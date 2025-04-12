@@ -1,6 +1,8 @@
 "use client";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { XIcon } from "lucide-react";
 import * as React from "react";
 
@@ -32,47 +34,72 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+const dialogContentVariants = cva(
+  cn(
+    //style
+    "bg-background sm:rounded-lg sm:border shadow-lg p-6",
+    // position
+    "fixed z-50 grid w-full top-0 left-1/2 -translate-x-1/2",
+    // animation
+    "duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-left-1/2 data-[state=closed]:slide-out-to-left-1/2",
+  ),
+  {
+    variants: {
+      position: {
+        top: "sm:top-48 data-[state=closed]:slide-out-to-top-[10%] data-[state=open]:slide-in-from-top-[10%]",
+        center:
+          "sm:top-[50%] sm:translate-y-[-50%] data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-top-[48%]",
+      },
+      size: {
+        sm: "sm:max-w-sm",
+        md: "sm:max-w-md",
+        lg: "sm:max-w-lg",
+        xl: "sm:max-w-xl",
+        "2xl": "sm:max-w-2xl",
+        "3xl": "sm:max-w-3xl",
+        "4xl": "sm:max-w-4xl",
+        "5xl": "sm:max-w-5xl",
+      },
+    },
+    defaultVariants: {
+      position: "center",
+      size: "md",
+    },
+  },
+);
+
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
-    size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
     hideCloseButton?: boolean;
-  }
->(({ className, children, size = "md", hideCloseButton, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay />
-    <DialogPrimitive.Content
-      ref={ref}
-      className={cn(
-        "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[10%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[10%] fixed left-[50%] top-0 z-50 grid w-full max-w-full translate-x-[-50%] gap-4 p-6 shadow-lg duration-200 sm:top-[50%] sm:translate-y-[-50%] sm:rounded-lg sm:border",
-        {
-          "sm:max-w-sm": size === "sm",
-          "sm:max-w-md": size === "md",
-          "sm:max-w-lg": size === "lg",
-          "sm:max-w-xl": size === "xl",
-          "sm:max-w-2xl": size === "2xl",
-          "sm:max-w-3xl": size === "3xl",
-          "sm:max-w-4xl": size === "4xl",
-          "sm:max-w-5xl": size === "5xl",
-        },
-        className,
-      )}
-      {...props}
-    >
-      {children}
-      {!hideCloseButton ? (
-        <DialogClose asChild className="absolute right-4 top-4">
-          <Button size="icon" variant="ghost">
-            <Icon>
-              <XIcon />
-            </Icon>
-            <span className="sr-only">Close</span>
-          </Button>
-        </DialogClose>
-      ) : null}
-    </DialogPrimitive.Content>
-  </DialogPortal>
-));
+  } & VariantProps<typeof dialogContentVariants>
+>(
+  (
+    { className, children, position, size = "md", hideCloseButton, ...props },
+    ref,
+  ) => (
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogPrimitive.Content
+        ref={ref}
+        className={cn("", dialogContentVariants({ position, size }), className)}
+        {...props}
+      >
+        {children}
+        {!hideCloseButton ? (
+          <DialogClose asChild className="absolute right-4 top-4">
+            <Button size="icon" variant="ghost">
+              <Icon>
+                <XIcon />
+              </Icon>
+              <span className="sr-only">Close</span>
+            </Button>
+          </DialogClose>
+        ) : null}
+      </DialogPrimitive.Content>
+    </DialogPortal>
+  ),
+);
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({
