@@ -1,6 +1,7 @@
 import type { PollStatus, Prisma } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
 import { shortUrl } from "@rallly/utils/absolute-url";
+import { InboxIcon } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
 
@@ -13,6 +14,13 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { CopyLinkButton } from "@/components/copy-link-button";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateFooter,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
 import { Pagination } from "@/components/pagination";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { PollStatusIcon } from "@/components/poll-status-icon";
@@ -159,63 +167,70 @@ export default async function Page({
       </div>
       <PageContent className="space-y-4">
         <PollsTabbedView>
-          <div className="space-y-4">
-            <SearchInput />
-            <StackedList className="overflow-hidden">
-              {polls.map((poll) => (
-                <StackedListItem
-                  className="relative hover:bg-gray-50"
-                  key={poll.id}
-                >
-                  <div className="flex items-center gap-4">
-                    <StackedListItemContent className="relative flex min-w-0 flex-1 items-center gap-2">
-                      <PollStatusIcon status={poll.status} />
-                      <Link
-                        className="focus:ring-ring truncate text-sm font-medium hover:underline focus-visible:ring-2"
-                        href={`/poll/${poll.id}`}
-                      >
-                        <span className="absolute inset-0" />
-                        {poll.title}
-                      </Link>
-                    </StackedListItemContent>
-                    <StackedListItemContent className="z-10 hidden items-center justify-end gap-4 sm:flex">
-                      <ParticipantAvatarBar
-                        participants={poll.participants}
-                        max={5}
-                      />
-                      <CopyLinkButton href={shortUrl(`/invite/${poll.id}`)} />
-                    </StackedListItemContent>
-                  </div>
-                </StackedListItem>
-              ))}
-            </StackedList>
-            {polls.length > 0 ? (
-              <Pagination
-                currentPage={parsedPage}
-                totalPages={totalPages}
-                totalItems={total}
-                pageSize={parsedPageSize}
-                className="mt-4"
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center py-8 text-center">
-                <p className="text-lg font-medium">
-                  <Trans i18nKey="noPolls" defaults="No polls found" />
-                </p>
-                <p className="text-muted-foreground mt-1">
-                  <Trans
-                    i18nKey="noPollsDescription"
-                    defaults="Try adjusting your search or create a new poll"
-                  />
-                </p>
-                <Button variant="primary" className="mt-4" asChild>
+          {polls.length === 0 ? (
+            <EmptyState className="p-8">
+              <EmptyStateIcon>
+                <InboxIcon />
+              </EmptyStateIcon>
+              <EmptyStateTitle>
+                <Trans i18nKey="noPolls" defaults="No polls found" />
+              </EmptyStateTitle>
+              <EmptyStateDescription>
+                <Trans
+                  i18nKey="noPollsDescription"
+                  defaults="Try adjusting your search or create a new poll"
+                />
+              </EmptyStateDescription>
+              <EmptyStateFooter>
+                <Button variant="primary" asChild>
                   <Link href="/new">
                     <Trans i18nKey="createPoll" defaults="Create Poll" />
                   </Link>
                 </Button>
-              </div>
-            )}
-          </div>
+              </EmptyStateFooter>
+            </EmptyState>
+          ) : (
+            <div className="space-y-4">
+              <SearchInput />
+              <StackedList className="overflow-hidden">
+                {polls.map((poll) => (
+                  <StackedListItem
+                    className="relative hover:bg-gray-50"
+                    key={poll.id}
+                  >
+                    <div className="flex items-center gap-4">
+                      <StackedListItemContent className="relative flex min-w-0 flex-1 items-center gap-2">
+                        <PollStatusIcon status={poll.status} />
+                        <Link
+                          className="focus:ring-ring truncate text-sm font-medium hover:underline focus-visible:ring-2"
+                          href={`/poll/${poll.id}`}
+                        >
+                          <span className="absolute inset-0" />
+                          {poll.title}
+                        </Link>
+                      </StackedListItemContent>
+                      <StackedListItemContent className="z-10 hidden items-center justify-end gap-4 sm:flex">
+                        <ParticipantAvatarBar
+                          participants={poll.participants}
+                          max={5}
+                        />
+                        <CopyLinkButton href={shortUrl(`/invite/${poll.id}`)} />
+                      </StackedListItemContent>
+                    </div>
+                  </StackedListItem>
+                ))}
+              </StackedList>
+              {totalPages > 1 ? (
+                <Pagination
+                  currentPage={parsedPage}
+                  totalPages={totalPages}
+                  totalItems={total}
+                  pageSize={parsedPageSize}
+                  className="mt-4"
+                />
+              ) : null}
+            </div>
+          )}
         </PollsTabbedView>
       </PageContent>
     </PageContainer>

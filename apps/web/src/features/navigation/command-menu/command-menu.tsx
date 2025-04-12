@@ -77,7 +77,7 @@ export function CommandMenu() {
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/polls")}>
               <PollPageIcon />
-              <Trans i18nKey="polls" defaults="Group Polls" />
+              <Trans i18nKey="polls" defaults="Polls" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/events")}>
               <EventPageIcon />

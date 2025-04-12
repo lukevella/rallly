@@ -49,10 +49,6 @@ export function Pagination({
     }
   };
 
-  if (totalPages <= 1) {
-    return null;
-  }
-
   return (
     <div className={cn("flex items-center justify-between", className)}>
       <div className="text-sm text-gray-500">
