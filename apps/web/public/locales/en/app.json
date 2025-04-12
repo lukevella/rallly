@@ -321,5 +321,6 @@
   "paginationItems": "Showing {startItem}–{endItem} of {totalItems}",
   "paginationPrevious": "Previous",
   "paginationPage": "Page {currentPage} of {totalPages}",
-  "paginationNext": "Next"
+  "paginationNext": "Next",
+  "upgradeToProDesc": "Unlock all Pro features"
 }

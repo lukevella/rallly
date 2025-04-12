@@ -19,8 +19,7 @@ const buttonVariants = cva(
           "focus:ring-offset-1 border-primary bg-primary hover:bg-primary-500 disabled:bg-gray-400 disabled:border-transparent text-white shadow-sm",
         destructive:
           "focus:ring-offset-1 bg-destructive shadow-sm text-destructive-foreground active:bg-destructive border-destructive hover:bg-destructive/90",
-        default:
-          "focus:ring-offset-1 hover:bg-gray-100 bg-gray-50 active:bg-gray-200",
+        default: "focus:ring-offset-1 hover:bg-gray-50 bg-white",
         secondary:
           "focus:ring-offset-1 border-secondary bg-secondary hover:bg-secondary/80 text-secondary-foreground",
         ghost:

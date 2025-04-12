@@ -70,6 +70,7 @@ module.exports = {
         sidebar: {
           DEFAULT: colors.gray["100"],
           foreground: colors.gray["700"],
+          border: colors.gray["200"],
           accent: {
             DEFAULT: colors.gray["200"],
             foreground: colors.gray["800"],
