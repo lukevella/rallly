@@ -187,7 +187,7 @@
   "timeShownIn": "Uhrzeiten werden in {timeZone} angezeigt",
   "pollStatusPausedDescription": "Stimmen können zurzeit nicht abgegeben oder bearbeitet werden",
   "eventHostTitle": "Zugriff verwalten",
-  "eventHostDescription": "Sie sind der Ersteller dieser Abstimmung",
+  "eventHostDescription": "Sie sind Ersteller*in dieser Abstimmung",
   "deleteAccount": "Konto löschen",
   "deleteAccountDialogTitle": "Konto löschen",
   "deleteAccountDialogDescription": "Bist Du sicher, dass Du dieses Konto löschen möchtest?",
@@ -302,5 +302,6 @@
   "addPaymentMethod": "Zahlungsmethode hinzufügen",
   "needToMakeChanges": "Musst du Änderungen vornehmen?",
   "billingPortalDescription": "Besuche das Rechnungsportal, um dein Abonnement zu verwalten, Zahlungsmethoden zu aktualisieren oder den Zahlungsverlauf einzusehen.",
-  "priceFree": "Kostenlos"
+  "priceFree": "Kostenlos",
+  "signUp": "Registrieren"
 }
