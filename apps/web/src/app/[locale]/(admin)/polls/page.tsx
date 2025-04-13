@@ -120,6 +120,32 @@ export async function generateMetadata() {
   };
 }
 
+function PollsEmptyState() {
+  return (
+    <EmptyState className="p-8">
+      <EmptyStateIcon>
+        <InboxIcon />
+      </EmptyStateIcon>
+      <EmptyStateTitle>
+        <Trans i18nKey="noPolls" defaults="No polls found" />
+      </EmptyStateTitle>
+      <EmptyStateDescription>
+        <Trans
+          i18nKey="noPollsDescription"
+          defaults="Try adjusting your search or create a new poll"
+        />
+      </EmptyStateDescription>
+      <EmptyStateFooter>
+        <Button variant="primary" asChild>
+          <Link href="/new">
+            <Trans i18nKey="createPoll" defaults="Create Poll" />
+          </Link>
+        </Button>
+      </EmptyStateFooter>
+    </EmptyState>
+  );
+}
+
 export default async function Page({
   searchParams,
 }: {
@@ -167,70 +193,54 @@ export default async function Page({
       </div>
       <PageContent className="space-y-4">
         <PollsTabbedView>
-          {polls.length === 0 ? (
-            <EmptyState className="p-8">
-              <EmptyStateIcon>
-                <InboxIcon />
-              </EmptyStateIcon>
-              <EmptyStateTitle>
-                <Trans i18nKey="noPolls" defaults="No polls found" />
-              </EmptyStateTitle>
-              <EmptyStateDescription>
-                <Trans
-                  i18nKey="noPollsDescription"
-                  defaults="Try adjusting your search or create a new poll"
-                />
-              </EmptyStateDescription>
-              <EmptyStateFooter>
-                <Button variant="primary" asChild>
-                  <Link href="/new">
-                    <Trans i18nKey="createPoll" defaults="Create Poll" />
-                  </Link>
-                </Button>
-              </EmptyStateFooter>
-            </EmptyState>
-          ) : (
-            <div className="space-y-4">
-              <SearchInput />
-              <StackedList className="overflow-hidden">
-                {polls.map((poll) => (
-                  <StackedListItem
-                    className="relative hover:bg-gray-50"
-                    key={poll.id}
-                  >
-                    <div className="flex items-center gap-4">
-                      <StackedListItemContent className="relative flex min-w-0 flex-1 items-center gap-2">
-                        <PollStatusIcon status={poll.status} />
-                        <Link
-                          className="focus:ring-ring truncate text-sm font-medium hover:underline focus-visible:ring-2"
-                          href={`/poll/${poll.id}`}
-                        >
-                          <span className="absolute inset-0" />
-                          {poll.title}
-                        </Link>
-                      </StackedListItemContent>
-                      <StackedListItemContent className="z-10 hidden items-center justify-end gap-4 sm:flex">
-                        <ParticipantAvatarBar
-                          participants={poll.participants}
-                          max={5}
-                        />
-                        <CopyLinkButton href={shortUrl(`/invite/${poll.id}`)} />
-                      </StackedListItemContent>
-                    </div>
-                  </StackedListItem>
-                ))}
-              </StackedList>
-              {totalPages > 1 ? (
-                <Pagination
-                  currentPage={parsedPage}
-                  totalPages={totalPages}
-                  totalItems={total}
-                  pageSize={parsedPageSize}
-                  className="mt-4"
-                />
-              ) : null}
-            </div>
-          )}
+          <div className="space-y-4">
+            <SearchInput />
+            {polls.length === 0 ? (
+              <PollsEmptyState />
+            ) : (
+              <>
+                <StackedList className="overflow-hidden">
+                  {polls.map((poll) => (
+                    <StackedListItem
+                      className="relative hover:bg-gray-50"
+                      key={poll.id}
+                    >
+                      <div className="flex items-center gap-4">
+                        <StackedListItemContent className="relative flex min-w-0 flex-1 items-center gap-2">
+                          <PollStatusIcon status={poll.status} />
+                          <Link
+                            className="focus:ring-ring truncate text-sm font-medium hover:underline focus-visible:ring-2"
+                            href={`/poll/${poll.id}`}
+                          >
+                            <span className="absolute inset-0" />
+                            {poll.title}
+                          </Link>
+                        </StackedListItemContent>
+                        <StackedListItemContent className="z-10 hidden items-center justify-end gap-4 sm:flex">
+                          <ParticipantAvatarBar
+                            participants={poll.participants}
+                            max={5}
+                          />
+                          <CopyLinkButton
+                            href={shortUrl(`/invite/${poll.id}`)}
+                          />
+                        </StackedListItemContent>
+                      </div>
+                    </StackedListItem>
+                  ))}
+                </StackedList>
+                {totalPages > 1 ? (
+                  <Pagination
+                    currentPage={parsedPage}
+                    totalPages={totalPages}
+                    totalItems={total}
+                    pageSize={parsedPageSize}
+                    className="mt-4"
+                  />
+                ) : null}
+              </>
+            )}
+          </div>
         </PollsTabbedView>
       </PageContent>
     </PageContainer>

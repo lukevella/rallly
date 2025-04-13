@@ -7,7 +7,10 @@ import { SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
+import { useTranslation } from "@/i18n/client";
+
 export function SearchInput() {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -47,7 +50,13 @@ export function SearchInput() {
   };
 
   return (
-    <div className="relative w-72">
+    <form
+      className="relative w-72"
+      onSubmit={(e) => {
+        e.preventDefault();
+        debouncedUpdateUrl.flush();
+      }}
+    >
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5">
         <Icon>
           <SearchIcon />
@@ -57,11 +66,13 @@ export function SearchInput() {
         ref={inputRef}
         type="search"
         autoFocus={searchParams.get("q") !== null}
-        placeholder="Search polls by title..."
+        placeholder={t("searchPollsPlaceholder", {
+          defaultValue: "Search polls by title...",
+        })}
         className="pl-8"
         value={inputValue}
         onChange={handleChange}
       />
-    </div>
+    </form>
   );
 }
