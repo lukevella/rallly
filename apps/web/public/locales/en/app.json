@@ -322,5 +322,6 @@
   "paginationPrevious": "Previous",
   "paginationPage": "Page {currentPage} of {totalPages}",
   "paginationNext": "Next",
-  "upgradeToProDesc": "Unlock all Pro features"
+  "upgradeToProDesc": "Unlock all Pro features",
+  "searchPollsPlaceholder": "Search polls by title..."
 }

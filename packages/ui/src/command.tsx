@@ -6,9 +6,9 @@ import { SearchIcon } from "lucide-react";
 import * as React from "react";
 
 import { Dialog, DialogContent } from "./dialog";
+import { usePlatform } from "./hooks/use-platform";
 import { Icon } from "./icon";
 import { cn } from "./lib/utils";
-import { usePlatform } from "./hooks/use-platform";
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
