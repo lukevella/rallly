@@ -323,5 +323,6 @@
   "paginationPage": "Page {currentPage} of {totalPages}",
   "paginationNext": "Next",
   "upgradeToProDesc": "Unlock all Pro features",
-  "searchPollsPlaceholder": "Search polls by title..."
+  "searchPollsPlaceholder": "Search polls by title...",
+  "poll": "Poll"
 }

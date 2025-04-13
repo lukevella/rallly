@@ -1,4 +1,4 @@
-import type { PollStatus, Prisma } from "@rallly/database";
+import type { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { InboxIcon } from "lucide-react";
@@ -30,7 +30,6 @@ import {
   StackedListItemContent,
 } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
-import { getPollCountByStatus } from "@/data/get-poll-count-by-status";
 import { getPolls } from "@/data/get-polls";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
@@ -84,30 +83,13 @@ async function loadData({
   pageSize?: number;
   q?: string;
 }) {
-  // Build the where clause based on filters
-  const where: Prisma.PollWhereInput = {
-    userId,
-    status,
-  };
-
-  // Add search filter if provided
-  if (q) {
-    where.title = {
-      contains: q,
-      mode: "insensitive",
-    };
-  }
-
-  // Count total polls for pagination and folder counts
-  const [{ total, data: polls }, statusCounts] = await Promise.all([
+  const [{ total, data: polls }] = await Promise.all([
     getPolls({ userId, status, page, pageSize, q }),
-    getPollCountByStatus(userId),
   ]);
 
   return {
     polls,
     total,
-    statusCounts,
   };
 }
 
