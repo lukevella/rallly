@@ -8,6 +8,7 @@ import * as React from "react";
 import { Dialog, DialogContent } from "./dialog";
 import { Icon } from "./icon";
 import { cn } from "./lib/utils";
+import { usePlatform } from "./hooks/use-platform";
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -171,7 +172,12 @@ CommandShortcut.displayName = "CommandShortcut";
 
 // Renders the Command (⌘) symbol on macs and Ctrl on windows
 const CommandShortcutSymbol = ({ symbol }: { symbol: string }) => {
-  return <CommandShortcut>⌘+{symbol}</CommandShortcut>;
+  const { isMac } = usePlatform();
+  return (
+    <CommandShortcut>
+      {isMac ? "⌘" : "Ctrl"}+{symbol}
+    </CommandShortcut>
+  );
 };
 CommandShortcutSymbol.displayName = "CommandShortcutSymbol";
 
