@@ -71,13 +71,6 @@ export async function getPolls({
             createdAt: "asc",
           },
         },
-        options: {
-          select: {
-            id: true,
-            startTime: true,
-            duration: true,
-          },
-        },
       },
       orderBy: {
         updatedAt: "desc",
@@ -92,28 +85,14 @@ export async function getPolls({
   return {
     total,
     data: data.map((poll) => {
-      const { options, ...rest } = poll;
-      const durations = new Set<number>();
-      for (const option of options) {
-        durations.add(option.duration);
-      }
       return {
-        ...rest,
+        ...poll,
         user: poll.user,
         participants: poll.participants.map((participant) => ({
           id: participant.id,
           name: participant.name,
           image: participant.user?.image ?? undefined,
         })),
-        dateOptions: {
-          first: options[0]?.startTime,
-          last: options[options.length - 1]?.startTime,
-          count: options.length,
-          duration:
-            durations.size === 1
-              ? (durations.values().next().value as number)
-              : Array.from(durations),
-        },
         event: poll.event ?? undefined,
       };
     }),
