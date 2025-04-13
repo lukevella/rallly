@@ -15,7 +15,7 @@ import {
 import { useDialog } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import dayjs from "dayjs";
-import { CheckIcon, GlobeIcon } from "lucide-react";
+import { CheckIcon, ChevronsUpDownIcon, GlobeIcon } from "lucide-react";
 import React from "react";
 
 import { Trans } from "@/components/trans";
@@ -96,6 +96,9 @@ export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
             <GlobeIcon />
           </Icon>
           {value}
+          <Icon>
+            <ChevronsUpDownIcon />
+          </Icon>
         </Button>
       </>
     );
