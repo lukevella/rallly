@@ -28,6 +28,7 @@ const pageIconVariants = cva(
         lime: "bg-lime-500 text-white",
         blue: "bg-blue-500 text-white",
         rose: "bg-rose-500 text-white",
+        purple: "bg-purple-500 text-white",
       },
       size: {
         sm: "size-5",
@@ -60,7 +61,7 @@ export function PageIcon({
 export function SettingsPageIcon() {
   return (
     <PageIcon color="gray" size="md">
-      <SettingsIcon className="size-4" />
+      <SettingsIcon />
     </PageIcon>
   );
 }
@@ -68,14 +69,14 @@ export function SettingsPageIcon() {
 export function AccountPageIcon() {
   return (
     <PageIcon color="gray" size="md">
-      <UserCogIcon className="size-4" />
+      <UserCogIcon />
     </PageIcon>
   );
 }
 export function SpacesPageIcon() {
   return (
     <PageIcon color="lime" size="md">
-      <EyeIcon className="size-4" />
+      <EyeIcon />
     </PageIcon>
   );
 }
@@ -83,7 +84,7 @@ export function SpacesPageIcon() {
 export function MembersPageIcon() {
   return (
     <PageIcon color="indigo" size="md">
-      <UsersIcon className="size-4" />
+      <UsersIcon />
     </PageIcon>
   );
 }
@@ -91,37 +92,37 @@ export function MembersPageIcon() {
 export function TeamsPageIcon() {
   return (
     <PageIcon color="indigo" size="md">
-      <UsersIcon className="size-4" />
+      <UsersIcon />
     </PageIcon>
   );
 }
 export function HomePageIcon() {
   return (
     <PageIcon color="darkGray" size="md">
-      <HomeIcon className="size-4" />
+      <HomeIcon />
     </PageIcon>
   );
 }
 export function CreatePageIcon() {
   return (
     <PageIcon color="gray" size="md">
-      <PlusIcon className="size-4" />
+      <PlusIcon />
     </PageIcon>
   );
 }
 
 export function PollPageIcon() {
   return (
-    <span className="inline-flex size-7 items-center justify-center rounded-lg bg-purple-500 text-white">
-      <BarChart2Icon className="size-4" />
-    </span>
+    <PageIcon color="purple" size="md">
+      <BarChart2Icon />
+    </PageIcon>
   );
 }
 
 export function EventPageIcon() {
   return (
     <PageIcon color="rose" size="md">
-      <CalendarIcon className="size-4" />
+      <CalendarIcon />
     </PageIcon>
   );
 }
@@ -129,7 +130,7 @@ export function EventPageIcon() {
 export function ProfilePageIcon() {
   return (
     <PageIcon color="gray" size="md">
-      <UserIcon className="size-4" />
+      <UserIcon />
     </PageIcon>
   );
 }
@@ -137,7 +138,7 @@ export function ProfilePageIcon() {
 export function PreferencesPageIcon() {
   return (
     <PageIcon color="gray" size="md">
-      <Settings2Icon className="size-4" />
+      <Settings2Icon />
     </PageIcon>
   );
 }
@@ -145,7 +146,7 @@ export function PreferencesPageIcon() {
 export function BillingPageIcon() {
   return (
     <PageIcon color="gray" size="md">
-      <CreditCardIcon className="size-4" />
+      <CreditCardIcon />
     </PageIcon>
   );
 }

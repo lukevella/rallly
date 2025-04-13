@@ -2,8 +2,8 @@ import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
 import type { Params } from "@/app/[locale]/types";
+import { PollPageIcon } from "@/app/components/page-icons";
 import { CreatePoll } from "@/components/create-poll";
 import { UserDropdown } from "@/components/user-dropdown";
 import { getTranslation } from "@/i18n/server";
@@ -24,10 +24,10 @@ export default async function Page({ params }: { params: Params }) {
           </div>
           <div className="flex flex-1 sm:justify-center">
             <div className="flex items-center gap-x-2">
-              <GroupPollIcon size="xs" />
+              <PollPageIcon />
               <div className="flex items-baseline gap-x-8">
                 <h1 className="text-sm font-semibold">
-                  <Trans t={t} i18nKey="groupPoll" defaults="Group Poll" />
+                  <Trans t={t} i18nKey="poll" defaults="Poll" />
                 </h1>
               </div>
             </div>
