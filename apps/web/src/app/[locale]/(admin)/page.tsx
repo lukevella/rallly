@@ -110,3 +110,12 @@ export default async function Page({ params }: { params: Params }) {
     </PageContainer>
   );
 }
+
+export async function generateMetadata() {
+  const { t } = await getTranslation();
+  return {
+    title: t("home", {
+      defaultValue: "Home",
+    }),
+  };
+}

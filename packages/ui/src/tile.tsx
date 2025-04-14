@@ -13,7 +13,7 @@ const Tile = React.forwardRef<
   <Link
     ref={ref}
     className={cn(
-      "text-card-foreground flex flex-col justify-end rounded-xl border bg-gray-50 p-3 hover:bg-gray-100",
+      "text-card-foreground bg-background flex flex-col justify-end rounded-xl border p-3 shadow-sm transition-shadow hover:bg-gray-50 active:shadow-none",
       className,
     )}
     {...props}
