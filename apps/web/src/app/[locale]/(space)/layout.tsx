@@ -3,12 +3,12 @@ import { Button } from "@rallly/ui/button";
 import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
 import Link from "next/link";
 
-import { AppSidebar } from "@/app/[locale]/(admin)/components/sidebar/app-sidebar";
-import { AppSidebarProvider } from "@/app/[locale]/(admin)/components/sidebar/app-sidebar-provider";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { getUser } from "@/data/get-user";
 import { CommandMenu } from "@/features/navigation/command-menu";
 
+import { AppSidebar } from "./components/sidebar/app-sidebar";
+import { AppSidebarProvider } from "./components/sidebar/app-sidebar-provider";
 import { TopBar, TopBarLeft, TopBarRight } from "./components/top-bar";
 
 export default async function Layout({

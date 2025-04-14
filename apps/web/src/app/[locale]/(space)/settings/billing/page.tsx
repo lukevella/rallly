@@ -16,10 +16,6 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import {
-  SettingsContent,
-  SettingsSection,
-} from "@/app/[locale]/(admin)/settings/components/settings-layout";
-import {
   DescriptionDetails,
   DescriptionList,
   DescriptionTerm,
@@ -37,6 +33,10 @@ import { Trans } from "@/components/trans";
 import { requireUser } from "@/next-auth";
 import { isSelfHosted } from "@/utils/constants";
 
+import {
+  SettingsContent,
+  SettingsSection,
+} from "../components/settings-layout";
 import { PaymentMethod } from "./components/payment-method";
 import { SubscriptionPrice } from "./components/subscription-price";
 import { SubscriptionStatus } from "./components/subscription-status";

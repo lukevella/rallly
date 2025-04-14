@@ -13,8 +13,8 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
-import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
 import { LogoutButton } from "@/app/components/logout-button";
+import { PollPageIcon } from "@/app/components/page-icons";
 import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
 import {
@@ -67,7 +67,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
             </Button>
           )}
           <div>
-            <GroupPollIcon size="xs" />
+            <PollPageIcon size="sm" />
           </div>
           <h1 className="truncate text-sm font-semibold">{poll.title}</h1>
         </div>

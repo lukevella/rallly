@@ -1,4 +1,3 @@
-import { UserScheduledEvents } from "@/app/[locale]/(admin)/events/user-scheduled-events";
 import type { Params } from "@/app/[locale]/types";
 import { EventPageIcon } from "@/app/components/page-icons";
 import {
@@ -10,6 +9,8 @@ import {
 } from "@/app/components/page-layout";
 import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
+
+import { UserScheduledEvents } from "./user-scheduled-events";
 
 export default async function Page({ params }: { params: Params }) {
   await getTranslation(params.locale);

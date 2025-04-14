@@ -17,30 +17,29 @@ import {
 } from "lucide-react";
 import React from "react";
 
-const pageIconVariants = cva(
-  "inline-flex size-7 items-center justify-center rounded-lg",
-  {
-    variants: {
-      color: {
-        darkGray: "bg-gray-700 text-white",
-        indigo: "bg-indigo-500 text-white",
-        gray: "bg-gray-200 text-gray-600",
-        lime: "bg-lime-500 text-white",
-        blue: "bg-blue-500 text-white",
-        rose: "bg-rose-500 text-white",
-        purple: "bg-purple-500 text-white",
-      },
-      size: {
-        sm: "size-5",
-        md: "size-7",
-      },
+const pageIconVariants = cva("inline-flex items-center justify-center", {
+  variants: {
+    color: {
+      darkGray: "bg-gray-700 text-white",
+      indigo: "bg-indigo-500 text-white",
+      gray: "bg-gray-200 text-gray-600",
+      lime: "bg-lime-500 text-white",
+      blue: "bg-blue-500 text-white",
+      rose: "bg-rose-500 text-white",
+      purple: "bg-purple-500 text-white",
     },
-    defaultVariants: {
-      color: "gray",
-      size: "md",
+    size: {
+      sm: "size-6 [&_svg]:size-3 rounded-md",
+      md: "size-7 [&_svg]:size-4 rounded-lg",
+      lg: "size-9 [&_svg]:size-5 rounded-xl",
+      xl: "size-10 [&_svg]:size-5 rounded-xl",
     },
   },
-);
+  defaultVariants: {
+    color: "gray",
+    size: "md",
+  },
+});
 
 type PageIconVariantProps = VariantProps<typeof pageIconVariants>;
 
@@ -53,7 +52,7 @@ export function PageIcon({
 } & PageIconVariantProps) {
   return (
     <span className={pageIconVariants({ color, size })}>
-      <Slot className="size-4">{children}</Slot>
+      <Slot>{children}</Slot>
     </span>
   );
 }
@@ -111,9 +110,9 @@ export function CreatePageIcon() {
   );
 }
 
-export function PollPageIcon() {
+export function PollPageIcon(props: PageIconVariantProps) {
   return (
-    <PageIcon color="purple" size="md">
+    <PageIcon color="purple" size="md" {...props}>
       <BarChart2Icon />
     </PageIcon>
   );
