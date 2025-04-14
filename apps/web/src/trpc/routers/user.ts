@@ -112,7 +112,7 @@ export const user = router({
     .mutation(async ({ input, ctx }) => {
       const currentUser = await prisma.user.findUnique({
         where: { id: ctx.user.id },
-        select: { email: true },
+        select: { email: true, id: true },
       });
 
       if (!currentUser) {
@@ -137,7 +137,7 @@ export const user = router({
       // create a verification token
       const token = await createToken(
         {
-          fromEmail: currentUser.email,
+          userId: currentUser.id,
           toEmail: input.email,
         },
         {
