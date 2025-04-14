@@ -117,7 +117,7 @@ export const ProfileEmailAddress = () => {
                     <Trans i18nKey="email" />
                   </FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input disabled={form.formState.isSubmitting} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

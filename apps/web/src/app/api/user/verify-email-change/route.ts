@@ -9,7 +9,7 @@ import { auth } from "@/next-auth";
 import { decryptToken } from "@/utils/session";
 
 type EmailChangePayload = {
-  fromEmail: string;
+  userId: string;
   toEmail: string;
 };
 
@@ -36,7 +36,7 @@ const handleEmailChange = async (token: string) => {
   }
 
   const user = await prisma.user.update({
-    where: { email: payload.fromEmail },
+    where: { id: payload.userId },
     data: { email: payload.toEmail },
     select: {
       customerId: true,
