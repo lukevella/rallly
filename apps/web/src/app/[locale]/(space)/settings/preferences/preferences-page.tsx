@@ -1,12 +1,13 @@
 "use client";
 
-import { DateTimePreferences } from "@/app/[locale]/(admin)/settings/components/date-time-preferences";
-import { LanguagePreference } from "@/app/[locale]/(admin)/settings/components/language-preference";
+import { Trans } from "@/components/trans";
+
+import { DateTimePreferences } from "../components/date-time-preferences";
+import { LanguagePreference } from "../components/language-preference";
 import {
   SettingsContent,
   SettingsSection,
-} from "@/app/[locale]/(admin)/settings/components/settings-layout";
-import { Trans } from "@/components/trans";
+} from "../components/settings-layout";
 
 export function PreferencesPage() {
   return (

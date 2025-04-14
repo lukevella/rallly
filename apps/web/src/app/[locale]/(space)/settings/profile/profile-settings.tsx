@@ -12,10 +12,11 @@ import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { ProfilePicture } from "@/app/[locale]/(admin)/settings/profile/profile-picture";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
+
+import { ProfilePicture } from "./profile-picture";
 
 const profileSettingsFormData = z.object({
   name: z.string().min(1).max(100),

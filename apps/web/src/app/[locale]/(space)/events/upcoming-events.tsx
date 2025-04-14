@@ -1,7 +1,6 @@
 "use client";
 import { CalendarPlusIcon } from "lucide-react";
 
-import { EventList } from "@/app/[locale]/(admin)/events/event-list";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -12,10 +11,10 @@ import { Spinner } from "@/components/spinner";
 import { Trans } from "@/components/trans";
 import { trpc } from "@/trpc/client";
 
-export function PastEvents() {
-  const { data } = trpc.scheduledEvents.list.useQuery({
-    period: "past",
-  });
+import { EventList } from "./event-list";
+
+export function UpcomingEvents() {
+  const { data } = trpc.scheduledEvents.list.useQuery({ period: "upcoming" });
 
   if (!data) {
     return <Spinner />;
@@ -29,13 +28,13 @@ export function PastEvents() {
         </EmptyStateIcon>
         <EmptyStateTitle>
           <Trans
-            i18nKey="pastEventsEmptyStateTitle"
-            defaults="No Past Events"
+            i18nKey="upcomingEventsEmptyStateTitle"
+            defaults="No Upcoming Events"
           />
         </EmptyStateTitle>
         <EmptyStateDescription>
           <Trans
-            i18nKey="pastEventsEmptyStateDescription"
+            i18nKey="upcomingEventsEmptyStateDescription"
             defaults="When you schedule events, they will appear here."
           />
         </EmptyStateDescription>

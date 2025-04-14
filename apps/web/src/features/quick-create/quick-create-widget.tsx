@@ -4,7 +4,7 @@ import { CheckIcon, PlusIcon, ZapIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
+import { PollPageIcon } from "@/app/components/page-icons";
 import { getGuestPolls } from "@/features/quick-create/lib/get-guest-polls";
 import { getTranslation } from "@/i18n/server";
 
@@ -50,10 +50,10 @@ export async function QuickCreateWidget() {
                 <li key={poll.id}>
                   <Link
                     href={`/poll/${poll.id}`}
-                    className="flex items-center gap-3 rounded-xl border bg-white p-3 hover:bg-gray-50 active:bg-gray-100"
+                    className="flex items-center gap-3 rounded-2xl border bg-white p-3 hover:bg-gray-50 active:bg-gray-100"
                   >
                     <div>
-                      <GroupPollIcon size="lg" />
+                      <PollPageIcon size="xl" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="truncate font-medium">{poll.title}</div>

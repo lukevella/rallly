@@ -4,9 +4,10 @@ import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/page-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
 
-import { PastEvents } from "@/app/[locale]/(admin)/events/past-events";
-import { UpcomingEvents } from "@/app/[locale]/(admin)/events/upcoming-events";
 import { Trans } from "@/components/trans";
+
+import { PastEvents } from "./past-events";
+import { UpcomingEvents } from "./upcoming-events";
 
 const eventPeriodSchema = z.enum(["upcoming", "past"]).catch("upcoming");
 

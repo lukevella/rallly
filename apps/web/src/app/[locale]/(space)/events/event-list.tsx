@@ -3,10 +3,11 @@
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import dayjs from "dayjs";
 
-import type { ScheduledEvent } from "@/app/[locale]/(admin)/events/types";
 import { Trans } from "@/components/trans";
 import { generateGradient } from "@/utils/color-hash";
 import { useDayjs } from "@/utils/dayjs";
+
+import type { ScheduledEvent } from "./types";
 
 export function EventList({ data }: { data: ScheduledEvent[] }) {
   const table = useReactTable({
