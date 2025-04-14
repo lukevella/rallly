@@ -13,7 +13,9 @@ export const SignOutButton = () => {
       variant="ghost"
       size="sm"
       onClick={() => {
-        signOut();
+        signOut({
+          redirectTo: "/",
+        });
       }}
     >
       <Icon>
