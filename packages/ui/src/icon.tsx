@@ -30,12 +30,18 @@ export interface IconProps extends VariantProps<typeof iconVariants> {
   children?: React.ReactNode;
 }
 
-export function Icon({ children, size, variant }: IconProps) {
+export function Icon({
+  children,
+  className,
+  size,
+  variant,
+}: { className?: string } & IconProps) {
   return (
     <Slot
       className={cn(
         iconVariants({ size, variant }),
         "group-[.bg-primary]:text-primary-50 group-[.bg-destructive]:text-destructive-foreground group shrink-0",
+        className,
       )}
     >
       {children}

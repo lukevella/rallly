@@ -30,7 +30,7 @@ import * as React from "react";
 import { DuplicateDialog } from "@/app/[locale]/poll/[urlId]/duplicate-dialog";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
-import { ProFeatureBadge } from "@/components/pro-feature-badge";
+import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
@@ -217,7 +217,7 @@ const ManagePoll: React.FunctionComponent<{
                     <CalendarCheck2Icon />
                   </Icon>
                   <Trans i18nKey="finishPoll" defaults="Finalize" />
-                  <ProFeatureBadge />
+                  <ProBadge />
                 </DropdownMenuItem>
                 <PauseResumeToggle />
               </>
@@ -245,7 +245,7 @@ const ManagePoll: React.FunctionComponent<{
           >
             <DropdownMenuItemIconLabel icon={CopyIcon}>
               <Trans i18nKey="duplicate" defaults="Duplicate" />
-              <ProFeatureBadge />
+              <ProBadge />
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
           <DropdownMenuSeparator />

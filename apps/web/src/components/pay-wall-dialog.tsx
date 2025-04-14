@@ -56,7 +56,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                   className="text-center"
                   aria-hidden="true"
                 >
-                  <Badge size="lg" variant="primary">
+                  <Badge size="lg" variant="secondary">
                     <Trans i18nKey="planPro" />
                   </Badge>
                 </m.div>
@@ -158,7 +158,11 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
           </section>
           <footer className="space-y-4">
             <div className="grid gap-2">
-              <UpgradeButton large annual={period === "yearly"}>
+              <UpgradeButton
+                className="w-full"
+                large
+                annual={period === "yearly"}
+              >
                 <Trans i18nKey="upgrade" defaults="Upgrade" />
               </UpgradeButton>
             </div>

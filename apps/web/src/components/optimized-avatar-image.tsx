@@ -7,9 +7,9 @@ import React from "react";
 const sizeToWidth = {
   xs: 20,
   sm: 24,
-  md: 36,
+  md: 32,
   lg: 48,
-  xl: 56,
+  xl: 64,
 };
 
 export function OptimizedAvatarImage({
@@ -26,7 +26,7 @@ export function OptimizedAvatarImage({
   const [isLoaded, setLoaded] = React.useState(false);
   return (
     <Avatar
-      className={className}
+      className={cn("rounded-full", className)}
       style={{ width: sizeToWidth[size], height: sizeToWidth[size] }}
     >
       {src ? (
@@ -49,14 +49,14 @@ export function OptimizedAvatarImage({
         <AvatarFallback
           seed={name}
           className={cn("shrink-0", {
-            "text-xs": size === "xs",
-            "text-sm": size === "sm",
+            "text-[10px]": size === "xs",
+            "text-[12px]": size === "sm",
             "text-md": size === "md",
             "text-lg": size === "lg",
-            "text-xl": size === "xl",
+            "text-3xl": size === "xl",
           })}
         >
-          {name[0]?.toUpperCase()}
+          {name?.[0]?.toUpperCase()}
         </AvatarFallback>
       ) : null}
     </Avatar>

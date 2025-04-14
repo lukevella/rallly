@@ -2,13 +2,14 @@ import { Button } from "@rallly/ui/button";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { GroupPollIcon } from "@/app/[locale]/(admin)/app-card";
-import { BackButton } from "@/app/[locale]/(admin)/menu/menu-button";
 import type { Params } from "@/app/[locale]/types";
+import { PollPageIcon } from "@/app/components/page-icons";
 import { CreatePoll } from "@/components/create-poll";
 import { UserDropdown } from "@/components/user-dropdown";
 import { getTranslation } from "@/i18n/server";
 import { getLoggedIn } from "@/next-auth";
+
+import { BackButton } from "./back-button";
 
 export default async function Page({ params }: { params: Params }) {
   const { t } = await getTranslation(params.locale);
@@ -17,16 +18,16 @@ export default async function Page({ params }: { params: Params }) {
   return (
     <div>
       <div className="sticky top-0 z-20 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:grid-cols-3">
-        <div className="mx-auto flex max-w-4xl items-center justify-between gap-x-2 sm:px-6">
+        <div className="mx-auto flex items-center justify-between gap-x-2">
           <div className="flex items-center gap-x-4 sm:flex-1">
             <BackButton />
           </div>
           <div className="flex flex-1 sm:justify-center">
             <div className="flex items-center gap-x-2">
-              <GroupPollIcon size="xs" />
+              <PollPageIcon />
               <div className="flex items-baseline gap-x-8">
-                <h1 className="text-sm font-semibold">
-                  <Trans t={t} i18nKey="groupPoll" defaults="Group Poll" />
+                <h1 className="font-semibold">
+                  <Trans t={t} i18nKey="poll" defaults="Poll" />
                 </h1>
               </div>
             </div>

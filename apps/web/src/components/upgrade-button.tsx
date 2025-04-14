@@ -1,3 +1,4 @@
+"use client";
 import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
@@ -9,7 +10,12 @@ export const UpgradeButton = ({
   children,
   annual,
   large,
-}: React.PropsWithChildren<{ annual?: boolean; large?: boolean }>) => {
+  className,
+}: React.PropsWithChildren<{ 
+  annual?: boolean; 
+  large?: boolean;
+  className?: string;
+}>) => {
   const posthog = usePostHog();
   const formRef = React.useRef<HTMLFormElement>(null);
 
@@ -27,7 +33,7 @@ export const UpgradeButton = ({
       />
       <Button
         size={large ? "lg" : "default"}
-        className="w-full"
+        className={className}
         variant="primary"
         onClick={(e) => {
           // 🐛 Since we have nested forms, we need to prevent the default
@@ -39,7 +45,7 @@ export const UpgradeButton = ({
           posthog?.capture("click upgrade button");
         }}
       >
-        {children || <Trans i18nKey="upgrade" defaults="Upgrade" />}
+        {children || <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />}
       </Button>
     </form>
   );

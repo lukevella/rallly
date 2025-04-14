@@ -1,35 +1,39 @@
 "use client";
 
-import { Icon } from "@rallly/ui/icon";
-import { CreditCardIcon, Settings2Icon, UserIcon } from "lucide-react";
-import { Trans } from "react-i18next";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/page-tabs";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-import { TabMenu, TabMenuItem } from "@/app/components/tab-menu";
+import { Trans } from "@/components/trans";
 import { IfCloudHosted } from "@/contexts/environment";
 
-export function SettingsMenu() {
+export function SettingsLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
   return (
-    <TabMenu>
-      <TabMenuItem href="/settings/profile">
-        <Icon>
-          <UserIcon />
-        </Icon>
-        <Trans i18nKey="profile" />
-      </TabMenuItem>
-      <TabMenuItem href="/settings/preferences">
-        <Icon>
-          <Settings2Icon />
-        </Icon>
-        <Trans i18nKey="preferences" />
-      </TabMenuItem>
-      <IfCloudHosted>
-        <TabMenuItem href="/settings/billing">
-          <Icon>
-            <CreditCardIcon />
-          </Icon>
-          <Trans i18nKey="billing" />
-        </TabMenuItem>
-      </IfCloudHosted>
-    </TabMenu>
+    <Tabs value={pathname}>
+      <TabsList>
+        <TabsTrigger asChild value="/settings/profile">
+          <Link href="/settings/profile">
+            <Trans i18nKey="profile" defaults="Profile" />
+          </Link>
+        </TabsTrigger>
+        <TabsTrigger asChild value="/settings/preferences">
+          <Link href="/settings/preferences">
+            <Trans i18nKey="preferences" defaults="Preferences" />
+          </Link>
+        </TabsTrigger>
+        <IfCloudHosted>
+          <TabsTrigger asChild value="/settings/billing">
+            <Link href="/settings/billing">
+              <Trans i18nKey="billing" defaults="Billing" />
+            </Link>
+          </TabsTrigger>
+        </IfCloudHosted>
+      </TabsList>
+      <TabsContent className="mt-4" value={pathname}>
+        {children}
+      </TabsContent>
+    </Tabs>
   );
 }

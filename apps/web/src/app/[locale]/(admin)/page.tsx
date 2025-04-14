@@ -1,52 +1,118 @@
-import { dehydrate, Hydrate } from "@tanstack/react-query";
-import { HomeIcon } from "lucide-react";
-import { Trans } from "react-i18next/TransWithoutContext";
+import { Tile, TileGrid, TileTitle } from "@rallly/ui/tile";
 
-import Dashboard from "@/app/[locale]/(admin)/dashboard";
 import type { Params } from "@/app/[locale]/types";
+import {
+  BillingPageIcon,
+  EventPageIcon,
+  HomePageIcon,
+  PollPageIcon,
+  PreferencesPageIcon,
+  ProfilePageIcon,
+} from "@/app/components/page-icons";
 import {
   PageContainer,
   PageContent,
+  PageDescription,
   PageHeader,
-  PageIcon,
   PageTitle,
 } from "@/app/components/page-layout";
+import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
-import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
 
 export default async function Page({ params }: { params: Params }) {
-  const { t } = await getTranslation(params.locale);
-  const helpers = await createSSRHelper();
-  await helpers.dashboard.info.prefetch();
+  await getTranslation(params.locale);
+
   return (
-    <Hydrate state={dehydrate(helpers.queryClient)}>
-      <div>
-        <PageContainer>
-          <PageHeader>
-            <div className="flex items-center gap-x-3">
-              <PageIcon>
-                <HomeIcon />
-              </PageIcon>
-              <PageTitle>
-                <Trans t={t} i18nKey="home" defaults="Home" />
-              </PageTitle>
-            </div>
-          </PageHeader>
-          <PageContent>
-            <Dashboard />
-          </PageContent>
-        </PageContainer>
-      </div>
-    </Hydrate>
+    <PageContainer>
+      <PageHeader>
+        <PageTitle>
+          <HomePageIcon />
+          <Trans i18nKey="home" defaults="Home" />
+        </PageTitle>
+        <PageDescription>
+          <Trans
+            i18nKey="homeDashboardDesc"
+            defaults="Manage your polls, events, and account settings"
+          />
+        </PageDescription>
+      </PageHeader>
+      <PageContent className="space-y-8">
+        {/* <div className="space-y-4">
+          <h2 className="text-muted-foreground text-sm">
+            <Trans i18nKey="homeActionsTitle" defaults="Actions" />
+          </h2>
+          <TileGrid>
+            <Tile href="/new">
+              <CreatePageIcon />
+              <TileTitle>
+                <Trans i18nKey="create" defaults="Create" />
+              </TileTitle>
+            </Tile>
+          </TileGrid>
+        </div> */}
+
+        <div className="space-y-4">
+          <h2 className="text-muted-foreground text-sm">
+            <Trans i18nKey="homeNavTitle" defaults="Navigation" />
+          </h2>
+          <TileGrid>
+            <Tile href="/polls">
+              <PollPageIcon />
+              <TileTitle>
+                <Trans i18nKey="polls" defaults="Polls" />
+              </TileTitle>
+            </Tile>
+
+            <Tile href="/events">
+              <EventPageIcon />
+              <TileTitle>
+                <Trans i18nKey="events" defaults="Events" />
+              </TileTitle>
+            </Tile>
+
+            {/* <Tile href="/members">
+              <MembersPageIcon />
+              <TileTitle>
+                <Trans i18nKey="members" defaults="Members" />
+              </TileTitle>
+            </Tile> */}
+          </TileGrid>
+        </div>
+
+        <div className="space-y-4">
+          <h2 className="text-muted-foreground text-sm">
+            <Trans i18nKey="account" defaults="Account" />
+          </h2>
+          <TileGrid>
+            <Tile href="/settings/profile">
+              <ProfilePageIcon />
+              <TileTitle>
+                <Trans i18nKey="profile" defaults="Profile" />
+              </TileTitle>
+            </Tile>
+
+            <Tile href="/settings/preferences">
+              <PreferencesPageIcon />
+              <TileTitle>
+                <Trans i18nKey="preferences" defaults="Preferences" />
+              </TileTitle>
+            </Tile>
+
+            <Tile href="/settings/billing">
+              <BillingPageIcon />
+              <TileTitle>
+                <Trans i18nKey="billing" defaults="Billing" />
+              </TileTitle>
+            </Tile>
+          </TileGrid>
+        </div>
+      </PageContent>
+    </PageContainer>
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
-  const { t } = await getTranslation(params.locale);
+export async function generateMetadata() {
+  const { t } = await getTranslation();
   return {
     title: t("home", {
       defaultValue: "Home",

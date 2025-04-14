@@ -13,6 +13,7 @@ import React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { UserProvider } from "@/components/user-provider";
+import { TimezoneProvider } from "@/features/timezone";
 import { I18nProvider } from "@/i18n/client";
 import { auth } from "@/next-auth";
 import { TRPCProvider } from "@/trpc/client/provider";
@@ -55,10 +56,14 @@ export default async function Root({
                     <PostHogPageView />
                     <TooltipProvider>
                       <UserProvider>
-                        <ConnectedDayjsProvider>
-                          {children}
-                          <TimeZoneChangeDetector />
-                        </ConnectedDayjsProvider>
+                        <TimezoneProvider
+                          initialTimezone={session?.user?.timeZone ?? undefined}
+                        >
+                          <ConnectedDayjsProvider>
+                            {children}
+                            <TimeZoneChangeDetector />
+                          </ConnectedDayjsProvider>
+                        </TimezoneProvider>
                       </UserProvider>
                     </TooltipProvider>
                   </PostHogProvider>

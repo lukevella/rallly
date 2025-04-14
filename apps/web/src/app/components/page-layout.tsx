@@ -1,25 +1,14 @@
 "use client";
-import { Slot } from "@radix-ui/react-slot";
+
 import { cn } from "@rallly/ui";
+import { Skeleton } from "@rallly/ui/skeleton";
 
 export function PageContainer({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
-  return <div className={cn(className)}>{children}</div>;
-}
-
-export function PageIcon({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
   return (
-    <div className={cn("hidden", className)}>
-      <Slot className="size-4">{children}</Slot>
-    </div>
+    <div className={cn("mx-auto w-full max-w-7xl", className)}>{children}</div>
   );
 }
 
@@ -33,12 +22,26 @@ export function PageTitle({
   return (
     <h1
       className={cn(
-        "inline-flex items-center truncate text-xl font-bold tracking-tight text-gray-700",
+        "text-foreground flex gap-3 truncate text-xl font-bold tracking-tight",
         className,
       )}
     >
       {children}
     </h1>
+  );
+}
+
+export function PageDescription({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <p className={cn("text-muted-foreground mt-4 text-sm", className)}>
+      {children}
+    </p>
   );
 }
 
@@ -50,7 +53,7 @@ export function PageHeader({
   className?: string;
   variant?: "default" | "ghost";
 }) {
-  return <div className={cn("mb-6", className)}>{children}</div>;
+  return <div className={cn(className)}>{children}</div>;
 }
 
 export function PageSection({ children }: { children?: React.ReactNode }) {
@@ -68,5 +71,43 @@ export function PageContent({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("md:grow", className)}>{children}</div>;
+  return (
+    <div className={cn("mt-4 md:grow lg:mt-6", className)}>{children}</div>
+  );
+}
+
+export function PageSkeleton() {
+  return (
+    <PageContainer>
+      <PageHeader>
+        <PageTitle>
+          <Skeleton className="size-8" />
+          <Skeleton className="h-8 w-32" />
+        </PageTitle>
+        <PageDescription>
+          <Skeleton className="h-4 w-64" />
+        </PageDescription>
+      </PageHeader>
+      <PageContent>
+        <div className="space-y-8">
+          <Skeleton className="h-8 w-1/2" />
+          <div className="space-y-4">
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-1/2" />
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-1/2" />
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-1/2" />
+          </div>
+        </div>
+      </PageContent>
+    </PageContainer>
+  );
 }

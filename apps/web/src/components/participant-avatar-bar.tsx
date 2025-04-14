@@ -1,10 +1,16 @@
 import { cn } from "@rallly/ui";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@rallly/ui/tooltip";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { Trans } from "@/components/trans";
 
 interface ParticipantAvatarBarProps {
-  participants: { name: string }[];
+  participants: { name: string; image?: string }[];
   max?: number;
 }
 
@@ -12,22 +18,40 @@ export const ParticipantAvatarBar = ({
   participants,
   max = Infinity,
 }: ParticipantAvatarBarProps) => {
-  const visibleCount = participants.length > max ? max - 1 : max;
-  const hiddenCount = participants.length - visibleCount;
+  const totalParticipants = participants.length;
+
+  const visibleCount = totalParticipants <= max ? totalParticipants : max - 1;
+
+  const visibleParticipants = participants.slice(0, visibleCount);
+
+  const tooltipParticipants = participants.slice(
+    visibleCount,
+    visibleCount + 10,
+  );
+
+  const remainingCount =
+    totalParticipants - visibleCount - tooltipParticipants.length;
+
+  const hiddenCount = totalParticipants - visibleCount;
+
   return (
-    <ul className="flex items-center -space-x-1">
-      {participants.slice(0, visibleCount).map((participant, index) => (
+    <ul className="flex cursor-default items-center -space-x-1 rounded-full bg-white p-0.5">
+      {visibleParticipants.map((participant, index) => (
         <Tooltip key={index}>
           <TooltipTrigger asChild>
             <li className="z-10 inline-flex items-center justify-center rounded-full ring-2 ring-white">
-              <OptimizedAvatarImage name={participant.name} size="xs" />
+              <OptimizedAvatarImage
+                name={participant.name}
+                src={participant.image}
+                size="xs"
+              />
             </li>
           </TooltipTrigger>
           <TooltipContent>{participant.name}</TooltipContent>
         </Tooltip>
       ))}
-      {hiddenCount > 1 ? (
-        <li className="relative z-20 inline-flex items-center justify-center rounded-full ring-2 ring-white">
+      {hiddenCount > 0 ? (
+        <li className="relative z-10 inline-flex items-center justify-center rounded-full ring-2 ring-white">
           <Tooltip>
             <TooltipTrigger asChild>
               <span
@@ -40,15 +64,24 @@ export const ParticipantAvatarBar = ({
                 +{hiddenCount}
               </span>
             </TooltipTrigger>
-            <TooltipContent>
-              <ul>
-                {participants
-                  .slice(visibleCount, 10)
-                  .map((participant, index) => (
+            <TooltipPortal>
+              <TooltipContent className="z-10">
+                <ul>
+                  {tooltipParticipants.map((participant, index) => (
                     <li key={index}>{participant.name}</li>
                   ))}
-              </ul>
-            </TooltipContent>
+                  {remainingCount > 0 && (
+                    <li>
+                      <Trans
+                        i18nKey="moreParticipants"
+                        values={{ count: remainingCount }}
+                        defaults="{count} more…"
+                      />
+                    </li>
+                  )}
+                </ul>
+              </TooltipContent>
+            </TooltipPortal>
           </Tooltip>
         </li>
       ) : null}
