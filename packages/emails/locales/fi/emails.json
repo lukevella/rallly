@@ -53,5 +53,14 @@
   "changeEmailRequest_button": "Vahvista sähköpostiosoite",
   "changeEmailRequest_subject": "Vahvista uusi sähköpostiosoitteesi",
   "changeEmailRequest_text3": "Tämä linkki vanhenee 10 minuutissa. Jos et pyytänyt tätä muutosta, jätä tämä viesti huomioimatta.",
-  "changeEmailRequest_text1": "Olemme saaneet pyynnön vaihtaa tilisi sähköpostiosoitteen <b>{fromEmail}</b> tilalle osoitteen <b>{toEmail}</b>."
+  "changeEmailRequest_text1": "Olemme saaneet pyynnön vaihtaa tilisi sähköpostiosoitteen <b>{fromEmail}</b> tilalle osoitteen <b>{toEmail}</b>.",
+  "abandoned_checkout_name": "Hei {name},",
+  "abandoned_checkout_noname": "Hei vain,",
+  "abandoned_checkout_content": "huomasin, että katselit aiemmin <b>Rallly Prota</b>. Lähetän tämän viestin sen varalta, että sinulla on kysymyksiä tai tarvitset apua jonkin kanssa.",
+  "abandoned_checkout_offer": "Päästäksesi alkuun voit saada <b>{discount} % alennusta</b> ensimmäisestä vuodestasi. Käytä seuraavaa koodia tilauksesi yhteydessä:",
+  "abandoned_checkout_button": "Päivitä Rallly Pro-versioon",
+  "abandoned_checkout_support": "Jos sinulla on kysyttävää Rallly Prosta tai tarvitset apua missä tahansa asiassa, vastaa vain tähän sähköpostiin. Olen mielelläni avuksi!",
+  "abandoned_checkout_preview": "Ainutlaatuinen tarjous: {discount} % alennus ensimmäisestä Rallly Pro -vuodesta!",
+  "abandoned_checkout_subject": "{discount} % alennus ensimmäisestä Rallly Pro -vuodestasi",
+  "abandoned_checkout_signoff": "Parhain terveisin"
 }
