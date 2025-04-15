@@ -301,5 +301,9 @@
   "needToMakeChanges": "Wil je wijzigingen aanbrengen?",
   "billingPortalDescription": "Bezoek het factuurportaal voor het beheren van je abonnement, betalingsmethoden of om je facturen te bekijken.",
   "priceFree": "Gratis",
-  "signUp": "Aanmelden"
+  "signUp": "Aanmelden",
+  "upgradeToPro": "Upgrade naar Pro",
+  "moreParticipants": "{count} meer…",
+  "noDates": "Geen datums",
+  "commandMenuNoResults": "Geen resultaten"
 }
