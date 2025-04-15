@@ -46,5 +46,21 @@
   "common_viewOn": "在 {domain} 上查看",
   "newComment_preview": "前往您的投票查看他们的回复。",
   "newComment_heading": "新评论",
-  "newPoll_preview": "分享您的参与者链接以开始收集回复。"
+  "newPoll_preview": "分享您的参与者链接以开始收集回复。",
+  "changeEmailRequest_preview": "请验证您的电子邮件地址",
+  "changeEmailRequest_heading": "验证您的新邮箱地址",
+  "changeEmailRequest_text2": "要完成此更改，请点击下面的按钮：",
+  "changeEmailRequest_button": "验证电子邮件地址",
+  "changeEmailRequest_subject": "验证您的新邮箱地址",
+  "changeEmailRequest_text3": "此链接将在10分钟后过期。如果您没有请求此更改，请忽略此电子邮件。",
+  "changeEmailRequest_text1": "我们收到要求更改您帐户的电子邮件地址的请求 <b>{fromEmail}</b> 改为 <b>{toEmail}</b>.",
+  "abandoned_checkout_name": "嗨 {name}",
+  "abandoned_checkout_noname": "你好",
+  "abandoned_checkout_content": "我注意到你之前在查看<b> rally Pro</b>。我想问问你是否有什么问题或者需要什么帮助。",
+  "abandoned_checkout_offer": "为了帮助您开始，您可以在第一年获得</b> {discount}%</b>。结账时只需使用下面的代码：",
+  "abandoned_checkout_button": "升级到 Rallly Pro",
+  "abandoned_checkout_support": "如果您有任何关于 Rallly Pro 的问题或需要任何帮助，只需回复这封电子邮件。我来帮忙！",
+  "abandoned_checkout_preview": "独家优惠：在你的第一年获得 {discount}% Rallly Pro折扣！",
+  "abandoned_checkout_subject": "在第一年获取 {discount}%的折扣",
+  "abandoned_checkout_signoff": "向您致谢，"
 }

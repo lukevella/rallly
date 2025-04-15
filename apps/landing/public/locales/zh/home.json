@@ -1,6 +1,8 @@
 {
   "createPageLikeThis": "仅需几秒即可创建一个这样的页面！",
   "noLoginRequired": "无需登录",
+  "headline": "找出最佳时间开会",
+  "subheading": "协调分组会议，而无需发送往来电子邮件",
   "pcmagQuote": "“在尽可能短的时间内进行一次投票。”",
   "hubspotQuote": "“为大型团体提供投票的最简单选择。”",
   "goodfirmsQuote": "“其独特之处在于其简单性，仅需最低限度的交互。”",
@@ -23,7 +25,9 @@
   "doodleAlternativeMetaTitle": "最好的免费 Doodle 替代方案 | Rallly",
   "doodleAlternativeMetaDescription": "正在寻找 Doodle 替代方案吗？试试 Rallly！免费，易于使用，不需要账户。",
   "createASchedulingPoll": "创建日程投票",
+  "freeSchedulingPollMetaTitle": "立即创建免费会议日程安排投票 | 无需账户",
   "freeSchedulingPollMetaDescription": "在几秒钟内创建免费的日程投票。非常适合组织见面、活动、会议、运动队等。",
+  "freeSchedulingPollTitle": "查找您下一个活动的日期",
   "freeSchedulingPollDescription": "Rallly 可让您创建美观且易于使用的日程投票，以便您确定下一次活动的最佳时间。",
   "new": "新",
   "metaTitle": "Rallly - 安排小组会议",
@@ -35,5 +39,6 @@
   "meetingPoll": "通过Rallly创建专业会议投票",
   "meetingPollDescription": "会议投票是让人们能够获得的一个好方法。很高兴让你能够轻松地创造会议投票。",
   "meetingPollMetaTitle": "会议投票",
-  "meetingPollMetaDescription": "用我们的会议投票功能轻松安排会议，确保每个人都能参加。"
+  "meetingPollMetaDescription": "用我们的会议投票功能轻松安排会议，确保每个人都能参加。",
+  "quickCreateBlog": "介绍快速创建"
 }

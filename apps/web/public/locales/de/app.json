@@ -168,11 +168,9 @@
   "hideScoresLabel": "Zeige das Ergebnis erst an, wenn ein Teilnehmer abgestimmt hat",
   "continueAs": "Fortsetzen als",
   "pageMovedDescription": "Weiterleitung zu <a>{newUrl}</a>",
-  "unlockFeatures": "Schalte alle Pro-Funktionen frei.",
   "pollStatusFinalized": "Abgeschlossen",
   "share": "Teilen",
   "noParticipants": "Keine Teilnehmer",
-  "logoutDescription": "Aus aktuellen Sitzung abmelden",
   "events": "Termine",
   "inviteParticipantsDescription": "Kopiere und teile den Einladungslink, um Antworten von deinen Teilnehmern zu sammeln.",
   "inviteLink": "Einladungs-Link",
@@ -187,7 +185,7 @@
   "timeShownIn": "Uhrzeiten werden in {timeZone} angezeigt",
   "pollStatusPausedDescription": "Stimmen können zurzeit nicht abgegeben oder bearbeitet werden",
   "eventHostTitle": "Zugriff verwalten",
-  "eventHostDescription": "Sie sind der Ersteller dieser Abstimmung",
+  "eventHostDescription": "Sie sind Ersteller*in dieser Abstimmung",
   "deleteAccount": "Konto löschen",
   "deleteAccountDialogTitle": "Konto löschen",
   "deleteAccountDialogDescription": "Bist Du sicher, dass Du dieses Konto löschen möchtest?",
@@ -302,5 +300,6 @@
   "addPaymentMethod": "Zahlungsmethode hinzufügen",
   "needToMakeChanges": "Musst du Änderungen vornehmen?",
   "billingPortalDescription": "Besuche das Rechnungsportal, um dein Abonnement zu verwalten, Zahlungsmethoden zu aktualisieren oder den Zahlungsverlauf einzusehen.",
-  "priceFree": "Kostenlos"
+  "priceFree": "Kostenlos",
+  "signUp": "Registrieren"
 }
