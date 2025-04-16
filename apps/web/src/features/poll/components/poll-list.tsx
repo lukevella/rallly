@@ -21,8 +21,8 @@ export function PollListItem({
   inviteLink: string;
 }) {
   return (
-    <StackedListItem className="relative flex items-center gap-4 hover:bg-gray-50">
-      <div className="relative flex flex-1 items-center gap-2 p-4">
+    <StackedListItem>
+      <div className="relative -m-4 flex min-w-0 flex-1 items-center gap-2 p-4">
         <PollStatusIcon status={status} showTooltip={false} />
         <Link
           className="focus:ring-ring min-w-0 text-sm font-medium hover:underline focus-visible:ring-2"
@@ -32,7 +32,7 @@ export function PollListItem({
           <span className="block truncate">{title}</span>
         </Link>
       </div>
-      <div className="z-10 hidden items-center justify-end gap-4 p-4 sm:flex">
+      <div className="hidden items-center justify-end gap-4 sm:flex">
         <ParticipantAvatarBar participants={participants} max={5} />
         <CopyLinkButton href={inviteLink} />
       </div>
