@@ -30,7 +30,7 @@ import { requireUser } from "@/next-auth";
 import { SearchInput } from "../../../components/search-input";
 import { PollsTabbedView } from "./polls-tabbed-view";
 
-const DEFAULT_PAGE_SIZE = 20;
+const DEFAULT_PAGE_SIZE = 10;
 
 const pageSchema = z
   .string()
