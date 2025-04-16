@@ -28,10 +28,17 @@ export async function rateLimit(
 
   const session = await auth();
   const identifier = session?.user?.id || (await getIPAddress());
-  const ratelimit = new Ratelimit({
-    redis: kv,
-    limiter: Ratelimit.slidingWindow(requests, duration),
-  });
+  try {
+    const ratelimit = new Ratelimit({
+      redis: kv,
+      limiter: Ratelimit.slidingWindow(requests, duration),
+    });
 
-  return ratelimit.limit(`${identifier}:${name}`);
+    return ratelimit.limit(`${identifier}:${name}`);
+  } catch (e) {
+    console.error(e);
+    return {
+      success: true,
+    };
+  }
 }
