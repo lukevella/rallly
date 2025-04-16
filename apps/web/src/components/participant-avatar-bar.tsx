@@ -47,7 +47,9 @@ export const ParticipantAvatarBar = ({
               />
             </li>
           </TooltipTrigger>
-          <TooltipContent>{participant.name}</TooltipContent>
+          <TooltipPortal>
+            <TooltipContent>{participant.name}</TooltipContent>
+          </TooltipPortal>
         </Tooltip>
       ))}
       {hiddenCount > 0 ? (

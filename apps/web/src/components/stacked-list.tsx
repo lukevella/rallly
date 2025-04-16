@@ -8,9 +8,9 @@ export function StackedList({
   className?: string;
 }) {
   return (
-    <div className={cn("divide-y rounded-lg border", className)}>
+    <ul className={cn("divide-y overflow-hidden rounded-lg border", className)}>
       {children}
-    </div>
+    </ul>
   );
 }
 
@@ -21,15 +21,14 @@ export function StackedListItem({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("p-1", className)}>{children}</div>;
-}
-
-export function StackedListItemContent({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return <div className={cn("p-3", className)}>{children}</div>;
+  return (
+    <li
+      className={cn(
+        "flex items-center gap-x-6 p-4 hover:bg-gray-50",
+        className,
+      )}
+    >
+      {children}
+    </li>
+  );
 }
