@@ -196,8 +196,6 @@
   "upgradePromptTitle": "Upgrade to Pro",
   "upgradeOverlaySubtitle3": "Unlock these feature by upgrading to a Pro plan.",
   "home": "Home",
-  "groupPoll": "Group Poll",
-  "groupPollDescription": "Share your availability with a group of people and find the best time to meet.",
   "create": "Create",
   "upcoming": "Upcoming",
   "past": "Past",
@@ -206,7 +204,6 @@
   "upcomingEventsEmptyStateDescription": "When you schedule events, they will appear here.",
   "pastEventsEmptyStateTitle": "No Past Events",
   "pastEventsEmptyStateDescription": "When you schedule events, they will appear here.",
-  "activePollCount": "{activePollCount} Live",
   "createPoll": "Create poll",
   "addToCalendar": "Add to Calendar",
   "microsoft365": "Microsoft 365",
@@ -306,10 +303,6 @@
   "moreParticipants": "{count} more…",
   "noDates": "No dates",
   "commandMenuNoResults": "No results",
-  "selectedPolls": "{count} {count, plural, one {poll} other {polls}} selected",
-  "unselectAll": "Unselect All",
-  "deletePolls": "Delete Polls",
-  "deletePollsDescription": "Are you sure you want to delete these {count} polls? This action cannot be undone.",
   "commandMenu": "Command Menu",
   "commandMenuDescription": "Select a command",
   "eventsPageDesc": "View and manage your scheduled events",
@@ -324,5 +317,7 @@
   "paginationNext": "Next",
   "upgradeToProDesc": "Unlock all Pro features",
   "searchPollsPlaceholder": "Search polls by title...",
-  "poll": "Poll"
+  "poll": "Poll",
+  "sendFeedbackDesc": "Share your feedback with us.",
+  "sendFeedbackSuccess": "Thank you for your feedback!"
 }
