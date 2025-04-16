@@ -8,9 +8,7 @@ export function StackedList({
   className?: string;
 }) {
   return (
-    <div className={cn("divide-y rounded-lg border", className)}>
-      {children}
-    </div>
+    <ul className={cn("divide-y rounded-lg border", className)}>{children}</ul>
   );
 }
 
@@ -21,7 +19,7 @@ export function StackedListItem({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("p-1", className)}>{children}</div>;
+  return <li className={cn(className)}>{children}</li>;
 }
 
 export function StackedListItemContent({
@@ -31,5 +29,5 @@ export function StackedListItemContent({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("p-3", className)}>{children}</div>;
+  return <div className={cn("p-4", className)}>{children}</div>;
 }

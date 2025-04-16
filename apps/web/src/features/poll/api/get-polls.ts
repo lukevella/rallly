@@ -61,6 +61,7 @@ export async function getPolls({
           select: {
             id: true,
             name: true,
+            email: true,
             user: {
               select: {
                 image: true,
@@ -91,6 +92,7 @@ export async function getPolls({
         participants: poll.participants.map((participant) => ({
           id: participant.id,
           name: participant.name,
+          email: participant.email ?? undefined,
           image: participant.user?.image ?? undefined,
         })),
         event: poll.event ?? undefined,
