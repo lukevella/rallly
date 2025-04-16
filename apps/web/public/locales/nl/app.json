@@ -317,5 +317,7 @@
   "paginationNext": "Volgende",
   "upgradeToProDesc": "Ontgrendel alle Pro-functies",
   "searchPollsPlaceholder": "Doorzoek polls op titel...",
-  "poll": "Poll"
+  "poll": "Poll",
+  "sendFeedbackDesc": "Deel je feedback met ons.",
+  "sendFeedbackSuccess": "Bedankt voor je feedback!"
 }
