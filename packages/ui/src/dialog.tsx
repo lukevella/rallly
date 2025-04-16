@@ -37,7 +37,7 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 const dialogContentVariants = cva(
   cn(
     //style
-    "bg-background sm:rounded-lg sm:border shadow-lg p-6 gap-4",
+    "bg-background sm:rounded-lg sm:border shadow-lg p-4 gap-4",
     // position
     "fixed z-50 grid w-full top-0 left-1/2 -translate-x-1/2",
     // animation

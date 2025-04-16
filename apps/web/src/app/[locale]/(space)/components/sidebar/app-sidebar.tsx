@@ -23,6 +23,7 @@ import * as React from "react";
 import { LogoLink } from "@/app/components/logo-link";
 import { Trans } from "@/components/trans";
 import { getUser } from "@/data/get-user";
+import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
 import { getTranslation } from "@/i18n/server";
 
 import { UpgradeButton } from "../upgrade-button";
@@ -42,6 +43,7 @@ export async function AppSidebar({
             <LogoLink />
           </div>
           <div className="flex items-center gap-1">
+            <FeedbackToggle />
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon" asChild>
