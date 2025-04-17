@@ -14,11 +14,13 @@ export function PollListItem({
   status,
   participants,
   inviteLink,
+  pollLink,
 }: {
   title: string;
   status: PollStatus;
   participants: { id: string; name: string; image?: string }[];
   inviteLink: string;
+  pollLink: string;
 }) {
   return (
     <StackedListItem>
@@ -26,7 +28,7 @@ export function PollListItem({
         <PollStatusIcon status={status} showTooltip={false} />
         <Link
           className="focus:ring-ring min-w-0 text-sm font-medium hover:underline focus-visible:ring-2"
-          href={inviteLink}
+          href={pollLink}
         >
           <span className="absolute inset-0" />
           <span className="block truncate">{title}</span>

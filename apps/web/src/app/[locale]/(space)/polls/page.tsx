@@ -1,6 +1,6 @@
 import type { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
-import { shortUrl } from "@rallly/utils/absolute-url";
+import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { InboxIcon } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
@@ -186,6 +186,7 @@ export default async function Page({
                       title={poll.title}
                       status={poll.status}
                       participants={poll.participants}
+                      pollLink={absoluteUrl(`/poll/${poll.id}`)}
                       inviteLink={shortUrl(`/invite/${poll.id}`)}
                     />
                   ))}

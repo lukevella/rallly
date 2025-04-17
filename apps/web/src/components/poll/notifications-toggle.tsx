@@ -83,7 +83,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
         <Button
           data-testid="notifications-toggle"
           disabled={user.isGuest}
-          className="flex items-center gap-2 px-2.5"
+          variant="ghost"
           onClick={async () => {
             if (user.isGuest) {
               signIn();

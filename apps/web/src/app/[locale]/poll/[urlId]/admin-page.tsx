@@ -21,7 +21,6 @@ export function AdminPage() {
       {/* Track poll views */}
       <PollViewTracker pollId={poll.id} />
       <UnsubscribeAlert />
-      <PollHeader />
       <GuestPollAlert />
       <EventCard />
       <ScheduledEvent />
