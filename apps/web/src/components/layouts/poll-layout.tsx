@@ -7,14 +7,12 @@ import {
   LogInIcon,
   LogOutIcon,
   ShieldCloseIcon,
-  XIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
 import { LogoutButton } from "@/app/components/logout-button";
-import { PollPageIcon } from "@/app/components/page-icons";
 import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
 import {

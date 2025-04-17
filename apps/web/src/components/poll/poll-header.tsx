@@ -1,8 +1,10 @@
-import { UserDropdown } from "@/components/user-dropdown";
-import { useUser } from "../user-provider";
 import { Button } from "@rallly/ui/button";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+
+import { UserDropdown } from "@/components/user-dropdown";
+
+import { useUser } from "../user-provider";
 
 export function PollHeader() {
   const { user } = useUser();
