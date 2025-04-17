@@ -7,14 +7,12 @@ import {
   LogInIcon,
   LogOutIcon,
   ShieldCloseIcon,
-  XIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
 import { LogoutButton } from "@/app/components/logout-button";
-import { PollPageIcon } from "@/app/components/page-icons";
 import { InviteDialog } from "@/components/invite-dialog";
 import { LoginLink } from "@/components/login-link";
 import {
@@ -46,37 +44,41 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   const pollLink = `/poll/${poll.id}`;
   const pathname = usePathname();
   return (
-    <div className="bg-gray-100">
-      <div className="sticky top-0 z-30 flex flex-col justify-between gap-x-4 gap-y-2.5 border-b bg-gray-100 p-3 sm:flex-row lg:items-center lg:px-5">
-        <div className="flex min-w-0 items-center gap-x-2.5">
-          {pathname === pollLink ? (
-            <Button variant="ghost" asChild>
-              <Link href="/polls">
-                <Icon>
-                  <XIcon />
-                </Icon>
-              </Link>
-            </Button>
-          ) : (
-            <Button variant="ghost" asChild>
-              <Link href={pollLink}>
-                <Icon>
-                  <ArrowLeftIcon />
-                </Icon>
-              </Link>
-            </Button>
-          )}
-          <div>
-            <PollPageIcon size="sm" />
+    <div>
+      <div className="sticky top-0 z-30 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:flex-row">
+        <div className="mx-auto flex max-w-4xl justify-between">
+          <div className="flex min-w-0 items-center gap-x-2.5">
+            {pathname === pollLink ? (
+              <Button variant="ghost" asChild>
+                <Link href="/polls">
+                  <Icon>
+                    <ArrowLeftIcon />
+                  </Icon>
+                  <span>
+                    <Trans i18nKey="back" defaults="Back" />
+                  </span>
+                </Link>
+              </Button>
+            ) : (
+              <Button variant="ghost" asChild>
+                <Link href={pollLink}>
+                  <Icon>
+                    <ArrowLeftIcon />
+                  </Icon>
+                  <span>
+                    <Trans i18nKey="back" defaults="Back" />
+                  </span>
+                </Link>
+              </Button>
+            )}
           </div>
-          <h1 className="truncate text-sm font-semibold">{poll.title}</h1>
-        </div>
-        <div>
-          <AdminControls />
+          <div>
+            <AdminControls />
+          </div>
         </div>
       </div>
-      <div className="mx-auto max-w-4xl space-y-3 p-3 lg:space-y-4 lg:px-4 lg:py-8">
-        {children}
+      <div className="p-3">
+        <div className="mx-auto max-w-4xl space-y-3">{children}</div>
       </div>
     </div>
   );

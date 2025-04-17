@@ -54,18 +54,21 @@ export function InvitePage() {
   const poll = usePoll();
 
   return (
-    <div className="mx-auto max-w-4xl space-y-3 p-3 lg:space-y-4 lg:px-4 lg:py-8">
-      {/* Track poll views */}
+    <div>
       <PollViewTracker pollId={poll.id} />
       <PollHeader />
-      <GoToApp />
-      <EventCard />
-      <ScheduledEvent />
-      <VotingForm>
-        <ResponsiveResults />
-      </VotingForm>
-      <Discussion />
-      <PollFooter />
+      <div className="p-3">
+        <div className="mx-auto w-full max-w-4xl space-y-4">
+          <GoToApp />
+          <EventCard />
+          <ScheduledEvent />
+          <VotingForm>
+            <ResponsiveResults />
+          </VotingForm>
+          <Discussion />
+          <PollFooter />
+        </div>
+      </div>
     </div>
   );
 }

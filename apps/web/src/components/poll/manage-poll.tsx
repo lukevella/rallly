@@ -151,11 +151,13 @@ const ManagePoll: React.FunctionComponent<{
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild={true}>
-          <Button disabled={disabled}>
+          <Button variant="ghost" disabled={disabled}>
             <Icon>
               <SettingsIcon />
             </Icon>
-            <Trans i18nKey="manage" />
+            <span className="hidden sm:block">
+              <Trans i18nKey="manage" />
+            </span>
             <Icon>
               <ChevronDownIcon />
             </Icon>
