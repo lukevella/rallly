@@ -10,18 +10,18 @@ import { cn } from "./lib/utils";
 const buttonVariants = cva(
   cn(
     "inline-flex border text-shadow font-medium disabled:pointer-events-none select-none disabled:opacity-50 items-center justify-center whitespace-nowrap border",
-    "focus:shadow-none focus-visible:ring-2 focus-visible:ring-ring",
+    "focus-visible:shadow-none",
   ),
   {
     variants: {
       variant: {
         primary:
-          "focus:ring-offset-1 border-primary bg-primary hover:bg-primary-500 disabled:bg-gray-400 disabled:border-transparent text-white shadow-sm",
+          "focus-visible:ring-offset-1 border-primary bg-primary hover:bg-primary-500 disabled:bg-gray-400 disabled:border-transparent text-white",
         destructive:
-          "focus:ring-offset-1 bg-destructive shadow-sm text-destructive-foreground active:bg-destructive border-destructive hover:bg-destructive/90",
-        default: "focus:ring-offset-1 hover:bg-gray-50 bg-white",
+          "focus-visible:ring-offset-1 bg-destructive shadow-sm text-destructive-foreground active:bg-destructive border-destructive hover:bg-destructive/90",
+        default: "focus-visible:ring-offset-1 hover:bg-gray-50 bg-white",
         secondary:
-          "focus:ring-offset-1 border-secondary bg-secondary hover:bg-secondary/80 text-secondary-foreground",
+          "focus-visible:ring-offset-1 border-secondary bg-secondary hover:bg-secondary/80 text-secondary-foreground",
         ghost:
           "border-transparent bg-transparent data-[state=open]:bg-gray-500/20 text-gray-800 hover:bg-gray-500/10 active:bg-gray-500/20",
         actionBar:
