@@ -64,7 +64,7 @@ export function CommandMenu() {
           </CommandEmpty>
           <CommandGroup heading={<Trans i18nKey="polls" defaults="Actions" />}>
             <CommandItem onSelect={() => handleSelect("/new")}>
-              <PageIcon>
+              <PageIcon size="sm">
                 <PlusIcon />
               </PageIcon>
               <Trans i18nKey="create" defaults="Create" />
@@ -72,15 +72,15 @@ export function CommandMenu() {
           </CommandGroup>
           <CommandGroup heading="Navigation">
             <CommandItem onSelect={() => handleSelect("/")}>
-              <HomePageIcon />
+              <HomePageIcon size="sm" />
               <Trans i18nKey="home" defaults="Home" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/polls")}>
-              <PollPageIcon />
+              <PollPageIcon size="sm" />
               <Trans i18nKey="polls" defaults="Polls" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/events")}>
-              <EventPageIcon />
+              <EventPageIcon size="sm" />
               <Trans i18nKey="events" defaults="Events" />
             </CommandItem>
             {/* <CommandItem onSelect={() => handleSelect("/teams")}>
@@ -96,15 +96,15 @@ export function CommandMenu() {
             heading={<Trans i18nKey="account" defaults="Account" />}
           >
             <CommandItem onSelect={() => handleSelect("/settings/profile")}>
-              <ProfilePageIcon />
+              <ProfilePageIcon size="sm" />
               <Trans i18nKey="profile" defaults="Profile" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/settings/preferences")}>
-              <PreferencesPageIcon />
+              <PreferencesPageIcon size="sm" />
               <Trans i18nKey="preferences" defaults="Preferences" />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/settings/billing")}>
-              <BillingPageIcon />
+              <BillingPageIcon size="sm" />
               <Trans i18nKey="billing" defaults="Billing" />
             </CommandItem>
           </CommandGroup>
