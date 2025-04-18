@@ -37,7 +37,7 @@ export const ParticipantAvatarBar = ({
   return (
     <ul className="flex cursor-default items-center -space-x-1 rounded-full bg-white p-0.5">
       {visibleParticipants.map((participant, index) => (
-        <Tooltip key={index}>
+        <Tooltip delayDuration={100} key={index}>
           <TooltipTrigger asChild>
             <li className="z-10 inline-flex items-center justify-center rounded-full ring-2 ring-white">
               <OptimizedAvatarImage

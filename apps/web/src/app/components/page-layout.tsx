@@ -22,7 +22,7 @@ export function PageTitle({
   return (
     <h1
       className={cn(
-        "text-foreground flex gap-3 truncate text-xl font-bold tracking-tight",
+        "text-foreground flex items-center gap-3 truncate text-xl font-bold leading-none tracking-tight",
         className,
       )}
     >
