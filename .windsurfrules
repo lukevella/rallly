@@ -37,3 +37,5 @@ t("menu", { defaultValue: "Menu" });
 25. i18nKeys should describe the message in camelCase. Ex. "lastUpdated": "Last Updated"
 26. Keep i18nKeys up to 25 characters
 27. If the i18nKey is not intended to be reused, prefix it with the component name in camelCase
+28. Always use kebab-case for file names
+29. Prefer double quotes for strings over single quotes
