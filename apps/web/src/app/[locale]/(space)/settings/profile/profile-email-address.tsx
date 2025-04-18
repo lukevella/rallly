@@ -1,3 +1,5 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePostHog } from "@rallly/posthog/client";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
@@ -29,7 +31,7 @@ const emailChangeFormData = z.object({
 
 type EmailChangeFormData = z.infer<typeof emailChangeFormData>;
 export const ProfileEmailAddress = () => {
-  const { user, refresh } = useUser();
+  const { user } = useUser();
   const requestEmailChange = trpc.user.requestEmailChange.useMutation();
   const posthog = usePostHog();
   const form = useForm<EmailChangeFormData>({
@@ -78,7 +80,7 @@ export const ProfileEmailAddress = () => {
               }),
       });
     }
-  }, [posthog, refresh, t, toast]);
+  }, [posthog, t, toast]);
 
   const { handleSubmit, formState, reset } = form;
   return (
