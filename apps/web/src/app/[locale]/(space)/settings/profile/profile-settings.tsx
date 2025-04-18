@@ -1,3 +1,4 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
 import {
@@ -9,11 +10,11 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
 
 import { ProfilePicture } from "./profile-picture";
@@ -24,13 +25,18 @@ const profileSettingsFormData = z.object({
 
 type ProfileSettingsFormData = z.infer<typeof profileSettingsFormData>;
 
-export const ProfileSettings = () => {
-  const { user, refresh } = useUser();
+export const ProfileSettings = ({
+  name,
+  image,
+}: {
+  name: string;
+  image?: string;
+}) => {
   const changeName = trpc.user.changeName.useMutation();
-
+  const router = useRouter();
   const form = useForm<ProfileSettingsFormData>({
     defaultValues: {
-      name: user.isGuest ? "" : user.name,
+      name,
     },
     resolver: zodResolver(profileSettingsFormData),
   });
@@ -41,15 +47,15 @@ export const ProfileSettings = () => {
       <Form {...form}>
         <form
           onSubmit={handleSubmit(async (data) => {
-            if (data.name !== user.name) {
+            if (data.name !== name) {
               await changeName.mutateAsync({ name: data.name });
             }
             reset(data);
-            await refresh();
+            router.refresh();
           })}
         >
           <div className="flex flex-col gap-y-4">
-            <ProfilePicture />
+            <ProfilePicture name={name} image={image} />
             <FormField
               control={control}
               name="name"

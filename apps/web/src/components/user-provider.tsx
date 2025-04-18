@@ -1,5 +1,6 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
+import { useRouter } from "next/navigation";
 import type { Session } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
 import React from "react";
@@ -63,7 +64,7 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
   const subscription = useSubscription();
   const updatePreferences = trpc.user.updatePreferences.useMutation();
   const { t, i18n } = useTranslation();
-
+  const router = useRouter();
   const posthog = usePostHog();
 
   const isGuest = !user?.email;
@@ -96,7 +97,10 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           image: user?.image ?? null,
           locale: user?.locale ?? i18n.language,
         },
-        refresh: session.update,
+        refresh: async (data) => {
+          router.refresh();
+          return await session.update(data);
+        },
         logout: async () => {
           await signOut();
           posthog?.capture("logout");
