@@ -1,11 +1,12 @@
-import type { Params } from "@/app/[locale]/types";
-import { getTranslation } from "@/i18n/server";
-
-import { getUser } from "@/data/get-user";
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
 import { TrashIcon } from "lucide-react";
+
+import type { Params } from "@/app/[locale]/types";
 import { Trans } from "@/components/trans";
+import { getUser } from "@/data/get-user";
+import { getTranslation } from "@/i18n/server";
+
 import {
   SettingsContent,
   SettingsSection,

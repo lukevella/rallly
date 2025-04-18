@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -17,7 +18,6 @@ import { Trans } from "@/components/trans";
 import { trpc } from "@/trpc/client";
 
 import { ProfilePicture } from "./profile-picture";
-import { useRouter } from "next/navigation";
 
 const profileSettingsFormData = z.object({
   name: z.string().min(1).max(100),

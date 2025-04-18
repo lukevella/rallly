@@ -1,5 +1,6 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
+import { useRouter } from "next/navigation";
 import type { Session } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
 import React from "react";
@@ -11,7 +12,6 @@ import { trpc } from "@/trpc/client";
 import { isOwner } from "@/utils/permissions";
 
 import { useRequiredContext } from "./use-required-context";
-import { useRouter } from "next/navigation";
 
 type UserData = {
   id?: string;

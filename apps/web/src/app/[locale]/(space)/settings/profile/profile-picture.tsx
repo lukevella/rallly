@@ -78,7 +78,7 @@ function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
       });
 
       onSuccess();
-    } catch (error) {
+    } catch {
       toast({
         title: t("errorUploadPicture", {
           defaultValue: "Failed to upload",
