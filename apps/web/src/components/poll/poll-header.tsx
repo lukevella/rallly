@@ -9,7 +9,7 @@ import { useUser } from "../user-provider";
 export function PollHeader() {
   const { user } = useUser();
   return (
-    <div className="sticky top-0 z-30 border-b bg-gray-100/90 p-3 backdrop-blur-md">
+    <div className="sticky top-0 z-40 border-b bg-gray-100/90 p-3 backdrop-blur-md">
       <div className="mx-auto flex max-w-4xl items-center justify-between">
         <div className="flex items-center gap-x-2.5">
           <Link

@@ -45,7 +45,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   const pathname = usePathname();
   return (
     <div>
-      <div className="sticky top-0 z-30 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:flex-row">
+      <div className="sticky top-0 z-40 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:flex-row">
         <div className="mx-auto flex max-w-4xl justify-between">
           <div className="flex min-w-0 items-center gap-x-2.5">
             {pathname === pollLink ? (
