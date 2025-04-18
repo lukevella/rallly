@@ -24,7 +24,7 @@ export default async function Page({ params }: { params: Params }) {
           </div>
           <div className="flex flex-1 sm:justify-center">
             <div className="flex items-center gap-x-2">
-              <PollPageIcon />
+              <PollPageIcon size="sm" />
               <div className="flex items-baseline gap-x-8">
                 <h1 className="font-semibold">
                   <Trans t={t} i18nKey="poll" defaults="Poll" />

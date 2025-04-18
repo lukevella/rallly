@@ -38,7 +38,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
   return (
     <Dialog {...dialog.dialogProps} {...forwardedProps}>
       {children}
-      <DialogContent className="w-[600px] overflow-hidden bg-gray-50 p-4 sm:p-6">
+      <DialogContent className="w-full max-w-[600px] overflow-hidden bg-gray-50 p-4 sm:p-6">
         <SparklesIcon className="absolute -top-4 left-4 size-32 text-gray-500/10" />
         <div className="space-y-6">
           <header>
@@ -73,7 +73,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
             </DialogDescription>
           </header>
           <section>
-            <ul className="grid grid-cols-2 justify-center gap-2 text-sm font-medium">
+            <ul className="grid justify-center gap-2 text-center text-sm font-medium sm:grid-cols-2">
               <li>
                 <CheckIcon className="mr-2 inline-block size-4 text-green-600" />
                 <Trans i18nKey="featureNameFinalize" defaults="Finalize Poll" />
