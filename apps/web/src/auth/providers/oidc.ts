@@ -19,7 +19,7 @@ export const OIDCProvider = () => {
       clientId: process.env.OIDC_CLIENT_ID,
       clientSecret: process.env.OIDC_CLIENT_SECRET,
       idToken: true,
-      checks: ["state"],
+      checks: ["pkce", "state"],
       allowDangerousEmailAccountLinking: true,
       profile(profile) {
         return {
