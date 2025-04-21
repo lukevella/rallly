@@ -522,6 +522,12 @@ export const polls = router({
               name: true,
               email: true,
               locale: true,
+              user: {
+                select: {
+                  email: true,
+                  timeZone: true,
+                },
+              },
               votes: {
                 select: {
                   optionId: true,
@@ -579,6 +585,40 @@ export const polls = router({
         },
         data: {
           status: "finalized",
+          scheduledEvent: {
+            create: {
+              id: input.pollId,
+              start: eventStart.toDate(),
+              end: eventStart.add(option.duration, "minute").toDate(),
+              title: poll.title,
+              location: poll.location,
+              timeZone: poll.timeZone,
+              userId: ctx.user.id,
+              allDay: option.duration === 0,
+              status: "confirmed",
+              invites: {
+                createMany: {
+                  data: poll.participants
+                    .filter((p) => !!p.email)
+                    .map((p) => ({
+                      inviteeName: p.name,
+                      inviteeEmail: p.user?.email ?? p.email ?? "",
+                      inviteeTimeZone: p.user?.timeZone ?? poll.timeZone, // We should track participant's timezone
+                      status: (
+                        {
+                          yes: "accepted",
+                          ifNeedBe: "tentative",
+                          no: "declined",
+                        } as const
+                      )[
+                        p.votes.find((v) => v.optionId === input.optionId)
+                          ?.type ?? "no"
+                      ],
+                    })),
+                },
+              },
+            },
+          },
           event: {
             create: {
               optionId: input.optionId,
@@ -771,6 +811,14 @@ export const polls = router({
           await prisma.event.delete({
             where: {
               id: poll.eventId,
+            },
+          });
+        }
+
+        if (poll.scheduledEventId) {
+          await prisma.scheduledEvent.delete({
+            where: {
+              id: poll.scheduledEventId,
             },
           });
         }
