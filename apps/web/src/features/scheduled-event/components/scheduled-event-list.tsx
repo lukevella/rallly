@@ -15,6 +15,7 @@ export function ScheduledEventListItem({
   status,
   allDay,
   invites,
+  isFloating,
 }: {
   eventId: string;
   title: string;
@@ -23,6 +24,7 @@ export function ScheduledEventListItem({
   status: Status;
   allDay: boolean;
   invites: { id: string; inviteeName: string; inviteeImage?: string }[];
+  isFloating: boolean;
 }) {
   return (
     <StackedListItem key={eventId}>
@@ -40,7 +42,11 @@ export function ScheduledEventListItem({
             <Trans i18nKey="allDay" defaults="All day" />
           ) : (
             <div className="flex items-center gap-x-1">
-              <TimeRangeDisplay start={start} end={end} />
+              <TimeRangeDisplay
+                start={start}
+                end={end}
+                isFloating={isFloating}
+              />
             </div>
           )}
         </div>

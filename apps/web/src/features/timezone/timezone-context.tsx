@@ -21,10 +21,15 @@ type TimezoneContextType = {
   timezone: string;
   setTimezone: (timezone: string) => void;
   formatDate: (date: string | Date | dayjs.Dayjs, format?: string) => string;
-  formatTime: (date: string | Date | dayjs.Dayjs, format?: string) => string;
+  formatTime: (
+    date: string | Date | dayjs.Dayjs,
+    format?: string,
+    isFloating?: boolean,
+  ) => string;
   formatDateTime: (
     date: string | Date | dayjs.Dayjs,
     format?: string,
+    isFloating?: boolean,
   ) => string;
 };
 
@@ -69,8 +74,14 @@ export const TimezoneProvider = ({
     return dayjs(date).tz(timezone).format(format);
   };
 
-  const formatTime = (date: string | Date | dayjs.Dayjs, format = "HH:mm") => {
-    return dayjs(date).tz(timezone).format(format);
+  const formatTime = (
+    date: string | Date | dayjs.Dayjs,
+    format = "HH:mm",
+    isFloating?: boolean,
+  ) => {
+    return isFloating
+      ? dayjs(date).utc().format(format)
+      : dayjs(date).tz(timezone).format(format);
   };
 
   const formatDateTime = (

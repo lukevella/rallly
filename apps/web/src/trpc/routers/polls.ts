@@ -524,6 +524,7 @@ export const polls = router({
           },
           participants: {
             select: {
+              id: true,
               name: true,
               email: true,
               locale: true,
@@ -604,10 +605,11 @@ export const polls = router({
               invites: {
                 createMany: {
                   data: poll.participants
-                    .filter((p) => !!p.email)
+                    .filter((p) => !!p.email) // Filter out participants without email
                     .map((p) => ({
                       inviteeName: p.name,
-                      inviteeEmail: p.user?.email ?? p.email ?? "",
+                      inviteeEmail:
+                        p.user?.email ?? p.email ?? `${p.id}@rallly.co`,
                       inviteeTimeZone: p.user?.timeZone ?? poll.timeZone, // We should track participant's timezone
                       status: (
                         {

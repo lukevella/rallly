@@ -46,6 +46,7 @@ export async function getScheduledEvents({
       start: true,
       end: true,
       allDay: true,
+      timeZone: true,
       status: true,
       invites: {
         select: {

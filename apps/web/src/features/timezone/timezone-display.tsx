@@ -34,17 +34,19 @@ export function TimeRangeDisplay({
   start,
   end,
   format = "LT",
+  isFloating,
 }: {
   start: string | Date | dayjs.Dayjs;
   end: string | Date | dayjs.Dayjs;
   format?: string;
+  isFloating?: boolean;
 }) {
   const { formatTime } = useTimezone();
   return (
     <span>
-      {formatTime(start, format)}
+      {formatTime(start, format, isFloating)}
       {" - "}
-      {formatTime(end, format)}
+      {formatTime(end, format, isFloating)}
     </span>
   );
 }

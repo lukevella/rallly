@@ -149,6 +149,7 @@ export default async function Page({
                         status={event.status}
                         allDay={event.allDay}
                         invites={event.invites}
+                        isFloating={!event.timeZone}
                       />
                     ))}
                   </ScheduledEventList>
