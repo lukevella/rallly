@@ -6,6 +6,7 @@ import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import * as ics from "ics";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { moderateContent } from "@/features/moderation";
@@ -253,6 +254,8 @@ export const polls = router({
         }
       }
 
+      revalidatePath("/", "layout");
+
       return { id: poll.id };
     }),
   update: possiblyPublicProcedure
@@ -349,6 +352,7 @@ export const polls = router({
           requireParticipantEmail: input.requireParticipantEmail,
         },
       });
+      revalidatePath("/", "layout");
     }),
   delete: possiblyPublicProcedure
     .input(
@@ -362,6 +366,7 @@ export const polls = router({
         where: { id: pollId },
         data: { deleted: true, deletedAt: new Date() },
       });
+      revalidatePath("/", "layout");
     }),
   // END LEGACY ROUTES
   getWatchers: publicProcedure
@@ -788,6 +793,8 @@ export const polls = router({
             days_since_created: dayjs().diff(poll.createdAt, "day"),
           },
         });
+
+        revalidatePath("/", "layout");
       }
     }),
   reopen: possiblyPublicProcedure
@@ -823,6 +830,7 @@ export const polls = router({
           });
         }
       });
+      revalidatePath("/", "layout");
     }),
   pause: possiblyPublicProcedure
     .input(
