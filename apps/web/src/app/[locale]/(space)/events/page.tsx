@@ -47,34 +47,34 @@ async function ScheduledEventEmptyState({ status }: { status: Status }) {
   const { t } = await getTranslation();
   const contentByStatus = {
     upcoming: {
-      title: t("noUpcomingEvents", {
-        defaultValue: "No upcoming events",
+      title: t("upcomingEventsEmptyStateTitle", {
+        defaultValue: "No Upcoming Events",
       }),
-      description: t("noUpcomingEventsDesc", {
-        defaultValue: "Upcoming events will show up here.",
+      description: t("upcomingEventsEmptyStateDescription", {
+        defaultValue: "When you schedule events, they will appear here.",
       }),
     },
     past: {
-      title: t("noPastEvents", {
-        defaultValue: "No past events",
+      title: t("pastEventsEmptyStateTitle", {
+        defaultValue: "No Past Events",
       }),
-      description: t("noPastEventsDesc", {
+      description: t("pastEventsEmptyStateDescription", {
         defaultValue: "Past events will show up here.",
       }),
     },
     unconfirmed: {
-      title: t("noUnconfirmedEvents", {
-        defaultValue: "No unconfirmed events",
+      title: t("unconfirmedEventsEmptyStateTitle", {
+        defaultValue: "No Unconfirmed Events",
       }),
-      description: t("noUnconfirmedEventsDesc", {
+      description: t("unconfirmedEventsEmptyStateDescription", {
         defaultValue: "Unconfirmed events will show up here.",
       }),
     },
     canceled: {
-      title: t("noCanceledEvents", {
-        defaultValue: "No canceled events",
+      title: t("canceledEventsEmptyStateTitle", {
+        defaultValue: "No Canceled Events",
       }),
-      description: t("noCanceledEventsDesc", {
+      description: t("canceledEventsEmptyStateDescription", {
         defaultValue: "Canceled events will show up here.",
       }),
     },
