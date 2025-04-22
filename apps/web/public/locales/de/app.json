@@ -200,10 +200,6 @@
   "upcoming": "Bevorstehende",
   "past": "Vergangene",
   "copyLink": "Link kopieren",
-  "upcomingEventsEmptyStateTitle": "Keine bevorstehenden Termine",
-  "upcomingEventsEmptyStateDescription": "Nachdem Du Termine geplant hast, werden sie hier angezeigt.",
-  "pastEventsEmptyStateTitle": "Keine vergangenen Termine",
-  "pastEventsEmptyStateDescription": "Nachdem Du Termine geplant hast, werden sie hier angezeigt.",
   "createPoll": "Umfrage erstellen",
   "addToCalendar": "Zum Kalender hinzufügen",
   "microsoft365": "Microsoft 365",
@@ -298,5 +294,8 @@
   "needToMakeChanges": "Musst du Änderungen vornehmen?",
   "billingPortalDescription": "Besuche das Rechnungsportal, um dein Abonnement zu verwalten, Zahlungsmethoden zu aktualisieren oder den Zahlungsverlauf einzusehen.",
   "priceFree": "Kostenlos",
-  "signUp": "Registrieren"
+  "signUp": "Registrieren",
+  "upcomingEventsEmptyStateTitle": "Keine bevorstehenden Termine",
+  "upcomingEventsEmptyStateDescription": "Nachdem Du Termine geplant hast, werden sie hier angezeigt.",
+  "pastEventsEmptyStateTitle": "Keine vergangenen Termine"
 }
