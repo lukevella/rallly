@@ -200,10 +200,6 @@
   "upcoming": "Em breve",
   "past": "Anterior",
   "copyLink": "Copiar Link",
-  "upcomingEventsEmptyStateTitle": "Sem eventos futuros",
-  "upcomingEventsEmptyStateDescription": "Quando você agendar eventos, eles aparecerão aqui.",
-  "pastEventsEmptyStateTitle": "Nenhum Evento Anterior",
-  "pastEventsEmptyStateDescription": "Quando você agendar eventos, eles aparecerão aqui.",
   "createPoll": "Criar enquete",
   "addToCalendar": "Adicionar ao Calendário",
   "microsoft365": "Microsoft 365",
@@ -279,5 +275,8 @@
   "subscriptionStatusUnknown": "Desconhecido",
   "subscriptionStatusPaused": "Pausada",
   "billingSubscriptionPlan": "Plano",
-  "priceFree": "Grátis"
+  "priceFree": "Grátis",
+  "upcomingEventsEmptyStateTitle": "Sem eventos futuros",
+  "upcomingEventsEmptyStateDescription": "Quando você agendar eventos, eles aparecerão aqui.",
+  "pastEventsEmptyStateTitle": "Nenhum Evento Anterior"
 }
