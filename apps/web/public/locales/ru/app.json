@@ -200,10 +200,6 @@
   "upcoming": "Предстоящие",
   "past": "Прошедшие",
   "copyLink": "Скопировать ссылку",
-  "upcomingEventsEmptyStateTitle": "Нет предстоящих событий",
-  "upcomingEventsEmptyStateDescription": "Когда вы запланируете события, они появятся здесь.",
-  "pastEventsEmptyStateTitle": "Нет прошедших событий",
-  "pastEventsEmptyStateDescription": "Когда вы запланируете события, они появятся здесь.",
   "createPoll": "Создать опрос",
   "addToCalendar": "Добавить в календарь",
   "microsoft365": "Microsoft 365",
@@ -259,5 +255,8 @@
   "subscriptionStatusActive": "Активна",
   "subscriptionStatusPaused": "Приостановлена",
   "billingSubscriptionPlan": "Подписка",
-  "priceFree": "Бесплатный"
+  "priceFree": "Бесплатный",
+  "upcomingEventsEmptyStateTitle": "Нет предстоящих событий",
+  "upcomingEventsEmptyStateDescription": "Когда вы запланируете события, они появятся здесь.",
+  "pastEventsEmptyStateTitle": "Нет прошедших событий"
 }
