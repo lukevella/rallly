@@ -199,10 +199,6 @@
   "upcoming": "Nadchádzajúce",
   "past": "Minulé",
   "copyLink": "Skopírovať odkaz",
-  "upcomingEventsEmptyStateTitle": "Žiadne nadchádzajúce udalosti",
-  "upcomingEventsEmptyStateDescription": "Keď naplánujete udalosti, zobrazia sa tu.",
-  "pastEventsEmptyStateTitle": "Žiadne minulé udalosti",
-  "pastEventsEmptyStateDescription": "Keď naplánujete udalosti, zobrazia sa tu.",
   "createPoll": "Vytvoriť anketu",
   "addToCalendar": "Pridať do kalendára",
   "microsoft365": "Microsoft 365",
@@ -222,5 +218,8 @@
   "subscriptionStatusActive": "Aktívna",
   "subscriptionStatusPaused": "Pozastavená",
   "billingSubscriptionPlan": "Plán",
-  "priceFree": "Voľný"
+  "priceFree": "Voľný",
+  "upcomingEventsEmptyStateTitle": "Žiadne nadchádzajúce udalosti",
+  "upcomingEventsEmptyStateDescription": "Keď naplánujete udalosti, zobrazia sa tu.",
+  "pastEventsEmptyStateTitle": "Žiadne minulé udalosti"
 }
