@@ -24,7 +24,7 @@ import {
 } from "@/features/scheduled-event/components/scheduled-event-list";
 import type { Status } from "@/features/scheduled-event/schema";
 import { statusSchema } from "@/features/scheduled-event/schema";
-import { CalendarDate } from "@/features/timezone/components/calendar-date";
+import { CalendarDate } from "@/features/timezone/client/calendar-date";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 

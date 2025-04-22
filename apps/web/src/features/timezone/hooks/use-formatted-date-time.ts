@@ -48,10 +48,5 @@ export const useFormattedDateTime = (
     dayjsInstance = dayjsInstance.utc();
   }
 
-  // Use default formats if none provided
-  // LLLL: Tuesday, April 22, 2025 10:45 AM
-  // LT: 10:45 AM
-  const defaultFormat = format ?? (floating ? "LT" : "LLLL");
-
-  return dayjsInstance.format(format ?? defaultFormat);
+  return dayjsInstance.format(format ?? "LLLL");
 };

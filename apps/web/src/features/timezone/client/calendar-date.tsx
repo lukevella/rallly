@@ -5,9 +5,8 @@ import calendar from "dayjs/plugin/calendar";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import timezone from "dayjs/plugin/timezone";
 
+import { useTimezone } from "@/features/timezone/client/context";
 import { useTranslation } from "@/i18n/client";
-
-import { useTimezone } from "../client/context";
 
 dayjs.extend(calendar);
 dayjs.extend(localizedFormat);
@@ -18,7 +17,7 @@ export function CalendarDate({ date }: { date: string }) {
 
   const { t } = useTranslation();
   return (
-    <>
+    <time dateTime={dayjs(date).toISOString()}>
       {dayjs(date)
         .tz(timezone)
         .calendar(null, {
@@ -29,6 +28,6 @@ export function CalendarDate({ date }: { date: string }) {
           lastWeek: `[${t("lastWeek", { defaultValue: "Last Week" })}]`,
           sameElse: "DD MMM YYYY",
         })}
-    </>
+    </time>
   );
 }

@@ -8,7 +8,6 @@ import { FormattedDateTime } from "@/features/timezone/client/formatted-date-tim
 export const ScheduledEventList = StackedList;
 
 export function ScheduledEventListItem({
-  eventId,
   title,
   start,
   end,
