@@ -200,10 +200,6 @@
   "upcoming": "Próximamente",
   "past": "Pasados",
   "copyLink": "Copiar enlace",
-  "upcomingEventsEmptyStateTitle": "No hay eventos próximos",
-  "upcomingEventsEmptyStateDescription": "Cuando programes eventos, aparecerán aquí.",
-  "pastEventsEmptyStateTitle": "No hay eventos pasados",
-  "pastEventsEmptyStateDescription": "Cuando programes eventos, aparecerán aquí.",
   "createPoll": "Crear encuesta",
   "addToCalendar": "Agregar al calendario",
   "microsoft365": "Microsoft 365",
@@ -297,5 +293,8 @@
   "addPaymentMethod": "Añadir forma de pago",
   "needToMakeChanges": "¿Necesita realizar cambios?",
   "billingPortalDescription": "Visite el portal de facturación para administrar su suscripción, actualizar formas de pago o ver el historial de facturación.",
-  "priceFree": "Gratuito"
+  "priceFree": "Gratuito",
+  "upcomingEventsEmptyStateTitle": "No hay eventos próximos",
+  "upcomingEventsEmptyStateDescription": "Cuando programes eventos, aparecerán aquí.",
+  "pastEventsEmptyStateTitle": "No hay eventos pasados"
 }
