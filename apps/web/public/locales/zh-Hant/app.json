@@ -199,10 +199,6 @@
   "upcoming": "即將舉行",
   "past": "過去的",
   "copyLink": "複製連結",
-  "upcomingEventsEmptyStateTitle": "沒有即將舉行的活動",
-  "upcomingEventsEmptyStateDescription": "當您排定活動時，它們將顯示在這裡。",
-  "pastEventsEmptyStateTitle": "沒有過去的活動",
-  "pastEventsEmptyStateDescription": "當您排定活動時，它們將顯示在這裡。",
   "createPoll": "建立投票",
   "addToCalendar": "加入行事曆",
   "microsoft365": "Microsoft 365",
@@ -232,5 +228,8 @@
   "subscriptionStatusActive": "啟用中",
   "subscriptionStatusPaused": "已暫停",
   "billingSubscriptionPlan": "方案",
-  "priceFree": "免費"
+  "priceFree": "免費",
+  "upcomingEventsEmptyStateTitle": "沒有即將舉行的活動",
+  "upcomingEventsEmptyStateDescription": "當您排定活動時，它們將顯示在這裡。",
+  "pastEventsEmptyStateTitle": "沒有過去的活動"
 }
