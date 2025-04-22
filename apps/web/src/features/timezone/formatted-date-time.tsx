@@ -1,6 +1,7 @@
 "use client";
 
 import type { ConfigType } from "dayjs";
+import dayjs from "dayjs";
 import * as React from "react";
 
 import { useFormattedDateTime } from "./use-formatted-date-time";
@@ -22,7 +23,7 @@ interface FormattedDateTimeProps extends React.HTMLAttributes<HTMLSpanElement> {
  * Uses the `useFormattedDateTime` hook internally.
  */
 export const FormattedDateTime = React.forwardRef<
-  HTMLSpanElement,
+  HTMLTimeElement,
   FormattedDateTimeProps
 >(({ date, format, floating, locale, ...props }, ref) => {
   const formattedDate = useFormattedDateTime(date, {
@@ -32,9 +33,9 @@ export const FormattedDateTime = React.forwardRef<
   });
 
   return (
-    <span ref={ref} {...props}>
+    <time dateTime={dayjs(date).toISOString()} ref={ref} {...props}>
       {formattedDate}
-    </span>
+    </time>
   );
 });
 
