@@ -199,10 +199,6 @@
   "upcoming": "Nadolazeće",
   "past": "Prošlo",
   "copyLink": "Kopiraj poveznicu",
-  "upcomingEventsEmptyStateTitle": "Nema nadolazećih događaja",
-  "upcomingEventsEmptyStateDescription": "Kada zakazujete događaje, oni će se ovdje pojaviti.",
-  "pastEventsEmptyStateTitle": "Nema prošlih događaja",
-  "pastEventsEmptyStateDescription": "Kada zakazujete događaje, oni će se ovdje pojaviti.",
   "createPoll": "Stvori anketu",
   "addToCalendar": "Dodaj u kalendar",
   "microsoft365": "Microsoft 365",
@@ -222,5 +218,8 @@
   "subscriptionStatusActive": "Aktivno",
   "subscriptionStatusPaused": "Pauzirano",
   "billingSubscriptionPlan": "Pretplata",
-  "priceFree": "Besplatno"
+  "priceFree": "Besplatno",
+  "upcomingEventsEmptyStateTitle": "Nema nadolazećih događaja",
+  "upcomingEventsEmptyStateDescription": "Kada zakazujete događaje, oni će se ovdje pojaviti.",
+  "pastEventsEmptyStateTitle": "Nema prošlih događaja"
 }

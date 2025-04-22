@@ -200,10 +200,6 @@
   "upcoming": "Tulevat",
   "past": "Menneet",
   "copyLink": "Kopioi linkki",
-  "upcomingEventsEmptyStateTitle": "Ei tulevia tapahtumia",
-  "upcomingEventsEmptyStateDescription": "Ajoittamasi tapahtumat näkyvät tässä.",
-  "pastEventsEmptyStateTitle": "Ei menneitä tapahtumia",
-  "pastEventsEmptyStateDescription": "Ajoittamasi tapahtumat näkyvät tässä.",
   "createPoll": "Luo kysely",
   "addToCalendar": "Lisää kalenteriin",
   "microsoft365": "Microsoft 365",
@@ -301,7 +297,6 @@
   "signUp": "Rekisteröidy",
   "upgradeToPro": "Vaihda Pro-sopimukseen",
   "moreParticipants": "{count} lisää…",
-  "noDates": "Ei päivämääriä",
   "commandMenuNoResults": "Ei tuloksia",
   "commandMenu": "Komentovalikko",
   "commandMenuDescription": "Valitse komento",
@@ -317,5 +312,8 @@
   "paginationNext": "Seuraava",
   "upgradeToProDesc": "Avaa kaikki Pro-ominaisuudet",
   "searchPollsPlaceholder": "Etsi kyselyitä otsikon perusteella...",
-  "poll": "Kysely"
+  "poll": "Kysely",
+  "upcomingEventsEmptyStateTitle": "Ei tulevia tapahtumia",
+  "upcomingEventsEmptyStateDescription": "Ajoittamasi tapahtumat näkyvät tässä.",
+  "pastEventsEmptyStateTitle": "Ei menneitä tapahtumia"
 }

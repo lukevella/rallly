@@ -200,10 +200,6 @@
   "upcoming": "Binnenkort",
   "past": "Afgelopen",
   "copyLink": "Link kopiëren",
-  "upcomingEventsEmptyStateTitle": "Geen geplande evenementen",
-  "upcomingEventsEmptyStateDescription": "Wanneer je evenementen inplant, zullen ze hier verschijnen.",
-  "pastEventsEmptyStateTitle": "Geen afgelopen evenementen",
-  "pastEventsEmptyStateDescription": "Wanneer je evenementen inplant, zullen ze hier verschijnen.",
   "createPoll": "Poll maken",
   "addToCalendar": "Toevoegen aan Agenda",
   "microsoft365": "Microsoft 365",
@@ -301,7 +297,6 @@
   "signUp": "Aanmelden",
   "upgradeToPro": "Upgrade naar Pro",
   "moreParticipants": "{count} meer…",
-  "noDates": "Geen datums",
   "commandMenuNoResults": "Geen resultaten",
   "commandMenu": "Opdrachtmenu",
   "commandMenuDescription": "Kies een opdracht",
@@ -319,5 +314,8 @@
   "searchPollsPlaceholder": "Doorzoek polls op titel...",
   "poll": "Poll",
   "sendFeedbackDesc": "Deel je feedback met ons.",
-  "sendFeedbackSuccess": "Bedankt voor je feedback!"
+  "sendFeedbackSuccess": "Bedankt voor je feedback!",
+  "upcomingEventsEmptyStateTitle": "Geen geplande evenementen",
+  "upcomingEventsEmptyStateDescription": "Wanneer je evenementen inplant, zullen ze hier verschijnen.",
+  "pastEventsEmptyStateTitle": "Geen afgelopen evenementen"
 }

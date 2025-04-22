@@ -200,10 +200,6 @@
   "upcoming": "Közelgő",
   "past": "Korábbi",
   "copyLink": "Link másolása",
-  "upcomingEventsEmptyStateTitle": "Nincsenek közelgő események",
-  "upcomingEventsEmptyStateDescription": "Amikor eseményeket ütemezel be, itt fognak megjelenni.",
-  "pastEventsEmptyStateTitle": "Nincsenek korábbi események",
-  "pastEventsEmptyStateDescription": "Amikor eseményeket ütemezel be, itt fognak megjelenni.",
   "createPoll": "Szavazás létrehozása",
   "addToCalendar": "Hozzáadás a naptárhoz",
   "microsoft365": "Microsoft 365",
@@ -297,5 +293,8 @@
   "addPaymentMethod": "Fizetési mód hozzáadása",
   "needToMakeChanges": "Változtatni szeretnél valamit?",
   "billingPortalDescription": "Látogasd meg a számlázás oldalt az előfizetésed kezeléséhez, fizetési módjaid frissítéséhez vagy a számlázási előzmények megtekintéséhez.",
-  "priceFree": "Ingyenes"
+  "priceFree": "Ingyenes",
+  "upcomingEventsEmptyStateTitle": "Nincsenek közelgő események",
+  "upcomingEventsEmptyStateDescription": "Amikor eseményeket ütemezel be, itt fognak megjelenni.",
+  "pastEventsEmptyStateTitle": "Nincsenek korábbi események"
 }

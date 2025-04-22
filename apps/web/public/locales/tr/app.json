@@ -199,10 +199,6 @@
   "upcoming": "Yaklaşan",
   "past": "Geçmiş",
   "copyLink": "Bağlantıyı Kopyala",
-  "upcomingEventsEmptyStateTitle": "Yaklaşan Etkinlik Yok",
-  "upcomingEventsEmptyStateDescription": "Etkinlikleri planladığınızda burada görünecekler.",
-  "pastEventsEmptyStateTitle": "Geçmiş Etkinlik Yok",
-  "pastEventsEmptyStateDescription": "Etkinlikleri planladığınızda burada görünecekler.",
   "createPoll": "Anket oluştur",
   "addToCalendar": "Takvime Ekle",
   "microsoft365": "Microsoft 365",
@@ -238,5 +234,8 @@
   "subscriptionStatusActive": "Aktif",
   "subscriptionStatusPaused": "Duraklatıldı",
   "billingSubscriptionPlan": "Plan",
-  "priceFree": "Ücretsiz"
+  "priceFree": "Ücretsiz",
+  "upcomingEventsEmptyStateTitle": "Yaklaşan Etkinlik Yok",
+  "upcomingEventsEmptyStateDescription": "Etkinlikleri planladığınızda burada görünecekler.",
+  "pastEventsEmptyStateTitle": "Geçmiş Etkinlik Yok"
 }

@@ -199,10 +199,6 @@
   "upcoming": "Kommende",
   "past": "Tidligere",
   "copyLink": "Kopier link",
-  "upcomingEventsEmptyStateTitle": "Ingen kommende begivenheder",
-  "upcomingEventsEmptyStateDescription": "Når du planlægger begivenheder, vil de vises her.",
-  "pastEventsEmptyStateTitle": "Ingen tidligere begivenheder",
-  "pastEventsEmptyStateDescription": "Når du planlægger begivenheder, vil de vises her.",
   "createPoll": "Opret afstemning",
   "addToCalendar": "Tilføj til kalender",
   "microsoft365": "Microsoft 365",
@@ -271,5 +267,8 @@
   "subscriptionStatusActive": "Aktiv",
   "subscriptionStatusPaused": "På pause",
   "billingSubscriptionPlan": "Abonnementstype",
-  "priceFree": "Gratis"
+  "priceFree": "Gratis",
+  "upcomingEventsEmptyStateTitle": "Ingen kommende begivenheder",
+  "upcomingEventsEmptyStateDescription": "Når du planlægger begivenheder, vil de vises her.",
+  "pastEventsEmptyStateTitle": "Ingen tidligere begivenheder"
 }
