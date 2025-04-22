@@ -27,12 +27,10 @@ export function ScheduledEventListItem({
   isFloating: boolean;
 }) {
   return (
-    <StackedListItem key={eventId}>
+    <StackedListItem>
       <div className="flex flex-1 flex-col gap-y-1 lg:flex-row-reverse lg:justify-end lg:gap-x-4">
         <div className="flex items-center gap-4 text-sm">
-          {/* <Link href={`/e/${eventId}`} className="font-medium hover:underline"> */}
-          {title}
-          {/* </Link> */}
+          <div>{title}</div>
           <div>
             <ScheduledEventStatusBadge status={status} />
           </div>
@@ -62,13 +60,6 @@ export function ScheduledEventListItem({
             max={5}
           />
         </div>
-        {/* <div className="flex gap-2">
-          <Button variant="ghost" size="icon">
-            <Icon>
-              <CopyIcon />
-            </Icon>
-          </Button>
-        </div> */}
       </div>
     </StackedListItem>
   );
