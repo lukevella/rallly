@@ -199,10 +199,6 @@
   "upcoming": "Próximos",
   "past": "Passados",
   "copyLink": "Copiar Link",
-  "upcomingEventsEmptyStateTitle": "Nenhum Evento Futuro",
-  "upcomingEventsEmptyStateDescription": "Quando você programar eventos, eles aparecerão aqui.",
-  "pastEventsEmptyStateTitle": "Nenhum Evento Passado",
-  "pastEventsEmptyStateDescription": "Quando você programar eventos, eles aparecerão aqui.",
   "createPoll": "Criar sondagem",
   "addToCalendar": "Adicionar ao Calendário",
   "microsoft365": "Microsoft 365",
@@ -244,5 +240,8 @@
   "quickCreateRecentlyCreated": "Criado Recentemente",
   "registerVerifyDescription": "Verifique o código de verificação no seu e-mail",
   "loginVerifyDescription": "Verifique o código de verificação no seu e-mail",
-  "createAccount": "Criar conta"
+  "createAccount": "Criar conta",
+  "upcomingEventsEmptyStateTitle": "Nenhum Evento Futuro",
+  "upcomingEventsEmptyStateDescription": "Quando você programar eventos, eles aparecerão aqui.",
+  "pastEventsEmptyStateTitle": "Nenhum Evento Passado"
 }
