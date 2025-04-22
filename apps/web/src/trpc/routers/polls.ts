@@ -6,6 +6,7 @@ import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import * as ics from "ics";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { moderateContent } from "@/features/moderation";
@@ -253,6 +254,8 @@ export const polls = router({
         }
       }
 
+      revalidatePath("/", "layout");
+
       return { id: poll.id };
     }),
   update: possiblyPublicProcedure
@@ -349,6 +352,7 @@ export const polls = router({
           requireParticipantEmail: input.requireParticipantEmail,
         },
       });
+      revalidatePath("/", "layout");
     }),
   delete: possiblyPublicProcedure
     .input(
@@ -362,6 +366,7 @@ export const polls = router({
         where: { id: pollId },
         data: { deleted: true, deletedAt: new Date() },
       });
+      revalidatePath("/", "layout");
     }),
   // END LEGACY ROUTES
   getWatchers: publicProcedure
@@ -519,9 +524,16 @@ export const polls = router({
           },
           participants: {
             select: {
+              id: true,
               name: true,
               email: true,
               locale: true,
+              user: {
+                select: {
+                  email: true,
+                  timeZone: true,
+                },
+              },
               votes: {
                 select: {
                   optionId: true,
@@ -579,6 +591,41 @@ export const polls = router({
         },
         data: {
           status: "finalized",
+          scheduledEvent: {
+            create: {
+              id: input.pollId,
+              start: eventStart.toDate(),
+              end: eventStart.add(option.duration, "minute").toDate(),
+              title: poll.title,
+              location: poll.location,
+              timeZone: poll.timeZone,
+              userId: ctx.user.id,
+              allDay: option.duration === 0,
+              status: "confirmed",
+              invites: {
+                createMany: {
+                  data: poll.participants
+                    .filter((p) => p.email || p.user?.email) // Filter out participants without email
+                    .map((p) => ({
+                      inviteeName: p.name,
+                      inviteeEmail:
+                        p.user?.email ?? p.email ?? `${p.id}@rallly.co`,
+                      inviteeTimeZone: p.user?.timeZone ?? poll.timeZone, // We should track participant's timezone
+                      status: (
+                        {
+                          yes: "accepted",
+                          ifNeedBe: "tentative",
+                          no: "declined",
+                        } as const
+                      )[
+                        p.votes.find((v) => v.optionId === input.optionId)
+                          ?.type ?? "no"
+                      ],
+                    })),
+                },
+              },
+            },
+          },
           event: {
             create: {
               optionId: input.optionId,
@@ -748,6 +795,8 @@ export const polls = router({
             days_since_created: dayjs().diff(poll.createdAt, "day"),
           },
         });
+
+        revalidatePath("/", "layout");
       }
     }),
   reopen: possiblyPublicProcedure
@@ -774,7 +823,16 @@ export const polls = router({
             },
           });
         }
+
+        if (poll.scheduledEventId) {
+          await prisma.scheduledEvent.delete({
+            where: {
+              id: poll.scheduledEventId,
+            },
+          });
+        }
       });
+      revalidatePath("/", "layout");
     }),
   pause: possiblyPublicProcedure
     .input(

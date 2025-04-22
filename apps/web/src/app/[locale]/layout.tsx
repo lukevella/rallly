@@ -13,7 +13,7 @@ import React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { UserProvider } from "@/components/user-provider";
-import { TimezoneProvider } from "@/features/timezone";
+import { TimezoneProvider } from "@/features/timezone/client/context";
 import { I18nProvider } from "@/i18n/client";
 import { auth } from "@/next-auth";
 import { TRPCProvider } from "@/trpc/client/provider";

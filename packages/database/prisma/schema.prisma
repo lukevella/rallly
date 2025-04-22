@@ -5,8 +5,8 @@ datasource db {
 }
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native"]
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native"]
   previewFeatures = ["relationJoins"]
 }
 
@@ -38,31 +38,33 @@ model Account {
 }
 
 model User {
-  id             String      @id @default(cuid())
-  name           String
-  email          String      @unique() @db.Citext
-  emailVerified  DateTime?   @map("email_verified")
-  image          String?
-  timeZone       String?     @map("time_zone")
-  weekStart      Int?        @map("week_start")
-  timeFormat     TimeFormat? @map("time_format")
-  locale         String?
-  createdAt      DateTime    @default(now()) @map("created_at")
-  updatedAt      DateTime?   @updatedAt @map("updated_at")
-  customerId     String?     @map("customer_id")
-  banned         Boolean     @default(false)
-  bannedAt       DateTime?   @map("banned_at")
-  banReason      String?     @map("ban_reason")
+  id            String      @id @default(cuid())
+  name          String
+  email         String      @unique() @db.Citext
+  emailVerified DateTime?   @map("email_verified")
+  image         String?
+  timeZone      String?     @map("time_zone")
+  weekStart     Int?        @map("week_start")
+  timeFormat    TimeFormat? @map("time_format")
+  locale        String?
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime?   @updatedAt @map("updated_at")
+  customerId    String?     @map("customer_id")
+  banned        Boolean     @default(false)
+  bannedAt      DateTime?   @map("banned_at")
+  banReason     String?     @map("ban_reason")
 
-  comments       Comment[]
-  polls          Poll[]
-  watcher        Watcher[]
-  events         Event[]
-  accounts       Account[]
-  participants   Participant[]
-  paymentMethods PaymentMethod[]
-  subscription   Subscription? @relation("UserToSubscription")
-  pollViews      PollView[]
+  comments              Comment[]
+  polls                 Poll[]
+  watcher               Watcher[]
+  events                Event[]
+  accounts              Account[]
+  participants          Participant[]
+  paymentMethods        PaymentMethod[]
+  subscription          Subscription?          @relation("UserToSubscription")
+  pollViews             PollView[]
+  scheduledEvents       ScheduledEvent[]
+  scheduledEventInvites ScheduledEventInvite[]
 
   @@map("users")
 }
@@ -155,19 +157,21 @@ model Poll {
   participantUrlId        String     @unique @map("participant_url_id")
   adminUrlId              String     @unique @map("admin_url_id")
   eventId                 String?    @unique @map("event_id")
+  scheduledEventId        String?    @map("scheduled_event_id")
   hideParticipants        Boolean    @default(false) @map("hide_participants")
   hideScores              Boolean    @default(false) @map("hide_scores")
   disableComments         Boolean    @default(false) @map("disable_comments")
   requireParticipantEmail Boolean    @default(false) @map("require_participant_email")
 
-  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  event        Event?        @relation(fields: [eventId], references: [id], onDelete: SetNull)
-  options      Option[]
-  participants Participant[]
-  watchers     Watcher[]
-  comments     Comment[]
-  votes        Vote[]
-  views        PollView[]
+  user           User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event          Event?          @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  scheduledEvent ScheduledEvent? @relation(fields: [scheduledEventId], references: [id], onDelete: SetNull)
+  options        Option[]
+  participants   Participant[]
+  watchers       Watcher[]
+  comments       Comment[]
+  votes          Vote[]
+  views          PollView[]
 
   @@index([guestId])
   @@map("polls")
@@ -293,7 +297,7 @@ model PollView {
   userAgent String?  @map("user_agent")
   viewedAt  DateTime @default(now()) @map("viewed_at")
 
-  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  poll Poll  @relation(fields: [pollId], references: [id], onDelete: Cascade)
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([pollId], type: Hash)
@@ -309,4 +313,80 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+enum ScheduledEventStatus {
+  confirmed
+  canceled
+  unconfirmed
+
+  @@map("scheduled_event_status")
+}
+
+enum ScheduledEventInviteStatus {
+  pending
+  accepted
+  declined
+  tentative
+
+  @@map("scheduled_event_invite_status")
+}
+
+model ScheduledEvent {
+  id          String               @id @default(cuid())
+  userId      String               @map("user_id")
+  title       String
+  description String?
+  location    String?
+  createdAt   DateTime             @default(now()) @map("created_at")
+  updatedAt   DateTime             @updatedAt @map("updated_at")
+  status      ScheduledEventStatus @default(confirmed)
+  timeZone    String?              @map("time_zone")
+  start       DateTime
+  end         DateTime
+  allDay      Boolean              @default(false) @map("all_day")
+  deletedAt   DateTime?            @map("deleted_at")
+
+  user             User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rescheduledDates RescheduledEventDate[]
+  invites          ScheduledEventInvite[]
+  polls            Poll[]
+
+  @@map("scheduled_events")
+}
+
+model RescheduledEventDate {
+  id               String   @id @default(cuid())
+  scheduledEventId String   @map("scheduled_event_id")
+  start            DateTime @map("start")
+  end              DateTime @map("end")
+  allDay           Boolean  @default(false) @map("all_day")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  scheduledEvent ScheduledEvent @relation(fields: [scheduledEventId], references: [id], onDelete: Cascade)
+
+  @@index([scheduledEventId])
+  @@map("rescheduled_event_dates")
+}
+
+model ScheduledEventInvite {
+  id               String                     @id @default(cuid())
+  scheduledEventId String                     @map("scheduled_event_id")
+  inviteeName      String                     @map("invitee_name")
+  inviteeEmail     String                     @map("invitee_email")
+  inviteeId        String?                    @map("invitee_id")
+  inviteeTimeZone  String?                    @map("invitee_time_zone")
+  status           ScheduledEventInviteStatus @default(pending)
+  createdAt        DateTime                   @default(now()) @map("created_at")
+  updatedAt        DateTime                   @updatedAt @map("updated_at")
+
+  scheduledEvent ScheduledEvent @relation(fields: [scheduledEventId], references: [id], onDelete: Cascade)
+  user           User?          @relation(fields: [inviteeId], references: [id], onDelete: SetNull) // Optional relation to User model
+
+  @@unique([scheduledEventId, inviteeEmail])
+  @@unique([scheduledEventId, inviteeId])
+  @@index([scheduledEventId])
+  @@index([inviteeId])
+  @@index([inviteeEmail])
+  @@map("scheduled_event_invites")
 }
