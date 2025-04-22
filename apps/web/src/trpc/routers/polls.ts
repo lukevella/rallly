@@ -605,7 +605,7 @@ export const polls = router({
               invites: {
                 createMany: {
                   data: poll.participants
-                    .filter((p) => !!p.email) // Filter out participants without email
+                    .filter((p) => p.email || p.user?.email) // Filter out participants without email
                     .map((p) => ({
                       inviteeName: p.name,
                       inviteeEmail:
