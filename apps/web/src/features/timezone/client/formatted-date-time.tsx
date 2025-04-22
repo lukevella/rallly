@@ -33,7 +33,11 @@ export const FormattedDateTime = React.forwardRef<
   });
 
   return (
-    <time dateTime={dayjs(date).toISOString()} ref={ref} {...props}>
+    <time
+      dateTime={date ? dayjs(date).toISOString() : new Date().toISOString()}
+      ref={ref}
+      {...props}
+    >
       {formattedDate}
     </time>
   );

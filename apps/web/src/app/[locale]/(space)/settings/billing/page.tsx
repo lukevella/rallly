@@ -27,9 +27,9 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { FormattedDate } from "@/components/formatted-date";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
+import { FormattedDateTime } from "@/features/timezone/client/formatted-date-time";
 import { requireUser } from "@/next-auth";
 import { isSelfHosted } from "@/utils/constants";
 
@@ -153,7 +153,10 @@ export default async function Page() {
                 {subscription.cancelAtPeriodEnd ? (
                   "-"
                 ) : (
-                  <FormattedDate date={subscription.periodEnd} format="short" />
+                  <FormattedDateTime
+                    date={subscription.periodEnd}
+                    format="D MMM YYYY"
+                  />
                 )}
               </DescriptionDetails>
 
