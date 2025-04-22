@@ -315,7 +315,18 @@
   "poll": "Poll",
   "sendFeedbackDesc": "Deel je feedback met ons.",
   "sendFeedbackSuccess": "Bedankt voor je feedback!",
+  "searchEventsPlaceholder": "Doorzoek evenementen op titel...",
+  "canceled": "Geannuleerd",
+  "tomorrow": "Morgen",
+  "yesterday": "Gisteren",
+  "lastWeek": "Vorige Week",
+  "unconfirmed": "Niet bevestigd",
   "upcomingEventsEmptyStateTitle": "Geen geplande evenementen",
   "upcomingEventsEmptyStateDescription": "Wanneer je evenementen inplant, zullen ze hier verschijnen.",
-  "pastEventsEmptyStateTitle": "Geen afgelopen evenementen"
+  "pastEventsEmptyStateTitle": "Geen afgelopen evenementen",
+  "pastEventsEmptyStateDescription": "Eerdere evenementen zullen hier verschijnen.",
+  "unconfirmedEventsEmptyStateTitle": "Geen onbevestigde evenementen",
+  "unconfirmedEventsEmptyStateDescription": "Onbevestigde evenementen zullen hier verschijnen.",
+  "canceledEventsEmptyStateTitle": "Geen geannuleerde evenementen",
+  "canceledEventsEmptyStateDescription": "Geannuleerde evenementen zullen hier verschijnen."
 }
