@@ -199,10 +199,6 @@
   "upcoming": "Properament",
   "past": "Passat",
   "copyLink": "Copia l'enllaç",
-  "upcomingEventsEmptyStateTitle": "No hi ha esdeveniments previs",
-  "upcomingEventsEmptyStateDescription": "Quan programis esdeveniments, apareixeran aquí.",
-  "pastEventsEmptyStateTitle": "No hi ha esdeveniments passats",
-  "pastEventsEmptyStateDescription": "Quan programis esdeveniments, apareixeran aquí.",
   "createPoll": "Crea l'enquesta",
   "addToCalendar": "Afegir al Calendari",
   "microsoft365": "Microsoft 365",
@@ -222,5 +218,8 @@
   "subscriptionStatusActive": "Actiu",
   "subscriptionStatusPaused": "Pausat",
   "billingSubscriptionPlan": "Pla",
-  "priceFree": "Gratuït"
+  "priceFree": "Gratuït",
+  "upcomingEventsEmptyStateTitle": "No hi ha esdeveniments previs",
+  "upcomingEventsEmptyStateDescription": "Quan programis esdeveniments, apareixeran aquí.",
+  "pastEventsEmptyStateTitle": "No hi ha esdeveniments passats"
 }
