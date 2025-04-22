@@ -7,7 +7,7 @@ import timezone from "dayjs/plugin/timezone";
 
 import { useTranslation } from "@/i18n/client";
 
-import { useTimezone } from "../timezone-context";
+import { useTimezone } from "../client/context";
 
 dayjs.extend(calendar);
 dayjs.extend(localizedFormat);

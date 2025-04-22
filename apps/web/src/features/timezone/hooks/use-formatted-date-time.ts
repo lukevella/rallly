@@ -1,7 +1,7 @@
 import type { ConfigType } from "dayjs";
 import dayjs from "dayjs";
 
-import { useTimezone } from "./timezone-context";
+import { useTimezone } from "@/features/timezone/client/context";
 
 interface UseFormattedDateTimeOptions {
   /** A dayjs format string (e.g., "YYYY-MM-DD HH:mm", "h:mm A"). Defaults to a locale-aware format. */

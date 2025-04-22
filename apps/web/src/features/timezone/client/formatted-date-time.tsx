@@ -4,7 +4,7 @@ import type { ConfigType } from "dayjs";
 import dayjs from "dayjs";
 import * as React from "react";
 
-import { useFormattedDateTime } from "./use-formatted-date-time";
+import { useFormattedDateTime } from "@/features/timezone/hooks/use-formatted-date-time";
 
 interface FormattedDateTimeProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** The date/time to format (Accepts Date, ISO string, Unix timestamp, Dayjs object). */

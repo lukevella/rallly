@@ -3,8 +3,8 @@
 import dayjs from "dayjs";
 import React from "react";
 
-import { FormattedDateTime } from "./formatted-date-time";
-import { useTimezone } from "./timezone-context";
+import { useTimezone } from "./client/context";
+import { FormattedDateTime } from "./client/formatted-date-time";
 
 export const TimezoneDisplay = () => {
   const { timezone } = useTimezone();
