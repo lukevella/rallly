@@ -350,7 +350,7 @@ model ScheduledEvent {
   user             User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   rescheduledDates RescheduledEventDate[]
   invites          ScheduledEventInvite[]
-  Poll             Poll[]
+  polls            Poll[]
 
   @@map("scheduled_events")
 }
