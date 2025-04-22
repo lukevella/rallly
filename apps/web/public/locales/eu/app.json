@@ -199,10 +199,6 @@
   "upcoming": "Datozenak",
   "past": "Igarotakoak",
   "copyLink": "Kopiatu esteka",
-  "upcomingEventsEmptyStateTitle": "Ez dago datorren ekitaldirik",
-  "upcomingEventsEmptyStateDescription": "Ekitaldiak programatzen dituzunean, hemen agertuko dira.",
-  "pastEventsEmptyStateTitle": "Ez dago iraganeko ekitaldirik",
-  "pastEventsEmptyStateDescription": "Ekitaldiak programatzen dituzunean, hemen agertuko dira.",
   "createPoll": "Sortu galdetegi bat",
   "addToCalendar": "Gehitu egutegira",
   "microsoft365": "Microsoft 365",
@@ -271,5 +267,8 @@
   "subscriptionStatusActive": "Aktibo",
   "subscriptionStatusPaused": "Pausatuta",
   "billingSubscriptionPlan": "Plana",
-  "priceFree": "Dohakoa"
+  "priceFree": "Dohakoa",
+  "upcomingEventsEmptyStateTitle": "Ez dago datorren ekitaldirik",
+  "upcomingEventsEmptyStateDescription": "Ekitaldiak programatzen dituzunean, hemen agertuko dira.",
+  "pastEventsEmptyStateTitle": "Ez dago iraganeko ekitaldirik"
 }
