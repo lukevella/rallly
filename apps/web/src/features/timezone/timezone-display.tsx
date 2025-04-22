@@ -1,66 +1,74 @@
 "use client";
 
-import type dayjs from "dayjs";
+import dayjs from "dayjs";
+import React from "react";
 
+import { FormattedDateTime } from "./formatted-date-time";
 import { useTimezone } from "./timezone-context";
 
-type DateDisplayProps = {
-  date: string | Date | dayjs.Dayjs;
-  format?: string;
-};
-
-export function DateDisplay({ date, format = "LL" }: DateDisplayProps) {
-  const { formatDate } = useTimezone();
-  return <span>{formatDate(date, format)}</span>;
-}
-
-export function TimeDisplay({ date, format = "LT" }: DateDisplayProps) {
-  const { formatTime } = useTimezone();
-  return <span>{formatTime(date, format)}</span>;
-}
-
-export function DateTimeDisplay({ date, format = "LL, LT" }: DateDisplayProps) {
-  const { formatDateTime } = useTimezone();
-  return <span>{formatDateTime(date, format)}</span>;
-}
-
-// Component to display the current timezone
-export function CurrentTimezone() {
+export const TimezoneDisplay = () => {
   const { timezone } = useTimezone();
-  return <span>{timezone}</span>;
-}
+  const now = dayjs();
 
-export function TimeRangeDisplay({
-  start,
-  end,
-  format = "LT",
-  isFloating,
-}: {
-  start: string | Date | dayjs.Dayjs;
-  end: string | Date | dayjs.Dayjs;
-  format?: string;
-  isFloating?: boolean;
-}) {
-  const { formatTime } = useTimezone();
   return (
-    <span>
-      {formatTime(start, format, isFloating)}
-      {" - "}
-      {formatTime(end, format, isFloating)}
-    </span>
-  );
-}
+    <div className="space-y-4 rounded border p-4">
+      <h2 className="text-lg font-semibold">Timezone Information</h2>
+      <p>
+        Current Timezone: <code className="font-mono">{timezone}</code>
+      </p>
 
-export function DateIcon({ date }: { date: string | Date | dayjs.Dayjs }) {
-  const { formatDate } = useTimezone();
-  return (
-    <div className="inline-flex size-12 flex-col overflow-hidden rounded-lg border bg-white text-center leading-none shadow-sm">
-      <div className="text-muted-foreground border-b bg-gray-50 py-1 text-[10px] font-medium uppercase">
-        {formatDate(date, "MMM")}
+      <div className="space-y-2">
+        <h3 className="font-medium">Formatted Examples:</h3>
+        <p>
+          Default Format: <FormattedDateTime date={now} />
+        </p>
+        <p>
+          Custom Date (YYYY-MM-DD):{" "}
+          <FormattedDateTime date={now} format="YYYY-MM-DD" />
+        </p>
+        <p>
+          Custom Time (h:mm A): <FormattedDateTime date={now} format="h:mm A" />
+        </p>
+        <p>
+          Custom DateTime (MMM D, hh:mm):{" "}
+          <FormattedDateTime date={now} format="MMM D, hh:mm" />
+        </p>
+        <p>
+          Floating Time (HH:mm):{" "}
+          <FormattedDateTime date={now} format="HH:mm" floating={true} />
+        </p>
+        <p>
+          Locale (French): <FormattedDateTime date={now} locale="fr" />
+        </p>
+        <p>
+          Locale & Format (French):{" "}
+          <FormattedDateTime
+            date={now}
+            locale="fr"
+            format="dddd D MMMM YYYY HH:mm"
+          />
+        </p>
       </div>
-      <div className="flex flex-1 items-center justify-center text-sm font-semibold leading-none">
-        {formatDate(date, "D")}
+
+      {/* Example with an explicit date string */}
+      <div className="space-y-2 border-t pt-4">
+        <h3 className="font-medium">Explicit Date Example:</h3>
+        <p>
+          ISO String Input: <code>2024-01-15T14:30:00Z</code>
+        </p>
+        <p>
+          Formatted (Context Timezone):{" "}
+          <FormattedDateTime date="2024-01-15T14:30:00Z" format="LLLL" />
+        </p>
+        <p>
+          Formatted (Floating):{" "}
+          <FormattedDateTime
+            date="2024-01-15T14:30:00Z"
+            format="HH:mm:ss"
+            floating={true}
+          />
+        </p>
       </div>
     </div>
   );
-}
+};

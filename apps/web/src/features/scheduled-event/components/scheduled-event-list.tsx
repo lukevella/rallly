@@ -1,9 +1,9 @@
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
+import { FormattedDateTime } from "@/features/timezone/formatted-date-time";
 import { ScheduledEventStatusBadge } from "@/features/scheduled-event/components/scheduled-event-status-badge";
 import type { Status } from "@/features/scheduled-event/schema";
-import { TimeRangeDisplay } from "@/features/timezone/timezone-display";
 
 export const ScheduledEventList = StackedList;
 
@@ -40,11 +40,9 @@ export function ScheduledEventListItem({
             <Trans i18nKey="allDay" defaults="All day" />
           ) : (
             <div className="flex items-center gap-x-1">
-              <TimeRangeDisplay
-                start={start}
-                end={end}
-                isFloating={isFloating}
-              />
+              <FormattedDateTime date={start} floating={isFloating} format="LT" />
+              <span>-</span>
+              <FormattedDateTime date={end} floating={isFloating} format="LT" />
             </div>
           )}
         </div>

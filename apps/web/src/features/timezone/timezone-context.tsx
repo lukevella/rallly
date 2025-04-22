@@ -1,103 +1,43 @@
 "use client";
 
 import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-import { createContext, useContext, useEffect, useState } from "react";
+import * as React from "react";
 
-// Initialize dayjs plugins
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import { getBrowserTimeZone } from "@/utils/date-time-utils";
 
-// Default to browser timezone if not specified
-const getBrowserTimezone = () => {
-  if (typeof window !== "undefined") {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone;
-  }
-  return "UTC"; // Default to UTC for server-side rendering
-};
-
-type TimezoneContextType = {
+interface TimezoneContextProps {
   timezone: string;
   setTimezone: (timezone: string) => void;
-  formatDate: (date: string | Date | dayjs.Dayjs, format?: string) => string;
-  formatTime: (
-    date: string | Date | dayjs.Dayjs,
-    format?: string,
-    isFloating?: boolean,
-  ) => string;
-  formatDateTime: (
-    date: string | Date | dayjs.Dayjs,
-    format?: string,
-    isFloating?: boolean,
-  ) => string;
-};
+}
 
-const TimezoneContext = createContext<TimezoneContextType | undefined>(
-  undefined,
-);
+const TimezoneContext = React.createContext<TimezoneContextProps | null>(null);
+
+interface TimezoneProviderProps {
+  children: React.ReactNode;
+  initialTimezone?: string;
+}
 
 export const TimezoneProvider = ({
-  initialTimezone,
   children,
-}: {
-  initialTimezone?: string;
-  children: React.ReactNode;
-}) => {
-  // Initialize with browser timezone, but allow user preference to override
-  const [timezone, setTimezone] = useState<string>(() => {
+  initialTimezone,
+}: TimezoneProviderProps) => {
+  const [timezone, setTimezone] = React.useState(() => {
     if (initialTimezone) {
-      return initialTimezone;
-    }
-    // Try to get from localStorage first (user preference)
-    if (typeof window !== "undefined") {
-      const savedTimezone = localStorage.getItem("userTimezone");
-      if (savedTimezone) {
-        return savedTimezone;
+      try {
+        dayjs().tz(initialTimezone);
+        return initialTimezone;
+      } catch (error) {
+        console.warn(error);
       }
     }
-    return getBrowserTimezone();
+
+    return getBrowserTimeZone();
   });
 
-  // Save timezone preference to localStorage when it changes
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("userTimezone", timezone);
-    }
-  }, [timezone]);
-
-  // Format functions that automatically use the current timezone
-  const formatDate = (
-    date: string | Date | dayjs.Dayjs,
-    format = "YYYY-MM-DD",
-  ) => {
-    return dayjs(date).tz(timezone).format(format);
-  };
-
-  const formatTime = (
-    date: string | Date | dayjs.Dayjs,
-    format = "HH:mm",
-    isFloating?: boolean,
-  ) => {
-    return isFloating
-      ? dayjs(date).utc().format(format)
-      : dayjs(date).tz(timezone).format(format);
-  };
-
-  const formatDateTime = (
-    date: string | Date | dayjs.Dayjs,
-    format = "YYYY-MM-DD HH:mm",
-  ) => {
-    return dayjs(date).tz(timezone).format(format);
-  };
-
-  const value = {
-    timezone,
-    setTimezone,
-    formatDate,
-    formatTime,
-    formatDateTime,
-  };
+  const value = React.useMemo(
+    () => ({ timezone, setTimezone }),
+    [timezone, setTimezone],
+  );
 
   return (
     <TimezoneContext.Provider value={value}>
@@ -107,8 +47,8 @@ export const TimezoneProvider = ({
 };
 
 export const useTimezone = () => {
-  const context = useContext(TimezoneContext);
-  if (context === undefined) {
+  const context = React.useContext(TimezoneContext);
+  if (context === null) {
     throw new Error("useTimezone must be used within a TimezoneProvider");
   }
   return context;
