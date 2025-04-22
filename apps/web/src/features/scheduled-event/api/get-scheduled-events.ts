@@ -64,7 +64,13 @@ export async function getScheduledEvents({
 
   const events = rawEvents.map((event) => ({
     ...event,
-    status: event.start < now ? "past" : (event.status as Status),
+    status:
+      event.status === "confirmed"
+        ? // If the event is confirmed, it's either past or upcoming
+          event.start < now
+          ? "past"
+          : "upcoming"
+        : event.status,
     invites: event.invites.map((invite) => ({
       id: invite.id,
       inviteeName: invite.inviteeName,
