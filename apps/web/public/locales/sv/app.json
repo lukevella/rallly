@@ -200,10 +200,6 @@
   "upcoming": "Kommande",
   "past": "Tidigare",
   "copyLink": "Kopiera länk",
-  "upcomingEventsEmptyStateTitle": "Inga kommande händelser",
-  "upcomingEventsEmptyStateDescription": "När du schemalägger händelser kommer de att visas här.",
-  "pastEventsEmptyStateTitle": "Inga tidigare händelser",
-  "pastEventsEmptyStateDescription": "När du schemalägger händelser kommer de att visas här.",
   "createPoll": "Skapa förfrågan",
   "addToCalendar": "Lägg till i kalender",
   "microsoft365": "Microsoft 365",
@@ -298,5 +294,8 @@
   "needToMakeChanges": "Behöver du göra förändringar?",
   "billingPortalDescription": "Besök faktureringsportalen för att hantera ditt abonnemang, uppdatera betalningsmetoder eller visa faktureringshistorik.",
   "priceFree": "Gratis",
-  "signUp": "Registrera dig"
+  "signUp": "Registrera dig",
+  "upcomingEventsEmptyStateTitle": "Inga kommande händelser",
+  "upcomingEventsEmptyStateDescription": "När du schemalägger händelser kommer de att visas här.",
+  "pastEventsEmptyStateTitle": "Inga tidigare händelser"
 }
