@@ -16,34 +16,31 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { getScheduledEvents } from "@/features/scheduled-event/api/get-scheduled-events";
-import {
-  ScheduledEventList,
-  ScheduledEventListItem,
-} from "@/features/scheduled-event/components/scheduled-event-list";
+import { ScheduledEventListItem } from "@/features/scheduled-event/components/scheduled-event-list";
 import type { Status } from "@/features/scheduled-event/schema";
 import { statusSchema } from "@/features/scheduled-event/schema";
-import { CalendarDate } from "@/features/timezone/client/calendar-date";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 
 import { EventsTabbedView } from "./events-tabbed-view";
 
 async function loadData({
-  period,
+  status,
   search,
 }: {
-  period: Status;
+  status: Status;
   search?: string;
 }) {
   const { userId } = await requireUser();
   const scheduledEvents = await getScheduledEvents({
     userId,
-    status: period,
+    status,
     search,
   });
-  return { groupedEvents: scheduledEvents };
+  return scheduledEvents;
 }
 
 async function ScheduledEventEmptyState({ status }: { status: Status }) {
@@ -101,11 +98,11 @@ export default async function Page({
   searchParams,
 }: {
   params: Params;
-  searchParams?: { period: string; q?: string };
+  searchParams?: { status: string; q?: string };
 }) {
   const { t } = await getTranslation(params.locale);
-  const period = statusSchema.catch("upcoming").parse(searchParams?.period);
-  const { groupedEvents } = await loadData({ period, search: searchParams?.q });
+  const status = statusSchema.catch("upcoming").parse(searchParams?.status);
+  const scheduledEvents = await loadData({ status, search: searchParams?.q });
 
   return (
     <PageContainer>
@@ -130,31 +127,28 @@ export default async function Page({
               })}
             />
             <div className="space-y-6">
-              {groupedEvents.length === 0 && (
-                <ScheduledEventEmptyState status={period} />
+              {scheduledEvents.length === 0 && (
+                <ScheduledEventEmptyState status={status} />
               )}
-              {groupedEvents.map((group) => (
-                <div key={group.date}>
-                  <h3 className="text-muted-foreground mb-2 text-sm font-medium">
-                    <CalendarDate date={group.date} />
-                  </h3>
-                  <ScheduledEventList>
-                    {group.events.map((event) => (
+              {scheduledEvents.length > 0 && (
+                <StackedList>
+                  {scheduledEvents.map((event) => (
+                    <StackedListItem key={event.id}>
                       <ScheduledEventListItem
-                        key={event.id}
                         eventId={event.id}
+                        key={event.id}
+                        floating={event.timeZone === null}
                         title={event.title}
                         start={event.start}
                         end={event.end}
                         status={event.status}
                         allDay={event.allDay}
                         invites={event.invites}
-                        isFloating={!event.timeZone}
                       />
-                    ))}
-                  </ScheduledEventList>
-                </div>
-              ))}
+                    </StackedListItem>
+                  ))}
+                </StackedList>
+              )}
             </div>
           </div>
         </EventsTabbedView>

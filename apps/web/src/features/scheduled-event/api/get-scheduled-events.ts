@@ -67,9 +67,7 @@ export async function getScheduledEvents({
     status:
       event.status === "confirmed"
         ? // If the event is confirmed, it's either past or upcoming
-          event.start < now
-          ? "past"
-          : "upcoming"
+          ((event.start < now ? "past" : "upcoming") as Status)
         : event.status,
     invites: event.invites.map((invite) => ({
       id: invite.id,
@@ -78,25 +76,5 @@ export async function getScheduledEvents({
     })),
   }));
 
-  const groupedEvents = events.reduce<
-    Record<string, Array<(typeof events)[number]>>
-  >((acc, event) => {
-    const dateKey = dayjs(event.start).startOf("day").toISOString();
-    if (!acc[dateKey]) {
-      acc[dateKey] = [];
-    }
-    acc[dateKey].push(event);
-    return acc;
-  }, {});
-
-  const groupedEventsArray = Object.keys(groupedEvents)
-    .sort((a, b) =>
-      status === "past" ? b.localeCompare(a) : a.localeCompare(b),
-    )
-    .map((dateKey) => ({
-      date: dateKey,
-      events: groupedEvents[dateKey],
-    }));
-
-  return groupedEventsArray;
+  return events;
 }

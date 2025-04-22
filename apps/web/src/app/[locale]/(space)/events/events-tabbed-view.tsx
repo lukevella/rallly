@@ -7,7 +7,7 @@ import { Trans } from "@/components/trans";
 
 export function EventsTabbedView({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
-  const name = "period";
+  const name = "status";
   const router = useRouter();
   const handleTabChange = React.useCallback(
     (value: string) => {
