@@ -1,8 +1,7 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
 import { useRouter } from "next/navigation";
-import type { Session } from "next-auth";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import React from "react";
 
 import { useSubscription } from "@/contexts/plan";
@@ -28,7 +27,8 @@ type UserData = {
 
 export const UserContext = React.createContext<{
   user: UserData;
-  refresh: (data?: Record<string, unknown>) => Promise<Session | null>;
+  isAuthenticated: boolean;
+  refresh: () => void;
   ownsObject: (obj: {
     userId?: string | null;
     guestId?: string | null;
@@ -58,9 +58,23 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
   return <>{props.children}</>;
 };
 
-export const UserProvider = (props: { children?: React.ReactNode }) => {
-  const session = useSession();
-  const user = session.data?.user;
+export const UserProvider = ({
+  children,
+  user,
+}: {
+  children?: React.ReactNode;
+  user?: {
+    id: string;
+    name: string;
+    email?: string;
+    tier: "guest" | "hobby" | "pro";
+    timeZone?: string;
+    timeFormat?: "hours12" | "hours24";
+    weekStart?: number;
+    image?: string;
+    locale?: string;
+  };
+}) => {
   const subscription = useSubscription();
   const updatePreferences = trpc.user.updatePreferences.useMutation();
   const { t, i18n } = useTranslation();
@@ -97,10 +111,8 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
           image: user?.image ?? null,
           locale: user?.locale ?? i18n.language,
         },
-        refresh: async (data) => {
-          router.refresh();
-          return await session.update(data);
-        },
+        isAuthenticated: !!user,
+        refresh: router.refresh,
         logout: async () => {
           await signOut();
           posthog?.capture("logout");
@@ -127,10 +139,10 @@ export const UserProvider = (props: { children?: React.ReactNode }) => {
               weekStart: newPreferences.weekStart ?? undefined,
             });
           }
-          await session.update(newPreferences);
+          router.refresh();
         }}
       >
-        {props.children}
+        {children}
       </PreferencesProvider>
     </UserContext.Provider>
   );

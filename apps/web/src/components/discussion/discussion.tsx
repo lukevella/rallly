@@ -26,7 +26,7 @@ import {
   MoreHorizontalIcon,
   TrashIcon,
 } from "lucide-react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -57,8 +57,7 @@ function NewCommentForm({
 }) {
   const { t } = useTranslation();
   const poll = usePoll();
-  const { user } = useUser();
-  const session = useSession();
+  const { user, isAuthenticated } = useUser();
   const { participants } = useParticipants();
 
   const authorName = React.useMemo(() => {
@@ -98,7 +97,7 @@ function NewCommentForm({
     <form
       className="w-full space-y-2.5"
       onSubmit={handleSubmit(async ({ authorName, content }) => {
-        if (session.status !== "authenticated") {
+        if (!isAuthenticated) {
           await signIn("guest", {
             redirect: false,
           });

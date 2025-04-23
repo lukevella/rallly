@@ -1,9 +1,7 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import React from "react";
 
 import { Logo } from "@/components/logo";
@@ -16,8 +14,6 @@ import { trpc } from "@/trpc/client";
 type PageProps = { magicLink: string; email: string };
 
 export const LoginPage = ({ magicLink, email }: PageProps) => {
-  const session = useSession();
-  const posthog = usePostHog();
   const { t } = useTranslation();
   const [error, setError] = React.useState<string | null>(null);
 
@@ -28,15 +24,6 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
     },
     onSuccess: async (data) => {
       if (!data.url.includes("auth/error")) {
-        // if login was successful, update the session
-        const updatedSession = await session.update();
-        if (updatedSession?.user) {
-          // identify the user in posthog
-          posthog?.identify(updatedSession.user.id, {
-            email: updatedSession.user.email,
-            name: updatedSession.user.name,
-          });
-        }
         router.push(data.url);
       } else {
         setError(
