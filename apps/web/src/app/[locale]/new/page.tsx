@@ -1,18 +1,16 @@
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
-import { Trans } from "react-i18next/TransWithoutContext";
 
-import type { Params } from "@/app/[locale]/types";
 import { PollPageIcon } from "@/app/components/page-icons";
 import { CreatePoll } from "@/components/create-poll";
+import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
 import { getTranslation } from "@/i18n/server";
 import { getLoggedIn } from "@/next-auth";
 
 import { BackButton } from "./back-button";
 
-export default async function Page({ params }: { params: Params }) {
-  const { t } = await getTranslation(params.locale);
+export default async function Page() {
   const isLoggedIn = await getLoggedIn();
 
   return (
@@ -27,7 +25,7 @@ export default async function Page({ params }: { params: Params }) {
               <PollPageIcon size="sm" />
               <div className="flex items-baseline gap-x-8">
                 <h1 className="font-semibold">
-                  <Trans t={t} i18nKey="poll" defaults="Poll" />
+                  <Trans i18nKey="poll" defaults="Poll" />
                 </h1>
               </div>
             </div>
@@ -41,7 +39,7 @@ export default async function Page({ params }: { params: Params }) {
                   <Link
                     href={`/login?redirectTo=${encodeURIComponent("/new")}`}
                   >
-                    <Trans i18nKey="login" />
+                    <Trans i18nKey="login" defaults="Login" />
                   </Link>
                 </Button>
                 <Button variant="primary" asChild>
