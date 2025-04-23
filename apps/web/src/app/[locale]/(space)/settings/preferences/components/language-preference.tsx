@@ -8,8 +8,9 @@ import { z } from "zod";
 
 import { LanguageSelect } from "@/components/poll/language-selector";
 import { Trans } from "@/components/trans";
-import { usePreferences } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
+
+import { updateLocale } from "../actions";
 
 const formSchema = z.object({
   language: z.string(),
@@ -25,13 +26,12 @@ export const LanguagePreference = () => {
     },
     resolver: zodResolver(formSchema),
   });
-  const { updatePreferences } = usePreferences();
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
-          await updatePreferences({ locale: data.language });
+          await updateLocale(data.language);
           i18n.changeLanguage(data.language);
           form.reset({ language: data.language });
         })}

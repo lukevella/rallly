@@ -90,7 +90,6 @@ export default async function Root({
                       initialValue={{
                         timeFormat: user?.timeFormat,
                         timeZone: user?.timeZone,
-                        locale: user?.locale,
                         weekStart: user?.weekStart,
                       }}
                     >
