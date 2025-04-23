@@ -13,7 +13,7 @@ export default async function SetupPage() {
 
   const isUserOnboarded = onboardedUserSchema.safeParse(user).success;
 
-  if (!isUserOnboarded) {
+  if (isUserOnboarded) {
     redirect("/");
   }
 
