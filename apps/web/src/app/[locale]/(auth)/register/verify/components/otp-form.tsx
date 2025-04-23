@@ -36,7 +36,7 @@ export function OTPForm({ token }: { token: string }) {
     resolver: zodResolver(otpFormSchema),
   });
 
-  const { timeZone } = useDayjs();
+  const { timeZone, weekStart, timeFormat } = useDayjs();
 
   const locale = i18n.language;
 
@@ -50,6 +50,8 @@ export function OTPForm({ token }: { token: string }) {
       token,
       timeZone,
       locale,
+      weekStart,
+      timeFormat,
       code: data.otp,
     });
 

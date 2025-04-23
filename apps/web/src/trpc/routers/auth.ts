@@ -97,6 +97,8 @@ export const auth = router({
         token: z.string(),
         code: z.string(),
         timeZone: z.string().optional(),
+        weekStart: z.number().min(0).max(6).optional(),
+        timeFormat: z.enum(["hours12", "hours24"]).optional(),
         locale: z.string().optional(),
       }),
     )
