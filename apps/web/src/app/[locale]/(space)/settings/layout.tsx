@@ -7,18 +7,16 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
-import { getTranslation } from "@/i18n/server";
+import { Trans } from "@/components/trans";
 
 import { SignOutButton } from "./components/sign-out-button";
 import { SettingsLayout } from "./settings-menu";
 
 export default async function ProfileLayout({
   children,
-  params,
-}: React.PropsWithChildren<{
-  params: { locale: string };
-}>) {
-  const { t } = await getTranslation(params.locale);
+}: {
+  children?: React.ReactNode;
+}) {
   return (
     <PageContainer>
       <PageHeader>
@@ -26,9 +24,7 @@ export default async function ProfileLayout({
           <div className="flex-1">
             <PageTitle>
               <SettingsPageIcon />
-              {t("settings", {
-                defaultValue: "Settings",
-              })}
+              <Trans i18nKey="settings" />
             </PageTitle>
           </div>
           <div className="flex items-center gap-2">

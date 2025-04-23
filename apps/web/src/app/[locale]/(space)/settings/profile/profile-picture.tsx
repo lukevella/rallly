@@ -1,3 +1,5 @@
+"use client";
+
 import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { useToast } from "@rallly/ui/hooks/use-toast";

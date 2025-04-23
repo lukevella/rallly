@@ -24,7 +24,6 @@ import { LogoLink } from "@/app/components/logo-link";
 import { Trans } from "@/components/trans";
 import { getUser } from "@/data/get-user";
 import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
-import { getTranslation } from "@/i18n/server";
 
 import { UpgradeButton } from "../upgrade-button";
 import { NavItem } from "./nav-item";
@@ -34,7 +33,6 @@ export async function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const user = await getUser();
-  const { t } = await getTranslation();
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -54,7 +52,9 @@ export async function AppSidebar({
                   </Link>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Create</TooltipContent>
+              <TooltipContent>
+                <Trans i18nKey="create" />
+              </TooltipContent>
             </Tooltip>
           </div>
         </div>
@@ -62,35 +62,18 @@ export async function AppSidebar({
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            {/* <NavItem href="/spaces">
-              <span className="inline-flex size-4 items-center justify-center rounded bg-violet-400 text-xs text-white">
-                P
-              </span>
-              <span className="flex-1">Personal</span>
-            </NavItem> */}
             <NavItem href="/">
               <HomeIcon className="size-4" />
-              {t("home")}
+              <Trans i18nKey="home" />
             </NavItem>
             <NavItem href="/polls">
               <BarChart2Icon className="size-4" />
-              {t("polls")}
+              <Trans i18nKey="polls" />
             </NavItem>
             <NavItem href="/events">
               <CalendarIcon className="size-4" />
-              {t("events")}
+              <Trans i18nKey="events" />
             </NavItem>
-            {/* <NavItem href="/teams">
-              <UsersIcon className="size-4" />
-              {t("teams", { defaultValue: "Teams" })}
-            </NavItem>
-            <NavItem href="/settings">
-              <SettingsIcon className="size-4" />
-              {t("settings", { defaultValue: "Settings" })}
-            </NavItem> */}
-            {/* <NavItem href="/links" icon={LinkIcon} label="Links" /> */}
-            {/* <NavItem href="/availability" icon={ClockIcon} label="Availability" /> */}
-            {/* <NavItem href="/integrations" icon={PuzzleIcon} label="Integrations" /> */}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

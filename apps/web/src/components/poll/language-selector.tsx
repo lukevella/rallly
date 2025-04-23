@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
-import { GlobeIcon } from "lucide-react";
+import { LanguagesIcon } from "lucide-react";
 
 export const LanguageSelect: React.FunctionComponent<{
   className?: string;
@@ -20,7 +20,7 @@ export const LanguageSelect: React.FunctionComponent<{
       <SelectTrigger asChild className={className}>
         <Button>
           <Icon>
-            <GlobeIcon />
+            <LanguagesIcon />
           </Icon>
           <SelectValue />
         </Button>

@@ -1,6 +1,7 @@
 "use client";
 
 import type { SelectProps } from "@radix-ui/react-select";
+import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
@@ -15,7 +16,7 @@ import {
 import { useDialog } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import dayjs from "dayjs";
-import { CheckIcon, ChevronsUpDownIcon, GlobeIcon } from "lucide-react";
+import { CheckIcon, GlobeIcon } from "lucide-react";
 import React from "react";
 
 import { Trans } from "@/components/trans";
@@ -71,38 +72,37 @@ export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
   );
 };
 
-export const TimeZoneSelect = React.forwardRef<HTMLButtonElement, SelectProps>(
-  ({ value, onValueChange, disabled }, ref) => {
-    const dialog = useDialog();
-    return (
-      <>
-        <CommandDialog {...dialog.dialogProps}>
-          <TimeZoneCommand
-            value={value}
-            onSelect={(newValue) => {
-              onValueChange?.(newValue);
-              dialog.dismiss();
-            }}
-          />
-        </CommandDialog>
-        <Button
-          ref={ref}
-          disabled={disabled}
-          onClick={() => {
-            dialog.trigger();
+export const TimeZoneSelect = React.forwardRef<
+  HTMLButtonElement,
+  SelectProps & { className?: string }
+>(({ value, onValueChange, className, disabled }, ref) => {
+  const dialog = useDialog();
+  return (
+    <>
+      <CommandDialog {...dialog.dialogProps}>
+        <TimeZoneCommand
+          value={value}
+          onSelect={(newValue) => {
+            onValueChange?.(newValue);
+            dialog.dismiss();
           }}
-        >
-          <Icon>
-            <GlobeIcon />
-          </Icon>
-          {value}
-          <Icon>
-            <ChevronsUpDownIcon />
-          </Icon>
-        </Button>
-      </>
-    );
-  },
-);
+        />
+      </CommandDialog>
+      <Button
+        ref={ref}
+        disabled={disabled}
+        className={cn("justify-start text-left", className)}
+        onClick={() => {
+          dialog.trigger();
+        }}
+      >
+        <Icon>
+          <GlobeIcon />
+        </Icon>
+        <span className="flex-1">{value}</span>
+      </Button>
+    </>
+  );
+});
 
 TimeZoneSelect.displayName = "TimeZoneSelect";
