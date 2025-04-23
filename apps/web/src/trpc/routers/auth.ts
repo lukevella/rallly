@@ -120,6 +120,8 @@ export const auth = router({
           name,
           email,
           timeZone: input.timeZone,
+          timeFormat: input.timeFormat,
+          weekStart: input.weekStart,
           locale: input.locale,
         },
       });
