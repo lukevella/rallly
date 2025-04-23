@@ -1,7 +1,7 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import React from "react";
 
 import { useSubscription } from "@/contexts/plan";
@@ -21,12 +21,12 @@ type UserData = {
 
 export const UserContext = React.createContext<{
   user: UserData;
-  isAuthenticated: boolean;
   refresh: () => void;
   ownsObject: (obj: {
     userId?: string | null;
     guestId?: string | null;
   }) => boolean;
+  createGuestIfNeeded: () => Promise<void>;
   logout: () => Promise<void>;
 } | null>(null);
 
@@ -108,7 +108,14 @@ export const UserProvider = ({
           tier,
           image: user?.image,
         },
-        isAuthenticated: !!user,
+        createGuestIfNeeded: async () => {
+          if (!user) {
+            await signIn("guest", {
+              redirect: false,
+            });
+            router.refresh();
+          }
+        },
         refresh: router.refresh,
         logout: async () => {
           await signOut();

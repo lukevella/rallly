@@ -11,7 +11,6 @@ import {
 import { Form } from "@rallly/ui/form";
 import { useToast } from "@rallly/ui/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
@@ -42,7 +41,7 @@ export interface CreatePollPageProps {
 
 export const CreatePoll: React.FunctionComponent = () => {
   const router = useRouter();
-  const { user, isAuthenticated } = useUser();
+  const { user, createGuestIfNeeded } = useUser();
   const { toast } = useToast();
   const form = useForm<NewEventData>({
     defaultValues: {
@@ -83,11 +82,7 @@ export const CreatePoll: React.FunctionComponent = () => {
       <form
         onSubmit={form.handleSubmit(async (formData) => {
           const title = required(formData?.title);
-          if (!isAuthenticated) {
-            await signIn("guest", {
-              redirect: false,
-            });
-          }
+          await createGuestIfNeeded();
           await createPoll.mutateAsync(
             {
               title: title,

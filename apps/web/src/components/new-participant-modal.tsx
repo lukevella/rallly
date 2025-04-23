@@ -7,7 +7,6 @@ import { FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import * as Sentry from "@sentry/nextjs";
 import { TRPCClientError } from "@trpc/client";
-import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
@@ -91,7 +90,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
 
   const isEmailRequired = poll.requireParticipantEmail;
 
-  const { user, isAuthenticated } = useUser();
+  const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = !user.isGuest;
   const { register, setError, formState, handleSubmit } =
     useForm<NewParticipantFormData>({
@@ -112,11 +111,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
     <form
       onSubmit={handleSubmit(async (data) => {
         try {
-          if (!isAuthenticated) {
-            await signIn("guest", {
-              redirect: false,
-            });
-          }
+          await createGuestIfNeeded();
           const newParticipant = await addParticipant.mutateAsync({
             name: data.name,
             votes: props.votes,
