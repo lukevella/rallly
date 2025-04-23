@@ -5,14 +5,15 @@ import { Logo } from "@/components/logo";
 import { Trans } from "@/components/trans";
 import { getUser } from "@/data/get-user";
 import { SetupForm } from "@/features/setup/components/setup-form";
-import { isUserOnboarded } from "@/features/setup/utils";
+import { onboardedUserSchema } from "@/features/setup/schema";
 import { getTranslation } from "@/i18n/server";
 
 export default async function SetupPage() {
   const user = await getUser();
 
-  if (isUserOnboarded(user)) {
-    // User is already onboarded, redirect to dashboard
+  const isUserOnboarded = onboardedUserSchema.safeParse(user).success;
+
+  if (!isUserOnboarded) {
     redirect("/");
   }
 
