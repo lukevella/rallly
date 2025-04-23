@@ -328,5 +328,10 @@
   "unconfirmedEventsEmptyStateTitle": "Geen onbevestigde evenementen",
   "unconfirmedEventsEmptyStateDescription": "Onbevestigde evenementen zullen hier verschijnen.",
   "canceledEventsEmptyStateTitle": "Geen geannuleerde evenementen",
-  "canceledEventsEmptyStateDescription": "Geannuleerde evenementen zullen hier verschijnen."
+  "canceledEventsEmptyStateDescription": "Geannuleerde evenementen zullen hier verschijnen.",
+  "setupFormTitle": "Installatie",
+  "setupFormDescription": "Voltooi je accountinstellingen.",
+  "errorNotAuthenticated": "Niet geauthenticeerd",
+  "errorInvalidFields": "Ongeldige velden. Controleer je invoer.",
+  "errorDatabaseUpdateFailed": "Databasefout: bijwerken van instellingen is mislukt."
 }
