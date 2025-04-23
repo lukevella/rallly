@@ -4,8 +4,8 @@ import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
 import Link from "next/link";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { getOnboardedUser } from "@/data/get-onboarded-user";
 import { CommandMenu } from "@/features/navigation/command-menu";
+import { getOnboardedUser } from "@/features/setup/api";
 import { TimezoneProvider } from "@/features/timezone/client/context";
 
 import { AppSidebar } from "./components/sidebar/app-sidebar";

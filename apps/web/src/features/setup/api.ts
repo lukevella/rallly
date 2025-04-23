@@ -4,14 +4,14 @@ import { cache } from "react";
 
 import { getUser } from "@/data/get-user";
 
-import { isUserOnboarded } from "./utils";
+import { onboardedUserSchema } from "./schema";
 
 export const getOnboardedUser = cache(async () => {
   const user = await getUser();
 
-  const { timeZone, locale, name } = user;
+  const onboardedUser = onboardedUserSchema.safeParse(user);
 
-  if (!isUserOnboarded({ timeZone, locale, name })) {
+  if (!onboardedUser.success) {
     const headerList = headers();
     const pathname = headerList.get("x-pathname");
     const searchParams =
@@ -21,5 +21,10 @@ export const getOnboardedUser = cache(async () => {
     redirect(`/setup${searchParams}`);
   }
 
-  return { ...user, timeZone, locale, name };
+  return {
+    ...user,
+    timeZone: onboardedUser.data.timeZone,
+    locale: onboardedUser.data.locale,
+    name: onboardedUser.data.name,
+  };
 });
