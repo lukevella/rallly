@@ -1,6 +1,7 @@
 import "tailwindcss/tailwind.css";
 import "../../style.css";
 
+import { defaultLocale, supportedLngs } from "@rallly/languages";
 import { PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/toaster";
 import { TooltipProvider } from "@rallly/ui/tooltip";
@@ -21,7 +22,6 @@ import { TRPCProvider } from "@/trpc/client/provider";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 
 import { PostHogPageView } from "../posthog-page-view";
-import { defaultLocale, supportedLngs } from "@rallly/languages";
 
 const inter = Inter({
   subsets: ["latin"],
