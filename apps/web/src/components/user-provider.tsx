@@ -5,9 +5,7 @@ import { signOut } from "next-auth/react";
 import React from "react";
 
 import { useSubscription } from "@/contexts/plan";
-import { PreferencesProvider } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
 import { isOwner } from "@/utils/permissions";
 
 import { useRequiredContext } from "./use-required-context";
@@ -15,14 +13,10 @@ import { useRequiredContext } from "./use-required-context";
 type UserData = {
   id?: string;
   name: string;
-  email?: string | null;
+  email?: string;
   isGuest: boolean;
   tier: "guest" | "hobby" | "pro";
-  timeZone?: string | null;
-  timeFormat?: "hours12" | "hours24" | null;
-  weekStart?: number | null;
-  image?: string | null;
-  locale?: string | null;
+  image?: string;
 };
 
 export const UserContext = React.createContext<{
@@ -58,30 +52,37 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
   return <>{props.children}</>;
 };
 
+type BaseUser = {
+  id: string;
+  tier: "guest" | "hobby" | "pro";
+  image?: string;
+  name?: string;
+  email?: string;
+};
+
+type RegisteredUser = BaseUser & {
+  email: string;
+  name: string;
+  tier: "hobby" | "pro";
+};
+
+type GuestUser = BaseUser & {
+  tier: "guest";
+};
+
 export const UserProvider = ({
   children,
   user,
 }: {
   children?: React.ReactNode;
-  user?: {
-    id: string;
-    name: string;
-    email?: string;
-    tier: "guest" | "hobby" | "pro";
-    timeZone?: string;
-    timeFormat?: "hours12" | "hours24";
-    weekStart?: number;
-    image?: string;
-    locale?: string;
-  };
+  user?: RegisteredUser | GuestUser;
 }) => {
   const subscription = useSubscription();
-  const updatePreferences = trpc.user.updatePreferences.useMutation();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const router = useRouter();
   const posthog = usePostHog();
 
-  const isGuest = !user?.email;
+  const isGuest = !user || user.tier === "guest";
   const tier = isGuest ? "guest" : subscription?.active ? "pro" : "hobby";
 
   React.useEffect(() => {
@@ -90,9 +91,7 @@ export const UserProvider = ({
         email: user.email,
         name: user.name,
         tier,
-        timeZone: user.timeZone ?? null,
-        image: user.image ?? null,
-        locale: user.locale ?? i18n.language,
+        image: user.image,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -104,12 +103,10 @@ export const UserProvider = ({
         user: {
           id: user?.id,
           name: user?.name ?? t("guest"),
-          email: user?.email || null,
+          email: user?.email,
           isGuest,
           tier,
-          timeZone: user?.timeZone ?? null,
-          image: user?.image ?? null,
-          locale: user?.locale ?? i18n.language,
+          image: user?.image,
         },
         isAuthenticated: !!user,
         refresh: router.refresh,
@@ -123,27 +120,7 @@ export const UserProvider = ({
         },
       }}
     >
-      <PreferencesProvider
-        initialValue={{
-          locale: user?.locale ?? undefined,
-          timeZone: user?.timeZone ?? undefined,
-          timeFormat: user?.timeFormat ?? undefined,
-          weekStart: user?.weekStart ?? undefined,
-        }}
-        onUpdate={async (newPreferences) => {
-          if (!isGuest) {
-            await updatePreferences.mutateAsync({
-              locale: newPreferences.locale ?? undefined,
-              timeZone: newPreferences.timeZone ?? undefined,
-              timeFormat: newPreferences.timeFormat ?? undefined,
-              weekStart: newPreferences.weekStart ?? undefined,
-            });
-          }
-          router.refresh();
-        }}
-      >
-        {children}
-      </PreferencesProvider>
+      {children}
     </UserContext.Provider>
   );
 };

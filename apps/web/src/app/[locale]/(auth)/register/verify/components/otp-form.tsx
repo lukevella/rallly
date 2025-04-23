@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -42,7 +41,6 @@ export function OTPForm({ token }: { token: string }) {
   const locale = i18n.language;
 
   const queryClient = trpc.useUtils();
-  const posthog = usePostHog();
   const authenticateRegistration =
     trpc.auth.authenticateRegistration.useMutation();
   const searchParams = useSearchParams();
@@ -63,11 +61,6 @@ export function OTPForm({ token }: { token: string }) {
     }
 
     queryClient.invalidate();
-
-    posthog?.identify(res.user.id, {
-      email: res.user.email,
-      name: res.user.name,
-    });
 
     signIn("registration-token", {
       token,

@@ -1,8 +1,11 @@
+"use client";
+
 import type { TimeFormat } from "@rallly/database";
 import React from "react";
 import { useSetState } from "react-use";
 
 import { useRequiredContext } from "@/components/use-required-context";
+import { trpc } from "@/trpc/client";
 
 type Preferences = {
   timeZone?: string | null;
@@ -23,13 +26,12 @@ const PreferencesContext = React.createContext<PreferencesContextValue | null>(
 export const PreferencesProvider = ({
   children,
   initialValue,
-  onUpdate,
 }: {
   children?: React.ReactNode;
   initialValue: Partial<Preferences>;
-  onUpdate?: (preferences: Partial<Preferences>) => Promise<void>;
 }) => {
   const [preferences, setPreferences] = useSetState<Preferences>(initialValue);
+  const updatePreferences = trpc.user.updatePreferences.useMutation();
 
   return (
     <PreferencesContext.Provider
@@ -37,7 +39,12 @@ export const PreferencesProvider = ({
         preferences,
         updatePreferences: async (newPreferences) => {
           setPreferences(newPreferences);
-          await onUpdate?.(newPreferences);
+          await updatePreferences.mutateAsync({
+            locale: newPreferences.locale ?? undefined,
+            timeZone: newPreferences.timeZone ?? undefined,
+            timeFormat: newPreferences.timeFormat ?? undefined,
+            weekStart: newPreferences.weekStart ?? undefined,
+          });
         },
       }}
     >

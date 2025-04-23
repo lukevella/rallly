@@ -27,8 +27,8 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const DateTimePreferencesForm = () => {
-  const { timeFormat, weekStart, timeZone, locale } = useDayjs();
-  const { preferences, updatePreferences } = usePreferences();
+  const { timeFormat, weekStart, timeZone } = useDayjs();
+  const { updatePreferences } = usePreferences();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -126,25 +126,6 @@ const DateTimePreferencesForm = () => {
           >
             <Trans i18nKey="save" />
           </Button>
-          {preferences.timeFormat || preferences.weekStart ? (
-            <Button
-              onClick={async () => {
-                updatePreferences({
-                  weekStart: null,
-                  timeFormat: null,
-                });
-                form.reset({
-                  weekStart: locale.weekStart,
-                  timeFormat: locale.timeFormat,
-                });
-              }}
-            >
-              <Trans
-                defaults="Use locale defaults"
-                i18nKey="useLocaleDefaults"
-              />
-            </Button>
-          ) : null}
         </div>
       </form>
     </Form>

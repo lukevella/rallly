@@ -12,6 +12,7 @@ import React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { UserProvider } from "@/components/user-provider";
+import { PreferencesProvider } from "@/contexts/preferences";
 import { getUser } from "@/data/get-user";
 import { TimezoneProvider } from "@/features/timezone/client/context";
 import { I18nProvider } from "@/i18n/client";
@@ -64,27 +65,42 @@ export default async function Root({
                 <PostHogPageView />
                 <TooltipProvider>
                   <UserProvider
-                    user={{
-                      id: user?.id ?? session?.user?.id ?? "",
-                      name: user?.name ?? session?.user?.name ?? "",
-                      email: user?.email ?? session?.user?.email ?? undefined,
-                      tier: user ? (user.isPro ? "pro" : "hobby") : "guest",
-                      timeZone:
-                        user?.timeZone ?? session?.user?.timeZone ?? undefined,
-                      timeFormat: session?.user?.timeFormat ?? undefined,
-                      weekStart: session?.user?.weekStart ?? undefined,
-                      image: session?.user?.image ?? undefined,
-                      locale: session?.user?.locale ?? undefined,
-                    }}
+                    user={
+                      user
+                        ? {
+                            id: user.id,
+                            name: user.name,
+                            email: user.email,
+                            tier: user
+                              ? user.isPro
+                                ? "pro"
+                                : "hobby"
+                              : "guest",
+                            image: user.image,
+                          }
+                        : session?.user
+                          ? {
+                              id: session.user.id,
+                              tier: "guest",
+                            }
+                          : undefined
+                    }
                   >
-                    <TimezoneProvider
-                      initialTimezone={session?.user?.timeZone ?? undefined}
+                    <PreferencesProvider
+                      initialValue={{
+                        timeFormat: user?.timeFormat,
+                        timeZone: user?.timeZone,
+                        locale: user?.locale,
+                        weekStart: user?.weekStart,
+                      }}
                     >
-                      <ConnectedDayjsProvider>
-                        {children}
-                        <TimeZoneChangeDetector />
-                      </ConnectedDayjsProvider>
-                    </TimezoneProvider>
+                      <TimezoneProvider initialTimezone={user?.timeZone}>
+                        <ConnectedDayjsProvider>
+                          {children}
+                          <TimeZoneChangeDetector />
+                        </ConnectedDayjsProvider>
+                      </TimezoneProvider>
+                    </PreferencesProvider>
                   </UserProvider>
                 </TooltipProvider>
               </PostHogProvider>
