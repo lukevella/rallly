@@ -328,5 +328,10 @@
   "unconfirmedEventsEmptyStateTitle": "No Unconfirmed Events",
   "unconfirmedEventsEmptyStateDescription": "Unconfirmed events will show up here.",
   "canceledEventsEmptyStateTitle": "No Canceled Events",
-  "canceledEventsEmptyStateDescription": "Canceled events will show up here."
+  "canceledEventsEmptyStateDescription": "Canceled events will show up here.",
+  "setupFormTitle": "Setup",
+  "setupFormDescription": "Finish setting up your account.",
+  "errorNotAuthenticated": "Not authenticated",
+  "errorInvalidFields": "Invalid fields. Please check your input.",
+  "errorDatabaseUpdateFailed": "Database error: Failed to update settings."
 }
