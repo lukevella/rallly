@@ -295,6 +295,12 @@
   "billingPortalDescription": "Besuche das Rechnungsportal, um dein Abonnement zu verwalten, Zahlungsmethoden zu aktualisieren oder den Zahlungsverlauf einzusehen.",
   "priceFree": "Kostenlos",
   "signUp": "Registrieren",
+  "upgradeToPro": "Auf Pro upgraden",
+  "moreParticipants": "{count} weitere…",
+  "commandMenuNoResults": "Keine Treffer",
+  "commandMenu": "Befehlsmenü",
+  "commandMenuDescription": "Befehl auswählen",
+  "eventsPageDesc": "Deine geplanten Termine anzeigen und verwalten",
   "upcomingEventsEmptyStateTitle": "Keine bevorstehenden Termine",
   "upcomingEventsEmptyStateDescription": "Nachdem Du Termine geplant hast, werden sie hier angezeigt.",
   "pastEventsEmptyStateTitle": "Keine vergangenen Termine"
