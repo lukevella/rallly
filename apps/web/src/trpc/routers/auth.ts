@@ -143,6 +143,9 @@ export const auth = router({
             name: user.name,
             timeZone: input.timeZone,
             locale: input.locale,
+            tier: "hobby",
+            weekStart: input.weekStart,
+            timeFormat: input.timeFormat,
           },
         },
       });
