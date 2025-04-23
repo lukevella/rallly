@@ -4,8 +4,8 @@ import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
 import Link from "next/link";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { getUser } from "@/data/get-user";
 import { CommandMenu } from "@/features/navigation/command-menu";
+import { getOnboardedUser } from "@/features/setup/api";
 import { TimezoneProvider } from "@/features/timezone/client/context";
 
 import { AppSidebar } from "./components/sidebar/app-sidebar";
@@ -17,7 +17,8 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getUser();
+  const user = await getOnboardedUser();
+
   return (
     <TimezoneProvider initialTimezone={user.timeZone}>
       <AppSidebarProvider>

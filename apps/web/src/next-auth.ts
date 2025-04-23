@@ -66,6 +66,22 @@ const {
     },
   },
   events: {
+    createUser({ user }) {
+      if (user.id) {
+        posthog?.capture({
+          distinctId: user.id,
+          event: "register",
+          properties: {
+            $set: {
+              name: user.name,
+              email: user.email,
+              timeZone: user.timeZone ?? undefined,
+              locale: user.locale ?? undefined,
+            },
+          },
+        });
+      }
+    },
     signIn({ user, account }) {
       if (user.id) {
         posthog?.capture({
@@ -76,8 +92,8 @@ const {
             $set: {
               name: user.name,
               email: user.email,
-              timeZone: user.timeZone,
-              locale: user.locale,
+              timeZone: user.timeZone ?? undefined,
+              locale: user.locale ?? undefined,
             },
           },
         });
@@ -168,7 +184,6 @@ const {
             select: {
               name: true,
               email: true,
-              locale: true,
               timeFormat: true,
               timeZone: true,
               weekStart: true,
@@ -180,7 +195,6 @@ const {
             token.name = user.name;
             token.email = user.email;
             token.picture = user.image;
-            token.locale = user.locale;
             token.timeFormat = user.timeFormat;
             token.timeZone = user.timeZone;
             token.weekStart = user.weekStart;
@@ -218,7 +232,7 @@ const requireUser = async () => {
  */
 export const getUserId = async () => {
   const session = await auth();
-  return session?.user?.email ? session.user.id : null;
+  return session?.user?.email ? session.user.id : undefined;
 };
 
 export const getLoggedIn = async () => {

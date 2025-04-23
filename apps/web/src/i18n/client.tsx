@@ -1,5 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
+import httpBackend from "i18next-http-backend";
 import React from "react";
 import {
   I18nextProvider,
@@ -14,12 +14,20 @@ export function useTranslation() {
   return useTranslationOrg("app");
 }
 
-export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const params = useParams<{ locale: string }>();
-  const locale = params?.locale ?? defaultNS;
-
+export function I18nProvider({
+  children,
+  locale,
+}: {
+  children: React.ReactNode;
+  locale: string;
+}) {
   const res = useAsync(async () => {
-    return await initI18next(locale, "app");
+    return await initI18next({
+      lng: locale,
+      middleware: (i18n) => {
+        i18n.use(httpBackend);
+      },
+    });
   });
 
   if (!res.value) {
@@ -27,7 +35,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <I18nextProvider i18n={res.value} defaultNS={defaultNS}>
+    <I18nextProvider i18n={res.value.i18n} defaultNS={defaultNS}>
       {children}
     </I18nextProvider>
   );
