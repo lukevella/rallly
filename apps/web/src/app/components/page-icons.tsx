@@ -29,10 +29,10 @@ const pageIconVariants = cva("inline-flex items-center justify-center", {
       purple: "bg-purple-500 text-white",
     },
     size: {
-      sm: "p-1 size-6 [&_svg]:size-3 rounded-md",
-      md: "p-2 size-8 [&_svg]:size-5 rounded-lg",
-      lg: "p-3 size-9 [&_svg]:size-5 rounded-xl",
-      xl: "p-4 size-10 [&_svg]:size-5 rounded-xl",
+      sm: "size-6 [&_svg]:size-3 rounded-md",
+      md: "size-8 [&_svg]:size-5 rounded-lg",
+      lg: "size-9 [&_svg]:size-5 rounded-lg",
+      xl: "size-10 [&_svg]:size-5 rounded-lg",
     },
   },
   defaultVariants: {
