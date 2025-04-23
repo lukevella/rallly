@@ -57,6 +57,7 @@
     "crypto": "^1.0.1",
     "dayjs": "^1.11.10",
     "i18next": "^24.2.2",
+    "i18next-http-backend": "^3.0.2",
     "i18next-icu": "^2.3.0",
     "i18next-resources-to-backend": "^1.2.1",
     "ics": "^3.1.0",
