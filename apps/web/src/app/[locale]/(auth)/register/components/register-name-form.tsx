@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
@@ -25,6 +25,7 @@ type RegisterNameFormValues = z.infer<typeof registerNameFormSchema>;
 
 export function RegisterNameForm() {
   const { t } = useTranslation();
+  const searchParams = useSearchParams();
   const form = useForm<RegisterNameFormValues>({
     defaultValues: {
       name: "",
@@ -43,7 +44,10 @@ export function RegisterNameForm() {
 
           if (res.ok) {
             await setToken(res.token);
-            router.push("/register/verify");
+            const redirectTo = searchParams.get("redirectTo");
+            router.push(
+              `/register/verify${redirectTo ? `?redirectTo=${redirectTo}` : ""}`,
+            );
           } else {
             switch (res.reason) {
               case "emailNotAllowed":
