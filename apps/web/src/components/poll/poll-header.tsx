@@ -1,13 +1,17 @@
 import { Button } from "@rallly/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
+import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
 
 import { useUser } from "../user-provider";
 
 export function PollHeader() {
   const { user } = useUser();
+  const pathname = usePathname();
+  const redirectTo = `?redirectTo=${encodeURIComponent(pathname)}`;
   return (
     <div className="sticky top-0 z-40 border-b bg-gray-100/90 p-3 backdrop-blur-md">
       <div className="mx-auto flex max-w-4xl items-center justify-between">
@@ -33,10 +37,14 @@ export function PollHeader() {
           ) : (
             <>
               <Button variant="ghost" asChild>
-                <Link href="/login">Login</Link>
+                <Link href={`/login${redirectTo}`}>
+                  <Trans i18nKey="login" defaults="Login" />
+                </Link>
               </Button>
               <Button variant="primary" asChild>
-                <Link href="/register">Sign Up</Link>
+                <Link href={`/register${redirectTo}`}>
+                  <Trans i18nKey="signUp" defaults="Sign Up" />
+                </Link>
               </Button>
             </>
           )}
