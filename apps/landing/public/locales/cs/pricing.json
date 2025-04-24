@@ -29,5 +29,6 @@
   "whenPollInactiveAnswer": "Anketa se stane neaktivní, když jsou všechny možnosti (data) v minulosti a zároveň nikdo anketu nenavštívil více než 30 dní. Neaktivní ankety jsou automaticky smazány, pokud nemáte placené předplatné.",
   "yearlyBillingDescription": "za rok",
   "annualBenefit": "{count} měsíců zdarma",
-  "pricingTitle": "Začněte zdarma"
+  "pricingTitle": "Začněte zdarma",
+  "pricingSubtitle": "Pro přístup k prémiovým funkcím přejděte na placenou verzi"
 }
