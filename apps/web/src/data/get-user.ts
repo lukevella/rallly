@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { cache } from "react";
 
 import { requireUser } from "@/next-auth";
+import { isSelfHosted } from "@/utils/constants";
 
 export const getUser = cache(async () => {
   const { userId } = await requireUser();
@@ -41,6 +42,6 @@ export const getUser = cache(async () => {
     timeZone: user.timeZone ?? undefined,
     timeFormat: user.timeFormat ?? undefined,
     weekStart: user.weekStart ?? undefined,
-    isPro: user.subscription?.active ?? false,
+    isPro: Boolean(isSelfHosted || user.subscription?.active),
   };
 });

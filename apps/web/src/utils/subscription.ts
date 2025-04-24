@@ -1,5 +1,7 @@
 import { prisma } from "@rallly/database";
 
+import { isSelfHosted } from "./constants";
+
 export const getSubscriptionStatus = async (userId: string) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -9,19 +11,12 @@ export const getSubscriptionStatus = async (userId: string) => {
       subscription: {
         select: {
           active: true,
-          periodEnd: true,
         },
       },
     },
   });
 
-  if (user?.subscription?.active === true) {
-    return {
-      active: true,
-    } as const;
-  }
-
   return {
-    active: false,
-  } as const;
+    active: user?.subscription?.active === true || isSelfHosted,
+  };
 };
