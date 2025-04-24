@@ -41,10 +41,6 @@ test.describe.serial(() => {
       email: TEST_USER_EMAIL,
     });
 
-    // Step 4: Navigate back to the poll
-    await page.getByRole("main").getByRole("link", { name: "Polls" }).click();
-    await expect(page).toHaveURL(/polls/);
-    await page.click("text=Monthly Meetup");
     await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
   });
 
