@@ -8,11 +8,11 @@ import { TooltipProvider } from "@rallly/ui/tooltip";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Viewport } from "next";
 import { Inter } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
 import React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { UserProvider } from "@/components/user-provider";
+import { PreferencesProvider } from "@/contexts/preferences";
 import { getUser } from "@/data/get-user";
 import { TimezoneProvider } from "@/features/timezone/client/context";
 import { I18nProvider } from "@/i18n/client";
@@ -33,32 +33,26 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-async function loadLocale() {
-  let locale = getLocale();
-
-  const userId = await getUserId();
-
-  if (userId) {
-    const user = await getUser();
-    if (user.locale) {
-      locale = user.locale;
-    }
-  }
-
-  if (!supportedLngs.includes(locale)) {
-    return defaultLocale;
-  }
-
-  return locale;
-}
-
 export default async function Root({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const session = await auth();
-  const locale = await loadLocale();
+
+  let locale = getLocale();
+
+  const userId = await getUserId();
+
+  const user = userId ? await getUser() : null;
+
+  if (user?.locale) {
+    locale = user.locale;
+  }
+
+  if (!supportedLngs.includes(locale)) {
+    locale = defaultLocale;
+  }
 
   return (
     <html lang={locale} className={inter.className}>
@@ -67,23 +61,48 @@ export default async function Root({
         <I18nProvider locale={locale}>
           <TRPCProvider>
             <LazyMotion features={domAnimation}>
-              <SessionProvider session={session}>
-                <PostHogProvider>
-                  <PostHogPageView />
-                  <TooltipProvider>
-                    <UserProvider>
-                      <TimezoneProvider
-                        initialTimezone={session?.user?.timeZone ?? undefined}
-                      >
+              <PostHogProvider>
+                <PostHogPageView />
+                <TooltipProvider>
+                  <UserProvider
+                    user={
+                      user
+                        ? {
+                            id: user.id,
+                            name: user.name,
+                            email: user.email,
+                            tier: user
+                              ? user.isPro
+                                ? "pro"
+                                : "hobby"
+                              : "guest",
+                            image: user.image,
+                          }
+                        : session?.user
+                          ? {
+                              id: session.user.id,
+                              tier: "guest",
+                            }
+                          : undefined
+                    }
+                  >
+                    <PreferencesProvider
+                      initialValue={{
+                        timeFormat: user?.timeFormat,
+                        timeZone: user?.timeZone,
+                        weekStart: user?.weekStart,
+                      }}
+                    >
+                      <TimezoneProvider initialTimezone={user?.timeZone}>
                         <ConnectedDayjsProvider>
                           {children}
                           <TimeZoneChangeDetector />
                         </ConnectedDayjsProvider>
                       </TimezoneProvider>
-                    </UserProvider>
-                  </TooltipProvider>
-                </PostHogProvider>
-              </SessionProvider>
+                    </PreferencesProvider>
+                  </UserProvider>
+                </TooltipProvider>
+              </PostHogProvider>
             </LazyMotion>
           </TRPCProvider>
         </I18nProvider>

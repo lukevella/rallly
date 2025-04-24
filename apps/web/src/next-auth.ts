@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import NextAuth from "next-auth";
 import type { Provider } from "next-auth/providers";
 import { cache } from "react";
-import z from "zod";
 
 import { CustomPrismaAdapter } from "./auth/adapters/prisma";
 import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
@@ -16,13 +15,6 @@ import { MicrosoftProvider } from "./auth/providers/microsoft";
 import { OIDCProvider } from "./auth/providers/oidc";
 import { RegistrationTokenProvider } from "./auth/providers/registration-token";
 import { nextAuthConfig } from "./next-auth.config";
-
-const sessionUpdateSchema = z.object({
-  locale: z.string().nullish(),
-  timeFormat: z.enum(["hours12", "hours24"]).nullish(),
-  timeZone: z.string().nullish(),
-  weekStart: z.number().nullish(),
-});
 
 const {
   auth: originalAuth,
@@ -162,43 +154,26 @@ const {
 
       return true;
     },
-    async jwt({ token, session }) {
-      if (session) {
-        const parsed = sessionUpdateSchema.safeParse(session);
-        if (parsed.success) {
-          Object.entries(parsed.data).forEach(([key, value]) => {
-            token[key] = value;
-          });
-        } else {
-          console.error(parsed.error);
-        }
-      } else {
-        const userId = token.sub;
-        const isGuest = userId?.startsWith("guest-");
+    async jwt({ token }) {
+      const userId = token.sub;
+      const isGuest = userId?.startsWith("guest-");
 
-        if (userId && !isGuest) {
-          const user = await prisma.user.findUnique({
-            where: {
-              id: userId,
-            },
-            select: {
-              name: true,
-              email: true,
-              timeFormat: true,
-              timeZone: true,
-              weekStart: true,
-              image: true,
-            },
-          });
+      if (userId && !isGuest) {
+        const user = await prisma.user.findUnique({
+          where: {
+            id: userId,
+          },
+          select: {
+            name: true,
+            email: true,
+            image: true,
+          },
+        });
 
-          if (user) {
-            token.name = user.name;
-            token.email = user.email;
-            token.picture = user.image;
-            token.timeFormat = user.timeFormat;
-            token.timeZone = user.timeZone;
-            token.weekStart = user.weekStart;
-          }
+        if (user) {
+          token.name = user.name;
+          token.email = user.email;
+          token.picture = user.image;
         }
       }
 

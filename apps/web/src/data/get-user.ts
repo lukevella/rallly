@@ -18,6 +18,8 @@ export const getUser = cache(async () => {
       image: true,
       locale: true,
       timeZone: true,
+      timeFormat: true,
+      weekStart: true,
       subscription: {
         select: {
           active: true,
@@ -37,6 +39,8 @@ export const getUser = cache(async () => {
     image: user.image ?? undefined,
     locale: user.locale ?? undefined,
     timeZone: user.timeZone ?? undefined,
+    timeFormat: user.timeFormat ?? undefined,
+    weekStart: user.weekStart ?? undefined,
     isPro: user.subscription?.active ?? false,
   };
 });

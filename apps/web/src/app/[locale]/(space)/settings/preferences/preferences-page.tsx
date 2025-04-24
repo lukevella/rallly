@@ -2,12 +2,12 @@
 
 import { Trans } from "@/components/trans";
 
-import { DateTimePreferences } from "../components/date-time-preferences";
-import { LanguagePreference } from "../components/language-preference";
 import {
   SettingsContent,
   SettingsSection,
 } from "../components/settings-layout";
+import { DateTimePreferences } from "./components/date-time-preferences";
+import { LanguagePreference } from "./components/language-preference";
 
 export function PreferencesPage() {
   return (
