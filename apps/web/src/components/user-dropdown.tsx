@@ -31,14 +31,12 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RegisterLink } from "@/components/register-link";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
-import { Plan, usePlan } from "@/contexts/plan";
 import { isFeedbackEnabled } from "@/utils/constants";
 
 import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
 
 export const UserDropdown = ({ className }: { className?: string }) => {
   const { user, logout } = useUser();
-  usePlan(); // prefetch plan data
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger
@@ -67,9 +65,6 @@ export const UserDropdown = ({ className }: { className?: string }) => {
                 {user.email}
               </div>
             ) : null}
-          </div>
-          <div className="ml-4">
-            <Plan />
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

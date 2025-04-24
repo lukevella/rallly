@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { signIn, signOut } from "next-auth/react";
 import React from "react";
 
-import { useSubscription } from "@/contexts/plan";
 import { useTranslation } from "@/i18n/client";
 import { isOwner } from "@/utils/permissions";
 
@@ -77,13 +76,12 @@ export const UserProvider = ({
   children?: React.ReactNode;
   user?: RegisteredUser | GuestUser;
 }) => {
-  const subscription = useSubscription();
   const { t } = useTranslation();
   const router = useRouter();
   const posthog = usePostHog();
 
   const isGuest = !user || user.tier === "guest";
-  const tier = isGuest ? "guest" : subscription?.active ? "pro" : "hobby";
+  const tier = isGuest ? "guest" : user.tier;
 
   React.useEffect(() => {
     if (user) {

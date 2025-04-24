@@ -17,7 +17,8 @@ import { Trans } from "react-i18next";
 
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { ProBadge } from "@/components/pro-badge";
-import { usePlan } from "@/contexts/plan";
+
+import { useUser } from "../user-provider";
 
 export type PollSettingsFormData = {
   requireParticipantEmail: boolean;
@@ -66,9 +67,9 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
   const form = useFormContext<PollSettingsFormData>();
   const posthog = usePostHog();
   const paywallDialog = useDialog();
-  const plan = usePlan();
+  const { user } = useUser();
 
-  const isFree = plan === "free";
+  const isFree = user.tier !== "pro";
 
   return (
     <>
