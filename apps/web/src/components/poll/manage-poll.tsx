@@ -32,10 +32,10 @@ import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
-import { usePlan } from "@/contexts/plan";
 import { usePoll } from "@/contexts/poll";
 import { trpc } from "@/trpc/client";
 
+import { useUser } from "../user-provider";
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
 
@@ -125,6 +125,7 @@ const ManagePoll: React.FunctionComponent<{
 }> = ({ disabled }) => {
   const poll = usePoll();
   const queryClient = trpc.useUtils();
+  const { user } = useUser();
   const reopen = trpc.polls.reopen.useMutation({
     onMutate: () => {
       queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
@@ -143,7 +144,6 @@ const ManagePoll: React.FunctionComponent<{
   const duplicateDialog = useDialog();
   const finalizeDialog = useDialog();
   const paywallDialog = useDialog();
-  const plan = usePlan();
   const posthog = usePostHog();
   const { exportToCsv } = useCsvExporter();
 
@@ -203,7 +203,7 @@ const ManagePoll: React.FunctionComponent<{
                 <DropdownMenuItem
                   disabled={!!poll.event}
                   onClick={() => {
-                    if (plan === "free") {
+                    if (user.tier !== "pro") {
                       paywallDialog.trigger();
                       posthog?.capture("trigger paywall", {
                         poll_id: poll.id,
@@ -233,7 +233,7 @@ const ManagePoll: React.FunctionComponent<{
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              if (plan === "free") {
+              if (user.tier !== "pro") {
                 paywallDialog.trigger();
                 posthog?.capture("trigger paywall", {
                   poll_id: poll.id,
