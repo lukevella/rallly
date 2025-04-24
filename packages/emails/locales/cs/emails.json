@@ -46,10 +46,21 @@
   "common_viewOn": "Zobrazit na {domain}",
   "newComment_preview": "Přejděte na svou anketu, abyste viděli, co říkali.",
   "newComment_heading": "Nový komentář",
+  "newPoll_preview": "Sdílejte odkaz vašeho uživatele a začněte sbírat odpovědi.",
   "changeEmailRequest_preview": "Prosím ověřte svou e-mailovou adresu",
   "changeEmailRequest_heading": "Ověřte svou novou e-mailovou adresu",
   "changeEmailRequest_text2": "Chcete-li dokončit tuto změnu, klikněte na tlačítko níže:",
   "changeEmailRequest_button": "Ověřit e-mailovou adresu",
   "changeEmailRequest_subject": "Ověřte svou novou e-mailovou adresu",
-  "changeEmailRequest_text1": "Obdrželi jsme žádost o změnu e-mailové adresy pro váš účet z <b>{fromEmail}</b> na <b>{toEmail}</b>."
+  "changeEmailRequest_text3": "Tento odkaz vyprší za 10 minut. Pokud jste o tuto změnu nepožádali, kontaktujte podporu.",
+  "changeEmailRequest_text1": "Obdrželi jsme žádost o změnu e-mailové adresy pro váš účet z <b>{fromEmail}</b> na <b>{toEmail}</b>.",
+  "abandoned_checkout_name": "Ahoj {name},",
+  "abandoned_checkout_noname": "Ahoj,",
+  "abandoned_checkout_content": "Všiml jsem si, že jste si dříve prohlíželi <b>Rallly Pro</b>. Chtěl jsem se zeptat, jestli máte nějaké otázky nebo potřebujete s něčím pomoci.",
+  "abandoned_checkout_offer": "Abyste mohli snadno začít, nabízíme vám <b>{discount}% slevu</b> na první rok. Stačí při platbě použít následující kód:",
+  "abandoned_checkout_button": "Upgradovat na Rallly Pro",
+  "abandoned_checkout_support": "Pokud máte jakékoli otázky ohledně Rallly Pro nebo potřebujete s čímkoli pomoci, stačí odpovědět na tento e-mail. Jsem tu pro vás!",
+  "abandoned_checkout_preview": "Exkluzivní nabídka: Získejte {discount}% slevu z prvního roku Rallly Pro!",
+  "abandoned_checkout_subject": "Získejte {discount}% slevu z prvního roku Rallly Pro",
+  "abandoned_checkout_signoff": "S pozdravem,"
 }
