@@ -301,6 +301,9 @@
   "commandMenu": "Befehlsmenü",
   "commandMenuDescription": "Befehl auswählen",
   "eventsPageDesc": "Deine geplanten Termine anzeigen und verwalten",
+  "homeDashboardDesc": "Verwalte deine Umfragen, Termine und Account-Einstellungen",
+  "homeNavTitle": "Navigation",
+  "account": "Account",
   "upcomingEventsEmptyStateTitle": "Keine bevorstehenden Termine",
   "upcomingEventsEmptyStateDescription": "Nachdem Du Termine geplant hast, werden sie hier angezeigt.",
   "pastEventsEmptyStateTitle": "Keine vergangenen Termine"
