@@ -16,6 +16,7 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { Pagination } from "@/components/pagination";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { getScheduledEvents } from "@/features/scheduled-event/api/get-scheduled-events";
@@ -30,17 +31,22 @@ import { EventsTabbedView } from "./events-tabbed-view";
 async function loadData({
   status,
   search,
+  page = 1,
+  pageSize = 10,
 }: {
   status: Status;
   search?: string;
+  page?: number;
+  pageSize?: number;
 }) {
   const { userId } = await requireUser();
-  const scheduledEvents = await getScheduledEvents({
+  return getScheduledEvents({
     userId,
     status,
     search,
+    page,
+    pageSize,
   });
-  return scheduledEvents;
 }
 
 async function ScheduledEventEmptyState({ status }: { status: Status }) {
@@ -98,11 +104,24 @@ export default async function Page({
   searchParams,
 }: {
   params: Params;
-  searchParams?: { status: string; q?: string };
+  searchParams?: { status: string; q?: string; page?: string };
 }) {
   const { t } = await getTranslation(params.locale);
   const status = statusSchema.catch("upcoming").parse(searchParams?.status);
-  const scheduledEvents = await loadData({ status, search: searchParams?.q });
+  const pageParam = searchParams?.page;
+  const page = pageParam ? Math.max(1, Number(pageParam) || 1) : 1;
+  const pageSize = 10;
+
+  const {
+    events: paginatedEvents,
+    totalCount,
+    totalPages,
+  } = await loadData({
+    status,
+    search: searchParams?.q,
+    page,
+    pageSize,
+  });
 
   return (
     <PageContainer>
@@ -127,12 +146,12 @@ export default async function Page({
               })}
             />
             <div className="space-y-6">
-              {scheduledEvents.length === 0 && (
+              {paginatedEvents.length === 0 && (
                 <ScheduledEventEmptyState status={status} />
               )}
-              {scheduledEvents.length > 0 && (
+              {paginatedEvents.length > 0 && (
                 <StackedList>
-                  {scheduledEvents.map((event) => (
+                  {paginatedEvents.map((event) => (
                     <StackedListItem key={event.id}>
                       <ScheduledEventListItem
                         eventId={event.id}
@@ -148,6 +167,14 @@ export default async function Page({
                     </StackedListItem>
                   ))}
                 </StackedList>
+              )}
+              {totalPages > 1 && (
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                  totalItems={totalCount}
+                  pageSize={pageSize}
+                />
               )}
             </div>
           </div>
