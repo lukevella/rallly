@@ -9,7 +9,6 @@ import { z } from "zod";
 import { env } from "@/env";
 import { getS3Client } from "@/utils/s3";
 import { createToken } from "@/utils/session";
-import { getSubscriptionStatus } from "@/utils/subscription";
 
 import {
   createRateLimitMiddleware,
@@ -52,18 +51,6 @@ export const user = router({
       },
     });
   }),
-  subscription: publicProcedure.query(
-    async ({ ctx }): Promise<{ legacy?: boolean; active: boolean }> => {
-      if (!ctx.user || ctx.user.isGuest) {
-        // guest user can't have an active subscription
-        return {
-          active: false,
-        };
-      }
-
-      return await getSubscriptionStatus(ctx.user.id);
-    },
-  ),
   changeName: privateProcedure
     .input(
       z.object({
