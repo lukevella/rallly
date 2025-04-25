@@ -16,8 +16,8 @@
     "posthog-node": "^4.10.2"
   },
   "devDependencies": {
-    "@rallly/eslint-config": "*",
-    "@rallly/tsconfig": "*"
+    "@rallly/eslint-config": "workspace:*",
+    "@rallly/tsconfig": "workspace:*"
   },
   "peerDependencies": {
     "next": "^14.2.13",

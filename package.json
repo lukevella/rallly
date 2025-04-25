@@ -30,7 +30,7 @@
     "sherif:fix": "npx sherif@latest --fix"
   },
   "prisma": {
-    "seed": "yarn workspace @rallly/database db:seed",
+    "seed": "pnpm --filter @rallly/database db:seed",
     "schema": "./packages/database/prisma/schema.prisma"
   },
   "workspaces": [
@@ -58,5 +58,5 @@
   "engines": {
     "node": "20.x"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "pnpm@9.1.0"
 }
