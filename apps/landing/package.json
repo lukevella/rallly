@@ -28,13 +28,14 @@
     "intl-messageformat": "^10.7.15",
     "lodash": "^4.17.21",
     "nanoid": "^5.0.9",
+    "next": "^14.2.25",
     "next-mdx-remote": "^5.0.0",
     "next-seo": "^6.1.0",
     "react-i18next": "^15.4.1",
     "react-use": "^17.4.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^12.3.4",
+    "@next/bundle-analyzer": "^14.2.25",
     "@rallly/eslint-config": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
     "@types/color-hash": "^1.0.2",

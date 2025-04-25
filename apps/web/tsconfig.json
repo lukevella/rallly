@@ -3,10 +3,15 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     },
     "strictNullChecks": true,
-    "types": ["vitest/globals"]
+    "types": [
+      "vitest/globals"
+    ],
+    "target": "ES2017"
   },
   "include": [
     "**/*.ts",
@@ -15,5 +20,10 @@
     ".next/types/**/*.ts",
     "vitest.config.mts"
   ],
-  "exclude": ["node_modules", ".next/**/*", "playwright-report", "test-results"]
+  "exclude": [
+    "node_modules",
+    ".next/**/*",
+    "playwright-report",
+    "test-results"
+  ]
 }
