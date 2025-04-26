@@ -17,7 +17,7 @@
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "db:push": "prisma db push",
-    "docker:up": "docker compose -f docker-compose.dev.yml up -d && wait-on --timeout 60000 tcp:localhost:5450",
+    "docker:up": "docker compose -f docker-compose.dev.yml up -d && pnpm dlx wait-on --timeout 60000 tcp:localhost:5450",
     "docker:down": "docker compose -f docker-compose.dev.yml down --volumes --remove-orphans",
     "test:integration": "turbo test:integration",
     "test:unit": "turbo test:unit",
