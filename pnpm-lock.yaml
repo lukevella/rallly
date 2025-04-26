@@ -68,6 +68,9 @@ importers:
       '@rallly/billing':
         specifier: workspace:*
         version: link:../../packages/billing
+      '@rallly/database':
+        specifier: workspace:*
+        version: link:../../packages/database
       '@rallly/icons':
         specifier: workspace:*
         version: link:../../packages/icons
@@ -110,6 +113,12 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      lucide-react:
+        specifier: ^0.479.0
+        version: 0.479.0(react@18.3.1)
+      motion:
+        specifier: ^12.6.2
+        version: 12.9.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nanoid:
         specifier: ^5.0.9
         version: 5.1.5
