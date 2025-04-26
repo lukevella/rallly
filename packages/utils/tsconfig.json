@@ -3,6 +3,6 @@
     "types": ["vitest/globals", "node"],
     "lib": ["es2020", "dom"]
   },
-  "extends": "../tsconfig/node.json", // Use relative path
+  "extends": "@rallly/tsconfig/node.json",
   "include": ["**/*.ts"]
 }

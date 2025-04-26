@@ -750,6 +750,9 @@ importers:
         specifier: ^5.0.9
         version: 5.1.5
     devDependencies:
+      '@rallly/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@types/node':
         specifier: ^18.15.10
         version: 18.19.87
