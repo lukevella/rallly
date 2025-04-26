@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@radix-ui/react-radio-group": "^1.2.3",
-    "@rallly/ui": "workspace:*",
     "@rallly/database": "workspace:*",
+    "@rallly/ui": "workspace:*",
     "stripe": "^13.2.0"
   },
   "devDependencies": {

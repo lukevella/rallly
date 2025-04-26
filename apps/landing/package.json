@@ -13,11 +13,11 @@
   },
   "dependencies": {
     "@rallly/billing": "workspace:*",
+    "@rallly/database": "workspace:*",
     "@rallly/icons": "workspace:*",
     "@rallly/languages": "workspace:*",
     "@rallly/tailwind-config": "workspace:*",
     "@rallly/ui": "workspace:*",
-    "@rallly/database": "workspace:*",
     "@rallly/utils": "workspace:*",
     "@svgr/webpack": "^6.5.1",
     "@vercel/analytics": "^0.1.8",
