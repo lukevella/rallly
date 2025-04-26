@@ -19,7 +19,9 @@ const handler = async (req: NextRequest) => {
     req,
     router: appRouter,
     createContext: async () => {
-      const locale = getPreferredLocale(req);
+      const locale = getPreferredLocale({
+        acceptLanguageHeader: req.headers.get("accept-language") ?? undefined,
+      });
       const user = session?.user
         ? {
             id: session.user.id,
