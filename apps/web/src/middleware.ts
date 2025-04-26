@@ -19,7 +19,12 @@ export const middleware = withAuth(async (req) => {
     return NextResponse.redirect(newUrl);
   }
 
-  const locale = req.auth?.user?.locale || getPreferredLocale(req);
+  const locale =
+    req.auth?.user?.locale ||
+    getPreferredLocale({
+      acceptLanguageHeader: req.headers.get("accept-language") ?? undefined,
+    });
+
   if (supportedLocales.includes(locale)) {
     newUrl.pathname = `/${locale}${pathname}`;
   }

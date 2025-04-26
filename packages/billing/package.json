@@ -20,6 +20,7 @@
     "stripe": "^13.2.0"
   },
   "devDependencies": {
-    "@rallly/eslint-config": "workspace:*"
+    "@rallly/eslint-config": "workspace:*",
+    "@rallly/tsconfig": "workspace:*"
   }
 }
