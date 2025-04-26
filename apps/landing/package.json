@@ -20,7 +20,7 @@
     "@rallly/utils": "workspace:*",
     "@svgr/webpack": "^6.5.1",
     "@vercel/analytics": "^0.1.8",
-    "dayjs": "^1.11.10",
+    "dayjs": "^1.11.13",
     "gray-matter": "^4.0.3",
     "i18next": "^24.2.2",
     "i18next-icu": "^2.3.0",
@@ -31,7 +31,7 @@
     "next": "^14.2.25",
     "next-mdx-remote": "^5.0.0",
     "next-seo": "^6.1.0",
-    "react-i18next": "^15.4.1",
+    "react-i18next": "^15.5.1",
     "react-use": "^17.4.0"
   },
   "devDependencies": {

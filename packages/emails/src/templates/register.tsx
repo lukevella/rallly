@@ -1,4 +1,4 @@
-import { Section } from "@react-email/section";
+import { Section } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { EmailLayout } from "../components/email-layout";

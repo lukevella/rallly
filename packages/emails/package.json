@@ -18,8 +18,12 @@
     "@react-email/components": "^0.0.14",
     "@react-email/render": "^0.0.12",
     "@vercel/functions": "^2.0.0",
+    "i18next": "^24.2.2",
+    "i18next-icu": "^2.3.0",
+    "i18next-resources-to-backend": "^1.2.1",
     "nodemailer": "^6.9.9",
-    "react-email": "^4.0.2"
+    "react-email": "^4.0.2",
+    "react-i18next": "^15.5.1"
   },
   "devDependencies": {
     "@rallly/tailwind-config": "workspace:*",
