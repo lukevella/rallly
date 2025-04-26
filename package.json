@@ -38,6 +38,7 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@playwright/test": "^1.49.1",
     "@prisma/client": "^6.4.1",
     "@sentry/nextjs": "^8.49.0",
     "@types/react": "^18.2.48",

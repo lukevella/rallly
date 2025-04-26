@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@playwright/test':
+        specifier: ^1.49.1
+        version: 1.52.0
       '@prisma/client':
         specifier: ^6.4.1
         version: 6.6.0(prisma@6.6.0(typescript@5.8.3))(typescript@5.8.3)
