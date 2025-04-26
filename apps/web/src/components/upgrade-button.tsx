@@ -11,8 +11,8 @@ export const UpgradeButton = ({
   annual,
   large,
   className,
-}: React.PropsWithChildren<{ 
-  annual?: boolean; 
+}: React.PropsWithChildren<{
+  annual?: boolean;
   large?: boolean;
   className?: string;
 }>) => {

@@ -4,7 +4,7 @@
   "private": true,
   "exports": {
     "./server": "./src/server/index.ts",
-    "./client": "./src/client/index.ts",
+    "./client": "./src/client.ts",
     "./next/middleware": "./src/next/middleware.ts"
   },
   "scripts": {
