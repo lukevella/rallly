@@ -1,8 +1,8 @@
-name: "Yarn Install"
-description: "Runs yarn install with --frozen-lockfile"
+name: "Pnpm Install"
+description: "Runs pnpm install with --frozen-lockfile"
 runs:
   using: "composite"
   steps:
-    - name: Run yarn install
-      run: yarn install --frozen-lockfile
+    - name: Run pnpm install
+      run: pnpm install --frozen-lockfile
       shell: bash

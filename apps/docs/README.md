@@ -13,7 +13,7 @@ To preview your changes locally, you can use the [mintlify cli](https://mintlify
 Install the cli globally:
 
 ```bash
-yarn global add mintlify
+pnpm install --global mintlify
 ```
 
 Navigate to this directory (where you can find `mint.json`):

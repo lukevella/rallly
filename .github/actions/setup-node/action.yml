@@ -8,7 +8,7 @@ inputs:
   cache:
     description: "Package manager for caching"
     required: false
-    default: "yarn"
+    default: "pnpm"
 runs:
   using: "composite"
   steps:

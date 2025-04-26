@@ -1,5 +1,5 @@
 {
-  "installCommand": "yarn install",
-  "buildCommand": "cd ../.. && yarn db:generate && yarn build:web && yarn db:deploy",
+  "installCommand": "pnpm install",
+  "buildCommand": "cd ../.. && pnpm db:generate && pnpm build:web && pnpm db:deploy",
   "outputDirectory": ".next"
 }
