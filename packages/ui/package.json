@@ -41,11 +41,15 @@
     "clsx": "^1.2.1",
     "cmdk": "^0.2.1",
     "lucide-react": "^0.479.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-hook-form": "^7.42.1",
     "tailwind-merge": "^1.12.0"
   },
   "devDependencies": {
     "@rallly/eslint-config": "workspace:*",
-    "@rallly/tsconfig": "workspace:*"
+    "@rallly/tsconfig": "workspace:*",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0"
   }
 }

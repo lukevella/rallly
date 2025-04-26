@@ -1,6 +1,6 @@
 import languages from "@rallly/languages";
 import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
-import { withPostHog } from "@rallly/posthog/next/middleware";
+import { getPosthogBootstrapCookie } from "@rallly/posthog/utils";
 import { NextResponse } from "next/server";
 
 import { withAuth } from "@/auth/edge";
@@ -34,7 +34,12 @@ export const middleware = withAuth(async (req) => {
   res.headers.set("x-pathname", pathname);
 
   if (req.auth?.user?.id) {
-    await withPostHog(res, { distinctID: req.auth.user.id });
+    const bootstrapCookie = getPosthogBootstrapCookie({
+      distinctID: req.auth.user.id,
+    });
+    if (bootstrapCookie) {
+      res.cookies.set(bootstrapCookie);
+    }
   }
 
   return res;

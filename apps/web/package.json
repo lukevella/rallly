@@ -79,7 +79,9 @@
     "next-auth": "^5.0.0-beta.25",
     "php-serialize": "^4.1.1",
     "postcss": "^8.4.31",
+    "react": "^18.2.0",
     "react-big-calendar": "^1.8.1",
+    "react-dom": "^18.2.0",
     "react-hook-form": "^7.42.1",
     "react-hook-form-persist": "^3.0.0",
     "react-i18next": "^15.5.1",
@@ -88,7 +90,8 @@
     "smoothscroll-polyfill": "^0.4.4",
     "spacetime": "^7.4.7",
     "superjson": "^2.0.0",
-    "timezone-soft": "^1.5.1"
+    "timezone-soft": "^1.5.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
@@ -97,7 +100,9 @@
     "@types/color-hash": "^1.0.2",
     "@types/js-cookie": "^3.0.1",
     "@types/lodash": "^4.14.178",
+    "@types/react": "^18.2.0",
     "@types/react-big-calendar": "^1.8.8",
+    "@types/react-dom": "^18.2.0",
     "@types/smoothscroll-polyfill": "^0.3.1",
     "cheerio": "^1.0.0-rc.12",
     "cross-env": "^7.0.3",

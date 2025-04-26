@@ -5,14 +5,13 @@
   "exports": {
     "./server": "./src/server/index.ts",
     "./client": "./src/client.ts",
-    "./next/middleware": "./src/next/middleware.ts"
+    "./utils": "./src/utils.ts"
   },
   "scripts": {
     "lint": "eslint ./src",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@vercel/functions": "^2.0.0",
     "js-cookie": "^3.0.1",
     "posthog-js": "^1.234.1",
     "posthog-node": "^4.10.2"
@@ -21,9 +20,5 @@
     "@rallly/eslint-config": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
     "@types/js-cookie": "^3.0.1"
-  },
-  "peerDependencies": {
-    "next": "^14.2.13",
-    "react": "^18.2.0"
   }
 }

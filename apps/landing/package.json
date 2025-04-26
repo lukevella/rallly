@@ -35,6 +35,8 @@
     "next": "^14.2.25",
     "next-mdx-remote": "^5.0.0",
     "next-seo": "^6.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-i18next": "^15.5.1",
     "react-use": "^17.4.0"
   },
@@ -44,6 +46,8 @@
     "@rallly/tsconfig": "workspace:*",
     "@types/color-hash": "^1.0.2",
     "@types/lodash": "^4.14.178",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "cross-env": "^7.0.3",
     "i18next-scanner": "^4.2.0",
     "i18next-scanner-typescript": "^1.1.1"
