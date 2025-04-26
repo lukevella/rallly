@@ -25,6 +25,7 @@
     "@next/bundle-analyzer": "^14.2.25",
     "@next/env": "^15.3.1",
     "@panva/hkdf": "^1.2.1",
+    "@prisma/client": "^6.4.1",
     "@radix-ui/react-radio-group": "^1.2.3",
     "@radix-ui/react-select": "^1.2.1",
     "@radix-ui/react-slot": "^1.1.2",
