@@ -39,7 +39,7 @@
     "eslint": "^8.52.0",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
-    "prisma": "^6.4.1",
+    "prisma": "^6.6.0",
     "turbo": "^2.4.4",
     "typescript": "^5.8.2",
     "vitest": "^2.1.9"
