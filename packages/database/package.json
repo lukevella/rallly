@@ -22,6 +22,7 @@
     "@rallly/eslint-config": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
     "@types/node": "^18.19.41",
+    "prisma": "^6.6.0",
     "tsx": "^4.6.2"
   }
 }

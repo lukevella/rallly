@@ -1,4 +1,4 @@
-import { PrismaClient } from "../generated/client";
+import { PrismaClient } from "@prisma/client";
 import { seedPolls } from "./seed/polls";
 import { seedScheduledEvents } from "./seed/scheduled-events";
 import { seedUsers } from "./seed/users";
