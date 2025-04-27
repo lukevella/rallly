@@ -57,15 +57,24 @@ RUN apt-get update \
 
 WORKDIR /app
 
+# Install prisma globally needed for runtime operations like migrations
+RUN pnpm add -g prisma
+
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 # Set HOME env for non-root user
 ENV HOME=/app
-# Ensure /app is writable by nextjs user
-RUN chown -R nextjs:nodejs /app
+# Ensure /app is writable by nextjs user AND fix perms for global pnpm dir
+RUN chown -R nextjs:nodejs /app /pnpm
+
+
 USER nextjs
 
+# Copy Corepack cache from installer stage to avoid runtime download
+COPY --from=installer /root/.cache/node/corepack/ /app/.cache/node/corepack/
+
+# Copy app files
 COPY --from=builder /app/scripts/docker-start.sh ./
 COPY --from=builder /app/packages/database/prisma ./prisma
 COPY --from=installer /app/apps/web/next.config.js .
