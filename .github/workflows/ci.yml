@@ -20,6 +20,9 @@ jobs:
       - uses: ./.github/actions/setup-node
       - uses: ./.github/actions/pnpm-install
 
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+
       - name: Check types
         run: pnpm type-check
 
@@ -67,6 +70,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
       - uses: ./.github/actions/pnpm-install
+
+      - name: Generate Prisma Client
+        run: pnpm db:generate
 
       - name: Install system dependencies
         run: sudo apt-get update
