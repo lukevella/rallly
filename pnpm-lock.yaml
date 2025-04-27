@@ -109,7 +109,7 @@ importers:
         version: 5.0.0(@types/react@18.3.20)(acorn@8.14.1)(react@18.3.1)
       next-seo:
         specifier: ^6.1.0
-        version: 6.6.0(next@14.2.28(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 6.6.0(next@14.2.28(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -375,6 +375,9 @@ importers:
       superjson:
         specifier: ^2.0.0
         version: 2.2.2
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.17
       timezone-soft:
         specifier: ^1.5.1
         version: 1.5.2
@@ -577,6 +580,9 @@ importers:
       lucide-react:
         specifier: ^0.479.0
         version: 0.479.0(react@18.3.1)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
 
   packages/languages:
     dependencies:
@@ -15486,7 +15492,7 @@ snapshots:
       - acorn
       - supports-color
 
-  next-seo@6.6.0(next@14.2.28(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-seo@6.6.0(next@14.2.28(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       next: 14.2.28(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1

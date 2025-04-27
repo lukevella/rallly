@@ -1,4 +1,3 @@
-import "tailwindcss/tailwind.css";
 import "../../style.css";
 
 import { defaultLocale, supportedLngs } from "@rallly/languages";
