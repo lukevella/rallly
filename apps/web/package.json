@@ -102,6 +102,7 @@
     "@types/color-hash": "^1.0.2",
     "@types/js-cookie": "^3.0.1",
     "@types/lodash": "^4.14.178",
+    "@types/node": "^18.19.41",
     "@types/react": "^18.2.0",
     "@types/react-big-calendar": "^1.8.8",
     "@types/react-dom": "^18.2.0",

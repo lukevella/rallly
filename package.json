@@ -33,10 +33,6 @@
     "seed": "pnpm --filter @rallly/database db:seed",
     "schema": "./packages/database/prisma/schema.prisma"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "devDependencies": {
     "@playwright/test": "^1.49.1",
     "dotenv-cli": "^8.0.0",

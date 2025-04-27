@@ -21,11 +21,10 @@ RUN turbo prune --scope=@rallly/web --docker
 # --- Installer Stage ---
 FROM base AS installer
 WORKDIR /app
-COPY .gitignore .gitignore
 COPY package.json .
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Build the project
 COPY --from=builder /app/out/full/ .
@@ -58,17 +57,17 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY package.json .
-# Install prisma globally needed for runtime operations like migrations
-RUN pnpm add -g prisma
-
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+# Set HOME env for non-root user
+ENV HOME=/app
+# Ensure /app is writable by nextjs user
+RUN chown -R nextjs:nodejs /app
 USER nextjs
 
-COPY --from=builder --chown=nextjs:nodejs /app/scripts/docker-start.sh ./
-COPY --from=builder --chown=nextjs:nodejs /app/packages/database/prisma ./prisma
+COPY --from=builder /app/scripts/docker-start.sh ./
+COPY --from=builder /app/packages/database/prisma ./prisma
 COPY --from=installer /app/apps/web/next.config.js .
 COPY --from=installer /app/apps/web/package.json .
 
@@ -76,9 +75,9 @@ ENV PORT=3000
 EXPOSE 3000
 
 # Copy Next.js standalone output
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+COPY --from=installer /app/apps/web/.next/standalone ./
+COPY --from=installer /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=installer /app/apps/web/public ./apps/web/public
 
 ARG SELF_HOSTED
 ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
