@@ -36,6 +36,7 @@
   "devDependencies": {
     "@playwright/test": "^1.49.1",
     "dotenv-cli": "^8.0.0",
+    "eslint": "^8.52.0",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
     "prisma": "^6.4.1",

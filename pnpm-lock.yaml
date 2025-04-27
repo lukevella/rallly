@@ -14,6 +14,9 @@ importers:
       dotenv-cli:
         specifier: ^8.0.0
         version: 8.0.0
+      eslint:
+        specifier: ^8.52.0
+        version: 8.57.1
       prettier:
         specifier: ^3.3.3
         version: 3.5.3
@@ -109,7 +112,7 @@ importers:
         version: 5.0.0(@types/react@18.3.20)(acorn@8.14.1)(react@18.3.1)
       next-seo:
         specifier: ^6.1.0
-        version: 6.6.0(next@14.2.28(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 6.6.0(next@14.2.28(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -478,7 +481,7 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: ^18.15.10
+        specifier: ^18.19.41
         version: 18.19.87
       prisma:
         specifier: ^6.4.1
@@ -550,9 +553,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^8.28.0
         version: 8.31.0(eslint@8.57.1)(typescript@5.8.3)
-      eslint:
-        specifier: ^8.52.0
-        version: 8.57.1
       eslint-config-next:
         specifier: ^14.0.1
         version: 14.2.28(eslint@8.57.1)(typescript@5.8.3)
@@ -769,7 +769,7 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: ^18.15.10
+        specifier: ^18.19.41
         version: 18.19.87
       vitest:
         specifier: ^2.1.9
@@ -15498,7 +15498,7 @@ snapshots:
       - acorn
       - supports-color
 
-  next-seo@6.6.0(next@14.2.28(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-seo@6.6.0(next@14.2.28(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       next: 14.2.28(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
