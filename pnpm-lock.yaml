@@ -44,9 +44,6 @@ importers:
 
   apps/landing:
     dependencies:
-      '@prisma/client':
-        specifier: ^6.4.1
-        version: 6.6.0(prisma@6.6.0(typescript@5.8.3))(typescript@5.8.3)
       '@rallly/billing':
         specifier: workspace:*
         version: link:../../packages/billing
@@ -112,7 +109,7 @@ importers:
         version: 5.0.0(@types/react@18.3.20)(acorn@8.14.1)(react@18.3.1)
       next-seo:
         specifier: ^6.1.0
-        version: 6.6.0(next@14.2.28(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 6.6.0(next@14.2.28(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -163,7 +160,7 @@ importers:
         specifier: ^1.2.0
         version: 1.3.20(zod@3.24.3)
       '@auth/prisma-adapter':
-        specifier: ^2.7.4
+        specifier: ^2.9.0
         version: 2.9.0(@prisma/client@6.6.0(prisma@6.6.0(typescript@5.8.3))(typescript@5.8.3))(nodemailer@6.10.1)
       '@aws-sdk/client-s3':
         specifier: ^3.645.0
@@ -183,9 +180,6 @@ importers:
       '@panva/hkdf':
         specifier: ^1.2.1
         version: 1.2.1
-      '@prisma/client':
-        specifier: ^6.4.1
-        version: 6.6.0(prisma@6.6.0(typescript@5.8.3))(typescript@5.8.3)
       '@radix-ui/react-radio-group':
         specifier: ^1.2.3
         version: 1.3.4(@types/react-dom@18.3.6(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -465,7 +459,7 @@ importers:
   packages/database:
     dependencies:
       '@prisma/client':
-        specifier: ^6.4.1
+        specifier: ^6.6.0
         version: 6.6.0(prisma@6.6.0(typescript@5.8.3))(typescript@5.8.3)
       dayjs:
         specifier: ^1.11.13
@@ -15498,7 +15492,7 @@ snapshots:
       - acorn
       - supports-color
 
-  next-seo@6.6.0(next@14.2.28(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-seo@6.6.0(next@14.2.28(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       next: 14.2.28(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1

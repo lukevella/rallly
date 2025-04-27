@@ -1,6 +1,6 @@
 "use client";
 
-import type { SubscriptionStatus as SubscriptionStatusType } from "@prisma/client";
+import type { SubscriptionStatus as SubscriptionStatusType } from "@rallly/database";
 import dayjs from "dayjs";
 
 import { Trans } from "@/components/trans";

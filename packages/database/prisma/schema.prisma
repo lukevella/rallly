@@ -8,6 +8,7 @@ generator client {
   provider        = "prisma-client-js"
   binaryTargets   = ["native"]
   previewFeatures = ["relationJoins"]
+  output          = "../generated/client"
 }
 
 enum TimeFormat {

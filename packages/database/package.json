@@ -10,9 +10,11 @@
     "db:seed": "tsx prisma/seed.ts",
     "type-check": "tsc --pretty --noEmit"
   },
-  "exports": "./index.ts",
+  "exports": {
+    ".": "./src/client.ts"
+  },
   "dependencies": {
-    "@prisma/client": "^6.4.1",
+    "@prisma/client": "^6.6.0",
     "dayjs": "^1.11.13"
   },
   "devDependencies": {
