@@ -11,11 +11,15 @@
     "type-check": "tsc --pretty --noEmit"
   },
   "exports": "./index.ts",
+  "dependencies": {
+    "@prisma/client": "^6.4.1",
+    "dayjs": "^1.11.13"
+  },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
-    "@rallly/eslint-config": "*",
-    "@rallly/tsconfig": "*",
-    "@types/node": "^18.15.10",
+    "@rallly/eslint-config": "workspace:*",
+    "@rallly/tsconfig": "workspace:*",
+    "@types/node": "^18.19.41",
     "prisma": "^6.4.1",
     "tsx": "^4.6.2"
   }

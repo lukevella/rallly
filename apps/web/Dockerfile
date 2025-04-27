@@ -1,22 +1,35 @@
-FROM node:20 AS builder
+# Base stage with Node.js 20 and Corepack enabled
+FROM node:20 AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
+# Slim base stage with Node.js 20 and Corepack enabled
+FROM node:20-slim AS base-slim
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+# --- Builder Stage ---
+FROM base AS builder
 WORKDIR /app
-RUN yarn global add turbo
+COPY package.json .
+RUN pnpm add -g turbo
 COPY . .
 RUN turbo prune --scope=@rallly/web --docker
 
-FROM node:20 AS installer
-
+# --- Installer Stage ---
+FROM base AS installer
 WORKDIR /app
-COPY .gitignore .gitignore
+COPY package.json .
 COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/yarn.lock ./yarn.lock
-RUN yarn --network-timeout 1000000
+COPY --from=builder /app/out/pnpm-lock.yaml ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Build the project
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
-RUN yarn db:generate
+RUN pnpm db:generate
 
 ARG APP_VERSION
 ENV NEXT_PUBLIC_APP_VERSION=$APP_VERSION
@@ -24,11 +37,15 @@ ENV NEXT_PUBLIC_APP_VERSION=$APP_VERSION
 ARG SELF_HOSTED
 ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
 
-RUN SKIP_ENV_VALIDATION=1 yarn build
+RUN SKIP_ENV_VALIDATION=1 pnpm build
 
-FROM node:20-slim AS runner
+# --- Runner Stage ---
+FROM base-slim AS runner
 
-# prisma requirements
+# Disable Next.js telemetry for self-hosted instances
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Install required system packages for Prisma
 # (see https://www.prisma.io/docs/orm/reference/system-requirements)
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
@@ -40,26 +57,36 @@ RUN apt-get update \
 
 WORKDIR /app
 
-RUN yarn global add prisma
+# Install prisma globally needed for runtime operations like migrations
+RUN pnpm add -g prisma
+
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+# Set HOME env for non-root user
+ENV HOME=/app
+# Ensure /app is writable by nextjs user AND fix perms for global pnpm dir
+RUN chown -R nextjs:nodejs /app /pnpm
+
+
 USER nextjs
 
-COPY --from=builder --chown=nextjs:nodejs /app/scripts/docker-start.sh ./
-COPY --from=builder --chown=nextjs:nodejs /app/packages/database/prisma ./prisma
- 
+# Copy Corepack cache from installer stage to avoid runtime download
+COPY --from=installer /root/.cache/node/corepack/ /app/.cache/node/corepack/
+
+# Copy app files
+COPY --from=builder /app/scripts/docker-start.sh ./
+COPY --from=builder /app/packages/database/prisma ./prisma
 COPY --from=installer /app/apps/web/next.config.js .
 COPY --from=installer /app/apps/web/package.json .
 
 ENV PORT=3000
 EXPOSE 3000
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+# Copy Next.js standalone output
+COPY --from=installer /app/apps/web/.next/standalone ./
+COPY --from=installer /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=installer /app/apps/web/public ./apps/web/public
 
 ARG SELF_HOSTED
 ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED

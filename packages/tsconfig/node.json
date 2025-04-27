@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node.js",
+  "compilerOptions": {
+    "lib": ["es2020"],
+    "module": "NodeNext",
+    "target": "es2020",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "NodeNext",
+    "noUncheckedIndexedAccess": true
+  }
+}

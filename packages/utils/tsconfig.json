@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "node"],
+    "lib": ["es2020", "dom"]
   },
-  "extends": "@rallly/tsconfig/react.json",
-  "include": ["**/*.ts", "**/*.tsx"]
+  "extends": "@rallly/tsconfig/node.json",
+  "include": ["**/*.ts"]
 }

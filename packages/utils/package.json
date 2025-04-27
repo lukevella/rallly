@@ -14,6 +14,8 @@
     "nanoid": "^5.0.9"
   },
   "devDependencies": {
+    "@rallly/tsconfig": "workspace:*",
+    "@types/node": "^18.19.41",
     "vitest": "^2.1.9"
   }
 }

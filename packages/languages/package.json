@@ -11,6 +11,7 @@
     "negotiator": "^1.0.0"
   },
   "devDependencies": {
+    "@rallly/tsconfig": "workspace:*",
     "@types/negotiator": "^0.6.3"
   }
 }

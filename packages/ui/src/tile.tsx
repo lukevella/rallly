@@ -1,26 +1,32 @@
 "use client";
 
 import { Slot } from "@radix-ui/react-slot";
-import Link from "next/link";
 import * as React from "react";
 
 import { cn } from "./lib/utils";
 
 const Tile = React.forwardRef<
-  HTMLAnchorElement,
-  React.ComponentPropsWithoutRef<typeof Link>
->(({ className, children, ...props }, ref) => (
-  <Link
-    ref={ref}
-    className={cn(
-      "text-card-foreground bg-background flex flex-col justify-end rounded-xl border p-3 shadow-sm transition-shadow hover:bg-gray-50 active:shadow-none",
-      className,
-    )}
-    {...props}
-  >
-    {children}
-  </Link>
-));
+  HTMLDivElement,
+  {
+    className?: string;
+    children?: React.ReactNode;
+    asChild?: boolean;
+  }
+>(({ className, asChild, children, ...props }, ref) => {
+  const Comp = asChild ? Slot : "div";
+  return (
+    <Comp
+      ref={ref}
+      className={cn(
+        "text-card-foreground bg-background flex flex-col justify-end rounded-xl border p-3 shadow-sm transition-shadow hover:bg-gray-50 active:shadow-none",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </Comp>
+  );
+});
 Tile.displayName = "Tile";
 
 const TileIcon = React.forwardRef<

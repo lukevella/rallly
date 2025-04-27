@@ -1,9 +1,10 @@
 import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
-import { withPosthog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+
+import { withPosthog } from "@/utils/posthog";
 
 import { getEventHandler } from "./handlers";
 

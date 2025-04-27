@@ -24,6 +24,7 @@
     "@radix-ui/react-dropdown-menu": "^2.0.4",
     "@radix-ui/react-label": "^2.0.1",
     "@radix-ui/react-popover": "^1.0.5",
+    "@radix-ui/react-portal": "^1.1.6",
     "@radix-ui/react-progress": "^1.1.2",
     "@radix-ui/react-radio-group": "^1.2.3",
     "@radix-ui/react-select": "^1.2.1",
@@ -33,17 +34,22 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.4",
     "@radix-ui/react-tooltip": "^1.1.8",
-    "@rallly/icons": "*",
-    "@rallly/languages": "*",
-    "@rallly/tailwind-config": "*",
+    "@rallly/icons": "workspace:*",
+    "@rallly/languages": "workspace:*",
+    "@rallly/tailwind-config": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.1",
     "lucide-react": "^0.479.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.42.1",
     "tailwind-merge": "^1.12.0"
   },
   "devDependencies": {
-    "@rallly/eslint-config": "*",
-    "@rallly/tsconfig": "*"
+    "@rallly/eslint-config": "workspace:*",
+    "@rallly/tsconfig": "workspace:*",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0"
   }
 }

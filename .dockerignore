@@ -11,3 +11,11 @@ docker-compose.yml
 /docs
 README.md
 node_modules
+
+# Build outputs
+apps/*/.next
+apps/*/dist
+packages/*/dist
+
+# Turbo prune output
+out/

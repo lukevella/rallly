@@ -1,4 +1,4 @@
-1. Use yarn for package management
+1. Use pnpm for package management
 2. Use dayjs for date handling
 3. Use tailwindcss for styling
 4. Use react-query for data fetching

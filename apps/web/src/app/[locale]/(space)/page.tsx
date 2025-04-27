@@ -1,4 +1,5 @@
 import { Tile, TileGrid, TileTitle } from "@rallly/ui/tile";
+import Link from "next/link";
 
 import type { Params } from "@/app/[locale]/types";
 import {
@@ -56,18 +57,22 @@ export default async function Page({ params }: { params: Params }) {
             <Trans i18nKey="homeNavTitle" defaults="Navigation" />
           </h2>
           <TileGrid>
-            <Tile href="/polls">
-              <PollPageIcon />
-              <TileTitle>
-                <Trans i18nKey="polls" defaults="Polls" />
-              </TileTitle>
+            <Tile asChild>
+              <Link href="/polls">
+                <PollPageIcon />
+                <TileTitle>
+                  <Trans i18nKey="polls" defaults="Polls" />
+                </TileTitle>
+              </Link>
             </Tile>
 
-            <Tile href="/events">
-              <EventPageIcon />
-              <TileTitle>
-                <Trans i18nKey="events" defaults="Events" />
-              </TileTitle>
+            <Tile asChild>
+              <Link href="/events">
+                <EventPageIcon />
+                <TileTitle>
+                  <Trans i18nKey="events" defaults="Events" />
+                </TileTitle>
+              </Link>
             </Tile>
 
             {/* <Tile href="/members">
@@ -84,25 +89,31 @@ export default async function Page({ params }: { params: Params }) {
             <Trans i18nKey="account" defaults="Account" />
           </h2>
           <TileGrid>
-            <Tile href="/settings/profile">
-              <ProfilePageIcon />
-              <TileTitle>
-                <Trans i18nKey="profile" defaults="Profile" />
-              </TileTitle>
+            <Tile asChild>
+              <Link href="/settings/profile">
+                <ProfilePageIcon />
+                <TileTitle>
+                  <Trans i18nKey="profile" defaults="Profile" />
+                </TileTitle>
+              </Link>
             </Tile>
 
-            <Tile href="/settings/preferences">
-              <PreferencesPageIcon />
-              <TileTitle>
-                <Trans i18nKey="preferences" defaults="Preferences" />
-              </TileTitle>
+            <Tile asChild>
+              <Link href="/settings/preferences">
+                <PreferencesPageIcon />
+                <TileTitle>
+                  <Trans i18nKey="preferences" defaults="Preferences" />
+                </TileTitle>
+              </Link>
             </Tile>
 
-            <Tile href="/settings/billing">
-              <BillingPageIcon />
-              <TileTitle>
-                <Trans i18nKey="billing" defaults="Billing" />
-              </TileTitle>
+            <Tile asChild>
+              <Link href="/settings/billing">
+                <BillingPageIcon />
+                <TileTitle>
+                  <Trans i18nKey="billing" defaults="Billing" />
+                </TileTitle>
+              </Link>
             </Tile>
           </TileGrid>
         </div>

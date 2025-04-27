@@ -16,15 +16,21 @@
     "@aws-sdk/client-ses": "^3.501.0",
     "@aws-sdk/credential-provider-node": "^3.501.0",
     "@react-email/components": "^0.0.14",
-    "@react-email/render": "^0.0.12",
-    "@vercel/functions": "*",
+    "@react-email/render": "^1.0.6",
+    "@vercel/functions": "^2.0.0",
+    "i18next": "^24.2.2",
+    "i18next-icu": "^2.3.0",
+    "i18next-resources-to-backend": "^1.2.1",
     "nodemailer": "^6.9.9",
-    "react-email": "^4.0.2"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-email": "^4.0.2",
+    "react-i18next": "^15.5.1"
   },
   "devDependencies": {
-    "@rallly/tailwind-config": "*",
-    "@rallly/tsconfig": "*",
-    "@rallly/utils": "*",
+    "@rallly/tailwind-config": "workspace:*",
+    "@rallly/tsconfig": "workspace:*",
+    "@rallly/utils": "workspace:*",
     "@types/nodemailer": "^6.4.14"
   }
 }

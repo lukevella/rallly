@@ -17,7 +17,7 @@
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "db:push": "prisma db push",
-    "docker:up": "docker compose -f docker-compose.dev.yml up -d && wait-on --timeout 60000 tcp:localhost:5450",
+    "docker:up": "docker compose -f docker-compose.dev.yml up -d && pnpm dlx wait-on --timeout 60000 tcp:localhost:5450",
     "docker:down": "docker compose -f docker-compose.dev.yml down --volumes --remove-orphans",
     "test:integration": "turbo test:integration",
     "test:unit": "turbo test:unit",
@@ -30,33 +30,22 @@
     "sherif:fix": "npx sherif@latest --fix"
   },
   "prisma": {
-    "seed": "yarn workspace @rallly/database db:seed",
+    "seed": "pnpm --filter @rallly/database db:seed",
     "schema": "./packages/database/prisma/schema.prisma"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "devDependencies": {
-    "@prisma/client": "^6.4.1",
-    "@sentry/nextjs": "^8.49.0",
-    "@types/react": "^18.2.48",
-    "@types/react-dom": "^18.2.18",
-    "dotenv-cli": "^7.1.0",
-    "next": "^14.2.25",
-    "npm-run-all": "^4.1.5",
+    "@playwright/test": "^1.49.1",
+    "dotenv-cli": "^8.0.0",
+    "eslint": "^8.52.0",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tailwindcss": "^3.4.17",
+    "prisma": "^6.4.1",
     "turbo": "^2.4.4",
     "typescript": "^5.8.2",
-    "vitest": "^2.1.9",
-    "zod": "^3.23.8"
+    "vitest": "^2.1.9"
   },
   "engines": {
     "node": "20.x"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "pnpm@10.9.0"
 }

@@ -1,14 +1,21 @@
 import languages, { defaultLocale } from "./index";
 import Negotiator from "negotiator";
 import { match } from "@formatjs/intl-localematcher";
-import type { NextRequest } from "next/server";
 
 const locales = Object.keys(languages);
 
-export function getPreferredLocale(req: NextRequest) {
+export function getPreferredLocale({
+  acceptLanguageHeader,
+}: {
+  acceptLanguageHeader?: string;
+}) {
+  if (!acceptLanguageHeader) {
+    return defaultLocale;
+  }
+
   const preferredLanguages = new Negotiator({
     headers: {
-      "accept-language": req.headers.get("accept-language") ?? "",
+      "accept-language": acceptLanguageHeader,
     },
   })
     .languages()
