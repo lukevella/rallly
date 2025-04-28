@@ -33,9 +33,6 @@
     "db:generate": {
       "cache": false
     },
-    "lint": {
-      "outputs": []
-    },
     "type-check": {
       "outputs": []
     },
@@ -58,7 +55,8 @@
       "inputs": ["src/**", "i18next-scanner.config.js"],
       "outputs": ["public/locales/**", "locales/**"]
     },
-    "format": {
+    "//#format-and-lint": {},
+    "//#format-and-lint:fix": {
       "cache": false
     }
   },

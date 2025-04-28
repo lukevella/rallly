@@ -10,8 +10,7 @@
     "checkout-expiry": "dotenv -e ../../.env -- tsx ./src/scripts/checkout-expiry.ts",
     "subscription-data-sync": "dotenv -e ../../.env -- tsx ./src/scripts/subscription-data-sync.ts",
     "sync-payment-methods": "dotenv -e ../../.env -- tsx ./src/scripts/sync-payment-methods.ts",
-    "type-check": "tsc --pretty --noEmit",
-    "lint": "eslint ./src"
+    "type-check": "tsc --pretty --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-radio-group": "^1.2.3",
@@ -20,7 +19,6 @@
     "stripe": "^13.2.0"
   },
   "devDependencies": {
-    "@rallly/eslint-config": "workspace:*",
     "@rallly/tsconfig": "workspace:*"
   }
 }
