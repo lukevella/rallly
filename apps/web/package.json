@@ -33,7 +33,6 @@
     "@rallly/billing": "workspace:*",
     "@rallly/database": "workspace:*",
     "@rallly/emails": "workspace:*",
-    "@rallly/icons": "workspace:*",
     "@rallly/languages": "workspace:*",
     "@rallly/posthog": "workspace:*",
     "@rallly/tailwind-config": "workspace:*",

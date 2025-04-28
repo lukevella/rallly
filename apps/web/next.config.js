@@ -15,7 +15,6 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
   transpilePackages: [
     "@rallly/database",
-    "@rallly/icons",
     "@rallly/ui",
     "@rallly/tailwind-config",
     "@rallly/posthog",

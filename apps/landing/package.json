@@ -15,7 +15,6 @@
     "@prisma/client": "^6.4.1",
     "@rallly/billing": "workspace:*",
     "@rallly/database": "workspace:*",
-    "@rallly/icons": "workspace:*",
     "@rallly/languages": "workspace:*",
     "@rallly/tailwind-config": "workspace:*",
     "@rallly/ui": "workspace:*",
