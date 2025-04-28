@@ -4,7 +4,7 @@ import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { MoreHorizontalIcon } from "lucide-react";
-import * as React from "react";
+import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";

@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import React from "react";
+import type React from "react";
 
 import { LogoutButton } from "@/app/components/logout-button";
 import { InviteDialog } from "@/components/invite-dialog";

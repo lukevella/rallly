@@ -22,7 +22,7 @@ const COOKIE_CONFIG = {
 
 const setEmailChangeCookie = (
   type: "success" | "error",
-  value: string = "1",
+  value = "1",
 ) => {
   cookies().set(`email-change-${type}`, value, COOKIE_CONFIG);
 };

@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@rallly/ui/dialog";
 import { useRouter } from "next/navigation";
-import * as React from "react";
+import type * as React from "react";
 
 import { Trans } from "@/components/trans";
 import { trpc } from "@/trpc/client";

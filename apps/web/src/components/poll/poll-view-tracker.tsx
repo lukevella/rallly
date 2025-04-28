@@ -38,7 +38,7 @@ export function PollViewTracker({ pollId }: { pollId: string }) {
 
       // Only track a view if it's been more than 30 minutes since the last view
       // or if this is the first view in this session
-      if (!lastView || now - parseInt(lastView) > 30 * 60 * 1000) {
+      if (!lastView || now - Number.parseInt(lastView) > 30 * 60 * 1000) {
         // Record the view using server action
         trackPollView(pollId)
           .then(() => {

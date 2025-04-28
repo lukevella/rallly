@@ -1,5 +1,5 @@
 import type { VoteType } from "@rallly/database";
-import * as React from "react";
+import type * as React from "react";
 import { Controller } from "react-hook-form";
 
 import { useVotingForm } from "@/components/poll/voting-form";

@@ -1,6 +1,6 @@
 import { cn } from "@rallly/ui";
 import { groupBy } from "lodash";
-import * as React from "react";
+import type * as React from "react";
 
 import type { ParsedDateTimeOpton } from "@/utils/date-time-utils";
 

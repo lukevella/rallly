@@ -7,7 +7,7 @@ import { TooltipProvider } from "@rallly/ui/tooltip";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Viewport } from "next";
 import { Inter } from "next/font/google";
-import React from "react";
+import type React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { UserProvider } from "@/components/user-provider";

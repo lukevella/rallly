@@ -3,7 +3,7 @@ import "./rbc-overrides.css";
 
 import dayjs from "dayjs";
 import { XIcon } from "lucide-react";
-import React from "react";
+import type React from "react";
 import type { CalendarProps } from "react-big-calendar";
 import { Calendar } from "react-big-calendar";
 import { createBreakpoint } from "react-use";

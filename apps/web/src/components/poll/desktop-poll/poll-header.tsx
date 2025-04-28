@@ -6,7 +6,7 @@ import {
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
 import { ClockIcon } from "lucide-react";
-import * as React from "react";
+import type * as React from "react";
 
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { useOptions } from "@/components/poll-context";
