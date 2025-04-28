@@ -1,6 +1,5 @@
 /** @return {import("eslint").Linter.Config} */
-module.exports = function (workspaceDirPath) {
-  return {
+module.exports = (workspaceDirPath) => ({
     root: true,
     extends: ["turbo"],
     plugins: [
@@ -18,7 +17,7 @@ module.exports = function (workspaceDirPath) {
     },
     parserOptions: {
       tsconfigRootDir: workspaceDirPath,
-      project: workspaceDirPath + "/tsconfig.json",
+      project: `${workspaceDirPath}/tsconfig.json`,
     },
     overrides: [
       {
@@ -48,5 +47,4 @@ module.exports = function (workspaceDirPath) {
       "no-console": ["error", { allow: ["warn", "error", "info"] }],
       "no-unused-vars": "error",
     },
-  };
-};
+  });

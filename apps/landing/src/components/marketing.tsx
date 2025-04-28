@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import * as m from "motion/react-m";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import type React from "react";
 
 import { Trans } from "@/i18n/client/trans";
 

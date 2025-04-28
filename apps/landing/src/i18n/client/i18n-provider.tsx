@@ -2,7 +2,7 @@
 import i18next from "i18next";
 import ICU from "i18next-icu";
 import resourcesToBackend from "i18next-resources-to-backend";
-import React from "react";
+import type React from "react";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import { useAsync } from "react-use";
 

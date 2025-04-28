@@ -33,5 +33,8 @@
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true
+  },
+  "files": {
+    "ignore": ["apps/landing/public/static/scripts/mailerlite.js"]
   }
 }

@@ -134,7 +134,7 @@ export class EmailClient {
   }
 
   async sendEmail(options: Mail.Options) {
-    if (!process.env["SUPPORT_EMAIL"]) {
+    if (!process.env.SUPPORT_EMAIL) {
       console.info("ℹ SUPPORT_EMAIL not configured - skipping email send");
       return;
     }
@@ -170,21 +170,21 @@ export class EmailClient {
         break;
       }
       case "smtp": {
-        const hasAuth = process.env["SMTP_USER"] || process.env["SMTP_PWD"];
+        const hasAuth = process.env.SMTP_USER || process.env.SMTP_PWD;
         this.cachedTransport = createTransport({
-          host: process.env["SMTP_HOST"],
-          port: process.env["SMTP_PORT"]
-            ? parseInt(process.env["SMTP_PORT"])
+          host: process.env.SMTP_HOST,
+          port: process.env.SMTP_PORT
+            ? Number.parseInt(process.env.SMTP_PORT)
             : undefined,
-          secure: process.env["SMTP_SECURE"] === "true",
+          secure: process.env.SMTP_SECURE === "true",
           auth: hasAuth
             ? {
-                user: process.env["SMTP_USER"],
-                pass: process.env["SMTP_PWD"],
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PWD,
               }
             : undefined,
           tls: {
-            rejectUnauthorized: process.env["SMTP_TLS_ENABLED"] === "true",
+            rejectUnauthorized: process.env.SMTP_TLS_ENABLED === "true",
           },
         });
         break;

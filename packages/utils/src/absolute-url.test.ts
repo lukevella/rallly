@@ -7,7 +7,7 @@ describe("absoluteUrl", () => {
     });
 
     afterAll(() => {
-      delete process.env.NEXT_PUBLIC_BASE_URL;
+      process.env.NEXT_PUBLIC_BASE_URL = undefined;
     });
 
     it("should return the value of NEXT_PUBLIC_BASE_URL", () => {
@@ -38,7 +38,7 @@ describe("absoluteUrl", () => {
       });
 
       afterAll(() => {
-        delete process.env.NEXT_PUBLIC_VERCEL_URL;
+        process.env.NEXT_PUBLIC_VERCEL_URL = undefined;
       });
 
       it("should return the correct absolute URL with a subpath and query params", () => {

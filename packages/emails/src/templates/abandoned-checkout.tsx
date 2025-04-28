@@ -134,12 +134,11 @@ AbandonedCheckoutEmail.getSubject = (
   ctx: EmailContext,
 ) => {
   return (
-    "🎉 " +
-    ctx.t("abandoned_checkout_subject", {
+    `🎉 ${ctx.t("abandoned_checkout_subject", {
       defaultValue: "Get {{discount}}% off your first year of Rallly Pro",
       discount: props.discount,
       ns: "emails",
-    })
+    })}`
   );
 };
 

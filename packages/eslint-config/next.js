@@ -1,7 +1,7 @@
 const preset = require("./preset");
 
 /** @return {import("eslint").Linter.Config} */
-module.exports = function (workspaceDirPath) {
+module.exports = (workspaceDirPath) => {
   const baseConfig = preset(workspaceDirPath);
 
   return {
