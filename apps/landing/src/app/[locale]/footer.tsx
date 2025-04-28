@@ -300,7 +300,8 @@ export const Footer: React.FunctionComponent = () => {
               <a
                 target="_blank"
                 href="https://vercel.com?utm_source=rallly&utm_campaign=oss"
-                className="inline-block text-white" rel="noreferrer"
+                className="inline-block text-white"
+                rel="noreferrer"
               >
                 <Image
                   src="/static/images/partners/vercel-logotype-dark.svg"
@@ -314,7 +315,8 @@ export const Footer: React.FunctionComponent = () => {
               <a
                 target="_blank"
                 className="inline-block"
-                href="/partners/digitalocean" rel="noreferrer"
+                href="/partners/digitalocean"
+                rel="noreferrer"
               >
                 <Image
                   src="/static/images/partners/digitalocean-logo.svg"
@@ -328,7 +330,8 @@ export const Footer: React.FunctionComponent = () => {
               <a
                 target="_blank"
                 className="inline-block"
-                href="https://sentry.io" rel="noreferrer"
+                href="https://sentry.io"
+                rel="noreferrer"
               >
                 <Image
                   src="/static/images/partners/sentry.svg"
