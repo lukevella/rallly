@@ -18,7 +18,7 @@ export const truncateLink = (href: string, text: string, key: number) => {
         key={key}
         target="_blank"
         href={href}
-        rel="nofollow noreferrer"
+        rel="nofollow noreferrer noopener"
       >
         {finalText}
       </Link>
@@ -32,7 +32,7 @@ export const truncateLink = (href: string, text: string, key: number) => {
             className="text-link"
             target="_blank"
             href={href}
-            rel="nofollow noreferrer"
+            rel="nofollow noreferrer noopener"
           >
             {finalText}
           </Link>
