@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { TimeFormat } from "@rallly/database";
 import type { DefaultSession, DefaultUser } from "next-auth";
 import NextAuth from "next-auth";

@@ -96,7 +96,6 @@
   "devDependencies": {
     "@babel/core": "^7.26.10",
     "@playwright/test": "^1.49.1",
-    "@rallly/eslint-config": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
     "@types/color-hash": "^1.0.2",
     "@types/js-cookie": "^3.0.1",
