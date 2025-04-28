@@ -1,5 +1,5 @@
 const ICU = require("i18next-icu/i18nextICU.js");
-const path = require("path");
+const path = require("node:path");
 const i18n = require("./i18n.config.js");
 
 module.exports = {

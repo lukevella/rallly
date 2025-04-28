@@ -20,10 +20,7 @@ const COOKIE_CONFIG = {
   expires: new Date(Date.now() + 5 * 1000), // 5 seconds
 } as const;
 
-const setEmailChangeCookie = (
-  type: "success" | "error",
-  value = "1",
-) => {
+const setEmailChangeCookie = (type: "success" | "error", value = "1") => {
   cookies().set(`email-change-${type}`, value, COOKIE_CONFIG);
 };
 

@@ -19,7 +19,7 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
       const newUrl = `?${params.toString()}`;
       router.replace(newUrl, { scroll: false });
     },
-    [name, router, searchParams],
+    [router, searchParams],
   );
 
   const value = searchParams.get(name) ?? "live";

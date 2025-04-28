@@ -168,6 +168,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         ) : null}
       </fieldset>
       <fieldset>
+        {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
         <label className="mb-1 text-gray-500">{t("response")}</label>
         <VoteSummary votes={props.votes} />
       </fieldset>

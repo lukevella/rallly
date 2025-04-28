@@ -23,7 +23,7 @@
     "formatter": {
       "quoteStyle": "double",
       "trailingCommas": "all",
-      "semicolons": "asNeeded"
+      "semicolons": "always"
     },
     "parser": {
       "unsafeParameterDecoratorsEnabled": true

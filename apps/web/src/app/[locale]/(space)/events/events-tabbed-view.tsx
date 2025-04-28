@@ -19,7 +19,7 @@ export function EventsTabbedView({ children }: { children: React.ReactNode }) {
       const newUrl = `?${params.toString()}`;
       router.replace(newUrl, { scroll: false });
     },
-    [name, router, searchParams],
+    [router, searchParams],
   );
 
   const value = searchParams.get(name) ?? "upcoming";
