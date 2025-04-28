@@ -1,6 +1,6 @@
-import languages, { defaultLocale } from "./index";
-import Negotiator from "negotiator";
 import { match } from "@formatjs/intl-localematcher";
+import Negotiator from "negotiator";
+import languages, { defaultLocale } from "./index";
 
 const locales = Object.keys(languages);
 

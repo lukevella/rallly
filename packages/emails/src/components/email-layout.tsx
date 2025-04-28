@@ -10,7 +10,7 @@ import {
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import type { EmailContext } from "../types";
-import { darkTextColor, fontFamily, Link, Text } from "./styled-components";
+import { Link, Text, darkTextColor, fontFamily } from "./styled-components";
 
 export interface EmailLayoutProps {
   preview: string;
