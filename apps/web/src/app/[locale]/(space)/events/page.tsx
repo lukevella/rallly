@@ -99,13 +99,12 @@ async function ScheduledEventEmptyState({ status }: { status: Status }) {
   );
 }
 
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: Params;
-  searchParams?: { status: string; q?: string; page?: string };
+export default async function Page(props: {
+  params: Promise<Params>;
+  searchParams?: Promise<{ status: string; q?: string; page?: string }>;
 }) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const { t } = await getTranslation(params.locale);
   const status = statusSchema.catch("upcoming").parse(searchParams?.status);
   const pageParam = searchParams?.page;

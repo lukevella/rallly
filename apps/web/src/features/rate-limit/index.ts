@@ -12,7 +12,7 @@ type Unit = "ms" | "s" | "m" | "h" | "d";
 type Duration = `${number} ${Unit}` | `${number}${Unit}`;
 
 async function getIPAddress() {
-  return headers().get("x-forwarded-for");
+  return (await headers()).get("x-forwarded-for");
 }
 
 export async function rateLimit(

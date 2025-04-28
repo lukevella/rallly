@@ -46,7 +46,7 @@ const MobilePoll: React.FunctionComponent = () => {
   const votingForm = useVotingForm();
   const { formState } = votingForm;
 
-  const selectedParticipantId = votingForm.watch("participantId") ?? "";
+  const selectedParticipantId = votingForm.watch("participantId");
 
   const visibleParticipants = useVisibleParticipants();
   const selectedParticipant = selectedParticipantId
@@ -74,6 +74,7 @@ const MobilePoll: React.FunctionComponent = () => {
         <div className="flex gap-x-2.5">
           {selectedParticipantId || !isEditing ? (
             <Select
+              defaultValue="all"
               value={selectedParticipantId}
               onValueChange={(participantId) => {
                 votingForm.setValue("participantId", participantId);
@@ -86,7 +87,7 @@ const MobilePoll: React.FunctionComponent = () => {
                 </Button>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">
+                <SelectItem value="all">
                   <div className="flex items-center gap-x-2.5">
                     <div className="flex w-5 justify-center">
                       <Icon>

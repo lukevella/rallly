@@ -17,7 +17,7 @@ import { OTPForm } from "./components/otp-form";
 
 export default async function VerifyPage() {
   const { t } = await getTranslation();
-  const email = cookies().get("verification-email")?.value;
+  const email = (await cookies()).get("verification-email")?.value;
   if (!email) {
     return redirect("/login");
   }
@@ -53,11 +53,10 @@ export default async function VerifyPage() {
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
 }) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {
     title: t("verifyEmail", {

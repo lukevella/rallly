@@ -14,7 +14,7 @@ export async function setVerificationEmail(email: string) {
   });
 
   if (user) {
-    cookies().set("verification-email", user.email, {
+    (await cookies()).set("verification-email", user.email, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

@@ -20,13 +20,13 @@ const nextConfig = {
     "@rallly/posthog",
     "@rallly/emails",
   ],
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ["@svgr/webpack"],
-    });
-
-    return config;
+  turbopack: {
+    rules: {
+      "*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: ".js",
+      },
+    },
   },
   typescript: {
     ignoreBuildErrors: true,
@@ -50,9 +50,8 @@ const nextConfig = {
       },
     ];
   },
-  experimental: {
-    // necessary for server actions using aws-sdk
-    serverComponentsExternalPackages: ["@aws-sdk"],
+  devIndicators: {
+    position: "bottom-right",
   },
 };
 

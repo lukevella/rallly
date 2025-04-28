@@ -10,7 +10,7 @@ import { checkApiAuthorization } from "@/utils/api-auth";
  * or if they don't have a user associated with them.
  */
 export async function POST() {
-  const unauthorized = checkApiAuthorization();
+  const unauthorized = await checkApiAuthorization();
   if (unauthorized) return unauthorized;
 
   // Define the 30-day threshold once

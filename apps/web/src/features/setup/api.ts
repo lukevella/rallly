@@ -12,7 +12,7 @@ export const getOnboardedUser = cache(async () => {
   const onboardedUser = onboardedUserSchema.safeParse(user);
 
   if (!onboardedUser.success) {
-    const headerList = headers();
+    const headerList = await headers();
     const pathname = headerList.get("x-pathname");
     const searchParams =
       pathname && pathname !== "/"
