@@ -28,7 +28,7 @@ const handleEmailChange = async (token: string) => {
   const payload = await decryptToken<EmailChangePayload>(token);
 
   if (!payload) {
-    setEmailChangeCookie("error", "invalidToken");
+    await setEmailChangeCookie("error", "invalidToken");
     return false;
   }
 
@@ -50,7 +50,7 @@ const handleEmailChange = async (token: string) => {
     Sentry.captureException(error);
   }
 
-  setEmailChangeCookie("success");
+  await setEmailChangeCookie("success");
 
   return true;
 };
