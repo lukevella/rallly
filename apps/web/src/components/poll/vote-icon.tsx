@@ -1,51 +1,60 @@
 import type { VoteType } from "@rallly/database";
-import { IfNeedBeIcon, NoIcon, PendingIcon, YesIcon } from "@rallly/icons";
+import React from "react";
+import Image from "next/image";
+import { useTranslation } from "@/i18n/client";
 import { cn } from "@rallly/ui";
-import * as React from "react";
 
-const VoteIcon: React.FunctionComponent<{
+const VoteIcon = ({
+  type,
+  size = "md",
+  className,
+}: {
   type?: VoteType;
   size?: "sm" | "md";
   className?: string;
-}> = ({ type, className, size = "md" }) => {
+}) => {
+  const { t } = useTranslation();
+  const iconSize = size === "md" ? 20 : 14;
   switch (type) {
     case "yes":
       return (
-        <YesIcon
-          className={cn("text-green-500", className, {
-            "size-5": size === "md",
-            "h-3": size === "sm",
-          })}
+        <Image
+          className={cn("select-none", className)}
+          src="/static/images/yes.svg"
+          alt={t("yes")}
+          width={iconSize}
+          height={iconSize}
         />
       );
-
     case "ifNeedBe":
       return (
-        <IfNeedBeIcon
-          className={cn("text-amber-400", className, {
-            "size-5": size === "md",
-            "h-3": size === "sm",
-          })}
+        <Image
+          className={cn("select-none", className)}
+          src="/static/images/if-need-be.svg"
+          alt={t("ifNeedBe")}
+          width={iconSize}
+          height={iconSize}
         />
       );
-
     case "no":
       return (
-        <NoIcon
-          className={cn("text-gray-400", className, {
-            "size-5": size === "md",
-            "h-3": size === "sm",
-          })}
+        <Image
+          className={cn("select-none", className)}
+          src="/static/images/no.svg"
+          alt={t("no")}
+          width={iconSize}
+          height={iconSize}
         />
       );
 
     default:
       return (
-        <PendingIcon
-          className={cn("text-gray-300", className, {
-            "size-5": size === "md",
-            "h-3": size === "sm",
-          })}
+        <Image
+          className={cn("select-none", className)}
+          src="/static/images/pending.svg"
+          alt={t("pending", { defaultValue: "Pending" })}
+          width={iconSize}
+          height={iconSize}
         />
       );
   }
