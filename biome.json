@@ -23,7 +23,10 @@
     "formatter": {
       "quoteStyle": "double",
       "trailingCommas": "all",
-      "semicolons": "always"
+      "semicolons": "always",
+      "bracketSpacing": true,
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded"
     },
     "parser": {
       "unsafeParameterDecoratorsEnabled": true
