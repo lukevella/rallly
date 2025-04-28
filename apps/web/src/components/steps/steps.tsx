@@ -28,6 +28,7 @@ const Steps: React.FunctionComponent<StepsProps> = ({
         {[...Array(total)].map((_, i) => {
           return (
             <span
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               key={i}
               className={cn("h-2 w-2 rounded-full transition-all", {
                 "bg-primary-400": i <= current,

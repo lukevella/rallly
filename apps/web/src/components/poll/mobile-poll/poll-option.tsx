@@ -49,6 +49,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
         <div className="grid grid-cols-2 gap-2">
           <div className="col-span-1 space-y-2.5">
             {participantsWhoVotedYes.map(({ name }, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
                   <OptimizedAvatarImage size="xs" name={name} />
@@ -62,6 +63,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
               </div>
             ))}
             {participantsWhoVotedIfNeedBe.map(({ name }, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
                   <OptimizedAvatarImage size="xs" name={name} />
@@ -77,6 +79,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
           </div>
           <div className="col-span-1 space-y-2.5">
             {participantsWhoVotedNo.map(({ name }, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
                   <OptimizedAvatarImage size="xs" name={name} />
@@ -111,6 +114,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   const [active, setActive] = React.useState(false);
   const [isExpanded, toggle] = useToggle(false);
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
       className={cn("space-y-4 bg-white p-4", {
         "bg-gray-500/5": editable && active,

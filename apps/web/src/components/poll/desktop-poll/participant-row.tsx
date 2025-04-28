@@ -68,6 +68,7 @@ export const ParticipantRowView: React.FunctionComponent<{
       {votes.map((vote, i) => {
         return (
           <td
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             key={i}
             className={cn(
               "h-12 border-l border-t",
@@ -95,7 +96,7 @@ export const ParticipantRowView: React.FunctionComponent<{
           </td>
         );
       })}
-      <td className="bg-diagonal-lines border-l"></td>
+      <td className="bg-diagonal-lines border-l" />
     </tr>
   );
 };
@@ -109,7 +110,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   const { ownsObject } = useUser();
   const { getVote, optionIds } = usePoll();
 
-  const isYou = ownsObject(participant) ? true : false;
+  const isYou = ownsObject(participant);
 
   const { canEditParticipant } = usePermissions();
   const canEdit = canEditParticipant(participant.id);

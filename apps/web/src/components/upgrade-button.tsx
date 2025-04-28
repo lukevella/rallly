@@ -50,13 +50,3 @@ export const UpgradeButton = ({
     </form>
   );
 };
-
-export const UpgradeLink = ({}) => {
-  return (
-    <Button variant="primary" asChild>
-      <Link href="/settings/billing">
-        <Trans i18nKey="upgrade" defaults="Upgrade" />
-      </Link>
-    </Button>
-  );
-};

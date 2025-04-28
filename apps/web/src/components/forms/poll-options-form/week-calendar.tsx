@@ -123,7 +123,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             );
           },
           week: {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
             header: function Header({ date }: any) {
               return (
                 <span className="w-full rounded-md text-center text-sm tracking-tight">

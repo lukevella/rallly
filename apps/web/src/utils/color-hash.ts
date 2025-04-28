@@ -26,7 +26,7 @@ const avatarBackgroundColors: RGBColor[] = [
 function isBright(color: RGBColor): boolean {
   const [r, g, b] = color;
   const L = (0.2126 * r) / 255 + (0.7152 * g) / 255 + (0.0722 * b) / 255;
-  return L > 0.6 ? true : false;
+  return L > 0.6;
 }
 
 export const getRandomAvatarColor = (str: string) => {

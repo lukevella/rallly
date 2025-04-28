@@ -1,7 +1,4 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import React from "react";
 
 function cmdKey(e: KeyboardEvent) {
   if (e.metaKey || e.ctrlKey) {
@@ -11,9 +8,7 @@ function cmdKey(e: KeyboardEvent) {
 }
 
 export function CommandGlobalShortcut({ trigger }: { trigger: () => void }) {
-  const router = useRouter();
-
-  useEffect(() => {
+  React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (cmdKey(e)) {
         case "k":
@@ -28,7 +23,7 @@ export function CommandGlobalShortcut({ trigger }: { trigger: () => void }) {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [router, trigger]);
+  }, [trigger]);
 
   // This component doesn't render anything
   return null;

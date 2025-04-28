@@ -186,45 +186,43 @@ const ManagePoll: React.FunctionComponent<{
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <>
-            {poll.status === "finalized" ? (
+          {poll.status === "finalized" ? (
+            <DropdownMenuItem
+              onClick={() => {
+                reopen.mutate({ pollId: poll.id });
+              }}
+            >
+              <Icon>
+                <RotateCcwIcon />
+              </Icon>
+              <Trans i18nKey="reopenPoll" defaults="Reopen" />
+            </DropdownMenuItem>
+          ) : (
+            <>
               <DropdownMenuItem
+                disabled={!!poll.event}
                 onClick={() => {
-                  reopen.mutate({ pollId: poll.id });
+                  if (user.tier !== "pro") {
+                    paywallDialog.trigger();
+                    posthog?.capture("trigger paywall", {
+                      poll_id: poll.id,
+                      from: "manage-poll",
+                      action: "finalize",
+                    });
+                  } else {
+                    finalizeDialog.trigger();
+                  }
                 }}
               >
                 <Icon>
-                  <RotateCcwIcon />
+                  <CalendarCheck2Icon />
                 </Icon>
-                <Trans i18nKey="reopenPoll" defaults="Reopen" />
+                <Trans i18nKey="finishPoll" defaults="Finalize" />
+                <ProBadge />
               </DropdownMenuItem>
-            ) : (
-              <>
-                <DropdownMenuItem
-                  disabled={!!poll.event}
-                  onClick={() => {
-                    if (user.tier !== "pro") {
-                      paywallDialog.trigger();
-                      posthog?.capture("trigger paywall", {
-                        poll_id: poll.id,
-                        from: "manage-poll",
-                        action: "finalize",
-                      });
-                    } else {
-                      finalizeDialog.trigger();
-                    }
-                  }}
-                >
-                  <Icon>
-                    <CalendarCheck2Icon />
-                  </Icon>
-                  <Trans i18nKey="finishPoll" defaults="Finalize" />
-                  <ProBadge />
-                </DropdownMenuItem>
-                <PauseResumeToggle />
-              </>
-            )}
-          </>
+              <PauseResumeToggle />
+            </>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={exportToCsv}>
             <DropdownMenuItemIconLabel icon={DownloadIcon}>

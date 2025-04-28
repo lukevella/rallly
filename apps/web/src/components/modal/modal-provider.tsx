@@ -78,6 +78,7 @@ const ModalProvider: React.FunctionComponent<ModalProviderProps> = ({
       ))}
       {modals.map((props, i) => (
         <Modal
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
           key={i}
           visible={true}
           {...props}

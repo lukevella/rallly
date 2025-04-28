@@ -83,6 +83,7 @@ export const UserProvider = ({
   const isGuest = !user || user.tier === "guest";
   const tier = isGuest ? "guest" : user.tier;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
     if (user) {
       posthog?.identify(user.id, {
@@ -92,7 +93,6 @@ export const UserProvider = ({
         image: user.image,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
   return (

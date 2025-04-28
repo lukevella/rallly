@@ -113,6 +113,7 @@ const ParticipantRowForm = ({
               control={form.control}
               name={`votes.${i}`}
               render={({ field }) => (
+                // biome-ignore lint/a11y/useKeyWithClickEvents: Fix later
                 <div
                   onClick={() => {
                     field.onChange({
