@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import type { NextAuthConfig } from "next-auth";
+import { NextResponse } from "next/server";
 
 import { env } from "@/env";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";

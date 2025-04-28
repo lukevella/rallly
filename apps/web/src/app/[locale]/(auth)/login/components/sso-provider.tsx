@@ -2,8 +2,8 @@
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { UserIcon } from "lucide-react";
-import Image from "next/image";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";

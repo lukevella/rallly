@@ -26,6 +26,7 @@ import type { NewEventData } from "@/components/forms";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 
+import type { DateTimeOption } from "..";
 import {
   expectTimeOption,
   getBrowserTimeZone,
@@ -34,7 +35,6 @@ import {
 } from "../../../../utils/date-time-utils";
 import DateCard from "../../../date-card";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
-import type { DateTimeOption } from "..";
 import type { DateTimePickerProps } from "../types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "../utils";
 import TimePicker from "./time-picker";

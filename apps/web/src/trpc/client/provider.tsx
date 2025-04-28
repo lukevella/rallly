@@ -6,7 +6,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { httpBatchLink, TRPCClientError } from "@trpc/client";
+import { TRPCClientError, httpBatchLink } from "@trpc/client";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import superjson from "superjson";

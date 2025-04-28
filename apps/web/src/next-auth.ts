@@ -1,8 +1,8 @@
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
-import { redirect } from "next/navigation";
 import NextAuth from "next-auth";
 import type { Provider } from "next-auth/providers";
+import { redirect } from "next/navigation";
 import { cache } from "react";
 
 import { CustomPrismaAdapter } from "./auth/adapters/prisma";
