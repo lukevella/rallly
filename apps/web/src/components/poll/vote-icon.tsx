@@ -1,9 +1,10 @@
 import type { VoteType } from "@rallly/database";
 import React from "react";
-import YesIcon from "@/assets/yes.svg";
+
 import IfNeedBeIcon from "@/assets/if-need-be.svg";
 import NoIcon from "@/assets/no.svg";
 import PendingIcon from "@/assets/pending.svg";
+import YesIcon from "@/assets/yes.svg";
 
 const VoteIcon = ({
   type,
