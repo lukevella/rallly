@@ -7,7 +7,8 @@ describe("absoluteUrl", () => {
     });
 
     afterAll(() => {
-      process.env.NEXT_PUBLIC_BASE_URL = undefined;
+      // biome-ignore lint/performance/noDelete: Setting to undefined doesn't work
+      delete process.env.NEXT_PUBLIC_BASE_URL;
     });
 
     it("should return the value of NEXT_PUBLIC_BASE_URL", () => {
@@ -15,12 +16,12 @@ describe("absoluteUrl", () => {
     });
     it("should return the correct absolute URL with query params", () => {
       expect(absoluteUrl("/", { test: "test" })).toBe(
-        "https://example.com/?test=test",
+        "https://example.com/?test=test"
       );
     });
     it("should return the correct absolute URL with a subpath and query params", () => {
       expect(absoluteUrl("/test", { test: "test" })).toBe(
-        "https://example.com/test?test=test",
+        "https://example.com/test?test=test"
       );
     });
   });
@@ -28,7 +29,7 @@ describe("absoluteUrl", () => {
   describe("when NEXT_PUBLIC_BASE_URL is not set", () => {
     it("should return the correct absolute URL with a subpath and query params", () => {
       expect(absoluteUrl("/test", { test: "test" })).toBe(
-        "http://localhost:3000/test?test=test",
+        "http://localhost:3000/test?test=test"
       );
     });
 
@@ -37,13 +38,9 @@ describe("absoluteUrl", () => {
         process.env.NEXT_PUBLIC_VERCEL_URL = "example.vercel.com";
       });
 
-      afterAll(() => {
-        process.env.NEXT_PUBLIC_VERCEL_URL = undefined;
-      });
-
       it("should return the correct absolute URL with a subpath and query params", () => {
         expect(absoluteUrl("/test", { test: "test" })).toBe(
-          "https://example.vercel.com/test?test=test",
+          "https://example.vercel.com/test?test=test"
         );
       });
     });
