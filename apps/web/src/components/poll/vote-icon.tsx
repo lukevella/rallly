@@ -1,52 +1,42 @@
 import type { VoteType } from "@rallly/database";
-import { IfNeedBeIcon, NoIcon, PendingIcon, YesIcon } from "@rallly/icons";
-import { cn } from "@rallly/ui";
-import * as React from "react";
+import React from "react";
 
-const VoteIcon: React.FunctionComponent<{
+import IfNeedBeIcon from "@/assets/if-need-be.svg";
+import NoIcon from "@/assets/no.svg";
+import PendingIcon from "@/assets/pending.svg";
+import YesIcon from "@/assets/yes.svg";
+
+const VoteIcon = ({
+  type,
+  size = "md",
+  className,
+}: {
   type?: VoteType;
   size?: "sm" | "md";
   className?: string;
-}> = ({ type, className, size = "md" }) => {
+}) => {
+  const iconSize = size === "md" ? 20 : 14;
   switch (type) {
     case "yes":
       return (
-        <YesIcon
-          className={cn("text-green-500", className, {
-            "size-5": size === "md",
-            "h-3": size === "sm",
-          })}
-        />
+        <YesIcon className={className} width={iconSize} height={iconSize} />
       );
-
     case "ifNeedBe":
       return (
         <IfNeedBeIcon
-          className={cn("text-amber-400", className, {
-            "size-5": size === "md",
-            "h-3": size === "sm",
-          })}
+          className={className}
+          width={iconSize}
+          height={iconSize}
         />
       );
-
     case "no":
       return (
-        <NoIcon
-          className={cn("text-gray-400", className, {
-            "size-5": size === "md",
-            "h-3": size === "sm",
-          })}
-        />
+        <NoIcon className={className} width={iconSize} height={iconSize} />
       );
 
     default:
       return (
-        <PendingIcon
-          className={cn("text-gray-300", className, {
-            "size-5": size === "md",
-            "h-3": size === "sm",
-          })}
-        />
+        <PendingIcon className={className} width={iconSize} height={iconSize} />
       );
   }
 };
