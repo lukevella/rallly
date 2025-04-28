@@ -34,7 +34,7 @@ export async function getScheduledEvents({
   const where: Prisma.ScheduledEventWhereInput = {
     userId,
     deletedAt: null,
-    ...(status != "past" && { start: { gte: now } }),
+    ...(status !== "past" && { start: { gte: now } }),
     ...(status === "past" && { start: { lt: now } }),
     ...(search && { title: { contains: search, mode: "insensitive" } }),
     status: mapStatus[status],

@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { SettingsPageIcon } from "@/app/components/page-icons";
 import {

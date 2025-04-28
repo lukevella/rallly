@@ -122,7 +122,7 @@ export const polls = router({
       let nextCursor: typeof cursor | undefined = undefined;
       if (polls.length > input.limit) {
         const nextItem = polls.pop();
-        nextCursor = nextItem!.id;
+        nextCursor = nextItem?.id;
       }
       return {
         polls,
@@ -720,6 +720,7 @@ export const polls = router({
         }> = [];
 
         if (input.notify === "all") {
+          // biome-ignore lint/complexity/noForEach: Fix this later
           poll.participants.forEach((p) => {
             if (p.email) {
               participantsToEmail.push({
@@ -732,6 +733,7 @@ export const polls = router({
         }
 
         if (input.notify === "attendees") {
+          // biome-ignore lint/complexity/noForEach: Fix this later
           attendees.forEach((p) => {
             if (p.email) {
               participantsToEmail.push({

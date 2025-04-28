@@ -37,8 +37,8 @@ const pageSchema = z
   .nullish()
   .transform((val) => {
     if (!val) return 1;
-    const parsed = parseInt(val, 10);
-    return isNaN(parsed) || parsed < 1 ? 1 : parsed;
+    const parsed = Number.parseInt(val, 10);
+    return Number.isNaN(parsed) || parsed < 1 ? 1 : parsed;
   });
 
 const querySchema = z
@@ -56,8 +56,8 @@ const pageSizeSchema = z
   .nullish()
   .transform((val) => {
     if (!val) return DEFAULT_PAGE_SIZE;
-    const parsed = parseInt(val, 10);
-    return isNaN(parsed) || parsed < 1
+    const parsed = Number.parseInt(val, 10);
+    return Number.isNaN(parsed) || parsed < 1
       ? DEFAULT_PAGE_SIZE
       : Math.min(parsed, 100);
   });

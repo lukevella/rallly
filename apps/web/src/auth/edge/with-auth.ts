@@ -1,6 +1,6 @@
-import type { NextResponse } from "next/server";
 import type { NextAuthRequest, Session } from "next-auth";
 import NextAuth from "next-auth";
+import type { NextResponse } from "next/server";
 
 import { nextAuthConfig } from "@/next-auth.config";
 

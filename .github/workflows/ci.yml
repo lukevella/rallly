@@ -45,7 +45,7 @@ jobs:
       - uses: ./.github/actions/pnpm-install
 
       - name: Check linting rules
-        run: pnpm lint
+        run: pnpm turbo check
 
   unit-tests:
     name: Unit tests

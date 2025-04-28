@@ -6,10 +6,10 @@ import {
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
 import { ClockIcon } from "lucide-react";
-import * as React from "react";
+import type * as React from "react";
 
-import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { useOptions } from "@/components/poll-context";
+import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { Trans } from "@/components/trans";
 
 const TimeRange: React.FunctionComponent<{
@@ -50,9 +50,9 @@ const TimelineRow = ({
       <th
         style={{ minWidth: 240, top }}
         className="sticky left-0 z-30 bg-white pl-4 pr-4"
-      ></th>
+      />
       {children}
-      <th className="w-full min-w-4 border-l"></th>
+      <th className="w-full min-w-4 border-l" />
     </tr>
   );
 };

@@ -8,7 +8,6 @@
     "./utils": "./src/utils.ts"
   },
   "scripts": {
-    "lint": "eslint ./src",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -17,7 +16,6 @@
     "posthog-node": "^4.10.2"
   },
   "devDependencies": {
-    "@rallly/eslint-config": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
     "@types/js-cookie": "^3.0.1"
   }

@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 
 import type { PollOptionProps } from "./poll-option";
 import PollOption from "./poll-option";

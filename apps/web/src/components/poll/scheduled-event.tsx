@@ -118,7 +118,7 @@ export function ScheduledEvent() {
               }
               guests={attendees
                 .filter((participant) => !!participant.email)
-                .map((participant) => participant.email!)}
+                .map((participant) => participant.email as string)}
             />
           </div>
         </div>

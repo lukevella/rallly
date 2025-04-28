@@ -12,16 +12,16 @@ import {
 import { MoreHorizontalIcon, PlusIcon, UsersIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
-import * as React from "react";
+import type * as React from "react";
 import smoothscroll from "smoothscroll-polyfill";
 
 import { TimesShownIn } from "@/components/clock";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
+import { useOptions, usePoll } from "@/components/poll-context";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { YouAvatar } from "@/components/poll/you-avatar";
-import { useOptions, usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
 import { useTranslation } from "@/i18n/client";

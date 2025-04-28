@@ -7,7 +7,8 @@ type Props = {
 const PostBody = ({ content }: Props) => {
   return (
     <div
-      className={markdownStyles["markdown"]}
+      className={markdownStyles.markdown}
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: Fix this later
       dangerouslySetInnerHTML={{ __html: content }}
     />
   );

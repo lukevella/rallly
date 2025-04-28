@@ -1,6 +1,6 @@
 "use client";
 import httpBackend from "i18next-http-backend";
-import React from "react";
+import type React from "react";
 import {
   I18nextProvider,
   useTranslation as useTranslationOrg,

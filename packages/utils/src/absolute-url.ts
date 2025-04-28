@@ -23,6 +23,7 @@ export function absoluteUrl(subpath = "", query: Record<string, string> = {}) {
 
   const url = new URL(subpath, baseUrl);
 
+  // biome-ignore lint/complexity/noForEach: Fix this later
   Object.entries(query).forEach(([key, value]) => {
     url.searchParams.set(key, value);
   });

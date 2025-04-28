@@ -71,7 +71,13 @@ export function normalizeTimeZone(timeZone: string) {
   if (!tz) {
     tz = supportedTimeZones.find((tz) => {
       return getTimeZoneOffset(tz) === timeZoneOffset;
-    })!; // We assume there has to be a timezone with the same offset
+    });
+  }
+
+  if (!tz) {
+    // In theory this shouldn't happen
+    tz = "America/New_York";
+    console.error(`Unable to resolve timezone ${timeZone}`);
   }
 
   return tz;

@@ -4,7 +4,7 @@ import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { MoreHorizontalIcon } from "lucide-react";
-import * as React from "react";
+import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";
@@ -68,6 +68,7 @@ export const ParticipantRowView: React.FunctionComponent<{
       {votes.map((vote, i) => {
         return (
           <td
+            // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
             key={i}
             className={cn(
               "h-12 border-l border-t",
@@ -95,7 +96,7 @@ export const ParticipantRowView: React.FunctionComponent<{
           </td>
         );
       })}
-      <td className="bg-diagonal-lines border-l"></td>
+      <td className="bg-diagonal-lines border-l" />
     </tr>
   );
 };
@@ -109,7 +110,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   const { ownsObject } = useUser();
   const { getVote, optionIds } = usePoll();
 
-  const isYou = ownsObject(participant) ? true : false;
+  const isYou = ownsObject(participant);
 
   const { canEditParticipant } = usePermissions();
   const canEdit = canEditParticipant(participant.id);

@@ -3,7 +3,7 @@ import "./rbc-overrides.css";
 
 import dayjs from "dayjs";
 import { XIcon } from "lucide-react";
-import React from "react";
+import type React from "react";
 import type { CalendarProps } from "react-big-calendar";
 import { Calendar } from "react-big-calendar";
 import { createBreakpoint } from "react-use";
@@ -123,7 +123,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             );
           },
           week: {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore lint/suspicious/noExplicitAny: Fix this later
             header: function Header({ date }: any) {
               return (
                 <span className="w-full rounded-md text-center text-sm tracking-tight">

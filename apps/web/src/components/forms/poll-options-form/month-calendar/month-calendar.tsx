@@ -26,6 +26,7 @@ import type { NewEventData } from "@/components/forms";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 
+import type { DateTimeOption } from "..";
 import {
   expectTimeOption,
   getBrowserTimeZone,
@@ -34,7 +35,6 @@ import {
 } from "../../../../utils/date-time-utils";
 import DateCard from "../../../date-card";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
-import type { DateTimeOption } from "..";
 import type { DateTimePickerProps } from "../types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "../utils";
 import TimePicker from "./time-picker";
@@ -81,7 +81,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
   const datepickerSelection = React.useMemo(() => {
     return Object.keys(optionsByDay).map(
-      (dateString) => new Date(dateString + "T12:00:00"),
+      (dateString) => new Date(`${dateString}T12:00:00`),
     );
   }, [optionsByDay]);
 
@@ -127,6 +127,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               {datepicker.days.map((day, i) => {
                 return (
                   <div
+                    // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
                     key={i}
                     className={cn("h-11", {
                       "border-r": (i + 1) % 7 !== 0,
@@ -192,7 +193,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                             ? "border-primary-300 group-hover:border-primary-400 border-dashed shadow-sm"
                             : "border-dashed border-transparent group-hover:border-gray-400 group-active:bg-gray-200",
                         )}
-                      ></span>
+                      />
                       <span className="z-10">{day.day}</span>
                     </button>
                   </div>
@@ -272,7 +273,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                       className="space-y-3 p-3 sm:flex sm:items-start sm:space-x-4 sm:space-y-0 sm:p-4"
                     >
                       <DateCard
-                        {...getDateProps(new Date(dateString + "T12:00:00"))}
+                        {...getDateProps(new Date(`${dateString}T12:00:00`))}
                       />
                       <div className="grow space-y-3">
                         {optionsForDay.map(({ option, index }) => {
@@ -411,8 +412,10 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                     },
                                   );
                                   const newOptions: DateTimeOption[] = [];
+                                  // biome-ignore lint/complexity/noForEach: Fix this later
                                   Object.keys(optionsByDay).forEach(
                                     (dateString) => {
+                                      // biome-ignore lint/complexity/noForEach: Fix this later
                                       times.forEach((time) => {
                                         const start =
                                           dateString + time.startTime;
@@ -465,6 +468,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 .map((selectedDate, i) => {
                   return (
                     <DateCard
+                      // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
                       key={i}
                       {...getDateProps(selectedDate)}
                       // annotation={

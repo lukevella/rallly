@@ -126,7 +126,7 @@ export const auth = router({
         },
       });
 
-      if (ctx.user && ctx.user.isGuest) {
+      if (ctx.user?.isGuest) {
         try {
           await mergeGuestsIntoUser(user.id, [ctx.user.id]);
         } catch (err) {

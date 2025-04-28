@@ -7,8 +7,8 @@ import { NextResponse } from "next/server";
 
 import { auth } from "@/next-auth";
 
-export function createStripePortalSessionHandler(path: string = "") {
-  return async function (request: NextRequest) {
+export function createStripePortalSessionHandler(path = "") {
+  return async (request: NextRequest) => {
     const sessionId = request.nextUrl.searchParams.get("session_id");
     const returnPath =
       request.nextUrl.searchParams.get("return_path") ?? "/settings/billing";

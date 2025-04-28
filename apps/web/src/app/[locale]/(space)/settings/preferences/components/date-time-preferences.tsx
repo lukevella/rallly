@@ -96,7 +96,7 @@ const DateTimePreferencesForm = () => {
                   <Select
                     value={field.value.toString()}
                     onValueChange={(value) => {
-                      field.onChange(parseInt(value));
+                      field.onChange(Number.parseInt(value));
                     }}
                   >
                     <SelectTrigger asChild>
@@ -106,6 +106,7 @@ const DateTimePreferencesForm = () => {
                     </SelectTrigger>
                     <SelectContent>
                       {dayjs.weekdays().map((day, index) => (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
                         <SelectItem key={index} value={index.toString()}>
                           {day}
                         </SelectItem>

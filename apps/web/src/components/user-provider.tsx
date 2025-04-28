@@ -1,7 +1,7 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
-import { useRouter } from "next/navigation";
 import { signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 import { useTranslation } from "@/i18n/client";
@@ -83,6 +83,7 @@ export const UserProvider = ({
   const isGuest = !user || user.tier === "guest";
   const tier = isGuest ? "guest" : user.tier;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix this later
   React.useEffect(() => {
     if (user) {
       posthog?.identify(user.id, {
@@ -92,7 +93,6 @@ export const UserProvider = ({
         image: user.image,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
   return (

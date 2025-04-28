@@ -8,6 +8,7 @@ const prismaClientSingleton = () => {
 
 export type ExtendedPrismaClient = ReturnType<typeof prismaClientSingleton>;
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: Fix this later
 declare const globalThis: {
   prismaGlobal: ExtendedPrismaClient;
 } & typeof global;

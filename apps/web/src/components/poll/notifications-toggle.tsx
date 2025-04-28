@@ -4,7 +4,7 @@ import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { BellOffIcon, BellRingIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
-import * as React from "react";
+import type * as React from "react";
 
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
@@ -22,7 +22,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
       pollId: poll.id,
     },
     {
-      staleTime: Infinity,
+      staleTime: Number.POSITIVE_INFINITY,
     },
   );
 

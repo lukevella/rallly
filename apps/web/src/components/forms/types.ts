@@ -7,7 +7,7 @@ export type NewEventData = PollDetailsData &
   PollOptionsData &
   PollSettingsFormData;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: Fix this later
 export interface PollFormProps<T extends Record<string, any>> {
   onSubmit?: (data: T) => void;
   onChange?: (data: Partial<T>) => void;

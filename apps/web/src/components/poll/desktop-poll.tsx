@@ -311,6 +311,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                         ? visibleParticipants.map((participant, i) => {
                             return (
                               <ParticipantRow
+                                // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
                                 key={i}
                                 participant={{
                                   id: participant.id,

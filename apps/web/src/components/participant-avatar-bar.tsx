@@ -16,7 +16,7 @@ interface ParticipantAvatarBarProps {
 
 export const ParticipantAvatarBar = ({
   participants,
-  max = Infinity,
+  max = Number.POSITIVE_INFINITY,
 }: ParticipantAvatarBarProps) => {
   const totalParticipants = participants.length;
 
@@ -37,6 +37,7 @@ export const ParticipantAvatarBar = ({
   return (
     <ul className="flex cursor-default items-center -space-x-1 rounded-full bg-white p-0.5">
       {visibleParticipants.map((participant, index) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
         <Tooltip delayDuration={100} key={index}>
           <TooltipTrigger asChild>
             <li className="z-10 inline-flex items-center justify-center rounded-full ring-2 ring-white">
@@ -70,6 +71,7 @@ export const ParticipantAvatarBar = ({
               <TooltipContent className="z-10">
                 <ul>
                   {tooltipParticipants.map((participant, index) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
                     <li key={index}>{participant.name}</li>
                   ))}
                   {remainingCount > 0 && (

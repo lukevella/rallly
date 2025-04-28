@@ -1,7 +1,7 @@
 import type React from "react";
 
 type ComponentPropsAs<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: Fix this later
   C extends React.ElementType<any>,
   T extends React.ComponentPropsWithoutRef<C>["as"],
 > = Omit<

@@ -34,10 +34,7 @@ export const TimezoneProvider = ({
     return getBrowserTimeZone();
   });
 
-  const value = React.useMemo(
-    () => ({ timezone, setTimezone }),
-    [timezone, setTimezone],
-  );
+  const value = React.useMemo(() => ({ timezone, setTimezone }), [timezone]);
 
   return (
     <TimezoneContext.Provider value={value}>

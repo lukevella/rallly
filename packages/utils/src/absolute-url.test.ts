@@ -7,6 +7,7 @@ describe("absoluteUrl", () => {
     });
 
     afterAll(() => {
+      // biome-ignore lint/performance/noDelete: Setting to undefined doesn't work
       delete process.env.NEXT_PUBLIC_BASE_URL;
     });
 
@@ -35,10 +36,6 @@ describe("absoluteUrl", () => {
     describe("when NEXT_PUBLIC_VERCEL_URL is set", () => {
       beforeAll(() => {
         process.env.NEXT_PUBLIC_VERCEL_URL = "example.vercel.com";
-      });
-
-      afterAll(() => {
-        delete process.env.NEXT_PUBLIC_VERCEL_URL;
       });
 
       it("should return the correct absolute URL with a subpath and query params", () => {

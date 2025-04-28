@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
 import { prisma } from "@rallly/database";
+import dayjs from "dayjs";
 
 export async function seedUsers() {
   console.info("Seeding users...");

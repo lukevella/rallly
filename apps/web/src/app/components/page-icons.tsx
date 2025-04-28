@@ -15,7 +15,7 @@ import {
   UserIcon,
   UsersIcon,
 } from "lucide-react";
-import React from "react";
+import type React from "react";
 
 const pageIconVariants = cva("inline-flex items-center justify-center", {
   variants: {

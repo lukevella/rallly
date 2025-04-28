@@ -71,8 +71,7 @@ const PollOptionsForm = ({
     [views, watchView],
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const watchOptions = watch("options", [])!;
+  const watchOptions = watch("options", []);
   const watchDuration = watch("duration");
   const watchTimeZone = watch("timeZone");
 

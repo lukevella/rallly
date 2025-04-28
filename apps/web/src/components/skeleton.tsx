@@ -1,5 +1,5 @@
 import { cn } from "@rallly/ui";
-import React from "react";
+import type React from "react";
 
 export const Skeleton = (props: {
   className?: string;

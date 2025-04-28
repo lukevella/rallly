@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
-import * as React from "react";
+import type * as React from "react";
 
 export interface ModalProps {
   title?: React.ReactNode;

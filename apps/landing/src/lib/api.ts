@@ -1,6 +1,6 @@
-import fs from "fs";
+import fs from "node:fs";
+import { join } from "node:path";
 import matter from "gray-matter";
-import { join } from "path";
 
 const postsDirectory = join(process.cwd(), "src", "posts");
 
@@ -21,6 +21,7 @@ export function getPostBySlug(slug: string, fields: string[] = []) {
   const items: Items = {};
 
   // Ensure only the minimal needed data is exposed
+  // biome-ignore lint/complexity/noForEach: Fix this later
   fields.forEach((field) => {
     if (field === "slug") {
       items[field] = realSlug;

@@ -22,7 +22,7 @@ export async function moderateContentWithAI(text: string) {
 
     return result.text.includes("FLAGGED");
   } catch (err) {
-    console.error(`❌ AI moderation failed:`, err);
+    console.error("❌ AI moderation failed:", err);
     return false;
   }
 }
