@@ -55,8 +55,8 @@
       "inputs": ["src/**", "i18next-scanner.config.js"],
       "outputs": ["public/locales/**", "locales/**"]
     },
-    "//#format-and-lint": {},
-    "//#format-and-lint:fix": {
+    "//#check": {},
+    "//#check:fix": {
       "cache": false
     }
   },
