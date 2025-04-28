@@ -28,7 +28,7 @@ export const POST = withPosthog(async (request: NextRequest) => {
   } catch (err) {
     Sentry.captureException(err);
     return NextResponse.json(
-      { error: `Webhook Error: Failed to construct event` },
+      { error: "Webhook Error: Failed to construct event" },
       { status: 400 },
     );
   }
