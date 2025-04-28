@@ -2,7 +2,7 @@ import {
   ScheduledEventStatus,
   type Prisma,
   type ScheduledEventInviteStatus,
-} from "@prisma/client";
+} from "../../generated/client";
 import dayjs from "dayjs";
 import { faker } from "@faker-js/faker";
 

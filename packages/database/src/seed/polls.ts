@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import type { VoteType } from "@prisma/client";
+import type { VoteType } from "../../generated/client";
 import dayjs from "dayjs";
 import { prisma } from "../client";
 
