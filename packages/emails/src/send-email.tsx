@@ -97,7 +97,7 @@ export class EmailClient {
     const subject = Template.getSubject?.(options.props, ctx);
     const component = (
       <Template
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: Fix this later
         {...(options.props as any)}
         ctx={ctx}
       />
