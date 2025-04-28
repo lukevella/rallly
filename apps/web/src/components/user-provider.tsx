@@ -83,7 +83,7 @@ export const UserProvider = ({
   const isGuest = !user || user.tier === "guest";
   const tier = isGuest ? "guest" : user.tier;
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix this later
   React.useEffect(() => {
     if (user) {
       posthog?.identify(user.id, {

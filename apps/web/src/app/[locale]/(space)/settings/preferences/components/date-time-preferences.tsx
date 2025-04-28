@@ -106,7 +106,7 @@ const DateTimePreferencesForm = () => {
                     </SelectTrigger>
                     <SelectContent>
                       {dayjs.weekdays().map((day, index) => (
-                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                        // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
                         <SelectItem key={index} value={index.toString()}>
                           {day}
                         </SelectItem>

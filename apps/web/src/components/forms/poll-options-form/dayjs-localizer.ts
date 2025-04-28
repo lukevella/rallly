@@ -2,25 +2,25 @@
 import { DateLocalizer } from "react-big-calendar";
 
 const weekRangeFormat = ({ start, end }, culture, local) =>
-  // biome-ignore lint/style/useTemplate: <explanation>
+  // biome-ignore lint/style/useTemplate: Fix this later
   local.format(start, "MMMM DD", culture) +
   " – " +
   local.format(end, local.eq(start, end, "month") ? "DD" : "MMMM DD", culture);
 
 const dateRangeFormat = ({ start, end }, culture, local) =>
-  // biome-ignore lint/style/useTemplate: <explanation>
+  // biome-ignore lint/style/useTemplate: Fix this later
   local.format(start, "L", culture) + " – " + local.format(end, "L", culture);
 
 const timeRangeFormat = ({ start, end }, culture, local) =>
-  // biome-ignore lint/style/useTemplate: <explanation>
+  // biome-ignore lint/style/useTemplate: Fix this later
   local.format(start, "LT", culture) + " – " + local.format(end, "LT", culture);
 
 const timeRangeStartFormat = ({ start }, culture, local) =>
-  // biome-ignore lint/style/useTemplate: <explanation>
+  // biome-ignore lint/style/useTemplate: Fix this later
   local.format(start, "LT", culture) + " – ";
 
 const timeRangeEndFormat = ({ end }, culture, local) =>
-  // biome-ignore lint/style/useTemplate: <explanation>
+  // biome-ignore lint/style/useTemplate: Fix this later
   " – " + local.format(end, "LT", culture);
 
 export const formats = {
@@ -66,7 +66,7 @@ export default function (dayjs) {
     return [dtA, dtB, datePart];
   }
 
-  // biome-ignore lint/style/useDefaultParameterLast: <explanation>
+  // biome-ignore lint/style/useDefaultParameterLast: Fix this later
   function startOf(date = null, unit) {
     const datePart = fixUnit(unit);
     if (datePart) {
@@ -75,7 +75,7 @@ export default function (dayjs) {
     return dayjs(date).toDate();
   }
 
-  // biome-ignore lint/style/useDefaultParameterLast: <explanation>
+  // biome-ignore lint/style/useDefaultParameterLast: Fix this later
   function endOf(date = null, unit) {
     const datePart = fixUnit(unit);
     if (datePart) {

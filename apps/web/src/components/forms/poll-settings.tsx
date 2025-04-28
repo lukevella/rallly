@@ -52,7 +52,7 @@ const SettingTitle = ({
 
 const Setting = ({ children }: React.PropsWithChildren) => {
   return (
-    // biome-ignore lint/a11y/noLabelWithoutControl: <explanation>
+    // biome-ignore lint/a11y/noLabelWithoutControl: Fix this later
     <label
       className={cn(
         "cursor-pointer bg-white hover:bg-gray-50 active:bg-gray-100",

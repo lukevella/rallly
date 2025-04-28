@@ -59,7 +59,7 @@ export const PollContextProvider: React.FunctionComponent<{
     (optionId: string) => {
       return (participants ?? []).reduce(
         (acc, curr) => {
-          // biome-ignore lint/complexity/noForEach: <explanation>
+          // biome-ignore lint/complexity/noForEach: Fix this later
           curr.votes.forEach((vote) => {
             if (vote.optionId !== optionId) {
               return;
@@ -104,7 +104,7 @@ export const PollContextProvider: React.FunctionComponent<{
     );
 
     const participantsByOptionId: Record<string, Participant[]> = {};
-    // biome-ignore lint/complexity/noForEach: <explanation>
+    // biome-ignore lint/complexity/noForEach: Fix this later
     poll.options.forEach((option) => {
       participantsByOptionId[option.id] = (participants ?? []).filter(
         (participant) =>
@@ -235,7 +235,7 @@ export const OptionsProvider = (props: React.PropsWithChildren) => {
   const { poll } = usePoll();
   const { timeZone: targetTimeZone, timeFormat } = useDayjs();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix this later
   const options = React.useMemo(() => {
     return createOptionsContextValue(
       poll.options,

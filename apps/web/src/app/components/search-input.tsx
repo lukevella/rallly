@@ -22,7 +22,7 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
   const [inputValue, setInputValue] = React.useState(currentSearchValue);
 
   // Create a debounced function to update the URL
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix this later
   const debouncedUpdateUrl = React.useCallback(
     debounce((value: string) => {
       const params = new URLSearchParams(searchParams);

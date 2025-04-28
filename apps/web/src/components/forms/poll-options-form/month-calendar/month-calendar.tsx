@@ -127,7 +127,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               {datepicker.days.map((day, i) => {
                 return (
                   <div
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
                     key={i}
                     className={cn("h-11", {
                       "border-r": (i + 1) % 7 !== 0,
@@ -412,10 +412,10 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                     },
                                   );
                                   const newOptions: DateTimeOption[] = [];
-                                  // biome-ignore lint/complexity/noForEach: <explanation>
+                                  // biome-ignore lint/complexity/noForEach: Fix this later
                                   Object.keys(optionsByDay).forEach(
                                     (dateString) => {
-                                      // biome-ignore lint/complexity/noForEach: <explanation>
+                                      // biome-ignore lint/complexity/noForEach: Fix this later
                                       times.forEach((time) => {
                                         const start =
                                           dateString + time.startTime;
@@ -468,7 +468,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 .map((selectedDate, i) => {
                   return (
                     <DateCard
-                      // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                      // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
                       key={i}
                       {...getDateProps(selectedDate)}
                       // annotation={

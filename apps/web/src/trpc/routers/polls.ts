@@ -720,7 +720,7 @@ export const polls = router({
         }> = [];
 
         if (input.notify === "all") {
-          // biome-ignore lint/complexity/noForEach: <explanation>
+          // biome-ignore lint/complexity/noForEach: Fix this later
           poll.participants.forEach((p) => {
             if (p.email) {
               participantsToEmail.push({
@@ -733,7 +733,7 @@ export const polls = router({
         }
 
         if (input.notify === "attendees") {
-          // biome-ignore lint/complexity/noForEach: <explanation>
+          // biome-ignore lint/complexity/noForEach: Fix this later
           attendees.forEach((p) => {
             if (p.email) {
               participantsToEmail.push({

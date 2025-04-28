@@ -68,7 +68,7 @@ export const ParticipantRowView: React.FunctionComponent<{
       {votes.map((vote, i) => {
         return (
           <td
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
             key={i}
             className={cn(
               "h-12 border-l border-t",

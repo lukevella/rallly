@@ -98,7 +98,7 @@ export const groupTimezonesByOffset = (): Record<string, string[]> => {
   const timezones = getAllTimezones();
   const grouped: Record<string, string[]> = {};
 
-  // biome-ignore lint/complexity/noForEach: <explanation>
+  // biome-ignore lint/complexity/noForEach: Fix this later
   timezones.forEach((tz) => {
     const offset = dayjs().tz(tz).format("Z");
     if (!grouped[offset]) {

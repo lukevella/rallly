@@ -10,7 +10,7 @@ import { getEventHandler } from "./handlers";
 
 export const POST = withPosthog(async (request: NextRequest) => {
   const body = await request.text();
-  // biome-ignore lint/style/noNonNullAssertion: <explanation>
+  // biome-ignore lint/style/noNonNullAssertion: Fix this later
   const sig = request.headers.get("stripe-signature")!;
   const stripeSigningSecret = process.env.STRIPE_SIGNING_SECRET;
 

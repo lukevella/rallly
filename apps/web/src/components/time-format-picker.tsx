@@ -17,14 +17,14 @@ const TimeFormatPicker = ({
   return (
     <RadioGroup value={value} onValueChange={onChange} disabled={disabled}>
       <div className="grid gap-y-1">
-        {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
+        {/* biome-ignore lint/a11y/noLabelWithoutControl: Fix this later */}
         <label className="flex items-center gap-x-2">
           <RadioGroupItem value="hours12" />
           <span>
             <Trans i18nKey="12h" />
           </span>
         </label>
-        {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
+        {/* biome-ignore lint/a11y/noLabelWithoutControl: Fix this later */}
         <label className="flex items-center gap-x-2">
           <RadioGroupItem value="hours24" />
           <span>
