@@ -9,6 +9,7 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const name = "status";
   const router = useRouter();
+  const [isPending, startTransition] = React.useTransition();
   const handleTabChange = React.useCallback(
     (value: string) => {
       const params = new URLSearchParams(searchParams);
@@ -16,8 +17,10 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
 
       params.delete("page");
 
-      const newUrl = `?${params.toString()}`;
-      router.replace(newUrl, { scroll: false });
+      startTransition(() => {
+        const newUrl = `?${params.toString()}`;
+        router.replace(newUrl, { scroll: false });
+      });
     },
     [router, searchParams],
   );
@@ -37,7 +40,7 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
           <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />
         </TabsTrigger>
       </TabsList>
-      <TabsContent tabIndex={-1} value={value} key={value}>
+      <TabsContent tabIndex={-1} value={value} key={value} className={isPending ? "opacity-50 pointer-events-none" : ""}>
         {children}
       </TabsContent>
     </Tabs>
