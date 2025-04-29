@@ -172,8 +172,8 @@ const DesktopPoll: React.FunctionComponent = () => {
                     size="sm"
                     disabled={Boolean(
                       scrollRef.current &&
-                      x + scrollRef.current.offsetWidth >=
-                      scrollRef.current.scrollWidth,
+                        x + scrollRef.current.offsetWidth >=
+                          scrollRef.current.scrollWidth,
                     )}
                     onClick={() => {
                       goToNextPage();
@@ -309,38 +309,38 @@ const DesktopPoll: React.FunctionComponent = () => {
                       ) : null}
                       {visibleParticipants.length > 0
                         ? visibleParticipants.map((participant, i) => {
-                          return (
-                            <ParticipantRow
-                              // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
-                              key={i}
-                              participant={{
-                                id: participant.id,
-                                name: participant.name,
-                                userId: participant.userId ?? undefined,
-                                guestId: participant.guestId ?? undefined,
-                                email: participant.email ?? undefined,
-                                votes: participant.votes,
-                              }}
-                              editMode={
-                                votingForm.watch("mode") === "edit" &&
-                                votingForm.watch("participantId") ===
-                                participant.id
-                              }
-                              className={
-                                i === visibleParticipants.length - 1
-                                  ? "last-row"
-                                  : ""
-                              }
-                              onChangeEditMode={(isEditing) => {
-                                if (isEditing) {
-                                  votingForm.setEditingParticipantId(
-                                    participant.id,
-                                  );
+                            return (
+                              <ParticipantRow
+                                // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
+                                key={i}
+                                participant={{
+                                  id: participant.id,
+                                  name: participant.name,
+                                  userId: participant.userId ?? undefined,
+                                  guestId: participant.guestId ?? undefined,
+                                  email: participant.email ?? undefined,
+                                  votes: participant.votes,
+                                }}
+                                editMode={
+                                  votingForm.watch("mode") === "edit" &&
+                                  votingForm.watch("participantId") ===
+                                    participant.id
                                 }
-                              }}
-                            />
-                          );
-                        })
+                                className={
+                                  i === visibleParticipants.length - 1
+                                    ? "last-row"
+                                    : ""
+                                }
+                                onChangeEditMode={(isEditing) => {
+                                  if (isEditing) {
+                                    votingForm.setEditingParticipantId(
+                                      participant.id,
+                                    );
+                                  }
+                                }}
+                              />
+                            );
+                          })
                         : null}
                     </tbody>
                   </table>
