@@ -122,7 +122,8 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
   );
 };
 
-export default async function Page({ params }: { params: { locale: string } }) {
+export default async function Page(props: { params: Promise<{ locale: string }> }) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale, "pricing");
   return (
     <article className="mx-auto max-w-3xl space-y-6">
@@ -178,11 +179,12 @@ export default async function Page({ params }: { params: { locale: string } }) {
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ locale: string }>;
+  }
+) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale, ["common", "pricing"]);
   return {
     title: t("pricing", { ns: "common", defaultValue: "Pricing" }),

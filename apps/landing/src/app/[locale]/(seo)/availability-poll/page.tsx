@@ -5,7 +5,8 @@ import { MarketingHero } from "@/components/home/hero";
 import { BigTestimonial, Marketing, MentionedBy } from "@/components/marketing";
 import { getTranslation } from "@/i18n/server";
 
-export default async function Page({ params }: { params: { locale: string } }) {
+export default async function Page(props: { params: Promise<{ locale: string }> }) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale, "home");
   return (
     <Marketing>
@@ -35,11 +36,12 @@ export default async function Page({ params }: { params: { locale: string } }) {
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ locale: string }>;
+  }
+) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale, "home");
   return {
     title: t("availabilityPollMetaTitle", {

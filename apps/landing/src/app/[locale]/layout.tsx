@@ -37,13 +37,22 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default async function Root({
-  children,
-  params: { locale },
-}: {
-  children: React.ReactNode;
-  params: { locale: string };
-}) {
+export default async function Root(
+  props: {
+    children: React.ReactNode;
+    params: Promise<{ locale: string }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    locale
+  } = params;
+
+  const {
+    children
+  } = props;
+
   const { t } = await getTranslation(locale, "common");
   return (
     <html lang={locale} className={sans.className}>
