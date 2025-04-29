@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@rallly/ui";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/page-tabs";
-import { useRouter, useSearchParams, useTransition } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
 import { Trans } from "@/components/trans";
@@ -10,7 +10,7 @@ export function EventsTabbedView({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const name = "status";
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = React.useTransition();
   const [tab, setTab] = React.useState(searchParams.get(name) ?? "upcoming");
   const handleTabChange = React.useCallback(
     (value: string) => {
@@ -25,7 +25,7 @@ export function EventsTabbedView({ children }: { children: React.ReactNode }) {
         router.replace(newUrl, { scroll: false });
       });
     },
-    [router, searchParams, startTransition],
+    [router, searchParams],
   );
 
   return (
