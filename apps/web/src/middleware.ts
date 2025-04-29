@@ -46,5 +46,5 @@ export const middleware = withAuth(async (req) => {
 });
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|static|monitoring|.*\\.).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|static|.*\\.).*)"],
 };
