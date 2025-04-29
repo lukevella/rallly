@@ -168,13 +168,13 @@ export default async function Page({
         </div>
       </div>
       <PageContent className="space-y-4">
+        <SearchInput
+          placeholder={t("searchPollsPlaceholder", {
+            defaultValue: "Search polls by title...",
+          })}
+        />
         <PollsTabbedView>
           <div className="space-y-4">
-            <SearchInput
-              placeholder={t("searchPollsPlaceholder", {
-                defaultValue: "Search polls by title...",
-              })}
-            />
             {polls.length === 0 ? (
               <PollsEmptyState />
             ) : (

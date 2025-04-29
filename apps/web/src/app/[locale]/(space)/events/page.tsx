@@ -138,13 +138,13 @@ export default async function Page({
         </PageDescription>
       </PageHeader>
       <PageContent>
-        <EventsTabbedView>
-          <div className="space-y-4">
-            <SearchInput
-              placeholder={t("searchEventsPlaceholder", {
-                defaultValue: "Search events by title...",
-              })}
-            />
+        <div className="space-y-4">
+          <SearchInput
+            placeholder={t("searchEventsPlaceholder", {
+              defaultValue: "Search events by title...",
+            })}
+          />
+          <EventsTabbedView>
             <div className="space-y-6">
               {paginatedEvents.length === 0 && (
                 <ScheduledEventEmptyState status={status} />
@@ -177,8 +177,8 @@ export default async function Page({
                 />
               )}
             </div>
-          </div>
-        </EventsTabbedView>
+          </EventsTabbedView>
+        </div>
       </PageContent>
     </PageContainer>
   );

@@ -1,8 +1,12 @@
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
+    "source.fixAll.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
   },
   "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
   "typescript.tsdk": "node_modules/typescript/lib",
@@ -14,5 +18,6 @@
   "typescript.preferences.preferTypeOnlyAutoImports": true,
   "typescript.tsserver.log": "verbose",
   "typescript.tsserver.trace": "messages",
-  "references.preferredLocation": "view"
+  "references.preferredLocation": "view",
+  "editor.defaultFormatter": "biomejs.biome"
 }

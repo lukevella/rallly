@@ -1,14 +1,18 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/page-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
 
 import { Trans } from "@/components/trans";
+
+import { cn } from "@rallly/ui";
+import React from "react";
 
 export function PollsTabbedView({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const name = "status";
   const router = useRouter();
+  const [isPending, startTransition] = React.useTransition();
+  const [tab, setTab] = React.useState(searchParams.get(name) ?? "live");
   const handleTabChange = React.useCallback(
     (value: string) => {
       const params = new URLSearchParams(searchParams);
@@ -16,16 +20,17 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
 
       params.delete("page");
 
-      const newUrl = `?${params.toString()}`;
-      router.replace(newUrl, { scroll: false });
+      startTransition(() => {
+        setTab(value);
+        const newUrl = `?${params.toString()}`;
+        router.replace(newUrl, { scroll: false });
+      });
     },
     [router, searchParams],
   );
 
-  const value = searchParams.get(name) ?? "live";
-
   return (
-    <Tabs value={value} onValueChange={handleTabChange}>
+    <Tabs value={tab} onValueChange={handleTabChange}>
       <TabsList>
         <TabsTrigger value="live">
           <Trans i18nKey="pollStatusOpen" defaults="Live" />
@@ -37,7 +42,15 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
           <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />
         </TabsTrigger>
       </TabsList>
-      <TabsContent tabIndex={-1} value={value} key={value}>
+      <TabsContent
+        tabIndex={-1}
+        value={tab}
+        key={tab}
+        className={cn(
+          "transition-opacity",
+          isPending ? "opacity-50 delay-200 pointer-events-none" : "",
+        )}
+      >
         {children}
       </TabsContent>
     </Tabs>
