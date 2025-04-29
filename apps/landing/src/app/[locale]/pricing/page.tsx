@@ -122,7 +122,9 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
   );
 };
 
-export default async function Page(props: { params: Promise<{ locale: string }> }) {
+export default async function Page(props: {
+  params: Promise<{ locale: string }>;
+}) {
   const params = await props.params;
   const { t } = await getTranslation(params.locale, "pricing");
   return (
@@ -179,11 +181,9 @@ export default async function Page(props: { params: Promise<{ locale: string }> 
   );
 }
 
-export async function generateMetadata(
-  props: {
-    params: Promise<{ locale: string }>;
-  }
-) {
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}) {
   const params = await props.params;
   const { t } = await getTranslation(params.locale, ["common", "pricing"]);
   return {

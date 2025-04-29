@@ -45,11 +45,9 @@ export default async function Page(props: { params: Promise<URLParams> }) {
   );
 }
 
-export async function generateMetadata(
-  props: {
-    params: Promise<{ locale: string }>;
-  }
-) {
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}) {
   const params = await props.params;
   const { t } = await getTranslation(params.locale, "blog");
   return {
