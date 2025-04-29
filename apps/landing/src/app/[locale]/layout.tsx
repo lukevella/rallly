@@ -1,4 +1,3 @@
-import "tailwindcss/tailwind.css";
 import "../../style.css";
 
 import languages from "@rallly/languages";
