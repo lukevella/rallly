@@ -44,8 +44,8 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
       </TabsList>
       <TabsContent
         tabIndex={-1}
-        value={value}
-        key={value}
+        value={tab}
+        key={tab}
         className={cn(
           "transition-opacity",
           isPending ? "opacity-50 delay-200 pointer-events-none" : "",
