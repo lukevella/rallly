@@ -39,14 +39,14 @@
     "clsx": "^1.2.1",
     "cmdk": "^1.1.1",
     "lucide-react": "^0.479.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "react-hook-form": "^7.42.1",
     "tailwind-merge": "^1.12.0"
   },
   "devDependencies": {
     "@rallly/tsconfig": "workspace:*",
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2"
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2"
   }
 }
