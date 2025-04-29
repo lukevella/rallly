@@ -35,7 +35,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@playwright/test": "^1.49.1",
     "dotenv-cli": "^8.0.0",
     "prettier": "^3.5.3",
     "prisma": "^6.4.1",
