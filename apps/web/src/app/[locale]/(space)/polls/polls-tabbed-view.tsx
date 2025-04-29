@@ -1,9 +1,10 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/page-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
 
 import { Trans } from "@/components/trans";
+
+import React from "react";
 
 export function PollsTabbedView({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
@@ -40,7 +41,12 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
           <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />
         </TabsTrigger>
       </TabsList>
-      <TabsContent tabIndex={-1} value={value} key={value} className={isPending ? "opacity-50 pointer-events-none" : ""}>
+      <TabsContent
+        tabIndex={-1}
+        value={value}
+        key={value}
+        className={isPending ? "opacity-50 pointer-events-none" : ""}
+      >
         {children}
       </TabsContent>
     </Tabs>
