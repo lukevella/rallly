@@ -157,7 +157,7 @@ const DeleteParticipantModal = ({
             <Trans i18nKey="cancel" />
           </Button>
           <Button
-            loading={deleteParticipant.isLoading}
+            loading={deleteParticipant.isPending}
             variant="destructive"
             onClick={async () => {
               deleteParticipant.mutate({

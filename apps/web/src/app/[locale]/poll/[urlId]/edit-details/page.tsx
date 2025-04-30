@@ -22,7 +22,7 @@ import { Trans } from "@/components/trans";
 const Page = () => {
   const { poll } = usePoll();
   const urlId = poll.adminUrlId;
-  const { mutate: updatePollMutation, isLoading: isUpdating } =
+  const { mutate: updatePollMutation, isPending: isUpdating } =
     useUpdatePollMutation();
   const router = useRouter();
 

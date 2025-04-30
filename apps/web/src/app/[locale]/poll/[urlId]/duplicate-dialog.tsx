@@ -65,7 +65,7 @@ export function DuplicateDialog({
           </DialogClose>
           <Button
             type="submit"
-            loading={duplicate.isLoading}
+            loading={duplicate.isPending}
             variant="primary"
             form={formName}
           >

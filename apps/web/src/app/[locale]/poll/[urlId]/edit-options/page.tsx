@@ -35,7 +35,7 @@ const convertOptionToString = (
 
 const Page = () => {
   const { poll, getParticipantsWhoVotedForOption } = usePoll();
-  const { mutate: updatePollMutation, isLoading: isUpdating } =
+  const { mutate: updatePollMutation, isPending: isUpdating } =
     useUpdatePollMutation();
   const { t } = useTranslation();
   const modalContext = useModalContext();

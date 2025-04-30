@@ -52,7 +52,7 @@ export const DeletePollDialog: React.FunctionComponent<{
             onClick={() => {
               deletePoll.mutate({ urlId });
             }}
-            loading={deletePoll.isLoading}
+            loading={deletePoll.isPending}
           >
             <Trans i18nKey="delete" />
           </Button>

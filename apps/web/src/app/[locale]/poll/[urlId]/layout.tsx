@@ -1,5 +1,5 @@
 import { prisma } from "@rallly/database";
-import { Hydrate, dehydrate } from "@tanstack/react-query";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 
 import { PollLayout } from "@/components/layouts/poll-layout";
@@ -27,9 +27,9 @@ export default async function Layout(
   }
 
   return (
-    <Hydrate state={dehydrate(trpc.queryClient)}>
+    <HydrationBoundary state={dehydrate(trpc.queryClient)}>
       <PollLayout>{children}</PollLayout>
-    </Hydrate>
+    </HydrationBoundary>
   );
 }
 

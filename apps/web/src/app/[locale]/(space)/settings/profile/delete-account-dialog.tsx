@@ -111,7 +111,7 @@ export function DeleteAccountDialog({
               </DialogClose>
               <Button
                 type="submit"
-                loading={deleteAccount.isLoading}
+                loading={deleteAccount.isPending}
                 variant="destructive"
               >
                 <Trans i18nKey="deleteAccount" defaults="Delete Account" />
