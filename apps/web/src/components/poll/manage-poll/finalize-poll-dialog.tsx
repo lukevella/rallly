@@ -250,7 +250,7 @@ export function FinalizePollDialog(props: DialogProps) {
             </Button>
           </DialogClose>
           <Button
-            loading={scheduleEvent.isLoading}
+            loading={scheduleEvent.isPending}
             type="submit"
             form="finalize-form"
             variant="primary"

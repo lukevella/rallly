@@ -73,7 +73,7 @@ export function OTPForm({ token }: { token: string }) {
   const isLoading =
     form.formState.isSubmitting ||
     form.formState.isSubmitSuccessful ||
-    authenticateRegistration.isLoading;
+    authenticateRegistration.isPending;
 
   return (
     <Form {...form}>

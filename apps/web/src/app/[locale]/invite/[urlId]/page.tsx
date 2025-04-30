@@ -1,6 +1,6 @@
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import { Hydrate, dehydrate } from "@tanstack/react-query";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 
 import { InvitePage } from "@/app/[locale]/invite/[urlId]/invite-page";
@@ -45,13 +45,13 @@ export default async function Page(props: {
   }
 
   return (
-    <Hydrate state={dehydrate(trpc.queryClient)}>
+    <HydrationBoundary state={dehydrate(trpc.queryClient)}>
       <Providers>
         <PermissionContext token={searchParams.token}>
           <InvitePage />
         </PermissionContext>
       </Providers>
-    </Hydrate>
+    </HydrationBoundary>
   );
 }
 

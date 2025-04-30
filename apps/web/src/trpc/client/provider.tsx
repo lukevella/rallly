@@ -25,7 +25,6 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
         defaultOptions: {
           queries: {
             retry: false,
-            cacheTime: Number.POSITIVE_INFINITY,
             staleTime: 1000 * 60,
           },
         },
@@ -73,9 +72,9 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
       links: [
         httpBatchLink({
           url: "/api/trpc",
+          transformer: superjson,
         }),
       ],
-      transformer: superjson,
     }),
   );
   return (

@@ -64,7 +64,7 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
         <div>
           <Button
             size="lg"
-            loading={magicLinkFetch.isLoading}
+            loading={magicLinkFetch.isPending}
             onClick={async () => {
               await magicLinkFetch.mutateAsync();
             }}
