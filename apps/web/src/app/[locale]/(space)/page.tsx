@@ -20,7 +20,8 @@ import {
 import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
 
-export default async function Page({ params }: { params: Params }) {
+export default async function Page(props: { params: Promise<Params> }) {
+  const params = await props.params;
   await getTranslation(params.locale);
 
   return (

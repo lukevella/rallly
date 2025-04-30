@@ -15,13 +15,15 @@ import {
 } from "../../components/auth-page";
 import { OTPForm } from "./components/otp-form";
 
-export default async function VerifyPage({
-  params: { locale },
-}: {
-  params: { locale: string };
+export default async function VerifyPage(props: {
+  params: Promise<{ locale: string }>;
 }) {
+  const params = await props.params;
+
+  const { locale } = params;
+
   const { t } = await getTranslation(locale);
-  const token = cookies().get("registration-token")?.value;
+  const token = (await cookies()).get("registration-token")?.value;
 
   if (!token) {
     redirect("/register");
@@ -59,11 +61,10 @@ export default async function VerifyPage({
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
 }) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {
     title: t("verifyEmail", {

@@ -28,6 +28,14 @@ const nextConfig = {
 
     return config;
   },
+  turbopack: {
+    rules: {
+      "*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: ".js",
+      },
+    },
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -50,9 +58,8 @@ const nextConfig = {
       },
     ];
   },
-  experimental: {
-    // necessary for server actions using aws-sdk
-    serverComponentsExternalPackages: ["@aws-sdk"],
+  devIndicators: {
+    position: "bottom-right",
   },
 };
 

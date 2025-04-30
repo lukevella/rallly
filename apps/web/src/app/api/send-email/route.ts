@@ -10,7 +10,7 @@ export const POST = async (req: NextRequest) => {
    * We need to call verifySignatureAppRouter inside the route handler
    * to avoid the build breaking when env vars are not set.
    */
-  return verifySignatureAppRouter(async (req: NextRequest) => {
+  return verifySignatureAppRouter(async (req: Request) => {
     const body = await req.json();
 
     // TODO: Add validation for templateName and options

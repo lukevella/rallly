@@ -29,7 +29,7 @@ const config: PlaywrightTestConfig = {
         reuseExistingServer: false,
       }
     : {
-        command: `NODE_ENV=test next dev --port ${port}`,
+        command: `NODE_ENV=test next dev --turbopack --port ${port}`,
         url: baseURL,
         reuseExistingServer: true,
       },

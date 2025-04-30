@@ -39,7 +39,7 @@ export default async function Root({
 }) {
   const session = await auth();
 
-  let locale = getLocale();
+  let locale = await getLocale();
 
   const userId = await getUserId();
 

@@ -13,11 +13,10 @@ import {
 } from "../components/auth-page";
 import { RegisterNameForm } from "./components/register-name-form";
 
-export default async function Register({
-  params,
-}: {
-  params: { locale: string };
+export default async function Register(props: {
+  params: Promise<{ locale: string }>;
 }) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale);
 
   return (
@@ -58,11 +57,10 @@ export default async function Register({
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
 }) {
+  const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {
     title: t("register"),

@@ -84,9 +84,7 @@ export function PageSkeleton() {
           <Skeleton className="size-8" />
           <Skeleton className="h-8 w-32" />
         </PageTitle>
-        <PageDescription>
-          <Skeleton className="h-4 w-64" />
-        </PageDescription>
+        <Skeleton className="mt-4 h-4 w-64" />
       </PageHeader>
       <PageContent>
         <div className="space-y-8">

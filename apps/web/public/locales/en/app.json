@@ -101,7 +101,6 @@
   "profileDescription": "Change your profile settings",
   "dates": "Dates",
   "menu": "Menu",
-  "useLocaleDefaults": "Use locale defaults",
   "support": "Support",
   "billing": "Billing",
   "guestPollAlertDescription": "<0>Create an account</0> or <1>login</1> to claim this poll.",
@@ -333,5 +332,6 @@
   "setupFormDescription": "Finish setting up your account.",
   "errorNotAuthenticated": "Not authenticated",
   "errorInvalidFields": "Invalid fields. Please check your input.",
-  "errorDatabaseUpdateFailed": "Database error: Failed to update settings."
+  "errorDatabaseUpdateFailed": "Database error: Failed to update settings.",
+  "pending": "Pending"
 }

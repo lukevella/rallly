@@ -20,15 +20,15 @@ const COOKIE_CONFIG = {
   expires: new Date(Date.now() + 5 * 1000), // 5 seconds
 } as const;
 
-const setEmailChangeCookie = (type: "success" | "error", value = "1") => {
-  cookies().set(`email-change-${type}`, value, COOKIE_CONFIG);
+const setEmailChangeCookie = async (type: "success" | "error", value = "1") => {
+  (await cookies()).set(`email-change-${type}`, value, COOKIE_CONFIG);
 };
 
 const handleEmailChange = async (token: string) => {
   const payload = await decryptToken<EmailChangePayload>(token);
 
   if (!payload) {
-    setEmailChangeCookie("error", "invalidToken");
+    await setEmailChangeCookie("error", "invalidToken");
     return false;
   }
 
@@ -50,7 +50,7 @@ const handleEmailChange = async (token: string) => {
     Sentry.captureException(error);
   }
 
-  setEmailChangeCookie("success");
+  await setEmailChangeCookie("success");
 
   return true;
 };

@@ -11,7 +11,7 @@ import { getUserId } from "@/next-auth";
  */
 export async function trackPollView(pollId: string) {
   try {
-    const headersList = headers();
+    const headersList = await headers();
     const userAgent = headersList.get("user-agent");
     const ip = headersList.get("x-forwarded-for") || "unknown";
 

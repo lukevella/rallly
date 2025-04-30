@@ -6,7 +6,8 @@ import { Redirect } from "@/app/components/redirect";
 
 import type { PParams } from "./types";
 
-export default async function Page({ params }: { params: PParams }) {
+export default async function Page(props: { params: Promise<PParams> }) {
+  const params = await props.params;
   const { adminUrlId } = params;
 
   const poll = await prisma.poll.findUnique({

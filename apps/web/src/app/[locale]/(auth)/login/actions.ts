@@ -14,9 +14,9 @@ export async function setVerificationEmail(email: string) {
   });
 
   if (user) {
-    cookies().set("verification-email", user.email, {
+    (await cookies()).set("verification-email", user.email, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https://"),
       sameSite: "lax",
       maxAge: 15 * 60,
     });

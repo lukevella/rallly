@@ -128,7 +128,7 @@ const DesktopPoll: React.FunctionComponent = () => {
 
   const isOverflowing = useIsOverflowing(scrollRef);
 
-  const { x } = useScroll(scrollRef);
+  const { x } = useScroll(scrollRef as React.RefObject<HTMLElement>);
 
   const containerRef = React.useRef<HTMLDivElement>(null);
 

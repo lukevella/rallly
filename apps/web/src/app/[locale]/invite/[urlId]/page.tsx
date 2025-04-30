@@ -26,13 +26,12 @@ const PermissionContext = async ({
   );
 };
 
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: { urlId: string };
-  searchParams: { token: string };
+export default async function Page(props: {
+  params: Promise<{ urlId: string }>;
+  searchParams: Promise<{ token: string }>;
 }) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const trpc = await createSSRHelper();
 
   const [poll] = await Promise.all([
@@ -56,14 +55,16 @@ export default async function Page({
   );
 }
 
-export async function generateMetadata({
-  params: { urlId },
-}: {
-  params: {
+export async function generateMetadata(props: {
+  params: Promise<{
     urlId: string;
     locale: string;
-  };
+  }>;
 }) {
+  const params = await props.params;
+
+  const { urlId } = params;
+
   const poll = await prisma.poll.findUnique({
     where: {
       id: urlId as string,

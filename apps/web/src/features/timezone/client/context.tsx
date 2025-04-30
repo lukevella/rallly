@@ -1,9 +1,12 @@
 "use client";
 
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
 import * as React from "react";
 
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
+
+dayjs.extend(timezone);
 
 interface TimezoneContextProps {
   timezone: string;

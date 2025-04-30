@@ -153,7 +153,7 @@ DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 function useDialog() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const triggerRef = React.useRef<HTMLButtonElement>();
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   function trigger() {
     setIsOpen(true);
