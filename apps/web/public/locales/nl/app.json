@@ -332,5 +332,6 @@
   "setupFormDescription": "Voltooi je accountinstellingen.",
   "errorNotAuthenticated": "Niet geauthenticeerd",
   "errorInvalidFields": "Ongeldige velden. Controleer je invoer.",
-  "errorDatabaseUpdateFailed": "Databasefout: bijwerken van instellingen is mislukt."
+  "errorDatabaseUpdateFailed": "Databasefout: bijwerken van instellingen is mislukt.",
+  "pending": "In behandeling"
 }
