@@ -20,6 +20,8 @@
     "i18next": "^24.2.2",
     "i18next-icu": "^2.3.0",
     "i18next-resources-to-backend": "^1.2.1",
+    "i18next-scanner": "^4.2.0",
+    "i18next-scanner-typescript": "^1.1.1",
     "nodemailer": "^6.9.9",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
