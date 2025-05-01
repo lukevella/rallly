@@ -117,7 +117,7 @@
   "finalize": "Finalisieren",
   "allDay": "Ganztägig",
   "permissionDenied": "Nicht autorisiert",
-  "permissionDeniedDescription": "Wenn du die Umfrage erstellt hast, melde dich bitte an, um auf Ihre Umfrage zuzugreifen",
+  "permissionDeniedDescription": "Wenn du die Umfrage erstellt hast, melde dich bitte an, um auf deine Umfrage zuzugreifen",
   "loginDifferent": "Benutzer wechseln",
   "editDetailsDescription": "Änder die Details deiner Veranstaltung.",
   "finalizeDescription": "Wähle einen finalen Termin für deine Veranstaltung.",
@@ -161,7 +161,7 @@
   "supportBilling": "Bitte kontaktiere uns, wenn du Hilfe brauchst.",
   "contactSupport": "Support kontaktieren",
   "pricing": "Preise",
-  "pollSettingsDescription": "Passen Sie das Verhalten Ihrer Umfrage an",
+  "pollSettingsDescription": "Passe das Verhalten deiner Umfrage an",
   "requireParticipantEmailLabel": "E-Mail-Adresse für Teilnehmer erforderlich machen",
   "hideParticipantsLabel": "Teilnehmerliste vor anderen Teilnehmern verbergen",
   "hideScoresLabel": "Zeige das Ergebnis erst an, wenn ein Teilnehmer abgestimmt hat",
@@ -332,5 +332,6 @@
   "setupFormDescription": "Schließe die Einrichtung deines Accounts ab.",
   "errorNotAuthenticated": "Nicht authentifiziert",
   "errorInvalidFields": "Ungültige Felder. Bitte überprüfe deine Eingabe.",
-  "errorDatabaseUpdateFailed": "Datenbankfehler: Einstellungen konnten nicht aktualisiert werden."
+  "errorDatabaseUpdateFailed": "Datenbankfehler: Einstellungen konnten nicht aktualisiert werden.",
+  "pending": "Ausstehend"
 }
