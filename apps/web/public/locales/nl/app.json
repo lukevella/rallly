@@ -101,7 +101,6 @@
   "profileDescription": "Beheer je profielinstellingen",
   "dates": "Datums",
   "menu": "Menu",
-  "useLocaleDefaults": "Lokale standaardinstellingen",
   "support": "Ondersteuning",
   "billing": "Facturatie",
   "guestPollAlertDescription": "<0>Maak een account aan</0> of <1>login</1> om deze poll te claimen.",
@@ -333,5 +332,6 @@
   "setupFormDescription": "Voltooi je accountinstellingen.",
   "errorNotAuthenticated": "Niet geauthenticeerd",
   "errorInvalidFields": "Ongeldige velden. Controleer je invoer.",
-  "errorDatabaseUpdateFailed": "Databasefout: bijwerken van instellingen is mislukt."
+  "errorDatabaseUpdateFailed": "Databasefout: bijwerken van instellingen is mislukt.",
+  "pending": "In behandeling"
 }
