@@ -240,6 +240,7 @@
   "registerVerifyDescription": "Verifique o código de verificação no seu e-mail",
   "loginVerifyDescription": "Verifique o código de verificação no seu e-mail",
   "createAccount": "Criar conta",
+  "billingSubscriptionNotActive": "Não é subscritor de nenhum plano, de momento.",
   "upcomingEventsEmptyStateTitle": "Nenhum Evento Futuro",
   "upcomingEventsEmptyStateDescription": "Quando você programar eventos, eles aparecerão aqui.",
   "pastEventsEmptyStateTitle": "Nenhum Evento Passado"
