@@ -44,8 +44,8 @@ export function FeedbackAlert() {
         <Button variant="primary" asChild>
           <Link
             href="https://senja.io/p/rallly/r/uwwiXJ"
-            type="button"
-            id="feedback-survey-button"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <Trans i18nKey="giveFeedback" defaults="Give feedback" />
           </Link>
