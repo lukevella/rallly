@@ -333,5 +333,10 @@
   "errorNotAuthenticated": "Not authenticated",
   "errorInvalidFields": "Invalid fields. Please check your input.",
   "errorDatabaseUpdateFailed": "Database error: Failed to update settings.",
-  "pending": "Pending"
+  "pending": "Pending",
+  "helpUsImprove": "Help us improve",
+  "helpUsImproveDesc": "Take a few minutes to share your feedback and help us shape the future of Rallly.",
+  "giveFeedback": "Give feedback",
+  "homeActionsTitle": "Actions",
+  "dismissFeedback": "Don't show again"
 }
