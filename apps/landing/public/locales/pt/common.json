@@ -1,6 +1,6 @@
 {
   "login": "Iniciar sessão",
-  "links": "Links",
+  "links": "Hiperligações",
   "blog": "Blogue",
   "discussions": "Discussões",
   "footerCredit": "Criado por <a>@imlukevella</a>",
@@ -13,16 +13,17 @@
   "termsOfUse": "Termos de utilização",
   "volunteerTranslator": "Ajude a traduzir esta página",
   "notFoundTitle": "404 Página não encontrada",
-  "notFoundDescription": "Não conseguimos encontrar a página que procuras.",
+  "notFoundDescription": "Não conseguimos encontrar a página que procura.",
   "goToHome": "Ir para a página inicial",
   "pricing": "Preço",
   "bestDoodleAlternative": "Melhor alternativa ao Doodle",
-  "freeSchedulingPoll": "Sondagem de agendamento gratuita",
+  "freeSchedulingPoll": "Votação de agendamento gratuita",
   "getStarted": "Começar",
-  "availabilityPoll": "Sondagem de disponibilidade",
+  "availabilityPoll": "Votação de disponibilidade",
   "solutions": "Soluções",
   "howItWorks": "Como Funciona",
   "status": "Status",
   "when2MeetAlternative": "Alternativa When2Meet",
-  "meetingPoll": "Sondagem de reunião"
+  "meetingPoll": "Votação de reunião",
+  "signUp": "Criar conta"
 }
