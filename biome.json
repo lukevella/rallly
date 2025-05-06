@@ -9,6 +9,9 @@
       "recommended": true,
       "style": {
         "noUselessElse": "off"
+      },
+      "correctness": {
+        "noUnusedImports": "error"
       }
     }
   },

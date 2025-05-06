@@ -5,7 +5,6 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React from "react";
 
 import { Trans } from "@/components/trans";
 

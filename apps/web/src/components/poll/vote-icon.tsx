@@ -1,5 +1,4 @@
 import type { VoteType } from "@rallly/database";
-import React from "react";
 
 import { IfNeedBeIcon } from "@/components/vote-icon/if-need-be-icon";
 import { NoIcon } from "@/components/vote-icon/no-icon";

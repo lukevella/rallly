@@ -1,8 +1,6 @@
 import type { TimeFormat } from "@rallly/database";
 import type { DefaultSession, DefaultUser } from "next-auth";
-import NextAuth from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
-import { JWT } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
 
 declare module "next-auth" {
