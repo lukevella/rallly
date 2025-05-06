@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Params } from "@/app/[locale]/types";
 import {
   BillingPageIcon,
+  CreatePageIcon,
   EventPageIcon,
   HomePageIcon,
   PollPageIcon,
@@ -18,7 +19,9 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { Trans } from "@/components/trans";
+import { IfCloudHosted } from "@/contexts/environment";
 import { getTranslation } from "@/i18n/server";
+import { FeedbackAlert } from "./feedback-alert";
 
 export default async function Page(props: { params: Promise<Params> }) {
   const params = await props.params;
@@ -39,20 +42,24 @@ export default async function Page(props: { params: Promise<Params> }) {
         </PageDescription>
       </PageHeader>
       <PageContent className="space-y-8">
-        {/* <div className="space-y-4">
+        <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
             <Trans i18nKey="homeActionsTitle" defaults="Actions" />
           </h2>
           <TileGrid>
-            <Tile href="/new">
-              <CreatePageIcon />
-              <TileTitle>
-                <Trans i18nKey="create" defaults="Create" />
-              </TileTitle>
+            <Tile asChild>
+              <Link href="/new">
+                <CreatePageIcon />
+                <TileTitle>
+                  <Trans i18nKey="create" defaults="Create" />
+                </TileTitle>
+              </Link>
             </Tile>
           </TileGrid>
-        </div> */}
-
+        </div>
+        <IfCloudHosted>
+          <FeedbackAlert />
+        </IfCloudHosted>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
             <Trans i18nKey="homeNavTitle" defaults="Navigation" />
@@ -75,16 +82,8 @@ export default async function Page(props: { params: Promise<Params> }) {
                 </TileTitle>
               </Link>
             </Tile>
-
-            {/* <Tile href="/members">
-              <MembersPageIcon />
-              <TileTitle>
-                <Trans i18nKey="members" defaults="Members" />
-              </TileTitle>
-            </Tile> */}
           </TileGrid>
         </div>
-
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
             <Trans i18nKey="account" defaults="Account" />
