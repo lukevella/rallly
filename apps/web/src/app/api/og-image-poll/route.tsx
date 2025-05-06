@@ -1,6 +1,5 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
-import * as React from "react";
 import { z } from "zod";
 
 import Logo from "./logo-color.svg";
