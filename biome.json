@@ -11,7 +11,10 @@
         "noUselessElse": "off"
       },
       "correctness": {
-        "noUnusedImports": "error"
+        "noUnusedImports": {
+          "level": "error",
+          "fix": "unsafe"
+        }
       }
     }
   },

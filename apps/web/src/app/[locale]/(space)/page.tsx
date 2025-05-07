@@ -42,6 +42,9 @@ export default async function Page(props: { params: Promise<Params> }) {
         </PageDescription>
       </PageHeader>
       <PageContent className="space-y-8">
+        <IfCloudHosted>
+          <FeedbackAlert />
+        </IfCloudHosted>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
             <Trans i18nKey="homeActionsTitle" defaults="Actions" />
@@ -57,9 +60,6 @@ export default async function Page(props: { params: Promise<Params> }) {
             </Tile>
           </TileGrid>
         </div>
-        <IfCloudHosted>
-          <FeedbackAlert />
-        </IfCloudHosted>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
             <Trans i18nKey="homeNavTitle" defaults="Navigation" />
