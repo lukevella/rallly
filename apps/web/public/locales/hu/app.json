@@ -333,5 +333,10 @@
   "errorNotAuthenticated": "Nem hitelesített",
   "errorInvalidFields": "Érvénytelen mezők. Ellenőrizd amit megadtál.",
   "errorDatabaseUpdateFailed": "Adatbázis hiba: A beállítások frissítése nem sikerült.",
-  "pending": "Függőben lévő"
+  "pending": "Függőben lévő",
+  "helpUsImprove": "Segítsen nekünk fejlődni",
+  "helpUsImproveDesc": "Szánj pár percet arra, hogy megoszd velünk a visszajelzésed és segíts nekünk alakítani a Rallly jövőjét.",
+  "giveFeedback": "Adj visszajelzést",
+  "homeActionsTitle": "Műveletek",
+  "dismissFeedback": "Ne mutasd újra"
 }
