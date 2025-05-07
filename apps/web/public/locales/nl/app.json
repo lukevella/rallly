@@ -333,5 +333,10 @@
   "errorNotAuthenticated": "Niet geauthenticeerd",
   "errorInvalidFields": "Ongeldige velden. Controleer je invoer.",
   "errorDatabaseUpdateFailed": "Databasefout: bijwerken van instellingen is mislukt.",
-  "pending": "In behandeling"
+  "pending": "In behandeling",
+  "helpUsImprove": "Geef ons tips",
+  "helpUsImproveDesc": "Deel je feedback en help ons zo de toekomst van Rallly vorm te geven.",
+  "giveFeedback": "Feedback geven",
+  "homeActionsTitle": "Acties",
+  "dismissFeedback": "Niet meer tonen"
 }
