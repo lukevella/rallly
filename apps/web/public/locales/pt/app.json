@@ -333,5 +333,10 @@
   "errorNotAuthenticated": "Não autenticado",
   "errorInvalidFields": "Campos inválidos. Por favor, verifique a sua entrada.",
   "errorDatabaseUpdateFailed": "Erro na base de dados: Falha ao atualizar as configurações.",
-  "pending": "Pendente"
+  "pending": "Pendente",
+  "helpUsImprove": "Ajude-nos a melhorar",
+  "helpUsImproveDesc": "Tome alguns minutos para partilhar a sua opinião connosco e ajudar a moldar o futuro do Rallly.",
+  "giveFeedback": "Dar a sua opinião",
+  "homeActionsTitle": "Ações",
+  "dismissFeedback": "Não mostrar novamente"
 }

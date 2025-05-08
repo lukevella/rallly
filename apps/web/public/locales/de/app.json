@@ -333,5 +333,10 @@
   "errorNotAuthenticated": "Nicht authentifiziert",
   "errorInvalidFields": "Ungültige Felder. Bitte überprüfe deine Eingabe.",
   "errorDatabaseUpdateFailed": "Datenbankfehler: Einstellungen konnten nicht aktualisiert werden.",
-  "pending": "Ausstehend"
+  "pending": "Ausstehend",
+  "helpUsImprove": "Hilf uns, besser zu werden",
+  "helpUsImproveDesc": "Nimm dir ein paar Minuten Zeit für Feedback und hilf uns, die Zukunft von Rallly zu gestalten.",
+  "giveFeedback": "Feedback geben",
+  "homeActionsTitle": "Aktionen",
+  "dismissFeedback": "Nicht erneut anzeigen"
 }
