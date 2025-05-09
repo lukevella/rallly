@@ -323,5 +323,6 @@
   "setupFormDescription": "Terminer la configuration de votre compte.",
   "errorNotAuthenticated": "Non authentifié",
   "errorInvalidFields": "Champs non valides. Veuillez vérifier votre saisie.",
-  "errorDatabaseUpdateFailed": "Erreur de base de données: Impossible de mettre à jour les paramètres."
+  "errorDatabaseUpdateFailed": "Erreur de base de données: Impossible de mettre à jour les paramètres.",
+  "dismissFeedback": "Ne plus afficher"
 }
