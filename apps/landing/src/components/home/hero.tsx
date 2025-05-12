@@ -108,7 +108,7 @@ export const MarketingHero = ({
         <h1 className="mb-2 mt-6 text-pretty text-2xl font-bold tracking-tight sm:mb-4 sm:text-5xl">
           {title}
         </h1>
-        <h2 className="mx-auto max-w-3xl text-pretty text-base text-gray-500 sm:text-xl sm:leading-relaxed">
+        <h2 className="mx-auto max-w-3xl text-pretty text-base text-gray-500 sm:text-xl font-normal sm:leading-relaxed">
           {description}
         </h2>
         <div className="mt-8 flex flex-col items-center justify-center gap-4">
