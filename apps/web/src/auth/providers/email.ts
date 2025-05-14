@@ -9,6 +9,7 @@ export const EmailProvider = NodemailerProvider({
   server: "none", // This value is required even though we don't need it
   from: process.env.NOREPLY_EMAIL,
   id: "email",
+  maxAge: 15 * 60,
   generateVerificationToken() {
     return generateOtp();
   },

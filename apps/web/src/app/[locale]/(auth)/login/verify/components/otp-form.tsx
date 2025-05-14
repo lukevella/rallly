@@ -41,16 +41,36 @@ export function OTPForm({ email }: { email: string }) {
     }/api/auth/callback/email?email=${encodeURIComponent(email.toLowerCase())}&token=${data.otp}`;
 
     const res = await fetch(url);
-    const resUrl = new URL(res.url);
 
-    const hasError = !!resUrl.searchParams.get("error");
-
-    if (hasError) {
-      form.setError("otp", {
-        message: t("wrongVerificationCode"),
-      });
+    if (!res.ok) {
+      switch (res.status) {
+        case 429:
+          form.setError("otp", {
+            message: t("tooManyAttempts", {
+              defaultValue: "Too many attempts, please try again later.",
+            }),
+          });
+          break;
+        default:
+          form.setError("otp", {
+            message: t("unknownError", {
+              defaultValue: "Something went wrong",
+            }),
+          });
+          break;
+      }
     } else {
-      window.location.href = searchParams?.get("redirectTo") ?? "/";
+      const resUrl = new URL(res.url);
+      const hasError = !!resUrl.searchParams.get("error");
+      if (hasError) {
+        form.setError("otp", {
+          message: t("wrongVerificationCode", {
+            defaultValue: "The code you entered is incorrect",
+          }),
+        });
+      } else {
+        window.location.href = searchParams?.get("redirectTo") ?? "/";
+      }
     }
   });
 
