@@ -338,5 +338,7 @@
   "helpUsImproveDesc": "Szánj pár percet arra, hogy megoszd velünk a visszajelzésed és segíts nekünk alakítani a Rallly jövőjét.",
   "giveFeedback": "Adj visszajelzést",
   "homeActionsTitle": "Műveletek",
-  "dismissFeedback": "Ne mutasd újra"
+  "dismissFeedback": "Ne mutasd újra",
+  "tooManyAttempts": "Túl sokat próbálkoztál, kérjük, próbáld meg újra később.",
+  "unknownError": "Valami hiba történt"
 }
