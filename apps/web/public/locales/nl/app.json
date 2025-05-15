@@ -338,5 +338,7 @@
   "helpUsImproveDesc": "Deel je feedback en help ons zo de toekomst van Rallly vorm te geven.",
   "giveFeedback": "Feedback geven",
   "homeActionsTitle": "Acties",
-  "dismissFeedback": "Niet meer tonen"
+  "dismissFeedback": "Niet meer tonen",
+  "tooManyAttempts": "Te veel pogingen. Probeer het later opnieuw.",
+  "unknownError": "Er is iets misgegaan"
 }

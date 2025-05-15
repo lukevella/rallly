@@ -336,5 +336,7 @@
   "helpUsImproveDesc": "Reserve alguns minutos para compartilhar seu feedback e nos ajudar a moldar o futuro de Rallly.",
   "giveFeedback": "Dar feedback",
   "homeActionsTitle": "Ações",
-  "dismissFeedback": "Não mostrar novamente"
+  "dismissFeedback": "Não mostrar novamente",
+  "tooManyAttempts": "Muitas tentativas, por favor, tente novamente mais tarde.",
+  "unknownError": "Algo deu errado"
 }
