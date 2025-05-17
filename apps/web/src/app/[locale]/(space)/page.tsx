@@ -106,15 +106,16 @@ export default async function Page(props: { params: Promise<Params> }) {
                 </TileTitle>
               </Link>
             </Tile>
-
-            <Tile asChild>
-              <Link href="/settings/billing">
-                <BillingPageIcon />
-                <TileTitle>
-                  <Trans i18nKey="billing" defaults="Billing" />
-                </TileTitle>
-              </Link>
-            </Tile>
+            <IfCloudHosted>
+              <Tile asChild>
+                <Link href="/settings/billing">
+                  <BillingPageIcon />
+                  <TileTitle>
+                    <Trans i18nKey="billing" defaults="Billing" />
+                  </TileTitle>
+                </Link>
+              </Tile>
+            </IfCloudHosted>
           </TileGrid>
         </div>
       </PageContent>
