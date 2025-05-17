@@ -56,7 +56,7 @@ const TileDescription = React.forwardRef<
   <p
     ref={ref}
     className={cn(
-      "text-muted-foreground absolute right-3 top-3 text-sm",
+      "text-muted-foreground pointer-events-none absolute right-3 top-3 text-sm",
       className,
     )}
     {...props}
