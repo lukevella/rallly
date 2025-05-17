@@ -51,7 +51,7 @@ export function FeedbackToggle() {
         </TooltipTrigger>
         <TooltipPortal>
           <TooltipContent>
-            <Trans i18nKey="sendFeedback" defaults="Send Feedback" />
+            <Trans i18nKey="feedback" defaults="Feedback" />
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>
@@ -60,7 +60,7 @@ export function FeedbackToggle() {
           <>
             <DialogHeader>
               <DialogTitle>
-                <Trans i18nKey="sendFeedback" defaults="Send Feedback" />
+                <Trans i18nKey="feedback" defaults="Feedback" />
               </DialogTitle>
               <DialogDescription>
                 <Trans
