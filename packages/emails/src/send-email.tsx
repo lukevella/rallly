@@ -140,7 +140,10 @@ export class EmailClient {
     }
 
     try {
-      await this.transport.sendMail(options);
+      await this.transport.sendMail({
+        ...options,
+        from: options.from || this.config.mail.from,
+      });
       return;
     } catch (e) {
       console.error("Error sending email", e);

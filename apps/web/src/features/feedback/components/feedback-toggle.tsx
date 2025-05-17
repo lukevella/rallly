@@ -24,11 +24,16 @@ import { useForm } from "react-hook-form";
 
 import { Trans } from "@/components/trans";
 
+import { isSelfHosted } from "@/utils/constants";
 import { submitFeedback } from "../actions";
 import type { Feedback } from "../schema";
 import { feedbackSchema } from "../schema";
 
 export function FeedbackToggle() {
+  if (isSelfHosted) {
+    return null;
+  }
+
   const form = useForm<Feedback>({
     resolver: zodResolver(feedbackSchema),
   });
