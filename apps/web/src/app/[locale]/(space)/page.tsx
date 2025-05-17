@@ -40,6 +40,7 @@ async function loadData() {
       where: {
         userId: user.id,
         status: "live",
+        deleted: false,
       },
     }),
     prisma.event.count({
