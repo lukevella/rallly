@@ -340,5 +340,7 @@
   "homeActionsTitle": "Actions",
   "dismissFeedback": "Don't show again",
   "tooManyAttempts": "Too many attempts, please try again later.",
-  "unknownError": "Something went wrong"
+  "unknownError": "Something went wrong",
+  "livePollCount": "{count} live",
+  "upcomingEventCount": "{count} upcoming"
 }

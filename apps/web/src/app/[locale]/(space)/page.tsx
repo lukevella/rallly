@@ -1,7 +1,6 @@
-import { Tile, TileGrid, TileTitle } from "@rallly/ui/tile";
+import { Tile, TileDescription, TileGrid, TileTitle } from "@rallly/ui/tile";
 import Link from "next/link";
 
-import type { Params } from "@/app/[locale]/types";
 import {
   BillingPageIcon,
   CreatePageIcon,
@@ -20,12 +19,47 @@ import {
 } from "@/app/components/page-layout";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted } from "@/contexts/environment";
+import { getUser } from "@/data/get-user";
 import { getTranslation } from "@/i18n/server";
+import { prisma } from "@rallly/database";
 import { FeedbackAlert } from "./feedback-alert";
 
-export default async function Page(props: { params: Promise<Params> }) {
-  const params = await props.params;
-  await getTranslation(params.locale);
+async function loadData() {
+  const user = await getUser();
+
+  if (!user) {
+    return {
+      livePollCount: 0,
+      upcomingEventCount: 0,
+    };
+  }
+
+  const now = new Date();
+  const [livePollCount, upcomingEventCount] = await Promise.all([
+    prisma.poll.count({
+      where: {
+        userId: user.id,
+        status: "live",
+      },
+    }),
+    prisma.event.count({
+      where: {
+        userId: user.id,
+        start: {
+          gte: now,
+        },
+      },
+    }),
+  ]);
+
+  return {
+    livePollCount,
+    upcomingEventCount,
+  };
+}
+
+export default async function Page() {
+  const { livePollCount, upcomingEventCount } = await loadData();
 
   return (
     <PageContainer>
@@ -71,6 +105,13 @@ export default async function Page(props: { params: Promise<Params> }) {
                 <TileTitle>
                   <Trans i18nKey="polls" defaults="Polls" />
                 </TileTitle>
+                <TileDescription>
+                  <Trans
+                    i18nKey="livePollCount"
+                    defaults="{count} live"
+                    values={{ count: livePollCount }}
+                  />
+                </TileDescription>
               </Link>
             </Tile>
 
@@ -80,6 +121,13 @@ export default async function Page(props: { params: Promise<Params> }) {
                 <TileTitle>
                   <Trans i18nKey="events" defaults="Events" />
                 </TileTitle>
+                <TileDescription>
+                  <Trans
+                    i18nKey="upcomingEventCount"
+                    defaults="{count} upcoming"
+                    values={{ count: upcomingEventCount }}
+                  />
+                </TileDescription>
               </Link>
             </Tile>
           </TileGrid>
