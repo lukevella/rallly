@@ -340,5 +340,7 @@
   "homeActionsTitle": "Aktionen",
   "dismissFeedback": "Nicht erneut anzeigen",
   "tooManyAttempts": "Zu viele Versuche, bitte versuche es später noch einmal.",
-  "unknownError": "Etwas ist schiefgelaufen"
+  "unknownError": "Etwas ist schiefgelaufen",
+  "livePollCount": "{count} live",
+  "upcomingEventCount": "{count} anstehend"
 }
