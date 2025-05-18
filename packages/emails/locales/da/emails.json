@@ -53,5 +53,14 @@
   "changeEmailRequest_button": "Bekræft e-mail adresse",
   "changeEmailRequest_subject": "Bekræft din nye e-mail adresse",
   "changeEmailRequest_text3": "Dette link udløber om 10 minutter. Hvis du ikke har anmodet om denne ændring, bedes du ignorere denne e-mail.",
-  "changeEmailRequest_text1": "Vi har modtaget en anmodning om at ændre e-mail adressen for din konto fra <b>{fromEmail}</b> til <b>{toEmail}</b>."
+  "changeEmailRequest_text1": "Vi har modtaget en anmodning om at ændre e-mail adressen for din konto fra <b>{fromEmail}</b> til <b>{toEmail}</b>.",
+  "abandoned_checkout_name": "Hej {name},",
+  "abandoned_checkout_noname": "Hej der,",
+  "abandoned_checkout_content": "Jeg bemærkede, at du tjek <b>Rallly Pro</b> tidligere. Jeg ønskede at nå ud for at se, om du havde spørgsmål eller brug for hjælp med noget.",
+  "abandoned_checkout_offer": "For at hjælpe dig i gang, kan du få <b>{discount}% i rabat</b> dit første år. Bare brug koden nedenfor, når du tjekker ud:",
+  "abandoned_checkout_button": "Opgrader til Rallly Pro",
+  "abandoned_checkout_support": "Hvis du har spørgsmål om Rallly Pro eller har brug for hjælp til noget overhovedet, bare besvare denne e-mail. Jeg er her for at hjælpe!",
+  "abandoned_checkout_preview": "Eksklusivt tilbud: Få {discount}% rabat på dit første år af Rallly Pro!",
+  "abandoned_checkout_subject": "Eksklusivt tilbud: Få {discount}% rabat på dit første år af Rallly Pro",
+  "abandoned_checkout_signoff": "Med venlig hilsen"
 }
