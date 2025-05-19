@@ -340,5 +340,7 @@
   "homeActionsTitle": "Acties",
   "dismissFeedback": "Niet meer tonen",
   "tooManyAttempts": "Te veel pogingen. Probeer het later opnieuw.",
-  "unknownError": "Er is iets misgegaan"
+  "unknownError": "Er is iets misgegaan",
+  "livePollCount": "{count} actief",
+  "upcomingEventCount": "{count} aanstaande"
 }

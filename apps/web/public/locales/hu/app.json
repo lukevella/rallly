@@ -340,5 +340,7 @@
   "homeActionsTitle": "Műveletek",
   "dismissFeedback": "Ne mutasd újra",
   "tooManyAttempts": "Túl sokat próbálkoztál, kérjük, próbáld meg újra később.",
-  "unknownError": "Valami hiba történt"
+  "unknownError": "Valami hiba történt",
+  "livePollCount": "{count} aktív",
+  "upcomingEventCount": "{count} közelgő"
 }

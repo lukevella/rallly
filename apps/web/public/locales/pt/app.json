@@ -340,5 +340,7 @@
   "homeActionsTitle": "Ações",
   "dismissFeedback": "Não mostrar novamente",
   "tooManyAttempts": "Demasiadas tentativas. Tente novamente mais tarde.",
-  "unknownError": "Ocorreu um problema"
+  "unknownError": "Ocorreu um problema",
+  "livePollCount": "{count} ao vivo",
+  "upcomingEventCount": "{count} em breve"
 }
