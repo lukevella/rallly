@@ -14,7 +14,7 @@
 
 </div>
 
-<img src="./assets/images/splash.png" alt="Rallly" />
+![Screenshot](https://github.com/user-attachments/assets/baafea52-c4da-43bb-96ef-50840f1c0c03)
 
 Schedule group meetings with friends, colleagues and teams. Create meeting polls to find the best date and time to organize an event based on your participants' availability. Save time and avoid back-and-forth emails.
 
