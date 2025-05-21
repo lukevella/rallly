@@ -20,8 +20,9 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
 
       params.delete("page");
 
+      setTab(value);
+
       startTransition(() => {
-        setTab(value);
         const newUrl = `?${params.toString()}`;
         router.replace(newUrl, { scroll: false });
       });

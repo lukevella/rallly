@@ -19,9 +19,10 @@ export function EventsTabbedView({ children }: { children: React.ReactNode }) {
 
       params.delete("page");
 
-      const newUrl = `?${params.toString()}`;
+      setTab(value);
+
       startTransition(() => {
-        setTab(value);
+        const newUrl = `?${params.toString()}`;
         router.replace(newUrl, { scroll: false });
       });
     },
