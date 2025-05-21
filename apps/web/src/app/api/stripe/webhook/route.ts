@@ -6,9 +6,16 @@ import { NextResponse } from "next/server";
 
 import { withPosthog } from "@/utils/posthog";
 
+import { isSelfHosted } from "@/utils/constants";
 import { getEventHandler } from "./handlers";
 
 export const POST = withPosthog(async (request: NextRequest) => {
+  if (isSelfHosted) {
+    return NextResponse.json(
+      { error: "This endpoint is not available on self-hosted instances" },
+      { status: 410 },
+    );
+  }
   const body = await request.text();
   // biome-ignore lint/style/noNonNullAssertion: Fix this later
   const sig = request.headers.get("stripe-signature")!;

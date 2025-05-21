@@ -11,7 +11,7 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center text-center",
+        "flex flex-col items-center pt-16 pb-32 justify-center text-center",
         className,
       )}
     >
@@ -44,6 +44,12 @@ export function EmptyStateDescription({
   );
 }
 
-export function EmptyStateFooter({ children }: { children: React.ReactNode }) {
-  return <div className="mt-6">{children}</div>;
+export function EmptyStateFooter({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return <div className={cn("mt-6", className)}>{children}</div>;
 }

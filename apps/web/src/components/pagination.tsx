@@ -78,7 +78,7 @@ export function Pagination({
         <div className="text-sm">
           <Trans
             i18nKey="paginationPage"
-            defaults="Page {currentPage} of {totalPages}"
+            defaults="Page {currentPage, number} of {totalPages, number}"
             values={{
               currentPage,
               totalPages,
