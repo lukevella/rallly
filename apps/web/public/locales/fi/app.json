@@ -307,6 +307,7 @@
   "signOut": "Kirjaudu ulos",
   "paginationItems": "Näytetään {startItem}–{endItem} / {totalItems}",
   "paginationPrevious": "Edellinen",
+  "paginationPage": "Sivu {currentPage, number} / {totalPages, number}",
   "paginationNext": "Seuraava",
   "upgradeToProDesc": "Avaa kaikki Pro-ominaisuudet",
   "searchPollsPlaceholder": "Etsi kyselyitä otsikon perusteella...",
@@ -337,5 +338,9 @@
   "helpUsImproveDesc": "Käytä hetkinen antaaksesi palautetta ja auta meitä muovaamaan Ralllyn tulevaisuutta.",
   "giveFeedback": "Anna palautetta",
   "homeActionsTitle": "Toiminnot",
-  "dismissFeedback": "Älä näytä uudelleen"
+  "dismissFeedback": "Älä näytä uudelleen",
+  "tooManyAttempts": "Liian monta yritystä, yritä myöhemmin uudelleen.",
+  "unknownError": "Jotain meni pieleen",
+  "livePollCount": "{count} käynnissä",
+  "upcomingEventCount": "{count} tulossa"
 }
