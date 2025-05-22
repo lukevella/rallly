@@ -12,14 +12,14 @@
   },
   "exports": "./index.ts",
   "dependencies": {
-    "@prisma/client": "^6.4.1",
+    "@prisma/client": "^6.8.2",
     "dayjs": "^1.11.13"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "@rallly/tsconfig": "workspace:*",
     "@types/node": "^20.11.1",
-    "prisma": "^6.4.1",
+    "prisma": "^6.8.2",
     "tsx": "^4.6.2"
   }
 }
