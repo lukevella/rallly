@@ -307,6 +307,7 @@
   "signOut": "Abmelden",
   "paginationItems": "Zeige {startItem}–{endItem} von {totalItems}",
   "paginationPrevious": "Zurück",
+  "paginationPage": "Seite {currentPage, number} von {totalPages, number}",
   "paginationNext": "Weiter",
   "upgradeToProDesc": "Schalte alle Pro-Funktionen frei",
   "searchPollsPlaceholder": "Umfragen nach Titel suchen...",
