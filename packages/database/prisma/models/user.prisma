@@ -1,0 +1,75 @@
+enum TimeFormat {
+  hours12
+  hours24
+
+  @@map("time_format")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+enum UserRole {
+  admin
+  user
+
+  @@map("user_role")
+}
+
+model User {
+  id            String      @id @default(cuid())
+  name          String
+  email         String      @unique() @db.Citext
+  emailVerified DateTime?   @map("email_verified")
+  image         String?
+  timeZone      String?     @map("time_zone")
+  weekStart     Int?        @map("week_start")
+  timeFormat    TimeFormat? @map("time_format")
+  locale        String?
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime?   @updatedAt @map("updated_at")
+  customerId    String?     @map("customer_id")
+  banned        Boolean     @default(false)
+  bannedAt      DateTime?   @map("banned_at")
+  banReason     String?     @map("ban_reason")
+  role          UserRole    @default(user)
+
+  comments              Comment[]
+  polls                 Poll[]
+  watcher               Watcher[]
+  events                Event[]
+  accounts              Account[]
+  participants          Participant[]
+  paymentMethods        PaymentMethod[]
+  subscription          Subscription?          @relation("UserToSubscription")
+  pollViews             PollView[]
+  scheduledEvents       ScheduledEvent[]
+  scheduledEventInvites ScheduledEventInvite[]
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String   @db.Citext
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}

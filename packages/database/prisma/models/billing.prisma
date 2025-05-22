@@ -1,0 +1,53 @@
+model Subscription {
+  id                String               @id
+  priceId           String               @map("price_id")
+  amount            Int
+  status            SubscriptionStatus
+  active            Boolean
+  currency          String
+  interval          SubscriptionInterval
+  createdAt         DateTime             @default(now()) @map("created_at")
+  periodStart       DateTime             @map("period_start")
+  periodEnd         DateTime             @map("period_end")
+  cancelAtPeriodEnd Boolean              @default(false) @map("cancel_at_period_end")
+  userId            String               @unique @map("user_id")
+
+  user User @relation("UserToSubscription", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+enum SubscriptionStatus {
+  incomplete
+  incomplete_expired
+  active
+  paused
+  trialing
+  past_due
+  canceled
+  unpaid
+
+  @@map("subscription_status")
+}
+
+enum SubscriptionInterval {
+  day
+  week
+  month
+  year
+
+  @@map("subscription_interval")
+}
+
+model PaymentMethod {
+  id        String   @id
+  userId    String   @map("user_id")
+  type      String
+  data      Json
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payment_methods")
+}
