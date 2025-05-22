@@ -307,6 +307,7 @@
   "signOut": "Terminar Sessão",
   "paginationItems": "A mostrar {startItem}–{endItem} de {totalItems}",
   "paginationPrevious": "Anterior",
+  "paginationPage": "Página {currentPage, number} de {totalPages, number}",
   "paginationNext": "Seguinte",
   "upgradeToProDesc": "Desbloquear todas as funções Pro",
   "searchPollsPlaceholder": "Pesquisar votações por título...",
