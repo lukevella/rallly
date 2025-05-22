@@ -1,0 +1,133 @@
+import { generateLicenseKey } from "@/features/licensing/helpers/generate-license-key";
+import {
+  type CreateLicenseResponse,
+  type ValidateLicenseKeyResponse,
+  createLicenseInputSchema,
+  validateLicenseKeyInputSchema,
+} from "@/features/licensing/schema";
+import { RedisStore } from "@hono-rate-limiter/redis";
+import { zValidator } from "@hono/zod-validator";
+import { prisma } from "@rallly/database";
+import { kv } from "@vercel/kv";
+import { Hono } from "hono";
+import { rateLimiter } from "hono-rate-limiter";
+import { bearerAuth } from "hono/bearer-auth";
+import { handle } from "hono/vercel";
+
+const isKvAvailable =
+  process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN;
+
+const app = new Hono().basePath("/api/licensing/v1");
+
+const token = process.env.LICENSE_API_AUTH_TOKEN;
+
+if (!token) {
+  throw new Error("LICENSE_API_AUTH_TOKEN environment variable is not set");
+}
+
+const bearer = bearerAuth({ token });
+
+app.post(
+  "/licenses",
+  zValidator("json", createLicenseInputSchema),
+  bearer,
+  async (c) => {
+    const {
+      type,
+      seats,
+      expiresAt,
+      licenseeEmail,
+      licenseeName,
+      version,
+      stripeCustomerId,
+    } = c.req.valid("json");
+    const license = await prisma.license.create({
+      data: {
+        licenseKey: generateLicenseKey({ version }),
+        version,
+        type,
+        seats,
+        issuedAt: new Date(),
+        expiresAt,
+        licenseeEmail,
+        licenseeName,
+        stripeCustomerId,
+      },
+    });
+    return c.json({
+      data: { key: license.licenseKey },
+    } satisfies CreateLicenseResponse);
+  },
+);
+
+app.post(
+  "/licenses/actions/validate-key",
+  zValidator("json", validateLicenseKeyInputSchema),
+  rateLimiter({
+    keyGenerator: async (c) => {
+      const { key, fingerprint } = await c.req.json();
+      return `validate-key:${key}:${fingerprint}`;
+    },
+    windowMs: 60 * 60 * 1000,
+    limit: 10,
+    store: isKvAvailable
+      ? new RedisStore({
+          client: kv,
+        })
+      : undefined,
+  }),
+  bearer,
+  async (c) => {
+    const { key, fingerprint } = c.req.valid("json");
+
+    const license = await prisma.license.findUnique({
+      where: {
+        licenseKey: key,
+      },
+      select: {
+        id: true,
+        licenseKey: true,
+        status: true,
+        issuedAt: true,
+        expiresAt: true,
+        licenseeEmail: true,
+        licenseeName: true,
+        seats: true,
+        type: true,
+        version: true,
+      },
+    });
+
+    if (!license) {
+      return c.json({ error: "License not found" }, 404);
+    }
+
+    await prisma.licenseValidation.create({
+      data: {
+        licenseId: license.id,
+        ipAddress: c.req.header("x-forwarded-for"),
+        fingerprint,
+        validatedAt: new Date(),
+        userAgent: c.req.header("user-agent"),
+      },
+    });
+
+    return c.json({
+      data: {
+        key: license.licenseKey,
+        valid: license.status === "ACTIVE",
+        status: license.status,
+        issuedAt: license.issuedAt,
+        expiresAt: license.expiresAt,
+        licenseeEmail: license.licenseeEmail,
+        licenseeName: license.licenseeName,
+        seats: license.seats,
+        type: license.type,
+        version: license.version,
+      },
+    } satisfies ValidateLicenseKeyResponse);
+  },
+);
+
+export const GET = handle(app);
+export const POST = handle(app);
