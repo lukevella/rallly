@@ -307,6 +307,7 @@
   "signOut": "Uitloggen",
   "paginationItems": "Toont {startItem}-{endItem} van {totalItems}",
   "paginationPrevious": "Vorige",
+  "paginationPage": "Pagina {currentPage, number} van {totalPages, number}",
   "paginationNext": "Volgende",
   "upgradeToProDesc": "Ontgrendel alle Pro-functies",
   "searchPollsPlaceholder": "Doorzoek polls op titel...",
