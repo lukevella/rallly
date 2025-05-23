@@ -16,7 +16,7 @@ export async function validateLicenseKey(key: string) {
   });
 
   if (error) {
-    throw new Error(error);
+    throw new Error(`License validation failed: ${error}`);
   }
 
   if (!data) {
@@ -25,7 +25,7 @@ export async function validateLicenseKey(key: string) {
     };
   }
 
-  const license = await prisma.instanceLicense.create({
+  await prisma.instanceLicense.create({
     data: {
       licenseKey: data.key,
       licenseeName: data.licenseeName,
