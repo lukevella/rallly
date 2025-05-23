@@ -49,20 +49,28 @@ export function LoginWithEmailForm() {
       <form
         className="space-y-4"
         onSubmit={handleSubmit(async ({ identifier }) => {
-          const doesExist = await setVerificationEmail(identifier);
-          if (doesExist) {
-            await signIn("email", {
+          try {
+            const res = await signIn("email", {
               email: identifier,
               redirectTo: searchParams?.get("redirectTo") ?? undefined,
               redirect: false,
             });
+
+            if (res?.error) {
+              throw new Error(res.error);
+            }
+
+            await setVerificationEmail(identifier);
             // redirect to verify page with redirectTo
+            const redirectTo = searchParams?.get("redirectTo");
             router.push(
-              `/login/verify?redirectTo=${encodeURIComponent(
-                searchParams?.get("redirectTo") ?? "",
-              )}`,
+              `/login/verify${
+                redirectTo
+                  ? `?redirectTo=${encodeURIComponent(redirectTo)}`
+                  : ""
+              }`,
             );
-          } else {
+          } catch (e) {
             form.setError("identifier", {
               message: t("userNotFound", {
                 defaultValue: "A user with that email doesn't exist",
