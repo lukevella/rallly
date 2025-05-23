@@ -17,15 +17,15 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
+import { requireUser } from "@/auth/queries";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted } from "@/contexts/environment";
-import { getUser } from "@/data/get-user";
 import { getTranslation } from "@/i18n/server";
 import { prisma } from "@rallly/database";
 import { FeedbackAlert } from "./feedback-alert";
 
 async function loadData() {
-  const user = await getUser();
+  const user = await requireUser();
 
   if (!user) {
     return {

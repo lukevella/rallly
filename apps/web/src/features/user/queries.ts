@@ -1,13 +1,9 @@
 import { prisma } from "@rallly/database";
-import { redirect } from "next/navigation";
 import { cache } from "react";
 
-import { requireUser } from "@/next-auth";
 import { isSelfHosted } from "@/utils/constants";
 
-export const getUser = cache(async () => {
-  const { userId } = await requireUser();
-
+export const getUser = cache(async (userId: string) => {
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -21,6 +17,7 @@ export const getUser = cache(async () => {
       timeZone: true,
       timeFormat: true,
       weekStart: true,
+      role: true,
       subscription: {
         select: {
           active: true,
@@ -30,7 +27,7 @@ export const getUser = cache(async () => {
   });
 
   if (!user) {
-    redirect("/api/auth/invalid-session");
+    return null;
   }
 
   return {
@@ -42,6 +39,23 @@ export const getUser = cache(async () => {
     timeZone: user.timeZone ?? undefined,
     timeFormat: user.timeFormat ?? undefined,
     weekStart: user.weekStart ?? undefined,
+    role: user.role,
     isPro: Boolean(isSelfHosted || user.subscription?.active),
   };
+});
+
+export const getAdminCount = cache(async () => {
+  return prisma.user.count({
+    where: {
+      role: "admin",
+    },
+  });
+});
+
+export const hasAdmins = async () => {
+  return (await getAdminCount()) > 0;
+};
+
+export const getUserCount = cache(async () => {
+  return await prisma.user.count();
 });

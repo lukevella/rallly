@@ -4,9 +4,9 @@ import { TrashIcon } from "lucide-react";
 
 import type { Params } from "@/app/[locale]/types";
 import { Trans } from "@/components/trans";
-import { getUser } from "@/data/get-user";
 import { getTranslation } from "@/i18n/server";
 
+import { requireUser } from "@/auth/queries";
 import {
   SettingsContent,
   SettingsSection,
@@ -16,7 +16,7 @@ import { ProfileEmailAddress } from "./profile-email-address";
 import { ProfileSettings } from "./profile-settings";
 
 export default async function Page() {
-  const user = await getUser();
+  const user = await requireUser();
   return (
     <SettingsContent>
       <SettingsSection

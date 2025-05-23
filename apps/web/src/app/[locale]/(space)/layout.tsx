@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { CommandMenu } from "@/features/navigation/command-menu";
-import { getOnboardedUser } from "@/features/setup/api";
+import { getOnboardedUser } from "@/features/setup/queries";
 import { TimezoneProvider } from "@/features/timezone/client/context";
 
 import { AppSidebar } from "./components/sidebar/app-sidebar";
