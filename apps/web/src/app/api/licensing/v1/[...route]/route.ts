@@ -1,3 +1,4 @@
+import { env } from "@/env";
 import { generateLicenseKey } from "@/features/licensing/helpers/generate-license-key";
 import {
   type CreateLicenseResponse,
@@ -5,6 +6,7 @@ import {
   createLicenseInputSchema,
   validateLicenseKeyInputSchema,
 } from "@/features/licensing/schema";
+import { isSelfHosted } from "@/utils/constants";
 import { RedisStore } from "@hono-rate-limiter/redis";
 import { zValidator } from "@hono/zod-validator";
 import { prisma } from "@rallly/database";
@@ -20,57 +22,58 @@ const isKvAvailable =
 
 const app = new Hono().basePath("/api/licensing/v1");
 
-const token = process.env.LICENSE_API_AUTH_TOKEN;
+app.use("*", async (c, next) => {
+  if (isSelfHosted) {
+    return c.json({ error: "Not available in self-hosted instances" }, 404);
+  }
+  return next();
+});
 
-if (!token) {
-  throw new Error("LICENSE_API_AUTH_TOKEN environment variable is not set");
-}
-
-const bearer = bearerAuth({ token });
-
-app.post(
-  "/licenses",
-  zValidator("json", createLicenseInputSchema),
-  some(
-    bearer,
-    rateLimiter({
-      windowMs: 60 * 60 * 1000,
-      limit: 10,
-      store: isKvAvailable
-        ? new RedisStore({
-            client: kv,
-          })
-        : undefined,
-    }),
-  ),
-  async (c) => {
-    const {
-      type,
-      seats,
-      expiresAt,
-      licenseeEmail,
-      licenseeName,
-      version,
-      stripeCustomerId,
-    } = c.req.valid("json");
-    const license = await prisma.license.create({
-      data: {
-        licenseKey: generateLicenseKey({ version }),
-        version,
+if (env.LICENSE_API_AUTH_TOKEN) {
+  app.post(
+    "/licenses",
+    zValidator("json", createLicenseInputSchema),
+    some(
+      bearerAuth({ token: env.LICENSE_API_AUTH_TOKEN }),
+      rateLimiter({
+        windowMs: 60 * 60 * 1000,
+        limit: 10,
+        store: isKvAvailable
+          ? new RedisStore({
+              client: kv,
+            })
+          : undefined,
+      }),
+    ),
+    async (c) => {
+      const {
         type,
         seats,
-        issuedAt: new Date(),
         expiresAt,
         licenseeEmail,
         licenseeName,
+        version,
         stripeCustomerId,
-      },
-    });
-    return c.json({
-      data: { key: license.licenseKey },
-    } satisfies CreateLicenseResponse);
-  },
-);
+      } = c.req.valid("json");
+      const license = await prisma.license.create({
+        data: {
+          licenseKey: generateLicenseKey({ version }),
+          version,
+          type,
+          seats,
+          issuedAt: new Date(),
+          expiresAt,
+          licenseeEmail,
+          licenseeName,
+          stripeCustomerId,
+        },
+      });
+      return c.json({
+        data: { key: license.licenseKey },
+      } satisfies CreateLicenseResponse);
+    },
+  );
+}
 
 app.post(
   "/licenses/actions/validate-key",
@@ -88,7 +91,6 @@ app.post(
         })
       : undefined,
   }),
-  bearer,
   async (c) => {
     const { key, fingerprint } = c.req.valid("json");
 
