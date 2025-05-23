@@ -74,6 +74,11 @@ export const env = createEnv({
      * @default "false"
      */
     MODERATION_ENABLED: z.enum(["true", "false"]).default("false"),
+    /**
+     * Licensing API Configuration
+     */
+    LICENSE_API_URL: z.string().optional(),
+    LICENSE_API_AUTH_TOKEN: z.string().optional(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -125,6 +130,8 @@ export const env = createEnv({
     NOREPLY_EMAIL_NAME: process.env.NOREPLY_EMAIL_NAME,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     MODERATION_ENABLED: process.env.MODERATION_ENABLED,
+    LICENSE_API_URL: process.env.LICENSE_API_URL,
+    LICENSE_API_AUTH_TOKEN: process.env.LICENSE_API_AUTH_TOKEN,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });

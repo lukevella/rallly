@@ -10,10 +10,10 @@ export class LicensingClient {
   authToken?: string;
 
   constructor({
-    apiUrl,
+    apiUrl = "https://licensing.rallly.co",
     authToken,
   }: {
-    apiUrl: string;
+    apiUrl?: string;
     authToken?: string;
   }) {
     this.apiUrl = apiUrl;
@@ -21,8 +21,7 @@ export class LicensingClient {
   }
   async createLicense(input: CreateLicenseInput) {
     if (!this.authToken) {
-      console.error("Licensing API auth token is not configured.");
-      return null;
+      throw new Error("Licensing API auth token is not configured.");
     }
 
     const res = await fetch(`${this.apiUrl}/api/v1/licenses`, {
