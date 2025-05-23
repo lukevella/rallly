@@ -4,7 +4,7 @@ import { z } from "zod";
 // Enums & Basic Types
 // =========================
 
-export const licenseTypeSchema = z.enum(["TEAM", "PLUS", "ENTERPRISE"]);
+export const licenseTypeSchema = z.enum(["PLUS", "ORGANIZATION", "ENTERPRISE"]);
 export type LicenseType = z.infer<typeof licenseTypeSchema>;
 
 export const licenseStatusSchema = z.enum(["ACTIVE", "REVOKED"]);
