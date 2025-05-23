@@ -86,8 +86,6 @@ model ScheduledEventInvite {
   scheduledEvent ScheduledEvent @relation(fields: [scheduledEventId], references: [id], onDelete: Cascade)
   user           User?          @relation(fields: [inviteeId], references: [id], onDelete: SetNull) // Optional relation to User model
 
-  @@unique([scheduledEventId, inviteeEmail])
-  @@unique([scheduledEventId, inviteeId])
   @@index([scheduledEventId])
   @@index([inviteeId])
   @@index([inviteeEmail])
