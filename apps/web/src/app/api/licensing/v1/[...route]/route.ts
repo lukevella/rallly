@@ -55,22 +55,28 @@ if (env.LICENSE_API_AUTH_TOKEN) {
         version,
         stripeCustomerId,
       } = c.req.valid("json");
-      const license = await prisma.license.create({
-        data: {
-          licenseKey: generateLicenseKey({ version }),
-          version,
-          type,
-          seats,
-          issuedAt: new Date(),
-          expiresAt,
-          licenseeEmail,
-          licenseeName,
-          stripeCustomerId,
-        },
-      });
-      return c.json({
-        data: { key: license.licenseKey },
-      } satisfies CreateLicenseResponse);
+
+      try {
+        const license = await prisma.license.create({
+          data: {
+            licenseKey: generateLicenseKey({ version }),
+            version,
+            type,
+            seats,
+            issuedAt: new Date(),
+            expiresAt,
+            licenseeEmail,
+            licenseeName,
+            stripeCustomerId,
+          },
+        });
+        return c.json({
+          data: { key: license.licenseKey },
+        } satisfies CreateLicenseResponse);
+      } catch (error) {
+        console.error("Failed to create license:", error);
+        return c.json({ error: "Failed to create license" }, 500);
+      }
     },
   );
 }
