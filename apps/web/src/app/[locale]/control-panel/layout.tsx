@@ -1,0 +1,41 @@
+import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
+import { CommandMenu } from "@/features/navigation/command-menu";
+import { hasAdmins } from "@/features/user/queries";
+import { getTranslation } from "@/i18n/server";
+import { SidebarInset } from "@rallly/ui/sidebar";
+import { redirect } from "next/navigation";
+import { ControlPanelSidebarProvider } from "./control-panel-sidebar-provider";
+import { ControlPanelSidebar } from "./sidebar";
+
+export default async function AdminLayout({
+  children,
+}: { children: React.ReactNode }) {
+  if (!(await hasAdmins())) {
+    redirect("/admin-setup");
+  }
+
+  return (
+    <ControlPanelSidebarProvider>
+      <CommandMenu />
+      <ControlPanelSidebar />
+      <SidebarInset>
+        <LicenseLimitWarning />
+        <div className="min-w-0 p-4 md:p-8 flex-1">{children}</div>
+      </SidebarInset>
+    </ControlPanelSidebarProvider>
+  );
+}
+
+export async function generateMetadata() {
+  const { t } = await getTranslation();
+  return {
+    title: {
+      template: `%s | ${t("controlPanel", {
+        defaultValue: "Control Panel",
+      })}`,
+      default: t("controlPanel", {
+        defaultValue: "Control Panel",
+      }),
+    },
+  };
+}
