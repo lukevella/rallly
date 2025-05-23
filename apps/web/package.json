@@ -20,6 +20,8 @@
     "@auth/prisma-adapter": "^2.7.4",
     "@aws-sdk/client-s3": "^3.645.0",
     "@aws-sdk/s3-request-presigner": "^3.645.0",
+    "@hono-rate-limiter/redis": "^0.1.4",
+    "@hono/zod-validator": "^0.5.0",
     "@hookform/resolvers": "^3.3.1",
     "@next/bundle-analyzer": "^15.3.1",
     "@next/env": "^15.3.1",
@@ -50,7 +52,7 @@
     "@upstash/qstash": "^2.7.17",
     "@upstash/ratelimit": "^1.2.1",
     "@vercel/functions": "^2.0.0",
-    "@vercel/kv": "^2.0.0",
+    "@vercel/kv": "^3.0.0",
     "ai": "^4.1.50",
     "autoprefixer": "^10.4.13",
     "calendar-link": "^2.6.0",
@@ -59,6 +61,8 @@
     "cookie": "^0.7.0",
     "crypto": "^1.0.1",
     "dayjs": "^1.11.13",
+    "hono": "^4.7.10",
+    "hono-rate-limiter": "^0.2.1",
     "i18next": "^24.2.2",
     "i18next-http-backend": "^3.0.2",
     "i18next-icu": "^2.3.0",
@@ -92,7 +96,7 @@
     "superjson": "^2.0.0",
     "tailwindcss": "^3.4.17",
     "timezone-soft": "^1.5.1",
-    "zod": "^3.23.8"
+    "zod": "^3.25.6"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
