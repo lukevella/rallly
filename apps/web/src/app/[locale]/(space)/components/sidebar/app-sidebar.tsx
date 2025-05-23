@@ -22,9 +22,9 @@ import type * as React from "react";
 
 import { LogoLink } from "@/app/components/logo-link";
 import { Trans } from "@/components/trans";
-import { getUser } from "@/data/get-user";
 import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
 
+import { requireUser } from "@/auth/queries";
 import { UpgradeButton } from "../upgrade-button";
 import { NavItem } from "./nav-item";
 import { NavUser } from "./nav-user";
@@ -32,7 +32,7 @@ import { NavUser } from "./nav-user";
 export async function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const user = await getUser();
+  const user = await requireUser();
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>

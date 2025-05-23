@@ -12,7 +12,6 @@ import type React from "react";
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
-import { getUser } from "@/data/get-user";
 import { TimezoneProvider } from "@/features/timezone/client/context";
 import { I18nProvider } from "@/i18n/client";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -20,6 +19,7 @@ import { auth, getUserId } from "@/next-auth";
 import { TRPCProvider } from "@/trpc/client/provider";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 
+import { getUser } from "@/features/user/queries";
 import { PostHogPageView } from "../posthog-page-view";
 
 const inter = Inter({
@@ -43,7 +43,7 @@ export default async function Root({
 
   const userId = await getUserId();
 
-  const user = userId ? await getUser() : null;
+  const user = userId ? await getUser(userId) : null;
 
   if (user?.locale) {
     locale = user.locale;
@@ -76,11 +76,13 @@ export default async function Root({
                                 : "hobby"
                               : "guest",
                             image: user.image,
+                            role: user.role,
                           }
                         : session?.user
                           ? {
                               id: session.user.id,
                               tier: "guest",
+                              role: "guest",
                             }
                           : undefined
                     }

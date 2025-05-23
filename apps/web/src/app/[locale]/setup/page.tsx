@@ -1,15 +1,15 @@
 import { redirect } from "next/navigation";
 
 import { ProfilePicture } from "@/app/[locale]/(space)/settings/profile/profile-picture";
+import { requireUser } from "@/auth/queries";
 import { Logo } from "@/components/logo";
 import { Trans } from "@/components/trans";
-import { getUser } from "@/data/get-user";
 import { SetupForm } from "@/features/setup/components/setup-form";
 import { onboardedUserSchema } from "@/features/setup/schema";
 import { getTranslation } from "@/i18n/server";
 
 export default async function SetupPage() {
-  const user = await getUser();
+  const user = await requireUser();
 
   const isUserOnboarded = onboardedUserSchema.safeParse(user).success;
 

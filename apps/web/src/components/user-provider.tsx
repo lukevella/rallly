@@ -16,6 +16,7 @@ type UserData = {
   isGuest: boolean;
   tier: "guest" | "hobby" | "pro";
   image?: string;
+  role: "guest" | "user" | "admin";
 };
 
 export const UserContext = React.createContext<{
@@ -54,6 +55,7 @@ export const IfGuest = (props: { children?: React.ReactNode }) => {
 type BaseUser = {
   id: string;
   tier: "guest" | "hobby" | "pro";
+  role: "guest" | "user" | "admin";
   image?: string;
   name?: string;
   email?: string;
@@ -105,6 +107,7 @@ export const UserProvider = ({
           isGuest,
           tier,
           image: user?.image,
+          role: user?.role ?? "guest",
         },
         createGuestIfNeeded: async () => {
           if (!user) {
