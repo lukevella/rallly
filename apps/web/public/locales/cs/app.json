@@ -307,7 +307,6 @@
   "signOut": "Odhlásit se",
   "paginationItems": "Zobrazuji {startItem}–{endItem} z {totalItems}",
   "paginationPrevious": "Předchozí",
-  "paginationPage": "Stránka {currentPage} z {totalPages}",
   "paginationNext": "Další",
   "upgradeToProDesc": "Odemknout všechny Pro funkce",
   "searchPollsPlaceholder": "Hledat ankety podle názvu...",

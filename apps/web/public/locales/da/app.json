@@ -307,7 +307,6 @@
   "signOut": "Log Ud",
   "paginationItems": "Viser {startItem}–{endItem} af {totalItems}",
   "paginationPrevious": "Foregående",
-  "paginationPage": "Side {currentPage} af {totalPages}",
   "paginationNext": "Næste",
   "upgradeToProDesc": "Lås alle Pro funktioner op",
   "searchPollsPlaceholder": "Søg afstemninger efter titel...",

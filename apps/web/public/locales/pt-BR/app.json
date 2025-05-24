@@ -305,7 +305,6 @@
   "signOut": "Encerrar sessão",
   "paginationItems": "Mostrando {startItem}–{endItem} de {totalItems}",
   "paginationPrevious": "Voltar",
-  "paginationPage": "Página {currentPage} de {totalPages}",
   "paginationNext": "Avançar",
   "upgradeToProDesc": "Desbloqueie todos os recursos Pro",
   "searchPollsPlaceholder": "Pesquisar enquetes por título...",

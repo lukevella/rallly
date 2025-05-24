@@ -307,7 +307,6 @@
   "signOut": "退出登录",
   "paginationItems": "显示{totalItems}的{startItem} - {endItem}",
   "paginationPrevious": "返回",
-  "paginationPage": "第 {currentPage} 页 共 {totalPages} 页",
   "paginationNext": "下一步",
   "upgradeToProDesc": "解锁全部专业版功能。",
   "searchPollsPlaceholder": "按标题搜索投票...",

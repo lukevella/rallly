@@ -307,7 +307,6 @@
   "signOut": "Kijelentkezés",
   "paginationItems": "{startItem} - {endItem} / {totalItems} elem",
   "paginationPrevious": "Előző",
-  "paginationPage": "{currentPage} / {totalPages} oldal",
   "paginationNext": "Következő",
   "upgradeToProDesc": "Az összes Pro funkció feloldása",
   "searchPollsPlaceholder": "Keress a szavazások közt cím alapján...",
