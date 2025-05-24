@@ -380,5 +380,6 @@
   "deleteUserDesc": "Are you sure you want to delete this user?",
   "deleteUserHint": "Type <b>{email}</b> to delete this user.",
   "changeRole": "Change role",
-  "licenseType": "License Type"
+  "licenseType": "License Type",
+  "removeLicense": "Remove License"
 }
