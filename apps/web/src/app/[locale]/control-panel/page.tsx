@@ -15,10 +15,11 @@ import { HomeIcon, KeySquareIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 
 async function loadData() {
+  await requireAdmin();
+
   const [userCount, license] = await Promise.all([
     prisma.user.count(),
     getLicense(),
-    requireAdmin(),
   ]);
 
   return {

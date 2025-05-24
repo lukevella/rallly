@@ -353,7 +353,6 @@
   "licenseeName": "Licensee Name",
   "licenseeEmail": "Licensee Email",
   "purchaseDate": "Purchase Date",
-  "tier": "Tier",
   "seatCount": "{count, plural, one {# seat} other {# seats}}",
   "noLicenseKey": "No license key found",
   "noLicenseKeyDescription": "This instance doesn’t have a license key yet.",
@@ -380,5 +379,6 @@
   "deleteUserTitle": "Delete User",
   "deleteUserDesc": "Are you sure you want to delete this user?",
   "deleteUserHint": "Type <b>{email}</b> to delete this user.",
-  "changeRole": "Change role"
+  "changeRole": "Change role",
+  "licenseType": "License Type"
 }

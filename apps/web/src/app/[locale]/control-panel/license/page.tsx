@@ -15,6 +15,7 @@ import {
 } from "@/components/empty-state";
 import { Trans } from "@/components/trans";
 import { LicenseKeyForm } from "@/features/licensing/components/license-key-form";
+import { RemoveLicenseButton } from "@/features/licensing/components/remove-license-button";
 import { getLicense } from "@/features/licensing/queries";
 import { getTranslation } from "@/i18n/server";
 import { Button } from "@rallly/ui/button";
@@ -37,7 +38,6 @@ async function loadData() {
 
 export default async function LicensePage() {
   const { license } = await loadData();
-
   return (
     <PageContainer>
       <PageHeader>
@@ -50,13 +50,30 @@ export default async function LicensePage() {
       </PageHeader>
       <PageContent>
         {license ? (
-          <div className="space-y-4 max-w-md">
+          <div className="space-y-4">
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-muted-foreground">
+                <Trans i18nKey="licenseType" defaults="License Type" />
+              </span>
+              <div className="flex text-sm items-center gap-2">
+                <span className="capitalize text-primary">{license.type}</span>
+                <span className="text-muted-foreground">
+                  (
+                  <Trans
+                    i18nKey="seatCount"
+                    defaults="{count, plural, one {# seat} other {# seats}}"
+                    values={{ count: license.seats }}
+                  />
+                  )
+                </span>
+              </div>
+            </div>
             <div className="flex flex-col gap-1">
               <span className="text-xs text-muted-foreground">
                 <Trans i18nKey="licenseKey" defaults="License Key" />
               </span>
-              <span className="font-mono select-all text-sm bg-muted px-2 py-1 rounded">
-                {license.licenseKey.replace(/(.{4})/g, "$1-").replace(/-$/, "")}
+              <span className="font-mono select-all text-sm">
+                {license.licenseKey}
               </span>
             </div>
             <div className="flex flex-col gap-1">
@@ -83,23 +100,8 @@ export default async function LicensePage() {
                 {dayjs(license.issuedAt).format("YYYY-MM-DD")}
               </span>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground">
-                <Trans i18nKey="tier" defaults="Tier" />
-              </span>
-              <div className="flex text-sm items-center gap-2">
-                <span className="capitalize text-primary">{license.type}</span>
-                <span className="text-muted-foreground">
-                  (
-                  <Trans
-                    i18nKey="seatCount"
-                    defaults="{count, plural, one {# seat} other {# seats}}"
-                    values={{ count: license.seats }}
-                  />
-                  )
-                </span>
-              </div>
-            </div>
+
+            <RemoveLicenseButton licenseId={license.id} />
           </div>
         ) : (
           <EmptyState className="h-full">
