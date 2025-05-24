@@ -381,5 +381,6 @@
   "deleteUserHint": "Type <b>{email}</b> to delete this user.",
   "changeRole": "Change role",
   "licenseType": "License Type",
-  "removeLicense": "Remove License"
+  "removeLicense": "Remove License",
+  "removeLicenseDescription": "Are you sure you want to remove this license?"
 }
