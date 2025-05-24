@@ -36,6 +36,26 @@ async function loadData() {
   return { license };
 }
 
+function DescriptionList({ children }: { children: React.ReactNode }) {
+  return <dl>{children}</dl>;
+}
+
+function DescriptionListTitle({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <dt className="text-xs mb-1 text-muted-foreground">{children}</dt>;
+}
+
+function DescriptionListValue({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <dd className="text-sm mb-4 font-mono">{children}</dd>;
+}
+
 export default async function LicensePage() {
   const { license } = await loadData();
   return (
@@ -50,14 +70,14 @@ export default async function LicensePage() {
       </PageHeader>
       <PageContent>
         {license ? (
-          <div className="space-y-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground">
+          <div>
+            <DescriptionList>
+              <DescriptionListTitle>
                 <Trans i18nKey="licenseType" defaults="License Type" />
-              </span>
-              <div className="flex text-sm items-center gap-2">
+              </DescriptionListTitle>
+              <DescriptionListValue>
                 <span className="capitalize text-primary">{license.type}</span>
-                <span className="text-muted-foreground">
+                <span className="text-muted-foreground ml-2">
                   (
                   <Trans
                     i18nKey="seatCount"
@@ -66,42 +86,37 @@ export default async function LicensePage() {
                   />
                   )
                 </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground">
+              </DescriptionListValue>
+              <DescriptionListTitle>
                 <Trans i18nKey="licenseKey" defaults="License Key" />
-              </span>
-              <span className="font-mono select-all text-sm">
-                {license.licenseKey}
-              </span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground">
+              </DescriptionListTitle>
+              <DescriptionListValue>
+                <span className="font-mono select-all text-sm">
+                  {license.licenseKey}
+                </span>
+              </DescriptionListValue>
+              <DescriptionListTitle>
                 <Trans i18nKey="licenseeName" defaults="Licensee Name" />
-              </span>
-              <span className="text-sm font-mono">
+              </DescriptionListTitle>
+              <DescriptionListValue>
                 {license.licenseeName ?? "-"}
-              </span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground">
+              </DescriptionListValue>
+              <DescriptionListTitle>
                 <Trans i18nKey="licenseeEmail" defaults="Licensee Email" />
-              </span>
-              <span className="text-sm font-mono">
+              </DescriptionListTitle>
+              <DescriptionListValue>
                 {license.licenseeEmail ?? "-"}
-              </span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground">
+              </DescriptionListValue>
+              <DescriptionListTitle>
                 <Trans i18nKey="purchaseDate" defaults="Purchase Date" />
-              </span>
-              <span className="text-sm font-mono">
+              </DescriptionListTitle>
+              <DescriptionListValue>
                 {dayjs(license.issuedAt).format("YYYY-MM-DD")}
-              </span>
+              </DescriptionListValue>
+            </DescriptionList>
+            <div className="mt-6">
+              <RemoveLicenseButton licenseId={license.id} />
             </div>
-
-            <RemoveLicenseButton licenseId={license.id} />
           </div>
         ) : (
           <EmptyState className="h-full">
