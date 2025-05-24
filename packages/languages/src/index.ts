@@ -1,4 +1,6 @@
-import languages from "./languages.json";
+import { languages } from "./languages";
+
+export type SupportedLocale = keyof typeof languages;
 
 export const supportedLngs = Object.keys(languages);
 
