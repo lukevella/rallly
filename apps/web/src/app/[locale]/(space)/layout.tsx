@@ -8,6 +8,7 @@ import { CommandMenu } from "@/features/navigation/command-menu";
 import { getOnboardedUser } from "@/features/setup/queries";
 import { TimezoneProvider } from "@/features/timezone/client/context";
 
+import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { AppSidebar } from "./components/sidebar/app-sidebar";
 import { AppSidebarProvider } from "./components/sidebar/app-sidebar-provider";
 import { TopBar, TopBarLeft, TopBarRight } from "./components/top-bar";
@@ -46,6 +47,7 @@ export default async function Layout({
               </Button>
             </TopBarRight>
           </TopBar>
+          <LicenseLimitWarning />
           <div className="flex flex-1 flex-col">
             <div className="flex flex-1 flex-col p-4 md:p-8">{children}</div>
           </div>

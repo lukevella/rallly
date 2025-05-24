@@ -9,7 +9,12 @@ import {
   CommandList,
 } from "@rallly/ui/command";
 import { DialogDescription, DialogTitle, useDialog } from "@rallly/ui/dialog";
-import { PlusIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  KeySquareIcon,
+  PlusIcon,
+  UsersIcon,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -23,10 +28,32 @@ import {
 } from "@/app/components/page-icons";
 import { Trans } from "@/components/trans";
 
+import { useUser } from "@/components/user-provider";
+import { useTranslation } from "@/i18n/client";
+import { Icon } from "@rallly/ui/icon";
 import { CommandGlobalShortcut } from "./command-global-shortcut";
+
+function NavigationCommandLabel({
+  label,
+}: {
+  label: string;
+}) {
+  return (
+    <div>
+      <Trans
+        i18nKey="goTo"
+        defaults="Go to <b>{page}</b>"
+        values={{ page: label }}
+        components={{ b: <b className="font-medium" /> }}
+      />
+    </div>
+  );
+}
 
 export function CommandMenu() {
   const router = useRouter();
+  const { user } = useUser();
+  const { t } = useTranslation();
   const { trigger, dialogProps, dismiss } = useDialog();
 
   const handleSelect = (route: string) => {
@@ -37,14 +64,6 @@ export function CommandMenu() {
   return (
     <>
       <CommandGlobalShortcut trigger={trigger} />
-
-      {/* <Button variant="ghost" onClick={trigger}>
-        <Icon>
-          <SearchIcon />
-        </Icon>
-        <Trans i18nKey="search" defaults="Search" />
-        <CommandShortcutSymbol symbol="K" />
-      </Button> */}
       <CommandDialog {...dialogProps}>
         <DialogTitle className="sr-only">
           <Trans i18nKey="commandMenu" defaults="Command Menu" />
@@ -64,50 +83,80 @@ export function CommandMenu() {
           </CommandEmpty>
           <CommandGroup heading={<Trans i18nKey="polls" defaults="Actions" />}>
             <CommandItem onSelect={() => handleSelect("/new")}>
-              <PageIcon size="sm">
+              <Icon>
                 <PlusIcon />
-              </PageIcon>
-              <Trans i18nKey="create" defaults="Create" />
+              </Icon>
+              <Trans i18nKey="createNewPoll" defaults="Create new poll" />
             </CommandItem>
           </CommandGroup>
           <CommandGroup heading="Navigation">
             <CommandItem onSelect={() => handleSelect("/")}>
               <HomePageIcon size="sm" />
-              <Trans i18nKey="home" defaults="Home" />
+              <NavigationCommandLabel label={t("home")} />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/polls")}>
               <PollPageIcon size="sm" />
-              <Trans i18nKey="polls" defaults="Polls" />
+              <NavigationCommandLabel label={t("polls")} />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/events")}>
               <EventPageIcon size="sm" />
-              <Trans i18nKey="events" defaults="Events" />
+              <NavigationCommandLabel label={t("events")} />
             </CommandItem>
-            {/* <CommandItem onSelect={() => handleSelect("/teams")}>
-              <TeamsPageIcon />
-              <Trans i18nKey="teams" defaults="Teams" />
-            </CommandItem>
-            <CommandItem onSelect={() => handleSelect("/spaces")}>
-              <SpacesPageIcon />
-              <Trans i18nKey="spaces" defaults="Spaces" />
-            </CommandItem> */}
           </CommandGroup>
           <CommandGroup
-            heading={<Trans i18nKey="account" defaults="Account" />}
+            heading={<Trans i18nKey="settings" defaults="Settings" />}
           >
             <CommandItem onSelect={() => handleSelect("/settings/profile")}>
               <ProfilePageIcon size="sm" />
-              <Trans i18nKey="profile" defaults="Profile" />
+              <NavigationCommandLabel label={t("profile")} />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/settings/preferences")}>
               <PreferencesPageIcon size="sm" />
-              <Trans i18nKey="preferences" defaults="Preferences" />
+              <NavigationCommandLabel label={t("preferences")} />
             </CommandItem>
             <CommandItem onSelect={() => handleSelect("/settings/billing")}>
               <BillingPageIcon size="sm" />
-              <Trans i18nKey="billing" defaults="Billing" />
+              <NavigationCommandLabel label={t("billing")} />
             </CommandItem>
           </CommandGroup>
+          {user.role === "admin" && (
+            <CommandGroup
+              heading={
+                <Trans i18nKey="controlPanel" defaults="Control Panel" />
+              }
+            >
+              <CommandItem onSelect={() => handleSelect("/control-panel")}>
+                <PageIcon size="sm">
+                  <ArrowRightIcon />
+                </PageIcon>
+                <NavigationCommandLabel label={t("controlPanel")} />
+              </CommandItem>
+              <CommandItem
+                onSelect={() => handleSelect("/control-panel/users")}
+              >
+                <PageIcon size="sm">
+                  <UsersIcon />
+                </PageIcon>
+                <NavigationCommandLabel
+                  label={t("users", {
+                    defaultValue: "Users",
+                  })}
+                />
+              </CommandItem>
+              <CommandItem
+                onSelect={() => handleSelect("/control-panel/license")}
+              >
+                <PageIcon size="sm">
+                  <KeySquareIcon />
+                </PageIcon>
+                <NavigationCommandLabel
+                  label={t("license", {
+                    defaultValue: "License",
+                  })}
+                />
+              </CommandItem>
+            </CommandGroup>
+          )}
         </CommandList>
       </CommandDialog>
     </>
