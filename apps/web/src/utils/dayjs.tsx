@@ -21,21 +21,17 @@ import { usePreferences } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
 import { getBrowserTimeZone, normalizeTimeZone } from "@/utils/date-time-utils";
 
+import type { SupportedLocale } from "@rallly/languages";
 import { useRequiredContext } from "../components/use-required-context";
 
 const dayjsLocales: Record<
-  string,
+  SupportedLocale,
   {
     weekStart: number;
     timeFormat: TimeFormat;
     import: () => Promise<ILocale>;
   }
 > = {
-  eu: {
-    weekStart: 1,
-    timeFormat: "hours24",
-    import: () => import("dayjs/locale/eu"),
-  },
   en: {
     weekStart: 1,
     timeFormat: "hours12",
@@ -50,11 +46,6 @@ const dayjsLocales: Record<
     weekStart: 1,
     timeFormat: "hours24",
     import: () => import("dayjs/locale/es"),
-  },
-  ca: {
-    weekStart: 1,
-    timeFormat: "hours24",
-    import: () => import("dayjs/locale/ca"),
   },
   da: {
     weekStart: 1,
@@ -76,11 +67,6 @@ const dayjsLocales: Record<
     timeFormat: "hours24",
     import: () => import("dayjs/locale/fr"),
   },
-  hr: {
-    weekStart: 1,
-    timeFormat: "hours24",
-    import: () => import("dayjs/locale/hr"),
-  },
   it: {
     weekStart: 1,
     timeFormat: "hours24",
@@ -90,11 +76,6 @@ const dayjsLocales: Record<
     weekStart: 1,
     timeFormat: "hours24",
     import: () => import("dayjs/locale/sv"),
-  },
-  sk: {
-    weekStart: 1,
-    timeFormat: "hours24",
-    import: () => import("dayjs/locale/sk"),
   },
   cs: {
     weekStart: 1,
@@ -141,21 +122,6 @@ const dayjsLocales: Record<
     timeFormat: "hours24",
     import: () => import("dayjs/locale/zh"),
   },
-  "zh-Hant": {
-    weekStart: 0,
-    timeFormat: "hours24",
-    import: () => import("dayjs/locale/zh-tw"),
-  },
-  vi: {
-    weekStart: 1,
-    timeFormat: "hours24",
-    import: () => import("dayjs/locale/vi"),
-  },
-  tr: {
-    weekStart: 1,
-    timeFormat: "hours24",
-    import: () => import("dayjs/locale/tr"),
-  },
 };
 
 dayjs.extend(localizedFormat);
@@ -195,7 +161,7 @@ export const useDayjs = () => {
 export const DayjsProvider: React.FunctionComponent<{
   children?: React.ReactNode;
   config?: {
-    locale?: string;
+    locale?: SupportedLocale;
     timeZone?: string;
     localeOverrides?: {
       weekStart?: number;
@@ -281,7 +247,7 @@ export const ConnectedDayjsProvider = ({
   return (
     <DayjsProvider
       config={{
-        locale: i18n.language,
+        locale: i18n.language as SupportedLocale,
         timeZone: preferences.timeZone ?? undefined,
         localeOverrides: {
           weekStart: preferences.weekStart ?? undefined,
