@@ -1,4 +1,4 @@
-import type { LicenseCheckoutMetada } from "@/features/licensing/schema";
+import type { LicenseCheckoutMetadata } from "@/features/licensing/schema";
 import type { LicenseType } from "@prisma/client";
 import { stripe } from "@rallly/billing";
 import { type NextRequest, NextResponse } from "next/server";
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
       metadata: {
         licenseType: type,
         seats,
-      } satisfies LicenseCheckoutMetada,
+      } satisfies LicenseCheckoutMetadata,
     });
 
     if (session.url) {

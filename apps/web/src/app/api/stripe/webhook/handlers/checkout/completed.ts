@@ -95,6 +95,6 @@ export async function onCheckoutSessionCompleted(event: Stripe.Event) {
   if (checkoutSession.subscription === null) {
     await handleSelfHostedCheckoutSessionCompleted(checkoutSession);
   } else {
-    handleSubscriptionCheckoutSessionCompleted(checkoutSession);
+    await handleSubscriptionCheckoutSessionCompleted(checkoutSession);
   }
 }

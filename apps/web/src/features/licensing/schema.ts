@@ -83,6 +83,6 @@ export const licenseCheckoutMetadataSchema = z.object({
   seats: z.number(),
 });
 
-export type LicenseCheckoutMetada = z.infer<
+export type LicenseCheckoutMetadata = z.infer<
   typeof licenseCheckoutMetadataSchema
 >;
