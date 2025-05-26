@@ -1,12 +1,13 @@
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import type { URLParams } from "@/app/[locale]/types";
 import { getTranslation } from "@/i18n/server";
 import { getAllPosts } from "@/lib/api";
 
 import { PostPreview } from "./post-preview";
 
-export default async function Page(props: { params: Promise<URLParams> }) {
+export default async function Page(props: {
+  params: Promise<{ locale: string }>;
+}) {
   const params = await props.params;
   const { t } = await getTranslation(params.locale, "blog");
   const allPosts = getAllPosts([

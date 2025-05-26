@@ -25,5 +25,13 @@
   "status": "Status",
   "when2MeetAlternative": "When2Meet Alternative",
   "meetingPoll": "Meeting Poll",
-  "signUp": "Sign Up"
+  "signUp": "Sign Up",
+  "licensingThankYouTitle": "Thank You for Your Purchase!",
+  "licensingThankYouSubtitle": "Your Rallly self-hosted license is confirmed. We're excited to have you on board!",
+  "licensingThankYouLicense": "Next Steps",
+  "licensingThankYouLicenseEmailed": "Your license key has been sent to the email address you provided during checkout. Please check your inbox.",
+  "licensingThankYouNextStepsInstallation": "Installation Guide",
+  "licensingThankYouNextStepsApplyLicense": "How to Apply Your License",
+  "licensingThankYouSupportPrompt": "Need help or have questions? Visit our <0>Support Center</0> or <1>contact us</1>.",
+  "licensingThankYouGoHomeLink": "Return to Home"
 }

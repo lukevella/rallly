@@ -2,6 +2,7 @@ import { AbandonedCheckoutEmail } from "./templates/abandoned-checkout";
 import { ChangeEmailRequest } from "./templates/change-email-request";
 import { FinalizeHostEmail } from "./templates/finalized-host";
 import { FinalizeParticipantEmail } from "./templates/finalized-participant";
+import { LicenseKeyEmail } from "./templates/license-key";
 import { LoginEmail } from "./templates/login";
 import { NewCommentEmail } from "./templates/new-comment";
 import { NewParticipantEmail } from "./templates/new-participant";
@@ -21,6 +22,7 @@ const templates = {
   RegisterEmail,
   ChangeEmailRequest,
   AbandonedCheckoutEmail,
+  LicenseKeyEmail,
 };
 
 export const emailTemplates = Object.keys(templates) as TemplateName[];
