@@ -7,7 +7,7 @@ import type { EmailContext } from "../types";
 interface LicenseKeyEmailProps {
   licenseKey: string;
   tier: string;
-  seats?: number;
+  seats: number;
   ctx: EmailContext;
 }
 
@@ -57,20 +57,18 @@ export const LicenseKeyEmail = ({
           </td>
           <td>{tier}</td>
         </tr>
-        {seats && (
-          <tr>
-            <td style={{ paddingRight: "16px" }}>
-              <Trans
-                t={ctx.t}
-                i18n={ctx.i18n}
-                ns="emails"
-                i18nKey="license_key_seats"
-                defaults="Seats"
-              />
-            </td>
-            <td>{seats}</td>
-          </tr>
-        )}
+        <tr>
+          <td style={{ paddingRight: "16px" }}>
+            <Trans
+              t={ctx.t}
+              i18n={ctx.i18n}
+              ns="emails"
+              i18nKey="license_key_seats"
+              defaults="Seats"
+            />
+          </td>
+          <td>{seats}</td>
+        </tr>
         <tr>
           <td style={{ paddingRight: "16px" }}>
             <Trans
