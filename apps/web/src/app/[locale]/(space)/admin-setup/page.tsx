@@ -5,7 +5,7 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
-import { requireUser } from "@/auth/queries";
+import { isInitialAdmin, requireUser } from "@/auth/queries";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -28,7 +28,7 @@ export default async function AdminSetupPage() {
     redirect("/control-panel");
   }
 
-  if (user.email !== process.env.INITIAL_ADMIN_EMAIL) {
+  if (!isInitialAdmin(user.email)) {
     notFound();
   }
 

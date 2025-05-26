@@ -18,11 +18,15 @@ export const requireUser = cache(async () => {
   return user;
 });
 
+export const isInitialAdmin = cache((email: string) => {
+  return email.toLowerCase() === process.env.INITIAL_ADMIN_EMAIL?.toLowerCase();
+});
+
 export const requireAdmin = cache(async () => {
   const user = await requireUser();
 
   if (user.role !== "admin") {
-    if (user.email === process.env.INITIAL_ADMIN_EMAIL) {
+    if (isInitialAdmin(user.email)) {
       redirect("/admin-setup");
     }
     notFound();

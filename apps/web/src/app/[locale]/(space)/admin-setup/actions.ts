@@ -1,12 +1,12 @@
 "use server";
 
-import { requireUser } from "@/auth/queries";
+import { isInitialAdmin, requireUser } from "@/auth/queries";
 import { prisma } from "@rallly/database";
 
 export async function makeAdmin() {
   const user = await requireUser();
 
-  if (user.email !== process.env.INITIAL_ADMIN_EMAIL) {
+  if (!isInitialAdmin(user.email)) {
     return { success: false, error: "Unauthorized" };
   }
 
