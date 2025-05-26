@@ -1,4 +1,5 @@
 import { licensingClient } from "@/features/licensing/client";
+import { getSeats } from "@/features/licensing/helpers/get-seats";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
 import { subscriptionCheckoutMetadataSchema } from "@/features/subscription/schema";
 import { getEmailClient } from "@/utils/emails";
@@ -38,10 +39,13 @@ async function handleSelfHostedCheckoutSessionCompleted(
 
   if (!success) {
     // If there is no metadata than this is likely a donation from a payment link
+    console.info("No metadata found for session: ", checkoutSession.id);
     return;
   }
 
-  const { licenseType, seats } = data;
+  const { licenseType } = data;
+
+  const seats = getSeats(licenseType);
 
   const customerDetails = checkoutSession.customer_details;
 

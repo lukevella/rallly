@@ -80,7 +80,6 @@ export type ValidateLicenseKeyResponse = z.infer<
 
 export const licenseCheckoutMetadataSchema = z.object({
   licenseType: licenseTypeSchema,
-  seats: z.number(),
 });
 
 export type LicenseCheckoutMetadata = z.infer<
