@@ -67,7 +67,6 @@ async function handleSelfHostedCheckoutSessionCompleted(
     licenseeName: customerDetails.name ?? undefined,
     version,
     seats,
-    stripeCustomerId: checkoutSession.customer as string,
   });
 
   if (!license || !license.data) {
