@@ -1,5 +1,5 @@
+import { env } from "@/env";
 import { licensingClient } from "@/features/licensing/client";
-import { getSeats } from "@/features/licensing/helpers/get-seats";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
 import { subscriptionCheckoutMetadataSchema } from "@/features/subscription/schema";
 import { getEmailClient } from "@/utils/emails";
@@ -43,9 +43,7 @@ async function handleSelfHostedCheckoutSessionCompleted(
     return;
   }
 
-  const { licenseType } = data;
-
-  const seats = getSeats(licenseType);
+  const { licenseType, version, seats } = data;
 
   const customerDetails = checkoutSession.customer_details;
 
@@ -67,13 +65,14 @@ async function handleSelfHostedCheckoutSessionCompleted(
     type: licenseType,
     licenseeEmail: email,
     licenseeName: customerDetails.name ?? undefined,
+    version,
     seats,
     stripeCustomerId: checkoutSession.customer as string,
   });
 
   if (!license || !license.data) {
     throw new Error(
-      `Failed to create team license for session: ${checkoutSession.id} - ${license?.error}`,
+      `Failed to create license for session: ${checkoutSession.id} - ${license?.error}`,
     );
   }
 
@@ -83,7 +82,7 @@ async function handleSelfHostedCheckoutSessionCompleted(
     to: email,
     from: {
       name: "Luke from Rallly",
-      address: process.env.SUPPORT_EMAIL,
+      address: env.SUPPORT_EMAIL,
     },
     props: {
       licenseKey: license.data.key,

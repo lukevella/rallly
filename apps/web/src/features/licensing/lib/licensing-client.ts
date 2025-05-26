@@ -10,7 +10,7 @@ export class LicensingClient {
   authToken?: string;
 
   constructor({
-    apiUrl = "https://licensing.rallly.co",
+    apiUrl = "https://licensing.rallly.co/api/licensing/v1",
     authToken,
   }: {
     apiUrl?: string;
@@ -24,7 +24,7 @@ export class LicensingClient {
       throw new Error("Licensing API auth token is not configured.");
     }
 
-    const res = await fetch(`${this.apiUrl}/api/v1/licenses`, {
+    const res = await fetch(`${this.apiUrl}/licenses`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,16 +39,13 @@ export class LicensingClient {
     return createLicenseResponseSchema.parse(await res.json());
   }
   async validateLicenseKey(input: ValidateLicenseInputKeySchema) {
-    const res = await fetch(
-      `${this.apiUrl}/api/v1/licenses/actions/validate-key`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
+    const res = await fetch(`${this.apiUrl}/licenses/actions/validate-key`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(input),
+    });
 
     if (!res.ok) {
       throw new Error("Failed to validate license key.");
