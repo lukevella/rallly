@@ -89,7 +89,7 @@ const nextConfig = {
       {
         source: "/buy-license/:product",
         destination: createAppUrl("/api/stripe/buy-license?product=:product"),
-        permanent: true,
+        permanent: false,
       },
       {
         source: "/S17JJrRWc",
