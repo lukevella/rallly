@@ -18,8 +18,7 @@ export function SubscriptionPrice({
   const formattedAmount = new Intl.NumberFormat("en", {
     style: "currency",
     currency: currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
   }).format(amount / 100); // Divide by 100 since amount is in cents
 
   return (
