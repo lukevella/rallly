@@ -67,24 +67,22 @@ export default function LicensingThankYouPage() {
           <p className="mb-6">
             <Trans
               i18nKey="licensingThankYouSupportPrompt"
-              defaults="Need help or have questions? Visit our <0>Support Center</0> or <1>contact us</1>."
-              components={{
-                0: (
-                  <Link
-                    href="https://support.rallly.co"
-                    className="font-medium text-brand hover:underline"
-                  />
-                ),
-                1: (
-                  <Link
-                    href="/contact"
-                    className="font-medium text-brand hover:underline"
-                  />
-                ),
-              }}
+              defaults="Need help or have questions? Visit our <0>self-hosted docs</0> or <1>contact us</1>."
+              components={[
+                <Link
+                  key="self-hosted-docs"
+                  href="https://support.rallly.co"
+                  className="underline"
+                />,
+                <Link
+                  key="contact-us"
+                  href="mailto:support@rallly.co"
+                  className="underline"
+                />,
+              ]}
             />
           </p>
-          <Link href="/" className="font-medium text-brand hover:underline">
+          <Link href="/" className="hover:underline">
             <Trans
               i18nKey="licensingThankYouGoHomeLink"
               defaults="Return to Home"
