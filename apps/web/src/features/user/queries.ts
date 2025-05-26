@@ -44,18 +44,6 @@ export const getUser = cache(async (userId: string) => {
   };
 });
 
-export const getAdminCount = cache(async () => {
-  return prisma.user.count({
-    where: {
-      role: "admin",
-    },
-  });
-});
-
-export const hasAdmins = async () => {
-  return (await getAdminCount()) > 0;
-};
-
 export const getUserCount = cache(async () => {
   return await prisma.user.count();
 });
