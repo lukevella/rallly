@@ -60,8 +60,7 @@ export async function GET(request: NextRequest) {
         },
       ],
       mode: "payment",
-      success_url: "https://support.rallly.co/self-hosted/licensing",
-      cancel_url: "https://support.rallly.co/self-hosted/licensing",
+      success_url: "https://rallly.co/licensing/thank-you",
       metadata: {
         licenseType: type,
         seats,
