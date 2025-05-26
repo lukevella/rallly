@@ -1,22 +1,23 @@
 "use server";
 
-import { hasAdmins } from "@/features/user/queries";
-import { requireUser } from "@/next-auth";
+import { requireUser } from "@/auth/queries";
 import { prisma } from "@rallly/database";
 
 export async function makeAdmin() {
-  if (await hasAdmins()) {
-    return;
-  }
+  const user = await requireUser();
 
-  const { userId } = await requireUser();
+  if (user.email !== process.env.INITIAL_ADMIN_EMAIL) {
+    return { success: false, error: "Unauthorized" };
+  }
 
   await prisma.user.update({
     where: {
-      id: userId,
+      id: user.id,
     },
     data: {
       role: "admin",
     },
   });
+
+  return { success: true, error: null };
 }
