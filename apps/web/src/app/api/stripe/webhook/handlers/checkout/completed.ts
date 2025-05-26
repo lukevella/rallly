@@ -1,3 +1,4 @@
+import { env } from "@/env";
 import { licensingClient } from "@/features/licensing/client";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
 import { subscriptionCheckoutMetadataSchema } from "@/features/subscription/schema";
@@ -38,10 +39,11 @@ async function handleSelfHostedCheckoutSessionCompleted(
 
   if (!success) {
     // If there is no metadata than this is likely a donation from a payment link
+    console.info("No metadata found for session: ", checkoutSession.id);
     return;
   }
 
-  const { licenseType, seats } = data;
+  const { licenseType, version, seats } = data;
 
   const customerDetails = checkoutSession.customer_details;
 
@@ -63,13 +65,13 @@ async function handleSelfHostedCheckoutSessionCompleted(
     type: licenseType,
     licenseeEmail: email,
     licenseeName: customerDetails.name ?? undefined,
+    version,
     seats,
-    stripeCustomerId: checkoutSession.customer as string,
   });
 
   if (!license || !license.data) {
     throw new Error(
-      `Failed to create team license for session: ${checkoutSession.id} - ${license?.error}`,
+      `Failed to create license for session: ${checkoutSession.id} - ${license?.error}`,
     );
   }
 
@@ -79,7 +81,7 @@ async function handleSelfHostedCheckoutSessionCompleted(
     to: email,
     from: {
       name: "Luke from Rallly",
-      address: process.env.SUPPORT_EMAIL,
+      address: env.SUPPORT_EMAIL,
     },
     props: {
       licenseKey: license.data.key,

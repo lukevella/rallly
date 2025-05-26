@@ -20,7 +20,6 @@ model License {
   licenseeEmail    String?       @map("licensee_email")
   licenseeName     String?       @map("licensee_name")
   status           LicenseStatus @default(ACTIVE) @map("status")
-  stripeCustomerId String?       @map("stripe_customer_id")
 
   validations LicenseValidation[]
 

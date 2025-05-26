@@ -46,15 +46,8 @@ if (env.LICENSE_API_AUTH_TOKEN) {
       }),
     ),
     async (c) => {
-      const {
-        type,
-        seats,
-        expiresAt,
-        licenseeEmail,
-        licenseeName,
-        version,
-        stripeCustomerId,
-      } = c.req.valid("json");
+      const { type, seats, expiresAt, licenseeEmail, licenseeName, version } =
+        c.req.valid("json");
 
       try {
         const license = await prisma.license.create({
@@ -67,7 +60,6 @@ if (env.LICENSE_API_AUTH_TOKEN) {
             expiresAt,
             licenseeEmail,
             licenseeName,
-            stripeCustomerId,
           },
         });
         return c.json({

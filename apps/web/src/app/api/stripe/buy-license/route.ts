@@ -63,6 +63,7 @@ export async function GET(request: NextRequest) {
       success_url: "https://rallly.co/licensing/thank-you",
       metadata: {
         licenseType: type,
+        version: 4,
         seats,
       } satisfies LicenseCheckoutMetadata,
     });

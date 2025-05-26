@@ -31,12 +31,11 @@ export type ApiResponse<T> = {
 
 export const createLicenseInputSchema = z.object({
   type: licenseTypeSchema,
-  seats: z.number().optional(),
-  expiresAt: z.date().optional(),
+  seats: z.coerce.number().optional(),
+  expiresAt: z.coerce.date().optional(),
   licenseeEmail: z.string().optional(),
   licenseeName: z.string().optional(),
-  version: z.number().optional(),
-  stripeCustomerId: z.string().optional(),
+  version: z.coerce.number().optional(),
 });
 export type CreateLicenseInput = z.infer<typeof createLicenseInputSchema>;
 
@@ -80,7 +79,8 @@ export type ValidateLicenseKeyResponse = z.infer<
 
 export const licenseCheckoutMetadataSchema = z.object({
   licenseType: licenseTypeSchema,
-  seats: z.number(),
+  version: z.coerce.number(),
+  seats: z.coerce.number(),
 });
 
 export type LicenseCheckoutMetadata = z.infer<
