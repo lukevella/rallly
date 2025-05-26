@@ -1,18 +1,15 @@
+import { requireAdmin } from "@/auth/queries";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
-import { hasAdmins } from "@/features/user/queries";
 import { getTranslation } from "@/i18n/server";
 import { SidebarInset } from "@rallly/ui/sidebar";
-import { redirect } from "next/navigation";
 import { ControlPanelSidebarProvider } from "./control-panel-sidebar-provider";
 import { ControlPanelSidebar } from "./sidebar";
 
 export default async function AdminLayout({
   children,
 }: { children: React.ReactNode }) {
-  if (!(await hasAdmins())) {
-    redirect("/admin-setup");
-  }
+  await requireAdmin();
 
   return (
     <ControlPanelSidebarProvider>

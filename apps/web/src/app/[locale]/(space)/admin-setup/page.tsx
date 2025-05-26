@@ -5,6 +5,7 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
+import { isInitialAdmin, requireUser } from "@/auth/queries";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -13,8 +14,6 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Trans } from "@/components/trans";
-import { hasAdmins } from "@/features/user/queries";
-import { isSelfHosted } from "@/utils/constants";
 import { Button } from "@rallly/ui/button";
 import { CrownIcon } from "lucide-react";
 import Link from "next/link";
@@ -22,12 +21,15 @@ import { notFound, redirect } from "next/navigation";
 import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {
-  if (!isSelfHosted) {
-    return notFound();
+  const user = await requireUser();
+
+  if (user.role === "admin") {
+    // User is already an admin
+    redirect("/control-panel");
   }
 
-  if (await hasAdmins()) {
-    redirect("/control-panel");
+  if (!isInitialAdmin(user.email)) {
+    notFound();
   }
 
   return (
