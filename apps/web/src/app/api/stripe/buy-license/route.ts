@@ -10,10 +10,10 @@ type Product = z.infer<typeof productSchema>;
 
 const mapProductToLicenseType: Record<
   Product,
-  { type: LicenseType; seats: number }
+  { type: LicenseType; seats: number; promoCode?: string }
 > = {
   plus: { type: "PLUS", seats: 5 },
-  organization: { type: "ORGANIZATION", seats: 50 },
+  organization: { type: "ORGANIZATION", seats: 50, promoCode: "EARLYORG" },
 };
 
 export async function GET(request: NextRequest) {
@@ -49,7 +49,14 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const { type, seats } = mapProductToLicenseType[product];
+  const { type, seats, promoCode } = mapProductToLicenseType[product];
+
+  const promotionCodes = await stripe.promotionCodes.list({
+    code: promoCode,
+    active: true,
+  });
+
+  const promoCodeId = promotionCodes.data[0]?.id;
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -61,6 +68,7 @@ export async function GET(request: NextRequest) {
       ],
       mode: "payment",
       success_url: "https://rallly.co/licensing/thank-you",
+      ...(promoCodeId ? { discounts: [{ promotion_code: promoCodeId }] } : {}),
       metadata: {
         licenseType: type,
         version: 4,
