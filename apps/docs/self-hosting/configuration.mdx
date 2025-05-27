@@ -96,16 +96,12 @@ https://<YOUR_DOMAIN>/api/auth/callback/google
 ### Microsoft
 
 <Accordion title="Setup">
-1. Head over to the Credentials tab: https://console.developers.google.com/apis/credentials
+Follow the instructions here to create a Microsoft Entra ID application: https://docs.microsoft.com/en-us/entra/identity-platform/quickstart-register-app
 
-2. Create a OAuth client ID. This will be your `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
-
-Make sure to set the following scopes: userinfo.email
-
-The “Authorized redirect URIs” used when creating the credentials must include your full domain and end in the callback path:
+After creating the application, set the redirect URI to include your full domain and end in the callback path:
 
 ```
-https://<YOUR_DOMAIN>/api/auth/callback/google
+https://<YOUR_DOMAIN>/api/auth/callback/microsoft-entra-id
 ```
 </Accordion>
 
