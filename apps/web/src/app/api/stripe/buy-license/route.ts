@@ -51,12 +51,16 @@ export async function GET(request: NextRequest) {
 
   const { type, seats, promoCode } = mapProductToLicenseType[product];
 
-  const promotionCodes = await stripe.promotionCodes.list({
-    code: promoCode,
-    active: true,
-  });
+  let promoCodeId: string | undefined;
 
-  const promoCodeId = promotionCodes.data[0]?.id;
+  if (promoCode) {
+    const promotionCodes = await stripe.promotionCodes.list({
+      code: promoCode,
+      active: true,
+    });
+
+    promoCodeId = promotionCodes.data[0]?.id;
+  }
 
   try {
     const session = await stripe.checkout.sessions.create({
