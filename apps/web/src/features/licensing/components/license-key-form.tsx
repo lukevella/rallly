@@ -109,7 +109,7 @@ export function LicenseKeyForm() {
             loading={form.formState.isSubmitting}
             type="submit"
           >
-            Activate
+            <Trans i18nKey="activate" defaults="Activate" />
           </Button>
         </div>
       </form>
