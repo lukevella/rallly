@@ -63,13 +63,13 @@ export const validateLicenseKeyResponseSchema = apiResponseSchema(
     key: z.string(),
     valid: z.boolean(),
     status: licenseStatusSchema,
-    issuedAt: z.date(),
-    expiresAt: z.date().nullable(),
+    issuedAt: z.coerce.date(),
+    expiresAt: z.coerce.date().nullable(),
     licenseeEmail: z.string().nullable(),
     licenseeName: z.string().nullable(),
-    seats: z.number().nullable(),
+    seats: z.coerce.number().nullable(),
     type: licenseTypeSchema,
-    version: z.number().nullable(),
+    version: z.coerce.number().nullable(),
   }),
 );
 
