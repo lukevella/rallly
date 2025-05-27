@@ -1,53 +1,32 @@
 ---
-icon: server
-title: Introduction
-description: How to Self-Host Rallly
+icon: "house"
+title: "Introduction"
+description: "Learn how to set up and manage your own instance of Rallly."
 ---
 
-Rallly is 100% open-source and available under the [GNU Affero General Public License v3.0 (AGPL-3.0)](https://github.com/lukevella/rallly/blob/main/LICENSE)
-which allows you to run your own instance of Rallly for free for both personal and commercial use.
+Self-hosting Rallly gives you complete control over your instance and your data. You can customize it to your needs, integrate it within your own infrastructure, and manage user access directly.
 
-<Frame>
-  <img src="/images/self-hosting/splash.png" alt="Rallly Splash Image" />
-</Frame>
+## The Official Docker Image
 
-## Official Docker Image
+The primary and **officially supported method** for self-hosting Rallly is by using our **official Docker image**. This image contains a build specifically optimized for self-hosting, with features like billing automatically disabled and no feature-gating.
 
-The best way to self-host Rallly is using the [official Docker image](https://hub.docker.com/r/lukevella/rallly).
-This image contains a build that is specifically intended for self-hosting.
-It is updated regularly but it is _not_ guaranteed to be up-to-date with the latest version of Rallly.
-If you want to have access to the latest features and bug fixes, you should consider using the [official managed service](https://rallly.co).
+These guides will walk you through using the Docker image:
+
+*   **[Installation](/self-hosting/installation/docker):** Setting up Rallly using Docker.
+*   **[Configuration](/self-hosting/configuration):** Customizing your instance with environment variables.
+*   **[Licensing](/self-hosting/licensing):** Understanding when a license is needed and how to manage it.
+*   **[Control Panel](/self-hosting/control-panel):** Managing your instance, users, and settings.
 
 <Note>
-  Though it is technically possible to build and run Rallly from its
-  [source-code](https://github.com/lukevella/rallly), it is not recommended and
-  we do not provide support for this.
+  While Rallly's source code is publicly available, self-hosting directly from the source code is not officially supported. For a stable and optimized experience, please use the provided Docker image.
 </Note>
 
-## Live Demo
+## Licensing
 
-If you want to try out Rallly before self-hosting it, you can try the official managed service at [app.rallly.co](https://app.rallly.co).
-This version differs slightly from the self-hosted version in that it allows guest users to create polls without having to create an account
-and is updated more frequently but it's still a good way to get a feel for the app.
+Rallly is free to self-host for **personal, single-user setups**. For instances with **multiple users**, we ask that you purchase a license. This helps support the ongoing development and maintenance of Rallly. You can find more details about the different tiers and how to purchase a license on our [Licensing page](/self-hosting/licensing).
 
-## Pricing
+## Before You Begin
 
-Rallly is **completely free** to self-host but for users who wish to contribute to the project,
-please check out the [pricing](/self-hosting/pricing) page.
+Ensure you have a basic understanding of Docker and server management. While we aim to make the process straightforward, some technical knowledge is beneficial.
 
-## Get Started
-
-Depending on how comfortable you are with technical things, you can either run Rallly on your own server or choose a managed hosting provider that will do it for you.
-
-<CardGroup cols={2}>
-  <Card title="Docker Setup" icon="docker" href="/self-hosting/docker-compose">
-    Host your own instance of Rallly on your own server using Docker.
-  </Card>
-  <Card
-    icon="cloud"
-    title="Using a hosting provider"
-    href="/self-hosting/managed-hosting"
-  >
-    Choose a provider that will install and run an instance of Rallly for you.
-  </Card>
-</CardGroup>
+If you're not ready to self-host or prefer a managed solution, you can always use the official Rallly service at [rallly.co](https://rallly.co).

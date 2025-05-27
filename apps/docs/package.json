@@ -2,7 +2,16 @@
   "name": "@rallly/docs",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "dev": "mint dev",
+    "build": "mint build"
+  },
   "devDependencies": {
     "@rallly/tsconfig": "workspace:*"
+  },
+  "dependencies": {
+    "mint": "^4.1.33",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }

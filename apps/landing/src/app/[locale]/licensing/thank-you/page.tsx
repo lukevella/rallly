@@ -52,7 +52,7 @@ export default function LicensingThankYouPage() {
             <li>
               <Link
                 className="text-link"
-                href="https://support.rallly.co/self-hosted/licensing/apply-license"
+                href="https://support.rallly.co/self-hosted/licensing"
               >
                 <Trans
                   i18nKey="licensingThankYouNextStepsApplyLicense"
