@@ -72,7 +72,9 @@ export async function GET(request: NextRequest) {
       ],
       mode: "payment",
       success_url: "https://rallly.co/licensing/thank-you",
-      ...(promoCodeId ? { discounts: [{ promotion_code: promoCodeId }] } : {}),
+      ...(promoCodeId
+        ? { discounts: [{ promotion_code: promoCodeId }] }
+        : { allow_promotion_codes: true }),
       metadata: {
         licenseType: type,
         version: 4,
