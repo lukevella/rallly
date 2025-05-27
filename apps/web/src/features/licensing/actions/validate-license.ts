@@ -8,20 +8,20 @@ export async function validateLicenseKey(key: string) {
   const { success } = await rateLimit("validate_license_key", 10, "1 m");
 
   if (!success) {
-    throw new Error("Rate limit exceeded");
+    return {
+      valid: false,
+      error: "Rate limit exceeded" as const,
+    };
   }
 
-  const { data, error } = await licensingClient.validateLicenseKey({
+  const { data } = await licensingClient.validateLicenseKey({
     key,
   });
-
-  if (error) {
-    throw new Error(`License validation failed: ${error}`);
-  }
 
   if (!data) {
     return {
       valid: false,
+      error: "Invalid license key" as const,
     };
   }
 
@@ -39,5 +39,6 @@ export async function validateLicenseKey(key: string) {
 
   return {
     valid: true,
+    error: null,
   };
 }

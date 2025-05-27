@@ -39,17 +39,40 @@ export function LicenseKeyForm() {
 
   const onSubmit = async (data: LicenseKeyFormValues) => {
     try {
-      const { valid } = await validateLicenseKey(data.licenseKey);
+      const { error } = await validateLicenseKey(data.licenseKey);
 
-      if (!valid) {
-        form.setError("licenseKey", {
-          message: "Invalid license key",
-        });
+      if (error) {
+        switch (error) {
+          case "Rate limit exceeded":
+            form.setError("licenseKey", {
+              message: t("licenseKeyErrorRateLimitExceeded", {
+                defaultValue: "Rate limit exceeded",
+              }),
+            });
+            break;
+          case "Invalid license key":
+            form.setError("licenseKey", {
+              message: t("licenseKeyErrorInvalidLicenseKey", {
+                defaultValue: "Invalid license key",
+              }),
+            });
+            break;
+          default:
+            form.setError("licenseKey", {
+              message: t("licenseKeyGenericError", {
+                defaultValue:
+                  "An error occurred while validating the license key",
+              }),
+            });
+            break;
+        }
         return;
       }
     } catch (error) {
       form.setError("licenseKey", {
-        message: "An error occurred while validating the license key",
+        message: t("licenseKeyGenericError", {
+          defaultValue: "An error occurred while validating the license key",
+        }),
       });
     }
     router.refresh();

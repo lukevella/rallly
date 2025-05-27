@@ -47,10 +47,6 @@ export class LicensingClient {
       body: JSON.stringify(input),
     });
 
-    if (!res.ok) {
-      throw new Error("Failed to validate license key.");
-    }
-
     return validateLicenseKeyResponseSchema.parse(await res.json());
   }
 }
