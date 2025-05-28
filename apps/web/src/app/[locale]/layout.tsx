@@ -19,6 +19,8 @@ import { auth, getUserId } from "@/next-auth";
 import { TRPCProvider } from "@/trpc/client/provider";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 
+import { FeatureFlagsProvider } from "@/features/feature-flags/client";
+import { isStorageEnabled } from "@/features/storage";
 import { getUser } from "@/features/user/queries";
 import { PostHogPageView } from "../posthog-page-view";
 
@@ -56,57 +58,59 @@ export default async function Root({
   return (
     <html lang={locale} className={inter.className}>
       <body>
-        <Toaster />
-        <I18nProvider locale={locale}>
-          <TRPCProvider>
-            <LazyMotion features={domAnimation}>
-              <PostHogProvider client={posthog}>
-                <PostHogPageView />
-                <TooltipProvider>
-                  <UserProvider
-                    user={
-                      user
-                        ? {
-                            id: user.id,
-                            name: user.name,
-                            email: user.email,
-                            tier: user
-                              ? user.isPro
-                                ? "pro"
-                                : "hobby"
-                              : "guest",
-                            image: user.image,
-                            role: user.role,
-                          }
-                        : session?.user
+        <FeatureFlagsProvider value={{ storage: isStorageEnabled }}>
+          <Toaster />
+          <I18nProvider locale={locale}>
+            <TRPCProvider>
+              <LazyMotion features={domAnimation}>
+                <PostHogProvider client={posthog}>
+                  <PostHogPageView />
+                  <TooltipProvider>
+                    <UserProvider
+                      user={
+                        user
                           ? {
-                              id: session.user.id,
-                              tier: "guest",
-                              role: "guest",
+                              id: user.id,
+                              name: user.name,
+                              email: user.email,
+                              tier: user
+                                ? user.isPro
+                                  ? "pro"
+                                  : "hobby"
+                                : "guest",
+                              image: user.image,
+                              role: user.role,
                             }
-                          : undefined
-                    }
-                  >
-                    <PreferencesProvider
-                      initialValue={{
-                        timeFormat: user?.timeFormat,
-                        timeZone: user?.timeZone,
-                        weekStart: user?.weekStart,
-                      }}
+                          : session?.user
+                            ? {
+                                id: session.user.id,
+                                tier: "guest",
+                                role: "guest",
+                              }
+                            : undefined
+                      }
                     >
-                      <TimezoneProvider initialTimezone={user?.timeZone}>
-                        <ConnectedDayjsProvider>
-                          {children}
-                          <TimeZoneChangeDetector />
-                        </ConnectedDayjsProvider>
-                      </TimezoneProvider>
-                    </PreferencesProvider>
-                  </UserProvider>
-                </TooltipProvider>
-              </PostHogProvider>
-            </LazyMotion>
-          </TRPCProvider>
-        </I18nProvider>
+                      <PreferencesProvider
+                        initialValue={{
+                          timeFormat: user?.timeFormat,
+                          timeZone: user?.timeZone,
+                          weekStart: user?.weekStart,
+                        }}
+                      >
+                        <TimezoneProvider initialTimezone={user?.timeZone}>
+                          <ConnectedDayjsProvider>
+                            {children}
+                            <TimeZoneChangeDetector />
+                          </ConnectedDayjsProvider>
+                        </TimezoneProvider>
+                      </PreferencesProvider>
+                    </UserProvider>
+                  </TooltipProvider>
+                </PostHogProvider>
+              </LazyMotion>
+            </TRPCProvider>
+          </I18nProvider>
+        </FeatureFlagsProvider>
       </body>
     </html>
   );
