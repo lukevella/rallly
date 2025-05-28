@@ -1,8 +1,6 @@
 import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
-import languages, { defaultLocale } from "./index";
-
-const locales = Object.keys(languages);
+import { defaultLocale, supportedLngs } from "./index";
 
 export function getPreferredLocale({
   userLocale,
@@ -11,7 +9,11 @@ export function getPreferredLocale({
   userLocale?: string;
   acceptLanguageHeader?: string;
 }) {
-  if (!acceptLanguageHeader || !userLocale) {
+  if (userLocale && supportedLngs.includes(userLocale)) {
+    return userLocale;
+  }
+
+  if (!acceptLanguageHeader) {
     return defaultLocale;
   }
 
@@ -23,12 +25,8 @@ export function getPreferredLocale({
     .languages()
     .filter((lang) => lang !== "*");
 
-  if (userLocale) {
-    preferredLanguages.unshift(userLocale);
-  }
-
   try {
-    return match(preferredLanguages, locales, defaultLocale);
+    return match(preferredLanguages, supportedLngs, defaultLocale);
   } catch (e) {
     return defaultLocale;
   }
