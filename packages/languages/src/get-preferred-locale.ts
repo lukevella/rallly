@@ -5,11 +5,13 @@ import languages, { defaultLocale } from "./index";
 const locales = Object.keys(languages);
 
 export function getPreferredLocale({
+  userLocale,
   acceptLanguageHeader,
 }: {
+  userLocale?: string;
   acceptLanguageHeader?: string;
 }) {
-  if (!acceptLanguageHeader) {
+  if (!acceptLanguageHeader || !userLocale) {
     return defaultLocale;
   }
 
@@ -21,10 +23,13 @@ export function getPreferredLocale({
     .languages()
     .filter((lang) => lang !== "*");
 
+  if (userLocale) {
+    preferredLanguages.unshift(userLocale);
+  }
+
   try {
     return match(preferredLanguages, locales, defaultLocale);
   } catch (e) {
-    console.warn("Failed to match locale", e);
     return defaultLocale;
   }
 }
