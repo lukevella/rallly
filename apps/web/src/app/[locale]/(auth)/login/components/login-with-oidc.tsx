@@ -18,7 +18,8 @@ export async function LoginWithOIDC({
           redirectTo,
         });
       }}
-      variant="link"
+      className="w-full"
+      size="lg"
     >
       <Trans
         i18nKey="continueWithProvider"
