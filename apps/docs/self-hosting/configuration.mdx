@@ -119,6 +119,13 @@ https://<YOUR_DOMAIN>/api/auth/callback/microsoft-entra-id
 
 ### Custom SSO (OIDC)
 
+The following must be set for OIDC to work:
+
+- `OIDC_DISCOVERY_URL`
+- `OIDC_CLIENT_ID`
+- `OIDC_CLIENT_SECRET`
+- `OIDC_ISSUER_URL`
+
 <Accordion title="Setup">
 Your OAuth 2.0 application needs to be configured with the following scopes:
 
@@ -139,6 +146,11 @@ https://<YOUR-DOMAIN>/api/auth/callback/oidc
 
 <ParamField path="OIDC_DISCOVERY_URL">
   URL of the `.well-known/openid-configuration` endpoint for your OIDC provider
+</ParamField>
+
+<ParamField path="OIDC_ISSUER_URL">
+  URL of the issuer for your OIDC provider. You can get this from your OpenId
+  Configuration endpoint.
 </ParamField>
 
 <ParamField path="OIDC_CLIENT_ID">

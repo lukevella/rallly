@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 
 import { Trans } from "@/components/trans";
 
-export async function LoginWithOIDC({
+export function LoginWithOIDC({
   name,
   redirectTo,
 }: {
@@ -18,7 +18,8 @@ export async function LoginWithOIDC({
           redirectTo,
         });
       }}
-      variant="link"
+      className="w-full"
+      size="lg"
     >
       <Trans
         i18nKey="continueWithProvider"
