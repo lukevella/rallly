@@ -11,7 +11,7 @@
     "light": "#6366f1",
     "dark": "#4F46E5",
     "background": {
-      "light": "#F9FAFB",
+      "light": "#f3f4f6",
       "dark": "#18181B"
     },
     "anchors": { "from": "#878AFA", "to": "#4347F1" }
@@ -38,7 +38,7 @@
   ],
   "navigation": [
     {
-      "group": "Documentation",
+      "group": "Get Started",
       "pages": ["introduction", "faq"]
     },
     {
@@ -50,21 +50,25 @@
       "pages": ["guide/participant-guide"]
     },
     {
-      "group": "Self-Hosting",
+      "group": "Get Started",
       "pages": [
         "self-hosting/introduction",
         {
-          "icon": "bolt",
-          "group": "Get Started",
-          "pages": [
-            "self-hosting/docker-compose",
-            "self-hosting/single-sign-on",
-            "self-hosting/configuration-options"
-          ]
+          "icon": "server",
+          "group": "Installation",
+          "pages": ["self-hosting/installation/docker"]
         },
-        "self-hosting/pricing",
-        "self-hosting/managed-hosting"
+        "self-hosting/licensing",
+        "self-hosting/configuration"
       ]
+    },
+    {
+      "group": "Guides",
+      "pages": ["self-hosting/control-panel"]
+    },
+    {
+      "group": "Misc",
+      "pages": ["self-hosting/managed-hosting"]
     },
     {
       "group": "Contribute",

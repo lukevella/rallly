@@ -1,0 +1,25 @@
+---
+title: "Accessing the Control Panel"
+description: "Learn how to access and use the Control Panel to manage your self-hosted Rallly instance."
+---
+
+The Control Panel is your central hub for administering your self-hosted Rallly instance. From here, you can manage users, activate your license, and configure instance-specific settings.
+
+To access the Control Panel:
+
+1.  Ensure your Rallly instance is running.
+2.  Open your web browser and navigate to `/control-panel`.
+3.  You may be prompted to log in if you haven't already. Only users with administrative privileges can access the Control Panel features, though all users can visit the page.
+
+## Claiming Initial Admin Rights
+
+The first user designated as an administrator needs to manually claim their admin role. This user is specified by the `INITIAL_ADMIN_EMAIL` environment variable during setup (see [Configuration](/self-hosting/configuration)).
+
+To claim admin rights:
+
+1.  Ensure the user account associated with the `INITIAL_ADMIN_EMAIL` has been created (e.g., by logging in once).
+2.  Navigate to the Control Panel: `/control-panel`.
+3.  If you are the user specified in `INITIAL_ADMIN_EMAIL` and have not yet claimed admin rights, you should see a section or button prompting you to "Make me an admin".
+4.  Click this button to elevate your account to an administrator.
+
+Once claimed, this user can manage other users and settings.
