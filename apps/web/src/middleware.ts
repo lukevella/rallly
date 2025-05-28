@@ -1,11 +1,8 @@
-import languages from "@rallly/languages";
 import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
 import { getPosthogBootstrapCookie } from "@rallly/posthog/utils";
 import { NextResponse } from "next/server";
 
 import { withAuth } from "@/auth/edge";
-
-const supportedLocales = Object.keys(languages);
 
 export const middleware = withAuth(async (req) => {
   const { nextUrl } = req;
@@ -19,15 +16,12 @@ export const middleware = withAuth(async (req) => {
     return NextResponse.redirect(newUrl);
   }
 
-  const locale =
-    req.auth?.user?.locale ||
-    getPreferredLocale({
-      acceptLanguageHeader: req.headers.get("accept-language") ?? undefined,
-    });
+  const locale = getPreferredLocale({
+    userLocale: req.auth?.user?.locale ?? undefined,
+    acceptLanguageHeader: req.headers.get("accept-language") ?? undefined,
+  });
 
-  if (supportedLocales.includes(locale)) {
-    newUrl.pathname = `/${locale}${pathname}`;
-  }
+  newUrl.pathname = `/${locale}${pathname}`;
 
   const res = NextResponse.rewrite(newUrl);
   res.headers.set("x-locale", locale);
