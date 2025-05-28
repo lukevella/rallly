@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 
 import { Trans } from "@/components/trans";
 
-export async function LoginWithOIDC({
+export function LoginWithOIDC({
   name,
   redirectTo,
 }: {

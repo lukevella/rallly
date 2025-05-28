@@ -5,19 +5,26 @@ import { env } from "@/env";
 import { getValueByPath } from "@/utils/get-value-by-path";
 
 export const OIDCProvider = () => {
-  if (
-    process.env.OIDC_DISCOVERY_URL &&
-    process.env.OIDC_CLIENT_ID &&
-    process.env.OIDC_CLIENT_SECRET
-  ) {
+  if (env.OIDC_DISCOVERY_URL && env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET) {
+    if (!env.OIDC_ISSUER_URL) {
+      console.warn(
+        "OIDC_ISSUER_URL is not set. Please set it to the issuer URL of your OpenID Connect provider.",
+      );
+      return;
+    }
     return {
       id: "oidc",
-      name: process.env.OIDC_NAME ?? "OpenID Connect",
+      name: env.OIDC_NAME ?? "OpenID Connect",
       type: "oidc",
-      wellKnown: process.env.OIDC_DISCOVERY_URL,
-      authorization: { params: { scope: "openid email profile" } },
-      clientId: process.env.OIDC_CLIENT_ID,
-      clientSecret: process.env.OIDC_CLIENT_SECRET,
+      wellKnown: env.OIDC_DISCOVERY_URL,
+      authorization: {
+        params: {
+          scope: "openid email profile",
+        },
+      },
+      issuer: env.OIDC_ISSUER_URL,
+      clientId: env.OIDC_CLIENT_ID,
+      clientSecret: env.OIDC_CLIENT_SECRET,
       idToken: true,
       checks: ["pkce", "state"],
       allowDangerousEmailAccountLinking: true,
