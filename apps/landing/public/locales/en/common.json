@@ -33,5 +33,7 @@
   "licensingThankYouNextStepsInstallation": "Installation Guide",
   "licensingThankYouNextStepsApplyLicense": "How to Apply Your License",
   "licensingThankYouSupportPrompt": "Need help or have questions? Visit our <0>self-hosted docs</0> or <1>contact us</1>.",
-  "licensingThankYouGoHomeLink": "Return to Home"
+  "licensingThankYouGoHomeLink": "Return to Home",
+  "openSource": "We're Open Source!",
+  "starOnGitHub": "Star us on GitHub"
 }

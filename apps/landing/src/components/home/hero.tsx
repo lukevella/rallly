@@ -33,7 +33,7 @@ const Screenshot = () => {
         style={{
           backfaceVisibility: "hidden",
         }}
-        className="shadow-huge relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-1.5 text-sm text-gray-50 subpixel-antialiased"
+        className="shadow-huge relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-2 text-sm text-gray-50 subpixel-antialiased"
       >
         <Trans
           i18nKey="home:createPageLikeThis"
