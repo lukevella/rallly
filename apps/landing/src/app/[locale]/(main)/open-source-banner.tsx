@@ -13,10 +13,10 @@ export function OpenSourceBanner() {
   return (
     <div
       className={cn(
-        "bg-gray-800 transition-all overflow-hidden hover:underline fixed top-0 w-full flex items-center h-10 text-sm rounded-none text-gray-100 justify-center gap-4",
+        "bg-gray-800 z-50 transition-transform h-11 overflow-hidden hover:underline fixed top-0 w-full flex items-center text-sm rounded-none text-gray-100 justify-center gap-4",
         {
-          "h-11": y <= 0,
-          "h-0": y > 16,
+          "translate-y-0": y <= 0,
+          "-translate-y-full": y > 20,
         },
       )}
     >
