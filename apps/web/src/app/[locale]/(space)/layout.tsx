@@ -49,7 +49,7 @@ export default async function Layout({
           </TopBar>
           <LicenseLimitWarning />
           <div className="flex flex-1 flex-col">
-            <div className="flex flex-1 flex-col p-4 md:p-8">{children}</div>
+            <div className="flex flex-1 flex-col">{children}</div>
           </div>
           <ActionBar />
         </SidebarInset>
