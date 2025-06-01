@@ -111,6 +111,10 @@ app.post(
       return c.json({ error: "License not found" }, 404);
     }
 
+    if (license.status !== "ACTIVE") {
+      return c.json({ error: "License is not active" }, 400);
+    }
+
     await prisma.licenseValidation.create({
       data: {
         licenseId: license.id,
