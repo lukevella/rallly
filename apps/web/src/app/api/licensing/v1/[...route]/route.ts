@@ -14,7 +14,6 @@ import { kv } from "@vercel/kv";
 import { Hono } from "hono";
 import { rateLimiter } from "hono-rate-limiter";
 import { bearerAuth } from "hono/bearer-auth";
-import { some } from "hono/combine";
 import { handle } from "hono/vercel";
 
 const isKvAvailable =
@@ -33,18 +32,16 @@ if (env.LICENSE_API_AUTH_TOKEN) {
   app.post(
     "/licenses",
     zValidator("json", createLicenseInputSchema),
-    some(
-      bearerAuth({ token: env.LICENSE_API_AUTH_TOKEN }),
-      rateLimiter({
-        windowMs: 60 * 60 * 1000,
-        limit: 10,
-        store: isKvAvailable
-          ? new RedisStore({
-              client: kv,
-            })
-          : undefined,
-      }),
-    ),
+    rateLimiter({
+      windowMs: 60 * 60 * 1000,
+      limit: 10,
+      store: isKvAvailable
+        ? new RedisStore({
+            client: kv,
+          })
+        : undefined,
+    }),
+    bearerAuth({ token: env.LICENSE_API_AUTH_TOKEN }),
     async (c) => {
       const { type, seats, expiresAt, licenseeEmail, licenseeName, version } =
         c.req.valid("json");
