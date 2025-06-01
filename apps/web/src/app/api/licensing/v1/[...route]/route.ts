@@ -31,7 +31,6 @@ app.use("*", async (c, next) => {
 if (env.LICENSE_API_AUTH_TOKEN) {
   app.post(
     "/licenses",
-    zValidator("json", createLicenseInputSchema),
     rateLimiter({
       windowMs: 60 * 60 * 1000,
       limit: 10,
@@ -41,6 +40,7 @@ if (env.LICENSE_API_AUTH_TOKEN) {
           })
         : undefined,
     }),
+    zValidator("json", createLicenseInputSchema),
     bearerAuth({ token: env.LICENSE_API_AUTH_TOKEN }),
     async (c) => {
       const { type, seats, expiresAt, licenseeEmail, licenseeName, version } =
@@ -72,7 +72,6 @@ if (env.LICENSE_API_AUTH_TOKEN) {
 
 app.post(
   "/licenses/actions/validate-key",
-  zValidator("json", validateLicenseKeyInputSchema),
   rateLimiter({
     keyGenerator: async (c) => {
       const { key, fingerprint } = await c.req.json();
@@ -86,6 +85,7 @@ app.post(
         })
       : undefined,
   }),
+  zValidator("json", validateLicenseKeyInputSchema),
   async (c) => {
     const { key, fingerprint } = c.req.valid("json");
 
