@@ -1,17 +1,14 @@
 "use client";
 
 import React from "react";
+import type { Feature, FeatureFlagConfig } from "./types";
 
-interface Features {
-  storage: boolean;
-}
-
-const FeatureFlagsContext = React.createContext<Features | undefined>(
+const FeatureFlagsContext = React.createContext<FeatureFlagConfig | undefined>(
   undefined,
 );
 
 interface FeatureFlagsProviderProps {
-  value: Features;
+  value: FeatureFlagConfig;
   children: React.ReactNode;
 }
 
@@ -26,7 +23,7 @@ export function FeatureFlagsProvider({
   );
 }
 
-export function useFeatureFlag(featureName: keyof Features): boolean {
+export function useFeatureFlag(featureName: Feature): boolean {
   const context = React.useContext(FeatureFlagsContext);
   if (context === undefined) {
     throw new Error(
@@ -34,4 +31,15 @@ export function useFeatureFlag(featureName: keyof Features): boolean {
     );
   }
   return context[featureName] ?? false;
+}
+
+export function IfFeatureEnabled({
+  feature,
+  children,
+}: {
+  feature: Feature;
+  children: React.ReactNode;
+}) {
+  const featureEnabled = useFeatureFlag(feature);
+  return featureEnabled ? children : null;
 }
