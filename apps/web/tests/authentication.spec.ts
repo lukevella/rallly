@@ -4,21 +4,21 @@ import { load } from "cheerio";
 
 import { captureEmailHTML } from "./mailpit/mailpit";
 import { RegisterPage } from "./register-page";
+import { createUserInDb, loginWithEmail } from "./test-utils";
 import { getCode } from "./utils";
 
 const testUserEmail = "test@example.com";
+const testExistingUserEmail = "existing-user-for-disabled-test@example.com";
 
 test.describe.serial(() => {
   test.afterAll(async () => {
-    try {
-      await prisma.user.deleteMany({
-        where: {
-          email: testUserEmail,
+    await prisma.user.deleteMany({
+      where: {
+        email: {
+          in: [testUserEmail, testExistingUserEmail],
         },
-      });
-    } catch {
-      // User doesn't exist
-    }
+      },
+    });
   });
 
   test.describe("new user", () => {
@@ -138,6 +138,38 @@ test.describe.serial(() => {
       await page.getByPlaceholder("Enter your 6-digit code").fill(code);
 
       await expect(page.getByText("Test User")).toBeVisible();
+    });
+  });
+
+  test.describe("when user registration is disabled", () => {
+    test.beforeAll(async () => {
+      await prisma.instanceSettings.update({
+        where: { id: 1 },
+        data: {
+          disableUserRegistration: true,
+        },
+      });
+    });
+
+    test.afterAll(async () => {
+      await prisma.instanceSettings.update({
+        where: { id: 1 },
+        data: {
+          disableUserRegistration: false,
+        },
+      });
+    });
+
+    test("allows existing user to log in via email", async ({ page }) => {
+      await createUserInDb({
+        email: testExistingUserEmail,
+        name: "Existing User",
+        role: "user",
+      });
+
+      await loginWithEmail(page, { email: testExistingUserEmail });
+
+      await expect(page).toHaveURL("/");
     });
   });
 });
