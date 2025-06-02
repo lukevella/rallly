@@ -22,5 +22,8 @@ export class LoginPage {
     const code = await getCode(email);
     await this.page.getByText("Finish Logging In").waitFor();
     await this.page.getByPlaceholder("Enter your 6-digit code").fill(code);
+
+    // Wait for page to load
+    await this.page.waitForLoadState("networkidle");
   }
 }
