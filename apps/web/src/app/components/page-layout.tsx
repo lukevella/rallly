@@ -8,7 +8,9 @@ export function PageContainer({
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
   return (
-    <div className={cn("mx-auto w-full max-w-7xl", className)}>{children}</div>
+    <div className={cn("mx-auto w-full p-4 md:p-8 max-w-7xl", className)}>
+      {children}
+    </div>
   );
 }
 

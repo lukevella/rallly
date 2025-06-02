@@ -36,12 +36,12 @@ test.describe("Admin Setup Page Access", () => {
   test("should allow access if user is the designated initial admin (and not yet admin role)", async ({
     page,
   }) => {
-    await createUserInDb(
-      INITIAL_ADMIN_TEST_EMAIL,
-      "Initial Admin User",
-      "user",
-    );
-    await loginWithEmail(page, INITIAL_ADMIN_TEST_EMAIL);
+    await createUserInDb({
+      email: INITIAL_ADMIN_TEST_EMAIL,
+      name: "Initial Admin User",
+      role: "user",
+    });
+    await loginWithEmail(page, { email: INITIAL_ADMIN_TEST_EMAIL });
 
     await page.goto("/admin-setup");
     await expect(page).toHaveURL(/.*\/admin-setup/);
@@ -54,8 +54,12 @@ test.describe("Admin Setup Page Access", () => {
   test("should show 'not found' for a regular user (not initial admin, not admin role)", async ({
     page,
   }) => {
-    await createUserInDb(REGULAR_USER_EMAIL, "Regular User", "user");
-    await loginWithEmail(page, REGULAR_USER_EMAIL);
+    await createUserInDb({
+      email: REGULAR_USER_EMAIL,
+      name: "Regular User",
+      role: "user",
+    });
+    await loginWithEmail(page, { email: REGULAR_USER_EMAIL });
 
     await page.goto("/admin-setup");
     await expect(page.getByText("404 not found")).toBeVisible();
@@ -64,8 +68,12 @@ test.describe("Admin Setup Page Access", () => {
   test("should redirect an existing admin user to control-panel", async ({
     page,
   }) => {
-    await createUserInDb(SUBSEQUENT_ADMIN_EMAIL, "Existing Admin", "admin");
-    await loginWithEmail(page, SUBSEQUENT_ADMIN_EMAIL);
+    await createUserInDb({
+      email: SUBSEQUENT_ADMIN_EMAIL,
+      name: "Existing Admin",
+      role: "admin",
+    });
+    await loginWithEmail(page, { email: SUBSEQUENT_ADMIN_EMAIL });
 
     await page.goto("/admin-setup");
     await expect(page).toHaveURL(/.*\/control-panel/);
@@ -74,8 +82,12 @@ test.describe("Admin Setup Page Access", () => {
   test("should show 'not found' if INITIAL_ADMIN_EMAIL in env is different from user's email", async ({
     page,
   }) => {
-    await createUserInDb(OTHER_USER_EMAIL, "Other User", "user");
-    await loginWithEmail(page, OTHER_USER_EMAIL);
+    await createUserInDb({
+      email: OTHER_USER_EMAIL,
+      name: "Other User",
+      role: "user",
+    });
+    await loginWithEmail(page, { email: OTHER_USER_EMAIL });
 
     await page.goto("/admin-setup");
     await expect(page.getByText("404 not found")).toBeVisible();
@@ -84,12 +96,12 @@ test.describe("Admin Setup Page Access", () => {
   test("initial admin can make themselves admin using the button", async ({
     page,
   }) => {
-    await createUserInDb(
-      INITIAL_ADMIN_TEST_EMAIL,
-      "Initial Admin To Be",
-      "user",
-    );
-    await loginWithEmail(page, INITIAL_ADMIN_TEST_EMAIL);
+    await createUserInDb({
+      email: INITIAL_ADMIN_TEST_EMAIL,
+      name: "Initial Admin To Be",
+      role: "user",
+    });
+    await loginWithEmail(page, { email: INITIAL_ADMIN_TEST_EMAIL });
 
     await page.goto("/admin-setup");
     await expect(page.getByText("Are you the admin?")).toBeVisible();

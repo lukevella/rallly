@@ -1,12 +1,16 @@
 import type { Page } from "@playwright/test";
-import { prisma } from "@rallly/database";
+import { type UserRole, prisma } from "@rallly/database";
 import { LoginPage } from "./login-page";
 
-export async function createUserInDb(
-  email: string,
-  name: string,
-  role: "user" | "admin" = "user",
-) {
+export async function createUserInDb({
+  email,
+  name,
+  role = "user",
+}: {
+  email: string;
+  name: string;
+  role?: UserRole;
+}) {
   return prisma.user.create({
     data: {
       email,
@@ -19,7 +23,7 @@ export async function createUserInDb(
   });
 }
 
-export async function loginWithEmail(page: Page, email: string) {
+export async function loginWithEmail(page: Page, { email }: { email: string }) {
   const loginPage = new LoginPage(page);
   await loginPage.goto();
   await loginPage.login({

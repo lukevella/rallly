@@ -10,16 +10,16 @@ enum LicenseStatus {
 }
 
 model License {
-  id               String        @id @default(cuid())
-  licenseKey       String        @unique @map("license_key")
-  version          Int?          @map("version")
-  type             LicenseType
-  seats            Int?          @map("seats")
-  issuedAt         DateTime      @default(now()) @map("issued_at")
-  expiresAt        DateTime?     @map("expires_at")
-  licenseeEmail    String?       @map("licensee_email")
-  licenseeName     String?       @map("licensee_name")
-  status           LicenseStatus @default(ACTIVE) @map("status")
+  id            String        @id @default(cuid())
+  licenseKey    String        @unique @map("license_key")
+  version       Int?          @map("version")
+  type          LicenseType
+  seats         Int?          @map("seats")
+  issuedAt      DateTime      @default(now()) @map("issued_at")
+  expiresAt     DateTime?     @map("expires_at")
+  licenseeEmail String?       @map("licensee_email")
+  licenseeName  String?       @map("licensee_name")
+  status        LicenseStatus @default(ACTIVE) @map("status")
 
   validations LicenseValidation[]
 
@@ -38,18 +38,17 @@ model LicenseValidation {
   @@map("license_validations")
 }
 
-
 model InstanceLicense {
-  id               String        @id @default(cuid())
-  licenseKey       String        @unique @map("license_key")
-  version          Int?          @map("version")
-  type             LicenseType
-  seats            Int?          @map("seats")
-  issuedAt         DateTime      @default(now()) @map("issued_at")
-  expiresAt        DateTime?     @map("expires_at")
-  licenseeEmail    String?       @map("licensee_email")
-  licenseeName     String?       @map("licensee_name")
-  status           LicenseStatus @default(ACTIVE) @map("status")
+  id            String        @id @default(cuid())
+  licenseKey    String        @unique @map("license_key")
+  version       Int?          @map("version")
+  type          LicenseType
+  seats         Int?          @map("seats")
+  issuedAt      DateTime      @default(now()) @map("issued_at")
+  expiresAt     DateTime?     @map("expires_at")
+  licenseeEmail String?       @map("licensee_email")
+  licenseeName  String?       @map("licensee_name")
+  status        LicenseStatus @default(ACTIVE) @map("status")
 
   @@map("instance_licenses")
 }

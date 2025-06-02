@@ -14,6 +14,7 @@ import { GuestProvider } from "./auth/providers/guest";
 import { MicrosoftProvider } from "./auth/providers/microsoft";
 import { OIDCProvider } from "./auth/providers/oidc";
 import { RegistrationTokenProvider } from "./auth/providers/registration-token";
+import { getInstanceSettings } from "./features/instance-settings/queries";
 import { nextAuthConfig } from "./next-auth.config";
 
 const {
@@ -94,40 +95,7 @@ const {
   },
   callbacks: {
     ...nextAuthConfig.callbacks,
-    async signIn({ user, email, profile }) {
-      const distinctId = user.id;
-      // prevent sign in if email is not verified
-      if (
-        profile &&
-        "email_verified" in profile &&
-        profile.email_verified === false &&
-        distinctId
-      ) {
-        posthog?.capture({
-          distinctId,
-          event: "login failed",
-          properties: {
-            reason: "email not verified",
-          },
-        });
-        return false;
-      }
-
-      if (user.banned) {
-        return false;
-      }
-
-      // Make sure email is allowed
-      if (user.email) {
-        if (isEmailBlocked(user.email) || (await isEmailBanned(user.email))) {
-          return false;
-        }
-      }
-
-      // For now, we don't allow users to login unless they have
-      // registered an account. This is just because we need a name
-      // to display on the dashboard. The flow can be modified so that
-      // the name is requested after the user has logged in.
+    async signIn({ user, email, profile, account }) {
       if (email?.verificationRequest) {
         const isRegisteredUser =
           (await prisma.user.count({
@@ -135,19 +103,39 @@ const {
               email: user.email as string,
             },
           })) > 0;
-
-        return isRegisteredUser;
+        if (!isRegisteredUser) {
+          return "/login?error=EmailNotVerified";
+        }
       }
 
-      // when we login with a social account for the first time, the user is not created yet
-      // and the user id will be the same as the provider account id
-      // we handle this case the the prisma adapter when we link accounts
-      const isInitialSocialLogin = user.id === profile?.sub;
+      if (user.banned) {
+        return "/login?error=Banned";
+      }
 
-      if (!isInitialSocialLogin) {
+      // Make sure email is allowed
+      const emailToTest = user.email || profile?.email;
+      if (emailToTest) {
+        if (isEmailBlocked(emailToTest) || (await isEmailBanned(emailToTest))) {
+          return "/login?error=EmailBlocked";
+        }
+      }
+
+      const isNewUser = !user.role && profile;
+      // Check for new user login with OAuth provider
+      if (isNewUser) {
+        // If role isn't set than the user doesn't exist yet
+        // This can happen if logging in with an OAuth provider
+        const instanceSettings = await getInstanceSettings();
+
+        if (instanceSettings?.disableUserRegistration) {
+          return "/login?error=RegistrationDisabled";
+        }
+      }
+
+      if (!isNewUser && user.id) {
         // merge guest user into newly logged in user
         const session = await auth();
-        if (user.id && session?.user && !session.user.email) {
+        if (session?.user && !session.user.email) {
           await mergeGuestsIntoUser(user.id, [session.user.id]);
         }
       }
