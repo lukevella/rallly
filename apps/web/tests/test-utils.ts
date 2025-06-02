@@ -19,6 +19,7 @@ export async function createUserInDb(
 
 export async function loginWithEmail(page: Page, email: string) {
   const loginPage = new LoginPage(page);
+  await loginPage.goto();
   await loginPage.login({
     email,
   });
