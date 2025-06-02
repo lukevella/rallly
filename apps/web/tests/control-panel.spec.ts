@@ -24,7 +24,7 @@ test.describe
       page,
     }) => {
       await page.goto("/control-panel");
-      await expect(page).toHaveURL(/.*\/login/);
+      await expect(page).toHaveURL("/login?redirectTo=%2Fcontrol-panel");
     });
 
     test("should show not found for a non-admin user", async ({ page }) => {
