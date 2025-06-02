@@ -101,6 +101,6 @@ test.describe("Admin Setup Page Access", () => {
       where: { email: INITIAL_ADMIN_TEST_EMAIL },
     });
     expect(user).toBeTruthy();
-    expect(user?.role).toBe("ADMIN");
+    expect(user?.role).toBe("admin");
   });
 });
