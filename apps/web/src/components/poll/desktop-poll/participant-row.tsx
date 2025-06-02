@@ -47,7 +47,7 @@ export const ParticipantRowView: React.FunctionComponent<{
       className={cn("group", className)}
     >
       <td
-        style={{ minWidth: 240, maxWidth: 240 }}
+        style={{ minWidth: 235, maxWidth: 235 }}
         className="sticky left-0 z-10 h-12 bg-white px-4"
       >
         <div className="flex max-w-full items-center justify-between gap-x-2">
