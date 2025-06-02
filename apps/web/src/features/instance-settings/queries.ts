@@ -3,7 +3,10 @@ import { prisma } from "@rallly/database";
 import { cache } from "react";
 
 export const getInstanceSettings = cache(async () => {
-  const instanceSettings = await prisma.instanceSettings.findFirst({
+  const instanceSettings = await prisma.instanceSettings.findUnique({
+    where: {
+      id: 1,
+    },
     select: {
       disableUserRegistration: true,
     },
