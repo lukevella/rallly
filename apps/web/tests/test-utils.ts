@@ -12,6 +12,8 @@ export async function createUserInDb(
       email,
       name,
       role,
+      locale: "en",
+      timeZone: "Europe/London",
       emailVerified: new Date(),
     },
   });

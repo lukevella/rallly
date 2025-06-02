@@ -47,7 +47,7 @@ test.describe("Admin Setup Page Access", () => {
     await expect(page).toHaveURL(/.*\/admin-setup/);
     await expect(page.getByText("Are you the admin?")).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Make Me Admin" }),
+      page.getByRole("button", { name: "Make me an admin" }),
     ).toBeVisible();
   });
 
@@ -58,7 +58,7 @@ test.describe("Admin Setup Page Access", () => {
     await loginWithEmail(page, REGULAR_USER_EMAIL);
 
     await page.goto("/admin-setup");
-    await expect(page.getByText("Page not found")).toBeVisible();
+    await expect(page.getByText("404 not found")).toBeVisible();
   });
 
   test("should redirect an existing admin user to control-panel", async ({
@@ -78,7 +78,7 @@ test.describe("Admin Setup Page Access", () => {
     await loginWithEmail(page, OTHER_USER_EMAIL);
 
     await page.goto("/admin-setup");
-    await expect(page.getByText("Page not found")).toBeVisible();
+    await expect(page.getByText("404 not found")).toBeVisible();
   });
 
   test("initial admin can make themselves admin using the button", async ({
@@ -93,7 +93,7 @@ test.describe("Admin Setup Page Access", () => {
 
     await page.goto("/admin-setup");
     await expect(page.getByText("Are you the admin?")).toBeVisible();
-    await page.getByRole("button", { name: "Make Me Admin" }).click();
+    await page.getByRole("button", { name: "Make me an admin" }).click();
 
     await expect(page).toHaveURL(/.*\/control-panel/, { timeout: 10000 });
 
