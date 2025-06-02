@@ -11,6 +11,8 @@ import { getEmailClient } from "@/utils/emails";
 import { isValidName } from "@/utils/is-valid-name";
 import { createToken, decryptToken } from "@/utils/session";
 
+import { getInstanceSettings } from "@/features/instance-settings/queries";
+import { TRPCError } from "@trpc/server";
 import { createRateLimitMiddleware, publicProcedure, router } from "../trpc";
 import type { RegistrationTokenPayload } from "../types";
 
@@ -52,6 +54,14 @@ export const auth = router({
               | "temporaryEmailNotAllowed";
           }
       > => {
+        const instanceSettings = await getInstanceSettings();
+        if (instanceSettings.disableUserRegistration) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "User registration is disabled",
+          });
+        }
+
         if (isEmailBlocked?.(input.email)) {
           return { ok: false, reason: "emailNotAllowed" };
         }
