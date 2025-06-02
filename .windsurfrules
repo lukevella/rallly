@@ -39,3 +39,4 @@ t("menu", { defaultValue: "Menu" });
 27. If the i18nKey is not intended to be reused, prefix it with the component name in camelCase
 28. Always use kebab-case for file names
 29. Prefer double quotes for strings over single quotes
+30. Only add comments when it is necessary to explain code that isn't self-explanatory
