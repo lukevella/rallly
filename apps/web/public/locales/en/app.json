@@ -382,18 +382,5 @@
   "changeRole": "Change role",
   "licenseType": "License Type",
   "removeLicense": "Remove License",
-  "removeLicenseDescription": "Are you sure you want to remove this license?",
-  "licenseKeyErrorRateLimitExceeded": "Rate limit exceeded",
-  "licenseKeyErrorInvalidLicenseKey": "Invalid license key",
-  "licenseKeyGenericError": "An error occurred while validating the license key",
-  "activate": "Activate",
-  "authErrorsRegistrationDisabled": "Registration is currently disabled. Please try again later.",
-  "authErrorsEmailNotVerified": "Your email address is not verified. Please verify your email before logging in.",
-  "authErrorsUserBanned": "This account has been banned. Please contact support if you believe this is an error.",
-  "authErrorsEmailBlocked": "This email address is not allowed. Please use a different email or contact support.",
-  "authErrorsUserNotFound": "No account found with this email address. Please check the email or register for a new account.",
-  "disableUserRegistration": "Disable User Registration",
-  "disableUserRegistrationDescription": "Prevent new users from registering an account.",
-  "authenticationAndSecurity": "Authentication & Security",
-  "authenticationAndSecurityDescription": "Manage authentication and security settings"
+  "removeLicenseDescription": "Are you sure you want to remove this license?"
 }
