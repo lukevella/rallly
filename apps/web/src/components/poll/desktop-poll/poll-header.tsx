@@ -48,7 +48,7 @@ const TimelineRow = ({
   return (
     <tr>
       <th
-        style={{ minWidth: 240, top }}
+        style={{ minWidth: 235, top }}
         className="sticky left-0 z-30 bg-white pl-4 pr-4"
       />
       {children}
@@ -77,7 +77,7 @@ const PollHeader: React.FunctionComponent = () => {
               style={{ height: monthRowHeight }}
               className={cn(
                 "sticky top-0 space-y-3 bg-gray-50",
-                firstOfMonth ? "left-[240px] z-20 border-l" : "z-10",
+                firstOfMonth ? "left-[235px] z-20 border-l" : "z-10",
               )}
             >
               <div className="flex">
@@ -111,7 +111,7 @@ const PollHeader: React.FunctionComponent = () => {
                 minWidth: 80,
                 width: 80,
                 height: dayRowHeight,
-                left: firstOfDay && !lastOfDay ? 240 : 0,
+                left: firstOfDay && !lastOfDay ? 235 : 0,
                 top: monthRowHeight,
               }}
               className={cn(

@@ -95,7 +95,7 @@ const DesktopPoll: React.FunctionComponent = () => {
 
   const goToNextPage = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollLeft += 240;
+      scrollRef.current.scrollLeft += 235;
     }
   };
 
@@ -114,7 +114,7 @@ const DesktopPoll: React.FunctionComponent = () => {
 
   const goToPreviousPage = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollLeft -= 240;
+      scrollRef.current.scrollLeft -= 235;
     }
   };
   const { t } = useTranslation();
@@ -287,7 +287,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                 <div
                   aria-hidden="true"
                   className={cn(
-                    "pointer-events-none absolute bottom-0 left-[240px] top-0 z-30 w-4 border-l bg-gradient-to-r from-gray-800/5 via-transparent to-transparent transition-opacity",
+                    "pointer-events-none absolute bottom-0 left-[235px] top-0 z-30 w-4 border-l bg-gradient-to-r from-gray-800/5 via-transparent to-transparent transition-opacity",
                     x > 0 ? "opacity-100" : "opacity-0",
                   )}
                 />
@@ -345,7 +345,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                     </tbody>
                   </table>
                   {mode === "new" ? (
-                    <div className="sticky left-[240px] flex w-[calc(100%-240px)] items-center justify-between gap-4 border-l border-t bg-gray-50 p-3">
+                    <div className="sticky border-l left-[235px] flex w-[calc(100%-235px)] items-center justify-between gap-4 border-t bg-gray-50 p-3">
                       <Button
                         onClick={() => {
                           votingForm.cancel();
