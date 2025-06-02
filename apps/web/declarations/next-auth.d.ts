@@ -1,4 +1,4 @@
-import type { TimeFormat } from "@rallly/database";
+import type { TimeFormat, UserRole } from "@rallly/database";
 import type { DefaultSession, DefaultUser } from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
@@ -23,6 +23,7 @@ declare module "next-auth" {
     timeFormat?: TimeFormat | null;
     weekStart?: number | null;
     banned?: boolean | null;
+    role?: UserRole | null;
   }
 
   interface NextAuthRequest extends NextRequest {

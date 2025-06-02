@@ -3,6 +3,8 @@ import { Trans } from "react-i18next/TransWithoutContext";
 
 import { getTranslation } from "@/i18n/server";
 
+import { getInstanceSettings } from "@/features/instance-settings/queries";
+import { notFound } from "next/navigation";
 import {
   AuthPageContainer,
   AuthPageContent,
@@ -18,6 +20,11 @@ export default async function Register(props: {
 }) {
   const params = await props.params;
   const { t } = await getTranslation(params.locale);
+  const instanceSettings = await getInstanceSettings();
+
+  if (instanceSettings?.disableUserRegistration) {
+    return notFound();
+  }
 
   return (
     <AuthPageContainer>

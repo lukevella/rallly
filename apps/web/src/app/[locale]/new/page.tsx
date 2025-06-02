@@ -8,10 +8,12 @@ import { UserDropdown } from "@/components/user-dropdown";
 import { getTranslation } from "@/i18n/server";
 import { getLoggedIn } from "@/next-auth";
 
+import { getInstanceSettings } from "@/features/instance-settings/queries";
 import { BackButton } from "./back-button";
 
 export default async function Page() {
   const isLoggedIn = await getLoggedIn();
+  const instanceSettings = await getInstanceSettings();
 
   return (
     <div>
@@ -42,13 +44,15 @@ export default async function Page() {
                     <Trans i18nKey="login" defaults="Login" />
                   </Link>
                 </Button>
-                <Button variant="primary" asChild>
-                  <Link
-                    href={`/register?redirectTo=${encodeURIComponent("/new")}`}
-                  >
-                    <Trans i18nKey="signUp" defaults="Sign up" />
-                  </Link>
-                </Button>
+                {instanceSettings?.disableUserRegistration ? null : (
+                  <Button variant="primary" asChild>
+                    <Link
+                      href={`/register?redirectTo=${encodeURIComponent("/new")}`}
+                    >
+                      <Trans i18nKey="signUp" defaults="Sign up" />
+                    </Link>
+                  </Button>
+                )}
               </div>
             )}
           </div>

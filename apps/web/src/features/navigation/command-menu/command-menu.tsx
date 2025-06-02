@@ -13,6 +13,7 @@ import {
   ArrowRightIcon,
   KeySquareIcon,
   PlusIcon,
+  SettingsIcon,
   UsersIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -152,6 +153,18 @@ export function CommandMenu() {
                 <NavigationCommandLabel
                   label={t("license", {
                     defaultValue: "License",
+                  })}
+                />
+              </CommandItem>
+              <CommandItem
+                onSelect={() => handleSelect("/control-panel/settings")}
+              >
+                <PageIcon size="sm">
+                  <SettingsIcon />
+                </PageIcon>
+                <NavigationCommandLabel
+                  label={t("settings", {
+                    defaultValue: "Settings",
                   })}
                 />
               </CommandItem>

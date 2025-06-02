@@ -1,6 +1,6 @@
 import "../../style.css";
 
-import { defaultLocale, supportedLngs } from "@rallly/languages";
+import { supportedLngs } from "@rallly/languages";
 import { PostHogProvider, posthog } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/toaster";
 import { TooltipProvider } from "@rallly/ui/tooltip";
@@ -15,7 +15,7 @@ import { PreferencesProvider } from "@/contexts/preferences";
 import { TimezoneProvider } from "@/features/timezone/client/context";
 import { I18nProvider } from "@/i18n/client";
 import { getLocale } from "@/i18n/server/get-locale";
-import { auth, getUserId } from "@/next-auth";
+import { auth } from "@/next-auth";
 import { TRPCProvider } from "@/trpc/client/provider";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 
@@ -34,25 +34,35 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+async function loadData() {
+  const [session, locale] = await Promise.all([auth(), getLocale()]);
+
+  const userId = session?.user?.email ? session.user.id : undefined;
+
+  const user = userId ? await getUser(userId) : null;
+
+  return {
+    session,
+    locale,
+    user,
+  };
+}
+
 export default async function Root({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  const { session, locale: fallbackLocale, user } = await loadData();
 
-  let locale = await getLocale();
-
-  const userId = await getUserId();
-
-  const user = userId ? await getUser(userId) : null;
+  let locale = fallbackLocale;
 
   if (user?.locale) {
     locale = user.locale;
   }
 
   if (!supportedLngs.includes(locale)) {
-    locale = defaultLocale;
+    locale = fallbackLocale;
   }
 
   return (

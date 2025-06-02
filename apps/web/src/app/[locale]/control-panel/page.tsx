@@ -11,7 +11,12 @@ import { getLicense } from "@/features/licensing/queries";
 import { prisma } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Tile, TileGrid, TileTitle } from "@rallly/ui/tile";
-import { GaugeIcon, KeySquareIcon, UsersIcon } from "lucide-react";
+import {
+  GaugeIcon,
+  KeySquareIcon,
+  SettingsIcon,
+  UsersIcon,
+} from "lucide-react";
 import Link from "next/link";
 
 async function loadData() {
@@ -47,6 +52,7 @@ export default async function AdminPage() {
             <Trans i18nKey="homeNavTitle" defaults="Navigation" />
           </h2>
           <TileGrid>
+            {/* USERS */}
             <Tile asChild>
               <Link href="/control-panel/users">
                 <div className="flex justify-between">
@@ -79,6 +85,7 @@ export default async function AdminPage() {
                 </div>
               </Link>
             </Tile>
+            {/* LICENSE */}
             <Tile asChild>
               <Link href="/control-panel/license">
                 <div className="flex justify-between">
@@ -97,6 +104,19 @@ export default async function AdminPage() {
                 </div>
                 <TileTitle>
                   <Trans i18nKey="license" defaults="License" />
+                </TileTitle>
+              </Link>
+            </Tile>
+            {/* INSTANCE SETTINGS */}
+            <Tile asChild>
+              <Link href="/control-panel/settings">
+                <div className="flex justify-between">
+                  <PageIcon color="darkGray">
+                    <SettingsIcon />
+                  </PageIcon>
+                </div>
+                <TileTitle>
+                  <Trans i18nKey="settings" defaults="Settings" />
                 </TileTitle>
               </Link>
             </Tile>

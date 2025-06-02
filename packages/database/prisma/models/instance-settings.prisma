@@ -1,0 +1,10 @@
+model InstanceSettings {
+  id                      Int     @id @default(1)
+  // Authentication & Security
+  disableUserRegistration Boolean @default(false) @map("disable_user_registration")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("instance_settings")
+}

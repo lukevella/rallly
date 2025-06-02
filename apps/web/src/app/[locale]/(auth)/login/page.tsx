@@ -6,6 +6,7 @@ import { MicrosoftProvider } from "@/auth/providers/microsoft";
 import { OIDCProvider } from "@/auth/providers/oidc";
 import { getTranslation } from "@/i18n/server";
 
+import { getInstanceSettings } from "@/features/instance-settings/queries";
 import {
   AuthPageContainer,
   AuthPageContent,
@@ -20,19 +21,33 @@ import { LoginWithOIDC } from "./components/login-with-oidc";
 import { OrDivider } from "./components/or-divider";
 import { SSOProvider } from "./components/sso-provider";
 
+async function loadData() {
+  const [instanceSettings, { t }] = await Promise.all([
+    getInstanceSettings(),
+    getTranslation(),
+  ]);
+
+  return {
+    instanceSettings,
+    t,
+  };
+}
+
 export default async function LoginPage(props: {
   searchParams?: Promise<{
     redirectTo?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const { t } = await getTranslation();
 
+  const { instanceSettings, t } = await loadData();
   const oidcProvider = OIDCProvider();
   const socialProviders = [GoogleProvider(), MicrosoftProvider()].filter(
     Boolean,
   );
-  const hasAlternateLoginMethods = socialProviders.length > 0 || !!oidcProvider;
+  const hasAlternateLoginMethods = [...socialProviders, oidcProvider].some(
+    Boolean,
+  );
 
   return (
     <AuthPageContainer>
@@ -74,16 +89,18 @@ export default async function LoginPage(props: {
         ) : null}
       </AuthPageContent>
       <AuthErrors />
-      <AuthPageExternal>
-        <Trans
-          t={t}
-          i18nKey="loginFooter"
-          defaults="Don't have an account? <a>Sign up</a>"
-          components={{
-            a: <Link className="text-link" href="/register" />,
-          }}
-        />
-      </AuthPageExternal>
+      {!instanceSettings?.disableUserRegistration ? (
+        <AuthPageExternal>
+          <Trans
+            t={t}
+            i18nKey="loginFooter"
+            defaults="Don't have an account? <a>Sign up</a>"
+            components={{
+              a: <Link className="text-link" href="/register" />,
+            }}
+          />
+        </AuthPageExternal>
+      ) : null}
     </AuthPageContainer>
   );
 }
