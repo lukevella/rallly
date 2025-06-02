@@ -299,7 +299,6 @@
   "pollsPageDesc": "Afficher et gérer tous vos sondages de planification",
   "signOut": "Déconnexion",
   "paginationPrevious": "Précédent",
-  "paginationPage": "Page {currentPage} sur {totalPages}",
   "paginationNext": "Suivant",
   "upgradeToProDesc": "Déverrouiller toutes les fonctionnalités Pro",
   "searchPollsPlaceholder": "Rechercher des sondages par titre...",
