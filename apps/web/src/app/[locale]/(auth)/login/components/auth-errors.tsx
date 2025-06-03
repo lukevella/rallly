@@ -16,15 +16,6 @@ export function AuthErrors() {
           })}
         </p>
       );
-    case "RegistrationDisabled":
-      return (
-        <p className="text-destructive text-sm">
-          {t("authErrorsRegistrationDisabled", {
-            defaultValue:
-              "Registration is currently disabled. Please try again later.",
-          })}
-        </p>
-      );
     case "EmailNotVerified":
       return (
         <p className="text-destructive text-sm">
