@@ -25,5 +25,8 @@
   "status": "Állapot",
   "when2MeetAlternative": "When2Meet alternatíva",
   "meetingPoll": "Találkozó szavazás",
-  "signUp": "Regisztrálj"
+  "signUp": "Regisztrálj",
+  "licensingThankYouNextStepsInstallation": "Telepítési útmutató",
+  "licensingThankYouGoHomeLink": "Vissza a főoldalra",
+  "starOnGitHub": "Csillagozz be GitHub-on"
 }
