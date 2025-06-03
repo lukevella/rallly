@@ -25,5 +25,15 @@
   "status": "Tila",
   "when2MeetAlternative": "Vaihtoehto When2Meetille",
   "meetingPoll": "Kokouskysely",
-  "signUp": "Rekisteröidy"
+  "signUp": "Rekisteröidy",
+  "licensingThankYouTitle": "Kiitos ostoksestasi!",
+  "licensingThankYouSubtitle": "Ralllyn self-hosted -lisenssisi on vahvistettu. Mahtavaa, että olet mukana!",
+  "licensingThankYouLicense": "Seuraavat vaiheet",
+  "licensingThankYouLicenseEmailed": "Lisenssiavaimesi on lähetetty tilauksen yhteydessä antamaasi sähköpostiosoitteeseen. Tarkista postilaatikkosi.",
+  "licensingThankYouNextStepsInstallation": "Asennusopas",
+  "licensingThankYouNextStepsApplyLicense": "Lisenssin käyttöönotto",
+  "licensingThankYouSupportPrompt": "Tarvitsetko apua tai onko sinulla kysyttävää? Tutustu <0>self-hosted -tukiaineistoon</0> tai <1>ota meihin yhteyttä</1>.",
+  "licensingThankYouGoHomeLink": "Palaa etusivulle",
+  "openSource": "Lähdekoodimme on avointa!",
+  "starOnGitHub": "Anna meille tähti Githubissa"
 }
