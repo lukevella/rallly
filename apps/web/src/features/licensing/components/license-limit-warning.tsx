@@ -16,7 +16,7 @@ export async function LicenseLimitWarning() {
 
   const userLimit = license?.seats ?? 1;
 
-  if (!userLimit || userCount <= userLimit) {
+  if (license?.type === "ENTERPRISE" || userCount <= userLimit) {
     return null;
   }
 
