@@ -120,9 +120,9 @@ const {
         }
       }
 
-      const isNewUser = !user.role && profile;
+      const isNewUserFromOAuth = !user.role && profile;
       // Check for new user login with OAuth provider
-      if (isNewUser) {
+      if (isNewUserFromOAuth) {
         // If role isn't set than the user doesn't exist yet
         // This can happen if logging in with an OAuth provider
         const instanceSettings = await getInstanceSettings();
@@ -132,8 +132,9 @@ const {
         }
       }
 
-      if (!isNewUser && user.id) {
-        // merge guest user into newly logged in user
+      // If this is an existing registered user
+      if (user.id && user.role && user.email) {
+        // merge guest user into existing user
         const session = await auth();
         if (session?.user && !session.user.email) {
           await mergeGuestsIntoUser(user.id, [session.user.id]);
