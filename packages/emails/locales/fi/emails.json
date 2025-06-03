@@ -62,5 +62,17 @@
   "abandoned_checkout_support": "Jos sinulla on kysyttävää Rallly Prosta tai tarvitset apua missä tahansa asiassa, vastaa vain tähän sähköpostiin. Olen mielelläni avuksi!",
   "abandoned_checkout_preview": "Ainutlaatuinen tarjous: {discount} % alennus ensimmäisestä Rallly Pro -vuodesta!",
   "abandoned_checkout_subject": "{discount} % alennus ensimmäisestä Rallly Pro -vuodestasi",
-  "abandoned_checkout_signoff": "Parhain terveisin"
+  "abandoned_checkout_signoff": "Parhain terveisin",
+  "license_key_content": "Ostoksesi on vahvistettu ja lisenssiavaimesi on luotu.",
+  "license_key_yourKey": "Lisenssin tiedot",
+  "license_key_plan": "Sopimus",
+  "license_key_seats": "Käyttäjämäärä",
+  "license_key_licenseKey": "Lisenssiavain",
+  "license_key_nextStepsHeading": "Seuraavat vaiheet",
+  "license_key_activationSteps": "Seuraa näitä <a>ohjeita</a> aktivoidaksesi lisenssin omassa Rallly-instanssissasi.",
+  "license_key_questionsHeading": "Kysyttävää?",
+  "license_key_support": "Vastaa tähän sähköpostiin tai ota meihin yhteyttä osoitteessa <a>support@rallly.co</a>, jos tarvitset apua.",
+  "license_key_signoff": "Kiitos, että valitsit Ralllyn!",
+  "license_key_preview": "Lisenssiavaimesi on luotu.",
+  "license_key_subject": "Rallly Self-Hosted {tier} -lisenssisi"
 }
