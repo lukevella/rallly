@@ -77,15 +77,17 @@ export default async function LicensePage() {
               </DescriptionListTitle>
               <DescriptionListValue>
                 <span className="text-primary capitalize">{license.type}</span>
-                <span className="ml-2 text-muted-foreground">
-                  (
-                  <Trans
-                    i18nKey="seatCount"
-                    defaults="{count, plural, one {# seat} other {# seats}}"
-                    values={{ count: license.seats }}
-                  />
-                  )
-                </span>
+                {license.seats ? (
+                  <span className="ml-2 text-muted-foreground">
+                    (
+                    <Trans
+                      i18nKey="seatCount"
+                      defaults="{count, plural, one {# seat} other {# seats}}"
+                      values={{ count: license.seats }}
+                    />
+                    )
+                  </span>
+                ) : null}
               </DescriptionListValue>
               <DescriptionListTitle>
                 <Trans i18nKey="licenseKey" defaults="License Key" />
