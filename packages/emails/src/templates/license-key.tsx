@@ -130,8 +130,9 @@ export const LicenseKeyEmail = ({
           ns="emails"
           i18nKey="license_key_support"
           defaults={
-            "Reply to this email or contact us at <a>support@rallly.co</a> if you need help."
+            "Reply to this email or contact us at <a>{supportEmail}</a> if you need help."
           }
+          values={{ supportEmail: ctx.supportEmail }}
           components={{
             a: <Link className="text-link" href="mailto:support@rallly.co" />,
           }}
