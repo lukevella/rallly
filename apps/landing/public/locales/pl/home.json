@@ -1,6 +1,8 @@
 {
   "createPageLikeThis": "Stwórz stronę taką jak ta w kilka sekund!",
   "noLoginRequired": "Nie wymaga logowania",
+  "headline": "Znajdź najlepszy czas na spotkanie",
+  "subheading": "Koordynuj spotkania grupowe bez wysyłania maili",
   "pcmagQuote": "\"Skonfiguruj ankietę planowania w jak najkrótszym czasie.\"",
   "hubspotQuote": "\"Najprostszy wybór do badania dostępności dla dużych grup.\"",
   "goodfirmsQuote": "\"Wyjątkowy w swojej prostocie i wymagający minimalnego czasu interakcji.\"",
@@ -37,5 +39,6 @@
   "meetingPoll": "Twórz profesjonalne ankiety na spotkania z Rallly",
   "meetingPollDescription": "Ankiety spotkań to świetny sposób na uzyskanie dostępności ludzi. Rallly pozwala z łatwością tworzyć piękne ankiety spotkań.",
   "meetingPollMetaTitle": "Ankieta dotycząca spotkania",
-  "meetingPollMetaDescription": "Łatwo planuj spotkania dzięki naszej funkcji ankiet, zapewniając dostępność każdego uczestnika."
+  "meetingPollMetaDescription": "Łatwo planuj spotkania dzięki naszej funkcji ankiet, zapewniając dostępność każdego uczestnika.",
+  "quickCreateBlog": "Wprowadzenie Szybkiego tworzenia"
 }

@@ -46,5 +46,21 @@
   "common_viewOn": "Zobacz na {domain}",
   "newComment_preview": "Przejdź do swojej ankiety, aby zobaczyć, co powiedzieli.",
   "newComment_heading": "Nowy komentarz",
-  "newPoll_preview": "Udostępnij swój link uczestnika, aby rozpocząć zbieranie odpowiedzi."
+  "newPoll_preview": "Udostępnij swój link uczestnika, aby rozpocząć zbieranie odpowiedzi.",
+  "changeEmailRequest_preview": "Zweryfikuj swój adres e-mail",
+  "changeEmailRequest_heading": "Zweryfikuj swój nowy adres e-mail",
+  "changeEmailRequest_text2": "Aby ukończyć tę zmianę, kliknij poniższy przycisk:",
+  "changeEmailRequest_button": "Zweryfikuj adres e-mail",
+  "changeEmailRequest_subject": "Zweryfikuj swój nowy adres e-mail",
+  "changeEmailRequest_text3": "Ten link wygaśnie za 10 minut. Jeśli nie prosiłeś o tę zmianę, zignoruj ten e-mail.",
+  "changeEmailRequest_text1": "Otrzymaliśmy prośbę o zmianę adresu e-mail dla Twojego konta z <b>{fromEmail}</b> na <b>{toEmail}</b>.",
+  "abandoned_checkout_name": "Cześć {name},",
+  "abandoned_checkout_noname": "Cześć,",
+  "abandoned_checkout_content": "Zauważyłem, że wcześniej sprawdziłeś <b>Rallly Pro</b>. Chciałem się dowiedzieć, czy masz jakieś pytania lub potrzebujesz pomocy z czymkolwiek.",
+  "abandoned_checkout_offer": "Aby pomóc Ci zacząć, możesz dostać <b>zniżkę {discount}%</b> na pierwszy rok. Po prostu użyj poniższego kodu przy finalizacji zamówienia:",
+  "abandoned_checkout_button": "Ulepsz do Rallly Pro",
+  "abandoned_checkout_support": "Jeśli masz jakiekolwiek pytania dotyczące Rallly Pro lub potrzebujesz pomocy z cokolwiek, po prostu odpowiedz na ten e-mail. Jestem tutaj, aby pomóc!",
+  "abandoned_checkout_preview": "Ekskluzywna oferta: otrzymaj {discount}% zniżki na pierwszy rok Rallly Pro!",
+  "abandoned_checkout_subject": "Otrzymaj {discount}% zniżki na pierwszy rok Rallly Pro",
+  "abandoned_checkout_signoff": "Z poważaniem,"
 }
