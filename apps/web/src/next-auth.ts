@@ -14,7 +14,6 @@ import { GuestProvider } from "./auth/providers/guest";
 import { MicrosoftProvider } from "./auth/providers/microsoft";
 import { OIDCProvider } from "./auth/providers/oidc";
 import { RegistrationTokenProvider } from "./auth/providers/registration-token";
-import { getInstanceSettings } from "./features/instance-settings/queries";
 import { nextAuthConfig } from "./next-auth.config";
 
 const {
@@ -117,18 +116,6 @@ const {
       if (emailToTest) {
         if (isEmailBlocked(emailToTest) || (await isEmailBanned(emailToTest))) {
           return "/login?error=EmailBlocked";
-        }
-      }
-
-      const isNewUserFromOAuth = !user.role && profile;
-      // Check for new user login with OAuth provider
-      if (isNewUserFromOAuth) {
-        // If role isn't set than the user doesn't exist yet
-        // This can happen if logging in with an OAuth provider
-        const instanceSettings = await getInstanceSettings();
-
-        if (instanceSettings?.disableUserRegistration) {
-          return "/login?error=RegistrationDisabled";
         }
       }
 
