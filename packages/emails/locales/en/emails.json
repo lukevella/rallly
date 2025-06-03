@@ -71,7 +71,7 @@
   "license_key_nextStepsHeading": "Next Steps",
   "license_key_activationSteps": "Follow these <a>instructions</a> to activate your license on your Rallly Self-Hosted instance.",
   "license_key_questionsHeading": "Questions?",
-  "license_key_support": "Reply to this email or contact us at <a>support@rallly.co</a> if you need help.",
+  "license_key_support": "Reply to this email or contact us at <a>{supportEmail}</a> if you need help.",
   "license_key_signoff": "Thank you for choosing Rallly!",
   "license_key_preview": "Your license key has been generated.",
   "license_key_subject": "Your Rallly Self-Hosted {tier} License"
