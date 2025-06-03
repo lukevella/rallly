@@ -174,7 +174,7 @@ export const FinalizePollForm = ({
                             <div className="flex gap-x-4">
                               <DateIcon start={option.startTime} />
                               <div className="grow whitespace-nowrap">
-                                <div className="text-sm font-medium">
+                                <div className="font-medium text-sm">
                                   {start.format("LL")}
                                 </div>
                                 <div className="text-muted-foreground text-sm">

@@ -43,7 +43,7 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
         <Logo className="mx-auto" />
       </div>
       <div className="w-48 space-y-8 text-center">
-        <h1 className="text-xl font-bold">
+        <h1 className="font-bold text-xl">
           <Trans i18nKey="continueAs" defaults="Continue as" />
         </h1>
         <div className="flex flex-col items-center gap-4">
@@ -56,7 +56,7 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
             <div className="mb-1 h-6 font-medium">
               {data?.name ?? <Skeleton className="inline-block h-5 w-16" />}
             </div>
-            <div className="text-muted-foreground h-5 truncate text-sm">
+            <div className="h-5 truncate text-muted-foreground text-sm">
               {data?.email ?? <Skeleton className="inline-block h-full w-20" />}
             </div>
           </div>

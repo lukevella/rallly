@@ -21,7 +21,7 @@ export const GuestPollAlert = () => {
   }
   return (
     <Alert icon={InfoIcon}>
-      <AlertTitle className="mb-1 text-sm font-medium tracking-normal">
+      <AlertTitle className="mb-1 font-medium text-sm tracking-normal">
         <Trans
           i18nKey="guestPollAlertTitle"
           defaults="Your administrator rights can be lost if you clear your cookies"

@@ -66,7 +66,7 @@ export const InviteDialog = () => {
       </DialogTrigger>
       <DialogContent data-testid="invite-participant-dialog">
         <div className="flex">
-          <Share2Icon className="text-primary size-6" />
+          <Share2Icon className="size-6 text-primary" />
         </div>
         <DialogHeader className="">
           <DialogTitle>

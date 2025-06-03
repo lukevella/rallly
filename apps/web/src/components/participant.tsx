@@ -57,7 +57,7 @@ export const ParticipantName = ({
           setIsTruncated(false);
         }
       }}
-      className={cn("truncate text-sm font-medium", {
+      className={cn("truncate font-medium text-sm", {
         "hover:-translate-x-2 hover:cursor-pointer hover:overflow-visible hover:whitespace-nowrap hover:rounded-md hover:bg-white hover:p-2":
           isTruncated,
       })}

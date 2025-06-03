@@ -223,7 +223,7 @@ function DiscussionInner() {
                         </div>
                         {canDelete && (
                           <DropdownMenu>
-                            <DropdownMenuTrigger className="hover:text-foreground text-gray-500">
+                            <DropdownMenuTrigger className="text-gray-500 hover:text-foreground">
                               <MoreHorizontalIcon className="size-4" />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">
@@ -267,7 +267,7 @@ function DiscussionInner() {
           ) : (
             <button
               type="button"
-              className="border-input text-muted-foreground flex w-full rounded border bg-transparent px-2 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+              className="flex w-full rounded border border-input bg-transparent px-2 py-2 text-left text-muted-foreground text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
               onClick={() => setIsWriting(true)}
             >
               <Trans
@@ -286,7 +286,7 @@ export default function Discussion() {
   const poll = usePoll();
   if (poll.disableComments) {
     return (
-      <p className="text-muted-foreground rounded-lg bg-gray-100 p-4 text-center text-sm">
+      <p className="rounded-lg bg-gray-100 p-4 text-center text-muted-foreground text-sm">
         <Icon>
           <MessageSquareOffIcon className="mr-2 inline-block" />
         </Icon>

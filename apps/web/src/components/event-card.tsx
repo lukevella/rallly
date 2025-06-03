@@ -42,11 +42,11 @@ export function EventCard() {
         <CardContent className="space-y-4 sm:space-y-6">
           <div className="flex flex-col items-start gap-4 lg:flex-row lg:justify-between">
             <div>
-              <h1 data-testid="poll-title" className="text-lg font-semibold">
+              <h1 data-testid="poll-title" className="font-semibold text-lg">
                 {poll.title}
               </h1>
               <CardDescription>
-                <span className="flex items-center gap-0.5 whitespace-nowrap text-sm text-gray-500">
+                <span className="flex items-center gap-0.5 whitespace-nowrap text-gray-500 text-sm">
                   <span>
                     <Trans
                       i18nKey="createdBy"
@@ -80,7 +80,7 @@ export function EventCard() {
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:flex-wrap sm:items-center">
             <IconGuide />
             {poll.location ? (
-              <p className="text-muted-foregroun truncate whitespace-nowrap text-sm">
+              <p className="truncate whitespace-nowrap text-muted-foregroun text-sm">
                 <Icon>
                   <MapPinIcon className="-mt-0.5 mr-1.5 inline-block" />
                 </Icon>

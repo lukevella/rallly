@@ -18,17 +18,17 @@ export default async function SetupPage() {
   }
 
   return (
-    <div className="bg-background flex min-h-dvh justify-center p-4 sm:items-center">
+    <div className="flex min-h-dvh justify-center bg-background p-4 sm:items-center">
       <div className="w-full max-w-sm">
         <article className="space-y-8 lg:space-y-10">
           <div className="py-8">
             <Logo className="mx-auto" />
           </div>
           <header className="text-center">
-            <h1 className="text-2xl font-bold">
+            <h1 className="font-bold text-2xl">
               <Trans i18nKey="setupFormTitle" defaults="Setup" />
             </h1>
-            <p className="text-muted-foreground mt-1">
+            <p className="mt-1 text-muted-foreground">
               <Trans
                 i18nKey="setupFormDescription"
                 defaults="Finish setting up your account."

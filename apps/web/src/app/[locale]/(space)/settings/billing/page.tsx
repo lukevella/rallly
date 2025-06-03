@@ -170,7 +170,7 @@ export default async function Page() {
                 {data.paymentMethods.length === 0 ? (
                   <div>
                     <div className="space-y-2">
-                      <div className="text-destructive flex items-center gap-x-2">
+                      <div className="flex items-center gap-x-2 text-destructive">
                         <CircleAlertIcon className="size-4" />
                         <span className="font-medium">
                           <Trans
@@ -217,7 +217,7 @@ export default async function Page() {
             {data.customerId ? (
               <div className="flex flex-col items-start justify-between gap-6 gap-x-4 rounded-lg border bg-gray-50 p-4 sm:flex-row">
                 <div className="space-y-1">
-                  <h3 className="text-sm font-medium">
+                  <h3 className="font-medium text-sm">
                     <Trans
                       i18nKey="needToMakeChanges"
                       defaults="Need to make changes?"

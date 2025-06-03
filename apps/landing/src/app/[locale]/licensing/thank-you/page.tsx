@@ -4,15 +4,15 @@ import Link from "next/link";
 
 export default function LicensingThankYouPage() {
   return (
-    <main className="p-4 sm:p-16 h-dvh flex flex-col sm:justify-center relative">
-      <div className="w-full relative z-10 max-w-2xl mx-auto space-y-6">
+    <main className="relative flex h-dvh flex-col p-4 sm:justify-center sm:p-16">
+      <div className="relative z-10 mx-auto w-full max-w-2xl space-y-6">
         <div className="py-4">
           <Link className="inline-block rounded" href="/">
             <Image src="/logo.svg" width={150} height={30} alt="rallly.co" />
           </Link>
         </div>
         <div className="space-y-4">
-          <h1 className="text-2xl font-bold tracking-tight">
+          <h1 className="font-bold text-2xl tracking-tight">
             <Trans
               i18nKey="licensingThankYouTitle"
               defaults="Thank You for Your Purchase!"
@@ -27,7 +27,7 @@ export default function LicensingThankYouPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">
+          <h2 className="font-semibold text-xl">
             <Trans i18nKey="licensingThankYouLicense" defaults="Next Steps" />
           </h2>
           <p className="text-gray-700 dark:text-gray-300">
@@ -37,7 +37,7 @@ export default function LicensingThankYouPage() {
             />
           </p>
 
-          <ul className="space-y-1 list-disc list-inside">
+          <ul className="list-inside list-disc space-y-1">
             <li>
               <Link
                 className="text-link"

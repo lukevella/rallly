@@ -39,7 +39,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
     <Dialog {...dialog.dialogProps} {...forwardedProps}>
       {children}
       <DialogContent className="w-full max-w-[600px] overflow-hidden bg-gray-50 p-4 sm:p-6">
-        <SparklesIcon className="absolute -top-4 left-4 size-32 text-gray-500/10" />
+        <SparklesIcon className="-top-4 absolute left-4 size-32 text-gray-500/10" />
         <div className="space-y-6">
           <header>
             <div className="flex justify-center">
@@ -62,10 +62,10 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                 </m.div>
               </div>
             </div>
-            <DialogTitle className="mb-1 mt-2 text-center text-xl font-bold">
+            <DialogTitle className="mt-2 mb-1 text-center font-bold text-xl">
               <Trans defaults="Upgrade to Pro" i18nKey="upgradePromptTitle" />
             </DialogTitle>
-            <DialogDescription className="text-muted-foreground mb-4 text-center text-sm leading-relaxed">
+            <DialogDescription className="mb-4 text-center text-muted-foreground text-sm leading-relaxed">
               <Trans
                 i18nKey="upgradeOverlaySubtitle3"
                 defaults="Unlock these feature by upgrading to a Pro plan."
@@ -73,7 +73,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
             </DialogDescription>
           </header>
           <section>
-            <ul className="grid justify-center gap-2 text-center text-sm font-medium sm:grid-cols-2">
+            <ul className="grid justify-center gap-2 text-center font-medium text-sm sm:grid-cols-2">
               <li>
                 <CheckIcon className="mr-2 inline-block size-4 text-green-600" />
                 <Trans i18nKey="featureNameFinalize" defaults="Finalize Poll" />
@@ -106,13 +106,13 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
               <li className="relative flex items-center justify-between rounded-lg border bg-gray-50 p-4 focus-within:bg-gray-100 focus-within:ring-gray-300 hover:bg-gray-100">
                 <div className="flex items-center gap-4">
                   <RadioGroupItem id="monthly" value="monthly" />
-                  <label className="text-base font-semibold" htmlFor="monthly">
+                  <label className="font-semibold text-base" htmlFor="monthly">
                     <span role="presentation" className="absolute inset-0" />
                     <Trans defaults="1 month" i18nKey="1month" />
                   </label>
                 </div>
                 <p className="flex items-baseline gap-1">
-                  <span className="text-xl font-semibold">${monthlyPrice}</span>
+                  <span className="font-semibold text-xl">${monthlyPrice}</span>
                   <span className="text-muted-foreground text-sm">/ mo</span>
                 </p>
               </li>
@@ -122,7 +122,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                     <RadioGroupItem id="yearly" value="yearly" />
                     <div className="flex items-center gap-2">
                       <label
-                        className="text-base font-semibold"
+                        className="font-semibold text-base"
                         htmlFor="yearly"
                       >
                         <span
@@ -140,7 +140,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                       </Badge>
                     </div>
                   </div>
-                  <p className="text-muted-foreground pointer-events-none flex items-baseline gap-1.5 pl-8 text-sm">
+                  <p className="pointer-events-none flex items-baseline gap-1.5 pl-8 text-muted-foreground text-sm">
                     <span>${yearlyPrice}</span>
                     <span className="line-through opacity-50">
                       ${((pricingData.monthly.amount * 12) / 100).toFixed(2)}
@@ -148,7 +148,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                   </p>
                 </div>
                 <p className="flex items-baseline gap-1">
-                  <span className="text-xl font-semibold">
+                  <span className="font-semibold text-xl">
                     ${monthlyPriceAnnualRate}
                   </span>
                   <span className="text-muted-foreground text-sm">/ mo</span>
@@ -166,7 +166,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                 <Trans i18nKey="upgrade" defaults="Upgrade" />
               </UpgradeButton>
             </div>
-            <p className="text-muted-foreground text-center text-sm">
+            <p className="text-center text-muted-foreground text-sm">
               <Trans
                 i18nKey="cancelAnytime"
                 defaults="Cancel anytime from your <a>billing page</a>."

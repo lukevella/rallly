@@ -20,10 +20,10 @@ const DateCard: React.FunctionComponent<DateCardProps> = ({
         className,
       )}
     >
-      <div className="text-muted-foreground border-b border-gray-200 text-xs font-normal leading-4">
+      <div className="border-gray-200 border-b font-normal text-muted-foreground text-xs leading-4">
         {month}
       </div>
-      <div className="flex grow items-center justify-center rounded-b-md bg-white text-lg font-semibold leading-none tracking-tight">
+      <div className="flex grow items-center justify-center rounded-b-md bg-white font-semibold text-lg leading-none tracking-tight">
         {day}
       </div>
     </div>

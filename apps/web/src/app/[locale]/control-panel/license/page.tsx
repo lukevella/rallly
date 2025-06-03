@@ -45,7 +45,7 @@ function DescriptionListTitle({
 }: {
   children: React.ReactNode;
 }) {
-  return <dt className="text-xs mb-1 text-muted-foreground">{children}</dt>;
+  return <dt className="mb-1 text-muted-foreground text-xs">{children}</dt>;
 }
 
 function DescriptionListValue({
@@ -53,7 +53,7 @@ function DescriptionListValue({
 }: {
   children: React.ReactNode;
 }) {
-  return <dd className="text-sm mb-4 font-mono">{children}</dd>;
+  return <dd className="mb-4 font-mono text-sm">{children}</dd>;
 }
 
 export default async function LicensePage() {
@@ -76,8 +76,8 @@ export default async function LicensePage() {
                 <Trans i18nKey="licenseType" defaults="License Type" />
               </DescriptionListTitle>
               <DescriptionListValue>
-                <span className="capitalize text-primary">{license.type}</span>
-                <span className="text-muted-foreground ml-2">
+                <span className="text-primary capitalize">{license.type}</span>
+                <span className="ml-2 text-muted-foreground">
                   (
                   <Trans
                     i18nKey="seatCount"
@@ -91,7 +91,7 @@ export default async function LicensePage() {
                 <Trans i18nKey="licenseKey" defaults="License Key" />
               </DescriptionListTitle>
               <DescriptionListValue>
-                <span className="font-mono select-all text-sm">
+                <span className="select-all font-mono text-sm">
                   {license.licenseKey}
                 </span>
               </DescriptionListValue>

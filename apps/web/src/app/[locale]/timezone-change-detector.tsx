@@ -62,7 +62,7 @@ export function TimeZoneChangeDetector() {
           <Trans
             i18nKey="timeZoneChangeDetectorMessage"
             defaults="Your timezone has changed to <b>{currentTimeZone}</b>. Do you want to update your preferences?"
-            components={{ b: <b className="text-foreground font-medium" /> }}
+            components={{ b: <b className="font-medium text-foreground" /> }}
             values={{ currentTimeZone }}
           />
         </p>

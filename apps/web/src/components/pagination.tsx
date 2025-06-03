@@ -50,7 +50,7 @@ export function Pagination({
 
   return (
     <div className={cn("flex items-center justify-between", className)}>
-      <div className="text-sm text-gray-500">
+      <div className="text-gray-500 text-sm">
         <Trans
           i18nKey="paginationItems"
           defaults="Showing {startItem}–{endItem} of {totalItems}"

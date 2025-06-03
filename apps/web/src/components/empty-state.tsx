@@ -11,7 +11,7 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center pt-16 pb-32 justify-center text-center",
+        "flex flex-col items-center justify-center pt-16 pb-32 text-center",
         className,
       )}
     >
@@ -29,7 +29,7 @@ export function EmptyStateIcon({ children }: { children: React.ReactNode }) {
 }
 
 export function EmptyStateTitle({ children }: { children: React.ReactNode }) {
-  return <p className="text-base font-semibold">{children}</p>;
+  return <p className="font-semibold text-base">{children}</p>;
 }
 
 export function EmptyStateDescription({
@@ -38,7 +38,7 @@ export function EmptyStateDescription({
   children: React.ReactNode;
 }) {
   return (
-    <p className="text-muted-foreground mt-2 max-w-md text-pretty text-sm leading-relaxed">
+    <p className="mt-2 max-w-md text-pretty text-muted-foreground text-sm leading-relaxed">
       {children}
     </p>
   );

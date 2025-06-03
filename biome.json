@@ -15,6 +15,15 @@
           "level": "error",
           "fix": "unsafe"
         }
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "options": {
+            "functions": ["cn", "clsx", "cva", "tw"]
+          },
+          "level": "error",
+          "fix": "safe"
+        }
       }
     }
   },

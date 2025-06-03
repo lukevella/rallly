@@ -55,9 +55,9 @@ export function UserRow({
         <div>
           <OptimizedAvatarImage src={image} name={name} size="md" />
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="font-semibold">{name}</div>
-          <div className="text-muted-foreground truncate">{email}</div>
+          <div className="truncate text-muted-foreground">{email}</div>
         </div>
         <div className="flex items-center gap-4">
           <span className="capitalize">{role}</span>

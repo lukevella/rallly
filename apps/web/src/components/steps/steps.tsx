@@ -18,7 +18,7 @@ const Steps: React.FunctionComponent<StepsProps> = ({
 
   return (
     <div className={cn("inline-flex items-center gap-2.5", className)}>
-      <div className="text-sm font-medium tracking-tight">
+      <div className="font-medium text-sm tracking-tight">
         {t("stepSummary", {
           current: current + 1,
           total,
@@ -33,7 +33,7 @@ const Steps: React.FunctionComponent<StepsProps> = ({
               className={cn("h-2 w-2 rounded-full transition-all", {
                 "bg-primary-400": i <= current,
                 "bg-gray-300": i > current,
-                "ring-primary-200 animate-pulse ring-4": i === current,
+                "animate-pulse ring-4 ring-primary-200": i === current,
               })}
             />
           );

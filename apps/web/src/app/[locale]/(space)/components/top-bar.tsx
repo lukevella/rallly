@@ -10,7 +10,7 @@ export function TopBar({
   return (
     <div
       className={cn(
-        "bg-background/90 sticky top-0 z-10 flex items-center gap-4 rounded-t-lg border-b px-4 py-3 backdrop-blur-md",
+        "sticky top-0 z-10 flex items-center gap-4 rounded-t-lg border-b bg-background/90 px-4 py-3 backdrop-blur-md",
         className,
       )}
     >
@@ -44,5 +44,5 @@ export function TopBarGroup({
 }
 
 export function TopBarSeparator() {
-  return <div className="bg-border h-4 w-px" />;
+  return <div className="h-4 w-px bg-border" />;
 }

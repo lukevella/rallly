@@ -42,7 +42,7 @@ export default async function Root(props: {
 
   const { t } = await getTranslation(locale, "common");
   return (
-    <div className="mx-auto relative z-10 flex min-h-full w-full max-w-7xl flex-col space-y-8 p-4 sm:p-8">
+    <div className="relative z-10 mx-auto flex min-h-full w-full max-w-7xl flex-col space-y-8 p-4 sm:p-8">
       <header className="flex w-full items-center">
         <div className="flex grow items-center gap-x-12">
           <Link className="inline-block rounded" href="/">

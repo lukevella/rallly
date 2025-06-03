@@ -24,10 +24,10 @@ export function PollListItem({
 }) {
   return (
     <StackedListItem>
-      <div className="relative -m-4 flex min-w-0 flex-1 items-center gap-2 p-4">
+      <div className="-m-4 relative flex min-w-0 flex-1 items-center gap-2 p-4">
         <PollStatusIcon status={status} showTooltip={false} />
         <Link
-          className="focus:ring-ring min-w-0 text-sm font-medium hover:underline focus-visible:ring-2"
+          className="min-w-0 font-medium text-sm hover:underline focus:ring-ring focus-visible:ring-2"
           href={pollLink}
         >
           <span className="absolute inset-0" />

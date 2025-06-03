@@ -4,13 +4,13 @@ import * as React from "react";
 import { cn } from "./lib/utils";
 
 const alertVariants = cva(
-  "flex sm:flex-row flex-col gap-x-3 gap-y-2 rounded-md border p-4",
+  "flex flex-col gap-x-3 gap-y-2 rounded-md border p-4 sm:flex-row",
   {
     variants: {
       variant: {
         default: "bg-gray-50 text-foreground",
         destructive:
-          "text-destructive bg-rose-50 border-destructive/50 dark:border-destructive [&>svg]:text-destructive text-destructive",
+          "border-destructive/50 bg-rose-50 text-destructive dark:border-destructive [&>svg]:text-destructive",
       },
     },
     defaultVariants: {
@@ -33,7 +33,7 @@ const Alert = React.forwardRef<
     {...props}
   >
     {Icon ? (
-      <Icon className="text-muted-foreground -mt-0.5 mb-2 size-5" />
+      <Icon className="-mt-0.5 mb-2 size-5 text-muted-foreground" />
     ) : null}
     <div>{children}</div>
   </div>
@@ -48,7 +48,7 @@ const AlertTitle = React.forwardRef<
   <h5
     ref={ref}
     className={cn(
-      "mb-2 text-sm font-semibold leading-none tracking-tight",
+      "mb-2 font-semibold text-sm leading-none tracking-tight",
       className,
     )}
     {...props}

@@ -71,7 +71,7 @@ export const ParticipantRowView: React.FunctionComponent<{
             // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
             key={i}
             className={cn(
-              "h-12 border-l border-t",
+              "h-12 border-t border-l",
               !vote || vote === "no" ? "bg-gray-100" : "bg-white",
               {
                 "bg-gray-100": vote === "no",
@@ -96,7 +96,7 @@ export const ParticipantRowView: React.FunctionComponent<{
           </td>
         );
       })}
-      <td className="bg-diagonal-lines border-l" />
+      <td className="border-l bg-diagonal-lines" />
     </tr>
   );
 };

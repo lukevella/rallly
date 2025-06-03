@@ -19,7 +19,7 @@ const DateNavigationToolbar: React.FunctionComponent<
   return (
     <div className="flex h-14 w-full shrink-0 items-center px-4">
       <div className="grow font-semibold tracking-tight">
-        <span className="mr-2 text-sm font-normal text-gray-500">{year}</span>
+        <span className="mr-2 font-normal text-gray-500 text-sm">{year}</span>
         <span className="font-semibold">{label}</span>
       </div>
       <div className="flex items-center space-x-2">

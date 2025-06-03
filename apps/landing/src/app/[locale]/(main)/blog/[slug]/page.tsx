@@ -24,7 +24,7 @@ export default async function Page(props: {
     <div>
       <nav className="mb-2">
         <Link
-          className="text-muted-foreground hover:text-primary inline-flex items-center gap-x-2 text-sm font-medium"
+          className="inline-flex items-center gap-x-2 font-medium text-muted-foreground text-sm hover:text-primary"
           href="/blog"
         >
           <ArrowLeftIcon className="size-4" /> All Posts
@@ -47,7 +47,7 @@ export default async function Page(props: {
             <div className="font-medium leading-none">Luke Vella</div>
             <div>
               <Link
-                className="text-muted-foreground hover:text-primary text-sm"
+                className="text-muted-foreground text-sm hover:text-primary"
                 href="https://twitter.com/imlukevella"
               >
                 @imlukevella

@@ -21,12 +21,12 @@ const GoToApp = () => {
   }
 
   return (
-    <div className="border-primary-200 bg-primary-50/75 rounded-lg border p-2.5 text-sm sm:p-1.5">
+    <div className="rounded-lg border border-primary-200 bg-primary-50/75 p-2.5 text-sm sm:p-1.5">
       <div className="flex items-start justify-between sm:items-center">
         <div className="flex gap-2.5 sm:items-center lg:px-2.5">
-          <UserCircle2Icon className="text-primary-600 hidden size-4 sm:block" />
+          <UserCircle2Icon className="hidden size-4 text-primary-600 sm:block" />
           <div className="flex grow flex-col gap-x-2.5 sm:flex-row">
-            <h4 className="text-primary-600 font-medium">
+            <h4 className="font-medium text-primary-600">
               <Trans i18nKey="eventHostTitle" defaults="Manage Access" />
             </h4>
             <p className="text-primary-600/75">
@@ -38,7 +38,7 @@ const GoToApp = () => {
           </div>
         </div>
         <Link
-          className="text-primary-600 hover:bg-primary-200/50 active:bg-primary-200 inline-flex h-9 items-center gap-x-2.5 rounded-md px-3 font-medium"
+          className="inline-flex h-9 items-center gap-x-2.5 rounded-md px-3 font-medium text-primary-600 hover:bg-primary-200/50 active:bg-primary-200"
           href={`/poll/${poll.id}`}
         >
           <Trans i18nKey="manage" />
@@ -53,7 +53,7 @@ export function InvitePage() {
   const poll = usePoll();
 
   return (
-    <div className="sm:p-6 p-3">
+    <div className="p-3 sm:p-6">
       <PollViewTracker pollId={poll.id} />
       <div className="mx-auto w-full max-w-4xl space-y-4">
         <GoToApp />

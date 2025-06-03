@@ -26,7 +26,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-gray-900/10",
+      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-gray-900/10 data-[state=closed]:animate-out data-[state=open]:animate-in",
       className,
     )}
     {...props}
@@ -37,18 +37,18 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 const dialogContentVariants = cva(
   cn(
     //style
-    "bg-background sm:rounded-lg sm:border shadow-lg p-4 gap-4",
+    "gap-4 bg-background p-4 shadow-lg sm:rounded-lg sm:border",
     // position
-    "fixed z-50 grid w-full top-0 left-1/2 -translate-x-1/2",
+    "-translate-x-1/2 fixed top-0 left-1/2 z-50 grid w-full",
     // animation
-    "duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-left-1/2 data-[state=closed]:slide-out-to-left-1/2",
+    "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-left-1/2 data-[state=closed]:slide-out-to-left-1/2 duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in",
   ),
   {
     variants: {
       position: {
-        top: "sm:top-48 data-[state=closed]:slide-out-to-top-[10%] data-[state=open]:slide-in-from-top-[10%]",
+        top: "data-[state=closed]:slide-out-to-top-[10%] data-[state=open]:slide-in-from-top-[10%] sm:top-48",
         center:
-          "sm:top-[50%] sm:translate-y-[-50%] data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-top-[48%]",
+          "data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-top-[48%] sm:top-[50%] sm:translate-y-[-50%]",
       },
       size: {
         sm: "sm:max-w-sm",
@@ -87,7 +87,7 @@ const DialogContent = React.forwardRef<
       >
         {children}
         {!hideCloseButton ? (
-          <DialogClose asChild className="absolute right-4 top-4">
+          <DialogClose asChild className="absolute top-4 right-4">
             <Button size="icon" variant="ghost">
               <Icon>
                 <XIcon />
@@ -131,7 +131,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "text-base font-semibold leading-none tracking-tight",
+      "font-semibold text-base leading-none tracking-tight",
       className,
     )}
     {...props}

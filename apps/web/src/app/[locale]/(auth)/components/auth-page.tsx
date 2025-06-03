@@ -16,7 +16,7 @@ export function AuthPageHeader({ children }: { children: React.ReactNode }) {
 }
 
 export function AuthPageTitle({ children }: { children: React.ReactNode }) {
-  return <h1 className="text-2xl font-bold">{children}</h1>;
+  return <h1 className="font-bold text-2xl">{children}</h1>;
 }
 
 export function AuthPageDescription({
@@ -33,6 +33,6 @@ export function AuthPageContent({ children }: { children: React.ReactNode }) {
 
 export function AuthPageExternal({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-muted-foreground px-4 py-3 text-center">{children}</p>
+    <p className="px-4 py-3 text-center text-muted-foreground">{children}</p>
   );
 }

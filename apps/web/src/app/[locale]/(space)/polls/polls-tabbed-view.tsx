@@ -49,7 +49,7 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
         key={tab}
         className={cn(
           "transition-opacity",
-          isPending ? "opacity-50 delay-200 pointer-events-none" : "",
+          isPending ? "pointer-events-none opacity-50 delay-200" : "",
         )}
       >
         {children}

@@ -35,7 +35,7 @@ export const ParticipantAvatarBar = ({
   const hiddenCount = totalParticipants - visibleCount;
 
   return (
-    <ul className="flex cursor-default items-center -space-x-1 rounded-full bg-white p-0.5">
+    <ul className="-space-x-1 flex cursor-default items-center rounded-full bg-white p-0.5">
       {visibleParticipants.map((participant, index) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
         <Tooltip delayDuration={100} key={index}>
@@ -60,7 +60,7 @@ export const ParticipantAvatarBar = ({
               <span
                 className={cn(
                   "select-none",
-                  "rounded-full bg-gray-100 px-1.5 text-xs font-semibold",
+                  "rounded-full bg-gray-100 px-1.5 font-semibold text-xs",
                   "inline-flex h-5 items-center justify-center",
                 )}
               >

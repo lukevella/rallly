@@ -21,7 +21,7 @@ export async function LicenseLimitWarning() {
   }
 
   return (
-    <div className="bg-muted p-2 text-center text-sm rounded-md m-1 text-muted-foreground">
+    <div className="m-1 rounded-md bg-muted p-2 text-center text-muted-foreground text-sm">
       <Trans
         i18nKey="licenseLimitWarning"
         defaults="You have exceeded the limits of your license. Please <a>upgrade</a>."

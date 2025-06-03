@@ -18,7 +18,7 @@ export default function BlogLayout({
               </div>
               <div>
                 <div className="font-medium">Want to stay up to date?</div>
-                <div className="text-sm text-gray-500">
+                <div className="text-gray-500 text-sm">
                   Subscribe to our newsletter to get updates on new features and
                   releases.
                 </div>

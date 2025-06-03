@@ -21,7 +21,7 @@ export default async function Page(props: {
   return (
     <section className="space-y-12">
       <header className="sm:p-6">
-        <h1 className="text-4xl font-bold tracking-tight">
+        <h1 className="font-bold text-4xl tracking-tight">
           <Trans
             t={t}
             ns="blog"

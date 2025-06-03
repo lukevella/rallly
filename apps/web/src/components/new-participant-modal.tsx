@@ -144,7 +144,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
           {...register("name")}
         />
         {formState.errors.name?.message ? (
-          <div className="mt-2 text-sm text-rose-500">
+          <div className="mt-2 text-rose-500 text-sm">
             {formState.errors.name.message}
           </div>
         ) : null}
@@ -162,7 +162,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
           {...register("email")}
         />
         {formState.errors.email?.message ? (
-          <div className="mt-1 text-sm text-rose-500">
+          <div className="mt-1 text-rose-500 text-sm">
             {formState.errors.email.message}
           </div>
         ) : null}

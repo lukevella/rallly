@@ -27,10 +27,10 @@ function DateIcon({ start }: { start: Date }) {
       className="inline-flex size-12 flex-col rounded-lg border text-center"
       dateTime={d.toISOString()}
     >
-      <div className="border-b border-green-600/10 p-px text-xs">
+      <div className="border-green-600/10 border-b p-px text-xs">
         {d.format("MMM")}
       </div>
-      <div className="inline-flex grow items-center justify-center text-sm font-bold">
+      <div className="inline-flex grow items-center justify-center font-bold text-sm">
         {d.format("D")}
       </div>
     </time>
@@ -81,7 +81,7 @@ export function ScheduledEvent() {
       <div className="rounded-lg border bg-white p-0.5 shadow-sm">
         <div className="flex h-9 items-center gap-x-2 rounded-md bg-gray-100 px-2">
           <CalendarIcon className="size-4" />
-          <h2 className="text-sm font-medium">
+          <h2 className="font-medium text-sm">
             <Trans i18nKey="schedulateDate" defaults="Scheduled Date" />
           </h2>
         </div>
@@ -92,7 +92,7 @@ export function ScheduledEvent() {
             </div>
             <div className="items-center gap-x-4">
               <div className="space-y-1">
-                <div className="text-sm font-medium">
+                <div className="font-medium text-sm">
                   <FinalDate start={event.start} />
                 </div>
                 <div className="text-sm opacity-75">

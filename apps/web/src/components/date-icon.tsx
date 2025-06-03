@@ -15,10 +15,10 @@ export const DateIconInner = (props: {
         props.className,
       )}
     >
-      <div className="text-muted-foreground border-b border-gray-200 text-xs font-normal leading-4">
+      <div className="border-gray-200 border-b font-normal text-muted-foreground text-xs leading-4">
         {props.dow}
       </div>
-      <div className="flex grow items-center justify-center bg-white text-sm font-medium leading-none tracking-tight">
+      <div className="flex grow items-center justify-center bg-white font-medium text-sm leading-none tracking-tight">
         {props.day}
       </div>
     </div>

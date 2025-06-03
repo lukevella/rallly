@@ -14,7 +14,7 @@ export const SettingsSection = (props: {
   return (
     <section className="rounded-lg border p-4">
       <header className="mb-6">
-        <h2 className="mb-2 text-base font-semibold leading-none">
+        <h2 className="mb-2 font-semibold text-base leading-none">
           {props.title}
         </h2>
         <p className="text-muted-foreground text-sm">{props.description}</p>
@@ -37,7 +37,7 @@ export const SettingsItemTitle = ({
 }: React.PropsWithChildren<{ hint?: React.ReactNode }>) => {
   return (
     <div className="flex items-center gap-x-2">
-      <dt className="text-sm font-medium text-gray-500">{children}</dt>
+      <dt className="font-medium text-gray-500 text-sm">{children}</dt>
       {hint ? (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -56,5 +56,5 @@ export const SettingsItemValue = ({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) => {
-  return <dd className={cn("text-sm text-gray-900", className)}>{children}</dd>;
+  return <dd className={cn("text-gray-900 text-sm", className)}>{children}</dd>;
 };
