@@ -275,7 +275,7 @@ export const BigTestimonial = () => {
         alt="5 stars"
       />
       <div className="text-center">
-        <p className="max-w-xl text-center text-lg font-medium leading-normal">
+        <p className="max-w-xl text-center font-medium text-lg leading-normal">
           <Trans
             i18nKey="home:ericQuote"
             defaults="“If your scheduling workflow lives in emails, I strongly encourage you to try and let Rallly simplify your scheduling tasks for a more organized and less stressful workday.”"
@@ -284,7 +284,7 @@ export const BigTestimonial = () => {
         <p className="mt-1">
           <Link
             target="_blank"
-            className="text-sm text-gray-500 hover:underline"
+            className="text-gray-500 text-sm hover:underline"
             href="https://www.trustpilot.com/reviews/645e1d1976733924e89d8203"
           >
             <Trans i18nKey="home:viaTrustpilot" defaults="via Trustpilot" />
@@ -302,7 +302,7 @@ export const BigTestimonial = () => {
         />
         <div>
           <div className="font-semibold">Eric Fletcher</div>
-          <div className="text-sm text-gray-500">
+          <div className="text-gray-500 text-sm">
             <Trans
               i18nKey="home:ericJobTitle"
               defaults="Executive Assistant at MIT"

@@ -12,7 +12,7 @@ export function AppCard({
   return (
     <div
       className={cn(
-        "flex w-full flex-col justify-between rounded-lg border bg-white p-4 shadow-sm ring-1 ring-inset ring-white/50",
+        "flex w-full flex-col justify-between rounded-lg border bg-white p-4 shadow-sm ring-1 ring-white/50 ring-inset",
         className,
       )}
     >
@@ -94,7 +94,7 @@ export function AppCardDescription({
   return (
     <p
       className={cn(
-        "text-muted-foreground mt-1 text-sm leading-relaxed",
+        "mt-1 text-muted-foreground text-sm leading-relaxed",
         className,
       )}
     >

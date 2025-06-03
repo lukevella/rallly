@@ -16,7 +16,7 @@ export function FeedbackAlert() {
   }
 
   return (
-    <div className="flex flex-col sm:flex-row items-start border text-sm bg-gray-50 border-gray-200 p-4 rounded-xl gap-4">
+    <div className="flex flex-col items-start gap-4 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm sm:flex-row">
       <div className="hidden sm:block">
         <HeartIcon className="size-4 text-pink-600 opacity-75" />
       </div>
@@ -24,14 +24,14 @@ export function FeedbackAlert() {
         <h2 className="font-semibold leading-none">
           <Trans i18nKey="helpUsImprove" defaults="Help us improve" />
         </h2>
-        <p className="opacity-75 mt-1.5">
+        <p className="mt-1.5 opacity-75">
           <Trans
             i18nKey="helpUsImproveDesc"
             defaults="Take a few minutes to share your feedback and help us shape the future of Rallly."
           />
         </p>
       </div>
-      <div className="flex items-center flex-row-reverse sm:flex-row gap-2">
+      <div className="flex flex-row-reverse items-center gap-2 sm:flex-row">
         <Button
           variant="ghost"
           onClick={() => {

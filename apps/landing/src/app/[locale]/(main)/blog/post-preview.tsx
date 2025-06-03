@@ -18,12 +18,12 @@ export const PostPreview = ({ title, date, excerpt, slug }: Props) => {
   return (
     <article className="flex flex-col gap-2 sm:flex-row sm:gap-8">
       <div>
-        <div className="text-muted-foreground w-48 pt-1 sm:text-right">
+        <div className="w-48 pt-1 text-muted-foreground sm:text-right">
           <time dateTime={date}>{dayjs(date).format("LL")}</time>
         </div>
       </div>
       <div className="grow">
-        <h3 className="mb-3 text-lg font-bold tracking-tight">
+        <h3 className="mb-3 font-bold text-lg tracking-tight">
           <Link
             locale="en"
             as={`/blog/${slug}`}
@@ -33,7 +33,7 @@ export const PostPreview = ({ title, date, excerpt, slug }: Props) => {
             {title}
           </Link>
         </h3>
-        <p className="mb-4 text-lg leading-relaxed text-gray-600">{excerpt}</p>
+        <p className="mb-4 text-gray-600 text-lg leading-relaxed">{excerpt}</p>
       </div>
     </article>
   );

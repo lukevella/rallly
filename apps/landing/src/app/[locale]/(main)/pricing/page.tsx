@@ -11,7 +11,7 @@ import { PriceTables } from "./pricing-table";
 const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
   return (
     <section>
-      <h2 className="text-2xl font-bold">
+      <h2 className="font-bold text-2xl">
         <Trans
           t={t}
           ns="pricing"
@@ -19,7 +19,7 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
           defaults="Frequently Asked Questions"
         />
       </h2>
-      <h3 className="mb-2 mt-6 text-lg font-bold">
+      <h3 className="mt-6 mb-2 font-bold text-lg">
         <Trans
           t={t}
           ns="pricing"
@@ -27,7 +27,7 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
           defaults="Can I use Rallly for free?"
         />
       </h3>
-      <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+      <p className="col-span-2 text-slate-600 text-sm leading-relaxed">
         <Trans
           t={t}
           ns="pricing"
@@ -35,7 +35,7 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
           defaults="Yes, most of Rallly's features are free and many users will never need to pay for anything. However, there are some features that are only available to paying customers. These features are designed to help you get the most out of Rallly."
         />
       </p>
-      <h3 className="mb-2 mt-6 text-lg font-bold">
+      <h3 className="mt-6 mb-2 font-bold text-lg">
         <Trans
           t={t}
           ns="pricing"
@@ -43,7 +43,7 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
           defaults="Why should I upgrade?"
         />
       </h3>
-      <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+      <p className="col-span-2 text-slate-600 text-sm leading-relaxed">
         <Trans
           t={t}
           ns="pricing"
@@ -51,7 +51,7 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
           defaults="Upgrading to a paid plan makes sense if you use Rallly often or use it for work. The current subscription rate is a special early adopter rate and will increase in the future. By upgrading now, you will get early access to new, high-quality scheduling tools as they are released and lock in your subscription rate so you won't be affected by future price increases."
         />
       </p>
-      <h3 className="mb-2 mt-6 text-lg font-bold">
+      <h3 className="mt-6 mb-2 font-bold text-lg">
         <Trans
           t={t}
           ns="pricing"
@@ -59,7 +59,7 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
           defaults="When does a poll become inactive?"
         />
       </h3>
-      <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+      <p className="col-span-2 text-slate-600 text-sm leading-relaxed">
         <Trans
           t={t}
           ns="pricing"
@@ -67,7 +67,7 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
           defaults="Polls become inactive when all date options are in the past AND the poll has not been accessed for over 30 days. Inactive polls are automatically deleted if you do not have a paid subscription."
         />
       </p>
-      <h3 className="mb-2 mt-6 text-lg font-bold">
+      <h3 className="mt-6 mb-2 font-bold text-lg">
         <Trans
           t={t}
           ns="pricing"
@@ -75,7 +75,7 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
           defaults="How do I upgrade to a paid plan?"
         />
       </h3>
-      <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+      <p className="col-span-2 text-slate-600 text-sm leading-relaxed">
         <Trans
           t={t}
           ns="pricing"
@@ -93,7 +93,7 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
         />
       </p>
 
-      <h3 className="mb-2 mt-6 text-lg font-bold">
+      <h3 className="mt-6 mb-2 font-bold text-lg">
         <Trans
           t={t}
           ns="pricing"
@@ -101,7 +101,7 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
           defaults="How do I cancel my subscription?"
         />
       </h3>
-      <p className="col-span-2 text-sm leading-relaxed text-slate-600">
+      <p className="col-span-2 text-slate-600 text-sm leading-relaxed">
         <Trans
           t={t}
           ns="pricing"
@@ -130,7 +130,7 @@ export default async function Page(props: {
   return (
     <article className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-2 sm:p-6 sm:text-center">
-        <h1 className="text-2xl font-bold tracking-tight sm:text-4xl">
+        <h1 className="font-bold text-2xl tracking-tight sm:text-4xl">
           <Trans
             t={t}
             ns="pricing"
@@ -138,7 +138,7 @@ export default async function Page(props: {
             defaults="Get started for free"
           />
         </h1>
-        <p className="text-muted-foreground text-lg">
+        <p className="text-lg text-muted-foreground">
           <Trans
             t={t}
             ns="pricing"
@@ -156,7 +156,7 @@ export default async function Page(props: {
             <TrendingUpIcon className="size-6" />
           </div>
           <div>
-            <h3 className="mb-2 text-sm font-bold">
+            <h3 className="mb-2 font-bold text-sm">
               <Trans
                 t={t}
                 ns="pricing"

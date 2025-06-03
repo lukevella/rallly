@@ -25,7 +25,7 @@ export function DisableUserRegistration({
           />
         </Label>
       </div>
-      <p className="text-sm mt-2 text-muted-foreground">
+      <p className="mt-2 text-muted-foreground text-sm">
         <Trans
           i18nKey="disableUserRegistrationDescription"
           defaults="Prevent new users from registering an account."

@@ -16,7 +16,7 @@ export async function QuickCreateWidget() {
   return (
     <div className="space-y-8">
       <div className="space-y-6">
-        <div className="text-primary inline-flex items-center justify-center gap-2 rounded-md font-medium">
+        <div className="inline-flex items-center justify-center gap-2 rounded-md font-medium text-primary">
           <ZapIcon className="size-5" />
           <h2>
             <Trans
@@ -27,7 +27,7 @@ export async function QuickCreateWidget() {
             />
           </h2>
         </div>
-        <p className="text-muted-foreground text-pretty">
+        <p className="text-pretty text-muted-foreground">
           <Trans
             t={t}
             ns="app"
@@ -57,7 +57,7 @@ export async function QuickCreateWidget() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="truncate font-medium">{poll.title}</div>
-                      <div className="text-muted-foreground whitespace-nowrap text-sm">
+                      <div className="whitespace-nowrap text-muted-foreground text-sm">
                         <RelativeDate date={poll.createdAt} />
                       </div>
                     </div>
@@ -94,7 +94,7 @@ export async function QuickCreateWidget() {
             />
           </h3>
         </div>
-        <ul className="text-muted-foreground space-y-2">
+        <ul className="space-y-2 text-muted-foreground">
           <li className="flex items-center gap-2">
             <Icon variant="success" size="lg">
               <CheckIcon />

@@ -64,7 +64,7 @@ export default async function AdminPage() {
                       <Trans i18nKey="users" defaults="Users" />
                     </TileTitle>
                   </div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-muted-foreground text-sm">
                     <span
                       className={cn({
                         "text-destructive":
@@ -93,7 +93,7 @@ export default async function AdminPage() {
                     <KeySquareIcon />
                   </PageIcon>
                   {tier ? (
-                    <span className="text-sm text-primary capitalize">
+                    <span className="text-primary text-sm capitalize">
                       {tier}
                     </span>
                   ) : (

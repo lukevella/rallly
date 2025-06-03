@@ -107,7 +107,7 @@ const ParticipantRowForm = ({
         return (
           <td
             key={optionId}
-            className="relative h-12 border-l border-t bg-gray-50"
+            className="relative h-12 border-t border-l bg-gray-50"
           >
             <Controller
               control={form.control}
@@ -121,7 +121,7 @@ const ParticipantRowForm = ({
                       type: toggleVote(field.value?.type),
                     });
                   }}
-                  className="absolute inset-0 flex cursor-pointer items-center justify-center hover:bg-gray-100 active:bg-gray-200/50 active:ring-1 active:ring-inset active:ring-gray-200"
+                  className="absolute inset-0 flex cursor-pointer items-center justify-center hover:bg-gray-100 active:bg-gray-200/50 active:ring-1 active:ring-gray-200 active:ring-inset"
                 >
                   <VoteSelector
                     value={field.value?.type}
@@ -135,7 +135,7 @@ const ParticipantRowForm = ({
           </td>
         );
       })}
-      <td className="bg-diagonal-lines border-l" />
+      <td className="border-l bg-diagonal-lines" />
     </tr>
   );
 };

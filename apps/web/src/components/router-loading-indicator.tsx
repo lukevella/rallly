@@ -62,7 +62,7 @@ export const RouterLoadingIndicator = () => {
   return (
     <div
       className={cn(
-        "fixed left-0 right-0 top-0 z-50 w-full",
+        "fixed top-0 right-0 left-0 z-50 w-full",
         isLoading ? "opacity-100" : "opacity-0",
       )}
     >

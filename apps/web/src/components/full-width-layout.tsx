@@ -6,7 +6,7 @@ export function FullWidthLayoutHeader({
   children,
 }: { children: React.ReactNode }) {
   return (
-    <header className="py-4 rounded-t-lg bg-background/90 backdrop-blur-sm sticky top-0 z-10 px-6 border-b">
+    <header className="sticky top-0 z-10 rounded-t-lg border-b bg-background/90 px-6 py-4 backdrop-blur-sm">
       {children}
     </header>
   );
@@ -25,7 +25,7 @@ export function FullWidthLayoutTitle({
   return (
     <div className="flex items-center gap-2">
       {icon}
-      <h1 className="text-xl font-semibold">{children}</h1>
+      <h1 className="font-semibold text-xl">{children}</h1>
     </div>
   );
 }

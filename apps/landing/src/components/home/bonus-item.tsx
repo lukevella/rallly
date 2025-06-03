@@ -26,11 +26,11 @@ export const BonusItem = ({
     >
       <div className="flex items-center justify-center gap-x-2.5 rounded-full border bg-gray-50 p-1 pr-6 shadow-sm">
         <span
-          className={cn("bg-primary rounded-full p-2 text-gray-50", className)}
+          className={cn("rounded-full bg-primary p-2 text-gray-50", className)}
         >
           {icon}
         </span>
-        <div className="text-sm font-semibold">{children}</div>
+        <div className="font-semibold text-sm">{children}</div>
       </div>
     </m.div>
   );

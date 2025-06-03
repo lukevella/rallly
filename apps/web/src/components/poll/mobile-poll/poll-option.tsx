@@ -42,7 +42,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
   return (
     <div>
       {noVotes ? (
-        <p className="rounded-lg bg-gray-50 p-2 text-center text-sm text-gray-500">
+        <p className="rounded-lg bg-gray-50 p-2 text-center text-gray-500 text-sm">
           {t("noVotes")}
         </p>
       ) : (
@@ -56,7 +56,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                   <VoteIcon
                     type="yes"
                     size="sm"
-                    className="absolute bottom-full left-full -translate-x-1.5 translate-y-2.5 rounded-full bg-white"
+                    className="-translate-x-1.5 absolute bottom-full left-full translate-y-2.5 rounded-full bg-white"
                   />
                 </div>
                 <div className="truncate text-sm">{name}</div>
@@ -70,7 +70,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                   <VoteIcon
                     type="ifNeedBe"
                     size="sm"
-                    className="absolute bottom-full left-full -translate-x-1.5 translate-y-2.5 rounded-full bg-white"
+                    className="-translate-x-1.5 absolute bottom-full left-full translate-y-2.5 rounded-full bg-white"
                   />
                 </div>
                 <div className="truncate text-sm"> {name}</div>
@@ -86,7 +86,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                   <VoteIcon
                     type="no"
                     size="sm"
-                    className="absolute bottom-full left-full -translate-x-1.5 translate-y-2.5 rounded-full bg-white"
+                    className="-translate-x-1.5 absolute bottom-full left-full translate-y-2.5 rounded-full bg-white"
                   />
                 </div>
                 <div className="truncate text-sm">{name}</div>

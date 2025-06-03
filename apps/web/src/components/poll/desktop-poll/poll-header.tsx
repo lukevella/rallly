@@ -21,7 +21,7 @@ const TimeRange: React.FunctionComponent<{
   return (
     <div
       className={cn(
-        "text-muted-foreground relative flex flex-col items-center gap-1.5 text-xs font-normal",
+        "relative flex flex-col items-center gap-1.5 font-normal text-muted-foreground text-xs",
         className,
       )}
     >
@@ -49,7 +49,7 @@ const TimelineRow = ({
     <tr>
       <th
         style={{ minWidth: 235, top }}
-        className="sticky left-0 z-30 bg-white pl-4 pr-4"
+        className="sticky left-0 z-30 bg-white pr-4 pl-4"
       />
       {children}
       <th className="w-full min-w-4 border-l" />
@@ -83,7 +83,7 @@ const PollHeader: React.FunctionComponent = () => {
               <div className="flex">
                 <div
                   className={cn(
-                    "inline-flex h-5 gap-1 px-2 py-0.5 text-xs font-medium uppercase",
+                    "inline-flex h-5 gap-1 px-2 py-0.5 font-medium text-xs uppercase",
                     firstOfMonth ? "opacity-100" : "opacity-0",
                   )}
                 >
@@ -124,10 +124,10 @@ const PollHeader: React.FunctionComponent = () => {
             >
               {firstOfDay ? (
                 <div className="mt-1 flex flex-col gap-1">
-                  <div className="text-muted-foreground text-xs font-normal">
+                  <div className="font-normal text-muted-foreground text-xs">
                     {option.dow}
                   </div>
-                  <div className="text-sm font-medium">{option.day}</div>
+                  <div className="font-medium text-sm">{option.day}</div>
                 </div>
               ) : null}
             </th>
@@ -150,7 +150,7 @@ const PollHeader: React.FunctionComponent = () => {
                     duration={option.duration}
                   />
                 ) : (
-                  <p className="text-muted-foreground text-xs font-normal opacity-50">
+                  <p className="font-normal text-muted-foreground text-xs opacity-50">
                     <Trans i18nKey="allDay" defaults="All-Day" />
                   </p>
                 )}

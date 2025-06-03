@@ -44,7 +44,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "animate-in relative z-50 max-h-[300px] min-w-[8rem] overflow-hidden rounded-lg border bg-white shadow-md",
+        "relative z-50 max-h-[300px] min-w-[8rem] animate-in overflow-hidden rounded-lg border bg-white shadow-md",
         position === "popper" && "translate-y-1",
         className,
       )}
@@ -72,7 +72,7 @@ const SelectLabel = React.forwardRef<
   <SelectPrimitive.Label
     ref={ref}
     className={cn(
-      "text-muted-foreground px-2 py-1.5 text-xs font-semibold",
+      "px-2 py-1.5 font-semibold text-muted-foreground text-xs",
       className,
     )}
     {...props}
@@ -87,7 +87,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-md py-2 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-default select-none items-center rounded-md py-2 pr-2 pl-8 text-sm outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}
@@ -110,7 +110,7 @@ const SelectSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Separator
     ref={ref}
-    className={cn("bg-muted -mx-1 my-1 h-px", className)}
+    className={cn("-mx-1 my-1 h-px bg-muted", className)}
     {...props}
   />
 ));

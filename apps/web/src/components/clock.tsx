@@ -110,7 +110,7 @@ export const ClockPreferences = ({ children }: React.PropsWithChildren) => {
             />
           </DialogDescription>
         </DialogHeader>
-        <div className="bg-muted grid h-24 items-center justify-center rounded-md text-2xl font-bold">
+        <div className="grid h-24 items-center justify-center rounded-md bg-muted font-bold text-2xl">
           <Clock />
         </div>
         <TimePreferences />

@@ -93,7 +93,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
   return (
     <div className="overflow-hidden md:flex">
-      <div className="shrink-0 border-b p-3 sm:p-4 md:w-[380px] md:border-b-0 md:border-r">
+      <div className="shrink-0 border-b p-3 sm:p-4 md:w-[380px] md:border-r md:border-b-0">
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
@@ -116,7 +116,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 return (
                   <div
                     key={dayOfWeek}
-                    className="flex items-center justify-center pb-2 text-sm font-medium text-gray-500"
+                    className="flex items-center justify-center pb-2 font-medium text-gray-500 text-sm"
                   >
                     {dayOfWeek.substring(0, 2)}
                   </div>
@@ -175,7 +175,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         }
                       }}
                       className={cn(
-                        "group relative flex h-full w-full items-start justify-end rounded-none px-2.5 py-1.5 text-sm font-medium tracking-tight focus:z-10 focus:rounded",
+                        "group relative flex h-full w-full items-start justify-end rounded-none px-2.5 py-1.5 font-medium text-sm tracking-tight focus:z-10 focus:rounded",
                         {
                           "bg-gray-100 text-gray-400": day.isPast,
                           "text-rose-600": day.today && !day.selected,
@@ -188,10 +188,10 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                       <span
                         aria-hidden
                         className={cn(
-                          "absolute inset-1 -z-0 rounded-md border",
+                          "-z-0 absolute inset-1 rounded-md border",
                           day.selected
-                            ? "border-primary-300 group-hover:border-primary-400 border-dashed shadow-sm"
-                            : "border-dashed border-transparent group-hover:border-gray-400 group-active:bg-gray-200",
+                            ? "border-primary-300 border-dashed shadow-sm group-hover:border-primary-400"
+                            : "border-transparent border-dashed group-hover:border-gray-400 group-active:bg-gray-200",
                         )}
                       />
                       <span className="z-10">{day.day}</span>
@@ -215,7 +215,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           <div className="flex items-center space-x-3 p-3 sm:p-4">
             <div className="grow">
               <div className="font-medium">{t("specifyTimes")}</div>
-              <div className="text-sm text-gray-500">
+              <div className="text-gray-500 text-sm">
                 {t("specifyTimesDescription")}
               </div>
             </div>

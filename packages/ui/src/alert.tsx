@@ -33,7 +33,7 @@ const Alert = React.forwardRef<
     {...props}
   >
     {Icon ? (
-      <Icon className="text-muted-foreground -mt-0.5 mb-2 size-5" />
+      <Icon className="-mt-0.5 mb-2 size-5 text-muted-foreground" />
     ) : null}
     <div>{children}</div>
   </div>
@@ -48,7 +48,7 @@ const AlertTitle = React.forwardRef<
   <h5
     ref={ref}
     className={cn(
-      "mb-2 text-sm font-semibold leading-none tracking-tight",
+      "mb-2 font-semibold text-sm leading-none tracking-tight",
       className,
     )}
     {...props}

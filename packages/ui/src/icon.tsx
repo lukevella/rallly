@@ -40,7 +40,7 @@ export function Icon({
     <Slot
       className={cn(
         iconVariants({ size, variant }),
-        "group-[.bg-primary]:text-primary-50 group-[.bg-destructive]:text-destructive-foreground group shrink-0",
+        "group shrink-0 group-[.bg-destructive]:text-destructive-foreground group-[.bg-primary]:text-primary-50",
         className,
       )}
     >

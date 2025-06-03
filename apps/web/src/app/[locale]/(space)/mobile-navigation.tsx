@@ -15,7 +15,7 @@ import { usePathname } from "next/navigation";
 
 function MobileNavigationIcon({ children }: { children: React.ReactNode }) {
   return (
-    <Slot className="group-[.is-active]:text-primary group-focus:text-primary group-hover:text-foreground size-5 text-gray-500">
+    <Slot className="size-5 text-gray-500 group-hover:text-foreground group-focus:text-primary group-[.is-active]:text-primary">
       {children}
     </Slot>
   );

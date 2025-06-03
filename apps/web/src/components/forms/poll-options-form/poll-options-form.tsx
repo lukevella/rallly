@@ -243,7 +243,7 @@ const PollOptionsForm = ({
                   </Label>
                   <Tooltip>
                     <TooltipTrigger type="button">
-                      <InfoIcon className="text-muted-foreground size-4" />
+                      <InfoIcon className="size-4 text-muted-foreground" />
                     </TooltipTrigger>
                     <TooltipContent className="w-72">
                       <Trans
@@ -262,7 +262,7 @@ const PollOptionsForm = ({
                       }}
                       variant="ghost"
                     >
-                      <GlobeIcon className="text-muted-foreground size-4" />
+                      <GlobeIcon className="size-4 text-muted-foreground" />
                       {field.value}
                     </Button>
                     <CommandDialog

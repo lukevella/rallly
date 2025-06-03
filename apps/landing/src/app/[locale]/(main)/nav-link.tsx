@@ -13,7 +13,7 @@ export const NavLink = ({
   const isActive = pathname === props.href;
   return (
     <Button
-      className={cn(isActive ? "text-foreground bg-gray-200" : "", className)}
+      className={cn(isActive ? "bg-gray-200 text-foreground" : "", className)}
       asChild
       variant="ghost"
     >

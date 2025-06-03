@@ -43,7 +43,7 @@ export function ScheduledEventListItem({
                 format="LL"
               />
             </div>
-            <div className="text-muted-foreground mt-1">
+            <div className="mt-1 text-muted-foreground">
               {allDay ? (
                 <Trans i18nKey="allDay" defaults="All day" />
               ) : (

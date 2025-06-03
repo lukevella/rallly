@@ -35,9 +35,9 @@ export default async function SettingsPage() {
         </FullWidthLayoutTitle>
       </FullWidthLayoutHeader>
       <FullWidthLayoutContent>
-        <div className="flex flex-col lg:flex-row p-6 gap-6 rounded-lg border">
+        <div className="flex flex-col gap-6 rounded-lg border p-6 lg:flex-row">
           <div className="lg:w-1/2">
-            <h2 className="text-base font-semibold">
+            <h2 className="font-semibold text-base">
               <Trans
                 i18nKey="authenticationAndSecurity"
                 defaults="Authentication & Security"

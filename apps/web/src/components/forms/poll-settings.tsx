@@ -40,7 +40,7 @@ const SettingTitle = ({
 }>) => {
   return (
     <div className="flex min-w-0 items-center gap-x-2.5">
-      <div className="text-sm font-medium">{children}</div>
+      <div className="font-medium text-sm">{children}</div>
       {pro ? (
         <div>
           <ProBadge />

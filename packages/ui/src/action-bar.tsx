@@ -42,7 +42,7 @@ const ActionBarContainer = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "bg-action-bar text-action-bar-foreground pointer-events-auto z-50 mx-auto inline-flex w-full max-w-2xl items-center gap-4 rounded-xl p-2 shadow-lg",
+        "pointer-events-auto z-50 mx-auto inline-flex w-full max-w-2xl items-center gap-4 rounded-xl bg-action-bar p-2 text-action-bar-foreground shadow-lg",
         className,
       )}
       {...props}

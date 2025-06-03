@@ -33,9 +33,9 @@ const CookieConsentPopover = () => {
               initial={{ opacity: 0, y: 100 }}
               animate="enter"
               exit="exit"
-              className="fixed bottom-8 right-8 z-50 w-60 rounded-lg bg-white p-4 pt-8 text-sm shadow-lg"
+              className="fixed right-8 bottom-8 z-50 w-60 rounded-lg bg-white p-4 pt-8 text-sm shadow-lg"
             >
-              <CookiesIllustration className="absolute -top-6" />
+              <CookiesIllustration className="-top-6 absolute" />
               <div className="mb-3">
                 Your privacy is important to us. We only use cookies to improve
                 the browsing experience on this website.
@@ -43,7 +43,7 @@ const CookieConsentPopover = () => {
               <div className="flex items-center space-x-6">
                 <Link
                   href="/privacy-policy"
-                  className="hover:text-primary-600 text-gray-500"
+                  className="text-gray-500 hover:text-primary-600"
                 >
                   Privacy Policy
                 </Link>
@@ -53,7 +53,7 @@ const CookieConsentPopover = () => {
                     Cookies.set("rallly_cookie_consent", "1", { expires: 365 });
                     setVisible(false);
                   }}
-                  className="bg-primary-600 hover:bg-primary-600/90 focus:ring-primary-200 active:bg-primary-600/90 grow rounded-md px-5 py-1 font-semibold text-white shadow-sm transition-all focus:ring-2"
+                  className="grow rounded-md bg-primary-600 px-5 py-1 font-semibold text-white shadow-sm transition-all hover:bg-primary-600/90 focus:ring-2 focus:ring-primary-200 active:bg-primary-600/90"
                 >
                   OK
                 </button>

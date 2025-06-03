@@ -68,7 +68,7 @@ export const Footer: React.FunctionComponent = () => {
             height={30}
             alt="Rallly"
           />
-          <div className="my-8 text-sm text-gray-500">
+          <div className="my-8 text-gray-500 text-sm">
             <p className="mb-4 leading-relaxed">
               <Trans
                 ns="common"
@@ -76,7 +76,7 @@ export const Footer: React.FunctionComponent = () => {
                 components={{
                   a: (
                     <Link
-                      className="font-normal leading-loose text-gray-500 underline hover:text-gray-800 hover:underline"
+                      className="font-normal text-gray-500 leading-loose underline hover:text-gray-800 hover:underline"
                       href="https://support.rallly.co/contribute/donations"
                     />
                   ),
@@ -90,7 +90,7 @@ export const Footer: React.FunctionComponent = () => {
                 components={{
                   a: (
                     <Link
-                      className="font-normal leading-loose text-gray-500 underline hover:text-gray-800 hover:underline"
+                      className="font-normal text-gray-500 leading-loose underline hover:text-gray-800 hover:underline"
                       href="https://twitter.com/imlukevella"
                     />
                   ),
@@ -102,7 +102,7 @@ export const Footer: React.FunctionComponent = () => {
             <a
               target="_blank"
               href="https://twitter.com/ralllyco"
-              className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
+              className="text-gray-500 text-sm hover:text-primary-600 hover:no-underline"
               rel="noreferrer noopener"
             >
               <TwitterIcon className="size-5" />
@@ -110,7 +110,7 @@ export const Footer: React.FunctionComponent = () => {
             <a
               target="_blank"
               href="https://discord.gg/uzg4ZcHbuM"
-              className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
+              className="text-gray-500 text-sm hover:text-primary-600 hover:no-underline"
               rel="noreferrer noopener"
             >
               <DiscordIcon className="size-5" />
@@ -118,7 +118,7 @@ export const Footer: React.FunctionComponent = () => {
             <a
               target="_blank"
               href="https://www.linkedin.com/company/rallly"
-              className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
+              className="text-gray-500 text-sm hover:text-primary-600 hover:no-underline"
               rel="noreferrer noopener"
             >
               <LinkedinIcon className="size-5" />
@@ -126,7 +126,7 @@ export const Footer: React.FunctionComponent = () => {
             <a
               target="_blank"
               href="https://github.com/lukevella/rallly"
-              className="hover:text-primary-600 text-sm text-gray-500 hover:no-underline"
+              className="text-gray-500 text-sm hover:text-primary-600 hover:no-underline"
               rel="noreferrer noopener"
             >
               <GithubIcon className="size-5" />
@@ -261,7 +261,7 @@ export const Footer: React.FunctionComponent = () => {
           </div>
           <a
             href="https://support.rallly.co/contribute/translations"
-            className="hover:border-primary-600 hover:text-primary-600 inline-flex items-center rounded-md border px-3 py-2 text-xs text-gray-500"
+            className="inline-flex items-center rounded-md border px-3 py-2 text-gray-500 text-xs hover:border-primary-600 hover:text-primary-600"
           >
             <LanguagesIcon className="mr-2 size-5" />
             <Trans ns="common" i18nKey="volunteerTranslator" /> &rarr;

@@ -79,7 +79,7 @@ export const ParticipantDropdown = ({
             <div className="grid gap-0.5">
               <div>{participant.name}</div>
               {participant.email ? (
-                <div className="text-muted-foreground text-xs font-normal">
+                <div className="font-normal text-muted-foreground text-xs">
                   {participant.email}
                 </div>
               ) : null}

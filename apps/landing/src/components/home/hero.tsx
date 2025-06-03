@@ -33,15 +33,15 @@ const Screenshot = () => {
         style={{
           backfaceVisibility: "hidden",
         }}
-        className="shadow-huge relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-2 text-sm text-gray-50 subpixel-antialiased"
+        className="relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-2 text-gray-50 text-sm subpixel-antialiased shadow-huge"
       >
         <Trans
           i18nKey="home:createPageLikeThis"
           defaults="Create a page like this in seconds!"
         />
-        <span className="absolute left-1/2 top-full z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
-        <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-right -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-        <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-right -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
+        <span className="-translate-x-1/2 absolute top-full left-1/2 z-10 h-8 w-px bg-gray-800" />
+        <span className="-bottom-12 -translate-x-1/2 absolute left-1/2 z-10 inline-block size-3 origin-right rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
+        <span className="-bottom-12 -translate-x-1/2 absolute left-1/2 z-10 inline-block size-3 origin-right animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
       </m.div>
       <m.div
         transition={{
@@ -55,7 +55,7 @@ const Screenshot = () => {
         }}
         initial="hidden"
         animate={isLoaded ? "visible" : "hidden"}
-        className="shadow-huge mx-auto w-fit overflow-hidden rounded-md border"
+        className="mx-auto w-fit overflow-hidden rounded-md border shadow-huge"
       >
         <Image
           src="/static/images/hero-shot.png"
@@ -88,7 +88,7 @@ export const MarketingHero = ({
           <Link
             locale="en"
             href="/blog/introducing-quick-create"
-            className="group relative inline-flex items-center gap-x-2 rounded-full border bg-gray-50 py-1 pl-1 pr-4 text-sm leading-6 text-gray-600 hover:bg-white"
+            className="group relative inline-flex items-center gap-x-2 rounded-full border bg-gray-50 py-1 pr-4 pl-1 text-gray-600 text-sm leading-6 hover:bg-white"
           >
             <Badge variant="secondary">
               <Trans ns="home" i18nKey="new" defaults="New" />
@@ -105,10 +105,10 @@ export const MarketingHero = ({
             </span>
           </Link>
         </div>
-        <h1 className="mb-2 mt-6 text-pretty text-2xl font-bold tracking-tight sm:mb-4 sm:text-5xl">
+        <h1 className="mt-6 mb-2 text-pretty font-bold text-2xl tracking-tight sm:mb-4 sm:text-5xl">
           {title}
         </h1>
-        <h2 className="mx-auto max-w-3xl text-pretty text-base text-gray-500 sm:text-xl font-normal sm:leading-relaxed">
+        <h2 className="mx-auto max-w-3xl text-pretty font-normal text-base text-gray-500 sm:text-xl sm:leading-relaxed">
           {description}
         </h2>
         <div className="mt-8 flex flex-col items-center justify-center gap-4">
@@ -122,9 +122,9 @@ export const MarketingHero = ({
           </Button>
           <p
             className={cn(
-              "whitespace-nowrap text-center text-xs text-gray-600",
+              "whitespace-nowrap text-center text-gray-600 text-xs",
               handwritten.className,
-              "decoration underline decoration-gray-300 decoration-2 underline-offset-8",
+              "decoration underline decoration-2 decoration-gray-300 underline-offset-8",
             )}
           >
             <Trans

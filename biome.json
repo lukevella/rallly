@@ -15,6 +15,9 @@
           "level": "error",
           "fix": "unsafe"
         }
+      },
+      "nursery": {
+        "useSortedClasses": "error"
       }
     }
   },

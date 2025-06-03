@@ -58,7 +58,7 @@ export default function TermsOfUse() {
         <a href="mailto:support@rallly.co">support@rallly.co</a>.
       </p>
 
-      <p className="text-sm font-semibold">
+      <p className="font-semibold text-sm">
         Stack Snap Ltd.
         <br />
         The Gallery 14

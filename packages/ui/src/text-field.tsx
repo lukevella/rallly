@@ -67,8 +67,8 @@ const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
         }}
         className={cn(
           "flex items-center",
-          "text-field group",
-          "focus-within:border-primary-400 focus-within:ring-primary-100 focus-within:ring-2",
+          "group text-field",
+          "focus-within:border-primary-400 focus-within:ring-2 focus-within:ring-primary-100",
           inputVariants({ size }),
           "p-0",
           className,

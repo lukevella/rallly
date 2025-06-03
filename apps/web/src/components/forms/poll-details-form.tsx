@@ -54,7 +54,7 @@ export const PollDetailsForm = () => {
           <FormLabel className="inline-block" htmlFor="location">
             {t("location")}
           </FormLabel>
-          <span className="text-muted-foreground ml-1 text-sm">
+          <span className="ml-1 text-muted-foreground text-sm">
             <Trans i18nKey="optionalLabel" defaults="(Optional)" />
           </span>
         </div>
@@ -71,7 +71,7 @@ export const PollDetailsForm = () => {
           <FormLabel className="inline-block" htmlFor="description">
             {t("description")}
           </FormLabel>
-          <span className="text-muted-foreground ml-1 text-sm">
+          <span className="ml-1 text-muted-foreground text-sm">
             <Trans i18nKey="optionalLabel" defaults="(Optional)" />
           </span>
         </div>
