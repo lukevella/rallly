@@ -14,10 +14,10 @@ const iconVariants = cva("", {
       primary: "text-primary-600",
     },
     size: {
-      sm: "w-3 h-3",
-      md: "w-4 h-4",
-      lg: "w-5 h-5",
-      xl: "w-7 h-7",
+      sm: "h-3 w-3",
+      md: "h-4 w-4",
+      lg: "h-5 w-5",
+      xl: "h-7 w-7",
     },
   },
   defaultVariants: {

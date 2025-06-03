@@ -9,30 +9,30 @@ import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex border text-shadow font-medium disabled:pointer-events-none select-none disabled:opacity-50 items-center justify-center whitespace-nowrap border",
+    "inline-flex select-none items-center justify-center whitespace-nowrap border border font-medium text-shadow disabled:pointer-events-none disabled:opacity-50",
     "focus-visible:shadow-none",
   ),
   {
     variants: {
       variant: {
         primary:
-          "focus-visible:ring-offset-1 border-primary bg-primary hover:bg-primary-500 disabled:bg-gray-400 disabled:border-transparent text-white",
+          "border-primary bg-primary text-white hover:bg-primary-500 focus-visible:ring-offset-1 disabled:border-transparent disabled:bg-gray-400",
         destructive:
-          "focus-visible:ring-offset-1 bg-destructive shadow-sm text-destructive-foreground active:bg-destructive border-destructive hover:bg-destructive/90",
-        default: "focus-visible:ring-offset-1 hover:bg-gray-50 bg-white",
+          "border-destructive bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 focus-visible:ring-offset-1 active:bg-destructive",
+        default: "bg-white hover:bg-gray-50 focus-visible:ring-offset-1",
         secondary:
-          "focus-visible:ring-offset-1 border-secondary bg-secondary hover:bg-secondary/80 text-secondary-foreground",
+          "border-secondary bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-offset-1",
         ghost:
-          "border-transparent bg-transparent data-[state=open]:bg-gray-500/20 text-gray-800 hover:bg-gray-500/10 active:bg-gray-500/20",
+          "border-transparent bg-transparent text-gray-800 hover:bg-gray-500/10 active:bg-gray-500/20 data-[state=open]:bg-gray-500/20",
         actionBar:
-          "border-transparent bg-transparent data-[state=open]:bg-gray-500/20 text-gray-800 hover:bg-gray-700 active:bg-gray-700/50",
-        link: "underline-offset-4 border-transparent hover:underline text-primary",
+          "border-transparent bg-transparent text-gray-800 hover:bg-gray-700 active:bg-gray-700/50 data-[state=open]:bg-gray-500/20",
+        link: "border-transparent text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-2.5 gap-x-2 text-sm rounded-md",
-        sm: "h-8 text-sm px-2 gap-x-1.5 rounded-md",
-        lg: "h-12 text-base gap-x-3 px-4 rounded-lg",
-        icon: "size-7 text-sm gap-x-1.5 rounded-md",
+        default: "h-9 gap-x-2 rounded-md px-2.5 text-sm",
+        sm: "h-8 gap-x-1.5 rounded-md px-2 text-sm",
+        lg: "h-12 gap-x-3 rounded-lg px-4 text-base",
+        icon: "size-7 gap-x-1.5 rounded-md text-sm",
         "icon-lg": "size-8 rounded-full",
       },
     },

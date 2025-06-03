@@ -4,13 +4,13 @@ import * as React from "react";
 import { cn } from "./lib/utils";
 
 const alertVariants = cva(
-  "flex sm:flex-row flex-col gap-x-3 gap-y-2 rounded-md border p-4",
+  "flex flex-col gap-x-3 gap-y-2 rounded-md border p-4 sm:flex-row",
   {
     variants: {
       variant: {
         default: "bg-gray-50 text-foreground",
         destructive:
-          "text-destructive bg-rose-50 border-destructive/50 dark:border-destructive [&>svg]:text-destructive text-destructive",
+          "border-destructive/50 bg-rose-50 text-destructive dark:border-destructive [&>svg]:text-destructive",
       },
     },
     defaultVariants: {

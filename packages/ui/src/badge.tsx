@@ -4,20 +4,20 @@ import type * as React from "react";
 import { cn } from "./lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex group whitespace-nowrap items-center rounded-full justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "group inline-flex items-center justify-center whitespace-nowrap rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
         primary: "bg-primary text-primary-50",
-        default: "bg-gray-50 border",
+        default: "border bg-gray-50",
         destructive: "bg-destructive text-destructive-foreground",
         outline: "text-foreground",
         green: "bg-green-600 text-white",
-        secondary: "text-primary bg-primary-50",
+        secondary: "bg-primary-50 text-primary",
       },
       size: {
-        md: "h-6 min-w-5 text-xs px-2",
-        lg: "h-7 text-sm min-w-7 px-2.5",
+        md: "h-6 min-w-5 px-2 text-xs",
+        lg: "h-7 min-w-7 px-2.5 text-sm",
       },
     },
     defaultVariants: {
