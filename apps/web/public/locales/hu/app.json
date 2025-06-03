@@ -382,5 +382,12 @@
   "changeRole": "Szerep módosítása",
   "licenseType": "Licenc típusa",
   "removeLicense": "Licenc eltávolítása",
-  "removeLicenseDescription": "Biztosan szeretnéd eltávolítani ezt a licencet?"
+  "removeLicenseDescription": "Biztosan el szeretnéd távolítani ezt a licencet?",
+  "licenseKeyErrorRateLimitExceeded": "Túl sok próbálkozás",
+  "licenseKeyErrorInvalidLicenseKey": "Érvénytelen licenckulcs",
+  "licenseKeyGenericError": "Hiba történt a licenckulcs ellenőrzése közben",
+  "activate": "Aktiválás",
+  "authErrorsEmailBlocked": "Ez az email cím nem használható. Próbálkozz egy másik címmel, vagy kérj segítséget.",
+  "disableUserRegistration": "Regisztráció tiltása",
+  "disableUserRegistrationDescription": "Ha nem szeretnéd, hogy új felhasználói fiókokat lehessen létrehozni."
 }
