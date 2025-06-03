@@ -387,7 +387,6 @@
   "licenseKeyErrorInvalidLicenseKey": "Invalid license key",
   "licenseKeyGenericError": "An error occurred while validating the license key",
   "activate": "Activate",
-  "authErrorsRegistrationDisabled": "Registration is currently disabled. Please try again later.",
   "authErrorsEmailNotVerified": "Your email address is not verified. Please verify your email before logging in.",
   "authErrorsUserBanned": "This account has been banned. Please contact support if you believe this is an error.",
   "authErrorsEmailBlocked": "This email address is not allowed. Please use a different email or contact support.",
