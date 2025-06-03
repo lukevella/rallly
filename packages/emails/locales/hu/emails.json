@@ -71,7 +71,6 @@
   "license_key_nextStepsHeading": "Következő lépések",
   "license_key_activationSteps": "Kövesd ezeket az <a>utasításokat</a>, hogy aktiváld a licenced az általad üzemeltetett Rallly példányhoz.",
   "license_key_questionsHeading": "Kérdések?",
-  "license_key_support": "Válaszolj erre az emailre vagy keress minket a <a>support@rallly.co</a> címen, ha segítségre van szükséged.",
   "license_key_signoff": "Köszönjük, hogy a Rallly-t választottad!",
   "license_key_preview": "A licenc kulcsot létre lett hozva.",
   "license_key_subject": "A te saját magad által üzemeltetett Rallly {tier} licenced"
