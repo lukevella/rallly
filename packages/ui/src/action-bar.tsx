@@ -36,13 +36,24 @@ ActionBarPortal.displayName = "ActionBarPortal";
 
 const ActionBarContainer = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & {
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+  }
+>(({ className, open, onOpenChange, ...props }, ref) => {
   return (
     <div
+      role="dialog"
+      aria-modal={open}
+      aria-labelledby="action-bar-title"
+      data-state={open ? "open" : "closed"}
       ref={ref}
       className={cn(
-        "-translate-x-1/2 pointer-events-auto fixed bottom-16 left-[calc(50vw+var(--sidebar-width)/2)] z-50 inline-flex items-center gap-4 rounded-xl bg-action-bar p-2 text-action-bar-foreground shadow-lg",
+        {
+          "opacity-0": !open,
+          "opacity-100": open,
+        },
+        "-translate-x-1/2 pointer-events-auto fixed bottom-16 left-1/2 z-50 inline-flex items-center gap-4 rounded-xl border bg-action-bar p-2 text-action-bar-foreground shadow-lg md:left-[calc(50vw+var(--sidebar-width)/2)]",
         className,
       )}
       {...props}

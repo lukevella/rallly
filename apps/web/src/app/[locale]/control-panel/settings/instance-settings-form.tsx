@@ -13,7 +13,11 @@ import {
   instanceSettingsSchema,
 } from "@/features/instance-settings/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ActionBarContainer, ActionBarGroup } from "@rallly/ui/action-bar";
+import {
+  ActionBarContainer,
+  ActionBarContent,
+  ActionBarGroup,
+} from "@rallly/ui/action-bar";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -24,6 +28,7 @@ import {
   FormLabel,
 } from "@rallly/ui/form";
 import { Switch } from "@rallly/ui/switch";
+import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { updateInstanceSettings } from "./actions";
 
@@ -92,26 +97,27 @@ export function InstanceSettingsForm({
             />
           </SettingsGroupContent>
         </SettingsGroup>
-        {form.formState.isDirty && (
-          <ActionBarContainer>
-            <ActionBarGroup>
-              <Button
-                variant="actionBar"
-                type="button"
-                onClick={() => form.reset()}
-              >
-                Cancel
-              </Button>
-              <Button
-                loading={form.formState.isSubmitting}
-                variant="primary"
-                type="submit"
-              >
-                Save
-              </Button>
-            </ActionBarGroup>
-          </ActionBarContainer>
-        )}
+        <ActionBarContainer open={form.formState.isDirty}>
+          <ActionBarContent>
+            <p className="text-sm">You have unsaved changes</p>
+          </ActionBarContent>
+          <ActionBarGroup>
+            <Button
+              variant="actionBar"
+              type="button"
+              onClick={() => form.reset()}
+            >
+              Cancel
+            </Button>
+            <Button
+              loading={form.formState.isSubmitting}
+              variant="primary"
+              type="submit"
+            >
+              Save
+            </Button>
+          </ActionBarGroup>
+        </ActionBarContainer>
       </form>
     </Form>
   );

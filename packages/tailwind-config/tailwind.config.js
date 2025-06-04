@@ -51,7 +51,7 @@ module.exports = {
         },
         "action-bar": {
           DEFAULT: colors.gray["800"],
-          foreground: colors.white,
+          foreground: colors.gray["50"],
         },
         muted: {
           DEFAULT: colors.gray["100"],
