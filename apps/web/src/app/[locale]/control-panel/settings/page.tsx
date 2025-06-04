@@ -5,17 +5,10 @@ import {
   FullWidthLayoutHeader,
   FullWidthLayoutTitle,
 } from "@/components/full-width-layout";
-import {
-  SettingsGroup,
-  SettingsGroupContent,
-  SettingsGroupDescription,
-  SettingsGroupHeader,
-  SettingsGroupTitle,
-} from "@/components/settings-group";
 import { Trans } from "@/components/trans";
 import { getInstanceSettings } from "@/features/instance-settings/queries";
 import { SettingsIcon } from "lucide-react";
-import { DisableUserRegistration } from "./disable-user-registration";
+import { InstanceSettingsForm } from "./instance-settings-form";
 
 async function loadData() {
   const instanceSettings = await getInstanceSettings();
@@ -42,27 +35,7 @@ export default async function SettingsPage() {
         </FullWidthLayoutTitle>
       </FullWidthLayoutHeader>
       <FullWidthLayoutContent>
-        <SettingsGroup>
-          <SettingsGroupHeader>
-            <SettingsGroupTitle>
-              <Trans
-                i18nKey="authenticationAndSecurity"
-                defaults="Authentication & Security"
-              />
-            </SettingsGroupTitle>
-            <SettingsGroupDescription>
-              <Trans
-                i18nKey="authenticationAndSecurityDescription"
-                defaults="Manage authentication and security settings"
-              />
-            </SettingsGroupDescription>
-          </SettingsGroupHeader>
-          <SettingsGroupContent>
-            <DisableUserRegistration
-              defaultValue={instanceSettings?.disableUserRegistration}
-            />
-          </SettingsGroupContent>
-        </SettingsGroup>
+        <InstanceSettingsForm defaultValue={instanceSettings} />
       </FullWidthLayoutContent>
     </FullWidthLayout>
   );
