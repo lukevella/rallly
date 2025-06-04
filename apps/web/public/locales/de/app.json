@@ -382,5 +382,17 @@
   "changeRole": "Rolle ändern",
   "licenseType": "Lizenztyp",
   "removeLicense": "Lizenz entfernen",
-  "removeLicenseDescription": "Bist du sicher, dass du diese Lizenz wirklich löschen möchtest?"
+  "removeLicenseDescription": "Bist du sicher, dass du diese Lizenz wirklich löschen möchtest?",
+  "licenseKeyErrorRateLimitExceeded": "Anfragelimit überschritten",
+  "licenseKeyErrorInvalidLicenseKey": "Ungültiger Lizenzschlüssel",
+  "licenseKeyGenericError": "Beim Überprüfen des Lizenzschlüssels ist ein Fehler aufgetreten",
+  "activate": "Aktivieren",
+  "authErrorsEmailNotVerified": "Deine E-Mail-Adresse ist nicht verifiziert. Bitte bestätige deine E-Mail-Adresse, bevor du dich anmeldest.",
+  "authErrorsUserBanned": "Dieser Account wurde gesperrt. Bitte kontaktiere den Support, falls du glaubst, dass dies ein Fehler ist.",
+  "authErrorsEmailBlocked": "Diese E-Mail-Adresse ist nicht erlaubt. Bitte verwende eine andere Adresse oder kontaktiere den Support.",
+  "authErrorsUserNotFound": "Kein Konto mit dieser E-Mail-Adresse gefunden. Bitte überprüfe die Adresse oder registriere ein neues Konto.",
+  "disableUserRegistration": "Benutzerregistrierung deaktivieren",
+  "disableUserRegistrationDescription": "Verhindert, dass sich neue Nutzer registrieren können.",
+  "authenticationAndSecurity": "Authentifizierung & Sicherheit",
+  "authenticationAndSecurityDescription": "Authentifizierungs- und Sicherheitseinstellungen verwalten"
 }
