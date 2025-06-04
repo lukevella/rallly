@@ -139,7 +139,7 @@ export default async function LicensePage() {
                 <a
                   target="_blank"
                   rel="noreferrer"
-                  href="https://support.rallly.co/self-hosting/pricing"
+                  href="https://support.rallly.co/self-hosting/licensing"
                 >
                   <Icon>
                     <ShoppingBagIcon />
