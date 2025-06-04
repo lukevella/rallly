@@ -1,40 +1,8 @@
-import * as Portal from "@radix-ui/react-portal";
 import * as React from "react";
 
 import { cn } from "./lib/utils";
 
-const ACTION_BAR_PORTAL_ID = "action-bar-portal";
-
 const ActionBar = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "pointer-events-none sticky bottom-8 flex justify-center pb-5",
-      className,
-    )}
-    id={ACTION_BAR_PORTAL_ID}
-    {...props}
-  />
-));
-ActionBar.displayName = "ActionBar";
-
-const ActionBarPortal = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <Portal.Root
-    container={document.getElementById(ACTION_BAR_PORTAL_ID)}
-    ref={ref}
-    className={className}
-    {...props}
-  />
-));
-ActionBarPortal.displayName = "ActionBarPortal";
-
-const ActionBarContainer = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
     open?: boolean;
@@ -60,7 +28,7 @@ const ActionBarContainer = React.forwardRef<
     />
   );
 });
-ActionBarContainer.displayName = "ActionBarContainer";
+ActionBar.displayName = "ActionBar";
 
 const ActionBarContent = React.forwardRef<
   HTMLDivElement,
@@ -86,10 +54,4 @@ const ActionBarGroup = React.forwardRef<
 ));
 ActionBarGroup.displayName = "ActionBarGroup";
 
-export {
-  ActionBar,
-  ActionBarContainer,
-  ActionBarContent,
-  ActionBarGroup,
-  ActionBarPortal,
-};
+export { ActionBar, ActionBarContent, ActionBarGroup };

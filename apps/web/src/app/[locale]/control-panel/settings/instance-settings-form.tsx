@@ -14,7 +14,7 @@ import {
 } from "@/features/instance-settings/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  ActionBarContainer,
+  ActionBar,
   ActionBarContent,
   ActionBarGroup,
 } from "@rallly/ui/action-bar";
@@ -28,7 +28,6 @@ import {
   FormLabel,
 } from "@rallly/ui/form";
 import { Switch } from "@rallly/ui/switch";
-import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { updateInstanceSettings } from "./actions";
 
@@ -97,7 +96,7 @@ export function InstanceSettingsForm({
             />
           </SettingsGroupContent>
         </SettingsGroup>
-        <ActionBarContainer open={form.formState.isDirty}>
+        <ActionBar open={form.formState.isDirty}>
           <ActionBarContent>
             <p className="text-sm">You have unsaved changes</p>
           </ActionBarContent>
@@ -117,7 +116,7 @@ export function InstanceSettingsForm({
               Save
             </Button>
           </ActionBarGroup>
-        </ActionBarContainer>
+        </ActionBar>
       </form>
     </Form>
   );
