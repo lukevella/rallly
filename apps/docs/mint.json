@@ -114,6 +114,10 @@
     {
       "source": "/participants/editing-a-response",
       "destination": "/guide/participant-guide"
+    },
+    {
+      "source": "/self-hosting/pricing",
+      "destination": "/self-hosting/licensing"
     }
   ]
 }
