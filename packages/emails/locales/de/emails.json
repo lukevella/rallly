@@ -66,5 +66,13 @@
   "license_key_content": "Dein Kauf wurde bestätigt und dein Lizenzschlüssel wurde erstellt.",
   "license_key_yourKey": "Lizenzdetails",
   "license_key_plan": "Plan",
-  "license_key_support": "Antworte auf diese E-Mail oder kontaktiere uns unter <a>{supportEmail}</a>, falls du Hilfe benötigst."
+  "license_key_seats": "Benutzerplätze",
+  "license_key_licenseKey": "Lizenzschlüssel",
+  "license_key_nextStepsHeading": "Nächste Schritte",
+  "license_key_activationSteps": "Folge diesen <a>Anweisungen</a>, um deine Lizenz auf deiner Rallly-Self-Hosted-Instanz zu aktivieren.",
+  "license_key_questionsHeading": "Fragen?",
+  "license_key_support": "Antworte auf diese E-Mail oder kontaktiere uns unter <a>{supportEmail}</a>, falls du Hilfe benötigst.",
+  "license_key_signoff": "Danke, dass du dich für Rallly entschieden hast!",
+  "license_key_preview": "Dein Lizenzschlüssel wurde generiert.",
+  "license_key_subject": "Deine Rallly-Self-Hosted-{tier}-Lizenz"
 }
