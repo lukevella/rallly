@@ -15,8 +15,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ActionBar,
-  ActionBarContent,
   ActionBarGroup,
+  ActionBarTitle,
 } from "@rallly/ui/action-bar";
 import { Button } from "@rallly/ui/button";
 import {
@@ -97,9 +97,9 @@ export function InstanceSettingsForm({
           </SettingsGroupContent>
         </SettingsGroup>
         <ActionBar open={form.formState.isDirty}>
-          <ActionBarContent>
+          <ActionBarTitle>
             <p className="text-sm">You have unsaved changes</p>
-          </ActionBarContent>
+          </ActionBarTitle>
           <ActionBarGroup>
             <Button
               variant="actionBar"
