@@ -1,10 +1,4 @@
 import { PageIcon } from "@/app/components/page-icons";
-import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageTitle,
-} from "@/app/components/page-layout";
 import { requireAdmin } from "@/auth/queries";
 import {
   EmptyState,
@@ -12,6 +6,12 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import {
+  FullWidthLayout,
+  FullWidthLayoutContent,
+  FullWidthLayoutHeader,
+  FullWidthLayoutTitle,
+} from "@/components/full-width-layout";
 import { Pagination } from "@/components/pagination";
 import { StackedList } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
@@ -113,18 +113,19 @@ export default async function AdminPage(props: {
   const totalItems = allUsers.length;
 
   return (
-    <PageContainer>
-      <PageHeader>
-        <div className="flex items-center gap-4">
-          <PageTitle>
-            <PageIcon color="darkGray">
+    <FullWidthLayout>
+      <FullWidthLayoutHeader>
+        <FullWidthLayoutTitle
+          icon={
+            <PageIcon size="sm" color="darkGray">
               <UsersIcon />
             </PageIcon>
-            <Trans i18nKey="users" defaults="Users" />
-          </PageTitle>
-        </div>
-      </PageHeader>
-      <PageContent>
+          }
+        >
+          <Trans i18nKey="users" defaults="Users" />
+        </FullWidthLayoutTitle>
+      </FullWidthLayoutHeader>
+      <FullWidthLayoutContent>
         <div className="space-y-4">
           <UserSearchInput />
           <UsersTabbedView>
@@ -167,8 +168,8 @@ export default async function AdminPage(props: {
             )}
           </UsersTabbedView>
         </div>
-      </PageContent>
-    </PageContainer>
+      </FullWidthLayoutContent>
+    </FullWidthLayout>
   );
 }
 

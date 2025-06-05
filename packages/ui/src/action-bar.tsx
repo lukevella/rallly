@@ -1,67 +1,54 @@
-import * as Portal from "@radix-ui/react-portal";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import * as React from "react";
-
 import { cn } from "./lib/utils";
 
-const ACTION_BAR_PORTAL_ID = "action-bar-portal";
+interface ActionBarProps
+  extends Omit<
+    React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
+    "open" | "onOpenChange"
+  > {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children: React.ReactNode;
+}
 
 const ActionBar = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "pointer-events-none sticky bottom-8 flex justify-center pb-5",
-      className,
-    )}
-    id={ACTION_BAR_PORTAL_ID}
-    {...props}
-  />
-));
-ActionBar.displayName = "ActionBar";
-
-const ActionBarPortal = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <Portal.Root
-    container={document.getElementById(ACTION_BAR_PORTAL_ID)}
-    ref={ref}
-    className={className}
-    {...props}
-  />
-));
-ActionBarPortal.displayName = "ActionBarPortal";
-
-const ActionBarContainer = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+  React.ComponentRef<typeof DialogPrimitive.Content>,
+  ActionBarProps
+>(({ open, onOpenChange, children, className, ...props }, ref) => {
   return (
-    <div
-      ref={ref}
-      className={cn(
-        "pointer-events-auto z-50 mx-auto inline-flex w-full max-w-2xl items-center gap-4 rounded-xl bg-action-bar p-2 text-action-bar-foreground shadow-lg",
-        className,
-      )}
-      {...props}
-    />
+    <DialogPrimitive.Root modal={false} open={open} onOpenChange={onOpenChange}>
+      <DialogPrimitive.Content
+        forceMount={true}
+        ref={ref}
+        className={cn(
+          "-translate-x-1/2 fixed bottom-3 z-50 flex items-start gap-2 rounded-xl bg-action-bar p-2 text-action-bar-foreground shadow-lg transition-transform duration-200 ease-out data-[state=closed]:pointer-events-none data-[state=closed]:translate-y-full data-[state=open]:translate-y-0 data-[state=closed]:opacity-0 data-[state=open]:opacity-100",
+          "left-1/2 md:bottom-16 md:w-fit",
+          "w-[calc(100%-24px)]",
+          className,
+        )}
+        {...props}
+      >
+        {children}
+      </DialogPrimitive.Content>
+    </DialogPrimitive.Root>
   );
 });
-ActionBarContainer.displayName = "ActionBarContainer";
+ActionBar.displayName = "ActionBar";
 
-const ActionBarContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
+const ActionBarTitle = React.forwardRef<
+  HTMLHeadingElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, children, ...props }, ref) => (
+  <DialogPrimitive.Title
     ref={ref}
-    className={cn("flex items-center px-2.5", className)}
+    className={cn("flex flex-1 items-center px-2.5 py-2 text-sm", className)}
     {...props}
-  />
+  >
+    {children}
+  </DialogPrimitive.Title>
 ));
-ActionBarContent.displayName = "ActionBarContent";
+ActionBarTitle.displayName = "ActionBarTitle";
 
 const ActionBarGroup = React.forwardRef<
   HTMLDivElement,
@@ -69,16 +56,10 @@ const ActionBarGroup = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center gap-2", className)}
+    className={cn("flex justify-end gap-2", className)}
     {...props}
   />
 ));
 ActionBarGroup.displayName = "ActionBarGroup";
 
-export {
-  ActionBar,
-  ActionBarContainer,
-  ActionBarContent,
-  ActionBarGroup,
-  ActionBarPortal,
-};
+export { ActionBar, ActionBarTitle, ActionBarGroup };

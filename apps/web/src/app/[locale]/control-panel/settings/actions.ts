@@ -1,13 +1,12 @@
 "use server";
 
 import { requireAdmin } from "@/auth/queries";
+import type { InstanceSettings } from "@/features/instance-settings/schema";
 import { prisma } from "@rallly/database";
 
-export async function setDisableUserRegistration({
+export async function updateInstanceSettings({
   disableUserRegistration,
-}: {
-  disableUserRegistration: boolean;
-}) {
+}: InstanceSettings) {
   await requireAdmin();
 
   await prisma.instanceSettings.update({
