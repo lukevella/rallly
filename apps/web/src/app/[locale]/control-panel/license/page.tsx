@@ -1,10 +1,4 @@
 import { PageIcon } from "@/app/components/page-icons";
-import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageTitle,
-} from "@/app/components/page-layout";
 import { requireAdmin } from "@/auth/queries";
 import {
   EmptyState,
@@ -13,6 +7,12 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import {
+  FullWidthLayout,
+  FullWidthLayoutContent,
+  FullWidthLayoutHeader,
+  FullWidthLayoutTitle,
+} from "@/components/full-width-layout";
 import { Trans } from "@/components/trans";
 import { LicenseKeyForm } from "@/features/licensing/components/license-key-form";
 import { RemoveLicenseButton } from "@/features/licensing/components/remove-license-button";
@@ -59,16 +59,19 @@ function DescriptionListValue({
 export default async function LicensePage() {
   const { license } = await loadData();
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageTitle>
-          <PageIcon color="darkGray">
-            <KeySquareIcon />
-          </PageIcon>
+    <FullWidthLayout>
+      <FullWidthLayoutHeader>
+        <FullWidthLayoutTitle
+          icon={
+            <PageIcon size="sm" color="darkGray">
+              <KeySquareIcon />
+            </PageIcon>
+          }
+        >
           <Trans i18nKey="license" defaults="License" />
-        </PageTitle>
-      </PageHeader>
-      <PageContent>
+        </FullWidthLayoutTitle>
+      </FullWidthLayoutHeader>
+      <FullWidthLayoutContent>
         {license ? (
           <div>
             <DescriptionList>
@@ -174,8 +177,8 @@ export default async function LicensePage() {
             </EmptyStateFooter>
           </EmptyState>
         )}
-      </PageContent>
-    </PageContainer>
+      </FullWidthLayoutContent>
+    </FullWidthLayout>
   );
 }
 

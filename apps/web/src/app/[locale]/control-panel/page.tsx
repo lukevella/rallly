@@ -1,11 +1,11 @@
 import { PageIcon } from "@/app/components/page-icons";
-import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageTitle,
-} from "@/app/components/page-layout";
 import { requireAdmin } from "@/auth/queries";
+import {
+  FullWidthLayout,
+  FullWidthLayoutContent,
+  FullWidthLayoutHeader,
+  FullWidthLayoutTitle,
+} from "@/components/full-width-layout";
 import { Trans } from "@/components/trans";
 import { getLicense } from "@/features/licensing/queries";
 import { prisma } from "@rallly/database";
@@ -37,16 +37,19 @@ async function loadData() {
 export default async function AdminPage() {
   const { userCount, userLimit, tier } = await loadData();
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageTitle>
-          <PageIcon color="indigo">
-            <GaugeIcon />
-          </PageIcon>
+    <FullWidthLayout>
+      <FullWidthLayoutHeader>
+        <FullWidthLayoutTitle
+          icon={
+            <PageIcon size="sm" color="indigo">
+              <GaugeIcon />
+            </PageIcon>
+          }
+        >
           <Trans i18nKey="controlPanel" defaults="Control Panel" />
-        </PageTitle>
-      </PageHeader>
-      <PageContent className="space-y-8">
+        </FullWidthLayoutTitle>
+      </FullWidthLayoutHeader>
+      <FullWidthLayoutContent>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
             <Trans i18nKey="homeNavTitle" defaults="Navigation" />
@@ -122,8 +125,8 @@ export default async function AdminPage() {
             </Tile>
           </TileGrid>
         </div>
-      </PageContent>
-    </PageContainer>
+      </FullWidthLayoutContent>
+    </FullWidthLayout>
   );
 }
 
