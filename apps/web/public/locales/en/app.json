@@ -394,5 +394,6 @@
   "disableUserRegistration": "Disable User Registration",
   "disableUserRegistrationDescription": "Prevent new users from registering an account.",
   "authenticationAndSecurity": "Authentication & Security",
-  "authenticationAndSecurityDescription": "Manage authentication and security settings"
+  "authenticationAndSecurityDescription": "Manage authentication and security settings",
+  "youHaveUnsavedChanges": "You have unsaved changes"
 }

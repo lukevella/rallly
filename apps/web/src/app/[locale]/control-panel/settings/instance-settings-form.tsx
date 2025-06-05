@@ -98,7 +98,10 @@ export function InstanceSettingsForm({
         </SettingsGroup>
         <ActionBar open={form.formState.isDirty}>
           <ActionBarTitle>
-            <p className="text-sm">You have unsaved changes</p>
+            <Trans
+              i18nKey="youHaveUnsavedChanges"
+              defaults="You have unsaved changes"
+            />
           </ActionBarTitle>
           <ActionBarGroup>
             <Button
@@ -106,14 +109,14 @@ export function InstanceSettingsForm({
               type="button"
               onClick={() => form.reset()}
             >
-              Cancel
+              <Trans i18nKey="cancel" defaults="Cancel" />
             </Button>
             <Button
               loading={form.formState.isSubmitting}
               variant="primary"
               type="submit"
             >
-              Save
+              <Trans i18nKey="save" defaults="Save" />
             </Button>
           </ActionBarGroup>
         </ActionBar>
