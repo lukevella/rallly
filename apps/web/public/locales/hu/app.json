@@ -394,5 +394,6 @@
   "disableUserRegistration": "Regisztráció tiltása",
   "disableUserRegistrationDescription": "Ha nem szeretnéd, hogy új felhasználói fiókokat lehessen létrehozni.",
   "authenticationAndSecurity": "Hitelesítés és biztonság",
-  "authenticationAndSecurityDescription": "Kezeld a hitelesítési és biztonsági beállításokat"
+  "authenticationAndSecurityDescription": "Kezeld a hitelesítési és biztonsági beállításokat",
+  "youHaveUnsavedChanges": "Nem mentett módosításai vannak"
 }
