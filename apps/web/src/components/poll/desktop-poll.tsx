@@ -152,7 +152,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
-                    size="sm"
+                    size="icon"
                     disabled={x === 0}
                     onClick={goToPreviousPage}
                   >
@@ -169,7 +169,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
-                    size="sm"
+                    size="icon"
                     disabled={Boolean(
                       scrollRef.current &&
                         x + scrollRef.current.offsetWidth >=
@@ -195,7 +195,7 @@ const DesktopPoll: React.FunctionComponent = () => {
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="sm"
+                  size="icon"
                   onClick={() => {
                     collapse();
                   }}
@@ -214,7 +214,7 @@ const DesktopPoll: React.FunctionComponent = () => {
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="sm"
+                  size="icon"
                   onClick={() => {
                     expand();
                   }}
@@ -263,7 +263,8 @@ const DesktopPoll: React.FunctionComponent = () => {
                 {canAddNewParticipant && mode !== "new" ? (
                   <Button
                     className="ml-2"
-                    size="sm"
+                    size="icon"
+                    variant="ghost"
                     data-testid="add-participant-button"
                     onClick={() => {
                       votingForm.newParticipant();
