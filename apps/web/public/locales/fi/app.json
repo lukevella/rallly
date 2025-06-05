@@ -387,7 +387,6 @@
   "licenseKeyErrorInvalidLicenseKey": "Virheellinen lisenssiavain",
   "licenseKeyGenericError": "Lisenssiavaimen vahvistamisessa tapahtui virhe",
   "activate": "Aktivoi",
-  "authErrorsRegistrationDisabled": "Rekisteröinti on poistettu käytöstä. Yritä myöhemmin uudelleen.",
   "authErrorsEmailNotVerified": "Sähköpostiosoitettasi ei ole vahvistettu. Vahvista sähköpostiosoitteesi ennen kirjautumista.",
   "authErrorsUserBanned": "Tämä tili on estetty. Ota yhteyttä tukeen, jos uskot tämän olevan virhe.",
   "authErrorsEmailBlocked": "Tätä sähköpostiosoite ei sallita. Käytä toista sähköpostiosoitetta tai ota yhteys tukeen.",

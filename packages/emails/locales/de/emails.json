@@ -62,5 +62,17 @@
   "abandoned_checkout_support": "Falls du Fragen zu Rallly Pro hast oder irgendwo Hilfe brauchst, antworte einfach auf diese E-Mail. Ich helfe dir gerne!",
   "abandoned_checkout_preview": "Exklusives Angebot: Sichere dir {discount}% Rabatt auf dein erstes Jahr mit Rallly Pro!",
   "abandoned_checkout_subject": "Sichere dir {discount}% Rabatt auf dein erstes Jahr mit Rallly Pro",
-  "abandoned_checkout_signoff": "Beste Grüße,"
+  "abandoned_checkout_signoff": "Beste Grüße,",
+  "license_key_content": "Dein Kauf wurde bestätigt und dein Lizenzschlüssel wurde erstellt.",
+  "license_key_yourKey": "Lizenzdetails",
+  "license_key_plan": "Plan",
+  "license_key_seats": "Benutzerplätze",
+  "license_key_licenseKey": "Lizenzschlüssel",
+  "license_key_nextStepsHeading": "Nächste Schritte",
+  "license_key_activationSteps": "Folge diesen <a>Anweisungen</a>, um deine Lizenz auf deiner Rallly-Self-Hosted-Instanz zu aktivieren.",
+  "license_key_questionsHeading": "Fragen?",
+  "license_key_support": "Antworte auf diese E-Mail oder kontaktiere uns unter <a>{supportEmail}</a>, falls du Hilfe benötigst.",
+  "license_key_signoff": "Danke, dass du dich für Rallly entschieden hast!",
+  "license_key_preview": "Dein Lizenzschlüssel wurde generiert.",
+  "license_key_subject": "Deine Rallly-Self-Hosted-{tier}-Lizenz"
 }

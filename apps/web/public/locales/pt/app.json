@@ -382,5 +382,17 @@
   "changeRole": "Alterar função",
   "licenseType": "Tipologia de licença",
   "removeLicense": "Remover licença",
-  "removeLicenseDescription": "Tem certeza de que deseja remover esta licença?"
+  "removeLicenseDescription": "Tem certeza de que deseja remover esta licença?",
+  "licenseKeyErrorRateLimitExceeded": "Limite de tentativas excedido",
+  "licenseKeyErrorInvalidLicenseKey": "Chave de licença inválida",
+  "licenseKeyGenericError": "Ocorreu um erro ao validar a chave da licença",
+  "activate": "Ativar",
+  "authErrorsEmailNotVerified": "O seu endereço de correio eletrónico não está verificado. Por favor, verifique o seu endereço eletrónico antes de iniciar sessão.",
+  "authErrorsUserBanned": "Esta conta foi banida. Por favor entre em contacto com o suporte se acredita que isto é um erro.",
+  "authErrorsEmailBlocked": "Este endereço de correio eletrónico não é permitido. Use um endereço de correio eletrónico diferente ou contacte o suporte.",
+  "authErrorsUserNotFound": "Nenhuma conta encontrada com este endereço de correio eletrónico. Por favor, verifique o endereço ou registe-se para uma nova conta.",
+  "disableUserRegistration": "Desativar registo de utilizadores",
+  "disableUserRegistrationDescription": "Impedir novos utilizadores de registar uma conta.",
+  "authenticationAndSecurity": "Autenticação e Segurança",
+  "authenticationAndSecurityDescription": "Gerir as configurações de autenticação e segurança"
 }
