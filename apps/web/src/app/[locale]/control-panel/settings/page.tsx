@@ -1,4 +1,5 @@
 import { PageIcon } from "@/app/components/page-icons";
+import { requireAdmin } from "@/auth/queries";
 import {
   FullWidthLayout,
   FullWidthLayoutContent,
@@ -11,6 +12,8 @@ import { SettingsIcon } from "lucide-react";
 import { InstanceSettingsForm } from "./instance-settings-form";
 
 async function loadData() {
+  await requireAdmin();
+
   const instanceSettings = await getInstanceSettings();
 
   return {
