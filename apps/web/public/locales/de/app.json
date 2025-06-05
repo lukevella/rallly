@@ -394,5 +394,6 @@
   "disableUserRegistration": "Benutzerregistrierung deaktivieren",
   "disableUserRegistrationDescription": "Verhindert, dass sich neue Nutzer registrieren können.",
   "authenticationAndSecurity": "Authentifizierung & Sicherheit",
-  "authenticationAndSecurityDescription": "Authentifizierungs- und Sicherheitseinstellungen verwalten"
+  "authenticationAndSecurityDescription": "Authentifizierungs- und Sicherheitseinstellungen verwalten",
+  "youHaveUnsavedChanges": "Du hast ungespeicherte Änderungen"
 }
