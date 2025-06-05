@@ -12,6 +12,7 @@ import {
   type InstanceSettings,
   instanceSettingsSchema,
 } from "@/features/instance-settings/schema";
+import { useTranslation } from "@/i18n/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ActionBar,
@@ -27,6 +28,7 @@ import {
   FormItem,
   FormLabel,
 } from "@rallly/ui/form";
+import { useToast } from "@rallly/ui/hooks/use-toast";
 import { Switch } from "@rallly/ui/switch";
 import { useForm } from "react-hook-form";
 import { updateInstanceSettings } from "./actions";
@@ -41,13 +43,30 @@ export function InstanceSettingsForm({
     resolver: zodResolver(instanceSettingsSchema),
   });
 
+  const { t } = useTranslation();
+
+  const { toast } = useToast();
+
   return (
     <Form {...form}>
       <form
         name="instance-settings-form"
         onSubmit={form.handleSubmit(async (data) => {
-          await updateInstanceSettings(data);
-          form.reset(data);
+          try {
+            await updateInstanceSettings(data);
+            form.reset(data);
+          } catch (error) {
+            console.error(error);
+            toast({
+              title: t("unexpectedError", {
+                defaultValue: "Unexpected Error",
+              }),
+              description: t("unexpectedErrorDescription", {
+                defaultValue:
+                  "There was an unexpected error. Please try again later.",
+              }),
+            });
+          }
         })}
       >
         <SettingsGroup>
