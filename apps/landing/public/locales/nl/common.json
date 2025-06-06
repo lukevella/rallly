@@ -25,5 +25,15 @@
   "status": "Status",
   "when2MeetAlternative": "Alternatief voor When2Meet",
   "meetingPoll": "Poll voor vergadering",
-  "signUp": "Aanmelden"
+  "signUp": "Aanmelden",
+  "licensingThankYouTitle": "Bedankt voor je aankoop!",
+  "licensingThankYouSubtitle": "Jouw Rallly self-hosted licentie is bevestigd. Welkom aan boord!",
+  "licensingThankYouLicense": "Vervolgstappen",
+  "licensingThankYouLicenseEmailed": "Je licentiesleutel is verstuurd naar het e-mailadres dat je hebt opgegeven tijdens het afrekenen. Controleer je inbox.",
+  "licensingThankYouNextStepsInstallation": "Installatiegids",
+  "licensingThankYouNextStepsApplyLicense": "Hoe gebruik je je licentie",
+  "licensingThankYouSupportPrompt": "Hulp nodig of heb je vragen? Bezoek onze <0>documentatie voor self-hosted</0> of <1>neem contact op</1>.",
+  "licensingThankYouGoHomeLink": "Terug naar beginpagina",
+  "openSource": "Wij zijn opensource!",
+  "starOnGitHub": "Geef een ster op GitHub"
 }
