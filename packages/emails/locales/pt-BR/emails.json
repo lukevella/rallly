@@ -62,5 +62,6 @@
   "abandoned_checkout_support": "Se você tiver alguma dúvida sobre Rallly Pro ou precisar de ajuda com qualquer coisa, basta responder a este e-mail. Estou aqui para ajudar!",
   "abandoned_checkout_preview": "Oferta exclusiva: obtenha {discount}% de desconto em seu primeiro ano de Rallly Pro!",
   "abandoned_checkout_subject": "Receba {discount}% de desconto no seu primeiro ano do Rallly Pro",
-  "abandoned_checkout_signoff": "Atenciosamente,"
+  "abandoned_checkout_signoff": "Atenciosamente,",
+  "license_key_content": "Sua compra foi confirmada e sua chave de licença foi gerada."
 }
