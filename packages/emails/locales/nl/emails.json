@@ -62,5 +62,17 @@
   "abandoned_checkout_support": "Als je vragen hebt over Rallly Pro of hulp nodig hebt, beantwoord dan deze e-mail en ik zal je helpen!",
   "abandoned_checkout_preview": "Exclusieve aanbieding: Ontvang {discount}% korting op je eerste jaar van Rallly Pro!",
   "abandoned_checkout_subject": "Krijg {discount}% korting op je eerste jaar van Rallly Pro",
-  "abandoned_checkout_signoff": "Met vriendelijke groet,"
+  "abandoned_checkout_signoff": "Met vriendelijke groet,",
+  "license_key_content": "Je aankoop is bevestigd en je licentiesleutel is gegenereerd.",
+  "license_key_yourKey": "Licentiedetails",
+  "license_key_plan": "Abonnement",
+  "license_key_seats": "Plaatsen",
+  "license_key_licenseKey": "Licentiesleutel",
+  "license_key_nextStepsHeading": "Vervolgstappen",
+  "license_key_activationSteps": "Volg deze <a>instructies</a> om je licentie te activeren op jouw Rallly Self-Hosted instantie.",
+  "license_key_questionsHeading": "Vragen?",
+  "license_key_support": "Reageer op deze e-mail of neem contact met ons op via <a>{supportEmail}</a> als je hulp nodig hebt.",
+  "license_key_signoff": "Bedankt voor het kiezen voor Rallly!",
+  "license_key_preview": "Je licentiesleutel is gegenereerd.",
+  "license_key_subject": "Je Rallly Self-Hosted {tier} licentie"
 }
