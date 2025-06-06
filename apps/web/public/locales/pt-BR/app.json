@@ -383,5 +383,17 @@
   "licenseType": "Tipo de Licença",
   "removeLicense": "Remover Licença",
   "removeLicenseDescription": "Tem certeza que deseja remover esta licença?",
+  "licenseKeyErrorRateLimitExceeded": "Limite excedido",
+  "licenseKeyErrorInvalidLicenseKey": "Chave de licença inválida",
+  "licenseKeyGenericError": "Um erro ocorreu durante a validação da chave de licença",
+  "activate": "Ativar",
+  "authErrorsEmailNotVerified": "O seu email não foi verificado. Por favor, verifique seu email antes de realizar o login.",
+  "authErrorsUserBanned": "Sua conta foi banida. Por favor, entre em contato com o suporte se você pensa que isto é um erro.",
+  "authErrorsEmailBlocked": "Esse endereço de email não é permitido. Por favor, utilize um endereço de email diferente ou entre em contato com o suporte.",
+  "authErrorsUserNotFound": "Nenhuma conta encontrada vinculada a este endereço de email. Por favor, verifique seu email ou registre uma nova conta.",
+  "disableUserRegistration": "Desabilitar Registro de Usuários",
+  "disableUserRegistrationDescription": "Impede o registro de novas contas de usuários.",
+  "authenticationAndSecurity": "Autenticação & Segurança",
+  "authenticationAndSecurityDescription": "Configurações de autenticação e segurança",
   "youHaveUnsavedChanges": "Você tem modificações não salvas"
 }
