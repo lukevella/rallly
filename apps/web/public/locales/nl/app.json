@@ -382,5 +382,18 @@
   "changeRole": "Rol wijzigen",
   "licenseType": "Licentietype",
   "removeLicense": "Licentie verwijderen",
-  "removeLicenseDescription": "Weet je zeker dat je deze licentie wilt verwijderen?"
+  "removeLicenseDescription": "Weet je zeker dat je deze licentie wilt verwijderen?",
+  "licenseKeyErrorRateLimitExceeded": "Tarieflimiet overschreden",
+  "licenseKeyErrorInvalidLicenseKey": "Ongeldige licentiesleutel",
+  "licenseKeyGenericError": "Er is een fout opgetreden tijdens het valideren van de licentiesleutel",
+  "activate": "Activeren",
+  "authErrorsEmailNotVerified": "Je e-mailadres is niet geverifieerd. Bevestig je e-mailadres voordat je inlogt.",
+  "authErrorsUserBanned": "Dit account is geblokkeerd. Neem contact op met support als je denkt dat dit een fout is.",
+  "authErrorsEmailBlocked": "Dit e-mailadres is niet toegestaan. Gebruik een ander e-mailadres of neem contact op met support.",
+  "authErrorsUserNotFound": "Geen account gevonden met dit e-mailadres. Controleer het e-mailadres of registreer een nieuw account.",
+  "disableUserRegistration": "Gebruikersregistratie uitschakelen",
+  "disableUserRegistrationDescription": "Voorkom dat nieuwe gebruikers een account registreren.",
+  "authenticationAndSecurity": "Authenticatie & Beveiliging",
+  "authenticationAndSecurityDescription": "Beheer authenticatie- en beveiligingsinstellingen",
+  "youHaveUnsavedChanges": "Je hebt niet-opgeslagen wijzigingen"
 }
