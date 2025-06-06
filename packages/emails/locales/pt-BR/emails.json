@@ -63,5 +63,16 @@
   "abandoned_checkout_preview": "Oferta exclusiva: obtenha {discount}% de desconto em seu primeiro ano de Rallly Pro!",
   "abandoned_checkout_subject": "Receba {discount}% de desconto no seu primeiro ano do Rallly Pro",
   "abandoned_checkout_signoff": "Atenciosamente,",
-  "license_key_content": "Sua compra foi confirmada e sua chave de licença foi gerada."
+  "license_key_content": "Sua compra foi confirmada e sua chave de licença foi gerada.",
+  "license_key_yourKey": "Detalhes da Licença",
+  "license_key_plan": "Plano",
+  "license_key_seats": "Assentos",
+  "license_key_licenseKey": "Chave de Licença",
+  "license_key_nextStepsHeading": "Próximos Passos",
+  "license_key_activationSteps": "Siga essas <a>instruções</a> para ativar sua licença na instância auto-hospedada do Rallly.",
+  "license_key_questionsHeading": "Dúvidas?",
+  "license_key_support": "Responda a este email ou entre em contato em <a>{supportEmail}</a> se você precisar de ajuda.",
+  "license_key_signoff": "Obrigado por escolher Rallly!",
+  "license_key_preview": "Sua chave de licença foi gerada.",
+  "license_key_subject": "Sua licença auto-hospedada do Rallly {tier}"
 }
