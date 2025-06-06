@@ -382,5 +382,6 @@
   "changeRole": "Alterar privilégio",
   "licenseType": "Tipo de Licença",
   "removeLicense": "Remover Licença",
-  "removeLicenseDescription": "Tem certeza que deseja remover esta licença?"
+  "removeLicenseDescription": "Tem certeza que deseja remover esta licença?",
+  "youHaveUnsavedChanges": "Você tem modificações não salvas"
 }
