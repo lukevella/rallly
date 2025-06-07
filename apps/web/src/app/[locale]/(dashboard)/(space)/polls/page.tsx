@@ -27,7 +27,7 @@ import { PollList, PollListItem } from "@/features/poll/components/poll-list";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/next-auth";
 
-import { SearchInput } from "../../../components/search-input";
+import { SearchInput } from "@/app/components/search-input";
 import { PollsTabbedView } from "./polls-tabbed-view";
 
 const DEFAULT_PAGE_SIZE = 10;

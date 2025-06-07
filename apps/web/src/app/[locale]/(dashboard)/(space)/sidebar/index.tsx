@@ -25,9 +25,9 @@ import { Trans } from "@/components/trans";
 import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
 
 import { requireUser } from "@/auth/queries";
-import { UpgradeButton } from "../upgrade-button";
 import { NavItem } from "./nav-item";
 import { NavUser } from "./nav-user";
+import { UpgradeButton } from "./upgrade-button";
 
 export async function AppSidebar({
   ...props
