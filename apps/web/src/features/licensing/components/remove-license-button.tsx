@@ -19,11 +19,7 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { removeInstanceLicense } from "../mutations";
 
-export function RemoveLicenseButton({
-  licenseId,
-}: {
-  licenseId: string;
-}) {
+export function RemoveLicenseButton() {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const dialog = useDialog();
@@ -60,9 +56,7 @@ export function RemoveLicenseButton({
             variant="destructive"
             onClick={() =>
               startTransition(async () => {
-                await removeInstanceLicense({
-                  licenseId,
-                });
+                await removeInstanceLicense();
                 router.refresh();
                 dialog.dismiss();
               })
