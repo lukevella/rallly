@@ -3,11 +3,7 @@
 import { requireAdmin } from "@/auth/queries";
 import { prisma } from "@rallly/database";
 
-export async function removeInstanceLicense({
-  licenseId,
-}: {
-  licenseId: string;
-}) {
+export async function removeInstanceLicense() {
   try {
     await requireAdmin();
   } catch (error) {
@@ -18,11 +14,7 @@ export async function removeInstanceLicense({
   }
 
   try {
-    await prisma.instanceLicense.delete({
-      where: {
-        id: licenseId,
-      },
-    });
+    await prisma.instanceLicense.deleteMany();
   } catch (error) {
     return {
       success: false,

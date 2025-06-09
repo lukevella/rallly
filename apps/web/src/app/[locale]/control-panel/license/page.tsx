@@ -120,7 +120,7 @@ export default async function LicensePage() {
               </DescriptionListValue>
             </DescriptionList>
             <div className="mt-6">
-              <RemoveLicenseButton licenseId={license.id} />
+              <RemoveLicenseButton />
             </div>
           </div>
         ) : (

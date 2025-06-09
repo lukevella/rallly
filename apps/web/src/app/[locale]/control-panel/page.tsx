@@ -10,9 +10,11 @@ import { Trans } from "@/components/trans";
 import { getLicense } from "@/features/licensing/queries";
 import { prisma } from "@rallly/database";
 import { cn } from "@rallly/ui";
+import { Icon } from "@rallly/ui/icon";
 import { Tile, TileGrid, TileTitle } from "@rallly/ui/tile";
 import {
   GaugeIcon,
+  InfinityIcon,
   KeySquareIcon,
   SettingsIcon,
   UsersIcon,
@@ -29,13 +31,16 @@ async function loadData() {
 
   return {
     userCount,
-    userLimit: license?.seats ?? 1,
-    tier: license?.type,
+    license,
   };
 }
 
 export default async function AdminPage() {
-  const { userCount, userLimit, tier } = await loadData();
+  const { userCount, license } = await loadData();
+
+  const userLimit = license?.seats ?? 1;
+  const tier = license?.type;
+
   return (
     <FullWidthLayout>
       <FullWidthLayoutHeader>
@@ -80,9 +85,13 @@ export default async function AdminPage() {
                         values={{ count: userCount }}
                       />
                       /
-                      {userLimit === Number.POSITIVE_INFINITY
-                        ? "unlimited"
-                        : userLimit}
+                      {userLimit === Number.POSITIVE_INFINITY ? (
+                        <Icon className="inline-flex">
+                          <InfinityIcon />
+                        </Icon>
+                      ) : (
+                        userLimit
+                      )}
                     </span>
                   </div>
                 </div>
