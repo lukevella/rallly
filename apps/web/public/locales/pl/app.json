@@ -382,5 +382,18 @@
   "changeRole": "Zmień rolę",
   "licenseType": "Typ licencji",
   "removeLicense": "Usuń licencję",
-  "removeLicenseDescription": "Czy na pewno chcesz usunąć tą licencję?"
+  "removeLicenseDescription": "Czy na pewno chcesz usunąć tą licencję?",
+  "licenseKeyErrorRateLimitExceeded": "Przekroczono limit zapytań",
+  "licenseKeyErrorInvalidLicenseKey": "Nieprawidłowy klucz licencyjny",
+  "licenseKeyGenericError": "Wystąpił błąd podczas sprawdzania poprawności klucza licencji",
+  "activate": "Aktywuj",
+  "authErrorsEmailNotVerified": "Twój adres e-mail nie jest zweryfikowany. Proszę zweryfikować swój adres e-mail przed zalogowaniem.",
+  "authErrorsUserBanned": "To konto zostało zablokowane. Jeśli uważasz, że jest to błąd, skontaktuj się z pomocą techniczną.",
+  "authErrorsEmailBlocked": "Ten adres e-mail jest niedozwolony. Użyj innego adresu e-mail lub skontaktuj się z pomocą techniczną.",
+  "authErrorsUserNotFound": "Nie znaleziono konta o podanym adresie e-mail. Sprawdź adres e-mail lub zarejestruj nowe konto.",
+  "disableUserRegistration": "Wyłącz rejestrację użytkowników",
+  "disableUserRegistrationDescription": "Zapobiegaj zarejestrowaniu się nowych użytkowników.",
+  "authenticationAndSecurity": "Uwierzytelnianie i bezpieczeństwo",
+  "authenticationAndSecurityDescription": "Zarządzaj ustawieniami uwierzytelniania i zabezpieczeń",
+  "youHaveUnsavedChanges": "Masz niezapisane zmiany"
 }
