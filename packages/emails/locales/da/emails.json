@@ -62,5 +62,17 @@
   "abandoned_checkout_support": "Hvis du har spørgsmål om Rallly Pro eller har brug for hjælp til noget overhovedet, bare besvare denne e-mail. Jeg er her for at hjælpe!",
   "abandoned_checkout_preview": "Eksklusivt tilbud: Få {discount}% rabat på dit første år af Rallly Pro!",
   "abandoned_checkout_subject": "Eksklusivt tilbud: Få {discount}% rabat på dit første år af Rallly Pro",
-  "abandoned_checkout_signoff": "Med venlig hilsen"
+  "abandoned_checkout_signoff": "Med venlig hilsen",
+  "license_key_content": "Dit køb er blevet bekræftet og din licensnøgle er blevet genereret.",
+  "license_key_yourKey": "Licens detaljer",
+  "license_key_plan": "Abonnementstype",
+  "license_key_seats": "Pladser",
+  "license_key_licenseKey": "Licensnøgle",
+  "license_key_nextStepsHeading": "Næste Trin",
+  "license_key_activationSteps": "Følg disse <a>instruktioner</a> for at aktivere din licens på din Rallly Self-Hosted forekomst.",
+  "license_key_questionsHeading": "Spørgsmål?",
+  "license_key_support": "Svar på denne e-mail eller kontakt os på <a>{supportEmail}</a> hvis du har brug for hjælp.",
+  "license_key_signoff": "Tak fordi du valgte Ralle!",
+  "license_key_preview": "Din licensnøgle er blevet genereret.",
+  "license_key_subject": "Din Rallly Self-Hosted {tier} Licens"
 }
