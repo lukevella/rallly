@@ -358,7 +358,7 @@
   "noLicenseKeyDescription": "Denne instans har ikke nogen licensnøgle endnu.",
   "purchaseLicense": "Køb licens",
   "addLicenseKey": "Tilføje licensnøgle",
-  "users": "Bruger",
+  "users": "Brugere",
   "userCount": "{count, number, ::compact-short}",
   "unlicensed": "Ingen licens",
   "deleteUser": "Slet bruger",
