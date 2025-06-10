@@ -110,7 +110,7 @@ export const LicenseKeyEmail = ({
             a: (
               <Link
                 className="text-link"
-                href="https://docs.rallly.co/self-hosted"
+                href="https://support.rallly.co/self-hosting/licensing#activating-your-license"
               />
             ),
           }}
