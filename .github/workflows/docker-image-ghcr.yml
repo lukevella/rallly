@@ -1,0 +1,140 @@
+name: Build and publish Container image to GHCR
+on: workflow_dispatch
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    name: Build and publish container image
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            os: ubuntu-24.04
+          - platform: linux/arm64
+            os: ubuntu-24.04-arm
+    runs-on: ${{ matrix.os }}
+
+    outputs:
+      digest_linux_amd64: ${{ steps.gen_output.outputs.digest_linux_amd64 }}
+      digest_linux_arm64: ${{ steps.gen_output.outputs.digest_linux_arm64 }}
+
+    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      # Uses the `docker/login-action` action to log in to the Container
+      # registry registry using the account and password that will publish the
+      # packages. Once published, the packages are scoped to the account defined here.
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            # branch event
+            type=ref,event=branch
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          file: ./apps/web/Dockerfile
+          platforms: ${{ matrix.platform }}
+          labels: ${{ steps.meta.outputs.labels }}
+          outputs: type=image,"name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}",push-by-digest=true,name-canonical=true,push=true
+          build-args: |
+            APP_VERSION=${{ github.ref_name }}
+            SELF_HOSTED=true
+
+      - name: Generate output
+        id: gen_output
+        run: |
+          platform=${{ matrix.platform }}
+          digest=${{ steps.build.outputs.digest }}
+          echo "digest_${platform//\//_}=${digest}" | tee -a $GITHUB_OUTPUT
+
+      # This step generates an artifact attestation for the image, which is an
+      # unforgeable statement about where and how it was built. It increases
+      # supply chain security for people who consume the image.
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+
+  merge-and-publish:
+    name: Merge digests and publish the Docker image
+    runs-on: ubuntu-latest
+    needs:
+      - build
+
+    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker metadata
+        id: metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            # set latest tag for default branch
+            type=raw,value=latest,enable={{is_default_branch}}
+            # branch event
+            type=ref,event=branch
+            # tag event
+            type=ref,event=tag
+            # pull request event
+            type=ref,event=pr
+
+      - uses: int128/docker-manifest-create-action@v2
+        id: build
+        with:
+          index-annotations: ${{ steps.metadata.outputs.labels }}
+          tags: ${{ steps.metadata.outputs.tags }}
+          sources: |
+            ${{ env.REGISTRY }}/${{ github.repository }}@${{ needs.build.outputs.digest_linux_amd64 }}
+            ${{ env.REGISTRY }}/${{ github.repository }}@${{ needs.build.outputs.digest_linux_arm64 }}
