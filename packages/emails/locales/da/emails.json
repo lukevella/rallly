@@ -72,7 +72,7 @@
   "license_key_activationSteps": "Følg disse <a>instruktioner</a> for at aktivere din licens på din Rallly Self-Hosted forekomst.",
   "license_key_questionsHeading": "Spørgsmål?",
   "license_key_support": "Svar på denne e-mail eller kontakt os på <a>{supportEmail}</a> hvis du har brug for hjælp.",
-  "license_key_signoff": "Tak fordi du valgte Ralle!",
+  "license_key_signoff": "Tak fordi du valgte Rallly!",
   "license_key_preview": "Din licensnøgle er blevet genereret.",
   "license_key_subject": "Din Rallly Self-Hosted {tier} Licens"
 }
