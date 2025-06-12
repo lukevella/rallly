@@ -64,9 +64,11 @@ const {
           distinctId: user.id,
           event: "register",
           properties: {
+            method: "sso",
             $set: {
               name: user.name,
               email: user.email,
+              tier: "hobby",
               timeZone: user.timeZone ?? undefined,
               locale: user.locale ?? undefined,
             },
