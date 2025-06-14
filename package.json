@@ -39,7 +39,7 @@
     "dotenv-cli": "^8.0.0",
     "prettier": "^3.5.3",
     "prisma": "^6.8.2",
-    "turbo": "^2.4.4",
+    "turbo": "^2.5.4",
     "typescript": "^5.8.2",
     "vitest": "^2.1.9"
   },
