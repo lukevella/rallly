@@ -31,11 +31,24 @@ export async function getScheduledEvents({
 }) {
   const now = new Date();
 
+  const todayStart = dayjs().startOf("day").toDate();
+  const todayEnd = dayjs().endOf("day").toDate();
+
   const where: Prisma.ScheduledEventWhereInput = {
     userId,
     deletedAt: null,
-    ...(status !== "past" && { start: { gte: now } }),
-    ...(status === "past" && { start: { lt: now } }),
+    ...(status === "upcoming" && {
+      OR: [
+        { allDay: false, start: { gte: now } },
+        { allDay: true, start: { gte: todayStart, lte: todayEnd } },
+      ],
+    }),
+    ...(status === "past" && {
+      OR: [
+        { allDay: false, start: { lt: now } },
+        { allDay: true, start: { lt: todayStart } },
+      ],
+    }),
     ...(search && { title: { contains: search, mode: "insensitive" } }),
     status: mapStatus[status],
   };
@@ -76,10 +89,6 @@ export async function getScheduledEvents({
 
   const events = rawEvents.map((event) => ({
     ...event,
-    status:
-      event.status === "confirmed"
-        ? ((event.start < now ? "past" : "upcoming") as Status)
-        : event.status,
     invites: event.invites.map((invite) => ({
       id: invite.id,
       inviteeName: invite.inviteeName,

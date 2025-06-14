@@ -1,8 +1,6 @@
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { StackedList } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
-import { ScheduledEventStatusBadge } from "@/features/scheduled-event/components/scheduled-event-status-badge";
-import type { Status } from "@/features/scheduled-event/schema";
 import { FormattedDateTime } from "@/features/timezone/client/formatted-date-time";
 
 export const ScheduledEventList = StackedList;
@@ -11,7 +9,6 @@ export function ScheduledEventListItem({
   title,
   start,
   end,
-  status,
   allDay,
   invites,
   floating: isFloating,
@@ -20,7 +17,6 @@ export function ScheduledEventListItem({
   title: string;
   start: Date;
   end: Date;
-  status: Status;
   allDay: boolean;
   invites: { id: string; inviteeName: string; inviteeImage?: string }[];
   floating: boolean;
@@ -30,9 +26,6 @@ export function ScheduledEventListItem({
       <div className="flex flex-1 flex-col gap-y-1 lg:flex-row-reverse lg:justify-end lg:gap-x-4">
         <div className="flex items-center gap-4 text-sm">
           <div>{title}</div>
-          <div>
-            <ScheduledEventStatusBadge status={status} />
-          </div>
         </div>
         <div className="flex items-center whitespace-nowrap text-sm lg:min-w-40">
           <div>

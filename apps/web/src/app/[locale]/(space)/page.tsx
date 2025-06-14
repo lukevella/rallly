@@ -37,6 +37,7 @@ async function loadData() {
 
   const todayStart = dayjs().startOf("day").toDate();
   const todayEnd = dayjs().endOf("day").toDate();
+  const now = new Date();
 
   const [livePollCount, upcomingEventCount] = await Promise.all([
     prisma.poll.count({
@@ -50,7 +51,7 @@ async function loadData() {
       where: {
         userId: user.id,
         OR: [
-          { start: { gte: todayStart } },
+          { allDay: false, start: { gte: now } },
           {
             allDay: true,
             start: { gte: todayStart, lte: todayEnd },
