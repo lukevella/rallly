@@ -59,11 +59,17 @@ export async function POST(request: NextRequest) {
   });
 
   if (!user) {
-    return new NextResponse(null, { status: 404 });
+    return NextResponse.json(
+      { error: `User with ID ${userSession.user.id} not found` },
+      { status: 404 },
+    );
   }
 
   if (user.spaces.length === 0) {
-    throw new Error(`Space with owner ID ${userSession.user.id} not found`);
+    return NextResponse.json(
+      { error: `Space with owner ID ${userSession.user.id} not found` },
+      { status: 404 },
+    );
   }
 
   let customerId = user.customerId;
