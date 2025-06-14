@@ -46,6 +46,17 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
 
   const spaceId = res.data.spaceId ?? existingUser.spaces[0].id;
 
+  // validate that the space belongs to the user
+  const isSpaceBelongsToUser = existingUser.spaces.some(
+    (space) => space.id === spaceId,
+  );
+
+  if (!isSpaceBelongsToUser) {
+    throw new Error(
+      `Space with ID ${spaceId} does not belong to user ${userId}`,
+    );
+  }
+
   // If user already has a subscription, update it or replace it
   if (existingUser.subscription) {
     // Update the existing subscription with new data
