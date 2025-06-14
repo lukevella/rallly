@@ -33,35 +33,53 @@ enum UserRole {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  name          String
-  email         String      @unique() @db.Citext
-  emailVerified DateTime?   @map("email_verified")
-  image         String?
-  timeZone      String?     @map("time_zone")
-  weekStart     Int?        @map("week_start")
-  timeFormat    TimeFormat? @map("time_format")
-  locale        String?
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime?   @updatedAt @map("updated_at")
-  customerId    String?     @map("customer_id")
-  banned        Boolean     @default(false)
-  bannedAt      DateTime?   @map("banned_at")
-  banReason     String?     @map("ban_reason")
-  role          UserRole    @default(user)
+  id             String      @id @default(cuid())
+  name           String
+  email          String      @unique() @db.Citext
+  emailVerified  DateTime?   @map("email_verified")
+  image          String?
+  timeZone       String?     @map("time_zone")
+  weekStart      Int?        @map("week_start")
+  timeFormat     TimeFormat? @map("time_format")
+  locale         String?
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime?   @updatedAt @map("updated_at")
+  customerId     String?     @map("customer_id")
+  banned         Boolean     @default(false)
+  bannedAt       DateTime?   @map("banned_at")
+  banReason      String?     @map("ban_reason")
+  role           UserRole    @default(user)
 
-  comments              Comment[]
-  polls                 Poll[]
-  watcher               Watcher[]
-  accounts              Account[]
-  participants          Participant[]
-  paymentMethods        PaymentMethod[]
-  subscription          Subscription?          @relation("UserToSubscription")
+  comments       Comment[]
+  polls          Poll[]
+  watcher        Watcher[]
+  accounts       Account[]
+  participants   Participant[]
+  paymentMethods PaymentMethod[]
+  subscription   Subscription?   @relation("UserToSubscription")
+
+  spaces       Space[] @relation("UserSpaces")
+
   pollViews             PollView[]
   scheduledEvents       ScheduledEvent[]
   scheduledEventInvites ScheduledEventInvite[]
 
   @@map("users")
+}
+
+model Space {
+  id        String   @id @default(uuid())
+  name      String
+  ownerId   String   @map("owner_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  owner           User             @relation("UserSpaces", fields: [ownerId], references: [id], onDelete: Cascade)
+  polls           Poll[]
+  scheduledEvents ScheduledEvent[]
+  subscription    Subscription?    @relation("SpaceToSubscription")
+
+  @@map("spaces")
 }
 
 model VerificationToken {

@@ -37,5 +37,27 @@ export function CustomPrismaAdapter(options: {
         },
       });
     },
+    createUser: async (user) => {
+      const newUser = await prisma.user.create({
+        data: {
+          name: user.name ?? "Unknown",
+          email: user.email,
+          emailVerified: user.emailVerified,
+          image: user.image,
+          timeZone: user.timeZone,
+          weekStart: user.weekStart,
+          timeFormat: user.timeFormat,
+          locale: user.locale,
+          role: "user",
+          spaces: {
+            create: {
+              name: "Personal",
+            },
+          },
+        },
+      });
+
+      return newUser;
+    },
   } as Adapter;
 }

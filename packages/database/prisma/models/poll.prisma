@@ -46,6 +46,8 @@ model Poll {
   comments       Comment[]
   votes          Vote[]
   views          PollView[]
+  space          Space?          @relation(fields: [spaceId], references: [id], onDelete: SetNull)
+  spaceId        String?         @map("space_id")
 
   @@index([guestId])
   @@map("polls")

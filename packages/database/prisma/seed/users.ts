@@ -11,6 +11,12 @@ export async function seedUsers() {
       name: "Dev User",
       email: "dev@rallly.co",
       timeZone: "America/New_York",
+      spaces: {
+        create: {
+          id: "space-1",
+          name: "Personal",
+        },
+      },
     },
   });
 
@@ -21,6 +27,12 @@ export async function seedUsers() {
       id: "pro-user",
       name: "Pro User",
       email: "dev+pro@rallly.co",
+      spaces: {
+        create: {
+          id: "space-2",
+          name: "Personal",
+        },
+      },
       subscription: {
         create: {
           id: "sub_123",
@@ -32,6 +44,7 @@ export async function seedUsers() {
           priceId: "price_123",
           periodStart: new Date(),
           periodEnd: dayjs().add(1, "month").toDate(),
+          spaceId: "space-2",
         },
       },
     },

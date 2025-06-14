@@ -2,11 +2,11 @@ import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 
+import { subscriptionMetadataSchema } from "@/features/subscription/schema";
 import {
   getExpandedSubscription,
   getSubscriptionDetails,
   isSubscriptionActive,
-  subscriptionMetadataSchema,
   toDate,
 } from "../utils";
 

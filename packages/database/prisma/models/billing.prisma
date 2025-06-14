@@ -11,8 +11,10 @@ model Subscription {
   periodEnd         DateTime             @map("period_end")
   cancelAtPeriodEnd Boolean              @default(false) @map("cancel_at_period_end")
   userId            String               @unique @map("user_id")
+  spaceId           String?              @unique @map("space_id")
 
-  user User @relation("UserToSubscription", fields: [userId], references: [id], onDelete: Cascade)
+  user  User   @relation("UserToSubscription", fields: [userId], references: [id], onDelete: Cascade)
+  space Space? @relation("SpaceToSubscription", fields: [spaceId], references: [id], onDelete: SetNull)
 
   @@map("subscriptions")
 }

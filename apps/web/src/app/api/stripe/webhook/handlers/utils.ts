@@ -2,11 +2,6 @@ import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { z } from "zod";
-
-export const subscriptionMetadataSchema = z.object({
-  userId: z.string(),
-});
 
 export function toDate(date: number) {
   return new Date(date * 1000);
