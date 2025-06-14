@@ -514,7 +514,10 @@ export const polls = router({
                 email: invite.inviteeEmail,
                 status: invite.status,
               }))
-              .filter((invite) => invite.status === "accepted"),
+              .filter(
+                (invite) =>
+                  invite.status === "accepted" || invite.status === "tentative",
+              ),
           }
         : null;
 
