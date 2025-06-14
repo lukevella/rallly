@@ -15,7 +15,14 @@ export async function getDefaultSpace({ ownerId }: { ownerId: string }) {
     where: {
       ownerId,
     },
+    orderBy: {
+      createdAt: "asc",
+    },
   });
+
+  if (!space) {
+    throw new Error(`Space with owner ID ${ownerId} not found`);
+  }
 
   return space;
 }
