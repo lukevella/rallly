@@ -39,7 +39,6 @@ model Poll {
   requireParticipantEmail Boolean    @default(false) @map("require_participant_email")
 
   user           User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  event          Event?          @relation(fields: [eventId], references: [id], onDelete: SetNull)
   scheduledEvent ScheduledEvent? @relation(fields: [scheduledEventId], references: [id], onDelete: SetNull)
   options        Option[]
   participants   Participant[]
