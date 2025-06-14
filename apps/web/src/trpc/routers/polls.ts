@@ -461,16 +461,25 @@ export const polls = router({
           userId: true,
           guestId: true,
           deleted: true,
-          event: {
-            select: {
-              start: true,
-              duration: true,
-              optionId: true,
-            },
-          },
           watchers: {
             select: {
               userId: true,
+            },
+          },
+          scheduledEvent: {
+            select: {
+              start: true,
+              end: true,
+              allDay: true,
+              invites: {
+                select: {
+                  id: true,
+                  inviteeName: true,
+                  inviteeEmail: true,
+                  inviteeTimeZone: true,
+                  status: true,
+                },
+              },
             },
           },
         },
@@ -490,10 +499,33 @@ export const polls = router({
         ? userId === res.guestId
         : userId === res.userId;
 
+      const event = res.scheduledEvent
+        ? {
+            start: res.scheduledEvent.start,
+            duration: res.scheduledEvent.allDay
+              ? 0
+              : dayjs(res.scheduledEvent.end).diff(
+                  dayjs(res.scheduledEvent.start),
+                  "minute",
+                ),
+            attendees: res.scheduledEvent.invites
+              .map((invite) => ({
+                name: invite.inviteeName,
+                email: invite.inviteeEmail,
+                status: invite.status,
+              }))
+              .filter((invite) => invite.status === "accepted"),
+          }
+        : null;
+
       if (isOwner || res.adminUrlId === input.adminToken) {
-        return { ...res, inviteLink };
+        return {
+          ...res,
+          inviteLink,
+          event,
+        };
       } else {
-        return { ...res, adminUrlId: "", inviteLink };
+        return { ...res, adminUrlId: "", inviteLink, event };
       }
     }),
   book: proProcedure
@@ -624,15 +656,6 @@ export const polls = router({
                     })),
                 },
               },
-            },
-          },
-          event: {
-            create: {
-              optionId: input.optionId,
-              start: eventStart.toDate(),
-              duration: option.duration,
-              title: poll.title,
-              userId: ctx.user.id,
             },
           },
         },
@@ -817,14 +840,6 @@ export const polls = router({
             status: "live",
           },
         });
-
-        if (poll.eventId) {
-          await prisma.event.delete({
-            where: {
-              id: poll.eventId,
-            },
-          });
-        }
 
         if (poll.scheduledEventId) {
           await prisma.scheduledEvent.delete({

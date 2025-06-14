@@ -48,12 +48,6 @@ export async function getPolls({
             image: true,
           },
         },
-        event: {
-          select: {
-            start: true,
-            duration: true,
-          },
-        },
         participants: {
           where: {
             deleted: false,
@@ -95,7 +89,6 @@ export async function getPolls({
           email: participant.email ?? undefined,
           image: participant.user?.image ?? undefined,
         })),
-        event: poll.event ?? undefined,
       };
     }),
     hasNextPage,

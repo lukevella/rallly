@@ -22,6 +22,7 @@ import { Trans } from "@/components/trans";
 import { IfCloudHosted } from "@/contexts/environment";
 import { getTranslation } from "@/i18n/server";
 import { prisma } from "@rallly/database";
+import dayjs from "dayjs";
 import { FeedbackAlert } from "./feedback-alert";
 
 async function loadData() {
@@ -34,7 +35,10 @@ async function loadData() {
     };
   }
 
+  const todayStart = dayjs().startOf("day").toDate();
+  const todayEnd = dayjs().endOf("day").toDate();
   const now = new Date();
+
   const [livePollCount, upcomingEventCount] = await Promise.all([
     prisma.poll.count({
       where: {
@@ -43,12 +47,16 @@ async function loadData() {
         deleted: false,
       },
     }),
-    prisma.event.count({
+    prisma.scheduledEvent.count({
       where: {
         userId: user.id,
-        start: {
-          gte: now,
-        },
+        OR: [
+          { allDay: false, start: { gte: now } },
+          {
+            allDay: true,
+            start: { gte: todayStart, lte: todayEnd },
+          },
+        ],
       },
     }),
   ]);

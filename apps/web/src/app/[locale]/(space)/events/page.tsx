@@ -159,7 +159,6 @@ export default async function Page(props: {
                         title={event.title}
                         start={event.start}
                         end={event.end}
-                        status={event.status}
                         allDay={event.allDay}
                         invites={event.invites}
                       />
