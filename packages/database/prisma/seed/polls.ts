@@ -41,7 +41,13 @@ function generateDescription() {
   return faker.helpers.arrayElement(descriptions);
 }
 
-async function createPollForUser(userId: string) {
+async function createPollForUser({
+  userId,
+  spaceId,
+}: {
+  userId: string;
+  spaceId: string;
+}) {
   const duration = 60 * randInt(8);
   let cursor = dayjs().add(randInt(30), "day").second(0).minute(0);
   const numberOfOptions = randInt(5, 2); // Reduced for realism
@@ -60,6 +66,11 @@ async function createPollForUser(userId: string) {
       user: {
         connect: {
           id: userId,
+        },
+      },
+      space: {
+        connect: {
+          id: spaceId,
         },
       },
       status: faker.helpers.arrayElement(["live", "paused", "finalized"]),
@@ -108,8 +119,18 @@ async function createPollForUser(userId: string) {
 
 export async function seedPolls(userId: string) {
   console.info("Seeding polls...");
+  const space = await prisma.space.findFirst({
+    where: {
+      ownerId: userId,
+    },
+  });
+
+  if (!space) {
+    throw new Error(`No space found for user ${userId}`);
+  }
+
   const pollPromises = Array.from({ length: 20 }).map(() =>
-    createPollForUser(userId),
+    createPollForUser({ userId, spaceId: space.id }),
   );
 
   await Promise.all(pollPromises);

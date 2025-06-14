@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import type { ScheduledEventInviteStatus } from "@prisma/client";
-import { type Prisma, ScheduledEventStatus } from "@prisma/client"; // Ensure Prisma is imported
+import { ScheduledEventStatus } from "@prisma/client"; // Ensure Prisma is imported
 import dayjs from "dayjs";
 
 import { prisma } from "@rallly/database";
@@ -54,7 +54,13 @@ function generateEventDetails() {
   };
 }
 
-async function createScheduledEventForUser(userId: string) {
+async function createScheduledEventForUser({
+  userId,
+  spaceId,
+}: {
+  userId: string;
+  spaceId: string;
+}) {
   const { title, description } = generateEventDetails();
   const isAllDay = Math.random() < 0.3; // ~30% chance of being all-day
 
@@ -101,41 +107,56 @@ async function createScheduledEventForUser(userId: string) {
   ]);
   const timeZone = faker.address.timeZone();
 
-  const data: Prisma.ScheduledEventCreateInput = {
-    title,
-    description,
-    start: startTime, // Use correct model field name 'start'
-    end: endTime, // Use correct model field name 'end'
-    timeZone,
-    status, // Assign the randomly selected valid status
-    user: { connect: { id: userId } }, // Connect to existing user
-    allDay: isAllDay,
-    location: faker.datatype.boolean()
-      ? faker.address.streetAddress()
-      : undefined,
-    // Add invites (optional, example below)
-    invites: {
-      create: Array.from({ length: randInt(5, 0) }).map(() => ({
-        inviteeEmail: faker.internet.email(),
-        inviteeName: faker.name.fullName(),
-        inviteeTimeZone: faker.address.timeZone(),
-        status: faker.helpers.arrayElement<ScheduledEventInviteStatus>([
-          "accepted",
-          "declined",
-          "tentative",
-          "pending",
-        ]),
-      })),
+  await prisma.scheduledEvent.create({
+    data: {
+      title,
+      description,
+      start: startTime, // Use correct model field name 'start'
+      end: endTime, // Use correct model field name 'end'
+      timeZone,
+      status, // Assign the randomly selected valid status
+      user: {
+        connect: { id: userId },
+      }, // Connect to existing user
+      space: {
+        connect: { id: spaceId },
+      },
+      allDay: isAllDay,
+      location: faker.datatype.boolean()
+        ? faker.address.streetAddress()
+        : undefined,
+      // Add invites (optional, example below)
+      invites: {
+        create: Array.from({ length: randInt(5, 0) }).map(() => ({
+          inviteeEmail: faker.internet.email(),
+          inviteeName: faker.name.fullName(),
+          inviteeTimeZone: faker.address.timeZone(),
+          status: faker.helpers.arrayElement<ScheduledEventInviteStatus>([
+            "accepted",
+            "declined",
+            "tentative",
+            "pending",
+          ]),
+        })),
+      },
     },
-  };
-
-  await prisma.scheduledEvent.create({ data });
+  });
 }
 
 export async function seedScheduledEvents(userId: string) {
   console.info("Seeding scheduled events...");
+  const space = await prisma.space.findFirst({
+    where: {
+      ownerId: userId,
+    },
+  });
+
+  if (!space) {
+    throw new Error(`No space found for user ${userId}`);
+  }
+
   const eventPromises = Array.from({ length: 15 }).map((_, i) =>
-    createScheduledEventForUser(userId),
+    createScheduledEventForUser({ userId, spaceId: space.id }),
   );
 
   await Promise.all(eventPromises);

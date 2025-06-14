@@ -18,6 +18,7 @@ enum ScheduledEventInviteStatus {
 model ScheduledEvent {
   id          String               @id @default(cuid())
   userId      String               @map("user_id")
+  spaceId     String               @map("space_id")
   title       String
   description String?
   location    String?
@@ -31,6 +32,7 @@ model ScheduledEvent {
   deletedAt   DateTime?            @map("deleted_at")
 
   user             User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  space            Space                  @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   rescheduledDates RescheduledEventDate[]
   invites          ScheduledEventInvite[]
   polls            Poll[]

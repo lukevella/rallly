@@ -33,22 +33,23 @@ enum UserRole {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  name          String
-  email         String      @unique() @db.Citext
-  emailVerified DateTime?   @map("email_verified")
-  image         String?
-  timeZone      String?     @map("time_zone")
-  weekStart     Int?        @map("week_start")
-  timeFormat    TimeFormat? @map("time_format")
-  locale        String?
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime?   @updatedAt @map("updated_at")
-  customerId    String?     @map("customer_id")
-  banned        Boolean     @default(false)
-  bannedAt      DateTime?   @map("banned_at")
-  banReason     String?     @map("ban_reason")
-  role          UserRole    @default(user)
+  id             String      @id @default(cuid())
+  name           String
+  email          String      @unique() @db.Citext
+  emailVerified  DateTime?   @map("email_verified")
+  image          String?
+  timeZone       String?     @map("time_zone")
+  weekStart      Int?        @map("week_start")
+  timeFormat     TimeFormat? @map("time_format")
+  locale         String?
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime?   @updatedAt @map("updated_at")
+  customerId     String?     @map("customer_id")
+  banned         Boolean     @default(false)
+  bannedAt       DateTime?   @map("banned_at")
+  banReason      String?     @map("ban_reason")
+  role           UserRole    @default(user)
+  defaultSpaceId String?     @map("default_space_id")
 
   comments       Comment[]
   polls          Poll[]
@@ -58,7 +59,8 @@ model User {
   paymentMethods PaymentMethod[]
   subscription   Subscription?   @relation("UserToSubscription")
 
-  spaces Space[] @relation("UserSpaces")
+  spaces       Space[] @relation("UserSpaces")
+  defaultSpace Space?   @relation(fields: [defaultSpaceId], references: [id])
 
   pollViews             PollView[]
   scheduledEvents       ScheduledEvent[]
@@ -74,9 +76,11 @@ model Space {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  owner        User          @relation("UserSpaces", fields: [ownerId], references: [id], onDelete: Cascade)
-  polls        Poll[]
-  subscription Subscription? @relation("SpaceToSubscription")
+  owner           User             @relation("UserSpaces", fields: [ownerId], references: [id], onDelete: Cascade)
+  polls           Poll[]
+  scheduledEvents ScheduledEvent[]
+  subscription    Subscription?    @relation("SpaceToSubscription")
+  User            User[]
 
   @@map("spaces")
 }

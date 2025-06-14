@@ -637,6 +637,22 @@ export const polls = router({
         eventStart = eventStart.utc();
       }
 
+      const space = await prisma.space.findFirst({
+        where: {
+          ownerId: ctx.user.id,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!space) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Space not found",
+        });
+      }
+
       await prisma.poll.update({
         where: {
           id: input.pollId,
@@ -652,6 +668,7 @@ export const polls = router({
               location: poll.location,
               timeZone: poll.timeZone,
               userId: ctx.user.id,
+              spaceId: space.id,
               allDay: option.duration === 0,
               status: "confirmed",
               invites: {
