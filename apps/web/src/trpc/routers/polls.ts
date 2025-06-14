@@ -181,17 +181,7 @@ export const polls = router({
       const participantUrlId = nanoid();
       const pollId = nanoid();
 
-      let spaceId: string | undefined;
-
-      if (!ctx.user.isGuest) {
-        const space = await getActiveSpace();
-
-        if (!space) {
-          console.error("No space found for user", ctx.user.id);
-        }
-
-        spaceId = space?.id;
-      }
+      const space = await getActiveSpace();
 
       const poll = await prisma.poll.create({
         select: {
@@ -241,7 +231,7 @@ export const polls = router({
           disableComments: input.disableComments,
           hideScores: input.hideScores,
           requireParticipantEmail: input.requireParticipantEmail,
-          spaceId,
+          spaceId: space?.id,
         },
       });
 
@@ -562,6 +552,7 @@ export const polls = router({
           title: true,
           location: true,
           description: true,
+          spaceId: true,
           user: {
             select: {
               name: true,
@@ -631,12 +622,10 @@ export const polls = router({
         eventStart = eventStart.utc();
       }
 
-      const space = await getActiveSpace();
-
-      if (!space) {
+      if (!poll.spaceId) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Space not found",
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Poll has no space",
         });
       }
 
@@ -655,7 +644,7 @@ export const polls = router({
               location: poll.location,
               timeZone: poll.timeZone,
               userId: ctx.user.id,
-              spaceId: space.id,
+              spaceId: poll.spaceId,
               allDay: option.duration === 0,
               status: "confirmed",
               invites: {

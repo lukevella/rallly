@@ -1,13 +1,13 @@
+import { getDefaultSpace } from "@/features/spaces/queries";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
-import { getActiveSpace } from "../queries";
 
 export const mergeGuestsIntoUser = async (
   userId: string,
   guestIds: string[],
 ) => {
-  const space = await getActiveSpace();
+  const space = await getDefaultSpace({ ownerId: userId });
 
   if (!space) {
     console.warn(`User ${userId} not found`);
