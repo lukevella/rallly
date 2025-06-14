@@ -6,13 +6,16 @@ export const mergeGuestsIntoUser = async (
   userId: string,
   guestIds: string[],
 ) => {
-  const count = await prisma.user.count({
+  const space = await prisma.space.findFirst({
     where: {
-      id: userId,
+      ownerId: userId,
+    },
+    select: {
+      id: true,
     },
   });
 
-  if (count === 0) {
+  if (!space) {
     console.warn(`User ${userId} not found`);
     return;
   }
@@ -29,6 +32,7 @@ export const mergeGuestsIntoUser = async (
           data: {
             guestId: null,
             userId: userId,
+            spaceId: space.id,
           },
         }),
 

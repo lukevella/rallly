@@ -50,18 +50,35 @@ model User {
   banReason     String?     @map("ban_reason")
   role          UserRole    @default(user)
 
-  comments              Comment[]
-  polls                 Poll[]
-  watcher               Watcher[]
-  accounts              Account[]
-  participants          Participant[]
-  paymentMethods        PaymentMethod[]
-  subscription          Subscription?          @relation("UserToSubscription")
+  comments       Comment[]
+  polls          Poll[]
+  watcher        Watcher[]
+  accounts       Account[]
+  participants   Participant[]
+  paymentMethods PaymentMethod[]
+  subscription   Subscription?   @relation("UserToSubscription")
+
+  spaces Space[] @relation("UserSpaces")
+
   pollViews             PollView[]
   scheduledEvents       ScheduledEvent[]
   scheduledEventInvites ScheduledEventInvite[]
 
   @@map("users")
+}
+
+model Space {
+  id        String   @id @default(uuid())
+  name      String
+  ownerId   String   @map("owner_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  owner        User          @relation("UserSpaces", fields: [ownerId], references: [id], onDelete: Cascade)
+  polls        Poll[]
+  subscription Subscription? @relation("SpaceToSubscription")
+
+  @@map("spaces")
 }
 
 model VerificationToken {

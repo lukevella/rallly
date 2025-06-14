@@ -180,6 +180,25 @@ export const polls = router({
       const participantUrlId = nanoid();
       const pollId = nanoid();
 
+      let spaceId: string | undefined;
+
+      if (!ctx.user.isGuest) {
+        const space = await prisma.space.findFirst({
+          where: {
+            ownerId: ctx.user.id,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        if (!space) {
+          console.error("No space found for user", ctx.user.id);
+        }
+
+        spaceId = space?.id;
+      }
+
       const poll = await prisma.poll.create({
         select: {
           adminUrlId: true,
@@ -228,6 +247,7 @@ export const polls = router({
           disableComments: input.disableComments,
           hideScores: input.hideScores,
           requireParticipantEmail: input.requireParticipantEmail,
+          spaceId,
         },
       });
 

@@ -5,6 +5,10 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import type {
+  SubscriptionCheckoutMetadata,
+  SubscriptionMetadata,
+} from "@/features/subscription/schema";
 import { auth } from "@/next-auth";
 
 const inputSchema = z.object({
@@ -46,11 +50,20 @@ export async function POST(request: NextRequest) {
           active: true,
         },
       },
+      spaces: {
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
   if (!user) {
     return new NextResponse(null, { status: 404 });
+  }
+
+  if (user.spaces.length === 0) {
+    throw new Error(`Space with owner ID ${userSession.user.id} not found`);
   }
 
   let customerId = user.customerId;
@@ -83,6 +96,8 @@ export async function POST(request: NextRequest) {
 
   const proPricingData = await getProPricing();
 
+  const spaceId = user.spaces[0].id;
+
   const session = await stripe.checkout.sessions.create({
     success_url: absoluteUrl(
       return_path ?? "/api/stripe/portal?session_id={CHECKOUT_SESSION_ID}",
@@ -101,11 +116,13 @@ export async function POST(request: NextRequest) {
     },
     metadata: {
       userId: userSession.user.id,
-    },
+      spaceId,
+    } satisfies SubscriptionCheckoutMetadata,
     subscription_data: {
       metadata: {
         userId: userSession.user.id,
-      },
+        spaceId,
+      } satisfies SubscriptionMetadata,
     },
     line_items: [
       {
