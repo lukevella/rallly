@@ -1,5 +1,6 @@
 import { getUser } from "@/features/user/queries";
 import { auth } from "@/next-auth";
+import { prisma } from "@rallly/database";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 
@@ -33,4 +34,20 @@ export const requireAdmin = cache(async () => {
   }
 
   return user;
+});
+
+export const getActiveSpace = cache(async () => {
+  const session = await auth();
+
+  if (session?.user?.email) {
+    return null;
+  }
+
+  const space = await prisma.space.findFirst({
+    where: {
+      ownerId: session?.user?.id,
+    },
+  });
+
+  return space;
 });

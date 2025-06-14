@@ -12,6 +12,7 @@ import { z } from "zod";
 import { moderateContent } from "@/features/moderation";
 import { getEmailClient } from "@/utils/emails";
 
+import { getActiveSpace } from "@/auth/queries";
 import { getTimeZoneAbbreviation } from "../../utils/date";
 import {
   createRateLimitMiddleware,
@@ -183,14 +184,7 @@ export const polls = router({
       let spaceId: string | undefined;
 
       if (!ctx.user.isGuest) {
-        const space = await prisma.space.findFirst({
-          where: {
-            ownerId: ctx.user.id,
-          },
-          select: {
-            id: true,
-          },
-        });
+        const space = await getActiveSpace();
 
         if (!space) {
           console.error("No space found for user", ctx.user.id);
@@ -637,14 +631,7 @@ export const polls = router({
         eventStart = eventStart.utc();
       }
 
-      const space = await prisma.space.findFirst({
-        where: {
-          ownerId: ctx.user.id,
-        },
-        select: {
-          id: true,
-        },
-      });
+      const space = await getActiveSpace();
 
       if (!space) {
         throw new TRPCError({
