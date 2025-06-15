@@ -133,6 +133,11 @@ export const auth = router({
           timeFormat: input.timeFormat,
           weekStart: input.weekStart,
           locale: input.locale,
+          spaces: {
+            create: {
+              name: "Personal",
+            },
+          },
         },
       });
 

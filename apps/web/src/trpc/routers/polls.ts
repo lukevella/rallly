@@ -12,6 +12,7 @@ import { z } from "zod";
 import { moderateContent } from "@/features/moderation";
 import { getEmailClient } from "@/utils/emails";
 
+import { getActiveSpace } from "@/auth/queries";
 import { getTimeZoneAbbreviation } from "../../utils/date";
 import {
   createRateLimitMiddleware,
@@ -180,6 +181,8 @@ export const polls = router({
       const participantUrlId = nanoid();
       const pollId = nanoid();
 
+      const space = await getActiveSpace();
+
       const poll = await prisma.poll.create({
         select: {
           adminUrlId: true,
@@ -228,6 +231,7 @@ export const polls = router({
           disableComments: input.disableComments,
           hideScores: input.hideScores,
           requireParticipantEmail: input.requireParticipantEmail,
+          spaceId: space?.id,
         },
       });
 
@@ -551,6 +555,7 @@ export const polls = router({
           title: true,
           location: true,
           description: true,
+          spaceId: true,
           user: {
             select: {
               name: true,
@@ -620,6 +625,13 @@ export const polls = router({
         eventStart = eventStart.utc();
       }
 
+      if (!poll.spaceId) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Poll has no space",
+        });
+      }
+
       await prisma.poll.update({
         where: {
           id: input.pollId,
@@ -635,6 +647,7 @@ export const polls = router({
               location: poll.location,
               timeZone: poll.timeZone,
               userId: ctx.user.id,
+              spaceId: poll.spaceId,
               allDay: option.duration === 0,
               status: "confirmed",
               invites: {
