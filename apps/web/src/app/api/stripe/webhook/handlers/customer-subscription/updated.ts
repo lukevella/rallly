@@ -26,7 +26,7 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
   const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
 
   if (!res.success) {
-    throw new Error("Missing user ID");
+    throw new Error("Invalid subscription metadata");
   }
 
   // Update the subscription in the database

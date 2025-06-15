@@ -11,7 +11,7 @@ export type SubscriptionCheckoutMetadata = z.infer<
 
 export const subscriptionMetadataSchema = z.object({
   userId: z.string(),
-  spaceId: z.string().optional(),
+  spaceId: z.string(),
 });
 
 export type SubscriptionMetadata = z.infer<typeof subscriptionMetadataSchema>;
