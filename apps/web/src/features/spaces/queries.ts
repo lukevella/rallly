@@ -26,3 +26,13 @@ export async function getDefaultSpace({ ownerId }: { ownerId: string }) {
 
   return space;
 }
+
+export async function getSpace({ id }: { id: string }) {
+  const space = await prisma.space.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return space;
+}
