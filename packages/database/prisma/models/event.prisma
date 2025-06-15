@@ -37,6 +37,8 @@ model ScheduledEvent {
   invites          ScheduledEventInvite[]
   polls            Poll[]
 
+  @@index([spaceId], type: Hash)
+  @@index([userId], type: Hash)
   @@map("scheduled_events")
 }
 

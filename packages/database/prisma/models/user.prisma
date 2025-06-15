@@ -79,6 +79,7 @@ model Space {
   scheduledEvents ScheduledEvent[]
   subscription    Subscription?    @relation("SpaceToSubscription")
 
+  @@index([ownerId], type: Hash)
   @@map("spaces")
 }
 

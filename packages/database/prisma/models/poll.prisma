@@ -49,7 +49,9 @@ model Poll {
   space          Space?          @relation(fields: [spaceId], references: [id], onDelete: SetNull)
   spaceId        String?         @map("space_id")
 
-  @@index([guestId])
+  @@index([guestId], type: Hash)
+  @@index([spaceId], type: Hash)
+  @@index([userId], type: Hash)
   @@map("polls")
 }
 
@@ -84,7 +86,6 @@ model Participant {
   poll Poll  @relation(fields: [pollId], references: [id], onDelete: Cascade)
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  @@index([guestId], type: Hash)
   @@index([pollId], type: Hash)
   @@map("participants")
 }
@@ -144,7 +145,6 @@ model Comment {
   poll Poll  @relation(fields: [pollId], references: [id], onDelete: Cascade)
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([guestId], type: Hash)
   @@index([pollId], type: Hash)
   @@map("comments")
 }

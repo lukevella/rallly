@@ -16,6 +16,8 @@ model Subscription {
   user  User   @relation("UserToSubscription", fields: [userId], references: [id], onDelete: Cascade)
   space Space? @relation("SpaceToSubscription", fields: [spaceId], references: [id], onDelete: SetNull)
 
+  @@index([userId], type: Hash)
+  @@index([spaceId], type: Hash)
   @@map("subscriptions")
 }
 
