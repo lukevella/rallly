@@ -1,13 +1,12 @@
+import { getActiveSpace } from "@/auth/queries";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-
-import type { Status } from "../schema";
+import { cache } from "react";
+import type { Status } from "./schema";
 
 dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const mapStatus = {
   upcoming: "confirmed",
@@ -16,26 +15,22 @@ const mapStatus = {
   canceled: "canceled",
 } as const;
 
-export async function getScheduledEvents({
-  userId,
+function getEventsWhereInput({
+  spaceId,
   status,
   search,
-  page = 1,
-  pageSize = 10,
 }: {
-  userId: string;
+  spaceId: string;
   status: Status;
   search?: string;
-  page?: number;
-  pageSize?: number;
 }) {
   const now = new Date();
 
-  const todayStart = dayjs().startOf("day").toDate();
-  const todayEnd = dayjs().endOf("day").toDate();
+  const todayStart = dayjs().startOf("day").utc().toDate();
+  const todayEnd = dayjs().endOf("day").utc().toDate();
 
   const where: Prisma.ScheduledEventWhereInput = {
-    userId,
+    spaceId,
     deletedAt: null,
     ...(status === "upcoming" && {
       OR: [
@@ -52,6 +47,28 @@ export async function getScheduledEvents({
     ...(search && { title: { contains: search, mode: "insensitive" } }),
     status: mapStatus[status],
   };
+
+  return where;
+}
+
+export async function getScheduledEvents({
+  spaceId,
+  status,
+  search,
+  page = 1,
+  pageSize = 10,
+}: {
+  spaceId: string;
+  status: Status;
+  search?: string;
+  page?: number;
+  pageSize?: number;
+}) {
+  const where = getEventsWhereInput({
+    spaceId,
+    status,
+    search,
+  });
 
   const [rawEvents, totalCount] = await Promise.all([
     prisma.scheduledEvent.findMany({
@@ -101,3 +118,13 @@ export async function getScheduledEvents({
 
   return { events, totalCount, totalPages, hasNextPage };
 }
+
+export const getUpcomingEventsCount = cache(async () => {
+  const space = await getActiveSpace();
+  return prisma.scheduledEvent.count({
+    where: getEventsWhereInput({
+      spaceId: space.id,
+      status: "upcoming",
+    }),
+  });
+});
