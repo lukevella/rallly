@@ -12,6 +12,7 @@ import { isValidName } from "@/utils/is-valid-name";
 import { createToken, decryptToken } from "@/utils/session";
 
 import { getInstanceSettings } from "@/features/instance-settings/queries";
+import { createUser } from "@/features/user/mutations";
 import { TRPCError } from "@trpc/server";
 import { createRateLimitMiddleware, publicProcedure, router } from "../trpc";
 import type { RegistrationTokenPayload } from "../types";
@@ -124,21 +125,14 @@ export const auth = router({
         return { ok: false };
       }
 
-      const user = await prisma.user.create({
-        select: { id: true, name: true, email: true },
-        data: {
-          name,
-          email,
-          timeZone: input.timeZone,
-          timeFormat: input.timeFormat,
-          weekStart: input.weekStart,
-          locale: input.locale,
-          spaces: {
-            create: {
-              name: "Personal",
-            },
-          },
-        },
+      const user = await createUser({
+        name,
+        email,
+        emailVerified: new Date(),
+        timeZone: input.timeZone,
+        timeFormat: input.timeFormat,
+        weekStart: input.weekStart,
+        locale: input.locale,
       });
 
       if (ctx.user?.isGuest) {
@@ -166,7 +160,14 @@ export const auth = router({
         },
       });
 
-      return { ok: true, user };
+      return {
+        ok: true,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+      };
     }),
   getUserPermission: publicProcedure
     .input(z.object({ token: z.string() }))

@@ -9,6 +9,7 @@
  *
  * See: https://github.com/lukevella/rallly/issues/949
  */
+import { createUser } from "@/features/user/mutations";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@rallly/database";
 import type { Adapter } from "next-auth/adapters";
@@ -38,26 +39,15 @@ export function CustomPrismaAdapter(options: {
       });
     },
     createUser: async (user) => {
-      const newUser = await prisma.user.create({
-        data: {
-          name: user.name ?? "Unknown",
-          email: user.email,
-          emailVerified: user.emailVerified,
-          image: user.image,
-          timeZone: user.timeZone,
-          weekStart: user.weekStart,
-          timeFormat: user.timeFormat,
-          locale: user.locale,
-          role: "user",
-          spaces: {
-            create: {
-              name: "Personal",
-            },
-          },
-        },
+      return await createUser({
+        name: user.name ?? "Unknown",
+        email: user.email,
+        emailVerified: user.emailVerified ?? undefined,
+        image: user.image ?? undefined,
+        timeZone: user.timeZone ?? undefined,
+        timeFormat: user.timeFormat ?? undefined,
+        locale: user.locale ?? undefined,
       });
-
-      return newUser;
     },
   } as Adapter;
 }
