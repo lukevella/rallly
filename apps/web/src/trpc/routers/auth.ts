@@ -128,6 +128,7 @@ export const auth = router({
       const user = await createUser({
         name,
         email,
+        emailVerified: new Date(),
         timeZone: input.timeZone,
         timeFormat: input.timeFormat,
         weekStart: input.weekStart,
