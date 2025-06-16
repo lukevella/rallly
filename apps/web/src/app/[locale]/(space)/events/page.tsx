@@ -19,13 +19,13 @@ import {
 import { Pagination } from "@/components/pagination";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
-import { getScheduledEvents } from "@/features/scheduled-event/api/get-scheduled-events";
 import { ScheduledEventListItem } from "@/features/scheduled-event/components/scheduled-event-list";
+import { getScheduledEvents } from "@/features/scheduled-event/queries";
 import type { Status } from "@/features/scheduled-event/schema";
 import { statusSchema } from "@/features/scheduled-event/schema";
 import { getTranslation } from "@/i18n/server";
-import { requireUser } from "@/next-auth";
 
+import { getActiveSpace } from "@/auth/queries";
 import { EventsTabbedView } from "./events-tabbed-view";
 
 async function loadData({
@@ -39,9 +39,9 @@ async function loadData({
   page?: number;
   pageSize?: number;
 }) {
-  const { userId } = await requireUser();
+  const space = await getActiveSpace();
   return getScheduledEvents({
-    userId,
+    spaceId: space.id,
     status,
     search,
     page,

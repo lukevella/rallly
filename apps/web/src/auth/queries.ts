@@ -37,19 +37,7 @@ export const requireAdmin = cache(async () => {
 });
 
 export const getActiveSpace = cache(async () => {
-  const session = await auth();
+  const user = await requireUser();
 
-  if (!session?.user?.id) {
-    return null;
-  }
-
-  const user = await getUser(session.user.id);
-
-  if (!user) {
-    return null;
-  }
-
-  const space = await getDefaultSpace({ ownerId: user.id });
-
-  return space;
+  return await getDefaultSpace({ ownerId: user.id });
 });

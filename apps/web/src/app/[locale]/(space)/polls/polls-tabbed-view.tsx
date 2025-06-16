@@ -6,13 +6,15 @@ import { Trans } from "@/components/trans";
 
 import { cn } from "@rallly/ui";
 import React from "react";
+import { statusSchema } from "./schema";
 
 export function PollsTabbedView({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const name = "status";
   const router = useRouter();
   const [isPending, startTransition] = React.useTransition();
-  const [tab, setTab] = React.useState(searchParams.get(name) ?? "live");
+  const status = statusSchema.parse(searchParams.get("status"));
+  const [tab, setTab] = React.useState(status);
   const handleTabChange = React.useCallback(
     (value: string) => {
       const params = new URLSearchParams(searchParams);
@@ -20,7 +22,7 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
 
       params.delete("page");
 
-      setTab(value);
+      setTab(statusSchema.parse(value));
 
       startTransition(() => {
         const newUrl = `?${params.toString()}`;
