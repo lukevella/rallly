@@ -1,0 +1,39 @@
+model Space {
+  id        String   @id @default(uuid())
+  name      String
+  ownerId   String   @map("owner_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  owner           User             @relation("UserSpaces", fields: [ownerId], references: [id], onDelete: Cascade)
+  polls           Poll[]
+  scheduledEvents ScheduledEvent[]
+  subscription    Subscription?    @relation("SpaceToSubscription")
+
+  members SpaceMember[]
+
+  @@index([ownerId], type: Hash)
+  @@map("spaces")
+}
+
+enum SpaceMemberRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model SpaceMember {
+  id        String          @id @default(uuid())
+  spaceId   String          @map("space_id")
+  userId    String          @map("user_id")
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+  role      SpaceMemberRole @default(MEMBER)
+
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([spaceId, userId])
+  @@index([spaceId])
+  @@map("space_members")
+}
