@@ -90,7 +90,7 @@ async function handleSelfHostedCheckoutSessionCompleted(
 
   const emailClient = getEmailClient();
 
-  emailClient.sendTemplate("LicenseKeyEmail", {
+  await emailClient.sendTemplate("LicenseKeyEmail", {
     to: email,
     from: {
       name: "Luke from Rallly",
