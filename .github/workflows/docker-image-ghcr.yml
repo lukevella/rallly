@@ -31,11 +31,6 @@ jobs:
       id-token: write
 
     steps:
-      - name: Prepare
-        run: |
-          platform=${{ matrix.platform }}
-          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-
       - name: Check out repository code
         uses: actions/checkout@v4
 
@@ -129,6 +124,10 @@ jobs:
             type=ref,event=tag
             # pull request event
             type=ref,event=pr
+            # semver tags on tag event
+            type=semver,event=tag,pattern={{version}}
+            type=semver,event=tag,pattern={{major}}.{{minor}}
+            type=semver,event=tag,pattern={{major}}
 
       - uses: int128/docker-manifest-create-action@v2
         id: build
@@ -136,5 +135,5 @@ jobs:
           index-annotations: ${{ steps.metadata.outputs.labels }}
           tags: ${{ steps.metadata.outputs.tags }}
           sources: |
-            ${{ env.REGISTRY }}/${{ github.repository }}@${{ needs.build.outputs.digest_linux_amd64 }}
-            ${{ env.REGISTRY }}/${{ github.repository }}@${{ needs.build.outputs.digest_linux_arm64 }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.digest_linux_amd64 }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.digest_linux_arm64 }}
