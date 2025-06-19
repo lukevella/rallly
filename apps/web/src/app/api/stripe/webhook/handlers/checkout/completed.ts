@@ -69,6 +69,19 @@ async function handleSelfHostedCheckoutSessionCompleted(
     seats,
   });
 
+  posthog?.capture({
+    distinctId: email,
+    event: "license_purchase",
+    properties: {
+      licenseType,
+      seats,
+      version,
+      $set: {
+        tier: licenseType,
+      },
+    },
+  });
+
   if (!license || !license.data) {
     throw new Error(
       `Failed to create license for session: ${checkoutSession.id} - ${license?.error}`,
