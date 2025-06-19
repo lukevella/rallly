@@ -125,9 +125,9 @@ jobs:
             # pull request event
             type=ref,event=pr
             # semver tags on tag event
- 					  type=semver,event=tag,pattern={{version}}
-						type=semver,event=tag,pattern={{major}}.{{minor}}
-						type=semver,event=tag,pattern={{major}}
+            type=semver,event=tag,pattern={{version}}
+            type=semver,event=tag,pattern={{major}}.{{minor}}
+            type=semver,event=tag,pattern={{major}}
 
       - uses: int128/docker-manifest-create-action@v2
         id: build
