@@ -30,9 +30,9 @@ import {
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
 import { FormattedDateTime } from "@/features/timezone/client/formatted-date-time";
-import { requireUser } from "@/next-auth";
 import { isSelfHosted } from "@/utils/constants";
 
+import { requireUser } from "@/auth/queries";
 import {
   SettingsContent,
   SettingsSection,
@@ -42,10 +42,10 @@ import { SubscriptionPrice } from "./components/subscription-price";
 import { SubscriptionStatus } from "./components/subscription-status";
 
 async function getData() {
-  const { userId } = await requireUser();
+  const user = await requireUser();
 
   const data = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: user.id },
     select: {
       customerId: true,
       subscription: {
