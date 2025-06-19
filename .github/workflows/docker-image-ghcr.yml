@@ -31,11 +31,6 @@ jobs:
       id-token: write
 
     steps:
-      - name: Prepare
-        run: |
-          platform=${{ matrix.platform }}
-          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-
       - name: Check out repository code
         uses: actions/checkout@v4
 
