@@ -2,7 +2,6 @@ import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import NextAuth from "next-auth";
 import type { Provider } from "next-auth/providers";
-import { redirect } from "next/navigation";
 import { cache } from "react";
 
 import { CustomPrismaAdapter } from "./auth/adapters/prisma";
@@ -171,14 +170,6 @@ const auth = cache(async () => {
   }
 });
 
-const requireUser = async () => {
-  const session = await auth();
-  if (!session?.user) {
-    redirect("/login");
-  }
-  return { userId: session.user.id };
-};
-
 /**
  * If email is not set it means the user is a guest
  * @returns
@@ -193,4 +184,4 @@ export const getLoggedIn = async () => {
   return !!session?.user?.email;
 };
 
-export { auth, handlers, requireUser, signIn, signOut };
+export { auth, handlers, signIn, signOut };
