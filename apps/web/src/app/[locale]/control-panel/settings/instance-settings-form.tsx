@@ -8,6 +8,7 @@ import {
   SettingsGroupTitle,
 } from "@/components/settings-group";
 import { Trans } from "@/components/trans";
+import { updateInstanceSettings } from "@/features/instance-settings/mutations";
 import {
   type InstanceSettings,
   instanceSettingsSchema,
@@ -31,7 +32,6 @@ import {
 import { useToast } from "@rallly/ui/hooks/use-toast";
 import { Switch } from "@rallly/ui/switch";
 import { useForm } from "react-hook-form";
-import { updateInstanceSettings } from "./actions";
 
 export function InstanceSettingsForm({
   defaultValue,
