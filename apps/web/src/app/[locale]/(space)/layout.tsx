@@ -25,7 +25,7 @@ export default async function Layout({
         <CommandMenu />
         <AppSidebar />
         <SidebarInset className="min-w-0">
-          <TopBar className="sm:hidden">
+          <TopBar className="md:hidden">
             <TopBarLeft>
               <SidebarTrigger />
             </TopBarLeft>
