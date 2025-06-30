@@ -20,6 +20,14 @@ export async function seedUsers() {
     },
   });
 
+  await prisma.spaceMember.create({
+    data: {
+      spaceId: "space-1",
+      userId: "free-user",
+      role: "OWNER",
+    },
+  });
+
   const proUser = await prisma.user.upsert({
     where: { email: "dev+pro@rallly.co" },
     update: {},
@@ -49,6 +57,15 @@ export async function seedUsers() {
       },
     },
   });
+
+  await prisma.spaceMember.create({
+    data: {
+      spaceId: "space-2",
+      userId: "pro-user",
+      role: "OWNER",
+    },
+  });
+
   console.info(`✓ Seeded user ${freeUser.email}`);
   console.info(`✓ Seeded user ${proUser.email}`);
 
