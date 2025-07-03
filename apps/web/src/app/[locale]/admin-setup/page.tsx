@@ -1,4 +1,4 @@
-import { isInitialAdmin, requireUser } from "@/auth/queries";
+import { requireUser } from "@/auth/queries";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -7,6 +7,8 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Trans } from "@/components/trans";
+import { createServerAbility } from "@/features/ability-manager/server";
+import { getTranslation } from "@/i18n/server";
 import { Button } from "@rallly/ui/button";
 import { CrownIcon } from "lucide-react";
 import Link from "next/link";
@@ -15,13 +17,16 @@ import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {
   const user = await requireUser();
+  const ability = createServerAbility(user);
 
-  if (user.role === "admin") {
+  if (ability.can("access", "ControlPanel")) {
     // User is already an admin
     redirect("/control-panel");
   }
 
-  if (!isInitialAdmin(user.email)) {
+  const canMakeAdmin = ability.can("update", "User", "role");
+
+  if (!canMakeAdmin) {
     notFound();
   }
 
@@ -51,4 +56,11 @@ export default async function AdminSetupPage() {
       </EmptyState>
     </div>
   );
+}
+
+export async function generateMetadata() {
+  const { t } = await getTranslation();
+  return {
+    title: t("adminSetupTitle"),
+  };
 }

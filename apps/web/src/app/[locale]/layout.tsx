@@ -2,6 +2,7 @@ import "../../style.css";
 
 import { supportedLngs } from "@rallly/languages";
 import { PostHogProvider, posthog } from "@rallly/posthog/client";
+import { Toaster as SonnerToast } from "@rallly/ui/sonner";
 import { Toaster } from "@rallly/ui/toaster";
 import { TooltipProvider } from "@rallly/ui/tooltip";
 import { LazyMotion, domAnimation } from "motion/react";
@@ -71,6 +72,7 @@ export default async function Root({
       <body>
         <FeatureFlagsProvider value={{ storage: isStorageEnabled }}>
           <Toaster />
+          <SonnerToast />
           <I18nProvider locale={locale}>
             <TRPCProvider>
               <LazyMotion features={domAnimation}>

@@ -17,8 +17,9 @@ import { signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
 import { Trans } from "@/components/trans";
+import { useSafeAction } from "@/features/safe-action/client";
 import { useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
+import { deleteUserAction } from "./actions";
 
 export function DeleteAccountDialog({
   email,
@@ -32,16 +33,9 @@ export function DeleteAccountDialog({
       email: "",
     },
   });
+  const deleteUser = useSafeAction(deleteUserAction);
   const { t } = useTranslation();
   const posthog = usePostHog();
-  const deleteAccount = trpc.user.delete.useMutation({
-    onSuccess() {
-      posthog?.capture("delete account");
-      signOut({
-        redirectTo: "/login",
-      });
-    },
-  });
 
   return (
     <Form {...form}>
@@ -52,7 +46,13 @@ export function DeleteAccountDialog({
             method="POST"
             action="/auth/logout"
             onSubmit={form.handleSubmit(async () => {
-              await deleteAccount.mutateAsync();
+              const res = await deleteUser.executeAsync();
+              if (res.data?.success) {
+                posthog?.capture("delete account");
+                signOut({
+                  redirectTo: "/login",
+                });
+              }
             })}
           >
             <DialogHeader>
@@ -111,7 +111,7 @@ export function DeleteAccountDialog({
               </DialogClose>
               <Button
                 type="submit"
-                loading={deleteAccount.isPending}
+                loading={deleteUser.isExecuting}
                 variant="destructive"
               >
                 <Trans i18nKey="deleteAccount" defaults="Delete Account" />

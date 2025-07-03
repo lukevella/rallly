@@ -16,9 +16,9 @@ import { useForm } from "react-hook-form";
 import { LanguageSelect } from "@/components/poll/language-selector";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
+import { useSafeAction } from "@/features/safe-action/client";
 import { useTimezone } from "@/features/timezone";
 import { useTranslation } from "@/i18n/client";
-import { useAction } from "next-safe-action/hooks";
 
 import { updateUserAction } from "../actions";
 import { type SetupFormValues, setupSchema } from "../schema";
@@ -30,7 +30,7 @@ interface SetupFormProps {
 export function SetupForm({ defaultValues }: SetupFormProps) {
   const { timezone } = useTimezone();
   const { i18n } = useTranslation();
-  const userSetupAction = useAction(updateUserAction);
+  const userSetupAction = useSafeAction(updateUserAction);
 
   const form = useForm<SetupFormValues>({
     resolver: zodResolver(setupSchema),

@@ -39,9 +39,11 @@
     "clsx": "^1.2.1",
     "cmdk": "^1.1.1",
     "lucide-react": "^0.479.0",
+    "next-themes": "^0.4.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.42.1",
+    "sonner": "^2.0.6",
     "tailwind-merge": "^1.12.0"
   },
   "devDependencies": {
