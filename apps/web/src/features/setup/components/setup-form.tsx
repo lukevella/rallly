@@ -19,8 +19,9 @@ import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
 import { useTimezone } from "@/features/timezone";
 import { useTranslation } from "@/i18n/client";
+import { useAction } from "next-safe-action/hooks";
 
-import { updateUserSetup } from "../actions";
+import { updateUserAction } from "../actions";
 import { type SetupFormValues, setupSchema } from "../schema";
 
 interface SetupFormProps {
@@ -30,6 +31,7 @@ interface SetupFormProps {
 export function SetupForm({ defaultValues }: SetupFormProps) {
   const { timezone } = useTimezone();
   const { i18n } = useTranslation();
+  const userSetupAction = useAction(updateUserAction);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [serverError, setServerError] = React.useState<string | null>(null);
   const form = useForm<SetupFormValues>({
@@ -45,18 +47,12 @@ export function SetupForm({ defaultValues }: SetupFormProps) {
     setIsSubmitting(true);
     setServerError(null);
 
-    // Construct FormData for the server action
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("timeZone", data.timeZone);
-    formData.append("locale", data.locale);
-
-    const result = await updateUserSetup(formData);
+    const result = await userSetupAction.executeAsync(data);
 
     setIsSubmitting(false);
 
-    if (result?.message) {
-      setServerError(result.message);
+    if (result.serverError) {
+      setServerError(result.serverError);
     }
   }
 
