@@ -81,6 +81,7 @@
     "nanoid": "^5.0.9",
     "next": "^15.3.1",
     "next-auth": "^5.0.0-beta.25",
+    "next-safe-action": "^8.0.7",
     "php-serialize": "^4.1.1",
     "postcss": "^8.4.31",
     "react": "^19.1.0",
