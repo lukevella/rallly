@@ -67,7 +67,7 @@ export const defineAbilityFor = ({
 
   if (user.role === "user") {
     if (isInitialAdmin(user.email)) {
-      can("update", "User", ["role"]);
+      can("update", "User", ["role"], { id: user.id });
     }
   }
 

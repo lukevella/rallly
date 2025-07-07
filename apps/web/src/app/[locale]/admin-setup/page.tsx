@@ -9,6 +9,7 @@ import {
 import { Trans } from "@/components/trans";
 import { createServerAbility } from "@/features/ability-manager/server";
 import { getTranslation } from "@/i18n/server";
+import { subject } from "@casl/ability";
 import { Button } from "@rallly/ui/button";
 import { CrownIcon } from "lucide-react";
 import Link from "next/link";
@@ -24,7 +25,7 @@ export default async function AdminSetupPage() {
     redirect("/control-panel");
   }
 
-  const canMakeAdmin = ability.can("update", "User", "role");
+  const canMakeAdmin = ability.can("update", subject("User", user), "role");
 
   if (!canMakeAdmin) {
     notFound();
