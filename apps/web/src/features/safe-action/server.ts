@@ -1,6 +1,8 @@
 "server-only";
 import { requireUser } from "@/auth/queries";
 import { createServerAbility } from "@/features/ability-manager/server";
+import { posthog } from "@rallly/posthog/server";
+import { waitUntil } from "@vercel/functions";
 import { createSafeActionClient } from "next-safe-action";
 
 type ActionErrorCode =
@@ -32,6 +34,16 @@ export const actionClient = createSafeActionClient({
 
     return "INTERNAL_SERVER_ERROR";
   },
+}).use(({ next }) => {
+  const result = next({
+    ctx: {
+      posthog,
+    },
+  });
+
+  waitUntil(Promise.all([posthog?.shutdown()]));
+
+  return result;
 });
 
 export const authActionClient = actionClient.use(async ({ next }) => {

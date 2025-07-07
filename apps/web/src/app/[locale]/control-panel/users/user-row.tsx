@@ -41,7 +41,11 @@ export function UserRow({
   role: "admin" | "user";
 }) {
   const router = useRouter();
-  const changeRole = useSafeAction(changeRoleAction);
+  const changeRole = useSafeAction(changeRoleAction, {
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
 
   const [isPending, startTransition] = useTransition();
   const { user } = useUser();
@@ -89,7 +93,6 @@ export function UserRow({
                           role: userRoleSchema.parse(value),
                           userId,
                         });
-                        router.refresh();
                       });
                     }}
                   >

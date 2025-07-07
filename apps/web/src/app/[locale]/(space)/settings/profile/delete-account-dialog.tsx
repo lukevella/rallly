@@ -33,9 +33,18 @@ export function DeleteAccountDialog({
       email: "",
     },
   });
-  const deleteUser = useSafeAction(deleteUserAction);
-  const { t } = useTranslation();
+
   const posthog = usePostHog();
+
+  const deleteUser = useSafeAction(deleteUserAction, {
+    onSuccess: () => {
+      posthog?.capture("delete account");
+      signOut({
+        redirectTo: "/login",
+      });
+    },
+  });
+  const { t } = useTranslation();
 
   return (
     <Form {...form}>
@@ -46,13 +55,7 @@ export function DeleteAccountDialog({
             method="POST"
             action="/auth/logout"
             onSubmit={form.handleSubmit(async () => {
-              const res = await deleteUser.executeAsync();
-              if (res.data?.success) {
-                posthog?.capture("delete account");
-                signOut({
-                  redirectTo: "/login",
-                });
-              }
+              await deleteUser.executeAsync();
             })}
           >
             <DialogHeader>
