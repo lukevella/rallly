@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import * as React from "react";
 import { useForm } from "react-hook-form";
 
 import { LanguageSelect } from "@/components/poll/language-selector";
@@ -32,8 +31,7 @@ export function SetupForm({ defaultValues }: SetupFormProps) {
   const { timezone } = useTimezone();
   const { i18n } = useTranslation();
   const userSetupAction = useAction(updateUserAction);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [serverError, setServerError] = React.useState<string | null>(null);
+
   const form = useForm<SetupFormValues>({
     resolver: zodResolver(setupSchema),
     defaultValues: {
@@ -43,27 +41,13 @@ export function SetupForm({ defaultValues }: SetupFormProps) {
     },
   });
 
-  async function onSubmit(data: SetupFormValues) {
-    setIsSubmitting(true);
-    setServerError(null);
-
-    const result = await userSetupAction.executeAsync(data);
-
-    setIsSubmitting(false);
-
-    if (result.serverError) {
-      setServerError(result.serverError);
-    }
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        {serverError && (
-          <p aria-live="polite" className="text-destructive text-sm">
-            {serverError}
-          </p>
-        )}
+      <form
+        onSubmit={form.handleSubmit(async (data) => {
+          await userSetupAction.executeAsync(data);
+        })}
+      >
         <div className="space-y-4">
           <FormField
             control={form.control}
@@ -124,12 +108,15 @@ export function SetupForm({ defaultValues }: SetupFormProps) {
               </FormItem>
             )}
           />
+          {userSetupAction.result.serverError && (
+            <FormMessage>{userSetupAction.result.serverError}</FormMessage>
+          )}
         </div>
         <div className="mt-6">
           <Button
             variant="primary"
             type="submit"
-            loading={isSubmitting}
+            loading={form.formState.isSubmitting}
             className="w-full"
           >
             <Trans i18nKey="save" defaults="Save" />
