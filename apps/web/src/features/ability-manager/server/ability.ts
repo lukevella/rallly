@@ -70,11 +70,8 @@ export const defineAbilityFor = ({
       can("update", "User", ["role"]);
     }
   }
-  // Regular user abilities
-  can("read", "Poll");
-  can("create", "Poll");
+
   can("update", "Poll", { userId: user.id });
-  can("manage", "Poll", { userId: user.id });
   can("delete", "Poll", { userId: user.id });
   can("finalize", "Poll", {
     space: {
@@ -92,10 +89,9 @@ export const defineAbilityFor = ({
       },
     },
   });
-  can("create", "Space");
+
   can("update", "Space", { ownerId: user.id });
   can("delete", "Space", { ownerId: user.id });
-  can("manage", "Space", { ownerId: user.id });
   can("manage", "Space", { ownerId: user.id });
   can("manage", "Space", {
     members: {
@@ -119,16 +115,6 @@ export const defineAbilityFor = ({
       },
     },
   });
-
-  can("read", "Comment");
-  can("create", "Comment");
-  can("update", "Comment", { userId: user.id });
-  can("delete", "Comment", { userId: user.id });
-
-  can("read", "Participant");
-  can("create", "Participant");
-  can("update", "Participant", { userId: user.id });
-  can("delete", "Participant", { userId: user.id });
 
   return build();
 };
