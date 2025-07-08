@@ -35,7 +35,7 @@ function getEventsWhereInput({
     ...(status === "upcoming" && {
       OR: [
         { allDay: false, start: { gte: now } },
-        { allDay: true, start: { gte: todayStart, lte: todayEnd } },
+        { allDay: true, start: { gte: todayStart } },
       ],
     }),
     ...(status === "past" && {
