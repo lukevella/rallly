@@ -9,6 +9,7 @@ import type {
   Comment,
   Participant,
   Poll,
+  ScheduledEvent,
   Space,
   SpaceMember,
   Subscription,
@@ -40,6 +41,7 @@ export type Subject =
       Participant: Participant;
       SpaceMember: SpaceMember;
       Subscription: Subscription;
+      ScheduledEvent: ScheduledEvent;
     }>
   | "ControlPanel";
 
@@ -90,6 +92,8 @@ export const defineAbilityFor = (
       },
     },
   });
+
+  can("update", "ScheduledEvent", { userId: user.id });
 
   return build();
 };

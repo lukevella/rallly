@@ -11,7 +11,7 @@ dayjs.extend(utc);
 const mapStatus = {
   upcoming: "confirmed",
   unconfirmed: "unconfirmed",
-  past: undefined,
+  past: "confirmed",
   canceled: "canceled",
 } as const;
 

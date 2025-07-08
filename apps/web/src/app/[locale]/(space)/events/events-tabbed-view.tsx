@@ -38,6 +38,9 @@ export function EventsTabbedView({ children }: { children: React.ReactNode }) {
         <TabsTrigger value="past">
           <Trans i18nKey="past" defaults="Past" />
         </TabsTrigger>
+        <TabsTrigger value="canceled">
+          <Trans i18nKey="canceled" defaults="Canceled" />
+        </TabsTrigger>
       </TabsList>
       <TabsContent
         tabIndex={-1}
