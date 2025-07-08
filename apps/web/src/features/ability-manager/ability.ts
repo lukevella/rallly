@@ -30,7 +30,8 @@ export type Action =
   | "delete"
   | "manage"
   | "finalize"
-  | "access";
+  | "access"
+  | "cancel";
 
 export type Subject =
   | Subjects<{
@@ -93,7 +94,7 @@ export const defineAbilityFor = (
     },
   });
 
-  can("update", "ScheduledEvent", { userId: user.id });
+  can("cancel", "ScheduledEvent", { userId: user.id });
 
   return build();
 };

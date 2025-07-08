@@ -1,8 +1,11 @@
 "use server";
 import { ActionError, authActionClient } from "@/features/safe-action/server";
+import { getEmailClient } from "@/utils/emails";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { formatEventDateTime } from "./utils";
 
 export const cancelEventAction = authActionClient
   .inputSchema(
@@ -24,7 +27,7 @@ export const cancelEventAction = authActionClient
       });
     }
 
-    if (ctx.ability.cannot("update", subject("ScheduledEvent", event))) {
+    if (ctx.ability.cannot("cancel", subject("ScheduledEvent", event))) {
       throw new ActionError({
         code: "UNAUTHORIZED",
         message: "You do not have permission to cancel this event",
@@ -39,4 +42,43 @@ export const cancelEventAction = authActionClient
         status: "canceled",
       },
     });
+
+    revalidatePath("/", "layout");
+
+    // notify attendees
+    const attendees = await prisma.scheduledEventInvite.findMany({
+      where: {
+        scheduledEventId: parsedInput.eventId,
+      },
+      select: {
+        inviteeEmail: true,
+        inviteeName: true,
+        inviteeTimeZone: true,
+        status: true,
+      },
+    });
+
+    for (const attendee of attendees) {
+      if (attendee.status !== "declined") {
+        const { day, dow, date, time } = formatEventDateTime({
+          start: event.start,
+          end: event.end,
+          allDay: event.allDay,
+          timeZone: event.timeZone,
+          inviteeTimeZone: attendee.inviteeTimeZone,
+        });
+
+        getEmailClient().queueTemplate("EventCanceledEmail", {
+          to: attendee.inviteeEmail,
+          props: {
+            title: event.title,
+            hostName: ctx.user.name,
+            day,
+            dow,
+            date,
+            time,
+          },
+        });
+      }
+    }
   });
