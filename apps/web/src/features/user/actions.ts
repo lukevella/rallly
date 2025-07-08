@@ -17,7 +17,7 @@ export const changeRoleAction = authActionClient
 
     const targetUser = userId ? await getUser(userId) : ctx.user;
 
-    if (!targetUser) {
+    if (userId && !targetUser) {
       throw new ActionError({
         code: "NOT_FOUND",
         message: `User ${userId} not found`,
