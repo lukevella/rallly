@@ -392,7 +392,6 @@
   "youHaveUnsavedChanges": "You have unsaved changes",
   "unexpectedError": "Unexpected Error",
   "unexpectedErrorDescription": "There was an unexpected error. Please try again later.",
-  "error": "Error",
   "actionErrorUnauthorized": "You are not authorized to perform this action",
   "actionErrorNotFound": "The resource was not found",
   "actionErrorForbidden": "You are not allowed to perform this action",
