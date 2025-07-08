@@ -388,5 +388,12 @@
   "disableUserRegistration": "Poista käyttäjän luominen käytöstä",
   "disableUserRegistrationDescription": "Estä uusia käyttäjiä luomasta tiliä.",
   "authenticationAndSecurity": "Todennus ja suojaus",
-  "authenticationAndSecurityDescription": "Hallinnoi todennuksen ja suojauksen asetuksia"
+  "authenticationAndSecurityDescription": "Hallinnoi todennuksen ja suojauksen asetuksia",
+  "youHaveUnsavedChanges": "Sinulla on tallentamattomia muutoksia",
+  "unexpectedError": "Odottamaton virhe",
+  "unexpectedErrorDescription": "Tapahtui odottamaton virhe. Yritä myöhemmin uudelleen.",
+  "actionErrorUnauthorized": "Sinulla ei ole valtuuksia suorittaa tätä toimintoa",
+  "actionErrorNotFound": "Resurssia ei löytynyt",
+  "actionErrorForbidden": "Sinulla ei ole oikeutta suorittaa tätä toimintoa",
+  "actionErrorInternalServerError": "Tapahtui sisäinen palvelinvirhe"
 }
