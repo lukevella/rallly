@@ -389,5 +389,11 @@
   "disableUserRegistrationDescription": "Voorkom dat nieuwe gebruikers een account registreren.",
   "authenticationAndSecurity": "Authenticatie & Beveiliging",
   "authenticationAndSecurityDescription": "Beheer authenticatie- en beveiligingsinstellingen",
-  "youHaveUnsavedChanges": "Je hebt niet-opgeslagen wijzigingen"
+  "youHaveUnsavedChanges": "Je hebt niet-opgeslagen wijzigingen",
+  "unexpectedError": "Onverwachte fout",
+  "unexpectedErrorDescription": "Er is een onverwachte fout opgetreden. Probeer het later nogmaals.",
+  "actionErrorUnauthorized": "Je bent niet bevoegd om deze actie uit te voeren",
+  "actionErrorNotFound": "Het bestand is niet gevonden",
+  "actionErrorForbidden": "Je bent niet bevoegd om deze actie uit te voeren",
+  "actionErrorInternalServerError": "Er is een interne serverfout opgetreden"
 }
