@@ -21,7 +21,6 @@ export default async function AdminSetupPage() {
   const ability = createServerAbility(user);
 
   if (ability.can("access", "ControlPanel")) {
-    // User is already an admin
     redirect("/control-panel");
   }
 
