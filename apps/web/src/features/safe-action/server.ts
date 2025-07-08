@@ -1,6 +1,5 @@
 "server-only";
-import { requireUser } from "@/auth/queries";
-import { defineAbilityFor } from "@/features/ability-manager";
+import { requireUserAbility } from "@/auth/queries";
 import { posthog } from "@rallly/posthog/server";
 import { waitUntil } from "@vercel/functions";
 import { createSafeActionClient } from "next-safe-action";
@@ -50,8 +49,7 @@ export const actionClient = createSafeActionClient({
 });
 
 export const authActionClient = actionClient.use(async ({ next }) => {
-  const user = await requireUser();
-  const ability = defineAbilityFor(user);
+  const { user, ability } = await requireUserAbility();
 
   return next({
     ctx: { user, ability },

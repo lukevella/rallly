@@ -1,4 +1,4 @@
-import { requireUser } from "@/auth/queries";
+import { requireUserAbility } from "@/auth/queries";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -7,7 +7,6 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Trans } from "@/components/trans";
-import { defineAbilityFor } from "@/features/ability-manager";
 import { getTranslation } from "@/i18n/server";
 import { subject } from "@casl/ability";
 import { Button } from "@rallly/ui/button";
@@ -17,8 +16,7 @@ import { notFound, redirect } from "next/navigation";
 import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {
-  const user = await requireUser();
-  const ability = defineAbilityFor(user);
+  const { user, ability } = await requireUserAbility();
 
   if (ability.can("access", "ControlPanel")) {
     redirect("/control-panel");
