@@ -1,11 +1,9 @@
 "use server";
-
 import { prisma } from "@rallly/database";
-import { posthog } from "@rallly/posthog/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { authActionClient } from "@/safe-action";
+import { authActionClient } from "@/features/safe-action/server";
 import { setupSchema } from "./schema";
 
 export const updateUserAction = authActionClient
@@ -22,7 +20,7 @@ export const updateUserAction = authActionClient
       },
     });
 
-    posthog?.capture({
+    ctx.posthog?.capture({
       event: "user_setup_completed",
       distinctId: ctx.user.id,
       properties: {
@@ -33,8 +31,6 @@ export const updateUserAction = authActionClient
         },
       },
     });
-
-    await posthog?.shutdown();
 
     revalidatePath("/", "layout");
 

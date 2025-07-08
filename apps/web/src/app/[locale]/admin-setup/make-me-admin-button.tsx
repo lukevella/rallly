@@ -1,34 +1,24 @@
 "use client";
 
 import { Trans } from "@/components/trans";
+import { useSafeAction } from "@/features/safe-action/client";
 import { Button } from "@rallly/ui/button";
-import { useToast } from "@rallly/ui/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { makeAdmin } from "./actions";
+import { makeMeAdminAction } from "./actions";
 
 export function MakeMeAdminButton() {
   const router = useRouter();
-  const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
+  const makeMeAdmin = useSafeAction(makeMeAdminAction, {
+    onSuccess: () => {
+      router.replace("/control-panel");
+    },
+  });
   return (
     <Button
       onClick={async () => {
-        startTransition(async () => {
-          const { success, error } = await makeAdmin();
-          if (success) {
-            router.replace("/control-panel");
-          }
-
-          if (error) {
-            toast({
-              title: "Error",
-              description: error,
-            });
-          }
-        });
+        await makeMeAdmin.executeAsync();
       }}
-      loading={isPending}
+      loading={makeMeAdmin.isExecuting}
       variant="primary"
     >
       <Trans i18nKey="adminSetupCta" defaults="Make me an admin" />

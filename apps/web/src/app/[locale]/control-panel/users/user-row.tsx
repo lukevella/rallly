@@ -3,6 +3,8 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
+import { useSafeAction } from "@/features/safe-action/client";
+import { changeRoleAction } from "@/features/user/actions";
 import { userRoleSchema } from "@/features/user/schema";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
@@ -23,7 +25,6 @@ import { Icon } from "@rallly/ui/icon";
 import { MoreHorizontal, TrashIcon, UserPenIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { changeRole } from "./actions";
 import { DeleteUserDialog } from "./dialogs/delete-user-dialog";
 
 export function UserRow({
@@ -40,6 +41,12 @@ export function UserRow({
   role: "admin" | "user";
 }) {
   const router = useRouter();
+  const changeRole = useSafeAction(changeRoleAction, {
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
+
   const [isPending, startTransition] = useTransition();
   const { user } = useUser();
   const deleteDialog = useDialog();
@@ -82,11 +89,10 @@ export function UserRow({
                     value={role}
                     onValueChange={async (value) => {
                       startTransition(async () => {
-                        await changeRole({
+                        await changeRole.executeAsync({
                           role: userRoleSchema.parse(value),
                           userId,
                         });
-                        router.refresh();
                       });
                     }}
                   >

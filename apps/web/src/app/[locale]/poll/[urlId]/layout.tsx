@@ -1,12 +1,12 @@
 import { prisma } from "@rallly/database";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { PollLayout } from "@/components/layouts/poll-layout";
 import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
 
 export default async function Layout(
-  props: React.PropsWithChildren<{ params: { urlId: string } }>,
+  props: React.PropsWithChildren<{ params: Promise<{ urlId: string }> }>,
 ) {
   const params = await props.params;
 
@@ -24,6 +24,10 @@ export default async function Layout(
 
   if (!poll) {
     notFound();
+  }
+
+  if (!poll.adminUrlId) {
+    redirect(`/invite/${params.urlId}`);
   }
 
   return (

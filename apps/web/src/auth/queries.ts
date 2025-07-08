@@ -1,3 +1,4 @@
+import { defineAbilityFor } from "@/features/ability-manager";
 import { getDefaultSpace } from "@/features/spaces/queries";
 import { getUser } from "@/features/user/queries";
 import { auth } from "@/next-auth";
@@ -40,4 +41,14 @@ export const getActiveSpace = cache(async () => {
   const user = await requireUser();
 
   return await getDefaultSpace({ ownerId: user.id });
+});
+
+export const requireUserAbility = cache(async () => {
+  const user = await requireUser();
+  return {
+    user,
+    ability: defineAbilityFor(user, {
+      isInitialAdmin: isInitialAdmin(user.email),
+    }),
+  };
 });
