@@ -78,7 +78,7 @@ export function UserRow({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
+                <DropdownMenuSubTrigger disabled={isYou}>
                   <Icon>
                     <UserPenIcon />
                   </Icon>
