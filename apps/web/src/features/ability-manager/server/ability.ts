@@ -86,50 +86,5 @@ export const defineAbilityFor = ({
     }
   }
 
-  can("update", "Poll", { userId: user.id });
-  can("delete", "Poll", { userId: user.id });
-  can("finalize", "Poll", {
-    space: {
-      subscription: {
-        active: true,
-      },
-    },
-  });
-
-  can("read", "Space", { ownerId: user.id });
-  can("read", "Space", {
-    members: {
-      some: {
-        userId: user.id,
-      },
-    },
-  });
-
-  can("update", "Space", { ownerId: user.id });
-  can("delete", "Space", { ownerId: user.id });
-  can("manage", "Space", { ownerId: user.id });
-  can("manage", "Space", {
-    members: {
-      some: {
-        userId: user.id,
-        role: {
-          in: ["ADMIN", "OWNER"],
-        },
-      },
-    },
-  });
-
-  can("manage", "Subscription", { userId: user.id });
-  can("manage", "Subscription", {
-    space: {
-      members: {
-        some: {
-          userId: user.id,
-          role: "OWNER",
-        },
-      },
-    },
-  });
-
   return build();
 };
