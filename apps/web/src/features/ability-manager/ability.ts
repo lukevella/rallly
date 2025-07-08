@@ -45,11 +45,7 @@ export type Subject =
 
 export type AppAbility = PureAbility<[string, Subject], PrismaQuery>;
 
-export const defineAbilityFor = ({
-  user,
-}: {
-  user: User | null;
-}) => {
+export const defineAbilityFor = (user?: User) => {
   const { can, cannot, build } = new AbilityBuilder<AppAbility>(
     createPrismaAbility,
   );

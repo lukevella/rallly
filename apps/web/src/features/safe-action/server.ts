@@ -1,6 +1,6 @@
 "server-only";
 import { requireUser } from "@/auth/queries";
-import { createServerAbility } from "@/features/ability-manager/server";
+import { defineAbilityFor } from "@/features/ability-manager";
 import { posthog } from "@rallly/posthog/server";
 import { waitUntil } from "@vercel/functions";
 import { createSafeActionClient } from "next-safe-action";
@@ -16,20 +16,21 @@ export class ActionError extends Error {
   constructor({
     code,
     message,
+    cause,
   }: {
     code: ActionErrorCode;
     message: string;
+    cause?: unknown;
   }) {
     super(`[${code}]: ${message}`);
     this.name = "ActionError";
     this.code = code;
+    this.cause = cause;
   }
 }
 
 export const actionClient = createSafeActionClient({
   handleServerError: async (error) => {
-    console.error(error);
-
     if (error instanceof ActionError) {
       return error.code;
     }
@@ -50,7 +51,7 @@ export const actionClient = createSafeActionClient({
 
 export const authActionClient = actionClient.use(async ({ next }) => {
   const user = await requireUser();
-  const ability = createServerAbility(user);
+  const ability = defineAbilityFor(user);
 
   return next({
     ctx: { user, ability },

@@ -71,8 +71,9 @@ export const deleteUserAction = authActionClient
 
     if (ctx.ability.cannot("delete", subject("User", user))) {
       throw new ActionError({
-        code: "UNAUTHORIZED",
-        message: "You are not authorized to delete this user",
+        code: "FORBIDDEN",
+        message: "This user cannot be deleted",
+        cause: ctx.ability.relevantRuleFor("delete", subject("User", user)),
       });
     }
 
