@@ -8,16 +8,16 @@ import { getUser } from "./queries";
 export const changeRoleAction = authActionClient
   .inputSchema(
     z.object({
-      userId: z.string().optional(),
+      userId: z.string(),
       role: z.enum(["user", "admin"]),
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
     const { userId, role } = parsedInput;
 
-    const targetUser = userId ? await getUser(userId) : ctx.user;
+    const targetUser = await getUser(userId);
 
-    if (userId && !targetUser) {
+    if (!targetUser) {
       throw new ActionError({
         code: "NOT_FOUND",
         message: `User ${userId} not found`,

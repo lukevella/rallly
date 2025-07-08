@@ -2,13 +2,13 @@
 
 import { Trans } from "@/components/trans";
 import { useSafeAction } from "@/features/safe-action/client";
-import { changeRoleAction } from "@/features/user/actions";
 import { Button } from "@rallly/ui/button";
 import { useRouter } from "next/navigation";
+import { makeMeAdminAction } from "./actions";
 
 export function MakeMeAdminButton() {
   const router = useRouter();
-  const changeRole = useSafeAction(changeRoleAction, {
+  const makeMeAdmin = useSafeAction(makeMeAdminAction, {
     onSuccess: () => {
       router.replace("/control-panel");
     },
@@ -16,11 +16,9 @@ export function MakeMeAdminButton() {
   return (
     <Button
       onClick={async () => {
-        await changeRole.executeAsync({
-          role: "admin",
-        });
+        await makeMeAdmin.executeAsync();
       }}
-      loading={changeRole.isExecuting}
+      loading={makeMeAdmin.isExecuting}
       variant="primary"
     >
       <Trans i18nKey="adminSetupCta" defaults="Make me an admin" />
