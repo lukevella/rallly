@@ -47,6 +47,8 @@ export const requireUserAbility = cache(async () => {
   const user = await requireUser();
   return {
     user,
-    ability: defineAbilityFor(user),
+    ability: defineAbilityFor(user, {
+      isInitialAdmin: isInitialAdmin(user.email),
+    }),
   };
 });

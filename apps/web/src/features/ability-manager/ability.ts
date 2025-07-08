@@ -1,5 +1,5 @@
-import { isInitialAdmin } from "@/auth/queries";
-import { AbilityBuilder, type PureAbility } from "@casl/ability";
+import type { PureAbility } from "@casl/ability";
+import { AbilityBuilder } from "@casl/ability";
 import {
   type PrismaQuery,
   type Subjects,
@@ -45,7 +45,12 @@ export type Subject =
 
 export type AppAbility = PureAbility<[string, Subject], PrismaQuery>;
 
-export const defineAbilityFor = (user?: User) => {
+export const defineAbilityFor = (
+  user?: User,
+  options?: {
+    isInitialAdmin?: boolean;
+  },
+) => {
   const { can, cannot, build } = new AbilityBuilder<AppAbility>(
     createPrismaAbility,
   );
@@ -62,10 +67,9 @@ export const defineAbilityFor = (user?: User) => {
   }
 
   if (user.role === "user") {
-    if (isInitialAdmin(user.email)) {
+    if (options?.isInitialAdmin) {
       can("update", "User", ["role"], {
         id: user.id,
-        email: process.env.INITIAL_ADMIN_EMAIL,
       });
     }
 
