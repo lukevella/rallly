@@ -1,35 +1,33 @@
 "use server";
 
-import { authActionClient } from "@/features/safe-action/server";
-import { ActionError } from "@/features/safe-action/server";
-import { getUser } from "@/features/user/queries";
+import { ActionError, authActionClient } from "@/features/safe-action/server";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 
-export const deleteUserAction = authActionClient.action(async ({ ctx }) => {
-  const user = await getUser(ctx.user.id);
-
-  if (!user) {
-    throw new ActionError({
-      code: "NOT_FOUND",
-      message: "User not found",
+export const deleteUserAction = authActionClient
+  .use(async ({ ctx, next }) => {
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id: ctx.user.id },
+      include: { spaces: { include: { subscription: true } } },
     });
-  }
 
-  if (ctx.ability.cannot("delete", subject("User", user))) {
-    throw new ActionError({
-      code: "UNAUTHORIZED",
-      message: "You are not authorized to delete this user",
+    if (ctx.ability.cannot("delete", subject("User", user))) {
+      throw new ActionError({
+        code: "UNAUTHORIZED",
+        message: "You are not authorized to delete this user",
+      });
+    }
+
+    return next();
+  })
+  .action(async ({ ctx }) => {
+    await prisma.user.delete({
+      where: {
+        id: ctx.user.id,
+      },
     });
-  }
 
-  await prisma.user.delete({
-    where: {
-      id: ctx.user.id,
-    },
+    return {
+      success: true,
+    };
   });
-
-  return {
-    success: true,
-  };
-});

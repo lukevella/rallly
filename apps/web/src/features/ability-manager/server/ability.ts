@@ -17,6 +17,7 @@ import type {
 
 export type User = {
   id: string;
+  name: string;
   email: string;
   role: UserRole;
 };
@@ -57,7 +58,21 @@ export const defineAbilityFor = ({
     return build();
   }
 
-  can("delete", "User", { id: user.id });
+  can("update", "User", ["email", "name"], { id: user.id });
+  can("delete", "User", {
+    id: user.id,
+  });
+  cannot("delete", "User", {
+    spaces: {
+      some: {
+        subscription: {
+          is: {
+            active: true,
+          },
+        },
+      },
+    },
+  });
 
   if (user.role === "admin") {
     can("access", "ControlPanel");

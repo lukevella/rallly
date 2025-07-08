@@ -28,6 +28,8 @@ export class ActionError extends Error {
 
 export const actionClient = createSafeActionClient({
   handleServerError: async (error) => {
+    console.error(error);
+
     if (error instanceof ActionError) {
       return error.code;
     }
