@@ -8,14 +8,14 @@ import { getUser } from "./queries";
 export const changeRoleAction = authActionClient
   .inputSchema(
     z.object({
-      userId: z.string(),
+      userId: z.string().optional(),
       role: z.enum(["user", "admin"]),
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
     const { userId, role } = parsedInput;
 
-    const targetUser = await getUser(userId);
+    const targetUser = userId ? await getUser(userId) : ctx.user;
 
     if (!targetUser) {
       throw new ActionError({
@@ -40,10 +40,49 @@ export const changeRoleAction = authActionClient
 
     await prisma.user.update({
       where: {
-        id: userId,
+        id: targetUser.id,
       },
       data: {
         role,
       },
     });
+  });
+
+export const deleteUserAction = authActionClient
+  .inputSchema(
+    z.object({
+      userId: z.string(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    const userId = parsedInput.userId;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { spaces: { include: { subscription: true } } },
+    });
+
+    if (!user) {
+      throw new ActionError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
+
+    if (ctx.ability.cannot("delete", subject("User", user))) {
+      throw new ActionError({
+        code: "UNAUTHORIZED",
+        message: "You are not authorized to delete this user",
+      });
+    }
+
+    await prisma.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+
+    return {
+      success: true,
+    };
   });

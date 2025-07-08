@@ -19,7 +19,7 @@ import { useForm } from "react-hook-form";
 import { Trans } from "@/components/trans";
 import { useSafeAction } from "@/features/safe-action/client";
 import { useTranslation } from "@/i18n/client";
-import { deleteUserAction } from "./actions";
+import { deleteCurrentUserAction } from "./actions";
 
 export function DeleteAccountDialog({
   email,
@@ -36,7 +36,7 @@ export function DeleteAccountDialog({
 
   const posthog = usePostHog();
 
-  const deleteUser = useSafeAction(deleteUserAction, {
+  const deleteUser = useSafeAction(deleteCurrentUserAction, {
     onSuccess: () => {
       posthog?.capture("delete account");
       signOut({

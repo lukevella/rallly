@@ -58,10 +58,27 @@ export const defineAbilityFor = ({
     return build();
   }
 
+  if (user.role === "admin") {
+    can("access", "ControlPanel");
+    can("update", "User", ["role"]);
+    cannot("update", "User", ["role"], { id: user.id });
+    can("delete", "User");
+  }
+
+  if (user.role === "user") {
+    if (isInitialAdmin(user.email)) {
+      can("update", "User", ["role"], {
+        id: user.id,
+        email: process.env.INITIAL_ADMIN_EMAIL,
+      });
+    }
+
+    can("delete", "User", {
+      id: user.id,
+    });
+  }
+
   can("update", "User", ["email", "name"], { id: user.id });
-  can("delete", "User", {
-    id: user.id,
-  });
   cannot("delete", "User", {
     spaces: {
       some: {
@@ -73,18 +90,6 @@ export const defineAbilityFor = ({
       },
     },
   });
-
-  if (user.role === "admin") {
-    can("access", "ControlPanel");
-    can("update", "User", ["role"]);
-    cannot("update", "User", ["role"], { id: user.id });
-  }
-
-  if (user.role === "user") {
-    if (isInitialAdmin(user.email)) {
-      can("update", "User", ["role"], { id: user.id });
-    }
-  }
 
   return build();
 };

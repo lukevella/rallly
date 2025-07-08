@@ -4,12 +4,21 @@ import { ActionError, authActionClient } from "@/features/safe-action/server";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 
-export const deleteUserAction = authActionClient
-  .use(async ({ ctx, next }) => {
-    const user = await prisma.user.findUniqueOrThrow({
-      where: { id: ctx.user.id },
+export const deleteCurrentUserAction = authActionClient.action(
+  async ({ ctx }) => {
+    const userId = ctx.user.id;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
       include: { spaces: { include: { subscription: true } } },
     });
+
+    if (!user) {
+      throw new ActionError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
 
     if (ctx.ability.cannot("delete", subject("User", user))) {
       throw new ActionError({
@@ -18,16 +27,14 @@ export const deleteUserAction = authActionClient
       });
     }
 
-    return next();
-  })
-  .action(async ({ ctx }) => {
     await prisma.user.delete({
       where: {
-        id: ctx.user.id,
+        id: userId,
       },
     });
 
     return {
       success: true,
     };
-  });
+  },
+);
