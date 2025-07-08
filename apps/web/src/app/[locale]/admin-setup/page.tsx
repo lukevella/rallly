@@ -61,6 +61,6 @@ export default async function AdminSetupPage() {
 export async function generateMetadata() {
   const { t } = await getTranslation();
   return {
-    title: t("adminSetupTitle"),
+    title: t("adminSetup"),
   };
 }

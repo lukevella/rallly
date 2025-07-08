@@ -9,9 +9,8 @@ export const useSafeAction: typeof useAction = (action, options) => {
     ...options,
     onError: ({ error }) => {
       if (error.serverError) {
-        let translatedDescription: string = t("safeActionUnknownError", {
-          defaultValue: "Unknown Error",
-        });
+        let translatedDescription = "An unexpected error occurred";
+
         switch (error.serverError) {
           case "UNAUTHORIZED":
             translatedDescription = t("safeActionUnauthorized", {
