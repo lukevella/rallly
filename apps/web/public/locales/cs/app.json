@@ -328,8 +328,5 @@
   "canceledEventsEmptyStateTitle": "Žádné zrušené události",
   "canceledEventsEmptyStateDescription": "Zde se zobrazí zrušené události.",
   "setupFormTitle": "Nastavení",
-  "setupFormDescription": "Dokončete vytváření svého účtu.",
-  "errorNotAuthenticated": "Nepřihlášený",
-  "errorInvalidFields": "Neplatná pole. Zkontrolujte zadání.",
-  "errorDatabaseUpdateFailed": "Chyba databáze: Nepodařilo se aktualizovat nastavení."
+  "setupFormDescription": "Dokončete vytváření svého účtu."
 }
