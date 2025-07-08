@@ -389,5 +389,11 @@
   "disableUserRegistrationDescription": "Ha nem szeretnéd, hogy új felhasználói fiókokat lehessen létrehozni.",
   "authenticationAndSecurity": "Hitelesítés és biztonság",
   "authenticationAndSecurityDescription": "Kezeld a hitelesítési és biztonsági beállításokat",
-  "youHaveUnsavedChanges": "Nem mentett módosításaid vannak"
+  "youHaveUnsavedChanges": "Nem mentett módosításaid vannak",
+  "unexpectedError": "Váratlan hiba",
+  "unexpectedErrorDescription": "Váratlan hiba történt. Kérjük próbáld újra később!",
+  "actionErrorUnauthorized": "Nem vagy jogosult a művelet végrehajtására",
+  "actionErrorNotFound": "Az erőforrás nem található",
+  "actionErrorForbidden": "Nem vagy jogosult a művelet végrehajtására",
+  "actionErrorInternalServerError": "Egy belső szerverhiba történt"
 }
