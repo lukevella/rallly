@@ -400,9 +400,6 @@ importers:
       smoothscroll-polyfill:
         specifier: ^0.4.4
         version: 0.4.4
-      sonner:
-        specifier: ^2.0.6
-        version: 2.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       spacetime:
         specifier: ^7.4.7
         version: 7.10.0

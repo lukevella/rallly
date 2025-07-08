@@ -1,7 +1,7 @@
 "use client";
 import { useTranslation } from "@/i18n/client";
+import { toast } from "@rallly/ui/sonner";
 import { useAction } from "next-safe-action/hooks";
-import { toast } from "sonner";
 
 export const useSafeAction: typeof useAction = (action, options) => {
   const { t } = useTranslation();
@@ -34,14 +34,7 @@ export const useSafeAction: typeof useAction = (action, options) => {
             break;
         }
 
-        toast(
-          t("error", {
-            defaultValue: "Error",
-          }),
-          {
-            description: translatedDescription,
-          },
-        );
+        toast.error(translatedDescription);
       }
     },
   });
