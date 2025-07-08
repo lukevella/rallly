@@ -1,3 +1,4 @@
+"use server";
 import { authActionClient } from "@/features/safe-action/server";
 import { ActionError } from "@/features/safe-action/server";
 import { subject } from "@casl/ability";
