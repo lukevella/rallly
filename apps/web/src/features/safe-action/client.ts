@@ -13,22 +13,22 @@ export const useSafeAction: typeof useAction = (action, options) => {
 
         switch (error.serverError) {
           case "UNAUTHORIZED":
-            translatedDescription = t("safeActionUnauthorized", {
+            translatedDescription = t("actionErrorUnauthorized", {
               defaultValue: "You are not authorized to perform this action",
             });
             break;
           case "NOT_FOUND":
-            translatedDescription = t("safeActionNotFound", {
+            translatedDescription = t("actionErrorNotFound", {
               defaultValue: "The resource was not found",
             });
             break;
           case "FORBIDDEN":
-            translatedDescription = t("safeActionForbidden", {
+            translatedDescription = t("actionErrorForbidden", {
               defaultValue: "You are not allowed to perform this action",
             });
             break;
           case "INTERNAL_SERVER_ERROR":
-            translatedDescription = t("safeActionInternalServerError", {
+            translatedDescription = t("actionErrorInternalServerError", {
               defaultValue: "An internal server error occurred",
             });
             break;

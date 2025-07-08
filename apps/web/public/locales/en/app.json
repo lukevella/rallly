@@ -392,10 +392,9 @@
   "youHaveUnsavedChanges": "You have unsaved changes",
   "unexpectedError": "Unexpected Error",
   "unexpectedErrorDescription": "There was an unexpected error. Please try again later.",
-  "safeActionUnknownError": "Unknown Error",
-  "safeActionUnauthorized": "You are not authorized to perform this action",
-  "safeActionNotFound": "The resource was not found",
-  "safeActionForbidden": "You are not allowed to perform this action",
-  "safeActionInternalServerError": "An internal server error occurred",
-  "error": "Error"
+  "error": "Error",
+  "actionErrorUnauthorized": "You are not authorized to perform this action",
+  "actionErrorNotFound": "The resource was not found",
+  "actionErrorForbidden": "You are not allowed to perform this action",
+  "actionErrorInternalServerError": "An internal server error occurred"
 }
