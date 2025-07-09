@@ -330,9 +330,6 @@
   "canceledEventsEmptyStateDescription": "A lemondott események itt fognak megjelenni.",
   "setupFormTitle": "Beállítás",
   "setupFormDescription": "Fejezd be a fiókod beállítását.",
-  "errorNotAuthenticated": "Nem hitelesített",
-  "errorInvalidFields": "Érvénytelen mezők. Ellenőrizd amit megadtál.",
-  "errorDatabaseUpdateFailed": "Adatbázis hiba: A beállítások frissítése nem sikerült.",
   "pending": "Függőben lévő",
   "helpUsImprove": "Segíts fejlődni",
   "helpUsImproveDesc": "Szánj pár percet arra, hogy megosztod velünk a visszajelzésed és segíts nekünk alakítani a Rallly jövőjét.",
@@ -361,9 +358,6 @@
   "users": "Felhasználók",
   "userCount": "{count, number, ::compact-short}",
   "unlicensed": "Licenc nélküli",
-  "deleteUser": "Felhasználó törlése",
-  "areYouSureYouWantToDeleteThisUser": "Biztosan szeretnéd törölni ezt a felhasználót?",
-  "typeTheEmailAddressOfTheUserYouWantToDelete": "Add meg a törölni kívánt felhasználó email címét.",
   "emailDoesNotMatch": "Az email cím nem egyezik.",
   "noUsers": "Felhasználó nem található",
   "noUsersDescription": "Próbáld meg módosítani a keresést",
@@ -395,5 +389,12 @@
   "disableUserRegistrationDescription": "Ha nem szeretnéd, hogy új felhasználói fiókokat lehessen létrehozni.",
   "authenticationAndSecurity": "Hitelesítés és biztonság",
   "authenticationAndSecurityDescription": "Kezeld a hitelesítési és biztonsági beállításokat",
-  "youHaveUnsavedChanges": "Nem mentett módosításaid vannak"
+  "youHaveUnsavedChanges": "Nem mentett módosításaid vannak",
+  "unexpectedError": "Váratlan hiba",
+  "unexpectedErrorDescription": "Váratlan hiba történt. Kérjük próbáld újra később!",
+  "actionErrorUnauthorized": "Nem vagy jogosult a művelet végrehajtására",
+  "actionErrorNotFound": "Az erőforrás nem található",
+  "actionErrorForbidden": "Nem vagy jogosult a művelet végrehajtására",
+  "actionErrorInternalServerError": "Egy belső szerverhiba történt",
+  "cancelEvent": "Esemény lemondása"
 }
