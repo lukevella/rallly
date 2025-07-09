@@ -3,6 +3,7 @@ import { authActionClient } from "@/features/safe-action/server";
 import { ActionError } from "@/features/safe-action/server";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { redirect } from "next/navigation";
 
 export const makeMeAdminAction = authActionClient.action(async ({ ctx }) => {
   if (ctx.ability.cannot("update", subject("User", ctx.user), "role")) {
@@ -20,4 +21,6 @@ export const makeMeAdminAction = authActionClient.action(async ({ ctx }) => {
       role: "admin",
     },
   });
+
+  redirect("/control-panel");
 });

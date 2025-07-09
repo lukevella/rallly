@@ -1,6 +1,7 @@
 "use server";
 
 import { ActionError, authActionClient } from "@/features/safe-action/server";
+import { signOut } from "@/next-auth";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 
@@ -32,6 +33,16 @@ export const deleteCurrentUserAction = authActionClient.action(
         id: userId,
       },
     });
+
+    ctx.posthog?.capture({
+      event: "delete_account",
+      distinctId: ctx.user.id,
+      properties: {
+        email: ctx.user.email,
+      },
+    });
+
+    await signOut();
 
     return {
       success: true,

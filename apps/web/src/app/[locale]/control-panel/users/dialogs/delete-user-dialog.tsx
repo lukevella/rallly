@@ -24,7 +24,6 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -53,7 +52,6 @@ export function DeleteUserDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const router = useRouter();
   const schema = useSchema(email);
   const form = useForm({
     resolver: zodResolver(schema),
@@ -64,7 +62,6 @@ export function DeleteUserDialog({
 
   const deleteUser = useSafeAction(deleteUserAction, {
     onSuccess: () => {
-      router.refresh();
       onOpenChange(false);
     },
   });
