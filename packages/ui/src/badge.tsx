@@ -13,9 +13,10 @@ const badgeVariants = cva(
         destructive: "bg-destructive text-destructive-foreground",
         outline: "text-foreground",
         green: "bg-green-600 text-white",
-        secondary: "bg-primary-50 text-primary",
+        secondary: "border border-primary-200 bg-primary-50 text-primary",
       },
       size: {
+        sm: "h-5 min-w-5 px-1.5 text-xs",
         md: "h-6 min-w-5 px-2 text-xs",
         lg: "h-7 min-w-7 px-2.5 text-sm",
       },

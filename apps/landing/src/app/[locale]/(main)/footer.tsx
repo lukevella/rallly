@@ -261,7 +261,7 @@ export const Footer: React.FunctionComponent = () => {
           </div>
           <a
             href="https://support.rallly.co/contribute/translations"
-            className="inline-flex items-center rounded-md border px-3 py-2 text-gray-500 text-xs hover:border-primary-600 hover:text-primary-600"
+            className="inline-flex h-8 items-center rounded-md border px-3 text-gray-500 text-xs hover:border-primary-600 hover:text-primary-600"
           >
             <LanguagesIcon className="mr-2 size-5" />
             <Trans ns="common" i18nKey="volunteerTranslator" /> &rarr;

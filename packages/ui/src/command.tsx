@@ -34,7 +34,7 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
         hideCloseButton={true}
         size="xl"
         position="top"
-        className="p-0 shadow-huge"
+        className="p-0"
       >
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:size-4 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:p-2 [&_[cmdk-item]_svg]:size-4">
           {children}
@@ -145,7 +145,7 @@ const CommandItemShortcut = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex h-12 cursor-pointer select-none items-center gap-3 rounded-md px-3 font-medium outline-none aria-selected:bg-gray-100 data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+      "relative flex h-12 cursor-pointer select-none items-center gap-3 rounded-xl px-3 font-medium outline-none aria-selected:bg-gray-100 data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
       className,
     )}
     {...props}
