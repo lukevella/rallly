@@ -45,6 +45,14 @@ export const cancelEventAction = authActionClient
 
     revalidatePath("/", "layout");
 
+    ctx.posthog?.capture({
+      event: "cancel_event",
+      distinctId: ctx.user.id,
+      properties: {
+        event_id: parsedInput.eventId,
+      },
+    });
+
     // notify attendees
     const attendees = await prisma.scheduledEventInvite.findMany({
       where: {
