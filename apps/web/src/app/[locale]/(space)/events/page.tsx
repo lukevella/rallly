@@ -161,6 +161,7 @@ export default async function Page(props: {
                         end={event.end}
                         allDay={event.allDay}
                         invites={event.invites}
+                        status={event.status}
                       />
                     </StackedListItem>
                   ))}

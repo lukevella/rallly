@@ -12,8 +12,8 @@ import { z } from "zod";
 import { moderateContent } from "@/features/moderation";
 import { getEmailClient } from "@/utils/emails";
 
+import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getDefaultSpace } from "@/features/spaces/queries";
-import { getTimeZoneAbbreviation } from "../../utils/date";
 import {
   createRateLimitMiddleware,
   possiblyPublicProcedure,
@@ -479,6 +479,7 @@ export const polls = router({
               start: true,
               end: true,
               allDay: true,
+              status: true,
               invites: {
                 select: {
                   id: true,
@@ -526,6 +527,7 @@ export const polls = router({
                 (invite) =>
                   invite.status === "accepted" || invite.status === "tentative",
               ),
+            status: res.scheduledEvent.status,
           }
         : null;
 
@@ -629,56 +631,64 @@ export const polls = router({
         eventStart = eventStart.utc();
       }
 
-      if (!poll.spaceId) {
+      const { spaceId } = poll;
+
+      if (!spaceId) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Poll has no space",
         });
       }
 
-      await prisma.poll.update({
-        where: {
-          id: input.pollId,
-        },
-        data: {
-          status: "finalized",
-          scheduledEvent: {
-            create: {
-              id: input.pollId,
-              start: eventStart.toDate(),
-              end: eventStart.add(option.duration, "minute").toDate(),
-              title: poll.title,
-              location: poll.location,
-              timeZone: poll.timeZone,
-              userId: ctx.user.id,
-              spaceId: poll.spaceId,
-              allDay: option.duration === 0,
-              status: "confirmed",
-              invites: {
-                createMany: {
-                  data: poll.participants
-                    .filter((p) => p.email || p.user?.email) // Filter out participants without email
-                    .map((p) => ({
-                      inviteeName: p.name,
-                      inviteeEmail:
-                        p.user?.email ?? p.email ?? `${p.id}@rallly.co`,
-                      inviteeTimeZone: p.user?.timeZone ?? poll.timeZone, // We should track participant's timezone
-                      status: (
-                        {
-                          yes: "accepted",
-                          ifNeedBe: "tentative",
-                          no: "declined",
-                        } as const
-                      )[
-                        p.votes.find((v) => v.optionId === input.optionId)
-                          ?.type ?? "no"
-                      ],
-                    })),
-                },
+      const scheduledEvent = await prisma.$transaction(async (tx) => {
+        // create scheduled event
+        const event = await tx.scheduledEvent.create({
+          data: {
+            start: eventStart.toDate(),
+            end: eventStart.add(option.duration, "minute").toDate(),
+            title: poll.title,
+            location: poll.location,
+            timeZone: poll.timeZone,
+            userId: ctx.user.id,
+            spaceId,
+            allDay: option.duration === 0,
+            status: "confirmed",
+            invites: {
+              createMany: {
+                data: poll.participants
+                  .filter((p) => p.email || p.user?.email) // Filter out participants without email
+                  .map((p) => ({
+                    inviteeName: p.name,
+                    inviteeEmail:
+                      p.user?.email ?? p.email ?? `${p.id}@rallly.co`,
+                    inviteeTimeZone: p.user?.timeZone ?? poll.timeZone, // We should track participant's timezone
+                    status: (
+                      {
+                        yes: "accepted",
+                        ifNeedBe: "tentative",
+                        no: "declined",
+                      } as const
+                    )[
+                      p.votes.find((v) => v.optionId === input.optionId)
+                        ?.type ?? "no"
+                    ],
+                  })),
               },
             },
           },
-        },
+        });
+        // update poll status
+        await tx.poll.update({
+          where: {
+            id: poll.id,
+          },
+          data: {
+            status: "finalized",
+            scheduledEventId: event.id,
+          },
+        });
+
+        return event;
       });
 
       const attendees = poll.participants.filter((p) =>
@@ -699,6 +709,8 @@ export const polls = router({
           : eventStart.add(1, "day");
 
       const event = ics.createEvent({
+        uid: scheduledEvent.id,
+        sequence: 0, // TODO: Get sequence from database
         title: poll.title,
         location: poll.location ?? undefined,
         description: poll.description ?? undefined,
@@ -742,20 +754,6 @@ export const polls = router({
           message: "Failed to generate ics",
         });
       } else {
-        const timeZoneAbbrev = poll.timeZone
-          ? getTimeZoneAbbreviation(eventStart.toDate(), poll.timeZone)
-          : "";
-        const date = eventStart.format("dddd, MMMM D, YYYY");
-        const day = eventStart.format("D");
-        const dow = eventStart.format("ddd");
-        const startTime = eventStart.format("hh:mm A");
-        const endTime = eventEnd.format("hh:mm A");
-
-        const time =
-          option.duration > 0
-            ? `${startTime} - ${endTime} ${timeZoneAbbrev}`
-            : "All-day";
-
         const participantsToEmail: Array<{
           name: string;
           email: string;
@@ -788,6 +786,13 @@ export const polls = router({
           });
         }
 
+        const { date, day, dow, time } = formatEventDateTime({
+          start: scheduledEvent.start,
+          end: scheduledEvent.end,
+          allDay: scheduledEvent.allDay,
+          timeZone: scheduledEvent.timeZone,
+        });
+
         ctx.user.getEmailClient().queueTemplate("FinalizeHostEmail", {
           to: poll.user.email,
           props: {
@@ -811,6 +816,13 @@ export const polls = router({
         });
 
         for (const p of participantsToEmail) {
+          const { date, day, dow, time } = formatEventDateTime({
+            start: scheduledEvent.start,
+            end: scheduledEvent.end,
+            allDay: scheduledEvent.allDay,
+            timeZone: scheduledEvent.timeZone,
+            // inviteeTimeZone: p.timeZone, // TODO: implement this
+          });
           getEmailClient(p.locale ?? undefined).queueTemplate(
             "FinalizeParticipantEmail",
             {

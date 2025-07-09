@@ -9,6 +9,7 @@ import type {
   Comment,
   Participant,
   Poll,
+  ScheduledEvent,
   Space,
   SpaceMember,
   Subscription,
@@ -29,7 +30,8 @@ export type Action =
   | "delete"
   | "manage"
   | "finalize"
-  | "access";
+  | "access"
+  | "cancel";
 
 export type Subject =
   | Subjects<{
@@ -40,6 +42,7 @@ export type Subject =
       Participant: Participant;
       SpaceMember: SpaceMember;
       Subscription: Subscription;
+      ScheduledEvent: ScheduledEvent;
     }>
   | "ControlPanel";
 
@@ -90,6 +93,8 @@ export const defineAbilityFor = (
       },
     },
   });
+
+  can("cancel", "ScheduledEvent", { userId: user.id });
 
   return build();
 };

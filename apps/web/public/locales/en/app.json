@@ -395,5 +395,6 @@
   "actionErrorUnauthorized": "You are not authorized to perform this action",
   "actionErrorNotFound": "The resource was not found",
   "actionErrorForbidden": "You are not allowed to perform this action",
-  "actionErrorInternalServerError": "An internal server error occurred"
+  "actionErrorInternalServerError": "An internal server error occurred",
+  "cancelEvent": "Cancel Event"
 }
