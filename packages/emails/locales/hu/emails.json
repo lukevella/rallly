@@ -74,5 +74,9 @@
   "license_key_support": "Válaszolj erre az emailre vagy keress minket a <a>{supportEmail}</a> címen, ha segítségre van szükséged.",
   "license_key_signoff": "Köszönjük, hogy a Rallly-t választottad!",
   "license_key_preview": "A licenckulcsod elkészült.",
-  "license_key_subject": "Az általad üzemeltetett Rallly {tier} licenced"
+  "license_key_subject": "Az általad üzemeltetett Rallly {tier} licenced",
+  "eventCanceledContent": "<b>{{hostName}}</b> lemondta a(z) <b>{{title}}</b> eseményt, ami ekkorra lett ütemezve:",
+  "eventCanceledPreview": "Esemény lemondva",
+  "eventCanceledHeading": "Esemény lemondva",
+  "eventCanceledSubject": "Lemondva: {title}"
 }
