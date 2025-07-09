@@ -40,7 +40,7 @@ const NewCommentEmail = ({
           i18n={ctx.i18n}
           ns="emails"
           i18nKey="newComment_content"
-          defaults="<b>{{authorName}}</b> has commented on <b>{{title}}</b>."
+          defaults="<b>{authorName}</b> has commented on <b>{title}</b>."
           components={{
             b: <strong />,
           }}
@@ -60,7 +60,7 @@ NewCommentEmail.getSubject = (
 ) => {
   return ctx.t("newComment_subject", {
     ns: "emails",
-    defaultValue: "{{authorName}} has commented on {{title}}",
+    defaultValue: "{authorName} has commented on {title}",
     authorName: props.authorName,
     title: props.title,
   });

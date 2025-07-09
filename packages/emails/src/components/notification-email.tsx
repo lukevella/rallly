@@ -31,7 +31,7 @@ export const NotificationEmail = ({
         <Button href={pollUrl}>
           {ctx.t("common_viewOn", {
             ns: "emails",
-            defaultValue: "View on {{domain}}",
+            defaultValue: "View on {domain}",
             domain,
           })}
         </Button>

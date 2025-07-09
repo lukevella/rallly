@@ -38,7 +38,7 @@ export const ChangeEmailRequest = ({
           t={ctx.t}
           i18nKey="changeEmailRequest_text1"
           ns="emails"
-          defaults="We've received a request to change the email address for your account from <b>{{fromEmail}}</b> to <b>{{toEmail}}</b>."
+          defaults="We've received a request to change the email address for your account from <b>{fromEmail}</b> to <b>{toEmail}</b>."
           values={{ fromEmail, toEmail }}
           components={{ b: <b /> }}
         />

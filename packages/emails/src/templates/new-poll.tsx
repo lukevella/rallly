@@ -49,7 +49,7 @@ export const NewPollEmail = ({
           components={{
             b: <strong />,
           }}
-          defaults="Your meeting poll titled <b>{{title}}</b> is ready! Share it using the link below:"
+          defaults="Your meeting poll titled <b>{title}</b> is ready! Share it using the link below:"
         />
       </Text>
       <Card style={{ textAlign: "center" }}>
@@ -69,7 +69,7 @@ export const NewPollEmail = ({
 
 NewPollEmail.getSubject = (props: NewPollEmailProps, ctx: EmailContext) => {
   return ctx.t("newPoll_subject", {
-    defaultValue: "Let's find a date for {{title}}!",
+    defaultValue: "Let's find a date for {title}!",
     title: props.title,
     ns: "emails",
   });

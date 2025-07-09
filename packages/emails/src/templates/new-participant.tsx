@@ -39,7 +39,7 @@ const NewParticipantEmail = ({
           t={ctx.t}
           i18nKey="newParticipant_content"
           ns="emails"
-          defaults="<b>{{name}}</b> has responded to <b>{{title}}</b>."
+          defaults="<b>{name}</b> has responded to <b>{title}</b>."
           components={{
             b: <strong />,
           }}
@@ -64,7 +64,7 @@ NewParticipantEmail.getSubject = (
   ctx: EmailContext,
 ) => {
   return ctx.t("newParticipant_subject", {
-    defaultValue: "{{name}} has responded to {{title}}",
+    defaultValue: "{name} has responded to {title}",
     name: props.participantName,
     title: props.title,
     ns: "emails",

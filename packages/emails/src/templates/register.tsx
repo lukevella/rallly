@@ -22,7 +22,7 @@ export const RegisterEmail = ({ code, ctx }: RegisterEmailProps) => {
       ctx={ctx}
       preview={ctx.t("register_preview", {
         ns: "emails",
-        defaultValue: "Your 6-digit code is: {{code}}",
+        defaultValue: "Your 6-digit code is: {code}",
         code,
       })}
     >
