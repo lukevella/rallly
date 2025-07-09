@@ -58,7 +58,7 @@ const FinalizeHostEmail = ({
           components={{
             b: <strong />,
           }}
-          defaults="<b>{{title}}</b> has been booked for:"
+          defaults="<b>{title}</b> has been booked for:"
         />
       </Text>
       <Section>

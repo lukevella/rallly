@@ -58,7 +58,7 @@ export const EmailLayout = ({
                   t={ctx.t}
                   i18nKey="common_poweredBy"
                   ns="emails"
-                  defaults="Powered by <a>{{domain}}</a>"
+                  defaults="Powered by <a>{domain}</a>"
                   values={{ domain: "rallly.co" }}
                   components={{
                     a: (

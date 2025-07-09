@@ -41,7 +41,7 @@ const NewParticipantConfirmationEmail = ({
           i18n={ctx.i18n}
           t={ctx.t}
           i18nKey="newParticipantConfirmation_content"
-          defaults="Your response to <b>{{title}}</b> has been submitted."
+          defaults="Your response to <b>{title}</b> has been submitted."
           components={{
             b: <strong />,
           }}
@@ -64,7 +64,7 @@ const NewParticipantConfirmationEmail = ({
             i18n={ctx.i18n}
             t={ctx.t}
             i18nKey="newParticipantConfirmation_button"
-            defaults="Review response on {{domain}}"
+            defaults="Review response on {domain}"
             values={{ domain }}
             ns="emails"
           />
@@ -91,7 +91,7 @@ NewParticipantConfirmationEmail.getSubject = (
   ctx: EmailContext,
 ) => {
   return ctx.t("newParticipantConfirmation_subject", {
-    defaultValue: "Thanks for responding to {{title}}",
+    defaultValue: "Thanks for responding to {title}",
     title: props.title,
     ns: "emails",
   });

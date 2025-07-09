@@ -75,7 +75,7 @@
   "license_key_signoff": "Thank you for choosing Rallly!",
   "license_key_preview": "Your license key has been generated.",
   "license_key_subject": "Your Rallly Self-Hosted {tier} License",
-  "eventCanceledContent": "<b>{{hostName}}</b> has canceled <b>{{title}}</b> that was scheduled for:",
+  "eventCanceledContent": "<b>{hostName}</b> has canceled <b>{title}</b> that was scheduled for:",
   "eventCanceledPreview": "Event canceled",
   "eventCanceledHeading": "Event canceled",
   "eventCanceledSubject": "Canceled: {title}"
