@@ -93,7 +93,7 @@ export async function AppSidebar({
                   />
                 </p>
                 <UpgradeButton>
-                  <Button size="sm" variant="primary" className="w-full">
+                  <Button variant="primary" className="w-full">
                     <Trans i18nKey="upgrade" defaults="Upgrade" />
                   </Button>
                 </UpgradeButton>
