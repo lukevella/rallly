@@ -12,7 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
-import { useToast } from "@rallly/ui/hooks/use-toast";
 import { Input } from "@rallly/ui/input";
 import Cookies from "js-cookie";
 import { InfoIcon } from "lucide-react";
@@ -24,6 +23,7 @@ import { z } from "zod";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
+import { toast } from "@rallly/ui/sonner";
 
 const emailChangeFormData = z.object({
   email: z.string().email(),
@@ -41,7 +41,6 @@ export const ProfileEmailAddress = () => {
     resolver: zodResolver(emailChangeFormData),
   });
   const { t } = useTranslation("app");
-  const { toast } = useToast();
 
   const [didRequestEmailChange, setDidRequestEmailChange] =
     React.useState(false);
@@ -52,35 +51,38 @@ export const ProfileEmailAddress = () => {
 
     if (success) {
       posthog.capture("email change completed");
-      toast({
-        title: t("emailChangeSuccess", {
+      toast.message(
+        t("emailChangeSuccess", {
           defaultValue: "Email changed successfully",
         }),
-        description: t("emailChangeSuccessDescription", {
-          defaultValue: "Your email has been updated",
-        }),
-      });
+        {
+          description: t("emailChangeSuccessDescription", {
+            defaultValue: "Your email has been updated",
+          }),
+        },
+      );
     }
 
     if (error) {
       posthog.capture("email change failed", { error });
-      toast({
-        variant: "destructive",
-        title: t("emailChangeFailed", {
+      toast.error(
+        t("emailChangeFailed", {
           defaultValue: "Email change failed",
         }),
-        description:
-          error === "invalidToken"
-            ? t("emailChangeInvalidToken", {
-                defaultValue:
-                  "The verification link is invalid or has expired. Please try again.",
-              })
-            : t("emailChangeError", {
-                defaultValue: "An error occurred while changing your email",
-              }),
-      });
+        {
+          description:
+            error === "invalidToken"
+              ? t("emailChangeInvalidToken", {
+                  defaultValue:
+                    "The verification link is invalid or has expired. Please try again.",
+                })
+              : t("emailChangeError", {
+                  defaultValue: "An error occurred while changing your email",
+                }),
+        },
+      );
     }
-  }, [posthog, t, toast]);
+  }, [posthog, t]);
 
   const { handleSubmit, formState, reset } = form;
   return (

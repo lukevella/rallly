@@ -2,7 +2,6 @@
 
 import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
-import { useToast } from "@rallly/ui/hooks/use-toast";
 import React, { useState } from "react";
 import { z } from "zod";
 
@@ -12,6 +11,7 @@ import { useUser } from "@/components/user-provider";
 import { useFeatureFlag } from "@/features/feature-flags/client";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
+import { toast } from "@rallly/ui/sonner";
 
 const allowedMimeTypes = z.enum(["image/jpeg", "image/png"]);
 
@@ -19,7 +19,6 @@ function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
   const getPresignedUrl = trpc.user.getAvatarUploadUrl.useMutation();
   const updateAvatar = trpc.user.updateAvatar.useMutation();
   const { t } = useTranslation();
-  const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
 
   const handleFileChange = async (
@@ -32,28 +31,32 @@ function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
     const parsedFileType = allowedMimeTypes.safeParse(file.type);
 
     if (!parsedFileType.success) {
-      toast({
-        title: t("invalidFileType", {
+      toast.message(
+        t("invalidFileType", {
           defaultValue: "Invalid file type",
         }),
-        description: t("invalidFileTypeDescription", {
-          defaultValue: "Please upload a JPG or PNG file.",
-        }),
-      });
+        {
+          description: t("invalidFileTypeDescription", {
+            defaultValue: "Please upload a JPG or PNG file.",
+          }),
+        },
+      );
       return;
     }
 
     const fileType = parsedFileType.data;
 
     if (file.size > 2 * 1024 * 1024) {
-      toast({
-        title: t("fileTooLarge", {
+      toast.message(
+        t("fileTooLarge", {
           defaultValue: "File too large",
         }),
-        description: t("fileTooLargeDescription", {
-          defaultValue: "Please upload a file smaller than 2MB.",
-        }),
-      });
+        {
+          description: t("fileTooLargeDescription", {
+            defaultValue: "Please upload a file smaller than 2MB.",
+          }),
+        },
+      );
       return;
     }
     setIsUploading(true);
@@ -81,15 +84,17 @@ function ChangeAvatarButton({ onSuccess }: { onSuccess: () => void }) {
 
       onSuccess();
     } catch {
-      toast({
-        title: t("errorUploadPicture", {
+      toast.error(
+        t("errorUploadPicture", {
           defaultValue: "Failed to upload",
         }),
-        description: t("errorUploadPictureDescription", {
-          defaultValue:
-            "There was an issue uploading your picture. Please try again later.",
-        }),
-      });
+        {
+          description: t("errorUploadPictureDescription", {
+            defaultValue:
+              "There was an issue uploading your picture. Please try again later.",
+          }),
+        },
+      );
     } finally {
       setIsUploading(false);
     }
