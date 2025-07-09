@@ -23,7 +23,6 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import { MoreHorizontal, TrashIcon, UserPenIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { DeleteUserDialog } from "./dialogs/delete-user-dialog";
 
@@ -40,12 +39,7 @@ export function UserRow({
   image?: string;
   role: "admin" | "user";
 }) {
-  const router = useRouter();
-  const changeRole = useSafeAction(changeRoleAction, {
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const changeRole = useSafeAction(changeRoleAction);
 
   const [isPending, startTransition] = useTransition();
   const { user } = useUser();

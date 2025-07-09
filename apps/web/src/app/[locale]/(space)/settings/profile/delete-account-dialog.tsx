@@ -1,5 +1,4 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -13,7 +12,6 @@ import {
 } from "@rallly/ui/dialog";
 import { Form, FormField, FormItem, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
 import { Trans } from "@/components/trans";
@@ -34,16 +32,7 @@ export function DeleteAccountDialog({
     },
   });
 
-  const posthog = usePostHog();
-
-  const deleteUser = useSafeAction(deleteCurrentUserAction, {
-    onSuccess: () => {
-      posthog?.capture("delete account");
-      signOut({
-        redirectTo: "/login",
-      });
-    },
-  });
+  const deleteUser = useSafeAction(deleteCurrentUserAction);
   const { t } = useTranslation();
 
   return (
