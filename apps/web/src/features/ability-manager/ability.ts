@@ -46,7 +46,7 @@ export type Subject =
     }>
   | "ControlPanel";
 
-export type AppAbility = PureAbility<[string, Subject], PrismaQuery>;
+export type AppAbility = PureAbility<[Action, Subject], PrismaQuery>;
 
 export const defineAbilityFor = (
   user?: User,
