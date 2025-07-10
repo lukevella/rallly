@@ -41,17 +41,18 @@ export const getActiveSpace = cache(async () => {
   const user = await requireUser();
 
   if (user.activeSpaceId) {
-    const space = await getSpace({ id: user.activeSpaceId });
+    const activeSpace = await getSpace({ id: user.activeSpaceId });
 
-    if (space) {
-      return space;
+    if (activeSpace) {
+      return activeSpace;
     }
+
     console.warn(
       `User ${user.id} has an active space ID ${user.activeSpaceId} that does not exist or is no longer accessible`,
     );
   }
 
-  return await getDefaultSpace();
+  return await getDefaultSpace({ ownerId: user.id });
 });
 
 export const requireUserAbility = cache(async () => {
