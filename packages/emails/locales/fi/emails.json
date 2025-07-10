@@ -71,6 +71,7 @@
   "license_key_nextStepsHeading": "Seuraavat vaiheet",
   "license_key_activationSteps": "Seuraa näitä <a>ohjeita</a> aktivoidaksesi lisenssin omassa Rallly-instanssissasi.",
   "license_key_questionsHeading": "Kysyttävää?",
+  "license_key_support": "Vastaa tähän sähköpostiin tai ota meihin yhteyttä osoitteessa <a>{supportEmail}</a>, jos tarvitset apua.",
   "license_key_signoff": "Kiitos, että valitsit Ralllyn!",
   "license_key_preview": "Lisenssiavaimesi on luotu.",
   "license_key_subject": "Rallly Self-Hosted {tier} -lisenssisi"
