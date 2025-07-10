@@ -67,7 +67,6 @@ model User {
   scheduledEvents       ScheduledEvent[]
   scheduledEventInvites ScheduledEventInvite[]
 
-  @@index([activeSpaceId])
   @@map("users")
 }
 
