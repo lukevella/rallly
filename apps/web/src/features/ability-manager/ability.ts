@@ -96,5 +96,16 @@ export const defineAbilityFor = (
 
   can("cancel", "ScheduledEvent", { userId: user.id });
 
+  can("read", "Space", {
+    ownerId: user.id,
+  });
+  can("read", "Space", {
+    members: {
+      some: {
+        userId: user.id,
+      },
+    },
+  });
+
   return build();
 };

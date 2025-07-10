@@ -1,19 +1,21 @@
+import { requireUserAbility } from "@/auth/queries";
+import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 
-export async function listSpaces({ ownerId }: { ownerId: string }) {
+export async function listSpaces() {
+  const { ability } = await requireUserAbility();
   const spaces = await prisma.space.findMany({
-    where: {
-      ownerId,
-    },
+    where: accessibleBy(ability).Space,
   });
 
   return spaces;
 }
 
-export async function getDefaultSpace({ ownerId }: { ownerId: string }) {
+export async function getDefaultSpace() {
+  const { user } = await requireUserAbility();
   const space = await prisma.space.findFirst({
     where: {
-      ownerId,
+      ownerId: user.id,
     },
     orderBy: {
       createdAt: "asc",
@@ -21,16 +23,17 @@ export async function getDefaultSpace({ ownerId }: { ownerId: string }) {
   });
 
   if (!space) {
-    throw new Error(`Space with owner ID ${ownerId} not found`);
+    throw new Error(`Space with owner ID ${user.id} not found`);
   }
 
   return space;
 }
 
 export async function getSpace({ id }: { id: string }) {
-  return await prisma.space.findUniqueOrThrow({
+  const { ability } = await requireUserAbility();
+  return await prisma.space.findFirst({
     where: {
-      id,
+      AND: [accessibleBy(ability).Space, { id }],
     },
   });
 }

@@ -10,7 +10,8 @@ model Space {
   scheduledEvents ScheduledEvent[]
   subscription    Subscription?    @relation("SpaceToSubscription")
 
-  members SpaceMember[]
+  members        SpaceMember[]
+  activeForUsers User[]        @relation("UserActiveSpace")
 
   @@index([ownerId], type: Hash)
   @@map("spaces")

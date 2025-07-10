@@ -1,5 +1,5 @@
 import { defineAbilityFor } from "@/features/ability-manager";
-import { getDefaultSpace } from "@/features/spaces/queries";
+import { getDefaultSpace, getSpace } from "@/features/spaces/queries";
 import { getUser } from "@/features/user/queries";
 import { auth } from "@/next-auth";
 import { notFound, redirect } from "next/navigation";
@@ -40,7 +40,18 @@ export const requireAdmin = cache(async () => {
 export const getActiveSpace = cache(async () => {
   const user = await requireUser();
 
-  return await getDefaultSpace({ ownerId: user.id });
+  if (user.activeSpaceId) {
+    const space = await getSpace({ id: user.activeSpaceId });
+
+    if (space) {
+      return space;
+    }
+    console.warn(
+      `User ${user.id} has an active space ID ${user.activeSpaceId} that does not exist or is no longer accessible`,
+    );
+  }
+
+  return await getDefaultSpace();
 });
 
 export const requireUserAbility = cache(async () => {

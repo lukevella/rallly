@@ -1,8 +1,8 @@
+import { getActiveSpace } from "@/auth/queries";
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 
 type PollFilters = {
-  spaceId: string;
   status?: PollStatus;
   page?: number;
   pageSize?: number;
@@ -10,15 +10,16 @@ type PollFilters = {
 };
 
 export async function getPolls({
-  spaceId,
   status,
   page = 1,
   pageSize = 10,
   q,
 }: PollFilters) {
+  const space = await getActiveSpace();
+  console.log({ space });
   // Build the where clause based on filters
   const where: Prisma.PollWhereInput = {
-    spaceId,
+    spaceId: space.id,
     status,
     deleted: false,
   };

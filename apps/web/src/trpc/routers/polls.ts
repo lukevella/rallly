@@ -12,8 +12,8 @@ import { z } from "zod";
 import { moderateContent } from "@/features/moderation";
 import { getEmailClient } from "@/utils/emails";
 
+import { getActiveSpace } from "@/auth/queries";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
-import { getDefaultSpace } from "@/features/spaces/queries";
 import {
   createRateLimitMiddleware,
   possiblyPublicProcedure,
@@ -183,7 +183,7 @@ export const polls = router({
       let spaceId: string | undefined;
 
       if (!ctx.user.isGuest) {
-        const space = await getDefaultSpace({ ownerId: ctx.user.id });
+        const space = await getActiveSpace();
         spaceId = space.id;
       }
 

@@ -49,6 +49,15 @@ export async function createUser({
       },
     });
 
+    await tx.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        activeSpaceId: space.id,
+      },
+    });
+
     return user;
   });
 }
