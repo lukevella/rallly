@@ -330,9 +330,6 @@
   "canceledEventsEmptyStateDescription": "Eventos cancelados aparecerão aqui.",
   "setupFormTitle": "Configuração",
   "setupFormDescription": "Conclua a configuração da sua conta.",
-  "errorNotAuthenticated": "Não autenticado",
-  "errorInvalidFields": "Campos inválidos. Por favor, verifique as informações.",
-  "errorDatabaseUpdateFailed": "Erro no banco de dados: Falha ao atualizar as configurações.",
   "pending": "Pendente",
   "helpUsImprove": "Ajude-nos a melhorar",
   "helpUsImproveDesc": "Reserve alguns minutos para compartilhar seu feedback e nos ajudar a moldar o futuro de Rallly.",
@@ -361,9 +358,6 @@
   "users": "Usuários",
   "userCount": "{count, number, ::compact-short}",
   "unlicensed": "Não Licenciado",
-  "deleteUser": "Excluir Usuário",
-  "areYouSureYouWantToDeleteThisUser": "Tem certeza de que deseja excluir este usuário?",
-  "typeTheEmailAddressOfTheUserYouWantToDelete": "Digite o endereço de e-mail do usuário que você deseja excluir.",
   "emailDoesNotMatch": "O endereço de e-mail não corresponde.",
   "noUsers": "Não foram encontrados usuários",
   "noUsersDescription": "Tente ajustar sua busca",
@@ -395,5 +389,12 @@
   "disableUserRegistrationDescription": "Impede o registro de novas contas de usuários.",
   "authenticationAndSecurity": "Autenticação & Segurança",
   "authenticationAndSecurityDescription": "Configurações de autenticação e segurança",
-  "youHaveUnsavedChanges": "Você tem modificações não salvas"
+  "youHaveUnsavedChanges": "Você tem modificações não salvas",
+  "unexpectedError": "Erro inesperado",
+  "unexpectedErrorDescription": "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.",
+  "actionErrorUnauthorized": "Você não está autorizado a realizar esta ação",
+  "actionErrorNotFound": "O recurso não foi encontrado",
+  "actionErrorForbidden": "Você não tem permissão para realizar esta ação",
+  "actionErrorInternalServerError": "Ocorreu um erro interno no servidor",
+  "cancelEvent": "Cancelar evento"
 }
