@@ -16,7 +16,7 @@ export async function getPolls({
   q,
 }: PollFilters) {
   const space = await getActiveSpace();
-  console.log({ space });
+
   // Build the where clause based on filters
   const where: Prisma.PollWhereInput = {
     spaceId: space.id,
