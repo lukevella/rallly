@@ -1,17 +1,35 @@
+import { getUser } from "@/features/user/queries";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
-import { getActiveSpace } from "../queries";
 
 export const mergeGuestsIntoUser = async (
   userId: string,
   guestIds: string[],
 ) => {
-  const space = await getActiveSpace();
+  let spaceId: string;
+  const user = await getUser(userId);
 
-  if (!space) {
-    console.warn(`User ${userId} not found`);
+  if (!user) {
+    console.error(`User ${userId} not found`);
     return;
+  }
+
+  if (user.activeSpaceId) {
+    spaceId = user.activeSpaceId;
+  } else {
+    const defaultSpace = await prisma.space.findFirst({
+      where: {
+        ownerId: user.id,
+      },
+    });
+
+    if (!defaultSpace) {
+      console.error(`User ${userId} has no default space`);
+      return;
+    }
+
+    spaceId = defaultSpace.id;
   }
 
   try {
@@ -26,7 +44,7 @@ export const mergeGuestsIntoUser = async (
           data: {
             guestId: null,
             userId: userId,
-            spaceId: space.id,
+            spaceId: spaceId,
           },
         }),
 
