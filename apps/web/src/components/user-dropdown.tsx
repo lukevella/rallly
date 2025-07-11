@@ -48,7 +48,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
           <OptimizedAvatarImage
             src={user.image ?? undefined}
             name={user.name}
-            size="xs"
+            size="sm"
           />
           <span className="truncate">{user.name}</span>
           <Icon>

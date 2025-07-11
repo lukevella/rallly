@@ -2,28 +2,38 @@
 
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { cn } from "@rallly/ui";
+import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
 
+const avatarVariants = cva("relative flex shrink-0 overflow-hidden", {
+  variants: {
+    size: {
+      xl: "size-12 text-xl",
+      lg: "size-9 text-lg",
+      md: "size-7 text-base",
+      sm: "size-5 text-xs",
+    },
+  },
+  defaultVariants: {
+    size: "md",
+  },
+});
+
 const Avatar = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> & {
-    size?: number;
-  }
->(({ className, size = 48, ...props }, ref) => (
+  React.ComponentRef<typeof AvatarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> &
+    VariantProps<typeof avatarVariants>
+>(({ className, size = "md", ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
-    className={cn(
-      "relative flex shrink-0 overflow-hidden rounded-full",
-      className,
-    )}
-    style={{ width: size, height: size }}
+    className={cn(avatarVariants({ size }), className)}
     {...props}
   />
 ));
 Avatar.displayName = AvatarPrimitive.Root.displayName;
 
 const AvatarImage = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Image>,
+  React.ComponentRef<typeof AvatarPrimitive.Image>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Image
@@ -62,7 +72,7 @@ export function getGradient(seed: string): {
 }
 
 const AvatarFallback = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Fallback>,
+  React.ComponentRef<typeof AvatarPrimitive.Fallback>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback> & {
     seed: string;
   }

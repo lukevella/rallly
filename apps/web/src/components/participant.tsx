@@ -1,41 +1,9 @@
 import { cn } from "@rallly/ui";
-import { Avatar, AvatarFallback } from "@rallly/ui/avatar";
 import React from "react";
 
 export function Participant({ children }: { children: React.ReactNode }) {
   return <div className="flex min-w-0 items-center gap-x-2">{children}</div>;
 }
-
-const sizeToWidth = {
-  xs: 20,
-  sm: 24,
-  md: 32,
-  lg: 48,
-};
-
-export const ParticipantAvatar = ({
-  size = "md",
-  name,
-}: {
-  size?: "xs" | "sm" | "md" | "lg";
-  name: string;
-}) => {
-  return (
-    <Avatar size={sizeToWidth[size]}>
-      <AvatarFallback
-        className={cn({
-          "text-xs": size === "xs",
-          "text-sm": size === "sm",
-          "text-md": size === "md",
-          "text-lg": size === "lg",
-        })}
-        seed={name}
-      >
-        {name[0]?.toUpperCase()}
-      </AvatarFallback>
-    </Avatar>
-  );
-};
 
 export const ParticipantName = ({
   children,
