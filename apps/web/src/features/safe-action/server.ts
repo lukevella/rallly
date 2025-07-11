@@ -40,27 +40,22 @@ const posthogMiddleware = createMiddleware<{
   ctx: { user: { id: string } };
   metadata: { actionName: string };
 }>().define(({ ctx, next, metadata }) => {
-  let didCapture = false;
+  let properties: Record<string, unknown> | undefined;
+
   const result = next({
     ctx: {
       posthog,
-      capture: (properties?: Record<string, unknown>) => {
-        didCapture = true;
-        posthog?.capture({
-          distinctId: ctx.user.id,
-          event: metadata.actionName,
-          properties,
-        });
+      captureProperties: (props?: Record<string, unknown>) => {
+        properties = props;
       },
     },
   });
 
-  if (!didCapture) {
-    posthog?.capture({
-      distinctId: ctx.user.id,
-      event: metadata.actionName,
-    });
-  }
+  posthog?.capture({
+    distinctId: ctx.user.id,
+    event: metadata.actionName,
+    properties,
+  });
 
   if (posthog) {
     waitUntil(posthog.shutdown());

@@ -43,7 +43,7 @@ export const cancelEventAction = authActionClient
       },
     });
 
-    ctx.capture({
+    ctx.captureProperties({
       eventId: parsedInput.eventId,
     });
 

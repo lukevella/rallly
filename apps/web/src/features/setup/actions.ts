@@ -20,7 +20,7 @@ export const completeSetupAction = authActionClient
       },
     });
 
-    ctx.capture({
+    ctx.captureProperties({
       $set: {
         name,
         timeZone,
