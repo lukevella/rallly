@@ -13,19 +13,19 @@ export function SettingsLayout({ children }: { children: React.ReactNode }) {
   return (
     <Tabs value={pathname}>
       <TabsList>
-        <TabsTrigger asChild value="/settings/profile">
-          <Link href="/settings/profile">
+        <TabsTrigger asChild value="/account/profile">
+          <Link href="/account/profile">
             <Trans i18nKey="profile" defaults="Profile" />
           </Link>
         </TabsTrigger>
-        <TabsTrigger asChild value="/settings/preferences">
-          <Link href="/settings/preferences">
+        <TabsTrigger asChild value="/account/preferences">
+          <Link href="/account/preferences">
             <Trans i18nKey="preferences" defaults="Preferences" />
           </Link>
         </TabsTrigger>
         <IfCloudHosted>
-          <TabsTrigger asChild value="/settings/billing">
-            <Link href="/settings/billing">
+          <TabsTrigger asChild value="/account/billing">
+            <Link href="/account/billing">
               <Trans i18nKey="billing" defaults="Billing" />
             </Link>
           </TabsTrigger>

@@ -84,7 +84,7 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
             a: (
               <Link
                 className="text-link"
-                href={linkToApp("/settings/billing")}
+                href={linkToApp("/account/billing")}
               />
             ),
             b: <strong />,
@@ -110,7 +110,7 @@ const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
             a: (
               <Link
                 className="text-link"
-                href={linkToApp("/settings/billing")}
+                href={linkToApp("/account/billing")}
               />
             ),
             b: <strong />,

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { ProfilePicture } from "@/app/[locale]/(space)/settings/profile/profile-picture";
+import { ProfilePicture } from "@/app/[locale]/(space)/account/profile/profile-picture";
 import { requireUser } from "@/auth/queries";
 import { Logo } from "@/components/logo";
 import { Trans } from "@/components/trans";

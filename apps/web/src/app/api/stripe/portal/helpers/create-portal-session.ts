@@ -11,7 +11,7 @@ export function createStripePortalSessionHandler(path = "") {
   return async (request: NextRequest) => {
     const sessionId = request.nextUrl.searchParams.get("session_id");
     const returnPath =
-      request.nextUrl.searchParams.get("return_path") ?? "/settings/billing";
+      request.nextUrl.searchParams.get("return_path") ?? "/account/billing";
 
     let customerId: string | undefined;
 
