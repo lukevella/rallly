@@ -204,7 +204,7 @@ function DiscussionInner() {
                       <Participant>
                         <OptimizedAvatarImage
                           name={comment.authorName}
-                          size="xs"
+                          size="sm"
                         />
                         <ParticipantName>{comment.authorName}</ParticipantName>
                         {session.ownsObject(comment) ? (

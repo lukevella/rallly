@@ -40,7 +40,7 @@ export default async function Layout({
                   <OptimizedAvatarImage
                     src={user.image}
                     name={user.name}
-                    size="xs"
+                    size="sm"
                   />
                 </Link>
               </Button>

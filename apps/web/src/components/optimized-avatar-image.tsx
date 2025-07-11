@@ -4,31 +4,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import Image from "next/image";
 import React from "react";
 
-const sizeToWidth = {
-  xs: 20,
-  sm: 24,
-  md: 32,
-  lg: 48,
-  xl: 64,
-};
-
 export function OptimizedAvatarImage({
   size,
   className,
   src,
   name,
 }: {
-  size: "xs" | "sm" | "md" | "lg" | "xl";
+  size: "sm" | "md" | "lg" | "xl";
   src?: string;
   name: string;
   className?: string;
 }) {
   const [isLoaded, setLoaded] = React.useState(false);
   return (
-    <Avatar
-      className={cn("rounded-full", className)}
-      style={{ width: sizeToWidth[size], height: sizeToWidth[size] }}
-    >
+    <Avatar className={cn("rounded-full", className)} size={size}>
       {src ? (
         src.startsWith("https") || src.startsWith("data:") ? (
           <AvatarImage src={src} alt={name} />
@@ -49,11 +38,9 @@ export function OptimizedAvatarImage({
         <AvatarFallback
           seed={name}
           className={cn("shrink-0", {
-            "text-[10px]": size === "xs",
-            "text-[12px]": size === "sm",
-            "text-md": size === "md",
-            "text-lg": size === "lg",
-            "text-3xl": size === "xl",
+            "text-[10px]": size === "sm",
+            "text-[12px]": size === "md",
+            "text-md": size === "lg",
           })}
         >
           {name?.[0]?.toUpperCase()}
