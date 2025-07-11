@@ -41,6 +41,10 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
 
   const space = await getSpace({ id: res.data.spaceId });
 
+  if (!space) {
+    throw new Error(`Space with ID ${res.data.spaceId} not found`);
+  }
+
   if (space.ownerId !== userId) {
     throw new Error(
       `Space with ID ${res.data.spaceId} does not belong to user ${userId}`,

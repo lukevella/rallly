@@ -18,6 +18,7 @@ export const getUser = cache(async (userId: string) => {
       timeFormat: true,
       weekStart: true,
       role: true,
+      activeSpaceId: true,
       subscription: {
         select: {
           active: true,
@@ -31,15 +32,12 @@ export const getUser = cache(async (userId: string) => {
   }
 
   return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
+    ...user,
     image: user.image ?? undefined,
     locale: user.locale ?? undefined,
     timeZone: user.timeZone ?? undefined,
     timeFormat: user.timeFormat ?? undefined,
     weekStart: user.weekStart ?? undefined,
-    role: user.role,
     isPro: Boolean(isSelfHosted || user.subscription?.active),
   };
 });

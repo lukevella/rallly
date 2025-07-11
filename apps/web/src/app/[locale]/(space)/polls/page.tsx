@@ -25,7 +25,6 @@ import { getPolls } from "@/features/poll/api/get-polls";
 import { PollList, PollListItem } from "@/features/poll/components/poll-list";
 import { getTranslation } from "@/i18n/server";
 
-import { getActiveSpace } from "@/auth/queries";
 import { SearchInput } from "../../../components/search-input";
 import { PollsTabbedView } from "./polls-tabbed-view";
 import { DEFAULT_PAGE_SIZE, searchParamsSchema } from "./schema";
@@ -42,9 +41,8 @@ async function loadData({
   pageSize?: number;
   q?: string;
 }) {
-  const space = await getActiveSpace();
   const [{ total, data: polls }] = await Promise.all([
-    getPolls({ spaceId: space.id, status, page, pageSize, q }),
+    getPolls({ status, page, pageSize, q }),
   ]);
 
   return {
