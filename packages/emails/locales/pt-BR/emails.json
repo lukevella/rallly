@@ -74,5 +74,9 @@
   "license_key_support": "Responda a este email ou entre em contato em <a>{supportEmail}</a> se você precisar de ajuda.",
   "license_key_signoff": "Obrigado por escolher Rallly!",
   "license_key_preview": "Sua chave de licença foi gerada.",
-  "license_key_subject": "Sua licença auto-hospedada do Rallly {tier}"
+  "license_key_subject": "Sua licença auto-hospedada do Rallly {tier}",
+  "eventCanceledContent": "<b>{hostName}</b> cancelou <b>{title}</b> que foi agendado para:",
+  "eventCanceledPreview": "Evento cancelado",
+  "eventCanceledHeading": "Evento cancelado",
+  "eventCanceledSubject": "Cancelado: {title}"
 }
