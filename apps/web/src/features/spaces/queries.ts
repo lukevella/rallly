@@ -1,6 +1,3 @@
-import { defineAbilityFor } from "@/features/ability-manager";
-import { getUser } from "@/features/user/queries";
-import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { cache } from "react";
 
@@ -21,36 +18,6 @@ export const listSpaces = cache(
       ...spaceMember.space,
       role: spaceMember.role,
     }));
-  },
-);
-
-export const getActiveSpaceForUser = cache(
-  async ({
-    userId,
-  }: {
-    userId: string;
-  }) => {
-    const user = await getUser(userId);
-
-    if (!user) {
-      throw new Error(`User ${userId} not found`);
-    }
-
-    const ability = defineAbilityFor(user);
-
-    if (user.activeSpaceId) {
-      const space = await prisma.space.findFirst({
-        where: {
-          AND: [accessibleBy(ability).Space, { id: user.activeSpaceId }],
-        },
-      });
-
-      if (space) {
-        return space;
-      }
-    }
-
-    return getDefaultSpace({ ownerId: user.id });
   },
 );
 
