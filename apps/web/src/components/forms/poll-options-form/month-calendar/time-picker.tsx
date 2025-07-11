@@ -1,4 +1,3 @@
-import { Button } from "@rallly/ui/button";
 import {
   Select,
   SelectContent,
@@ -62,10 +61,8 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
       open={open}
       onOpenChange={setOpen}
     >
-      <SelectTrigger asChild>
-        <Button className={className}>
-          <SelectValue placeholder="Select time" />
-        </Button>
+      <SelectTrigger className={className}>
+        <SelectValue placeholder="Select time" />
       </SelectTrigger>
       <SelectContent>
         {open ? (
