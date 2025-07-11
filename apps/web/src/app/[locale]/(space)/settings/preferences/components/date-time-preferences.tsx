@@ -99,10 +99,8 @@ const DateTimePreferencesForm = () => {
                       field.onChange(Number.parseInt(value));
                     }}
                   >
-                    <SelectTrigger asChild>
-                      <Button>
-                        <SelectValue />
-                      </Button>
+                    <SelectTrigger>
+                      <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {dayjs.weekdays().map((day, index) => (

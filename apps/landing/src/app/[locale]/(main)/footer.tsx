@@ -1,7 +1,6 @@
 "use client";
 
 import languages, { supportedLngs } from "@rallly/languages";
-import { Button } from "@rallly/ui/button";
 import {
   Select,
   SelectContent,
@@ -41,10 +40,8 @@ const LanguageSelect = () => {
         router.replace(`/${newLocale}${newPath}`);
       }}
     >
-      <SelectTrigger asChild>
-        <Button className="w-full">
-          <SelectValue />
-        </Button>
+      <SelectTrigger className="w-full">
+        <SelectValue />
       </SelectTrigger>
       <SelectContent>
         {Object.entries(languages).map(([code, name]) => (
