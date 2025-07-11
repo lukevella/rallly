@@ -129,6 +129,7 @@ export const participants = router({
         pollId: z.string(),
         name: z.string().min(1, "Participant name is required").max(100),
         email: z.string().optional(),
+        timeZone: z.string().optional(),
         votes: z
           .object({
             optionId: z.string(),
@@ -137,100 +138,103 @@ export const participants = router({
           .array(),
       }),
     )
-    .mutation(async ({ ctx, input: { pollId, votes, name, email } }) => {
-      const { user } = ctx;
+    .mutation(
+      async ({ ctx, input: { pollId, votes, name, email, timeZone } }) => {
+        const { user } = ctx;
 
-      const participant = await prisma.$transaction(async (prisma) => {
-        const participantCount = await prisma.participant.count({
-          where: {
-            pollId,
-            deleted: false,
-          },
-        });
-
-        if (participantCount >= MAX_PARTICIPANTS) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: `This poll has reached its maximum limit of ${MAX_PARTICIPANTS} participants`,
+        const participant = await prisma.$transaction(async (prisma) => {
+          const participantCount = await prisma.participant.count({
+            where: {
+              pollId,
+              deleted: false,
+            },
           });
-        }
 
-        const participant = await prisma.participant.create({
-          data: {
-            pollId: pollId,
-            name: name,
-            email,
-            ...(user.isGuest ? { guestId: user.id } : { userId: user.id }),
-            locale: user.locale ?? undefined,
-          },
-          include: {
-            poll: {
-              select: {
-                id: true,
-                title: true,
+          if (participantCount >= MAX_PARTICIPANTS) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: `This poll has reached its maximum limit of ${MAX_PARTICIPANTS} participants`,
+            });
+          }
+
+          const participant = await prisma.participant.create({
+            data: {
+              pollId: pollId,
+              name: name,
+              email,
+              timeZone,
+              ...(user.isGuest ? { guestId: user.id } : { userId: user.id }),
+              locale: user.locale ?? undefined,
+            },
+            include: {
+              poll: {
+                select: {
+                  id: true,
+                  title: true,
+                },
               },
             },
-          },
-        });
+          });
 
-        const options = await prisma.option.findMany({
-          where: {
-            pollId,
-          },
-          select: {
-            id: true,
-          },
-        });
-
-        const existingOptionIds = new Set(options.map((option) => option.id));
-
-        const validVotes = votes.filter(({ optionId }) =>
-          existingOptionIds.has(optionId),
-        );
-
-        await prisma.vote.createMany({
-          data: validVotes.map(({ optionId, type }) => ({
-            optionId,
-            type,
-            pollId,
-            participantId: participant.id,
-          })),
-        });
-
-        return participant;
-      });
-
-      if (email) {
-        const token = await createToken(
-          { userId: user.id },
-          {
-            ttl: 0, // basically forever
-          },
-        );
-
-        ctx.user
-          .getEmailClient()
-          .queueTemplate("NewParticipantConfirmationEmail", {
-            to: email,
-            props: {
-              title: participant.poll.title,
-              editSubmissionUrl: absoluteUrl(
-                `/invite/${participant.poll.id}?token=${token}`,
-              ),
+          const options = await prisma.option.findMany({
+            where: {
+              pollId,
+            },
+            select: {
+              id: true,
             },
           });
-      }
 
-      waitUntil(
-        sendNewParticipantNotifcationEmail({
-          pollId,
-          pollTitle: participant.poll.title,
-          participantName: participant.name,
-        }),
-      );
+          const existingOptionIds = new Set(options.map((option) => option.id));
 
-      return participant;
-    }),
+          const validVotes = votes.filter(({ optionId }) =>
+            existingOptionIds.has(optionId),
+          );
+
+          await prisma.vote.createMany({
+            data: validVotes.map(({ optionId, type }) => ({
+              optionId,
+              type,
+              pollId,
+              participantId: participant.id,
+            })),
+          });
+
+          return participant;
+        });
+
+        if (email) {
+          const token = await createToken(
+            { userId: user.id },
+            {
+              ttl: 0, // basically forever
+            },
+          );
+
+          ctx.user
+            .getEmailClient()
+            .queueTemplate("NewParticipantConfirmationEmail", {
+              to: email,
+              props: {
+                title: participant.poll.title,
+                editSubmissionUrl: absoluteUrl(
+                  `/invite/${participant.poll.id}?token=${token}`,
+                ),
+              },
+            });
+        }
+
+        waitUntil(
+          sendNewParticipantNotifcationEmail({
+            pollId,
+            pollTitle: participant.poll.title,
+            participantName: participant.name,
+          }),
+        );
+
+        return participant;
+      },
+    ),
   rename: publicProcedure
     .input(z.object({ participantId: z.string(), newName: z.string() }))
     .mutation(async ({ input: { participantId, newName } }) => {
