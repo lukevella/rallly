@@ -1,5 +1,4 @@
 import { defineAbilityFor } from "@/features/ability-manager";
-import { getDefaultSpace } from "@/features/spaces/queries";
 import { getUser } from "@/features/user/queries";
 import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
@@ -31,7 +30,14 @@ const getActiveSpaceForUser = async ({
     }
   }
 
-  return getDefaultSpace({ ownerId: user.id });
+  return await prisma.space.findFirst({
+    where: {
+      ownerId: user.id,
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
 };
 
 export const mergeGuestsIntoUser = async (
@@ -39,6 +45,11 @@ export const mergeGuestsIntoUser = async (
   guestIds: string[],
 ) => {
   const space = await getActiveSpaceForUser({ userId });
+
+  if (!space) {
+    console.error(`User ${userId} has no active space or default space`);
+    return;
+  }
 
   try {
     await prisma.$transaction(async (tx) => {
