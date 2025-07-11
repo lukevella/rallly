@@ -30,8 +30,8 @@ export class ActionError extends Error {
   }
 }
 
-const autoRevalidateMiddleware = createMiddleware().define(({ next }) => {
-  const result = next();
+const autoRevalidateMiddleware = createMiddleware().define(async ({ next }) => {
+  const result = await next();
   revalidatePath("/", "layout");
   return result;
 });
@@ -39,10 +39,10 @@ const autoRevalidateMiddleware = createMiddleware().define(({ next }) => {
 const posthogMiddleware = createMiddleware<{
   ctx: { user: { id: string } };
   metadata: { actionName: string };
-}>().define(({ ctx, next, metadata }) => {
+}>().define(async ({ ctx, next, metadata }) => {
   let properties: Record<string, unknown> | undefined;
 
-  const result = next({
+  const result = await next({
     ctx: {
       posthog,
       captureProperties: (props?: Record<string, unknown>) => {
