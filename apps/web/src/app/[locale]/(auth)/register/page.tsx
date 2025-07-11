@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { getTranslation } from "@/i18n/server";
@@ -13,6 +12,7 @@ import {
   AuthPageHeader,
   AuthPageTitle,
 } from "../components/auth-page";
+import { LinkWithRedirectTo } from "../components/link-with-redirect-to";
 import { RegisterNameForm } from "./components/register-name-form";
 
 export default async function Register(props: {
@@ -56,7 +56,7 @@ export default async function Register(props: {
           i18nKey="alreadyHaveAccount"
           defaults="Already have an account? <a>Log in</a>"
           components={{
-            a: <Link className="text-link" href="/login" />,
+            a: <LinkWithRedirectTo className="text-link" href="/login" />,
           }}
         />
       </AuthPageExternal>
