@@ -2,7 +2,8 @@
 import { requireUserAbility } from "@/auth/queries";
 import { posthog } from "@rallly/posthog/server";
 import { waitUntil } from "@vercel/functions";
-import { createSafeActionClient } from "next-safe-action";
+import { createMiddleware, createSafeActionClient } from "next-safe-action";
+import { revalidatePath } from "next/cache";
 
 type ActionErrorCode =
   | "UNAUTHORIZED"
@@ -28,18 +29,25 @@ export class ActionError extends Error {
   }
 }
 
-export const actionClient = createSafeActionClient({
-  handleServerError: async (error) => {
-    if (error instanceof ActionError) {
-      return error.code;
-    }
+const autoRevalidateMiddleware = createMiddleware().define(({ next }) => {
+  const result = next();
+  revalidatePath("/", "layout");
+  return result;
+});
 
-    return "INTERNAL_SERVER_ERROR";
-  },
-}).use(({ next }) => {
+const posthogMiddleware = createMiddleware<{
+  ctx: { user: { id: string } };
+}>().define(({ ctx, next }) => {
   const result = next({
     ctx: {
       posthog,
+      capture: (event: string, properties?: Record<string, unknown>) => {
+        posthog?.capture({
+          distinctId: ctx.user.id,
+          event,
+          properties,
+        });
+      },
     },
   });
 
@@ -48,10 +56,22 @@ export const actionClient = createSafeActionClient({
   return result;
 });
 
-export const authActionClient = actionClient.use(async ({ next }) => {
-  const { user, ability } = await requireUserAbility();
+export const actionClient = createSafeActionClient({
+  handleServerError: async (error) => {
+    if (error instanceof ActionError) {
+      return error.code;
+    }
 
-  return next({
-    ctx: { user, ability },
-  });
-});
+    return "INTERNAL_SERVER_ERROR";
+  },
+}).use(autoRevalidateMiddleware);
+
+export const authActionClient = actionClient
+  .use(async ({ next }) => {
+    const { user, ability } = await requireUserAbility();
+
+    return next({
+      ctx: { user, ability },
+    });
+  })
+  .use(posthogMiddleware);

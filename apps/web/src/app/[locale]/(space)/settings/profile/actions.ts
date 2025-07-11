@@ -34,12 +34,8 @@ export const deleteCurrentUserAction = authActionClient.action(
       },
     });
 
-    ctx.posthog?.capture({
-      event: "delete_account",
-      distinctId: ctx.user.id,
-      properties: {
-        email: ctx.user.email,
-      },
+    ctx.capture("delete_account", {
+      email: ctx.user.email,
     });
 
     await signOut();

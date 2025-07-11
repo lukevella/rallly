@@ -1,6 +1,5 @@
 "use server";
 import { prisma } from "@rallly/database";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { authActionClient } from "@/features/safe-action/server";
@@ -20,19 +19,13 @@ export const updateUserAction = authActionClient
       },
     });
 
-    ctx.posthog?.capture({
-      event: "user_setup_completed",
-      distinctId: ctx.user.id,
-      properties: {
-        $set: {
-          name,
-          timeZone,
-          locale,
-        },
+    ctx.capture("user_setup_completed", {
+      $set: {
+        name,
+        timeZone,
+        locale,
       },
     });
-
-    revalidatePath("/", "layout");
 
     redirect("/");
   });
