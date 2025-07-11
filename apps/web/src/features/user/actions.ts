@@ -2,11 +2,11 @@
 import { ActionError, authActionClient } from "@/features/safe-action/server";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getUser } from "./queries";
 
 export const changeRoleAction = authActionClient
+  .metadata({ actionName: "change_role" })
   .inputSchema(
     z.object({
       userId: z.string(),
@@ -47,11 +47,10 @@ export const changeRoleAction = authActionClient
         role,
       },
     });
-
-    revalidatePath("/control-panel");
   });
 
 export const deleteUserAction = authActionClient
+  .metadata({ actionName: "delete_user" })
   .inputSchema(
     z.object({
       userId: z.string(),
@@ -85,8 +84,6 @@ export const deleteUserAction = authActionClient
         id: userId,
       },
     });
-
-    revalidatePath("/control-panel");
 
     return {
       success: true,

@@ -2,7 +2,9 @@
 import { requireUserAbility } from "@/auth/queries";
 import { posthog } from "@rallly/posthog/server";
 import { waitUntil } from "@vercel/functions";
-import { createSafeActionClient } from "next-safe-action";
+import { createMiddleware, createSafeActionClient } from "next-safe-action";
+import { revalidatePath } from "next/cache";
+import z from "zod";
 
 type ActionErrorCode =
   | "UNAUTHORIZED"
@@ -28,7 +30,45 @@ export class ActionError extends Error {
   }
 }
 
+const autoRevalidateMiddleware = createMiddleware().define(async ({ next }) => {
+  const result = await next();
+  revalidatePath("/", "layout");
+  return result;
+});
+
+const posthogMiddleware = createMiddleware<{
+  ctx: { user: { id: string } };
+  metadata: { actionName: string };
+}>().define(async ({ ctx, next, metadata }) => {
+  let properties: Record<string, unknown> | undefined;
+
+  const result = await next({
+    ctx: {
+      posthog,
+      captureProperties: (props?: Record<string, unknown>) => {
+        properties = props;
+      },
+    },
+  });
+
+  posthog?.capture({
+    distinctId: ctx.user.id,
+    event: metadata.actionName,
+    properties,
+  });
+
+  if (posthog) {
+    waitUntil(posthog.shutdown());
+  }
+
+  return result;
+});
+
 export const actionClient = createSafeActionClient({
+  defineMetadataSchema: () =>
+    z.object({
+      actionName: z.string(),
+    }),
   handleServerError: async (error) => {
     if (error instanceof ActionError) {
       return error.code;
@@ -36,22 +76,14 @@ export const actionClient = createSafeActionClient({
 
     return "INTERNAL_SERVER_ERROR";
   },
-}).use(({ next }) => {
-  const result = next({
-    ctx: {
-      posthog,
-    },
-  });
+}).use(autoRevalidateMiddleware);
 
-  waitUntil(Promise.all([posthog?.shutdown()]));
+export const authActionClient = actionClient
+  .use(async ({ next }) => {
+    const { user, ability } = await requireUserAbility();
 
-  return result;
-});
-
-export const authActionClient = actionClient.use(async ({ next }) => {
-  const { user, ability } = await requireUserAbility();
-
-  return next({
-    ctx: { user, ability },
-  });
-});
+    return next({
+      ctx: { user, ability },
+    });
+  })
+  .use(posthogMiddleware);

@@ -3,11 +3,11 @@ import { ActionError, authActionClient } from "@/features/safe-action/server";
 import { getEmailClient } from "@/utils/emails";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { formatEventDateTime } from "./utils";
 
 export const cancelEventAction = authActionClient
+  .metadata({ actionName: "cancel_event" })
   .inputSchema(
     z.object({
       eventId: z.string(),
@@ -43,14 +43,8 @@ export const cancelEventAction = authActionClient
       },
     });
 
-    revalidatePath("/", "layout");
-
-    ctx.posthog?.capture({
-      event: "cancel_event",
-      distinctId: ctx.user.id,
-      properties: {
-        event_id: parsedInput.eventId,
-      },
+    ctx.captureProperties({
+      eventId: parsedInput.eventId,
     });
 
     // notify attendees
