@@ -76,10 +76,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         </DropdownMenuItem>
         <IfAuthenticated>
           <DropdownMenuItem asChild={true}>
-            <Link
-              href="/settings/profile"
-              className="flex items-center gap-x-2"
-            >
+            <Link href="/account/profile" className="flex items-center gap-x-2">
               <UserIcon className="size-4 text-muted-foreground" />
               <Trans i18nKey="profile" defaults="Profile" />
             </Link>
@@ -87,7 +84,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         </IfAuthenticated>
         <DropdownMenuItem asChild={true}>
           <Link
-            href="/settings/preferences"
+            href="/account/preferences"
             className="flex items-center gap-x-2"
           >
             <Settings2Icon className="size-4 text-muted-foreground" />
@@ -96,10 +93,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         </DropdownMenuItem>
         <IfCloudHosted>
           <DropdownMenuItem asChild={true}>
-            <Link
-              href="/settings/billing"
-              className="flex items-center gap-x-2"
-            >
+            <Link href="/account/billing" className="flex items-center gap-x-2">
               <CreditCardIcon className="size-4 text-muted-foreground" />
               <Trans i18nKey="Billing" defaults="Billing" />
             </Link>

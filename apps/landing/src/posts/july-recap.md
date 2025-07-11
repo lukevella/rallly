@@ -28,7 +28,7 @@ If you haven't jumped aboard yet, the launch price for Rallly Pro is still up fo
 **As an early adopter, you will not be impacted by future price increases**, so you will be benefitting from significantly reduced rates once more features are added.
 If you haven't already, you should check out the new [feedback portal](https://feedback.rallly.co) to see what features are coming next.
 
-Ready to go Pro? You can upgrade from your [billing page](https://app.rallly.co/settings/billing).
+Ready to go Pro? You can upgrade from your [billing page](https://app.rallly.co/account/billing).
 
 ### Pricing Updates
 

@@ -125,7 +125,7 @@ export default async function Page() {
           </h2>
           <TileGrid>
             <Tile asChild>
-              <Link href="/settings/profile">
+              <Link href="/account/profile">
                 <ProfilePageIcon />
                 <TileTitle>
                   <Trans i18nKey="profile" defaults="Profile" />
@@ -134,7 +134,7 @@ export default async function Page() {
             </Tile>
 
             <Tile asChild>
-              <Link href="/settings/preferences">
+              <Link href="/account/preferences">
                 <PreferencesPageIcon />
                 <TileTitle>
                   <Trans i18nKey="preferences" defaults="Preferences" />
@@ -143,7 +143,7 @@ export default async function Page() {
             </Tile>
             <IfCloudHosted>
               <Tile asChild>
-                <Link href="/settings/billing">
+                <Link href="/account/billing">
                   <BillingPageIcon />
                   <TileTitle>
                     <Trans i18nKey="billing" defaults="Billing" />
