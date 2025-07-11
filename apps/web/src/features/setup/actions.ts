@@ -5,7 +5,8 @@ import { redirect } from "next/navigation";
 import { authActionClient } from "@/features/safe-action/server";
 import { setupSchema } from "./schema";
 
-export const updateUserAction = authActionClient
+export const completeSetupAction = authActionClient
+  .metadata({ actionName: "complete_setup" })
   .inputSchema(setupSchema)
   .action(async ({ parsedInput, ctx }) => {
     const { name, timeZone, locale } = parsedInput;
@@ -19,7 +20,7 @@ export const updateUserAction = authActionClient
       },
     });
 
-    ctx.capture("user_setup_completed", {
+    ctx.capture({
       $set: {
         name,
         timeZone,

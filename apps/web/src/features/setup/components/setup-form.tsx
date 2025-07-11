@@ -20,7 +20,7 @@ import { useSafeAction } from "@/features/safe-action/client";
 import { useTimezone } from "@/features/timezone";
 import { useTranslation } from "@/i18n/client";
 
-import { updateUserAction } from "../actions";
+import { completeSetupAction } from "../actions";
 import { type SetupFormValues, setupSchema } from "../schema";
 
 interface SetupFormProps {
@@ -30,7 +30,7 @@ interface SetupFormProps {
 export function SetupForm({ defaultValues }: SetupFormProps) {
   const { timezone } = useTimezone();
   const { i18n } = useTranslation();
-  const userSetupAction = useSafeAction(updateUserAction);
+  const completeSetup = useSafeAction(completeSetupAction);
 
   const form = useForm<SetupFormValues>({
     resolver: zodResolver(setupSchema),
@@ -45,7 +45,7 @@ export function SetupForm({ defaultValues }: SetupFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
-          await userSetupAction.executeAsync(data);
+          await completeSetup.executeAsync(data);
         })}
       >
         <div className="space-y-4">
@@ -108,8 +108,8 @@ export function SetupForm({ defaultValues }: SetupFormProps) {
               </FormItem>
             )}
           />
-          {userSetupAction.result.serverError && (
-            <FormMessage>{userSetupAction.result.serverError}</FormMessage>
+          {completeSetup.result.serverError && (
+            <FormMessage>{completeSetup.result.serverError}</FormMessage>
           )}
         </div>
         <div className="mt-6">

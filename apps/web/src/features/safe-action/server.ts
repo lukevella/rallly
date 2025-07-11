@@ -4,6 +4,7 @@ import { posthog } from "@rallly/posthog/server";
 import { waitUntil } from "@vercel/functions";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import { revalidatePath } from "next/cache";
+import z from "zod";
 
 type ActionErrorCode =
   | "UNAUTHORIZED"
@@ -37,26 +38,42 @@ const autoRevalidateMiddleware = createMiddleware().define(({ next }) => {
 
 const posthogMiddleware = createMiddleware<{
   ctx: { user: { id: string } };
-}>().define(({ ctx, next }) => {
+  metadata: { actionName: string };
+}>().define(({ ctx, next, metadata }) => {
+  let didCapture = false;
   const result = next({
     ctx: {
       posthog,
-      capture: (event: string, properties?: Record<string, unknown>) => {
+      capture: (properties?: Record<string, unknown>) => {
+        didCapture = true;
         posthog?.capture({
           distinctId: ctx.user.id,
-          event,
+          event: metadata.actionName,
           properties,
         });
       },
     },
   });
 
-  waitUntil(Promise.all([posthog?.shutdown()]));
+  if (!didCapture) {
+    posthog?.capture({
+      distinctId: ctx.user.id,
+      event: metadata.actionName,
+    });
+  }
+
+  if (posthog) {
+    waitUntil(posthog.shutdown());
+  }
 
   return result;
 });
 
 export const actionClient = createSafeActionClient({
+  defineMetadataSchema: () =>
+    z.object({
+      actionName: z.string(),
+    }),
   handleServerError: async (error) => {
     if (error instanceof ActionError) {
       return error.code;

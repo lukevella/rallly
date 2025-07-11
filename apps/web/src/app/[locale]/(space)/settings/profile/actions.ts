@@ -5,8 +5,9 @@ import { signOut } from "@/next-auth";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 
-export const deleteCurrentUserAction = authActionClient.action(
-  async ({ ctx }) => {
+export const deleteCurrentUserAction = authActionClient
+  .metadata({ actionName: "delete_current_user" })
+  .action(async ({ ctx }) => {
     const userId = ctx.user.id;
 
     const user = await prisma.user.findUnique({
@@ -34,14 +35,9 @@ export const deleteCurrentUserAction = authActionClient.action(
       },
     });
 
-    ctx.capture("delete_account", {
-      email: ctx.user.email,
-    });
-
     await signOut();
 
     return {
       success: true,
     };
-  },
-);
+  });
