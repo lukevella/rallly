@@ -574,6 +574,7 @@ export const polls = router({
               name: true,
               email: true,
               locale: true,
+              timeZone: true,
               user: {
                 select: {
                   email: true,
@@ -661,7 +662,8 @@ export const polls = router({
                     inviteeName: p.name,
                     inviteeEmail:
                       p.user?.email ?? p.email ?? `${p.id}@rallly.co`,
-                    inviteeTimeZone: p.user?.timeZone ?? poll.timeZone, // We should track participant's timezone
+                    inviteeTimeZone:
+                      p.user?.timeZone ?? p.timeZone ?? poll.timeZone,
                     status: (
                       {
                         yes: "accepted",
@@ -758,6 +760,7 @@ export const polls = router({
           name: string;
           email: string;
           locale: string | undefined;
+          timeZone: string | null;
         }> = [];
 
         if (input.notify === "all") {
@@ -768,6 +771,7 @@ export const polls = router({
                 name: p.name,
                 email: p.email,
                 locale: p.locale ?? undefined,
+                timeZone: p.timeZone,
               });
             }
           });
@@ -781,6 +785,7 @@ export const polls = router({
                 name: p.name,
                 email: p.email,
                 locale: p.locale ?? undefined,
+                timeZone: p.timeZone,
               });
             }
           });
@@ -821,7 +826,7 @@ export const polls = router({
             end: scheduledEvent.end,
             allDay: scheduledEvent.allDay,
             timeZone: scheduledEvent.timeZone,
-            // inviteeTimeZone: p.timeZone, // TODO: implement this
+            inviteeTimeZone: p.timeZone,
           });
           getEmailClient(p.locale ?? undefined).queueTemplate(
             "FinalizeParticipantEmail",
