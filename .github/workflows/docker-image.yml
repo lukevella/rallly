@@ -1,5 +1,10 @@
 name: Build and publish Container image
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "v*"
 
 env:
   GHCR_REGISTRY: ghcr.io
