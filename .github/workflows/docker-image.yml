@@ -1,4 +1,4 @@
-name: Build and publish Container image to GHCR
+name: Build and publish Container image
 on: workflow_dispatch
 
 env:
