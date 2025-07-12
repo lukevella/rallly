@@ -26,13 +26,13 @@ export function SubscriptionPrice({
       {interval === "month" ? (
         <Trans
           i18nKey="subscriptionPriceMonthly"
-          defaults="{{price}} per month"
+          defaults="{price} per month"
           values={{ price: formattedAmount }}
         />
       ) : (
         <Trans
           i18nKey="subscriptionPriceYearly"
-          defaults="{{price}} per year"
+          defaults="{price} per year"
           values={{ price: formattedAmount }}
         />
       )}

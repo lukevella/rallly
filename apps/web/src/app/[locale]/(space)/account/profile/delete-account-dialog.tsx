@@ -1,5 +1,4 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -13,12 +12,12 @@ import {
 } from "@rallly/ui/dialog";
 import { Form, FormField, FormItem, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
 import { Trans } from "@/components/trans";
+import { useSafeAction } from "@/features/safe-action/client";
 import { useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
+import { deleteCurrentUserAction } from "./actions";
 
 export function DeleteAccountDialog({
   email,
@@ -32,16 +31,9 @@ export function DeleteAccountDialog({
       email: "",
     },
   });
+
+  const deleteUser = useSafeAction(deleteCurrentUserAction);
   const { t } = useTranslation();
-  const posthog = usePostHog();
-  const deleteAccount = trpc.user.delete.useMutation({
-    onSuccess() {
-      posthog?.capture("delete account");
-      signOut({
-        redirectTo: "/login",
-      });
-    },
-  });
 
   return (
     <Form {...form}>
@@ -52,7 +44,7 @@ export function DeleteAccountDialog({
             method="POST"
             action="/auth/logout"
             onSubmit={form.handleSubmit(async () => {
-              await deleteAccount.mutateAsync();
+              await deleteUser.executeAsync();
             })}
           >
             <DialogHeader>
@@ -111,7 +103,7 @@ export function DeleteAccountDialog({
               </DialogClose>
               <Button
                 type="submit"
-                loading={deleteAccount.isPending}
+                loading={deleteUser.isExecuting}
                 variant="destructive"
               >
                 <Trans i18nKey="deleteAccount" defaults="Delete Account" />

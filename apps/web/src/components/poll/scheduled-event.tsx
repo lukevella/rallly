@@ -8,6 +8,7 @@ import { Trans } from "@/components/trans";
 import { IfParticipantsVisible } from "@/components/visibility";
 import { usePoll } from "@/contexts/poll";
 import { useDayjs } from "@/utils/dayjs";
+import { Badge } from "@rallly/ui/badge";
 
 function FinalDate({ start }: { start: Date }) {
   const poll = usePoll();
@@ -92,6 +93,11 @@ export function ScheduledEvent() {
                 </div>
               </div>
             </div>
+            {event.status === "canceled" && (
+              <Badge>
+                <Trans i18nKey="canceled" defaults="Canceled" />
+              </Badge>
+            )}
           </div>
           <div className="flex items-center gap-4">
             <IfParticipantsVisible>

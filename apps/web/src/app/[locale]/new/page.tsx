@@ -23,7 +23,7 @@ export default async function Page() {
             <BackButton />
           </div>
           <div className="flex flex-1 sm:justify-center">
-            <div className="flex items-center gap-x-2">
+            <div className="flex items-center gap-x-3">
               <PollPageIcon size="sm" />
               <div className="flex items-baseline gap-x-8">
                 <h1 className="font-semibold">

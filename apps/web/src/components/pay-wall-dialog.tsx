@@ -175,7 +175,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
                     <Link
                       onClick={() => dialog.dismiss()}
                       className="text-link"
-                      href="/settings/billing"
+                      href="/account/billing"
                     />
                   ),
                 }}

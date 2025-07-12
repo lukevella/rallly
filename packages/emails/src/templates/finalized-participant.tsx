@@ -51,7 +51,7 @@ const FinalizeParticipantEmail = ({
           t={ctx.t}
           i18nKey="finalizeParticipant_content"
           ns="emails"
-          defaults="<b>{{hostName}}</b> has booked <b>{{title}}</b> for the following date:"
+          defaults="<b>{hostName}</b> has booked <b>{title}</b> for the following date:"
           values={{ hostName, title }}
           components={{
             b: <strong />,
@@ -114,7 +114,7 @@ FinalizeParticipantEmail.getSubject = (
   ctx: EmailContext,
 ) => {
   return ctx.t("finalizeParticipant_subject", {
-    defaultValue: "Date booked for {{title}}",
+    defaultValue: "Date booked for {title}",
     title: props.title,
     ns: "emails",
   });

@@ -1,19 +1,26 @@
+import { requireUserAbility } from "@/auth/queries";
+import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
+import { cache } from "react";
 
-export async function listSpaces({ ownerId }: { ownerId: string }) {
-  const spaces = await prisma.space.findMany({
-    where: {
-      ownerId,
-    },
+export const listSpaces = cache(async () => {
+  const { ability } = await requireUserAbility();
+  const spaces = await prisma.spaceMember.findMany({
+    where: accessibleBy(ability).SpaceMember,
+    include: { space: true },
   });
 
-  return spaces;
-}
+  return spaces.map((spaceMember) => ({
+    ...spaceMember.space,
+    role: spaceMember.role,
+  }));
+});
 
-export async function getDefaultSpace({ ownerId }: { ownerId: string }) {
+export const getDefaultSpace = cache(async () => {
+  const { user } = await requireUserAbility();
   const space = await prisma.space.findFirst({
     where: {
-      ownerId,
+      ownerId: user.id,
     },
     orderBy: {
       createdAt: "asc",
@@ -21,16 +28,17 @@ export async function getDefaultSpace({ ownerId }: { ownerId: string }) {
   });
 
   if (!space) {
-    throw new Error(`Space with owner ID ${ownerId} not found`);
+    throw new Error(`Space with owner ID ${user.id} not found`);
   }
 
   return space;
-}
+});
 
-export async function getSpace({ id }: { id: string }) {
-  return await prisma.space.findUniqueOrThrow({
+export const getSpace = cache(async ({ id }: { id: string }) => {
+  const { ability } = await requireUserAbility();
+  return await prisma.space.findFirst({
     where: {
-      id,
+      AND: [accessibleBy(ability).Space, { id }],
     },
   });
-}
+});

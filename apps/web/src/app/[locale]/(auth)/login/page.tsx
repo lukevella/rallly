@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { GoogleProvider } from "@/auth/providers/google";
@@ -15,6 +14,7 @@ import {
   AuthPageHeader,
   AuthPageTitle,
 } from "../components/auth-page";
+import { LinkWithRedirectTo } from "../components/link-with-redirect-to";
 import { AuthErrors } from "./components/auth-errors";
 import { LoginWithEmailForm } from "./components/login-email-form";
 import { LoginWithOIDC } from "./components/login-with-oidc";
@@ -96,7 +96,7 @@ export default async function LoginPage(props: {
             i18nKey="loginFooter"
             defaults="Don't have an account? <a>Sign up</a>"
             components={{
-              a: <Link className="text-link" href="/register" />,
+              a: <LinkWithRedirectTo className="text-link" href="/register" />,
             }}
           />
         </AuthPageExternal>

@@ -81,10 +81,8 @@ const MobilePoll: React.FunctionComponent = () => {
               }}
               disabled={isEditing}
             >
-              <SelectTrigger asChild className="w-full">
-                <Button>
-                  <SelectValue />
-                </Button>
+              <SelectTrigger className="w-full">
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">
@@ -104,7 +102,7 @@ const MobilePoll: React.FunctionComponent = () => {
                 {visibleParticipants.map((participant) => (
                   <SelectItem key={participant.id} value={participant.id}>
                     <Participant>
-                      <OptimizedAvatarImage name={participant.name} size="xs" />
+                      <OptimizedAvatarImage name={participant.name} size="sm" />
                       <ParticipantName>{participant.name}</ParticipantName>
                       {session.ownsObject(participant) && (
                         <Badge>

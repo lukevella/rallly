@@ -8,6 +8,7 @@ import {
   SettingsGroupTitle,
 } from "@/components/settings-group";
 import { Trans } from "@/components/trans";
+import { updateInstanceSettings } from "@/features/instance-settings/mutations";
 import {
   type InstanceSettings,
   instanceSettingsSchema,
@@ -28,10 +29,9 @@ import {
   FormItem,
   FormLabel,
 } from "@rallly/ui/form";
-import { useToast } from "@rallly/ui/hooks/use-toast";
+import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
 import { useForm } from "react-hook-form";
-import { updateInstanceSettings } from "./actions";
 
 export function InstanceSettingsForm({
   defaultValue,
@@ -45,8 +45,6 @@ export function InstanceSettingsForm({
 
   const { t } = useTranslation();
 
-  const { toast } = useToast();
-
   return (
     <Form {...form}>
       <form
@@ -57,15 +55,17 @@ export function InstanceSettingsForm({
             form.reset(data);
           } catch (error) {
             console.error(error);
-            toast({
-              title: t("unexpectedError", {
+            toast.error(
+              t("unexpectedError", {
                 defaultValue: "Unexpected Error",
               }),
-              description: t("unexpectedErrorDescription", {
-                defaultValue:
-                  "There was an unexpected error. Please try again later.",
-              }),
-            });
+              {
+                description: t("unexpectedErrorDescription", {
+                  defaultValue:
+                    "There was an unexpected error. Please try again later.",
+                }),
+              },
+            );
           }
         })}
       >

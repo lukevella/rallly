@@ -10,7 +10,7 @@
     "editor.defaultFormatter": "biomejs.biome"
   },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.preferences.importModuleSpecifier": "shortest",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
   "cSpell.words": ["Rallly", "Vella"],
   "jestrunner.codeLensSelector": "",
   "vitest.filesWatcherInclude": "**/*.test.ts",

@@ -52,7 +52,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
               // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
-                  <OptimizedAvatarImage size="xs" name={name} />
+                  <OptimizedAvatarImage size="sm" name={name} />
                   <VoteIcon
                     type="yes"
                     size="sm"
@@ -66,7 +66,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
               // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
-                  <OptimizedAvatarImage size="xs" name={name} />
+                  <OptimizedAvatarImage size="sm" name={name} />
                   <VoteIcon
                     type="ifNeedBe"
                     size="sm"
@@ -82,7 +82,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
               // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
-                  <OptimizedAvatarImage size="xs" name={name} />
+                  <OptimizedAvatarImage size="sm" name={name} />
                   <VoteIcon
                     type="no"
                     size="sm"

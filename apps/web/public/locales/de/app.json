@@ -330,9 +330,6 @@
   "canceledEventsEmptyStateDescription": "Abgesagte Termine werden hier angezeigt.",
   "setupFormTitle": "Setup",
   "setupFormDescription": "Schließe die Einrichtung deines Accounts ab.",
-  "errorNotAuthenticated": "Nicht authentifiziert",
-  "errorInvalidFields": "Ungültige Felder. Bitte überprüfe deine Eingabe.",
-  "errorDatabaseUpdateFailed": "Datenbankfehler: Einstellungen konnten nicht aktualisiert werden.",
   "pending": "Ausstehend",
   "helpUsImprove": "Hilf uns, besser zu werden",
   "helpUsImproveDesc": "Nimm dir ein paar Minuten Zeit für Feedback und hilf uns, die Zukunft von Rallly zu gestalten.",
@@ -361,9 +358,6 @@
   "users": "Benutzer",
   "userCount": "{count, number, ::compact-short}",
   "unlicensed": "Ohne Lizenz",
-  "deleteUser": "Benutzer löschen",
-  "areYouSureYouWantToDeleteThisUser": "Bist du sicher, dass du diesen Benutzer löschen möchtest?",
-  "typeTheEmailAddressOfTheUserYouWantToDelete": "Gib die E-Mail-Adresse des Benutzers ein, den du löschen möchtest.",
   "emailDoesNotMatch": "Die E-Mail-Adresse stimmt nicht überein.",
   "noUsers": "Keine Benutzer gefunden",
   "noUsersDescription": "Versuche, deine Suche anzupassen",
@@ -395,5 +389,12 @@
   "disableUserRegistrationDescription": "Verhindert, dass sich neue Nutzer registrieren können.",
   "authenticationAndSecurity": "Authentifizierung & Sicherheit",
   "authenticationAndSecurityDescription": "Authentifizierungs- und Sicherheitseinstellungen verwalten",
-  "youHaveUnsavedChanges": "Du hast ungespeicherte Änderungen"
+  "youHaveUnsavedChanges": "Du hast ungespeicherte Änderungen",
+  "unexpectedError": "Unerwarteter Fehler",
+  "unexpectedErrorDescription": "Es gab einen unerwarteten Fehler. Bitte versuche es später erneut.",
+  "actionErrorUnauthorized": "Du bist nicht berechtigt, diese Aktion auszuführen",
+  "actionErrorNotFound": "Die Ressource wurde nicht gefunden",
+  "actionErrorForbidden": "Du bist nicht berechtigt, diese Aktion auszuführen",
+  "actionErrorInternalServerError": "Ein interner Serverfehler ist aufgetreten",
+  "cancelEvent": "Termin absagen"
 }

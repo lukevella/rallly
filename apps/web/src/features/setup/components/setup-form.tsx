@@ -11,16 +11,16 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import * as React from "react";
 import { useForm } from "react-hook-form";
 
 import { LanguageSelect } from "@/components/poll/language-selector";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
+import { useSafeAction } from "@/features/safe-action/client";
 import { useTimezone } from "@/features/timezone";
 import { useTranslation } from "@/i18n/client";
 
-import { updateUserSetup } from "../actions";
+import { completeSetupAction } from "../actions";
 import { type SetupFormValues, setupSchema } from "../schema";
 
 interface SetupFormProps {
@@ -30,8 +30,8 @@ interface SetupFormProps {
 export function SetupForm({ defaultValues }: SetupFormProps) {
   const { timezone } = useTimezone();
   const { i18n } = useTranslation();
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [serverError, setServerError] = React.useState<string | null>(null);
+  const completeSetup = useSafeAction(completeSetupAction);
+
   const form = useForm<SetupFormValues>({
     resolver: zodResolver(setupSchema),
     defaultValues: {
@@ -41,33 +41,13 @@ export function SetupForm({ defaultValues }: SetupFormProps) {
     },
   });
 
-  async function onSubmit(data: SetupFormValues) {
-    setIsSubmitting(true);
-    setServerError(null);
-
-    // Construct FormData for the server action
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("timeZone", data.timeZone);
-    formData.append("locale", data.locale);
-
-    const result = await updateUserSetup(formData);
-
-    setIsSubmitting(false);
-
-    if (result?.message) {
-      setServerError(result.message);
-    }
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        {serverError && (
-          <p aria-live="polite" className="text-destructive text-sm">
-            {serverError}
-          </p>
-        )}
+      <form
+        onSubmit={form.handleSubmit(async (data) => {
+          await completeSetup.executeAsync(data);
+        })}
+      >
         <div className="space-y-4">
           <FormField
             control={form.control}
@@ -128,12 +108,15 @@ export function SetupForm({ defaultValues }: SetupFormProps) {
               </FormItem>
             )}
           />
+          {completeSetup.result.serverError && (
+            <FormMessage>{completeSetup.result.serverError}</FormMessage>
+          )}
         </div>
         <div className="mt-6">
           <Button
             variant="primary"
             type="submit"
-            loading={isSubmitting}
+            loading={form.formState.isSubmitting}
             className="w-full"
           >
             <Trans i18nKey="save" defaults="Save" />

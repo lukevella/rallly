@@ -155,12 +155,13 @@ export default async function Page(props: {
                       <ScheduledEventListItem
                         eventId={event.id}
                         key={event.id}
-                        floating={event.timeZone === null}
+                        floating={!event.timeZone}
                         title={event.title}
                         start={event.start}
                         end={event.end}
                         allDay={event.allDay}
                         invites={event.invites}
+                        status={event.status}
                       />
                     </StackedListItem>
                   ))}

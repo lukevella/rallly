@@ -70,7 +70,7 @@ const TileGrid = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("grid gap-4 sm:grid-cols-2 lg:grid-cols-3", className)}
+    className={cn("grid gap-4 md:grid-cols-3 2xl:grid-cols-4", className)}
     {...props}
   />
 ));

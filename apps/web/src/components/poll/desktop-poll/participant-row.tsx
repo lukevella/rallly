@@ -52,7 +52,7 @@ export const ParticipantRowView: React.FunctionComponent<{
       >
         <div className="flex max-w-full items-center justify-between gap-x-2">
           <Participant>
-            <OptimizedAvatarImage size="xs" name={name} />
+            <OptimizedAvatarImage size="sm" name={name} />
             <ParticipantName>{name}</ParticipantName>
           </Participant>
           <div className="flex items-center gap-x-2">

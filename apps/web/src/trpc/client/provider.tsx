@@ -1,6 +1,5 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
-import { useToast } from "@rallly/ui/hooks/use-toast";
 import {
   MutationCache,
   QueryClient,
@@ -13,11 +12,11 @@ import superjson from "superjson";
 
 import { useTranslation } from "@/i18n/client";
 
+import { toast } from "@rallly/ui/sonner";
 import { trpc } from "../client";
 
 export function TRPCProvider(props: { children: React.ReactNode }) {
   const posthog = usePostHog();
-  const { toast } = useToast();
   const { t } = useTranslation();
   const [queryClient] = useState(
     () =>
@@ -41,14 +40,16 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
                   window.location.href = "/login";
                   break;
                 case "TOO_MANY_REQUESTS":
-                  toast({
-                    title: t("tooManyRequests", {
+                  toast.error(
+                    t("tooManyRequests", {
                       defaultValue: "Too many requests",
                     }),
-                    description: t("tooManyRequestsDescription", {
-                      defaultValue: "Please try again later.",
-                    }),
-                  });
+                    {
+                      description: t("tooManyRequestsDescription", {
+                        defaultValue: "Please try again later.",
+                      }),
+                    },
+                  );
                   break;
                 case "FORBIDDEN":
                   signOut({

@@ -17,8 +17,8 @@ export function NavUser({
   const pathname = usePathname();
   return (
     <Link
-      href="/settings/profile"
-      data-state={pathname.startsWith("/settings") ? "active" : "inactive"}
+      href="/account/profile"
+      data-state={pathname.startsWith("/account") ? "active" : "inactive"}
       className="group relative flex w-full items-center gap-3 rounded-md p-3 text-sm hover:bg-gray-200 data-[state=active]:bg-gray-200"
     >
       <OptimizedAvatarImage size="md" src={image} name={name} />
