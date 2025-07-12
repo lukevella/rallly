@@ -95,24 +95,11 @@ jobs:
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
 
-  merge-and-publish:
+  merge-and-publish-docker:
     name: Merge digests and publish the Docker image
     runs-on: ubuntu-latest
     needs:
       - build
-    strategy:
-      matrix:
-        target:
-          - name: ghcr
-            registry: "ghcr.io"
-            image: "${{ github.repository }}"
-            username: "${{ github.actor }}"
-            password: "${{ secrets.GITHUB_TOKEN }}"
-          - name: docker
-            registry: "docker.io"
-            image: "${{ secrets.DOCKER_NAMESPACE }}"
-            username: "${{ secrets.DOCKER_USERNAME }}"
-            password: "${{ secrets.DOCKER_PASSWORD }}"
     permissions:
       contents: read
       packages: write
@@ -120,12 +107,12 @@ jobs:
       id-token: write
 
     steps:
-      - name: Log in to ${{ matrix.target.registry }} registry
+      - name: Log in to container registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ matrix.target.registry }}
-          username: ${{ matrix.target.username }}
-          password: ${{ matrix.target.password }}
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -154,5 +141,54 @@ jobs:
           index-annotations: ${{ steps.metadata.outputs.labels }}
           tags: ${{ steps.metadata.outputs.tags }}
           sources: |
-            ${{ matrix.target.registry }}/${{ matrix.target.image }}@${{ needs.build.outputs.digest_linux_amd64 }}
-            ${{ matrix.target.registry }}/${{ matrix.target.image }}@${{ needs.build.outputs.digest_linux_arm64 }}
+            ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}@${{ needs.build.outputs.digest_linux_amd64 }}
+            ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}@${{ needs.build.outputs.digest_linux_arm64 }}
+
+  merge-and-publish-ghcr:
+    name: Merge digests and publish the Docker image
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - name: Log in to container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GHCR_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker metadata
+        id: metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ matrix.target.registry }}/${{ matrix.target.image }}
+          tags: |
+            # set latest tag for default branch
+            type=raw,value=latest,enable={{is_default_branch}}
+            # use branch ref for non‑default branches
+            type=ref,event=branch
+            # publish tag event (both Git tag and PR)
+            type=ref,event=tag
+            type=ref,event=pr
+            # semver tags on tag event
+            type=semver,event=tag,pattern={{version}}
+            type=semver,event=tag,pattern={{major}}.{{minor}}
+            type=semver,event=tag,pattern={{major}}
+
+      - name: Create and push manifest
+        uses: int128/docker-manifest-create-action@v2
+        with:
+          index-annotations: ${{ steps.metadata.outputs.labels }}
+          tags: ${{ steps.metadata.outputs.tags }}
+          sources: |
+            ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}@${{ needs.build.outputs.digest_linux_amd64 }}
+            ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}@${{ needs.build.outputs.digest_linux_arm64 }}
