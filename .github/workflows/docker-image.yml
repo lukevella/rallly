@@ -131,9 +131,6 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
             # use branch ref for non‑default branches
             type=ref,event=branch
-            # publish tag event (both Git tag and PR)
-            type=ref,event=tag
-            type=ref,event=pr
             # semver tags on tag event
             type=semver,event=tag,pattern={{version}}
             type=semver,event=tag,pattern={{major}}.{{minor}}
@@ -180,9 +177,6 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
             # use branch ref for non‑default branches
             type=ref,event=branch
-            # publish tag event (both Git tag and PR)
-            type=ref,event=tag
-            type=ref,event=pr
             # semver tags on tag event
             type=semver,event=tag,pattern={{version}}
             type=semver,event=tag,pattern={{major}}.{{minor}}
