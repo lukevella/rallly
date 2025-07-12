@@ -178,8 +178,6 @@ jobs:
         with:
           images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}
           tags: |
-            # Latest tag for default branch (if applicable).
-            type=raw,value=latest,enable={{is_default_branch}}
             # Branch reference.
             type=ref,event=branch
             # Semantic version tags on tag events.
