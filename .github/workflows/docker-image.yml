@@ -104,15 +104,15 @@ jobs:
       matrix:
         target:
           - name: ghcr
-            registry: ${{ env.GHCR_REGISTRY }}
-            image: ${{ env.GHCR_IMAGE_NAME }}
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
+            registry: "ghcr.io"
+            image: "${{ github.repository }}"
+            username: "${{ github.actor }}"
+            password: "${{ secrets.GITHUB_TOKEN }}"
           - name: docker
-            registry: ${{ env.DOCKER_REGISTRY }}
-            image: ${{ env.DOCKER_IMAGE_NAME }}
-            username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKER_PASSWORD }}
+            registry: "docker.io"
+            image: "${{ secrets.DOCKER_NAMESPACE }}"
+            username: "${{ secrets.DOCKER_USERNAME }}"
+            password: "${{ secrets.DOCKER_PASSWORD }}"
     permissions:
       contents: read
       packages: write
