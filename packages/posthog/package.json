@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@rallly/tsconfig": "workspace:*",
-    "@types/js-cookie": "^3.0.1"
+    "@types/js-cookie": "^3.0.1",
+    "@types/node": "^20.11.1"
   }
 }

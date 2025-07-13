@@ -607,6 +607,9 @@ importers:
       '@types/js-cookie':
         specifier: ^3.0.1
         version: 3.0.6
+      '@types/node':
+        specifier: ^20.11.1
+        version: 20.17.50
 
   packages/tailwind-config:
     dependencies:
