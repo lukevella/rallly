@@ -18,6 +18,8 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { getTranslation } from "@/i18n/server";
 import { linkToApp } from "@/lib/linkToApp";
 
+import { LoginButton } from "@/components/login-button";
+import { SignUpButton } from "@/components/sign-up-button";
 import { Footer } from "./footer";
 import { NavLink } from "./nav-link";
 
@@ -65,16 +67,8 @@ export default async function Root(props: {
         </div>
         <div className="flex items-center gap-4 sm:gap-8">
           <div className="hidden items-center gap-2 sm:flex">
-            <Button variant="ghost" asChild>
-              <Link href={linkToApp("/login")}>
-                <Trans t={t} i18nKey="login" defaults="Login" />
-              </Link>
-            </Button>
-            <Button asChild variant="primary">
-              <Link href={linkToApp("/register")}>
-                <Trans t={t} i18nKey="signUp" defaults="Sign up" />
-              </Link>
-            </Button>
+            <LoginButton />
+            <SignUpButton />
           </div>
           <div className="flex items-center justify-center lg:hidden">
             <DropdownMenu>
