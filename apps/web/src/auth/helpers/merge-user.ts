@@ -45,8 +45,8 @@ export const mergeGuestsIntoUser = async (
   guestIds: string[],
 ) => {
   const space = await getActiveSpaceForUser({ userId });
-
-  if (!space) {
+  const guestId = guestIds[0];
+  if (!space || !guestId) {
     console.error(`User ${userId} has no active space or default space`);
     return;
   }
@@ -56,9 +56,7 @@ export const mergeGuestsIntoUser = async (
       await Promise.all([
         tx.poll.updateMany({
           where: {
-            guestId: {
-              in: guestIds,
-            },
+            guestId,
           },
           data: {
             guestId: null,
@@ -69,9 +67,7 @@ export const mergeGuestsIntoUser = async (
 
         tx.participant.updateMany({
           where: {
-            guestId: {
-              in: guestIds,
-            },
+            guestId,
           },
           data: {
             guestId: null,
@@ -81,9 +77,7 @@ export const mergeGuestsIntoUser = async (
 
         tx.comment.updateMany({
           where: {
-            guestId: {
-              in: guestIds,
-            },
+            guestId,
           },
           data: {
             guestId: null,
@@ -92,7 +86,11 @@ export const mergeGuestsIntoUser = async (
         }),
       ]);
     });
-    posthog?.alias({ distinctId: userId, alias: guestIds[0] });
+    posthog?.capture({
+      distinctId: userId,
+      event: "$merge_dangerously",
+      properties: { alias: guestId },
+    });
   } catch (error) {
     Sentry.captureException(error);
   }
