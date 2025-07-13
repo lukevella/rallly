@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "js-cookie": "^3.0.1",
-    "posthog-js": "^1.234.1",
-    "posthog-node": "^4.10.2"
+    "posthog-js": "^1.257.0",
+    "posthog-node": "^5.5.0"
   },
   "devDependencies": {
     "@rallly/tsconfig": "workspace:*",

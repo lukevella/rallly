@@ -595,11 +595,11 @@ importers:
         specifier: ^3.0.1
         version: 3.0.5
       posthog-js:
-        specifier: ^1.234.1
-        version: 1.236.7
+        specifier: ^1.257.0
+        version: 1.257.0
       posthog-node:
-        specifier: ^4.10.2
-        version: 4.14.0
+        specifier: ^5.5.0
+        version: 5.5.0
     devDependencies:
       '@rallly/tsconfig':
         specifier: workspace:*
@@ -7583,8 +7583,8 @@ packages:
     resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
     engines: {node: '>=0.10.0'}
 
-  posthog-js@1.236.7:
-    resolution: {integrity: sha512-HatTinqAt/6aAraCgbnP+2MTeVTChdf6TDsQkef4/yUnXeA4tsHmXnGGJ3vnzQk7N//R6lIHN189BZDO9kuKAg==}
+  posthog-js@1.257.0:
+    resolution: {integrity: sha512-Ujg9RGtWVCu+4tmlRpALSy2ZOZI6JtieSYXIDDdgMWm167KYKvTtbMPHdoBaPWcNu0Km+1hAIBnQFygyn30KhA==}
     peerDependencies:
       '@rrweb/types': 2.0.0-alpha.17
       rrweb-snapshot: 2.0.0-alpha.17
@@ -7594,9 +7594,9 @@ packages:
       rrweb-snapshot:
         optional: true
 
-  posthog-node@4.14.0:
-    resolution: {integrity: sha512-PitSiuxGiVFl0ItuhIfi3Sq1tcaMU4vlbPu1wv0qufTJGDjWthOOr4vYfFIs1xkbJFOQcfGczMXkr44kX5TDDg==}
-    engines: {node: '>=15.0.0'}
+  posthog-node@5.5.0:
+    resolution: {integrity: sha512-q+d6yuwCw88ZkcYTDlrF6eBkbRDgn4pA4Jp8ghm8uTfgxoGUKEcajnuMfmYudAXsly6UC4YccwQThey8p1jvgg==}
+    engines: {node: '>=20'}
 
   preact-render-to-string@6.5.11:
     resolution: {integrity: sha512-ubnauqoGczeGISiOh6RjX0/cdaF8v/oDXIjO85XALCQjwQP+SB4RDXXtvZ6yTYSjG+PC1QRP2AhPgCEsM2EvUw==}
@@ -17171,18 +17171,14 @@ snapshots:
     dependencies:
       xtend: 4.0.2
 
-  posthog-js@1.236.7:
+  posthog-js@1.257.0:
     dependencies:
       core-js: 3.41.0
       fflate: 0.4.8
       preact: 10.26.5
       web-vitals: 4.2.4
 
-  posthog-node@4.14.0:
-    dependencies:
-      axios: 1.9.0
-    transitivePeerDependencies:
-      - debug
+  posthog-node@5.5.0: {}
 
   preact-render-to-string@6.5.11(preact@10.24.3):
     dependencies:
