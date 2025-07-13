@@ -35,10 +35,9 @@ export const getDefaultSpace = cache(async () => {
 });
 
 export const getSpace = cache(async ({ id }: { id: string }) => {
-  const { ability } = await requireUserAbility();
   return await prisma.space.findFirst({
     where: {
-      AND: [accessibleBy(ability).Space, { id }],
+      id,
     },
   });
 });
