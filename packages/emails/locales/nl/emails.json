@@ -74,5 +74,9 @@
   "license_key_support": "Reageer op deze e-mail of neem contact met ons op via <a>{supportEmail}</a> als je hulp nodig hebt.",
   "license_key_signoff": "Bedankt voor het kiezen voor Rallly!",
   "license_key_preview": "Je licentiesleutel is gegenereerd.",
-  "license_key_subject": "Je Rallly Self-Hosted {tier} licentie"
+  "license_key_subject": "Je Rallly Self-Hosted {tier} licentie",
+  "eventCanceledContent": "<b>{hostName}</b> heeft het evenement <b>{title}</b> geannuleerd dat was gepland voor:",
+  "eventCanceledPreview": "Evenement is geannuleerd",
+  "eventCanceledHeading": "Evenement is geannuleerd",
+  "eventCanceledSubject": "Geannuleerd: {title}"
 }
