@@ -26,8 +26,6 @@ if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
     capture_pageleave: true,
     disable_session_recording: true,
     enable_heatmaps: false,
-    disable_surveys: true,
-    advanced_disable_feature_flags: true,
     persistence: "cookie",
     bootstrap: bootstrapData,
     autocapture: false,
