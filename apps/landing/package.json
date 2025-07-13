@@ -15,6 +15,7 @@
     "@rallly/billing": "workspace:*",
     "@rallly/database": "workspace:*",
     "@rallly/languages": "workspace:*",
+    "@rallly/posthog": "workspace:*",
     "@rallly/tailwind-config": "workspace:*",
     "@rallly/ui": "workspace:*",
     "@rallly/utils": "workspace:*",
