@@ -1,15 +1,5 @@
 {
   "installCommand": "pnpm install",
   "buildCommand": "cd ../.. && pnpm db:generate && pnpm build:web && pnpm db:deploy",
-  "outputDirectory": ".next",
-  "rewrites": [
-    {
-      "source": "/relay-XiKLe/static/(.*)",
-      "destination": "https://eu-assets.i.posthog.com/static/$1"
-    },
-    {
-      "source": "/relay-XiKLe/(.*)",
-      "destination": "https://eu.i.posthog.com/$1"
-    }
-  ]
+  "outputDirectory": ".next"
 }
