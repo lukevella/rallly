@@ -33,6 +33,7 @@ import { FormattedDateTime } from "@/features/timezone/client/formatted-date-tim
 import { isSelfHosted } from "@/utils/constants";
 
 import { requireUser } from "@/auth/queries";
+import { getTranslation } from "@/i18n/server";
 import {
   SettingsContent,
   SettingsSection,
@@ -310,4 +311,13 @@ export default async function Page() {
       </SettingsSection>
     </SettingsContent>
   );
+}
+
+export async function generateMetadata() {
+  const { t } = await getTranslation();
+  return {
+    title: t("billing", {
+      defaultValue: "Billing",
+    }),
+  };
 }
