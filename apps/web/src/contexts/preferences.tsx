@@ -46,7 +46,13 @@ export const PreferencesProvider = ({
     {
       raw: false,
       serializer: JSON.stringify,
-      deserializer: (value) => preferencesSchema.parse(JSON.parse(value)),
+      deserializer: (value) => {
+        try {
+          return preferencesSchema.parse(JSON.parse(value));
+        } catch {
+          return {};
+        }
+      },
     },
   );
 
