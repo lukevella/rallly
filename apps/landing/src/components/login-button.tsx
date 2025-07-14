@@ -12,7 +12,7 @@ export const LoginButton = () => {
     <Button
       variant="ghost"
       onClick={() => {
-        posthog.capture("click_login_button");
+        posthog.capture("landing:login_button_click");
       }}
       asChild
     >

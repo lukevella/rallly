@@ -12,7 +12,7 @@ export function SignUpButton() {
     <Button
       variant="primary"
       onClick={() => {
-        posthog.capture("click_sign_up_button");
+        posthog.capture("landing:sign_up_button_click");
       }}
       asChild
     >

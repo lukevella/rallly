@@ -119,7 +119,7 @@ export const MarketingHero = ({
             className="transition-all hover:shadow-md active:translate-y-1 active:shadow-none"
             variant="primary"
             onClick={() => {
-              posthog.capture("click_hero_button");
+              posthog.capture("landing:hero_button_click");
             }}
             asChild
           >
