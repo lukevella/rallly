@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import dayjs from "dayjs";
 
 async function createUser({
   id,
@@ -14,6 +15,7 @@ async function createUser({
   space: {
     id: string;
     name: string;
+    isPro: boolean;
   };
 }) {
   const user = await prisma.user.create({
@@ -23,10 +25,31 @@ async function createUser({
       email,
       timeZone,
       spaces: {
-        create: space,
+        create: {
+          id: space.id,
+          name: space.name,
+        },
       },
     },
   });
+
+  if (space.isPro) {
+    await prisma.subscription.create({
+      data: {
+        id: "sub-1",
+        spaceId: space.id,
+        userId: user.id,
+        active: true,
+        amount: 700,
+        currency: "USD",
+        interval: "month",
+        periodStart: new Date(),
+        periodEnd: dayjs().add(1, "month").toDate(),
+        priceId: "price_1M6ZJZGZJZJZJZJZJZJZJZJZ",
+        status: "active",
+      },
+    });
+  }
 
   await prisma.spaceMember.create({
     data: {
@@ -56,6 +79,7 @@ export async function seedUsers() {
     space: {
       id: "space-1",
       name: "Personal",
+      isPro: false,
     },
   });
 
@@ -67,6 +91,7 @@ export async function seedUsers() {
     space: {
       id: "space-2",
       name: "Personal",
+      isPro: true,
     },
   });
 
