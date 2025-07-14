@@ -1,4 +1,4 @@
-import SpaceSidebarMenu from "@/app/[locale]/(space)/components/sidebar/space-sidebar-menu";
+import { SpaceSidebarMenu } from "@/app/[locale]/(space)/components/sidebar/space-sidebar-menu";
 import { LogoLink } from "@/app/components/logo-link";
 import { getActiveSpace, requireUserAbility } from "@/auth/queries";
 import { Trans } from "@/components/trans";
