@@ -18,24 +18,32 @@ export const loadSpaces = cache(async () => {
     where: accessibleBy(ability).Space,
     include: {
       subscription: true,
-      members: {
-        where: {
-          userId: user.id,
-        },
-      },
+      members: true,
     },
   });
 
-  return spaces.map(
-    (space) =>
-      ({
-        id: space.id,
-        name: space.name,
-        ownerId: space.ownerId,
-        isPro: Boolean(space.subscription?.active),
-        role: space.members[0].role,
-      }) satisfies SpaceDTO,
-  );
+  const availableSpaces: SpaceDTO[] = [];
+
+  for (const space of spaces) {
+    const role = space.members.find(
+      (member) => member.userId === user.id,
+    )?.role;
+
+    if (!role) {
+      console.warn(`User ${user.id} does not have access to space ${space.id}`);
+      continue;
+    }
+
+    availableSpaces.push({
+      id: space.id,
+      name: space.name,
+      ownerId: space.ownerId,
+      isPro: Boolean(space.subscription?.active),
+      role,
+    });
+  }
+
+  return availableSpaces;
 });
 
 export const getDefaultSpace = cache(async () => {
@@ -89,11 +97,17 @@ export const getSpace = cache(async ({ id }: { id: string }) => {
     throw new Error(`User ${user.id} does not have access to space ${id}`);
   }
 
+  const role = space.members.find((member) => member.userId === user.id)?.role;
+
+  if (!role) {
+    throw new Error(`User ${user.id} is not a member of space ${id}`);
+  }
+
   return {
     id: space.id,
     name: space.name,
     ownerId: space.ownerId,
     isPro: Boolean(space.subscription?.active),
-    role: space.members[0].role,
+    role,
   } satisfies SpaceDTO;
 });
