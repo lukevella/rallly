@@ -330,9 +330,6 @@
   "canceledEventsEmptyStateDescription": "Geannuleerde evenementen zullen hier verschijnen.",
   "setupFormTitle": "Installatie",
   "setupFormDescription": "Voltooi je accountinstellingen.",
-  "errorNotAuthenticated": "Niet geauthenticeerd",
-  "errorInvalidFields": "Ongeldige velden. Controleer je invoer.",
-  "errorDatabaseUpdateFailed": "Databasefout: bijwerken van instellingen is mislukt.",
   "pending": "In behandeling",
   "helpUsImprove": "Geef ons tips",
   "helpUsImproveDesc": "Deel je feedback en help ons zo de toekomst van Rallly vorm te geven.",
@@ -361,9 +358,6 @@
   "users": "Gebruikers",
   "userCount": "{count, number, ::compact-short}",
   "unlicensed": "Geen licentie",
-  "deleteUser": "Gebruiker verwijderen",
-  "areYouSureYouWantToDeleteThisUser": "Weet je zeker dat je deze gebruiker wilt verwijderen?",
-  "typeTheEmailAddressOfTheUserYouWantToDelete": "Voer het e-mailadres in van de gebruiker die je wilt verwijderen.",
   "emailDoesNotMatch": "Het e-mailadres komt niet overeen.",
   "noUsers": "Geen gebruikers gevonden",
   "noUsersDescription": "Probeer je zoekopdracht aan te passen",
@@ -395,5 +389,12 @@
   "disableUserRegistrationDescription": "Voorkom dat nieuwe gebruikers een account registreren.",
   "authenticationAndSecurity": "Authenticatie & Beveiliging",
   "authenticationAndSecurityDescription": "Beheer authenticatie- en beveiligingsinstellingen",
-  "youHaveUnsavedChanges": "Je hebt niet-opgeslagen wijzigingen"
+  "youHaveUnsavedChanges": "Je hebt niet-opgeslagen wijzigingen",
+  "unexpectedError": "Onverwachte fout",
+  "unexpectedErrorDescription": "Er is een onverwachte fout opgetreden. Probeer het later nogmaals.",
+  "actionErrorUnauthorized": "Je bent niet bevoegd om deze actie uit te voeren",
+  "actionErrorNotFound": "Het bestand is niet gevonden",
+  "actionErrorForbidden": "Je bent niet bevoegd om deze actie uit te voeren",
+  "actionErrorInternalServerError": "Er is een interne serverfout opgetreden",
+  "cancelEvent": "Evenement annuleren"
 }
