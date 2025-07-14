@@ -1,0 +1,122 @@
+"use client";
+import { Trans } from "@/components/trans";
+import { useSafeAction } from "@/features/safe-action/client";
+import { createSpaceAction } from "@/features/spaces/actions";
+import { useTranslation } from "@/i18n/client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@rallly/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  type DialogProps,
+  DialogTitle,
+} from "@rallly/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@rallly/ui/form";
+import { Input } from "@rallly/ui/input";
+import { toast } from "@rallly/ui/sonner";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+const newSpaceFormSchema = z.object({
+  name: z.string().min(1).max(100),
+});
+
+type NewSpaceFormValues = z.infer<typeof newSpaceFormSchema>;
+
+export function NewSpaceDialog({ children, ...props }: DialogProps) {
+  const { t } = useTranslation();
+
+  const form = useForm<NewSpaceFormValues>({
+    resolver: zodResolver(newSpaceFormSchema),
+    defaultValues: {
+      name: "",
+    },
+  });
+
+  const createSpace = useSafeAction(createSpaceAction, {
+    onSuccess: () => {
+      form.reset();
+    },
+  });
+
+  return (
+    <Dialog {...props}>
+      {children}
+      <Form {...form}>
+        <DialogContent size="xs">
+          <DialogHeader>
+            <DialogTitle>
+              <Trans i18nKey="createSpace" defaults="Create Space" />
+            </DialogTitle>
+            <DialogDescription>
+              <Trans
+                i18nKey="createSpaceDescription"
+                defaults="Create a new space to organize your polls and events."
+              />
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            onSubmit={form.handleSubmit(({ name }) => {
+              props.onOpenChange?.(false);
+              toast.promise(
+                createSpace.executeAsync({
+                  name,
+                }),
+                {
+                  loading: t("createSpaceLoading", {
+                    defaultValue: "Creating space...",
+                  }),
+                  success: t("createSpaceSuccess", {
+                    defaultValue: "Space created successfully",
+                  }),
+                  error: t("createSpaceError", {
+                    defaultValue: "Failed to create space",
+                  }),
+                },
+              );
+            })}
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Trans i18nKey="name" defaults="Name" />
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      data-1p-ignore="true"
+                      placeholder="e.g. Acme Corp"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <DialogFooter className="mt-4">
+              <Button
+                loading={form.formState.isSubmitting}
+                type="submit"
+                variant="primary"
+              >
+                <Trans i18nKey="createSpace" defaults="Create Space" />
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Form>
+    </Dialog>
+  );
+}

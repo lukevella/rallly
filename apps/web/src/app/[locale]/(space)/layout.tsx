@@ -8,22 +8,30 @@ import { getOnboardedUser } from "@/features/setup/queries";
 import { TimezoneProvider } from "@/features/timezone/client/context";
 
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
-import { AppSidebar } from "./components/sidebar/app-sidebar";
-import { AppSidebarProvider } from "./components/sidebar/app-sidebar-provider";
+import { SpaceSidebar } from "./components/sidebar/space-sidebar";
+import { SpaceSidebarProvider } from "./components/sidebar/space-sidebar-provider";
 import { TopBar, TopBarLeft, TopBarRight } from "./components/top-bar";
+
+async function loadData() {
+  const [user] = await Promise.all([getOnboardedUser()]);
+
+  return {
+    user,
+  };
+}
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getOnboardedUser();
+  const { user } = await loadData();
 
   return (
     <TimezoneProvider initialTimezone={user.timeZone}>
-      <AppSidebarProvider>
+      <SpaceSidebarProvider>
         <CommandMenu />
-        <AppSidebar />
+        <SpaceSidebar />
         <SidebarInset className="min-w-0">
           <TopBar className="md:hidden">
             <TopBarLeft>
@@ -51,7 +59,7 @@ export default async function Layout({
             <div className="flex flex-1 flex-col">{children}</div>
           </div>
         </SidebarInset>
-      </AppSidebarProvider>
+      </SpaceSidebarProvider>
     </TimezoneProvider>
   );
 }

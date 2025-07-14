@@ -1,3 +1,12 @@
+import SpaceSidebarMenu from "@/app/[locale]/(space)/components/sidebar/space-sidebar-menu";
+import { LogoLink } from "@/app/components/logo-link";
+import { getActiveSpace, requireUserAbility } from "@/auth/queries";
+import { Trans } from "@/components/trans";
+import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
+import { SpaceDropdown } from "@/features/spaces/components/space-dropdown";
+import { SpaceIcon } from "@/features/spaces/components/space-icon";
+import { isSpacesEnabled } from "@/features/spaces/constants";
+import { loadSpaces } from "@/features/spaces/queries";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import {
@@ -6,33 +15,34 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarMenu,
   SidebarSeparator,
 } from "@rallly/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import {
-  BarChart2Icon,
-  CalendarIcon,
-  HomeIcon,
-  PlusIcon,
-  SparklesIcon,
-} from "lucide-react";
+import { ChevronsUpDownIcon, PlusIcon, SparklesIcon } from "lucide-react";
 import Link from "next/link";
-import type * as React from "react";
-
-import { LogoLink } from "@/app/components/logo-link";
-import { Trans } from "@/components/trans";
-import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
-
-import { requireUser } from "@/auth/queries";
+import type React from "react";
 import { UpgradeButton } from "../upgrade-button";
-import { NavItem } from "./nav-item";
 import { NavUser } from "./nav-user";
 
-export async function AppSidebar({
+async function loadData() {
+  const [{ user }, spaces, activeSpace] = await Promise.all([
+    requireUserAbility(),
+    loadSpaces(),
+    getActiveSpace(),
+  ]);
+
+  return {
+    user,
+    spaces,
+    activeSpace,
+  };
+}
+
+export async function SpaceSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const user = await requireUser();
+  const { user, spaces, activeSpace } = await loadData();
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -58,23 +68,28 @@ export async function AppSidebar({
             </Tooltip>
           </div>
         </div>
+        {isSpacesEnabled ? (
+          <div>
+            <SpaceDropdown spaces={spaces} activeSpaceId={activeSpace.id}>
+              <Button className="h-auto w-full rounded-lg p-1" variant="ghost">
+                <SpaceIcon name={activeSpace.name} />
+                <div className="flex-1 px-0.5 text-left">
+                  <div>{activeSpace.name}</div>
+                  <div className="text-muted-foreground text-xs">
+                    {activeSpace.isPro ? "Pro" : "Free"}
+                  </div>
+                </div>
+                <Icon>
+                  <ChevronsUpDownIcon />
+                </Icon>
+              </Button>
+            </SpaceDropdown>
+          </div>
+        ) : null}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarMenu>
-            <NavItem href="/">
-              <HomeIcon className="size-4" />
-              <Trans i18nKey="home" />
-            </NavItem>
-            <NavItem href="/polls">
-              <BarChart2Icon className="size-4" />
-              <Trans i18nKey="polls" />
-            </NavItem>
-            <NavItem href="/events">
-              <CalendarIcon className="size-4" />
-              <Trans i18nKey="events" />
-            </NavItem>
-          </SidebarMenu>
+          <SpaceSidebarMenu />
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
@@ -106,11 +121,7 @@ export async function AppSidebar({
           name={user.name}
           image={user.image}
           plan={
-            user.isPro ? (
-              <Trans i18nKey="planPro" defaults="Pro" />
-            ) : (
-              <Trans i18nKey="planFree" defaults="Free" />
-            )
+            <span className="capitalize">{activeSpace.role.toLowerCase()}</span>
           }
         />
       </SidebarFooter>

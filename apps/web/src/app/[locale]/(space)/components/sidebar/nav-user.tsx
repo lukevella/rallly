@@ -24,7 +24,7 @@ export function NavUser({
       <OptimizedAvatarImage size="md" src={image} name={name} />
       <div className="flex-1 truncate text-left">
         <div className="font-medium">{name}</div>
-        <div className="mt-0.5 truncate font-normal text-muted-foreground">
+        <div className="mt-0.5 truncate font-normal text-muted-foreground text-xs">
           {plan}
         </div>
       </div>

@@ -1,19 +1,41 @@
 import { requireUserAbility } from "@/auth/queries";
 import { accessibleBy } from "@casl/prisma";
-import { prisma } from "@rallly/database";
+import { type SpaceMemberRole, prisma } from "@rallly/database";
+import { redirect } from "next/navigation";
 import { cache } from "react";
 
-export const listSpaces = cache(async () => {
-  const { ability } = await requireUserAbility();
-  const spaces = await prisma.spaceMember.findMany({
-    where: accessibleBy(ability).SpaceMember,
-    include: { space: true },
+export type SpaceDTO = {
+  id: string;
+  name: string;
+  ownerId: string;
+  isPro: boolean;
+  role: SpaceMemberRole;
+};
+
+export const loadSpaces = cache(async () => {
+  const { user, ability } = await requireUserAbility();
+  const spaces = await prisma.space.findMany({
+    where: accessibleBy(ability).Space,
+    include: {
+      subscription: true,
+      members: {
+        where: {
+          userId: user.id,
+        },
+      },
+    },
   });
 
-  return spaces.map((spaceMember) => ({
-    ...spaceMember.space,
-    role: spaceMember.role,
-  }));
+  return spaces.map(
+    (space) =>
+      ({
+        id: space.id,
+        name: space.name,
+        ownerId: space.ownerId,
+        isPro: Boolean(space.subscription?.active),
+        role: space.members[0].role,
+      }) satisfies SpaceDTO,
+  );
 });
 
 export const getDefaultSpace = cache(async () => {
@@ -25,19 +47,53 @@ export const getDefaultSpace = cache(async () => {
     orderBy: {
       createdAt: "asc",
     },
+    include: {
+      subscription: true,
+    },
   });
 
   if (!space) {
-    throw new Error(`Space with owner ID ${user.id} not found`);
+    redirect("/setup");
   }
 
-  return space;
+  return {
+    id: space.id,
+    name: space.name,
+    ownerId: space.ownerId,
+    isPro: Boolean(space.subscription?.active),
+    role: "OWNER",
+  } satisfies SpaceDTO;
 });
 
 export const getSpace = cache(async ({ id }: { id: string }) => {
-  return await prisma.space.findFirst({
+  const { user, ability } = await requireUserAbility();
+  const space = await prisma.space.findFirst({
     where: {
-      id,
+      AND: [accessibleBy(ability).Space, { id }],
+    },
+    include: {
+      subscription: {
+        where: {
+          active: true,
+        },
+      },
+      members: {
+        where: {
+          userId: user.id,
+        },
+      },
     },
   });
+
+  if (!space) {
+    throw new Error(`User ${user.id} does not have access to space ${id}`);
+  }
+
+  return {
+    id: space.id,
+    name: space.name,
+    ownerId: space.ownerId,
+    isPro: Boolean(space.subscription?.active),
+    role: space.members[0].role,
+  } satisfies SpaceDTO;
 });
