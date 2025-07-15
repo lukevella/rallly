@@ -35,6 +35,7 @@ model SpaceMember {
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([spaceId, userId])
-  @@index([spaceId])
+  @@index([spaceId], type: Hash, map: "space_members_space_id_idx")
+  @@index([userId], type: Hash, map: "space_members_user_id_idx")
   @@map("space_members")
 }
