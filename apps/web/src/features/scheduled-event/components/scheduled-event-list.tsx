@@ -1,10 +1,5 @@
 "use client";
 
-import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
-import { StackedList } from "@/components/stacked-list";
-import { Trans } from "@/components/trans";
-import { useSafeAction } from "@/features/safe-action/client";
-import { FormattedDateTime } from "@/features/timezone/client/formatted-date-time";
 import type { ScheduledEventStatus } from "@rallly/database";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
@@ -16,6 +11,11 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import { MoreHorizontalIcon, XIcon } from "lucide-react";
+import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
+import { StackedList } from "@/components/stacked-list";
+import { Trans } from "@/components/trans";
+import { useSafeAction } from "@/features/safe-action/client";
+import { FormattedDateTime } from "@/features/timezone/client/formatted-date-time";
 import { cancelEventAction } from "../actions";
 
 export const ScheduledEventList = StackedList;

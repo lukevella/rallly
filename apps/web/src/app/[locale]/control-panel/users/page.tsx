@@ -1,3 +1,6 @@
+import { type Prisma, prisma } from "@rallly/database";
+import { UsersIcon } from "lucide-react";
+import z from "zod";
 import { PageIcon } from "@/app/components/page-icons";
 import { requireAdmin } from "@/auth/queries";
 import {
@@ -16,9 +19,6 @@ import { Pagination } from "@/components/pagination";
 import { StackedList } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
-import { type Prisma, prisma } from "@rallly/database";
-import { UsersIcon } from "lucide-react";
-import z from "zod";
 import { UserRow } from "./user-row";
 import { UserSearchInput } from "./user-search-input";
 import { UsersTabbedView } from "./users-tabbed-view";
@@ -102,7 +102,7 @@ export default async function AdminPage(props: {
   const searchParams = await props.searchParams;
   const { page, pageSize } = searchParamsSchema.parse(searchParams);
 
-  const { adminUser, allUsers, totalUsers } = await loadData({
+  const { allUsers, totalUsers } = await loadData({
     page,
     pageSize,
     q: searchParams.q ? String(searchParams.q) : undefined,

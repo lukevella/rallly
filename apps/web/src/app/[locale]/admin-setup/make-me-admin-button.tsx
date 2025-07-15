@@ -1,8 +1,8 @@
 "use client";
 
+import { Button } from "@rallly/ui/button";
 import { Trans } from "@/components/trans";
 import { useSafeAction } from "@/features/safe-action/client";
-import { Button } from "@rallly/ui/button";
 import { makeMeAdminAction } from "./actions";
 
 export function MakeMeAdminButton() {

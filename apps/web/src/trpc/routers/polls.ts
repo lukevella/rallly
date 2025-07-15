@@ -8,12 +8,10 @@ import dayjs from "dayjs";
 import * as ics from "ics";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-
-import { moderateContent } from "@/features/moderation";
-import { getEmailClient } from "@/utils/emails";
-
 import { getActiveSpace } from "@/auth/queries";
+import { moderateContent } from "@/features/moderation";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
+import { getEmailClient } from "@/utils/emails";
 import {
   createRateLimitMiddleware,
   possiblyPublicProcedure,
@@ -120,7 +118,7 @@ export const polls = router({
         },
       });
 
-      let nextCursor: typeof cursor | undefined = undefined;
+      let nextCursor: typeof cursor | undefined;
       if (polls.length > input.limit) {
         const nextItem = polls.pop();
         nextCursor = nextItem?.id;
@@ -764,7 +762,6 @@ export const polls = router({
         }> = [];
 
         if (input.notify === "all") {
-          // biome-ignore lint/complexity/noForEach: Fix this later
           poll.participants.forEach((p) => {
             if (p.email) {
               participantsToEmail.push({
@@ -778,7 +775,6 @@ export const polls = router({
         }
 
         if (input.notify === "attendees") {
-          // biome-ignore lint/complexity/noForEach: Fix this later
           attendees.forEach((p) => {
             if (p.email) {
               participantsToEmail.push({

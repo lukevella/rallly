@@ -1,9 +1,7 @@
 import { usePostHog } from "@rallly/posthog/client";
-
+import { toast } from "@rallly/ui/sonner";
 import { usePoll } from "@/components/poll-context";
 import { trpc } from "@/trpc/client";
-
-import { toast } from "@rallly/ui/sonner";
 import type { ParticipantForm } from "./types";
 
 export const normalizeVotes = (

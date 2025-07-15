@@ -23,7 +23,7 @@ export function isValidName(value: string) {
   }
 
   // Check for phone number patterns (various formats)
-  const phonePattern = /\+?[\d\s\(\)\-\.]{7,}/;
+  const phonePattern = /\+?[\d\s()\-.]{7,}/;
   if (phonePattern.test(value)) {
     return false;
   }

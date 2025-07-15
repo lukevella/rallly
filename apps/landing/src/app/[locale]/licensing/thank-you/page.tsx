@@ -1,6 +1,6 @@
-import { Trans } from "@/i18n/client/trans";
 import Image from "next/image";
 import Link from "next/link";
+import { Trans } from "@/i18n/client/trans";
 
 export default function LicensingThankYouPage() {
   return (

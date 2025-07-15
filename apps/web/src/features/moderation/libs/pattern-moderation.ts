@@ -10,7 +10,7 @@ export function containsSuspiciousPatterns(text: string) {
   const repetitiveCharsPattern = /(.)\1{4,}/;
   const allCapsPattern = /[A-Z]{5,}/;
   const excessiveSpecialCharsPattern =
-    /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{4,}/;
+    /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]{4,}/;
   const suspiciousUrlPattern = /(bit\.ly|tinyurl|goo\.gl|t\.co|is\.gd)/i;
 
   // Email address pattern
@@ -18,7 +18,7 @@ export function containsSuspiciousPatterns(text: string) {
 
   // Comprehensive phone number pattern covering various formats
   const phoneNumberPattern =
-    /(\+?\d{1,3}[-.\s]?)?(\d{3}[-.\s]?)?\d{3}[-.\s]?\d{4}|\+\d[\d\s\-\.]{5,14}|\+\d{6,15}/i;
+    /(\+?\d{1,3}[-.\s]?)?(\d{3}[-.\s]?)?\d{3}[-.\s]?\d{4}|\+\d[\d\s\-.]{5,14}|\+\d{6,15}/i;
 
   // Detect suspicious Unicode patterns - simplified version without surrogate pairs
   const suspiciousUnicodePattern =

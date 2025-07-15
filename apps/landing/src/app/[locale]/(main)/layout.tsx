@@ -14,12 +14,10 @@ import type { Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
-
-import { getTranslation } from "@/i18n/server";
-import { linkToApp } from "@/lib/linkToApp";
-
 import { LoginButton } from "@/components/login-button";
 import { SignUpButton } from "@/components/sign-up-button";
+import { getTranslation } from "@/i18n/server";
+import { linkToApp } from "@/lib/linkToApp";
 import { Footer } from "./footer";
 import { NavLink } from "./nav-link";
 

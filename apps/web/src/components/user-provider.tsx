@@ -1,7 +1,7 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
-import { signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { signIn, signOut } from "next-auth/react";
 import React from "react";
 
 import { useTranslation } from "@/i18n/client";

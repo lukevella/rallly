@@ -3,9 +3,8 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { GoogleProvider } from "@/auth/providers/google";
 import { MicrosoftProvider } from "@/auth/providers/microsoft";
 import { OIDCProvider } from "@/auth/providers/oidc";
-import { getTranslation } from "@/i18n/server";
-
 import { getInstanceSettings } from "@/features/instance-settings/queries";
+import { getTranslation } from "@/i18n/server";
 import {
   AuthPageContainer,
   AuthPageContent,

@@ -4,9 +4,9 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { EmailLayout } from "../components/email-layout";
 import {
   Button,
+  borderColor,
   Heading,
   Text,
-  borderColor,
 } from "../components/styled-components";
 import type { EmailContext } from "../types";
 

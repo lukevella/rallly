@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslation } from "@/i18n/client";
 import { Icon } from "@rallly/ui/icon";
 import {
   SidebarMenu,
@@ -10,6 +9,7 @@ import {
 import { BarChart2Icon, CalendarIcon, HomeIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslation } from "@/i18n/client";
 
 const useSpaceMenuItems = () => {
   const { t } = useTranslation();

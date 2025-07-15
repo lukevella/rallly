@@ -1,4 +1,4 @@
-import type { Namespace, i18n } from "i18next";
+import type { i18n, Namespace } from "i18next";
 import { createInstance } from "i18next";
 import ICU from "i18next-icu";
 import { initReactI18next } from "react-i18next/initReactI18next";

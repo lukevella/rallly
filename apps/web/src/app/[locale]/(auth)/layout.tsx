@@ -2,9 +2,9 @@ import { cn } from "@rallly/ui";
 import { DotPattern } from "@rallly/ui/dot-pattern";
 
 import {
+  isQuickCreateEnabled,
   QuickCreateButton,
   QuickCreateWidget,
-  isQuickCreateEnabled,
 } from "@/features/quick-create";
 
 export default async function Layout({

@@ -2,18 +2,16 @@ import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import { generateOtp } from "@rallly/utils/nanoid";
 import * as Sentry from "@sentry/nextjs";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-
 import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
 import { isTemporaryEmail } from "@/auth/helpers/temp-email-domains";
+import { getInstanceSettings } from "@/features/instance-settings/queries";
+import { createUser } from "@/features/user/mutations";
 import { getEmailClient } from "@/utils/emails";
 import { isValidName } from "@/utils/is-valid-name";
 import { createToken, decryptToken } from "@/utils/session";
-
-import { getInstanceSettings } from "@/features/instance-settings/queries";
-import { createUser } from "@/features/user/mutations";
-import { TRPCError } from "@trpc/server";
 import { createRateLimitMiddleware, publicProcedure, router } from "../trpc";
 import type { RegistrationTokenPayload } from "../types";
 

@@ -5,8 +5,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import {
-  QuickCreateWidget,
   isQuickCreateEnabled,
+  QuickCreateWidget,
 } from "@/features/quick-create";
 import { getTranslation } from "@/i18n/server";
 

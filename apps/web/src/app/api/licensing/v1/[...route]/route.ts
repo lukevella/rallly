@@ -1,20 +1,20 @@
+import { zValidator } from "@hono/zod-validator";
+import { RedisStore } from "@hono-rate-limiter/redis";
+import { prisma } from "@rallly/database";
+import { kv } from "@vercel/kv";
+import { Hono } from "hono";
+import { bearerAuth } from "hono/bearer-auth";
+import { handle } from "hono/vercel";
+import { rateLimiter } from "hono-rate-limiter";
 import { env } from "@/env";
 import { generateLicenseKey } from "@/features/licensing/helpers/generate-license-key";
 import {
   type CreateLicenseResponse,
-  type ValidateLicenseKeyResponse,
   createLicenseInputSchema,
+  type ValidateLicenseKeyResponse,
   validateLicenseKeyInputSchema,
 } from "@/features/licensing/schema";
 import { isSelfHosted } from "@/utils/constants";
-import { RedisStore } from "@hono-rate-limiter/redis";
-import { zValidator } from "@hono/zod-validator";
-import { prisma } from "@rallly/database";
-import { kv } from "@vercel/kv";
-import { Hono } from "hono";
-import { rateLimiter } from "hono-rate-limiter";
-import { bearerAuth } from "hono/bearer-auth";
-import { handle } from "hono/vercel";
 
 const isKvAvailable =
   process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN;

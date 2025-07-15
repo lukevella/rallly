@@ -1,9 +1,8 @@
 import { faker } from "@faker-js/faker";
 import type { ScheduledEventInviteStatus } from "@prisma/client";
 import { ScheduledEventStatus } from "@prisma/client"; // Ensure Prisma is imported
-import dayjs from "dayjs";
-
 import { prisma } from "@rallly/database";
+import dayjs from "dayjs";
 import { randInt } from "./utils";
 
 // Realistic event titles and descriptions
@@ -155,7 +154,7 @@ export async function seedScheduledEvents(userId: string) {
     throw new Error(`No space found for user ${userId}`);
   }
 
-  const eventPromises = Array.from({ length: 15 }).map((_, i) =>
+  const eventPromises = Array.from({ length: 15 }).map(() =>
     createScheduledEventForUser({ userId, spaceId: space.id }),
   );
 

@@ -1,9 +1,5 @@
 "use client";
 
-import { ProBadge } from "@/components/pro-badge";
-import { Trans } from "@/components/trans";
-import { useSafeAction } from "@/features/safe-action/client";
-import { setActiveSpaceAction } from "@/features/spaces/actions";
 import { cn } from "@rallly/ui";
 import { useDialog } from "@rallly/ui/dialog";
 import {
@@ -18,6 +14,10 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { CirclePlusIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
+import { ProBadge } from "@/components/pro-badge";
+import { Trans } from "@/components/trans";
+import { useSafeAction } from "@/features/safe-action/client";
+import { setActiveSpaceAction } from "@/features/spaces/actions";
 import { NewSpaceDialog } from "./new-space-dialog";
 import { SpaceIcon } from "./space-icon";
 

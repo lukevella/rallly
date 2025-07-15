@@ -1,9 +1,9 @@
 "use server";
 
-import { ActionError, authActionClient } from "@/features/safe-action/server";
-import { signOut } from "@/next-auth";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { ActionError, authActionClient } from "@/features/safe-action/server";
+import { signOut } from "@/next-auth";
 
 export const deleteCurrentUserAction = authActionClient
   .metadata({ actionName: "delete_current_user" })

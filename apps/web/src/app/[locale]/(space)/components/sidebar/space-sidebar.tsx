@@ -1,12 +1,3 @@
-import { SpaceSidebarMenu } from "@/app/[locale]/(space)/components/sidebar/space-sidebar-menu";
-import { LogoLink } from "@/app/components/logo-link";
-import { getActiveSpace, requireUserAbility } from "@/auth/queries";
-import { Trans } from "@/components/trans";
-import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
-import { SpaceDropdown } from "@/features/spaces/components/space-dropdown";
-import { SpaceIcon } from "@/features/spaces/components/space-icon";
-import { isSpacesEnabled } from "@/features/spaces/constants";
-import { loadSpaces } from "@/features/spaces/queries";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import {
@@ -21,6 +12,15 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { ChevronsUpDownIcon, PlusIcon, SparklesIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
+import { SpaceSidebarMenu } from "@/app/[locale]/(space)/components/sidebar/space-sidebar-menu";
+import { LogoLink } from "@/app/components/logo-link";
+import { getActiveSpace, requireUserAbility } from "@/auth/queries";
+import { Trans } from "@/components/trans";
+import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
+import { SpaceDropdown } from "@/features/spaces/components/space-dropdown";
+import { SpaceIcon } from "@/features/spaces/components/space-icon";
+import { isSpacesEnabled } from "@/features/spaces/constants";
+import { loadSpaces } from "@/features/spaces/queries";
 import { UpgradeButton } from "../upgrade-button";
 import { NavUser } from "./nav-user";
 

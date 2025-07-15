@@ -9,18 +9,16 @@ import {
   CardTitle,
 } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
+import { toast } from "@rallly/ui/sonner";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useUnmount } from "react-use";
-
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
-
-import { toast } from "@rallly/ui/sonner";
 import type { NewEventData } from "./forms";
 import { PollDetailsForm, PollOptionsForm } from "./forms";
 

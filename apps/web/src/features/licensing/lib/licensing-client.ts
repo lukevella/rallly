@@ -1,7 +1,7 @@
 import {
   type CreateLicenseInput,
-  type ValidateLicenseInputKeySchema,
   createLicenseResponseSchema,
+  type ValidateLicenseInputKeySchema,
   validateLicenseKeyResponseSchema,
 } from "../schema";
 

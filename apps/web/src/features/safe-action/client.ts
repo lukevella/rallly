@@ -1,7 +1,7 @@
 "use client";
-import { useTranslation } from "@/i18n/client";
 import { toast } from "@rallly/ui/sonner";
 import { useAction } from "next-safe-action/hooks";
+import { useTranslation } from "@/i18n/client";
 
 export const useSafeAction: typeof useAction = (action, options) => {
   const { t } = useTranslation();

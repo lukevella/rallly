@@ -1,7 +1,7 @@
+import type { NextRequest } from "next/server";
 import { rateLimit } from "@/features/rate-limit";
 import { handlers } from "@/next-auth";
 import { withPosthog } from "@/utils/posthog";
-import type { NextRequest } from "next/server";
 
 export const GET = withPosthog(async (req: NextRequest) => {
   if (req.nextUrl.pathname.includes("callback/email")) {

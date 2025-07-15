@@ -1,6 +1,6 @@
 "use client";
-import type { SpaceDTO } from "@/features/spaces/queries";
 import React from "react";
+import type { SpaceDTO } from "@/features/spaces/queries";
 
 export const SpaceContext = React.createContext<SpaceDTO | null>(null);
 
@@ -17,7 +17,10 @@ export const useSpace = () => {
 export const SpaceProvider = ({
   space,
   children,
-}: { space: SpaceDTO; children?: React.ReactNode }) => {
+}: {
+  space: SpaceDTO;
+  children?: React.ReactNode;
+}) => {
   return (
     <SpaceContext.Provider value={space}>{children}</SpaceContext.Provider>
   );

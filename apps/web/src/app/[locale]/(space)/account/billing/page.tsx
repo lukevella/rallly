@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-
+import { requireUser } from "@/auth/queries";
 import {
   DescriptionDetails,
   DescriptionList,
@@ -30,10 +30,8 @@ import {
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
 import { FormattedDateTime } from "@/features/timezone/client/formatted-date-time";
-import { isSelfHosted } from "@/utils/constants";
-
-import { requireUser } from "@/auth/queries";
 import { getTranslation } from "@/i18n/server";
+import { isSelfHosted } from "@/utils/constants";
 import {
   SettingsContent,
   SettingsSection,

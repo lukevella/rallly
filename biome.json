@@ -1,14 +1,21 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
+  "$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "style": {
-        "noUselessElse": "off"
+        "noUselessElse": "off",
+        "noParameterAssign": "error",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error"
       },
       "correctness": {
         "noUnusedImports": {
@@ -53,6 +60,10 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignore": ["apps/landing/public/static/scripts/mailerlite.js"]
+    "includes": [
+      "packages/**",
+      "apps/**",
+      "!**/apps/landing/public/static/scripts/mailerlite.js"
+    ]
   }
 }

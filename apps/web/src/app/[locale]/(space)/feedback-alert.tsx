@@ -1,11 +1,10 @@
 "use client";
-import { useLocalStorage } from "react-use";
-
-import { Trans } from "@/components/trans";
 import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { HeartIcon } from "lucide-react";
 import Link from "next/link";
+import { useLocalStorage } from "react-use";
+import { Trans } from "@/components/trans";
 
 export function FeedbackAlert() {
   const [value, setValue] = useLocalStorage<string>("home_feedback_dismissed");

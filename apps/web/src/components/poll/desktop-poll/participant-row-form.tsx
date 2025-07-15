@@ -19,7 +19,7 @@ import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 
 import { usePoll } from "../../poll-context";
-import { VoteSelector, toggleVote } from "../vote-selector";
+import { toggleVote, VoteSelector } from "../vote-selector";
 
 export interface ParticipantRowFormProps {
   name?: string;
@@ -114,6 +114,7 @@ const ParticipantRowForm = ({
               name={`votes.${i}`}
               render={({ field }) => (
                 // biome-ignore lint/a11y/useKeyWithClickEvents: Fix later
+                // biome-ignore lint/a11y/noStaticElementInteractions: Fix later
                 <div
                   onClick={() => {
                     field.onChange({

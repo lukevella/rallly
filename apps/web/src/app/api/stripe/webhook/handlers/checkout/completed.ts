@@ -1,11 +1,11 @@
+import type { Stripe } from "@rallly/billing";
+import { stripe } from "@rallly/billing";
+import { posthog } from "@rallly/posthog/server";
 import { env } from "@/env";
 import { licensingClient } from "@/features/licensing/client";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
 import { subscriptionCheckoutMetadataSchema } from "@/features/subscription/schema";
 import { getEmailClient } from "@/utils/emails";
-import type { Stripe } from "@rallly/billing";
-import { stripe } from "@rallly/billing";
-import { posthog } from "@rallly/posthog/server";
 
 async function handleSubscriptionCheckoutSessionCompleted(
   checkoutSession: Stripe.Checkout.Session,

@@ -2,7 +2,7 @@ import { Column, Row, Section } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { EmailLayout } from "../components/email-layout";
-import { Heading, Text, borderColor } from "../components/styled-components";
+import { borderColor, Heading, Text } from "../components/styled-components";
 import type { EmailContext } from "../types";
 
 export interface EventCanceledEmailProps {

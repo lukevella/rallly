@@ -1,14 +1,16 @@
+import { SidebarInset } from "@rallly/ui/sidebar";
 import { requireAdmin } from "@/auth/queries";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { getTranslation } from "@/i18n/server";
-import { SidebarInset } from "@rallly/ui/sidebar";
 import { ControlPanelSidebarProvider } from "./control-panel-sidebar-provider";
 import { ControlPanelSidebar } from "./sidebar";
 
 export default async function AdminLayout({
   children,
-}: { children: React.ReactNode }) {
+}: {
+  children: React.ReactNode;
+}) {
   await requireAdmin();
 
   return (

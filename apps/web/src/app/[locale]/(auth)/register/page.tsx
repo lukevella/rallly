@@ -1,9 +1,8 @@
+import { notFound } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { getTranslation } from "@/i18n/server";
-
 import { getInstanceSettings } from "@/features/instance-settings/queries";
-import { notFound } from "next/navigation";
+import { getTranslation } from "@/i18n/server";
 import {
   AuthPageContainer,
   AuthPageContent,

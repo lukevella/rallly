@@ -1,9 +1,9 @@
-import { getActiveSpace } from "@/auth/queries";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { cache } from "react";
+import { getActiveSpace } from "@/auth/queries";
 import type { Status } from "./schema";
 
 dayjs.extend(utc);
@@ -27,7 +27,6 @@ function getEventsWhereInput({
   const now = new Date();
 
   const todayStart = dayjs().startOf("day").utc().toDate();
-  const todayEnd = dayjs().endOf("day").utc().toDate();
 
   const where: Prisma.ScheduledEventWhereInput = {
     spaceId,

@@ -1,3 +1,14 @@
+import { Button } from "@rallly/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@rallly/ui/dialog";
+import { Icon } from "@rallly/ui/icon";
+import dayjs from "dayjs";
+import { KeySquareIcon, PlusIcon, ShoppingBagIcon } from "lucide-react";
 import { PageIcon } from "@/app/components/page-icons";
 import { requireAdmin } from "@/auth/queries";
 import {
@@ -18,17 +29,6 @@ import { LicenseKeyForm } from "@/features/licensing/components/license-key-form
 import { RemoveLicenseButton } from "@/features/licensing/components/remove-license-button";
 import { getLicense } from "@/features/licensing/queries";
 import { getTranslation } from "@/i18n/server";
-import { Button } from "@rallly/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@rallly/ui/dialog";
-import { Icon } from "@rallly/ui/icon";
-import dayjs from "dayjs";
-import { KeySquareIcon, PlusIcon, ShoppingBagIcon } from "lucide-react";
 
 async function loadData() {
   await requireAdmin();
@@ -40,19 +40,11 @@ function DescriptionList({ children }: { children: React.ReactNode }) {
   return <dl>{children}</dl>;
 }
 
-function DescriptionListTitle({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function DescriptionListTitle({ children }: { children: React.ReactNode }) {
   return <dt className="mb-1 text-muted-foreground text-xs">{children}</dt>;
 }
 
-function DescriptionListValue({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function DescriptionListValue({ children }: { children: React.ReactNode }) {
   return <dd className="mb-4 font-mono text-sm">{children}</dd>;
 }
 

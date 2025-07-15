@@ -1,9 +1,8 @@
 "use server";
-import { authActionClient } from "@/features/safe-action/server";
-import { ActionError } from "@/features/safe-action/server";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { redirect } from "next/navigation";
+import { ActionError, authActionClient } from "@/features/safe-action/server";
 
 export const makeMeAdminAction = authActionClient
   .metadata({ actionName: "make_admin" })

@@ -59,7 +59,6 @@ export const PollContextProvider: React.FunctionComponent<{
     (optionId: string) => {
       return (participants ?? []).reduce(
         (acc, curr) => {
-          // biome-ignore lint/complexity/noForEach: Fix this later
           curr.votes.forEach((vote) => {
             if (vote.optionId !== optionId) {
               return;
@@ -104,7 +103,6 @@ export const PollContextProvider: React.FunctionComponent<{
     );
 
     const participantsByOptionId: Record<string, Participant[]> = {};
-    // biome-ignore lint/complexity/noForEach: Fix this later
     poll.options.forEach((option) => {
       participantsByOptionId[option.id] = (participants ?? []).filter(
         (participant) =>

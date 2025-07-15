@@ -2,16 +2,15 @@
 
 import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
+import { toast } from "@rallly/ui/sonner";
 import React, { useState } from "react";
 import { z } from "zod";
-
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { useFeatureFlag } from "@/features/feature-flags/client";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
-import { toast } from "@rallly/ui/sonner";
 
 const allowedMimeTypes = z.enum(["image/jpeg", "image/png"]);
 

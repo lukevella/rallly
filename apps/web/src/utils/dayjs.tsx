@@ -1,6 +1,7 @@
 "use client";
 
 import type { TimeFormat } from "@rallly/database";
+import type { SupportedLocale } from "@rallly/languages";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import duration from "dayjs/plugin/duration";
@@ -16,12 +17,9 @@ import updateLocale from "dayjs/plugin/updateLocale";
 import utc from "dayjs/plugin/utc";
 import * as React from "react";
 import { useAsync } from "react-use";
-
 import { usePreferences } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
 import { getBrowserTimeZone, normalizeTimeZone } from "@/utils/date-time-utils";
-
-import type { SupportedLocale } from "@rallly/languages";
 import { useRequiredContext } from "../components/use-required-context";
 
 const dayjsLocales: Record<

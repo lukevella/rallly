@@ -30,13 +30,14 @@ import type { Feedback } from "../schema";
 import { feedbackSchema } from "../schema";
 
 export function FeedbackToggle() {
+  const form = useForm<Feedback>({
+    resolver: zodResolver(feedbackSchema),
+  });
+
   if (isSelfHosted) {
     return null;
   }
 
-  const form = useForm<Feedback>({
-    resolver: zodResolver(feedbackSchema),
-  });
   return (
     <Dialog>
       <Tooltip>
