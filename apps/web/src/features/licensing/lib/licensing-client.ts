@@ -1,7 +1,9 @@
+import type {
+  CreateLicenseInput,
+  ValidateLicenseInputKeySchema,
+} from "../schema";
 import {
-  type CreateLicenseInput,
   createLicenseResponseSchema,
-  type ValidateLicenseInputKeySchema,
   validateLicenseKeyResponseSchema,
 } from "../schema";
 

@@ -1,10 +1,7 @@
 import type { PureAbility } from "@casl/ability";
 import { AbilityBuilder } from "@casl/ability";
-import {
-  createPrismaAbility,
-  type PrismaQuery,
-  type Subjects,
-} from "@casl/prisma";
+import type { PrismaQuery, Subjects } from "@casl/prisma";
+import { createPrismaAbility } from "@casl/prisma";
 import type {
   Comment,
   Participant,

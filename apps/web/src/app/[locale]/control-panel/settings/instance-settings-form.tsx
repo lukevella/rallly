@@ -27,10 +27,8 @@ import {
 } from "@/components/settings-group";
 import { Trans } from "@/components/trans";
 import { updateInstanceSettings } from "@/features/instance-settings/mutations";
-import {
-  type InstanceSettings,
-  instanceSettingsSchema,
-} from "@/features/instance-settings/schema";
+import type { InstanceSettings } from "@/features/instance-settings/schema";
+import { instanceSettingsSchema } from "@/features/instance-settings/schema";
 import { useTranslation } from "@/i18n/client";
 
 export function InstanceSettingsForm({

@@ -1,7 +1,8 @@
 "use client";
 
 import { cn } from "@rallly/ui";
-import { Avatar, AvatarFallback, type AvatarProps } from "@rallly/ui/avatar";
+import type { AvatarProps } from "@rallly/ui/avatar";
+import { Avatar, AvatarFallback } from "@rallly/ui/avatar";
 
 type SpaceIconProps = {
   name: string;

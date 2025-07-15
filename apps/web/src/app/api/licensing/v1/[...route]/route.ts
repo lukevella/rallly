@@ -8,10 +8,12 @@ import { handle } from "hono/vercel";
 import { rateLimiter } from "hono-rate-limiter";
 import { env } from "@/env";
 import { generateLicenseKey } from "@/features/licensing/helpers/generate-license-key";
+import type {
+  CreateLicenseResponse,
+  ValidateLicenseKeyResponse,
+} from "@/features/licensing/schema";
 import {
-  type CreateLicenseResponse,
   createLicenseInputSchema,
-  type ValidateLicenseKeyResponse,
   validateLicenseKeyInputSchema,
 } from "@/features/licensing/schema";
 import { isSelfHosted } from "@/utils/constants";

@@ -1,6 +1,7 @@
 "use server";
 
-import { type InstanceSettings, prisma } from "@rallly/database";
+import type { InstanceSettings } from "@rallly/database";
+import { prisma } from "@rallly/database";
 import { revalidateTag } from "next/cache";
 import { requireAdmin } from "@/auth/queries";
 import { instanceSettingsTag } from "./constants";
