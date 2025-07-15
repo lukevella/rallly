@@ -15,13 +15,16 @@
         "useSingleVarDeclarator": "error",
         "noUnusedTemplateLiteral": "error",
         "useNumberNamespace": "error",
-        "noInferrableTypes": "error"
+        "noInferrableTypes": "error",
+        "useImportType": {
+          "options": {
+            "style": "separatedType"
+          },
+          "level": "error"
+        }
       },
       "correctness": {
-        "noUnusedImports": {
-          "level": "error",
-          "fix": "unsafe"
-        }
+        "noUnusedImports": "error"
       },
       "nursery": {
         "useSortedClasses": {

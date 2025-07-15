@@ -1,4 +1,5 @@
-import { type Prisma, prisma } from "@rallly/database";
+import type { Prisma } from "@rallly/database";
+import { prisma } from "@rallly/database";
 import { UsersIcon } from "lucide-react";
 import z from "zod";
 import { PageIcon } from "@/app/components/page-icons";

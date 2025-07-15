@@ -1,7 +1,8 @@
 "use server";
 
 import { requireUser } from "@/auth/queries";
-import { type Feedback, feedbackSchema } from "@/features/feedback/schema";
+import type { Feedback } from "@/features/feedback/schema";
+import { feedbackSchema } from "@/features/feedback/schema";
 import { getEmailClient } from "@/utils/emails";
 
 import { rateLimit } from "../rate-limit";

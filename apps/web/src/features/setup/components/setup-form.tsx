@@ -21,7 +21,8 @@ import { useTimezone } from "@/features/timezone";
 import { useTranslation } from "@/i18n/client";
 
 import { completeSetupAction } from "../actions";
-import { type SetupFormValues, setupSchema } from "../schema";
+import type { SetupFormValues } from "../schema";
+import { setupSchema } from "../schema";
 
 interface SetupFormProps {
   defaultValues?: Partial<SetupFormValues>;

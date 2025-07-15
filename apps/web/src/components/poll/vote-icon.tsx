@@ -1,6 +1,7 @@
 import type { VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
-import { cva, type VariantProps } from "class-variance-authority";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { IfNeedBeIcon } from "@/components/vote-icon/if-need-be-icon";
 import { NoIcon } from "@/components/vote-icon/no-icon";
 import { PendingIcon } from "@/components/vote-icon/pending-icon";

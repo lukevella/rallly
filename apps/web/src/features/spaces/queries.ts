@@ -1,5 +1,6 @@
 import { accessibleBy } from "@casl/prisma";
-import { prisma, type SpaceMemberRole } from "@rallly/database";
+import type { SpaceMemberRole } from "@rallly/database";
+import { prisma } from "@rallly/database";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import { requireUserAbility } from "@/auth/queries";

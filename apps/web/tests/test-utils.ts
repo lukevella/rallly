@@ -1,5 +1,6 @@
 import type { Page } from "@playwright/test";
-import { prisma, type UserRole } from "@rallly/database";
+import type { UserRole } from "@rallly/database";
+import { prisma } from "@rallly/database";
 import { LoginPage } from "./login-page";
 
 export async function createUserInDb({
