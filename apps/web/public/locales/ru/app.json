@@ -122,7 +122,6 @@
   "editDetailsDescription": "Изменить детали вашего события.",
   "finalizeDescription": "Выбрать итоговую дату вашего события.",
   "notificationsGuestTooltip": "Создайте аккаунт или войдите, чтобы включить уведомления",
-  "planFree": "Бесплатный",
   "dateAndTimeDescription": "Изменить настройки даты и времени",
   "createdTime": "Создано {relativeTime}",
   "permissionDeniedParticipant": "Если этот опрос создали не вы, перейдите на страницу с приглашением.",
