@@ -95,7 +95,7 @@ const {
   },
   callbacks: {
     ...nextAuthConfig.callbacks,
-    async signIn({ user, email, profile, account }) {
+    async signIn({ user, email, profile }) {
       if (email?.verificationRequest) {
         const isRegisteredUser =
           (await prisma.user.count({

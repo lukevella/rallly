@@ -1,9 +1,9 @@
 "use server";
-import { ActionError, authActionClient } from "@/features/safe-action/server";
-import { getEmailClient } from "@/utils/emails";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { z } from "zod";
+import { ActionError, authActionClient } from "@/features/safe-action/server";
+import { getEmailClient } from "@/utils/emails";
 import { formatEventDateTime } from "./utils";
 
 export const cancelEventAction = authActionClient

@@ -10,8 +10,8 @@ import {
   FormItem,
   FormMessage,
 } from "@rallly/ui/form";
-import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 

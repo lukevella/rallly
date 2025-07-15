@@ -9,6 +9,7 @@ import {
   CommandList,
 } from "@rallly/ui/command";
 import { DialogDescription, DialogTitle, useDialog } from "@rallly/ui/dialog";
+import { Icon } from "@rallly/ui/icon";
 import {
   ArrowRightIcon,
   KeySquareIcon,
@@ -17,7 +18,6 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-
 import {
   BillingPageIcon,
   EventPageIcon,
@@ -28,17 +28,11 @@ import {
   ProfilePageIcon,
 } from "@/app/components/page-icons";
 import { Trans } from "@/components/trans";
-
 import { useUser } from "@/components/user-provider";
 import { useTranslation } from "@/i18n/client";
-import { Icon } from "@rallly/ui/icon";
 import { CommandGlobalShortcut } from "./command-global-shortcut";
 
-function NavigationCommandLabel({
-  label,
-}: {
-  label: string;
-}) {
+function NavigationCommandLabel({ label }: { label: string }) {
   return (
     <div>
       <Trans

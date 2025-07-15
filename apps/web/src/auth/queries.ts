@@ -1,9 +1,9 @@
+import { notFound, redirect } from "next/navigation";
+import { cache } from "react";
 import { defineAbilityFor } from "@/features/ability-manager";
 import { getDefaultSpace, getSpace } from "@/features/spaces/queries";
 import { getUser } from "@/features/user/queries";
 import { auth } from "@/next-auth";
-import { notFound, redirect } from "next/navigation";
-import { cache } from "react";
 
 /**
  * @deprecated - Use requireUserAbility() instead

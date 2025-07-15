@@ -1,5 +1,5 @@
 import { prisma } from "@rallly/database";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { notFound, redirect } from "next/navigation";
 
 import { PollLayout } from "@/components/layouts/poll-layout";

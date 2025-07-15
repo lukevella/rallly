@@ -6,7 +6,9 @@ export function FullWidthLayout({ children }: { children: React.ReactNode }) {
 
 export function FullWidthLayoutHeader({
   children,
-}: { children: React.ReactNode }) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <header className="sticky top-0 z-10 rounded-t-lg border-b bg-background/90 px-3 py-4 backdrop-blur-sm md:px-6">
       <div className="flex items-center gap-4">
@@ -21,14 +23,19 @@ export function FullWidthLayoutHeader({
 
 export function FullWidthLayoutContent({
   children,
-}: { children: React.ReactNode }) {
+}: {
+  children: React.ReactNode;
+}) {
   return <main className="p-3 pb-44 md:px-6 md:pt-6">{children}</main>;
 }
 
 export function FullWidthLayoutTitle({
   children,
   icon,
-}: { children: React.ReactNode; icon?: React.ReactNode }) {
+}: {
+  children: React.ReactNode;
+  icon?: React.ReactNode;
+}) {
   return (
     <div className="flex items-center gap-2.5">
       {icon}

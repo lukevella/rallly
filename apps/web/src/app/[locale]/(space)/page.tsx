@@ -1,6 +1,6 @@
+import { prisma } from "@rallly/database";
 import { Tile, TileDescription, TileGrid, TileTitle } from "@rallly/ui/tile";
 import Link from "next/link";
-
 import {
   BillingPageIcon,
   CreatePageIcon,
@@ -22,7 +22,6 @@ import { Trans } from "@/components/trans";
 import { IfCloudHosted } from "@/contexts/environment";
 import { getUpcomingEventsCount } from "@/features/scheduled-event/queries";
 import { getTranslation } from "@/i18n/server";
-import { prisma } from "@rallly/database";
 import { FeedbackAlert } from "./feedback-alert";
 
 async function loadData() {

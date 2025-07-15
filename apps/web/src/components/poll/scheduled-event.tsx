@@ -1,14 +1,13 @@
 "use client";
 
+import { Badge } from "@rallly/ui/badge";
 import { CalendarIcon } from "lucide-react";
-
 import { AddToCalendarButton } from "@/components/add-to-calendar-button";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { Trans } from "@/components/trans";
 import { IfParticipantsVisible } from "@/components/visibility";
 import { usePoll } from "@/contexts/poll";
 import { useDayjs } from "@/utils/dayjs";
-import { Badge } from "@rallly/ui/badge";
 
 function FinalDate({ start }: { start: Date }) {
   const poll = usePoll();

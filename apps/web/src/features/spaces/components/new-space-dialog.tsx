@@ -1,8 +1,4 @@
 "use client";
-import { Trans } from "@/components/trans";
-import { useSafeAction } from "@/features/safe-action/client";
-import { createSpaceAction } from "@/features/spaces/actions";
-import { useTranslation } from "@/i18n/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
 import {
@@ -26,6 +22,10 @@ import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Trans } from "@/components/trans";
+import { useSafeAction } from "@/features/safe-action/client";
+import { createSpaceAction } from "@/features/spaces/actions";
+import { useTranslation } from "@/i18n/client";
 
 const newSpaceFormSchema = z.object({
   name: z.string().min(1).max(100),

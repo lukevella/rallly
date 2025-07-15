@@ -2,6 +2,7 @@
 import posthog from "posthog-js";
 
 export { usePostHog } from "posthog-js/react";
+
 import { PostHogProvider as BasePostHogProvider } from "posthog-js/react";
 
 if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {

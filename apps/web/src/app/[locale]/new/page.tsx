@@ -5,10 +5,9 @@ import { PollPageIcon } from "@/app/components/page-icons";
 import { CreatePoll } from "@/components/create-poll";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
+import { getInstanceSettings } from "@/features/instance-settings/queries";
 import { getTranslation } from "@/i18n/server";
 import { getLoggedIn } from "@/next-auth";
-
-import { getInstanceSettings } from "@/features/instance-settings/queries";
 import { BackButton } from "./back-button";
 
 export default async function Page() {

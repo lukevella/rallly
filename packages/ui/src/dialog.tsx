@@ -1,12 +1,11 @@
 "use client";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { Slot } from "@radix-ui/react-slot";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { XIcon } from "lucide-react";
 import * as React from "react";
-
-import { Slot } from "@radix-ui/react-slot";
 import { Button } from "./button";
 import { Icon } from "./icon";
 import { cn } from "./lib/utils";

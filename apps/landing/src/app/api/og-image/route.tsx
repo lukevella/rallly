@@ -36,6 +36,7 @@ export async function GET(req: NextRequest) {
       <div tw="bg-gray-50 h-full flex-col w-full px-18 py-16 flex">
         <div tw="mb-16 flex justify-between">
           <div tw="flex justify-between items-center w-full">
+            {/** biome-ignore lint/performance/noImgElement: it's ok to use img here */}
             <img
               alt="Rallly"
               src="https://rallly.co/static/images/logo-color.svg"

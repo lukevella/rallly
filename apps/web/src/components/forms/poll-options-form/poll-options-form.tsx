@@ -96,196 +96,194 @@ const PollOptionsForm = ({
   const navigationDate = new Date(watchNavigationDate ?? Date.now());
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col justify-between gap-4 sm:flex-row">
-            <div>
-              <CardTitle>
-                <Trans i18nKey="calendar">Calendar</Trans>
-              </CardTitle>
-              <CardDescription>
-                <Trans i18nKey="selectPotentialDates">
-                  Select potential dates for your event
-                </Trans>
-              </CardDescription>
-            </div>
-            <div>
-              <FormField
-                control={form.control}
-                name="view"
-                render={({ field }) => (
-                  <Tabs value={field.value} onValueChange={field.onChange}>
-                    <TabsList className="w-full">
-                      <TabsTrigger className="grow" value="month">
-                        <CalendarIcon className="mr-2 size-4" />
-                        <Trans i18nKey="monthView" />
-                      </TabsTrigger>
-                      <TabsTrigger className="grow" value="week">
-                        <TableIcon className="mr-2 size-4" />
-                        <Trans i18nKey="weekView" />
-                      </TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                )}
-              />
-            </div>
+    <Card>
+      <CardHeader>
+        <div className="flex flex-col justify-between gap-4 sm:flex-row">
+          <div>
+            <CardTitle>
+              <Trans i18nKey="calendar">Calendar</Trans>
+            </CardTitle>
+            <CardDescription>
+              <Trans i18nKey="selectPotentialDates">
+                Select potential dates for your event
+              </Trans>
+            </CardDescription>
           </div>
-        </CardHeader>
-        <Dialog {...dateOrTimeRangeDialog.dialogProps}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                <Trans i18nKey="mixedOptionsTitle" />
-              </DialogTitle>
-            </DialogHeader>
-            <p className="text-sm">
-              <Trans i18nKey="mixedOptionsDescription" />
-            </p>
-            <DialogFooter>
-              <Button
-                onClick={() => {
-                  setValue(
-                    "options",
-                    watchOptions.filter((option) => option.type === "date"),
-                  );
-                  setValue("timeZone", "");
-                  dateOrTimeRangeDialog.dismiss();
+          <div>
+            <FormField
+              control={form.control}
+              name="view"
+              render={({ field }) => (
+                <Tabs value={field.value} onValueChange={field.onChange}>
+                  <TabsList className="w-full">
+                    <TabsTrigger className="grow" value="month">
+                      <CalendarIcon className="mr-2 size-4" />
+                      <Trans i18nKey="monthView" />
+                    </TabsTrigger>
+                    <TabsTrigger className="grow" value="week">
+                      <TableIcon className="mr-2 size-4" />
+                      <Trans i18nKey="weekView" />
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              )}
+            />
+          </div>
+        </div>
+      </CardHeader>
+      <Dialog {...dateOrTimeRangeDialog.dialogProps}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              <Trans i18nKey="mixedOptionsTitle" />
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-sm">
+            <Trans i18nKey="mixedOptionsDescription" />
+          </p>
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setValue(
+                  "options",
+                  watchOptions.filter((option) => option.type === "date"),
+                );
+                setValue("timeZone", "");
+                dateOrTimeRangeDialog.dismiss();
+              }}
+            >
+              <Trans i18nKey="mixedOptionsKeepDates" />
+            </Button>
+            <Button
+              onClick={() => {
+                setValue(
+                  "options",
+                  watchOptions.filter((option) => option.type === "timeSlot"),
+                );
+                if (!watchTimeZone) {
+                  setValue("timeZone", getBrowserTimeZone());
+                }
+                dateOrTimeRangeDialog.dismiss();
+              }}
+              variant="primary"
+            >
+              <Trans i18nKey="mixedOptionsKeepTimes" />
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <div>
+        <FormField
+          control={form.control}
+          name="options"
+          rules={{
+            validate: (options) => {
+              return options.length > 0
+                ? true
+                : t("calendarHelp", {
+                    defaultValue:
+                      "You can't create a poll without any options. Add at least one option to continue.",
+                  });
+            },
+          }}
+          render={({ field }) => (
+            <div>
+              <selectedView.Component
+                options={field.value}
+                date={navigationDate}
+                onNavigate={(date) => {
+                  setValue("navigationDate", date.toISOString());
                 }}
-              >
-                <Trans i18nKey="mixedOptionsKeepDates" />
-              </Button>
-              <Button
-                onClick={() => {
-                  setValue(
-                    "options",
-                    watchOptions.filter((option) => option.type === "timeSlot"),
-                  );
-                  if (!watchTimeZone) {
-                    setValue("timeZone", getBrowserTimeZone());
-                  }
-                  dateOrTimeRangeDialog.dismiss();
+                onChange={(options) => {
+                  field.onChange(options);
                 }}
-                variant="primary"
-              >
-                <Trans i18nKey="mixedOptionsKeepTimes" />
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        <div>
-          <FormField
-            control={form.control}
-            name="options"
-            rules={{
-              validate: (options) => {
-                return options.length > 0
-                  ? true
-                  : t("calendarHelp", {
-                      defaultValue:
-                        "You can't create a poll without any options. Add at least one option to continue.",
-                    });
-              },
-            }}
-            render={({ field }) => (
-              <div>
-                <selectedView.Component
-                  options={field.value}
-                  date={navigationDate}
-                  onNavigate={(date) => {
-                    setValue("navigationDate", date.toISOString());
-                  }}
-                  onChange={(options) => {
-                    field.onChange(options);
-                  }}
-                  duration={watchDuration}
-                  onChangeDuration={(duration) => {
-                    setValue("duration", duration);
+                duration={watchDuration}
+                onChangeDuration={(duration) => {
+                  setValue("duration", duration);
+                }}
+              />
+              {formState.errors.options ? (
+                <div className="border-t bg-red-50 p-3 text-center">
+                  <FormMessage />
+                </div>
+              ) : null}
+            </div>
+          )}
+        />
+      </div>
+      {!datesOnly ? (
+        <FormField
+          control={form.control}
+          name="timeZone"
+          render={({ field }) => (
+            <div
+              className={cn(
+                "grid items-center justify-between gap-2.5 border-t bg-gray-50 p-4 md:flex",
+              )}
+            >
+              <div className="flex h-9 items-center gap-x-2.5 p-2">
+                <Switch
+                  id="timeZone"
+                  disabled={disableTimeZoneChange}
+                  checked={!!field.value}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      field.onChange(getBrowserTimeZone());
+                    } else {
+                      field.onChange("");
+                    }
                   }}
                 />
-                {formState.errors.options ? (
-                  <div className="border-t bg-red-50 p-3 text-center">
-                    <FormMessage />
-                  </div>
-                ) : null}
-              </div>
-            )}
-          />
-        </div>
-        {!datesOnly ? (
-          <FormField
-            control={form.control}
-            name="timeZone"
-            render={({ field }) => (
-              <div
-                className={cn(
-                  "grid items-center justify-between gap-2.5 border-t bg-gray-50 p-4 md:flex",
-                )}
-              >
-                <div className="flex h-9 items-center gap-x-2.5 p-2">
-                  <Switch
-                    id="timeZone"
-                    disabled={disableTimeZoneChange}
-                    checked={!!field.value}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        field.onChange(getBrowserTimeZone());
-                      } else {
-                        field.onChange("");
-                      }
-                    }}
+                <Label htmlFor="timeZone">
+                  <Trans
+                    i18nKey="autoTimeZone"
+                    defaults="Automatic Time Zone Conversion"
                   />
-                  <Label htmlFor="timeZone">
+                </Label>
+                <Tooltip>
+                  <TooltipTrigger type="button">
+                    <InfoIcon className="size-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent className="w-72">
                     <Trans
-                      i18nKey="autoTimeZone"
-                      defaults="Automatic Time Zone Conversion"
+                      i18nKey="autoTimeZoneHelp"
+                      defaults="Enable this setting to automatically adjust event times to each participant's local time zone."
                     />
-                  </Label>
-                  <Tooltip>
-                    <TooltipTrigger type="button">
-                      <InfoIcon className="size-4 text-muted-foreground" />
-                    </TooltipTrigger>
-                    <TooltipContent className="w-72">
-                      <Trans
-                        i18nKey="autoTimeZoneHelp"
-                        defaults="Enable this setting to automatically adjust event times to each participant's local time zone."
-                      />
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-                {field.value ? (
-                  <div>
-                    <Button
-                      disabled={disableTimeZoneChange}
-                      onClick={() => {
-                        showTimeZoneCommandModal(true);
-                      }}
-                      variant="ghost"
-                    >
-                      <GlobeIcon className="size-4 text-muted-foreground" />
-                      {field.value}
-                    </Button>
-                    <CommandDialog
-                      open={isTimeZoneCommandModalOpen}
-                      onOpenChange={showTimeZoneCommandModal}
-                    >
-                      <TimeZoneCommand
-                        value={field.value}
-                        onSelect={(newValue) => {
-                          field.onChange(newValue);
-                          showTimeZoneCommandModal(false);
-                        }}
-                      />
-                    </CommandDialog>
-                  </div>
-                ) : null}
+                  </TooltipContent>
+                </Tooltip>
               </div>
-            )}
-          />
-        ) : null}
-        {children}
-      </Card>
-    </>
+              {field.value ? (
+                <div>
+                  <Button
+                    disabled={disableTimeZoneChange}
+                    onClick={() => {
+                      showTimeZoneCommandModal(true);
+                    }}
+                    variant="ghost"
+                  >
+                    <GlobeIcon className="size-4 text-muted-foreground" />
+                    {field.value}
+                  </Button>
+                  <CommandDialog
+                    open={isTimeZoneCommandModalOpen}
+                    onOpenChange={showTimeZoneCommandModal}
+                  >
+                    <TimeZoneCommand
+                      value={field.value}
+                      onSelect={(newValue) => {
+                        field.onChange(newValue);
+                        showTimeZoneCommandModal(false);
+                      }}
+                    />
+                  </CommandDialog>
+                </div>
+              ) : null}
+            </div>
+          )}
+        />
+      ) : null}
+      {children}
+    </Card>
   );
 };
 

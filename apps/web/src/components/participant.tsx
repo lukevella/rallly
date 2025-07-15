@@ -13,6 +13,7 @@ export const ParticipantName = ({
   const ref = React.useRef<HTMLDivElement>(null);
   const [isTruncated, setIsTruncated] = React.useState(false);
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: fix later
     <div
       ref={ref}
       onMouseEnter={() => {

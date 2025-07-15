@@ -1,8 +1,8 @@
 "use server";
-import { ActionError, authActionClient } from "@/features/safe-action/server";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { z } from "zod";
+import { ActionError, authActionClient } from "@/features/safe-action/server";
 import { getUser } from "./queries";
 
 export const changeRoleAction = authActionClient

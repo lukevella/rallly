@@ -1,8 +1,8 @@
 "use server";
 
-import { requireAdmin } from "@/auth/queries";
 import { type InstanceSettings, prisma } from "@rallly/database";
 import { revalidateTag } from "next/cache";
+import { requireAdmin } from "@/auth/queries";
 import { instanceSettingsTag } from "./constants";
 
 export async function updateInstanceSettings(data: Partial<InstanceSettings>) {

@@ -98,6 +98,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             const start = dayjs(props.event.start);
             const end = dayjs(props.event.end);
             return (
+              // biome-ignore lint/a11y/noStaticElementInteractions: fix later
               <div
                 // onClick prop doesn't work properly. Seems like some other element is cancelling the event before it reaches this element
                 onMouseUp={props.onClick}

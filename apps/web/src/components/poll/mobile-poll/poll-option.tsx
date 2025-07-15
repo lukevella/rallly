@@ -1,3 +1,6 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: fix later */
+/** biome-ignore-all lint/a11y/useKeyWithClickEvents: fix later */
+/** biome-ignore-all lint/a11y/useFocusableInteractive: fix later */
 "use client";
 import type { Participant, VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
@@ -114,8 +117,8 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   const [active, setActive] = React.useState(false);
   const [isExpanded, toggle] = useToggle(false);
   return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: Fix this later
     <div
+      role="button"
       className={cn("space-y-4 bg-white p-4", {
         "bg-gray-500/5": editable && active,
       })}

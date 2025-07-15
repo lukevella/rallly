@@ -3,11 +3,10 @@ import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
 import Link from "next/link";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { getOnboardedUser } from "@/features/setup/queries";
 import { TimezoneProvider } from "@/features/timezone/client/context";
-
-import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { SpaceSidebar } from "./components/sidebar/space-sidebar";
 import { SpaceSidebarProvider } from "./components/sidebar/space-sidebar-provider";
 import { TopBar, TopBarLeft, TopBarRight } from "./components/top-bar";

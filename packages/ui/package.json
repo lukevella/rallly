@@ -5,6 +5,8 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
+    "check": "biome check .",
+    "check:fix": "biome check . --write",
     "ui:add": "npx shadcn-ui@latest add",
     "type-check": "tsc --noEmit"
   },

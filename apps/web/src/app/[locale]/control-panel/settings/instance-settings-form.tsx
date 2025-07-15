@@ -1,19 +1,5 @@
 "use client";
 
-import {
-  SettingsGroup,
-  SettingsGroupContent,
-  SettingsGroupDescription,
-  SettingsGroupHeader,
-  SettingsGroupTitle,
-} from "@/components/settings-group";
-import { Trans } from "@/components/trans";
-import { updateInstanceSettings } from "@/features/instance-settings/mutations";
-import {
-  type InstanceSettings,
-  instanceSettingsSchema,
-} from "@/features/instance-settings/schema";
-import { useTranslation } from "@/i18n/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ActionBar,
@@ -32,6 +18,20 @@ import {
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
 import { useForm } from "react-hook-form";
+import {
+  SettingsGroup,
+  SettingsGroupContent,
+  SettingsGroupDescription,
+  SettingsGroupHeader,
+  SettingsGroupTitle,
+} from "@/components/settings-group";
+import { Trans } from "@/components/trans";
+import { updateInstanceSettings } from "@/features/instance-settings/mutations";
+import {
+  type InstanceSettings,
+  instanceSettingsSchema,
+} from "@/features/instance-settings/schema";
+import { useTranslation } from "@/i18n/client";
 
 export function InstanceSettingsForm({
   defaultValue,

@@ -1,11 +1,4 @@
 "use client";
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { StackedListItem } from "@/components/stacked-list";
-import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
-import { useSafeAction } from "@/features/safe-action/client";
-import { changeRoleAction } from "@/features/user/actions";
-import { userRoleSchema } from "@/features/user/schema";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
@@ -24,6 +17,13 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { MoreHorizontal, TrashIcon, UserPenIcon } from "lucide-react";
 import { useTransition } from "react";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { StackedListItem } from "@/components/stacked-list";
+import { Trans } from "@/components/trans";
+import { useUser } from "@/components/user-provider";
+import { useSafeAction } from "@/features/safe-action/client";
+import { changeRoleAction } from "@/features/user/actions";
+import { userRoleSchema } from "@/features/user/schema";
 import { DeleteUserDialog } from "./dialogs/delete-user-dialog";
 
 export function UserRow({

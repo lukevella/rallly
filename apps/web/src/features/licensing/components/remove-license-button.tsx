@@ -1,6 +1,5 @@
 "use client";
 
-import { Trans } from "@/components/trans";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -17,6 +16,7 @@ import { Icon } from "@rallly/ui/icon";
 import { XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { Trans } from "@/components/trans";
 import { removeInstanceLicense } from "../mutations";
 
 export function RemoveLicenseButton() {

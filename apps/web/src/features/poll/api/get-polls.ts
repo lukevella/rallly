@@ -1,6 +1,6 @@
-import { getActiveSpace } from "@/auth/queries";
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { getActiveSpace } from "@/auth/queries";
 
 type PollFilters = {
   status?: PollStatus;

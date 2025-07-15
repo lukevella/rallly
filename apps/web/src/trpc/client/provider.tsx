@@ -1,18 +1,16 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
+import { toast } from "@rallly/ui/sonner";
 import {
   MutationCache,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { TRPCClientError, httpBatchLink } from "@trpc/client";
+import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import superjson from "superjson";
-
 import { useTranslation } from "@/i18n/client";
-
-import { toast } from "@rallly/ui/sonner";
 import { trpc } from "../client";
 
 export function TRPCProvider(props: { children: React.ReactNode }) {

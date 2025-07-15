@@ -1,15 +1,11 @@
-import { defineAbilityFor } from "@/features/ability-manager";
-import { getUser } from "@/features/user/queries";
 import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
+import { defineAbilityFor } from "@/features/ability-manager";
+import { getUser } from "@/features/user/queries";
 
-const getActiveSpaceForUser = async ({
-  userId,
-}: {
-  userId: string;
-}) => {
+const getActiveSpaceForUser = async ({ userId }: { userId: string }) => {
   const user = await getUser(userId);
 
   if (!user) {

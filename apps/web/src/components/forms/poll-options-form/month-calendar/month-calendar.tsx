@@ -25,8 +25,6 @@ import { useFormContext } from "react-hook-form";
 import type { NewEventData } from "@/components/forms";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
-
-import type { DateTimeOption } from "..";
 import {
   expectTimeOption,
   getBrowserTimeZone,
@@ -35,6 +33,7 @@ import {
 } from "../../../../utils/date-time-utils";
 import DateCard from "../../../date-card";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
+import type { DateTimeOption } from "..";
 import type { DateTimePickerProps } from "../types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "../utils";
 import TimePicker from "./time-picker";
@@ -412,10 +411,8 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                     },
                                   );
                                   const newOptions: DateTimeOption[] = [];
-                                  // biome-ignore lint/complexity/noForEach: Fix this later
                                   Object.keys(optionsByDay).forEach(
                                     (dateString) => {
-                                      // biome-ignore lint/complexity/noForEach: Fix this later
                                       times.forEach((time) => {
                                         const start =
                                           dateString + time.startTime;

@@ -15,8 +15,8 @@ import { useForm } from "react-hook-form";
 
 import type { PollDetailsData } from "@/components/forms/poll-details-form";
 import { PollDetailsForm } from "@/components/forms/poll-details-form";
-import { usePoll } from "@/components/poll-context";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
+import { usePoll } from "@/components/poll-context";
 import { Trans } from "@/components/trans";
 
 const Page = () => {

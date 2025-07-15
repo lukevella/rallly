@@ -1,4 +1,4 @@
-import { type TimeFormat, prisma } from "@rallly/database";
+import { prisma, type TimeFormat } from "@rallly/database";
 
 export async function createUser({
   name,

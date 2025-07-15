@@ -10,6 +10,7 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { SearchInput } from "@/app/components/search-input";
+import { getActiveSpace } from "@/auth/queries";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -24,8 +25,6 @@ import { getScheduledEvents } from "@/features/scheduled-event/queries";
 import type { Status } from "@/features/scheduled-event/schema";
 import { statusSchema } from "@/features/scheduled-event/schema";
 import { getTranslation } from "@/i18n/server";
-
-import { getActiveSpace } from "@/auth/queries";
 import { EventsTabbedView } from "./events-tabbed-view";
 
 async function loadData({

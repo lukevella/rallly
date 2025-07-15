@@ -1,10 +1,10 @@
 "use client";
 
-import { Trans } from "@/i18n/client/trans";
-import { linkToApp } from "@/lib/linkToApp";
 import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import Link from "next/link";
+import { Trans } from "@/i18n/client/trans";
+import { linkToApp } from "@/lib/linkToApp";
 
 export const LoginButton = () => {
   const posthog = usePostHog();
