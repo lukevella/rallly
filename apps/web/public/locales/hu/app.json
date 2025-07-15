@@ -122,7 +122,6 @@
   "editDetailsDescription": "Változtasd meg az eseményed részleteit.",
   "finalizeDescription": "Válassz egy végleges dátumot az eseményedhez.",
   "notificationsGuestTooltip": "Hozz létre fiókot vagy lépj be, hogy bekapcsolhasd az értesítéseket",
-  "planFree": "Ingyenes",
   "dateAndTimeDescription": "Módosítsd a preferált dátum és idő beállításaid",
   "createdTime": "Létrehozva {relativeTime}",
   "permissionDeniedParticipant": "Ha nem te vagy a szavazás létrehozója, akkor a meghívás oldalra kell lépj.",
@@ -396,5 +395,10 @@
   "actionErrorNotFound": "Az erőforrás nem található",
   "actionErrorForbidden": "Nem vagy jogosult a művelet végrehajtására",
   "actionErrorInternalServerError": "Egy belső szerverhiba történt",
-  "cancelEvent": "Esemény lemondása"
+  "cancelEvent": "Esemény lemondása",
+  "createSpace": "Tér létrehozása",
+  "createSpaceDescription": "Hozz létre egy új teret a szavazásaid és eseményeid rendszerezésére.",
+  "createSpaceLoading": "Tér létrehozása...",
+  "createSpaceSuccess": "Tér létrehozva",
+  "createSpaceError": "Nem sikerült a tér létrehozása"
 }
