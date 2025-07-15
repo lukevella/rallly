@@ -121,7 +121,11 @@ export async function SpaceSidebar({
           name={user.name}
           image={user.image}
           plan={
-            <span className="capitalize">{activeSpace.role.toLowerCase()}</span>
+            user.isPro ? (
+              <Trans i18nKey="planPro" defaults="Pro" />
+            ) : (
+              <Trans i18nKey="planFree" defaults="Free" />
+            )
           }
         />
       </SidebarFooter>
