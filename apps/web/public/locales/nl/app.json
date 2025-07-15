@@ -122,7 +122,6 @@
   "editDetailsDescription": "Wijzig de details van je evenement.",
   "finalizeDescription": "Selecteer een einddatum voor je evenement.",
   "notificationsGuestTooltip": "Maak een account aan of log in om meldingen te krijgen",
-  "planFree": "Gratis",
   "dateAndTimeDescription": "Wijzig de datum- en tijdinstellingen",
   "createdTime": "Aangemaakt: {relativeTime}",
   "permissionDeniedParticipant": "Als je niet de maker van deze poll bent, moet je naar de uitnodigingspagina gaan.",
@@ -396,5 +395,10 @@
   "actionErrorNotFound": "Het bestand is niet gevonden",
   "actionErrorForbidden": "Je bent niet bevoegd om deze actie uit te voeren",
   "actionErrorInternalServerError": "Er is een interne serverfout opgetreden",
-  "cancelEvent": "Evenement annuleren"
+  "cancelEvent": "Evenement annuleren",
+  "createSpace": "Ruimte aanmaken",
+  "createSpaceDescription": "Maak een nieuwe ruimte aan om polls en evenementen te organiseren.",
+  "createSpaceLoading": "Ruimte aanmaken...",
+  "createSpaceSuccess": "Ruimte succesvol aangemaakt",
+  "createSpaceError": "Kan geen ruimte aanmaken"
 }
