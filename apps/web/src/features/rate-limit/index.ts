@@ -1,4 +1,4 @@
-"server-only";
+import "server-only";
 
 import { Ratelimit } from "@upstash/ratelimit";
 import { kv } from "@vercel/kv";

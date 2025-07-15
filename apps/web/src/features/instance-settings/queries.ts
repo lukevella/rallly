@@ -1,4 +1,5 @@
-"server-only";
+import "server-only";
+
 import { prisma } from "@rallly/database";
 import { unstable_cache } from "next/cache";
 import { instanceSettingsTag } from "./constants";
