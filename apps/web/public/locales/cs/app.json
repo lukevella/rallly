@@ -122,7 +122,6 @@
   "editDetailsDescription": "Změňte podrobnosti vaší události.",
   "finalizeDescription": "Vyberte konečné datum události.",
   "notificationsGuestTooltip": "Pro zasílání oznámení si vytvořte účet nebo se přihlaste",
-  "planFree": "Zdarma",
   "dateAndTimeDescription": "Upravte preferované nastavení data a času",
   "createdTime": "Vytvořeno {relativeTime}",
   "permissionDeniedParticipant": "Pokud nejste autorem hlasování, měli byste jít na stránku s pozvánkou.",
@@ -328,8 +327,5 @@
   "canceledEventsEmptyStateTitle": "Žádné zrušené události",
   "canceledEventsEmptyStateDescription": "Zde se zobrazí zrušené události.",
   "setupFormTitle": "Nastavení",
-  "setupFormDescription": "Dokončete vytváření svého účtu.",
-  "errorNotAuthenticated": "Nepřihlášený",
-  "errorInvalidFields": "Neplatná pole. Zkontrolujte zadání.",
-  "errorDatabaseUpdateFailed": "Chyba databáze: Nepodařilo se aktualizovat nastavení."
+  "setupFormDescription": "Dokončete vytváření svého účtu."
 }
