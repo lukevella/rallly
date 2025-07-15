@@ -11,15 +11,34 @@ export async function createUserInDb({
   name: string;
   role?: UserRole;
 }) {
-  return prisma.user.create({
-    data: {
-      email,
-      name,
-      role,
-      locale: "en",
-      timeZone: "Europe/London",
-      emailVerified: new Date(),
-    },
+  return await prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
+      data: {
+        email,
+        name,
+        role,
+        locale: "en",
+        timeZone: "Europe/London",
+        emailVerified: new Date(),
+      },
+    });
+
+    const space = await tx.space.create({
+      data: {
+        name: "Personal",
+        ownerId: user.id,
+      },
+    });
+
+    await tx.spaceMember.create({
+      data: {
+        spaceId: space.id,
+        userId: user.id,
+        role: "OWNER",
+      },
+    });
+
+    return user;
   });
 }
 
