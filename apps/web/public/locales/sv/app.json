@@ -122,7 +122,6 @@
   "editDetailsDescription": "Ändra detaljerna för ditt evenemang.",
   "finalizeDescription": "Välj ett slutdatum för ditt evenemang.",
   "notificationsGuestTooltip": "Skapa ett konto eller logga in för att aktivera aviseringar",
-  "planFree": "Gratis",
   "dateAndTimeDescription": "Ändra önskade datum- och tidsinställningar",
   "createdTime": "Skapad {relativeTime}",
   "permissionDeniedParticipant": "Om du inte är skaparen av enkäten bör du gå till inbjudningssidan.",
