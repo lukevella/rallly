@@ -122,7 +122,6 @@
   "editDetailsDescription": "更改活动详情",
   "finalizeDescription": "选择一个最终日期",
   "notificationsGuestTooltip": "创建帐户或登录以打开通知",
-  "planFree": "免费版",
   "dateAndTimeDescription": "设置您首选的日期和时间设置",
   "createdTime": "建立于 {relativeTime}",
   "permissionDeniedParticipant": "如果你不是投票创建者，你应该去邀请页面。",
