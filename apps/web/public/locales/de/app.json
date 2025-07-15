@@ -122,7 +122,6 @@
   "editDetailsDescription": "Änder die Details deiner Veranstaltung.",
   "finalizeDescription": "Wähle einen finalen Termin für deine Veranstaltung.",
   "notificationsGuestTooltip": "Erstelle ein Konto oder logge dich ein, um Benachrichtigungen einzuschalten",
-  "planFree": "Kostenlos",
   "dateAndTimeDescription": "Änder deine bevorzugten Datums- und Zeiteinstellungen",
   "createdTime": "{relativeTime} erstellt",
   "permissionDeniedParticipant": "Wenn du die Umfrage nicht erstellt hast, solltest du auf die Einladungsseite gehen.",
@@ -396,5 +395,10 @@
   "actionErrorNotFound": "Die Ressource wurde nicht gefunden",
   "actionErrorForbidden": "Du bist nicht berechtigt, diese Aktion auszuführen",
   "actionErrorInternalServerError": "Ein interner Serverfehler ist aufgetreten",
-  "cancelEvent": "Termin absagen"
+  "cancelEvent": "Termin absagen",
+  "createSpace": "Gruppe erstellen",
+  "createSpaceDescription": "Erstelle eine Gruppe, um deine Umfragen und Termine zu organisieren.",
+  "createSpaceLoading": "Gruppe erstellen...",
+  "createSpaceSuccess": "Gruppe erfolgreich erstellt",
+  "createSpaceError": "Fehler beim Erstellen der Gruppe"
 }
