@@ -8,16 +8,18 @@ import * as React from "react";
 const avatarVariants = cva("relative flex shrink-0 overflow-hidden", {
   variants: {
     size: {
-      xl: "size-12 text-xl",
-      lg: "size-9 text-lg",
-      md: "size-7 text-base",
-      sm: "size-5 text-xs",
+      xl: "size-12 rounded-md text-xl",
+      lg: "size-12 rounded-md text-lg",
+      md: "size-9 rounded-md text-base",
+      sm: "size-5 rounded-md text-xs",
     },
   },
   defaultVariants: {
     size: "md",
   },
 });
+
+export type AvatarProps = VariantProps<typeof avatarVariants>;
 
 const Avatar = React.forwardRef<
   React.ComponentRef<typeof AvatarPrimitive.Root>,

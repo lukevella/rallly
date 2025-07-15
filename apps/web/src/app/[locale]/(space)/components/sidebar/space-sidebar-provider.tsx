@@ -3,7 +3,7 @@
 import { SidebarProvider } from "@rallly/ui/sidebar";
 import { useLocalStorage } from "react-use";
 
-export function AppSidebarProvider({
+export function SpaceSidebarProvider({
   children,
 }: {
   children: React.ReactNode;
