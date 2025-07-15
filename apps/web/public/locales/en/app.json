@@ -122,7 +122,6 @@
   "editDetailsDescription": "Change the details of your event.",
   "finalizeDescription": "Select a final date for your event.",
   "notificationsGuestTooltip": "Create an account or login to turn on notifications",
-  "planFree": "Free",
   "dateAndTimeDescription": "Change your preferred date and time settings",
   "createdTime": "Created {relativeTime}",
   "permissionDeniedParticipant": "If you are not the poll creator, you should go to the Invite Page.",
@@ -396,5 +395,10 @@
   "actionErrorNotFound": "The resource was not found",
   "actionErrorForbidden": "You are not allowed to perform this action",
   "actionErrorInternalServerError": "An internal server error occurred",
-  "cancelEvent": "Cancel Event"
+  "cancelEvent": "Cancel Event",
+  "createSpace": "Create Space",
+  "createSpaceDescription": "Create a new space to organize your polls and events.",
+  "createSpaceLoading": "Creating space...",
+  "createSpaceSuccess": "Space created successfully",
+  "createSpaceError": "Failed to create space"
 }
