@@ -1,7 +1,6 @@
 import { accessibleBy } from "@casl/prisma";
 import type { SpaceMemberRole } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { redirect } from "next/navigation";
 import { cache } from "react";
 import { requireUserAbility } from "@/auth/queries";
 
@@ -54,35 +53,16 @@ export const loadSpaces = cache(async () => {
 
 export const loadDefaultSpace = cache(async () => {
   const { user } = await requireUserAbility();
-  const space = await prisma.space.findFirst({
-    where: {
-      ownerId: user.id,
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-    include: {
-      subscription: true,
-    },
-  });
+  const spaces = await loadSpaces();
+  const defaultSpace = spaces.find((space) => space.ownerId === user.id);
 
-  if (!space) {
-    redirect("/setup");
+  if (!defaultSpace) {
+    throw new Error(`User ${user.id} does not have access to any spaces`);
   }
 
-  return {
-    id: space.id,
-    name: space.name,
-    ownerId: space.ownerId,
-    isPro: Boolean(space.subscription?.active),
-    role: "OWNER" as const,
-  } satisfies SpaceDTO;
+  return defaultSpace;
 });
 
-/**
- * Loads a specific space by ID using the cached list of spaces
- * This is more efficient than querying the database directly
- */
 export const loadSpace = cache(async ({ id }: { id: string }) => {
   const spaces = await loadSpaces();
   const space = spaces.find((space) => space.id === id);
