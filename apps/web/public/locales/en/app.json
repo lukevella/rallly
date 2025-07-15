@@ -126,6 +126,7 @@
   "createdTime": "Created {relativeTime}",
   "permissionDeniedParticipant": "If you are not the poll creator, you should go to the Invite Page.",
   "goToInvite": "Go to Invite Page",
+  "planFree": "Free",
   "planPro": "Pro",
   "Billing": "Billing",
   "becomeATranslator": "Help translate",
