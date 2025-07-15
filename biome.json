@@ -64,8 +64,7 @@
   },
   "files": {
     "includes": [
-      "packages/**",
-      "apps/**",
+      "src/**",
       "!**/apps/landing/public/static/scripts/mailerlite.js"
     ]
   }
