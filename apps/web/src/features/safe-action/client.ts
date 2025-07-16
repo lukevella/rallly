@@ -32,6 +32,11 @@ export const useSafeAction: typeof useAction = (action, options) => {
               defaultValue: "An internal server error occurred",
             });
             break;
+          case "TOO_MANY_REQUESTS":
+            translatedDescription = t("actionErrorTooManyRequests", {
+              defaultValue: "You are making too many requests",
+            });
+            break;
         }
 
         toast.error(translatedDescription);
