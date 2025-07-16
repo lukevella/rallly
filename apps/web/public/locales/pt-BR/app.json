@@ -29,7 +29,7 @@
   "editOptions": "Editar opções",
   "editVotes": "Editar votos",
   "email": "E-mail",
-  "emailNotAllowed": "Este email não é permitido.",
+  "emailNotAllowed": "Este endereço eletrônico não é permitido.",
   "temporaryEmailNotAllowed": "Endereços de e-mail temporários ou descartáveis não são permitidos.",
   "emailPlaceholder": "fulano@exemplo.com",
   "exportToCsv": "Exportar para CSV",
@@ -396,5 +396,10 @@
   "actionErrorNotFound": "O recurso não foi encontrado",
   "actionErrorForbidden": "Você não tem permissão para realizar esta ação",
   "actionErrorInternalServerError": "Ocorreu um erro interno no servidor",
-  "cancelEvent": "Cancelar evento"
+  "cancelEvent": "Cancelar evento",
+  "createSpace": "Criar espaço",
+  "createSpaceDescription": "Crie um novo espaço para organizar suas enquetes e eventos.",
+  "createSpaceLoading": "Criando espaço...",
+  "createSpaceSuccess": "Espaço criado com sucesso",
+  "createSpaceError": "Falha ao criar espaço"
 }
