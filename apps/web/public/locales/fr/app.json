@@ -126,6 +126,7 @@
   "createdTime": "Créé {relativeTime}",
   "permissionDeniedParticipant": "Si vous n'êtes pas le créateur du sondage, vous devriez aller à la page d'invitation.",
   "goToInvite": "Accéder à la page d'invitation",
+  "planFree": "Gratuit",
   "planPro": "Pro",
   "Billing": "Facturation",
   "becomeATranslator": "Aidez à la traduction",
@@ -319,5 +320,7 @@
   "canceledEventsEmptyStateTitle": "Aucun évènement annulé",
   "canceledEventsEmptyStateDescription": "Les événements annulés apparaîtront ici.",
   "setupFormDescription": "Terminer la configuration de votre compte.",
-  "dismissFeedback": "Ne plus afficher"
+  "pending": "En cours",
+  "dismissFeedback": "Ne plus afficher",
+  "user": "Utilisateur"
 }
