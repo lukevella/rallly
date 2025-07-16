@@ -8,8 +8,8 @@ import { auth } from "@/next-auth";
 
 import { isRateLimitEnabled } from "./constants";
 
-type Unit = "ms" | "s" | "m" | "h" | "d";
-type Duration = `${number} ${Unit}` | `${number}${Unit}`;
+export type Unit = "ms" | "s" | "m" | "h" | "d";
+export type Duration = `${number} ${Unit}` | `${number}${Unit}`;
 
 async function getIPAddress() {
   return (await headers()).get("x-forwarded-for");

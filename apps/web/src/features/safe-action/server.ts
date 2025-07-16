@@ -6,12 +6,15 @@ import { revalidatePath } from "next/cache";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import z from "zod";
 import { requireUserAbility } from "@/auth/queries";
+import type { Duration } from "@/features/rate-limit";
+import { rateLimit } from "@/features/rate-limit";
 
 type ActionErrorCode =
   | "UNAUTHORIZED"
   | "NOT_FOUND"
   | "FORBIDDEN"
-  | "INTERNAL_SERVER_ERROR";
+  | "INTERNAL_SERVER_ERROR"
+  | "TOO_MANY_REQUESTS";
 
 export class ActionError extends Error {
   code: ActionErrorCode;
@@ -64,6 +67,29 @@ const posthogMiddleware = createMiddleware<{
 
   return result;
 });
+
+export const createRateLimitMiddleware = (
+  requests: number,
+  duration: Duration,
+) =>
+  createMiddleware<{
+    metadata: {
+      actionName: string;
+    };
+  }>().define<{
+    ctx: { user: { id: string } };
+  }>(async ({ next, metadata }) => {
+    const res = await rateLimit(metadata.actionName, requests, duration);
+
+    if (!res.success) {
+      throw new ActionError({
+        code: "TOO_MANY_REQUESTS",
+        message: "You are making too many requests.",
+      });
+    }
+
+    return next();
+  });
 
 export const actionClient = createSafeActionClient({
   defineMetadataSchema: () =>
