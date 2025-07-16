@@ -125,6 +125,7 @@
   "createdTime": "Creato {relativeTime}",
   "permissionDeniedParticipant": "Se non sei il creatore del sondaggio, dovresti andare alla pagina di invito.",
   "goToInvite": "Vai alla pagina di invito",
+  "planFree": "Gratis",
   "planPro": "Pro",
   "Billing": "Fatturazione",
   "becomeATranslator": "Aiuta a tradurre",
@@ -267,5 +268,7 @@
   "priceFree": "Gratis",
   "upcomingEventsEmptyStateTitle": "Nessun Evento Prossimo",
   "upcomingEventsEmptyStateDescription": "Quando pianifichi eventi, appariranno qui.",
-  "pastEventsEmptyStateTitle": "Nessun Evento Passato"
+  "pastEventsEmptyStateTitle": "Nessun Evento Passato",
+  "pending": "In attesa",
+  "user": "Utente"
 }
