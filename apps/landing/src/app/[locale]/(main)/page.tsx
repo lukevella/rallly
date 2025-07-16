@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Bonus from "@/components/home/bonus";
 import { MarketingHero } from "@/components/home/hero";
 import { BigTestimonial, Marketing, MentionedBy } from "@/components/marketing";
@@ -33,7 +34,7 @@ export default async function Page(props: {
 
 export async function generateMetadata(props: {
   params: Promise<{ locale: string }>;
-}) {
+}): Promise<Metadata> {
   const params = await props.params;
   const { t } = await getTranslation(params.locale, "home");
   return {

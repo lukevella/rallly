@@ -1,6 +1,7 @@
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { UsersIcon } from "lucide-react";
+import type { Metadata } from "next";
 import z from "zod";
 import { PageIcon } from "@/app/components/page-icons";
 import {
@@ -174,7 +175,7 @@ export default async function AdminPage(props: {
   );
 }
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
     title: t("users", {

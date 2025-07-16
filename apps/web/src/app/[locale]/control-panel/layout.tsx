@@ -1,4 +1,5 @@
 import { SidebarInset } from "@rallly/ui/sidebar";
+import type { Metadata } from "next";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { getTranslation } from "@/i18n/server";
@@ -24,7 +25,7 @@ export default async function AdminLayout({
   );
 }
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
     title: {

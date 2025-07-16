@@ -9,6 +9,7 @@ import {
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PageIcon } from "@/app/components/page-icons";
 import {
@@ -138,7 +139,7 @@ export default async function AdminPage() {
   );
 }
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Control Panel",
   };

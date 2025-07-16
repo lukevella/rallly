@@ -9,6 +9,7 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import dayjs from "dayjs";
 import { KeySquareIcon, PlusIcon, ShoppingBagIcon } from "lucide-react";
+import type { Metadata } from "next";
 import { PageIcon } from "@/app/components/page-icons";
 import {
   EmptyState,
@@ -176,7 +177,7 @@ export default async function LicensePage() {
   );
 }
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
     title: t("license", {
