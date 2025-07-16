@@ -3,7 +3,6 @@ import { Button } from "@rallly/ui/button";
 import { CrownIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { requireUserAbility } from "@/auth/queries";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -12,11 +11,12 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Trans } from "@/components/trans";
+import { loadUserAbility } from "@/data/user";
 import { getTranslation } from "@/i18n/server";
 import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {
-  const { user, ability } = await requireUserAbility();
+  const { user, ability } = await loadUserAbility();
 
   if (ability.can("access", "ControlPanel")) {
     redirect("/control-panel");

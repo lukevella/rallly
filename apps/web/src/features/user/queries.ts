@@ -1,9 +1,8 @@
 import { prisma } from "@rallly/database";
-import { cache } from "react";
 
 import { isSelfHosted } from "@/utils/constants";
 
-export const getUser = cache(async (userId: string) => {
+export const getUser = async (userId: string) => {
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -19,6 +18,7 @@ export const getUser = cache(async (userId: string) => {
       weekStart: true,
       role: true,
       activeSpaceId: true,
+      customerId: true,
       subscription: {
         select: {
           active: true,
@@ -38,10 +38,11 @@ export const getUser = cache(async (userId: string) => {
     timeZone: user.timeZone ?? undefined,
     timeFormat: user.timeFormat ?? undefined,
     weekStart: user.weekStart ?? undefined,
+    customerId: user.customerId ?? undefined,
     isPro: Boolean(isSelfHosted || user.subscription?.active),
   };
-});
+};
 
-export const getUserCount = cache(async () => {
+export const getUserCount = async () => {
   return await prisma.user.count();
-});
+};

@@ -3,7 +3,6 @@ import { prisma } from "@rallly/database";
 import { UsersIcon } from "lucide-react";
 import z from "zod";
 import { PageIcon } from "@/app/components/page-icons";
-import { requireAdmin } from "@/auth/queries";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -19,6 +18,7 @@ import {
 import { Pagination } from "@/components/pagination";
 import { StackedList } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
+import { loadAdminUserAbility } from "@/data/user";
 import { getTranslation } from "@/i18n/server";
 import { UserRow } from "./user-row";
 import { UserSearchInput } from "./user-search-input";
@@ -35,7 +35,7 @@ async function loadData({
   q?: string;
   role?: "admin" | "user";
 }) {
-  const adminUser = await requireAdmin();
+  const { user } = await loadAdminUserAbility();
 
   const where: Prisma.UserWhereInput = {};
 
@@ -81,7 +81,7 @@ async function loadData({
   });
 
   return {
-    adminUser,
+    adminUser: user,
     allUsers: allUsers.map((user) => ({
       ...user,
       image: user.image ?? undefined,

@@ -21,7 +21,7 @@ import {
 } from "@/components/empty-state";
 import { Pagination } from "@/components/pagination";
 import { Trans } from "@/components/trans";
-import { getPolls } from "@/features/poll/api/get-polls";
+import { loadPolls } from "@/data/poll";
 import { PollList, PollListItem } from "@/features/poll/components/poll-list";
 import { getTranslation } from "@/i18n/server";
 
@@ -42,7 +42,7 @@ async function loadData({
   q?: string;
 }) {
   const [{ total, data: polls }] = await Promise.all([
-    getPolls({ status, page, pageSize, q }),
+    loadPolls({ status, page, pageSize, q }),
   ]);
 
   return {

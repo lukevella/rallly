@@ -1,4 +1,3 @@
-import { prisma } from "@rallly/database";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
@@ -13,8 +12,7 @@ import {
   SparklesIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
-import { requireUser } from "@/auth/queries";
+import { notFound } from "next/navigation";
 import {
   DescriptionDetails,
   DescriptionList,
@@ -29,6 +27,8 @@ import {
 } from "@/components/empty-state";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
+import { loadPaymentMethods, loadSubscription } from "@/data/space";
+import { loadUserAbility } from "@/data/user";
 import { FormattedDateTime } from "@/features/timezone/client/formatted-date-time";
 import { getTranslation } from "@/i18n/server";
 import { isSelfHosted } from "@/utils/constants";
@@ -40,52 +40,22 @@ import { PaymentMethod } from "./components/payment-method";
 import { SubscriptionPrice } from "./components/subscription-price";
 import { SubscriptionStatus } from "./components/subscription-status";
 
-async function getData() {
-  const user = await requireUser();
-
-  const data = await prisma.user.findUnique({
-    where: { id: user.id },
-    select: {
-      customerId: true,
-      subscription: {
-        select: {
-          id: true,
-          active: true,
-          currency: true,
-          amount: true,
-          priceId: true,
-          periodStart: true,
-          periodEnd: true,
-          interval: true,
-          cancelAtPeriodEnd: true,
-          status: true,
-        },
-      },
-      paymentMethods: {
-        select: {
-          id: true,
-          type: true,
-          data: true,
-        },
-      },
-    },
-  });
-
-  if (!data) {
-    redirect("/api/auth/invalid-session");
-  }
-
-  return data;
-}
-
-export default async function Page() {
+async function loadData() {
   if (isSelfHosted) {
     notFound();
   }
 
-  const data = await getData();
+  const [{ user }, subscription, paymentMethods] = await Promise.all([
+    loadUserAbility(),
+    loadSubscription(),
+    loadPaymentMethods(),
+  ]);
 
-  const { subscription } = data;
+  return { user, subscription, paymentMethods };
+}
+
+export default async function Page() {
+  const { user, subscription, paymentMethods } = await loadData();
 
   return (
     <SettingsContent>
@@ -166,7 +136,7 @@ export default async function Page() {
                 />
               </DescriptionTerm>
               <DescriptionDetails>
-                {data.paymentMethods.length === 0 ? (
+                {paymentMethods.length === 0 ? (
                   <div>
                     <div className="space-y-2">
                       <div className="flex items-center gap-x-2 text-destructive">
@@ -204,7 +174,7 @@ export default async function Page() {
                   </div>
                 ) : (
                   <ul className="space-y-2">
-                    {data.paymentMethods.map((method) => (
+                    {paymentMethods.map((method) => (
                       <li key={method.id}>
                         <PaymentMethod type={method.type} data={method.data} />
                       </li>
@@ -213,7 +183,7 @@ export default async function Page() {
                 )}
               </DescriptionDetails>
             </DescriptionList>
-            {data.customerId ? (
+            {user.customerId ? (
               <div className="flex flex-col items-start justify-between gap-6 gap-x-4 rounded-lg border bg-gray-50 p-4 sm:flex-row">
                 <div className="space-y-1">
                   <h3 className="font-medium text-sm">

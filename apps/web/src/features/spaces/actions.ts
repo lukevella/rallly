@@ -4,7 +4,6 @@ import { subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { z } from "zod";
-import { requireUserAbility } from "@/auth/queries";
 import { ActionError, authActionClient } from "@/features/safe-action/server";
 
 export const setActiveSpaceAction = authActionClient
@@ -16,17 +15,15 @@ export const setActiveSpaceAction = authActionClient
   .metadata({
     actionName: "space_set_active",
   })
-  .action(async ({ parsedInput }) => {
-    const { user, ability } = await requireUserAbility();
-
+  .action(async ({ ctx, parsedInput }) => {
     const space = await prisma.space.findFirst({
       where: {
-        AND: [accessibleBy(ability).Space, { id: parsedInput.spaceId }],
+        AND: [accessibleBy(ctx.ability).Space, { id: parsedInput.spaceId }],
       },
       include: {
         members: {
           where: {
-            userId: user.id,
+            userId: ctx.user.id,
           },
         },
       },
@@ -39,7 +36,7 @@ export const setActiveSpaceAction = authActionClient
       });
     }
 
-    if (!ability.can("read", subject("Space", space))) {
+    if (!ctx.ability.can("read", subject("Space", space))) {
       throw new ActionError({
         code: "FORBIDDEN",
         message: "You do not have access to this space",
@@ -48,7 +45,7 @@ export const setActiveSpaceAction = authActionClient
 
     await prisma.user.update({
       where: {
-        id: user.id,
+        id: ctx.user.id,
       },
       data: {
         activeSpaceId: parsedInput.spaceId,
@@ -65,16 +62,14 @@ export const createSpaceAction = authActionClient
       name: z.string().min(1).max(100),
     }),
   )
-  .action(async ({ parsedInput }) => {
-    const { user } = await requireUserAbility();
-
+  .action(async ({ ctx, parsedInput }) => {
     const space = await prisma.space.create({
       data: {
         name: parsedInput.name,
-        ownerId: user.id,
+        ownerId: ctx.user.id,
         members: {
           create: {
-            userId: user.id,
+            userId: ctx.user.id,
             role: "OWNER",
           },
         },
@@ -84,7 +79,7 @@ export const createSpaceAction = authActionClient
     try {
       await prisma.user.update({
         where: {
-          id: user.id,
+          id: ctx.user.id,
         },
         data: {
           activeSpaceId: space.id,
@@ -104,12 +99,10 @@ export const deleteSpaceAction = authActionClient
       spaceId: z.string(),
     }),
   )
-  .action(async ({ parsedInput }) => {
-    const { ability } = await requireUserAbility();
-
+  .action(async ({ ctx, parsedInput }) => {
     const space = await prisma.space.findFirst({
       where: {
-        AND: [accessibleBy(ability).Space, { id: parsedInput.spaceId }],
+        AND: [accessibleBy(ctx.ability).Space, { id: parsedInput.spaceId }],
       },
       include: {
         subscription: true,
@@ -123,7 +116,7 @@ export const deleteSpaceAction = authActionClient
       });
     }
 
-    if (ability.cannot("delete", subject("Space", space))) {
+    if (ctx.ability.cannot("delete", subject("Space", space))) {
       throw new ActionError({
         code: "FORBIDDEN",
         message: "You do not have access to this space",
