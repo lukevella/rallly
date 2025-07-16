@@ -88,3 +88,14 @@ export const authActionClient = actionClient
     });
   })
   .use(posthogMiddleware);
+
+export const adminActionClient = authActionClient.use(async ({ ctx, next }) => {
+  if (ctx.user.role !== "admin") {
+    throw new ActionError({
+      code: "FORBIDDEN",
+      message: "You do not have permission to perform this action.",
+    });
+  }
+
+  return next();
+});
