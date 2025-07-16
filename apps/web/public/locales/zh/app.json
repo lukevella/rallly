@@ -122,11 +122,11 @@
   "editDetailsDescription": "更改活动详情",
   "finalizeDescription": "选择一个最终日期",
   "notificationsGuestTooltip": "创建帐户或登录以打开通知",
-  "planFree": "免费版",
   "dateAndTimeDescription": "设置您首选的日期和时间设置",
   "createdTime": "建立于 {relativeTime}",
   "permissionDeniedParticipant": "如果你不是投票创建者，你应该去邀请页面。",
   "goToInvite": "前往邀请页面",
+  "planFree": "免费版",
   "planPro": "Pro版",
   "Billing": "订阅",
   "becomeATranslator": "协助翻译",
@@ -313,5 +313,6 @@
   "poll": "调查",
   "upcomingEventsEmptyStateTitle": "暂无即将开始的活动",
   "upcomingEventsEmptyStateDescription": "当您安排活动时，它们将出现在这里。",
-  "pastEventsEmptyStateTitle": "没有过去的活动"
+  "pastEventsEmptyStateTitle": "没有过去的活动",
+  "user": "用户"
 }
