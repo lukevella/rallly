@@ -10,11 +10,13 @@ export async function getActiveSpace() {
       },
     });
 
-    if (!space) {
-      console.warn(
-        `User ${user.id} has an active space ID ${user.activeSpaceId} that does not exist or is no longer accessible`,
-      );
+    if (space) {
+      return space;
     }
+
+    console.warn(
+      `User ${user.id} has an active space ID ${user.activeSpaceId} that does not exist or is no longer accessible`,
+    );
   }
 
   const space = await prisma.space.findFirst({
