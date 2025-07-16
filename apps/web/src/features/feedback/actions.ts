@@ -11,7 +11,7 @@ export const submitFeedbackAction = authActionClient
   .metadata({
     actionName: "submit_feedback",
   })
-  .use(createRateLimitMiddleware(3, "1 h"))
+  .use(createRateLimitMiddleware(5, "1 h"))
   .inputSchema(feedbackSchema)
   .action(async ({ ctx, parsedInput }) => {
     try {
