@@ -26,10 +26,11 @@ import {
   SettingsGroupTitle,
 } from "@/components/settings-group";
 import { Trans } from "@/components/trans";
-import { updateInstanceSettings } from "@/features/instance-settings/mutations";
 import type { InstanceSettings } from "@/features/instance-settings/schema";
 import { instanceSettingsSchema } from "@/features/instance-settings/schema";
+import { useSafeAction } from "@/features/safe-action/client";
 import { useTranslation } from "@/i18n/client";
+import { updateInstanceSettingsAction } from "./actions";
 
 export function InstanceSettingsForm({
   defaultValue,
@@ -41,6 +42,8 @@ export function InstanceSettingsForm({
     resolver: zodResolver(instanceSettingsSchema),
   });
 
+  const updateInstanceSettings = useSafeAction(updateInstanceSettingsAction);
+
   const { t } = useTranslation();
 
   return (
@@ -49,7 +52,7 @@ export function InstanceSettingsForm({
         name="instance-settings-form"
         onSubmit={form.handleSubmit(async (data) => {
           try {
-            await updateInstanceSettings(data);
+            await updateInstanceSettings.executeAsync(data);
             form.reset(data);
           } catch (error) {
             console.error(error);
