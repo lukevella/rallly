@@ -8,9 +8,9 @@ import dayjs from "dayjs";
 import * as ics from "ics";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { getActiveSpace } from "@/auth/queries";
 import { moderateContent } from "@/features/moderation";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
+import { getActiveSpace } from "@/features/spaces/api";
 import { getEmailClient } from "@/utils/emails";
 import {
   createRateLimitMiddleware,

@@ -1,5 +1,5 @@
 import { CalendarIcon } from "lucide-react";
-
+import type { Metadata } from "next";
 import type { Params } from "@/app/[locale]/types";
 import { EventPageIcon } from "@/app/components/page-icons";
 import {
@@ -10,7 +10,6 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { SearchInput } from "@/app/components/search-input";
-import { getActiveSpace } from "@/auth/queries";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -20,8 +19,8 @@ import {
 import { Pagination } from "@/components/pagination";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
+import { loadScheduledEvents } from "@/data/event";
 import { ScheduledEventListItem } from "@/features/scheduled-event/components/scheduled-event-list";
-import { getScheduledEvents } from "@/features/scheduled-event/queries";
 import type { Status } from "@/features/scheduled-event/schema";
 import { statusSchema } from "@/features/scheduled-event/schema";
 import { getTranslation } from "@/i18n/server";
@@ -38,9 +37,7 @@ async function loadData({
   page?: number;
   pageSize?: number;
 }) {
-  const space = await getActiveSpace();
-  return getScheduledEvents({
-    spaceId: space.id,
+  return loadScheduledEvents({
     status,
     search,
     page,
@@ -182,7 +179,7 @@ export default async function Page(props: {
   );
 }
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
     title: t("events", {

@@ -17,15 +17,15 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
-import { getActiveSpace } from "@/auth/queries";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted } from "@/contexts/environment";
-import { getUpcomingEventsCount } from "@/features/scheduled-event/queries";
+import { loadUpcomingEventsCount } from "@/data/event";
+import { loadActiveSpace } from "@/data/space";
 import { getTranslation } from "@/i18n/server";
 import { FeedbackAlert } from "./feedback-alert";
 
 async function loadData() {
-  const space = await getActiveSpace();
+  const space = await loadActiveSpace();
 
   const [livePollCount, upcomingEventCount] = await Promise.all([
     prisma.poll.count({
@@ -35,7 +35,7 @@ async function loadData() {
         deleted: false,
       },
     }),
-    getUpcomingEventsCount(),
+    loadUpcomingEventsCount(),
   ]);
 
   return {

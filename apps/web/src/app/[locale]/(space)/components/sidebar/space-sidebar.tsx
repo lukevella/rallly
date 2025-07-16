@@ -14,21 +14,21 @@ import Link from "next/link";
 import type React from "react";
 import { SpaceSidebarMenu } from "@/app/[locale]/(space)/components/sidebar/space-sidebar-menu";
 import { LogoLink } from "@/app/components/logo-link";
-import { getActiveSpace, requireUserAbility } from "@/auth/queries";
 import { Trans } from "@/components/trans";
+import { loadActiveSpace, loadSpaces } from "@/data/space";
+import { loadUserAbility } from "@/data/user";
 import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
 import { SpaceDropdown } from "@/features/spaces/components/space-dropdown";
 import { SpaceIcon } from "@/features/spaces/components/space-icon";
 import { isSpacesEnabled } from "@/features/spaces/constants";
-import { loadSpaces } from "@/features/spaces/queries";
 import { UpgradeButton } from "../upgrade-button";
 import { NavUser } from "./nav-user";
 
 async function loadData() {
   const [{ user }, spaces, activeSpace] = await Promise.all([
-    requireUserAbility(),
+    loadUserAbility(),
     loadSpaces(),
-    getActiveSpace(),
+    loadActiveSpace(),
   ]);
 
   return {

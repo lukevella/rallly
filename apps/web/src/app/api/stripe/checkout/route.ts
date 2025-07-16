@@ -4,8 +4,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-
-import { getActiveSpace, requireUser } from "@/auth/queries";
+import { requireUser } from "@/data/user";
 import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
@@ -18,7 +17,8 @@ const inputSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const user = await requireUser();
+  const { user } = await requireUser();
+
   const formData = await request.formData();
   const data = inputSchema.safeParse(Object.fromEntries(formData.entries()));
 
@@ -70,9 +70,20 @@ export async function POST(request: NextRequest) {
 
   const proPricingData = await getProPricing();
 
-  const space = await getActiveSpace();
+  let spaceId = user.activeSpaceId;
 
-  const spaceId = space.id;
+  if (!spaceId) {
+    const space = await prisma.space.findFirstOrThrow({
+      where: {
+        ownerId: user.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    spaceId = space.id;
+  }
 
   const checkoutSession = await stripe.checkout.sessions.create({
     success_url: absoluteUrl(

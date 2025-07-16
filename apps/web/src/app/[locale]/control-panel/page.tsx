@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { PageIcon } from "@/app/components/page-icons";
-import { requireAdmin } from "@/auth/queries";
 import {
   FullWidthLayout,
   FullWidthLayoutContent,
@@ -19,14 +18,14 @@ import {
   FullWidthLayoutTitle,
 } from "@/components/full-width-layout";
 import { Trans } from "@/components/trans";
-import { getLicense } from "@/features/licensing/queries";
+import { loadInstanceLicense } from "@/data/instance-license";
+import { loadAdminUserAbility } from "@/data/user";
 
 async function loadData() {
-  await requireAdmin();
-
-  const [userCount, license] = await Promise.all([
+  const [_, userCount, license] = await Promise.all([
+    loadAdminUserAbility(),
     prisma.user.count(),
-    getLicense(),
+    loadInstanceLicense(),
   ]);
 
   return {
