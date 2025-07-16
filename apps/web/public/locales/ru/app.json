@@ -126,6 +126,7 @@
   "createdTime": "Создано {relativeTime}",
   "permissionDeniedParticipant": "Если этот опрос создали не вы, перейдите на страницу с приглашением.",
   "goToInvite": "Перейти на страницу с приглашением",
+  "planFree": "Бесплатный",
   "planPro": "Pro",
   "Billing": "Платежи",
   "becomeATranslator": "Помочь с переводом",
@@ -256,5 +257,7 @@
   "priceFree": "Бесплатный",
   "upcomingEventsEmptyStateTitle": "Нет предстоящих событий",
   "upcomingEventsEmptyStateDescription": "Когда вы запланируете события, они появятся здесь.",
-  "pastEventsEmptyStateTitle": "Нет прошедших событий"
+  "pastEventsEmptyStateTitle": "Нет прошедших событий",
+  "pending": "Проводится",
+  "user": "Пользователь"
 }
