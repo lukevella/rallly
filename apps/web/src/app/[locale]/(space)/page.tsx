@@ -1,5 +1,6 @@
 import { prisma } from "@rallly/database";
 import { Tile, TileDescription, TileGrid, TileTitle } from "@rallly/ui/tile";
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   BillingPageIcon,
@@ -157,7 +158,7 @@ export default async function Page() {
   );
 }
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
     title: t("home", {

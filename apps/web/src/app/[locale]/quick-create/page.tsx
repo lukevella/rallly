@@ -1,6 +1,7 @@
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { LogInIcon } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -41,7 +42,7 @@ export default async function QuickCreatePage() {
   );
 }
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
     title: t("quickCreate"),

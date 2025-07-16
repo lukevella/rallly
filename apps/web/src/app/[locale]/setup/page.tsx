@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { ProfilePicture } from "@/app/[locale]/(space)/account/profile/profile-picture";
@@ -51,7 +52,7 @@ export default async function SetupPage() {
   );
 }
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
     title: t("setupFormTitle", {

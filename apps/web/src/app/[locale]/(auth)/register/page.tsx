@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -65,7 +66,7 @@ export default async function Register(props: {
 
 export async function generateMetadata(props: {
   params: Promise<{ locale: string }>;
-}) {
+}): Promise<Metadata> {
   const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {

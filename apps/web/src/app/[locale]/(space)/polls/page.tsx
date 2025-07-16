@@ -2,6 +2,7 @@ import type { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { InboxIcon } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { PollPageIcon } from "@/app/components/page-icons";
@@ -51,7 +52,7 @@ async function loadData({
   };
 }
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
     title: t("polls", {

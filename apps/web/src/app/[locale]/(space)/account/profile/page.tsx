@@ -1,6 +1,7 @@
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
 import { TrashIcon } from "lucide-react";
+import type { Metadata } from "next";
 
 import type { Params } from "@/app/[locale]/types";
 import { Trans } from "@/components/trans";
@@ -63,7 +64,9 @@ export default async function Page() {
   );
 }
 
-export async function generateMetadata(props: { params: Promise<Params> }) {
+export async function generateMetadata(props: {
+  params: Promise<Params>;
+}): Promise<Metadata> {
   const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {
