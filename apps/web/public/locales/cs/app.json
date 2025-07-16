@@ -126,6 +126,7 @@
   "createdTime": "Vytvořeno {relativeTime}",
   "permissionDeniedParticipant": "Pokud nejste autorem hlasování, měli byste jít na stránku s pozvánkou.",
   "goToInvite": "Přejít na stránku s pozvánkou",
+  "planFree": "Zdarma",
   "planPro": "Pro",
   "Billing": "Fakturace",
   "becomeATranslator": "Pomozte s překladem",
@@ -327,5 +328,7 @@
   "canceledEventsEmptyStateTitle": "Žádné zrušené události",
   "canceledEventsEmptyStateDescription": "Zde se zobrazí zrušené události.",
   "setupFormTitle": "Nastavení",
-  "setupFormDescription": "Dokončete vytváření svého účtu."
+  "setupFormDescription": "Dokončete vytváření svého účtu.",
+  "pending": "Čekající",
+  "user": "Uživatel"
 }
