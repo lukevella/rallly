@@ -7,7 +7,7 @@ import {
   validateLicenseKeyResponseSchema,
 } from "../schema";
 
-export class LicensingClient {
+export class LicenseManager {
   apiUrl: string;
   authToken?: string;
 

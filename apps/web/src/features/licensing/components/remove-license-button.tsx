@@ -14,15 +14,15 @@ import {
 } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import { XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { Trans } from "@/components/trans";
-import { removeInstanceLicense } from "../mutations";
+import { useSafeAction } from "@/features/safe-action/client";
+import { removeInstanceLicenseAction } from "../actions";
 
 export function RemoveLicenseButton() {
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   const dialog = useDialog();
+  const removeInstanceLicense = useSafeAction(removeInstanceLicenseAction);
   return (
     <Dialog {...dialog.dialogProps}>
       <DialogTrigger asChild>
@@ -56,8 +56,7 @@ export function RemoveLicenseButton() {
             variant="destructive"
             onClick={() =>
               startTransition(async () => {
-                await removeInstanceLicense();
-                router.refresh();
+                await removeInstanceLicense.executeAsync();
                 dialog.dismiss();
               })
             }

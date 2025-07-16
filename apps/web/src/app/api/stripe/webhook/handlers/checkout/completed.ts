@@ -2,8 +2,8 @@ import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
 import { posthog } from "@rallly/posthog/server";
 import { env } from "@/env";
-import { licensingClient } from "@/features/licensing/client";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
+import { licenseManager } from "@/features/licensing/server";
 import { subscriptionCheckoutMetadataSchema } from "@/features/subscription/schema";
 import { getEmailClient } from "@/utils/emails";
 
@@ -61,7 +61,7 @@ async function handleSelfHostedCheckoutSessionCompleted(
     );
   }
 
-  const license = await licensingClient.createLicense({
+  const license = await licenseManager.createLicense({
     type: licenseType,
     licenseeEmail: email,
     licenseeName: customerDetails.name ?? undefined,

@@ -2,7 +2,7 @@
 
 import { prisma } from "@rallly/database";
 import { rateLimit } from "@/features/rate-limit";
-import { licensingClient } from "../client";
+import { licenseManager } from "../server";
 
 export async function validateLicenseKey(key: string) {
   const { success } = await rateLimit("validate_license_key", 10, "1 m");
@@ -14,7 +14,7 @@ export async function validateLicenseKey(key: string) {
     };
   }
 
-  const { data } = await licensingClient.validateLicenseKey({
+  const { data } = await licenseManager.validateLicenseKey({
     key,
   });
 
