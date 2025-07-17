@@ -34,8 +34,7 @@ export const useSpaceMenu = () => {
     () => ({
       sections: [
         {
-          id: "main",
-          title: t("main", { defaultValue: "Main" }),
+          id: "home",
           items: [
             {
               id: "home",
@@ -44,6 +43,12 @@ export const useSpaceMenu = () => {
               icon: HomeIcon,
               isActive: pathname === "/",
             },
+          ],
+        },
+        {
+          id: "content",
+          title: t("content", { defaultValue: "Content" }),
+          items: [
             {
               id: "polls",
               label: t("polls", { defaultValue: "Polls" }),

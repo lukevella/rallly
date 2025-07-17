@@ -21,7 +21,9 @@ export function SpaceSidebarMenu() {
       {config.sections.map((section) => {
         return (
           <SidebarGroup key={section.id}>
-            <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
+            {section.title && (
+              <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
+            )}
             <SidebarGroupContent>
               <SidebarMenu>
                 {section.items.map((item) => {
