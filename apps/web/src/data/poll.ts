@@ -14,8 +14,8 @@ type PollFilters = {
 type DateRange = {
   startDate: Date;
   endDate: Date;
-  isSameDay: boolean;
-  formattedRange: string;
+  timeZone: string | null;
+  isFloating: boolean;
 } | null;
 
 function calculateDateRange(
@@ -34,29 +34,9 @@ function calculateDateRange(
     .add(lastOption.duration, "minute")
     .toDate();
 
-  const startDay = dayjs(startDate);
-  const endDay = dayjs(endDate);
-  const isSameDay = startDay.isSame(endDay, "day");
-
-  let formattedRange: string;
-  if (isSameDay) {
-    formattedRange = startDay.format("MMM D, YYYY");
-  } else {
-    const startYear = startDay.year();
-    const endYear = endDay.year();
-
-    if (startYear === endYear) {
-      formattedRange = `${startDay.format("MMM D")} - ${endDay.format("MMM D, YYYY")}`;
-    } else {
-      formattedRange = `${startDay.format("MMM D, YYYY")} - ${endDay.format("MMM D, YYYY")}`;
-    }
-  }
-
   return {
     startDate,
     endDate,
-    isSameDay,
-    formattedRange,
   };
 }
 
@@ -89,6 +69,7 @@ export const loadPolls = cache(
           status: true,
           createdAt: true,
           updatedAt: true,
+          timeZone: true,
           user: {
             select: {
               id: true,

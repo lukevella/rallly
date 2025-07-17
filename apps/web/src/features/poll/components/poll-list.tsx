@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
+import { PollDateRange } from "@/components/poll-date-range";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import type { PollStatus } from "../schema";
@@ -23,15 +24,13 @@ export function PollListItem({
   dateRange: {
     startDate: Date;
     endDate: Date;
-    isSameDay: boolean;
-    formattedRange: string;
   } | null;
 }) {
   return (
     <StackedListItem>
       <div className="-m-4 relative flex min-w-0 flex-1 items-center gap-2 p-4">
         <PollStatusIcon status={status} showTooltip={false} />
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <Link
             className="font-medium text-sm hover:underline focus:ring-ring focus-visible:ring-2"
             href={pollLink}
@@ -41,9 +40,11 @@ export function PollListItem({
           </Link>
         </div>
         {dateRange && (
-          <span className="whitespace-nowrap text-muted-foreground text-xs">
-            {dateRange.formattedRange}
-          </span>
+          <PollDateRange
+            startDate={dateRange.startDate}
+            endDate={dateRange.endDate}
+            className="text-xs"
+          />
         )}
       </div>
       <div className="flex items-center justify-end gap-4">
