@@ -8,7 +8,7 @@ export function PageContainer({
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
   return (
-    <div className={cn("mx-auto w-full max-w-7xl p-4 md:p-8", className)}>
+    <div className={cn("mx-auto w-full p-4 md:px-8 md:py-6", className)}>
       {children}
     </div>
   );
@@ -41,7 +41,7 @@ export function PageDescription({
   className?: string;
 }) {
   return (
-    <p className={cn("mt-4 text-muted-foreground text-sm", className)}>
+    <p className={cn("mt-2 text-muted-foreground text-sm", className)}>
       {children}
     </p>
   );
@@ -83,10 +83,9 @@ export function PageSkeleton() {
     <PageContainer>
       <PageHeader>
         <PageTitle>
-          <Skeleton className="size-8" />
-          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-6 w-32" />
         </PageTitle>
-        <Skeleton className="mt-4 h-4 w-64" />
+        <Skeleton className="mt-2 h-4 w-64" />
       </PageHeader>
       <PageContent>
         <div className="space-y-8">
