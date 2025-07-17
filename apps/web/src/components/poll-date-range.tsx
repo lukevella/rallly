@@ -27,10 +27,12 @@ export function PollDateRange({
   // For floating times, use the dates as-is (no timezone conversion)
   // For fixed times, convert to the user's timezone
   const startDay = isFloating
-    ? dayjs(startDate)
+    ? dayjs(startDate).utc()
     : dayjs(startDate).tz(timezone);
 
-  const endDay = isFloating ? dayjs(endDate) : dayjs(endDate).tz(timezone);
+  const endDay = isFloating
+    ? dayjs(endDate).utc()
+    : dayjs(endDate).tz(timezone);
   const isSameDay = startDay.isSame(endDay, "day");
 
   let formattedRange: string;

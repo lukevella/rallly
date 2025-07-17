@@ -23,11 +23,8 @@ function calculateDateRange(
 ): DateRange {
   if (options.length === 0) return null;
 
-  const sortedOptions = options.sort(
-    (a, b) => a.startTime.getTime() - b.startTime.getTime(),
-  );
-  const firstOption = sortedOptions[0];
-  const lastOption = sortedOptions[sortedOptions.length - 1];
+  const firstOption = options[0];
+  const lastOption = options[options.length - 1];
 
   const startDate = firstOption.startTime;
   const endDate = dayjs(lastOption.startTime)
