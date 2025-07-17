@@ -14,12 +14,12 @@ type PollFilters = {
 type DateRange = {
   startDate: Date;
   endDate: Date;
-  timeZone: string | null;
   isFloating: boolean;
 } | null;
 
 function calculateDateRange(
   options: { startTime: Date; duration: number }[],
+  isFloating: boolean,
 ): DateRange {
   if (options.length === 0) return null;
 
@@ -37,6 +37,7 @@ function calculateDateRange(
   return {
     startDate,
     endDate,
+    isFloating,
   };
 }
 
@@ -118,7 +119,7 @@ export const loadPolls = cache(
     return {
       total,
       data: data.map((poll) => {
-        const dateRange = calculateDateRange(poll.options);
+        const dateRange = calculateDateRange(poll.options, !poll.timeZone);
         return {
           ...poll,
           user: poll.user,

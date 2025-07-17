@@ -4,14 +4,9 @@ import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { InboxIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-
-import {
-  PageContainer,
-  PageContent,
-  PageDescription,
-  PageHeader,
-  PageTitle,
-} from "@/app/components/page-layout";
+import { PollsPageHeader } from "@/app/[locale]/(space)/polls/components/header";
+import { PageContainer, PageContent } from "@/app/components/page-layout";
+import { CopyLinkButton } from "@/components/copy-link-button";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -20,11 +15,13 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Pagination } from "@/components/pagination";
+import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
+import { PollDateRange } from "@/components/poll-date-range";
+import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { loadPolls } from "@/data/poll";
-import { PollList, PollListItem } from "@/features/poll/components/poll-list";
+import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import { getTranslation } from "@/i18n/server";
-
 import { SearchInput } from "../../../components/search-input";
 import { PollsTabbedView } from "./polls-tabbed-view";
 import { DEFAULT_PAGE_SIZE, searchParamsSchema } from "./schema";
@@ -105,26 +102,7 @@ export default async function Page(props: {
 
   return (
     <PageContainer>
-      <div className="flex gap-4">
-        <PageHeader className="flex-1">
-          <PageTitle>
-            <Trans i18nKey="polls" defaults="Polls" />
-          </PageTitle>
-          <PageDescription>
-            <Trans
-              i18nKey="pollsPageDesc"
-              defaults="View and manage all your scheduling polls"
-            />
-          </PageDescription>
-        </PageHeader>
-        <div className="flex items-start gap-2">
-          <Button size="sm" asChild>
-            <Link href="/new">
-              <Trans i18nKey="create" defaults="Create" />
-            </Link>
-          </Button>
-        </div>
-      </div>
+      <PollsPageHeader />
       <PageContent className="space-y-4">
         <SearchInput
           placeholder={t("searchPollsPlaceholder", {
@@ -137,19 +115,46 @@ export default async function Page(props: {
               <PollsEmptyState />
             ) : (
               <>
-                <PollList>
-                  {polls.map((poll) => (
-                    <PollListItem
-                      key={poll.id}
-                      title={poll.title}
-                      status={poll.status}
-                      participants={poll.participants}
-                      pollLink={absoluteUrl(`/poll/${poll.id}`)}
-                      inviteLink={shortUrl(`/invite/${poll.id}`)}
-                      dateRange={poll.dateRange}
-                    />
-                  ))}
-                </PollList>
+                <StackedList>
+                  {polls.map((poll) => {
+                    const pollLink = absoluteUrl(`/poll/${poll.id}`);
+                    const inviteLink = shortUrl(`/invite/${poll.id}`);
+                    const { title, status, participants, dateRange } = poll;
+                    return (
+                      <StackedListItem key={poll.id}>
+                        <div className="-m-4 relative flex min-w-0 flex-1 items-center gap-2 p-4">
+                          <PollStatusIcon status={status} showTooltip={false} />
+                          <div className="min-w-0 flex-1">
+                            <Link
+                              className="font-medium text-sm hover:underline focus:ring-ring focus-visible:ring-2"
+                              href={pollLink}
+                            >
+                              <span className="absolute inset-0" />
+                              <span className="block truncate">{title}</span>
+                            </Link>
+                          </div>
+                          {dateRange && (
+                            <PollDateRange
+                              startDate={dateRange.startDate}
+                              endDate={dateRange.endDate}
+                              isFloating={dateRange.isFloating}
+                              className="text-muted-foreground text-sm"
+                            />
+                          )}
+                        </div>
+                        <div className="flex items-center justify-end gap-4">
+                          <div className="hidden sm:block">
+                            <ParticipantAvatarBar
+                              participants={participants}
+                              max={5}
+                            />
+                          </div>
+                          <CopyLinkButton href={inviteLink} />
+                        </div>
+                      </StackedListItem>
+                    );
+                  })}
+                </StackedList>
                 {totalPages > 1 ? (
                   <Pagination
                     currentPage={page}
