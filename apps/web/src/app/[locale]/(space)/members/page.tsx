@@ -1,13 +1,9 @@
 import { UserSearchIcon } from "lucide-react";
 import type { Metadata } from "next";
 import z from "zod";
-import { RolesTabbedView } from "@/app/[locale]/(space)/members/roles-tabbed-view";
-import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageTitle,
-} from "@/app/components/page-layout";
+import { MembersHeader } from "@/app/[locale]/(space)/members/components/header";
+import { MembersTabs } from "@/app/[locale]/(space)/members/components/tabs";
+import { PageContainer, PageContent } from "@/app/components/page-layout";
 import { SearchInput } from "@/app/components/search-input";
 import {
   EmptyState,
@@ -50,18 +46,9 @@ export default async function MembersPage({
 
   return (
     <PageContainer>
-      <PageHeader>
-        <PageTitle>
-          <Trans i18nKey="members" defaults="Members" />
-        </PageTitle>
-      </PageHeader>
+      <MembersHeader />
       <PageContent className="space-y-4">
-        <div>
-          <SearchInput
-            placeholder={t("searchMembers", { defaultValue: "Search members" })}
-          />
-        </div>
-        <RolesTabbedView name="role" value={role}>
+        <MembersTabs value={role}>
           {members.data.length === 0 ? (
             <EmptyState>
               <EmptyStateIcon>
@@ -112,7 +99,7 @@ export default async function MembersPage({
               </div>
             </>
           )}
-        </RolesTabbedView>
+        </MembersTabs>
       </PageContent>
     </PageContainer>
   );

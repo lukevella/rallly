@@ -299,11 +299,8 @@
   "commandMenuNoResults": "No results",
   "commandMenu": "Command Menu",
   "commandMenuDescription": "Select a command",
-  "eventsPageDesc": "View and manage your scheduled events",
-  "homeDashboardDesc": "Manage your polls, events, and account settings",
   "homeNavTitle": "Navigation",
   "account": "Account",
-  "pollsPageDesc": "View and manage all your scheduling polls",
   "signOut": "Sign Out",
   "paginationItems": "Showing {startItem}–{endItem} of {totalItems}",
   "paginationPrevious": "Previous",
@@ -403,12 +400,12 @@
   "createSpaceSuccess": "Space created successfully",
   "createSpaceError": "Failed to create space",
   "members": "Members",
-  "membersDescription": "View and manage the members of your space",
   "noMembers": "No members found",
   "noMembersDescription": "Try adjusting your search",
   "searchMembers": "Search members",
   "main": "Main",
   "actionErrorTooManyRequests": "You are making too many requests",
   "owner": "Owner",
-  "member": "Member"
+  "member": "Member",
+  "allMembers": "All"
 }
