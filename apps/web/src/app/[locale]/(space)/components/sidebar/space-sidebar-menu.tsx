@@ -2,51 +2,50 @@
 
 import { Icon } from "@rallly/ui/icon";
 import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@rallly/ui/sidebar";
-import { BarChart2Icon, CalendarIcon, HomeIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTranslation } from "@/i18n/client";
-
-const useSpaceMenuItems = () => {
-  const { t } = useTranslation();
-  return [
-    {
-      href: "/",
-      icon: <HomeIcon />,
-      label: t("home", { defaultValue: "Home" }),
-    },
-    {
-      href: "/polls",
-      icon: <BarChart2Icon />,
-      label: t("polls", { defaultValue: "Polls" }),
-    },
-    {
-      href: "/events",
-      icon: <CalendarIcon />,
-      label: t("events", { defaultValue: "Events" }),
-    },
-  ];
-};
+import { useSpaceMenu } from "@/features/navigation/config";
 
 export function SpaceSidebarMenu() {
-  const items = useSpaceMenuItems();
+  const { config } = useSpaceMenu();
   const pathname = usePathname();
   return (
-    <SidebarMenu>
-      {items.map((item) => (
-        <SidebarMenuItem key={item.href}>
-          <SidebarMenuButton asChild isActive={pathname === item.href}>
-            <Link href={item.href}>
-              <Icon>{item.icon}</Icon>
-              {item.label}
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      ))}
-    </SidebarMenu>
+    <>
+      {config.sections.map((section) => {
+        return (
+          <SidebarGroup key={section.id}>
+            <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.items.map((item) => {
+                  return (
+                    <SidebarMenuItem key={item.id}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={pathname === item.href}
+                      >
+                        <Link href={item.href}>
+                          <Icon>
+                            <item.icon />
+                          </Icon>
+                          {item.label}
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        );
+      })}
+    </>
   );
 }
