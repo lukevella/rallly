@@ -13,7 +13,6 @@ import {
 import {
   PageContainer,
   PageContent,
-  PageDescription,
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
@@ -53,12 +52,6 @@ export default async function Page() {
         <PageTitle>
           <Trans i18nKey="home" defaults="Home" />
         </PageTitle>
-        <PageDescription>
-          <Trans
-            i18nKey="homeDashboardDesc"
-            defaults="Manage your polls, events, and account settings"
-          />
-        </PageDescription>
       </PageHeader>
       <PageContent className="space-y-8">
         <IfCloudHosted>

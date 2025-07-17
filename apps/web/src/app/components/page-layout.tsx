@@ -33,7 +33,7 @@ export function PageTitle({
   );
 }
 
-export function PageDescription({
+export function PageHeader({
   children,
   className,
 }: {
@@ -41,21 +41,34 @@ export function PageDescription({
   className?: string;
 }) {
   return (
-    <p className={cn("mt-2 text-muted-foreground text-sm", className)}>
+    <div className={cn("flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between", className)}>
       {children}
-    </p>
+    </div>
   );
 }
 
-export function PageHeader({
+export function PageHeaderContent({
   children,
   className,
 }: {
   children?: React.ReactNode;
   className?: string;
-  variant?: "default" | "ghost";
 }) {
-  return <div className={cn(className)}>{children}</div>;
+  return <div className={cn("min-w-0 flex-1", className)}>{children}</div>;
+}
+
+export function PageHeaderActions({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex items-center gap-2 sm:flex-shrink-0", className)}>
+      {children}
+    </div>
+  );
 }
 
 export function PageSection({ children }: { children?: React.ReactNode }) {
@@ -85,7 +98,6 @@ export function PageSkeleton() {
         <PageTitle>
           <Skeleton className="h-6 w-32" />
         </PageTitle>
-        <Skeleton className="mt-2 h-4 w-64" />
       </PageHeader>
       <PageContent>
         <div className="space-y-8">

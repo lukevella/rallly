@@ -10,7 +10,6 @@ import { Trans } from "@/components/trans";
 
 interface PaginationProps {
   currentPage: number;
-  totalPages: number;
   totalItems: number;
   pageSize: number;
   className?: string;
@@ -18,7 +17,6 @@ interface PaginationProps {
 
 export function Pagination({
   currentPage,
-  totalPages,
   totalItems,
   pageSize,
   className,
@@ -29,6 +27,8 @@ export function Pagination({
 
   const startItem = (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(currentPage * pageSize, totalItems);
+
+  const totalPages = Math.ceil(totalItems / pageSize);
 
   const navigateToPage = (page: number) => {
     const params = new URLSearchParams(searchParams);

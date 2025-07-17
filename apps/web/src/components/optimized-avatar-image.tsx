@@ -35,14 +35,7 @@ export function OptimizedAvatarImage({
         )
       ) : null}
       {!src || !isLoaded ? (
-        <AvatarFallback
-          seed={name}
-          className={cn("shrink-0", {
-            "text-[10px]": size === "sm",
-            "text-[12px]": size === "md",
-            "text-md": size === "lg",
-          })}
-        >
+        <AvatarFallback seed={name} className={cn("shrink-0")}>
           {name?.[0]?.toUpperCase()}
         </AvatarFallback>
       ) : null}

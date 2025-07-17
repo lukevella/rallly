@@ -401,5 +401,14 @@
   "createSpaceDescription": "Create a new space to organize your polls and events.",
   "createSpaceLoading": "Creating space...",
   "createSpaceSuccess": "Space created successfully",
-  "createSpaceError": "Failed to create space"
+  "createSpaceError": "Failed to create space",
+  "members": "Members",
+  "membersDescription": "View and manage the members of your space",
+  "noMembers": "No members found",
+  "noMembersDescription": "Try adjusting your search",
+  "searchMembers": "Search members",
+  "main": "Main",
+  "actionErrorTooManyRequests": "You are making too many requests",
+  "owner": "Owner",
+  "member": "Member"
 }

@@ -1,8 +1,9 @@
 import { accessibleBy } from "@casl/prisma";
-import type { SpaceMemberRole } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { cache } from "react";
 import { loadUserAbility } from "@/data/user";
+import type { SpaceMemberRole } from "@/features/spaces/schema";
+import { fromDBRole, toDBRole } from "@/features/spaces/utils";
 
 export type SpaceDTO = {
   id: string;
@@ -45,7 +46,7 @@ export const loadSpaces = cache(async () => {
         name: space.name,
         ownerId: space.ownerId,
         isPro: Boolean(space.subscription?.active),
-        role,
+        role: fromDBRole(role),
       } satisfies SpaceDTO;
     })
     .filter(Boolean) as SpaceDTO[];
@@ -127,3 +128,87 @@ export const loadPaymentMethods = cache(async () => {
 
   return paymentMethods;
 });
+
+type MemberDTO = {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
+  role: SpaceMemberRole;
+};
+
+export const loadMembers = cache(
+  async ({
+    page = 1,
+    pageSize = 10,
+    q,
+    role,
+  }: {
+    page?: number;
+    pageSize?: number;
+    q?: string;
+    role?: "all" | SpaceMemberRole;
+  }) => {
+    const space = await loadActiveSpace();
+    const members = await prisma.spaceMember.findMany({
+      where: {
+        spaceId: space.id,
+        ...(q
+          ? {
+              user: {
+                OR: [
+                  {
+                    name: {
+                      contains: q,
+                      mode: "insensitive",
+                    },
+                  },
+                  {
+                    email: {
+                      contains: q,
+                      mode: "insensitive",
+                    },
+                  },
+                ],
+              },
+            }
+          : {}),
+        ...(role && role !== "all"
+          ? {
+              role: toDBRole(role),
+            }
+          : {}),
+      },
+      select: {
+        id: true,
+        userId: true,
+        role: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+
+    return {
+      total: members.length,
+      data: members.map(
+        (member) =>
+          ({
+            id: member.id,
+            name: member.user.name,
+            email: member.user.email,
+            image: member.user.image ?? undefined,
+            role: fromDBRole(member.role),
+          }) satisfies MemberDTO,
+      ),
+      hasNextPage: page * pageSize < members.length,
+    };
+  },
+);
