@@ -1,5 +1,6 @@
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import dayjs from "dayjs";
 import { cache } from "react";
 import { loadActiveSpace } from "@/data/space";
 
@@ -9,6 +10,55 @@ type PollFilters = {
   pageSize?: number;
   q?: string;
 };
+
+type DateRange = {
+  startDate: Date;
+  endDate: Date;
+  isSameDay: boolean;
+  formattedRange: string;
+} | null;
+
+function calculateDateRange(
+  options: { startTime: Date; duration: number }[],
+): DateRange {
+  if (options.length === 0) return null;
+
+  const sortedOptions = options.sort(
+    (a, b) => a.startTime.getTime() - b.startTime.getTime(),
+  );
+  const firstOption = sortedOptions[0];
+  const lastOption = sortedOptions[sortedOptions.length - 1];
+
+  const startDate = firstOption.startTime;
+  const endDate = dayjs(lastOption.startTime)
+    .add(lastOption.duration, "minute")
+    .toDate();
+
+  const startDay = dayjs(startDate);
+  const endDay = dayjs(endDate);
+  const isSameDay = startDay.isSame(endDay, "day");
+
+  let formattedRange: string;
+  if (isSameDay) {
+    formattedRange = startDay.format("MMM D, YYYY");
+  } else {
+    const startYear = startDay.year();
+    const endYear = endDay.year();
+
+    if (startYear === endYear) {
+      formattedRange = `${startDay.format("MMM D")} - ${endDay.format("MMM D, YYYY")}`;
+    } else {
+      formattedRange = `${startDay.format("MMM D, YYYY")} - ${endDay.format("MMM D, YYYY")}`;
+    }
+  }
+
+  return {
+    startDate,
+    endDate,
+    isSameDay,
+    formattedRange,
+  };
+}
 
 export const loadPolls = cache(
   async ({ status, page = 1, pageSize = 10, q }: PollFilters) => {
@@ -64,6 +114,15 @@ export const loadPolls = cache(
               createdAt: "asc",
             },
           },
+          options: {
+            select: {
+              startTime: true,
+              duration: true,
+            },
+            orderBy: {
+              startTime: "asc",
+            },
+          },
         },
         orderBy: {
           updatedAt: "desc",
@@ -78,6 +137,7 @@ export const loadPolls = cache(
     return {
       total,
       data: data.map((poll) => {
+        const dateRange = calculateDateRange(poll.options);
         return {
           ...poll,
           user: poll.user,
@@ -87,6 +147,7 @@ export const loadPolls = cache(
             email: participant.email ?? undefined,
             image: participant.user?.image ?? undefined,
           })),
+          dateRange,
         };
       }),
       hasNextPage,

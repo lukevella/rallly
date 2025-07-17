@@ -146,6 +146,7 @@ export default async function Page(props: {
                       participants={poll.participants}
                       pollLink={absoluteUrl(`/poll/${poll.id}`)}
                       inviteLink={shortUrl(`/invite/${poll.id}`)}
+                      dateRange={poll.dateRange}
                     />
                   ))}
                 </PollList>
