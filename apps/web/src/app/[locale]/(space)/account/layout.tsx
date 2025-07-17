@@ -1,6 +1,5 @@
 import type React from "react";
 
-import { SettingsPageIcon } from "@/app/components/page-icons";
 import {
   PageContainer,
   PageContent,
@@ -23,7 +22,6 @@ export default async function ProfileLayout({
         <div className="flex items-start gap-4">
           <div className="flex-1">
             <PageTitle>
-              <SettingsPageIcon />
               <Trans i18nKey="settings" />
             </PageTitle>
           </div>

@@ -6,7 +6,6 @@ import {
   BillingPageIcon,
   CreatePageIcon,
   EventPageIcon,
-  HomePageIcon,
   PollPageIcon,
   PreferencesPageIcon,
   ProfilePageIcon,
@@ -52,7 +51,6 @@ export default async function Page() {
     <PageContainer>
       <PageHeader>
         <PageTitle>
-          <HomePageIcon />
           <Trans i18nKey="home" defaults="Home" />
         </PageTitle>
         <PageDescription>

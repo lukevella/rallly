@@ -1,7 +1,6 @@
 import { CalendarIcon } from "lucide-react";
 import type { Metadata } from "next";
 import type { Params } from "@/app/[locale]/types";
-import { EventPageIcon } from "@/app/components/page-icons";
 import {
   PageContainer,
   PageContent,
@@ -122,7 +121,6 @@ export default async function Page(props: {
     <PageContainer>
       <PageHeader>
         <PageTitle>
-          <EventPageIcon />
           <Trans i18nKey="events" defaults="Events" />
         </PageTitle>
         <PageDescription>

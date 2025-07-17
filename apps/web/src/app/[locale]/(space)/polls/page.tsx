@@ -5,7 +5,6 @@ import { InboxIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { PollPageIcon } from "@/app/components/page-icons";
 import {
   PageContainer,
   PageContent,
@@ -109,7 +108,6 @@ export default async function Page(props: {
       <div className="flex gap-4">
         <PageHeader className="flex-1">
           <PageTitle>
-            <PollPageIcon />
             <Trans i18nKey="polls" defaults="Polls" />
           </PageTitle>
           <PageDescription>
