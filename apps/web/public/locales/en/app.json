@@ -299,11 +299,8 @@
   "commandMenuNoResults": "No results",
   "commandMenu": "Command Menu",
   "commandMenuDescription": "Select a command",
-  "eventsPageDesc": "View and manage your scheduled events",
-  "homeDashboardDesc": "Manage your polls, events, and account settings",
   "homeNavTitle": "Navigation",
   "account": "Account",
-  "pollsPageDesc": "View and manage all your scheduling polls",
   "signOut": "Sign Out",
   "paginationItems": "Showing {startItem}–{endItem} of {totalItems}",
   "paginationPrevious": "Previous",
@@ -401,5 +398,15 @@
   "createSpaceDescription": "Create a new space to organize your polls and events.",
   "createSpaceLoading": "Creating space...",
   "createSpaceSuccess": "Space created successfully",
-  "createSpaceError": "Failed to create space"
+  "createSpaceError": "Failed to create space",
+  "members": "Members",
+  "noMembers": "No members found",
+  "noMembersDescription": "Try adjusting your search",
+  "searchMembers": "Search members",
+  "actionErrorTooManyRequests": "You are making too many requests",
+  "owner": "Owner",
+  "member": "Member",
+  "allMembers": "All",
+  "inviteMember": "Invite member",
+  "content": "Content"
 }
