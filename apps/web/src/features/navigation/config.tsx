@@ -82,26 +82,6 @@ export const useSpaceMenu = () => {
               },
             ]
           : []),
-        // {
-        //   id: "manage",
-        //   title: t("manage", { defaultValue: "Manage" }),
-        //   items: [
-        //     {
-        //       id: "members",
-        //       label: t("members", { defaultValue: "Members" }),
-        //       href: "/members",
-        //       icon: UsersIcon,
-        //       isActive: pathname === "/members",
-        //     },
-        //     {
-        //       id: "settings",
-        //       label: t("settings", { defaultValue: "Settings" }),
-        //       href: "/settings",
-        //       icon: SettingsIcon,
-        //       isActive: pathname === "/settings",
-        //     },
-        //   ],
-        // },
       ],
     }),
     [pathname, t],
