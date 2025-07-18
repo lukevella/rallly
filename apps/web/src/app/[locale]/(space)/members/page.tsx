@@ -1,10 +1,8 @@
 import { UserSearchIcon } from "lucide-react";
 import type { Metadata } from "next";
-import z from "zod";
 import { MembersHeader } from "@/app/[locale]/(space)/members/components/header";
 import { MembersTabs } from "@/app/[locale]/(space)/members/components/tabs";
 import { PageContainer, PageContent } from "@/app/components/page-layout";
-import { SearchInput } from "@/app/components/search-input";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -18,21 +16,13 @@ import { Trans } from "@/components/trans";
 import { loadMembers } from "@/data/space";
 import { SpaceRole } from "@/features/spaces/components/space-role";
 import { getTranslation } from "@/i18n/server";
-
-const searchParamsSchema = z.object({
-  page: z.coerce.number().min(1).default(1),
-  pageSize: z.coerce.number().min(1).default(10),
-  q: z.string().optional(),
-  role: z.enum(["all", "member", "admin", "owner"]).optional().catch("all"),
-});
+import { searchParamsSchema } from "./schema";
 
 export default async function MembersPage({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { t } = await getTranslation();
-
   const { page, pageSize, q, role } = searchParamsSchema.parse(
     await searchParams,
   );

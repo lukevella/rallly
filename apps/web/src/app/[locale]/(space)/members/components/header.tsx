@@ -23,7 +23,6 @@ export function MembersHeader() {
         <SearchInput
           placeholder={t("searchMembers", { defaultValue: "Search members" })}
         />
-
         <Button variant="primary">
           <Icon>
             <UserPlusIcon />
