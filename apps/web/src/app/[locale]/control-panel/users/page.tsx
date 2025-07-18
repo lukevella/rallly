@@ -111,8 +111,7 @@ export default async function AdminPage(props: {
     role: roleSchema.parse(searchParams.role),
   });
 
-  const totalPages = Math.ceil(totalUsers / pageSize);
-  const totalItems = allUsers.length;
+  const totalItems = totalUsers;
 
   return (
     <FullWidthLayout>
