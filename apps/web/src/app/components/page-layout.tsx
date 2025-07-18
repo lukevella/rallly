@@ -41,7 +41,12 @@ export function PageHeader({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between", className)}>
+    <div
+      className={cn(
+        "flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between",
+        className,
+      )}
+    >
       {children}
     </div>
   );
