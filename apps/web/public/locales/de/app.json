@@ -398,5 +398,15 @@
   "createSpaceDescription": "Erstelle eine Gruppe, um deine Umfragen und Termine zu organisieren.",
   "createSpaceLoading": "Gruppe erstellen...",
   "createSpaceSuccess": "Gruppe erfolgreich erstellt",
-  "createSpaceError": "Fehler beim Erstellen der Gruppe"
+  "createSpaceError": "Fehler beim Erstellen der Gruppe",
+  "members": "Mitglieder",
+  "noMembers": "Keine Mitglieder gefunden",
+  "noMembersDescription": "Versuche, deine Suche anzupassen",
+  "searchMembers": "Mitglieder suchen",
+  "actionErrorTooManyRequests": "Du sendest zu viele Anfragen",
+  "owner": "Besitzer",
+  "member": "Mitglied",
+  "allMembers": "Alle",
+  "inviteMember": "Mitglied einladen",
+  "content": "Inhalt"
 }
