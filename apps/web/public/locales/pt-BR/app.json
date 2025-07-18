@@ -399,5 +399,14 @@
   "createSpaceLoading": "Criando espaço...",
   "createSpaceSuccess": "Espaço criado com sucesso",
   "createSpaceError": "Falha ao criar espaço",
-  "members": "Membros"
+  "members": "Membros",
+  "noMembers": "Nenhum membro encontrado",
+  "noMembersDescription": "Tente ajustar sua busca",
+  "searchMembers": "Procurar membros",
+  "actionErrorTooManyRequests": "Você está fazendo muitas solicitações",
+  "owner": "Proprietário",
+  "member": "Membro",
+  "allMembers": "Todos",
+  "inviteMember": "Convidar membro",
+  "content": "Conteúdo"
 }
