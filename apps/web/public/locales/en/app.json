@@ -403,9 +403,10 @@
   "noMembers": "No members found",
   "noMembersDescription": "Try adjusting your search",
   "searchMembers": "Search members",
-  "main": "Main",
   "actionErrorTooManyRequests": "You are making too many requests",
   "owner": "Owner",
   "member": "Member",
-  "allMembers": "All"
+  "allMembers": "All",
+  "inviteMember": "Invite member",
+  "content": "Content"
 }

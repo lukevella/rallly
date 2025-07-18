@@ -27,7 +27,7 @@ export function MembersHeader() {
           <Icon>
             <UserPlusIcon />
           </Icon>
-          <Trans i18nKey="addMember" defaults="Add member" />
+          <Trans i18nKey="inviteMember" defaults="Invite member" />
         </Button>
       </PageHeaderActions>
     </PageHeader>
