@@ -4,7 +4,6 @@ import type { Params } from "@/app/[locale]/types";
 import {
   PageContainer,
   PageContent,
-  PageDescription,
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
@@ -123,12 +122,6 @@ export default async function Page(props: {
         <PageTitle>
           <Trans i18nKey="events" defaults="Events" />
         </PageTitle>
-        <PageDescription>
-          <Trans
-            i18nKey="eventsPageDesc"
-            defaults="View and manage your scheduled events"
-          />
-        </PageDescription>
       </PageHeader>
       <PageContent>
         <div className="space-y-4">
@@ -164,7 +157,6 @@ export default async function Page(props: {
               {totalPages > 1 && (
                 <Pagination
                   currentPage={page}
-                  totalPages={totalPages}
                   totalItems={totalCount}
                   pageSize={pageSize}
                 />

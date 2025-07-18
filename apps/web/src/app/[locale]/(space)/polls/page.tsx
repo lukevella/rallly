@@ -8,8 +8,9 @@ import Link from "next/link";
 import {
   PageContainer,
   PageContent,
-  PageDescription,
   PageHeader,
+  PageHeaderActions,
+  PageHeaderContent,
   PageTitle,
 } from "@/app/components/page-layout";
 import {
@@ -105,26 +106,20 @@ export default async function Page(props: {
 
   return (
     <PageContainer>
-      <div className="flex gap-4">
-        <PageHeader className="flex-1">
+      <PageHeader>
+        <PageHeaderContent>
           <PageTitle>
             <Trans i18nKey="polls" defaults="Polls" />
           </PageTitle>
-          <PageDescription>
-            <Trans
-              i18nKey="pollsPageDesc"
-              defaults="View and manage all your scheduling polls"
-            />
-          </PageDescription>
-        </PageHeader>
-        <div className="flex items-start gap-2">
-          <Button size="sm" asChild>
+        </PageHeaderContent>
+        <PageHeaderActions>
+          <Button variant="primary" asChild>
             <Link href="/new">
               <Trans i18nKey="create" defaults="Create" />
             </Link>
           </Button>
-        </div>
-      </div>
+        </PageHeaderActions>
+      </PageHeader>
       <PageContent className="space-y-4">
         <SearchInput
           placeholder={t("searchPollsPlaceholder", {
@@ -152,7 +147,6 @@ export default async function Page(props: {
                 {totalPages > 1 ? (
                   <Pagination
                     currentPage={page}
-                    totalPages={totalPages}
                     totalItems={total}
                     pageSize={pageSize}
                     className="mt-4"

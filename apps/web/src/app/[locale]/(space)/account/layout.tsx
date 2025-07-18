@@ -4,6 +4,8 @@ import {
   PageContainer,
   PageContent,
   PageHeader,
+  PageHeaderActions,
+  PageHeaderContent,
   PageTitle,
 } from "@/app/components/page-layout";
 import { Trans } from "@/components/trans";
@@ -19,16 +21,14 @@ export default async function ProfileLayout({
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex items-start gap-4">
-          <div className="flex-1">
-            <PageTitle>
-              <Trans i18nKey="settings" />
-            </PageTitle>
-          </div>
-          <div className="flex items-center gap-2">
-            <SignOutButton />
-          </div>
-        </div>
+        <PageHeaderContent>
+          <PageTitle>
+            <Trans i18nKey="settings" />
+          </PageTitle>
+        </PageHeaderContent>
+        <PageHeaderActions>
+          <SignOutButton />
+        </PageHeaderActions>
       </PageHeader>
       <PageContent>
         <SettingsLayout>{children}</SettingsLayout>

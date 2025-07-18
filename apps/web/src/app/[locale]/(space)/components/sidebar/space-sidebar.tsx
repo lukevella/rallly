@@ -4,7 +4,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarHeader,
   SidebarSeparator,
 } from "@rallly/ui/sidebar";
@@ -46,28 +45,6 @@ export async function SpaceSidebar({
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
-        <div className="flex items-center justify-between p-1">
-          <div className="flex items-center gap-2">
-            <LogoLink />
-          </div>
-          <div className="flex items-center gap-1">
-            <FeedbackToggle />
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" asChild>
-                  <Link href="/new">
-                    <Icon>
-                      <PlusIcon />
-                    </Icon>
-                  </Link>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <Trans i18nKey="create" />
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </div>
         {isSpacesEnabled ? (
           <div>
             <SpaceDropdown spaces={spaces} activeSpaceId={activeSpace.id}>
@@ -85,12 +62,33 @@ export async function SpaceSidebar({
               </Button>
             </SpaceDropdown>
           </div>
-        ) : null}
+        ) : (
+          <div className="flex items-center justify-between p-1">
+            <div className="flex items-center gap-2">
+              <LogoLink />
+            </div>
+            <div className="flex items-center gap-1">
+              <FeedbackToggle />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" asChild>
+                    <Link href="/new">
+                      <Icon>
+                        <PlusIcon />
+                      </Icon>
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <Trans i18nKey="create" />
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </div>
+        )}
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SpaceSidebarMenu />
-        </SidebarGroup>
+        <SpaceSidebarMenu />
       </SidebarContent>
       <SidebarFooter>
         {!user.isPro ? (
