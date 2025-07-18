@@ -12,6 +12,7 @@
 
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@rallly/database";
+import { posthog } from "@rallly/posthog/server";
 import type { Adapter } from "next-auth/adapters";
 import { createUser } from "@/features/user/mutations";
 
@@ -40,7 +41,7 @@ export function CustomPrismaAdapter(options: {
       });
     },
     createUser: async (user) => {
-      return await createUser({
+      const newUser = await createUser({
         name: user.name ?? "Unknown",
         email: user.email,
         emailVerified: user.emailVerified ?? undefined,
@@ -49,6 +50,21 @@ export function CustomPrismaAdapter(options: {
         timeFormat: user.timeFormat ?? undefined,
         locale: user.locale ?? undefined,
       });
+
+      posthog?.capture({
+        distinctId: newUser.id,
+        event: "register",
+        properties: {
+          method: "sso",
+          $set: {
+            email: user.email,
+            name: user.name,
+            tier: "hobby",
+          },
+        },
+      });
+
+      return newUser;
     },
   } as Adapter;
 }
