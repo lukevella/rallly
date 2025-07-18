@@ -1,5 +1,4 @@
 "use client";
-import { cn } from "@rallly/ui";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/page-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
@@ -15,34 +14,22 @@ export function PageTabs({
 }) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [isPending, startTransition] = React.useTransition();
   const [tab, setTab] = React.useState(value);
   const handleTabChange = React.useCallback(
     (value: string) => {
       const params = new URLSearchParams(searchParams);
       params.set(name, value);
-
       params.delete("page");
-
       setTab(value);
 
-      startTransition(() => {
-        const newUrl = `?${params.toString()}`;
-        router.replace(newUrl, { scroll: false });
-      });
+      const newUrl = `?${params.toString()}`;
+      router.replace(newUrl, { scroll: false });
     },
     [router, searchParams, name],
   );
 
   return (
-    <Tabs
-      className={cn(
-        "transition-opacity",
-        isPending ? "pointer-events-none opacity-50 delay-200" : "",
-      )}
-      value={tab}
-      onValueChange={handleTabChange}
-    >
+    <Tabs className="group" value={tab} onValueChange={handleTabChange}>
       {children}
     </Tabs>
   );
@@ -58,7 +45,13 @@ export function PageTabsContent({
   children: React.ReactNode;
 }) {
   return (
-    <TabsContent tabIndex={-1} value={value}>
+    <TabsContent
+      tabIndex={-1}
+      forceMount={true}
+      key={value}
+      className="transition-opacity data-[state=inactive]:pointer-events-none data-[state=inactive]:opacity-50 data-[state=inactive]:delay-200"
+      value={value}
+    >
       {children}
     </TabsContent>
   );
