@@ -147,7 +147,6 @@ export default async function AdminPage(props: {
                 </StackedList>
                 <Pagination
                   currentPage={page}
-                  totalPages={totalPages}
                   totalItems={totalItems}
                   pageSize={pageSize}
                 />
