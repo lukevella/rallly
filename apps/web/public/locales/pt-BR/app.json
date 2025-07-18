@@ -398,5 +398,6 @@
   "createSpaceDescription": "Crie um novo espaço para organizar suas enquetes e eventos.",
   "createSpaceLoading": "Criando espaço...",
   "createSpaceSuccess": "Espaço criado com sucesso",
-  "createSpaceError": "Falha ao criar espaço"
+  "createSpaceError": "Falha ao criar espaço",
+  "members": "Membros"
 }
