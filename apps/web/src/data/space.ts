@@ -150,54 +150,62 @@ export const loadMembers = cache(
     role?: "all" | SpaceMemberRole;
   }) => {
     const space = await loadActiveSpace();
-    const members = await prisma.spaceMember.findMany({
-      where: {
-        spaceId: space.id,
-        ...(q
-          ? {
-              user: {
-                OR: [
-                  {
-                    name: {
-                      contains: q,
-                      mode: "insensitive",
-                    },
+
+    const whereClause = {
+      spaceId: space.id,
+      ...(q
+        ? {
+            user: {
+              OR: [
+                {
+                  name: {
+                    contains: q,
+                    mode: "insensitive",
                   },
-                  {
-                    email: {
-                      contains: q,
-                      mode: "insensitive",
-                    },
+                },
+                {
+                  email: {
+                    contains: q,
+                    mode: "insensitive",
                   },
-                ],
-              },
-            }
-          : {}),
-        ...(role && role !== "all"
-          ? {
-              role: toDBRole(role),
-            }
-          : {}),
-      },
-      select: {
-        id: true,
-        userId: true,
-        role: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true,
+                },
+              ],
+            },
+          }
+        : {}),
+      ...(role && role !== "all"
+        ? {
+            role: toDBRole(role),
+          }
+        : {}),
+    };
+
+    const [members, totalCount] = await Promise.all([
+      prisma.spaceMember.findMany({
+        where: whereClause,
+        select: {
+          id: true,
+          userId: true,
+          role: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+            },
           },
         },
-      },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+      prisma.spaceMember.count({
+        where: whereClause,
+      }),
+    ]);
 
     return {
-      total: members.length,
+      total: totalCount,
       data: members.map(
         (member) =>
           ({
@@ -208,7 +216,7 @@ export const loadMembers = cache(
             role: fromDBRole(member.role),
           }) satisfies MemberDTO,
       ),
-      hasNextPage: page * pageSize < members.length,
+      hasNextPage: page * pageSize < totalCount,
     };
   },
 );
