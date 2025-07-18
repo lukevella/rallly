@@ -1,4 +1,5 @@
 import { accessibleBy } from "@casl/prisma";
+import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { cache } from "react";
 import { loadUserAbility } from "@/data/user";
@@ -151,7 +152,7 @@ export const loadMembers = cache(
   }) => {
     const space = await loadActiveSpace();
 
-    const whereClause = {
+    const whereClause: Prisma.SpaceMemberWhereInput = {
       spaceId: space.id,
       ...(q
         ? {
