@@ -1,12 +1,18 @@
 "use client";
 import { toast } from "@rallly/ui/sonner";
+import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { useTranslation } from "@/i18n/client";
 
 export const useSafeAction: typeof useAction = (action, options) => {
   const { t } = useTranslation();
+  const router = useRouter();
   return useAction(action, {
     ...options,
+    onSuccess: (args) => {
+      router.refresh();
+      options?.onSuccess?.(args);
+    },
     onError: ({ error }) => {
       if (error.serverError) {
         let translatedDescription = "An unexpected error occurred";
