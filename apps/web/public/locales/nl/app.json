@@ -398,5 +398,15 @@
   "createSpaceDescription": "Maak een nieuwe ruimte aan om polls en evenementen te organiseren.",
   "createSpaceLoading": "Ruimte aanmaken...",
   "createSpaceSuccess": "Ruimte succesvol aangemaakt",
-  "createSpaceError": "Kan geen ruimte aanmaken"
+  "createSpaceError": "Kan geen ruimte aanmaken",
+  "members": "Deelnemers",
+  "noMembers": "Geen deelnemers gevonden",
+  "noMembersDescription": "Probeer je zoekopdracht aan te passen",
+  "searchMembers": "Deelnemers zoeken",
+  "actionErrorTooManyRequests": "Er zijn te veel aanvragen gedaan",
+  "owner": "Eigenaar",
+  "member": "Deelnemer",
+  "allMembers": "Alle",
+  "inviteMember": "Deelnemer uitnodigen",
+  "content": "Inhoud"
 }
