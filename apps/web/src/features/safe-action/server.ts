@@ -2,7 +2,6 @@ import "server-only";
 
 import { posthog } from "@rallly/posthog/server";
 import { waitUntil } from "@vercel/functions";
-import { revalidatePath } from "next/cache";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import z from "zod";
 import { requireUserAbility } from "@/auth/queries";
@@ -33,12 +32,6 @@ export class ActionError extends Error {
     this.cause = cause;
   }
 }
-
-const autoRevalidateMiddleware = createMiddleware().define(async ({ next }) => {
-  const result = await next();
-  revalidatePath("/", "layout");
-  return result;
-});
 
 const posthogMiddleware = createMiddleware<{
   ctx: { user: { id: string } };
@@ -103,7 +96,7 @@ export const actionClient = createSafeActionClient({
 
     return "INTERNAL_SERVER_ERROR";
   },
-}).use(autoRevalidateMiddleware);
+});
 
 export const authActionClient = actionClient
   .use(async ({ next }) => {
