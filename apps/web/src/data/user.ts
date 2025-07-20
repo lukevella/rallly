@@ -1,9 +1,18 @@
+import type { User } from "@rallly/database";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
-import { isInitialAdmin } from "@/auth/queries";
 import { defineAbilityFor } from "@/features/ability-manager";
 import { getUser } from "@/features/user/queries";
 import { auth } from "@/next-auth";
+
+export const createUserDTO = (user: User) => ({
+  id: user.id,
+  name: user.name,
+  image: user.image ?? undefined,
+  email: user.email,
+  role: user.role,
+  activeSpaceId: user.activeSpaceId ?? undefined,
+});
 
 export const requireUser = async () => {
   const session = await auth();
@@ -28,9 +37,7 @@ export const loadUserAbility = cache(async () => {
 
   return {
     user,
-    ability: defineAbilityFor(user, {
-      isInitialAdmin: isInitialAdmin(user.email),
-    }),
+    ability: defineAbilityFor(user),
   };
 });
 

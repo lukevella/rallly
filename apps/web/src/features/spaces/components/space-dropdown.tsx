@@ -29,7 +29,7 @@ export function SpaceDropdown({
   spaces: {
     id: string;
     name: string;
-    isPro: boolean;
+    tier: "hobby" | "pro";
   }[];
   activeSpaceId: string;
   children?: React.ReactNode;
@@ -70,7 +70,7 @@ export function SpaceDropdown({
               >
                 <SpaceIcon size="sm" name={space.name} />
                 <span>{space.name}</span>
-                {space.isPro ? <ProBadge /> : null}
+                {space.tier === "pro" ? <ProBadge /> : null}
               </DropdownMenuRadioItem>
             ))}
           </DropdownMenuRadioGroup>

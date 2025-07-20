@@ -21,8 +21,6 @@ export const requireUserAbility = async () => {
 
   return {
     user,
-    ability: defineAbilityFor(user, {
-      isInitialAdmin: isInitialAdmin(user.email),
-    }),
+    ability: defineAbilityFor(user),
   };
 };

@@ -53,7 +53,7 @@ export async function SpaceSidebar({
                 <div className="flex-1 px-0.5 text-left">
                   <div>{activeSpace.name}</div>
                   <div className="text-muted-foreground text-xs">
-                    {activeSpace.isPro ? "Pro" : "Free"}
+                    {activeSpace.tier === "pro" ? "Pro" : "Free"}
                   </div>
                 </div>
                 <Icon>

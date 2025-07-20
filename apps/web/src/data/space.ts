@@ -1,16 +1,49 @@
 import { accessibleBy } from "@casl/prisma";
-import type { Prisma } from "@rallly/database";
+import type {
+  SpaceMemberRole as DBSpaceMemberRole,
+  Prisma,
+} from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { cache } from "react";
 import { loadUserAbility } from "@/data/user";
 import type { SpaceMemberRole } from "@/features/spaces/schema";
 import { fromDBRole, toDBRole } from "@/features/spaces/utils";
 
+export function createSpaceDTO(
+  userId: string,
+  space: {
+    id: string;
+    ownerId: string;
+    name: string;
+    subscription: {
+      active: boolean;
+    } | null;
+    members: {
+      role: DBSpaceMemberRole;
+      userId: string;
+    }[];
+  },
+) {
+  const role = space.members.find((member) => member.userId === userId)?.role;
+
+  if (!role) {
+    throw new Error("User is not a member of the space");
+  }
+
+  return {
+    id: space.id,
+    name: space.name,
+    ownerId: space.ownerId,
+    tier: space.subscription?.active ? "pro" : "hobby",
+    role: fromDBRole(role),
+  } satisfies SpaceDTO;
+}
+
 export type SpaceDTO = {
   id: string;
   name: string;
   ownerId: string;
-  isPro: boolean;
+  tier: "hobby" | "pro";
   role: SpaceMemberRole;
 };
 
@@ -46,7 +79,7 @@ export const loadSpaces = cache(async () => {
         id: space.id,
         name: space.name,
         ownerId: space.ownerId,
-        isPro: Boolean(space.subscription?.active),
+        tier: space.subscription?.active ? "pro" : "hobby",
         role: fromDBRole(role),
       } satisfies SpaceDTO;
     })
@@ -221,3 +254,32 @@ export const loadMembers = cache(
     };
   },
 );
+
+export const getDefaultSpace = async (userId: string) => {
+  const space = await prisma.space.findFirst({
+    where: {
+      ownerId: userId,
+    },
+    select: {
+      id: true,
+      name: true,
+      ownerId: true,
+      subscription: {
+        select: {
+          active: true,
+        },
+      },
+      members: {
+        where: {
+          userId,
+        },
+        select: {
+          role: true,
+          userId: true,
+        },
+      },
+    },
+  });
+
+  return space;
+};

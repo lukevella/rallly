@@ -2,11 +2,12 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { z } from "zod";
-import { ActionError, authActionClient } from "@/features/safe-action/server";
+import { spaceActionClient } from "@/features/safe-action/server";
+import { AppError } from "@/lib/errors";
 import { getEmailClient } from "@/utils/emails";
 import { formatEventDateTime } from "./utils";
 
-export const cancelEventAction = authActionClient
+export const cancelEventAction = spaceActionClient
   .metadata({ actionName: "cancel_event" })
   .inputSchema(
     z.object({
@@ -21,14 +22,14 @@ export const cancelEventAction = authActionClient
     });
 
     if (!event) {
-      throw new ActionError({
+      throw new AppError({
         code: "NOT_FOUND",
         message: "Event not found",
       });
     }
 
     if (ctx.ability.cannot("cancel", subject("ScheduledEvent", event))) {
-      throw new ActionError({
+      throw new AppError({
         code: "UNAUTHORIZED",
         message: "You do not have permission to cancel this event",
       });
