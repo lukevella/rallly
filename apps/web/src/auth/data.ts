@@ -4,7 +4,7 @@ import { prisma } from "@rallly/database";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { createSpaceDTO } from "@/data/space";
-import { createUserDTO } from "@/data/user";
+import { createUserDTO } from "@/features/user/data";
 import { AppError } from "@/lib/errors";
 import { auth } from "@/next-auth";
 
