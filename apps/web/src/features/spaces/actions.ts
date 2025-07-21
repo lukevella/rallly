@@ -4,12 +4,9 @@ import { subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { z } from "zod";
-import {
-  authActionClient,
-  spaceActionClient,
-} from "@/features/safe-action/server";
 import { spaceMemberRoleSchema } from "@/features/spaces/schema";
 import { AppError } from "@/lib/errors";
+import { authActionClient, spaceActionClient } from "@/lib/safe-action/server";
 
 export const setActiveSpaceAction = authActionClient
   .inputSchema(

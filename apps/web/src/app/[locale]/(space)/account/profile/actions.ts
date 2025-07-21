@@ -2,8 +2,8 @@
 
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
-import { authActionClient } from "@/features/safe-action/server";
 import { AppError } from "@/lib/errors";
+import { authActionClient } from "@/lib/safe-action/server";
 import { signOut } from "@/next-auth";
 
 export const deleteCurrentUserAction = authActionClient

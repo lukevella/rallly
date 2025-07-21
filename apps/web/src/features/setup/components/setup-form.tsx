@@ -16,9 +16,9 @@ import { useForm } from "react-hook-form";
 import { LanguageSelect } from "@/components/poll/language-selector";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
-import { useSafeAction } from "@/features/safe-action/client";
 import { useTimezone } from "@/features/timezone";
 import { useTranslation } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 import { completeSetupAction } from "../actions";
 import type { SetupFormValues } from "../schema";

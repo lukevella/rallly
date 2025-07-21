@@ -16,7 +16,7 @@ import { Icon } from "@rallly/ui/icon";
 import { XIcon } from "lucide-react";
 import { useTransition } from "react";
 import { Trans } from "@/components/trans";
-import { useSafeAction } from "@/features/safe-action/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { removeInstanceLicenseAction } from "../actions";
 
 export function RemoveLicenseButton() {

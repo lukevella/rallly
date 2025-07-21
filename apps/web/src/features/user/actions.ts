@@ -2,8 +2,8 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { z } from "zod";
-import { adminActionClient } from "@/features/safe-action/server";
 import { AppError } from "@/lib/errors";
+import { adminActionClient } from "@/lib/safe-action/server";
 
 export const changeRoleAction = adminActionClient
   .metadata({ actionName: "change_role" })

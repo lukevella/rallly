@@ -4,7 +4,7 @@ import { feedbackSchema } from "@/features/feedback/schema";
 import {
   authActionClient,
   createRateLimitMiddleware,
-} from "@/features/safe-action/server";
+} from "@/lib/safe-action/server";
 import { getEmailClient } from "@/utils/emails";
 
 export const submitFeedbackAction = authActionClient

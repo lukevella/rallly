@@ -24,7 +24,7 @@ import { useForm } from "react-hook-form";
 
 import { Trans } from "@/components/trans";
 
-import { useSafeAction } from "@/features/safe-action/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { isSelfHosted } from "@/utils/constants";
 import { submitFeedbackAction } from "../actions";
 import type { Feedback } from "../schema";
