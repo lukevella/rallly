@@ -150,6 +150,7 @@ function defineUserRules(
 ) {
   const { can } = builder;
 
+  // Initial admin setup
   if (user.email === process.env.INITIAL_ADMIN_EMAIL) {
     can("update", "User", ["role"], { id: user.id });
   }
