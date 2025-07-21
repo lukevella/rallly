@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Trans } from "@/components/trans";
-import { loadInstanceLicense } from "@/data/instance-license";
+import { loadInstanceLicense } from "@/features/licensing/data";
 import { getUserCount } from "@/features/user/queries";
 import { isSelfHosted } from "@/utils/constants";
 

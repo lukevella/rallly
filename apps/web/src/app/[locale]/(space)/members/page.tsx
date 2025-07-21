@@ -13,8 +13,8 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Pagination } from "@/components/pagination";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
-import { loadMembers } from "@/data/space";
 import { SpaceRole } from "@/features/spaces/components/space-role";
+import { loadMembers } from "@/features/spaces/data";
 import { getTranslation } from "@/i18n/server";
 import { searchParamsSchema } from "./schema";
 

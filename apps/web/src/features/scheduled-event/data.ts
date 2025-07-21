@@ -3,7 +3,7 @@ import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { cache } from "react";
-import { loadActiveSpace } from "@/data/space";
+import { loadCurrentUserSpace } from "@/auth/data";
 import type { Status } from "./schema";
 
 dayjs.extend(utc);
@@ -62,7 +62,7 @@ export const loadScheduledEvents = cache(
     page?: number;
     pageSize?: number;
   }) => {
-    const space = await loadActiveSpace();
+    const { space } = await loadCurrentUserSpace();
     const where = getEventsWhereInput({
       spaceId: space.id,
       status,
@@ -120,7 +120,7 @@ export const loadScheduledEvents = cache(
 );
 
 export const loadUpcomingEventsCount = cache(async () => {
-  const space = await loadActiveSpace();
+  const { space } = await loadCurrentUserSpace();
   return prisma.scheduledEvent.count({
     where: getEventsWhereInput({
       spaceId: space.id,

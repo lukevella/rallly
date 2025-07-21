@@ -26,9 +26,9 @@ import {
   FullWidthLayoutTitle,
 } from "@/components/full-width-layout";
 import { Trans } from "@/components/trans";
-import { loadInstanceLicense } from "@/data/instance-license";
 import { LicenseKeyForm } from "@/features/licensing/components/license-key-form";
 import { RemoveLicenseButton } from "@/features/licensing/components/remove-license-button";
+import { loadInstanceLicense } from "@/features/licensing/data";
 import { getTranslation } from "@/i18n/server";
 
 async function loadData() {
