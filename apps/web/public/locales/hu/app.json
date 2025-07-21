@@ -398,5 +398,15 @@
   "createSpaceDescription": "Hozz létre egy új teret a szavazásaid és eseményeid rendszerezésére.",
   "createSpaceLoading": "Tér létrehozása...",
   "createSpaceSuccess": "Tér létrehozva",
-  "createSpaceError": "Nem sikerült a tér létrehozása"
+  "createSpaceError": "Nem sikerült a tér létrehozása",
+  "members": "Tagok",
+  "noMembers": "Nincsenek tagok",
+  "noMembersDescription": "Próbáld meg módosítani a keresést",
+  "searchMembers": "Tagok keresése",
+  "actionErrorTooManyRequests": "Túl sok kérést kezdeményezel",
+  "owner": "Tulajdonos",
+  "member": "Tag",
+  "allMembers": "Összes",
+  "inviteMember": "Tagok meghívása",
+  "content": "Tartalom"
 }
