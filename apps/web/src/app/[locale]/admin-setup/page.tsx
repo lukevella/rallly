@@ -13,8 +13,8 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Trans } from "@/components/trans";
-import { defineAbilityFor } from "@/features/ability-manager";
 import { getTranslation } from "@/i18n/server";
+import { defineAbilityFor } from "@/lib/ability-manager";
 import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {
