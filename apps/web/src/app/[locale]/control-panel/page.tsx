@@ -12,6 +12,7 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageIcon } from "@/app/components/page-icons";
+import { requireAdmin } from "@/auth/data";
 import {
   FullWidthLayout,
   FullWidthLayoutContent,
@@ -20,13 +21,12 @@ import {
 } from "@/components/full-width-layout";
 import { Trans } from "@/components/trans";
 import { loadInstanceLicense } from "@/data/instance-license";
-import { loadAdminUserAbility } from "@/data/user";
 
 async function loadData() {
-  const [_, userCount, license] = await Promise.all([
-    loadAdminUserAbility(),
+  const [userCount, license] = await Promise.all([
     prisma.user.count(),
     loadInstanceLicense(),
+    requireAdmin(),
   ]);
 
   return {

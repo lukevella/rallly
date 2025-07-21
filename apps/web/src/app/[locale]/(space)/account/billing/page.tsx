@@ -14,6 +14,7 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { loadCurrentUser } from "@/auth/data";
 import {
   DescriptionDetails,
   DescriptionList,
@@ -29,7 +30,6 @@ import {
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
 import { loadPaymentMethods, loadSubscription } from "@/data/space";
-import { loadUserAbility } from "@/data/user";
 import { FormattedDateTime } from "@/features/timezone/client/formatted-date-time";
 import { getTranslation } from "@/i18n/server";
 import { isSelfHosted } from "@/utils/constants";
@@ -46,8 +46,8 @@ async function loadData() {
     notFound();
   }
 
-  const [{ user }, subscription, paymentMethods] = await Promise.all([
-    loadUserAbility(),
+  const [user, subscription, paymentMethods] = await Promise.all([
+    loadCurrentUser(),
     loadSubscription(),
     loadPaymentMethods(),
   ]);

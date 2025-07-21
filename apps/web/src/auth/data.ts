@@ -1,6 +1,7 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
+import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { createSpaceDTO } from "@/data/space";
 import { createUserDTO } from "@/data/user";
@@ -32,6 +33,26 @@ export const getCurrentUser = async () => {
 
   return createUserDTO(user);
 };
+
+export const loadCurrentUser = cache(async () => {
+  try {
+    return getCurrentUser();
+  } catch (error) {
+    if (error instanceof AppError) {
+      switch (error.code) {
+        case "NOT_FOUND":
+          redirect("/api/auth/invalid-session");
+          break;
+        case "UNAUTHORIZED":
+          redirect("/login");
+          break;
+        default:
+          throw error;
+      }
+    }
+    throw error;
+  }
+});
 
 export const getCurrentUserSpace = async () => {
   const user = await getCurrentUser();
@@ -113,4 +134,30 @@ export const getCurrentUserSpace = async () => {
   };
 };
 
-export const loadCurrentUserSpace = cache(getCurrentUserSpace);
+export const loadCurrentUserSpace = cache(async () => {
+  try {
+    return getCurrentUserSpace();
+  } catch (error) {
+    if (error instanceof AppError) {
+      switch (error.code) {
+        case "NOT_FOUND":
+          redirect("/api/auth/invalid-session");
+          break;
+        case "UNAUTHORIZED":
+          redirect("/login");
+          break;
+        default:
+          throw error;
+      }
+    }
+    throw error;
+  }
+});
+
+export const requireAdmin = cache(async () => {
+  const user = await loadCurrentUser();
+
+  if (user.role !== "admin") {
+    notFound();
+  }
+});

@@ -5,9 +5,20 @@ import type {
 } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { cache } from "react";
-import { loadUserAbility } from "@/data/user";
+import { loadCurrentUser } from "@/auth/data";
+import { defineAbilityFor } from "@/features/ability-manager";
 import type { SpaceMemberRole } from "@/features/spaces/schema";
 import { fromDBRole, toDBRole } from "@/features/spaces/utils";
+import { AppError } from "@/lib/errors";
+import { isSelfHosted } from "@/utils/constants";
+
+function getSpaceTier(space: {
+  subscription: {
+    active: boolean;
+  } | null;
+}) {
+  return isSelfHosted ? "pro" : space.subscription?.active ? "pro" : "hobby";
+}
 
 export function createSpaceDTO(
   userId: string,
@@ -27,14 +38,17 @@ export function createSpaceDTO(
   const role = space.members.find((member) => member.userId === userId)?.role;
 
   if (!role) {
-    throw new Error("User is not a member of the space");
+    throw new AppError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "User is not a member of the space",
+    });
   }
 
   return {
     id: space.id,
     name: space.name,
     ownerId: space.ownerId,
-    tier: space.subscription?.active ? "pro" : "hobby",
+    tier: getSpaceTier(space),
     role: fromDBRole(role),
   } satisfies SpaceDTO;
 }
@@ -48,7 +62,8 @@ export type SpaceDTO = {
 };
 
 export const loadSpaces = cache(async () => {
-  const { user, ability } = await loadUserAbility();
+  const user = await loadCurrentUser();
+  const ability = defineAbilityFor(user);
   const spaces = await prisma.space.findMany({
     where: accessibleBy(ability).Space,
     include: {
@@ -91,7 +106,7 @@ export const loadSpace = cache(async ({ id }: { id: string }) => {
   const space = spaces.find((space) => space.id === id);
 
   if (!space) {
-    const { user } = await loadUserAbility();
+    const user = await loadCurrentUser();
     throw new Error(`User ${user.id} does not have access to space ${id}`);
   }
 
@@ -99,7 +114,7 @@ export const loadSpace = cache(async ({ id }: { id: string }) => {
 });
 
 const loadDefaultSpace = cache(async () => {
-  const { user } = await loadUserAbility();
+  const user = await loadCurrentUser();
   const spaces = await loadSpaces();
   const defaultSpace = spaces.find((space) => space.ownerId === user.id);
 
@@ -111,7 +126,7 @@ const loadDefaultSpace = cache(async () => {
 });
 
 export const loadActiveSpace = cache(async () => {
-  const { user } = await loadUserAbility();
+  const user = await loadCurrentUser();
 
   if (user.activeSpaceId) {
     try {
@@ -148,7 +163,7 @@ export const loadSubscription = cache(async () => {
 });
 
 export const loadPaymentMethods = cache(async () => {
-  const { user } = await loadUserAbility();
+  const user = await loadCurrentUser();
   const paymentMethods = await prisma.paymentMethod.findMany({
     where: {
       userId: user.id,

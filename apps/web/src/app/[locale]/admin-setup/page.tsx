@@ -4,6 +4,7 @@ import { CrownIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { loadCurrentUser } from "@/auth/data";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -12,12 +13,14 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Trans } from "@/components/trans";
-import { loadUserAbility } from "@/data/user";
+import { defineAbilityFor } from "@/features/ability-manager";
 import { getTranslation } from "@/i18n/server";
 import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {
-  const { user, ability } = await loadUserAbility();
+  const user = await loadCurrentUser();
+
+  const ability = defineAbilityFor(user);
 
   if (ability.can("access", "ControlPanel")) {
     redirect("/control-panel");

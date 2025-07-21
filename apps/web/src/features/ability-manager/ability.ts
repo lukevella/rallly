@@ -13,7 +13,7 @@ import type {
   UserRole,
 } from "@prisma/client";
 
-export type User = {
+export type UserContext = {
   id: string;
   email: string;
   role: UserRole;
@@ -28,7 +28,7 @@ type SpaceContext = {
   tier: SpaceTier;
 };
 
-export type AbilityContext = {
+export type AppContext = {
   space?: SpaceContext;
 };
 
@@ -45,7 +45,7 @@ export type Action =
 
 export type Subject =
   | Subjects<{
-      User: User;
+      User: UserContext;
       Poll: Poll;
       Space: Space;
       Comment: Comment;
@@ -60,12 +60,12 @@ export type Subject =
 export type AppAbility = PureAbility<[Action, Subject], PrismaQuery>;
 
 // Main ability definition function following RBAC pattern
-export function defineAbilityFor(user?: User, context?: AbilityContext) {
+export function defineAbilityFor(user?: UserContext, context?: AppContext) {
   return createPrismaAbility<AppAbility>(defineRulesFor(user, context));
 }
 
 // Rule definition function that delegates to specific role handlers
-export function defineRulesFor(user?: User, context?: AbilityContext) {
+export function defineRulesFor(user?: UserContext, context?: AppContext) {
   const builder = new AbilityBuilder<AppAbility>(createPrismaAbility);
 
   if (!user) {
@@ -96,7 +96,7 @@ export function defineRulesFor(user?: User, context?: AbilityContext) {
 // Base authenticated user rules
 function defineAuthenticatedUserRules(
   { can, cannot }: AbilityBuilder<AppAbility>,
-  user: User,
+  user: UserContext,
 ) {
   // Profile management
   can("update", "User", ["email", "name"], { id: user.id });
@@ -131,7 +131,7 @@ function defineAuthenticatedUserRules(
 
 function defineAdminRules(
   { can, cannot }: AbilityBuilder<AppAbility>,
-  user: User,
+  user: UserContext,
 ) {
   // System administration
   can("access", "ControlPanel");
@@ -140,17 +140,19 @@ function defineAdminRules(
   can("delete", "User");
 }
 
-function defineUserRules({ can }: AbilityBuilder<AppAbility>, user: User) {
+function defineUserRules(
+  { can }: AbilityBuilder<AppAbility>,
+  user: UserContext,
+) {
   // Initial admin setup
   if (user.email === process.env.INITIAL_ADMIN_EMAIL) {
     can("update", "User", ["role"], { id: user.id });
   }
 }
 
-// Space-specific rules based on user's role in the space
 function defineSpaceRules(
   { can, cannot }: AbilityBuilder<AppAbility>,
-  user: User,
+  user: UserContext,
   spaceContext: SpaceContext,
 ) {
   const { role, tier, id: spaceId } = spaceContext;
@@ -188,10 +190,7 @@ function defineSpaceRules(
       cannot("invite", "SpaceMember", { spaceId });
       break;
     case "pro":
-      if (role === "owner" || role === "admin") {
-        can("invite", "SpaceMember", { spaceId });
-        can("create", "SpaceMember", { spaceId });
-      }
+      can("invite", "SpaceMember", { spaceId });
       break;
   }
 }

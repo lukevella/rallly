@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import { KeySquareIcon, PlusIcon, ShoppingBagIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { PageIcon } from "@/app/components/page-icons";
+import { requireAdmin } from "@/auth/data";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -26,16 +27,12 @@ import {
 } from "@/components/full-width-layout";
 import { Trans } from "@/components/trans";
 import { loadInstanceLicense } from "@/data/instance-license";
-import { loadAdminUserAbility } from "@/data/user";
 import { LicenseKeyForm } from "@/features/licensing/components/license-key-form";
 import { RemoveLicenseButton } from "@/features/licensing/components/remove-license-button";
 import { getTranslation } from "@/i18n/server";
 
 async function loadData() {
-  const [_, license] = await Promise.all([
-    loadAdminUserAbility(),
-    loadInstanceLicense(),
-  ]);
+  const [license] = await Promise.all([loadInstanceLicense(), requireAdmin()]);
   return { license };
 }
 
