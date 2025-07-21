@@ -2,8 +2,10 @@ import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { UsersIcon } from "lucide-react";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import z from "zod";
 import { PageIcon } from "@/app/components/page-icons";
+import { getCurrentUser } from "@/auth/data";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -19,7 +21,6 @@ import {
 import { Pagination } from "@/components/pagination";
 import { StackedList } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
-import { loadAdminUserAbility } from "@/data/user";
 import { getTranslation } from "@/i18n/server";
 import { UserRow } from "./user-row";
 import { UserSearchInput } from "./user-search-input";
@@ -36,7 +37,11 @@ async function loadData({
   q?: string;
   role?: "admin" | "user";
 }) {
-  const { user } = await loadAdminUserAbility();
+  const user = await getCurrentUser();
+
+  if (user.role !== "admin") {
+    notFound();
+  }
 
   const where: Prisma.UserWhereInput = {};
 

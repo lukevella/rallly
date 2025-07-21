@@ -4,7 +4,11 @@ import { subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { z } from "zod";
-import { authActionClient } from "@/features/safe-action/server";
+import {
+  authActionClient,
+  spaceActionClient,
+} from "@/features/safe-action/server";
+import { spaceMemberRoleSchema } from "@/features/spaces/schema";
 import { AppError } from "@/lib/errors";
 
 export const setActiveSpaceAction = authActionClient
@@ -129,4 +133,25 @@ export const deleteSpaceAction = authActionClient
         id: parsedInput.spaceId,
       },
     });
+  });
+
+export const inviteMemberAction = spaceActionClient
+  .metadata({
+    actionName: "space_invite_member",
+  })
+  .inputSchema(
+    z.object({
+      email: z.string().email(),
+      role: spaceMemberRoleSchema,
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    if (ctx.ability.cannot("invite", "SpaceMember")) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "You do not have access to this space",
+      });
+    }
+
+    // create space member invite
   });

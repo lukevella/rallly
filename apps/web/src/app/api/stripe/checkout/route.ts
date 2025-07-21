@@ -4,7 +4,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireUser } from "@/data/user";
+import { getCurrentUserSpace } from "@/auth/data";
 import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
@@ -17,7 +17,8 @@ const inputSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const { user } = await requireUser();
+  const { user, space } = await getCurrentUserSpace();
+  const spaceId = space.id;
 
   const formData = await request.formData();
   const data = inputSchema.safeParse(Object.fromEntries(formData.entries()));
@@ -60,7 +61,7 @@ export async function POST(request: NextRequest) {
     customerId = customer.id;
   }
 
-  if (user.isPro) {
+  if (space.tier === "pro") {
     // User already has an active subscription. Take them to customer portal
     return NextResponse.redirect(
       new URL("/api/stripe/portal", request.url),
@@ -69,21 +70,6 @@ export async function POST(request: NextRequest) {
   }
 
   const proPricingData = await getProPricing();
-
-  let spaceId = user.activeSpaceId;
-
-  if (!spaceId) {
-    const space = await prisma.space.findFirstOrThrow({
-      where: {
-        ownerId: user.id,
-      },
-      select: {
-        id: true,
-      },
-    });
-
-    spaceId = space.id;
-  }
 
   const checkoutSession = await stripe.checkout.sessions.create({
     success_url: absoluteUrl(

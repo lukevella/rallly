@@ -2,19 +2,17 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { ProfilePicture } from "@/app/[locale]/(space)/account/profile/profile-picture";
+import { loadCurrentUser } from "@/auth/data";
 import { Logo } from "@/components/logo";
 import { Trans } from "@/components/trans";
-import { loadUserAbility } from "@/data/user";
 import { SetupForm } from "@/features/setup/components/setup-form";
-import { onboardedUserSchema } from "@/features/setup/schema";
+import { isUserOnboarded } from "@/features/setup/utils";
 import { getTranslation } from "@/i18n/server";
 
 export default async function SetupPage() {
-  const { user } = await loadUserAbility();
+  const user = await loadCurrentUser();
 
-  const isUserOnboarded = onboardedUserSchema.safeParse(user).success;
-
-  if (isUserOnboarded) {
+  if (isUserOnboarded(user)) {
     redirect("/");
   }
 

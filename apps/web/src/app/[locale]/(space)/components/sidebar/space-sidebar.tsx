@@ -13,9 +13,9 @@ import Link from "next/link";
 import type React from "react";
 import { SpaceSidebarMenu } from "@/app/[locale]/(space)/components/sidebar/space-sidebar-menu";
 import { LogoLink } from "@/app/components/logo-link";
+import { loadCurrentUserSpace } from "@/auth/data";
 import { Trans } from "@/components/trans";
-import { loadActiveSpace, loadSpaces } from "@/data/space";
-import { loadUserAbility } from "@/data/user";
+import { loadSpaces } from "@/data/space";
 import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
 import { SpaceDropdown } from "@/features/spaces/components/space-dropdown";
 import { SpaceIcon } from "@/features/spaces/components/space-icon";
@@ -24,23 +24,22 @@ import { UpgradeButton } from "../upgrade-button";
 import { NavUser } from "./nav-user";
 
 async function loadData() {
-  const [{ user }, spaces, activeSpace] = await Promise.all([
-    loadUserAbility(),
+  const [{ user, space }, spaces] = await Promise.all([
+    loadCurrentUserSpace(),
     loadSpaces(),
-    loadActiveSpace(),
   ]);
 
   return {
     user,
     spaces,
-    activeSpace,
+    space,
   };
 }
 
 export async function SpaceSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const { user, spaces, activeSpace } = await loadData();
+  const { user, spaces, space: activeSpace } = await loadData();
 
   return (
     <Sidebar variant="inset" {...props}>
@@ -95,7 +94,7 @@ export async function SpaceSidebar({
         <SpaceSidebarMenu />
       </SidebarContent>
       <SidebarFooter>
-        {!user.isPro ? (
+        {activeSpace.tier !== "pro" ? (
           <>
             <div className="relative overflow-hidden rounded-xl border bg-gray-50 p-3 text-sm shadow-sm">
               <SparklesIcon className="-top-4 absolute right-0 z-0 size-16 text-gray-200" />
@@ -123,7 +122,7 @@ export async function SpaceSidebar({
           name={user.name}
           image={user.image}
           plan={
-            user.isPro ? (
+            activeSpace.tier === "pro" ? (
               <Trans i18nKey="planPro" defaults="Pro" />
             ) : (
               <Trans i18nKey="planFree" defaults="Free" />
