@@ -8,8 +8,8 @@ import { z } from "zod";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
-import { useFeatureFlag } from "@/features/feature-flags/client";
 import { useTranslation } from "@/i18n/client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { trpc } from "@/trpc/client";
 
 const allowedMimeTypes = z.enum(["image/jpeg", "image/png"]);
