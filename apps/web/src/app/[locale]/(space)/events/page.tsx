@@ -17,8 +17,8 @@ import {
 import { Pagination } from "@/components/pagination";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
-import { loadScheduledEvents } from "@/data/event";
 import { ScheduledEventListItem } from "@/features/scheduled-event/components/scheduled-event-list";
+import { loadScheduledEvents } from "@/features/scheduled-event/data";
 import type { Status } from "@/features/scheduled-event/schema";
 import { statusSchema } from "@/features/scheduled-event/schema";
 import { getTranslation } from "@/i18n/server";

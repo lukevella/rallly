@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { cache } from "react";
 import { loadActiveSpace } from "@/data/space";
-import type { Status } from "../features/scheduled-event/schema";
+import type { Status } from "./schema";
 
 dayjs.extend(utc);
 
