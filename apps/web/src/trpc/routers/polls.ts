@@ -8,9 +8,9 @@ import dayjs from "dayjs";
 import * as ics from "ics";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { getCurrentUserSpace } from "@/auth/data";
 import { moderateContent } from "@/features/moderation";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
-import { getActiveSpace } from "@/features/spaces/api";
 import { getEmailClient } from "@/utils/emails";
 import {
   createRateLimitMiddleware,
@@ -181,7 +181,7 @@ export const polls = router({
       let spaceId: string | undefined;
 
       if (!ctx.user.isGuest) {
-        const space = await getActiveSpace();
+        const { space } = await getCurrentUserSpace();
         spaceId = space.id;
       }
 

@@ -36,7 +36,7 @@ export const getCurrentUser = async () => {
 
 export const loadCurrentUser = cache(async () => {
   try {
-    return getCurrentUser();
+    return await getCurrentUser();
   } catch (error) {
     if (error instanceof AppError) {
       switch (error.code) {
@@ -136,7 +136,7 @@ export const getCurrentUserSpace = async () => {
 
 export const loadCurrentUserSpace = cache(async () => {
   try {
-    return getCurrentUserSpace();
+    return await getCurrentUserSpace();
   } catch (error) {
     if (error instanceof AppError) {
       switch (error.code) {
