@@ -4,7 +4,7 @@ import { posthog } from "@rallly/posthog/server";
 import { waitUntil } from "@vercel/functions";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import z from "zod";
-import { getCurrentUser, getCurrentUserSpace } from "@/data/auth";
+import { getCurrentUser, getCurrentUserSpace } from "@/auth/data";
 import { defineAbilityFor } from "@/features/ability-manager";
 import type { Duration } from "@/features/rate-limit";
 import { rateLimit } from "@/features/rate-limit";
