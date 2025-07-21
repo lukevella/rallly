@@ -53,7 +53,11 @@ export async function SpaceSidebar({
                 <div className="flex-1 px-0.5 text-left">
                   <div>{activeSpace.name}</div>
                   <div className="text-muted-foreground text-xs">
-                    {activeSpace.tier === "pro" ? "Pro" : "Free"}
+                    {activeSpace.tier === "pro" ? (
+                      <Trans i18nKey="planPro" defaults="Pro" />
+                    ) : (
+                      <Trans i18nKey="planFree" defaults="Free" />
+                    )}
                   </div>
                 </div>
                 <Icon>
