@@ -95,9 +95,11 @@ export function defineRulesFor(user?: UserContext, context?: AppContext) {
 
 // Base authenticated user rules
 function defineAuthenticatedUserRules(
-  { can, cannot }: AbilityBuilder<AppAbility>,
+  builder: AbilityBuilder<AppAbility>,
   user: UserContext,
 ) {
+  const { can, cannot } = builder;
+
   // Profile management
   can("update", "User", ["email", "name"], { id: user.id });
   can("delete", "User", { id: user.id });
@@ -130,9 +132,11 @@ function defineAuthenticatedUserRules(
 }
 
 function defineAdminRules(
-  { can, cannot }: AbilityBuilder<AppAbility>,
+  builder: AbilityBuilder<AppAbility>,
   user: UserContext,
 ) {
+  const { can, cannot } = builder;
+
   // System administration
   can("access", "ControlPanel");
   can("update", "User", ["role"]);
@@ -141,45 +145,37 @@ function defineAdminRules(
 }
 
 function defineUserRules(
-  { can }: AbilityBuilder<AppAbility>,
+  builder: AbilityBuilder<AppAbility>,
   user: UserContext,
 ) {
-  // Initial admin setup
+  const { can } = builder;
+
   if (user.email === process.env.INITIAL_ADMIN_EMAIL) {
     can("update", "User", ["role"], { id: user.id });
   }
 }
 
 function defineSpaceRules(
-  { can, cannot }: AbilityBuilder<AppAbility>,
+  builder: AbilityBuilder<AppAbility>,
   user: UserContext,
   spaceContext: SpaceContext,
 ) {
+  const { can, cannot } = builder;
+
   const { role, tier, id: spaceId } = spaceContext;
 
-  // All members can read space content
-  can("read", "Poll", { spaceId });
-  can("read", "Comment", {
-    poll: { spaceId },
-  });
-  can("read", "SpaceMember", { spaceId });
-
-  // Owner and Admin permissions
-  if (role === "owner" || role === "admin") {
-    can(["update", "delete"], "SpaceMember", { spaceId });
-    can("update", "SpaceMember", ["role"], { spaceId });
-    // Cannot update their own role
-    cannot("update", "SpaceMember", ["role"], {
-      spaceId,
-      userId: user.id,
-    });
+  switch (role) {
+    case "owner":
+      defineSpaceOwnerRules(builder, user, spaceContext);
+      break;
+    case "admin":
+      defineSpaceAdminRules(builder, user, spaceContext);
+      break;
+    case "member":
+      defineSpaceMemberRules(builder, user, spaceContext);
+      break;
   }
 
-  can("cancel", "ScheduledEvent", {
-    spaceId,
-  });
-
-  // Tier-based permissions
   switch (tier) {
     case "hobby":
       cannot("update", "Poll", [
@@ -193,4 +189,45 @@ function defineSpaceRules(
       can("invite", "SpaceMember", { spaceId });
       break;
   }
+}
+
+function defineSpaceMemberRules(
+  builder: AbilityBuilder<AppAbility>,
+  user: UserContext,
+  space: SpaceContext,
+) {
+  const { can } = builder;
+
+  can("cancel", "ScheduledEvent", { spaceId: space.id, userId: user.id });
+}
+
+function defineSpaceAdminRules(
+  builder: AbilityBuilder<AppAbility>,
+  user: UserContext,
+  space: SpaceContext,
+) {
+  const { can, cannot } = builder;
+
+  can("cancel", "ScheduledEvent", { spaceId: space.id });
+
+  can(["read", "update", "delete"], "SpaceMember", { spaceId: space.id });
+  cannot("update", "SpaceMember", ["role"], {
+    spaceId: space.id,
+    userId: user.id,
+  });
+}
+
+function defineSpaceOwnerRules(
+  builder: AbilityBuilder<AppAbility>,
+  user: UserContext,
+  space: SpaceContext,
+) {
+  const { can, cannot } = builder;
+
+  can(["read", "update", "delete"], "SpaceMember", { spaceId: space.id });
+  cannot("update", "SpaceMember", ["role"], {
+    spaceId: space.id,
+    userId: user.id,
+  });
+  can("cancel", "ScheduledEvent", { spaceId: space.id });
 }
