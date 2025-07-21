@@ -4,7 +4,8 @@ import { subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { z } from "zod";
-import { ActionError, authActionClient } from "@/features/safe-action/server";
+import { authActionClient } from "@/features/safe-action/server";
+import { AppError } from "@/lib/errors";
 
 export const setActiveSpaceAction = authActionClient
   .inputSchema(
@@ -30,14 +31,14 @@ export const setActiveSpaceAction = authActionClient
     });
 
     if (!space) {
-      throw new ActionError({
+      throw new AppError({
         code: "NOT_FOUND",
         message: "Space not found",
       });
     }
 
     if (!ctx.ability.can("read", subject("Space", space))) {
-      throw new ActionError({
+      throw new AppError({
         code: "FORBIDDEN",
         message: "You do not have access to this space",
       });
@@ -110,14 +111,14 @@ export const deleteSpaceAction = authActionClient
     });
 
     if (!space) {
-      throw new ActionError({
+      throw new AppError({
         code: "NOT_FOUND",
         message: "Space not found",
       });
     }
 
     if (ctx.ability.cannot("delete", subject("Space", space))) {
-      throw new ActionError({
+      throw new AppError({
         code: "FORBIDDEN",
         message: "You do not have access to this space",
       });

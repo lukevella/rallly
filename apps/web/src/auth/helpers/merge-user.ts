@@ -3,10 +3,13 @@ import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
 import { defineAbilityFor } from "@/features/ability-manager";
-import { getUser } from "@/features/user/queries";
 
 const getActiveSpaceForUser = async ({ userId }: { userId: string }) => {
-  const user = await getUser(userId);
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
 
   if (!user) {
     throw new Error(`User ${userId} not found`);

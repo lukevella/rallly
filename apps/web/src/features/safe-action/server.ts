@@ -4,34 +4,11 @@ import { posthog } from "@rallly/posthog/server";
 import { waitUntil } from "@vercel/functions";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import z from "zod";
-import { requireUserAbility } from "@/auth/queries";
+import { getCurrentUser, getCurrentUserSpace } from "@/auth/data";
+import { defineAbilityFor } from "@/features/ability-manager";
 import type { Duration } from "@/features/rate-limit";
 import { rateLimit } from "@/features/rate-limit";
-
-type ActionErrorCode =
-  | "UNAUTHORIZED"
-  | "NOT_FOUND"
-  | "FORBIDDEN"
-  | "INTERNAL_SERVER_ERROR"
-  | "TOO_MANY_REQUESTS";
-
-export class ActionError extends Error {
-  code: ActionErrorCode;
-  constructor({
-    code,
-    message,
-    cause,
-  }: {
-    code: ActionErrorCode;
-    message: string;
-    cause?: unknown;
-  }) {
-    super(`[${code}]: ${message}`);
-    this.name = "ActionError";
-    this.code = code;
-    this.cause = cause;
-  }
-}
+import { AppError } from "@/lib/errors";
 
 const posthogMiddleware = createMiddleware<{
   ctx: { user: { id: string } };
@@ -75,7 +52,7 @@ export const createRateLimitMiddleware = (
     const res = await rateLimit(metadata.actionName, requests, duration);
 
     if (!res.success) {
-      throw new ActionError({
+      throw new AppError({
         code: "TOO_MANY_REQUESTS",
         message: "You are making too many requests.",
       });
@@ -90,7 +67,7 @@ export const actionClient = createSafeActionClient({
       actionName: z.string(),
     }),
   handleServerError: async (error) => {
-    if (error instanceof ActionError) {
+    if (error instanceof AppError) {
       return error.code;
     }
 
@@ -100,17 +77,25 @@ export const actionClient = createSafeActionClient({
 
 export const authActionClient = actionClient
   .use(async ({ next }) => {
-    const { user, ability } = await requireUserAbility();
-
-    return next({
-      ctx: { user, ability },
-    });
+    try {
+      const user = await getCurrentUser();
+      const ability = defineAbilityFor(user);
+      return next({
+        ctx: { user, ability },
+      });
+    } catch (error) {
+      throw new AppError({
+        code: "UNAUTHORIZED",
+        message: "You are not authenticated.",
+        cause: error,
+      });
+    }
   })
   .use(posthogMiddleware);
 
 export const adminActionClient = authActionClient.use(async ({ ctx, next }) => {
   if (ctx.user.role !== "admin") {
-    throw new ActionError({
+    throw new AppError({
       code: "FORBIDDEN",
       message: "You do not have permission to perform this action.",
     });
@@ -118,3 +103,27 @@ export const adminActionClient = authActionClient.use(async ({ ctx, next }) => {
 
   return next();
 });
+
+export const spaceActionClient = actionClient
+  .use(async ({ next }) => {
+    try {
+      const { user, space } = await getCurrentUserSpace();
+      const ability = defineAbilityFor(user, {
+        space,
+      });
+      return next({
+        ctx: {
+          user,
+          space,
+          ability,
+        },
+      });
+    } catch (error) {
+      throw new AppError({
+        code: "UNAUTHORIZED",
+        message: "You are not authenticated.",
+        cause: error,
+      });
+    }
+  })
+  .use(posthogMiddleware);

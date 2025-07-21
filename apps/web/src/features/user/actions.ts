@@ -2,10 +2,10 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { z } from "zod";
-import { ActionError, authActionClient } from "@/features/safe-action/server";
-import { getUser } from "./queries";
+import { adminActionClient } from "@/features/safe-action/server";
+import { AppError } from "@/lib/errors";
 
-export const changeRoleAction = authActionClient
+export const changeRoleAction = adminActionClient
   .metadata({ actionName: "change_role" })
   .inputSchema(
     z.object({
@@ -16,24 +16,26 @@ export const changeRoleAction = authActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { userId, role } = parsedInput;
 
-    const targetUser = await getUser(userId);
+    const targetUser = await prisma.user.findUnique({
+      where: { id: userId },
+    });
 
     if (!targetUser) {
-      throw new ActionError({
+      throw new AppError({
         code: "NOT_FOUND",
         message: `User ${userId} not found`,
       });
     }
 
     if (targetUser.role === role) {
-      throw new ActionError({
+      throw new AppError({
         code: "FORBIDDEN",
         message: "User is already this role",
       });
     }
 
     if (ctx.ability.cannot("update", subject("User", targetUser), "role")) {
-      throw new ActionError({
+      throw new AppError({
         code: "UNAUTHORIZED",
         message: "Current user is not authorized to update role",
       });
@@ -49,7 +51,7 @@ export const changeRoleAction = authActionClient
     });
   });
 
-export const deleteUserAction = authActionClient
+export const deleteUserAction = adminActionClient
   .metadata({ actionName: "delete_user" })
   .inputSchema(
     z.object({
@@ -65,14 +67,14 @@ export const deleteUserAction = authActionClient
     });
 
     if (!user) {
-      throw new ActionError({
+      throw new AppError({
         code: "NOT_FOUND",
         message: "User not found",
       });
     }
 
     if (ctx.ability.cannot("delete", subject("User", user))) {
-      throw new ActionError({
+      throw new AppError({
         code: "FORBIDDEN",
         message: "This user cannot be deleted",
         cause: ctx.ability.relevantRuleFor("delete", subject("User", user)),
