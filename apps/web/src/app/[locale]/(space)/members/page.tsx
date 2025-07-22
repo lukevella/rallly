@@ -1,3 +1,4 @@
+import { Badge } from "@rallly/ui/badge";
 import { UserSearchIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { MembersHeader } from "@/app/[locale]/(space)/members/components/header";
@@ -65,14 +66,25 @@ export default async function MembersPage({
                         name={member.name}
                         size="md"
                       />
-                      <div className="text-sm">
-                        <div className="font-semibold">{member.name}</div>
-                        <div className="text-muted-foreground">
+                      <div>
+                        <div className="flex items-center gap-x-2">
+                          <div className="font-semibold text-sm">
+                            {member.name}
+                          </div>
+                          <div>
+                            {member.isOwner ? (
+                              <Badge>
+                                <Trans i18nKey="owner" defaults="Owner" />
+                              </Badge>
+                            ) : null}
+                          </div>
+                        </div>
+                        <div className="text-muted-foreground text-sm">
                           {member.email}
                         </div>
                       </div>
                     </div>
-                    <div className="text-sm capitalize">
+                    <div className="text-sm">
                       <SpaceRole role={member.role} />
                     </div>
                   </StackedListItem>

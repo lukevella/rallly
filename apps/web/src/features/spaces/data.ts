@@ -156,6 +156,7 @@ type MemberDTO = {
   email: string;
   image?: string;
   role: SpaceMemberRole;
+  isOwner: boolean;
 };
 
 export const loadMembers = cache(
@@ -235,6 +236,7 @@ export const loadMembers = cache(
             email: member.user.email,
             image: member.user.image ?? undefined,
             role: fromDBRole(member.role),
+            isOwner: member.userId === space.ownerId,
           }) satisfies MemberDTO,
       ),
       hasNextPage: page * pageSize < totalCount,

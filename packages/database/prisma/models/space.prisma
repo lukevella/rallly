@@ -18,7 +18,6 @@ model Space {
 }
 
 enum SpaceMemberRole {
-  OWNER
   ADMIN
   MEMBER
 }

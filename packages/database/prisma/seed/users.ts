@@ -55,7 +55,7 @@ async function createUser({
     data: {
       spaceId: space.id,
       userId: id,
-      role: "OWNER",
+      role: "ADMIN",
     },
   });
 

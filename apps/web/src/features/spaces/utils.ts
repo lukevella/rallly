@@ -7,8 +7,6 @@ export const toDBRole = (role: SpaceMemberRole): PrismaSpaceMemberRole => {
       return "MEMBER";
     case "admin":
       return "ADMIN";
-    case "owner":
-      return "OWNER";
   }
 };
 
@@ -18,7 +16,5 @@ export const fromDBRole = (role: PrismaSpaceMemberRole): SpaceMemberRole => {
       return "member";
     case "ADMIN":
       return "admin";
-    case "OWNER":
-      return "owner";
   }
 };
