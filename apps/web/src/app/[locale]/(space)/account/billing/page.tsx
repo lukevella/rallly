@@ -30,8 +30,8 @@ import {
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
 import { loadPaymentMethods, loadSubscription } from "@/features/spaces/data";
-import { FormattedDateTime } from "@/features/timezone/client/formatted-date-time";
 import { getTranslation } from "@/i18n/server";
+import { FormattedDateTime } from "@/lib/timezone/client/formatted-date-time";
 import { isSelfHosted } from "@/utils/constants";
 import {
   SettingsContent,

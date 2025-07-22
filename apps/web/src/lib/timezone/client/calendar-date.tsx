@@ -4,9 +4,8 @@ import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import timezone from "dayjs/plugin/timezone";
-
-import { useTimezone } from "@/features/timezone/client/context";
 import { useTranslation } from "@/i18n/client";
+import { useTimezone } from "@/lib/timezone/client/context";
 
 dayjs.extend(calendar);
 dayjs.extend(localizedFormat);

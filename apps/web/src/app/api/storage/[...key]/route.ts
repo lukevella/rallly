@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { env } from "@/env";
-import { getS3Client } from "@/features/storage/s3";
+import { getS3Client } from "@/lib/storage/s3";
 
 async function getAvatar(key: string) {
   const s3Client = getS3Client();
