@@ -3,8 +3,8 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { redirect } from "next/navigation";
-import { authActionClient } from "@/features/safe-action/server";
 import { AppError } from "@/lib/errors";
+import { authActionClient } from "@/lib/safe-action/server";
 
 export const makeMeAdminAction = authActionClient
   .metadata({ actionName: "make_admin" })

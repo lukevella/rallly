@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { defineAbilityFor } from "@/features/ability-manager";
 import { getUser } from "@/features/user/queries";
+import { defineAbilityFor } from "@/lib/ability-manager";
 import { auth } from "@/next-auth";
 
 export const requireUserAbility = async () => {

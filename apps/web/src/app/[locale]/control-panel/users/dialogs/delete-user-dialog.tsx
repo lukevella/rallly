@@ -23,9 +23,9 @@ import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Trans } from "@/components/trans";
-import { useSafeAction } from "@/features/safe-action/client";
 import { deleteUserAction } from "@/features/user/actions";
 import { useTranslation } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 const useSchema = (email: string) => {
   const { t } = useTranslation();

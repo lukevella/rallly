@@ -2,8 +2,8 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { z } from "zod";
-import { spaceActionClient } from "@/features/safe-action/server";
 import { AppError } from "@/lib/errors";
+import { spaceActionClient } from "@/lib/safe-action/server";
 import { getEmailClient } from "@/utils/emails";
 import { formatEventDateTime } from "./utils";
 

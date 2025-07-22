@@ -28,8 +28,8 @@ import {
 import { Trans } from "@/components/trans";
 import type { InstanceSettings } from "@/features/instance-settings/schema";
 import { instanceSettingsSchema } from "@/features/instance-settings/schema";
-import { useSafeAction } from "@/features/safe-action/client";
 import { useTranslation } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { updateInstanceSettingsAction } from "./actions";
 
 export function InstanceSettingsForm({

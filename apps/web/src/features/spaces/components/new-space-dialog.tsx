@@ -23,9 +23,9 @@ import { toast } from "@rallly/ui/sonner";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Trans } from "@/components/trans";
-import { useSafeAction } from "@/features/safe-action/client";
 import { createSpaceAction } from "@/features/spaces/actions";
 import { useTranslation } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 const newSpaceFormSchema = z.object({
   name: z.string().min(1).max(100),

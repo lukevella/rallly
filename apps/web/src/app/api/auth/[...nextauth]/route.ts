@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { rateLimit } from "@/features/rate-limit";
+import { rateLimit } from "@/lib/rate-limit";
 import { handlers } from "@/next-auth";
 import { withPosthog } from "@/utils/posthog";
 

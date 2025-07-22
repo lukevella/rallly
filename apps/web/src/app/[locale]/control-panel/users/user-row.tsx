@@ -21,9 +21,9 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
-import { useSafeAction } from "@/features/safe-action/client";
 import { changeRoleAction } from "@/features/user/actions";
 import { userRoleSchema } from "@/features/user/schema";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { DeleteUserDialog } from "./dialogs/delete-user-dialog";
 
 export function UserRow({

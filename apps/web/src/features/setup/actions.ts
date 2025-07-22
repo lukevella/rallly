@@ -2,7 +2,7 @@
 import { prisma } from "@rallly/database";
 import { redirect } from "next/navigation";
 
-import { authActionClient } from "@/features/safe-action/server";
+import { authActionClient } from "@/lib/safe-action/server";
 import { setupSchema } from "./schema";
 
 export const completeSetupAction = authActionClient

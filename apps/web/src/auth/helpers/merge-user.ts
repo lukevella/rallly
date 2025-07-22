@@ -2,7 +2,7 @@ import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
-import { defineAbilityFor } from "@/features/ability-manager";
+import { defineAbilityFor } from "@/lib/ability-manager";
 
 const getActiveSpaceForUser = async ({ userId }: { userId: string }) => {
   const user = await prisma.user.findUnique({

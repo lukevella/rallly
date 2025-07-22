@@ -20,7 +20,7 @@ import {
   FullWidthLayoutTitle,
 } from "@/components/full-width-layout";
 import { Trans } from "@/components/trans";
-import { loadInstanceLicense } from "@/data/instance-license";
+import { loadInstanceLicense } from "@/features/licensing/data";
 
 async function loadData() {
   const [userCount, license] = await Promise.all([

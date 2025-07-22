@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@rallly/database";
-import { adminActionClient } from "@/features/safe-action/server";
+import { adminActionClient } from "@/lib/safe-action/server";
 
 export const removeInstanceLicenseAction = adminActionClient
   .metadata({

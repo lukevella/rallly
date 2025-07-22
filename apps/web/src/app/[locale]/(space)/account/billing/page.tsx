@@ -29,9 +29,9 @@ import {
 } from "@/components/empty-state";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
-import { loadPaymentMethods, loadSubscription } from "@/data/space";
-import { FormattedDateTime } from "@/features/timezone/client/formatted-date-time";
+import { loadPaymentMethods, loadSubscription } from "@/features/spaces/data";
 import { getTranslation } from "@/i18n/server";
+import { FormattedDateTime } from "@/lib/timezone/client/formatted-date-time";
 import { isSelfHosted } from "@/utils/constants";
 import {
   SettingsContent,

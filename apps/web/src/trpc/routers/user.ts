@@ -7,7 +7,7 @@ import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
 import { env } from "@/env";
-import { getS3Client } from "@/features/storage/s3";
+import { getS3Client } from "@/lib/storage/s3";
 import { createToken } from "@/utils/session";
 
 import {

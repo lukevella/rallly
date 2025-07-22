@@ -22,8 +22,8 @@ import {
 } from "@/components/empty-state";
 import { Pagination } from "@/components/pagination";
 import { Trans } from "@/components/trans";
-import { loadPolls } from "@/data/poll";
 import { PollList, PollListItem } from "@/features/poll/components/poll-list";
+import { loadPolls } from "@/features/poll/data";
 import { getTranslation } from "@/i18n/server";
 
 import { SearchInput } from "../../../components/search-input";

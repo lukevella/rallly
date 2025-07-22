@@ -11,8 +11,8 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 
 import { usePoll } from "@/contexts/poll";
-import { useTimezone } from "@/features/timezone";
 import { useTranslation } from "@/i18n/client";
+import { useTimezone } from "@/lib/timezone/client/context";
 import { useAddParticipantMutation } from "./poll/mutations";
 import VoteIcon from "./poll/vote-icon";
 import { useUser } from "./user-provider";

@@ -5,10 +5,10 @@ import type {
 } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { cache } from "react";
-import { loadCurrentUser } from "@/auth/data";
-import { defineAbilityFor } from "@/features/ability-manager";
+import { loadCurrentUser, loadCurrentUserSpace } from "@/auth/data";
 import type { SpaceMemberRole } from "@/features/spaces/schema";
 import { fromDBRole, toDBRole } from "@/features/spaces/utils";
+import { defineAbilityFor } from "@/lib/ability-manager";
 import { AppError } from "@/lib/errors";
 import { isSelfHosted } from "@/utils/constants";
 
@@ -113,36 +113,8 @@ export const loadSpace = cache(async ({ id }: { id: string }) => {
   return space;
 });
 
-const loadDefaultSpace = cache(async () => {
-  const user = await loadCurrentUser();
-  const spaces = await loadSpaces();
-  const defaultSpace = spaces.find((space) => space.ownerId === user.id);
-
-  if (!defaultSpace) {
-    throw new Error(`User ${user.id} does not have access to any spaces`);
-  }
-
-  return defaultSpace;
-});
-
-export const loadActiveSpace = cache(async () => {
-  const user = await loadCurrentUser();
-
-  if (user.activeSpaceId) {
-    try {
-      return await loadSpace({ id: user.activeSpaceId });
-    } catch {
-      console.warn(
-        `User ${user.id} has an active space ID ${user.activeSpaceId} that does not exist or is no longer accessible`,
-      );
-    }
-  }
-
-  return await loadDefaultSpace();
-});
-
 export const loadSubscription = cache(async () => {
-  const space = await loadActiveSpace();
+  const { space } = await loadCurrentUserSpace();
   const subscription = await prisma.subscription.findUnique({
     where: {
       spaceId: space.id,
@@ -198,7 +170,7 @@ export const loadMembers = cache(
     q?: string;
     role?: "all" | SpaceMemberRole;
   }) => {
-    const space = await loadActiveSpace();
+    const { space } = await loadCurrentUserSpace();
 
     const whereClause: Prisma.SpaceMemberWhereInput = {
       spaceId: space.id,
@@ -269,32 +241,3 @@ export const loadMembers = cache(
     };
   },
 );
-
-export const getDefaultSpace = async (userId: string) => {
-  const space = await prisma.space.findFirst({
-    where: {
-      ownerId: userId,
-    },
-    select: {
-      id: true,
-      name: true,
-      ownerId: true,
-      subscription: {
-        select: {
-          active: true,
-        },
-      },
-      members: {
-        where: {
-          userId,
-        },
-        select: {
-          role: true,
-          userId: true,
-        },
-      },
-    },
-  });
-
-  return space;
-};

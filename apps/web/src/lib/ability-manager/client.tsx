@@ -5,8 +5,8 @@ import type {
   AppAbility,
   AppContext,
   UserContext,
-} from "@/features/ability-manager/ability";
-import { defineAbilityFor } from "@/features/ability-manager/ability";
+} from "@/lib/ability-manager/ability";
+import { defineAbilityFor } from "@/lib/ability-manager/ability";
 
 export const AbilityContext = React.createContext<AppAbility>({} as AppAbility);
 export const Can = createContextualCan(AbilityContext.Consumer);

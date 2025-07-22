@@ -5,10 +5,10 @@ import { waitUntil } from "@vercel/functions";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import z from "zod";
 import { getCurrentUser, getCurrentUserSpace } from "@/auth/data";
-import { defineAbilityFor } from "@/features/ability-manager";
-import type { Duration } from "@/features/rate-limit";
-import { rateLimit } from "@/features/rate-limit";
+import { defineAbilityFor } from "@/lib/ability-manager";
 import { AppError } from "@/lib/errors";
+import type { Duration } from "@/lib/rate-limit";
+import { rateLimit } from "@/lib/rate-limit";
 
 const posthogMiddleware = createMiddleware<{
   ctx: { user: { id: string } };
