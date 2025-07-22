@@ -35,7 +35,7 @@ export async function createUserInDb({
       data: {
         spaceId: space.id,
         userId: user.id,
-        role: "OWNER",
+        role: "ADMIN",
       },
     });
 

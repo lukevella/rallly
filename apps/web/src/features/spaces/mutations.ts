@@ -14,7 +14,7 @@ export async function createSpace({
       members: {
         create: {
           userId: ownerId,
-          role: "OWNER",
+          role: "ADMIN",
         },
       },
     },

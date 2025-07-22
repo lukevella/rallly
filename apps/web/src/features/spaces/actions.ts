@@ -72,7 +72,7 @@ export const createSpaceAction = authActionClient
         members: {
           create: {
             userId: ctx.user.id,
-            role: "OWNER",
+            role: "ADMIN",
           },
         },
       },

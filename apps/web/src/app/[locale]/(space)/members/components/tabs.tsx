@@ -26,9 +26,6 @@ export const MembersTabs = ({
         <PageTabsTrigger value="admin">
           <Trans i18nKey="admin" defaults="Admin" />
         </PageTabsTrigger>
-        <PageTabsTrigger value="owner">
-          <Trans i18nKey="owner" defaults="Owner" />
-        </PageTabsTrigger>
       </PageTabsList>
       <PageTabsContent value={value}>{children}</PageTabsContent>
     </PageTabs>

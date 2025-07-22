@@ -12,6 +12,7 @@ import type {
   Subscription,
   UserRole,
 } from "@prisma/client";
+import type { SpaceMemberRole } from "@/features/spaces/schema";
 
 export type UserContext = {
   id: string;
@@ -20,7 +21,7 @@ export type UserContext = {
 };
 
 type SpaceTier = "hobby" | "pro";
-type SpaceRole = "member" | "owner" | "admin";
+type SpaceRole = SpaceMemberRole;
 
 type SpaceContext = {
   id: string;
@@ -166,9 +167,6 @@ function defineSpaceRules(
   const { role, tier, id: spaceId } = spaceContext;
 
   switch (role) {
-    case "owner":
-      defineSpaceOwnerRules(builder, user, spaceContext);
-      break;
     case "admin":
       defineSpaceAdminRules(builder, user, spaceContext);
       break;
@@ -216,19 +214,4 @@ function defineSpaceAdminRules(
     spaceId: space.id,
     userId: user.id,
   });
-}
-
-function defineSpaceOwnerRules(
-  builder: AbilityBuilder<AppAbility>,
-  user: UserContext,
-  space: SpaceContext,
-) {
-  const { can, cannot } = builder;
-
-  can(["read", "update", "delete"], "SpaceMember", { spaceId: space.id });
-  cannot("update", "SpaceMember", ["role"], {
-    spaceId: space.id,
-    userId: user.id,
-  });
-  can("cancel", "ScheduledEvent", { spaceId: space.id });
 }
