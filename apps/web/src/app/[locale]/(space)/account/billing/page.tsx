@@ -31,8 +31,8 @@ import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
 import { loadPaymentMethods, loadSubscription } from "@/features/spaces/data";
 import { getTranslation } from "@/i18n/server";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { FormattedDateTime } from "@/lib/timezone/client/formatted-date-time";
-import { isSelfHosted } from "@/utils/constants";
 import {
   SettingsContent,
   SettingsSection,
@@ -42,10 +42,6 @@ import { SubscriptionPrice } from "./components/subscription-price";
 import { SubscriptionStatus } from "./components/subscription-status";
 
 async function loadData() {
-  if (isSelfHosted) {
-    notFound();
-  }
-
   const [user, subscription, paymentMethods] = await Promise.all([
     loadCurrentUser(),
     loadSubscription(),
@@ -56,6 +52,10 @@ async function loadData() {
 }
 
 export default async function Page() {
+  if (!isFeatureEnabled("billing")) {
+    notFound();
+  }
+
   const { user, subscription, paymentMethods } = await loadData();
 
   return (
