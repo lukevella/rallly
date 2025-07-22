@@ -142,7 +142,7 @@ export const inviteMemberAction = spaceActionClient
       role: spaceMemberRoleSchema,
     }),
   )
-  .action(async ({ ctx, parsedInput }) => {
+  .action(async ({ ctx }) => {
     if (ctx.ability.cannot("invite", "SpaceMember")) {
       throw new AppError({
         code: "FORBIDDEN",
