@@ -3,6 +3,7 @@ type AppErrorCode =
   | "NOT_FOUND"
   | "FORBIDDEN"
   | "INTERNAL_SERVER_ERROR"
+  | "PAYMENT_REQUIRED"
   | "TOO_MANY_REQUESTS";
 
 export class AppError extends Error {

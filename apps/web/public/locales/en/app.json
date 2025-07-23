@@ -408,5 +408,21 @@
   "member": "Member",
   "allMembers": "All",
   "inviteMember": "Invite member",
-  "content": "Content"
+  "content": "Content",
+  "role": "Role",
+  "inviteMemberDescription": "Invite a new member to your space",
+  "inviteSent": "Invitation sent",
+  "inviteUpdated": "Invitation updated with new role",
+  "alreadyMember": "This person is already a member of this space",
+  "invitePending": "An invitation has already been sent to this email address",
+  "inviteFailed": "Failed to send invitation",
+  "acceptInvite": "Accept Invite",
+  "acceptInviteSuccess": "Successfully joined the space!",
+  "joinSpace": "Join {spaceName}",
+  "acceptInviteTitle": "{inviterName} invited you to join the {spaceName}",
+  "youAreSignedInAs": "You're signed in as",
+  "acceptInviteMetadataTitle": "Join {spaceName}",
+  "actionErrorPaymentRequired": "You need to upgrade to perform this action",
+  "loginWithAnotherAccount": "Login with another account",
+  "adminRoleRequired": "You need to be an admin to perform this action"
 }

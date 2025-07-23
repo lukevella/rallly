@@ -51,14 +51,15 @@ model User {
   role          UserRole    @default(user)
   activeSpaceId String?     @map("active_space_id")
 
-  comments       Comment[]
-  polls          Poll[]
-  watcher        Watcher[]
-  accounts       Account[]
-  participants   Participant[]
-  paymentMethods PaymentMethod[]
-  subscription   Subscription?   @relation("UserToSubscription")
-  activeSpace    Space?          @relation("UserActiveSpace", fields: [activeSpaceId], references: [id], onDelete: SetNull)
+  comments           Comment[]
+  polls              Poll[]
+  watcher            Watcher[]
+  accounts           Account[]
+  participants       Participant[]
+  paymentMethods     PaymentMethod[]
+  subscription       Subscription?       @relation("UserToSubscription")
+  activeSpace        Space?              @relation("UserActiveSpace", fields: [activeSpaceId], references: [id], onDelete: SetNull)
+  spaceMemberInvites SpaceMemberInvite[]
 
   spaces   Space[]       @relation("UserSpaces")
   memberOf SpaceMember[]
