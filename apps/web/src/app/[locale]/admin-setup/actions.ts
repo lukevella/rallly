@@ -1,17 +1,17 @@
 "use server";
 
-import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { redirect } from "next/navigation";
 import { AppError } from "@/lib/errors";
 import { authActionClient } from "@/lib/safe-action/server";
+import { isInitialAdmin } from "@/utils/is-initial-admin";
 
 export const makeMeAdminAction = authActionClient
   .metadata({ actionName: "make_admin" })
   .action(async ({ ctx }) => {
-    if (ctx.ability.cannot("update", subject("User", ctx.user), "role")) {
+    if (!isInitialAdmin(ctx.user.email)) {
       throw new AppError({
-        code: "UNAUTHORIZED",
+        code: "FORBIDDEN",
         message: "You are not authorized to update your role",
       });
     }
