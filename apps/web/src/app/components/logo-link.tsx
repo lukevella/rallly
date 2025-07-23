@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import Logo from "@/assets/logo-mark.svg";
 
 export function LogoLink() {
   return (
@@ -7,14 +7,7 @@ export function LogoLink() {
       className="inline-block transition-transform active:translate-y-1"
       href="/"
     >
-      <Image
-        src="/images/logo-mark.svg"
-        alt="Rallly"
-        width={32}
-        height={32}
-        priority={true}
-        className="shrink-0"
-      />
+      <Logo className="size-8" />
     </Link>
   );
 }
