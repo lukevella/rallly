@@ -24,7 +24,7 @@ export default async function JoinPage({
       spaceId: true,
       email: true,
       role: true,
-      inviter: {
+      invitedBy: {
         select: {
           name: true,
         },
@@ -55,7 +55,7 @@ export default async function JoinPage({
             i18nKey="joinSpace"
             defaults="Join {spaceName}"
             values={{
-              spaceName: invite.space.name,
+              spaceName: invite.invitedBy.name,
             }}
           />
         </h1>
@@ -65,7 +65,7 @@ export default async function JoinPage({
             defaults="{inviterName} invited you to join the {spaceName}"
             values={{
               spaceName: invite.space.name,
-              inviterName: invite.inviter.name,
+              inviterName: invite.invitedBy.name,
             }}
           />
         </p>
