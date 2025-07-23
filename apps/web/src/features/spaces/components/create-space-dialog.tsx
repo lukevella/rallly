@@ -27,17 +27,17 @@ import { createSpaceAction } from "@/features/spaces/actions";
 import { useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
-const newSpaceFormSchema = z.object({
+const createSpaceFormSchema = z.object({
   name: z.string().min(1).max(100),
 });
 
-type NewSpaceFormValues = z.infer<typeof newSpaceFormSchema>;
+type CreateSpaceFormValues = z.infer<typeof createSpaceFormSchema>;
 
-export function NewSpaceDialog({ children, ...props }: DialogProps) {
+export function CreateSpaceDialog(props: DialogProps) {
   const { t } = useTranslation();
 
-  const form = useForm<NewSpaceFormValues>({
-    resolver: zodResolver(newSpaceFormSchema),
+  const form = useForm<CreateSpaceFormValues>({
+    resolver: zodResolver(createSpaceFormSchema),
     defaultValues: {
       name: "",
     },
@@ -51,9 +51,8 @@ export function NewSpaceDialog({ children, ...props }: DialogProps) {
 
   return (
     <Dialog {...props}>
-      {children}
       <Form {...form}>
-        <DialogContent size="xs">
+        <DialogContent size="sm">
           <DialogHeader>
             <DialogTitle>
               <Trans i18nKey="createSpace" defaults="Create Space" />

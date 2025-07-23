@@ -18,7 +18,7 @@ import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { setActiveSpaceAction } from "@/features/spaces/actions";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { NewSpaceDialog } from "./new-space-dialog";
+import { CreateSpaceDialog } from "./create-space-dialog";
 import { SpaceIcon } from "./space-icon";
 
 export function SpaceDropdown({
@@ -74,7 +74,6 @@ export function SpaceDropdown({
               </DropdownMenuRadioItem>
             ))}
           </DropdownMenuRadioGroup>
-          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={newSpaceDialog.trigger}>
             <Icon>
               <CirclePlusIcon />
@@ -92,7 +91,7 @@ export function SpaceDropdown({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <NewSpaceDialog {...newSpaceDialog.dialogProps} />
+      <CreateSpaceDialog {...newSpaceDialog.dialogProps} />
     </>
   );
 }
