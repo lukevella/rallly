@@ -51,7 +51,7 @@ const dialogContentVariants = cva(
           "data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-top-[48%] sm:top-[50%] sm:translate-y-[-50%]",
       },
       size: {
-        xs: "sm:max-w-[400px]",
+        xs: "sm:max-w-xs",
         sm: "sm:max-w-sm",
         md: "sm:max-w-md",
         lg: "sm:max-w-lg",
