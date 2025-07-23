@@ -1,6 +1,7 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
+import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { createSpaceDTO } from "@/features/spaces/data";
@@ -161,3 +162,70 @@ export const requireAdmin = cache(async () => {
     notFound();
   }
 });
+
+export const requireUser = async () => {
+  const session = await auth();
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") ?? "/";
+
+  if (!session?.user) {
+    const searchParams = new URLSearchParams();
+    searchParams.set("redirectTo", pathname);
+    redirect(`/login?${searchParams.toString()}`);
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: session.user.id,
+    },
+  });
+
+  if (!user) {
+    redirect("/api/auth/invalid-session");
+  }
+
+  return createUserDTO(user);
+};
+
+export const requireUserWithSpace = async () => {
+  const user = await requireUser();
+
+  if (user.activeSpaceId) {
+    const space = await prisma.space.findUnique({
+      where: {
+        id: user.activeSpaceId,
+      },
+      include: {
+        subscription: true,
+        members: true,
+      },
+    });
+
+    if (space) {
+      return {
+        user,
+        space: createSpaceDTO(user.id, space),
+      };
+    }
+    console.error("Could not find user's active space");
+  }
+
+  const space = await prisma.space.findFirst({
+    where: {
+      ownerId: user.id,
+    },
+    include: {
+      subscription: true,
+      members: true,
+    },
+  });
+
+  if (!space) {
+    throw new AppError({
+      code: "NOT_FOUND",
+      message: "User does not own any spaces",
+    });
+  }
+
+  return { user, space: createSpaceDTO(user.id, space) };
+};
