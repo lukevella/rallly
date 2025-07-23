@@ -1,4 +1,3 @@
-import { subject } from "@casl/ability";
 import { Button } from "@rallly/ui/button";
 import { CrownIcon } from "lucide-react";
 import type { Metadata } from "next";
@@ -14,21 +13,17 @@ import {
 } from "@/components/empty-state";
 import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
-import { defineAbilityFor } from "@/lib/ability-manager";
+import { isInitialAdmin } from "@/utils/is-initial-admin";
 import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {
   const user = await loadCurrentUser();
 
-  const ability = defineAbilityFor(user);
-
-  if (ability.can("access", "ControlPanel")) {
+  if (user.role === "admin") {
     redirect("/control-panel");
   }
 
-  const canMakeAdmin = ability.can("update", subject("User", user), "role");
-
-  if (!canMakeAdmin) {
+  if (!isInitialAdmin(user.email)) {
     notFound();
   }
 
