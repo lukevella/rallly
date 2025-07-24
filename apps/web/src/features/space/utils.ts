@@ -1,5 +1,5 @@
 import type { SpaceMemberRole as PrismaSpaceMemberRole } from "@prisma/client";
-import type { SpaceMemberRole } from "@/features/spaces/schema";
+import type { SpaceMemberRole } from "@/features/space/schema";
 
 export const toDBRole = (role: SpaceMemberRole): PrismaSpaceMemberRole => {
   switch (role) {

@@ -4,7 +4,7 @@ import { FullLogoLink } from "@/app/components/full-logo-link";
 import { loadCurrentUser } from "@/auth/data";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
-import { SpaceIcon } from "@/features/spaces/components/space-icon";
+import { SpaceIcon } from "@/features/space/components/space-icon";
 import { getTranslation } from "@/i18n/server";
 import { AcceptInviteButton } from "./components/accept-invite-button";
 import { SignOutButton } from "./components/sign-out-button";

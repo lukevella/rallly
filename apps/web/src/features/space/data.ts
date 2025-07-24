@@ -6,8 +6,8 @@ import type {
 import { prisma } from "@rallly/database";
 import { cache } from "react";
 import { loadCurrentUser, loadCurrentUserSpace } from "@/auth/data";
-import type { SpaceMemberRole } from "@/features/spaces/schema";
-import { fromDBRole, toDBRole } from "@/features/spaces/utils";
+import type { SpaceMemberRole } from "@/features/space/schema";
+import { fromDBRole, toDBRole } from "@/features/space/utils";
 import { defineAbilityFor } from "@/lib/ability-manager";
 import { AppError } from "@/lib/errors";
 import { isSelfHosted } from "@/utils/constants";

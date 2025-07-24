@@ -5,7 +5,7 @@ import {
   PageTabsTrigger,
 } from "@/app/components/page-tabs";
 import { Trans } from "@/components/trans";
-import type { SpaceMemberRole } from "@/features/spaces/schema";
+import type { SpaceMemberRole } from "@/features/space/schema";
 
 export const MembersTabs = ({
   value = "all",

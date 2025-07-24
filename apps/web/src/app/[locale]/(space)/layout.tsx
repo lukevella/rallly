@@ -7,7 +7,7 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { isUserOnboarded } from "@/features/setup/utils";
-import { SpaceProvider } from "@/features/spaces/client";
+import { SpaceProvider } from "@/features/space/client";
 import { AbilityProvider } from "@/lib/ability-manager/client";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 import { SpaceSidebar } from "./components/sidebar/space-sidebar";

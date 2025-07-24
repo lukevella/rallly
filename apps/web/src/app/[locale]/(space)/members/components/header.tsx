@@ -14,7 +14,7 @@ import {
 import { SearchInput } from "@/app/components/search-input";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
-import { useSpace } from "@/features/spaces/client";
+import { useSpace } from "@/features/space/client";
 import { useTranslation } from "@/i18n/client";
 import { useAbility } from "@/lib/ability-manager/client";
 

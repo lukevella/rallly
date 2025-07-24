@@ -16,7 +16,7 @@ import { CirclePlusIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
-import { setActiveSpaceAction } from "@/features/spaces/actions";
+import { setActiveSpaceAction } from "@/features/space/actions";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { CreateSpaceDialog } from "./create-space-dialog";
 import { SpaceIcon } from "./space-icon";

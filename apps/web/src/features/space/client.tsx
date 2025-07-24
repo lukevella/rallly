@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { SpaceDTO } from "@/features/spaces/data";
+import type { SpaceDTO } from "@/features/space/data";
 import type { SpaceAbility } from "./ability";
 import { defineAbilityForSpace } from "./ability";
 
