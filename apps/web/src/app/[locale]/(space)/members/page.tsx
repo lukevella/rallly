@@ -15,9 +15,9 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Pagination } from "@/components/pagination";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
-import { SpaceRole } from "@/features/spaces/components/space-role";
-import { isSpacesEnabled } from "@/features/spaces/constants";
-import { loadMembers } from "@/features/spaces/data";
+import { SpaceRole } from "@/features/space/components/space-role";
+import { isSpacesEnabled } from "@/features/space/constants";
+import { loadMembers } from "@/features/space/data";
 import { getTranslation } from "@/i18n/server";
 import { searchParamsSchema } from "./schema";
 

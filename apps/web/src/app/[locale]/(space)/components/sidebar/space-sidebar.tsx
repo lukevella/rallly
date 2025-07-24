@@ -16,10 +16,10 @@ import { LogoLink } from "@/app/components/logo-link";
 import { loadCurrentUserSpace } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
-import { SpaceDropdown } from "@/features/spaces/components/space-dropdown";
-import { SpaceIcon } from "@/features/spaces/components/space-icon";
-import { isSpacesEnabled } from "@/features/spaces/constants";
-import { loadSpaces } from "@/features/spaces/data";
+import { SpaceDropdown } from "@/features/space/components/space-dropdown";
+import { SpaceIcon } from "@/features/space/components/space-icon";
+import { isSpacesEnabled } from "@/features/space/constants";
+import { loadSpaces } from "@/features/space/data";
 import { UpgradeButton } from "../upgrade-button";
 import { NavUser } from "./nav-user";
 

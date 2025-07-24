@@ -30,9 +30,9 @@ import { toast } from "@rallly/ui/sonner";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Trans } from "@/components/trans";
-import { inviteMemberAction } from "@/features/spaces/actions";
-import { SpaceRole } from "@/features/spaces/components/space-role";
-import { spaceMemberRoleSchema } from "@/features/spaces/schema";
+import { inviteMemberAction } from "@/features/space/actions";
+import { SpaceRole } from "@/features/space/components/space-role";
+import { spaceMemberRoleSchema } from "@/features/space/schema";
 import { useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 

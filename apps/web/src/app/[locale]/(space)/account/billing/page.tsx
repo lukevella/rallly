@@ -29,7 +29,7 @@ import {
 } from "@/components/empty-state";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
-import { loadPaymentMethods, loadSubscription } from "@/features/spaces/data";
+import { loadPaymentMethods, loadSubscription } from "@/features/space/data";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { FormattedDateTime } from "@/lib/timezone/client/formatted-date-time";
