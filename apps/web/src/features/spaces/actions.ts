@@ -239,6 +239,7 @@ export const inviteMemberAction = spaceActionClient
         message: "Invitation sent successfully",
       };
     } catch {
+      console.error("Failed to send invitation");
       return {
         success: false,
         code: "INVITE_FAILED" as const,
