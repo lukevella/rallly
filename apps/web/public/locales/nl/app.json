@@ -408,5 +408,21 @@
   "member": "Deelnemer",
   "allMembers": "Alle",
   "inviteMember": "Deelnemer uitnodigen",
-  "content": "Inhoud"
+  "content": "Inhoud",
+  "role": "Rol",
+  "inviteMemberDescription": "Nodig een nieuw lid uit voor jouw ruimte",
+  "inviteSent": "Uitnodiging verzonden",
+  "inviteUpdated": "Uitnodiging bijgewerkt met nieuwe rol",
+  "alreadyMember": "Deze persoon is al lid van deze ruimte",
+  "invitePending": "Er is al een uitnodiging verstuurd naar dit e-mailadres",
+  "inviteFailed": "Het versturen van de uitnodiging is mislukt",
+  "acceptInvite": "Uitnodiging accepteren",
+  "acceptInviteSuccess": "Je bent nu lid van deze ruimte!",
+  "joinSpace": "Lid worden van {spaceName}",
+  "acceptInviteTitle": "{inviterName} heeft jou uitgenodigd om lid te worden van {spaceName}",
+  "youAreSignedInAs": "Je bent ingelogd als",
+  "acceptInviteMetadataTitle": "Lid worden van {spaceName}",
+  "actionErrorPaymentRequired": "Je moet upgraden om deze actie uit te voeren",
+  "loginWithAnotherAccount": "Inloggen met een ander account",
+  "adminRoleRequired": "Je moet een beheerder zijn om deze actie uit te voeren"
 }
