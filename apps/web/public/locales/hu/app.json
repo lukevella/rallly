@@ -408,5 +408,21 @@
   "member": "Tag",
   "allMembers": "Összes",
   "inviteMember": "Tagok meghívása",
-  "content": "Tartalom"
+  "content": "Tartalom",
+  "role": "Szerepkör",
+  "inviteMemberDescription": "Hívj meg egy új tagot a munkaterületedre",
+  "inviteSent": "Meghívó elküldve",
+  "inviteUpdated": "Meghívó frissítve új szereppel",
+  "alreadyMember": "Ez a személy már tagja ennek a munkaterületnek",
+  "invitePending": "Egy meghívó már el lett küldve erre az email címre",
+  "inviteFailed": "A meghívó küldése sikertelen",
+  "acceptInvite": "Meghívás elfogadása",
+  "acceptInviteSuccess": "Sikeresen csatlakozott a munkaterülethez!",
+  "joinSpace": "Csatlakozz ide: {spaceName}",
+  "acceptInviteTitle": "{inviterName} meghívott hogy csatlakozz ide: {spaceName}",
+  "youAreSignedInAs": "Belépve, mint",
+  "acceptInviteMetadataTitle": "Csatlakozz ide: {spaceName}",
+  "actionErrorPaymentRequired": "Csomagot kell váltanod a művelet végrehajtásához",
+  "loginWithAnotherAccount": "Belépés másik fiókkal",
+  "adminRoleRequired": "Adminnak kell lenned a művelet végrehajtásához"
 }
