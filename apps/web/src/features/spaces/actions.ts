@@ -208,27 +208,29 @@ export const inviteMemberAction = spaceActionClient
     }
 
     try {
-      const invite = await prisma.spaceMemberInvite.create({
-        data: {
-          spaceId: ctx.space.id,
-          email: parsedInput.email,
-          role: toDBRole(parsedInput.role),
-          inviterId: ctx.user.id,
-        },
-      });
+      await prisma.$transaction(async (tx) => {
+        const invite = await tx.spaceMemberInvite.create({
+          data: {
+            spaceId: ctx.space.id,
+            email: parsedInput.email,
+            role: toDBRole(parsedInput.role),
+            inviterId: ctx.user.id,
+          },
+        });
 
-      const emailClient = getEmailClient(
-        existingUser?.locale ?? ctx.user.locale,
-      );
+        const emailClient = getEmailClient(
+          existingUser?.locale ?? ctx.user.locale,
+        );
 
-      await emailClient.sendTemplate("SpaceInviteEmail", {
-        to: parsedInput.email,
-        props: {
-          spaceName: ctx.space.name,
-          inviterName: ctx.user.name,
-          spaceRole: parsedInput.role,
-          inviteUrl: absoluteUrl(`/accept-invite/${invite.id}`),
-        },
+        await emailClient.sendTemplate("SpaceInviteEmail", {
+          to: parsedInput.email,
+          props: {
+            spaceName: ctx.space.name,
+            inviterName: ctx.user.name,
+            spaceRole: parsedInput.role,
+            inviteUrl: absoluteUrl(`/accept-invite/${invite.id}`),
+          },
+        });
       });
 
       return {
