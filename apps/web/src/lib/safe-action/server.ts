@@ -6,7 +6,9 @@ import { waitUntil } from "@vercel/functions";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import z from "zod";
 import { getCurrentUser, getCurrentUserSpace } from "@/auth/data";
-import { defineAbilityFor } from "@/lib/ability-manager";
+import { defineAbilityForSpace } from "@/features/space/ability";
+import { defineAbilityForMember } from "@/features/space/member/ability";
+import { defineAbilityFor } from "@/features/user/ability";
 import { AppError } from "@/lib/errors";
 import type { Duration } from "@/lib/rate-limit";
 import { rateLimit } from "@/lib/rate-limit";
@@ -118,14 +120,21 @@ export const spaceActionClient = actionClient
   .use(async ({ next }) => {
     try {
       const { user, space } = await getCurrentUserSpace();
-      const ability = defineAbilityFor(user, {
-        space,
-      });
+      const getUserAbility = () => defineAbilityFor(user);
+      const getMemberAbility = () =>
+        defineAbilityForMember({
+          userId: user.id,
+          spaceId: space.id,
+          role: space.role,
+        });
+      const getSpaceAbility = () => defineAbilityForSpace(space);
       return next({
         ctx: {
           user,
           space,
-          ability,
+          getUserAbility,
+          getMemberAbility,
+          getSpaceAbility,
         },
       });
     } catch (error) {

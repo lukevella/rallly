@@ -8,7 +8,7 @@ import { cache } from "react";
 import { loadCurrentUser, loadCurrentUserSpace } from "@/auth/data";
 import type { SpaceMemberRole } from "@/features/space/schema";
 import { fromDBRole, toDBRole } from "@/features/space/utils";
-import { defineAbilityFor } from "@/lib/ability-manager";
+import { defineAbilityFor } from "@/features/user/ability";
 import { AppError } from "@/lib/errors";
 import { isSelfHosted } from "@/utils/constants";
 

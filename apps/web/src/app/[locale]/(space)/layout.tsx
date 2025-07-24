@@ -8,7 +8,7 @@ import { LicenseLimitWarning } from "@/features/licensing/components/license-lim
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { isUserOnboarded } from "@/features/setup/utils";
 import { SpaceProvider } from "@/features/space/client";
-import { AbilityProvider } from "@/lib/ability-manager/client";
+import { MemberProvider } from "@/features/space/member/client";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 import { SpaceSidebar } from "./components/sidebar/space-sidebar";
 import { SpaceSidebarProvider } from "./components/sidebar/space-sidebar-provider";
@@ -36,7 +36,9 @@ export default async function Layout({
 
   return (
     <SpaceProvider data={space}>
-      <AbilityProvider user={user} context={{ space }}>
+      <MemberProvider
+        data={{ userId: user.id, spaceId: space.id, role: space.role }}
+      >
         <TimezoneProvider initialTimezone={user.timeZone}>
           <SpaceSidebarProvider>
             <CommandMenu />
@@ -70,7 +72,7 @@ export default async function Layout({
             </SidebarInset>
           </SpaceSidebarProvider>
         </TimezoneProvider>
-      </AbilityProvider>
+      </MemberProvider>
     </SpaceProvider>
   );
 }

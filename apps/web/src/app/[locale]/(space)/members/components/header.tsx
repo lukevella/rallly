@@ -15,14 +15,14 @@ import { SearchInput } from "@/app/components/search-input";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
 import { useSpace } from "@/features/space/client";
+import { useMemberAbility } from "@/features/space/member/client";
 import { useTranslation } from "@/i18n/client";
-import { useAbility } from "@/lib/ability-manager/client";
 
 export function MembersHeader() {
   const { t } = useTranslation();
   const inviteMemberDialog = useDialog();
   const payWallDialog = useDialog();
-  const { ability } = useAbility();
+  const member = useMemberAbility();
   const space = useSpace();
   return (
     <>
@@ -37,7 +37,7 @@ export function MembersHeader() {
           <Button
             variant="primary"
             onClick={() => {
-              if (ability.cannot("create", "SpaceMemberInvite")) {
+              if (member.ability.cannot("create", "SpaceMemberInvite")) {
                 toast.error(
                   t("adminRoleRequired", {
                     defaultValue:

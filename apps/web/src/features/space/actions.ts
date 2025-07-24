@@ -143,14 +143,14 @@ export const inviteMemberAction = spaceActionClient
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
-    if (ctx.ability.cannot("invite", "Member")) {
+    if (ctx.getSpaceAbility().cannot("invite", "Member")) {
       throw new AppError({
         code: "PAYMENT_REQUIRED",
         message: "You need a Pro subscription to invite members to this space",
       });
     }
 
-    if (ctx.ability.cannot("create", "SpaceMemberInvite")) {
+    if (ctx.getMemberAbility().cannot("create", "SpaceMemberInvite")) {
       throw new AppError({
         code: "FORBIDDEN",
         message: "You do not have permission to invite members to this space",
