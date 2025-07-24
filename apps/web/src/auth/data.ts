@@ -172,7 +172,7 @@ export const requireUser = cache(async () => {
   return createUserDTO(user);
 });
 
-export const requireUserWithSpace = cache(async () => {
+export const requireSpace = cache(async () => {
   const user = await requireUser();
 
   if (user.activeSpaceId) {
@@ -187,10 +187,7 @@ export const requireUserWithSpace = cache(async () => {
     });
 
     if (space) {
-      return {
-        user,
-        space: createSpaceDTO(user.id, space),
-      };
+      return createSpaceDTO(user.id, space);
     }
     console.error("Could not find user's active space");
   }
@@ -212,5 +209,5 @@ export const requireUserWithSpace = cache(async () => {
     });
   }
 
-  return { user, space: createSpaceDTO(user.id, space) };
+  return createSpaceDTO(user.id, space);
 });

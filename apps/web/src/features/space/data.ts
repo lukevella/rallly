@@ -5,7 +5,7 @@ import type {
 } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { cache } from "react";
-import { requireUser, requireUserWithSpace } from "@/auth/data";
+import { requireSpace, requireUser } from "@/auth/data";
 import type { MemberDTO } from "@/features/space/member/types";
 import type { MemberRole } from "@/features/space/schema";
 import type { SpaceDTO } from "@/features/space/types";
@@ -108,7 +108,7 @@ export const loadSpace = cache(async ({ id }: { id: string }) => {
 });
 
 export const loadSubscription = cache(async () => {
-  const { space } = await requireUserWithSpace();
+  const space = await requireSpace();
   const subscription = await prisma.subscription.findUnique({
     where: {
       spaceId: space.id,
@@ -156,7 +156,7 @@ export const loadMembers = cache(
     q?: string;
     role?: "all" | MemberRole;
   }) => {
-    const { space } = await requireUserWithSpace();
+    const space = await requireSpace();
 
     const whereClause: Prisma.SpaceMemberWhereInput = {
       spaceId: space.id,
