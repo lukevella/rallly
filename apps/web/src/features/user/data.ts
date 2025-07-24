@@ -1,6 +1,8 @@
 import type { User } from "@rallly/database";
+import { prisma } from "@rallly/database";
+import type { UserDTO } from "@/features/user/schema";
 
-export const createUserDTO = (user: User) => ({
+export const createUserDTO = (user: User): UserDTO => ({
   id: user.id,
   name: user.name,
   image: user.image ?? undefined,
@@ -13,3 +15,17 @@ export const createUserDTO = (user: User) => ({
   weekStart: user.weekStart ?? undefined,
   customerId: user.customerId ?? undefined,
 });
+
+export const getUser = async (id: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  return createUserDTO(user);
+};

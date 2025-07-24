@@ -1,1 +1,0 @@
-export { defineAbilityFor } from "./ability";

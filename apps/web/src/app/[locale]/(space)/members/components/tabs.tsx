@@ -5,13 +5,13 @@ import {
   PageTabsTrigger,
 } from "@/app/components/page-tabs";
 import { Trans } from "@/components/trans";
-import type { SpaceMemberRole } from "@/features/space/schema";
+import type { MemberRole } from "@/features/space/schema";
 
 export const MembersTabs = ({
   value = "all",
   children,
 }: {
-  value?: "all" | SpaceMemberRole;
+  value?: "all" | MemberRole;
   children: React.ReactNode;
 }) => {
   return (

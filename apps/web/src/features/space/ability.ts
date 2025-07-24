@@ -7,9 +7,12 @@ import type { SpaceTier } from "./schema";
 type Action = "invite" | "finalize" | "duplicate" | "update";
 type Subject = "Member" | "Poll" | "AdvancedPollSettings";
 
+export type SpaceAbilityContext = {
+  tier: SpaceTier;
+};
 export type SpaceAbility = PureAbility<[Action, Subject], PrismaQuery>;
 
-export function defineAbilityForSpace(context: { tier: SpaceTier }) {
+export function defineAbilityForSpace(context: SpaceAbilityContext) {
   const { can, build } = new AbilityBuilder<SpaceAbility>(createPrismaAbility);
 
   if (context.tier === "pro") {

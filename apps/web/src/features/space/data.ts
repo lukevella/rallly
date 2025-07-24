@@ -6,9 +6,11 @@ import type {
 import { prisma } from "@rallly/database";
 import { cache } from "react";
 import { loadCurrentUser, loadCurrentUserSpace } from "@/auth/data";
-import type { SpaceMemberRole } from "@/features/space/schema";
+import type { MemberDTO } from "@/features/space/member/types";
+import type { MemberRole } from "@/features/space/schema";
+import type { SpaceDTO } from "@/features/space/types";
 import { fromDBRole, toDBRole } from "@/features/space/utils";
-import { defineAbilityFor } from "@/lib/ability-manager";
+import { defineAbilityFor } from "@/features/user/ability";
 import { AppError } from "@/lib/errors";
 import { isSelfHosted } from "@/utils/constants";
 
@@ -52,14 +54,6 @@ export function createSpaceDTO(
     role: fromDBRole(role),
   } satisfies SpaceDTO;
 }
-
-export type SpaceDTO = {
-  id: string;
-  name: string;
-  ownerId: string;
-  tier: "hobby" | "pro";
-  role: SpaceMemberRole;
-};
 
 export const loadSpaces = cache(async () => {
   const user = await loadCurrentUser();
@@ -150,15 +144,6 @@ export const loadPaymentMethods = cache(async () => {
   return paymentMethods;
 });
 
-type MemberDTO = {
-  id: string;
-  name: string;
-  email: string;
-  image?: string;
-  role: SpaceMemberRole;
-  isOwner: boolean;
-};
-
 export const loadMembers = cache(
   async ({
     page = 1,
@@ -169,7 +154,7 @@ export const loadMembers = cache(
     page?: number;
     pageSize?: number;
     q?: string;
-    role?: "all" | SpaceMemberRole;
+    role?: "all" | MemberRole;
   }) => {
     const { space } = await loadCurrentUserSpace();
 
@@ -211,7 +196,6 @@ export const loadMembers = cache(
           role: true,
           user: {
             select: {
-              id: true,
               name: true,
               email: true,
               image: true,

@@ -28,7 +28,9 @@ export const cancelEventAction = spaceActionClient
       });
     }
 
-    if (ctx.ability.cannot("cancel", subject("ScheduledEvent", event))) {
+    if (
+      ctx.getMemberAbility().cannot("cancel", subject("ScheduledEvent", event))
+    ) {
       throw new AppError({
         code: "UNAUTHORIZED",
         message: "You do not have permission to cancel this event",

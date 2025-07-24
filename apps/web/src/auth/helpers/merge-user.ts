@@ -2,14 +2,11 @@ import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
-import { defineAbilityFor } from "@/lib/ability-manager";
+import { defineAbilityFor } from "@/features/user/ability";
+import { getUser } from "@/features/user/data";
 
 const getActiveSpaceForUser = async ({ userId }: { userId: string }) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
+  const user = await getUser(userId);
 
   if (!user) {
     throw new Error(`User ${userId} not found`);

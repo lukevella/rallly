@@ -32,13 +32,13 @@ import { z } from "zod";
 import { Trans } from "@/components/trans";
 import { inviteMemberAction } from "@/features/space/actions";
 import { SpaceRole } from "@/features/space/components/space-role";
-import { spaceMemberRoleSchema } from "@/features/space/schema";
+import { memberRoleSchema } from "@/features/space/schema";
 import { useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 const inviteMemberFormSchema = z.object({
   email: z.string().email(),
-  role: spaceMemberRoleSchema,
+  role: memberRoleSchema,
 });
 
 export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
@@ -143,13 +143,11 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
                       <SelectValue placeholder="Select a role" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.values(spaceMemberRoleSchema.Values).map(
-                        (role) => (
-                          <SelectItem key={role} value={role}>
-                            <SpaceRole role={role} />
-                          </SelectItem>
-                        ),
-                      )}
+                      {Object.values(memberRoleSchema.Values).map((role) => (
+                        <SelectItem key={role} value={role}>
+                          <SpaceRole role={role} />
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormControl>

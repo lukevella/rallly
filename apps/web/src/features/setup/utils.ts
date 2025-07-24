@@ -1,6 +1,6 @@
 import { onboardedUserSchema } from "@/features/setup/schema";
-import type { OnboardedUser } from "@/features/setup/types";
+import type { UserDTO } from "@/features/user/schema";
 
-export const isUserOnboarded = (user: Partial<OnboardedUser>) => {
+export const isUserOnboarded = (user: UserDTO) => {
   return onboardedUserSchema.safeParse(user).success;
 };

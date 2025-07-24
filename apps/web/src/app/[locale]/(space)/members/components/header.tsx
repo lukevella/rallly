@@ -16,13 +16,11 @@ import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
 import { useSpace } from "@/features/space/client";
 import { useTranslation } from "@/i18n/client";
-import { useAbility } from "@/lib/ability-manager/client";
 
 export function MembersHeader() {
   const { t } = useTranslation();
   const inviteMemberDialog = useDialog();
   const payWallDialog = useDialog();
-  const { ability } = useAbility();
   const space = useSpace();
   return (
     <>
@@ -37,14 +35,16 @@ export function MembersHeader() {
           <Button
             variant="primary"
             onClick={() => {
-              if (ability.cannot("create", "SpaceMemberInvite")) {
+              if (
+                space.getMemberAbility().cannot("create", "SpaceMemberInvite")
+              ) {
                 toast.error(
                   t("adminRoleRequired", {
                     defaultValue:
                       "You need to be an admin to perform this action",
                   }),
                 );
-              } else if (space.ability.cannot("invite", "Member")) {
+              } else if (space.getAbility().cannot("invite", "Member")) {
                 payWallDialog.trigger();
               } else {
                 inviteMemberDialog.trigger();
