@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import z from "zod";
 import { PageIcon } from "@/app/components/page-icons";
-import { getCurrentUser } from "@/auth/data";
+import { requireUser } from "@/auth/data";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -37,7 +37,7 @@ async function loadData({
   q?: string;
   role?: "admin" | "user";
 }) {
-  const user = await getCurrentUser();
+  const user = await requireUser();
 
   if (user.role !== "admin") {
     notFound();

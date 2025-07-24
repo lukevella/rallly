@@ -1,7 +1,7 @@
 import { prisma } from "@rallly/database";
 import { notFound } from "next/navigation";
 import { FullLogoLink } from "@/app/components/full-logo-link";
-import { loadCurrentUser } from "@/auth/data";
+import { requireUser } from "@/auth/data";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
 import { SpaceIcon } from "@/features/space/components/space-icon";
@@ -15,7 +15,7 @@ export default async function JoinPage({
   params: Promise<{ inviteId: string }>;
 }) {
   const { inviteId } = await params;
-  const user = await loadCurrentUser();
+  const user = await requireUser();
   const invite = await prisma.spaceMemberInvite.findUnique({
     where: {
       id: inviteId,
@@ -62,7 +62,7 @@ export default async function JoinPage({
         <p className="mt-1 text-sm">
           <Trans
             i18nKey="acceptInviteTitle"
-            defaults="{inviterName} invited you to join the {spaceName}"
+            defaults="{inviterName} invited you to join {spaceName}"
             values={{
               spaceName: invite.space.name,
               inviterName: invite.invitedBy.name,

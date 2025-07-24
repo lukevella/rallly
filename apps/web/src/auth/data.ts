@@ -13,10 +13,7 @@ export const getCurrentUser = async () => {
   const session = await auth();
 
   if (!session?.user) {
-    throw new AppError({
-      code: "UNAUTHORIZED",
-      message: "User not authenticated",
-    });
+    return null;
   }
 
   const user = await prisma.user.findUnique({
@@ -26,37 +23,18 @@ export const getCurrentUser = async () => {
   });
 
   if (!user) {
-    throw new AppError({
-      code: "NOT_FOUND",
-      message: "User not found",
-    });
+    return null;
   }
 
   return createUserDTO(user);
 };
 
-export const loadCurrentUser = cache(async () => {
-  try {
-    return await getCurrentUser();
-  } catch (error) {
-    if (error instanceof AppError) {
-      switch (error.code) {
-        case "NOT_FOUND":
-          redirect("/api/auth/invalid-session");
-          break;
-        case "UNAUTHORIZED":
-          redirect("/login");
-          break;
-        default:
-          throw error;
-      }
-    }
-    throw error;
-  }
-});
-
 export const getCurrentUserSpace = async () => {
   const user = await getCurrentUser();
+
+  if (!user) {
+    return null;
+  }
 
   if (user.activeSpaceId) {
     const space = await prisma.space.findUnique({
@@ -84,17 +62,44 @@ export const getCurrentUserSpace = async () => {
       },
     });
 
-    if (!space) {
-      throw new AppError({
-        code: "NOT_FOUND",
-        message: "Space not found",
-      });
+    if (space) {
+      return {
+        user,
+        space: createSpaceDTO(user.id, space),
+      };
     }
 
-    return {
-      user,
-      space: createSpaceDTO(user.id, space),
-    };
+    const defaultSpace = await prisma.space.findFirst({
+      where: {
+        ownerId: user.id,
+      },
+      select: {
+        id: true,
+        name: true,
+        ownerId: true,
+        subscription: {
+          select: {
+            active: true,
+          },
+        },
+        members: {
+          where: {
+            userId: user.id,
+          },
+          select: {
+            role: true,
+            userId: true,
+          },
+        },
+      },
+    });
+
+    if (defaultSpace) {
+      return {
+        user,
+        space: createSpaceDTO(user.id, defaultSpace),
+      };
+    }
   }
 
   const space = await prisma.space.findFirst({
@@ -135,35 +140,15 @@ export const getCurrentUserSpace = async () => {
   };
 };
 
-export const loadCurrentUserSpace = cache(async () => {
-  try {
-    return await getCurrentUserSpace();
-  } catch (error) {
-    if (error instanceof AppError) {
-      switch (error.code) {
-        case "NOT_FOUND":
-          redirect("/api/auth/invalid-session");
-          break;
-        case "UNAUTHORIZED":
-          redirect("/login");
-          break;
-        default:
-          throw error;
-      }
-    }
-    throw error;
-  }
-});
-
 export const requireAdmin = cache(async () => {
-  const user = await loadCurrentUser();
+  const user = await requireUser();
 
   if (user.role !== "admin") {
     notFound();
   }
 });
 
-export const requireUser = async () => {
+export const requireUser = cache(async () => {
   const session = await auth();
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") ?? "/";
@@ -185,9 +170,9 @@ export const requireUser = async () => {
   }
 
   return createUserDTO(user);
-};
+});
 
-export const requireUserWithSpace = async () => {
+export const requireUserWithSpace = cache(async () => {
   const user = await requireUser();
 
   if (user.activeSpaceId) {
@@ -228,4 +213,4 @@ export const requireUserWithSpace = async () => {
   }
 
   return { user, space: createSpaceDTO(user.id, space) };
-};
+});

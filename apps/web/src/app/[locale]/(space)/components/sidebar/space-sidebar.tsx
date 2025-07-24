@@ -13,7 +13,7 @@ import Link from "next/link";
 import type React from "react";
 import { SpaceSidebarMenu } from "@/app/[locale]/(space)/components/sidebar/space-sidebar-menu";
 import { LogoLink } from "@/app/components/logo-link";
-import { loadCurrentUserSpace } from "@/auth/data";
+import { requireUserWithSpace } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
@@ -25,7 +25,7 @@ import { NavUser } from "./nav-user";
 
 async function loadData() {
   const [{ user, space }, spaces] = await Promise.all([
-    loadCurrentUserSpace(),
+    requireUserWithSpace(),
     loadSpaces(),
   ]);
 

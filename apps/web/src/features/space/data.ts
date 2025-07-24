@@ -5,7 +5,7 @@ import type {
 } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { cache } from "react";
-import { loadCurrentUser, loadCurrentUserSpace } from "@/auth/data";
+import { requireUser, requireUserWithSpace } from "@/auth/data";
 import type { MemberDTO } from "@/features/space/member/types";
 import type { MemberRole } from "@/features/space/schema";
 import type { SpaceDTO } from "@/features/space/types";
@@ -56,7 +56,7 @@ export function createSpaceDTO(
 }
 
 export const loadSpaces = cache(async () => {
-  const user = await loadCurrentUser();
+  const user = await requireUser();
   const ability = defineAbilityFor(user);
   const spaces = await prisma.space.findMany({
     where: accessibleBy(ability).Space,
@@ -100,7 +100,7 @@ export const loadSpace = cache(async ({ id }: { id: string }) => {
   const space = spaces.find((space) => space.id === id);
 
   if (!space) {
-    const user = await loadCurrentUser();
+    const user = await requireUser();
     throw new Error(`User ${user.id} does not have access to space ${id}`);
   }
 
@@ -108,7 +108,7 @@ export const loadSpace = cache(async ({ id }: { id: string }) => {
 });
 
 export const loadSubscription = cache(async () => {
-  const { space } = await loadCurrentUserSpace();
+  const { space } = await requireUserWithSpace();
   const subscription = await prisma.subscription.findUnique({
     where: {
       spaceId: space.id,
@@ -129,7 +129,7 @@ export const loadSubscription = cache(async () => {
 });
 
 export const loadPaymentMethods = cache(async () => {
-  const user = await loadCurrentUser();
+  const user = await requireUser();
   const paymentMethods = await prisma.paymentMethod.findMany({
     where: {
       userId: user.id,
@@ -156,7 +156,7 @@ export const loadMembers = cache(
     q?: string;
     role?: "all" | MemberRole;
   }) => {
-    const { space } = await loadCurrentUserSpace();
+    const { space } = await requireUserWithSpace();
 
     const whereClause: Prisma.SpaceMemberWhereInput = {
       spaceId: space.id,

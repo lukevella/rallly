@@ -1,7 +1,7 @@
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { cache } from "react";
-import { loadCurrentUserSpace } from "@/auth/data";
+import { requireUserWithSpace } from "@/auth/data";
 
 type PollFilters = {
   status?: PollStatus;
@@ -12,7 +12,7 @@ type PollFilters = {
 
 export const loadPolls = cache(
   async ({ status, page = 1, pageSize = 10, q }: PollFilters) => {
-    const { space } = await loadCurrentUserSpace();
+    const { space } = await requireUserWithSpace();
 
     // Build the where clause based on filters
     const where: Prisma.PollWhereInput = {

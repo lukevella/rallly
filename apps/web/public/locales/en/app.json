@@ -419,7 +419,7 @@
   "acceptInvite": "Accept Invite",
   "acceptInviteSuccess": "Successfully joined the space!",
   "joinSpace": "Join {spaceName}",
-  "acceptInviteTitle": "{inviterName} invited you to join the {spaceName}",
+  "acceptInviteTitle": "{inviterName} invited you to join {spaceName}",
   "youAreSignedInAs": "You're signed in as",
   "acceptInviteMetadataTitle": "Join {spaceName}",
   "actionErrorPaymentRequired": "You need to upgrade to perform this action",

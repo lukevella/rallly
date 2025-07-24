@@ -181,8 +181,14 @@ export const polls = router({
       let spaceId: string | undefined;
 
       if (!ctx.user.isGuest) {
-        const { space } = await getCurrentUserSpace();
-        spaceId = space.id;
+        const data = await getCurrentUserSpace();
+        if (!data) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Space not found",
+          });
+        }
+        spaceId = data.space.id;
       }
 
       const poll = await prisma.poll.create({

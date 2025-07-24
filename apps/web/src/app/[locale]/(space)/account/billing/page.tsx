@@ -14,7 +14,7 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadCurrentUser } from "@/auth/data";
+import { requireUser } from "@/auth/data";
 import {
   DescriptionDetails,
   DescriptionList,
@@ -43,7 +43,7 @@ import { SubscriptionStatus } from "./components/subscription-status";
 
 async function loadData() {
   const [user, subscription, paymentMethods] = await Promise.all([
-    loadCurrentUser(),
+    requireUser(),
     loadSubscription(),
     loadPaymentMethods(),
   ]);

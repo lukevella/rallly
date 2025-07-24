@@ -2,7 +2,7 @@ import { Button } from "@rallly/ui/button";
 import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { loadCurrentUserSpace } from "@/auth/data";
+import { requireUserWithSpace } from "@/auth/data";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
@@ -14,7 +14,7 @@ import { SpaceSidebarProvider } from "./components/sidebar/space-sidebar-provide
 import { TopBar, TopBarLeft, TopBarRight } from "./components/top-bar";
 
 async function loadData() {
-  const { user, space } = await loadCurrentUserSpace();
+  const { user, space } = await requireUserWithSpace();
 
   if (!isUserOnboarded(user)) {
     redirect("/setup");
