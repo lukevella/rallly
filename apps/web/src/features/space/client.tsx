@@ -1,13 +1,16 @@
 "use client";
 
 import React from "react";
-import type { SpaceDTO } from "@/features/space/data";
+import type { MemberAbility } from "@/features/space/member/ability";
+import { defineAbilityForMember } from "@/features/space/member/ability";
+import type { SpaceDTO } from "@/features/space/types";
 import type { SpaceAbility } from "./ability";
 import { defineAbilityForSpace } from "./ability";
 
 const SpaceContext = React.createContext<{
   data: SpaceDTO;
-  ability: SpaceAbility;
+  getAbility: () => SpaceAbility;
+  getMemberAbility: () => MemberAbility;
 } | null>(null);
 
 export const useSpace = () => {
@@ -22,14 +25,25 @@ export const useSpace = () => {
 
 export const SpaceProvider = ({
   data,
+  userId,
   children,
 }: {
   data: SpaceDTO;
+  userId: string;
   children: React.ReactNode;
 }) => {
   const value = React.useMemo(
-    () => ({ data, ability: defineAbilityForSpace(data) }),
-    [data],
+    () => ({
+      data,
+      getAbility: () => defineAbilityForSpace(data),
+      getMemberAbility: () =>
+        defineAbilityForMember({
+          userId,
+          spaceId: data.id,
+          role: data.role,
+        }),
+    }),
+    [data, userId],
   );
 
   return (

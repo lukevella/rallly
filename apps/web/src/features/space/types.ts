@@ -1,10 +1,9 @@
 import type { MemberRole } from "@/features/space/schema";
 
-export type MemberDTO = {
+export type SpaceDTO = {
   id: string;
   name: string;
-  email: string;
-  image?: string;
+  ownerId: string;
+  tier: "hobby" | "pro";
   role: MemberRole;
-  isOwner: boolean;
 };

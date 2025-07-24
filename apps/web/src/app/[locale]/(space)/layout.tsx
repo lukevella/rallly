@@ -8,7 +8,6 @@ import { LicenseLimitWarning } from "@/features/licensing/components/license-lim
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { isUserOnboarded } from "@/features/setup/utils";
 import { SpaceProvider } from "@/features/space/client";
-import { MemberProvider } from "@/features/space/member/client";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 import { SpaceSidebar } from "./components/sidebar/space-sidebar";
 import { SpaceSidebarProvider } from "./components/sidebar/space-sidebar-provider";
@@ -35,44 +34,40 @@ export default async function Layout({
   const { user, space } = await loadData();
 
   return (
-    <SpaceProvider data={space}>
-      <MemberProvider
-        data={{ userId: user.id, spaceId: space.id, role: space.role }}
-      >
-        <TimezoneProvider initialTimezone={user.timeZone}>
-          <SpaceSidebarProvider>
-            <CommandMenu />
-            <SpaceSidebar />
-            <SidebarInset className="min-w-0">
-              <TopBar className="md:hidden">
-                <TopBarLeft>
-                  <SidebarTrigger />
-                </TopBarLeft>
-                <TopBarRight>
-                  <Button
-                    asChild
-                    variant="ghost"
-                    className="rounded-full"
-                    size="icon"
-                  >
-                    <Link href="/account/profile">
-                      <OptimizedAvatarImage
-                        src={user.image}
-                        name={user.name}
-                        size="sm"
-                      />
-                    </Link>
-                  </Button>
-                </TopBarRight>
-              </TopBar>
-              <LicenseLimitWarning />
-              <div className="flex flex-1 flex-col">
-                <div className="flex flex-1 flex-col">{children}</div>
-              </div>
-            </SidebarInset>
-          </SpaceSidebarProvider>
-        </TimezoneProvider>
-      </MemberProvider>
+    <SpaceProvider data={space} userId={user.id}>
+      <TimezoneProvider initialTimezone={user.timeZone}>
+        <SpaceSidebarProvider>
+          <CommandMenu />
+          <SpaceSidebar />
+          <SidebarInset className="min-w-0">
+            <TopBar className="md:hidden">
+              <TopBarLeft>
+                <SidebarTrigger />
+              </TopBarLeft>
+              <TopBarRight>
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="rounded-full"
+                  size="icon"
+                >
+                  <Link href="/account/profile">
+                    <OptimizedAvatarImage
+                      src={user.image}
+                      name={user.name}
+                      size="sm"
+                    />
+                  </Link>
+                </Button>
+              </TopBarRight>
+            </TopBar>
+            <LicenseLimitWarning />
+            <div className="flex flex-1 flex-col">
+              <div className="flex flex-1 flex-col">{children}</div>
+            </div>
+          </SidebarInset>
+        </SpaceSidebarProvider>
+      </TimezoneProvider>
     </SpaceProvider>
   );
 }

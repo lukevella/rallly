@@ -5,7 +5,7 @@ import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { z } from "zod";
-import { spaceMemberRoleSchema } from "@/features/space/schema";
+import { memberRoleSchema } from "@/features/space/schema";
 import { toDBRole } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors";
@@ -139,7 +139,7 @@ export const inviteMemberAction = spaceActionClient
   .inputSchema(
     z.object({
       email: z.string().email(),
-      role: spaceMemberRoleSchema,
+      role: memberRoleSchema,
     }),
   )
   .action(async ({ ctx, parsedInput }) => {

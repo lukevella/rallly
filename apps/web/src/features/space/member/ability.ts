@@ -7,12 +7,12 @@ import type {
   SpaceMember,
   SpaceMemberInvite,
 } from "@rallly/database";
-import type { SpaceMemberRole } from "@/features/space/schema";
+import type { MemberRole } from "@/features/space/schema";
 
-type MemberDTO = {
+export type MemberAbilityContext = {
   userId: string;
   spaceId: string;
-  role: SpaceMemberRole;
+  role: MemberRole;
 };
 
 type Action = "cancel" | "create" | "read" | "update" | "delete";
@@ -24,7 +24,7 @@ type Subject = Subjects<{
 
 export type MemberAbility = PureAbility<[Action, Subject], PrismaQuery>;
 
-export function defineAbilityForMember(member: MemberDTO) {
+export function defineAbilityForMember(member: MemberAbilityContext) {
   const builder = new AbilityBuilder<MemberAbility>(createPrismaAbility);
 
   switch (member.role) {
@@ -41,7 +41,7 @@ export function defineAbilityForMember(member: MemberDTO) {
 
 function defineSpaceMemberRules(
   builder: AbilityBuilder<MemberAbility>,
-  member: MemberDTO,
+  member: MemberAbilityContext,
 ) {
   const { can } = builder;
 
@@ -53,7 +53,7 @@ function defineSpaceMemberRules(
 
 function defineSpaceAdminRules(
   builder: AbilityBuilder<MemberAbility>,
-  member: MemberDTO,
+  member: MemberAbilityContext,
 ) {
   const { can, cannot } = builder;
 
