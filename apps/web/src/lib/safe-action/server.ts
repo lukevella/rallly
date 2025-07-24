@@ -1,6 +1,7 @@
 import "server-only";
 
 import { posthog } from "@rallly/posthog/server";
+import * as Sentry from "@sentry/nextjs";
 import { waitUntil } from "@vercel/functions";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import z from "zod";
@@ -66,7 +67,16 @@ export const actionClient = createSafeActionClient({
     z.object({
       actionName: z.string(),
     }),
-  handleServerError: async (error) => {
+  handleServerError: async (error, { metadata }) => {
+    Sentry.captureException(error, {
+      tags: {
+        errorHandler: "safe-action",
+      },
+      extra: {
+        actionName: metadata.actionName,
+      },
+    });
+
     if (error instanceof AppError) {
       return error.code;
     }
