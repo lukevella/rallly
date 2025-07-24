@@ -1,6 +1,7 @@
 import { Badge } from "@rallly/ui/badge";
 import { UserSearchIcon } from "lucide-react";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { MembersHeader } from "@/app/[locale]/(space)/members/components/header";
 import { MembersTabs } from "@/app/[locale]/(space)/members/components/tabs";
 import { PageContainer, PageContent } from "@/app/components/page-layout";
@@ -15,6 +16,7 @@ import { Pagination } from "@/components/pagination";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { SpaceRole } from "@/features/spaces/components/space-role";
+import { isSpacesEnabled } from "@/features/spaces/constants";
 import { loadMembers } from "@/features/spaces/data";
 import { getTranslation } from "@/i18n/server";
 import { searchParamsSchema } from "./schema";
@@ -24,6 +26,10 @@ export default async function MembersPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  if (!isSpacesEnabled) {
+    return notFound();
+  }
+
   const { page, pageSize, q, role } = searchParamsSchema.parse(
     await searchParams,
   );

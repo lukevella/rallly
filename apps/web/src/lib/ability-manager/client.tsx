@@ -1,12 +1,8 @@
 "use client";
 import { createContextualCan } from "@casl/react";
 import React from "react";
-import type {
-  AppAbility,
-  AppContext,
-  UserContext,
-} from "@/lib/ability-manager/ability";
 import { defineAbilityFor } from "@/lib/ability-manager/ability";
+import type { AppAbility, AppContext, UserContext } from "./types";
 
 export const AbilityContext = React.createContext<AppAbility>({} as AppAbility);
 export const Can = createContextualCan(AbilityContext.Consumer);
@@ -28,7 +24,7 @@ export const AbilityProvider = ({
   );
 };
 
-export const useAppAbility = () => {
+export const useAbility = () => {
   const ability = React.useContext(AbilityContext);
-  return ability;
+  return { ability };
 };

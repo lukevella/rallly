@@ -62,3 +62,20 @@ export async function createUser({
     return user;
   });
 }
+
+export async function setActiveSpace({
+  userId,
+  spaceId,
+}: {
+  userId: string;
+  spaceId: string;
+}) {
+  return await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      activeSpaceId: spaceId,
+    },
+  });
+}

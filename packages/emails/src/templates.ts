@@ -10,6 +10,7 @@ import { NewParticipantEmail } from "./templates/new-participant";
 import { NewParticipantConfirmationEmail } from "./templates/new-participant-confirmation";
 import { NewPollEmail } from "./templates/new-poll";
 import { RegisterEmail } from "./templates/register";
+import { SpaceInviteEmail } from "./templates/space-invite";
 import type { TemplateName } from "./types";
 
 const templates = {
@@ -25,6 +26,7 @@ const templates = {
   AbandonedCheckoutEmail,
   LicenseKeyEmail,
   EventCanceledEmail,
+  SpaceInviteEmail,
 };
 
 export const emailTemplates = Object.keys(templates) as TemplateName[];

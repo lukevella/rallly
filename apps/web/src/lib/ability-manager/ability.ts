@@ -1,104 +1,19 @@
-import type { PureAbility } from "@casl/ability";
 import { AbilityBuilder } from "@casl/ability";
-import type { PrismaQuery, Subjects } from "@casl/prisma";
 import { createPrismaAbility } from "@casl/prisma";
 import type {
-  Comment,
-  Participant,
-  Poll,
-  ScheduledEvent,
-  Space,
-  SpaceMember,
-  Subscription,
-  UserRole,
-} from "@prisma/client";
-import type { SpaceMemberRole } from "@/features/spaces/schema";
+  AppAbility,
+  AppContext,
+  SpaceContext,
+  UserContext,
+} from "./types";
 
-export type UserContext = {
-  id: string;
-  email: string;
-  role: UserRole;
-};
-
-type SpaceTier = "hobby" | "pro";
-type SpaceRole = SpaceMemberRole;
-
-type SpaceContext = {
-  id: string;
-  role: SpaceRole;
-  tier: SpaceTier;
-};
-
-export type AppContext = {
-  space?: SpaceContext;
-};
-
-export type Action =
-  | "create"
-  | "read"
-  | "update"
-  | "delete"
-  | "manage"
-  | "finalize"
-  | "access"
-  | "cancel"
-  | "invite";
-
-export type Subject =
-  | Subjects<{
-      User: UserContext;
-      Poll: Poll;
-      Space: Space;
-      Comment: Comment;
-      Participant: Participant;
-      SpaceMember: SpaceMember;
-      Subscription: Subscription;
-      ScheduledEvent: ScheduledEvent;
-    }>
-  | "ControlPanel"
-  | "all";
-
-export type AppAbility = PureAbility<[Action, Subject], PrismaQuery>;
-
-// Main ability definition function following RBAC pattern
 export function defineAbilityFor(user?: UserContext, context?: AppContext) {
-  return createPrismaAbility<AppAbility>(defineRulesFor(user, context));
-}
-
-// Rule definition function that delegates to specific role handlers
-export function defineRulesFor(user?: UserContext, context?: AppContext) {
   const builder = new AbilityBuilder<AppAbility>(createPrismaAbility);
 
   if (!user) {
-    return builder.rules;
+    return builder.build();
   }
 
-  // Add authenticated user rules
-  defineAuthenticatedUserRules(builder, user);
-
-  // Add system role-based rules
-  switch (user.role) {
-    case "admin":
-      defineAdminRules(builder, user);
-      break;
-    case "user":
-      defineUserRules(builder, user);
-      break;
-  }
-
-  // Add context-specific rules
-  if (context?.space) {
-    defineSpaceRules(builder, user, context.space);
-  }
-
-  return builder.rules;
-}
-
-// Base authenticated user rules
-function defineAuthenticatedUserRules(
-  builder: AbilityBuilder<AppAbility>,
-  user: UserContext,
-) {
   const { can, cannot } = builder;
 
   // Profile management
@@ -118,9 +33,6 @@ function defineAuthenticatedUserRules(
     },
   });
 
-  // Event management
-  can("cancel", "ScheduledEvent", { userId: user.id });
-
   // Basic space access
   can("read", "Space", { ownerId: user.id });
   can("read", "Space", {
@@ -130,64 +42,25 @@ function defineAuthenticatedUserRules(
       },
     },
   });
-}
 
-function defineAdminRules(
-  builder: AbilityBuilder<AppAbility>,
-  user: UserContext,
-) {
-  const { can, cannot } = builder;
-
-  // System administration
-  can("access", "ControlPanel");
-  can("update", "User", ["role"]);
-  cannot("update", "User", ["role"], { id: user.id });
-  can("delete", "User");
-}
-
-function defineUserRules(
-  builder: AbilityBuilder<AppAbility>,
-  user: UserContext,
-) {
-  const { can } = builder;
-
-  // Initial admin setup
-  if (user.email === process.env.INITIAL_ADMIN_EMAIL) {
-    can("update", "User", ["role"], { id: user.id });
-  }
-}
-
-function defineSpaceRules(
-  builder: AbilityBuilder<AppAbility>,
-  user: UserContext,
-  spaceContext: SpaceContext,
-) {
-  const { can, cannot } = builder;
-
-  const { role, tier, id: spaceId } = spaceContext;
-
-  switch (role) {
-    case "admin":
-      defineSpaceAdminRules(builder, user, spaceContext);
-      break;
-    case "member":
-      defineSpaceMemberRules(builder, user, spaceContext);
-      break;
+  if (user.role === "admin") {
+    can("update", "User", ["role"]);
+    cannot("update", "User", ["role"], { id: user.id });
+    can("delete", "User");
   }
 
-  switch (tier) {
-    case "hobby":
-      cannot("update", "Poll", [
-        "requireParticipantEmail",
-        "hideScores",
-        "hideParticipants",
-      ]);
-      cannot("invite", "SpaceMember", { spaceId });
-      break;
-    case "pro":
-      can("invite", "SpaceMember", { spaceId });
-      break;
+  if (context?.space) {
+    switch (context.space.role) {
+      case "admin":
+        defineSpaceAdminRules(builder, user, context.space);
+        break;
+      case "member":
+        defineSpaceMemberRules(builder, user, context.space);
+        break;
+    }
   }
+
+  return builder.build();
 }
 
 function defineSpaceMemberRules(
@@ -207,8 +80,8 @@ function defineSpaceAdminRules(
 ) {
   const { can, cannot } = builder;
 
+  can("create", "SpaceMemberInvite", { spaceId: space.id });
   can("cancel", "ScheduledEvent", { spaceId: space.id });
-
   can(["read", "update", "delete"], "SpaceMember", { spaceId: space.id });
   cannot("update", "SpaceMember", ["role"], {
     spaceId: space.id,

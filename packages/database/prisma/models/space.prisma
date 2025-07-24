@@ -13,6 +13,8 @@ model Space {
   members        SpaceMember[]
   activeForUsers User[]        @relation("UserActiveSpace")
 
+  memberInvites SpaceMemberInvite[]
+
   @@index([ownerId], type: Hash)
   @@map("spaces")
 }
@@ -37,4 +39,21 @@ model SpaceMember {
   @@index([spaceId], type: Hash, map: "space_members_space_id_idx")
   @@index([userId], type: Hash, map: "space_members_user_id_idx")
   @@map("space_members")
+}
+
+model SpaceMemberInvite {
+  id        String          @id @default(uuid())
+  spaceId   String          @map("space_id")
+  email     String
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+  role      SpaceMemberRole @default(MEMBER)
+  inviterId String          @map("inviter_id")
+
+  invitedBy User  @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+  space     Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+
+  @@unique([spaceId, email])
+  @@index([spaceId], type: Hash, map: "space_member_invites_space_id_idx")
+  @@map("space_member_invites")
 }

@@ -43,6 +43,11 @@ export const useSafeAction: typeof useAction = (action, options) => {
               defaultValue: "You are making too many requests",
             });
             break;
+          case "PAYMENT_REQUIRED":
+            translatedDescription = t("actionErrorPaymentRequired", {
+              defaultValue: "You need to upgrade to perform this action",
+            });
+            break;
         }
 
         toast.error(translatedDescription);
