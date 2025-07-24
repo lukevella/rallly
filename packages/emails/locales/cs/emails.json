@@ -62,5 +62,9 @@
   "abandoned_checkout_support": "Pokud máte jakékoli otázky ohledně Rallly Pro nebo potřebujete s čímkoli pomoci, stačí odpovědět na tento e-mail. Jsem tu pro vás!",
   "abandoned_checkout_preview": "Exkluzivní nabídka: Získejte {discount}% slevu z prvního roku Rallly Pro!",
   "abandoned_checkout_subject": "Získejte {discount}% slevu z prvního roku Rallly Pro",
-  "abandoned_checkout_signoff": "S pozdravem,"
+  "abandoned_checkout_signoff": "S pozdravem,",
+  "spaceInvite_preview": "Byli jste pozváni k připojení do {spaceName}",
+  "spaceInvite_heading": "Jste zváni!",
+  "spaceInvite_button": "Přijmout pozvání",
+  "spaceInvite_subject": "Zveme vás k připojení k {spaceName}"
 }
