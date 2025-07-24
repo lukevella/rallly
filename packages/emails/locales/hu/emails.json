@@ -78,5 +78,10 @@
   "eventCanceledContent": "<b>{hostName}</b> lemondta a(z) <b>{title}</b> eseményt, ami ekkorra lett ütemezve:",
   "eventCanceledPreview": "Esemény lemondva",
   "eventCanceledHeading": "Esemény lemondva",
-  "eventCanceledSubject": "Lemondva: {title}"
+  "eventCanceledSubject": "Lemondva: {title}",
+  "spaceInvite_content": "{inviterName} meghívott, hogy csatlakozz ide: {spaceName}, ezzel a szerepkörrel: {role}.",
+  "spaceInvite_preview": "Meghívást kaptál, hogy csatlakozz ide: {spaceName}",
+  "spaceInvite_heading": "Meghívást kaptál!",
+  "spaceInvite_button": "Meghívás elfogadása",
+  "spaceInvite_subject": "Meghívtak, hogy csatlakozz ide: {spaceName}"
 }
