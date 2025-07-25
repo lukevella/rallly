@@ -3,7 +3,6 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "../../apps/web/src/posthog-page-view.tsx"
   ],
   "exclude": ["node_modules"]
 }

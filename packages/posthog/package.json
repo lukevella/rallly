@@ -13,11 +13,13 @@
   "dependencies": {
     "js-cookie": "^3.0.1",
     "posthog-js": "^1.257.0",
-    "posthog-node": "^5.5.0"
+    "posthog-node": "^5.5.0",
+    "react": "^19.1.0"
   },
   "devDependencies": {
     "@rallly/tsconfig": "workspace:*",
     "@types/js-cookie": "^3.0.1",
-    "@types/node": "^20.11.1"
+    "@types/node": "^20.11.1",
+    "@types/react": "^19.1.2"
   }
 }

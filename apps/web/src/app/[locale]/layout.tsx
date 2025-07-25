@@ -1,7 +1,7 @@
 import "../../style.css";
 
 import { supportedLngs } from "@rallly/languages";
-import { PostHogProvider } from "@rallly/posthog/client";
+import { PostHogIdentify, PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/sonner";
 import { TooltipProvider } from "@rallly/ui/tooltip";
 import { domAnimation, LazyMotion } from "motion/react";
@@ -74,6 +74,7 @@ export default async function Root({
             <TRPCProvider>
               <LazyMotion features={domAnimation}>
                 <PostHogProvider>
+                  <PostHogIdentify distinctId={user?.id} />
                   <PostHogPageView />
                   <TooltipProvider>
                     <UserProvider
