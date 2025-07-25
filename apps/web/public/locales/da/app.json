@@ -419,7 +419,6 @@
   "acceptInvite": "Accepter invitation",
   "acceptInviteSuccess": "Tilmelding til stedet er succesfuld!",
   "joinSpace": "Deltag i {spaceName}",
-  "acceptInviteTitle": "{inviterName} inviterede dig til at deltage i {spaceName}",
   "youAreSignedInAs": "Du er logget ind som",
   "acceptInviteMetadataTitle": "Deltag i {spaceName}",
   "actionErrorPaymentRequired": "Du skal opgradere for at udføre denne handling",
