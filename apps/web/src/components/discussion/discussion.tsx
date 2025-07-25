@@ -59,11 +59,12 @@ function NewCommentForm({
   const { participants } = useParticipants();
 
   const authorName = React.useMemo(() => {
-    if (user.id) {
+    if (user) {
+      if (!user.isGuest) {
+        return user.name;
+      }
       const participant = participants.find((p) => p.userId === user.id);
       return participant?.name ?? "";
-    } else {
-      return user.name;
     }
   }, [user, participants]);
 
@@ -91,7 +92,7 @@ function NewCommentForm({
     <form
       className="w-full space-y-2.5"
       onSubmit={handleSubmit(async ({ authorName, content }) => {
-        if (!user.id) {
+        if (!user) {
           await createGuest();
         }
         await addComment.mutateAsync({ authorName, content, pollId });
@@ -110,7 +111,7 @@ function NewCommentForm({
       </div>
       <div
         className={cn("mb-2", {
-          hidden: !user.isGuest,
+          hidden: user && !user.isGuest,
         })}
       >
         <Controller

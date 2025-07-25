@@ -28,10 +28,10 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
 import { isFeedbackEnabled } from "@/utils/constants";
-import { useUser } from "./user-provider";
+import { useAuthenticatedUser } from "./user-provider";
 
 export const UserDropdown = ({ className }: { className?: string }) => {
-  const { user } = useUser();
+  const { user } = useAuthenticatedUser();
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger

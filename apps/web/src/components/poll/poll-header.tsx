@@ -32,7 +32,7 @@ export function PollHeader() {
           </Link>
         </div>
         <div className="flex items-center gap-x-2.5">
-          {user.email ? (
+          {user ? (
             <UserDropdown />
           ) : (
             <>

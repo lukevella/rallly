@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
+import { useAuthenticatedUser } from "@/components/user-provider";
 import { useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { trpc } from "@/trpc/client";
@@ -144,7 +144,7 @@ function RemoveAvatarButton({ onSuccess }: { onSuccess?: () => void }) {
 }
 
 function Upload() {
-  const { user } = useUser();
+  const { user } = useAuthenticatedUser();
   const router = useRouter();
 
   const posthog = usePostHog();
@@ -158,7 +158,7 @@ function Upload() {
             posthog?.capture("upload profile picture");
           }}
         />
-        {user.image ? (
+        {user?.image ? (
           <RemoveAvatarButton
             onSuccess={() => {
               router.refresh();

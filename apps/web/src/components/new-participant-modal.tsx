@@ -92,7 +92,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const isEmailRequired = poll.requireParticipantEmail;
   const { timezone } = useTimezone();
   const { user } = useUser();
-  const isLoggedIn = !user.isGuest;
+  const isLoggedIn = user && !user.isGuest;
   const { register, setError, formState, handleSubmit } =
     useForm<NewParticipantFormData>({
       resolver: zodResolver(schema),
@@ -112,7 +112,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
     <form
       onSubmit={handleSubmit(async (data) => {
         try {
-          if (!user.id) {
+          if (!user) {
             await createGuest();
           }
           const newParticipant = await addParticipant.mutateAsync({

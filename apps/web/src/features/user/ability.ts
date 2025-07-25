@@ -3,7 +3,7 @@ import { AbilityBuilder } from "@casl/ability";
 import type { PrismaQuery, Subjects } from "@casl/prisma";
 import { createPrismaAbility } from "@casl/prisma";
 import type { Space, User } from "@rallly/database";
-import type { UserDTO } from "@/features/user/schema";
+import type { UserRole } from "@/features/user/schema";
 
 type Action = "read" | "update" | "delete";
 type Subject = Subjects<{
@@ -11,9 +11,13 @@ type Subject = Subjects<{
   Space: Space;
 }>;
 
-type UserAbility = PureAbility<[Action, Subject], PrismaQuery>;
+type UserAbilityContext = {
+  role: UserRole;
+  id: string;
+};
+export type UserAbility = PureAbility<[Action, Subject], PrismaQuery>;
 
-export function defineAbilityFor(user?: UserDTO) {
+export function defineAbilityFor(user?: UserAbilityContext) {
   const builder = new AbilityBuilder<UserAbility>(createPrismaAbility);
 
   if (!user) {
@@ -36,7 +40,7 @@ export function defineAbilityFor(user?: UserDTO) {
 
 function defineAbilityForUser(
   builder: AbilityBuilder<UserAbility>,
-  user: UserDTO,
+  user: UserAbilityContext,
 ) {
   const { can, cannot } = builder;
 
@@ -73,7 +77,7 @@ function defineAbilityForUser(
 
 function defineAbilityForAdmin(
   builder: AbilityBuilder<UserAbility>,
-  user: UserDTO,
+  user: UserAbilityContext,
 ) {
   defineAbilityForUser(builder, user);
   const { can, cannot } = builder;

@@ -28,7 +28,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
 
   const { user } = useUser();
 
-  const isWatching = watchers?.some(({ userId }) => userId === user.id);
+  const isWatching = watchers?.some(({ userId }) => userId === user?.id);
 
   const posthog = usePostHog();
 
@@ -44,7 +44,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
       queryClient.polls.getWatchers.setData(
         { pollId: poll.id },
         (oldWatchers) => {
-          if (!oldWatchers || !user.id) {
+          if (!oldWatchers || !user) {
             return;
           }
           return [...oldWatchers, { userId: user.id }];
@@ -65,7 +65,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
           if (!oldWatchers) {
             return;
           }
-          return oldWatchers.filter(({ userId }) => userId !== user.id);
+          return oldWatchers.filter(({ userId }) => userId !== user?.id);
         },
       );
     },
@@ -82,10 +82,10 @@ const NotificationsToggle: React.FunctionComponent = () => {
       <TooltipTrigger asChild>
         <Button
           data-testid="notifications-toggle"
-          disabled={user.isGuest}
+          disabled={!user || user.isGuest}
           variant="ghost"
           onClick={async () => {
-            if (user.isGuest) {
+            if (user) {
               signIn();
               return;
             }
@@ -109,7 +109,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
         </Button>
       </TooltipTrigger>
       <TooltipContent side="bottom">
-        {user.isGuest ? (
+        {!user || user.isGuest ? (
           <Trans
             i18nKey="notificationsGuestTooltip"
             defaults="Create an account or login to turn on notifications"

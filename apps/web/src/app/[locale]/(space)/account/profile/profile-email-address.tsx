@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
+import { useAuthenticatedUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
 
 const emailChangeFormData = z.object({
@@ -30,12 +30,12 @@ const emailChangeFormData = z.object({
 
 type EmailChangeFormData = z.infer<typeof emailChangeFormData>;
 export const ProfileEmailAddress = () => {
-  const { user } = useUser();
+  const { user } = useAuthenticatedUser();
   const requestEmailChange = trpc.user.requestEmailChange.useMutation();
   const posthog = usePostHog();
   const form = useForm<EmailChangeFormData>({
     defaultValues: {
-      email: user.email ?? "",
+      email: user.email,
     },
     resolver: zodResolver(emailChangeFormData),
   });
@@ -89,7 +89,7 @@ export const ProfileEmailAddress = () => {
       <Form {...form}>
         <form
           onSubmit={handleSubmit(async (data) => {
-            if (data.email !== user.email) {
+            if (data.email !== user?.email) {
               posthog.capture("email change requested");
               const res = await requestEmailChange.mutateAsync({
                 email: data.email,

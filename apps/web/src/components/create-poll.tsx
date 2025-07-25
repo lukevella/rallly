@@ -77,7 +77,7 @@ export const CreatePoll: React.FunctionComponent = () => {
       <form
         onSubmit={form.handleSubmit(async (formData) => {
           const title = required(formData?.title);
-          if (!user.id) {
+          if (!user) {
             await createGuest();
           }
           await createPoll.mutateAsync(
@@ -101,7 +101,6 @@ export const CreatePoll: React.FunctionComponent = () => {
                   pollId: res.id,
                   numberOfOptions: formData.options?.length,
                   optionsView: formData?.view,
-                  tier: user.tier,
                   $set: {
                     last_poll_created_at: new Date().toISOString(),
                   },

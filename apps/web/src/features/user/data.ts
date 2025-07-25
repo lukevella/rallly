@@ -14,6 +14,7 @@ export const createUserDTO = (user: User): UserDTO => ({
   locale: user.locale ?? undefined,
   weekStart: user.weekStart ?? undefined,
   customerId: user.customerId ?? undefined,
+  isGuest: false,
 });
 
 export const getUser = async (id: string) => {

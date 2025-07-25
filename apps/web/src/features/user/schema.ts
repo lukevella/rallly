@@ -10,6 +10,7 @@ export type UserDTO = {
   image?: string;
   email: string;
   role: UserRole;
+  isGuest: boolean;
   activeSpaceId?: string;
   timeZone?: string;
   timeFormat?: string;
