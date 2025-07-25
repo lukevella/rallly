@@ -1,6 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 import React from "react";
 
 import { useTranslation } from "@/i18n/client";
@@ -24,7 +22,6 @@ export const UserContext = React.createContext<{
     userId?: string | null;
     guestId?: string | null;
   }) => boolean;
-  createGuestIfNeeded: () => Promise<void>;
 } | null>(null);
 
 export const useUser = () => {
@@ -58,7 +55,6 @@ export const UserProvider = ({
   user?: RegisteredUser | GuestUser;
 }) => {
   const { t } = useTranslation();
-  const router = useRouter();
 
   const isGuest = !user || user.tier === "guest";
   const tier = isGuest ? "guest" : user.tier;
@@ -74,14 +70,6 @@ export const UserProvider = ({
           tier,
           image: user?.image,
           role: user?.role ?? "guest",
-        },
-        createGuestIfNeeded: async () => {
-          if (!user) {
-            await signIn("guest", {
-              redirect: false,
-            });
-            router.refresh();
-          }
         },
         ownsObject: (resource) => {
           return user ? isOwner(resource, { id: user.id, isGuest }) : false;

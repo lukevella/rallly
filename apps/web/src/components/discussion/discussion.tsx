@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
+import { createGuest } from "@/auth/client";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";
 import { useParticipants } from "@/components/participants-provider";
@@ -54,11 +55,11 @@ function NewCommentForm({
 }) {
   const { t } = useTranslation();
   const poll = usePoll();
-  const { user, createGuestIfNeeded } = useUser();
+  const { user } = useUser();
   const { participants } = useParticipants();
 
   const authorName = React.useMemo(() => {
-    if (user.isGuest) {
+    if (user.id) {
       const participant = participants.find((p) => p.userId === user.id);
       return participant?.name ?? "";
     } else {
@@ -90,7 +91,9 @@ function NewCommentForm({
     <form
       className="w-full space-y-2.5"
       onSubmit={handleSubmit(async ({ authorName, content }) => {
-        await createGuestIfNeeded();
+        if (!user.id) {
+          await createGuest();
+        }
         await addComment.mutateAsync({ authorName, content, pollId });
         reset({ authorName, content: "" });
         onSubmit?.();
