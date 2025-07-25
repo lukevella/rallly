@@ -132,9 +132,8 @@ export const spaceActionClient = actionClient
     const getUserAbility = () => defineAbilityFor(user);
     const getMemberAbility = () =>
       defineAbilityForMember({
-        userId: user.id,
-        spaceId: space.id,
-        role: space.role,
+        user,
+        space,
       });
     const getSpaceAbility = () => defineAbilityForSpace(space);
     return next({

@@ -10,9 +10,8 @@ import type {
 import type { MemberRole } from "@/features/space/schema";
 
 export type MemberAbilityContext = {
-  userId: string;
-  spaceId: string;
-  role: MemberRole;
+  user: { id: string };
+  space: { id: string; role: MemberRole };
 };
 
 type Action = "cancel" | "create" | "read" | "update" | "delete";
@@ -20,19 +19,22 @@ type Subject = Subjects<{
   ScheduledEvent: ScheduledEvent;
   SpaceMember: SpaceMember;
   SpaceMemberInvite: SpaceMemberInvite;
+  Subscription: {
+    spaceId: string;
+  };
 }>;
 
 export type MemberAbility = PureAbility<[Action, Subject], PrismaQuery>;
 
-export function defineAbilityForMember(member: MemberAbilityContext) {
+export function defineAbilityForMember(ctx: MemberAbilityContext) {
   const builder = new AbilityBuilder<MemberAbility>(createPrismaAbility);
 
-  switch (member.role) {
+  switch (ctx.space.role) {
     case "admin":
-      defineSpaceAdminRules(builder, member);
+      defineSpaceAdminRules(builder, ctx);
       break;
     case "member":
-      defineSpaceMemberRules(builder, member);
+      defineSpaceMemberRules(builder, ctx);
       break;
   }
 
@@ -41,29 +43,32 @@ export function defineAbilityForMember(member: MemberAbilityContext) {
 
 function defineSpaceMemberRules(
   builder: AbilityBuilder<MemberAbility>,
-  member: MemberAbilityContext,
+  { user, space }: MemberAbilityContext,
 ) {
   const { can } = builder;
 
   can("cancel", "ScheduledEvent", {
-    spaceId: member.spaceId,
-    userId: member.userId,
+    spaceId: space.id,
+    userId: user.id,
   });
 }
 
 function defineSpaceAdminRules(
   builder: AbilityBuilder<MemberAbility>,
-  member: MemberAbilityContext,
+  ctx: MemberAbilityContext,
 ) {
   const { can, cannot } = builder;
 
   // Can do everything a member can do
-  defineSpaceMemberRules(builder, member);
+  defineSpaceMemberRules(builder, ctx);
 
-  can("create", "SpaceMemberInvite", { spaceId: member.spaceId });
-  can(["delete"], "SpaceMember", { spaceId: member.spaceId });
+  can("create", "SpaceMemberInvite", { spaceId: ctx.space.id });
+  can(["delete"], "SpaceMember", { spaceId: ctx.space.id });
   cannot("update", "SpaceMember", ["role"], {
-    spaceId: member.spaceId,
-    userId: member.userId,
+    spaceId: ctx.space.id,
+    userId: ctx.user.id,
+  });
+  can("read", "Subscription", {
+    spaceId: ctx.space.id,
   });
 }

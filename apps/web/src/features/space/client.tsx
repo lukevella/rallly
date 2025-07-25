@@ -38,9 +38,13 @@ export const SpaceProvider = ({
       getAbility: () => defineAbilityForSpace(data),
       getMemberAbility: () =>
         defineAbilityForMember({
-          userId,
-          spaceId: data.id,
-          role: data.role,
+          user: {
+            id: userId,
+          },
+          space: {
+            id: data.id,
+            role: data.role,
+          },
         }),
     }),
     [data, userId],
