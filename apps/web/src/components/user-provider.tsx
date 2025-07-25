@@ -34,24 +34,6 @@ export const useUser = () => {
   return useRequiredContext(UserContext, "UserContext");
 };
 
-export const IfAuthenticated = (props: { children?: React.ReactNode }) => {
-  const { user } = useUser();
-  if (user.isGuest) {
-    return null;
-  }
-
-  return <>{props.children}</>;
-};
-
-export const IfGuest = (props: { children?: React.ReactNode }) => {
-  const { user } = useUser();
-  if (!user.isGuest) {
-    return null;
-  }
-
-  return <>{props.children}</>;
-};
-
 type BaseUser = {
   id: string;
   tier: "guest" | "hobby" | "pro";

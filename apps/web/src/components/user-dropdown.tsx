@@ -17,23 +17,19 @@ import {
   GemIcon,
   LifeBuoyIcon,
   ListIcon,
-  LogInIcon,
   LogOutIcon,
   MegaphoneIcon,
   Settings2Icon,
   UserIcon,
-  UserPlusIcon,
 } from "lucide-react";
 import Link from "next/link";
 
-import { LoginLink } from "@/components/login-link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { RegisterLink } from "@/components/register-link";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
 import { isFeedbackEnabled } from "@/utils/constants";
 
-import { IfAuthenticated, IfGuest, useUser } from "./user-provider";
+import { useUser } from "./user-provider";
 
 export const UserDropdown = ({ className }: { className?: string }) => {
   const { user, logout } = useUser();
@@ -74,14 +70,12 @@ export const UserDropdown = ({ className }: { className?: string }) => {
             <Trans i18nKey="polls" defaults="Polls" />
           </Link>
         </DropdownMenuItem>
-        <IfAuthenticated>
-          <DropdownMenuItem asChild={true}>
-            <Link href="/account/profile" className="flex items-center gap-x-2">
-              <UserIcon className="size-4 text-muted-foreground" />
-              <Trans i18nKey="profile" defaults="Profile" />
-            </Link>
-          </DropdownMenuItem>
-        </IfAuthenticated>
+        <DropdownMenuItem asChild={true}>
+          <Link href="/account/profile" className="flex items-center gap-x-2">
+            <UserIcon className="size-4 text-muted-foreground" />
+            <Trans i18nKey="profile" defaults="Profile" />
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild={true}>
           <Link
             href="/account/preferences"
@@ -137,31 +131,15 @@ export const UserDropdown = ({ className }: { className?: string }) => {
           </DropdownMenuItem>
         ) : null}
         <DropdownMenuSeparator />
-        <IfGuest>
-          <DropdownMenuItem asChild={true}>
-            <LoginLink className="flex items-center gap-x-2">
-              <LogInIcon className="size-4 text-muted-foreground" />
-              <Trans i18nKey="login" defaults="login" />
-            </LoginLink>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild={true}>
-            <RegisterLink className="flex items-center gap-x-2">
-              <UserPlusIcon className="size-4 text-muted-foreground" />
-              <Trans i18nKey="createAnAccount" defaults="Register" />
-            </RegisterLink>
-          </DropdownMenuItem>
-        </IfGuest>
-        <IfAuthenticated>
-          <DropdownMenuItem
-            onClick={() => {
-              logout();
-            }}
-            className="flex items-center gap-x-2"
-          >
-            <LogOutIcon className="size-4 text-muted-foreground" />
-            <Trans i18nKey="logout" />
-          </DropdownMenuItem>
-        </IfAuthenticated>
+        <DropdownMenuItem
+          onClick={() => {
+            logout();
+          }}
+          className="flex items-center gap-x-2"
+        >
+          <LogOutIcon className="size-4 text-muted-foreground" />
+          <Trans i18nKey="logout" />
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
