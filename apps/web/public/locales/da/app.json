@@ -386,5 +386,13 @@
   "disableUserRegistrationDescription": "Forhindre nye brugere i at registrere en konto.",
   "authenticationAndSecurity": "Godkendelse Og Sikkerhed",
   "authenticationAndSecurityDescription": "Administrer godkendelses- og sikkerhedsindstillinger",
-  "youHaveUnsavedChanges": "Du har ændringer, der ikke er gemt"
+  "youHaveUnsavedChanges": "Du har ændringer, der ikke er gemt",
+  "unexpectedError": "Uventet fejl",
+  "unexpectedErrorDescription": "Der opstod en uventet fejl. Prøv igen senere.",
+  "actionErrorUnauthorized": "Du har ikke tilladelse til at udføre denne handling",
+  "actionErrorNotFound": "Denne ressource kunne ikke findes",
+  "actionErrorForbidden": "Du har ikke tilladelse til at udføre denne handling",
+  "actionErrorInternalServerError": "Der opstod en intern serverfejl",
+  "cancelEvent": "Annuller Begivenhed",
+  "createSpaceDescription": "Opret et nyt sted til at organisere dine meningsmålinger og begivenheder."
 }
