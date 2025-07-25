@@ -89,19 +89,20 @@ export const actionClient = createSafeActionClient({
 
 export const authActionClient = actionClient
   .use(async ({ next }) => {
-    try {
-      const user = await getCurrentUser();
-      const ability = defineAbilityFor(user);
-      return next({
-        ctx: { user, ability },
-      });
-    } catch (error) {
+    const user = await getCurrentUser();
+
+    if (!user) {
       throw new AppError({
         code: "UNAUTHORIZED",
         message: "You are not authenticated.",
-        cause: error,
       });
     }
+
+    const ability = defineAbilityFor(user);
+
+    return next({
+      ctx: { user, ability },
+    });
   })
   .use(posthogMiddleware);
 
@@ -118,31 +119,32 @@ export const adminActionClient = authActionClient.use(async ({ ctx, next }) => {
 
 export const spaceActionClient = actionClient
   .use(async ({ next }) => {
-    try {
-      const { user, space } = await getCurrentUserSpace();
-      const getUserAbility = () => defineAbilityFor(user);
-      const getMemberAbility = () =>
-        defineAbilityForMember({
-          userId: user.id,
-          spaceId: space.id,
-          role: space.role,
-        });
-      const getSpaceAbility = () => defineAbilityForSpace(space);
-      return next({
-        ctx: {
-          user,
-          space,
-          getUserAbility,
-          getMemberAbility,
-          getSpaceAbility,
-        },
-      });
-    } catch (error) {
+    const data = await getCurrentUserSpace();
+
+    if (!data) {
       throw new AppError({
         code: "UNAUTHORIZED",
         message: "You are not authenticated.",
-        cause: error,
       });
     }
+
+    const { user, space } = data;
+    const getUserAbility = () => defineAbilityFor(user);
+    const getMemberAbility = () =>
+      defineAbilityForMember({
+        userId: user.id,
+        spaceId: space.id,
+        role: space.role,
+      });
+    const getSpaceAbility = () => defineAbilityForSpace(space);
+    return next({
+      ctx: {
+        user,
+        space,
+        getUserAbility,
+        getMemberAbility,
+        getSpaceAbility,
+      },
+    });
   })
   .use(posthogMiddleware);

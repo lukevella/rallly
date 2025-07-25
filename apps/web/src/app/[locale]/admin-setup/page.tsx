@@ -3,7 +3,7 @@ import { CrownIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { loadCurrentUser } from "@/auth/data";
+import { requireUser } from "@/auth/data";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -17,7 +17,7 @@ import { isInitialAdmin } from "@/utils/is-initial-admin";
 import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {
-  const user = await loadCurrentUser();
+  const user = await requireUser();
 
   if (user.role === "admin") {
     redirect("/control-panel");

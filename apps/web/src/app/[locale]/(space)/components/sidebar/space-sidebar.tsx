@@ -13,7 +13,7 @@ import Link from "next/link";
 import type React from "react";
 import { SpaceSidebarMenu } from "@/app/[locale]/(space)/components/sidebar/space-sidebar-menu";
 import { LogoLink } from "@/app/components/logo-link";
-import { loadCurrentUserSpace } from "@/auth/data";
+import { requireSpace, requireUser } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
@@ -24,22 +24,23 @@ import { UpgradeButton } from "../upgrade-button";
 import { NavUser } from "./nav-user";
 
 async function loadData() {
-  const [{ user, space }, spaces] = await Promise.all([
-    loadCurrentUserSpace(),
+  const [user, activeSpace, spaces] = await Promise.all([
+    requireUser(),
+    requireSpace(),
     loadSpaces(),
   ]);
 
   return {
     user,
     spaces,
-    space,
+    activeSpace,
   };
 }
 
 export async function SpaceSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const { user, spaces, space: activeSpace } = await loadData();
+  const { user, spaces, activeSpace } = await loadData();
 
   return (
     <Sidebar variant="inset" {...props}>

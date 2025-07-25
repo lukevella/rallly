@@ -4,7 +4,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireUserWithSpace } from "@/auth/data";
+import { requireSpace, requireUser } from "@/auth/data";
 import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
@@ -18,7 +18,7 @@ const inputSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const { user, space } = await requireUserWithSpace();
+  const [user, space] = await Promise.all([requireUser(), requireSpace()]);
 
   if (space.ownerId !== user.id) {
     throw new AppError({
