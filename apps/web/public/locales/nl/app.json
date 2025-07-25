@@ -419,7 +419,6 @@
   "acceptInvite": "Uitnodiging accepteren",
   "acceptInviteSuccess": "Je bent nu lid van deze ruimte!",
   "joinSpace": "Lid worden van {spaceName}",
-  "acceptInviteTitle": "{inviterName} heeft jou uitgenodigd om lid te worden van {spaceName}",
   "youAreSignedInAs": "Je bent ingelogd als",
   "acceptInviteMetadataTitle": "Lid worden van {spaceName}",
   "actionErrorPaymentRequired": "Je moet upgraden om deze actie uit te voeren",
