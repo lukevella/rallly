@@ -23,16 +23,15 @@ import {
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
-
+import { signOut } from "next-auth/react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
 import { isFeedbackEnabled } from "@/utils/constants";
-
 import { useUser } from "./user-provider";
 
 export const UserDropdown = ({ className }: { className?: string }) => {
-  const { user, logout } = useUser();
+  const { user } = useUser();
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger
@@ -132,8 +131,8 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         ) : null}
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => {
-            logout();
+          onClick={async () => {
+            await signOut();
           }}
           className="flex items-center gap-x-2"
         >

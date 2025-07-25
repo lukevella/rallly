@@ -1,7 +1,6 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
 import { useRouter } from "next/navigation";
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import React from "react";
 
 import { useTranslation } from "@/i18n/client";
@@ -26,7 +25,6 @@ export const UserContext = React.createContext<{
     guestId?: string | null;
   }) => boolean;
   createGuestIfNeeded: () => Promise<void>;
-  logout: () => Promise<void>;
 } | null>(null);
 
 export const useUser = () => {
@@ -61,22 +59,9 @@ export const UserProvider = ({
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
-  const posthog = usePostHog();
 
   const isGuest = !user || user.tier === "guest";
   const tier = isGuest ? "guest" : user.tier;
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix this later
-  React.useEffect(() => {
-    if (user) {
-      posthog?.identify(user.id, {
-        email: user.email,
-        name: user.name,
-        tier,
-        image: user.image,
-      });
-    }
-  }, [user?.id]);
 
   return (
     <UserContext.Provider
@@ -97,11 +82,6 @@ export const UserProvider = ({
             });
             router.refresh();
           }
-        },
-        logout: async () => {
-          await signOut();
-          posthog?.capture("logout");
-          posthog?.reset();
         },
         ownsObject: (resource) => {
           return user ? isOwner(resource, { id: user.id, isGuest }) : false;

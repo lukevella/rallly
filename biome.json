@@ -63,10 +63,6 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": [
-      "apps/**/src/**",
-      "packages/**/src/**",
-      "!**/apps/landing/public/static/scripts/mailerlite.js"
-    ]
+    "includes": ["apps/**/src/**", "packages/**/src/**"]
   }
 }
