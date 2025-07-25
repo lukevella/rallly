@@ -8,8 +8,8 @@ import { z } from "zod";
 
 import { env } from "@/env";
 import { getS3Client } from "@/lib/storage/s3";
+import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
-
 import {
   createRateLimitMiddleware,
   privateProcedure,
@@ -135,7 +135,7 @@ export const user = router({
         },
       );
 
-      ctx.user.getEmailClient().sendTemplate("ChangeEmailRequest", {
+      getEmailClient(ctx.user.locale).sendTemplate("ChangeEmailRequest", {
         to: input.email,
         props: {
           verificationUrl: absoluteUrl(

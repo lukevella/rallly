@@ -211,9 +211,9 @@ export const participants = router({
             },
           );
 
-          ctx.user
-            .getEmailClient()
-            .queueTemplate("NewParticipantConfirmationEmail", {
+          getEmailClient(ctx.user.locale).queueTemplate(
+            "NewParticipantConfirmationEmail",
+            {
               to: email,
               props: {
                 title: participant.poll.title,
@@ -221,7 +221,8 @@ export const participants = router({
                   `/invite/${participant.poll.id}?token=${token}`,
                 ),
               },
-            });
+            },
+          );
         }
 
         waitUntil(
