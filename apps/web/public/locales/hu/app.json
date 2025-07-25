@@ -395,7 +395,7 @@
   "actionErrorInternalServerError": "Egy belső szerverhiba történt",
   "cancelEvent": "Esemény lemondása",
   "createSpace": "Munkaterület létrehozása",
-  "createSpaceDescription": "Hozz létre egy új teret a szavazásaid és eseményeid rendszerezésére.",
+  "createSpaceDescription": "Hozz létre egy új munkaterületet a szavazásaid és eseményeid rendszerezésére.",
   "createSpaceLoading": "Munkaterület létrehozása...",
   "createSpaceSuccess": "Munkaterület létrehozva",
   "createSpaceError": "Nem sikerült a munkaterület létrehozása",
