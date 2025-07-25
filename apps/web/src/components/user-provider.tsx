@@ -21,7 +21,6 @@ type UserData = {
 
 export const UserContext = React.createContext<{
   user: UserData;
-  refresh: () => void;
   ownsObject: (obj: {
     userId?: string | null;
     guestId?: string | null;
@@ -99,7 +98,6 @@ export const UserProvider = ({
             router.refresh();
           }
         },
-        refresh: router.refresh,
         logout: async () => {
           await signOut();
           posthog?.capture("logout");
