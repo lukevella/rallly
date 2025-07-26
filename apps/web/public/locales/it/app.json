@@ -262,6 +262,9 @@
   "loginVerifyTitle": "Termina L'Accesso",
   "loginVerifyDescription": "Controlla la tua email per il codice verifica",
   "createAccount": "Crea Utenza",
+  "subscriptionPriceMonthly": "{price} per mese",
+  "subscriptionPriceYearly": "{price} per anno",
+  "billingSubscriptionTitle": "Abbonamento",
   "subscriptionStatusActive": "Attivo",
   "subscriptionStatusPaused": "In pausa",
   "billingSubscriptionPlan": "Piano",
@@ -270,5 +273,9 @@
   "upcomingEventsEmptyStateDescription": "Quando pianifichi eventi, appariranno qui.",
   "pastEventsEmptyStateTitle": "Nessun Evento Passato",
   "pending": "In attesa",
-  "user": "Utente"
+  "user": "Utente",
+  "acceptInviteMetadataTitle": "Entra In {spaceName}",
+  "actionErrorPaymentRequired": "Devi eseguire l'aggiornamento per eseguire questa azione",
+  "loginWithAnotherAccount": "Accedi con un altro account",
+  "adminRoleRequired": "È necessario essere un amministratore per eseguire questa azione"
 }
