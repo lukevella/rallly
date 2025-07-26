@@ -74,5 +74,14 @@
   "license_key_support": "Svar på denne e-mail eller kontakt os på <a>{supportEmail}</a> hvis du har brug for hjælp.",
   "license_key_signoff": "Tak fordi du valgte Rallly!",
   "license_key_preview": "Din licensnøgle er blevet genereret.",
-  "license_key_subject": "Din Rallly Self-Hosted {tier} Licens"
+  "license_key_subject": "Din Rallly Self-Hosted {tier} Licens",
+  "eventCanceledContent": "<b>{hostName}</b> har annulleret <b>{title}</b>, der var planlagt til:",
+  "eventCanceledPreview": "Begivenhed annulleret",
+  "eventCanceledHeading": "Begivenhed annulleret",
+  "eventCanceledSubject": "Annulleret: {title}",
+  "spaceInvite_content": "{inviterName} har inviteret dig til at deltage i {spaceName} som {role}.",
+  "spaceInvite_preview": "Du er inviteret til at deltage i {spaceName}",
+  "spaceInvite_heading": "Du er inviteret!",
+  "spaceInvite_button": "Accepter invitation",
+  "spaceInvite_subject": "Du er inviteret til at deltage i {spaceName}"
 }

@@ -327,5 +327,20 @@
   "setupFormTitle": "Nastavení",
   "setupFormDescription": "Dokončete vytváření svého účtu.",
   "pending": "Čekající",
-  "user": "Uživatel"
+  "user": "Uživatel",
+  "role": "Role",
+  "inviteMemberDescription": "Pozvěte nového člena do svého prostoru",
+  "inviteSent": "Pozvánka odeslána",
+  "inviteUpdated": "Pozvánka aktualizována s novou rolí",
+  "alreadyMember": "Tato osoba je již členem tohoto prostoru",
+  "invitePending": "Na tuto e-mailovou adresu již byla odeslána pozvánka",
+  "inviteFailed": "Pozvánka nebyla odeslána",
+  "acceptInvite": "Přijmout pozvánku",
+  "acceptInviteSuccess": "Připojení k prostoru bylo úspěšné!",
+  "joinSpace": "Připojit se k {spaceName}",
+  "youAreSignedInAs": "Jste přihlášeni jako",
+  "acceptInviteMetadataTitle": "Připojit se k {spaceName}",
+  "actionErrorPaymentRequired": "K provedení této akce je nutné provést upgrade",
+  "loginWithAnotherAccount": "Přihlaste se pomocí jiného účtu",
+  "adminRoleRequired": "K provedení této akce musíte být správcem"
 }

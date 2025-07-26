@@ -78,5 +78,10 @@
   "eventCanceledContent": "<b>{hostName}</b> heeft het evenement <b>{title}</b> geannuleerd dat was gepland voor:",
   "eventCanceledPreview": "Evenement is geannuleerd",
   "eventCanceledHeading": "Evenement is geannuleerd",
-  "eventCanceledSubject": "Geannuleerd: {title}"
+  "eventCanceledSubject": "Geannuleerd: {title}",
+  "spaceInvite_content": "{inviterName} heeft jou uitgenodigd om lid te worden van de ruimte {spaceName} als {role}.",
+  "spaceInvite_preview": "Je bent uitgenodigd om lid te worden van {spaceName}",
+  "spaceInvite_heading": "Je bent uitgenodigd!",
+  "spaceInvite_button": "Uitnodiging accepteren",
+  "spaceInvite_subject": "Je bent uitgenodigd om lid te worden van {spaceName}"
 }

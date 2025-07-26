@@ -408,5 +408,21 @@
   "member": "Mitglied",
   "allMembers": "Alle",
   "inviteMember": "Mitglied einladen",
-  "content": "Inhalt"
+  "content": "Inhalt",
+  "role": "Rolle",
+  "inviteMemberDescription": "Lade ein neues Mitglied in deine Gruppe ein",
+  "inviteSent": "Einladung gesendet",
+  "inviteUpdated": "Einladung mit neuer Rolle aktualisiert",
+  "alreadyMember": "Diese Person ist bereits Mitglied dieser Gruppe",
+  "invitePending": "Eine Einladung wurde bereits an diese E-Mail-Adresse gesendet",
+  "inviteFailed": "Einladung konnte nicht gesendet werden",
+  "acceptInvite": "Einladung annehmen",
+  "acceptInviteSuccess": "Erfolgreich der Gruppe beigetreten!",
+  "joinSpace": "{spaceName} beitreten",
+  "acceptInviteTitle": "{inviterName} hat dich eingeladen, {spaceName} beizutreten",
+  "youAreSignedInAs": "Du bist angemeldet als",
+  "acceptInviteMetadataTitle": "{spaceName} beitreten",
+  "actionErrorPaymentRequired": "Du musst deinen Plan upgraden, um diese Aktion auszuführen",
+  "loginWithAnotherAccount": "Mit einem anderen Konto anmelden",
+  "adminRoleRequired": "Du musst ein Admin sein, um diese Aktion auszuführen"
 }

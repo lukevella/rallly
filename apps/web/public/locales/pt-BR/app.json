@@ -408,5 +408,21 @@
   "member": "Membro",
   "allMembers": "Todos",
   "inviteMember": "Convidar membro",
-  "content": "Conteúdo"
+  "content": "Conteúdo",
+  "role": "Atribuição",
+  "inviteMemberDescription": "Convide um novo membro para o seu espaço",
+  "inviteSent": "Convite enviado",
+  "inviteUpdated": "Convite atualizado com nova atribuição",
+  "alreadyMember": "Esta pessoa já é membro deste espaço",
+  "invitePending": "Um convite já foi enviado para esse endereço de e-mail",
+  "inviteFailed": "Falha ao enviar convite",
+  "acceptInvite": "Aceitar Convite",
+  "acceptInviteSuccess": "Ingressou no espaço com sucesso!",
+  "joinSpace": "Ingressar em {spaceName}",
+  "acceptInviteTitle": "{inviterName} convidou você para igressar em {spaceName}",
+  "youAreSignedInAs": "Você entrou como",
+  "acceptInviteMetadataTitle": "Ingressar em {spaceName}",
+  "actionErrorPaymentRequired": "Você precisa atualizar seu plano para realizar esta ação",
+  "loginWithAnotherAccount": "Logar com outra conta",
+  "adminRoleRequired": "Você precisa ser um administrador para realizar esta ação"
 }

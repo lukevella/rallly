@@ -74,5 +74,14 @@
   "license_key_support": "Vastaa tähän sähköpostiin tai ota meihin yhteyttä osoitteessa <a>{supportEmail}</a>, jos tarvitset apua.",
   "license_key_signoff": "Kiitos, että valitsit Ralllyn!",
   "license_key_preview": "Lisenssiavaimesi on luotu.",
-  "license_key_subject": "Rallly Self-Hosted {tier} -lisenssisi"
+  "license_key_subject": "Rallly Self-Hosted {tier} -lisenssisi",
+  "eventCanceledContent": "<b>{hostName}</b> on perunut tapahtuman <b>{title}</b>, jonka ajankohta oli:",
+  "eventCanceledPreview": "Tapahtuma peruttu",
+  "eventCanceledHeading": "Tapahtuma peruttu",
+  "eventCanceledSubject": "Peruttu: {title}",
+  "spaceInvite_content": "{inviterName} on kutsunut sinut liittymään tilaan {spaceName} roolissa {role}.",
+  "spaceInvite_preview": "Olet saanut kutsun liittyä tilaan {spaceName}",
+  "spaceInvite_heading": "Olet saanut kutsun!",
+  "spaceInvite_button": "Hyväksy kutsu",
+  "spaceInvite_subject": "Olet saanut kutsun liittyä tilaan {spaceName}"
 }
