@@ -5,7 +5,6 @@ import { useDialog } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { UserPlusIcon } from "lucide-react";
-import { InviteMemberDialog } from "@/app/[locale]/(space)/members/components/invite-member-dialog";
 import {
   PageHeader,
   PageHeaderActions,
@@ -16,6 +15,7 @@ import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
 import { useSpace } from "@/features/space/client";
 import { useTranslation } from "@/i18n/client";
+import { InviteMemberDialog } from "./invite-member-dialog";
 
 export function MembersHeader() {
   const { t } = useTranslation();
