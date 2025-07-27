@@ -5,7 +5,7 @@ import Image from "next/image";
 import React from "react";
 
 export function OptimizedAvatarImage({
-  size,
+  size = "md",
   className,
   src,
   name,
