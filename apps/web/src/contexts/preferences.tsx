@@ -68,7 +68,7 @@ export const PreferencesProvider = ({
             ...newPreferences,
           }));
 
-          if (!user.isGuest) {
+          if (user && !user.isGuest) {
             await updatePreferences.mutateAsync({
               timeZone: newPreferences.timeZone ?? undefined,
               timeFormat: newPreferences.timeFormat ?? undefined,

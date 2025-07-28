@@ -18,7 +18,6 @@ import { Trans } from "react-i18next";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { ProBadge } from "@/components/pro-badge";
 import { useSpace } from "@/features/space/client";
-import { useUser } from "../user-provider";
 
 export type PollSettingsFormData = {
   requireParticipantEmail: boolean;

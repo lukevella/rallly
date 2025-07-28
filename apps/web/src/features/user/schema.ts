@@ -1,3 +1,4 @@
+import type { TimeFormat } from "@prisma/client";
 import z from "zod";
 
 export const userRoleSchema = z.enum(["admin", "user"]);
@@ -13,7 +14,7 @@ export type UserDTO = {
   isGuest: boolean;
   activeSpaceId?: string;
   timeZone?: string;
-  timeFormat?: string;
+  timeFormat?: TimeFormat;
   locale?: string;
   weekStart?: number;
   customerId?: string;

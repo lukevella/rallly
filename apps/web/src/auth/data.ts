@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { createSpaceDTO } from "@/features/space/data";
-import { createUserDTO } from "@/features/user/data";
+import { getUser } from "@/features/user/data";
 import { AppError } from "@/lib/errors";
 import { auth } from "@/next-auth";
 
@@ -16,17 +16,13 @@ export const getCurrentUser = async () => {
     return null;
   }
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: session.user.id,
-    },
-  });
+  const user = await getUser(session.user.id);
 
   if (!user) {
     return null;
   }
 
-  return createUserDTO(user);
+  return user;
 };
 
 export const getCurrentUserSpace = async () => {
@@ -159,17 +155,13 @@ export const requireUser = cache(async () => {
     redirect(`/login?${searchParams.toString()}`);
   }
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: session.user.id,
-    },
-  });
+  const user = await getUser(session.user.id);
 
   if (!user) {
     redirect("/api/auth/invalid-session");
   }
 
-  return createUserDTO(user);
+  return user;
 });
 
 export const requireSpace = cache(async () => {

@@ -1,5 +1,6 @@
 import type { User } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { cache } from "react";
 import type { UserDTO } from "@/features/user/schema";
 
 export const createUserDTO = (user: User): UserDTO => ({
@@ -17,7 +18,7 @@ export const createUserDTO = (user: User): UserDTO => ({
   isGuest: false,
 });
 
-export const getUser = async (id: string) => {
+export const getUser = cache(async (id: string) => {
   const user = await prisma.user.findUnique({
     where: {
       id,
@@ -29,4 +30,4 @@ export const getUser = async (id: string) => {
   }
 
   return createUserDTO(user);
-};
+});

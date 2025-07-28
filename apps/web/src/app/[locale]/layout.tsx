@@ -12,7 +12,7 @@ import type React from "react";
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
-import { getUser } from "@/features/user/queries";
+import { getUser } from "@/features/user/data";
 import { I18nProvider } from "@/i18n/client";
 import { getLocale } from "@/i18n/server/get-locale";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
@@ -53,7 +53,7 @@ export default async function Root({
 }: {
   children: React.ReactNode;
 }) {
-  const { session, locale: fallbackLocale, user } = await loadData();
+  const { locale: fallbackLocale, user } = await loadData();
 
   let locale = fallbackLocale;
 
@@ -77,30 +77,7 @@ export default async function Root({
                   <PostHogIdentify distinctId={user?.id} />
                   <PostHogPageView />
                   <TooltipProvider>
-                    <UserProvider
-                      user={
-                        user
-                          ? {
-                              id: user.id,
-                              name: user.name,
-                              email: user.email,
-                              tier: user
-                                ? user.isPro
-                                  ? "pro"
-                                  : "hobby"
-                                : "guest",
-                              image: user.image,
-                              role: user.role,
-                            }
-                          : session?.user
-                            ? {
-                                id: session.user.id,
-                                tier: "guest",
-                                role: "guest",
-                              }
-                            : undefined
-                      }
-                    >
+                    <UserProvider user={user ?? undefined}>
                       <PreferencesProvider
                         initialValue={{
                           timeFormat: user?.timeFormat,
