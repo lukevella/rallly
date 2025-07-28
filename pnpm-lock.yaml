@@ -512,6 +512,8 @@ importers:
         specifier: ^4.6.2
         version: 4.19.3
 
+  packages/dayjs: {}
+
   packages/emails:
     dependencies:
       '@aws-sdk/client-ses':
@@ -614,7 +616,7 @@ importers:
         specifier: ^20.11.1
         version: 20.17.50
       '@types/react':
-        specifier: ^19.1.2
+        specifier: 19.1.2
         version: 19.1.2
 
   packages/tailwind-config:
