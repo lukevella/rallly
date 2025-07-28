@@ -1,4 +1,6 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import React from "react";
 import type { UserAbility } from "@/features/user/ability";
 import { defineAbilityFor } from "@/features/user/ability";
@@ -13,6 +15,7 @@ type GuestUser = {
 
 type UserContextValue = {
   user?: UserDTO | GuestUser;
+  createGuestIfNeeded: () => Promise<void>;
   getAbility: () => UserAbility;
   ownsObject: (obj: {
     userId?: string | null;
@@ -42,9 +45,18 @@ export const UserProvider = ({
   children?: React.ReactNode;
   user?: UserDTO;
 }) => {
+  const router = useRouter();
   const value = React.useMemo<UserContextValue>(() => {
     return {
       user,
+      createGuestIfNeeded: async () => {
+        if (!user) {
+          await signIn("guest", {
+            redirect: false,
+          });
+          router.refresh();
+        }
+      },
       getAbility: () => defineAbilityFor(user),
       ownsObject: (resource) => {
         return user
@@ -52,6 +64,6 @@ export const UserProvider = ({
           : false;
       },
     };
-  }, [user]);
+  }, [user, router]);
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

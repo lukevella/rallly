@@ -10,7 +10,6 @@ import { TRPCClientError } from "@trpc/client";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
-import { createGuest } from "@/auth/client";
 import { usePoll } from "@/contexts/poll";
 import { useTranslation } from "@/i18n/client";
 import { useTimezone } from "@/lib/timezone/client/context";
@@ -91,7 +90,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
 
   const isEmailRequired = poll.requireParticipantEmail;
   const { timezone } = useTimezone();
-  const { user } = useUser();
+  const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = user && !user.isGuest;
   const { register, setError, formState, handleSubmit } =
     useForm<NewParticipantFormData>({
@@ -112,9 +111,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
     <form
       onSubmit={handleSubmit(async (data) => {
         try {
-          if (!user) {
-            await createGuest();
-          }
+          await createGuestIfNeeded();
           const newParticipant = await addParticipant.mutateAsync({
             name: data.name,
             votes: props.votes,
