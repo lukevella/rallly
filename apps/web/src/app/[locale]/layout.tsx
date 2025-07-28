@@ -13,6 +13,7 @@ import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector"
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { getUser } from "@/features/user/data";
+import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
 import { getLocale } from "@/i18n/server/get-locale";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
@@ -37,9 +38,21 @@ export const viewport: Viewport = {
 async function loadData() {
   const [session, locale] = await Promise.all([auth(), getLocale()]);
 
-  const userId = session?.user?.email ? session.user.id : undefined;
-
-  const user = userId ? await getUser(userId) : null;
+  const user = session?.user
+    ? session.user.email
+      ? await getUser(session.user.id)
+      : ({
+          id: session.user.id,
+          name: "Guest",
+          isGuest: true,
+          email: `${session.user.id}@rallly.co`,
+          role: "user",
+          locale: session.user.locale ?? undefined,
+          timeZone: session.user.timeZone ?? undefined,
+          timeFormat: session.user.timeFormat ?? undefined,
+          weekStart: session.user.weekStart ?? undefined,
+        } satisfies UserDTO)
+    : null;
 
   return {
     session,

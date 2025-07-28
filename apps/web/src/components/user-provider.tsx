@@ -42,15 +42,16 @@ export const UserProvider = ({
   children?: React.ReactNode;
   user?: UserDTO;
 }) => {
-  const isGuest = !user;
   const value = React.useMemo<UserContextValue>(() => {
     return {
       user,
       getAbility: () => defineAbilityFor(user),
       ownsObject: (resource) => {
-        return user ? isOwner(resource, { id: user.id, isGuest }) : false;
+        return user
+          ? isOwner(resource, { id: user.id, isGuest: user.isGuest })
+          : false;
       },
     };
-  }, [user, isGuest]);
+  }, [user]);
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
