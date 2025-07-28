@@ -49,7 +49,7 @@ export async function SpaceSidebar({
           <SpaceDropdown spaces={spaces} activeSpaceId={activeSpace.id}>
             <button
               type="button"
-              className="flex h-auto w-full items-center gap-2 rounded-lg border bg-background/25 p-2 hover:bg-background/50"
+              className="flex h-auto w-full items-center gap-2 rounded-lg border border-gray-300/50 bg-background/25 p-2 hover:bg-background/50"
             >
               <SpaceIcon name={activeSpace.name} />
               <div className="flex-1 px-0.5 text-left">
