@@ -8,6 +8,7 @@ import { createSpaceDTO } from "@/features/space/data";
 import { createUserDTO } from "@/features/user/data";
 import { AppError } from "@/lib/errors";
 import { auth } from "@/next-auth";
+import { isInitialAdmin } from "@/utils/is-initial-admin";
 
 export const getCurrentUser = async () => {
   const session = await auth();
@@ -144,6 +145,10 @@ export const requireAdmin = cache(async () => {
   const user = await requireUser();
 
   if (user.role !== "admin") {
+    if (isInitialAdmin(user.email)) {
+      return redirect("/admin-setup");
+    }
+
     notFound();
   }
 });
