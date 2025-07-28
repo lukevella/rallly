@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import type { Params } from "@/app/[locale]/types";
-import { getTranslation } from "@/i18n/server";
-
-import { PreferencesPage } from "./preferences-page";
-import { PageContainer, PageContent, PageHeader, PageTitle } from "@/app/components/page-layout";
+import {
+  PageContainer,
+  PageContent,
+  PageHeader,
+  PageTitle,
+} from "@/app/components/page-layout";
 import { Trans } from "@/components/trans";
+import { getTranslation } from "@/i18n/server";
+import { PreferencesPage } from "./preferences-page";
 
 export default async function Page() {
   return (

@@ -36,7 +36,6 @@ import { usePoll } from "@/contexts/poll";
 import { useSpace } from "@/features/space/client";
 import { trpc } from "@/trpc/client";
 
-import { useUser } from "../user-provider";
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
 
@@ -126,7 +125,6 @@ const ManagePoll: React.FunctionComponent<{
 }> = ({ disabled }) => {
   const poll = usePoll();
   const queryClient = trpc.useUtils();
-  const { user } = useUser();
   const space = useSpace();
   const reopen = trpc.polls.reopen.useMutation({
     onMutate: () => {
