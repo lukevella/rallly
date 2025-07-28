@@ -2,6 +2,7 @@ import { Icon } from "@rallly/ui/icon";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -11,23 +12,18 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "@rallly/ui/sidebar";
-import {
-  ArrowLeftIcon,
-  CreditCardIcon,
-  Settings2Icon,
-  UserIcon,
-} from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { requireUser } from "@/auth/data";
+import { AccountSidebarMenu } from "@/app/[locale]/(space)/account/components/sidebar";
 import { Trans } from "@/components/trans";
+import { SignOutButton } from "./components/sign-out-button";
 
 export default async function ProfileLayout({
   children,
 }: {
   children?: React.ReactNode;
 }) {
-  const user = await requireUser();
   return (
     <SidebarProvider>
       <Sidebar variant="inset">
@@ -53,41 +49,15 @@ export default async function ProfileLayout({
               <Trans i18nKey="settings" defaults="Settings" />
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/account/profile">
-                      <Icon>
-                        <UserIcon />
-                      </Icon>
-                      <Trans i18nKey="profile" defaults="Profile" />
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/account/preferences">
-                      <Icon>
-                        <Settings2Icon />
-                      </Icon>
-                      <Trans i18nKey="preferences" defaults="Preferences" />
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/account/billing">
-                      <Icon>
-                        <CreditCardIcon />
-                      </Icon>
-                      <Trans i18nKey="billing" defaults="Billing" />
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
+              <AccountSidebarMenu />
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu>
+            <SignOutButton />
+          </SidebarMenu>
+        </SidebarFooter>
       </Sidebar>
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
