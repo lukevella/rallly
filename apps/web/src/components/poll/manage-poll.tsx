@@ -27,12 +27,13 @@ import {
 import Link from "next/link";
 import * as React from "react";
 
-import { DuplicateDialog } from "@/app/[locale]/poll/[urlId]/duplicate-dialog";
+import { DuplicateDialog } from "@/app/[locale]/(space)/poll/[urlId]/duplicate-dialog";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
+import { useSpace } from "@/features/space/client";
 import { trpc } from "@/trpc/client";
 
 import { useUser } from "../user-provider";
@@ -126,6 +127,7 @@ const ManagePoll: React.FunctionComponent<{
   const poll = usePoll();
   const queryClient = trpc.useUtils();
   const { user } = useUser();
+  const space = useSpace();
   const reopen = trpc.polls.reopen.useMutation({
     onMutate: () => {
       queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
@@ -202,7 +204,7 @@ const ManagePoll: React.FunctionComponent<{
               <DropdownMenuItem
                 disabled={!!poll.event}
                 onClick={() => {
-                  if (user.tier !== "pro") {
+                  if (space.data.tier !== "pro") {
                     paywallDialog.trigger();
                     posthog?.capture("trigger paywall", {
                       poll_id: poll.id,
@@ -231,7 +233,7 @@ const ManagePoll: React.FunctionComponent<{
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              if (user.tier !== "pro") {
+              if (space.data.tier !== "pro") {
                 paywallDialog.trigger();
                 posthog?.capture("trigger paywall", {
                   poll_id: poll.id,
