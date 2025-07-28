@@ -41,7 +41,7 @@ export default async function ProfileLayout({
                       <Icon>
                         <ArrowLeftIcon />
                       </Icon>
-                      <Trans i18nKey="backToDashboard" defaults="Back" />
+                      <Trans i18nKey="back" defaults="Back" />
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
