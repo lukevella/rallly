@@ -82,10 +82,9 @@ const NotificationsToggle: React.FunctionComponent = () => {
       <TooltipTrigger asChild>
         <Button
           data-testid="notifications-toggle"
-          disabled={!user || user.isGuest}
           variant="ghost"
           onClick={async () => {
-            if (user) {
+            if (!user || user.isGuest) {
               signIn();
               return;
             }

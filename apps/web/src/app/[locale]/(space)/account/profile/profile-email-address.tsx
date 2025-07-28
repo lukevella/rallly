@@ -89,7 +89,7 @@ export const ProfileEmailAddress = () => {
       <Form {...form}>
         <form
           onSubmit={handleSubmit(async (data) => {
-            if (data.email !== user?.email) {
+            if (data.email !== user.email) {
               posthog.capture("email change requested");
               const res = await requestEmailChange.mutateAsync({
                 email: data.email,
