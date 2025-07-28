@@ -66,6 +66,7 @@ function NewCommentForm({
       const participant = participants.find((p) => p.userId === user.id);
       return participant?.name ?? "";
     }
+    return "";
   }, [user, participants]);
 
   const pollId = poll.id;

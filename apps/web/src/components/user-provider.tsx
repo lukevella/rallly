@@ -45,7 +45,7 @@ export const UserProvider = ({
   const isGuest = !user;
   const value = React.useMemo<UserContextValue>(() => {
     return {
-      user: isGuest ? { id: "guest", isGuest: true } : user,
+      user,
       getAbility: () => defineAbilityFor(user),
       ownsObject: (resource) => {
         return user ? isOwner(resource, { id: user.id, isGuest }) : false;
