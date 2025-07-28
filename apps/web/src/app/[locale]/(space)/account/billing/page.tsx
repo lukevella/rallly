@@ -40,6 +40,9 @@ import {
 import { PaymentMethod } from "./components/payment-method";
 import { SubscriptionPrice } from "./components/subscription-price";
 import { SubscriptionStatus } from "./components/subscription-status";
+import { PageContainer, PageContent, PageHeader, PageTitle } from "@/app/components/page-layout";
+import { t } from "i18next";
+import { title } from "process";
 
 async function loadData() {
   const [user, subscription, paymentMethods] = await Promise.all([
@@ -59,7 +62,13 @@ export default async function Page() {
   const { user, subscription, paymentMethods } = await loadData();
 
   return (
-    <SettingsContent>
+    <PageContainer>
+      <PageHeader>
+        <PageTitle>
+          <Trans i18nKey="billing" defaults="Billing" />
+        </PageTitle>
+      </PageHeader>
+      <PageContent>   <SettingsContent>
       <SettingsSection
         title={
           <Trans i18nKey="billingSubscriptionTitle" defaults="Subscription" />
@@ -278,7 +287,8 @@ export default async function Page() {
           </Button>
         </div>
       </SettingsSection>
-    </SettingsContent>
+    </SettingsContent></PageContent>
+    </PageContainer>
   );
 }
 

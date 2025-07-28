@@ -74,13 +74,13 @@ export function SpaceDropdown({
               </DropdownMenuRadioItem>
             ))}
           </DropdownMenuRadioGroup>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={newSpaceDialog.trigger}>
             <Icon>
               <CirclePlusIcon />
             </Icon>
             <Trans i18nKey="createSpace" defaults="Create Space" />
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <Link href="/settings">
               <Icon>

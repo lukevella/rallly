@@ -46,12 +46,12 @@ export async function SpaceSidebar({
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         {isSpacesEnabled ? (
-          <div>
+          <>
             <SpaceDropdown spaces={spaces} activeSpaceId={activeSpace.id}>
-              <Button className="h-auto w-full rounded-lg p-1" variant="ghost">
+              <button type="button" className="flex gap-2 items-center h-auto w-full bg-background/25 border rounded-lg p-2" variant="ghost">
                 <SpaceIcon name={activeSpace.name} />
                 <div className="flex-1 px-0.5 text-left">
-                  <div>{activeSpace.name}</div>
+                  <div className="font-medium text-sm">{activeSpace.name}</div>
                   <div className="text-muted-foreground text-xs">
                     {activeSpace.tier === "pro" ? (
                       <Trans i18nKey="planPro" defaults="Pro" />
@@ -63,9 +63,9 @@ export async function SpaceSidebar({
                 <Icon>
                   <ChevronsUpDownIcon />
                 </Icon>
-              </Button>
+              </button>
             </SpaceDropdown>
-          </div>
+          </>
         ) : (
           <div className="flex items-center justify-between p-1">
             <div className="flex items-center gap-2">
@@ -95,7 +95,7 @@ export async function SpaceSidebar({
         <SpaceSidebarMenu />
       </SidebarContent>
       <SidebarFooter>
-        {activeSpace.tier !== "pro" ? (
+      {activeSpace.tier !== "pro" ? (
           <>
             <div className="relative overflow-hidden rounded-xl border bg-gray-50 p-3 text-sm shadow-sm">
               <SparklesIcon className="-top-4 absolute right-0 z-0 size-16 text-gray-200" />
@@ -116,7 +116,7 @@ export async function SpaceSidebar({
                 </UpgradeButton>
               </div>
             </div>
-            <SidebarSeparator />
+            <SidebarSeparator className="my-1" />
           </>
         ) : null}
         <NavUser

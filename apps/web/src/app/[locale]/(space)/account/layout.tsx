@@ -1,4 +1,3 @@
-import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import {
   Sidebar,
@@ -20,18 +19,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageHeaderActions,
-  PageHeaderContent,
-  PageTitle,
-} from "@/app/components/page-layout";
 import { requireUser } from "@/auth/data";
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
-import { SignOutButton } from "./components/sign-out-button";
 
 export default async function ProfileLayout({
   children,
@@ -60,15 +49,9 @@ export default async function ProfileLayout({
             </SidebarGroupContent>
           </SidebarGroup>
           <SidebarGroup>
-            <div className="flex flex-col gap-2 p-4">
-              <OptimizedAvatarImage
-                size="md"
-                name={user.name}
-                className="mr-2"
-                src={user.image}
-              />
-              <div className="font-medium">{user.name}</div>
-            </div>
+            <SidebarGroupLabel>
+              <Trans i18nKey="settings" defaults="Settings" />
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
@@ -106,21 +89,7 @@ export default async function ProfileLayout({
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
-      <SidebarInset>
-        <PageContainer>
-          <PageHeader>
-            <PageHeaderContent>
-              <PageTitle>
-                <Trans i18nKey="settings" />
-              </PageTitle>
-            </PageHeaderContent>
-            <PageHeaderActions>
-              <SignOutButton />
-            </PageHeaderActions>
-          </PageHeader>
-          <PageContent>{children}</PageContent>
-        </PageContainer>
-      </SidebarInset>
+      <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
   );
 }

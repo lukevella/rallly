@@ -3,9 +3,22 @@ import type { Params } from "@/app/[locale]/types";
 import { getTranslation } from "@/i18n/server";
 
 import { PreferencesPage } from "./preferences-page";
+import { PageContainer, PageContent, PageHeader, PageTitle } from "@/app/components/page-layout";
+import { Trans } from "@/components/trans";
 
 export default async function Page() {
-  return <PreferencesPage />;
+  return (
+    <PageContainer>
+      <PageHeader>
+        <PageTitle>
+          <Trans i18nKey="preferences" defaults="Preferences" />
+        </PageTitle>
+      </PageHeader>
+      <PageContent>
+        <PreferencesPage />
+      </PageContent>
+    </PageContainer>
+  );
 }
 
 export async function generateMetadata(props: {
