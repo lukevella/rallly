@@ -4,6 +4,7 @@ import type { LucideIcon } from "lucide-react";
 import { BarChart2Icon, CalendarIcon, HomeIcon, UsersIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { isSpacesEnabled } from "@/features/space/constants";
 import { useTranslation } from "@/i18n/client";
 
 export interface NavigationItem {
@@ -65,7 +66,7 @@ export const useSpaceMenu = () => {
             },
           ],
         },
-        ...(process.env.NODE_ENV === "development"
+        ...(isSpacesEnabled
           ? [
               {
                 id: "manage",

@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@rallly/ui";
 import { useDialog } from "@rallly/ui/dialog";
 import {
   DropdownMenu,
@@ -15,6 +14,7 @@ import { Icon } from "@rallly/ui/icon";
 import { CirclePlusIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { ProBadge } from "@/components/pro-badge";
+import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/components/trans";
 import { setActiveSpaceAction } from "@/features/space/actions";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -44,12 +44,7 @@ export function SpaceDropdown({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger
-          className={cn({
-            "animate-pulse duration-500": setActiveSpace.isExecuting,
-          })}
-          asChild={Boolean(children)}
-        >
+        <DropdownMenuTrigger asChild={Boolean(children)}>
           {children}
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -59,6 +54,7 @@ export function SpaceDropdown({
           <DropdownMenuRadioGroup
             value={activeSpaceId}
             onValueChange={(value) => {
+              if (value === activeSpaceId) return;
               setActiveSpace.execute({ spaceId: value });
             }}
           >
@@ -91,6 +87,7 @@ export function SpaceDropdown({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      {setActiveSpace.isExecuting ? <RouterLoadingIndicator /> : null}
       <CreateSpaceDialog {...newSpaceDialog.dialogProps} />
     </>
   );
