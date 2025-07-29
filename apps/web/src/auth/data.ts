@@ -33,98 +33,40 @@ export const getCurrentUserSpace = async () => {
     return null;
   }
 
-  if (user.activeSpaceId) {
-    const space = await prisma.space.findUnique({
-      where: {
-        id: user.activeSpaceId,
-      },
-      select: {
-        id: true,
-        name: true,
-        ownerId: true,
-        subscription: {
-          select: {
-            active: true,
-          },
-        },
-        members: {
-          where: {
-            userId: user.id,
-          },
-          select: {
-            role: true,
-            userId: true,
-          },
-        },
-      },
-    });
-
-    if (space) {
-      return {
-        user,
-        space: createSpaceDTO(user.id, space),
-      };
-    }
-
-    const defaultSpace = await prisma.space.findFirst({
-      where: {
-        ownerId: user.id,
-      },
-      select: {
-        id: true,
-        name: true,
-        ownerId: true,
-        subscription: {
-          select: {
-            active: true,
-          },
-        },
-        members: {
-          where: {
-            userId: user.id,
-          },
-          select: {
-            role: true,
-            userId: true,
-          },
-        },
-      },
-    });
-
-    if (defaultSpace) {
-      return {
-        user,
-        space: createSpaceDTO(user.id, defaultSpace),
-      };
-    }
-  }
-
-  const space = await prisma.space.findFirst({
+  // Get the most recently selected space via SpaceMember
+  const spaceMember = await prisma.spaceMember.findFirst({
     where: {
-      ownerId: user.id,
+      userId: user.id,
     },
-    select: {
-      id: true,
-      name: true,
-      ownerId: true,
-      subscription: {
+    orderBy: {
+      lastSelectedAt: "desc",
+    },
+    include: {
+      space: {
         select: {
-          active: true,
-        },
-      },
-      members: {
-        where: {
-          userId: user.id,
-        },
-        select: {
-          role: true,
-          userId: true,
+          id: true,
+          name: true,
+          ownerId: true,
+          subscription: {
+            select: {
+              active: true,
+            },
+          },
+          members: {
+            where: {
+              userId: user.id,
+            },
+            select: {
+              role: true,
+              userId: true,
+            },
+          },
         },
       },
     },
   });
 
-  if (!space) {
+  if (!spaceMember) {
     throw new AppError({
       code: "NOT_FOUND",
       message: "Space not found",
@@ -133,7 +75,7 @@ export const getCurrentUserSpace = async () => {
 
   return {
     user,
-    space: createSpaceDTO(user.id, space),
+    space: createSpaceDTO(user.id, spaceMember.space),
   };
 };
 
@@ -172,39 +114,29 @@ export const requireUser = cache(async () => {
 export const requireSpace = cache(async () => {
   const user = await requireUser();
 
-  if (user.activeSpaceId) {
-    const space = await prisma.space.findUnique({
-      where: {
-        id: user.activeSpaceId,
-      },
-      include: {
-        subscription: true,
-        members: true,
-      },
-    });
-
-    if (space) {
-      return createSpaceDTO(user.id, space);
-    }
-    console.error("Could not find user's active space");
-  }
-
-  const space = await prisma.space.findFirst({
+  const spaceMember = await prisma.spaceMember.findFirst({
     where: {
-      ownerId: user.id,
+      userId: user.id,
+    },
+    orderBy: {
+      lastSelectedAt: "desc",
     },
     include: {
-      subscription: true,
-      members: true,
+      space: {
+        include: {
+          subscription: true,
+          members: true,
+        },
+      },
     },
   });
 
-  if (!space) {
+  if (!spaceMember) {
     throw new AppError({
       code: "NOT_FOUND",
-      message: "User does not own any spaces",
+      message: "User does not belong to any spaces",
     });
   }
 
-  return createSpaceDTO(user.id, space);
+  return createSpaceDTO(user.id, spaceMember.space);
 });

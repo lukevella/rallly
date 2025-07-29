@@ -50,12 +50,15 @@ export async function createUser({
       },
     });
 
-    await tx.user.update({
+    await tx.spaceMember.update({
       where: {
-        id: user.id,
+        spaceId_userId: {
+          spaceId: space.id,
+          userId: user.id,
+        },
       },
       data: {
-        activeSpaceId: space.id,
+        lastSelectedAt: new Date(),
       },
     });
 
@@ -70,12 +73,15 @@ export async function setActiveSpace({
   userId: string;
   spaceId: string;
 }) {
-  return await prisma.user.update({
+  return await prisma.spaceMember.update({
     where: {
-      id: userId,
+      spaceId_userId: {
+        spaceId: spaceId,
+        userId: userId,
+      },
     },
     data: {
-      activeSpaceId: spaceId,
+      lastSelectedAt: new Date(),
     },
   });
 }

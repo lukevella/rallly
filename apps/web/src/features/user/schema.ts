@@ -12,7 +12,6 @@ export type UserDTO = {
   email: string;
   role: UserRole;
   isGuest: boolean;
-  activeSpaceId?: string;
   timeZone?: string;
   timeFormat?: TimeFormat;
   locale?: string;

@@ -49,7 +49,6 @@ model User {
   bannedAt      DateTime?   @map("banned_at")
   banReason     String?     @map("ban_reason")
   role          UserRole    @default(user)
-  activeSpaceId String?     @map("active_space_id")
 
   comments           Comment[]
   polls              Poll[]
@@ -58,7 +57,6 @@ model User {
   participants       Participant[]
   paymentMethods     PaymentMethod[]
   subscription       Subscription?       @relation("UserToSubscription")
-  activeSpace        Space?              @relation("UserActiveSpace", fields: [activeSpaceId], references: [id], onDelete: SetNull)
   spaceMemberInvites SpaceMemberInvite[]
 
   spaces   Space[]       @relation("UserSpaces")
