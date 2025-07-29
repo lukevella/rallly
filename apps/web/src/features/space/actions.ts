@@ -67,7 +67,7 @@ export const createSpaceAction = authActionClient
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
-    const space = await prisma.space.create({
+    await prisma.space.create({
       data: {
         name: parsedInput.name,
         ownerId: ctx.user.id,
@@ -75,23 +75,11 @@ export const createSpaceAction = authActionClient
           create: {
             userId: ctx.user.id,
             role: "ADMIN",
+            lastSelectedAt: new Date(),
           },
         },
       },
     });
-
-    try {
-      await prisma.user.update({
-        where: {
-          id: ctx.user.id,
-        },
-        data: {
-          activeSpaceId: space.id,
-        },
-      });
-    } catch (error) {
-      console.error(error);
-    }
   });
 
 export const deleteSpaceAction = authActionClient

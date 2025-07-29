@@ -61,13 +61,6 @@ async function createUser({
     },
   });
 
-  await prisma.user.update({
-    where: { id },
-    data: {
-      activeSpaceId: space.id,
-    },
-  });
-
   return user;
 }
 

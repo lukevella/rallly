@@ -47,15 +47,7 @@ export async function createUser({
         spaceId: space.id,
         userId: user.id,
         role: "ADMIN",
-      },
-    });
-
-    await tx.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        activeSpaceId: space.id,
+        lastSelectedAt: new Date(),
       },
     });
 
@@ -70,12 +62,15 @@ export async function setActiveSpace({
   userId: string;
   spaceId: string;
 }) {
-  return await prisma.user.update({
+  return await prisma.spaceMember.update({
     where: {
-      id: userId,
+      spaceId_userId: {
+        spaceId: spaceId,
+        userId: userId,
+      },
     },
     data: {
-      activeSpaceId: spaceId,
+      lastSelectedAt: new Date(),
     },
   });
 }

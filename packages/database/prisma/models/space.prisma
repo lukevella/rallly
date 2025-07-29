@@ -10,8 +10,7 @@ model Space {
   scheduledEvents ScheduledEvent[]
   subscription    Subscription?    @relation("SpaceToSubscription")
 
-  members        SpaceMember[]
-  activeForUsers User[]        @relation("UserActiveSpace")
+  members SpaceMember[]
 
   memberInvites SpaceMemberInvite[]
 
@@ -25,12 +24,13 @@ enum SpaceMemberRole {
 }
 
 model SpaceMember {
-  id        String          @id @default(uuid())
-  spaceId   String          @map("space_id")
-  userId    String          @map("user_id")
-  createdAt DateTime        @default(now()) @map("created_at")
-  updatedAt DateTime        @updatedAt @map("updated_at")
-  role      SpaceMemberRole @default(MEMBER)
+  id             String          @id @default(uuid())
+  spaceId        String          @map("space_id")
+  userId         String          @map("user_id")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  role           SpaceMemberRole @default(MEMBER)
+  lastSelectedAt DateTime        @default(now()) @map("last_selected_at")
 
   space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
