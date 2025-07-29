@@ -22,6 +22,14 @@ function getSpaceTier(space: {
   return isSelfHosted ? "pro" : space.subscription?.active ? "pro" : "hobby";
 }
 
+export async function getSpaceSeatCount(spaceId: string) {
+  return await prisma.spaceMember.count({
+    where: {
+      spaceId: spaceId,
+    },
+  });
+}
+
 export function createSpaceDTO(
   userId: string,
   space: {
@@ -120,6 +128,7 @@ export const loadSubscription = cache(async () => {
       currency: true,
       interval: true,
       status: true,
+      quantity: true,
       periodEnd: true,
       cancelAtPeriodEnd: true,
     },

@@ -5,10 +5,12 @@ import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { z } from "zod";
+import { increaseSpaceSeatCount } from "@/features/billing/mutations";
 import { memberRoleSchema } from "@/features/space/schema";
 import { toDBRole } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { authActionClient, spaceActionClient } from "@/lib/safe-action/server";
 import { getEmailClient } from "@/utils/emails";
 
@@ -288,6 +290,10 @@ export const acceptInviteAction = authActionClient
           id: spaceMemberInvite.id,
         },
       });
+
+      if (isFeatureEnabled("billing")) {
+        await increaseSpaceSeatCount(spaceMemberInvite.spaceId);
+      }
     });
 
     try {

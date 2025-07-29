@@ -39,6 +39,8 @@ async function createUser({
         id: "sub-1",
         spaceId: space.id,
         userId: user.id,
+        subscriptionItemId: "subitem-1",
+        quantity: 1,
         active: true,
         amount: 700,
         currency: "USD",
