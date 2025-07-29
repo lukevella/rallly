@@ -10,9 +10,9 @@ import { Inter } from "next/font/google";
 import type React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
+import { requireUser } from "@/auth/data";
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
-import { getUser } from "@/features/user/data";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -39,8 +39,8 @@ async function loadData() {
   const [session, locale] = await Promise.all([auth(), getLocale()]);
 
   const user = session?.user
-    ? session.user.email
-      ? await getUser(session.user.id)
+    ? !session.user.isGuest
+      ? await requireUser()
       : ({
           id: session.user.id,
           name: "Guest",
