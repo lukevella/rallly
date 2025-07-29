@@ -29,6 +29,15 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     throw new Error("Invalid subscription metadata");
   }
 
+  const subscriptionItem = subscription.items.data[0];
+
+  if (!subscriptionItem) {
+    throw new Error("Expected subscription to have one item");
+  }
+
+  const subscriptionItemId = subscriptionItem.id;
+  const quantity = subscriptionItem.quantity ?? 1;
+
   // Update the subscription in the database
   await prisma.subscription.update({
     where: {
@@ -39,6 +48,8 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
       priceId,
       currency,
       interval,
+      subscriptionItemId,
+      quantity,
       amount,
       status: subscription.status,
       periodStart: toDate(subscription.current_period_start),

@@ -27,6 +27,16 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
   const userId = res.data.userId;
   const spaceId = res.data.spaceId;
 
+  const subscriptionItem = subscription.items.data[0];
+
+  if (!subscriptionItem) {
+    throw new Error(
+      `Missing subscription item in subscription ${subscription.id}`,
+    );
+  }
+
+  const subscriptionItemId = subscriptionItem.id;
+  const quantity = subscriptionItem.quantity ?? 1;
   // If user already has a subscription, update it or replace it
   // Update the existing subscription with new data
   await prisma.subscription.upsert({
@@ -35,6 +45,8 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
       id: subscription.id,
       userId,
       active: isActive,
+      quantity,
+      subscriptionItemId,
       priceId,
       currency,
       interval,
@@ -50,6 +62,8 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
       id: subscription.id,
       userId,
       active: isActive,
+      subscriptionItemId,
+      quantity,
       priceId,
       currency,
       interval,

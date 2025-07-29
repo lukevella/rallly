@@ -1,17 +1,19 @@
 model Subscription {
-  id                String               @id
-  priceId           String               @map("price_id")
-  amount            Int
-  status            SubscriptionStatus
-  active            Boolean
-  currency          String
-  interval          SubscriptionInterval
-  createdAt         DateTime             @default(now()) @map("created_at")
-  periodStart       DateTime             @map("period_start")
-  periodEnd         DateTime             @map("period_end")
-  cancelAtPeriodEnd Boolean              @default(false) @map("cancel_at_period_end")
-  userId            String               @unique @map("user_id")
-  spaceId           String?              @unique @map("space_id")
+  id                 String               @id
+  priceId            String               @map("price_id")
+  quantity           Int                  @default(1)
+  subscriptionItemId String?              @map("subscription_item_id")
+  amount             Int
+  status             SubscriptionStatus
+  active             Boolean
+  currency           String
+  interval           SubscriptionInterval
+  createdAt          DateTime             @default(now()) @map("created_at")
+  periodStart        DateTime             @map("period_start")
+  periodEnd          DateTime             @map("period_end")
+  cancelAtPeriodEnd  Boolean              @default(false) @map("cancel_at_period_end")
+  userId             String               @unique @map("user_id")
+  spaceId            String?              @unique @map("space_id")
 
   user  User   @relation("UserToSubscription", fields: [userId], references: [id], onDelete: Cascade)
   space Space? @relation("SpaceToSubscription", fields: [spaceId], references: [id], onDelete: SetNull)
