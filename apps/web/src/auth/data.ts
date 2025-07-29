@@ -52,15 +52,6 @@ export const getCurrentUserSpace = async () => {
               active: true,
             },
           },
-          members: {
-            where: {
-              userId: user.id,
-            },
-            select: {
-              role: true,
-              userId: true,
-            },
-          },
         },
       },
     },
@@ -75,7 +66,13 @@ export const getCurrentUserSpace = async () => {
 
   return {
     user,
-    space: createSpaceDTO(user.id, spaceMember.space),
+    space: createSpaceDTO({
+      id: spaceMember.space.id,
+      ownerId: spaceMember.space.ownerId,
+      name: spaceMember.space.name,
+      subscription: spaceMember.space.subscription,
+      role: spaceMember.role,
+    }),
   };
 };
 
@@ -138,5 +135,11 @@ export const requireSpace = cache(async () => {
     });
   }
 
-  return createSpaceDTO(user.id, spaceMember.space);
+  return createSpaceDTO({
+    id: spaceMember.space.id,
+    ownerId: spaceMember.space.ownerId,
+    name: spaceMember.space.name,
+    subscription: spaceMember.space.subscription,
+    role: spaceMember.role,
+  });
 });

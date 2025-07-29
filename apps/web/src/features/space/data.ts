@@ -30,36 +30,21 @@ export async function getSpaceSeatCount(spaceId: string) {
   });
 }
 
-export function createSpaceDTO(
-  userId: string,
-  space: {
-    id: string;
-    ownerId: string;
-    name: string;
-    subscription: {
-      active: boolean;
-    } | null;
-    members: {
-      role: DBSpaceMemberRole;
-      userId: string;
-    }[];
-  },
-) {
-  const role = space.members.find((member) => member.userId === userId)?.role;
-
-  if (!role) {
-    throw new AppError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "User is not a member of the space",
-    });
-  }
-
+export function createSpaceDTO(space: {
+  id: string;
+  ownerId: string;
+  name: string;
+  role: DBSpaceMemberRole;
+  subscription: {
+    active: boolean;
+  } | null;
+}) {
   return {
     id: space.id,
     name: space.name,
     ownerId: space.ownerId,
     tier: getSpaceTier(space),
-    role: fromDBRole(role),
+    role: fromDBRole(space.role),
   } satisfies SpaceDTO;
 }
 

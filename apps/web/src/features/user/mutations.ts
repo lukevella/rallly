@@ -47,17 +47,6 @@ export async function createUser({
         spaceId: space.id,
         userId: user.id,
         role: "ADMIN",
-      },
-    });
-
-    await tx.spaceMember.update({
-      where: {
-        spaceId_userId: {
-          spaceId: space.id,
-          userId: user.id,
-        },
-      },
-      data: {
         lastSelectedAt: new Date(),
       },
     });
