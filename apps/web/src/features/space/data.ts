@@ -11,7 +11,6 @@ import type { MemberRole } from "@/features/space/schema";
 import type { SpaceDTO } from "@/features/space/types";
 import { fromDBRole, toDBRole } from "@/features/space/utils";
 import { defineAbilityFor } from "@/features/user/ability";
-import { AppError } from "@/lib/errors";
 import { isSelfHosted } from "@/utils/constants";
 
 function getSpaceTier(space: {
