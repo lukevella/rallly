@@ -16,7 +16,7 @@ export const GuestPollAlert = () => {
     return null;
   }
 
-  if (!user.isGuest) {
+  if (user?.isGuest === false) {
     return null;
   }
   return (

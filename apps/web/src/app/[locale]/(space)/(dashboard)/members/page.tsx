@@ -2,8 +2,6 @@ import { Badge } from "@rallly/ui/badge";
 import { UserSearchIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { MembersHeader } from "@/app/[locale]/(space)/members/components/header";
-import { MembersTabs } from "@/app/[locale]/(space)/members/components/tabs";
 import { PageContainer, PageContent } from "@/app/components/page-layout";
 import {
   EmptyState,
@@ -19,6 +17,8 @@ import { SpaceRole } from "@/features/space/components/space-role";
 import { isSpacesEnabled } from "@/features/space/constants";
 import { loadMembers } from "@/features/space/data";
 import { getTranslation } from "@/i18n/server";
+import { MembersHeader } from "./components/header";
+import { MembersTabs } from "./components/tabs";
 import { searchParamsSchema } from "./schema";
 
 export default async function MembersPage({

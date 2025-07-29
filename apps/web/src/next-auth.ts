@@ -156,6 +156,17 @@ const {
 
       return token;
     },
+    async session({ session, token }) {
+      if (token.sub) {
+        session.user.id = token.sub;
+        session.user.name = token.name;
+        session.user.email = token.email ? token.email : "";
+        session.user.image = token.picture;
+        session.user.isGuest = !token.email;
+      }
+
+      return session;
+    },
   },
 });
 

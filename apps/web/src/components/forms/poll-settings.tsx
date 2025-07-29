@@ -17,8 +17,7 @@ import { Trans } from "react-i18next";
 
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { ProBadge } from "@/components/pro-badge";
-
-import { useUser } from "../user-provider";
+import { useSpace } from "@/features/space/client";
 
 export type PollSettingsFormData = {
   requireParticipantEmail: boolean;
@@ -68,9 +67,9 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
   const form = useFormContext<PollSettingsFormData>();
   const posthog = usePostHog();
   const paywallDialog = useDialog();
-  const { user } = useUser();
 
-  const isFree = user.tier !== "pro";
+  const space = useSpace();
+  const isFree = space.data.tier === "hobby";
 
   return (
     <>

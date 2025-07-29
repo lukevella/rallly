@@ -3,11 +3,12 @@
 import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { z } from "zod";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
+import { useAuthenticatedUser } from "@/components/user-provider";
 import { useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { trpc } from "@/trpc/client";
@@ -143,7 +144,8 @@ function RemoveAvatarButton({ onSuccess }: { onSuccess?: () => void }) {
 }
 
 function Upload() {
-  const { user, refresh } = useUser();
+  const { user } = useAuthenticatedUser();
+  const router = useRouter();
 
   const posthog = usePostHog();
 
@@ -152,14 +154,14 @@ function Upload() {
       <div className="flex gap-2">
         <ChangeAvatarButton
           onSuccess={() => {
-            refresh();
+            router.refresh();
             posthog?.capture("upload profile picture");
           }}
         />
-        {user.image ? (
+        {user?.image ? (
           <RemoveAvatarButton
             onSuccess={() => {
-              refresh();
+              router.refresh();
               posthog?.capture("remove profile picture");
             }}
           />

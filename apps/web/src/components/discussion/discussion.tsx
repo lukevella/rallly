@@ -58,12 +58,14 @@ function NewCommentForm({
   const { participants } = useParticipants();
 
   const authorName = React.useMemo(() => {
-    if (user.isGuest) {
+    if (user) {
+      if (!user.isGuest) {
+        return user.name;
+      }
       const participant = participants.find((p) => p.userId === user.id);
       return participant?.name ?? "";
-    } else {
-      return user.name;
     }
+    return "";
   }, [user, participants]);
 
   const pollId = poll.id;
@@ -107,7 +109,7 @@ function NewCommentForm({
       </div>
       <div
         className={cn("mb-2", {
-          hidden: !user.isGuest,
+          hidden: user && !user.isGuest,
         })}
       >
         <Controller

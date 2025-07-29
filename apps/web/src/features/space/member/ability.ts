@@ -26,14 +26,18 @@ type Subject = Subjects<{
 
 export type MemberAbility = PureAbility<[Action, Subject], PrismaQuery>;
 
-export function defineAbilityForMember(ctx: MemberAbilityContext) {
+export function defineAbilityForMember(ctx?: MemberAbilityContext) {
   const builder = new AbilityBuilder<MemberAbility>(createPrismaAbility);
+
+  if (!ctx) {
+    return builder.build();
+  }
 
   switch (ctx.space.role) {
     case "admin":
       defineSpaceAdminRules(builder, ctx);
       break;
-    case "member":
+    default:
       defineSpaceMemberRules(builder, ctx);
       break;
   }

@@ -12,8 +12,10 @@ import { getLoggedIn } from "@/next-auth";
 import { BackButton } from "./back-button";
 
 export default async function Page() {
-  const isLoggedIn = await getLoggedIn();
-  const instanceSettings = await getInstanceSettings();
+  const [isLoggedIn, instanceSettings] = await Promise.all([
+    getLoggedIn(),
+    getInstanceSettings(),
+  ]);
 
   return (
     <div>

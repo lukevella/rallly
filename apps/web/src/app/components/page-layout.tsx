@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@rallly/ui";
+import { SidebarTrigger } from "@rallly/ui/sidebar";
 import { Skeleton } from "@rallly/ui/skeleton";
 
 export function PageContainer({
@@ -28,6 +29,7 @@ export function PageTitle({
         className,
       )}
     >
+      <SidebarTrigger className="md:hidden" />
       {children}
     </h1>
   );
@@ -43,7 +45,7 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between",
+        "flex flex-col gap-4 md:flex-row md:items-start md:justify-between",
         className,
       )}
     >
@@ -92,7 +94,7 @@ export function PageContent({
   className?: string;
 }) {
   return (
-    <div className={cn("mt-4 md:grow lg:mt-6", className)}>{children}</div>
+    <div className={cn("mt-4 md:mt-6 md:grow", className)}>{children}</div>
   );
 }
 

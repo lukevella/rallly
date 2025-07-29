@@ -11,16 +11,20 @@ const SpaceContext = React.createContext<{
   data: SpaceDTO;
   getAbility: () => SpaceAbility;
   getMemberAbility: () => MemberAbility;
-} | null>(null);
+}>({
+  data: {
+    id: "",
+    name: "",
+    ownerId: "system",
+    role: "member",
+    tier: "hobby",
+  },
+  getAbility: () => defineAbilityForSpace(),
+  getMemberAbility: () => defineAbilityForMember(),
+});
 
 export const useSpace = () => {
-  const context = React.useContext(SpaceContext);
-
-  if (!context) {
-    throw new Error("useSpace must be used within a SpaceProvider");
-  }
-
-  return context;
+  return React.useContext(SpaceContext);
 };
 
 export const SpaceProvider = ({

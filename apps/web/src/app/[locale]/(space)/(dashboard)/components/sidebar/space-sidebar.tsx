@@ -11,7 +11,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { ChevronsUpDownIcon, PlusIcon, SparklesIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { SpaceSidebarMenu } from "@/app/[locale]/(space)/components/sidebar/space-sidebar-menu";
 import { LogoLink } from "@/app/components/logo-link";
 import { requireSpace, requireUser } from "@/auth/data";
 import { Trans } from "@/components/trans";
@@ -22,6 +21,7 @@ import { isSpacesEnabled } from "@/features/space/constants";
 import { loadSpaces } from "@/features/space/data";
 import { UpgradeButton } from "../upgrade-button";
 import { NavUser } from "./nav-user";
+import { SpaceSidebarMenu } from "./space-sidebar-menu";
 
 async function loadData() {
   const [user, activeSpace, spaces] = await Promise.all([
@@ -46,26 +46,27 @@ export async function SpaceSidebar({
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         {isSpacesEnabled ? (
-          <div>
-            <SpaceDropdown spaces={spaces} activeSpaceId={activeSpace.id}>
-              <Button className="h-auto w-full rounded-lg p-1" variant="ghost">
-                <SpaceIcon name={activeSpace.name} />
-                <div className="flex-1 px-0.5 text-left">
-                  <div>{activeSpace.name}</div>
-                  <div className="text-muted-foreground text-xs">
-                    {activeSpace.tier === "pro" ? (
-                      <Trans i18nKey="planPro" defaults="Pro" />
-                    ) : (
-                      <Trans i18nKey="planFree" defaults="Free" />
-                    )}
-                  </div>
+          <SpaceDropdown spaces={spaces} activeSpaceId={activeSpace.id}>
+            <button
+              type="button"
+              className="flex h-auto w-full items-center gap-2 rounded-lg border border-gray-300/50 bg-background/25 p-2 hover:bg-background/50"
+            >
+              <SpaceIcon name={activeSpace.name} />
+              <div className="flex-1 px-0.5 text-left">
+                <div className="font-medium text-sm">{activeSpace.name}</div>
+                <div className="text-muted-foreground text-xs">
+                  {activeSpace.tier === "pro" ? (
+                    <Trans i18nKey="planPro" defaults="Pro" />
+                  ) : (
+                    <Trans i18nKey="planFree" defaults="Free" />
+                  )}
                 </div>
-                <Icon>
-                  <ChevronsUpDownIcon />
-                </Icon>
-              </Button>
-            </SpaceDropdown>
-          </div>
+              </div>
+              <Icon>
+                <ChevronsUpDownIcon />
+              </Icon>
+            </button>
+          </SpaceDropdown>
         ) : (
           <div className="flex items-center justify-between p-1">
             <div className="flex items-center gap-2">
@@ -116,7 +117,7 @@ export async function SpaceSidebar({
                 </UpgradeButton>
               </div>
             </div>
-            <SidebarSeparator />
+            <SidebarSeparator className="my-1" />
           </>
         ) : null}
         <NavUser

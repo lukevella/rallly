@@ -13,6 +13,7 @@ import {
   PageHeaderContent,
   PageTitle,
 } from "@/app/components/page-layout";
+import { SearchInput } from "@/app/components/search-input";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -25,8 +26,6 @@ import { Trans } from "@/components/trans";
 import { PollList, PollListItem } from "@/features/poll/components/poll-list";
 import { loadPolls } from "@/features/poll/data";
 import { getTranslation } from "@/i18n/server";
-
-import { SearchInput } from "../../../components/search-input";
 import { PollsTabbedView } from "./polls-tabbed-view";
 import { DEFAULT_PAGE_SIZE, searchParamsSchema } from "./schema";
 

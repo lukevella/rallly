@@ -12,10 +12,10 @@ export type SpaceAbilityContext = {
 };
 export type SpaceAbility = PureAbility<[Action, Subject], PrismaQuery>;
 
-export function defineAbilityForSpace(context: SpaceAbilityContext) {
+export function defineAbilityForSpace(context?: SpaceAbilityContext) {
   const { can, build } = new AbilityBuilder<SpaceAbility>(createPrismaAbility);
 
-  if (context.tier === "pro") {
+  if (context?.tier === "pro") {
     can("invite", "Member");
     can(["finalize", "duplicate"], "Poll");
     can("update", "AdvancedPollSettings");

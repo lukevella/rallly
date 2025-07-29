@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import superjson from "superjson";
 
 import { auth } from "@/next-auth";
-import { getEmailClient } from "@/utils/emails";
 
 import type { TRPCContext } from "../context";
 import { appRouter } from "../routers";
@@ -17,8 +16,6 @@ async function createContext(): Promise<TRPCContext> {
           isGuest: !session.user.email,
           locale: session.user.locale ?? undefined,
           image: session.user.image ?? undefined,
-          getEmailClient: () =>
-            getEmailClient(session.user?.locale ?? undefined),
         }
       : undefined,
   };

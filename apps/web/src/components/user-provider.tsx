@@ -1,56 +1,41 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
 import { useRouter } from "next/navigation";
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import React from "react";
-
-import { useTranslation } from "@/i18n/client";
+import type { UserAbility } from "@/features/user/ability";
+import { defineAbilityFor } from "@/features/user/ability";
+import type { UserDTO } from "@/features/user/schema";
 import { isOwner } from "@/utils/permissions";
-
 import { useRequiredContext } from "./use-required-context";
 
-type UserData = {
-  id?: string;
-  name: string;
-  email?: string;
-  isGuest: boolean;
-  tier: "guest" | "hobby" | "pro";
-  image?: string;
-  role: "guest" | "user" | "admin";
+type GuestUser = {
+  id: string;
+  isGuest: true;
 };
 
-export const UserContext = React.createContext<{
-  user: UserData;
-  refresh: () => void;
+type UserContextValue = {
+  user?: UserDTO | GuestUser;
+  createGuestIfNeeded: () => Promise<void>;
+  getAbility: () => UserAbility;
   ownsObject: (obj: {
     userId?: string | null;
     guestId?: string | null;
   }) => boolean;
-  createGuestIfNeeded: () => Promise<void>;
-  logout: () => Promise<void>;
-} | null>(null);
+};
+
+export const UserContext = React.createContext<UserContextValue | null>(null);
 
 export const useUser = () => {
   return useRequiredContext(UserContext, "UserContext");
 };
 
-type BaseUser = {
-  id: string;
-  tier: "guest" | "hobby" | "pro";
-  role: "guest" | "user" | "admin";
-  image?: string;
-  name?: string;
-  email?: string;
-};
+export const useAuthenticatedUser = () => {
+  const { user } = useUser();
+  if (!user || user.isGuest) {
+    throw new Error("User is not defined");
+  }
 
-type RegisteredUser = BaseUser & {
-  email: string;
-  name: string;
-  tier: "hobby" | "pro";
-};
-
-type GuestUser = BaseUser & {
-  tier: "guest";
+  return { user };
 };
 
 export const UserProvider = ({
@@ -58,59 +43,27 @@ export const UserProvider = ({
   user,
 }: {
   children?: React.ReactNode;
-  user?: RegisteredUser | GuestUser;
+  user?: UserDTO;
 }) => {
-  const { t } = useTranslation();
   const router = useRouter();
-  const posthog = usePostHog();
-
-  const isGuest = !user || user.tier === "guest";
-  const tier = isGuest ? "guest" : user.tier;
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix this later
-  React.useEffect(() => {
-    if (user) {
-      posthog?.identify(user.id, {
-        email: user.email,
-        name: user.name,
-        tier,
-        image: user.image,
-      });
-    }
-  }, [user?.id]);
-
-  return (
-    <UserContext.Provider
-      value={{
-        user: {
-          id: user?.id,
-          name: user?.name ?? t("guest"),
-          email: user?.email,
-          isGuest,
-          tier,
-          image: user?.image,
-          role: user?.role ?? "guest",
-        },
-        createGuestIfNeeded: async () => {
-          if (!user) {
-            await signIn("guest", {
-              redirect: false,
-            });
-            router.refresh();
-          }
-        },
-        refresh: router.refresh,
-        logout: async () => {
-          await signOut();
-          posthog?.capture("logout");
-          posthog?.reset();
-        },
-        ownsObject: (resource) => {
-          return user ? isOwner(resource, { id: user.id, isGuest }) : false;
-        },
-      }}
-    >
-      {children}
-    </UserContext.Provider>
-  );
+  const value = React.useMemo<UserContextValue>(() => {
+    return {
+      user,
+      createGuestIfNeeded: async () => {
+        if (!user) {
+          await signIn("guest", {
+            redirect: false,
+          });
+          router.refresh();
+        }
+      },
+      getAbility: () => defineAbilityFor(user),
+      ownsObject: (resource) => {
+        return user
+          ? isOwner(resource, { id: user.id, isGuest: user.isGuest })
+          : false;
+      },
+    };
+  }, [user, router]);
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

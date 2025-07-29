@@ -91,7 +91,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const isEmailRequired = poll.requireParticipantEmail;
   const { timezone } = useTimezone();
   const { user, createGuestIfNeeded } = useUser();
-  const isLoggedIn = !user.isGuest;
+  const isLoggedIn = user && !user.isGuest;
   const { register, setError, formState, handleSubmit } =
     useForm<NewParticipantFormData>({
       resolver: zodResolver(schema),

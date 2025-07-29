@@ -39,7 +39,7 @@ export interface CreatePollPageProps {
 
 export const CreatePoll: React.FunctionComponent = () => {
   const router = useRouter();
-  const { user, createGuestIfNeeded } = useUser();
+  const { createGuestIfNeeded } = useUser();
   const form = useForm<NewEventData>({
     defaultValues: {
       title: "",
@@ -98,7 +98,6 @@ export const CreatePoll: React.FunctionComponent = () => {
                   pollId: res.id,
                   numberOfOptions: formData.options?.length,
                   optionsView: formData?.view,
-                  tier: user.tier,
                   $set: {
                     last_poll_created_at: new Date().toISOString(),
                   },
