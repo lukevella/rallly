@@ -77,7 +77,9 @@ export const ParticipantDropdown = ({
         <DropdownMenuContent align={align}>
           <DropdownMenuLabel>
             <div className="grid gap-0.5">
-              <div>{participant.name}</div>
+              <div className="font-medium text-foreground">
+                {participant.name}
+              </div>
               {participant.email ? (
                 <div className="font-normal text-muted-foreground text-xs">
                   {participant.email}
