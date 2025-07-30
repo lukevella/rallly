@@ -18,6 +18,9 @@ function createMemberDTO(member: {
   userId: string;
   spaceId: string;
   role: DBSpaceMemberRole;
+  space: {
+    ownerId: string;
+  };
   user: {
     name: string;
     email: string;
@@ -32,7 +35,7 @@ function createMemberDTO(member: {
     email: member.user.email,
     image: member.user.image ?? undefined,
     role: fromDBRole(member.role),
-    isOwner: member.userId === member.spaceId, // Assuming spaceId is the ownerId
+    isOwner: member.userId === member.space.ownerId,
   } satisfies MemberDTO;
 }
 
@@ -229,19 +232,7 @@ export const loadMembers = cache(
 
     return {
       total: totalCount,
-      data: members.map(
-        (member) =>
-          ({
-            id: member.id,
-            name: member.user.name,
-            userId: member.userId,
-            spaceId: member.spaceId,
-            email: member.user.email,
-            image: member.user.image ?? undefined,
-            role: fromDBRole(member.role),
-            isOwner: member.userId === space.ownerId,
-          }) satisfies MemberDTO,
-      ),
+      data: members.map((member) => createMemberDTO({ ...member, space })),
       hasNextPage: page * pageSize < totalCount,
     };
   },
@@ -257,6 +248,11 @@ export const getMember = async (id: string) => {
       userId: true,
       spaceId: true,
       role: true,
+      space: {
+        select: {
+          ownerId: true,
+        },
+      },
       user: {
         select: {
           name: true,
