@@ -3,43 +3,20 @@ import { getSpaceSubscription } from "@/features/billing/data";
 import { getSpaceSeatCount } from "@/features/space/data";
 import { AppError } from "@/lib/errors";
 
-export async function increaseSpaceSeatCount(spaceId: string) {
+export async function updateSeatCount(spaceId: string, delta: number) {
+  const seatCount = await getSpaceSeatCount(spaceId);
   const subscription = await getSpaceSubscription(spaceId);
 
-  if (!subscription || subscription.tier !== "pro") {
+  if (subscription?.tier !== "pro") {
     throw new AppError({
       code: "PAYMENT_REQUIRED",
-      message: "You need a Pro subscription to invite members to this space",
+      message: "No active subscription found for this space",
     });
   }
-
-  let subscriptionItemId = subscription.subscriptionItemId;
-
-  if (!subscriptionItemId) {
-    try {
-      const stripeSub = await stripe.subscriptions.retrieve(subscription.id);
-      subscriptionItemId = stripeSub.items.data[0].id;
-    } catch (error) {
-      throw new AppError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to retrieve subscription from Stripe",
-        cause: error,
-      });
-    }
-  }
-
-  if (!subscriptionItemId) {
-    throw new AppError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Expected subscription to have at least one item",
-    });
-  }
-
-  const seatCount = await getSpaceSeatCount(spaceId);
 
   try {
-    await stripe.subscriptionItems.update(subscriptionItemId, {
-      quantity: seatCount + 1,
+    await stripe.subscriptionItems.update(subscription.subscriptionItemId, {
+      quantity: seatCount + delta,
     });
   } catch (error) {
     throw new AppError({

@@ -2,7 +2,7 @@ model Subscription {
   id                 String               @id
   priceId            String               @map("price_id")
   quantity           Int                  @default(1)
-  subscriptionItemId String?              @map("subscription_item_id")
+  subscriptionItemId String               @map("subscription_item_id")
   amount             Int
   status             SubscriptionStatus
   active             Boolean
