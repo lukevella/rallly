@@ -418,5 +418,12 @@
   "acceptInviteMetadataTitle": "Csatlakozz ide: {spaceName}",
   "actionErrorPaymentRequired": "Csomagot kell váltanod a művelet végrehajtásához",
   "loginWithAnotherAccount": "Belépés másik fiókkal",
-  "adminRoleRequired": "Adminnak kell lenned a művelet végrehajtásához"
+  "adminRoleRequired": "Adminnak kell lenned a művelet végrehajtásához",
+  "removeMember": "Tag eltávolítása",
+  "remove": "Tag eltávolítása",
+  "removeMemberConfirmation": "Biztosan szeretnéd eltávolítani ezt a tagot?",
+  "confirm": "Megerősít",
+  "removeMemberLoading": "Tag eltávolítása...",
+  "removeMemberSuccess": "Tag sikeresen eltávolítva",
+  "removeMemberError": "Nem sikerült a tag eltávolítása"
 }
