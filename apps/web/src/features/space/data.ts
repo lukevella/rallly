@@ -13,6 +13,29 @@ import { fromDBRole, toDBRole } from "@/features/space/utils";
 import { defineAbilityFor } from "@/features/user/ability";
 import { isSelfHosted } from "@/utils/constants";
 
+function createMemberDTO(member: {
+  id: string;
+  userId: string;
+  spaceId: string;
+  role: DBSpaceMemberRole;
+  user: {
+    name: string;
+    email: string;
+    image?: string | null;
+  };
+}) {
+  return {
+    id: member.id,
+    name: member.user.name,
+    userId: member.userId,
+    spaceId: member.spaceId,
+    email: member.user.email,
+    image: member.user.image ?? undefined,
+    role: fromDBRole(member.role),
+    isOwner: member.userId === member.spaceId, // Assuming spaceId is the ownerId
+  } satisfies MemberDTO;
+}
+
 function getSpaceTier(space: {
   subscription: {
     active: boolean;
@@ -187,6 +210,7 @@ export const loadMembers = cache(
           id: true,
           userId: true,
           role: true,
+          spaceId: true,
           user: {
             select: {
               name: true,
@@ -210,6 +234,8 @@ export const loadMembers = cache(
           ({
             id: member.id,
             name: member.user.name,
+            userId: member.userId,
+            spaceId: member.spaceId,
             email: member.user.email,
             image: member.user.image ?? undefined,
             role: fromDBRole(member.role),
@@ -220,3 +246,30 @@ export const loadMembers = cache(
     };
   },
 );
+
+export const getMember = async (id: string) => {
+  const member = await prisma.spaceMember.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      userId: true,
+      spaceId: true,
+      role: true,
+      user: {
+        select: {
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
+    },
+  });
+
+  if (!member) {
+    return null;
+  }
+
+  return createMemberDTO(member);
+};
