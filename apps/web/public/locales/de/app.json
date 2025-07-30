@@ -418,5 +418,12 @@
   "acceptInviteMetadataTitle": "{spaceName} beitreten",
   "actionErrorPaymentRequired": "Du musst deinen Plan upgraden, um diese Aktion auszuführen",
   "loginWithAnotherAccount": "Mit einem anderen Konto anmelden",
-  "adminRoleRequired": "Du musst ein Admin sein, um diese Aktion auszuführen"
+  "adminRoleRequired": "Du musst ein Admin sein, um diese Aktion auszuführen",
+  "removeMember": "Mitglied entfernen",
+  "remove": "Mitglied entfernen",
+  "removeMemberConfirmation": "Bist du sicher, dass du dieses Mitglied entfernen möchtest?",
+  "confirm": "Bestätigen",
+  "removeMemberLoading": "Mitglied wird entfernt...",
+  "removeMemberSuccess": "Mitglied erfolgreich entfernt",
+  "removeMemberError": "Mitglied konnte nicht entfernt werden"
 }
