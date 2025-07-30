@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import type { SpaceTier } from "@/features/space/schema";
 
 export async function getSpaceSubscription(spaceId: string) {
   const subscription = await prisma.subscription.findUnique({
@@ -13,8 +14,8 @@ export async function getSpaceSubscription(spaceId: string) {
 
   return {
     id: subscription.id,
-    tier: subscription.active ? "pro" : "hobby",
+    tier: (subscription.active ? "pro" : "hobby") as SpaceTier,
     quantity: subscription.quantity,
     subscriptionItemId: subscription.subscriptionItemId,
-  } as const;
+  };
 }

@@ -76,6 +76,7 @@ test.describe("House-keeping API", () => {
             amount: 1000,
             status: "active",
             active: true,
+            subscriptionItemId: "si_test_pro",
             currency: "USD",
             interval: "month",
             periodStart: new Date(),
