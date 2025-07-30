@@ -422,7 +422,7 @@
   "removeMember": "Tag eltávolítása",
   "remove": "Tag eltávolítása",
   "removeMemberConfirmation": "Biztosan szeretnéd eltávolítani ezt a tagot?",
-  "confirm": "Megerősít",
+  "confirm": "Megerősítés",
   "removeMemberLoading": "Tag eltávolítása...",
   "removeMemberSuccess": "Tag sikeresen eltávolítva",
   "removeMemberError": "Nem sikerült a tag eltávolítása"
