@@ -2,6 +2,7 @@ import { Badge } from "@rallly/ui/badge";
 import { UserSearchIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { MemberDropdownMenu } from "@/app/[locale]/(space)/(dashboard)/members/components/member-dropdown-menu";
 import { PageContainer, PageContent } from "@/app/components/page-layout";
 import {
   EmptyState,
@@ -93,6 +94,7 @@ export default async function MembersPage({
                     <div className="text-sm">
                       <SpaceRole role={member.role} />
                     </div>
+                    <MemberDropdownMenu member={member} />
                   </StackedListItem>
                 ))}
               </StackedList>

@@ -6,6 +6,7 @@ import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { z } from "zod";
 import { updateSeatCount } from "@/features/billing/mutations";
+import { getMember } from "@/features/space/data";
 import { memberRoleSchema } from "@/features/space/schema";
 import { toDBRole } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
@@ -292,4 +293,44 @@ export const acceptInviteAction = authActionClient
     } catch {
       console.warn("Failed to update user's active space");
     }
+  });
+
+export const removeMemberAction = spaceActionClient
+  .metadata({
+    actionName: "space_remove_member",
+  })
+  .inputSchema(
+    z.object({
+      memberId: z.string(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    const member = await getMember(parsedInput.memberId);
+    if (!member) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: "Member not found",
+      });
+    }
+
+    if (
+      ctx.getMemberAbility().cannot("delete", subject("SpaceMember", member))
+    ) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "You do not have permission to remove members from this space",
+      });
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.spaceMember.delete({
+        where: {
+          id: parsedInput.memberId,
+        },
+      });
+
+      if (isFeatureEnabled("billing")) {
+        await updateSeatCount(member.spaceId, -1);
+      }
+    });
   });

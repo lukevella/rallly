@@ -17,6 +17,7 @@ export async function updateSeatCount(spaceId: string, delta: number) {
   try {
     await stripe.subscriptionItems.update(subscription.subscriptionItemId, {
       quantity: seatCount + delta,
+      proration_behavior: "create_prorations",
     });
   } catch (error) {
     throw new AppError({
