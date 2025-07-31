@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
+import { Checkbox } from "@rallly/ui/checkbox";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
   Dialog,
@@ -18,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
+import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
 import {
   Select,
@@ -27,6 +29,9 @@ import {
   SelectValue,
 } from "@rallly/ui/select";
 import { toast } from "@rallly/ui/sonner";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import { InfoIcon } from "lucide-react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Trans } from "@/components/trans";
@@ -34,22 +39,44 @@ import { inviteMemberAction } from "@/features/space/actions";
 import { SpaceRole } from "@/features/space/components/space-role";
 import { memberRoleSchema } from "@/features/space/schema";
 import { useTranslation } from "@/i18n/client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
-const inviteMemberFormSchema = z.object({
-  email: z.string().email(),
-  role: memberRoleSchema,
-});
+function useInviteMemberFormSchema() {
+  const { t } = useTranslation();
+  const isBillingEnabled = useFeatureFlag("billing");
+
+  return useMemo(() => {
+    return z.object({
+      email: z.string().email({
+        message: t("invalidEmailAddress", {
+          defaultValue: "Please enter a valid email address",
+        }),
+      }),
+      role: memberRoleSchema,
+      billingAcknowledgment: isBillingEnabled
+        ? z.boolean().refine((val) => val === true, {
+            message: t("billingAcknowledgmentRequired", {
+              defaultValue: "You must acknowledge the billing impact",
+            }),
+          })
+        : z.boolean().optional().default(true),
+    });
+  }, [t, isBillingEnabled]);
+}
 
 export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
   const { t } = useTranslation();
+  const isBillingEnabled = useFeatureFlag("billing");
+  const formSchema = useInviteMemberFormSchema();
 
-  const form = useForm<z.infer<typeof inviteMemberFormSchema>>({
+  const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
       email: "",
       role: "member",
+      billingAcknowledgment: !isBillingEnabled,
     },
-    resolver: zodResolver(inviteMemberFormSchema),
+    resolver: zodResolver(formSchema),
   });
 
   const inviteMember = useSafeAction(inviteMemberAction, {
@@ -134,13 +161,52 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
             name="role"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  <Trans i18nKey="role" defaults="Role" />
-                </FormLabel>
+                <div className="flex items-center gap-x-1">
+                  <FormLabel>
+                    <Trans i18nKey="role" defaults="Role" />
+                  </FormLabel>
+                  <Tooltip>
+                    <TooltipTrigger type="button">
+                      <Icon>
+                        <InfoIcon />
+                      </Icon>
+                    </TooltipTrigger>
+                    <TooltipContent align="start" side="right">
+                      <div className="w-60 space-y-3">
+                        <div>
+                          <h4 className="font-medium text-sm">
+                            <Trans i18nKey="member" defaults="Member" />
+                          </h4>
+                          <p className="mt-1 opacity-75">
+                            <Trans
+                              i18nKey="memberRoleDescription"
+                              defaults="Can create and manage all scheduling tools in this space"
+                            />
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm">
+                            <Trans i18nKey="admin" defaults="Admin" />
+                          </h4>
+                          <p className="mt-1 opacity-75">
+                            <Trans
+                              i18nKey="adminRoleDescription"
+                              defaults="Full member access plus space management and member permissions"
+                            />
+                          </p>
+                        </div>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
                 <FormControl>
                   <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a role" />
+                    <SelectTrigger className="w-full">
+                      <SelectValue
+                        placeholder={t("rolePlaceholder", {
+                          defaultValue: "Select role...",
+                        })}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.values(memberRoleSchema.Values).map((role) => (
@@ -154,11 +220,37 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
               </FormItem>
             )}
           />
+          {isBillingEnabled && (
+            <FormField
+              control={form.control}
+              name="billingAcknowledgment"
+              render={({ field }) => (
+                <FormItem className="rounded-lg border p-3">
+                  <div className="flex flex-row items-start gap-3">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      {t("billingAcknowledgment", {
+                        defaultValue:
+                          "I understand that adding members will affect my subscription price",
+                      })}
+                    </FormLabel>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
           <FormMessage />
         </fieldset>
-        <div className="mt-6">
+        <div className="mt-4">
           <Button
             variant="primary"
+            className="w-full"
             loading={inviteMember.isExecuting}
             type="submit"
           >
