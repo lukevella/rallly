@@ -425,5 +425,11 @@
   "confirm": "Confirm",
   "removeMemberLoading": "Removing member...",
   "removeMemberSuccess": "Member removed successfully",
-  "removeMemberError": "Failed to remove member"
+  "removeMemberError": "Failed to remove member",
+  "memberRoleDescription": "Can create and manage all scheduling tools in this space",
+  "adminRoleDescription": "Full member access plus space management and member permissions",
+  "rolePlaceholder": "Select role...",
+  "invalidEmailAddress": "Please enter a valid email address",
+  "billingAcknowledgmentRequired": "You must acknowledge the billing impact",
+  "billingAcknowledgment": "I understand that adding members will affect my subscription price"
 }
