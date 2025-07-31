@@ -2,8 +2,7 @@ name: Build and Publish Container Image
 # -----------------------------------------------------------------
 # Workflow Purpose:
 #   Builds container images for multiple architectures,
-#   pushes them to GHCR and Docker Hub, and then creates
-#   multi-arch manifest lists for each registry.
+#   pushes them to Docker Hub, and creates multi-arch manifest lists.
 # Trigger: Executes on push of tags that start with "v".
 # -----------------------------------------------------------------
 on:
@@ -14,14 +13,10 @@ on:
 
 # -----------------------------------------------------------------
 # Global Environment Variables:
-#   GHCR_REGISTRY       - Hostname for GitHub Container Registry.
-#   GHCR_IMAGE_NAME     - Image name for GHCR (uses repo name).
 #   DOCKER_REGISTRY     - Hostname for Docker Hub.
 #   DOCKER_IMAGE_NAME   - Image name for Docker Hub (from secret).
 # -----------------------------------------------------------------
 env:
-  GHCR_REGISTRY: ghcr.io
-  GHCR_IMAGE_NAME: ${{ github.repository }}
   DOCKER_REGISTRY: docker.io
   DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_NAMESPACE }}
 
@@ -29,7 +24,7 @@ jobs:
   # -----------------------------------------------------------------
   # Job: Build & Push Container Image
   # Purpose: Build the multi-arch container image on multiple
-  #          platforms, push images to registries, and capture
+  #          platforms, push images to Docker Hub, and capture
   #          per-platform image digests.
   # -----------------------------------------------------------------
   build:
@@ -50,7 +45,6 @@ jobs:
       digest_linux_arm64: ${{ steps.gen_output.outputs.digest_linux_arm64 }}
     permissions:
       contents: read
-      packages: write
       attestations: write
       id-token: write
     steps:
@@ -62,17 +56,9 @@ jobs:
         uses: actions/checkout@v4
 
       # -----------------------------------------------------------------
-      # Log in to Registries
-      # Purpose: Authenticate to both GHCR and Docker Hub, which
-      #          is required for pushing the built images.
+      # Log in to Docker Hub Registry
+      # Purpose: Authenticate to Docker Hub for pushing the built images.
       # -----------------------------------------------------------------
-      - name: Login to GHCR Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.GHCR_REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Login to Docker Hub Registry
         uses: docker/login-action@v3
         with:
@@ -88,9 +74,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: |
-            ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}
-            ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}
+          images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}
           tags: |
             # Use branch references for non-tag events.
             type=ref,event=branch
@@ -111,7 +95,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: >
-            type=image,"name=${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }},${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}",
+            type=image,"name=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}",
             push-by-digest=true,name-canonical=true,push=true
           build-args: |
             APP_VERSION=${{ github.ref_name }}
@@ -136,7 +120,7 @@ jobs:
       - name: Generate Build Attestation
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}
+          subject-name: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
 
@@ -152,7 +136,6 @@ jobs:
       - build
     permissions:
       contents: read
-      packages: write
       attestations: write
       id-token: write
     steps:
@@ -197,62 +180,3 @@ jobs:
           sources: |
             ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}@${{ needs.build.outputs.digest_linux_amd64 }}
             ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}@${{ needs.build.outputs.digest_linux_arm64 }}
-
-  # -----------------------------------------------------------------
-  # Job: Publish Multi-Arch Manifest: GHCR
-  # Purpose: Create and push a multi-arch manifest list for images on GHCR.
-  # -----------------------------------------------------------------
-  publish-ghcr:
-    name: "Publish Multi-Arch Manifest: GHCR"
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
-    steps:
-      # -----------------------------------------------------------------
-      # Login to GHCR Registry
-      # -----------------------------------------------------------------
-      - name: Login to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.GHCR_REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Docker Buildx for Manifest Publishing
-        uses: docker/setup-buildx-action@v3
-
-      # -----------------------------------------------------------------
-      # Generate GHCR Manifest Metadata
-      # Purpose: Determine tags for the GHCR manifest list.
-      # -----------------------------------------------------------------
-      - name: Generate GHCR Manifest Metadata
-        id: metadata
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}
-          tags: |
-            # Latest tag for default branch (if applicable).
-            type=raw,value=latest,enable={{is_default_branch}}
-            # Branch reference.
-            type=ref,event=branch
-            # Semantic version tags on tag events.
-            type=semver,event=tag,pattern={{version}}
-            type=semver,event=tag,pattern={{major}}.{{minor}}
-            type=semver,event=tag,pattern={{major}}
-
-      # -----------------------------------------------------------------
-      # Create and Push GHCR Manifest
-      # -----------------------------------------------------------------
-      - name: Create and Push GHCR Manifest
-        uses: int128/docker-manifest-create-action@v2
-        with:
-          index-annotations: ${{ steps.metadata.outputs.labels }}
-          tags: ${{ steps.metadata.outputs.tags }}
-          sources: |
-            ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}@${{ needs.build.outputs.digest_linux_amd64 }}
-            ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}@${{ needs.build.outputs.digest_linux_arm64 }}
