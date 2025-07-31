@@ -61,15 +61,8 @@ WORKDIR /app
 RUN pnpm add -g prisma
 
 # Don't run production as root
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-# Set HOME env for non-root user
-ENV HOME=/app
-# Ensure /app is writable by nextjs user AND fix perms for global pnpm dir
-RUN chown -R nextjs:nodejs /app /pnpm
-
-
-USER nextjs
+RUN addgroup --system nodejs \
+  && adduser --system --ingroup nodejs --home /app --shell /bin/bash nextjs
 
 # Copy Corepack cache from installer stage to avoid runtime download
 COPY --from=installer /root/.cache/node/corepack/ /app/.cache/node/corepack/
@@ -80,13 +73,18 @@ COPY --from=builder /app/packages/database/prisma ./prisma
 COPY --from=installer /app/apps/web/next.config.js .
 COPY --from=installer /app/apps/web/package.json .
 
-ENV PORT=3000
-EXPOSE 3000
-
 # Copy Next.js standalone output
-COPY --from=installer /app/apps/web/.next/standalone ./
-COPY --from=installer /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=installer /app/apps/web/public ./apps/web/public
+COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/standalone ./
+COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/static ./apps/web/.next/static
+COPY --chown=nextjs:nodejs --from=installer /app/apps/web/public ./apps/web/public
+
+# Fix ownership of global pnpm dir - Prisma needs write access to its engines
+# and cache directories within the pnpm global store at runtime
+RUN chown -R nextjs:nodejs /pnpm
+ENV HOME=/app
+USER nextjs
+
+EXPOSE 3000
 
 ARG SELF_HOSTED
 ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
