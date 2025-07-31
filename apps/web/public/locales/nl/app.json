@@ -425,5 +425,11 @@
   "confirm": "Bevestigen",
   "removeMemberLoading": "Deelnemer verwijderen...",
   "removeMemberSuccess": "Deelnemer succesvol verwijderd",
-  "removeMemberError": "Kan deelnemer niet verwijderen"
+  "removeMemberError": "Kan deelnemer niet verwijderen",
+  "memberRoleDescription": "Kan alle planningstools in deze ruimte aanmaken en beheren",
+  "adminRoleDescription": "Heeft volledige toegang en kan ruimtes en machtigingen beheren",
+  "rolePlaceholder": "Kies een rol...",
+  "invalidEmailAddress": "Voer een geldig e-mailadres in",
+  "billingAcknowledgmentRequired": "Je moet de gevolgen voor de facturering accepteren",
+  "billingAcknowledgment": "Ik begrijp dat het toevoegen van deelnemers mijn abonnementsprijs zal beïnvloeden"
 }
