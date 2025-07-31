@@ -61,15 +61,8 @@ WORKDIR /app
 RUN pnpm add -g prisma
 
 # Don't run production as root
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-# Set HOME env for non-root user
-ENV HOME=/app
-# Ensure /app is writable by nextjs user AND fix perms for global pnpm dir
-RUN chown -R nextjs:nodejs /app /pnpm
-
-
-USER nextjs
+RUN addgroup --system nodejs
+RUN adduser --system nextjs
 
 # Copy Corepack cache from installer stage to avoid runtime download
 COPY --from=installer /root/.cache/node/corepack/ /app/.cache/node/corepack/
@@ -80,13 +73,18 @@ COPY --from=builder /app/packages/database/prisma ./prisma
 COPY --from=installer /app/apps/web/next.config.js .
 COPY --from=installer /app/apps/web/package.json .
 
-ENV PORT=3000
-EXPOSE 3000
-
 # Copy Next.js standalone output
 COPY --from=installer /app/apps/web/.next/standalone ./
 COPY --from=installer /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=installer /app/apps/web/public ./apps/web/public
+
+# Fix ownership of all files and switch to non-root user
+RUN chown -R nextjs:nodejs /app /pnpm
+ENV HOME=/app
+USER nextjs
+
+ENV PORT=3000
+EXPOSE 3000
 
 ARG SELF_HOSTED
 ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
