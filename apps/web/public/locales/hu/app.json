@@ -425,5 +425,11 @@
   "confirm": "Megerősítés",
   "removeMemberLoading": "Tag eltávolítása...",
   "removeMemberSuccess": "Tag sikeresen eltávolítva",
-  "removeMemberError": "Nem sikerült a tag eltávolítása"
+  "removeMemberError": "Nem sikerült a tag eltávolítása",
+  "memberRoleDescription": "Létrehozhat és kezelheti az összes időpontkereső eszközt ebben a munkaterületben",
+  "adminRoleDescription": "Teljes tagi hozzaférés és munkaterület menedzselés és tagi jogosultságkezelés",
+  "rolePlaceholder": "Válassz szerepkört...",
+  "invalidEmailAddress": "Kérjük, adj meg egy érvényes email címet",
+  "billingAcknowledgmentRequired": "El kell ismerned a számlázással kapcsolatos fizetési kötelezettségeket",
+  "billingAcknowledgment": "Megértettem, hogy a tagok hozzáadása hatással van az előfizetésem összegére"
 }
