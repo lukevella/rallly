@@ -2,6 +2,7 @@ import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { billingIntervalSchema } from "@/features/billing/schema";
 
 export function toDate(date: number) {
   return new Date(date * 1000);
@@ -37,8 +38,14 @@ export function getSubscriptionDetails(subscription: Stripe.Subscription) {
     throw new Error(`Missing amount in subscription ${subscription.id}`);
   }
 
+  const intervalResult = billingIntervalSchema.safeParse(interval);
+
+  if (!intervalResult.success) {
+    throw new Error(`Invalid interval: ${interval}`);
+  }
+
   return {
-    interval,
+    interval: intervalResult.data,
     currency,
     amount,
     priceId: subscriptionItem.price.id,
