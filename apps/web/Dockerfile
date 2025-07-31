@@ -74,16 +74,15 @@ COPY --from=installer /app/apps/web/next.config.js .
 COPY --from=installer /app/apps/web/package.json .
 
 # Copy Next.js standalone output
-COPY --from=installer /app/apps/web/.next/standalone ./
-COPY --from=installer /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=installer /app/apps/web/public ./apps/web/public
+COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/standalone ./
+COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/static ./apps/web/.next/static
+COPY --chown=nextjs:nodejs --from=installer /app/apps/web/public ./apps/web/public
 
-# Fix ownership of all files and switch to non-root user
-RUN chown -R nextjs:nodejs /app /pnpm
+# Fix ownership of global pnpm dir
+RUN chown -R nextjs:nodejs /pnpm
 ENV HOME=/app
 USER nextjs
 
-ENV PORT=3000
 EXPOSE 3000
 
 ARG SELF_HOSTED
