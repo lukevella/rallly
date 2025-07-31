@@ -61,8 +61,8 @@ WORKDIR /app
 RUN pnpm add -g prisma
 
 # Don't run production as root
-RUN addgroup --system nodejs
-RUN adduser --system nextjs
+RUN addgroup --system nodejs \
+  && adduser --system --ingroup nodejs --home /app --shell /bin/bash nextjs
 
 # Copy Corepack cache from installer stage to avoid runtime download
 COPY --from=installer /root/.cache/node/corepack/ /app/.cache/node/corepack/
