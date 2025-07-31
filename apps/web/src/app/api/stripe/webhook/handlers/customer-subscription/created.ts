@@ -1,6 +1,5 @@
 import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
-
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
 import {
   getExpandedSubscription,

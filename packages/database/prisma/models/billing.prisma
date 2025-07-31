@@ -37,8 +37,6 @@ enum SubscriptionStatus {
 }
 
 enum SubscriptionInterval {
-  day
-  week
   month
   year
 
