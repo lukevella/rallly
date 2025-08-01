@@ -428,5 +428,17 @@
   "rolePlaceholder": "Válassz szerepkört...",
   "invalidEmailAddress": "Kérjük, adj meg egy érvényes email címet",
   "billingAcknowledgmentRequired": "El kell ismerned a számlázással kapcsolatos fizetési kötelezettségeket",
-  "billingAcknowledgment": "Megértettem, hogy a tagok hozzáadása hatással van az előfizetésem összegére"
+  "billingAcknowledgment": "Megértettem, hogy a tagok hozzáadása hatással van az előfizetésem összegére",
+  "makeAdmin": "Legyen adminisztrátor",
+  "makeMember": "Legyen tag",
+  "changingRole": "Szerep módosítása...",
+  "roleChangedSuccess": "Szerepkör sikeresen megváltozott",
+  "roleChangedError": "Szerepkör megváltoztatása nem sikerült",
+  "cancelInvite": "Meghívó visszavonása",
+  "cancelInviteConfirmation": "Biztosan vissza szeretnéd vonni a meghívót számára: {email}?",
+  "cancelingInvite": "Meghívó visszavonása...",
+  "inviteCanceledSuccess": "Meghívó sikeresen visszavonva",
+  "inviteCanceledError": "Meghívó visszavonása nem sikerült",
+  "pendingInvites": "Függőben lévő meghívók",
+  "memberInvitedBy": "Meghívva {inviterName} által"
 }
