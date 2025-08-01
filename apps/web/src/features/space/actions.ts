@@ -334,3 +334,41 @@ export const removeMemberAction = spaceActionClient
       }
     });
   });
+
+export const changeMemberRoleAction = spaceActionClient
+  .metadata({
+    actionName: "space_change_member_role",
+  })
+  .inputSchema(
+    z.object({
+      memberId: z.string(),
+      role: memberRoleSchema,
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    const member = await getMember(parsedInput.memberId);
+    if (!member) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: "Member not found",
+      });
+    }
+
+    if (
+      ctx.getMemberAbility().cannot("update", subject("SpaceMember", member))
+    ) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "You do not have permission to change member roles in this space",
+      });
+    }
+
+    await prisma.spaceMember.update({
+      where: {
+        id: parsedInput.memberId,
+      },
+      data: {
+        role: toDBRole(parsedInput.role),
+      },
+    });
+  });

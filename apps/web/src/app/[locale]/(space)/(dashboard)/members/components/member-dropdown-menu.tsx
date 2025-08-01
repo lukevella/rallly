@@ -16,15 +16,20 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
-import { MoreHorizontalIcon, XIcon } from "lucide-react";
+import { MoreHorizontalIcon, ShieldIcon, UserIcon, XIcon } from "lucide-react";
 import { Trans } from "@/components/trans";
-import { removeMemberAction } from "@/features/space/actions";
+import {
+  changeMemberRoleAction,
+  removeMemberAction,
+} from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
 import type { MemberDTO } from "@/features/space/member/types";
+import type { MemberRole } from "@/features/space/schema";
 import { useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
@@ -32,7 +37,37 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
   const space = useSpace();
   const removeMemberDialog = useDialog();
   const removeMember = useSafeAction(removeMemberAction);
+  const changeMemberRole = useSafeAction(changeMemberRoleAction);
   const { t } = useTranslation();
+
+  const canUpdateMember = space
+    .getMemberAbility()
+    .can("update", subject("SpaceMember", member));
+
+  const canDeleteMember = space
+    .getMemberAbility()
+    .can("delete", subject("SpaceMember", member));
+
+  const handleRoleChange = (newRole: MemberRole) => {
+    toast.promise(
+      changeMemberRole.executeAsync({
+        memberId: member.id,
+        role: newRole,
+      }),
+      {
+        loading: t("changingRole", {
+          defaultValue: "Changing role...",
+        }),
+        success: t("roleChangedSuccess", {
+          defaultValue: "Role changed successfully",
+        }),
+        error: t("roleChangedError", {
+          defaultValue: "Failed to change role",
+        }),
+      },
+    );
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -44,13 +79,33 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          {member.role === "member" ? (
+            <DropdownMenuItem
+              onClick={() => handleRoleChange("admin")}
+              disabled={!canUpdateMember}
+            >
+              <Icon>
+                <ShieldIcon className="size-4" />
+              </Icon>
+              <Trans i18nKey="makeAdmin" defaults="Make admin" />
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem
+              onClick={() => handleRoleChange("member")}
+              disabled={!canUpdateMember}
+            >
+              <Icon>
+                <UserIcon />
+              </Icon>
+              <Trans i18nKey="makeMember" defaults="Make member" />
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               removeMemberDialog.trigger();
             }}
-            disabled={space
-              .getMemberAbility()
-              .cannot("delete", subject("SpaceMember", member))}
+            disabled={!canDeleteMember}
             className="text-destructive"
           >
             <XIcon className="size-4" />

@@ -71,8 +71,8 @@ function defineSpaceAdminRules(
     spaceId: ctx.space.id,
   });
   can("create", "SpaceMemberInvite");
-  can("delete", "SpaceMember", { spaceId: ctx.space.id });
-  cannot(["delete", "update"], "SpaceMember", {
+  can(["update", "delete"], "SpaceMember", { spaceId: ctx.space.id });
+  cannot(["update", "delete"], "SpaceMember", {
     userId: ctx.user.id,
   });
 }
