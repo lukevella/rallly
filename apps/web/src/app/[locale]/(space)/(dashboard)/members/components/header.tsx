@@ -10,7 +10,6 @@ import {
   PageHeaderActions,
   PageTitle,
 } from "@/app/components/page-layout";
-import { SearchInput } from "@/app/components/search-input";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
 import { useSpace } from "@/features/space/client";
@@ -29,9 +28,6 @@ export function MembersHeader() {
           <Trans i18nKey="members" defaults="Members" />
         </PageTitle>
         <PageHeaderActions>
-          <SearchInput
-            placeholder={t("searchMembers", { defaultValue: "Search members" })}
-          />
           <Button
             variant="primary"
             onClick={() => {
