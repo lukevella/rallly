@@ -10,8 +10,8 @@ const avatarVariants = cva("relative flex shrink-0 overflow-hidden", {
   variants: {
     size: {
       xl: "size-12 rounded-lg text-xl",
-      lg: "size-12 rounded-md text-lg",
-      md: "size-9 rounded text-base",
+      lg: "size-10 rounded-md text-lg",
+      md: "size-8 rounded text-base",
       sm: "size-5 rounded-sm text-[10px]",
     },
   },
