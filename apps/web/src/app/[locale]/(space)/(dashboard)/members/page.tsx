@@ -87,9 +87,7 @@ export default async function MembersPage() {
                     </div>
                   </div>
                   <div className="text-sm">
-                    <SpaceRole
-                      role={invite.role === "ADMIN" ? "admin" : "member"}
-                    />
+                    <SpaceRole role={invite.role} />
                   </div>
                   <InviteDropdownMenu invite={invite} />
                 </StackedListItem>

@@ -247,5 +247,8 @@ export const loadInvites = cache(async () => {
     },
   });
 
-  return invites;
+  return invites.map((invite) => ({
+    ...invite,
+    role: fromDBRole(invite.role),
+  }));
 });
