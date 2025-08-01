@@ -64,7 +64,7 @@ export default async function MembersPage() {
         {invites.length > 0 && (
           <section className="flex flex-col gap-4">
             <h2 className="font-medium">
-              <Trans defaults="Pending Invites" />
+              <Trans i18nKey="pendingInvites" defaults="Pending Invites" />
             </h2>
             <StackedList>
               {invites.map((invite) => (
@@ -79,6 +79,7 @@ export default async function MembersPage() {
                       </div>
                       <div className="text-muted-foreground text-sm">
                         <Trans
+                          i18nKey="memberInvitedBy"
                           defaults="Invited by {inviterName}"
                           values={{ inviterName: invite.invitedBy.name }}
                         />

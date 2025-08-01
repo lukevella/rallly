@@ -438,5 +438,7 @@
   "cancelInviteConfirmation": "Are you sure you want to cancel the invite for {email}?",
   "cancelingInvite": "Canceling invite...",
   "inviteCanceledSuccess": "Invite canceled successfully",
-  "inviteCanceledError": "Failed to cancel invite"
+  "inviteCanceledError": "Failed to cancel invite",
+  "pendingInvites": "Pending Invites",
+  "memberInvitedBy": "Invited by {inviterName}"
 }
