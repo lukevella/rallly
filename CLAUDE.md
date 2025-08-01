@@ -151,3 +151,4 @@ See `.env.development` for complete development defaults.
 - Translation files in `public/locales/[lang]/`
 - Crowdin integration for translation management
 - Use `pnpm i18n:scan` to extract new translation keys
+- **IMPORTANT**: When TypeScript errors occur for missing i18n keys, run `pnpm i18n:scan` instead of manually adding keys. This command automatically scans the codebase for `Trans` components and generates the necessary translation entries.

@@ -1,33 +1,40 @@
 import { Badge } from "@rallly/ui/badge";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { InviteDropdownMenu } from "@/app/[locale]/(space)/(dashboard)/members/components/invite-dropdown-menu";
-import { MemberDropdownMenu } from "@/app/[locale]/(space)/(dashboard)/members/components/member-dropdown-menu";
-import { PageContainer, PageContent } from "@/app/components/page-layout";
+import { InviteMemberButton } from "@/app/[locale]/(space)/(dashboard)/settings/members/components/header";
+import {
+  PageSection,
+  PageSectionContent,
+  PageSectionDescription,
+  PageSectionHeader,
+  PageSectionTitle,
+} from "@/app/components/page-layout";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { SpaceRole } from "@/features/space/components/space-role";
-import { isSpacesEnabled } from "@/features/space/constants";
 import { loadInvites, loadMembers } from "@/features/space/data";
 import { getTranslation } from "@/i18n/server";
-import { MembersHeader } from "./components/header";
+import { InviteDropdownMenu } from "./components/invite-dropdown-menu";
+import { MemberDropdownMenu } from "./components/member-dropdown-menu";
 
-export default async function MembersPage() {
-  if (!isSpacesEnabled) {
-    return notFound();
-  }
-
+export default async function MembersSettingsPage() {
   const [members, invites] = await Promise.all([loadMembers(), loadInvites()]);
 
   return (
-    <PageContainer>
-      <MembersHeader />
-      <PageContent className="space-y-6">
-        <section className="flex flex-col gap-4">
-          <h2 className="font-medium">
+    <div className="space-y-8">
+      <PageSection>
+        <PageSectionHeader>
+          <PageSectionTitle>
             <Trans i18nKey="members" />
-          </h2>
+          </PageSectionTitle>
+          <PageSectionDescription>
+            <Trans
+              i18nKey="membersDescription"
+              defaults="Members have access to your space"
+            />
+          </PageSectionDescription>
+        </PageSectionHeader>
+        <PageSectionContent>
           <StackedList>
             {members.data.map((member) => (
               <StackedListItem key={member.id}>
@@ -60,12 +67,22 @@ export default async function MembersPage() {
               </StackedListItem>
             ))}
           </StackedList>
-        </section>
-        {invites.length > 0 && (
-          <section className="flex flex-col gap-4">
-            <h2 className="font-medium">
-              <Trans i18nKey="pendingInvites" defaults="Pending Invites" />
-            </h2>
+        </PageSectionContent>
+      </PageSection>
+      <PageSection>
+        <PageSectionHeader>
+          <PageSectionTitle>
+            <Trans i18nKey="pendingInvites" defaults="Pending Invites" />
+          </PageSectionTitle>
+          <PageSectionDescription>
+            <Trans
+              i18nKey="pendingInvitesDescription"
+              defaults="Invite other users to share your space."
+            />
+          </PageSectionDescription>
+        </PageSectionHeader>
+        <PageSectionContent>
+          {invites.length > 0 ? (
             <StackedList>
               {invites.map((invite) => (
                 <StackedListItem key={invite.id}>
@@ -93,10 +110,11 @@ export default async function MembersPage() {
                 </StackedListItem>
               ))}
             </StackedList>
-          </section>
-        )}
-      </PageContent>
-    </PageContainer>
+          ) : null}
+          <InviteMemberButton />
+        </PageSectionContent>
+      </PageSection>
+    </div>
   );
 }
 
@@ -105,6 +123,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t("members", {
       defaultValue: "Members",
+    }),
+    description: t("membersSettingsDescription", {
+      defaultValue:
+        "Manage space members, invite new users, and control access permissions.",
     }),
   };
 }

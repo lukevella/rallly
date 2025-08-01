@@ -5,7 +5,7 @@ import { PostHogIdentify, PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/sonner";
 import { TooltipProvider } from "@rallly/ui/tooltip";
 import { domAnimation, LazyMotion } from "motion/react";
-import type { Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import type React from "react";
 
@@ -115,4 +115,13 @@ export default async function Root({
       </body>
     </html>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: {
+      template: "%s | Rallly",
+      default: "Rallly",
+    },
+  };
 }
