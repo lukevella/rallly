@@ -431,5 +431,10 @@
   "rolePlaceholder": "Select role...",
   "invalidEmailAddress": "Please enter a valid email address",
   "billingAcknowledgmentRequired": "You must acknowledge the billing impact",
-  "billingAcknowledgment": "I understand that adding members will affect my subscription price"
+  "billingAcknowledgment": "I understand that adding members will affect my subscription price",
+  "makeAdmin": "Make admin",
+  "makeMember": "Make member",
+  "changingRole": "Changing role...",
+  "roleChangedSuccess": "Role changed successfully",
+  "roleChangedError": "Failed to change role"
 }
