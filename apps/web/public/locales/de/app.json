@@ -423,8 +423,22 @@
   "removeMemberLoading": "Mitglied wird entfernt...",
   "removeMemberSuccess": "Mitglied erfolgreich entfernt",
   "removeMemberError": "Mitglied konnte nicht entfernt werden",
+  "memberRoleDescription": "Kann alle Planungstools in dieser Gruppe erstellen und verwalten",
+  "adminRoleDescription": "Voller Mitgliederzugang sowie Gruppenverwaltungs- und Mitgliederberechtigungen",
+  "rolePlaceholder": "Rolle auswählen...",
+  "invalidEmailAddress": "Bitte gib eine gültige E-Mail-Adresse ein",
+  "billingAcknowledgmentRequired": "Du musst die Auswirkungen auf die Rechnungsstellung anerkennen",
+  "billingAcknowledgment": "Ich verstehe, dass das Hinzufügen von Mitgliedern Auswirkungen auf meinen Abonnementpreis hat",
   "makeAdmin": "Zum Admin machen",
   "makeMember": "Zum Mitglied machen",
   "changingRole": "Rolle wird geändert...",
-  "roleChangedSuccess": "Rolle erfolgreich geändert"
+  "roleChangedSuccess": "Rolle erfolgreich geändert",
+  "roleChangedError": "Fehler beim Ändern der Rolle",
+  "cancelInvite": "Einladung zurücknehmen",
+  "cancelInviteConfirmation": "Bist du sicher, dass du die Einladung für {email} zurücknehmen möchtest?",
+  "cancelingInvite": "Einladung wird entfernt...",
+  "inviteCanceledSuccess": "Einladung erfolgreich entfernt",
+  "inviteCanceledError": "Einladung konnte nicht zurückgenommen werden",
+  "pendingInvites": "Ausstehende Einladungen",
+  "memberInvitedBy": "Eingeladen von {inviterName}"
 }
