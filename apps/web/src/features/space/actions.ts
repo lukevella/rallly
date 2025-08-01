@@ -359,7 +359,8 @@ export const changeMemberRoleAction = spaceActionClient
     ) {
       throw new AppError({
         code: "FORBIDDEN",
-        message: "You do not have permission to change member roles in this space",
+        message:
+          "You do not have permission to change member roles in this space",
       });
     }
 
