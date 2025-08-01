@@ -1,15 +1,11 @@
 import { accessibleBy } from "@casl/prisma";
-import type {
-  SpaceMemberRole as DBSpaceMemberRole,
-  Prisma,
-} from "@rallly/database";
+import type { SpaceMemberRole as DBSpaceMemberRole } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { cache } from "react";
 import { requireSpace, requireUser } from "@/auth/data";
 import type { MemberDTO } from "@/features/space/member/types";
-import type { MemberRole } from "@/features/space/schema";
 import type { SpaceDTO } from "@/features/space/types";
-import { fromDBRole, toDBRole } from "@/features/space/utils";
+import { fromDBRole } from "@/features/space/utils";
 import { defineAbilityFor } from "@/features/user/ability";
 import { isSelfHosted } from "@/utils/constants";
 
@@ -163,80 +159,40 @@ export const loadPaymentMethods = cache(async () => {
   return paymentMethods;
 });
 
-export const loadMembers = cache(
-  async ({
-    page = 1,
-    pageSize = 10,
-    q,
-    role,
-  }: {
-    page?: number;
-    pageSize?: number;
-    q?: string;
-    role?: "all" | MemberRole;
-  }) => {
-    const space = await requireSpace();
+export const loadMembers = cache(async () => {
+  const space = await requireSpace();
 
-    const whereClause: Prisma.SpaceMemberWhereInput = {
-      spaceId: space.id,
-      ...(q
-        ? {
-            user: {
-              OR: [
-                {
-                  name: {
-                    contains: q,
-                    mode: "insensitive",
-                  },
-                },
-                {
-                  email: {
-                    contains: q,
-                    mode: "insensitive",
-                  },
-                },
-              ],
-            },
-          }
-        : {}),
-      ...(role && role !== "all"
-        ? {
-            role: toDBRole(role),
-          }
-        : {}),
-    };
-
-    const [members, totalCount] = await Promise.all([
-      prisma.spaceMember.findMany({
-        where: whereClause,
-        select: {
-          id: true,
-          userId: true,
-          role: true,
-          spaceId: true,
-          user: {
-            select: {
-              name: true,
-              email: true,
-              image: true,
-            },
+  const [members, totalCount] = await Promise.all([
+    prisma.spaceMember.findMany({
+      where: {
+        spaceId: space.id,
+      },
+      select: {
+        id: true,
+        userId: true,
+        role: true,
+        spaceId: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+            image: true,
           },
         },
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-      }),
-      prisma.spaceMember.count({
-        where: whereClause,
-      }),
-    ]);
+      },
+    }),
+    prisma.spaceMember.count({
+      where: {
+        spaceId: space.id,
+      },
+    }),
+  ]);
 
-    return {
-      total: totalCount,
-      data: members.map((member) => createMemberDTO({ ...member, space })),
-      hasNextPage: page * pageSize < totalCount,
-    };
-  },
-);
+  return {
+    total: totalCount,
+    data: members.map((member) => createMemberDTO({ ...member, space })),
+  };
+});
 
 export const getMember = async (id: string) => {
   const member = await prisma.spaceMember.findUnique({
@@ -269,3 +225,27 @@ export const getMember = async (id: string) => {
 
   return createMemberDTO(member);
 };
+
+export const loadInvites = cache(async () => {
+  const space = await requireSpace();
+
+  const invites = await prisma.spaceMemberInvite.findMany({
+    where: {
+      spaceId: space.id,
+    },
+    include: {
+      invitedBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return invites;
+});

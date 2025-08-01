@@ -373,3 +373,43 @@ export const changeMemberRoleAction = spaceActionClient
       },
     });
   });
+
+export const cancelInviteAction = spaceActionClient
+  .metadata({
+    actionName: "space_cancel_invite",
+  })
+  .inputSchema(
+    z.object({
+      inviteId: z.string(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    const invite = await prisma.spaceMemberInvite.findUnique({
+      where: { id: parsedInput.inviteId },
+    });
+
+    if (!invite) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: "Invite not found",
+      });
+    }
+
+    if (invite.spaceId !== ctx.space.id) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "You do not have access to this invite",
+      });
+    }
+
+    if (ctx.getMemberAbility().cannot("delete", "SpaceMemberInvite")) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "You do not have permission to cancel invites",
+      });
+    }
+
+    await prisma.spaceMemberInvite.delete({
+      where: { id: parsedInput.inviteId },
+    });
+  });
