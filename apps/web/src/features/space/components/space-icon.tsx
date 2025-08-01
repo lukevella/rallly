@@ -12,7 +12,9 @@ type SpaceIconProps = {
 export function SpaceIcon({ name, className, size }: SpaceIconProps) {
   return (
     <Avatar className={cn(className)} size={size}>
-      <AvatarFallback seed={name}>{name[0]}</AvatarFallback>
+      <AvatarFallback seed={name}>
+        {name.slice(0, 2).toUpperCase()}
+      </AvatarFallback>
     </Avatar>
   );
 }

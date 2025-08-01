@@ -53,7 +53,7 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
               .cannot("delete", subject("SpaceMember", member))}
             className="text-destructive"
           >
-            <XIcon />
+            <XIcon className="size-4" />
             <Trans i18nKey="removeMember" defaults="Remove member" />
           </DropdownMenuItem>
         </DropdownMenuContent>
