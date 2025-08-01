@@ -422,5 +422,9 @@
   "confirm": "Bestätigen",
   "removeMemberLoading": "Mitglied wird entfernt...",
   "removeMemberSuccess": "Mitglied erfolgreich entfernt",
-  "removeMemberError": "Mitglied konnte nicht entfernt werden"
+  "removeMemberError": "Mitglied konnte nicht entfernt werden",
+  "makeAdmin": "Zum Admin machen",
+  "makeMember": "Zum Mitglied machen",
+  "changingRole": "Rolle wird geändert...",
+  "roleChangedSuccess": "Rolle erfolgreich geändert"
 }
