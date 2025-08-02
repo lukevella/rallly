@@ -287,7 +287,7 @@ export const polls = router({
       }),
     )
     .use(requireUserMiddleware)
-    .use(createRateLimitMiddleware("update_poll", 5, "1 m"))
+    .use(createRateLimitMiddleware("update_poll", 10, "1 m"))
     .use(async ({ ctx, input, next }) => {
       const isFlaggedContent = await moderateContent([
         input.title,
