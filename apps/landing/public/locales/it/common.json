@@ -24,5 +24,16 @@
   "howItWorks": "Come funziona",
   "status": "Stato",
   "when2MeetAlternative": "Alternativa When2Meet",
-  "meetingPoll": "Sondaggio per Riunione"
+  "meetingPoll": "Sondaggio per Riunione",
+  "signUp": "Registrati",
+  "licensingThankYouTitle": "Grazie per il tuo acquisto!",
+  "licensingThankYouSubtitle": "La tua licenza Rallly è stata confermata. Siamo entusiasti di averti a bordo!",
+  "licensingThankYouLicense": "Passi Successivi",
+  "licensingThankYouLicenseEmailed": "La tua chiave di licenza è stata inviata all'indirizzo email fornito durante il checkout. Controlla la tua casella di posta.",
+  "licensingThankYouNextStepsInstallation": "Guida all'installazione",
+  "licensingThankYouNextStepsApplyLicense": "Come applicare la tua licenza",
+  "licensingThankYouSupportPrompt": "Hai bisogno di aiuto o hai domande? Visita i nostri documenti <0>autoospitati</0> o <1>contattaci</1>.",
+  "licensingThankYouGoHomeLink": "Torna alla Home",
+  "openSource": "Siamo Open Source!",
+  "starOnGitHub": "Aggiungici una stella su GitHub"
 }

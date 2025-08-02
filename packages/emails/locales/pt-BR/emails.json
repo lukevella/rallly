@@ -78,5 +78,10 @@
   "eventCanceledContent": "<b>{hostName}</b> cancelou <b>{title}</b> que foi agendado para:",
   "eventCanceledPreview": "Evento cancelado",
   "eventCanceledHeading": "Evento cancelado",
-  "eventCanceledSubject": "Cancelado: {title}"
+  "eventCanceledSubject": "Cancelado: {title}",
+  "spaceInvite_content": "{inviterName} convidou você para ingressar ao espaço {spaceName} como um {role}.",
+  "spaceInvite_preview": "Você foi convidado a ingressar em {spaceName}",
+  "spaceInvite_heading": "Você está convidado!",
+  "spaceInvite_button": "Aceitar convite",
+  "spaceInvite_subject": "Você está convidado a ingressar em {spaceName}"
 }

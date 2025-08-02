@@ -78,5 +78,10 @@
   "eventCanceledContent": "<b>{hostName}</b> hat <b>{title}</b> abgesagt, das für folgenden Termin geplant war:",
   "eventCanceledPreview": "Termin abgesagt",
   "eventCanceledHeading": "Termin abgesagt",
-  "eventCanceledSubject": "Abgesagt: {title}"
+  "eventCanceledSubject": "Abgesagt: {title}",
+  "spaceInvite_content": "{inviterName} hat dich eingeladen, der {spaceName} Gruppe als {role} beizutreten.",
+  "spaceInvite_preview": "Du wurdest eingeladen, {spaceName} beizutreten",
+  "spaceInvite_heading": "Du wurdest eingeladen!",
+  "spaceInvite_button": "Einladung annehmen",
+  "spaceInvite_subject": "Du wurdest eingeladen, {spaceName} beizutreten"
 }
