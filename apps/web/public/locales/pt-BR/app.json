@@ -415,5 +415,16 @@
   "acceptInviteMetadataTitle": "Ingressar em {spaceName}",
   "actionErrorPaymentRequired": "Você precisa atualizar seu plano para realizar esta ação",
   "loginWithAnotherAccount": "Logar com outra conta",
-  "adminRoleRequired": "Você precisa ser um administrador para realizar esta ação"
+  "adminRoleRequired": "Você precisa ser um administrador para realizar esta ação",
+  "removeMember": "Remover membro",
+  "remove": "Remover Membro",
+  "removeMemberConfirmation": "Você tem certeza que deseja remover este membro?",
+  "confirm": "Confirmar",
+  "removeMemberLoading": "Removendo membro...",
+  "removeMemberSuccess": "Membro removido com sucesso",
+  "removeMemberError": "Erro ao remover membro",
+  "memberRoleDescription": "Pode criar e gerenciar todas as ferramentas de agendamento neste espaço",
+  "adminRoleDescription": "Acesso completo ao membro, além de gerenciamento de espaço e permissões de membro",
+  "rolePlaceholder": "Selecionr atribuição...",
+  "invalidEmailAddress": "Por favor, insira um endereço de e-mail válido"
 }
