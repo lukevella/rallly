@@ -78,7 +78,7 @@ export function SpaceDropdown({
             <Trans i18nKey="createSpace" defaults="Create Space" />
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/settings">
+            <Link href="/settings/general">
               <Icon>
                 <SettingsIcon />
               </Icon>

@@ -413,3 +413,37 @@ export const cancelInviteAction = spaceActionClient
       where: { id: parsedInput.inviteId },
     });
   });
+
+export const updateSpaceAction = spaceActionClient
+  .metadata({
+    actionName: "space_update",
+  })
+  .inputSchema(
+    z.object({
+      name: z.string().min(1).max(100),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    if (
+      ctx
+        .getMemberAbility()
+        .cannot(
+          "update",
+          subject("Space", { id: ctx.space.id, ownerId: ctx.space.ownerId }),
+        )
+    ) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "You do not have permission to update this space",
+      });
+    }
+
+    await prisma.space.update({
+      where: {
+        id: ctx.space.id,
+      },
+      data: {
+        name: parsedInput.name,
+      },
+    });
+  });

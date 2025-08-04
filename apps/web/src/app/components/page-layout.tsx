@@ -25,7 +25,7 @@ export function PageTitle({
   return (
     <h1
       className={cn(
-        "flex items-center gap-3 truncate font-bold text-foreground text-xl leading-none tracking-tight",
+        "flex items-center gap-3 truncate font-semibold text-foreground text-lg tracking-tight",
         className,
       )}
     >
@@ -73,14 +73,6 @@ export function PageHeaderActions({
   );
 }
 
-export function PageSection({ children }: { children?: React.ReactNode }) {
-  return <div className="space-y-4 md:space-y-6">{children}</div>;
-}
-
-export function PageSectionTitle({ children }: { children?: React.ReactNode }) {
-  return <h2 className="text-muted-foreground text-sm">{children}</h2>;
-}
-
 export function PageContent({
   children,
   className,
@@ -123,4 +115,68 @@ export function PageSkeleton() {
       </PageContent>
     </PageContainer>
   );
+}
+
+export function PageSection({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section
+      className={cn("grid gap-6 lg:grid-cols-[320px_1fr] lg:gap-8", className)}
+    >
+      {children}
+    </section>
+  );
+}
+
+export function PageSectionHeader({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return <div className={cn(className)}>{children}</div>;
+}
+
+export function PageSectionTitle({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <h2 className={cn("font-medium text-base text-foreground", className)}>
+      {children}
+    </h2>
+  );
+}
+
+export function PageSectionDescription({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <p className={cn("mt-2 text-muted-foreground text-sm", className)}>
+      {children}
+    </p>
+  );
+}
+
+export function PageSectionContent({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return <div className={cn("space-y-4", className)}>{children}</div>;
 }

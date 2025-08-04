@@ -440,5 +440,17 @@
   "inviteCanceledSuccess": "Invite canceled successfully",
   "inviteCanceledError": "Failed to cancel invite",
   "pendingInvites": "Pending Invites",
-  "memberInvitedBy": "Invited by {inviterName}"
+  "memberInvitedBy": "Invited by {inviterName}",
+  "updatingSpace": "Updating space...",
+  "spaceUpdatedSuccess": "Space updated successfully",
+  "spaceUpdatedError": "Failed to update space",
+  "generalSettings": "General Settings",
+  "spaceInformation": "Space Information",
+  "spaceInformationDescription": "Update your space name and basic settings.",
+  "general": "General",
+  "generalSettingsDescription": "Manage your space settings, including name, description, and other general preferences.",
+  "membersDescription": "Members have access to your space",
+  "pendingInvitesDescription": "Invite other users to share your space.",
+  "membersSettingsDescription": "Manage space members, invite new users, and control access permissions.",
+  "spaceNamePlaceholder": "My Team"
 }

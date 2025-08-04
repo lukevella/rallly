@@ -1,7 +1,12 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import { BarChart2Icon, CalendarIcon, HomeIcon, UsersIcon } from "lucide-react";
+import {
+  BarChart2Icon,
+  CalendarIcon,
+  HomeIcon,
+  SettingsIcon,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { isSpacesEnabled } from "@/features/space/constants";
@@ -73,11 +78,11 @@ export const useSpaceMenu = () => {
                 title: t("manage", { defaultValue: "Manage" }),
                 items: [
                   {
-                    id: "members",
-                    label: t("members", { defaultValue: "Members" }),
-                    href: "/members",
-                    icon: UsersIcon,
-                    isActive: pathname === "/members",
+                    id: "settings",
+                    label: t("settings", { defaultValue: "Settings" }),
+                    href: "/settings",
+                    icon: SettingsIcon,
+                    isActive: pathname.startsWith("/settings"),
                   },
                 ],
               },

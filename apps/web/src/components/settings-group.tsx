@@ -1,9 +1,5 @@
 export function SettingsGroup({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-6 rounded-lg border p-6 lg:flex-row">
-      {children}
-    </div>
-  );
+  return <div className="flex flex-col gap-6 lg:flex-row">{children}</div>;
 }
 
 export function SettingsGroupHeader({
@@ -19,7 +15,7 @@ export function SettingsGroupTitle({
 }: {
   children: React.ReactNode;
 }) {
-  return <h2 className="font-semibold text-base">{children}</h2>;
+  return <h2 className="font-medium text-sm">{children}</h2>;
 }
 
 export function SettingsGroupDescription({

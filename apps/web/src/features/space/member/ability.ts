@@ -23,6 +23,10 @@ type Subject = Subjects<{
   Subscription: {
     spaceId: string;
   };
+  Space: {
+    id: string;
+    ownerId: string;
+  };
 }>;
 
 export type MemberAbility = PureAbility<[Action, Subject], PrismaQuery>;
@@ -70,6 +74,7 @@ function defineSpaceAdminRules(
   can("read", "Subscription", {
     spaceId: ctx.space.id,
   });
+  can("update", "Space", { id: ctx.space.id });
   can(["create", "delete"], "SpaceMemberInvite");
   can(["update", "delete"], "SpaceMember", { spaceId: ctx.space.id });
   cannot(["delete", "update"], "SpaceMember", {

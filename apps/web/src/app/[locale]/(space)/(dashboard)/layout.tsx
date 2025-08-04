@@ -1,6 +1,7 @@
 import { SidebarInset } from "@rallly/ui/sidebar";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { requireUser } from "@/auth/data";
+import { requireSpace, requireUser } from "@/auth/data";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { isUserOnboarded } from "@/features/setup/utils";
@@ -30,4 +31,14 @@ export default async function Layout({
       </SidebarInset>
     </SpaceSidebarProvider>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const space = await requireSpace();
+  return {
+    title: {
+      template: `%s | ${space.name} | Rallly`,
+      default: space.name,
+    },
+  };
 }
