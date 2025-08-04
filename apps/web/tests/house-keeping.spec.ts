@@ -69,7 +69,16 @@ test.describe("House-keeping API", () => {
       data: {
         name: "Pro User",
         email: "pro-user@example.com",
-        subscriptions: {
+      },
+    });
+    createdUserIds.push(proUser.id);
+
+    // Create a space with an active subscription
+    const proSpace = await prisma.space.create({
+      data: {
+        name: "Pro Space",
+        ownerId: proUser.id,
+        subscription: {
           create: {
             id: "sub_test_pro",
             priceId: "price_test",
@@ -81,11 +90,11 @@ test.describe("House-keeping API", () => {
             interval: "month",
             periodStart: new Date(),
             periodEnd: dayjs().add(30, "day").toDate(),
+            userId: proUser.id,
           },
         },
       },
     });
-    createdUserIds.push(proUser.id);
 
     // Create test polls
 
@@ -102,7 +111,7 @@ test.describe("House-keeping API", () => {
     });
     createdPollIds.push(oldPollRegularUser.id);
 
-    // 2. Old poll from pro user (should NOT be marked as deleted)
+    // 2. Old poll from pro user in pro space (should NOT be marked as deleted)
     const oldPollProUser = await prisma.poll.create({
       data: {
         id: "old-poll-pro-user",
@@ -110,6 +119,7 @@ test.describe("House-keeping API", () => {
         participantUrlId: "old-poll-pro-user-participant",
         adminUrlId: "old-poll-pro-user-admin",
         userId: proUser.id,
+        spaceId: proSpace.id,
         touchedAt: dayjs().subtract(35, "day").toDate(), // 35 days old
       },
     });
