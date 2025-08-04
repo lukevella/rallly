@@ -69,7 +69,7 @@ test.describe("House-keeping API", () => {
       data: {
         name: "Pro User",
         email: "pro-user@example.com",
-        subscription: {
+        subscriptions: {
           create: {
             id: "sub_test_pro",
             priceId: "price_test",

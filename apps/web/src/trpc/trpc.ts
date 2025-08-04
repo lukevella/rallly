@@ -4,11 +4,9 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { kv } from "@vercel/kv";
 import superjson from "superjson";
-
+import { getCurrentUserSpace } from "@/auth/data";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { isSelfHosted } from "@/utils/constants";
-import { getSubscriptionStatus } from "@/utils/subscription";
-
 import type { TRPCContext } from "./context";
 
 const t = initTRPC.context<TRPCContext>().create({
@@ -97,15 +95,15 @@ export const privateProcedure = t.procedure.use(async ({ ctx, next }) => {
   });
 });
 
-export const proProcedure = privateProcedure.use(async ({ ctx, next }) => {
+export const proProcedure = privateProcedure.use(async ({ next }) => {
   if (isSelfHosted) {
     // Self-hosted instances don't have paid subscriptions
     return next();
   }
 
-  const { active: isPro } = await getSubscriptionStatus(ctx.user.id);
+  const data = await getCurrentUserSpace();
 
-  if (!isPro) {
+  if (!data || data.space.tier !== "pro") {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message:

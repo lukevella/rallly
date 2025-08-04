@@ -1,9 +1,5 @@
 import type { Stripe } from "@rallly/billing";
-import { prisma } from "@rallly/database";
 import * as Sentry from "@sentry/nextjs";
-import { kv } from "@vercel/kv";
-
-import { getEmailClient } from "@/utils/emails";
 
 export async function onCheckoutSessionExpired(event: Stripe.Event) {
   const session = event.data.object as Stripe.Checkout.Session;
@@ -24,46 +20,5 @@ export async function onCheckoutSessionExpired(event: Stripe.Event) {
     return;
   }
 
-  const promoEmailKey = `promo_email_sent:${email}`;
-  // Track that a promotional email opportunity has been shown to this user
-  const hasReceivedPromo = await kv.get(promoEmailKey);
-
-  const user = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-    select: {
-      locale: true,
-      subscription: {
-        select: {
-          active: true,
-        },
-      },
-    },
-  });
-
-  const isPro = !!user?.subscription?.active;
-
-  // Avoid spamming people who abandon Checkout multiple times
-  if (user && !hasReceivedPromo && !isPro) {
-    console.info("Sending abandoned checkout email");
-    // Set the flag with a 30-day expiration (in seconds)
-    await kv.set(promoEmailKey, 1, { ex: 30 * 24 * 60 * 60, nx: true });
-    getEmailClient(user.locale ?? undefined).sendTemplate(
-      "AbandonedCheckoutEmail",
-      {
-        to: email,
-        from: {
-          name: "Luke from Rallly",
-          address: "luke@rallly.co",
-        },
-        props: {
-          name: session.customer_details?.name ?? undefined,
-          discount: 20,
-          couponCode: "GETPRO1Y20",
-          recoveryUrl,
-        },
-      },
-    );
-  }
+  // TODO (Luke Vella) [2025-08-04]: We may want to send the user an email to users who do not complete checkout
 }
