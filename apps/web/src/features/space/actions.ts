@@ -4,6 +4,7 @@ import { subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 import { updateSeatCount } from "@/features/billing/mutations";
 import { getMember } from "@/features/space/data";
@@ -13,6 +14,10 @@ import { setActiveSpace } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { authActionClient, spaceActionClient } from "@/lib/safe-action/server";
+import {
+  deleteImageFromS3,
+  getImageUploadUrl,
+} from "@/lib/storage/image-upload";
 import { getEmailClient } from "@/utils/emails";
 
 export const setActiveSpaceAction = authActionClient
@@ -421,6 +426,7 @@ export const updateSpaceAction = spaceActionClient
   .inputSchema(
     z.object({
       name: z.string().min(1).max(100),
+      image: z.string().optional(),
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
@@ -438,12 +444,122 @@ export const updateSpaceAction = spaceActionClient
       });
     }
 
+    const oldImage = ctx.space.image;
+
     await prisma.space.update({
       where: {
         id: ctx.space.id,
       },
       data: {
         name: parsedInput.name,
+        image: parsedInput.image,
       },
     });
+
+    // Delete old image from S3 if it exists and we're updating to a new image
+    if (oldImage && parsedInput.image && oldImage !== parsedInput.image) {
+      await deleteImageFromS3(oldImage);
+    }
+  });
+
+export const getSpaceImageUploadUrlAction = spaceActionClient
+  .metadata({
+    actionName: "space_get_image_upload_url",
+  })
+  .inputSchema(
+    z.object({
+      fileType: z.enum(["image/jpeg", "image/png"]),
+      fileSize: z.number(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    if (
+      ctx
+        .getMemberAbility()
+        .cannot(
+          "update",
+          subject("Space", { id: ctx.space.id, ownerId: ctx.space.ownerId }),
+        )
+    ) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "You do not have permission to update this space",
+      });
+    }
+
+    return await getImageUploadUrl({
+      keyPrefix: "spaces",
+      entityId: ctx.space.id,
+      fileType: parsedInput.fileType,
+      fileSize: parsedInput.fileSize,
+    });
+  });
+
+export const updateSpaceImageAction = spaceActionClient
+  .metadata({
+    actionName: "space_update_image",
+  })
+  .inputSchema(
+    z.object({
+      imageKey: z.string().max(255),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    if (
+      ctx
+        .getMemberAbility()
+        .cannot(
+          "update",
+          subject("Space", { id: ctx.space.id, ownerId: ctx.space.ownerId }),
+        )
+    ) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "You do not have permission to update this space",
+      });
+    }
+
+    const oldImageKey = ctx.space.image;
+
+    await prisma.space.update({
+      where: { id: ctx.space.id },
+      data: { image: parsedInput.imageKey },
+    });
+
+    // Delete old image from S3 if it exists
+    if (oldImageKey) {
+      waitUntil(deleteImageFromS3(oldImageKey));
+    }
+  });
+
+export const removeSpaceImageAction = spaceActionClient
+  .metadata({
+    actionName: "space_remove_image",
+  })
+  .action(async ({ ctx }) => {
+    if (
+      ctx
+        .getMemberAbility()
+        .cannot(
+          "update",
+          subject("Space", { id: ctx.space.id, ownerId: ctx.space.ownerId }),
+        )
+    ) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "You do not have permission to update this space",
+      });
+    }
+
+    const oldImageKey = ctx.space.image;
+
+    await prisma.space.update({
+      where: { id: ctx.space.id },
+      data: { image: null },
+    });
+
+    // Delete image from S3 if it exists
+    if (oldImageKey) {
+      await deleteImageFromS3(oldImageKey);
+    }
   });

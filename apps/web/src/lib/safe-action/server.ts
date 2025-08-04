@@ -69,7 +69,7 @@ export const actionClient = createSafeActionClient({
     z.object({
       actionName: z.string(),
     }),
-  handleServerError: async (error, { metadata }) => {
+  handleServerError: (error, { metadata }) => {
     Sentry.captureException(error, {
       tags: {
         errorHandler: "safe-action",
@@ -83,7 +83,7 @@ export const actionClient = createSafeActionClient({
       return error.code;
     }
 
-    return "INTERNAL_SERVER_ERROR";
+    return "INTERNAL_SERVER_ERROR" as const;
   },
 });
 

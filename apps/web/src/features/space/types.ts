@@ -6,4 +6,5 @@ export type SpaceDTO = {
   ownerId: string;
   tier: "hobby" | "pro";
   role: MemberRole;
+  image?: string;
 };

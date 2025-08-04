@@ -56,6 +56,7 @@ export function createSpaceDTO(space: {
   ownerId: string;
   name: string;
   role: DBSpaceMemberRole;
+  image?: string | null;
   subscription: {
     active: boolean;
   } | null;
@@ -66,6 +67,7 @@ export function createSpaceDTO(space: {
     ownerId: space.ownerId,
     tier: getSpaceTier(space),
     role: fromDBRole(space.role),
+    image: space.image ?? undefined,
   } satisfies SpaceDTO;
 }
 
@@ -74,8 +76,16 @@ export const loadSpaces = cache(async () => {
   const ability = defineAbilityFor(user);
   const spaces = await prisma.space.findMany({
     where: accessibleBy(ability).Space,
-    include: {
-      subscription: true,
+    select: {
+      id: true,
+      name: true,
+      ownerId: true,
+      image: true,
+      subscription: {
+        select: {
+          active: true,
+        },
+      },
       members: {
         where: {
           userId: user.id,
@@ -104,6 +114,7 @@ export const loadSpaces = cache(async () => {
         ownerId: space.ownerId,
         tier: space.subscription?.active ? "pro" : "hobby",
         role: fromDBRole(role),
+        image: space.image ?? undefined,
       } satisfies SpaceDTO;
     })
     .filter(Boolean) as SpaceDTO[];

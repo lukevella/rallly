@@ -1,6 +1,7 @@
 model Space {
   id        String   @id @default(uuid())
   name      String
+  image     String?
   ownerId   String   @map("owner_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

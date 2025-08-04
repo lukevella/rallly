@@ -42,7 +42,7 @@ export default async function MembersSettingsPage() {
                   <OptimizedAvatarImage
                     src={member.image ?? undefined}
                     name={member.name}
-                    size="md"
+                    size="lg"
                   />
                   <div>
                     <div className="flex items-center gap-x-2">

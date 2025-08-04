@@ -30,6 +30,7 @@ export function SpaceDropdown({
     id: string;
     name: string;
     tier: "hobby" | "pro";
+    image?: string;
   }[];
   activeSpaceId: string;
   children?: React.ReactNode;
@@ -64,7 +65,7 @@ export function SpaceDropdown({
                 value={space.id}
                 className="flex items-center gap-2"
               >
-                <SpaceIcon size="sm" name={space.name} />
+                <SpaceIcon size="sm" src={space.image} name={space.name} />
                 <span>{space.name}</span>
                 {space.tier === "pro" ? <ProBadge /> : null}
               </DropdownMenuRadioItem>

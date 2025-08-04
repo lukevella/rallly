@@ -1,9 +1,11 @@
-type AppErrorCode =
+export type AppErrorCode =
   | "UNAUTHORIZED"
   | "NOT_FOUND"
   | "FORBIDDEN"
   | "INTERNAL_SERVER_ERROR"
   | "PAYMENT_REQUIRED"
+  | "PAYLOAD_TOO_LARGE"
+  | "SERVICE_UNAVAILABLE"
   | "TOO_MANY_REQUESTS";
 
 export class AppError extends Error {

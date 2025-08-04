@@ -3,6 +3,7 @@ import { toast } from "@rallly/ui/sonner";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { useTranslation } from "@/i18n/client";
+import type { AppErrorCode } from "@/lib/errors";
 
 export const useSafeAction: typeof useAction = (action, options) => {
   const { t } = useTranslation();
@@ -17,7 +18,7 @@ export const useSafeAction: typeof useAction = (action, options) => {
       if (error.serverError) {
         let translatedDescription = "An unexpected error occurred";
 
-        switch (error.serverError) {
+        switch (error.serverError as AppErrorCode) {
           case "UNAUTHORIZED":
             translatedDescription = t("actionErrorUnauthorized", {
               defaultValue: "You are not authorized to perform this action",
@@ -46,6 +47,17 @@ export const useSafeAction: typeof useAction = (action, options) => {
           case "PAYMENT_REQUIRED":
             translatedDescription = t("actionErrorPaymentRequired", {
               defaultValue: "You need to upgrade to perform this action",
+            });
+            break;
+          case "SERVICE_UNAVAILABLE":
+            translatedDescription = t("actionErrorServiceUnavailable", {
+              defaultValue:
+                "The service required to perform this action is not available",
+            });
+            break;
+          case "PAYLOAD_TOO_LARGE":
+            translatedDescription = t("actionErrorPayloadTooLarge", {
+              defaultValue: "The file you uploaded is too large. Please try a smaller file.",
             });
             break;
         }
