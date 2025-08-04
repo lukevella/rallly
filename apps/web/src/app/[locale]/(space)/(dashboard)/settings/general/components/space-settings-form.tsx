@@ -105,9 +105,6 @@ export function SpaceSettingsForm({ space }: SpaceSettingsFormProps) {
                 keyPrefix="spaces"
                 onUploadSuccess={handleImageUploadSuccess}
                 onRemoveSuccess={handleImageRemoveSuccess}
-                removeImage={async () => {
-                  await removeImage.executeAsync();
-                }}
                 hasCurrentImage={!!space.image}
               />
             </div>
