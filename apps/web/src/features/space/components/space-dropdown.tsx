@@ -13,7 +13,6 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { CirclePlusIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
-import { ProBadge } from "@/components/pro-badge";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/components/trans";
 import { setActiveSpaceAction } from "@/features/space/actions";
@@ -67,7 +66,6 @@ export function SpaceDropdown({
               >
                 <SpaceIcon size="sm" src={space.image} name={space.name} />
                 <span>{space.name}</span>
-                {space.tier === "pro" ? <ProBadge /> : null}
               </DropdownMenuRadioItem>
             ))}
           </DropdownMenuRadioGroup>

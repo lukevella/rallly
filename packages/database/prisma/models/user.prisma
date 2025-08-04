@@ -56,9 +56,9 @@ model User {
   accounts           Account[]
   participants       Participant[]
   paymentMethods     PaymentMethod[]
-  subscription       Subscription?       @relation("UserToSubscription")
   spaceMemberInvites SpaceMemberInvite[]
 
+  subscriptions      Subscription[]      @relation("UserToSubscription")
   spaces   Space[]       @relation("UserSpaces")
   memberOf SpaceMember[]
 

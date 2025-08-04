@@ -26,12 +26,19 @@ export async function POST() {
           startTime: { gt: new Date() },
         },
       },
-      // User is either null or doesn't have an active subscription
+      // We don't delete polls that belong to a space with an active subscription
       OR: [
-        { userId: null },
+        { spaceId: null },
         {
-          user: {
-            OR: [{ subscription: null }, { subscription: { active: false } }],
+          space: {
+            subscription: null,
+          },
+        },
+        {
+          space: {
+            subscription: {
+              active: false,
+            },
           },
         },
       ],
