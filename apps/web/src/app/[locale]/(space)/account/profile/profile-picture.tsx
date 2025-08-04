@@ -47,9 +47,6 @@ function ProfilePictureUpload() {
         keyPrefix="avatars"
         onUploadSuccess={handleUploadSuccess}
         onRemoveSuccess={handleRemoveSuccess}
-        removeImage={async () => {
-          await removeAvatar.mutateAsync();
-        }}
         hasCurrentImage={!!user.image}
       />
     </ImageUpload>

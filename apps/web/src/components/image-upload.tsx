@@ -3,8 +3,7 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
-import type React from "react";
-import { useState } from "react";
+import React from "react";
 import { z } from "zod";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
@@ -16,9 +15,8 @@ const allowedMimeTypes = z.enum(["image/jpeg", "image/png"]);
 
 export interface ImageUploadControlProps {
   keyPrefix: "avatars" | "spaces";
-  onUploadSuccess: (imageKey: string) => void;
-  onRemoveSuccess: () => void;
-  removeImage: () => Promise<void>;
+  onUploadSuccess: (imageKey: string) => Promise<void> | void;
+  onRemoveSuccess: () => Promise<void> | void;
   hasCurrentImage?: boolean;
 }
 
@@ -35,12 +33,11 @@ export function ImageUploadControl({
   keyPrefix,
   onUploadSuccess,
   onRemoveSuccess,
-  removeImage,
   hasCurrentImage = false,
 }: ImageUploadControlProps) {
   const { t } = useTranslation();
-  const [isUploading, setIsUploading] = useState(false);
-  const [isRemoving, setIsRemoving] = useState(false);
+  const [isRemoving, startRemoving] = React.useTransition();
+  const [isUploading, startUploading] = React.useTransition();
   const getUploadUrl = useSafeAction(getImageUploadUrlAction);
 
   const handleFileChange = async (
@@ -82,52 +79,47 @@ export function ImageUploadControl({
       return;
     }
 
-    setIsUploading(true);
-    try {
-      const result = await getUploadUrl.executeAsync({
-        keyPrefix,
-        fileType,
-        fileSize: file.size,
-      });
+    startUploading(async () => {
+      try {
+        const result = await getUploadUrl.executeAsync({
+          keyPrefix,
+          fileType,
+          fileSize: file.size,
+        });
 
-      if (!result.data) {
-        throw new Error("Failed to get upload URL");
-      }
+        if (!result.data) {
+          throw new Error("Failed to get upload URL");
+        }
 
-      const { url, fields } = result.data;
+        const { url, fields } = result.data;
 
-      await uploadImage({
-        file,
-        url,
-        fileType,
-      });
+        await uploadImage({
+          file,
+          url,
+          fileType,
+        });
 
-      onUploadSuccess(fields.key);
-    } catch {
-      toast.error(
-        t("errorUploadPicture", {
-          defaultValue: "Failed to upload",
-        }),
-        {
-          description: t("errorUploadPictureDescription", {
-            defaultValue:
-              "There was an issue uploading your picture. Please try again later.",
+        onUploadSuccess(fields.key);
+      } catch {
+        toast.error(
+          t("errorUploadPicture", {
+            defaultValue: "Failed to upload",
           }),
-        },
-      );
-    } finally {
-      setIsUploading(false);
-    }
+          {
+            description: t("errorUploadPictureDescription", {
+              defaultValue:
+                "There was an issue uploading your picture. Please try again later.",
+            }),
+          },
+        );
+      }
+    });
   };
 
   const handleRemove = async () => {
-    setIsRemoving(true);
-    try {
-      await removeImage();
-      onRemoveSuccess();
-    } finally {
-      setIsRemoving(false);
-    }
+    startRemoving(async () => {
+      await onRemoveSuccess();
+    });
   };
 
   return (
