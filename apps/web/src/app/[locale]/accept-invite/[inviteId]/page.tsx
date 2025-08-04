@@ -32,6 +32,7 @@ export default async function JoinPage({
       space: {
         select: {
           name: true,
+          image: true,
         },
       },
     },
@@ -48,7 +49,11 @@ export default async function JoinPage({
       <FullLogoLink />
       <div className="flex w-full max-w-sm flex-col rounded-xl border bg-white p-12 text-center shadow-sm">
         <div className="mx-auto mb-4">
-          <SpaceIcon name={invite.space.name} size="lg" />
+          <SpaceIcon
+            src={invite.space.image ?? undefined}
+            name={invite.space.name}
+            size="lg"
+          />
         </div>
         <h1 className="font-bold text-base">
           <Trans
