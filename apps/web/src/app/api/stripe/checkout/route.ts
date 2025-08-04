@@ -5,7 +5,6 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSpace, requireUser } from "@/auth/data";
-import { getSpaceSubscription } from "@/features/billing/data";
 import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
@@ -70,10 +69,8 @@ export async function POST(request: NextRequest) {
     customerId = customer.id;
   }
 
-  // Check if space already has an active subscription
-  const existingSubscription = await getSpaceSubscription(spaceId);
-  if (existingSubscription?.tier === "pro") {
-    // Space already has an active subscription. Take them to customer portal
+  if (space.tier === "pro") {
+    // User already has an active subscription. Take them to customer portal
     return NextResponse.redirect(
       new URL("/api/stripe/portal", request.url),
       303,
