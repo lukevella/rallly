@@ -17,7 +17,7 @@ export const getImageUploadUrlAction = authActionClient
       fileSize: z.number(),
     }),
   )
-  .use(({ next }) => {
+  .use(async ({ next }) => {
     if (!isStorageEnabled) {
       throw new AppError({
         code: "SERVICE_UNAVAILABLE",
