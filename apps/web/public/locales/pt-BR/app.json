@@ -426,5 +426,19 @@
   "memberRoleDescription": "Pode criar e gerenciar todas as ferramentas de agendamento neste espaço",
   "adminRoleDescription": "Acesso completo ao membro, além de gerenciamento de espaço e permissões de membro",
   "rolePlaceholder": "Selecionr atribuição...",
-  "invalidEmailAddress": "Por favor, insira um endereço de e-mail válido"
+  "invalidEmailAddress": "Por favor, insira um endereço de e-mail válido",
+  "billingAcknowledgmentRequired": "Você precisa reconhecer o impacto da cobrança",
+  "billingAcknowledgment": "Entendo que adicionar membros afetará o preço da minha assinatura",
+  "makeAdmin": "Tornar administrador",
+  "makeMember": "Tornar membro",
+  "changingRole": "Alterando atribuição...",
+  "roleChangedSuccess": "Atribuição alterada com sucesso",
+  "roleChangedError": "Erro ao mudar atribuição",
+  "cancelInvite": "Cancelar convite",
+  "cancelInviteConfirmation": "Você tem certeza que deseja cancelar o convite para {email}?",
+  "cancelingInvite": "Cancelando convite...",
+  "inviteCanceledSuccess": "Convite cancelado com sucesso",
+  "inviteCanceledError": "Erro ao cancelar convite",
+  "pendingInvites": "Convites Pendentes",
+  "memberInvitedBy": "Convidado por {inviterName}"
 }
