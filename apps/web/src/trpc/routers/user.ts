@@ -1,13 +1,11 @@
-import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
-import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
-
-import { env } from "@/env";
-import { getS3Client } from "@/lib/storage/s3";
+import {
+  deleteImageFromS3,
+  getImageUploadUrl,
+} from "@/lib/storage/image-upload";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 import {
@@ -16,11 +14,6 @@ import {
   publicProcedure,
   router,
 } from "../trpc";
-
-const mimeToExtension = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-} as const;
 
 export const user = router({
   getByEmail: publicProcedure
@@ -157,41 +150,12 @@ export const user = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const s3Client = getS3Client();
-
-      if (!s3Client) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "S3 storage has not been configured",
-        });
-      }
-
-      const userId = ctx.user.id;
-      const key = `avatars/${userId}-${Date.now()}.${mimeToExtension[input.fileType]}`;
-
-      if (input.fileSize > 2 * 1024 * 1024) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "File size too large",
-        });
-      }
-
-      const command = new PutObjectCommand({
-        Bucket: env.S3_BUCKET_NAME,
-        Key: key,
-        ContentType: input.fileType,
-        ContentLength: input.fileSize,
+      return await getImageUploadUrl({
+        keyPrefix: "avatars",
+        entityId: ctx.user.id,
+        fileType: input.fileType,
+        fileSize: input.fileSize,
       });
-
-      const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-
-      return {
-        success: true,
-        url,
-        fields: {
-          key,
-        },
-      } as const;
     }),
   updateAvatar: privateProcedure
     .input(z.object({ imageKey: z.string().max(255) }))
@@ -204,23 +168,16 @@ export const user = router({
         data: { image: input.imageKey },
       });
 
-      const s3Client = getS3Client();
-
-      if (oldImageKey && s3Client) {
-        waitUntil(
-          s3Client?.send(
-            new DeleteObjectCommand({
-              Bucket: env.S3_BUCKET_NAME,
-              Key: oldImageKey,
-            }),
-          ),
-        );
+      // Delete old image from S3 if it exists
+      if (oldImageKey) {
+        await deleteImageFromS3(oldImageKey);
       }
 
       return { success: true };
     }),
   removeAvatar: privateProcedure.mutation(async ({ ctx }) => {
     const userId = ctx.user.id;
+    const oldImageKey = ctx.user.image;
 
     await prisma.user.update({
       where: { id: userId },
@@ -228,24 +185,12 @@ export const user = router({
     });
 
     // Delete the avatar from storage if it's an internal avatar
-    const isInternalAvatar =
-      ctx.user.image && !ctx.user.image.startsWith("https://");
+    const isInternalAvatar = oldImageKey && !oldImageKey.startsWith("https://");
 
     if (isInternalAvatar) {
-      const s3Client = getS3Client();
-
-      if (s3Client) {
-        waitUntil(
-          s3Client.send(
-            new DeleteObjectCommand({
-              Bucket: env.S3_BUCKET_NAME,
-              Key: ctx.user.image,
-            }),
-          ),
-        );
-      }
-
-      return { success: true };
+      await deleteImageFromS3(oldImageKey);
     }
+
+    return { success: true };
   }),
 });

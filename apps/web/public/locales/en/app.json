@@ -204,9 +204,6 @@
   "timeZoneChangeDetectorMessage": "Your timezone has changed to <b>{currentTimeZone}</b>. Do you want to update your preferences?",
   "yesUpdateTimezone": "Yes, update my timezone",
   "noKeepCurrentTimezone": "No, keep the current timezone",
-  "removeAvatar": "Remove",
-  "uploadProfilePicture": "Upload",
-  "profilePictureDescription": "Up to 2MB, JPG or PNG",
   "invalidFileType": "Invalid file type",
   "invalidFileTypeDescription": "Please upload a JPG or PNG file.",
   "fileTooLarge": "File too large",
@@ -452,5 +449,9 @@
   "membersDescription": "Members have access to your space",
   "pendingInvitesDescription": "Invite other users to share your space.",
   "membersSettingsDescription": "Manage space members, invite new users, and control access permissions.",
-  "spaceNamePlaceholder": "My Team"
+  "spaceNamePlaceholder": "My Team",
+  "uploadImage": "Upload",
+  "removeImage": "Remove",
+  "imageUploadDescription": "Up to 2MB, JPG or PNG",
+  "image": "Image"
 }

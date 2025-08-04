@@ -141,5 +141,6 @@ export const requireSpace = cache(async () => {
     name: spaceMember.space.name,
     subscription: spaceMember.space.subscription,
     role: spaceMember.role,
+    image: spaceMember.space.image,
   });
 });

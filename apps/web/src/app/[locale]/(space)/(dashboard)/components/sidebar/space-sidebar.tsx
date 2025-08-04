@@ -48,7 +48,7 @@ export async function SpaceSidebar({
         {isSpacesEnabled ? (
           <SpaceDropdown spaces={spaces} activeSpaceId={activeSpace.id}>
             <Button className="flex h-auto w-full p-2" variant="ghost">
-              <SpaceIcon name={activeSpace.name} />
+              <SpaceIcon src={activeSpace.image} name={activeSpace.name} />
               <div className="flex-1 px-0.5 text-left">
                 <div className="font-medium text-sm">{activeSpace.name}</div>
                 <div className="text-muted-foreground text-xs">
