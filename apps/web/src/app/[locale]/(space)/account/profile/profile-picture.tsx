@@ -40,7 +40,7 @@ function ProfilePictureUpload() {
         <OptimizedAvatarImage
           src={user.image ?? undefined}
           name={user.name}
-          size="lg"
+          size="xl"
         />
       </ImageUploadPreview>
       <ImageUploadControl
