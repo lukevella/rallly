@@ -76,7 +76,7 @@ function PollsEmptyState() {
         />
       </EmptyStateDescription>
       <EmptyStateFooter>
-        <Button variant="primary" asChild>
+        <Button asChild>
           <Link href="/new">
             <Trans i18nKey="createPoll" defaults="Create Poll" />
           </Link>

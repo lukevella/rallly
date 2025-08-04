@@ -34,7 +34,7 @@ export class NewPollPage {
     await page.click("text=/^10$/");
     await page.click("text=/^15$/");
 
-    await page.click('text="Create poll"');
+    await page.click('text="Create Poll"');
 
     return new PollPage(page);
   }
