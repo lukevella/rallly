@@ -21,7 +21,7 @@ export function NavUser({
       data-state={pathname.startsWith("/account") ? "active" : "inactive"}
       className="group relative flex w-full items-center gap-3 rounded-md p-3 text-sm hover:bg-gray-200 data-[state=active]:bg-gray-200"
     >
-      <OptimizedAvatarImage size="md" src={image} name={name} />
+      <OptimizedAvatarImage size="lg" src={image} name={name} />
       <div className="flex-1 truncate text-left">
         <div className="font-medium">{name}</div>
         <div className="mt-0.5 truncate font-normal text-muted-foreground text-xs">
