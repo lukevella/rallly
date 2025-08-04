@@ -57,7 +57,8 @@ export const useSafeAction: typeof useAction = (action, options) => {
             break;
           case "PAYLOAD_TOO_LARGE":
             translatedDescription = t("actionErrorPayloadTooLarge", {
-              defaultValue: "The file you uploaded is too large. Please try a smaller file.",
+              defaultValue:
+                "The file you uploaded is too large. Please try a smaller file.",
             });
             break;
         }
