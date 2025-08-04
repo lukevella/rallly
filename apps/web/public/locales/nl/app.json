@@ -193,6 +193,7 @@
   "upcoming": "Binnenkort",
   "past": "Afgelopen",
   "copyLink": "Link kopiëren",
+  "createPoll": "Poll aanmaken",
   "addToCalendar": "Toevoegen aan Agenda",
   "microsoft365": "Microsoft 365",
   "outlook": "Outlook",
@@ -439,5 +440,12 @@
   "inviteCanceledSuccess": "Uitnodiging is geannuleerd",
   "inviteCanceledError": "Uitnodiging annuleren is mislukt",
   "pendingInvites": "Openstaande uitnodigingen",
-  "memberInvitedBy": "Uitgenodigd door {inviterName}"
+  "memberInvitedBy": "Uitgenodigd door {inviterName}",
+  "updatingSpace": "Ruimte bijwerken...",
+  "spaceUpdatedSuccess": "Ruimte bijgewerkt",
+  "spaceUpdatedError": "Bijwerken van ruimte is mislukt",
+  "generalSettings": "Algemene instellingen",
+  "spaceInformation": "Informatie ruimte",
+  "spaceInformationDescription": "Wijzig de naam en instellingen van de ruimte.",
+  "general": "Algemeen"
 }
