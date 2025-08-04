@@ -447,5 +447,10 @@
   "generalSettings": "Algemene instellingen",
   "spaceInformation": "Informatie ruimte",
   "spaceInformationDescription": "Wijzig de naam en instellingen van de ruimte.",
-  "general": "Algemeen"
+  "general": "Algemeen",
+  "generalSettingsDescription": "Beheer de instellingen van de ruimte, zoals naam, beschrijving en andere voorkeuren.",
+  "membersDescription": "Deelnemers hebben toegang tot deze ruimte",
+  "pendingInvitesDescription": "Nodig andere gebruikers uit om jouw ruimte te delen.",
+  "membersSettingsDescription": "Beheer deelnemers, nodig nieuwe gebruikers uit en controleer toegangsrechten.",
+  "spaceNamePlaceholder": "Mijn Team"
 }
