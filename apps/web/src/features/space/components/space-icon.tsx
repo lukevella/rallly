@@ -14,11 +14,6 @@ type SpaceIconProps = {
 export function SpaceIcon({ name, src, className, size }: SpaceIconProps) {
   return (
     <Avatar className={cn(className)} size={size}>
-      {!src ? (
-        <AvatarFallback seed={name}>
-          {name.slice(0, 2).toUpperCase()}
-        </AvatarFallback>
-      ) : null}
       {src ? (
         <Image
           src={`/api/storage/${src}`}
@@ -27,7 +22,11 @@ export function SpaceIcon({ name, src, className, size }: SpaceIconProps) {
           alt={name}
           style={{ objectFit: "cover" }}
         />
-      ) : null}
+      ) : (
+        <AvatarFallback seed={name}>
+          {name.slice(0, 2).toUpperCase()}
+        </AvatarFallback>
+      )}
     </Avatar>
   );
 }
