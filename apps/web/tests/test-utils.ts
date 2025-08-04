@@ -1,6 +1,7 @@
 import type { Page } from "@playwright/test";
 import type { UserRole } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import dayjs from "dayjs";
 import { LoginPage } from "./login-page";
 
 export async function createUserInDb({
@@ -40,6 +41,85 @@ export async function createUserInDb({
     });
 
     return user;
+  });
+}
+
+export async function createSpaceWithSubscription({
+  name,
+  ownerId,
+  subscriptionId = "sub_test",
+}: {
+  name: string;
+  ownerId: string;
+  subscriptionId?: string;
+}) {
+  return await prisma.space.create({
+    data: {
+      name,
+      ownerId,
+      subscription: {
+        create: {
+          id: subscriptionId,
+          priceId: "price_test",
+          amount: 1000,
+          status: "active",
+          active: true,
+          subscriptionItemId: "si_test",
+          currency: "USD",
+          interval: "month",
+          periodStart: new Date(),
+          periodEnd: dayjs().add(30, "day").toDate(),
+          userId: ownerId,
+        },
+      },
+    },
+  });
+}
+
+export async function createTestPoll({
+  id,
+  title,
+  userId,
+  spaceId,
+  touchedAt,
+  hasRecentViews = false,
+  hasFutureOptions = false,
+}: {
+  id: string;
+  title: string;
+  userId?: string;
+  spaceId?: string;
+  touchedAt: Date;
+  hasRecentViews?: boolean;
+  hasFutureOptions?: boolean;
+}) {
+  const pollData = {
+    id,
+    title,
+    participantUrlId: `${id}-participant`,
+    adminUrlId: `${id}-admin`,
+    userId,
+    spaceId,
+    touchedAt,
+    ...(hasRecentViews && {
+      views: {
+        create: {
+          viewedAt: dayjs().subtract(15, "day").toDate(),
+        },
+      },
+    }),
+    ...(hasFutureOptions && {
+      options: {
+        create: {
+          startTime: dayjs().add(10, "day").toDate(),
+          duration: 60,
+        },
+      },
+    }),
+  };
+
+  return await prisma.poll.create({
+    data: pollData,
   });
 }
 

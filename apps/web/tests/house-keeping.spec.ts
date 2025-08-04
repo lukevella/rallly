@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
+import { createUserInDb, createSpaceWithSubscription, createTestPoll } from "./test-utils";
 
 /**
  * This test suite tests the house-keeping API endpoints:
@@ -52,138 +53,79 @@ test.describe("House-keeping API", () => {
     }
   }
 
-  test("should mark inactive polls as deleted for users without active subscriptions", async ({
+  test("should mark inactive polls as deleted except for polls in spaces with active subscriptions", async ({
     request,
     baseURL,
   }) => {
     // Create test users
-    const regularUser = await prisma.user.create({
-      data: {
-        name: "Regular User",
-        email: "regular-user@example.com",
-      },
+    const freeUser = await createUserInDb({
+      name: "Free User",
+      email: "free-user@example.com",
     });
-    createdUserIds.push(regularUser.id);
+    createdUserIds.push(freeUser.id);
 
-    const proUser = await prisma.user.create({
-      data: {
-        name: "Pro User",
-        email: "pro-user@example.com",
-      },
+    const spaceOwner = await createUserInDb({
+      name: "Space Owner",
+      email: "space-owner@example.com",
     });
-    createdUserIds.push(proUser.id);
+    createdUserIds.push(spaceOwner.id);
 
     // Create a space with an active subscription
-    const proSpace = await prisma.space.create({
-      data: {
-        name: "Pro Space",
-        ownerId: proUser.id,
-        subscription: {
-          create: {
-            id: "sub_test_pro",
-            priceId: "price_test",
-            amount: 1000,
-            status: "active",
-            active: true,
-            subscriptionItemId: "si_test_pro",
-            currency: "USD",
-            interval: "month",
-            periodStart: new Date(),
-            periodEnd: dayjs().add(30, "day").toDate(),
-            userId: proUser.id,
-          },
-        },
-      },
+    const paidSpace = await createSpaceWithSubscription({
+      name: "Paid Space",
+      ownerId: spaceOwner.id,
+      subscriptionId: "sub_test_paid",
     });
 
-    // Create test polls
-
-    // 1. Old poll from regular user (should be marked as deleted)
-    const oldPollRegularUser = await prisma.poll.create({
-      data: {
-        id: "old-poll-regular-user",
-        title: "Old Poll Regular User",
-        participantUrlId: "old-poll-regular-user-participant",
-        adminUrlId: "old-poll-regular-user-admin",
-        userId: regularUser.id,
-        touchedAt: dayjs().subtract(35, "day").toDate(), // 35 days old
-      },
+    // Create test polls - These should be marked as deleted (free space, old, no future dates)
+    const oldPollFromFreeUser = await createTestPoll({
+      id: "old-poll-free-user",
+      title: "Old Poll from Free User",
+      userId: freeUser.id,
+      touchedAt: dayjs().subtract(35, "day").toDate(),
     });
-    createdPollIds.push(oldPollRegularUser.id);
+    createdPollIds.push(oldPollFromFreeUser.id);
 
-    // 2. Old poll from pro user in pro space (should NOT be marked as deleted)
-    const oldPollProUser = await prisma.poll.create({
-      data: {
-        id: "old-poll-pro-user",
-        title: "Old Poll Pro User",
-        participantUrlId: "old-poll-pro-user-participant",
-        adminUrlId: "old-poll-pro-user-admin",
-        userId: proUser.id,
-        spaceId: proSpace.id,
-        touchedAt: dayjs().subtract(35, "day").toDate(), // 35 days old
-      },
-    });
-    createdPollIds.push(oldPollProUser.id);
-
-    // 3. Recent poll from regular user (should NOT be marked as deleted)
-    const recentPollRegularUser = await prisma.poll.create({
-      data: {
-        id: "recent-poll-regular-user",
-        title: "Recent Poll Regular User",
-        participantUrlId: "recent-poll-regular-user-participant",
-        adminUrlId: "recent-poll-regular-user-admin",
-        userId: regularUser.id,
-        touchedAt: dayjs().subtract(15, "day").toDate(), // 15 days old
-      },
-    });
-    createdPollIds.push(recentPollRegularUser.id);
-
-    // 4. Old poll with future options from regular user (should NOT be marked as deleted)
-    const oldPollWithFutureOptions = await prisma.poll.create({
-      data: {
-        id: "old-poll-with-future-options",
-        title: "Old Poll With Future Options",
-        participantUrlId: "old-poll-with-future-options-participant",
-        adminUrlId: "old-poll-with-future-options-admin",
-        userId: regularUser.id,
-        touchedAt: dayjs().subtract(35, "day").toDate(), // 35 days old
-        options: {
-          create: {
-            startTime: dayjs().add(10, "day").toDate(), // Future date
-            duration: 60,
-          },
-        },
-      },
-    });
-    createdPollIds.push(oldPollWithFutureOptions.id);
-
-    // 5. Old poll without a user (should be marked as deleted)
-    const oldPollNoUser = await prisma.poll.create({
-      data: {
-        id: "old-poll-no-user",
-        title: "Old Poll No User",
-        participantUrlId: "old-poll-no-user-participant",
-        adminUrlId: "old-poll-no-user-admin",
-        touchedAt: dayjs().subtract(35, "day").toDate(), // 35 days old
-      },
+    const oldPollNoUser = await createTestPoll({
+      id: "old-poll-no-user",
+      title: "Old Poll with No User",
+      touchedAt: dayjs().subtract(35, "day").toDate(),
     });
     createdPollIds.push(oldPollNoUser.id);
 
-    // 6. Old poll with recent views from regular user (should NOT be marked as deleted)
-    const oldPollWithRecentViews = await prisma.poll.create({
-      data: {
-        id: "old-poll-with-recent-views",
-        title: "Old Poll With Recent Views",
-        participantUrlId: "old-poll-with-recent-views-participant",
-        adminUrlId: "old-poll-with-recent-views-admin",
-        userId: regularUser.id,
-        touchedAt: dayjs().subtract(35, "day").toDate(), // 35 days old
-        views: {
-          create: {
-            viewedAt: dayjs().subtract(15, "day").toDate(), // Viewed 15 days ago
-          },
-        },
-      },
+    // These should NOT be marked as deleted
+    const oldPollInPaidSpace = await createTestPoll({
+      id: "old-poll-paid-space",
+      title: "Old Poll in Paid Space",
+      userId: spaceOwner.id,
+      spaceId: paidSpace.id,
+      touchedAt: dayjs().subtract(35, "day").toDate(),
+    });
+    createdPollIds.push(oldPollInPaidSpace.id);
+
+    const recentPollFromFreeUser = await createTestPoll({
+      id: "recent-poll-free-user",
+      title: "Recent Poll from Free User",
+      userId: freeUser.id,
+      touchedAt: dayjs().subtract(15, "day").toDate(),
+    });
+    createdPollIds.push(recentPollFromFreeUser.id);
+
+    const oldPollWithFutureOptions = await createTestPoll({
+      id: "old-poll-future-options",
+      title: "Old Poll with Future Options",
+      userId: freeUser.id,
+      touchedAt: dayjs().subtract(35, "day").toDate(),
+      hasFutureOptions: true,
+    });
+    createdPollIds.push(oldPollWithFutureOptions.id);
+
+    const oldPollWithRecentViews = await createTestPoll({
+      id: "old-poll-recent-views",
+      title: "Old Poll with Recent Views",
+      userId: freeUser.id,
+      touchedAt: dayjs().subtract(35, "day").toDate(),
+      hasRecentViews: true,
     });
     createdPollIds.push(oldPollWithRecentViews.id);
 
@@ -202,46 +144,47 @@ test.describe("House-keeping API", () => {
     expect(responseData.success).toBeTruthy();
 
     // We expect 2 polls to be marked as deleted:
-    // - Old poll from regular user
+    // - Old poll from free user (not in a paid space)
     // - Old poll without a user
     expect(responseData.summary.markedDeleted).toBe(2);
 
-    // Verify the state of each poll
-    const updatedOldPollRegularUser = await prisma.poll.findUnique({
-      where: { id: oldPollRegularUser.id },
+    // Verify polls that should be marked as deleted
+    const deletedPollFromFreeUser = await prisma.poll.findUnique({
+      where: { id: oldPollFromFreeUser.id },
     });
-    expect(updatedOldPollRegularUser?.deleted).toBe(true);
-    expect(updatedOldPollRegularUser?.deletedAt).not.toBeNull();
+    expect(deletedPollFromFreeUser?.deleted).toBe(true);
+    expect(deletedPollFromFreeUser?.deletedAt).not.toBeNull();
 
-    const updatedOldPollProUser = await prisma.poll.findUnique({
-      where: { id: oldPollProUser.id },
-    });
-    expect(updatedOldPollProUser?.deleted).toBe(false);
-    expect(updatedOldPollProUser?.deletedAt).toBeNull();
-
-    const updatedRecentPollRegularUser = await prisma.poll.findUnique({
-      where: { id: recentPollRegularUser.id },
-    });
-    expect(updatedRecentPollRegularUser?.deleted).toBe(false);
-    expect(updatedRecentPollRegularUser?.deletedAt).toBeNull();
-
-    const updatedOldPollWithFutureOptions = await prisma.poll.findUnique({
-      where: { id: oldPollWithFutureOptions.id },
-    });
-    expect(updatedOldPollWithFutureOptions?.deleted).toBe(false);
-    expect(updatedOldPollWithFutureOptions?.deletedAt).toBeNull();
-
-    const updatedOldPollNoUser = await prisma.poll.findUnique({
+    const deletedPollNoUser = await prisma.poll.findUnique({
       where: { id: oldPollNoUser.id },
     });
-    expect(updatedOldPollNoUser?.deleted).toBe(true);
-    expect(updatedOldPollNoUser?.deletedAt).not.toBeNull();
+    expect(deletedPollNoUser?.deleted).toBe(true);
+    expect(deletedPollNoUser?.deletedAt).not.toBeNull();
 
-    const updatedOldPollWithRecentViews = await prisma.poll.findUnique({
+    // Verify polls that should NOT be marked as deleted
+    const protectedPollInPaidSpace = await prisma.poll.findUnique({
+      where: { id: oldPollInPaidSpace.id },
+    });
+    expect(protectedPollInPaidSpace?.deleted).toBe(false);
+    expect(protectedPollInPaidSpace?.deletedAt).toBeNull();
+
+    const protectedRecentPoll = await prisma.poll.findUnique({
+      where: { id: recentPollFromFreeUser.id },
+    });
+    expect(protectedRecentPoll?.deleted).toBe(false);
+    expect(protectedRecentPoll?.deletedAt).toBeNull();
+
+    const protectedPollWithFutureOptions = await prisma.poll.findUnique({
+      where: { id: oldPollWithFutureOptions.id },
+    });
+    expect(protectedPollWithFutureOptions?.deleted).toBe(false);
+    expect(protectedPollWithFutureOptions?.deletedAt).toBeNull();
+
+    const protectedPollWithRecentViews = await prisma.poll.findUnique({
       where: { id: oldPollWithRecentViews.id },
     });
-    expect(updatedOldPollWithRecentViews?.deleted).toBe(false);
-    expect(updatedOldPollWithRecentViews?.deletedAt).toBeNull();
+    expect(protectedPollWithRecentViews?.deleted).toBe(false);
+    expect(protectedPollWithRecentViews?.deletedAt).toBeNull();
   });
 
   test("should permanently remove polls that have been marked as deleted for more than 7 days", async ({
