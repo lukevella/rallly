@@ -33,7 +33,7 @@ export async function canUserManagePoll(
     });
 
     if (space) {
-      // user is not a member of this space
+      // user a member of this space
       return true;
     }
   }
