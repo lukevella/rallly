@@ -260,7 +260,7 @@
   "subscriptionPriceMonthly": "{price} pro Monat",
   "subscriptionPriceYearly": "{price} pro Jahr",
   "billingSubscriptionTitle": "Abonnement",
-  "billingSubscriptionDescription": "Anzeigen und Verwalten deines aktuellen Abonnementplans",
+  "billingSubscriptionDescription": "Verwalte deinen aktuellen Abonnementplan",
   "billingSubscriptionNotActive": "Du hast derzeit keinen Plan abonniert.",
   "billingSubscriptionUpgradeToProDescription": "Upgrade auf Pro, um Zugriff auf alle Funktionen und Vorteile zu erhalten.",
   "billingSubscriptionUpgradeToPro": "Auf Pro upgraden",
@@ -309,7 +309,7 @@
   "lastWeek": "Letzte Woche",
   "unconfirmed": "Unbestätigt",
   "upcomingEventsEmptyStateTitle": "Keine bevorstehenden Termine",
-  "upcomingEventsEmptyStateDescription": "Nachdem Du Termine geplant hast, werden sie hier angezeigt.",
+  "upcomingEventsEmptyStateDescription": "Nachdem du Termine geplant hast, werden sie hier angezeigt.",
   "pastEventsEmptyStateTitle": "Keine vergangenen Termine",
   "pastEventsEmptyStateDescription": "Vergangene Termine werden hier angezeigt.",
   "unconfirmedEventsEmptyStateTitle": "Keine unbestätigten Termine",
@@ -453,5 +453,11 @@
   "uploadImage": "Hochladen",
   "removeImage": "Entfernen",
   "imageUploadDescription": "Bis zu 2 MB, JPG oder PNG",
-  "image": "Bild"
+  "image": "Bild",
+  "billingPlanTitle": "Plan",
+  "billingSettings": "Zahlungseinstellungen",
+  "billingSettingsDescription": "Verwalte die Abonnement- und Zahlungsinformationen deiner Gruppe.",
+  "planHobby": "Hobby",
+  "actionErrorServiceUnavailable": "Der für diese Aktion benötigte Dienst ist nicht verfügbar",
+  "actionErrorPayloadTooLarge": "Die hochgeladene Datei ist zu groß. Bitte versuche es mit einer kleineren Datei."
 }
