@@ -4,15 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { isSpacesEnabled } from "@/features/space/constants";
 
 export function NavUser({
   name,
   image,
   plan,
+  email,
 }: {
   name: string;
   image?: string;
   plan?: React.ReactNode;
+  email: string;
 }) {
   const pathname = usePathname();
   return (
@@ -25,7 +28,7 @@ export function NavUser({
       <div className="flex-1 truncate text-left">
         <div className="font-medium">{name}</div>
         <div className="mt-0.5 truncate font-normal text-muted-foreground text-xs">
-          {plan}
+          {isSpacesEnabled ? email : plan}
         </div>
       </div>
     </Link>

@@ -17,5 +17,12 @@ export async function getSpaceSubscription(spaceId: string) {
     tier: (subscription.active ? "pro" : "hobby") as SpaceTier,
     quantity: subscription.quantity,
     subscriptionItemId: subscription.subscriptionItemId,
+    amount: subscription.amount,
+    cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
+    currency: subscription.currency,
+    interval: subscription.interval,
+    status: subscription.status,
+    periodEnd: subscription.periodEnd,
+    active: subscription.active,
   };
 }

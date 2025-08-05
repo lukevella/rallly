@@ -1,1 +1,5 @@
-export { default } from "./general/page";
+import { redirect } from "next/navigation";
+
+export default function Page() {
+  redirect("/settings/general");
+}
