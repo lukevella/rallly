@@ -17,6 +17,7 @@ import { Trans } from "@/components/trans";
 import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
 import { SpaceIcon } from "@/features/space/components/space-icon";
+import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { isSpacesEnabled } from "@/features/space/constants";
 import { loadSpaces } from "@/features/space/data";
 import { UpgradeButton } from "../upgrade-button";
@@ -52,11 +53,7 @@ export async function SpaceSidebar({
               <div className="flex-1 px-0.5 text-left">
                 <div className="font-medium text-sm">{activeSpace.name}</div>
                 <div className="text-muted-foreground text-xs">
-                  {activeSpace.tier === "pro" ? (
-                    <Trans i18nKey="planPro" defaults="Pro" />
-                  ) : (
-                    <Trans i18nKey="planFree" defaults="Free" />
-                  )}
+                  <SpaceTierLabel tier={activeSpace.tier} />
                 </div>
               </div>
               <Icon>
@@ -120,6 +117,7 @@ export async function SpaceSidebar({
         <NavUser
           name={user.name}
           image={user.image}
+          email={user.email}
           plan={
             activeSpace.tier === "pro" ? (
               <Trans i18nKey="planPro" defaults="Pro" />

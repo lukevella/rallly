@@ -191,6 +191,9 @@ export const loadMembers = cache(async () => {
           },
         },
       },
+      orderBy: {
+        createdAt: "asc",
+      },
     }),
     prisma.spaceMember.count({
       where: {
