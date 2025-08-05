@@ -10,6 +10,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getCurrentUserSpace } from "@/auth/data";
 import { moderateContent } from "@/features/moderation";
+import { canUserManagePoll } from "@/features/poll/helpers";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getEmailClient } from "@/utils/emails";
 import {
@@ -473,6 +474,7 @@ export const polls = router({
           userId: true,
           guestId: true,
           deleted: true,
+          spaceId: true,
           watchers: {
             select: {
               userId: true,
@@ -506,11 +508,9 @@ export const polls = router({
       }
       const inviteLink = shortUrl(`/invite/${res.id}`);
 
-      const userId = ctx.user?.id;
-
-      const isOwner = ctx.user?.isGuest
-        ? userId === res.guestId
-        : userId === res.userId;
+      const canManagePoll = ctx.user
+        ? await canUserManagePoll(ctx.user, res)
+        : false;
 
       const event = res.scheduledEvent
         ? {
@@ -535,7 +535,7 @@ export const polls = router({
           }
         : null;
 
-      if (isOwner || res.adminUrlId === input.adminToken) {
+      if (canManagePoll || res.adminUrlId === input.adminToken) {
         return {
           ...res,
           inviteLink,
