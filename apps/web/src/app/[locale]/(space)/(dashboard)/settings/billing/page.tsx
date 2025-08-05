@@ -17,6 +17,7 @@ import { requireSpace, requireUser } from "@/auth/data";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
+import { SubscriptionStatus } from "@/features/billing/components/subscription-status";
 import { getSpaceSubscription } from "@/features/billing/data";
 import {
   SpaceTierIcon,
@@ -24,7 +25,6 @@ import {
 } from "@/features/space/components/space-tier";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { SubscriptionStatus } from "./components/subscription-status";
 
 export default async function BillingSettingsPage() {
   if (!isFeatureEnabled("billing")) {

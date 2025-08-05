@@ -35,6 +35,7 @@ import {
 } from "@/components/empty-state";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
+import { SubscriptionStatus } from "@/features/billing/components/subscription-status";
 import { loadPaymentMethods, loadSubscription } from "@/features/space/data";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -45,7 +46,6 @@ import {
 } from "../components/settings-layout";
 import { PaymentMethod } from "./components/payment-method";
 import { SubscriptionPrice } from "./components/subscription-price";
-import { SubscriptionStatus } from "./components/subscription-status";
 
 async function loadData() {
   const [user, subscription, paymentMethods] = await Promise.all([
