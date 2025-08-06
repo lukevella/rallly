@@ -314,8 +314,6 @@
   "unconfirmedEventsEmptyStateDescription": "Zde se zobrazí nepotvrzené události.",
   "canceledEventsEmptyStateTitle": "Žádné zrušené události",
   "canceledEventsEmptyStateDescription": "Zde se zobrazí zrušené události.",
-  "setupFormTitle": "Nastavení",
-  "setupFormDescription": "Dokončete vytváření svého účtu.",
   "pending": "Čekající",
   "user": "Uživatel",
   "role": "Role",
