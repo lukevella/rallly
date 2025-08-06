@@ -38,7 +38,7 @@ export const usePermissions = () => {
         return false;
       }
 
-      if (role === "admin" && ownsObject(poll)) {
+      if (role === "admin") {
         return true;
       }
 
