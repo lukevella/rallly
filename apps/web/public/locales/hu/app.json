@@ -316,8 +316,6 @@
   "unconfirmedEventsEmptyStateDescription": "A nem megerősített események itt fognak megjelenni.",
   "canceledEventsEmptyStateTitle": "Nincs lemondott esemény",
   "canceledEventsEmptyStateDescription": "A lemondott események itt fognak megjelenni.",
-  "setupFormTitle": "Beállítás",
-  "setupFormDescription": "Fejezd be a fiókod beállítását.",
   "pending": "Függőben lévő",
   "helpUsImprove": "Segíts fejlődni",
   "helpUsImproveDesc": "Szánj pár percet arra, hogy megosztod velünk a visszajelzésed és segíts nekünk alakítani a Rallly jövőjét.",
