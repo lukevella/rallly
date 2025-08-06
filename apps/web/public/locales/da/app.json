@@ -259,7 +259,6 @@
   "subscriptionPriceMonthly": "{price} pr. måned",
   "subscriptionPriceYearly": "{price} pr. år",
   "billingSubscriptionTitle": "Abonnement",
-  "billingSubscriptionDescription": "Se og administrer dit nuværende abonnement",
   "billingSubscriptionNotActive": "Du er i øjeblikket ikke tilmeldt et abonnement.",
   "billingSubscriptionUpgradeToProDescription": "Opgrader til Pro for at få adgang til alle funktioner og fordele.",
   "billingSubscriptionUpgradeToPro": "Opgrader til Pro",
