@@ -457,5 +457,7 @@
   "billingSettingsDescription": "Megtekintheted és kezelheted a munkaterületed előfizetését és számlázási információit.",
   "planHobby": "Hobbi",
   "actionErrorServiceUnavailable": "A szükséges szolgáltatás a művelet végrehajtásához nem elérhető",
-  "actionErrorPayloadTooLarge": "A feltöltött fájl túl nagy. Kérjük próbálj meg kisebb fájlt feltölteni!"
+  "actionErrorPayloadTooLarge": "A feltöltött fájl túl nagy. Kérjük próbálj meg kisebb fájlt feltölteni!",
+  "spaceName": "Munkaterület neve",
+  "personal": "Személyes"
 }
