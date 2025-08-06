@@ -260,7 +260,6 @@
   "subscriptionPriceMonthly": "{price} kuukaudessa",
   "subscriptionPriceYearly": "{price} vuodessa",
   "billingSubscriptionTitle": "Tilaus",
-  "billingSubscriptionDescription": "Tarkastele ja hallitse nykyistä tilaustasi",
   "billingSubscriptionNotActive": "Sinulla ei tällä hetkellä ole tilausta.",
   "billingSubscriptionUpgradeToProDescription": "Vaihda Pro-tilaukseen päästäksesi käsiksi kaikkiin ominaisuuksiin ja etuihin.",
   "billingSubscriptionUpgradeToPro": "Vaihda Pro-sopimukseen",
