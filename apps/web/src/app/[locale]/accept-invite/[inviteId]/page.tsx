@@ -60,7 +60,7 @@ export default async function JoinPage({
             i18nKey="joinSpace"
             defaults="Join {spaceName}"
             values={{
-              spaceName: invite.invitedBy.name,
+              spaceName: invite.space.name,
             }}
           />
         </h1>
