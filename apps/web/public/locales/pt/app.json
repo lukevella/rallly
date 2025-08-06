@@ -314,8 +314,6 @@
   "unconfirmedEventsEmptyStateDescription": "Eventos não confirmados aparecerão aqui.",
   "canceledEventsEmptyStateTitle": "Nenhum Evento Cancelado",
   "canceledEventsEmptyStateDescription": "Os eventos cancelados aparecerão aqui.",
-  "setupFormTitle": "Configuração",
-  "setupFormDescription": "Finalize a configuração da sua conta.",
   "pending": "Pendente",
   "helpUsImprove": "Ajude-nos a melhorar",
   "helpUsImproveDesc": "Tome alguns minutos para partilhar a sua opinião connosco e ajudar a moldar o futuro do Rallly.",
