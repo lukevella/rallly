@@ -260,7 +260,6 @@
   "subscriptionPriceMonthly": "{price} per maand",
   "subscriptionPriceYearly": "{price} per jaar",
   "billingSubscriptionTitle": "Abonnement",
-  "billingSubscriptionDescription": "Bekijk en beheer je huidige abonnement",
   "billingSubscriptionNotActive": "Je hebt momenteel geen abonnement.",
   "billingSubscriptionUpgradeToProDescription": "Upgrade naar Pro voor toegang tot alle functies en voordelen.",
   "billingSubscriptionUpgradeToPro": "Upgrade naar Pro",
