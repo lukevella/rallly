@@ -306,7 +306,6 @@
   "unconfirmedEventsEmptyStateDescription": "Les événements non confirmés apparaîtront ici.",
   "canceledEventsEmptyStateTitle": "Aucun évènement annulé",
   "canceledEventsEmptyStateDescription": "Les événements annulés apparaîtront ici.",
-  "setupFormDescription": "Terminer la configuration de votre compte.",
   "pending": "En cours",
   "dismissFeedback": "Ne plus afficher",
   "user": "Utilisateur"
