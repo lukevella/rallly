@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --spacing: 0.25rem;
+}
+
 @layer base {
   * {
     @apply border-border;

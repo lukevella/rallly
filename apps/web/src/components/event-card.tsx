@@ -90,15 +90,18 @@ export function EventCard() {
         </CardContent>
       </Card>
       {poll.status === "paused" ? (
-        <Alert icon={PauseIcon}>
+        <Alert>
+          <PauseIcon />
           <AlertTitle>
             <Trans i18nKey="pollStatusPaused" />
           </AlertTitle>
           <AlertDescription>
-            <Trans
-              i18nKey="pollStatusPausedDescription"
-              defaults="Votes cannot be submitted or edited at this time"
-            />
+            <p>
+              <Trans
+                i18nKey="pollStatusPausedDescription"
+                defaults="Votes cannot be submitted or edited at this time"
+              />
+            </p>
           </AlertDescription>
         </Alert>
       ) : null}

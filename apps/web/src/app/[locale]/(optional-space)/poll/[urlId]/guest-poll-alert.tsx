@@ -20,25 +20,31 @@ export const GuestPollAlert = () => {
     return null;
   }
   return (
-    <Alert icon={InfoIcon}>
-      <AlertTitle className="mb-1 font-medium text-sm tracking-normal">
+    <Alert>
+      <InfoIcon />
+      <AlertTitle>
         <Trans
           i18nKey="guestPollAlertTitle"
           defaults="Your administrator rights can be lost if you clear your cookies"
         />
       </AlertTitle>
-      <AlertDescription className="text-sm">
-        <Trans
-          i18nKey="guestPollAlertDescription"
-          defaults="<0>Create an account</0> or <1>login</1> to claim this poll."
-          components={[
-            <RegisterLink
-              className="underline hover:text-gray-800"
-              key="register"
-            />,
-            <LoginLink className="underline hover:text-gray-800" key="login" />,
-          ]}
-        />
+      <AlertDescription>
+        <p className="text-sm">
+          <Trans
+            i18nKey="guestPollAlertDescription"
+            defaults="<0>Create an account</0> or <1>login</1> to claim this poll."
+            components={[
+              <RegisterLink
+                className="underline hover:text-gray-800"
+                key="register"
+              />,
+              <LoginLink
+                className="underline hover:text-gray-800"
+                key="login"
+              />,
+            ]}
+          />
+        </p>
       </AlertDescription>
     </Alert>
   );
