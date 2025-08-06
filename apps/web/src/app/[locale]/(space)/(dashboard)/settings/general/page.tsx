@@ -19,6 +19,7 @@ import {
 } from "@/components/empty-state";
 import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { DeleteSpaceButton } from "./components/delete-space-button";
 import { LeaveSpaceButton } from "./components/leave-space-button";
 import { SpaceSettingsForm } from "./components/space-settings-form";
@@ -49,17 +50,23 @@ export default async function GeneralSettingsPage() {
   }
 
   // Get additional data needed for the buttons
-  const [userSpaces, pollCount] = await Promise.all([
+  const [userSpaces, pollCount, subscription] = await Promise.all([
     prisma.spaceMember.count({
       where: { userId: user.id },
     }),
     prisma.poll.count({
       where: { spaceId: space.id },
     }),
+    isFeatureEnabled("billing")
+      ? prisma.subscription.findUnique({
+          where: { spaceId: space.id },
+          select: { active: true },
+        })
+      : Promise.resolve(null),
   ]);
 
   const hasOtherSpaces = userSpaces > 1;
-
+  const hasActiveSubscription = Boolean(subscription?.active);
   return (
     <PageSectionGroup>
       <PageSection>
@@ -145,6 +152,18 @@ export default async function GeneralSettingsPage() {
                   <Trans
                     i18nKey="deleteSpaceOnlyOneMessage"
                     defaults="You need to have at least one space. Create another space before deleting this one."
+                  />
+                </p>
+              </div>
+            ) : hasActiveSubscription ? (
+              <div className="flex items-center gap-x-3 rounded-lg border p-3">
+                <Icon>
+                  <InfoIcon />
+                </Icon>
+                <p className="text-sm">
+                  <Trans
+                    i18nKey="deleteSpaceActiveSubscriptionMessage"
+                    defaults="You cannot delete this space because it has an active subscription. Please cancel your subscription first."
                   />
                 </p>
               </div>

@@ -483,5 +483,6 @@
   "accessDenied": "Access Denied",
   "ownerPermissionsRequired": "Only space owners can access billing settings.",
   "adminPermissionsRequired": "You need admin permissions to access space settings.",
-  "adminPermissionsRequiredMembers": "You need admin permissions to manage space members."
+  "adminPermissionsRequiredMembers": "You need admin permissions to manage space members.",
+  "deleteSpaceActiveSubscriptionMessage": "You cannot delete this space because it has an active subscription. Please cancel your subscription first."
 }

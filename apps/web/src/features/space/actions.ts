@@ -136,6 +136,15 @@ export const deleteSpaceAction = spaceActionClient
       });
     }
 
+    // Check if space has an active subscription
+    if (space.subscription?.active) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message:
+          "Cannot delete space with an active subscription. Please cancel the subscription first.",
+      });
+    }
+
     await prisma.space.delete({
       where: {
         id: parsedInput.spaceId,
