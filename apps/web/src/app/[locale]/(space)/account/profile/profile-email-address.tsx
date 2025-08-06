@@ -127,7 +127,8 @@ export const ProfileEmailAddress = () => {
               )}
             />
             {didRequestEmailChange ? (
-              <Alert icon={InfoIcon}>
+              <Alert>
+                <InfoIcon />
                 <AlertTitle>
                   <Trans
                     i18nKey="emailChangeRequestSent"
@@ -135,10 +136,12 @@ export const ProfileEmailAddress = () => {
                   />
                 </AlertTitle>
                 <AlertDescription>
-                  <Trans
-                    i18nKey="emailChangeRequestSentDescription"
-                    defaults="To complete the change, please check your email for a verification link."
-                  />
+                  <p>
+                    <Trans
+                      i18nKey="emailChangeRequestSentDescription"
+                      defaults="To complete the change, please check your email for a verification link."
+                    />
+                  </p>
                 </AlertDescription>
               </Alert>
             ) : null}
