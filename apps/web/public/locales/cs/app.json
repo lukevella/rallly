@@ -259,7 +259,6 @@
   "subscriptionPriceMonthly": "{price} za měsíc",
   "subscriptionPriceYearly": "{price} za rok",
   "billingSubscriptionTitle": "Předplatné",
-  "billingSubscriptionDescription": "Zobrazit a spravovat aktuální plán předplatného",
   "billingSubscriptionNotActive": "V současné době nejste přihlášeni k odběru plánu.",
   "billingSubscriptionUpgradeToProDescription": "Upgradujte na verzi Pro a získejte přístup ke všem funkcím a výhodám.",
   "billingSubscriptionUpgradeToPro": "Upgrade na Pro",
