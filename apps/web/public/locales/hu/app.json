@@ -260,7 +260,6 @@
   "subscriptionPriceMonthly": "{price} havonta",
   "subscriptionPriceYearly": "{price} évente",
   "billingSubscriptionTitle": "Előfizetés",
-  "billingSubscriptionDescription": "Jelenlegi előfizetésed állapotának megtekintése és kezelése",
   "billingSubscriptionNotActive": "Jelenleg nincs előfizetésed.",
   "billingSubscriptionUpgradeToProDescription": "Válts Pro-ra, hogy hozzáférhess az összes funkcióhoz.",
   "billingSubscriptionUpgradeToPro": "Pro-ra váltás",
