@@ -5,6 +5,7 @@ import {
   PageSection,
   PageSectionContent,
   PageSectionDescription,
+  PageSectionGroup,
   PageSectionHeader,
   PageSectionTitle,
 } from "@/app/components/page-layout";
@@ -21,7 +22,7 @@ export default async function MembersSettingsPage() {
   const [members, invites] = await Promise.all([loadMembers(), loadInvites()]);
 
   return (
-    <div className="space-y-8">
+    <PageSectionGroup>
       <PageSection>
         <PageSectionHeader>
           <PageSectionTitle>
@@ -114,7 +115,7 @@ export default async function MembersSettingsPage() {
           <InviteMemberButton />
         </PageSectionContent>
       </PageSection>
-    </div>
+    </PageSectionGroup>
   );
 }
 

@@ -8,6 +8,7 @@ import {
   PageSection,
   PageSectionContent,
   PageSectionDescription,
+  PageSectionGroup,
   PageSectionHeader,
   PageSectionTitle,
 } from "@/app/components/page-layout";
@@ -32,7 +33,7 @@ export default async function BillingSettingsPage() {
   const subscription = await getSpaceSubscription(space.id);
 
   return (
-    <div className="space-y-6">
+    <PageSectionGroup>
       <PageSection>
         <PageSectionHeader>
           <PageSectionTitle>
@@ -125,7 +126,7 @@ export default async function BillingSettingsPage() {
           </Button>
         </PageSectionContent>
       </PageSection>
-    </div>
+    </PageSectionGroup>
   );
 }
 
