@@ -458,5 +458,6 @@
   "planHobby": "Hobby",
   "actionErrorServiceUnavailable": "The service required to perform this action is not available",
   "actionErrorPayloadTooLarge": "The file you uploaded is too large. Please try a smaller file.",
-  "spaceName": "Space Name"
+  "spaceName": "Space Name",
+  "personal": "Personal"
 }

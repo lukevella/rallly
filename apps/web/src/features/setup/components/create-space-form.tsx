@@ -33,7 +33,7 @@ export function CreateSpaceForm() {
   const form = useForm<CreateSpaceFormValues>({
     resolver: zodResolver(createSpaceFormSchema),
     defaultValues: {
-      name: "Personal",
+      name: t("personal", { defaultValue: "Personal" }),
     },
   });
 
