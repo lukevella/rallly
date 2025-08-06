@@ -447,7 +447,7 @@
   "general": "Általános",
   "generalSettingsDescription": "Kezeld a munkaterület beállításait, beleérve a nevét, leírását és egyéb általános beállításokat.",
   "membersDescription": "A tagok hozzáférnek a munkaterületedhez",
-  "pendingInvitesDescription": "Hívj meg további felhasználókat, hogy osszák meg a munkaterületedet.",
+  "pendingInvitesDescription": "Hívj meg további felhasználókat, hogy hozzáférhessenek a munkaterületedhez.",
   "membersSettingsDescription": "Kezeld a munkaterület tagjait, hívj meg új felhasználókat és kezeld a hozzáférési engedélyeiket.",
   "spaceNamePlaceholder": "Csapatom",
   "uploadImage": "Feltöltés",
