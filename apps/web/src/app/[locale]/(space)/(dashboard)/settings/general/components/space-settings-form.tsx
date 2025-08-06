@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
+  ImageUpload,
   ImageUploadControl,
   ImageUploadPreview,
 } from "@/components/image-upload";
@@ -28,7 +29,6 @@ import {
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import type { SpaceDTO } from "@/features/space/types";
 import { useTranslation } from "@/i18n/client";
-import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 const spaceSettingsSchema = z.object({
@@ -42,12 +42,15 @@ type SpaceSettingsData = z.infer<typeof spaceSettingsSchema>;
 
 interface SpaceSettingsFormProps {
   space: SpaceDTO;
+  disabled?: boolean;
 }
 
-export function SpaceSettingsForm({ space }: SpaceSettingsFormProps) {
+export function SpaceSettingsForm({
+  space,
+  disabled = false,
+}: SpaceSettingsFormProps) {
   const { t } = useTranslation();
   const router = useRouter();
-  const isStorageEnabled = useFeatureFlag("storage");
 
   const updateSpace = useSafeAction(updateSpaceAction);
   const updateImage = useSafeAction(updateSpaceImageAction);
@@ -92,24 +95,22 @@ export function SpaceSettingsForm({ space }: SpaceSettingsFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {isStorageEnabled && (
-          <div>
-            <FormLabel>
-              <Trans i18nKey="image" defaults="Image" />
-            </FormLabel>
-            <div className="mt-2 flex items-center gap-x-4">
-              <ImageUploadPreview>
-                <SpaceIcon name={space.name} src={space.image} size="xl" />
-              </ImageUploadPreview>
-              <ImageUploadControl
-                keyPrefix="spaces"
-                onUploadSuccess={handleImageUploadSuccess}
-                onRemoveSuccess={handleImageRemoveSuccess}
-                hasCurrentImage={!!space.image}
-              />
-            </div>
-          </div>
-        )}
+        <div>
+          <FormLabel>
+            <Trans i18nKey="image" defaults="Image" />
+          </FormLabel>
+          <ImageUpload className="mt-2">
+            <ImageUploadPreview>
+              <SpaceIcon name={space.name} src={space.image} size="xl" />
+            </ImageUploadPreview>
+            <ImageUploadControl
+              keyPrefix="spaces"
+              onUploadSuccess={handleImageUploadSuccess}
+              onRemoveSuccess={handleImageRemoveSuccess}
+              hasCurrentImage={!!space.image}
+            />
+          </ImageUpload>
+        </div>
         <FormField
           control={form.control}
           name="name"
@@ -124,6 +125,7 @@ export function SpaceSettingsForm({ space }: SpaceSettingsFormProps) {
                   placeholder={t("spaceNamePlaceholder", {
                     defaultValue: "My Team",
                   })}
+                  disabled={disabled}
                   {...field}
                 />
               </FormControl>
@@ -135,7 +137,9 @@ export function SpaceSettingsForm({ space }: SpaceSettingsFormProps) {
           <Button
             type="submit"
             disabled={
-              updateSpace.status === "executing" || !form.formState.isDirty
+              disabled ||
+              updateSpace.status === "executing" ||
+              !form.formState.isDirty
             }
           >
             <Trans i18nKey="save" defaults="Save" />

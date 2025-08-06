@@ -7,7 +7,7 @@ import type { MemberRole } from "@/features/space/schema";
 
 export type MemberAbilityContext = {
   user: { id: string };
-  space: { id: string; role: MemberRole };
+  space: { id: string; ownerId: string; role: MemberRole };
 };
 
 type Action = "cancel" | "create" | "read" | "update" | "delete";
@@ -45,6 +45,14 @@ export function defineAbilityForMember(ctx?: MemberAbilityContext) {
     default:
       defineSpaceMemberRules(builder, ctx);
       break;
+  }
+
+  const isOwner = ctx.space.ownerId === ctx.user.id;
+
+  if (isOwner) {
+    builder.can("delete", "Space", {
+      ownerId: ctx.user.id,
+    });
   }
 
   return builder.build();

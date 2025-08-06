@@ -1,6 +1,5 @@
 "use client";
 
-import { subject } from "@casl/ability";
 import type { LucideIcon } from "lucide-react";
 import {
   BarChart2Icon,
@@ -10,7 +9,6 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { useSpace } from "@/features/space/client";
 import { isSpacesEnabled } from "@/features/space/constants";
 import { useTranslation } from "@/i18n/client";
 
@@ -37,11 +35,6 @@ export interface NavigationConfig {
 
 export const useSpaceMenu = () => {
   const { t } = useTranslation();
-  const space = useSpace();
-
-  const canManageSpace = space
-    .getMemberAbility()
-    .can("update", subject("Space", space.data));
 
   const pathname = usePathname();
   const config = React.useMemo<NavigationConfig>(
@@ -79,7 +72,7 @@ export const useSpaceMenu = () => {
             },
           ],
         },
-        ...(isSpacesEnabled && canManageSpace
+        ...(isSpacesEnabled
           ? [
               {
                 id: "manage",
@@ -98,7 +91,7 @@ export const useSpaceMenu = () => {
           : []),
       ],
     }),
-    [pathname, t, canManageSpace],
+    [pathname, t],
   );
 
   return React.useMemo(
