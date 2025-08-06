@@ -258,7 +258,6 @@
   "subscriptionPriceMonthly": "{price} por mês",
   "subscriptionPriceYearly": "{price} por ano",
   "billingSubscriptionTitle": "Subscrição",
-  "billingSubscriptionDescription": "Ver e gerir o seu plano de assinatura atual",
   "billingSubscriptionNotActive": "Não é subscritor de nenhum plano, de momento.",
   "billingSubscriptionUpgradeToProDescription": "Atualize para o Pro para ter acesso a todos os recursos e benefícios.",
   "billingSubscriptionUpgradeToPro": "Atualizar para o Pro",
