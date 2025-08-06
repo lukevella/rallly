@@ -1,7 +1,5 @@
-import { TabsContent } from "@rallly/ui/page-tabs";
 import type { Metadata } from "next";
 import {
-  PageContent,
   PageSection,
   PageSectionContent,
   PageSectionDescription,
@@ -17,26 +15,24 @@ export default async function GeneralSettingsPage() {
   const space = await requireSpace();
 
   return (
-    <TabsContent value="general">
-      <PageContent className="space-y-6">
-        <PageSection>
-          <PageSectionHeader>
-            <PageSectionTitle>
-              <Trans i18nKey="spaceInformation" defaults="Space Information" />
-            </PageSectionTitle>
-            <PageSectionDescription>
-              <Trans
-                i18nKey="spaceInformationDescription"
-                defaults="Update your space name and basic settings."
-              />
-            </PageSectionDescription>
-          </PageSectionHeader>
-          <PageSectionContent>
-            <SpaceSettingsForm space={space} />
-          </PageSectionContent>
-        </PageSection>
-      </PageContent>
-    </TabsContent>
+    <div className="space-y-6">
+      <PageSection>
+        <PageSectionHeader>
+          <PageSectionTitle>
+            <Trans i18nKey="spaceInformation" defaults="Space Information" />
+          </PageSectionTitle>
+          <PageSectionDescription>
+            <Trans
+              i18nKey="spaceInformationDescription"
+              defaults="Update your space name and basic settings."
+            />
+          </PageSectionDescription>
+        </PageSectionHeader>
+        <PageSectionContent>
+          <SpaceSettingsForm space={space} />
+        </PageSectionContent>
+      </PageSection>
+    </div>
   );
 }
 

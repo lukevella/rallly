@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
-import { CirclePlusIcon, SettingsIcon } from "lucide-react";
+import { CirclePlusIcon, SettingsIcon, UserPlusIcon } from "lucide-react";
 import Link from "next/link";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/components/trans";
@@ -74,19 +74,28 @@ export function SpaceDropdown({
             ))}
           </DropdownMenuRadioGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={newSpaceDialog.trigger}>
-            <Icon>
-              <CirclePlusIcon />
-            </Icon>
-            <Trans i18nKey="createSpace" defaults="Create Space" />
-          </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/settings/general">
               <Icon>
                 <SettingsIcon />
               </Icon>
-              <Trans i18nKey="settings" defaults="Settings" />
+              <Trans i18nKey="spaceSettings" defaults="Space Settings" />
             </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/settings/members">
+              <Icon>
+                <UserPlusIcon />
+              </Icon>
+              <Trans i18nKey="inviteMembers" defaults="Invite Members" />
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={newSpaceDialog.trigger}>
+            <Icon>
+              <CirclePlusIcon />
+            </Icon>
+            <Trans i18nKey="createSpace" defaults="Create Space" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -31,7 +31,9 @@ export function SettingsTabs({ children }: { children: React.ReactNode }) {
           </TabsTrigger>
         </IfFeatureEnabled>
       </TabsList>
-      <TabsContent value={activeTab}>{children}</TabsContent>
+      <TabsContent tabIndex={-1} value={activeTab}>
+        {children}
+      </TabsContent>
     </Tabs>
   );
 }

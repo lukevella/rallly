@@ -22,7 +22,7 @@ export default function SettingsLayout({
     <PageContainer>
       <PageHeader>
         <PageTitle>
-          <Trans i18nKey="settings" defaults="Settings" />
+          <Trans i18nKey="spaceSettings" defaults="Space Settings" />
         </PageTitle>
       </PageHeader>
       <PageContent>
