@@ -260,7 +260,7 @@
   "subscriptionPriceMonthly": "{price} per month",
   "subscriptionPriceYearly": "{price} per year",
   "billingSubscriptionTitle": "Subscription",
-  "billingSubscriptionDescription": "View and manage your current subscription plan",
+  "billingSubscriptionDescription": "Manage your current subscription plan.",
   "billingSubscriptionNotActive": "You are not currently subscribed to a plan.",
   "billingSubscriptionUpgradeToProDescription": "Upgrade to Pro to get access to all features and benefits.",
   "billingSubscriptionUpgradeToPro": "Upgrade to Pro",

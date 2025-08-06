@@ -5,6 +5,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -51,6 +52,9 @@ export function SpaceDropdown({
           className="min-w-[var(--radix-dropdown-menu-trigger-width)]"
           align="start"
         >
+          <DropdownMenuLabel>
+            <Trans i18nKey="spaces" defaults="Spaces" />
+          </DropdownMenuLabel>
           <DropdownMenuRadioGroup
             value={activeSpaceId}
             onValueChange={(value) => {
