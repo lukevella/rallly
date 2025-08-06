@@ -5,6 +5,7 @@ import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { waitUntil } from "@vercel/functions";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { updateSeatCount } from "@/features/billing/mutations";
 import { getMember } from "@/features/space/data";
@@ -88,7 +89,7 @@ export const createSpaceAction = authActionClient
     });
   });
 
-export const deleteSpaceAction = authActionClient
+export const deleteSpaceAction = spaceActionClient
   .metadata({
     actionName: "space_delete",
   })
@@ -100,7 +101,7 @@ export const deleteSpaceAction = authActionClient
   .action(async ({ ctx, parsedInput }) => {
     const space = await prisma.space.findFirst({
       where: {
-        AND: [accessibleBy(ctx.ability).Space, { id: parsedInput.spaceId }],
+        id: parsedInput.spaceId,
       },
       include: {
         subscription: true,
@@ -114,10 +115,19 @@ export const deleteSpaceAction = authActionClient
       });
     }
 
-    if (ctx.ability.cannot("delete", subject("Space", space))) {
+    if (ctx.getMemberAbility().cannot("delete", subject("Space", space))) {
       throw new AppError({
         code: "FORBIDDEN",
         message: "You do not have access to this space",
+      });
+    }
+
+    // Check if space has an active subscription
+    if (space.subscription?.active) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message:
+          "Cannot delete space with an active subscription. Please cancel the subscription first.",
       });
     }
 
@@ -126,6 +136,8 @@ export const deleteSpaceAction = authActionClient
         id: parsedInput.spaceId,
       },
     });
+
+    revalidatePath("/", "layout");
   });
 
 export const inviteMemberAction = spaceActionClient
@@ -562,4 +574,79 @@ export const removeSpaceImageAction = spaceActionClient
     if (oldImageKey) {
       await deleteImageFromS3(oldImageKey);
     }
+  });
+
+export const leaveSpaceAction = spaceActionClient
+  .metadata({
+    actionName: "space_leave",
+  })
+  .action(async ({ ctx }) => {
+    // Check if user is the space owner
+    if (ctx.space.ownerId === ctx.user.id) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message:
+          "Space owners cannot leave their space. Transfer ownership first.",
+      });
+    }
+
+    // Get the user's member record
+    const member = await prisma.spaceMember.findFirst({
+      where: {
+        spaceId: ctx.space.id,
+        userId: ctx.user.id,
+      },
+    });
+
+    if (!member) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: "You are not a member of this space",
+      });
+    }
+
+    // Check if user has other spaces
+    const userSpaces = await prisma.spaceMember.findMany({
+      where: {
+        userId: ctx.user.id,
+        NOT: {
+          spaceId: ctx.space.id,
+        },
+      },
+      orderBy: {
+        lastSelectedAt: "desc",
+      },
+    });
+
+    if (userSpaces.length === 0) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "Cannot leave your last remaining space",
+      });
+    }
+
+    await prisma.$transaction(async (tx) => {
+      // Remove the user from the space
+      await tx.spaceMember.delete({
+        where: {
+          id: member.id,
+        },
+      });
+
+      // Update the most recent remaining space to be current
+      // (this handles the case where they're leaving their active space)
+      await tx.spaceMember.update({
+        where: {
+          id: userSpaces[0].id,
+        },
+        data: {
+          lastSelectedAt: new Date(),
+        },
+      });
+
+      // Update seat count if billing is enabled
+      if (isFeatureEnabled("billing")) {
+        await updateSeatCount(ctx.space.id, -1);
+      }
+    });
   });

@@ -117,6 +117,10 @@ export function PageSkeleton() {
   );
 }
 
+export function PageSectionGroup({ children }: { children?: React.ReactNode }) {
+  return <div className="space-y-6 lg:space-y-12">{children}</div>;
+}
+
 export function PageSection({
   children,
   className,
@@ -126,7 +130,7 @@ export function PageSection({
 }) {
   return (
     <section
-      className={cn("grid gap-6 lg:grid-cols-[320px_1fr] lg:gap-8", className)}
+      className={cn("grid gap-4 lg:grid-cols-[320px_1fr] lg:gap-12", className)}
     >
       {children}
     </section>
@@ -165,7 +169,12 @@ export function PageSectionDescription({
   className?: string;
 }) {
   return (
-    <p className={cn("mt-2 text-muted-foreground text-sm", className)}>
+    <p
+      className={cn(
+        "mt-2 text-muted-foreground text-sm leading-relaxed",
+        className,
+      )}
+    >
       {children}
     </p>
   );

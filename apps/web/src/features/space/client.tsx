@@ -47,6 +47,7 @@ export const SpaceProvider = ({
           },
           space: {
             id: data.id,
+            ownerId: data.ownerId,
             role: data.role,
           },
         }),

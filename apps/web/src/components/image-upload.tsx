@@ -7,6 +7,7 @@ import React from "react";
 import { z } from "zod";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { getImageUploadUrlAction } from "@/lib/storage/actions";
 import { uploadImage } from "@/lib/storage/image-upload";
@@ -25,8 +26,16 @@ export interface ImageUploadPreviewProps {
   children?: React.ReactNode;
 }
 
-export function ImageUpload({ children }: { children?: React.ReactNode }) {
-  return <div className="flex items-center gap-x-4">{children}</div>;
+export function ImageUpload({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className={cn("flex items-center gap-x-4", className)}>{children}</div>
+  );
 }
 
 export function ImageUploadControl({
@@ -35,6 +44,8 @@ export function ImageUploadControl({
   onRemoveSuccess,
   hasCurrentImage = false,
 }: ImageUploadControlProps) {
+  const isStorageEnabled = useFeatureFlag("storage");
+
   const { t } = useTranslation();
   const [isRemoving, startRemoving] = React.useTransition();
   const [isUploading, startUploading] = React.useTransition();
@@ -127,6 +138,7 @@ export function ImageUploadControl({
       <div className="flex gap-2">
         <Button
           loading={isUploading}
+          disabled={!isStorageEnabled}
           onClick={() => {
             document.getElementById("image-upload")?.click();
           }}
