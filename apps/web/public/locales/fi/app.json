@@ -316,8 +316,6 @@
   "unconfirmedEventsEmptyStateDescription": "Vahvistamattomat tapahtumat näkyvät täällä.",
   "canceledEventsEmptyStateTitle": "Ei peruttuja tapahtumia",
   "canceledEventsEmptyStateDescription": "Perutut tapahtumat näkyvät täällä.",
-  "setupFormTitle": "Alkutoimet",
-  "setupFormDescription": "Viimeistele tilisi alkutoimet.",
   "pending": "Odottaa",
   "helpUsImprove": "Auta meitä kehittymään",
   "helpUsImproveDesc": "Käytä hetkinen antaaksesi palautetta ja auta meitä muovaamaan Ralllyn tulevaisuutta.",
