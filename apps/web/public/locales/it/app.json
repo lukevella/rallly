@@ -259,7 +259,6 @@
   "subscriptionPriceMonthly": "{price} per mese",
   "subscriptionPriceYearly": "{price} per anno",
   "billingSubscriptionTitle": "Abbonamento",
-  "billingSubscriptionDescription": "Visualizza e gestisci il tuo attuale piano di abbonamento",
   "billingSubscriptionNotActive": "Al momento non hai sottoscritto alcun piano.",
   "billingSubscriptionUpgradeToProDescription": "Passa alla versione Pro per accedere a tutte le funzionalità e i vantaggi.",
   "billingSubscriptionUpgradeToPro": "Aggiorna alla versione Pro",
