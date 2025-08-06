@@ -1,4 +1,5 @@
 import { Badge } from "@rallly/ui/badge";
+import { ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { InviteMemberButton } from "@/app/[locale]/(space)/(dashboard)/settings/members/components/header";
 import {
@@ -9,6 +10,13 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/app/components/page-layout";
+import { requireSpace } from "@/auth/data";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
@@ -19,6 +27,30 @@ import { InviteDropdownMenu } from "./components/invite-dropdown-menu";
 import { MemberDropdownMenu } from "./components/member-dropdown-menu";
 
 export default async function MembersSettingsPage() {
+  const space = await requireSpace();
+
+  // Check if user has admin role
+  const isAdmin = space.role === "admin";
+
+  if (!isAdmin) {
+    return (
+      <EmptyState>
+        <EmptyStateIcon>
+          <ShieldXIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans i18nKey="accessDenied" defaults="Access Denied" />
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            i18nKey="adminPermissionsRequiredMembers"
+            defaults="You need admin permissions to manage space members."
+          />
+        </EmptyStateDescription>
+      </EmptyState>
+    );
+  }
+
   const [members, invites] = await Promise.all([loadMembers(), loadInvites()]);
 
   return (

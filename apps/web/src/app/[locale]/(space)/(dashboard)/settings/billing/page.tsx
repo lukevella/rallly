@@ -1,7 +1,7 @@
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
-import { DotIcon, SendIcon } from "lucide-react";
+import { DotIcon, SendIcon, ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
@@ -13,6 +13,12 @@ import {
   PageSectionTitle,
 } from "@/app/components/page-layout";
 import { requireSpace, requireUser } from "@/auth/data";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
 import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
@@ -29,7 +35,30 @@ export default async function BillingSettingsPage() {
   if (!isFeatureEnabled("billing")) {
     notFound();
   }
-  const [space] = await Promise.all([requireSpace(), requireUser()]);
+  const [space, user] = await Promise.all([requireSpace(), requireUser()]);
+
+  // Check if user is owner - only owners can access billing
+  const isOwner = space.ownerId === user.id;
+
+  if (!isOwner) {
+    return (
+      <EmptyState>
+        <EmptyStateIcon>
+          <ShieldXIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans i18nKey="accessDenied" defaults="Access Denied" />
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            i18nKey="ownerPermissionsRequired"
+            defaults="Only space owners can access billing settings."
+          />
+        </EmptyStateDescription>
+      </EmptyState>
+    );
+  }
+
   const subscription = await getSpaceSubscription(space.id);
 
   return (

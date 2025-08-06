@@ -479,5 +479,9 @@
   "inviteMembers": "Invite Members",
   "leaveSpaceOwnerMessage": "You can't leave this space because you are the owner",
   "leaveSpaceOnlyOneMessgae": "You will need to create a new space before you can leave this one.",
-  "deleteSpaceOnlyOneMessage": "You need to have at least one space. Create another space before deleting this one."
+  "deleteSpaceOnlyOneMessage": "You need to have at least one space. Create another space before deleting this one.",
+  "accessDenied": "Access Denied",
+  "ownerPermissionsRequired": "Only space owners can access billing settings.",
+  "adminPermissionsRequired": "You need admin permissions to access space settings.",
+  "adminPermissionsRequiredMembers": "You need admin permissions to manage space members."
 }

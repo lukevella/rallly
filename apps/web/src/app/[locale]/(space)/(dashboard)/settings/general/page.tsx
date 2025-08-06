@@ -1,6 +1,6 @@
 import { prisma } from "@rallly/database";
 import { Icon } from "@rallly/ui/icon";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
 import {
   PageSection,
@@ -11,6 +11,12 @@ import {
   PageSectionTitle,
 } from "@/app/components/page-layout";
 import { requireSpace, requireUser } from "@/auth/data";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
 import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
 import { DeleteSpaceButton } from "./components/delete-space-button";
@@ -19,6 +25,28 @@ import { SpaceSettingsForm } from "./components/space-settings-form";
 
 export default async function GeneralSettingsPage() {
   const [space, user] = await Promise.all([requireSpace(), requireUser()]);
+
+  const isAdmin = space.role === "admin";
+  const isOwner = space.ownerId === user.id;
+
+  if (!isAdmin) {
+    return (
+      <EmptyState>
+        <EmptyStateIcon>
+          <ShieldXIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans i18nKey="accessDenied" defaults="Access Denied" />
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            i18nKey="adminPermissionsRequired"
+            defaults="You need admin permissions to access space settings."
+          />
+        </EmptyStateDescription>
+      </EmptyState>
+    );
+  }
 
   // Get additional data needed for the buttons
   const [userSpaces, pollCount] = await Promise.all([
@@ -30,7 +58,6 @@ export default async function GeneralSettingsPage() {
     }),
   ]);
 
-  const isOwner = space.ownerId === user.id;
   const hasOtherSpaces = userSpaces > 1;
 
   return (
