@@ -129,10 +129,7 @@ export const requireSpace = cache(async () => {
   });
 
   if (!spaceMember) {
-    throw new AppError({
-      code: "NOT_FOUND",
-      message: "User does not belong to any spaces",
-    });
+    redirect("/setup");
   }
 
   return createSpaceDTO({

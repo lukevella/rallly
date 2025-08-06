@@ -1,6 +1,10 @@
-import { onboardedUserSchema } from "@/features/setup/schema";
-import type { UserDTO } from "@/features/user/schema";
+import { prisma } from "@rallly/database";
 
-export const isUserOnboarded = (user: UserDTO) => {
-  return onboardedUserSchema.safeParse(user).success;
+export const userHasSpaces = async (userId: string): Promise<boolean> => {
+  const spaceCount = await prisma.spaceMember.count({
+    where: {
+      userId: userId,
+    },
+  });
+  return spaceCount > 0;
 };

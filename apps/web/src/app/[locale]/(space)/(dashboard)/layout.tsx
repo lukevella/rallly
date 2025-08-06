@@ -1,10 +1,8 @@
 import { SidebarInset } from "@rallly/ui/sidebar";
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-import { requireSpace, requireUser } from "@/auth/data";
+import { requireSpace } from "@/auth/data";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
-import { isUserOnboarded } from "@/features/setup/utils";
 import { SpaceSidebar } from "./components/sidebar/space-sidebar";
 import { SpaceSidebarProvider } from "./components/sidebar/space-sidebar-provider";
 
@@ -13,12 +11,6 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await requireUser();
-
-  if (!isUserOnboarded(user)) {
-    redirect("/setup");
-  }
-
   return (
     <SpaceSidebarProvider>
       <CommandMenu />
