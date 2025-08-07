@@ -394,7 +394,6 @@
   "loginWithAnotherAccount": "Kirjaudu sisään toisella tilillä",
   "adminRoleRequired": "Sinun täytyy olla ylläpitäjä tämän toiminnon suorittamiseksi",
   "removeMember": "Poista jäsen",
-  "remove": "Poista jäsen",
   "removeMemberConfirmation": "Haluatko varmasti poistaa tämän jäsenen?",
   "confirm": "Vahvista",
   "removeMemberLoading": "Poistetaan jäsentä...",
