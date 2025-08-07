@@ -474,10 +474,10 @@
   "leftSpaceSuccess": "You have left the space",
   "leaveSpaceDescription": "Remove yourself from this space.",
   "deleteSpaceDescription": "Permanently delete this space and all its contents. This action cannot be undone.",
-  "spaceSettings": "Space Settings",
   "spaces": "Spaces",
   "inviteMembers": "Invite Members",
   "accessDenied": "Access Denied",
   "ownerPermissionsRequired": "Only space owners can access billing settings.",
-  "deleteSpacePermission": "You need to be the owner to delete a space."
+  "signOutSection": "Sign Out",
+  "signOutSectionDescription": "End your current session and sign out of your account"
 }

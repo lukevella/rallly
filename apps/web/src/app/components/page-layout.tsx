@@ -171,7 +171,7 @@ export function PageSectionDescription({
   return (
     <p
       className={cn(
-        "mt-2 text-muted-foreground text-sm leading-relaxed",
+        "mt-2 text-pretty text-muted-foreground text-sm leading-relaxed",
         className,
       )}
     >
