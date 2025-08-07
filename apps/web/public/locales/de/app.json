@@ -460,5 +460,7 @@
   "spaces": "Gruppen",
   "inviteMembers": "Mitglieder einladen",
   "accessDenied": "Zugriff verweigert",
-  "ownerPermissionsRequired": "Nur Gruppenbesitzer können auf die Abrechnungseinstellungen zugreifen."
+  "ownerPermissionsRequired": "Nur Gruppenbesitzer können auf die Abrechnungseinstellungen zugreifen.",
+  "signOutSection": "Abmelden",
+  "signOutSectionDescription": "Beende deine aktuelle Sitzung und melde dich von deinem Konto ab"
 }
