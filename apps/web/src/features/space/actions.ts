@@ -14,7 +14,11 @@ import { toDBRole } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { authActionClient, spaceActionClient } from "@/lib/safe-action/server";
+import {
+  authActionClient,
+  createRateLimitMiddleware,
+  spaceActionClient,
+} from "@/lib/safe-action/server";
 import {
   deleteImageFromS3,
   getImageUploadUrl,
@@ -68,6 +72,7 @@ export const createSpaceAction = authActionClient
   .metadata({
     actionName: "space_create",
   })
+  .use(createRateLimitMiddleware(5, "1h"))
   .inputSchema(
     z.object({
       name: z.string().min(1).max(100),

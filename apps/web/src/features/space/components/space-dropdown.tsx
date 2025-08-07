@@ -79,7 +79,7 @@ export function SpaceDropdown({
               <Icon>
                 <SettingsIcon />
               </Icon>
-              <Trans i18nKey="spaceSettings" defaults="Space Settings" />
+              <Trans i18nKey="settings" defaults="Settings" />
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>

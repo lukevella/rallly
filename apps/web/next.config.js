@@ -67,8 +67,8 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: "/settings/billing",
-        destination: "/account/billing",
+        source: "/account/billing",
+        destination: "/settings/billing",
         permanent: true,
       },
     ];

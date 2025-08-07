@@ -226,7 +226,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
               name="billingAcknowledgment"
               render={({ field }) => (
                 <FormItem>
-                  <div className="flex flex-row items-start gap-3 rounded-lg border p-3">
+                  <div className="flex flex-row items-start gap-3 py-2">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
