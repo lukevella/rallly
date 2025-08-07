@@ -12,7 +12,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@rallly/ui/dialog";
-import { Form, FormField, FormItem, FormMessage } from "@rallly/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@rallly/ui/form";
 import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
@@ -59,12 +66,12 @@ function LeaveSpaceDialog({
     <Form {...form}>
       <Dialog {...rest}>
         {children}
-        <DialogContent>
-          <form
-            onSubmit={form.handleSubmit(() => {
-              leaveSpace.execute();
-            })}
-          >
+        <form
+          onSubmit={form.handleSubmit(() => {
+            leaveSpace.execute();
+          })}
+        >
+          <DialogContent>
             <DialogHeader>
               <DialogTitle>
                 <Trans i18nKey="leaveSpaceDialogTitle" defaults="Leave Space" />
@@ -76,14 +83,7 @@ function LeaveSpaceDialog({
                 />
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              <p className="text-sm">
-                <Trans
-                  i18nKey="leaveSpaceInstruction"
-                  defaults="Please type the space name to confirm: {{spaceName}}"
-                  values={{ spaceName }}
-                />
-              </p>
+            <div className="space-y-4">
               <FormField
                 control={form.control}
                 name="spaceName"
@@ -99,13 +99,21 @@ function LeaveSpaceDialog({
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <Input
-                      autoComplete="off"
-                      data-1p-ignore
-                      error={!!form.formState.errors.spaceName}
-                      placeholder={spaceName}
-                      {...field}
-                    />
+                    <FormLabel>
+                      <Trans
+                        i18nKey="leaveSpaceInstruction"
+                        defaults="Please type the space name to confirm:"
+                      />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        autoComplete="off"
+                        data-1p-ignore
+                        error={!!form.formState.errors.spaceName}
+                        placeholder={spaceName}
+                        {...field}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -125,8 +133,8 @@ function LeaveSpaceDialog({
                 <Trans i18nKey="leaveSpace" defaults="Leave Space" />
               </Button>
             </DialogFooter>
-          </form>
-        </DialogContent>
+          </DialogContent>
+        </form>
       </Dialog>
     </Form>
   );

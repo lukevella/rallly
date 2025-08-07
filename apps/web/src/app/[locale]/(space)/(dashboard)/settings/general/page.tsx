@@ -1,6 +1,4 @@
 import { subject } from "@casl/ability";
-import { Alert, AlertTitle } from "@rallly/ui/alert";
-import { ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
 import {
   PageSection,
@@ -24,6 +22,7 @@ export default async function GeneralSettingsPage() {
   const isAdmin = space.role === "admin";
   const canDeleteSpace = ability.can("delete", subject("Space", { ...space }));
 
+  const isOwner = space.ownerId === user.id;
   return (
     <PageSectionGroup>
       <PageSection>
@@ -42,52 +41,42 @@ export default async function GeneralSettingsPage() {
           <SpaceSettingsForm space={space} disabled={!isAdmin} />
         </PageSectionContent>
       </PageSection>
-
-      <PageSection>
-        <PageSectionHeader>
-          <PageSectionTitle>
-            <Trans i18nKey="leaveSpace" defaults="Leave Space" />
-          </PageSectionTitle>
-          <PageSectionDescription>
-            <Trans
-              i18nKey="leaveSpaceDescription"
-              defaults="Remove yourself from this space. You'll lose access to all polls in this space."
-            />
-          </PageSectionDescription>
-        </PageSectionHeader>
-        <PageSectionContent>
-          <LeaveSpaceButton spaceName={space.name} spaceId={space.id} />
-        </PageSectionContent>
-      </PageSection>
-
-      <PageSection>
-        <PageSectionHeader>
-          <PageSectionTitle>
-            <Trans i18nKey="deleteSpace" defaults="Delete Space" />
-          </PageSectionTitle>
-          <PageSectionDescription>
-            <Trans
-              i18nKey="deleteSpaceDescription"
-              defaults="Permanently delete this space and all its content. This action cannot be undone."
-            />
-          </PageSectionDescription>
-        </PageSectionHeader>
-        <PageSectionContent>
-          {!canDeleteSpace ? (
-            <Alert>
-              <ShieldXIcon />
-              <AlertTitle>
-                <Trans
-                  i18nKey="deleteSpacePermission"
-                  defaults="You need to be the owner to delete a space."
-                />
-              </AlertTitle>
-            </Alert>
-          ) : (
+      {!isOwner ? (
+        <PageSection>
+          <PageSectionHeader>
+            <PageSectionTitle>
+              <Trans i18nKey="leaveSpace" defaults="Leave Space" />
+            </PageSectionTitle>
+            <PageSectionDescription>
+              <Trans
+                i18nKey="leaveSpaceDescription"
+                defaults="Remove yourself from this space. You'll lose access to all polls in this space."
+              />
+            </PageSectionDescription>
+          </PageSectionHeader>
+          <PageSectionContent>
+            <LeaveSpaceButton spaceName={space.name} spaceId={space.id} />
+          </PageSectionContent>
+        </PageSection>
+      ) : null}
+      {canDeleteSpace ? (
+        <PageSection>
+          <PageSectionHeader>
+            <PageSectionTitle>
+              <Trans i18nKey="deleteSpace" defaults="Delete Space" />
+            </PageSectionTitle>
+            <PageSectionDescription>
+              <Trans
+                i18nKey="deleteSpaceDescription"
+                defaults="Permanently delete this space and all its content. This action cannot be undone."
+              />
+            </PageSectionDescription>
+          </PageSectionHeader>
+          <PageSectionContent>
             <DeleteSpaceButton spaceName={space.name} spaceId={space.id} />
-          )}
-        </PageSectionContent>
-      </PageSection>
+          </PageSectionContent>
+        </PageSection>
+      ) : null}
     </PageSectionGroup>
   );
 }
