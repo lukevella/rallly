@@ -393,7 +393,6 @@
   "loginWithAnotherAccount": "Accedi con un altro account",
   "adminRoleRequired": "È necessario essere un amministratore per eseguire questa azione",
   "removeMember": "Rimuovi membro",
-  "remove": "Rimuovi membro",
   "removeMemberConfirmation": "Sei sicuro di voler rimuovere questo membro?",
   "confirm": "Conferma",
   "removeMemberLoading": "Rimozione membro...",
