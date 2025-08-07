@@ -15,8 +15,8 @@ import {
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { AccountSidebarMenu } from "@/app/[locale]/(space)/account/components/sidebar";
 import { Trans } from "@/components/trans";
+import { AccountSidebarMenu } from "./components/sidebar";
 import { SignOutButton } from "./components/sign-out-button";
 
 export default async function ProfileLayout({
