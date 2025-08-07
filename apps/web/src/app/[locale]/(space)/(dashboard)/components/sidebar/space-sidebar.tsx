@@ -50,8 +50,10 @@ export async function SpaceSidebar({
           <SpaceDropdown spaces={spaces} activeSpaceId={activeSpace.id}>
             <Button className="flex h-auto w-full p-2" variant="ghost">
               <SpaceIcon src={activeSpace.image} name={activeSpace.name} />
-              <div className="flex-1 px-0.5 text-left">
-                <div className="font-medium text-sm">{activeSpace.name}</div>
+              <div className="min-w-0 flex-1 px-0.5 text-left">
+                <div className="truncate font-medium text-sm">
+                  {activeSpace.name}
+                </div>
                 <div className="text-muted-foreground text-xs">
                   <SpaceTierLabel tier={activeSpace.tier} />
                 </div>
