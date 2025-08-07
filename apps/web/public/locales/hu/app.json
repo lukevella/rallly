@@ -395,7 +395,6 @@
   "loginWithAnotherAccount": "Belépés másik fiókkal",
   "adminRoleRequired": "Adminnak kell lenned a művelet végrehajtásához",
   "removeMember": "Tag eltávolítása",
-  "remove": "Tag eltávolítása",
   "removeMemberConfirmation": "Biztosan szeretnéd eltávolítani ezt a tagot?",
   "confirm": "Megerősítés",
   "removeMemberLoading": "Tag eltávolítása...",
