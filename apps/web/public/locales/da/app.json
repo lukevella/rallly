@@ -395,7 +395,6 @@
   "loginWithAnotherAccount": "Log ind med en anden konto",
   "adminRoleRequired": "Du skal være administrator for at udføre denne handling",
   "removeMember": "Fjern medlem",
-  "remove": "Fjern medlem",
   "removeMemberConfirmation": "Er du sikker på, at du vil fjerne dette medlem?",
   "confirm": "Bekræft",
   "removeMemberLoading": "Fjerner medlem...",
