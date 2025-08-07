@@ -142,8 +142,79 @@ async function createScheduledEventForUser({
   });
 }
 
+async function seedTeamEvents() {
+  console.info("Seeding team scheduled events...");
+  const teamSpace = await prisma.space.findUnique({
+    where: { id: "team-space-1" },
+    include: {
+      members: {
+        include: { user: true },
+      },
+    },
+  });
+
+  if (!teamSpace) {
+    console.warn("Team space not found, skipping team events");
+    return;
+  }
+
+  // Create events from different team members
+  const teamEventPromises = [
+    // Owner creates important company events
+    ...Array.from({ length: 12 }).map(() =>
+      createScheduledEventForUser({ 
+        userId: "team-owner", 
+        spaceId: teamSpace.id 
+      }),
+    ),
+    // Admin creates operational events
+    ...Array.from({ length: 10 }).map(() =>
+      createScheduledEventForUser({ 
+        userId: "team-admin", 
+        spaceId: teamSpace.id 
+      }),
+    ),
+    // Members create department/project events
+    ...Array.from({ length: 6 }).map(() =>
+      createScheduledEventForUser({ 
+        userId: "team-member-1", 
+        spaceId: teamSpace.id 
+      }),
+    ),
+    ...Array.from({ length: 5 }).map(() =>
+      createScheduledEventForUser({ 
+        userId: "team-member-2", 
+        spaceId: teamSpace.id 
+      }),
+    ),
+    ...Array.from({ length: 4 }).map(() =>
+      createScheduledEventForUser({ 
+        userId: "team-member-3", 
+        spaceId: teamSpace.id 
+      }),
+    ),
+  ];
+
+  await Promise.all(teamEventPromises);
+  console.info(`✓ Seeded ${teamEventPromises.length} team events`);
+}
+
 export async function seedScheduledEvents(userId: string) {
-  console.info("Seeding scheduled events...");
+  console.info(`Seeding scheduled events for user ${userId}...`);
+  
+  // Handle team space separately
+  if (userId === "team-owner") {
+    await seedTeamEvents();
+    return;
+  }
+
+  // Skip other team members as they're handled in team events
+  const teamMemberIds = ["team-admin", "team-member-1", "team-member-2", "team-member-3"];
+  if (teamMemberIds.includes(userId)) {
+    console.info(`Skipping individual events for team member ${userId} (included in team events)`);
+    return;
+  }
+
   const space = await prisma.space.findFirst({
     where: {
       ownerId: userId,
