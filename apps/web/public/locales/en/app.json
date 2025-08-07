@@ -395,7 +395,6 @@
   "loginWithAnotherAccount": "Login with another account",
   "adminRoleRequired": "You need to be an admin to perform this action",
   "removeMember": "Remove member",
-  "remove": "Remove Member",
   "removeMemberConfirmation": "Are you sure you want to remove this member?",
   "confirm": "Confirm",
   "removeMemberLoading": "Removing member...",
