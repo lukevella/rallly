@@ -19,7 +19,7 @@ import {
 import { requireSpace } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted } from "@/contexts/environment";
-import { loadUpcomingEventsCount } from "@/features/scheduled-event/data";
+import { getUpcomingEventsCount } from "@/features/scheduled-event/data";
 import { getTranslation } from "@/i18n/server";
 import { FeedbackAlert } from "./feedback-alert";
 
@@ -34,7 +34,7 @@ async function loadData() {
         deleted: false,
       },
     }),
-    loadUpcomingEventsCount(),
+    getUpcomingEventsCount(),
   ]);
 
   return {

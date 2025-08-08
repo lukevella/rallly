@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { loadEventsChronological } from "@/features/scheduled-event/data";
+import { getEventsChronological } from "@/features/scheduled-event/data";
 import { privateProcedure, router } from "../trpc";
 
 export const events = router({
@@ -18,7 +18,7 @@ export const events = router({
     .query(async ({ input }) => {
       const { cursor: page, limit: pageSize, status, search, member } = input;
 
-      const result = await loadEventsChronological({
+      const result = await getEventsChronological({
         status,
         search,
         member,
