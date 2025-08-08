@@ -324,9 +324,7 @@ export const loadPastEvents = cache(
       }),
     ]);
 
-    const events = allEvents
-      .filter((event) => event.user !== null)
-      .map(transformEvent);
+    const events = allEvents.map(transformEvent);
 
     const totalPages = Math.ceil(totalCount / pageSize);
     const hasNextPage = page < totalPages;

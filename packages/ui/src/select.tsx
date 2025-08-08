@@ -35,7 +35,7 @@ const SelectTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       buttonVariants({ variant: "default" }),
-      "bg-backgroud",
+      "bg-background",
       className,
     )}
     {...props}

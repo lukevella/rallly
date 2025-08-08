@@ -12,7 +12,7 @@ export const events = router({
         search: z.string().optional(),
         member: z.string().optional(),
         cursor: z.number().optional().default(1),
-        limit: z.number().optional().default(20),
+        limit: z.number().max(100).optional().default(20),
       }),
     )
     .query(async ({ input }) => {

@@ -54,7 +54,6 @@ export const getPolls = async ({
         select: {
           id: true,
           name: true,
-          email: true,
           user: {
             select: {
               image: true,
@@ -63,7 +62,7 @@ export const getPolls = async ({
         },
       },
     },
-    orderBy: [{ updatedAt: "desc" }],
+    orderBy: [{ updatedAt: "desc", id: "desc" }],
     skip: (page - 1) * pageSize,
     take: pageSize,
   });
@@ -84,7 +83,6 @@ export const getPolls = async ({
     participants: poll.participants.map((participant) => ({
       id: participant.id,
       name: participant.name,
-      email: participant.email ?? undefined,
       image: participant.user?.image ?? undefined,
     })),
   }));
