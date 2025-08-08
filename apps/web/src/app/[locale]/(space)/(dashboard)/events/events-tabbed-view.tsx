@@ -47,8 +47,7 @@ export function EventsTabbedView({ children }: { children: React.ReactNode }) {
         value={tab}
         key={tab}
         className={cn(
-          "transition-opacity",
-          isPending ? "pointer-events-none opacity-50 delay-200" : "",
+          isPending ? "pointer-events-none animate-pulse opacity-50" : "",
         )}
       >
         {children}

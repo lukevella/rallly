@@ -1,3 +1,4 @@
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { CalendarIcon } from "lucide-react";
 import type { Metadata } from "next";
 import type { Params } from "@/app/[locale]/types";
@@ -14,33 +15,41 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { Pagination } from "@/components/pagination";
-import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
-import { ScheduledEventListItem } from "@/features/scheduled-event/components/scheduled-event-list";
-import { loadScheduledEvents } from "@/features/scheduled-event/data";
 import type { Status } from "@/features/scheduled-event/schema";
-import { statusSchema } from "@/features/scheduled-event/schema";
+import { loadMembers } from "@/features/space/data";
 import { getTranslation } from "@/i18n/server";
+import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { MemberSelector } from "../../../../../components/member-selector";
+import { EventsInfiniteList } from "./events-infinite-list";
 import { EventsTabbedView } from "./events-tabbed-view";
+import { eventsSearchParamsSchema } from "./schema";
 
 async function loadData({
   status,
   search,
-  page = 1,
-  pageSize = 10,
+  member,
 }: {
-  status: Status;
+  status?: Status;
   search?: string;
-  page?: number;
-  pageSize?: number;
+  member?: string;
 }) {
-  return loadScheduledEvents({
-    status,
-    search,
-    page,
-    pageSize,
-  });
+  const helpers = await createSSRHelper();
+
+  const [members] = await Promise.all([
+    loadMembers(),
+    // Prefetch the first page of events in parallel
+    helpers.events.infiniteList.prefetchInfinite({
+      status,
+      search,
+      member,
+    }),
+  ]);
+
+  return {
+    members,
+    dehydratedState: dehydrate(helpers.queryClient),
+  };
 }
 
 async function ScheduledEventEmptyState({ status }: { status: Status }) {
@@ -95,77 +104,50 @@ async function ScheduledEventEmptyState({ status }: { status: Status }) {
 
 export default async function Page(props: {
   params: Promise<Params>;
-  searchParams?: Promise<{ status: string; q?: string; page?: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const searchParams = await props.searchParams;
   const params = await props.params;
   const { t } = await getTranslation(params.locale);
-  const status = statusSchema.catch("upcoming").parse(searchParams?.status);
-  const pageParam = searchParams?.page;
-  const page = pageParam ? Math.max(1, Number(pageParam) || 1) : 1;
-  const pageSize = 10;
 
-  const {
-    events: paginatedEvents,
-    totalCount,
-    totalPages,
-  } = await loadData({
+  const { status, q, member } = eventsSearchParamsSchema.parse(searchParams);
+
+  const { members, dehydratedState } = await loadData({
     status,
-    search: searchParams?.q,
-    page,
-    pageSize,
+    search: q,
+    member,
   });
 
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageTitle>
-          <Trans i18nKey="events" defaults="Events" />
-        </PageTitle>
-      </PageHeader>
-      <PageContent>
-        <div className="space-y-4">
-          <SearchInput
-            placeholder={t("searchEventsPlaceholder", {
-              defaultValue: "Search events by title...",
-            })}
-          />
+    <HydrationBoundary state={dehydratedState}>
+      <PageContainer>
+        <PageHeader>
+          <PageTitle>
+            <Trans i18nKey="events" defaults="Events" />
+          </PageTitle>
+        </PageHeader>
+        <PageContent>
           <EventsTabbedView>
-            <div className="space-y-6">
-              {paginatedEvents.length === 0 && (
-                <ScheduledEventEmptyState status={status} />
-              )}
-              {paginatedEvents.length > 0 && (
-                <StackedList>
-                  {paginatedEvents.map((event) => (
-                    <StackedListItem key={event.id}>
-                      <ScheduledEventListItem
-                        eventId={event.id}
-                        key={event.id}
-                        floating={!event.timeZone}
-                        title={event.title}
-                        start={event.start}
-                        end={event.end}
-                        allDay={event.allDay}
-                        invites={event.invites}
-                        status={event.status}
-                      />
-                    </StackedListItem>
-                  ))}
-                </StackedList>
-              )}
-              {totalPages > 1 && (
-                <Pagination
-                  currentPage={page}
-                  totalItems={totalCount}
-                  pageSize={pageSize}
-                />
-              )}
+            <div className="mb-6 flex gap-x-2">
+              <SearchInput
+                placeholder={t("searchEventsPlaceholder", {
+                  defaultValue: "Search events by title...",
+                })}
+              />
+              <MemberSelector members={members.data} />
             </div>
+            <EventsInfiniteList
+              status={status}
+              search={q}
+              member={member}
+              emptyState={
+                <ScheduledEventEmptyState status={status || "upcoming"} />
+              }
+            />
           </EventsTabbedView>
-        </div>
-      </PageContent>
-    </PageContainer>
+        </PageContent>
+      </PageContainer>
+    </HydrationBoundary>
   );
 }
 
