@@ -62,7 +62,7 @@ export const getPolls = async ({
         },
       },
     },
-    orderBy: [{ updatedAt: "desc", id: "desc" }],
+    orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
     skip: (page - 1) * pageSize,
     take: pageSize,
   });
