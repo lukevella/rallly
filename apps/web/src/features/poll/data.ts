@@ -28,44 +28,44 @@ export const getPolls = async ({
     ...(member && { userId: member }),
   };
 
-  // Get total count for pagination
-  const totalCount = await prisma.poll.count({ where });
-
-  // Load paginated polls
-  const polls = await prisma.poll.findMany({
-    where,
-    select: {
-      id: true,
-      title: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-      user: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
+  // Get total count and paginated polls in a transaction
+  const [totalCount, polls] = await prisma.$transaction([
+    prisma.poll.count({ where }),
+    prisma.poll.findMany({
+      where,
+      select: {
+        id: true,
+        title: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
         },
-      },
-      participants: {
-        where: {
-          deletedAt: null,
-        },
-        select: {
-          id: true,
-          name: true,
-          user: {
-            select: {
-              image: true,
+        participants: {
+          where: {
+            deletedAt: null,
+          },
+          select: {
+            id: true,
+            name: true,
+            user: {
+              select: {
+                image: true,
+              },
             },
           },
         },
       },
-    },
-    orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
-    skip: (page - 1) * pageSize,
-    take: pageSize,
-  });
+      orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+  ]);
 
   const transformedPolls = polls.map((poll) => ({
     id: poll.id,

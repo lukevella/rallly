@@ -67,7 +67,7 @@ export const getScheduledEvents = async ({
     search,
   });
 
-  const [rawEvents, totalCount] = await Promise.all([
+  const [rawEvents, totalCount] = await prisma.$transaction([
     prisma.scheduledEvent.findMany({
       where,
       orderBy: {
@@ -257,7 +257,7 @@ export const getUpcomingEvents = async ({
     ],
   };
 
-  const [totalCount, allEvents] = await Promise.all([
+  const [totalCount, allEvents] = await prisma.$transaction([
     prisma.scheduledEvent.count({ where }),
     prisma.scheduledEvent.findMany({
       where,
@@ -307,7 +307,7 @@ export const getPastEvents = async ({
     ],
   };
 
-  const [totalCount, allEvents] = await Promise.all([
+  const [totalCount, allEvents] = await prisma.$transaction([
     prisma.scheduledEvent.count({ where }),
     prisma.scheduledEvent.findMany({
       where,
@@ -351,7 +351,7 @@ export const getUnconfirmedEvents = async ({
     status: "unconfirmed",
   };
 
-  const [totalCount, allEvents] = await Promise.all([
+  const [totalCount, allEvents] = await prisma.$transaction([
     prisma.scheduledEvent.count({ where }),
     prisma.scheduledEvent.findMany({
       where,
@@ -395,7 +395,7 @@ export const getCanceledEvents = async ({
     status: "canceled",
   };
 
-  const [totalCount, allEvents] = await Promise.all([
+  const [totalCount, allEvents] = await prisma.$transaction([
     prisma.scheduledEvent.count({ where }),
     prisma.scheduledEvent.findMany({
       where,
