@@ -1,10 +1,10 @@
 import type { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
-import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { InboxIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-
+import { PollsTabbedView } from "@/app/[locale]/(space)/(dashboard)/polls/polls-tabbed-view";
 import {
   PageContainer,
   PageContent,
@@ -21,33 +21,37 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { Pagination } from "@/components/pagination";
+import { MemberSelector } from "@/components/member-selector";
 import { Trans } from "@/components/trans";
-import { PollList, PollListItem } from "@/features/poll/components/poll-list";
-import { loadPolls } from "@/features/poll/data";
+import { PollsInfiniteList } from "@/features/poll/components/polls-infinite-list";
+import { loadMembers } from "@/features/space/data";
 import { getTranslation } from "@/i18n/server";
-import { PollsTabbedView } from "./polls-tabbed-view";
-import { DEFAULT_PAGE_SIZE, searchParamsSchema } from "./schema";
+import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { searchParamsSchema } from "./schema";
 
-// Combined schema for type inference
 async function loadData({
-  status = "live",
-  page = 1,
-  pageSize = DEFAULT_PAGE_SIZE,
+  status,
   q,
+  member,
 }: {
   status?: PollStatus;
-  page?: number;
-  pageSize?: number;
   q?: string;
+  member?: string;
 }) {
-  const [{ total, data: polls }] = await Promise.all([
-    loadPolls({ status, page, pageSize, q }),
+  const helpers = await createSSRHelper();
+
+  const [members] = await Promise.all([
+    loadMembers(),
+    helpers.polls.infiniteChronological.prefetchInfinite({
+      status,
+      search: q,
+      member,
+    }),
   ]);
 
   return {
-    polls,
-    total,
+    members,
+    dehydratedState: dehydrate(helpers.queryClient),
   };
 }
 
@@ -92,70 +96,50 @@ export default async function Page(props: {
   const { t } = await getTranslation();
 
   const searchParams = await props.searchParams;
-  const { status, page, pageSize, q } = searchParamsSchema.parse(searchParams);
+  const { status, q, member } = searchParamsSchema.parse(searchParams);
 
-  const { polls, total } = await loadData({
+  const { members, dehydratedState } = await loadData({
     status,
-    page,
-    pageSize,
     q,
+    member,
   });
 
-  const totalPages = Math.ceil(total / pageSize);
-
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageHeaderContent>
-          <PageTitle>
-            <Trans i18nKey="polls" defaults="Polls" />
-          </PageTitle>
-        </PageHeaderContent>
-        <PageHeaderActions>
-          <Button variant="primary" asChild>
-            <Link href="/new">
-              <Trans i18nKey="create" defaults="Create" />
-            </Link>
-          </Button>
-        </PageHeaderActions>
-      </PageHeader>
-      <PageContent className="space-y-4">
-        <SearchInput
-          placeholder={t("searchPollsPlaceholder", {
-            defaultValue: "Search polls by title...",
-          })}
-        />
-        <PollsTabbedView>
-          <div className="space-y-4">
-            {polls.length === 0 ? (
-              <PollsEmptyState />
-            ) : (
-              <>
-                <PollList>
-                  {polls.map((poll) => (
-                    <PollListItem
-                      key={poll.id}
-                      title={poll.title}
-                      status={poll.status}
-                      participants={poll.participants}
-                      pollLink={absoluteUrl(`/poll/${poll.id}`)}
-                      inviteLink={shortUrl(`/invite/${poll.id}`)}
-                    />
-                  ))}
-                </PollList>
-                {totalPages > 1 ? (
-                  <Pagination
-                    currentPage={page}
-                    totalItems={total}
-                    pageSize={pageSize}
-                    className="mt-4"
-                  />
-                ) : null}
-              </>
-            )}
-          </div>
-        </PollsTabbedView>
-      </PageContent>
-    </PageContainer>
+    <HydrationBoundary state={dehydratedState}>
+      <PageContainer>
+        <PageHeader>
+          <PageHeaderContent>
+            <PageTitle>
+              <Trans i18nKey="polls" defaults="Polls" />
+            </PageTitle>
+          </PageHeaderContent>
+          <PageHeaderActions>
+            <Button variant="primary" asChild>
+              <Link href="/new">
+                <Trans i18nKey="create" defaults="Create" />
+              </Link>
+            </Button>
+          </PageHeaderActions>
+        </PageHeader>
+        <PageContent>
+          <PollsTabbedView>
+            <div className="mb-6 flex gap-x-2">
+              <SearchInput
+                placeholder={t("searchPollsPlaceholder", {
+                  defaultValue: "Search polls by title...",
+                })}
+              />
+              <MemberSelector members={members.data} />
+            </div>
+            <PollsInfiniteList
+              status={status}
+              search={q}
+              member={member}
+              emptyState={<PollsEmptyState />}
+            />
+          </PollsTabbedView>
+        </PageContent>
+      </PageContainer>
+    </HydrationBoundary>
   );
 }

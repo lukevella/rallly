@@ -461,5 +461,9 @@
   "accessDenied": "Access Denied",
   "ownerPermissionsRequired": "Only space owners can access billing settings.",
   "signOutSection": "Sign Out",
-  "signOutSectionDescription": "End your current session and sign out of your account"
+  "signOutSectionDescription": "End your current session and sign out of your account",
+  "loading": "Loading...",
+  "endOfList": "You've reached the end of the list",
+  "attendeeCount": "{count, plural, =0 {No attendees} one {1 attendee} other {# attendees}}",
+  "participantCount": "{count, plural, one {1 participant} other {# participants}}"
 }

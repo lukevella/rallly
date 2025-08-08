@@ -25,9 +25,15 @@ export const pageSizeSchema = z.coerce
       : Math.min(val, 100);
   });
 
+export const memberSchema = z
+  .string()
+  .optional()
+  .transform((val) => val?.trim() || undefined);
+
 export const searchParamsSchema = z.object({
   status: statusSchema,
   page: pageSchema,
   pageSize: pageSizeSchema,
   q: querySchema,
+  member: memberSchema,
 });

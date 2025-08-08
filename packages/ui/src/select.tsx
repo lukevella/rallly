@@ -33,7 +33,11 @@ const SelectTrigger = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
-    className={cn(buttonVariants({ variant: "default" }), className)}
+    className={cn(
+      buttonVariants({ variant: "default" }),
+      "bg-background",
+      className,
+    )}
     {...props}
   >
     {children}

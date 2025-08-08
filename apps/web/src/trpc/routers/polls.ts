@@ -10,6 +10,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getCurrentUserSpace } from "@/auth/data";
 import { moderateContent } from "@/features/moderation";
+import { getPolls } from "@/features/poll/data";
 import { canUserManagePoll } from "@/features/poll/helpers";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getEmailClient } from "@/utils/emails";
@@ -45,6 +46,39 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 export const polls = router({
   participants,
   comments,
+  infiniteChronological: privateProcedure
+    .input(
+      z.object({
+        status: z.enum(["live", "paused", "finalized"]).optional(),
+        search: z.string().optional(),
+        member: z.string().optional(),
+        cursor: z.number().optional().default(1),
+        limit: z.number().default(20),
+      }),
+    )
+    .query(async ({ input }) => {
+      const { cursor: page, limit: pageSize, status, search, member } = input;
+
+      const result = await getPolls({
+        status,
+        q: search,
+        member,
+        page,
+        pageSize,
+      });
+
+      let nextCursor: number | undefined;
+      if (result.hasNextPage) {
+        nextCursor = page + 1;
+      }
+
+      return {
+        polls: result.polls,
+        nextCursor,
+        hasNextPage: result.hasNextPage,
+        total: result.total,
+      };
+    }),
   getCountByStatus: privateProcedure.query(async ({ ctx }) => {
     const res = await prisma.poll.groupBy({
       by: ["status"],
