@@ -461,5 +461,9 @@
   "accessDenied": "Zugriff verweigert",
   "ownerPermissionsRequired": "Nur Gruppenbesitzer können auf die Abrechnungseinstellungen zugreifen.",
   "signOutSection": "Abmelden",
-  "signOutSectionDescription": "Beende deine aktuelle Sitzung und melde dich von deinem Konto ab"
+  "signOutSectionDescription": "Beende deine aktuelle Sitzung und melde dich von deinem Konto ab",
+  "loading": "Wird geladen...",
+  "endOfList": "Du hast das Ende der Liste erreicht",
+  "attendeeCount": "{count, plural, =0 {Keine Teilnehmer} one {1 Teilnehmer} other {# Teilnehmer}}",
+  "participantCount": "{count, plural, one {1 Teilnehmer} other {# Teilnehmer}}"
 }
