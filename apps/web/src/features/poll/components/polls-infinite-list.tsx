@@ -101,7 +101,7 @@ export function PollsInfiniteList({
             name: participant.name,
             image: participant.image,
           }))}
-          inviteLink={`/invite/${poll.id}`}
+          inviteLink={poll.inviteLink}
           pollLink={`/poll/${poll.id}`}
           createdBy={
             poll.user
