@@ -220,7 +220,7 @@ export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
                             amount: currencyFormatter.format(
                               (pricingData.monthly.amount * 12 -
                                 pricingData.yearly.amount) /
-                              100
+                                100,
                             ),
                           }}
                         />
