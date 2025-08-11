@@ -32,6 +32,7 @@ import { Trans } from "@/components/trans";
 import { UpgradeButton } from "@/components/upgrade-button";
 import type { SpaceTier } from "@/features/space/schema";
 import { spaceTierSchema } from "@/features/space/schema";
+import { PLAN_NAMES } from "../constants";
 
 function KeyBenefits({ children }: { children?: React.ReactNode }) {
   return <ul className="space-y-3">{children}</ul>;
@@ -192,13 +193,13 @@ export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
                   <PlanRadioGroupItem
                     value="hobby"
                     id="hobby"
-                    title={<Trans i18nKey="planHobby" defaults="Hobby" />}
+                    title={PLAN_NAMES.HOBBY}
                     price={<Trans i18nKey="planFree" defaults="Free" />}
                   />
                   <PlanRadioGroupItem
                     value="pro"
                     id="pro"
-                    title={<Trans i18nKey="planPro" defaults="Pro" />}
+                    title={PLAN_NAMES.PRO}
                     price={getProPrice()}
                     priceLabel={
                       <Trans i18nKey="perSeatMonth" defaults="/seat/mo" />
@@ -257,9 +258,7 @@ export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
             <div className="hidden overflow-y-auto bg-muted-background px-6 py-6 md:block">
               <TabsContent value="hobby" className="space-y-6">
                 <DialogHeader>
-                  <DialogTitle>
-                    <Trans i18nKey="planHobby" defaults="Hobby" />
-                  </DialogTitle>
+                  <DialogTitle>{PLAN_NAMES.HOBBY}</DialogTitle>
                   <DialogDescription>
                     <Trans
                       i18nKey="planHobbyDescription"
@@ -304,9 +303,7 @@ export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
               </TabsContent>
               <TabsContent value="pro" className="space-y-6">
                 <DialogHeader>
-                  <DialogTitle>
-                    <Trans i18nKey="planPro" defaults="Pro" />
-                  </DialogTitle>
+                  <DialogTitle>{PLAN_NAMES.PRO}</DialogTitle>
                   <DialogDescription>
                     <Trans
                       i18nKey="planProDescription"

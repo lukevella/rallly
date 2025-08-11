@@ -114,18 +114,7 @@ export async function SpaceSidebar({
             <SidebarSeparator className="my-1" />
           </>
         ) : null}
-        <NavUser
-          name={user.name}
-          image={user.image}
-          email={user.email}
-          plan={
-            activeSpace.tier === "pro" ? (
-              <Trans i18nKey="planPro" defaults="Pro" />
-            ) : (
-              <Trans i18nKey="planFree" defaults="Free" />
-            )
-          }
-        />
+        <NavUser name={user.name} image={user.image} email={user.email} />
       </SidebarFooter>
     </Sidebar>
   );

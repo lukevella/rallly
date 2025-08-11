@@ -1,15 +1,15 @@
 "use client";
 
 import { HandHeartIcon, SparklesIcon } from "lucide-react";
-import { Trans } from "@/components/trans";
+import { PLAN_NAMES } from "@/features/billing/constants";
 import type { SpaceTier } from "@/features/space/schema";
 
 export const SpaceTierLabel = ({ tier }: { tier: SpaceTier }) => {
   switch (tier) {
     case "hobby":
-      return <Trans i18nKey="planHobby" defaults="Hobby" />;
+      return PLAN_NAMES.HOBBY;
     case "pro":
-      return <Trans i18nKey="planPro" defaults="Pro" />;
+      return PLAN_NAMES.PRO;
   }
 };
 

@@ -1,7 +1,6 @@
 {
   "pricingDescription": "Get started for free. No login required.",
   "freeForever": "free forever",
-  "planPro": "Pro",
   "monthlyBillingDescription": "per month",
   "upgrade": "Upgrade",
   "faq": "Frequently Asked Questions",
@@ -23,7 +22,6 @@
   "whyUpgradeAnswer2": "Upgrading to a paid plan makes sense if you use Rallly often or use it for work. The current subscription rate is a special early adopter rate and will increase in the future. By upgrading now, you will get early access to new, high-quality scheduling tools as they are released and lock in your subscription rate so you won't be affected by future price increases.",
   "upgradeNowSaveLater": "Upgrade now, save later",
   "earlyAdopterDescription": "As an early adopter, you'll lock in your subscription rate and won't be affected by future price increases.",
-  "planFree": "Free",
   "keepPollsIndefinitely": "Keep polls indefinitely",
   "whenPollInactive": "When does a poll become inactive?",
   "whenPollInactiveAnswer": "Polls become inactive when all date options are in the past AND the poll has not been accessed for over 30 days. Inactive polls are automatically deleted if you do not have a paid subscription.",
