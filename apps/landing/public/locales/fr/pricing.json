@@ -1,7 +1,6 @@
 {
   "pricingDescription": "Commencez gratuitement. Pas de connexion requise.",
   "freeForever": "gratuit pour toujours",
-  "planPro": "Pro",
   "monthlyBillingDescription": "par mois",
   "upgrade": "Mettre à niveau",
   "faq": "Foire Aux Questions",
@@ -23,7 +22,6 @@
   "whyUpgradeAnswer2": "La mise à niveau vers une offre payante est logique si vous utilisez Rallly souvent ou si vous l’utilisez au travail. Le taux d'abonnement actuel est un taux spécial de pré-adoption et augmentera à l'avenir. En mettant à niveau maintenant, vous aurez un accès exclusif aux nouveautés des outils de réservation de haute qualité, car ils sont publiés et compris dans votre taux d'abonnement de sorte que vous ne serez pas affecté par de futures augmentations de prix.",
   "upgradeNowSaveLater": "Mettre à niveau maintenant, enregistrer plus tard",
   "earlyAdopterDescription": "En tant qu'adopteur précoce, vous verrouillez votre abonnement et ne serez pas affecté par des augmentations de prix futures.",
-  "planFree": "Gratuit",
   "keepPollsIndefinitely": "Conserver les sondages indéfiniment",
   "whenPollInactive": "Quand un sondage est-il devenu inactif ?",
   "whenPollInactiveAnswer": "Les sondages deviennent inactifs lorsque toutes les options de date sont passées ET que le sondage n'a pas été consulté depuis plus de 30 jours. Les sondages inactifs sont automatiquement supprimés si vous n'avez pas d'abonnement payant.",
