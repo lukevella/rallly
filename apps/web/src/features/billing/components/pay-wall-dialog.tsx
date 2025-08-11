@@ -227,8 +227,11 @@ export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
                       </Label>
                       <p className="text-muted-foreground text-sm">
                         <Trans
-                          defaults="Pay for 8 months, get 12."
+                          defaults="Pay for {payMonths, number} months, get 12."
                           i18nKey="annualDiscount"
+                          values={{
+                            payMonths: 8,
+                          }}
                         />
                       </p>
                     </div>

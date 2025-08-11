@@ -463,7 +463,7 @@
   "imageCropDialogTitle": "Crop Image",
   "cropPreview": "Crop preview",
   "annualSavings": "Save {amount} with yearly billing",
-  "annualDiscount": "Pay for 8 months, get 12.",
+  "annualDiscount": "Pay for {payMonths, number} months, get 12.",
   "perSeatMonth": "/seat/mo",
   "currentPlan": "Current Plan",
   "planHobbyDescription": "For casual users",
