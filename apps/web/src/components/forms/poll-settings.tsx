@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@rallly/ui/card";
-import { useDialog } from "@rallly/ui/dialog";
 import { FormField } from "@rallly/ui/form";
 import { Switch } from "@rallly/ui/switch";
 import { AtSignIcon, EyeIcon, MessageCircleIcon, VoteIcon } from "lucide-react";
@@ -15,8 +14,8 @@ import type React from "react";
 import { useFormContext } from "react-hook-form";
 import { Trans } from "react-i18next";
 
-import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { ProBadge } from "@/components/pro-badge";
+import { useBilling } from "@/features/billing/client";
 import { useSpace } from "@/features/space/client";
 
 export type PollSettingsFormData = {
@@ -66,153 +65,150 @@ const Setting = ({ children }: React.PropsWithChildren) => {
 export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
   const form = useFormContext<PollSettingsFormData>();
   const posthog = usePostHog();
-  const paywallDialog = useDialog();
+  const { showPayWall } = useBilling();
 
   const space = useSpace();
   const isFree = space.data.tier === "hobby";
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between gap-x-4">
-            <div>
-              <div className="flex items-center gap-x-2">
-                <CardTitle>
-                  <Trans i18nKey="settings" />
-                </CardTitle>
-              </div>
-              <CardDescription>
-                <Trans
-                  i18nKey="pollSettingsDescription"
-                  defaults="Customize the behaviour of your poll"
-                />
-              </CardDescription>
+    <Card>
+      <CardHeader>
+        <div className="flex justify-between gap-x-4">
+          <div>
+            <div className="flex items-center gap-x-2">
+              <CardTitle>
+                <Trans i18nKey="settings" />
+              </CardTitle>
             </div>
+            <CardDescription>
+              <Trans
+                i18nKey="pollSettingsDescription"
+                defaults="Customize the behaviour of your poll"
+              />
+            </CardDescription>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className={cn("grid gap-2.5")}>
-            <FormField
-              control={form.control}
-              name="disableComments"
-              render={({ field }) => (
-                <Setting>
-                  <MessageCircleIcon className="size-5 shrink-0 translate-y-0.5" />
-                  <SettingContent>
-                    <SettingTitle htmlFor="disableComments">
-                      <Trans i18nKey="disableComments">Disable Comments</Trans>
-                    </SettingTitle>
-                  </SettingContent>
-                  <Switch
-                    id={field.name}
-                    checked={!!field.value}
-                    onCheckedChange={(checked) => {
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className={cn("grid gap-2.5")}>
+          <FormField
+            control={form.control}
+            name="disableComments"
+            render={({ field }) => (
+              <Setting>
+                <MessageCircleIcon className="size-5 shrink-0 translate-y-0.5" />
+                <SettingContent>
+                  <SettingTitle htmlFor="disableComments">
+                    <Trans i18nKey="disableComments">Disable Comments</Trans>
+                  </SettingTitle>
+                </SettingContent>
+                <Switch
+                  id={field.name}
+                  checked={!!field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                  }}
+                />
+              </Setting>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="requireParticipantEmail"
+            render={({ field }) => (
+              <Setting>
+                <AtSignIcon className="size-5 shrink-0 translate-y-0.5" />
+                <SettingContent>
+                  <SettingTitle pro>
+                    <Trans
+                      i18nKey="requireParticipantEmailLabel"
+                      defaults="Make email address required for participants"
+                    />
+                  </SettingTitle>
+                </SettingContent>
+                <Switch
+                  checked={!!field.value}
+                  onCheckedChange={(checked) => {
+                    if (isFree) {
+                      showPayWall();
+                      posthog?.capture("trigger paywall", {
+                        setting: "require-participant-email",
+                        from: "poll-settings",
+                      });
+                    } else {
                       field.onChange(checked);
-                    }}
-                  />
-                </Setting>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="requireParticipantEmail"
-              render={({ field }) => (
-                <Setting>
-                  <AtSignIcon className="size-5 shrink-0 translate-y-0.5" />
-                  <SettingContent>
-                    <SettingTitle pro>
-                      <Trans
-                        i18nKey="requireParticipantEmailLabel"
-                        defaults="Make email address required for participants"
-                      />
-                    </SettingTitle>
-                  </SettingContent>
-                  <Switch
-                    checked={!!field.value}
-                    onCheckedChange={(checked) => {
-                      if (isFree) {
-                        paywallDialog.trigger();
-                        posthog?.capture("trigger paywall", {
-                          setting: "require-participant-email",
-                          from: "poll-settings",
-                        });
-                      } else {
-                        field.onChange(checked);
-                      }
-                    }}
-                  />
-                </Setting>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="hideParticipants"
-              render={({ field }) => (
-                <Setting>
-                  <EyeIcon className="size-5 shrink-0 translate-y-0.5" />
-                  <SettingContent>
-                    <SettingTitle pro>
-                      <Trans
-                        i18nKey="hideParticipantsLabel"
-                        defaults="Hide participants from each other"
-                      />
-                    </SettingTitle>
-                  </SettingContent>
-                  <Switch
-                    checked={!!field.value}
-                    onCheckedChange={(checked) => {
-                      if (isFree) {
-                        paywallDialog.trigger();
-                        posthog?.capture("trigger paywall", {
-                          setting: "hide-participants",
-                          from: "poll-settings",
-                        });
-                      } else {
-                        field.onChange(checked);
-                      }
-                    }}
-                  />
-                </Setting>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="hideScores"
-              render={({ field }) => (
-                <Setting>
-                  <VoteIcon className="size-5 shrink-0 translate-y-0.5" />
-                  <SettingContent>
-                    <SettingTitle htmlFor={field.name} pro>
-                      <Trans
-                        i18nKey="hideScoresLabel"
-                        defaults="Hide scores until after a participant has voted"
-                      />
-                    </SettingTitle>
-                  </SettingContent>
-                  <Switch
-                    id={field.name}
-                    checked={!!field.value}
-                    onCheckedChange={(checked) => {
-                      if (isFree) {
-                        paywallDialog.trigger();
-                        posthog?.capture("trigger paywall", {
-                          setting: "hide-scores",
-                          from: "poll-settings",
-                        });
-                      } else {
-                        field.onChange(checked);
-                      }
-                    }}
-                  />
-                </Setting>
-              )}
-            />
-          </div>
-        </CardContent>
-        {children}
-      </Card>
-      <PayWallDialog {...paywallDialog.dialogProps} />
-    </>
+                    }
+                  }}
+                />
+              </Setting>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="hideParticipants"
+            render={({ field }) => (
+              <Setting>
+                <EyeIcon className="size-5 shrink-0 translate-y-0.5" />
+                <SettingContent>
+                  <SettingTitle pro>
+                    <Trans
+                      i18nKey="hideParticipantsLabel"
+                      defaults="Hide participants from each other"
+                    />
+                  </SettingTitle>
+                </SettingContent>
+                <Switch
+                  checked={!!field.value}
+                  onCheckedChange={(checked) => {
+                    if (isFree) {
+                      showPayWall();
+                      posthog?.capture("trigger paywall", {
+                        setting: "hide-participants",
+                        from: "poll-settings",
+                      });
+                    } else {
+                      field.onChange(checked);
+                    }
+                  }}
+                />
+              </Setting>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="hideScores"
+            render={({ field }) => (
+              <Setting>
+                <VoteIcon className="size-5 shrink-0 translate-y-0.5" />
+                <SettingContent>
+                  <SettingTitle htmlFor={field.name} pro>
+                    <Trans
+                      i18nKey="hideScoresLabel"
+                      defaults="Hide scores until after a participant has voted"
+                    />
+                  </SettingTitle>
+                </SettingContent>
+                <Switch
+                  id={field.name}
+                  checked={!!field.value}
+                  onCheckedChange={(checked) => {
+                    if (isFree) {
+                      showPayWall();
+                      posthog?.capture("trigger paywall", {
+                        setting: "hide-scores",
+                        from: "poll-settings",
+                      });
+                    } else {
+                      field.onChange(checked);
+                    }
+                  }}
+                />
+              </Setting>
+            )}
+          />
+        </div>
+      </CardContent>
+      {children}
+    </Card>
   );
 };

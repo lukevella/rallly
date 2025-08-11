@@ -8,11 +8,9 @@ import { Trans } from "@/components/trans";
 export const UpgradeButton = ({
   children,
   annual,
-  large,
   className,
 }: React.PropsWithChildren<{
   annual?: boolean;
-  large?: boolean;
   className?: string;
 }>) => {
   const posthog = usePostHog();
@@ -31,7 +29,7 @@ export const UpgradeButton = ({
         value={window.location.pathname}
       />
       <Button
-        size={large ? "lg" : "default"}
+        size="md"
         className={className}
         variant="primary"
         onClick={(e) => {

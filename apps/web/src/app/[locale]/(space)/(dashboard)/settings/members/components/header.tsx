@@ -5,8 +5,8 @@ import { useDialog } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { UserPlusIcon } from "lucide-react";
-import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { Trans } from "@/components/trans";
+import { useBilling } from "@/features/billing/client";
 import { useSpace } from "@/features/space/client";
 import { useTranslation } from "@/i18n/client";
 import { InviteMemberDialog } from "./invite-member-dialog";
@@ -14,8 +14,8 @@ import { InviteMemberDialog } from "./invite-member-dialog";
 export function InviteMemberButton() {
   const { t } = useTranslation();
   const inviteMemberDialog = useDialog();
-  const payWallDialog = useDialog();
   const space = useSpace();
+  const { showPayWall } = useBilling();
   return (
     <>
       <Button
@@ -27,7 +27,7 @@ export function InviteMemberButton() {
               }),
             );
           } else if (space.getAbility().cannot("invite", "Member")) {
-            payWallDialog.trigger();
+            showPayWall();
           } else {
             inviteMemberDialog.trigger();
           }
@@ -38,7 +38,6 @@ export function InviteMemberButton() {
         </Icon>
         <Trans i18nKey="inviteMember" defaults="Invite member" />
       </Button>
-      <PayWallDialog {...payWallDialog.dialogProps} />
       <InviteMemberDialog {...inviteMemberDialog.dialogProps} />
     </>
   );

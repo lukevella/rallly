@@ -1,5 +1,4 @@
 import { Button } from "@rallly/ui/button";
-import { DialogTrigger } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import { DotIcon, SendIcon, ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
@@ -19,9 +18,9 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
+import { PayWallButton } from "@/features/billing/client";
 import { SubscriptionStatus } from "@/features/billing/components/subscription-status";
 import { getSpaceSubscription } from "@/features/billing/data";
 import {
@@ -119,13 +118,9 @@ export default async function BillingSettingsPage() {
                     </a>
                   </Button>
                 ) : (
-                  <PayWallDialog>
-                    <DialogTrigger asChild>
-                      <Button>
-                        <Trans i18nKey="upgradeToPro" />
-                      </Button>
-                    </DialogTrigger>
-                  </PayWallDialog>
+                  <PayWallButton>
+                    <Trans i18nKey="upgradeToPro" />
+                  </PayWallButton>
                 )}
               </div>
             </StackedListItem>
