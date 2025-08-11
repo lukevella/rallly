@@ -474,7 +474,7 @@
   "currentPlan": "Current Plan",
   "planHobbyDescription": "For casual users",
   "keyBenefits": "Key Benefits",
-  "basicPolls": "Basic polls",
+  "basicPolls": "Basic Polls",
   "basicPollsDescription": "Create simple scheduling polls",
   "limitedPollLifetime": "Limited Poll Lifetime",
   "limitedPollLifetimeDescription": "Inactive polls are automatically deleted",
@@ -483,10 +483,10 @@
   "duplicatePollDescription": "Quickly create similar polls from existing ones",
   "advancedSettingsDescription": "Customize poll behavior and participant permissions",
   "extendedPollLifetimeDescription": "Keep polls indefinitely",
-  "teamCollaboration": "Team collaboration",
+  "teamCollaboration": "Team Collaboration",
   "teamCollaborationDescription": "Invite team members with centralized billing",
   "instantAccess": "Instant access to all features",
   "selectPlan": "Select Plan:",
-  "prioritySupport": "Priority support",
+  "prioritySupport": "Priority Support",
   "prioritySupportDescription": "Get faster response times and dedicated assistance"
 }
