@@ -1,7 +1,6 @@
 {
   "pricingDescription": "Začněte zdarma. Bez nutnosti přihlášení.",
   "freeForever": "zdarma navždy",
-  "planPro": "Pro",
   "monthlyBillingDescription": "měsíčně",
   "upgrade": "Upgradovat",
   "faq": "Často kladené otázky",
@@ -23,7 +22,6 @@
   "whyUpgradeAnswer2": "Upgrade na placený plán má smysl, pokud používáte Rallly často nebo ho používáte pro práci. Aktuální cena předplatného je akce pro \"early adopters\" a v budoucnu se zvýší. Upgradem dnes získáte přednostní přístup k novým funkcím vysoce kvalitního nástroje pro plánování a cena vašeho předplátného vám zůstane napořád. Budoucí zvýšení cen se vás nedotkne.",
   "upgradeNowSaveLater": "Upgradujte dnes a ušetřete",
   "earlyAdopterDescription": "Jako \"early adopter\" vám zůstane aktuální cena předplatného napořád a nedotkne se vás budoucí zvýšení cen.",
-  "planFree": "Zdarma",
   "keepPollsIndefinitely": "Uchovat hlasování neomezeně",
   "whenPollInactive": "Kdy se anketa stane neaktivní?",
   "whenPollInactiveAnswer": "Anketa se stane neaktivní, když jsou všechny možnosti (data) v minulosti a zároveň nikdo anketu nenavštívil více než 30 dní. Neaktivní ankety jsou automaticky smazány, pokud nemáte placené předplatné.",
