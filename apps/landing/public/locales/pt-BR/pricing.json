@@ -1,7 +1,6 @@
 {
   "pricingDescription": "Comece grátis. Nenhum login é necessário.",
   "freeForever": "gratuito para sempre",
-  "planPro": "Pro",
   "monthlyBillingDescription": "por mês",
   "upgrade": "Upgrade",
   "faq": "Preguntas frequentes",
@@ -23,7 +22,6 @@
   "whyUpgradeAnswer2": "Atualizar para um plano pago faz sentido se você usar o Rallly com frequência ou usá-lo para trabalhar. A atual taxa de assinatura é uma taxa especial de utilizador antecipado e aumentará no futuro. Ao atualizar agora, você terá acesso antecipado a novas ferramentas de agendamento de alta qualidade à medida que forem lançadas e bloqueadas na sua taxa de assinatura para que você não seja afetado por futuros aumentos de preços.",
   "upgradeNowSaveLater": "Atualize agora, economize depois",
   "earlyAdopterDescription": "Como um utilizador antecipado, você bloqueará a taxa de assinatura e não será afetado por futuros aumentos de preços.",
-  "planFree": "Grátis",
   "keepPollsIndefinitely": "Manter enquetes indefinidamente",
   "whenPollInactive": "Quando uma enquete fica inativa?",
   "whenPollInactiveAnswer": "Enquetes ficam inativas quando todas as opções de data estiverem no passado e não tenham sido acessadas há mais de 30 dias. As enquetes inativas são automaticamente excluídas se você não tiver uma assinatura paga.",
