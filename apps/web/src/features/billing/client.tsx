@@ -51,5 +51,13 @@ export function useBilling() {
 
 export const PayWallButton = ({ onClick, ...forwardedProps }: ButtonProps) => {
   const { showPayWall } = useBilling();
-  return <Button onClick={() => showPayWall()} {...forwardedProps} />;
+  return (
+    <Button
+      onClick={(e) => {
+        showPayWall();
+        onClick?.(e);
+      }}
+      {...forwardedProps}
+    />
+  );
 };
