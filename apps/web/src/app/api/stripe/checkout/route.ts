@@ -5,6 +5,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSpace, requireUser } from "@/auth/data";
+import type { CustomerMetadata } from "@/features/billing/schema";
 import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
@@ -52,19 +53,18 @@ export async function POST(request: NextRequest) {
     customerId = res.customerId;
   } else {
     // create a new customer in stripe
-    const customer = await stripe.customers.create({
-      email: user.email,
-      name: user.name,
-    });
-
-    await prisma.user.update({
-      where: {
-        id: user.id,
+    const customer = await stripe.customers.create(
+      {
+        email: user.email,
+        name: user.name,
+        metadata: {
+          userId: user.id,
+        } satisfies CustomerMetadata,
       },
-      data: {
-        customerId: customer.id,
+      {
+        idempotencyKey: `cust_create_${user.id}`,
       },
-    });
+    );
 
     customerId = customer.id;
   }
