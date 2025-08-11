@@ -117,6 +117,13 @@ function PlanRadioGroupItem({
   );
 }
 
+const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
 export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
   const dialog = useDialog();
   const [selectedPlan, setSelectedPlan] = React.useState<SpaceTier>("pro");
@@ -129,20 +136,10 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
     if (isAnnual) {
       const yearlyPrice = pricingData.yearly.amount / 100;
       const monthlyEquivalent = yearlyPrice / 12;
-      return new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(monthlyEquivalent);
+      return currencyFormatter.format(monthlyEquivalent);
     } else {
       const monthlyPrice = pricingData.monthly.amount / 100;
-      return new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(monthlyPrice);
+      return currencyFormatter.format(monthlyPrice);
     }
   };
 
