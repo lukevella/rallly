@@ -14,7 +14,7 @@ import { useTranslation } from "@/i18n/client";
 
 function IconGuide() {
   return (
-    <ul className="flex items-center gap-x-3 whitespace-nowrap text-sm">
+    <ul className="flex items-center gap-x-3 flex-wrap whitespace-nowrap text-sm">
       <li className="flex items-center gap-1.5">
         <VoteIcon type="yes" />
         <Trans i18nKey="yes" />
@@ -45,7 +45,7 @@ export function EventCard() {
                 {poll.title}
               </h1>
               <CardDescription>
-                <span className="flex items-center gap-0.5 whitespace-nowrap text-gray-500 text-sm">
+                <span className="flex items-center gap-0.5 whitespace-nowrap flex-wrap text-gray-500 text-sm">
                   <span>
                     <Trans
                       i18nKey="createdBy"
