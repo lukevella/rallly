@@ -462,7 +462,7 @@
   "participantCount": "{count, plural, one {1 participant} other {# participants}}",
   "imageCropDialogTitle": "Crop Image",
   "cropPreview": "Crop preview",
-  "annualSavings": "Save ${amount} with yearly billing",
+  "annualSavings": "Save {amount} with yearly billing",
   "annualDiscount": "Pay for 8 months, get 12.",
   "perSeatMonth": "/seat/mo",
   "currentPlan": "Current Plan",

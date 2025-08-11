@@ -214,14 +214,14 @@ export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
                     <div className="space-y-2">
                       <Label htmlFor="annual-switch">
                         <Trans
-                          defaults="Save ${amount} with yearly billing"
+                          defaults="Save {amount} with yearly billing"
                           i18nKey="annualSavings"
                           values={{
-                            amount: (
+                            amount: currencyFormatter.format(
                               (pricingData.monthly.amount * 12 -
                                 pricingData.yearly.amount) /
                               100
-                            ).toFixed(0),
+                            ),
                           }}
                         />
                       </Label>
