@@ -1,7 +1,6 @@
 {
   "pricingDescription": "Ga gratis aan de slag. Inloggen is niet vereist.",
   "freeForever": "voor altijd gratis",
-  "planPro": "Pro",
   "monthlyBillingDescription": "per maand",
   "upgrade": "Upgraden",
   "faq": "Veelgestelde vragen (FAQ's)",
@@ -23,7 +22,6 @@
   "whyUpgradeAnswer2": "Upgraden naar een betaald abonnement is zinvol als je Rallly vaak gebruikt of het voor je werk gebruikt. Het huidige abonnementstarief is speciaal voor early adopters en zal in de toekomst stijgen. Door nu te upgraden krijg je vroegtijdige toegang tot nieuwe planningshulpmiddelen van hoge kwaliteit zodra ze worden uitgebracht en kun je je abonnement vastzetten zodat je niet wordt beïnvloed door toekomstige prijsstijgingen.",
   "upgradeNowSaveLater": "Upgrade nu, bespaar later",
   "earlyAdopterDescription": "Als een early adopter heb je een vaste abonnementsprijs die niet zal worden beïnvloed door toekomstige prijsstijgingen.",
-  "planFree": "Gratis",
   "keepPollsIndefinitely": "Behoud polls voor onbepaalde tijd",
   "whenPollInactive": "Wanneer krijgt een poll de status \"inactief\"?",
   "whenPollInactiveAnswer": "Polls worden inactief wanneer alle datumopties in het verleden liggen en de poll gedurende meer dan 30 dagen niet is benaderd. Zonder een betaald abonnement worden inactieve polls automatisch verwijderd.",
