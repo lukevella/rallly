@@ -5,6 +5,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSpace, requireUser } from "@/auth/data";
+import type { CustomerMetadata } from "@/features/billing/schema";
 import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
@@ -48,33 +49,32 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  if (res.customerId) {
-    customerId = res.customerId;
-  } else {
-    // create a new customer in stripe
-    const customer = await stripe.customers.create({
-      email: user.email,
-      name: user.name,
-    });
-
-    await prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        customerId: customer.id,
-      },
-    });
-
-    customerId = customer.id;
-  }
-
   if (space.tier === "pro") {
     // User already has an active subscription. Take them to customer portal
     return NextResponse.redirect(
       new URL("/api/stripe/portal", request.url),
       303,
     );
+  }
+
+  if (res.customerId) {
+    customerId = res.customerId;
+  } else {
+    // create a new customer in stripe
+    const customer = await stripe.customers.create(
+      {
+        email: user.email,
+        name: user.name,
+        metadata: {
+          userId: user.id,
+        } satisfies CustomerMetadata,
+      },
+      {
+        idempotencyKey: `cust_create_${user.id}`,
+      },
+    );
+
+    customerId = customer.id;
   }
 
   const proPricingData = await getProPricing();

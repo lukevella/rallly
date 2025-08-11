@@ -1,10 +1,6 @@
 import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
-import { z } from "zod";
-
-const customerMetadataSchema = z.object({
-  userId: z.string(),
-});
+import { customerMetadataSchema } from "@/features/billing/schema";
 
 export async function onCustomerCreated(event: Stripe.Event) {
   const customer = event.data.object as Stripe.Customer;
