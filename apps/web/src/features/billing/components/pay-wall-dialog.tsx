@@ -192,13 +192,13 @@ export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
                   <PlanRadioGroupItem
                     value="hobby"
                     id="hobby"
-                    title={<Trans i18nKey="planHobbyTitle" defaults="Hobby" />}
-                    price={<Trans i18nKey="free" defaults="Free" />}
+                    title={<Trans i18nKey="planHobby" defaults="Hobby" />}
+                    price={<Trans i18nKey="planFree" defaults="Free" />}
                   />
                   <PlanRadioGroupItem
                     value="pro"
                     id="pro"
-                    title={<Trans i18nKey="planProTitle" defaults="Pro" />}
+                    title={<Trans i18nKey="planPro" defaults="Pro" />}
                     price={getProPrice()}
                     priceLabel={
                       <Trans i18nKey="perSeatMonth" defaults="/seat/mo" />
@@ -258,7 +258,7 @@ export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
               <TabsContent value="hobby" className="space-y-6">
                 <DialogHeader>
                   <DialogTitle>
-                    <Trans i18nKey="planHobbyTitle" defaults="Hobby" />
+                    <Trans i18nKey="planHobby" defaults="Hobby" />
                   </DialogTitle>
                   <DialogDescription>
                     <Trans
@@ -305,7 +305,7 @@ export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
               <TabsContent value="pro" className="space-y-6">
                 <DialogHeader>
                   <DialogTitle>
-                    <Trans i18nKey="planProTitle" defaults="Pro" />
+                    <Trans i18nKey="planPro" defaults="Pro" />
                   </DialogTitle>
                   <DialogDescription>
                     <Trans
