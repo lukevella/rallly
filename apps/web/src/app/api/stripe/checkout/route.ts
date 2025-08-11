@@ -49,6 +49,14 @@ export async function POST(request: NextRequest) {
     },
   });
 
+  if (space.tier === "pro") {
+    // User already has an active subscription. Take them to customer portal
+    return NextResponse.redirect(
+      new URL("/api/stripe/portal", request.url),
+      303,
+    );
+  }
+
   if (res.customerId) {
     customerId = res.customerId;
   } else {
@@ -67,14 +75,6 @@ export async function POST(request: NextRequest) {
     );
 
     customerId = customer.id;
-  }
-
-  if (space.tier === "pro") {
-    // User already has an active subscription. Take them to customer portal
-    return NextResponse.redirect(
-      new URL("/api/stripe/portal", request.url),
-      303,
-    );
   }
 
   const proPricingData = await getProPricing();
