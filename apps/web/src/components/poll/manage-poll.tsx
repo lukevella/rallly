@@ -28,14 +28,13 @@ import Link from "next/link";
 import * as React from "react";
 
 import { DuplicateDialog } from "@/app/[locale]/(optional-space)/poll/[urlId]/duplicate-dialog";
-import { PayWallDialog } from "@/components/pay-wall-dialog";
 import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
+import { useBilling } from "@/features/billing/client";
 import { useSpace } from "@/features/space/client";
 import { trpc } from "@/trpc/client";
-
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
 
@@ -143,7 +142,7 @@ const ManagePoll: React.FunctionComponent<{
   const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
   const duplicateDialog = useDialog();
   const finalizeDialog = useDialog();
-  const paywallDialog = useDialog();
+  const { showPayWall } = useBilling();
   const posthog = usePostHog();
   const { exportToCsv } = useCsvExporter();
 
@@ -203,7 +202,7 @@ const ManagePoll: React.FunctionComponent<{
                 disabled={!!poll.event}
                 onClick={() => {
                   if (space.data.tier !== "pro") {
-                    paywallDialog.trigger();
+                    showPayWall();
                     posthog?.capture("trigger paywall", {
                       poll_id: poll.id,
                       from: "manage-poll",
@@ -232,7 +231,7 @@ const ManagePoll: React.FunctionComponent<{
           <DropdownMenuItem
             onClick={() => {
               if (space.data.tier !== "pro") {
-                paywallDialog.trigger();
+                showPayWall();
                 posthog?.capture("trigger paywall", {
                   poll_id: poll.id,
                   action: "duplicate",
@@ -271,7 +270,6 @@ const ManagePoll: React.FunctionComponent<{
         {...duplicateDialog.dialogProps}
       />
       <FinalizePollDialog {...finalizeDialog.dialogProps} />
-      <PayWallDialog {...paywallDialog.dialogProps} />
     </>
   );
 };

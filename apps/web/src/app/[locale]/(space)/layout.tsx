@@ -1,4 +1,5 @@
 import { requireSpace, requireUser } from "@/auth/data";
+import { BillingProvider } from "@/features/billing/client";
 import { SpaceProvider } from "@/features/space/client";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 
@@ -20,9 +21,11 @@ export default async function Layout({
 
   return (
     <SpaceProvider data={space} userId={user.id}>
-      <TimezoneProvider initialTimezone={user.timeZone}>
-        {children}
-      </TimezoneProvider>
+      <BillingProvider>
+        <TimezoneProvider initialTimezone={user.timeZone}>
+          {children}
+        </TimezoneProvider>
+      </BillingProvider>
     </SpaceProvider>
   );
 }

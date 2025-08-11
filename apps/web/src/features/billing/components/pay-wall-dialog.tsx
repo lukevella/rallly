@@ -2,7 +2,6 @@
 
 import { pricingData } from "@rallly/billing/pricing";
 import { Button } from "@rallly/ui/button";
-import type { DialogProps } from "@rallly/ui/dialog";
 import {
   Dialog,
   DialogClose,
@@ -10,7 +9,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  useDialog,
 } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import { Label } from "@rallly/ui/label";
@@ -124,10 +122,15 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
 
-export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
-  const dialog = useDialog();
+interface PayWallDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
   const [selectedPlan, setSelectedPlan] = React.useState<SpaceTier>("pro");
   const [isAnnual, setIsAnnual] = React.useState(false);
+
   const handleChangePlan = (value: string) => {
     setSelectedPlan(spaceTierSchema.parse(value));
   };
@@ -144,8 +147,7 @@ export function PayWallDialog({ children, ...forwardedProps }: DialogProps) {
   };
 
   return (
-    <Dialog {...dialog.dialogProps} {...forwardedProps}>
-      {children}
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent size="4xl" className="overflow-hidden p-0 lg:h-[500px]">
         <Tabs value={selectedPlan} onValueChange={handleChangePlan} asChild>
           <div className="grid min-h-0 grid-cols-1 md:grid-cols-2">

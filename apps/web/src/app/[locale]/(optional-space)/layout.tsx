@@ -1,4 +1,5 @@
 import { requireSpace } from "@/auth/data";
+import { BillingProvider } from "@/features/billing/client";
 import { SpaceProvider } from "@/features/space/client";
 import { auth } from "@/next-auth";
 
@@ -13,7 +14,7 @@ export default async function Layout({
     const space = await requireSpace();
     return (
       <SpaceProvider data={space} userId={session.user.id}>
-        {children}
+        <BillingProvider>{children}</BillingProvider>
       </SpaceProvider>
     );
   }

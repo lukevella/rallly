@@ -14,13 +14,13 @@ import type React from "react";
 import { LogoLink } from "@/app/components/logo-link";
 import { requireSpace, requireUser } from "@/auth/data";
 import { Trans } from "@/components/trans";
+import { PayWallButton } from "@/features/billing/client";
 import { FeedbackToggle } from "@/features/feedback/components/feedback-toggle";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { isSpacesEnabled } from "@/features/space/constants";
 import { loadSpaces } from "@/features/space/data";
-import { UpgradeButton } from "../upgrade-button";
 import { NavUser } from "./nav-user";
 import { SpaceSidebarMenu } from "./space-sidebar-menu";
 
@@ -106,11 +106,9 @@ export async function SpaceSidebar({
                     defaults="Unlock all Pro features"
                   />
                 </p>
-                <UpgradeButton>
-                  <Button variant="primary" className="w-full">
-                    <Trans i18nKey="upgrade" defaults="Upgrade" />
-                  </Button>
-                </UpgradeButton>
+                <PayWallButton variant="primary" className="w-full">
+                  <Trans i18nKey="upgrade" defaults="Upgrade" />
+                </PayWallButton>
               </div>
             </div>
             <SidebarSeparator className="my-1" />
