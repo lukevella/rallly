@@ -1,7 +1,6 @@
 {
   "pricingDescription": "Starte kostenlos. Keine Anmeldung erforderlich.",
   "freeForever": "dauerhaft kostenlos",
-  "planPro": "Pro",
   "monthlyBillingDescription": "pro Monat",
   "upgrade": "Upgrade",
   "faq": "Häufig gestellte Fragen",
@@ -23,7 +22,6 @@
   "whyUpgradeAnswer2": "Ein Upgrade auf einen kostenpflichtigen Plan lohnt sich, wenn du Rallly häufig nutzt oder beruflich einsetzt. Der aktuelle Preis ist ein spezieller Frühbucher-Tarif, der in Zukunft steigen wird. Wenn du jetzt ein Upgrade machst, erhältst du frühzeitigen Zugang zu neuen, hochwertigen Planungstools und sicherst dir den aktuellen Preis – zukünftige Preiserhöhungen betreffen dich dann nicht.",
   "upgradeNowSaveLater": "Jetzt upgraden, später sparen",
   "earlyAdopterDescription": "Als Abonnent der ersten Stunde sicherst du dir deinen Abonnementpreis und bist von künftigen Preiserhöhungen nicht betroffen.",
-  "planFree": "Kostenlos",
   "keepPollsIndefinitely": "Umfragen auf unbestimmte Zeit behalten",
   "whenPollInactive": "Wann wird eine Umfrage inaktiv?",
   "whenPollInactiveAnswer": "Umfragen werden inaktiv, wenn alle Datumsoptionen in der Vergangenheit liegen UND die Umfrage seit mehr als 30 Tagen nicht aufgerufen wurde. Inaktive Umfragen werden automatisch gelöscht, wenn du kein kostenpflichtiges Abonnement hast.",
