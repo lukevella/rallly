@@ -129,6 +129,11 @@ pnpm sherif               # Check package dependencies
 - React Context for client state (auth, preferences, etc.)
 - Form state with react-hook-form + Zod validation
 
+### TypeScript Conventions
+- Prefer inline prop types over named interfaces for simple component props
+- Example: `function Component({ prop }: { prop: string })` instead of defining a separate interface
+- Only create named interfaces when they're reused or complex
+
 ### File Organization
 - Features organized in `apps/web/src/features/[feature]/`
 - Shared components in `apps/web/src/components/`
