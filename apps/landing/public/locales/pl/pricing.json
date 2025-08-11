@@ -1,7 +1,6 @@
 {
   "pricingDescription": "Rozpocznij za darmo. Logowanie nie jest wymagane.",
   "freeForever": "darmowy na zawsze",
-  "planPro": "Pro",
   "monthlyBillingDescription": "miesięcznie",
   "upgrade": "Ulepsz",
   "faq": "Często zadawane pytania",
@@ -23,7 +22,6 @@
   "whyUpgradeAnswer2": "Przejście do płatnego planu ma sens, jeśli często korzystasz z Rallly lub używasz go do pracy. Obecna cena subskrypcji jest specjalną ceną dla wczesnych użytkowników i wzrośnie w przyszłości. Ulepszając teraz, uzyskasz wczesny dostęp do nowych, wysokiej jakości narzędzi do planowania harmonogramów w miarę ich wydawania i zablokujesz swoją cenę subskrypcji, dzięki czemu nie wpłyną na ciebie przyszłe podwyżki cen.",
   "upgradeNowSaveLater": "Ulepsz teraz, oszczędzaj później",
   "earlyAdopterDescription": "Jako wczesny użytkownik zablokujesz swoją cenę subskrypcji i nie będą miały na nią wpływu przyszłe podwyżki cen.",
-  "planFree": "Darmowy",
   "keepPollsIndefinitely": "Przechowuj ankiety w nieskończoność",
   "whenPollInactive": "Kiedy ankieta staje się nieaktywna?",
   "whenPollInactiveAnswer": "Ankiety stają się nieaktywne, gdy wszystkie opcje daty znajdują się w przeszłości ORAZ ankieta nie była używana przez ponad 30 dni. Nieaktywne ankiety są automatycznie usuwane, jeśli użytkownik nie posiada płatnej subskrypcji.",
