@@ -1,6 +1,6 @@
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { shortUrl } from "@rallly/utils/absolute-url";
 import { requireSpace } from "@/auth/data";
 
 type PollFilters = {
@@ -86,7 +86,7 @@ export const getPolls = async ({
       name: participant.name,
       image: participant.user?.image ?? undefined,
     })),
-    inviteLink: absoluteUrl(`/invite/${poll.id}`),
+    inviteLink: shortUrl(`/invite/${poll.id}`),
   }));
 
   const totalPages = Math.ceil(totalCount / pageSize);
