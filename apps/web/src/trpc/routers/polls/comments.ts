@@ -2,6 +2,7 @@ import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { z } from "zod";
 
+import { trackPollEvent } from "@/features/poll/analytics";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
@@ -147,6 +148,18 @@ export const comments = router({
         );
       }
 
+      // Track comment addition analytics
+      trackPollEvent({
+        type: "comment_added",
+        userId: ctx.user.id,
+        pollId,
+        properties: {
+          commentId: newComment.id,
+          authorName,
+          contentLength: content.length,
+        },
+      });
+
       return newComment;
     }),
   delete: publicProcedure
@@ -155,11 +168,29 @@ export const comments = router({
         commentId: z.string(),
       }),
     )
-    .mutation(async ({ input: { commentId } }) => {
+    .use(requireUserMiddleware)
+    .mutation(async ({ input: { commentId }, ctx }) => {
+      const comment = await prisma.comment.findUnique({
+        where: { id: commentId },
+        select: { pollId: true },
+      });
+
       await prisma.comment.delete({
         where: {
           id: commentId,
         },
       });
+
+      // Track comment deletion analytics
+      if (comment) {
+        trackPollEvent({
+          type: "comment_deleted",
+          userId: ctx.user.id,
+          pollId: comment.pollId,
+          properties: {
+            commentId,
+          },
+        });
+      }
     }),
 });

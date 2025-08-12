@@ -1,5 +1,6 @@
 import type { PollStatus } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
+import { convertKeysToSnakeCase } from "@rallly/utils/string-utils";
 
 /**
  * Poll analytics functions using functional approach
@@ -151,7 +152,7 @@ export interface PollErrorEvent extends BaseEventData {
 /**
  * Main analytics tracking function using discriminated union
  */
-export async function trackPollEvent(event: PollEvent): Promise<void> {
+export function trackPollEvent(event: PollEvent): void {
   if (!posthog) return;
 
   // Handle special case for poll creation - also set up group
@@ -186,29 +187,6 @@ export async function trackPollEvent(event: PollEvent): Promise<void> {
       poll: event.pollId,
     },
   });
-}
-
-/**
- * Convert camelCase keys to snake_case
- */
-function camelToSnakeCase(str: string): string {
-  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
-}
-
-/**
- * Convert an object's keys from camelCase to snake_case
- */
-function convertKeysToSnakeCase(
-  obj: Record<string, unknown>,
-): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
-
-  for (const [key, value] of Object.entries(obj)) {
-    const snakeKey = camelToSnakeCase(key);
-    result[snakeKey] = value;
-  }
-
-  return result;
 }
 
 /**

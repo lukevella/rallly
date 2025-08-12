@@ -10,6 +10,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getCurrentUserSpace } from "@/auth/data";
 import { moderateContent } from "@/features/moderation";
+import { trackPollEvent } from "@/features/poll/analytics";
 import { getPolls } from "@/features/poll/data";
 import { canUserManagePoll } from "@/features/poll/helpers";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
@@ -301,6 +302,20 @@ export const polls = router({
         }
       }
 
+      // Track poll creation analytics
+      trackPollEvent({
+        type: "poll_created",
+        userId: ctx.user.id,
+        pollId: poll.id,
+        properties: {
+          title: poll.title,
+          optionCount: poll.options.length,
+          hasLocation: !!input.location,
+          hasDescription: !!input.description,
+          timezone: input.timeZone,
+        },
+      });
+
       revalidatePath("/", "layout");
 
       return { id: poll.id };
@@ -346,7 +361,7 @@ export const polls = router({
 
       return next();
     })
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const pollId = await getPollIdFromAdminUrlId(input.urlId);
 
       if (input.optionsToDelete && input.optionsToDelete.length > 0) {
@@ -399,6 +414,22 @@ export const polls = router({
           requireParticipantEmail: input.requireParticipantEmail,
         },
       });
+
+      // Track poll update analytics
+      const fieldsUpdated = Object.keys(input).filter(
+        (key) =>
+          key !== "urlId" && input[key as keyof typeof input] !== undefined,
+      );
+
+      trackPollEvent({
+        type: "poll_updated",
+        userId: ctx.user.id,
+        pollId,
+        properties: {
+          fieldsUpdated,
+        },
+      });
+
       revalidatePath("/", "layout");
     }),
   delete: possiblyPublicProcedure
@@ -407,12 +438,21 @@ export const polls = router({
         urlId: z.string(),
       }),
     )
-    .mutation(async ({ input: { urlId } }) => {
+    .use(requireUserMiddleware)
+    .mutation(async ({ input: { urlId }, ctx }) => {
       const pollId = await getPollIdFromAdminUrlId(urlId);
       await prisma.poll.update({
         where: { id: pollId },
         data: { deleted: true, deletedAt: new Date() },
       });
+
+      // Track poll deletion analytics
+      trackPollEvent({
+        type: "poll_deleted",
+        userId: ctx.user.id,
+        pollId,
+      });
+
       revalidatePath("/", "layout");
     }),
   // END LEGACY ROUTES
@@ -882,28 +922,27 @@ export const polls = router({
           );
         }
 
-        posthog?.capture({
-          distinctId: ctx.user.id,
-          event: "finalize poll",
+        trackPollEvent({
+          type: "poll_finalized",
+          pollId: poll.id,
+          userId: ctx.user.id,
           properties: {
-            poll_id: poll.id,
-            poll_time_zone: poll.timeZone,
-            number_of_participants: poll.participants.length,
-            number_of_attendees: attendees.length,
-            days_since_created: dayjs().diff(poll.createdAt, "day"),
+            attendeeCount: attendees.length,
+            daysSinceCreated: dayjs().diff(poll.createdAt, "day"),
+            participantCount: poll.participants.length,
           },
         });
 
         revalidatePath("/", "layout");
       }
     }),
-  reopen: possiblyPublicProcedure
+  reopen: privateProcedure
     .input(
       z.object({
         pollId: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       await prisma.$transaction(async () => {
         const poll = await prisma.poll.update({
           where: {
@@ -922,6 +961,13 @@ export const polls = router({
           });
         }
       });
+
+      trackPollEvent({
+        type: "poll_reopened",
+        pollId: input.pollId,
+        userId: ctx.user.id,
+      });
+
       revalidatePath("/", "layout");
     }),
   pause: possiblyPublicProcedure
@@ -930,7 +976,8 @@ export const polls = router({
         pollId: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .use(requireUserMiddleware)
+    .mutation(async ({ input, ctx }) => {
       await prisma.poll.update({
         where: {
           id: input.pollId,
@@ -938,6 +985,12 @@ export const polls = router({
         data: {
           status: "paused",
         },
+      });
+
+      trackPollEvent({
+        type: "poll_paused",
+        pollId: input.pollId,
+        userId: ctx.user.id,
       });
     }),
   duplicate: proProcedure
@@ -1009,7 +1062,8 @@ export const polls = router({
         pollId: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .use(requireUserMiddleware)
+    .mutation(async ({ input, ctx }) => {
       await prisma.poll.update({
         where: {
           id: input.pollId,
@@ -1017,6 +1071,13 @@ export const polls = router({
         data: {
           status: "live",
         },
+      });
+
+      // Track poll resume analytics
+      trackPollEvent({
+        type: "poll_resumed",
+        userId: ctx.user.id,
+        pollId: input.pollId,
       });
     }),
 });
