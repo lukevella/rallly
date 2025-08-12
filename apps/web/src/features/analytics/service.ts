@@ -1,5 +1,5 @@
 import { PostHog } from "@rallly/posthog/server";
-import { convertKeysToSnakeCase } from "@rallly/utils/camel-to-snake-case";
+import { toSnakeCaseKeys } from "es-toolkit";
 import type { PollEvent, PollGroupProperties } from "@/features/poll/analytics";
 
 /**
@@ -74,22 +74,19 @@ export class AnalyticsService {
         case "poll_updated_options":
         case "poll_updated_settings":
           // Update group with poll details (title, description, location)
-          this.setPoll(event.pollId, convertKeysToSnakeCase(event.properties));
+          this.setPoll(event.pollId, toSnakeCaseKeys(event.properties));
           break;
 
         default:
           break;
       }
 
-      // Track the event - convert camelCase properties to snake_case
-      const properties = convertKeysToSnakeCase(event.properties ?? {});
-
       this.posthog.capture({
         distinctId: event.userId,
         event: event.type,
         properties: {
           poll_id: event.pollId,
-          ...properties,
+          ...toSnakeCaseKeys(event.properties ?? {}),
         },
         groups: {
           poll: event.pollId,
