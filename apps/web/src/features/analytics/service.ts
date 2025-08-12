@@ -33,7 +33,7 @@ export class AnalyticsService {
     try {
       // Handle automatic group updates based on event type
       switch (event.type) {
-        case "poll_created":
+        case "poll_create":
           // Set up initial group properties for new polls
           this.setPoll(event.pollId, {
             name: event.properties.title, // The PostHog UI identifies a group using the name property
@@ -48,31 +48,31 @@ export class AnalyticsService {
           });
           break;
 
-        case "poll_finalized":
+        case "poll_finalize":
           // Update status to finalized
           this.setPoll(event.pollId, {
             status: "finalized",
           });
           break;
 
-        case "poll_reopened":
-        case "poll_resumed":
+        case "poll_reopen":
+        case "poll_resume":
           // Update status to live
           this.setPoll(event.pollId, {
             status: "live",
           });
           break;
 
-        case "poll_paused":
+        case "poll_pause":
           // Update status to paused
           this.setPoll(event.pollId, {
             status: "paused",
           });
           break;
 
-        case "poll_updated_details":
-        case "poll_updated_options":
-        case "poll_updated_settings":
+        case "poll_update_details":
+        case "poll_update_options":
+        case "poll_update_settings":
           // Update group with poll details (title, description, location)
           this.setPoll(event.pollId, toSnakeCaseKeys(event.properties));
           break;

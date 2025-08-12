@@ -22,27 +22,27 @@ export interface PollGroupProperties {
 
 // Discriminated union of all possible poll events
 export type PollEvent =
-  | PollCreatedEvent
-  | PollUpdatedDetailsEvent
-  | PollUpdatedOptionsEvent
-  | PollUpdatedSettingsEvent
-  | PollDeletedEvent
-  | PollFinalizedEvent
-  | PollReopenedEvent
-  | PollPausedEvent
-  | PollResumedEvent
-  | PollWatchedEvent
-  | PollUnwatchedEvent
-  | ParticipantAddedEvent
-  | ParticipantUpdatedEvent
-  | ParticipantDeletedEvent
-  | CommentAddedEvent
-  | CommentDeletedEvent
+  | PollCreateEvent
+  | PollUpdateDetailsEvent
+  | PollUpdateOptionsEvent
+  | PollUpdateSettingsEvent
+  | PollDeleteEvent
+  | PollFinalizeEvent
+  | PollReopenEvent
+  | PollPauseEvent
+  | PollResumeEvent
+  | PollWatchEvent
+  | PollUnwatchEvent
+  | PollResponseSubmitEvent
+  | PollResponseUpdateEvent
+  | PollResponseDeleteEvent
+  | PollCommentAddEvent
+  | PollCommentDeleteEvent
   | PollErrorEvent;
 
 // Poll events
-export interface PollCreatedEvent extends BaseEventData {
-  type: "poll_created";
+export interface PollCreateEvent extends BaseEventData {
+  type: "poll_create";
   properties: {
     title: string;
     optionCount: number;
@@ -52,8 +52,8 @@ export interface PollCreatedEvent extends BaseEventData {
   };
 }
 
-export interface PollUpdatedDetailsEvent extends BaseEventData {
-  type: "poll_updated_details";
+export interface PollUpdateDetailsEvent extends BaseEventData {
+  type: "poll_update_details";
   properties: {
     title?: string;
     hasDescription?: boolean;
@@ -61,27 +61,27 @@ export interface PollUpdatedDetailsEvent extends BaseEventData {
   };
 }
 
-export interface PollUpdatedOptionsEvent extends BaseEventData {
-  type: "poll_updated_options";
+export interface PollUpdateOptionsEvent extends BaseEventData {
+  type: "poll_update_options";
   properties: {
     optionCount?: number;
   };
 }
 
-export interface PollUpdatedSettingsEvent extends BaseEventData {
-  type: "poll_updated_settings";
+export interface PollUpdateSettingsEvent extends BaseEventData {
+  type: "poll_update_settings";
   properties: {
     timezone?: string;
   };
 }
 
-export interface PollDeletedEvent extends BaseEventData {
-  type: "poll_deleted";
+export interface PollDeleteEvent extends BaseEventData {
+  type: "poll_delete";
   properties?: Record<string, never>; // No additional properties
 }
 
-export interface PollFinalizedEvent extends BaseEventData {
-  type: "poll_finalized";
+export interface PollFinalizeEvent extends BaseEventData {
+  type: "poll_finalize";
   properties: {
     participantCount: number;
     attendeeCount: number;
@@ -89,59 +89,58 @@ export interface PollFinalizedEvent extends BaseEventData {
   };
 }
 
-export interface PollReopenedEvent extends BaseEventData {
-  type: "poll_reopened";
+export interface PollReopenEvent extends BaseEventData {
+  type: "poll_reopen";
 }
 
-export interface PollPausedEvent extends BaseEventData {
-  type: "poll_paused";
+export interface PollPauseEvent extends BaseEventData {
+  type: "poll_pause";
 }
 
-export interface PollResumedEvent extends BaseEventData {
-  type: "poll_resumed";
+export interface PollResumeEvent extends BaseEventData {
+  type: "poll_resume";
 }
 
-export interface PollWatchedEvent extends BaseEventData {
-  type: "poll_watched";
+export interface PollWatchEvent extends BaseEventData {
+  type: "poll_watch";
 }
 
-export interface PollUnwatchedEvent extends BaseEventData {
-  type: "poll_unwatched";
+export interface PollUnwatchEvent extends BaseEventData {
+  type: "poll_unwatch";
 }
 
-// Participant events
-export interface ParticipantAddedEvent extends BaseEventData {
-  type: "participant_added";
+export interface PollResponseSubmitEvent extends BaseEventData {
+  type: "poll_response_submit";
   properties: {
     participantId: string;
     hasEmail: boolean;
   };
 }
 
-export interface ParticipantUpdatedEvent extends BaseEventData {
-  type: "participant_updated";
+export interface PollResponseUpdateEvent extends BaseEventData {
+  type: "poll_response_update";
   properties: {
     participantId: string;
   };
 }
 
-export interface ParticipantDeletedEvent extends BaseEventData {
-  type: "participant_deleted";
+export interface PollResponseDeleteEvent extends BaseEventData {
+  type: "poll_response_delete";
   properties: {
     participantId: string;
   };
 }
 
-// Comment events
-export interface CommentAddedEvent extends BaseEventData {
-  type: "comment_added";
+// Poll comment events
+export interface PollCommentAddEvent extends BaseEventData {
+  type: "poll_comment_add";
   properties: {
     commentId: string;
   };
 }
 
-export interface CommentDeletedEvent extends BaseEventData {
-  type: "comment_deleted";
+export interface PollCommentDeleteEvent extends BaseEventData {
+  type: "poll_comment_delete";
   properties: {
     commentId: string;
   };
@@ -149,7 +148,7 @@ export interface CommentDeletedEvent extends BaseEventData {
 
 // Error events
 export interface PollErrorEvent extends BaseEventData {
-  type: "poll_operation_error";
+  type: "poll_error";
   properties: {
     operation: string;
     errorMessage: string;

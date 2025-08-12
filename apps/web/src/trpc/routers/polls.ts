@@ -302,7 +302,7 @@ export const polls = router({
       }
 
       ctx.analytics.trackEvent({
-        type: "poll_created",
+        type: "poll_create",
         userId: ctx.user.id,
         pollId: poll.id,
         properties: {
@@ -458,7 +458,7 @@ export const polls = router({
 
       if (hasDetailsUpdate) {
         ctx.analytics.trackEvent({
-          type: "poll_updated_details",
+          type: "poll_update_details",
           userId: ctx.user.id,
           pollId,
           properties: {
@@ -475,7 +475,7 @@ export const polls = router({
 
       if (hasOptionsUpdate) {
         ctx.analytics.trackEvent({
-          type: "poll_updated_options",
+          type: "poll_update_options",
           userId: ctx.user.id,
           pollId,
           properties: {
@@ -486,7 +486,7 @@ export const polls = router({
 
       if (hasSettingsUpdate) {
         ctx.analytics.trackEvent({
-          type: "poll_updated_settings",
+          type: "poll_update_settings",
           userId: ctx.user.id,
           pollId,
           properties: {
@@ -515,7 +515,7 @@ export const polls = router({
 
       // Track poll deletion analytics
       ctx.analytics.trackEvent({
-        type: "poll_deleted",
+        type: "poll_delete",
         userId: ctx.user.id,
         pollId,
       });
@@ -551,7 +551,7 @@ export const polls = router({
 
       // Track poll watch analytics
       ctx.analytics.trackEvent({
-        type: "poll_watched",
+        type: "poll_watch",
         userId: ctx.user.id,
         pollId: input.pollId,
       });
@@ -578,7 +578,7 @@ export const polls = router({
 
         // Track poll unwatch analytics
         ctx.analytics.trackEvent({
-          type: "poll_unwatched",
+          type: "poll_unwatch",
           userId: ctx.user.id,
           pollId: input.pollId,
         });
@@ -1004,7 +1004,7 @@ export const polls = router({
         }
 
         ctx.analytics.trackEvent({
-          type: "poll_finalized",
+          type: "poll_finalize",
           pollId: poll.id,
           userId: ctx.user.id,
           properties: {
@@ -1044,7 +1044,7 @@ export const polls = router({
       });
 
       ctx.analytics.trackEvent({
-        type: "poll_reopened",
+        type: "poll_reopen",
         pollId: input.pollId,
         userId: ctx.user.id,
       });
@@ -1069,7 +1069,7 @@ export const polls = router({
       });
 
       ctx.analytics.trackEvent({
-        type: "poll_paused",
+        type: "poll_pause",
         pollId: input.pollId,
         userId: ctx.user.id,
       });
@@ -1156,7 +1156,7 @@ export const polls = router({
 
       // Track poll resume analytics
       ctx.analytics.trackEvent({
-        type: "poll_resumed",
+        type: "poll_resume",
         userId: ctx.user.id,
         pollId: input.pollId,
       });

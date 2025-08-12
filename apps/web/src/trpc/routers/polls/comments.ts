@@ -148,7 +148,7 @@ export const comments = router({
 
       // Track comment addition analytics
       ctx.analytics.trackEvent({
-        type: "comment_added",
+        type: "poll_comment_add",
         userId: ctx.user.id,
         pollId,
         properties: {
@@ -187,7 +187,7 @@ export const comments = router({
       // Track comment deletion analytics
       if (comment) {
         ctx.analytics.trackEvent({
-          type: "comment_deleted",
+          type: "poll_comment_delete",
           userId: ctx.user.id,
           pollId: comment.pollId,
           properties: {

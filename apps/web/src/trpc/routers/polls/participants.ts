@@ -124,7 +124,7 @@ export const participants = router({
 
       if (participant) {
         ctx.analytics.trackEvent({
-          type: "participant_deleted",
+          type: "poll_response_delete",
           userId: ctx.user.id,
           pollId: participant.pollId,
           properties: {
@@ -247,7 +247,7 @@ export const participants = router({
 
         // Track participant addition analytics
         ctx.analytics.trackEvent({
-          type: "participant_added",
+          type: "poll_response_submit",
           userId: user.id,
           pollId,
           properties: {
@@ -333,7 +333,7 @@ export const participants = router({
       });
 
       ctx.analytics.trackEvent({
-        type: "participant_updated",
+        type: "poll_response_update",
         userId: ctx.user.id,
         pollId,
         properties: {
