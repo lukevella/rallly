@@ -34,7 +34,6 @@ export class AnalyticsService {
         case "poll_create":
           // Set up initial group properties for new polls
           this.setPoll(event.pollId, {
-            name: event.properties.title, // The PostHog UI identifies a group using the name property
             title: event.properties.title,
             status: "live", // New polls start as live
             participant_count: 0, // New polls start with 0 participants
@@ -102,15 +101,14 @@ export class AnalyticsService {
   setPoll(pollId: string, properties: Partial<PollGroupProperties>): void {
     if (!this.posthog) return;
 
-    try {
-      this.posthog.groupIdentify({
-        groupType: "poll",
-        groupKey: pollId,
-        properties,
-      });
-    } catch (error) {
-      console.error("Failed to update poll group:", error);
-    }
+    this.posthog.groupIdentify({
+      groupType: "poll",
+      groupKey: pollId,
+      properties: {
+        ...properties,
+        name: properties.title,
+      },
+    });
   }
 
   /**
