@@ -1,5 +1,4 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Card,
@@ -61,7 +60,6 @@ export const CreatePoll: React.FunctionComponent = () => {
 
   useUnmount(clear);
 
-  const posthog = usePostHog();
   const createPoll = trpc.polls.create.useMutation({
     networkMode: "always",
     onError: (error) => {
@@ -94,14 +92,6 @@ export const CreatePoll: React.FunctionComponent = () => {
             },
             {
               onSuccess: (res) => {
-                posthog?.capture("created poll", {
-                  pollId: res.id,
-                  numberOfOptions: formData.options?.length,
-                  optionsView: formData?.view,
-                  $set: {
-                    last_poll_created_at: new Date().toISOString(),
-                  },
-                });
                 router.push(`/poll/${res.id}`);
               },
             },

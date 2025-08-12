@@ -1,4 +1,3 @@
-import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -18,11 +17,9 @@ export const DeletePollDialog: React.FunctionComponent<{
   onOpenChange: (open: boolean) => void;
   urlId: string;
 }> = ({ open, onOpenChange, urlId }) => {
-  const posthog = usePostHog();
   const router = useRouter();
   const deletePoll = trpc.polls.delete.useMutation({
     onSuccess: () => {
-      posthog?.capture("deleted poll");
       onOpenChange(false);
       router.replace("/polls");
     },

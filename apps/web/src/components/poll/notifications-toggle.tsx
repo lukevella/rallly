@@ -1,4 +1,3 @@
-import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
@@ -30,17 +29,10 @@ const NotificationsToggle: React.FunctionComponent = () => {
 
   const isWatching = watchers?.some(({ userId }) => userId === user?.id);
 
-  const posthog = usePostHog();
-
   const queryClient = trpc.useUtils();
 
   const watch = trpc.polls.watch.useMutation({
     onSuccess: () => {
-      // TODO (Luke Vella) [2023-04-08]: We should have a separate query for getting watchers
-      posthog?.capture("turned notifications on", {
-        pollId: poll.id,
-        source: "notifications-toggle",
-      });
       queryClient.polls.getWatchers.setData(
         { pollId: poll.id },
         (oldWatchers) => {
@@ -55,10 +47,6 @@ const NotificationsToggle: React.FunctionComponent = () => {
 
   const unwatch = trpc.polls.unwatch.useMutation({
     onSuccess: () => {
-      posthog?.capture("turned notifications off", {
-        pollId: poll.id,
-        source: "notifications-toggle",
-      });
       queryClient.polls.getWatchers.setData(
         { pollId: poll.id },
         (oldWatchers) => {
