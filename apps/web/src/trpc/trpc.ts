@@ -33,7 +33,11 @@ export const procedureWithAnalytics = t.procedure.use(
     });
 
     if (type === "mutation") {
-      waitUntil(analytics.shutdown());
+      waitUntil(
+        analytics.shutdown().catch((error) => {
+          console.error(error);
+        }),
+      );
     }
 
     return res;
