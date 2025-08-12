@@ -1,5 +1,6 @@
 import { PostHog } from "@rallly/posthog/server";
 import { toSnakeCaseKeys } from "es-toolkit";
+import { env } from "@/env";
 import type { PollEvent, PollGroupProperties } from "@/features/poll/analytics";
 
 /**
@@ -11,12 +12,9 @@ export class AnalyticsService {
 
   constructor() {
     // Only initialize PostHog if we have the required environment variables
-    if (
-      process.env.NEXT_PUBLIC_POSTHOG_KEY &&
-      process.env.NEXT_PUBLIC_POSTHOG_HOST
-    ) {
-      this.posthog = new PostHog(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-        host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    if (env.NEXT_PUBLIC_POSTHOG_API_HOST && env.NEXT_PUBLIC_POSTHOG_API_KEY) {
+      this.posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_API_KEY, {
+        host: env.NEXT_PUBLIC_POSTHOG_API_HOST,
         flushAt: 20,
         flushInterval: 10000,
       });
