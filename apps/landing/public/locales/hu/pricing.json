@@ -1,7 +1,6 @@
 {
   "pricingDescription": "Vágj bele ingyen. Bejelentkezés nem szükséges.",
   "freeForever": "ingyenes örökre",
-  "planPro": "Pro",
   "monthlyBillingDescription": "havonta",
   "upgrade": "Előfizetés",
   "faq": "Gyakran ismételt kérdések",
@@ -23,7 +22,6 @@
   "whyUpgradeAnswer2": "Akkor érdemes előfizetned, ha a Rallly-t gyakran vagy munka miatt használod. A jelenlegi előfizetési ár speciális bevezető ár és a jövőben emelkedni fog. Ha most előfizetsz, korai hozzáférést kapsz új, minőségi ütemező eszközökhöz megjelenéskor és a jelenlegi előfizetési árat megőrizve, nem fognak érinteni a jövőbeni áremelések.",
   "upgradeNowSaveLater": "Fizess elő most, spórolj később",
   "earlyAdopterDescription": "Korai előfizetőként rögzül az előfizetésed ára és nem lesznek rád hatássál a jövőbeni áremelkedések.",
-  "planFree": "Ingyenes",
   "keepPollsIndefinitely": "Szavazások megőrzése örökre",
   "whenPollInactive": "Mikor lesz egy szavazás inaktív?",
   "whenPollInactiveAnswer": "A szavazások inaktívak lesznek, ha az összes dátum lehetőség múltbeli ÉS a szavazás nem volt megtekintve a legutóbbi 30 napban. Az inaktív szavazások automatikusan törlődnek, ha nincs előfizetésed.",

@@ -1,7 +1,6 @@
 {
   "pricingDescription": "Kom igång gratis. Ingen inloggning krävs.",
   "freeForever": "gratis för alltid",
-  "planPro": "Pro",
   "monthlyBillingDescription": "per månad",
   "upgrade": "Uppgradera",
   "faq": "Vanliga frågor",
@@ -23,7 +22,6 @@
   "whyUpgradeAnswer2": "Att uppgradera till ett abonnemang är vettigt om du använder Rallly ofta eller använder det i arbetet. Den nuvarande abonnemansavgiften är anpassad för tidiga användare och kommer att öka i framtiden. Genom att uppgradera nu får du tidig tillgång till nya, högkvalitativa schemaläggningsverktyg när de släpps och låser din abonnemanskostnad så att du inte påverkas av framtida prishöjningar.",
   "upgradeNowSaveLater": "Uppgradera nu, spara senare",
   "earlyAdopterDescription": "Som tidig användare låser du din prenumerationsavgift och påverkas inte av framtida prishöjningar.",
-  "planFree": "Gratis",
   "keepPollsIndefinitely": "Behåll förfrågningar på obestämd tid",
   "whenPollInactive": "När blir en förfrågan inaktiv?",
   "whenPollInactiveAnswer": "Förfrågningar blir inaktiva när alla datumalternativ ligger i det förflutna OCH omröstningen inte har öppnats på över 30 dagar. Inaktiva förfrågningar raderas automatiskt om du inte har en betalprenumeration.",

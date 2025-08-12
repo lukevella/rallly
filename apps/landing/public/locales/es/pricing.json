@@ -1,7 +1,6 @@
 {
   "pricingDescription": "Comienza a utilizarlo gratis. No se necesita iniciar sesión.",
   "freeForever": "gratis para siempre",
-  "planPro": "Pro",
   "monthlyBillingDescription": "por mes",
   "upgrade": "Mejorar",
   "faq": "Preguntas frecuentes",
@@ -23,7 +22,6 @@
   "whyUpgradeAnswer2": "Mejorar a un plan de pago tiene sentido si usas Rallly a menudo o lo usas para trabajar. La tasa de suscripción actual es una tasa especial de adopción temprana y se incrementará en el futuro. Actualizando ahora, obtendrás acceso temprano a nuevas herramientas de programación de alta calidad a medida que se liberan y se bloquean en su tarifa de suscripción para que no se vea afectado por aumentos de precios futuros.",
   "upgradeNowSaveLater": "Actualizar ahora, guardar más tarde",
   "earlyAdopterDescription": "Como usuario pionero, fijará su tarifa de suscripción y no se verá afectado por futuras subidas de precios.",
-  "planFree": "Gratuito",
   "keepPollsIndefinitely": "Mantener encuestas indefinidamente",
   "whenPollInactive": "¿Cuándo una encuesta se vuelve inactiva?",
   "whenPollInactiveAnswer": "Las encuestas se vuelven inactivas cuando todas las opciones de fecha están en el pasado Y la encuesta no ha sido accedida durante más de 30 días. Las encuestas inactivas se eliminan automáticamente si no tienes una suscripción de pago.",

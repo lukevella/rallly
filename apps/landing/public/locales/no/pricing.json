@@ -1,7 +1,6 @@
 {
   "pricingDescription": "Kom i gang gratis. Ingen innlogging kreves.",
   "freeForever": "gratis for alltid",
-  "planPro": "Pro",
   "monthlyBillingDescription": "per måned",
   "upgrade": "Oppgrader",
   "faq": "Ofte stilte spørsmål",
@@ -23,7 +22,6 @@
   "whyUpgradeAnswer2": "Oppgradering til en betalt plan gir mening hvis du bruker Rallly ofte eller på jobb. Dagens abonnementspris er en spesiell tidligpris og vil økes i fremtiden. Ved å oppgradere nå, vil du få tidlig tilgang til nye planleggingsverktøy av høy kvalitet så fort de gis ut, og abonnementsprisen din låses, slik at du ikke påvirkes av fremtidige prisøkninger.",
   "upgradeNowSaveLater": "Oppgrader nå, spar senere",
   "earlyAdopterDescription": "Som en tidlig bruker, vil du beholde nåværende abonnementspris uten å bli påvirket av fremtidige prisøkninger.",
-  "planFree": "Gratis",
   "keepPollsIndefinitely": "Behold avstemninger på ubestemt tid",
   "whenPollInactive": "Når blir en avstemning inaktiv?",
   "whenPollInactiveAnswer": "Avstemninger blir inaktive når alle datovalgene ligger i fortiden OG avstemningen ikke har blitt åpnet på over 30 dager. Inaktive avstemninger slettes automatisk hvis du ikke har et betalt abonnement.",

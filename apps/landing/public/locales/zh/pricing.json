@@ -1,7 +1,6 @@
 {
   "pricingDescription": "无需登录即可开始免费使用。",
   "freeForever": "永远免费",
-  "planPro": "专业版",
   "monthlyBillingDescription": "每月",
   "upgrade": "升级",
   "faq": "常见问题",
@@ -23,7 +22,6 @@
   "whyUpgradeAnswer2": "如果您经常使用 Rallly 或将其用于工作，升级到付费计划是有意义的。当前的订阅费率是一种特殊的早期支持者费率，未来将会涨价。通过立即升级，您将在发布时获得新的高质量调度工具的早期访问权限，并锁定您的订阅费率，以免受到未来价格上涨的影响。",
   "upgradeNowSaveLater": "立即升级，节省更多",
   "earlyAdopterDescription": "作为早期支持者，折扣将在订阅后锁定，您将不会受到未来涨价的影响",
-  "planFree": "免费版",
   "keepPollsIndefinitely": "无限期保留投票",
   "whenPollInactive": "投票何时不活跃？",
   "whenPollInactiveAnswer": "当所有日期选项过去并且投票未访问超过30天时，投票变为不活动状态。如果您没有付费订阅，不活动的投票将被自动删除。",
