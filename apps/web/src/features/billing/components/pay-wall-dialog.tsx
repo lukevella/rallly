@@ -16,6 +16,7 @@ import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { Switch } from "@rallly/ui/switch";
 import { Tabs, TabsContent } from "@rallly/ui/tabs";
 import {
+  BadgeDollarSignIcon,
   CalendarCheckIcon,
   CalendarSearchIcon,
   CheckIcon,
@@ -123,12 +124,36 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
 
-interface PayWallDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
+function SubscriptionBenefits() {
+  return (
+    <ul className="space-y-2 text-muted-foreground">
+      <li className="text-sm">
+        <CheckIcon className="mr-2 inline-block size-4 text-green-500" />
+        <Trans
+          i18nKey="instantAccess"
+          defaults="Instant access to all features"
+        />
+      </li>
+      <li className="text-sm">
+        <CheckIcon className="mr-2 inline-block size-4 text-green-500 " />
+        <Trans
+          i18nKey="cancelAnytime"
+          components={{
+            a: <Link className="underline" href="/settings/billing" />,
+          }}
+        />
+      </li>
+    </ul>
+  );
 }
 
-export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
+export function PayWallDialog({
+  isOpen,
+  onOpenChange,
+}: {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const [selectedPlan, setSelectedPlan] = React.useState<SpaceTier>("pro");
   const [isAnnual, setIsAnnual] = React.useState(false);
 
@@ -148,7 +173,16 @@ export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        onOpenChange(open);
+        if (!open) {
+          setSelectedPlan("pro");
+          setIsAnnual(false);
+        }
+      }}
+    >
       <DialogContent size="4xl" className="overflow-hidden p-0 lg:h-[500px]">
         <Tabs value={selectedPlan} onValueChange={handleChangePlan} asChild>
           <div className="grid min-h-0 grid-cols-1 md:grid-cols-2">
@@ -159,29 +193,7 @@ export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
                 </DialogTitle>
               </DialogHeader>
               <div className="mt-6 flex-1 space-y-6">
-                <ul className="space-y-2 text-muted-foreground">
-                  <li className="text-sm">
-                    <CheckIcon className="mr-2 inline-block size-4" />
-                    <Trans
-                      i18nKey="cancelAnytime"
-                      components={{
-                        a: (
-                          <Link
-                            className="underline"
-                            href="/settings/billing"
-                          />
-                        ),
-                      }}
-                    />
-                  </li>
-                  <li className="text-sm">
-                    <CheckIcon className="mr-2 inline-block size-4" />
-                    <Trans
-                      i18nKey="instantAccess"
-                      defaults="Instant access to all features"
-                    />
-                  </li>
-                </ul>
+                <SubscriptionBenefits />
                 <hr className="border-gray-100" />
                 <Label>
                   <Trans i18nKey="selectPlan" defaults="Select Plan:" />
@@ -211,8 +223,11 @@ export function PayWallDialog({ isOpen, onClose }: PayWallDialogProps) {
               <div className="space-y-4 pt-4">
                 {selectedPlan === "pro" && (
                   <div className="flex justify-between gap-4 rounded-lg border border-dashed bg-muted-background p-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="annual-switch">
+                    <div>
+                      <BadgeDollarSignIcon className="size-4 text-green-500" />
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <Label htmlFor="annual-switch" className="leading-4">
                         <Trans
                           defaults="Save {amount} with yearly billing"
                           i18nKey="annualSavings"

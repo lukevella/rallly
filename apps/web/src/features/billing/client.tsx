@@ -22,10 +22,6 @@ export function BillingProvider({ children }: BillingProviderProps) {
     setIsPayWallOpen(true);
   }, []);
 
-  const handlePayWallClose = React.useCallback(() => {
-    setIsPayWallOpen(false);
-  }, []);
-
   const contextValue = React.useMemo(
     () => ({
       showPayWall,
@@ -36,7 +32,7 @@ export function BillingProvider({ children }: BillingProviderProps) {
   return (
     <BillingContext.Provider value={contextValue}>
       {children}
-      <PayWallDialog isOpen={isPayWallOpen} onClose={handlePayWallClose} />
+      <PayWallDialog isOpen={isPayWallOpen} onOpenChange={setIsPayWallOpen} />
     </BillingContext.Provider>
   );
 }
