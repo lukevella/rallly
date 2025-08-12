@@ -11,7 +11,12 @@ const alertVariants = cva(
       variant: {
         default: "bg-card text-card-foreground",
         destructive:
-          "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 [&>svg]:text-current",
+          "border-destructive/20 bg-destructive-background text-destructive-foreground has-[[data-slot=alert-description]]:opacity-50",
+        info: "border-blue-200 bg-blue-50 text-blue-900 has-[[data-slot=alert-description]]:text-blue-800/90 [&>svg]:text-blue-600",
+        warning:
+          "border-yellow-200 bg-yellow-50 text-yellow-900 has-[[data-slot=alert-description]]:text-yellow-800/90 [&>svg]:text-yellow-600",
+        tip: "border-green-200 bg-green-50 text-green-900 has-[[data-slot=alert-description]]:text-green-800/90 [&>svg]:text-green-600",
+        note: "border-gray-200 bg-gray-50 text-gray-900 has-[[data-slot=alert-description]]:text-gray-700/90 [&>svg]:text-gray-600",
       },
     },
     defaultVariants: {
@@ -53,7 +58,7 @@ function AlertDescription({
     <div
       data-slot="alert-description"
       className={cn(
-        "col-start-2 grid justify-items-start gap-1 text-muted-foreground text-sm [&_p]:leading-relaxed",
+        "col-start-2 grid justify-items-start gap-1 text-sm [&_p]:leading-relaxed",
         className,
       )}
       {...props}
