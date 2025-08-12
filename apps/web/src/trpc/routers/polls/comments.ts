@@ -1,10 +1,9 @@
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
-
 import {
   createRateLimitMiddleware,
   publicProcedure,
@@ -171,6 +170,13 @@ export const comments = router({
         where: { id: commentId },
         select: { pollId: true },
       });
+
+      if (!comment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Comment not found",
+        });
+      }
 
       await prisma.comment.delete({
         where: {
