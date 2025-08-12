@@ -422,6 +422,10 @@ export const polls = router({
           createdAt: true,
           location: true,
           description: true,
+          disableComments: true,
+          requireParticipantEmail: true,
+          hideParticipants: true,
+          hideScores: true,
           timeZone: true,
           _count: {
             select: {
@@ -462,13 +466,9 @@ export const polls = router({
           userId: ctx.user.id,
           pollId,
           properties: {
-            ...(input.title !== undefined && { title: updatedPoll.title }),
-            ...(input.location !== undefined && {
-              hasLocation: !!updatedPoll.location,
-            }),
-            ...(input.description !== undefined && {
-              hasDescription: !!updatedPoll.description,
-            }),
+            title: updatedPoll.title,
+            hasLocation: !!updatedPoll.location,
+            hasDescription: !!updatedPoll.description,
           },
         });
       }
@@ -490,9 +490,10 @@ export const polls = router({
           userId: ctx.user.id,
           pollId,
           properties: {
-            ...(input.timeZone !== undefined && {
-              timezone: updatedPoll.timeZone ?? undefined,
-            }),
+            disableComments: !!updatedPoll.disableComments,
+            hideParticipants: !!updatedPoll.hideParticipants,
+            hideScores: !!updatedPoll.hideScores,
+            requireParticipantEmail: !!updatedPoll.requireParticipantEmail,
           },
         });
       }

@@ -13,6 +13,10 @@ export interface PollGroupProperties {
   status: PollStatus;
   created_at: string;
   participant_count: number;
+  hide_participants: boolean;
+  require_participant_email: boolean;
+  hide_scores: boolean;
+  disable_comments: boolean;
   comment_count: number;
   option_count: number;
   has_location: boolean;
@@ -55,23 +59,26 @@ export interface PollCreateEvent extends BaseEventData {
 export interface PollUpdateDetailsEvent extends BaseEventData {
   type: "poll_update_details";
   properties: {
-    title?: string;
-    hasDescription?: boolean;
-    hasLocation?: boolean;
+    title: string;
+    hasDescription: boolean;
+    hasLocation: boolean;
   };
 }
 
 export interface PollUpdateOptionsEvent extends BaseEventData {
   type: "poll_update_options";
   properties: {
-    optionCount?: number;
+    optionCount: number;
   };
 }
 
 export interface PollUpdateSettingsEvent extends BaseEventData {
   type: "poll_update_settings";
   properties: {
-    timezone?: string;
+    hideScores: boolean;
+    hideParticipants: boolean;
+    disableComments: boolean;
+    requireParticipantEmail: boolean;
   };
 }
 

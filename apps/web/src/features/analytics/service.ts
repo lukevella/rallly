@@ -73,7 +73,6 @@ export class AnalyticsService {
         case "poll_update_details":
         case "poll_update_options":
         case "poll_update_settings":
-          // Update group with poll details (title, description, location)
           this.setPoll(event.pollId, toSnakeCaseKeys(event.properties));
           break;
 
