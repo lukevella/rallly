@@ -482,5 +482,6 @@
   "instantAccess": "Instant access to all features",
   "selectPlan": "Select Plan:",
   "prioritySupport": "Priority Support",
-  "prioritySupportDescription": "Get faster response times and dedicated assistance"
+  "prioritySupportDescription": "Get faster response times and dedicated assistance",
+  "cancelEventConfirmDescription": "Are you sure you want to cancel this event?"
 }
