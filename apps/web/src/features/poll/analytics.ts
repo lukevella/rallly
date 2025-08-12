@@ -40,6 +40,8 @@ export type PollEvent =
   | PollReopenedEvent
   | PollPausedEvent
   | PollResumedEvent
+  | PollWatchedEvent
+  | PollUnwatchedEvent
   | ParticipantAddedEvent
   | ParticipantUpdatedEvent
   | ParticipantDeletedEvent
@@ -92,6 +94,16 @@ export interface PollPausedEvent extends BaseEventData {
 
 export interface PollResumedEvent extends BaseEventData {
   type: "poll_resumed";
+  properties?: Record<string, never>; // No additional properties
+}
+
+export interface PollWatchedEvent extends BaseEventData {
+  type: "poll_watched";
+  properties?: Record<string, never>; // No additional properties
+}
+
+export interface PollUnwatchedEvent extends BaseEventData {
+  type: "poll_unwatched";
   properties?: Record<string, never>; // No additional properties
 }
 

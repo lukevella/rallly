@@ -481,6 +481,13 @@ export const polls = router({
           userId: ctx.user.id,
         },
       });
+
+      // Track poll watch analytics
+      trackPollEvent({
+        type: "poll_watched",
+        userId: ctx.user.id,
+        pollId: input.pollId,
+      });
     }),
   unwatch: privateProcedure
     .input(z.object({ pollId: z.string() }))
@@ -500,6 +507,13 @@ export const polls = router({
           where: {
             id: watcher.id,
           },
+        });
+
+        // Track poll unwatch analytics
+        trackPollEvent({
+          type: "poll_unwatched",
+          userId: ctx.user.id,
+          pollId: input.pollId,
         });
       }
     }),
