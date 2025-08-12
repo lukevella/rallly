@@ -110,8 +110,9 @@ export const participants = router({
         participantId: z.string(),
       }),
     )
-    .mutation(async ({ input: { participantId } }) => {
-      await prisma.participant.update({
+    .use(requireUserMiddleware)
+    .mutation(async ({ input: { participantId }, ctx }) => {
+      const participant = await prisma.participant.update({
         where: {
           id: participantId,
         },
@@ -120,6 +121,17 @@ export const participants = router({
           deletedAt: new Date(),
         },
       });
+
+      if (participant) {
+        ctx.analytics.trackEvent({
+          type: "poll_response_delete",
+          userId: ctx.user.id,
+          pollId: participant.pollId,
+          properties: {
+            participantId,
+          },
+        });
+      }
     }),
   add: publicProcedure
     .use(createRateLimitMiddleware("add_participant", 5, "1 m"))
@@ -233,6 +245,17 @@ export const participants = router({
           }),
         );
 
+        // Track participant addition analytics
+        ctx.analytics.trackEvent({
+          type: "poll_response_submit",
+          userId: user.id,
+          pollId,
+          properties: {
+            participantId: participant.id,
+            hasEmail: !!email,
+          },
+        });
+
         return participant;
       },
     ),
@@ -262,7 +285,8 @@ export const participants = router({
           .array(),
       }),
     )
-    .mutation(async ({ input: { pollId, participantId, votes } }) => {
+    .use(requireUserMiddleware)
+    .mutation(async ({ input: { pollId, participantId, votes }, ctx }) => {
       const participant = await prisma.$transaction(async (tx) => {
         // Delete existing votes
         await tx.vote.deleteMany({
@@ -306,6 +330,15 @@ export const participants = router({
             votes: true,
           },
         });
+      });
+
+      ctx.analytics.trackEvent({
+        type: "poll_response_update",
+        userId: ctx.user.id,
+        pollId,
+        properties: {
+          participantId,
+        },
       });
 
       return participant;

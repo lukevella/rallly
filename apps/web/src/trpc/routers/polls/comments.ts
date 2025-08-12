@@ -1,10 +1,9 @@
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
-
 import {
   createRateLimitMiddleware,
   publicProcedure,
@@ -147,6 +146,16 @@ export const comments = router({
         );
       }
 
+      // Track comment addition analytics
+      ctx.analytics.trackEvent({
+        type: "poll_comment_add",
+        userId: ctx.user.id,
+        pollId,
+        properties: {
+          commentId: newComment.id,
+        },
+      });
+
       return newComment;
     }),
   delete: publicProcedure
@@ -155,11 +164,36 @@ export const comments = router({
         commentId: z.string(),
       }),
     )
-    .mutation(async ({ input: { commentId } }) => {
+    .use(requireUserMiddleware)
+    .mutation(async ({ input: { commentId }, ctx }) => {
+      const comment = await prisma.comment.findUnique({
+        where: { id: commentId },
+        select: { pollId: true },
+      });
+
+      if (!comment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Comment not found",
+        });
+      }
+
       await prisma.comment.delete({
         where: {
           id: commentId,
         },
       });
+
+      // Track comment deletion analytics
+      if (comment) {
+        ctx.analytics.trackEvent({
+          type: "poll_comment_delete",
+          userId: ctx.user.id,
+          pollId: comment.pollId,
+          properties: {
+            commentId,
+          },
+        });
+      }
     }),
 });

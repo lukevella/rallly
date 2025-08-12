@@ -64,6 +64,7 @@
     "cookie": "^0.7.0",
     "crypto": "^1.0.1",
     "dayjs": "^1.11.13",
+    "es-toolkit": "^1.39.9",
     "hono": "^4.7.10",
     "hono-rate-limiter": "^0.2.1",
     "i18next": "^24.2.2",

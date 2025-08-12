@@ -1,4 +1,3 @@
-import { usePostHog } from "@rallly/posthog/client";
 import { toast } from "@rallly/ui/sonner";
 import { usePoll } from "@/components/poll-context";
 import { trpc } from "@/trpc/client";
@@ -15,26 +14,13 @@ export const normalizeVotes = (
 };
 
 export const useAddParticipantMutation = () => {
-  const posthog = usePostHog();
-  return trpc.polls.participants.add.useMutation({
-    onSuccess: async (_, input) => {
-      posthog?.capture("add participant", {
-        pollId: input.pollId,
-        name: input.name,
-        email: input.email,
-      });
-    },
-  });
+  return trpc.polls.participants.add.useMutation();
 };
 
 export const useUpdateParticipantMutation = () => {
   const queryClient = trpc.useUtils();
-  const posthog = usePostHog();
   return trpc.polls.participants.update.useMutation({
     onSuccess: (participant) => {
-      posthog?.capture("update participant", {
-        name: participant.name,
-      });
       queryClient.polls.participants.list.setData(
         { pollId: participant.pollId },
         (existingParticipants = []) => {
@@ -57,7 +43,6 @@ export const useUpdateParticipantMutation = () => {
 
 export const useDeleteParticipantMutation = () => {
   const queryClient = trpc.useUtils();
-  const posthog = usePostHog();
   const { poll } = usePoll();
   return trpc.polls.participants.delete.useMutation({
     onMutate: ({ participantId }) => {
@@ -68,23 +53,11 @@ export const useDeleteParticipantMutation = () => {
         },
       );
     },
-    onSuccess: (_, { participantId }) => {
-      posthog?.capture("remove participant", {
-        pollId: poll.id,
-        participantId,
-      });
-    },
   });
 };
 
 export const useUpdatePollMutation = () => {
-  const posthog = usePostHog();
   return trpc.polls.update.useMutation({
-    onSuccess: (_data, { urlId }) => {
-      posthog?.capture("updated poll", {
-        id: urlId,
-      });
-    },
     onError: (error) => {
       if (error.data?.code === "BAD_REQUEST") {
         toast.error(error.message);

@@ -301,6 +301,19 @@ export const polls = router({
         }
       }
 
+      ctx.analytics.trackEvent({
+        type: "poll_create",
+        userId: ctx.user.id,
+        pollId: poll.id,
+        properties: {
+          title: poll.title,
+          optionCount: poll.options.length,
+          hasLocation: !!input.location,
+          hasDescription: !!input.description,
+          timezone: input.timeZone,
+        },
+      });
+
       revalidatePath("/", "layout");
 
       return { id: poll.id };
@@ -346,7 +359,7 @@ export const polls = router({
 
       return next();
     })
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const pollId = await getPollIdFromAdminUrlId(input.urlId);
 
       if (input.optionsToDelete && input.optionsToDelete.length > 0) {
@@ -399,6 +412,92 @@ export const polls = router({
           requireParticipantEmail: input.requireParticipantEmail,
         },
       });
+
+      // Get updated poll data for group update
+      const updatedPoll = await prisma.poll.findUnique({
+        where: { id: pollId },
+        select: {
+          title: true,
+          status: true,
+          createdAt: true,
+          location: true,
+          description: true,
+          disableComments: true,
+          requireParticipantEmail: true,
+          hideParticipants: true,
+          hideScores: true,
+          timeZone: true,
+          _count: {
+            select: {
+              participants: {
+                where: { deleted: false },
+              },
+              comments: true,
+              options: true,
+            },
+          },
+        },
+      });
+
+      if (!updatedPoll) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      // Track specific poll update events based on what was changed
+      const hasDetailsUpdate =
+        input.title !== undefined ||
+        input.location !== undefined ||
+        input.description !== undefined;
+      const hasOptionsUpdate =
+        (input.optionsToDelete && input.optionsToDelete.length > 0) ||
+        (input.optionsToAdd && input.optionsToAdd.length > 0);
+      const hasSettingsUpdate =
+        input.timeZone !== undefined ||
+        input.hideParticipants !== undefined ||
+        input.disableComments !== undefined ||
+        input.hideScores !== undefined ||
+        input.requireParticipantEmail !== undefined;
+
+      if (hasDetailsUpdate) {
+        ctx.analytics.trackEvent({
+          type: "poll_update_details",
+          userId: ctx.user.id,
+          pollId,
+          properties: {
+            title: updatedPoll.title,
+            hasLocation: !!updatedPoll.location,
+            hasDescription: !!updatedPoll.description,
+          },
+        });
+      }
+
+      if (hasOptionsUpdate) {
+        ctx.analytics.trackEvent({
+          type: "poll_update_options",
+          userId: ctx.user.id,
+          pollId,
+          properties: {
+            optionCount: updatedPoll._count.options,
+          },
+        });
+      }
+
+      if (hasSettingsUpdate) {
+        ctx.analytics.trackEvent({
+          type: "poll_update_settings",
+          userId: ctx.user.id,
+          pollId,
+          properties: {
+            disableComments: !!updatedPoll.disableComments,
+            hideParticipants: !!updatedPoll.hideParticipants,
+            hideScores: !!updatedPoll.hideScores,
+            requireParticipantEmail: !!updatedPoll.requireParticipantEmail,
+          },
+        });
+      }
+
       revalidatePath("/", "layout");
     }),
   delete: possiblyPublicProcedure
@@ -407,12 +506,21 @@ export const polls = router({
         urlId: z.string(),
       }),
     )
-    .mutation(async ({ input: { urlId } }) => {
+    .use(requireUserMiddleware)
+    .mutation(async ({ input: { urlId }, ctx }) => {
       const pollId = await getPollIdFromAdminUrlId(urlId);
       await prisma.poll.update({
         where: { id: pollId },
         data: { deleted: true, deletedAt: new Date() },
       });
+
+      // Track poll deletion analytics
+      ctx.analytics.trackEvent({
+        type: "poll_delete",
+        userId: ctx.user.id,
+        pollId,
+      });
+
       revalidatePath("/", "layout");
     }),
   // END LEGACY ROUTES
@@ -441,6 +549,13 @@ export const polls = router({
           userId: ctx.user.id,
         },
       });
+
+      // Track poll watch analytics
+      ctx.analytics.trackEvent({
+        type: "poll_watch",
+        userId: ctx.user.id,
+        pollId: input.pollId,
+      });
     }),
   unwatch: privateProcedure
     .input(z.object({ pollId: z.string() }))
@@ -460,6 +575,13 @@ export const polls = router({
           where: {
             id: watcher.id,
           },
+        });
+
+        // Track poll unwatch analytics
+        ctx.analytics.trackEvent({
+          type: "poll_unwatch",
+          userId: ctx.user.id,
+          pollId: input.pollId,
         });
       }
     }),
@@ -882,28 +1004,27 @@ export const polls = router({
           );
         }
 
-        posthog?.capture({
-          distinctId: ctx.user.id,
-          event: "finalize poll",
+        ctx.analytics.trackEvent({
+          type: "poll_finalize",
+          pollId: poll.id,
+          userId: ctx.user.id,
           properties: {
-            poll_id: poll.id,
-            poll_time_zone: poll.timeZone,
-            number_of_participants: poll.participants.length,
-            number_of_attendees: attendees.length,
-            days_since_created: dayjs().diff(poll.createdAt, "day"),
+            attendeeCount: attendees.length,
+            daysSinceCreated: dayjs().diff(poll.createdAt, "day"),
+            participantCount: poll.participants.length,
           },
         });
 
         revalidatePath("/", "layout");
       }
     }),
-  reopen: possiblyPublicProcedure
+  reopen: privateProcedure
     .input(
       z.object({
         pollId: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       await prisma.$transaction(async () => {
         const poll = await prisma.poll.update({
           where: {
@@ -922,6 +1043,13 @@ export const polls = router({
           });
         }
       });
+
+      ctx.analytics.trackEvent({
+        type: "poll_reopen",
+        pollId: input.pollId,
+        userId: ctx.user.id,
+      });
+
       revalidatePath("/", "layout");
     }),
   pause: possiblyPublicProcedure
@@ -930,7 +1058,8 @@ export const polls = router({
         pollId: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .use(requireUserMiddleware)
+    .mutation(async ({ input, ctx }) => {
       await prisma.poll.update({
         where: {
           id: input.pollId,
@@ -938,6 +1067,12 @@ export const polls = router({
         data: {
           status: "paused",
         },
+      });
+
+      ctx.analytics.trackEvent({
+        type: "poll_pause",
+        pollId: input.pollId,
+        userId: ctx.user.id,
       });
     }),
   duplicate: proProcedure
@@ -1009,7 +1144,8 @@ export const polls = router({
         pollId: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .use(requireUserMiddleware)
+    .mutation(async ({ input, ctx }) => {
       await prisma.poll.update({
         where: {
           id: input.pollId,
@@ -1017,6 +1153,13 @@ export const polls = router({
         data: {
           status: "live",
         },
+      });
+
+      // Track poll resume analytics
+      ctx.analytics.trackEvent({
+        type: "poll_resume",
+        userId: ctx.user.id,
+        pollId: input.pollId,
       });
     }),
 });
