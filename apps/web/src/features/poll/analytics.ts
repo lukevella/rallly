@@ -1,6 +1,6 @@
 import type { PollStatus } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
-import { convertKeysToSnakeCase } from "@rallly/utils/string-utils";
+import { convertKeysToSnakeCase } from "@rallly/utils/camel-to-snake-case";
 
 /**
  * Poll analytics functions using functional approach
