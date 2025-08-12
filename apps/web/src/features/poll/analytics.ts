@@ -206,19 +206,13 @@ export function trackPollEvent(event: PollEvent): void {
  * Note: trackPollEvent with type 'poll_created' automatically sets up initial group properties
  * Use this function to update group properties after poll creation (e.g., when participant/comment counts change)
  */
-export async function updatePollGroup(
+export function updatePollGroup(
   pollId: string,
-  properties: PollGroupProperties,
-): Promise<void> {
-  if (!posthog) return;
-
-  try {
-    posthog.groupIdentify({
-      groupType: "poll",
-      groupKey: pollId,
-      properties,
-    });
-  } catch (error) {
-    console.error("Failed to update poll group:", error);
-  }
+  properties: Partial<PollGroupProperties>,
+) {
+  posthog?.groupIdentify({
+    groupType: "poll",
+    groupKey: pollId,
+    properties,
+  });
 }

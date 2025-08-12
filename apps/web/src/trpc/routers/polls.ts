@@ -10,7 +10,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getCurrentUserSpace } from "@/auth/data";
 import { moderateContent } from "@/features/moderation";
-import { trackPollEvent } from "@/features/poll/analytics";
+import { trackPollEvent, updatePollGroup } from "@/features/poll/analytics";
 import { getPolls } from "@/features/poll/data";
 import { canUserManagePoll } from "@/features/poll/helpers";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
@@ -415,6 +415,28 @@ export const polls = router({
         },
       });
 
+      // Get updated poll data for group update
+      const updatedPoll = await prisma.poll.findUnique({
+        where: { id: pollId },
+        select: {
+          title: true,
+          status: true,
+          createdAt: true,
+          location: true,
+          description: true,
+          timeZone: true,
+          _count: {
+            select: {
+              participants: {
+                where: { deleted: false },
+              },
+              comments: true,
+              options: true,
+            },
+          },
+        },
+      });
+
       // Track poll update analytics
       const fieldsUpdated = Object.keys(input).filter(
         (key) =>
@@ -429,6 +451,21 @@ export const polls = router({
           fieldsUpdated,
         },
       });
+
+      // Update PostHog group with current poll data
+      if (updatedPoll) {
+        updatePollGroup(pollId, {
+          title: updatedPoll.title,
+          status: updatedPoll.status,
+          created_at: updatedPoll.createdAt.toISOString(),
+          participant_count: updatedPoll._count.participants,
+          comment_count: updatedPoll._count.comments,
+          option_count: updatedPoll._count.options,
+          has_location: !!updatedPoll.location,
+          has_description: !!updatedPoll.description,
+          timezone: updatedPoll.timeZone ?? undefined,
+        });
+      }
 
       revalidatePath("/", "layout");
     }),
@@ -947,6 +984,19 @@ export const polls = router({
           },
         });
 
+        // Update PostHog group status to finalized
+        await updatePollGroup(poll.id, {
+          title: poll.title,
+          status: "finalized",
+          created_at: poll.createdAt.toISOString(),
+          participant_count: poll.participants.length,
+          comment_count: 0, // We don't have comment count in this context, but it's not critical
+          option_count: 0, // We don't have option count in this context, but it's not critical
+          has_location: !!poll.location,
+          has_description: !!poll.description,
+          timezone: poll.timeZone ?? undefined,
+        });
+
         revalidatePath("/", "layout");
       }
     }),
@@ -982,6 +1032,40 @@ export const polls = router({
         userId: ctx.user.id,
       });
 
+      // Update PostHog group status
+      const pollData = await prisma.poll.findUnique({
+        where: { id: input.pollId },
+        select: {
+          title: true,
+          status: true,
+          createdAt: true,
+          location: true,
+          description: true,
+          timeZone: true,
+          _count: {
+            select: {
+              participants: { where: { deleted: false } },
+              comments: true,
+              options: true,
+            },
+          },
+        },
+      });
+
+      if (pollData) {
+        await updatePollGroup(input.pollId, {
+          title: pollData.title,
+          status: pollData.status,
+          created_at: pollData.createdAt.toISOString(),
+          participant_count: pollData._count.participants,
+          comment_count: pollData._count.comments,
+          option_count: pollData._count.options,
+          has_location: !!pollData.location,
+          has_description: !!pollData.description,
+          timezone: pollData.timeZone ?? undefined,
+        });
+      }
+
       revalidatePath("/", "layout");
     }),
   pause: possiblyPublicProcedure
@@ -1006,6 +1090,40 @@ export const polls = router({
         pollId: input.pollId,
         userId: ctx.user.id,
       });
+
+      // Update PostHog group status
+      const pollData = await prisma.poll.findUnique({
+        where: { id: input.pollId },
+        select: {
+          title: true,
+          status: true,
+          createdAt: true,
+          location: true,
+          description: true,
+          timeZone: true,
+          _count: {
+            select: {
+              participants: { where: { deleted: false } },
+              comments: true,
+              options: true,
+            },
+          },
+        },
+      });
+
+      if (pollData) {
+        await updatePollGroup(input.pollId, {
+          title: pollData.title,
+          status: pollData.status,
+          created_at: pollData.createdAt.toISOString(),
+          participant_count: pollData._count.participants,
+          comment_count: pollData._count.comments,
+          option_count: pollData._count.options,
+          has_location: !!pollData.location,
+          has_description: !!pollData.description,
+          timezone: pollData.timeZone ?? undefined,
+        });
+      }
     }),
   duplicate: proProcedure
     .input(
@@ -1093,5 +1211,39 @@ export const polls = router({
         userId: ctx.user.id,
         pollId: input.pollId,
       });
+
+      // Update PostHog group status
+      const pollData = await prisma.poll.findUnique({
+        where: { id: input.pollId },
+        select: {
+          title: true,
+          status: true,
+          createdAt: true,
+          location: true,
+          description: true,
+          timeZone: true,
+          _count: {
+            select: {
+              participants: { where: { deleted: false } },
+              comments: true,
+              options: true,
+            },
+          },
+        },
+      });
+
+      if (pollData) {
+        await updatePollGroup(input.pollId, {
+          title: pollData.title,
+          status: pollData.status,
+          created_at: pollData.createdAt.toISOString(),
+          participant_count: pollData._count.participants,
+          comment_count: pollData._count.comments,
+          option_count: pollData._count.options,
+          has_location: !!pollData.location,
+          has_description: !!pollData.description,
+          timezone: pollData.timeZone ?? undefined,
+        });
+      }
     }),
 });
