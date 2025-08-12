@@ -2,7 +2,6 @@ import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { z } from "zod";
 
-import { trackPollEvent } from "@/features/poll/analytics";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
@@ -149,14 +148,12 @@ export const comments = router({
       }
 
       // Track comment addition analytics
-      trackPollEvent({
+      ctx.analytics.trackEvent({
         type: "comment_added",
         userId: ctx.user.id,
         pollId,
         properties: {
           commentId: newComment.id,
-          authorName,
-          contentLength: content.length,
         },
       });
 
@@ -183,7 +180,7 @@ export const comments = router({
 
       // Track comment deletion analytics
       if (comment) {
-        trackPollEvent({
+        ctx.analytics.trackEvent({
           type: "comment_deleted",
           userId: ctx.user.id,
           pollId: comment.pollId,

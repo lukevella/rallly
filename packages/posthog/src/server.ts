@@ -11,4 +11,6 @@ function PostHogClient() {
   return posthogClient;
 }
 
+export { PostHog };
+
 export const posthog = PostHogClient();

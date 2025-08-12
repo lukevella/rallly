@@ -5,7 +5,6 @@ import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
-import { trackPollEvent } from "@/features/poll/analytics";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
@@ -124,7 +123,7 @@ export const participants = router({
       });
 
       if (participant) {
-        trackPollEvent({
+        ctx.analytics.trackEvent({
           type: "participant_deleted",
           userId: ctx.user.id,
           pollId: participant.pollId,
@@ -247,15 +246,13 @@ export const participants = router({
         );
 
         // Track participant addition analytics
-        trackPollEvent({
+        ctx.analytics.trackEvent({
           type: "participant_added",
           userId: user.id,
           pollId,
           properties: {
             participantId: participant.id,
-            participantName: participant.name,
             hasEmail: !!email,
-            voteCount: votes.length,
           },
         });
 
@@ -335,13 +332,12 @@ export const participants = router({
         });
       });
 
-      trackPollEvent({
+      ctx.analytics.trackEvent({
         type: "participant_updated",
         userId: ctx.user.id,
         pollId,
         properties: {
           participantId,
-          voteCount: votes.length,
         },
       });
 

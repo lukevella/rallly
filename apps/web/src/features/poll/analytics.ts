@@ -1,25 +1,14 @@
-import type { PollStatus } from "@rallly/database";
-import { posthog } from "@rallly/posthog/server";
-import { convertKeysToSnakeCase } from "@rallly/utils/camel-to-snake-case";
-
-/**
- * Poll analytics functions using functional approach
- * Single trackPollEvent function with type-safe event objects
- *
- * Note: Functions are async for consistency and to allow for future async operations,
- * but PostHog calls are synchronous (events are batched and sent when shutdown() is called)
- *
- * PostHog automatically tracks timestamps for events, so we don't need to pass them
- */
+import type { PollStatus } from "@/features/poll/schema";
 
 // Base event data that all events share
 interface BaseEventData {
   userId: string;
   pollId: string;
+  properties?: Record<string, unknown>;
 }
 
-// Poll group properties for PostHog groups
 export interface PollGroupProperties {
+  name: string; // PostHog group name (same as title)
   title: string;
   status: PollStatus;
   created_at: string;
@@ -34,7 +23,9 @@ export interface PollGroupProperties {
 // Discriminated union of all possible poll events
 export type PollEvent =
   | PollCreatedEvent
-  | PollUpdatedEvent
+  | PollUpdatedDetailsEvent
+  | PollUpdatedOptionsEvent
+  | PollUpdatedSettingsEvent
   | PollDeletedEvent
   | PollFinalizedEvent
   | PollReopenedEvent
@@ -61,10 +52,26 @@ export interface PollCreatedEvent extends BaseEventData {
   };
 }
 
-export interface PollUpdatedEvent extends BaseEventData {
-  type: "poll_updated";
+export interface PollUpdatedDetailsEvent extends BaseEventData {
+  type: "poll_updated_details";
   properties: {
-    fieldsUpdated: string[];
+    title?: string;
+    hasDescription?: boolean;
+    hasLocation?: boolean;
+  };
+}
+
+export interface PollUpdatedOptionsEvent extends BaseEventData {
+  type: "poll_updated_options";
+  properties: {
+    optionCount?: number;
+  };
+}
+
+export interface PollUpdatedSettingsEvent extends BaseEventData {
+  type: "poll_updated_settings";
+  properties: {
+    timezone?: string;
   };
 }
 
@@ -84,27 +91,22 @@ export interface PollFinalizedEvent extends BaseEventData {
 
 export interface PollReopenedEvent extends BaseEventData {
   type: "poll_reopened";
-  properties?: Record<string, never>; // No additional properties
 }
 
 export interface PollPausedEvent extends BaseEventData {
   type: "poll_paused";
-  properties?: Record<string, never>; // No additional properties
 }
 
 export interface PollResumedEvent extends BaseEventData {
   type: "poll_resumed";
-  properties?: Record<string, never>; // No additional properties
 }
 
 export interface PollWatchedEvent extends BaseEventData {
   type: "poll_watched";
-  properties?: Record<string, never>; // No additional properties
 }
 
 export interface PollUnwatchedEvent extends BaseEventData {
   type: "poll_unwatched";
-  properties?: Record<string, never>; // No additional properties
 }
 
 // Participant events
@@ -112,9 +114,7 @@ export interface ParticipantAddedEvent extends BaseEventData {
   type: "participant_added";
   properties: {
     participantId: string;
-    participantName: string;
     hasEmail: boolean;
-    voteCount: number;
   };
 }
 
@@ -122,7 +122,6 @@ export interface ParticipantUpdatedEvent extends BaseEventData {
   type: "participant_updated";
   properties: {
     participantId: string;
-    voteCount: number;
   };
 }
 
@@ -138,8 +137,6 @@ export interface CommentAddedEvent extends BaseEventData {
   type: "comment_added";
   properties: {
     commentId: string;
-    authorName: string;
-    contentLength: number;
   };
 }
 
@@ -159,60 +156,4 @@ export interface PollErrorEvent extends BaseEventData {
     errorCode?: string;
     errorStatus?: number;
   };
-}
-
-/**
- * Main analytics tracking function using discriminated union
- */
-export function trackPollEvent(event: PollEvent): void {
-  if (!posthog) return;
-
-  // Handle special case for poll creation - also set up group
-  if (event.type === "poll_created") {
-    posthog.groupIdentify({
-      groupType: "poll",
-      groupKey: event.pollId,
-      properties: {
-        name: event.properties.title, // The PostHog UI identifies a group using the name property
-        status: "live", // New polls start as live
-        participant_count: 0, // New polls start with 0 participants
-        comment_count: 0, // New polls start with 0 comments
-        option_count: event.properties.optionCount,
-        has_location: event.properties.hasLocation,
-        has_description: event.properties.hasDescription,
-        timezone: event.properties.timezone,
-      },
-    });
-  }
-
-  // Track the event - convert camelCase properties to snake_case
-  const properties = convertKeysToSnakeCase(event.properties || {});
-
-  posthog.capture({
-    distinctId: event.userId,
-    event: event.type,
-    properties: {
-      poll_id: event.pollId,
-      ...properties,
-    },
-    groups: {
-      poll: event.pollId,
-    },
-  });
-}
-
-/**
- * Poll group management
- * Note: trackPollEvent with type 'poll_created' automatically sets up initial group properties
- * Use this function to update group properties after poll creation (e.g., when participant/comment counts change)
- */
-export function updatePollGroup(
-  pollId: string,
-  properties: Partial<PollGroupProperties>,
-) {
-  posthog?.groupIdentify({
-    groupType: "poll",
-    groupKey: pollId,
-    properties,
-  });
 }

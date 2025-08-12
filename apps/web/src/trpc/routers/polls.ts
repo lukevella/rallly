@@ -10,7 +10,6 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getCurrentUserSpace } from "@/auth/data";
 import { moderateContent } from "@/features/moderation";
-import { trackPollEvent, updatePollGroup } from "@/features/poll/analytics";
 import { getPolls } from "@/features/poll/data";
 import { canUserManagePoll } from "@/features/poll/helpers";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
@@ -302,8 +301,7 @@ export const polls = router({
         }
       }
 
-      // Track poll creation analytics
-      trackPollEvent({
+      ctx.analytics.trackEvent({
         type: "poll_created",
         userId: ctx.user.id,
         pollId: poll.id,
@@ -437,33 +435,65 @@ export const polls = router({
         },
       });
 
-      // Track poll update analytics
-      const fieldsUpdated = Object.keys(input).filter(
-        (key) =>
-          key !== "urlId" && input[key as keyof typeof input] !== undefined,
-      );
+      if (!updatedPoll) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
 
-      trackPollEvent({
-        type: "poll_updated",
-        userId: ctx.user.id,
-        pollId,
-        properties: {
-          fieldsUpdated,
-        },
-      });
+      // Track specific poll update events based on what was changed
+      const hasDetailsUpdate =
+        input.title !== undefined ||
+        input.location !== undefined ||
+        input.description !== undefined;
+      const hasOptionsUpdate =
+        (input.optionsToDelete && input.optionsToDelete.length > 0) ||
+        (input.optionsToAdd && input.optionsToAdd.length > 0);
+      const hasSettingsUpdate =
+        input.timeZone !== undefined ||
+        input.hideParticipants !== undefined ||
+        input.disableComments !== undefined ||
+        input.hideScores !== undefined ||
+        input.requireParticipantEmail !== undefined;
 
-      // Update PostHog group with current poll data
-      if (updatedPoll) {
-        updatePollGroup(pollId, {
-          title: updatedPoll.title,
-          status: updatedPoll.status,
-          created_at: updatedPoll.createdAt.toISOString(),
-          participant_count: updatedPoll._count.participants,
-          comment_count: updatedPoll._count.comments,
-          option_count: updatedPoll._count.options,
-          has_location: !!updatedPoll.location,
-          has_description: !!updatedPoll.description,
-          timezone: updatedPoll.timeZone ?? undefined,
+      if (hasDetailsUpdate) {
+        ctx.analytics.trackEvent({
+          type: "poll_updated_details",
+          userId: ctx.user.id,
+          pollId,
+          properties: {
+            ...(input.title !== undefined && { title: updatedPoll.title }),
+            ...(input.location !== undefined && {
+              hasLocation: !!updatedPoll.location,
+            }),
+            ...(input.description !== undefined && {
+              hasDescription: !!updatedPoll.description,
+            }),
+          },
+        });
+      }
+
+      if (hasOptionsUpdate) {
+        ctx.analytics.trackEvent({
+          type: "poll_updated_options",
+          userId: ctx.user.id,
+          pollId,
+          properties: {
+            optionCount: updatedPoll._count.options,
+          },
+        });
+      }
+
+      if (hasSettingsUpdate) {
+        ctx.analytics.trackEvent({
+          type: "poll_updated_settings",
+          userId: ctx.user.id,
+          pollId,
+          properties: {
+            ...(input.timeZone !== undefined && {
+              timezone: updatedPoll.timeZone ?? undefined,
+            }),
+          },
         });
       }
 
@@ -484,7 +514,7 @@ export const polls = router({
       });
 
       // Track poll deletion analytics
-      trackPollEvent({
+      ctx.analytics.trackEvent({
         type: "poll_deleted",
         userId: ctx.user.id,
         pollId,
@@ -520,7 +550,7 @@ export const polls = router({
       });
 
       // Track poll watch analytics
-      trackPollEvent({
+      ctx.analytics.trackEvent({
         type: "poll_watched",
         userId: ctx.user.id,
         pollId: input.pollId,
@@ -547,7 +577,7 @@ export const polls = router({
         });
 
         // Track poll unwatch analytics
-        trackPollEvent({
+        ctx.analytics.trackEvent({
           type: "poll_unwatched",
           userId: ctx.user.id,
           pollId: input.pollId,
@@ -973,7 +1003,7 @@ export const polls = router({
           );
         }
 
-        trackPollEvent({
+        ctx.analytics.trackEvent({
           type: "poll_finalized",
           pollId: poll.id,
           userId: ctx.user.id,
@@ -982,19 +1012,6 @@ export const polls = router({
             daysSinceCreated: dayjs().diff(poll.createdAt, "day"),
             participantCount: poll.participants.length,
           },
-        });
-
-        // Update PostHog group status to finalized
-        await updatePollGroup(poll.id, {
-          title: poll.title,
-          status: "finalized",
-          created_at: poll.createdAt.toISOString(),
-          participant_count: poll.participants.length,
-          comment_count: 0, // We don't have comment count in this context, but it's not critical
-          option_count: 0, // We don't have option count in this context, but it's not critical
-          has_location: !!poll.location,
-          has_description: !!poll.description,
-          timezone: poll.timeZone ?? undefined,
         });
 
         revalidatePath("/", "layout");
@@ -1026,45 +1043,11 @@ export const polls = router({
         }
       });
 
-      trackPollEvent({
+      ctx.analytics.trackEvent({
         type: "poll_reopened",
         pollId: input.pollId,
         userId: ctx.user.id,
       });
-
-      // Update PostHog group status
-      const pollData = await prisma.poll.findUnique({
-        where: { id: input.pollId },
-        select: {
-          title: true,
-          status: true,
-          createdAt: true,
-          location: true,
-          description: true,
-          timeZone: true,
-          _count: {
-            select: {
-              participants: { where: { deleted: false } },
-              comments: true,
-              options: true,
-            },
-          },
-        },
-      });
-
-      if (pollData) {
-        await updatePollGroup(input.pollId, {
-          title: pollData.title,
-          status: pollData.status,
-          created_at: pollData.createdAt.toISOString(),
-          participant_count: pollData._count.participants,
-          comment_count: pollData._count.comments,
-          option_count: pollData._count.options,
-          has_location: !!pollData.location,
-          has_description: !!pollData.description,
-          timezone: pollData.timeZone ?? undefined,
-        });
-      }
 
       revalidatePath("/", "layout");
     }),
@@ -1085,45 +1068,11 @@ export const polls = router({
         },
       });
 
-      trackPollEvent({
+      ctx.analytics.trackEvent({
         type: "poll_paused",
         pollId: input.pollId,
         userId: ctx.user.id,
       });
-
-      // Update PostHog group status
-      const pollData = await prisma.poll.findUnique({
-        where: { id: input.pollId },
-        select: {
-          title: true,
-          status: true,
-          createdAt: true,
-          location: true,
-          description: true,
-          timeZone: true,
-          _count: {
-            select: {
-              participants: { where: { deleted: false } },
-              comments: true,
-              options: true,
-            },
-          },
-        },
-      });
-
-      if (pollData) {
-        await updatePollGroup(input.pollId, {
-          title: pollData.title,
-          status: pollData.status,
-          created_at: pollData.createdAt.toISOString(),
-          participant_count: pollData._count.participants,
-          comment_count: pollData._count.comments,
-          option_count: pollData._count.options,
-          has_location: !!pollData.location,
-          has_description: !!pollData.description,
-          timezone: pollData.timeZone ?? undefined,
-        });
-      }
     }),
   duplicate: proProcedure
     .input(
@@ -1206,44 +1155,10 @@ export const polls = router({
       });
 
       // Track poll resume analytics
-      trackPollEvent({
+      ctx.analytics.trackEvent({
         type: "poll_resumed",
         userId: ctx.user.id,
         pollId: input.pollId,
       });
-
-      // Update PostHog group status
-      const pollData = await prisma.poll.findUnique({
-        where: { id: input.pollId },
-        select: {
-          title: true,
-          status: true,
-          createdAt: true,
-          location: true,
-          description: true,
-          timeZone: true,
-          _count: {
-            select: {
-              participants: { where: { deleted: false } },
-              comments: true,
-              options: true,
-            },
-          },
-        },
-      });
-
-      if (pollData) {
-        await updatePollGroup(input.pollId, {
-          title: pollData.title,
-          status: pollData.status,
-          created_at: pollData.createdAt.toISOString(),
-          participant_count: pollData._count.participants,
-          comment_count: pollData._count.comments,
-          option_count: pollData._count.options,
-          has_location: !!pollData.location,
-          has_description: !!pollData.description,
-          timezone: pollData.timeZone ?? undefined,
-        });
-      }
     }),
 });
