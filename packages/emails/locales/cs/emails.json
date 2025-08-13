@@ -36,7 +36,7 @@
   "newPoll_content": "Vaše anketa s názvem <b>{title}</b> je připravena! Sdílejte ji pomocí níže uvedeného odkazu:",
   "newPoll_heading": "Nová anketa vytvořena",
   "newPoll_button": "Spravovat anketu",
-  "newPoll_subject": "Najdeme datum pro {title}!",
+  "newPoll_subject": "Pojďme najít vhodné datum pro {title}!",
   "register_footer": "Tento e-mail dostáváte, protože byla podána žádost o registraci účtu na <domain />. Pokud to nebyla vaše žádost, prosím, ignorujte tento e-mail.",
   "register_preview": "Váš 6místný kód je: {code}",
   "register_heading": "Ověřte svou e-mailovou adresu",
@@ -62,5 +62,10 @@
   "abandoned_checkout_support": "Pokud máte jakékoli otázky ohledně Rallly Pro nebo potřebujete s čímkoli pomoci, stačí odpovědět na tento e-mail. Jsem tu pro vás!",
   "abandoned_checkout_preview": "Exkluzivní nabídka: Získejte {discount}% slevu z prvního roku Rallly Pro!",
   "abandoned_checkout_subject": "Získejte {discount}% slevu z prvního roku Rallly Pro",
-  "abandoned_checkout_signoff": "S pozdravem,"
+  "abandoned_checkout_signoff": "S pozdravem,",
+  "spaceInvite_content": "{inviterName} vás pozval, abyste se připojil k {spaceName} jako {role}.",
+  "spaceInvite_preview": "Byli jste pozváni k připojení do {spaceName}",
+  "spaceInvite_heading": "Jste zváni!",
+  "spaceInvite_button": "Přijmout pozvání",
+  "spaceInvite_subject": "Zveme vás k připojení k {spaceName}"
 }
