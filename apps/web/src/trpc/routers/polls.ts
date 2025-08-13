@@ -227,10 +227,7 @@ export const polls = router({
       }
 
       const poll = await prisma.poll.create({
-        select: {
-          adminUrlId: true,
-          id: true,
-          title: true,
+        include: {
           options: {
             select: {
               id: true,
@@ -311,6 +308,10 @@ export const polls = router({
           hasLocation: !!input.location,
           hasDescription: !!input.description,
           timezone: input.timeZone,
+          disableCommnets: poll.disableComments,
+          hideParticipants: poll.hideParticipants,
+          hideScores: poll.hideScores,
+          requireParticipantEmail: poll.requireParticipantEmail,
         },
       });
 

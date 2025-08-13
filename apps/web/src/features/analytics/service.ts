@@ -34,14 +34,10 @@ export class AnalyticsService {
         case "poll_create":
           // Set up initial group properties for new polls
           this.setPoll(event.pollId, {
-            title: event.properties.title,
             status: "live", // New polls start as live
             participant_count: 0, // New polls start with 0 participants
             comment_count: 0, // New polls start with 0 comments
-            option_count: event.properties.optionCount,
-            has_location: event.properties.hasLocation,
-            has_description: event.properties.hasDescription,
-            timezone: event.properties.timezone,
+            ...toSnakeCaseKeys(event.properties),
           });
           break;
 
@@ -101,12 +97,14 @@ export class AnalyticsService {
   setPoll(pollId: string, properties: Partial<PollGroupProperties>): void {
     if (!this.posthog) return;
 
+    const { title, ...forwardProps } = properties;
+
     this.posthog.groupIdentify({
       groupType: "poll",
       groupKey: pollId,
       properties: {
-        ...properties,
-        name: properties.title,
+        name: title,
+        ...forwardProps,
       },
     });
   }

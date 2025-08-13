@@ -53,6 +53,10 @@ export interface PollCreateEvent extends BaseEventData {
     hasLocation: boolean;
     hasDescription: boolean;
     timezone?: string;
+    disableCommnets: boolean;
+    hideScores: boolean;
+    hideParticipants: boolean;
+    requireParticipantEmail: boolean;
   };
 }
 
