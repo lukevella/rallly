@@ -69,7 +69,7 @@ const nextConfig = {
       {
         source: "/account/billing",
         destination: "/settings/billing",
-        permanent: true,
+        permanent: false,
       },
     ];
   },

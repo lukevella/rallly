@@ -6,7 +6,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@rallly/ui/sidebar";
-import { Settings2Icon, UserIcon } from "lucide-react";
+import { CreditCardIcon, Settings2Icon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "@/i18n/client";
@@ -26,6 +26,12 @@ export function AccountSidebarMenu() {
       label: t("preferences", { defaultValue: "Preferences" }),
       icon: <Settings2Icon />,
       href: "/account/preferences",
+    },
+    {
+      id: "billing",
+      label: t("billing", { defaultValue: "Billing" }),
+      icon: <CreditCardIcon />,
+      href: "/account/billing",
     },
   ];
   return (
