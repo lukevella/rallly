@@ -312,6 +312,7 @@ export const polls = router({
           hideParticipants: poll.hideParticipants,
           hideScores: poll.hideScores,
           requireParticipantEmail: poll.requireParticipantEmail,
+          isGuest: ctx.user.isGuest,
         },
       });
 

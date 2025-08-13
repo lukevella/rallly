@@ -11,6 +11,7 @@ export interface PollGroupProperties {
   name: string; // PostHog group name (same as title)
   title: string;
   status: PollStatus;
+  is_guest: boolean;
   created_at: string;
   participant_count: number;
   hide_participants: boolean;
@@ -57,6 +58,7 @@ export interface PollCreateEvent extends BaseEventData {
     hideScores: boolean;
     hideParticipants: boolean;
     requireParticipantEmail: boolean;
+    isGuest: boolean;
   };
 }
 
