@@ -482,5 +482,6 @@
   "instantAccess": "Sofortiger Zugriff auf alle Funktionen",
   "selectPlan": "Plan auswählen:",
   "prioritySupport": "Vorrangiger Support",
-  "prioritySupportDescription": "Schnellere Antwortzeiten und engagierte Unterstützung"
+  "prioritySupportDescription": "Schnellere Antwortzeiten und engagierte Unterstützung",
+  "cancelEventConfirmDescription": "Bist du sicher, dass du diesen Termin absagen möchtest?"
 }

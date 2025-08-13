@@ -482,5 +482,6 @@
   "instantAccess": "Az összes funkció azonnali elérése",
   "selectPlan": "Válassz előfizetést:",
   "prioritySupport": "Kiemelt támogatás",
-  "prioritySupportDescription": "Gyorsabb válaszidő és dedikált támogatás"
+  "prioritySupportDescription": "Gyorsabb válaszidő és dedikált támogatás",
+  "cancelEventConfirmDescription": "Biztosan szeretnéd lemondani ezt az eseményt?"
 }

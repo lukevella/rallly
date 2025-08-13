@@ -307,5 +307,6 @@
   "acceptInviteMetadataTitle": "Připojit se k {spaceName}",
   "actionErrorPaymentRequired": "K provedení této akce je nutné provést upgrade",
   "loginWithAnotherAccount": "Přihlaste se pomocí jiného účtu",
-  "adminRoleRequired": "K provedení této akce musíte být správcem"
+  "adminRoleRequired": "K provedení této akce musíte být správcem",
+  "cancelEventConfirmDescription": "Jste si jisti, že chcete zrušit tuto událost?"
 }
