@@ -12,7 +12,6 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { CrownIcon, LayersIcon, MoreHorizontalIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   EmptyState,
@@ -37,7 +36,6 @@ interface SpacesListProps {
 
 export function SpacesList({ spaces, currentUserId }: SpacesListProps) {
   const { t } = useTranslation();
-  const router = useRouter();
   const leaveSpaceDialog = useDialog();
   const [selectedSpace, setSelectedSpace] = useState<SpaceDTO | null>(null);
 
@@ -48,7 +46,6 @@ export function SpacesList({ spaces, currentUserId }: SpacesListProps) {
           defaultValue: "You have left the space",
         }),
       );
-      router.refresh();
       leaveSpaceDialog.dismiss();
       setSelectedSpace(null);
     },

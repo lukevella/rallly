@@ -80,6 +80,7 @@ export function LeaveSpaceDialog({
           <form
             onSubmit={form.handleSubmit(async () => {
               await onConfirm();
+              form.reset();
             })}
             className="space-y-4"
           >
