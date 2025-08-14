@@ -454,8 +454,6 @@
   "inviteMembers": "Tagok meghívása",
   "accessDenied": "Hozzáférés megtagadva",
   "ownerPermissionsRequired": "Csak a munkaterület tulajdonosai férhetnek hozzá a számlázási beállításokhoz.",
-  "signOutSection": "Kijelentkezés",
-  "signOutSectionDescription": "Befejezed a jelenlegi munkameneted és kilépsz a fiókodból",
   "loading": "Betöltés...",
   "endOfList": "Elérted a lista végét",
   "attendeeCount": "{count, plural, =0 {Nincs résztvevő} one {1 résztvevő} other {# résztvevő}}",
