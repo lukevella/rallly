@@ -8,9 +8,9 @@ import { waitUntil } from "@vercel/functions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { updateSeatCount } from "@/features/billing/mutations";
-import { getMember } from "@/features/space/data";
+import { getMember, getSpaceSeatCount } from "@/features/space/data";
 import { memberRoleSchema } from "@/features/space/schema";
-import { toDBRole } from "@/features/space/utils";
+import { getTotalSeatsForSpace, toDBRole } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -170,6 +170,19 @@ export const inviteMemberAction = spaceActionClient
       });
     }
 
+    // Check seat availability before proceeding with invitation
+    const [currentSeatCount, totalSeats] = await Promise.all([
+      getSpaceSeatCount(ctx.space.id),
+      getTotalSeatsForSpace(ctx.space.id),
+    ]);
+
+    if (currentSeatCount >= totalSeats) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "There are not enough available seats to perform this action",
+      });
+    }
+
     // Check if user is already a member
     const existingUser = await prisma.user.findUnique({
       where: { email: parsedInput.email },
@@ -287,6 +300,20 @@ export const acceptInviteAction = authActionClient
       });
     }
 
+    // Check seat availability before accepting the invite
+    const [currentSeatCount, totalSeats] = await Promise.all([
+      getSpaceSeatCount(parsedInput.spaceId),
+      getTotalSeatsForSpace(parsedInput.spaceId),
+    ]);
+
+    if (currentSeatCount >= totalSeats) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message:
+          "There are not enough available seats to accept this invitation",
+      });
+    }
+
     await prisma.$transaction(async (tx) => {
       await tx.spaceMember.create({
         data: {
@@ -301,10 +328,6 @@ export const acceptInviteAction = authActionClient
           id: spaceMemberInvite.id,
         },
       });
-
-      if (isFeatureEnabled("billing")) {
-        await updateSeatCount(spaceMemberInvite.spaceId, 1);
-      }
     });
 
     try {

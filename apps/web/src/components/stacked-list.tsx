@@ -8,7 +8,7 @@ export function StackedList({
   className?: string;
 }) {
   return (
-    <ul className={cn("divide-y overflow-hidden rounded-lg border", className)}>
+    <ul className={cn("divide-y overflow-hidden rounded-xl border", className)}>
       {children}
     </ul>
   );
