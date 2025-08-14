@@ -184,6 +184,8 @@ export const participants = router({
                   select: {
                     id: true,
                     title: true,
+                    userId: true,
+                    guestId: true,
                   },
                 },
               },
@@ -258,6 +260,9 @@ export const participants = router({
             participantId: participant.id,
             hasEmail: !!email,
             totalResponses,
+            isCreator: ctx.user.isGuest
+              ? participant.poll.guestId === ctx.user.id
+              : participant.poll.userId === ctx.user.id,
           },
         });
 

@@ -128,6 +128,7 @@ export interface PollResponseSubmitEvent extends BaseEventData {
     participantId: string;
     hasEmail: boolean;
     totalResponses: number;
+    isCreator: boolean;
   };
 }
 
