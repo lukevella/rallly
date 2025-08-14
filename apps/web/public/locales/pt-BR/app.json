@@ -454,8 +454,6 @@
   "inviteMembers": "Convidar Membros",
   "accessDenied": "Acesso Negado",
   "ownerPermissionsRequired": "Somente donos de espaço podem acessar as configurações de cobrança.",
-  "signOutSection": "Encerrar sessão",
-  "signOutSectionDescription": "Encerre a sessão atual e saia da sua conta",
   "loading": "Carregando...",
   "endOfList": "Você atingiu o final da lista",
   "attendeeCount": "{count, plural, =0 {Nenhum participante} one {1 participante} other {# participantes}}",
