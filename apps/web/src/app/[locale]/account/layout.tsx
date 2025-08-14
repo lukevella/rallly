@@ -2,7 +2,6 @@ import { Icon } from "@rallly/ui/icon";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -17,7 +16,6 @@ import Link from "next/link";
 import type React from "react";
 import { Trans } from "@/components/trans";
 import { AccountSidebarMenu } from "./components/sidebar";
-import { SignOutButton } from "./components/sign-out-button";
 
 export default async function ProfileLayout({
   children,
@@ -53,11 +51,6 @@ export default async function ProfileLayout({
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter>
-          <SidebarMenu>
-            <SignOutButton />
-          </SidebarMenu>
-        </SidebarFooter>
       </Sidebar>
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
