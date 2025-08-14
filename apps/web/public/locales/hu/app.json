@@ -483,5 +483,10 @@
   "selectPlan": "Válassz előfizetést:",
   "prioritySupport": "Kiemelt támogatás",
   "prioritySupportDescription": "Gyorsabb válaszidő és dedikált támogatás",
-  "cancelEventConfirmDescription": "Biztosan szeretnéd lemondani ezt az eseményt?"
+  "cancelEventConfirmDescription": "Biztosan szeretnéd lemondani ezt az eseményt?",
+  "confirmSpaceName": "Kérjük, add meg a munkaterület nevét a megerősítéshez:",
+  "mySpaces": "Munkaterületeim",
+  "spacesDescription": "Kezeld a hozzád tartozó munkaterületeket",
+  "noSpaces": "Nem található munkaterület",
+  "noSpacesDescription": "Még nem vagy tagja egy munkaterületnek sem"
 }
