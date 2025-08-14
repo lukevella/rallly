@@ -86,7 +86,10 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         </DropdownMenuItem>
         <IfCloudHosted>
           <DropdownMenuItem asChild={true}>
-            <Link href="/account/billing" className="flex items-center gap-x-2">
+            <Link
+              href="/settings/billing"
+              className="flex items-center gap-x-2"
+            >
               <CreditCardIcon className="size-4 text-muted-foreground" />
               <Trans i18nKey="Billing" defaults="Billing" />
             </Link>

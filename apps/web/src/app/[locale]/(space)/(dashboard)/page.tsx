@@ -134,7 +134,7 @@ export default async function Page() {
             </Tile>
             <IfCloudHosted>
               <Tile asChild>
-                <Link href="/account/billing">
+                <Link href="/settings/billing">
                   <BillingPageIcon />
                   <TileTitle>
                     <Trans i18nKey="billing" defaults="Billing" />

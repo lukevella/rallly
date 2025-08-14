@@ -100,7 +100,7 @@ export function CommandMenu() {
               <PreferencesPageIcon size="sm" />
               <NavigationCommandLabel label={t("preferences")} />
             </CommandItem>
-            <CommandItem onSelect={() => handleSelect("/account/billing")}>
+            <CommandItem onSelect={() => handleSelect("/settings/billing")}>
               <BillingPageIcon size="sm" />
               <NavigationCommandLabel label={t("billing")} />
             </CommandItem>

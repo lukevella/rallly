@@ -153,7 +153,7 @@ export function PriceTables() {
           </TabsContent>
           <hr />
           <Button asChild variant="primary" className="w-full">
-            <Link href={linkToApp("/account/billing")}>
+            <Link href={linkToApp("/settings/billing")}>
               <Trans
                 t={t}
                 ns="pricing"
