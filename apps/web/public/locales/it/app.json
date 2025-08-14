@@ -454,8 +454,6 @@
   "inviteMembers": "Invita membri",
   "accessDenied": "Accesso negato",
   "ownerPermissionsRequired": "Solo i proprietari dello spazio possono accedere alle impostazioni di fatturazione.",
-  "signOutSection": "Disconnettiti",
-  "signOutSectionDescription": "Termina la sessione corrente ed esci dal tuo account",
   "loading": "Caricamento in corso...",
   "endOfList": "Hai raggiunto la fine della lista",
   "attendeeCount": "{count, plural, =0 {Nessun partecipante} one {1 partecipante} other {# partecipanti}}",
