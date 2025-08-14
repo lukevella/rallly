@@ -1,5 +1,6 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -20,7 +21,9 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import React from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
@@ -36,13 +39,27 @@ export function LeaveSpaceDialog({
   children,
   ...rest
 }: LeaveSpaceDialogProps) {
-  const form = useForm<{ spaceName: string }>({
-    defaultValues: {
-      spaceName: "",
-    },
-  });
-
   const { t } = useTranslation();
+
+  const formSchema = React.useMemo(
+    () =>
+      z.object({
+        spaceName: z
+          .string()
+          .transform((s) => s.trim())
+          .refine((val) => val === spaceName, {
+            message: t("spaceNameMismatch", {
+              defaultValue: "Space name does not match",
+            }),
+          }),
+      }),
+    [spaceName, t],
+  );
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { spaceName: "" },
+  });
 
   return (
     <Form {...form}>
@@ -61,8 +78,7 @@ export function LeaveSpaceDialog({
             </DialogDescription>
           </DialogHeader>
           <form
-            onSubmit={form.handleSubmit(async (data) => {
-              console.log({ data });
+            onSubmit={form.handleSubmit(async () => {
               await onConfirm();
             })}
             className="space-y-4"
@@ -70,17 +86,6 @@ export function LeaveSpaceDialog({
             <FormField
               control={form.control}
               name="spaceName"
-              rules={{
-                validate: (value) => {
-                  console.log({ value, spaceName });
-                  if (value !== spaceName) {
-                    return t("spaceNameMismatch", {
-                      defaultValue: "Space name does not match",
-                    });
-                  }
-                  return true;
-                },
-              }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
