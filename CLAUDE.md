@@ -134,6 +134,20 @@ pnpm sherif               # Check package dependencies
 - Example: `function Component({ prop }: { prop: string })` instead of defining a separate interface
 - Only create named interfaces when they're reused or complex
 
+### Dialog Management
+- **IMPORTANT**: Always use the `useDialog` hook from `@rallly/ui/dialog` for managing dialog state instead of manual `useState` for open/close state
+- The hook provides `dialog.trigger()`, `dialog.dismiss()`, and `dialog.dialogProps` which should be spread onto the dialog component
+- Example usage:
+  ```tsx
+  const dialog = useDialog();
+  
+  // Trigger dialog
+  <Button onClick={() => dialog.trigger()}>Open</Button>
+  
+  // Dialog component
+  <MyDialog {...dialog.dialogProps} />
+  ```
+
 ### File Organization
 - Features organized in `apps/web/src/features/[feature]/`
 - Shared components in `apps/web/src/components/`

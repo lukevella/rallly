@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { isSpacesEnabled } from "@/features/space/constants";
+import { useSpace } from "@/features/space/client";
 import { useTranslation } from "@/i18n/client";
 
 export interface NavigationItem {
@@ -35,7 +35,7 @@ export interface NavigationConfig {
 
 export const useSpaceMenu = () => {
   const { t } = useTranslation();
-
+  const space = useSpace();
   const pathname = usePathname();
   const config = React.useMemo<NavigationConfig>(
     () => ({
@@ -72,7 +72,7 @@ export const useSpaceMenu = () => {
             },
           ],
         },
-        ...(isSpacesEnabled
+        ...(space.data.role === "admin"
           ? [
               {
                 id: "manage",
@@ -91,7 +91,7 @@ export const useSpaceMenu = () => {
           : []),
       ],
     }),
-    [pathname, t],
+    [pathname, t, space],
   );
 
   return React.useMemo(

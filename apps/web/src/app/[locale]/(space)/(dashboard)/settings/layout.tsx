@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import {
   PageContainer,
   PageContent,
@@ -6,7 +5,6 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { Trans } from "@/components/trans";
-import { isSpacesEnabled } from "@/features/space/constants";
 import { SettingsTabs } from "./components/settings-tabs";
 
 export default function SettingsLayout({
@@ -14,10 +12,6 @@ export default function SettingsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  if (!isSpacesEnabled) {
-    return notFound();
-  }
-
   return (
     <PageContainer>
       <PageHeader>
