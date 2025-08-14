@@ -454,8 +454,6 @@
   "inviteMembers": "Inviter medlemmer",
   "accessDenied": "Adgang nægtet",
   "ownerPermissionsRequired": "Kun ejerne af rum kan få adgang til faktureringsindstillinger.",
-  "signOutSection": "Log Ud",
-  "signOutSectionDescription": "Afslut din nuværende session og log ud af din konto",
   "loading": "Indlæser...",
   "endOfList": "Du har nået afslutningen på listen",
   "attendeeCount": "{count, plural, =0 {Ingen deltagere} one {1 deltager} other {# deltagere}}",
