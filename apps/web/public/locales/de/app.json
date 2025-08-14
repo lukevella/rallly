@@ -483,5 +483,10 @@
   "selectPlan": "Plan auswählen:",
   "prioritySupport": "Vorrangiger Support",
   "prioritySupportDescription": "Schnellere Antwortzeiten und engagierte Unterstützung",
-  "cancelEventConfirmDescription": "Bist du sicher, dass du diesen Termin absagen möchtest?"
+  "cancelEventConfirmDescription": "Bist du sicher, dass du diesen Termin absagen möchtest?",
+  "confirmSpaceName": "Bitte gib zur Bestätigung den Gruppennamen ein:",
+  "mySpaces": "Meine Gruppen",
+  "spacesDescription": "Verwalte die Gruppen, zu denen du gehörst",
+  "noSpaces": "Keine Gruppen gefunden",
+  "noSpacesDescription": "Du bist noch kein Mitglied in einer Gruppe"
 }
