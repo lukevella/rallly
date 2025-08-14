@@ -483,5 +483,10 @@
   "selectPlan": "Select Plan:",
   "prioritySupport": "Priority Support",
   "prioritySupportDescription": "Get faster response times and dedicated assistance",
-  "cancelEventConfirmDescription": "Are you sure you want to cancel this event?"
+  "cancelEventConfirmDescription": "Are you sure you want to cancel this event?",
+  "confirmSpaceName": "Please type the space name to confirm:",
+  "mySpaces": "My Spaces",
+  "spacesDescription": "Manage the spaces you belong to",
+  "noSpaces": "No spaces found",
+  "noSpacesDescription": "You are not a member of any spaces yet"
 }
