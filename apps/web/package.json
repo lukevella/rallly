@@ -108,6 +108,9 @@
     "@babel/core": "^7.26.10",
     "@playwright/test": "^1.52.0",
     "@rallly/tsconfig": "workspace:*",
+    "@testing-library/jest-dom": "^6.7.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/color-hash": "^1.0.2",
     "@types/js-cookie": "^3.0.1",
     "@types/lodash": "^4.14.178",
@@ -116,10 +119,12 @@
     "@types/react-big-calendar": "^1.8.8",
     "@types/react-dom": "19.1.2",
     "@types/smoothscroll-polyfill": "^0.3.1",
+    "@vitejs/plugin-react": "^5.0.0",
     "cheerio": "^1.0.0-rc.12",
     "cross-env": "^7.0.3",
     "i18next-scanner": "^4.2.0",
     "i18next-scanner-typescript": "^1.1.1",
+    "jsdom": "^26.1.0",
     "vitest": "^2.1.9"
   }
 }
