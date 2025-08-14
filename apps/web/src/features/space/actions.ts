@@ -581,6 +581,103 @@ export const removeSpaceImageAction = spaceActionClient
     }
   });
 
+export const leaveSpaceFromAccountAction = authActionClient
+  .metadata({
+    actionName: "space_leave_from_account",
+  })
+  .inputSchema(
+    z.object({
+      spaceId: z.string(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    const space = await prisma.space.findUnique({
+      where: {
+        id: parsedInput.spaceId,
+      },
+      select: {
+        id: true,
+        ownerId: true,
+      },
+    });
+
+    if (!space) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: "Space not found",
+      });
+    }
+
+    // Check if user is the space owner
+    if (space.ownerId === ctx.user.id) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message:
+          "Space owners cannot leave their space. Transfer ownership first.",
+      });
+    }
+
+    // Get the user's member record
+    const member = await prisma.spaceMember.findFirst({
+      where: {
+        spaceId: parsedInput.spaceId,
+        userId: ctx.user.id,
+      },
+    });
+
+    if (!member) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: "You are not a member of this space",
+      });
+    }
+
+    // Check if user has other spaces
+    const userSpaces = await prisma.spaceMember.findMany({
+      where: {
+        userId: ctx.user.id,
+        NOT: {
+          spaceId: parsedInput.spaceId,
+        },
+      },
+      orderBy: {
+        lastSelectedAt: "desc",
+      },
+    });
+
+    if (userSpaces.length === 0) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "Cannot leave your last remaining space",
+      });
+    }
+
+    await prisma.$transaction(async (tx) => {
+      // Remove the user from the space
+      await tx.spaceMember.delete({
+        where: {
+          id: member.id,
+        },
+      });
+
+      // Update the most recent remaining space to be current
+      // (this handles the case where they're leaving their active space)
+      await tx.spaceMember.update({
+        where: {
+          id: userSpaces[0].id,
+        },
+        data: {
+          lastSelectedAt: new Date(),
+        },
+      });
+
+      // Update seat count if billing is enabled
+      if (isFeatureEnabled("billing")) {
+        await updateSeatCount(parsedInput.spaceId, -1);
+      }
+    });
+  });
+
 export const leaveSpaceAction = spaceActionClient
   .metadata({
     actionName: "space_leave",

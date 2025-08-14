@@ -6,7 +6,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@rallly/ui/sidebar";
-import { CreditCardIcon, Settings2Icon, UserIcon } from "lucide-react";
+import {
+  CreditCardIcon,
+  LayersIcon,
+  Settings2Icon,
+  UserIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "@/i18n/client";
@@ -26,6 +31,12 @@ export function AccountSidebarMenu() {
       label: t("preferences", { defaultValue: "Preferences" }),
       icon: <Settings2Icon />,
       href: "/account/preferences",
+    },
+    {
+      id: "spaces",
+      label: t("spaces", { defaultValue: "Spaces" }),
+      icon: <LayersIcon />,
+      href: "/account/spaces",
     },
     {
       id: "billing",

@@ -12,8 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
-import { CirclePlusIcon, SettingsIcon, UserPlusIcon } from "lucide-react";
-import Link from "next/link";
+import { CirclePlusIcon } from "lucide-react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/components/trans";
 import { setActiveSpaceAction } from "@/features/space/actions";
@@ -73,23 +72,6 @@ export function SpaceDropdown({
               </DropdownMenuRadioItem>
             ))}
           </DropdownMenuRadioGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="/settings/general">
-              <Icon>
-                <SettingsIcon />
-              </Icon>
-              <Trans i18nKey="settings" defaults="Settings" />
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/settings/members">
-              <Icon>
-                <UserPlusIcon />
-              </Icon>
-              <Trans i18nKey="inviteMembers" defaults="Invite Members" />
-            </Link>
-          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={newSpaceDialog.trigger}>
             <Icon>
