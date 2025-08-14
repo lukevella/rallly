@@ -20,7 +20,6 @@ import { requireUser } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
 import { DeleteAccountDialog } from "./delete-account-dialog";
-import { LogoutButton } from "./logout-button";
 import { ProfileEmailAddress } from "./profile-email-address";
 import { ProfileSettings } from "./profile-settings";
 
@@ -66,23 +65,6 @@ export default async function Page() {
             </PageSectionHeader>
             <PageSectionContent>
               <ProfileEmailAddress />
-            </PageSectionContent>
-          </PageSection>
-
-          <PageSection>
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans i18nKey="signOutSection" defaults="Sign Out" />
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  i18nKey="signOutSectionDescription"
-                  defaults="End your current session and sign out of your account"
-                />
-              </PageSectionDescription>
-            </PageSectionHeader>
-            <PageSectionContent>
-              <LogoutButton />
             </PageSectionContent>
           </PageSection>
 
