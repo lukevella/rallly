@@ -1,6 +1,5 @@
 "use client";
 
-import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -13,12 +12,7 @@ import {
 } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
-import {
-  AlertTriangleIcon,
-  ArmchairIcon,
-  MinusIcon,
-  PlusIcon,
-} from "lucide-react";
+import { ArmchairIcon, MinusIcon, PlusIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 
 import { Trans } from "@/components/trans";
@@ -213,19 +207,6 @@ export function ManageSeatsButton({
               usedSeats={usedSeats}
               minSeats={usedSeats}
             />
-
-            {!canRemoveSeats && (
-              <Alert variant="destructive">
-                <AlertTriangleIcon />
-                <AlertDescription>
-                  <Trans
-                    i18nKey="cannotReduceSeatsError"
-                    defaults="Cannot reduce seats below {usedSeats} (currently in use). Remove members first to free up seats."
-                    values={{ usedSeats }}
-                  />
-                </AlertDescription>
-              </Alert>
-            )}
           </div>
 
           <DialogFooter>
