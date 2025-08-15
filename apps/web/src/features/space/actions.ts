@@ -300,21 +300,21 @@ export const acceptInviteAction = authActionClient
       });
     }
 
-    // Check seat availability before accepting the invite
-    const [currentSeatCount, totalSeats] = await Promise.all([
-      getSpaceSeatCount(parsedInput.spaceId),
-      getTotalSeatsForSpace(parsedInput.spaceId),
-    ]);
-
-    if (currentSeatCount >= totalSeats) {
-      throw new AppError({
-        code: "FORBIDDEN",
-        message:
-          "There are not enough available seats to accept this invitation",
-      });
-    }
-
     await prisma.$transaction(async (tx) => {
+      // Check seat availability before accepting the invite
+      const [usedSeats, totalSeats] = await Promise.all([
+        tx.spaceMember.count({ where: { spaceId: parsedInput.spaceId } }),
+        getTotalSeatsForSpace(parsedInput.spaceId),
+      ]);
+
+      if (usedSeats >= totalSeats) {
+        throw new AppError({
+          code: "FORBIDDEN",
+          message:
+            "There are not enough available seats to accept this invitation",
+        });
+      }
+
       await tx.spaceMember.create({
         data: {
           spaceId: parsedInput.spaceId,

@@ -56,13 +56,6 @@ export function getSelfHostedSeatLimit(
  * Handles both cloud-hosted (Stripe subscription) and self-hosted (license-based) deployments
  */
 export async function getTotalSeatsForSpace(spaceId: string): Promise<number> {
-  if (!spaceId) {
-    throw new AppError({
-      code: "NOT_FOUND",
-      message: "Space ID is required",
-    });
-  }
-
   try {
     if (isSelfHosted) {
       // For self-hosted instances, get seat limit from instance license
