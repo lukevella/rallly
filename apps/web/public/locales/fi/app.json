@@ -398,8 +398,6 @@
   "adminRoleDescription": "Täysi käyttöoikeus sekä tilan ja jäsenoikeuksien hallinta",
   "rolePlaceholder": "Valitse rooli...",
   "invalidEmailAddress": "Anna toimiva sähköpostiosoite",
-  "billingAcknowledgmentRequired": "Sinun täytyy hyväksyä vaikutus laskutukseen",
-  "billingAcknowledgment": "Ymmärrän, että jäsenten lisääminen vaikuttaa tilaukseni hintaan",
   "makeAdmin": "Muuta ylläpitäjäksi",
   "makeMember": "Muuta jäseneksi",
   "changingRole": "Vaihdetaan roolia...",
