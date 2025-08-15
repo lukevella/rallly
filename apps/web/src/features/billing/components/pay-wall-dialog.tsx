@@ -19,7 +19,6 @@ import {
   BadgeDollarSignIcon,
   CalendarCheckIcon,
   CalendarSearchIcon,
-  CheckIcon,
   ClockIcon,
   CopyIcon,
   LifeBuoyIcon,
@@ -27,7 +26,6 @@ import {
   TimerResetIcon,
   UserPlusIcon,
 } from "lucide-react";
-import Link from "next/link";
 import React from "react";
 import { Trans } from "@/components/trans";
 import { UpgradeButton } from "@/components/upgrade-button";
@@ -101,7 +99,7 @@ function PlanRadioGroupItem({
   return (
     <label
       htmlFor={id}
-      className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border p-4 transition-colors has-[[data-state=checked]]:border-primary-600 has-[[data-state=checked]]:ring-1 has-[[data-state=checked]]:ring-primary"
+      className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border p-4 transition-colors has-[[data-state=checked]]:border-primary-300 has-[[data-state=checked]]:bg-primary-background has-[[data-state=checked]]:ring-primary"
     >
       <RadioGroupItem value={value} id={id} />
       <div className="flex-1">
@@ -123,29 +121,6 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 });
-
-function SubscriptionBenefits() {
-  return (
-    <ul className="space-y-2 text-muted-foreground">
-      <li className="text-sm">
-        <CheckIcon className="mr-2 inline-block size-4 text-green-500" />
-        <Trans
-          i18nKey="instantAccess"
-          defaults="Instant access to all features"
-        />
-      </li>
-      <li className="text-sm">
-        <CheckIcon className="mr-2 inline-block size-4 text-green-500 " />
-        <Trans
-          i18nKey="cancelAnytime"
-          components={{
-            a: <Link className="underline" href="/settings/billing" />,
-          }}
-        />
-      </li>
-    </ul>
-  );
-}
 
 export function PayWallDialog({
   isOpen,
@@ -193,8 +168,6 @@ export function PayWallDialog({
                 </DialogTitle>
               </DialogHeader>
               <div className="mt-6 flex-1 space-y-6">
-                <SubscriptionBenefits />
-                <hr className="border-gray-100" />
                 <Label>
                   <Trans i18nKey="selectPlan" defaults="Select Plan:" />
                 </Label>
