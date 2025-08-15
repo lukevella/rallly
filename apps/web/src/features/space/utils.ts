@@ -69,7 +69,7 @@ export async function getTotalSeatsForSpace(spaceId: string): Promise<number> {
 
       // If license has explicit seats defined, use that
       if (license.seats && license.seats > 0) {
-        return Math.max(license.seats, MAX_SEAT_LIMIT);
+        return Math.min(license.seats, MAX_SEAT_LIMIT);
       }
 
       // Otherwise, use the license type to determine seat limit
