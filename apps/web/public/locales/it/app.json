@@ -398,8 +398,6 @@
   "adminRoleDescription": "Accesso completo per i membri, più gestione dello spazio e autorizzazioni per i membri",
   "rolePlaceholder": "Seleziona ruolo...",
   "invalidEmailAddress": "Inserisci un indirizzo email valido",
-  "billingAcknowledgmentRequired": "È necessario riconoscere l'impatto sulla fatturazione",
-  "billingAcknowledgment": "Capisco che l'aggiunta di membri influenzerà il prezzo dell'abbonamento",
   "makeAdmin": "Rendi amministratore",
   "makeMember": "Rendi membro",
   "changingRole": "Cambiamento di ruolo...",
