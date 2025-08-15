@@ -161,24 +161,24 @@ export default async function MembersSettingsPage() {
                     />
                   </p>
                 </IfCloudHosted>
+                <IfSelfHosted>
+                  <p>
+                    <Trans
+                      i18nKey="noSeatsAvailableAlertSelfHostedDescription"
+                      defaults="You will need to <a>upgrade</a> to increase the number of seats in this space."
+                      components={{
+                        a: (
+                          <Link
+                            className="underline"
+                            prefetch={false}
+                            href="https://support.rallly.co/self-hosting/licensing"
+                          />
+                        ),
+                      }}
+                    />
+                  </p>
+                </IfSelfHosted>
               </AlertDescription>
-              <IfSelfHosted>
-                <p>
-                  <Trans
-                    i18nKey="noSeatsAvailableAlertBillingDescription"
-                    defaults="You will need to upgrade to increase the number of seats in this space."
-                    components={{
-                      a: (
-                        <Link
-                          className="underline"
-                          prefetch={false}
-                          href="https://support.rallly.co/self-hosting/licensing"
-                        />
-                      ),
-                    }}
-                  />
-                </p>
-              </IfSelfHosted>
             </Alert>
           ) : null}
         </PageSectionContent>
