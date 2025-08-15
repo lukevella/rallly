@@ -19,15 +19,6 @@ interface MemberSelectorProps {
   members: MemberDTO[];
 }
 
-function MemberOption({ member }: { member: MemberDTO }) {
-  return (
-    <div className="flex items-center gap-2">
-      <OptimizedAvatarImage size="sm" name={member.name} src={member.image} />
-      <span>{member.name}</span>
-    </div>
-  );
-}
-
 export function MemberSelector({ members }: MemberSelectorProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -52,30 +43,14 @@ export function MemberSelector({ members }: MemberSelectorProps) {
     });
   };
 
-  const selectedMember = members.find((m) => m.userId === optimisticMember);
-  const isAllMembers = optimisticMember === "all";
-
   return (
     <Select
       value={optimisticMember}
       onValueChange={handleMemberChange}
       disabled={isPending}
     >
-      <SelectTrigger className="w-48">
-        <SelectValue>
-          {isAllMembers ? (
-            <div className="flex items-center gap-2">
-              <Icon>
-                <UsersIcon />
-              </Icon>
-              <span>
-                <Trans i18nKey="allMembers" defaults="All Members" />
-              </span>
-            </div>
-          ) : (
-            selectedMember && <MemberOption member={selectedMember} />
-          )}
-        </SelectValue>
+      <SelectTrigger className="min-w-48">
+        <SelectValue />
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">
@@ -90,7 +65,14 @@ export function MemberSelector({ members }: MemberSelectorProps) {
         </SelectItem>
         {members.map((member) => (
           <SelectItem key={member.userId} value={member.userId}>
-            <MemberOption member={member} />
+            <div className="flex items-center gap-2">
+              <OptimizedAvatarImage
+                size="sm"
+                name={member.name}
+                src={member.image}
+              />
+              <span>{member.name}</span>
+            </div>
           </SelectItem>
         ))}
       </SelectContent>
