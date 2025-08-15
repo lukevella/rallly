@@ -495,5 +495,7 @@
   "seatUsage": "{usedSeats} of {totalSeats} seats used",
   "noSeatsAvailableAlertTitle": "No Seats Available",
   "noSeatsAvailableAlertBillingDescription": "Increase the number of seats in this space from the <a>billing page</a>.",
-  "noSeatsAvailableAlertSelfHostedDescription": "You will need to <a>upgrade</a> to increase the number of seats in this space."
+  "noSeatsAvailableAlertSelfHostedDescription": "You will need to <a>upgrade</a> to increase the number of seats in this space.",
+  "seatsUpdatedAlertTitle": "Seats Updated",
+  "seatsUpdatedAlertDescription": "Your seat allocation has been successfully updated. The changes will be reflected in your next billing cycle."
 }

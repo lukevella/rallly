@@ -3,6 +3,7 @@ import { Icon } from "@rallly/ui/icon";
 import { CreditCardIcon, SendIcon, ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { SeatsUpdatedAlert } from "@/app/[locale]/(space)/(dashboard)/settings/billing/components/seats-updated-alert";
 import {
   PageSection,
   PageSectionContent,
@@ -31,7 +32,6 @@ import { loadMembers } from "@/features/space/data";
 import { getTotalSeatsForSpace } from "@/features/space/utils";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-
 import { ManageSeatsButton } from "./components/manage-seats-button";
 
 export default async function BillingSettingsPage() {
@@ -141,6 +141,8 @@ export default async function BillingSettingsPage() {
               </PayWallButton>
             )}
           </div>
+
+          <SeatsUpdatedAlert />
         </PageSectionContent>
       </PageSection>
       <PageSection>

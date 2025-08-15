@@ -69,7 +69,7 @@ export const createStripeSubscriptionUpdateConfirmation = async ({
   const portalSession = await stripe.billingPortal.sessions.create({
     customer: customerId,
     configuration: configurationId,
-    return_url: absoluteUrl("/settings/members?cancel=true"),
+    return_url: absoluteUrl("/settings/billing"),
     flow_data: {
       type: "subscription_update_confirm",
       subscription_update_confirm: {
@@ -84,7 +84,7 @@ export const createStripeSubscriptionUpdateConfirmation = async ({
       after_completion: {
         type: "redirect",
         redirect: {
-          return_url: absoluteUrl("/settings/members?seats_updated=true"),
+          return_url: absoluteUrl("/settings/billing?seats_updated=true"),
         },
       },
     },
