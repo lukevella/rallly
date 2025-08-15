@@ -493,5 +493,9 @@
   "increaseSeats": "Helyek számának növelése",
   "manageSubscription": "Előfizetés kezelése",
   "seatUsage": "{usedSeats} foglalt {totalSeats} helyből",
-  "noSeatsAvailableAlertTitle": "Nincsenek szabad helyek"
+  "noSeatsAvailableAlertTitle": "Nincsenek szabad helyek",
+  "noSeatsAvailableAlertBillingDescription": "Növeld meg a helyek számát ezen a munkaterületen a <a>számlázási oldalon</a>.",
+  "noSeatsAvailableAlertSelfHostedDescription": "Előfizetést kell <a>váltanod</a>, hogy növelni tudd a helyek számát ezen a munkaterületen.",
+  "seatsUpdatedAlertTitle": "Helyek frissítve",
+  "seatsUpdatedAlertDescription": "A helyek elosztásának frissítése sikeresen megtörtént. A változtatások a következő számlázási ciklusodban fognak megjelenni."
 }
