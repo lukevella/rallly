@@ -1,6 +1,6 @@
 import type { SpaceMemberRole as PrismaSpaceMemberRole } from "@prisma/client";
-import { prisma } from "@rallly/database";
 import { getSpaceSubscription } from "@/features/billing/data";
+import { getInstanceLicense } from "@/features/licensing/data";
 import type { LicenseType } from "@/features/licensing/schema";
 import type { MemberRole } from "@/features/space/schema";
 import { AppError } from "@/lib/errors";
@@ -28,6 +28,7 @@ export const fromDBRole = (role: PrismaSpaceMemberRole): MemberRole => {
  * Default seat limit for spaces without active subscriptions
  */
 const DEFAULT_SEAT_LIMIT = 1;
+const MAX_SEAT_LIMIT = 100;
 
 /**
  * Returns the seat limit for self-hosted instances based on license type
@@ -45,7 +46,7 @@ export function getSelfHostedSeatLimit(
     case "ORGANIZATION":
       return 50;
     case "ENTERPRISE":
-      return 100;
+      return MAX_SEAT_LIMIT;
     default:
       return DEFAULT_SEAT_LIMIT;
   }
@@ -59,7 +60,7 @@ export async function getTotalSeatsForSpace(spaceId: string): Promise<number> {
   try {
     if (isSelfHosted) {
       // For self-hosted instances, get seat limit from instance license
-      const license = await prisma.instanceLicense.findFirst();
+      const license = await getInstanceLicense();
 
       if (!license) {
         // No license found, return default limit
@@ -68,7 +69,7 @@ export async function getTotalSeatsForSpace(spaceId: string): Promise<number> {
 
       // If license has explicit seats defined, use that
       if (license.seats && license.seats > 0) {
-        return license.seats;
+        return Math.max(license.seats, MAX_SEAT_LIMIT);
       }
 
       // Otherwise, use the license type to determine seat limit
