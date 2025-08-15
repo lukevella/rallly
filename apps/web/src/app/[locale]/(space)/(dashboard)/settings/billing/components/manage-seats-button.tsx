@@ -13,9 +13,9 @@ import {
 } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
+import { Label } from "@rallly/ui/label";
 import { ArmchairIcon, MinusIcon, PlusIcon } from "lucide-react";
 import { useCallback, useState } from "react";
-
 import { Trans } from "@/components/trans";
 import { updateSeatsAction } from "@/features/billing/actions";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -30,7 +30,6 @@ interface SeatCountSelectorProps {
   value: number;
   onChange: (value: number) => void;
   currentSeats: number;
-  usedSeats: number;
   minSeats: number;
 }
 
@@ -38,7 +37,6 @@ function SeatCountSelector({
   value,
   onChange,
   currentSeats,
-  usedSeats,
   minSeats,
 }: SeatCountSelectorProps) {
   const handleIncrement = useCallback(() => {
@@ -81,61 +79,44 @@ function SeatCountSelector({
   const canIncrement = value < 999; // Reasonable upper limit
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="font-medium text-sm">
-            <Trans i18nKey="totalSeats" defaults="Total Seats" />
-          </div>
-          <div className="text-muted-foreground text-xs">
-            <Trans
-              i18nKey="currentlyUsing"
-              defaults="Currently using {usedSeats} of {currentSeats} seats"
-              values={{ usedSeats, currentSeats }}
-            />
-          </div>
-        </div>
+    <div>
+      <div className="flex items-center gap-2">
+        <Button
+          type="button"
+          variant="default"
+          onClick={handleDecrement}
+          disabled={!canDecrement}
+        >
+          <Icon>
+            <MinusIcon />
+          </Icon>
+          <span className="sr-only">
+            <Trans i18nKey="decreaseSeats" defaults="Decrease seats" />
+          </span>
+        </Button>
 
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="default"
-            size="sm"
-            onClick={handleDecrement}
-            disabled={!canDecrement}
-            className="size-8 p-0"
-          >
-            <MinusIcon className="size-4" />
-            <span className="sr-only">
-              <Trans i18nKey="decreaseSeats" defaults="Decrease seats" />
-            </span>
-          </Button>
+        <Input
+          type="number"
+          value={value}
+          onChange={handleInputChange}
+          onBlur={handleInputBlur}
+          min={minSeats}
+          max={999}
+          className="w-20 text-center"
+        />
 
-          <Input
-            type="number"
-            value={value}
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
-            min={minSeats}
-            max={999}
-            className="w-20 text-center"
-            size="sm"
-          />
-
-          <Button
-            type="button"
-            variant="default"
-            size="sm"
-            onClick={handleIncrement}
-            disabled={!canIncrement}
-            className="size-8 p-0"
-          >
-            <PlusIcon className="size-4" />
-            <span className="sr-only">
-              <Trans i18nKey="increaseSeats" defaults="Increase seats" />
-            </span>
-          </Button>
-        </div>
+        <Button
+          type="button"
+          onClick={handleIncrement}
+          disabled={!canIncrement}
+        >
+          <Icon>
+            <PlusIcon />
+          </Icon>
+          <span className="sr-only">
+            <Trans i18nKey="increaseSeats" defaults="Increase seats" />
+          </span>
+        </Button>
       </div>
     </div>
   );
@@ -178,7 +159,7 @@ export function ManageSeatsButton({
         <Trans i18nKey="manageSeats" defaults="Manage Seats" />
       </Button>
       <Dialog {...dialog.dialogProps}>
-        <DialogContent size="sm">
+        <DialogContent size="md">
           <DialogHeader>
             <DialogTitle>
               <Trans i18nKey="manageSeats" defaults="Manage Seats" />
@@ -190,19 +171,31 @@ export function ManageSeatsButton({
               />
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <Label className="mb-2">
+                <Trans i18nKey="totalSeats" defaults="Total Seats" />
+              </Label>
+              <p>
+                <p className="mt-1 text-muted-foreground text-sm">
+                  <Trans
+                    i18nKey="currentlyUsing"
+                    defaults="Currently using {usedSeats} of {currentSeats} seats"
+                    values={{ usedSeats, currentSeats }}
+                  />
+                </p>
+              </p>
+            </div>
             <SeatCountSelector
               value={newSeatCount}
               onChange={setNewSeatCount}
               currentSeats={currentSeats}
-              usedSeats={usedSeats}
               minSeats={usedSeats}
             />
           </div>
-
           <DialogFooter>
-            <DialogClose>
-              <Button variant="default">
+            <DialogClose asChild>
+              <Button>
                 <Trans i18nKey="cancel" defaults="Cancel" />
               </Button>
             </DialogClose>
