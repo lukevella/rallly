@@ -209,7 +209,6 @@
   "featureNameDuplicate": "Sklonuj ankietę",
   "featureNameAdvancedSettings": "Ustawienia zaawansowane",
   "featureNameExtendedPollLifetime": "Wydłużony czas trwania ankiety",
-  "cancelAnytime": "Możesz anulować w dowolnym momencie na <a>stronie rozliczeniowej</a>.",
   "unsubscribeToastTitle": "Powiadomienia zostały wyłączone",
   "unsubscribeToastDescription": "Nie będziesz już otrzymywać powiadomień dla tej ankiety",
   "emailChangeSuccess": "Adres e-mail zmieniony pomyślnie",
