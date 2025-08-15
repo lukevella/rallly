@@ -398,8 +398,6 @@
   "adminRoleDescription": "Fuldt medlemskab inklusive rummanagement og medlemsrettigheder",
   "rolePlaceholder": "Vælg rolle...",
   "invalidEmailAddress": "Angiv venligst en gyldig e-mailadresse",
-  "billingAcknowledgmentRequired": "Du skal anerkende den fakturerings påvirkning",
-  "billingAcknowledgment": "Jeg forstår, at tilføjelse af medlemmer vil påvirke min abonnementspris",
   "makeAdmin": "Giv administrationsrettighed",
   "makeMember": "Opret medlem",
   "changingRole": "Skifter roller ...",
