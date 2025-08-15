@@ -398,8 +398,6 @@
   "adminRoleDescription": "Heeft volledige toegang en kan ruimtes en machtigingen beheren",
   "rolePlaceholder": "Kies een rol...",
   "invalidEmailAddress": "Voer een geldig e-mailadres in",
-  "billingAcknowledgmentRequired": "Je moet de gevolgen voor de facturering accepteren",
-  "billingAcknowledgment": "Ik begrijp dat het toevoegen van deelnemers mijn abonnementsprijs zal beïnvloeden",
   "makeAdmin": "Beheerder maken",
   "makeMember": "Deelnemer maken",
   "changingRole": "Rol wijzigen...",
