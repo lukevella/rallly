@@ -7,13 +7,11 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { waitUntil } from "@vercel/functions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { updateSeatCount } from "@/features/billing/mutations";
 import { getMember, getSpaceSeatCount } from "@/features/space/data";
 import { memberRoleSchema } from "@/features/space/schema";
 import { getTotalSeatsForSpace, toDBRole } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors";
-import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import {
   authActionClient,
   createRateLimitMiddleware,
@@ -373,10 +371,6 @@ export const removeMemberAction = spaceActionClient
           id: parsedInput.memberId,
         },
       });
-
-      if (isFeatureEnabled("billing")) {
-        await updateSeatCount(member.spaceId, -1);
-      }
     });
   });
 
@@ -693,11 +687,6 @@ export const leaveSpaceFromAccountAction = authActionClient
           lastSelectedAt: new Date(),
         },
       });
-
-      // Update seat count if billing is enabled
-      if (isFeatureEnabled("billing")) {
-        await updateSeatCount(parsedInput.spaceId, -1);
-      }
     });
   });
 
@@ -768,10 +757,5 @@ export const leaveSpaceAction = spaceActionClient
           lastSelectedAt: new Date(),
         },
       });
-
-      // Update seat count if billing is enabled
-      if (isFeatureEnabled("billing")) {
-        await updateSeatCount(ctx.space.id, -1);
-      }
     });
   });
