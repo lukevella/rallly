@@ -110,7 +110,7 @@ export default async function BillingSettingsPage() {
                 <Trans
                   i18nKey="seatCount"
                   defaults="{count, plural, {one, # seat} {other, # seats}}"
-                  values={{ count: subscription?.quantity }}
+                  values={{ count: totalSeats }}
                 />
               </div>
             </StackedListItem>

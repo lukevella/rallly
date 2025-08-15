@@ -170,19 +170,6 @@ export const inviteMemberAction = spaceActionClient
       });
     }
 
-    // Check seat availability before proceeding with invitation
-    const [currentSeatCount, totalSeats] = await Promise.all([
-      getSpaceSeatCount(ctx.space.id),
-      getTotalSeatsForSpace(ctx.space.id),
-    ]);
-
-    if (currentSeatCount >= totalSeats) {
-      throw new AppError({
-        code: "FORBIDDEN",
-        message: "There are not enough available seats to perform this action",
-      });
-    }
-
     // Check if user is already a member
     const existingUser = await prisma.user.findUnique({
       where: { email: parsedInput.email },
@@ -212,7 +199,7 @@ export const inviteMemberAction = spaceActionClient
     });
 
     if (existingInvite) {
-      // Update existing invite if role is different
+      // Update existing invite if role is different (allow regardless of seats)
       if (existingInvite.role !== toDBRole(parsedInput.role)) {
         await prisma.spaceMemberInvite.update({
           where: { id: existingInvite.id },
@@ -231,6 +218,19 @@ export const inviteMemberAction = spaceActionClient
         code: "INVITE_PENDING" as const,
         message: "An invitation has already been sent to this email address",
       };
+    }
+
+    // Check seat availability only for new invites
+    const [currentSeatCount, totalSeats] = await Promise.all([
+      getSpaceSeatCount(ctx.space.id),
+      getTotalSeatsForSpace(ctx.space.id),
+    ]);
+
+    if (currentSeatCount >= totalSeats) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "There are not enough available seats to perform this action",
+      });
     }
 
     try {

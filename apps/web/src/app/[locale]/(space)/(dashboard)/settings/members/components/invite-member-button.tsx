@@ -22,7 +22,7 @@ export function InviteMemberButton({
   const inviteMemberDialog = useDialog();
   const space = useSpace();
   const { showPayWall } = useBilling();
-  const availableSeats = totalSeats - usedSeats;
+  const availableSeats = Math.max(totalSeats - usedSeats, 0);
   return (
     <>
       <Button
