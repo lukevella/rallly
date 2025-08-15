@@ -398,8 +398,6 @@
   "adminRoleDescription": "Voller Mitgliederzugang sowie Gruppenverwaltungs- und Mitgliederberechtigungen",
   "rolePlaceholder": "Rolle auswählen...",
   "invalidEmailAddress": "Bitte gib eine gültige E-Mail-Adresse ein",
-  "billingAcknowledgmentRequired": "Du musst die Auswirkungen auf die Rechnungsstellung anerkennen",
-  "billingAcknowledgment": "Ich verstehe, dass das Hinzufügen von Mitgliedern Auswirkungen auf meinen Abonnementpreis hat",
   "makeAdmin": "Zum Admin machen",
   "makeMember": "Zum Mitglied machen",
   "changingRole": "Rolle wird geändert...",
