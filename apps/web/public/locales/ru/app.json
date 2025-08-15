@@ -454,8 +454,6 @@
   "inviteMembers": "Пригласить участников",
   "accessDenied": "Доступ запрещен",
   "ownerPermissionsRequired": "Только владельцы пространства могут получить доступ к настройкам выставления счетов.",
-  "signOutSection": "Выйти",
-  "signOutSectionDescription": "Завершите текущую сессию и выйдите из вашей учетной записи",
   "loading": "Загрузка...",
   "endOfList": "Вы достигли конца списка",
   "attendeeCount": "{count, plural, =0 {Нет участников} one {1 участник} few {2 участника} many {3 участников} other {# участников}}",
