@@ -398,8 +398,6 @@
   "adminRoleDescription": "Acesso completo ao membro, além de gerenciamento de espaço e permissões de membro",
   "rolePlaceholder": "Selecionar atribuição...",
   "invalidEmailAddress": "Por favor, insira um endereço de e-mail válido",
-  "billingAcknowledgmentRequired": "Você precisa reconhecer o impacto da cobrança",
-  "billingAcknowledgment": "Entendo que adicionar membros afetará o preço da minha assinatura",
   "makeAdmin": "Tornar administrador",
   "makeMember": "Tornar membro",
   "changingRole": "Alterando atribuição...",
