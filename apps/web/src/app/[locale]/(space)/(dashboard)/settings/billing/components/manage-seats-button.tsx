@@ -176,14 +176,13 @@ export function ManageSeatsButton({
               <Label className="mb-2">
                 <Trans i18nKey="totalSeats" defaults="Total Seats" />
               </Label>
-              <p>
-                <p className="mt-1 text-muted-foreground text-sm">
-                  <Trans
-                    i18nKey="currentlyUsing"
-                    defaults="Currently using {usedSeats} of {currentSeats} seats"
-                    values={{ usedSeats, currentSeats }}
-                  />
-                </p>
+
+              <p className="mt-1 text-muted-foreground text-sm">
+                <Trans
+                  i18nKey="currentlyUsing"
+                  defaults="Currently using {usedSeats} of {currentSeats} seats"
+                  values={{ usedSeats, currentSeats }}
+                />
               </p>
             </div>
             <SeatCountSelector
