@@ -3,6 +3,7 @@
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -168,14 +169,6 @@ export function ManageSeatsButton({
     }
   };
 
-  const handleOpenChange = (newOpen: boolean) => {
-    if (!newOpen) {
-      // Reset seat count when closing dialog
-      setNewSeatCount(currentSeats);
-    }
-    dialog.dialogProps.onOpenChange(newOpen);
-  };
-
   return (
     <>
       <Button onClick={dialog.trigger}>
@@ -184,9 +177,8 @@ export function ManageSeatsButton({
         </Icon>
         <Trans i18nKey="manageSeats" defaults="Manage Seats" />
       </Button>
-
-      <Dialog {...dialog.dialogProps} onOpenChange={handleOpenChange}>
-        <DialogContent size="md">
+      <Dialog {...dialog.dialogProps}>
+        <DialogContent size="sm">
           <DialogHeader>
             <DialogTitle>
               <Trans i18nKey="manageSeats" defaults="Manage Seats" />
@@ -198,7 +190,6 @@ export function ManageSeatsButton({
               />
             </DialogDescription>
           </DialogHeader>
-
           <div className="space-y-4">
             <SeatCountSelector
               value={newSeatCount}
@@ -210,21 +201,18 @@ export function ManageSeatsButton({
           </div>
 
           <DialogFooter>
-            <Button variant="default" onClick={() => handleOpenChange(false)}>
-              <Trans i18nKey="cancel" defaults="Cancel" />
-            </Button>
+            <DialogClose>
+              <Button variant="default">
+                <Trans i18nKey="cancel" defaults="Cancel" />
+              </Button>
+            </DialogClose>
             <Button
               variant="primary"
               onClick={handleUpdate}
               disabled={!canRemoveSeats || !hasChanges}
               loading={isPending}
             >
-              {isSelfHosted ? (
-                <Trans
-                  i18nKey="viewLicensingOptions"
-                  defaults="View Licensing Options"
-                />
-              ) : isAdding ? (
+              {isAdding ? (
                 <Trans
                   i18nKey="addSeats"
                   defaults="Add {count} Seats"
