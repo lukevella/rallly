@@ -1,8 +1,16 @@
 import { prisma } from "@rallly/database";
 import { cache } from "react";
 
+export function getInstanceLicense() {
+  return prisma.instanceLicense.findFirst({
+    orderBy: {
+      id: "asc",
+    },
+  });
+}
+
 export const loadInstanceLicense = cache(async () => {
-  const license = await prisma.instanceLicense.findFirst();
+  const license = await getInstanceLicense();
 
   if (!license) {
     return null;

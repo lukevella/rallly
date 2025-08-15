@@ -11,14 +11,22 @@ import { useSpace } from "@/features/space/client";
 import { useTranslation } from "@/i18n/client";
 import { InviteMemberDialog } from "./invite-member-dialog";
 
-export function InviteMemberButton() {
+export function InviteMemberButton({
+  usedSeats,
+  totalSeats,
+}: {
+  usedSeats: number;
+  totalSeats: number;
+}) {
   const { t } = useTranslation();
   const inviteMemberDialog = useDialog();
   const space = useSpace();
   const { showPayWall } = useBilling();
+  const availableSeats = Math.max(totalSeats - usedSeats, 0);
   return (
     <>
       <Button
+        disabled={availableSeats <= 0}
         onClick={() => {
           if (space.getMemberAbility().cannot("create", "SpaceMemberInvite")) {
             toast.error(

@@ -1,8 +1,9 @@
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import { DotIcon, SendIcon, ShieldXIcon } from "lucide-react";
+import { CreditCardIcon, SendIcon, ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { SeatsUpdatedAlert } from "@/app/[locale]/(space)/(dashboard)/settings/billing/components/seats-updated-alert";
 import {
   PageSection,
   PageSectionContent,
@@ -27,8 +28,11 @@ import {
   SpaceTierIcon,
   SpaceTierLabel,
 } from "@/features/space/components/space-tier";
+import { loadMembers } from "@/features/space/data";
+import { getTotalSeatsForSpace } from "@/features/space/utils";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
+import { ManageSeatsButton } from "./components/manage-seats-button";
 
 export default async function BillingSettingsPage() {
   if (!isFeatureEnabled("billing")) {
@@ -58,7 +62,13 @@ export default async function BillingSettingsPage() {
     );
   }
 
-  const subscription = await getSpaceSubscription(space.id);
+  const [subscription, members, totalSeats] = await Promise.all([
+    getSpaceSubscription(space.id),
+    loadMembers(),
+    getTotalSeatsForSpace(space.id),
+  ]);
+
+  const usedSeats = members.total;
 
   return (
     <PageSectionGroup>
@@ -83,48 +93,56 @@ export default async function BillingSettingsPage() {
                   <SpaceTierLabel tier={space.tier} />
                 </div>
                 {subscription ? (
-                  <ul className="flex items-center gap-px text-muted-foreground text-sm">
-                    <li>
-                      <SubscriptionStatus
-                        status={subscription.status}
-                        cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
-                        periodEnd={subscription.periodEnd}
-                      />
-                    </li>
-                    <li>
-                      <Icon>
-                        <DotIcon />
-                      </Icon>
-                    </li>
-                    <li>
-                      <Trans
-                        i18nKey="seatCount"
-                        defaults="{count, plural, {one, # seat} {other, # seats}}"
-                        values={{ count: subscription?.quantity }}
-                      />
-                    </li>
-                  </ul>
+                  <p className="text-muted-foreground text-sm">
+                    <SubscriptionStatus
+                      status={subscription.status}
+                      cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
+                      periodEnd={subscription.periodEnd}
+                    />
+                  </p>
                 ) : (
                   <p className="text-muted-foreground text-sm">
                     <Trans i18nKey="priceFree" />
                   </p>
                 )}
               </div>
-              <div>
-                {subscription ? (
-                  <Button asChild>
-                    <a href="/api/stripe/portal">
-                      <Trans i18nKey="manage" />
-                    </a>
-                  </Button>
-                ) : (
-                  <PayWallButton>
-                    <Trans i18nKey="upgradeToPro" />
-                  </PayWallButton>
-                )}
+              <div className="text-muted-foreground text-sm">
+                <Trans
+                  i18nKey="seatCount"
+                  defaults="{count, plural, {one, # seat} {other, # seats}}"
+                  values={{ count: totalSeats }}
+                />
               </div>
             </StackedListItem>
           </StackedList>
+
+          <div>
+            {subscription ? (
+              <div className="flex justify-between gap-2">
+                <Button asChild>
+                  <a href="/api/stripe/portal">
+                    <Icon>
+                      <CreditCardIcon />
+                    </Icon>
+                    <Trans
+                      i18nKey="manageSubscription"
+                      defaults="Manage Subscription"
+                    />
+                  </a>
+                </Button>
+                <ManageSeatsButton
+                  currentSeats={totalSeats}
+                  usedSeats={usedSeats}
+                />
+              </div>
+            ) : (
+              <PayWallButton>
+                <Trans i18nKey="upgradeToPro" />
+              </PayWallButton>
+            )}
+          </div>
+
+          <SeatsUpdatedAlert />
         </PageSectionContent>
       </PageSection>
       <PageSection>

@@ -7,13 +7,11 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { waitUntil } from "@vercel/functions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { updateSeatCount } from "@/features/billing/mutations";
-import { getMember } from "@/features/space/data";
+import { getMember, getSpaceSeatCount } from "@/features/space/data";
 import { memberRoleSchema } from "@/features/space/schema";
-import { toDBRole } from "@/features/space/utils";
+import { getTotalSeatsForSpace, toDBRole } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors";
-import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import {
   authActionClient,
   createRateLimitMiddleware,
@@ -199,7 +197,7 @@ export const inviteMemberAction = spaceActionClient
     });
 
     if (existingInvite) {
-      // Update existing invite if role is different
+      // Update existing invite if role is different (allow regardless of seats)
       if (existingInvite.role !== toDBRole(parsedInput.role)) {
         await prisma.spaceMemberInvite.update({
           where: { id: existingInvite.id },
@@ -218,6 +216,19 @@ export const inviteMemberAction = spaceActionClient
         code: "INVITE_PENDING" as const,
         message: "An invitation has already been sent to this email address",
       };
+    }
+
+    // Check seat availability only for new invites
+    const [currentSeatCount, totalSeats] = await Promise.all([
+      getSpaceSeatCount(ctx.space.id),
+      getTotalSeatsForSpace(ctx.space.id),
+    ]);
+
+    if (currentSeatCount >= totalSeats) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "There are not enough available seats to perform this action",
+      });
     }
 
     try {
@@ -288,6 +299,20 @@ export const acceptInviteAction = authActionClient
     }
 
     await prisma.$transaction(async (tx) => {
+      // Check seat availability before accepting the invite
+      const [usedSeats, totalSeats] = await Promise.all([
+        tx.spaceMember.count({ where: { spaceId: parsedInput.spaceId } }),
+        getTotalSeatsForSpace(parsedInput.spaceId),
+      ]);
+
+      if (usedSeats >= totalSeats) {
+        throw new AppError({
+          code: "FORBIDDEN",
+          message:
+            "There are not enough available seats to accept this invitation",
+        });
+      }
+
       await tx.spaceMember.create({
         data: {
           spaceId: parsedInput.spaceId,
@@ -301,10 +326,6 @@ export const acceptInviteAction = authActionClient
           id: spaceMemberInvite.id,
         },
       });
-
-      if (isFeatureEnabled("billing")) {
-        await updateSeatCount(spaceMemberInvite.spaceId, 1);
-      }
     });
 
     try {
@@ -350,10 +371,6 @@ export const removeMemberAction = spaceActionClient
           id: parsedInput.memberId,
         },
       });
-
-      if (isFeatureEnabled("billing")) {
-        await updateSeatCount(member.spaceId, -1);
-      }
     });
   });
 
@@ -670,11 +687,6 @@ export const leaveSpaceFromAccountAction = authActionClient
           lastSelectedAt: new Date(),
         },
       });
-
-      // Update seat count if billing is enabled
-      if (isFeatureEnabled("billing")) {
-        await updateSeatCount(parsedInput.spaceId, -1);
-      }
     });
   });
 
@@ -745,10 +757,5 @@ export const leaveSpaceAction = spaceActionClient
           lastSelectedAt: new Date(),
         },
       });
-
-      // Update seat count if billing is enabled
-      if (isFeatureEnabled("billing")) {
-        await updateSeatCount(ctx.space.id, -1);
-      }
     });
   });

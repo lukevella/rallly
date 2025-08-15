@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
-import { Checkbox } from "@rallly/ui/checkbox";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
   Dialog,
@@ -39,12 +38,10 @@ import { inviteMemberAction } from "@/features/space/actions";
 import { SpaceRole } from "@/features/space/components/space-role";
 import { memberRoleSchema } from "@/features/space/schema";
 import { useTranslation } from "@/i18n/client";
-import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 function useInviteMemberFormSchema() {
   const { t } = useTranslation();
-  const isBillingEnabled = useFeatureFlag("billing");
 
   return useMemo(() => {
     return z.object({
@@ -54,27 +51,18 @@ function useInviteMemberFormSchema() {
         }),
       }),
       role: memberRoleSchema,
-      billingAcknowledgment: isBillingEnabled
-        ? z.boolean().refine((val) => val === true, {
-            message: t("billingAcknowledgmentRequired", {
-              defaultValue: "You must acknowledge the billing impact",
-            }),
-          })
-        : z.boolean().optional().default(true),
     });
-  }, [t, isBillingEnabled]);
+  }, [t]);
 }
 
 export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
   const { t } = useTranslation();
-  const isBillingEnabled = useFeatureFlag("billing");
   const formSchema = useInviteMemberFormSchema();
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
       email: "",
       role: "member",
-      billingAcknowledgment: !isBillingEnabled,
     },
     resolver: zodResolver(formSchema),
   });
@@ -220,37 +208,11 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
               </FormItem>
             )}
           />
-          {isBillingEnabled && (
-            <FormField
-              control={form.control}
-              name="billingAcknowledgment"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex flex-row items-start gap-3 py-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      {t("billingAcknowledgment", {
-                        defaultValue:
-                          "I understand that adding members will affect my subscription price",
-                      })}
-                    </FormLabel>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
           <FormMessage />
         </fieldset>
-        <div className="mt-4">
+        <div className="mt-4 flex">
           <Button
             variant="primary"
-            className="w-full"
             loading={inviteMember.isExecuting}
             type="submit"
           >
