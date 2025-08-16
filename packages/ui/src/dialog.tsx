@@ -37,9 +37,9 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 const dialogContentVariants = cva(
   cn(
     //style
-    "gap-4 bg-background p-4 shadow-lg sm:rounded-xl",
+    "gap-4 rounded-xl bg-background p-4 shadow-lg",
     // position
-    "-translate-x-1/2 fixed top-0 left-1/2 z-50 grid w-full",
+    "-translate-x-1/2 -translate-y-1/2 fixed top-1/2 left-1/2 z-50 grid w-full",
     // animation
     "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-left-1/2 data-[state=closed]:slide-out-to-left-1/2 duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in",
   ),
@@ -127,7 +127,10 @@ const DialogFooter = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn("mt-2 flex flex-col-reverse gap-2 sm:flex-row", className)}
+    className={cn(
+      "mt-2 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+      className,
+    )}
     {...props}
   />
 );
