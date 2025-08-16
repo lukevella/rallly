@@ -209,7 +209,6 @@
   "featureNameDuplicate": "Dupliquer le sondage",
   "featureNameAdvancedSettings": "Paramètres avancés",
   "featureNameExtendedPollLifetime": "Durée de vie des sondages prolongée",
-  "cancelAnytime": "Annulez à tout moment depuis votre <a>page de facturation</a>.",
   "unsubscribeToastTitle": "Vous avez désactivé les notifications",
   "unsubscribeToastDescription": "Vous ne recevrez plus de notifications pour ce sondage",
   "emailChangeSuccess": "Adresse e-mail changée avec succès",

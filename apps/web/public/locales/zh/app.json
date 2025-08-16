@@ -209,7 +209,6 @@
   "featureNameDuplicate": "重新投票",
   "featureNameAdvancedSettings": "高级设置",
   "featureNameExtendedPollLifetime": "延长投票日期",
-  "cancelAnytime": "随时在<a>账单页</a>取消订阅",
   "unsubscribeToastTitle": "您已禁用通知",
   "unsubscribeToastDescription": "您将不再收到此投票的通知",
   "emailChangeSuccess": "电子邮件修改成功",

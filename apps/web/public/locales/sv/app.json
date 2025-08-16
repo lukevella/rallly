@@ -209,7 +209,6 @@
   "featureNameDuplicate": "Duplicera förfrågan",
   "featureNameAdvancedSettings": "Avancerade inställningar",
   "featureNameExtendedPollLifetime": "Förläng tiden på förfrågan",
-  "cancelAnytime": "Avbryt när som helst från din <a>faktureringssida</a>.",
   "unsubscribeToastTitle": "Du har inaktiverat notifieringar",
   "unsubscribeToastDescription": "Du kommer inte längre att få notifieringar för denna förfrågan",
   "emailChangeSuccess": "Lyckat byte av mejladress",
