@@ -1,22 +1,22 @@
 "use client";
 
-import type { SubscriptionStatus as SubscriptionStatusType } from "@prisma/client";
+import type { SubscriptionStatus } from "@prisma/client";
 import dayjs from "dayjs";
 
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 
-interface SubscriptionStatusProps {
-  status: SubscriptionStatusType;
+interface SubscriptionStatusLabelProps {
+  status: SubscriptionStatus;
   cancelAtPeriodEnd: boolean;
   periodEnd: Date;
 }
 
-export const SubscriptionStatus = ({
+export const SubscriptionStatusLabel = ({
   status,
   cancelAtPeriodEnd,
   periodEnd,
-}: SubscriptionStatusProps) => {
+}: SubscriptionStatusLabelProps) => {
   const { t } = useTranslation();
 
   const statusConfig: Record<
