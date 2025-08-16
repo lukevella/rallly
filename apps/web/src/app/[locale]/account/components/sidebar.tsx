@@ -15,9 +15,11 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "@/i18n/client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 
 export function AccountSidebarMenu() {
   const { t } = useTranslation();
+  const isBillingEnabled = useFeatureFlag("billing");
   const pathname = usePathname();
   const menuItems = [
     {
@@ -38,13 +40,17 @@ export function AccountSidebarMenu() {
       icon: <LayersIcon />,
       href: "/account/spaces",
     },
-    {
+  ];
+
+  if (isBillingEnabled) {
+    menuItems.push({
       id: "billing",
       label: t("billing", { defaultValue: "Billing" }),
       icon: <CreditCardIcon />,
       href: "/account/billing",
-    },
-  ];
+    });
+  }
+
   return (
     <SidebarMenu>
       {menuItems.map((item) => (

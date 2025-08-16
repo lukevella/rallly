@@ -5,6 +5,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
@@ -52,7 +53,14 @@ export function NavUser({
             </Icon>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" side="top">
+        <DropdownMenuContent
+          className="w-[var(--radix-dropdown-menu-trigger-width)]"
+          align="end"
+          side="top"
+        >
+          <DropdownMenuLabel>
+            <Trans i18nKey="account" defaults="Account" />
+          </DropdownMenuLabel>
           <DropdownMenuItem asChild>
             <Link href="/account/profile">
               <Icon>
