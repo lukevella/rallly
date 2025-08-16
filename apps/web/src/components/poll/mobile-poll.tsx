@@ -71,7 +71,7 @@ const MobilePoll: React.FunctionComponent = () => {
       </CardHeader>
 
       <div className="sticky top-0 z-20 flex flex-col space-y-2 border-b bg-gray-50 p-2">
-        <div className="flex gap-x-2.5">
+        <div className="flex gap-x-2.5 overflow-x-auto scrollbar-none">
           {selectedParticipantId || !isEditing ? (
             <Select
               defaultValue="all"
