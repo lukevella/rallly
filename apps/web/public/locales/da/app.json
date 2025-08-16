@@ -476,5 +476,13 @@
   "selectPlan": "Vælg abonnement:",
   "prioritySupport": "Prioriteret support",
   "prioritySupportDescription": "Få hurtigere svartider og dedikeret assistance",
-  "cancelEventConfirmDescription": "Er du sikker på, at du vil annullere denne begivenhed?"
+  "cancelEventConfirmDescription": "Er du sikker på, at du vil annullere denne begivenhed?",
+  "confirmSpaceName": "Indtast venligst rumnavnet for at bekræfte:",
+  "mySpaces": "Mine rum",
+  "spacesDescription": "Håndter de rum, du tilhører",
+  "noSpaces": "Ingen rum fundet",
+  "noSpacesDescription": "Du er endnu ikke medlem af nogen rum",
+  "manageSeats": "Administrer pladser",
+  "manageSeatsDescription": "Juster antallet af pladser til dit rum.",
+  "addSeats": "{count, plural, one {Tilføj # sæde} other {Tilføj # sæder}}"
 }
