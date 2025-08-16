@@ -1,6 +1,6 @@
 "use client";
 
-import type { SubscriptionStatus } from "@prisma/client";
+import type { SubscriptionStatus } from "@rallly/database";
 import dayjs from "dayjs";
 
 import { Trans } from "@/components/trans";
@@ -63,7 +63,7 @@ export const SubscriptionStatusLabel = ({
       <Trans
         i18nKey="subscriptionCancelOn"
         defaults="Cancels {date}"
-        values={{ date: dayjs(periodEnd).format("MMM D") }}
+        values={{ date: dayjs(periodEnd).format("MMM D YYYY") }}
       />
     );
   }

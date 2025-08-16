@@ -1,3 +1,5 @@
+"use client";
+
 import type React from "react";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
