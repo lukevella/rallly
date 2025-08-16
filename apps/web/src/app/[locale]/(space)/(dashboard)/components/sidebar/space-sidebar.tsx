@@ -7,11 +7,10 @@ import {
   SidebarHeader,
   SidebarSeparator,
 } from "@rallly/ui/sidebar";
-import { ChevronsUpDownIcon, SparklesIcon } from "lucide-react";
+import { ChevronsUpDownIcon } from "lucide-react";
 import type React from "react";
+import { UpgradeToProAlert } from "@/app/[locale]/(space)/(dashboard)/components/sidebar/upgrade-to-pro-alert";
 import { requireSpace, requireUser } from "@/auth/data";
-import { Trans } from "@/components/trans";
-import { PayWallButton } from "@/features/billing/client";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
@@ -64,23 +63,7 @@ export async function SpaceSidebar({
       <SidebarFooter>
         {activeSpace.tier !== "pro" ? (
           <>
-            <div className="relative overflow-hidden rounded-xl border bg-gray-50 p-3 text-sm shadow-sm">
-              <SparklesIcon className="-top-4 absolute right-0 z-0 size-16 text-gray-200" />
-              <div className="relative z-10">
-                <h2 className="font-semibold">
-                  <Trans i18nKey="upgrade" defaults="Upgrade" />
-                </h2>
-                <p className="mt-1 mb-3 text-muted-foreground text-sm">
-                  <Trans
-                    i18nKey="upgradeToProDesc"
-                    defaults="Unlock all Pro features"
-                  />
-                </p>
-                <PayWallButton variant="primary" className="w-full">
-                  <Trans i18nKey="upgrade" defaults="Upgrade" />
-                </PayWallButton>
-              </div>
-            </div>
+            <UpgradeToProAlert />
             <SidebarSeparator className="my-1" />
           </>
         ) : null}
