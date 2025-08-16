@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
+import type { DialogProps } from "@rallly/ui/dialog";
 import {
   Dialog,
   DialogClose,
@@ -9,17 +10,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  useDialog,
 } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
-import { ArmchairIcon, MinusIcon, PlusIcon } from "lucide-react";
+import { MinusIcon, PlusIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Trans } from "@/components/trans";
 import { updateSeatsAction } from "@/features/billing/actions";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { isSelfHosted } from "@/utils/constants";
 
 interface ManageSeatsButtonProps {
   currentSeats: number;
@@ -122,11 +121,13 @@ function SeatCountSelector({
   );
 }
 
-export function ManageSeatsButton({
+export function ManageSeatsDialog({
+  onOpenChange,
+  open,
+  children,
   currentSeats,
   usedSeats,
-}: ManageSeatsButtonProps) {
-  const dialog = useDialog();
+}: DialogProps & ManageSeatsButtonProps) {
   const [newSeatCount, setNewSeatCount] = useState(currentSeats);
   const seatDelta = newSeatCount - currentSeats;
   const isRemoving = seatDelta < 0;
@@ -141,88 +142,75 @@ export function ManageSeatsButton({
   });
 
   const handleUpdate = async () => {
-    if (isSelfHosted) {
-      // Redirect to self-hosted licensing page
-      window.location.href = "/licensing";
-    } else {
-      // Use Stripe billing portal with subscription_update_confirm flow
-      updateSeats({ seatDelta });
-    }
+    updateSeats({ seatDelta });
   };
 
   return (
-    <>
-      <Button onClick={dialog.trigger}>
-        <Icon>
-          <ArmchairIcon />
-        </Icon>
-        <Trans i18nKey="manageSeats" defaults="Manage Seats" />
-      </Button>
-      <Dialog {...dialog.dialogProps}>
-        <DialogContent size="md">
-          <DialogHeader>
-            <DialogTitle>
-              <Trans i18nKey="manageSeats" defaults="Manage Seats" />
-            </DialogTitle>
-            <DialogDescription>
-              <Trans
-                i18nKey="manageSeatsDescription"
-                defaults="Adjust the number of seats for your space."
-              />
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <Label className="mb-2">
-                <Trans i18nKey="totalSeats" defaults="Total Seats" />
-              </Label>
-
-              <p className="mt-1 text-muted-foreground text-sm">
-                <Trans
-                  i18nKey="currentlyUsing"
-                  defaults="Currently using {usedSeats} of {currentSeats} seats"
-                  values={{ usedSeats, currentSeats }}
-                />
-              </p>
-            </div>
-            <SeatCountSelector
-              value={newSeatCount}
-              onChange={setNewSeatCount}
-              currentSeats={currentSeats}
-              minSeats={usedSeats}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {children}
+      <DialogContent size="md">
+        <DialogHeader>
+          <DialogTitle>
+            <Trans i18nKey="manageSeats" defaults="Manage Seats" />
+          </DialogTitle>
+          <DialogDescription>
+            <Trans
+              i18nKey="manageSeatsDescription"
+              defaults="Adjust the number of seats for your space."
             />
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <Label className="mb-2">
+              <Trans i18nKey="totalSeats" defaults="Total Seats" />
+            </Label>
+
+            <p className="mt-1 text-muted-foreground text-sm">
+              <Trans
+                i18nKey="currentlyUsing"
+                defaults="Currently using {usedSeats} of {currentSeats} seats"
+                values={{ usedSeats, currentSeats }}
+              />
+            </p>
           </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button>
-                <Trans i18nKey="cancel" defaults="Cancel" />
-              </Button>
-            </DialogClose>
-            <Button
-              variant="primary"
-              onClick={handleUpdate}
-              disabled={!canRemoveSeats || !hasChanges}
-              loading={isPending}
-            >
-              {isAdding ? (
-                <Trans
-                  i18nKey="addSeats"
-                  defaults="Add {count} Seats"
-                  values={{ count: seatDelta }}
-                />
-              ) : isRemoving ? (
-                <Trans
-                  i18nKey="removeSeats"
-                  defaults="Remove {count} Seats"
-                  values={{ count: Math.abs(seatDelta) }}
-                />
-              ) : (
-                <Trans i18nKey="noChanges" defaults="No Changes" />
-              )}
+          <SeatCountSelector
+            value={newSeatCount}
+            onChange={setNewSeatCount}
+            currentSeats={currentSeats}
+            minSeats={usedSeats}
+          />
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button>
+              <Trans i18nKey="cancel" defaults="Cancel" />
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+          </DialogClose>
+          <Button
+            variant="primary"
+            onClick={handleUpdate}
+            disabled={!canRemoveSeats || !hasChanges}
+            loading={isPending}
+          >
+            {isAdding ? (
+              <Trans
+                i18nKey="addSeats"
+                defaults="Add {count} Seats"
+                values={{ count: seatDelta }}
+              />
+            ) : isRemoving ? (
+              <Trans
+                i18nKey="removeSeats"
+                defaults="Remove {count} Seats"
+                values={{ count: Math.abs(seatDelta) }}
+              />
+            ) : (
+              <Trans i18nKey="noChanges" defaults="No Changes" />
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
