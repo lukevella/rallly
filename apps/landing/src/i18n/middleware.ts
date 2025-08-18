@@ -10,7 +10,11 @@ function getLocaleFromPath(pathname: string): string | undefined {
 }
 
 function removeLocaleFromPath(pathname: string, locale: string): string {
-  return pathname.replace(new RegExp(`^/${locale}`), "");
+  if (pathname === `/${locale}`) return "/";
+  if (pathname.startsWith(`/${locale}/`)) {
+    return pathname.slice(locale.length + 1);
+  }
+  return pathname;
 }
 
 function addLocaleToPath(pathname: string, locale: string): string {
@@ -38,7 +42,8 @@ export function i18nMiddleware(req: NextRequest) {
     acceptLanguageHeader: req.headers.get("accept-language") ?? undefined,
   });
 
-  const locale = localeInPath || preferredLocale;
+  // Ensure we always have a valid locale, fallback to fallbackLng if needed
+  const locale = localeInPath || preferredLocale || fallbackLng;
   const headers = createLocalizedHeaders(req, locale);
 
   // If the URL starts with the fallback language prefix, redirect to remove it
