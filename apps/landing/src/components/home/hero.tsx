@@ -87,7 +87,6 @@ export const MarketingHero = ({
       <header className="sm:p-8">
         <div>
           <Link
-            locale="en"
             href="/blog/introducing-quick-create"
             className="group relative inline-flex items-center gap-x-2 rounded-full border bg-gray-50 py-1 pr-4 pl-1 text-gray-600 text-sm leading-6 hover:bg-white"
           >
