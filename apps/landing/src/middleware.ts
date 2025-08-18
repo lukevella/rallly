@@ -1,21 +1,14 @@
-import { supportedLngs } from "@rallly/languages";
 import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { fallbackLng, headerName, languages } from "@/i18n/settings";
 
 export async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-  const localeInPath = supportedLngs.find(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
-  );
-
-  let lng;
+  let lng: string;
   // If no cookie, check the Accept-Language header
-  if (!lng)
-    lng = getPreferredLocale({
-      acceptLanguageHeader: req.headers.get("accept-language") ?? undefined,
-    });
+  lng = getPreferredLocale({
+    acceptLanguageHeader: req.headers.get("accept-language") ?? undefined,
+  });
   // Default to fallback language if still undefined
   if (!lng) lng = fallbackLng;
 
