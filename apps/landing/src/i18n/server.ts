@@ -1,11 +1,11 @@
 import type { Namespace } from "i18next";
 import { headers } from "next/headers";
-import { defaultNS, headerName } from "@/i18n/settings";
+import { defaultNS, fallbackLng, headerName } from "@/i18n/settings";
 import { i18next } from "./i18next";
 
 export async function getTranslation<Ns extends Namespace>(
-  locale: string,
-  ns = defaultNS,
+  locale: string = fallbackLng,
+  ns: string | string[] = defaultNS,
 ) {
   const headerList = await headers();
   const lng = headerList.get(headerName);
@@ -17,7 +17,7 @@ export async function getTranslation<Ns extends Namespace>(
     await i18next.loadNamespaces(ns);
   }
   return {
-    t: i18next.getFixedT<Ns>(locale),
+    t: i18next.getFixedT<Ns>(lng ?? fallbackLng),
     i18n: i18next,
   };
 }

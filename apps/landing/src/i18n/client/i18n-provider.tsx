@@ -1,5 +1,6 @@
 "use client";
 import { defaultLocale } from "@rallly/languages";
+import type { Resource } from "i18next";
 import { createInstance } from "i18next";
 import ICU from "i18next-icu";
 import React from "react";
@@ -8,24 +9,26 @@ import { defaultNS, languages } from "../settings";
 
 export function I18nProvider({
   locale,
+  resources,
   children,
 }: {
   locale: string;
+  resources?: Resource;
   children: React.ReactNode;
 }) {
   const [i18n] = React.useState(() => {
-    return createInstance({
+    const instance = createInstance({
       supportedLngs: languages,
       fallbackLng: defaultLocale,
       lng: locale,
       fallbackNS: defaultNS,
       defaultNS,
-      initImmediate: false,
-      // Disable debug in production
-      debug: process.env.NODE_ENV === "development",
-    })
-      .use(initReactI18next)
-      .use(ICU);
+      resources,
+    });
+
+    instance.use(initReactI18next).use(ICU).init();
+
+    return instance;
   });
 
   return (

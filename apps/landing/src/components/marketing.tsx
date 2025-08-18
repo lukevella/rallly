@@ -51,7 +51,8 @@ export const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="home:pcmagQuote"
+            ns="home"
+            i18nKey="pcmagQuote"
             defaults="“Set up a scheduling poll in as little time as possible.”"
           />
         </Mention>
@@ -69,7 +70,8 @@ export const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="home:hubspotQuote"
+            ns="home"
+            i18nKey="hubspotQuote"
             defaults="“The simplest choice for availability polling for large groups.”"
           />
         </Mention>
@@ -87,7 +89,8 @@ export const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="home:goodfirmsQuote"
+            ns="home"
+            i18nKey="goodfirmsQuote"
             defaults="“Unique in its simplicity and requires minimum interaction time.”"
           />
         </Mention>
@@ -105,7 +108,8 @@ export const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="home:popsciQuote"
+            ns="home"
+            i18nKey="popsciQuote"
             defaults="“The perfect pick if you want to keep your RSVPs simple.”"
           />
         </Mention>
@@ -136,7 +140,8 @@ export const BigTestimonial = () => {
       <div className="text-center">
         <p className="max-w-xl text-center font-medium text-lg leading-normal">
           <Trans
-            i18nKey="home:ericQuote"
+            ns="home"
+            i18nKey="ericQuote"
             defaults="“If your scheduling workflow lives in emails, I strongly encourage you to try and let Rallly simplify your scheduling tasks for a more organized and less stressful workday.”"
           />
         </p>
@@ -146,7 +151,11 @@ export const BigTestimonial = () => {
             className="text-gray-500 text-sm hover:underline"
             href="https://www.trustpilot.com/reviews/645e1d1976733924e89d8203"
           >
-            <Trans i18nKey="home:viaTrustpilot" defaults="via Trustpilot" />
+            <Trans
+              ns="home"
+              i18nKey="viaTrustpilot"
+              defaults="via Trustpilot"
+            />
             <ArrowUpRight className="ml-1 inline size-3" />
           </Link>
         </p>
@@ -163,7 +172,8 @@ export const BigTestimonial = () => {
           <div className="font-semibold">Eric Fletcher</div>
           <div className="text-gray-500 text-sm">
             <Trans
-              i18nKey="home:ericJobTitle"
+              ns="home"
+              i18nKey="ericJobTitle"
               defaults="Executive Assistant at MIT"
             />
           </div>
