@@ -34,6 +34,9 @@
           "level": "error",
           "fix": "safe"
         }
+      },
+      "a11y": {
+        "useAnchorContent": "off"
       }
     }
   },

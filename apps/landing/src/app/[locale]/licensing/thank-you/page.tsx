@@ -1,8 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
-import { getTranslation } from "@/i18n/server";
 import { LinkBase } from "@/i18n/client/link";
+import { getTranslation } from "@/i18n/server";
 
 export default async function LicensingThankYouPage() {
   const { t } = await getTranslation();
