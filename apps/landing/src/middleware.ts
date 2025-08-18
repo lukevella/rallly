@@ -4,26 +4,29 @@ import { NextResponse } from "next/server";
 import { fallbackLng, headerName, languages } from "@/i18n/settings";
 
 export async function middleware(req: NextRequest) {
-  let lng: string;
-  // If no cookie, check the Accept-Language header
-  lng = getPreferredLocale({
-    acceptLanguageHeader: req.headers.get("accept-language") ?? undefined,
-  });
-  // Default to fallback language if still undefined
-  if (!lng) lng = fallbackLng;
+  const pathname = req.nextUrl.pathname;
 
   // Check if the language is already in the path
-  const lngInPath = languages.find((loc) =>
-    req.nextUrl.pathname.startsWith(`/${loc}`),
+  const localeInPath = languages.find(
+    (loc) => pathname === `/${loc}` || pathname.startsWith(`/${loc}/`),
   );
+  const preferredLocale = getPreferredLocale({
+    acceptLanguageHeader: req.headers.get("accept-language") ?? undefined,
+  });
+
   const headers = new Headers(req.headers);
-  headers.set(headerName, lngInPath || lng);
+  headers.set(headerName, localeInPath || preferredLocale);
 
   // If the language is not in the path, redirect to include it
-  if (!lngInPath) {
-    return NextResponse.redirect(
-      new URL(`/${lng}${req.nextUrl.pathname}${req.nextUrl.search}`, req.url),
+  if (!localeInPath) {
+    const newUrl = new URL(
+      `/${preferredLocale}${req.nextUrl.pathname}${req.nextUrl.search}`,
+      req.url,
     );
+    if (preferredLocale === fallbackLng) {
+      return NextResponse.rewrite(newUrl);
+    }
+    return NextResponse.redirect(newUrl);
   }
 
   return NextResponse.next({ headers });
