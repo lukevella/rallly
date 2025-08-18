@@ -5,7 +5,7 @@ import { FileSearchIcon } from "lucide-react";
 import Link from "next/link";
 import type * as React from "react";
 
-import { useTranslation } from "@/i18n/client/use-translation";
+import { useT } from "@/i18n/client/use-translation";
 
 export interface ComponentProps {
   icon?: React.ReactNode;
@@ -18,7 +18,7 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
   title,
   description,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useT();
   return (
     <div className="inset-0 flex h-full w-full items-center justify-center lg:absolute">
       <div className="space-y-8">

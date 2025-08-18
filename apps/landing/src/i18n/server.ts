@@ -1,34 +1,23 @@
 import type { Namespace } from "i18next";
-import { createInstance } from "i18next";
-import ICU from "i18next-icu";
-import resourcesToBackend from "i18next-resources-to-backend";
-import { initReactI18next } from "react-i18next/initReactI18next";
-
-import { defaultNS, getOptions } from "./settings";
-
-const initI18next = async (lng: string, ns: Namespace) => {
-  const i18nInstance = createInstance();
-  await i18nInstance
-    .use(initReactI18next)
-    .use(ICU)
-    .use(
-      resourcesToBackend(
-        (language: string, namespace: string) =>
-          import(`../../public/locales/${language}/${namespace}.json`),
-      ),
-    )
-    .init(getOptions(lng, ns));
-  return i18nInstance;
-};
+import { headers } from "next/headers";
+import { defaultNS, headerName } from "@/i18n/settings";
+import { i18next } from "./i18next";
 
 export async function getTranslation<Ns extends Namespace>(
   locale: string,
-  ns?: Ns,
+  ns = defaultNS,
 ) {
-  const fixedNs = ns ?? defaultNS;
-  const i18nextInstance = await initI18next(locale, fixedNs);
+  const headerList = await headers();
+  const lng = headerList.get(headerName);
+  if (lng && i18next.resolvedLanguage !== lng) {
+    await i18next.changeLanguage(lng);
+  }
+
+  if (ns && !i18next.hasLoadedNamespace(ns)) {
+    await i18next.loadNamespaces(ns);
+  }
   return {
-    t: i18nextInstance.getFixedT<Ns>(locale),
-    i18n: i18nextInstance,
+    t: i18next.getFixedT<Ns>(locale),
+    i18n: i18next,
   };
 }

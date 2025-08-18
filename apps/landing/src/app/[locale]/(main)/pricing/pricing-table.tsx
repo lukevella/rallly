@@ -18,11 +18,11 @@ import Link from "next/link";
 import React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { useTranslation } from "@/i18n/client/use-translation";
+import { useT } from "@/i18n/client/use-translation";
 import { linkToApp } from "@/lib/linkToApp";
 
 export function PriceTables() {
-  const { t } = useTranslation("pricing");
+  const { t } = useT("pricing");
   const [tab, setTab] = React.useState("yearly");
   return (
     <Tabs value={tab} onValueChange={setTab}>

@@ -7,7 +7,6 @@ import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
 import { PostHogPageView } from "@/components/posthog-page-view";
 import { sans } from "@/fonts/sans";
-import { I18nProvider } from "@/i18n/client/i18n-provider";
 
 export async function generateStaticParams() {
   return Object.keys(languages).map((locale) => ({ locale }));
@@ -32,12 +31,10 @@ export default async function Root(props: {
     <html lang={locale} className={sans.className}>
       <body>
         <LazyMotion features={domAnimation}>
-          <I18nProvider locale={locale}>
-            <PostHogProvider>
-              <PostHogPageView />
-              {children}
-            </PostHogProvider>
-          </I18nProvider>
+          <PostHogProvider>
+            <PostHogPageView />
+            {children}
+          </PostHogProvider>
         </LazyMotion>
         <Analytics />
       </body>

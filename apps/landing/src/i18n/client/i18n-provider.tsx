@@ -1,27 +1,10 @@
 "use client";
-import i18next from "i18next";
+import { defaultLocale } from "@rallly/languages";
+import { createInstance } from "i18next";
 import ICU from "i18next-icu";
-import resourcesToBackend from "i18next-resources-to-backend";
-import type React from "react";
+import React from "react";
 import { I18nextProvider, initReactI18next } from "react-i18next";
-import { useAsync } from "react-use";
-
-import { defaultNS, getOptions } from "../settings";
-
-async function initTranslations(lng: string) {
-  const i18n = i18next
-    .use(initReactI18next)
-    .use(ICU)
-    .use(
-      resourcesToBackend(
-        (language: string, namespace: string) =>
-          import(`../../../public/locales/${language}/${namespace}.json`),
-      ),
-    );
-  await i18n.init(getOptions(lng));
-
-  return i18n;
-}
+import { defaultNS, languages } from "../settings";
 
 export function I18nProvider({
   locale,
@@ -30,16 +13,23 @@ export function I18nProvider({
   locale: string;
   children: React.ReactNode;
 }) {
-  const res = useAsync(async () => {
-    return await initTranslations(locale);
+  const [i18n] = React.useState(() => {
+    return createInstance({
+      supportedLngs: languages,
+      fallbackLng: defaultLocale,
+      lng: locale,
+      fallbackNS: defaultNS,
+      defaultNS,
+      initImmediate: false,
+      // Disable debug in production
+      debug: process.env.NODE_ENV === "development",
+    })
+      .use(initReactI18next)
+      .use(ICU);
   });
 
-  if (!res.value) {
-    return null;
-  }
-
   return (
-    <I18nextProvider i18n={res.value} defaultNS={defaultNS}>
+    <I18nextProvider i18n={i18n} defaultNS={defaultNS}>
       {children}
     </I18nextProvider>
   );

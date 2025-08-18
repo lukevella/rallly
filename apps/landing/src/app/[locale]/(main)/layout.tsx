@@ -44,7 +44,7 @@ export default async function Root(props: {
 
   const { children } = props;
 
-  const { t } = await getTranslation(locale, "common");
+  const { t } = await getTranslation(locale);
   return (
     <div className="relative z-10 mx-auto flex min-h-full w-full max-w-7xl flex-col space-y-8 p-4 sm:p-8">
       <header className="flex w-full items-center">
