@@ -18,6 +18,7 @@ import DiscordIcon from "@/assets/discord.svg";
 import GithubIcon from "@/assets/github.svg";
 import LinkedinIcon from "@/assets/linkedin.svg";
 import TwitterIcon from "@/assets/twitter.svg";
+import { LinkBase } from "@/i18n/client/link";
 import { Trans } from "@/i18n/client/trans";
 import { useTranslation } from "@/i18n/client/use-translation";
 
@@ -136,49 +137,50 @@ export const Footer: React.FunctionComponent = () => {
           </div>
           <ul className="grid gap-2 text-sm">
             <li>
-              <Link
+              <LinkBase
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="/pricing"
               >
                 <Trans i18nKey="pricing" defaults="Pricing" />
-              </Link>
+              </LinkBase>
             </li>
             <li>
-              <Link
+              <a
                 target="_blank"
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly/discussions"
+                rel="noopener"
               >
                 <Trans
                   ns="common"
                   i18nKey="discussions"
                   defaults="Discussions"
                 />
-              </Link>
+              </a>
             </li>
             <li>
-              <Link
-                href="https://rallly.co/blog"
+              <LinkBase
+                href="/blog"
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
               >
                 <Trans ns="common" i18nKey="blog" defaults="Blog" />
-              </Link>
+              </LinkBase>
             </li>
             <li>
-              <Link
+              <a
                 href="https://support.rallly.co"
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
               >
                 <Trans ns="common" i18nKey="support" defaults="Support" />
-              </Link>
+              </a>
             </li>
             <li>
-              <Link
+              <a
                 href="https://rallly.openstatus.dev"
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
               >
                 <Trans ns="common" i18nKey="status" defaults="Status" />
-              </Link>
+              </a>
             </li>
           </ul>
         </div>
@@ -188,7 +190,7 @@ export const Footer: React.FunctionComponent = () => {
           </div>
           <ul className="grid gap-2 text-sm">
             <li>
-              <Link
+              <LinkBase
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="/best-doodle-alternative"
               >
@@ -197,10 +199,10 @@ export const Footer: React.FunctionComponent = () => {
                   i18nKey="bestDoodleAlternative"
                   defaults="Best Doodle Alternative"
                 />
-              </Link>
+              </LinkBase>
             </li>
             <li>
-              <Link
+              <LinkBase
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="/when2meet-alternative"
               >
@@ -209,10 +211,10 @@ export const Footer: React.FunctionComponent = () => {
                   i18nKey="when2MeetAlternative"
                   defaults="When2Meet Alternative"
                 />
-              </Link>
+              </LinkBase>
             </li>
             <li>
-              <Link
+              <LinkBase
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="/free-scheduling-poll"
               >
@@ -221,10 +223,10 @@ export const Footer: React.FunctionComponent = () => {
                   i18nKey="freeSchedulingPoll"
                   defaults="Free Scheduling Poll"
                 />
-              </Link>
+              </LinkBase>
             </li>
             <li>
-              <Link
+              <LinkBase
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="/meeting-poll"
               >
@@ -233,10 +235,10 @@ export const Footer: React.FunctionComponent = () => {
                   i18nKey="meetingPoll"
                   defaults="Meeting Poll"
                 />
-              </Link>
+              </LinkBase>
             </li>
             <li>
-              <Link
+              <LinkBase
                 className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
                 href="/availability-poll"
               >
@@ -245,7 +247,7 @@ export const Footer: React.FunctionComponent = () => {
                   i18nKey="availabilityPoll"
                   defaults="Availability Poll"
                 />
-              </Link>
+              </LinkBase>
             </li>
           </ul>
         </div>
