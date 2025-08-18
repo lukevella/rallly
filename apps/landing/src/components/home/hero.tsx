@@ -36,7 +36,8 @@ const Screenshot = () => {
         className="relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-2 text-gray-50 text-sm subpixel-antialiased shadow-huge"
       >
         <Trans
-          i18nKey="home:createPageLikeThis"
+          ns="home"
+          i18nKey="createPageLikeThis"
           defaults="Create a page like this in seconds!"
         />
         <span className="-translate-x-1/2 absolute top-full left-1/2 z-10 h-8 w-px bg-gray-800" />
@@ -87,7 +88,6 @@ export const MarketingHero = ({
       <header className="sm:p-8">
         <div>
           <Link
-            locale="en"
             href="/blog/introducing-quick-create"
             className="group relative inline-flex items-center gap-x-2 rounded-full border bg-gray-50 py-1 pr-4 pl-1 text-gray-600 text-sm leading-6 hover:bg-white"
           >
@@ -96,7 +96,8 @@ export const MarketingHero = ({
             </Badge>
             <span className="flex items-center gap-x-1">
               <Trans
-                i18nKey="home:quickCreateBlog"
+                ns="home"
+                i18nKey="quickCreateBlog"
                 defaults="Introducing Quick Create"
               />
               <ChevronRightIcon

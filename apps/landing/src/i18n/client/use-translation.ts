@@ -1,6 +1,3 @@
-import type { Namespace } from "i18next";
-import { useTranslation as useTranslationOrg } from "react-i18next";
+"use client";
 
-export function useTranslation(ns?: Namespace) {
-  return useTranslationOrg(ns);
-}
+export { useTranslation } from "react-i18next";

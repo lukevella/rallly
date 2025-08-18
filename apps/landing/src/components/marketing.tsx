@@ -7,147 +7,6 @@ import type React from "react";
 
 import { Trans } from "@/i18n/client/trans";
 
-// export const UsedBy = () => {
-//   return (
-//     <div>
-//       <h2 className="mx-auto mb-8 max-w-2xl text-center leading-relaxed">
-//         Trusted by some of the world's most influential companies and
-//         organizations
-//       </h2>
-//       <div className="flex flex-wrap justify-center gap-8">
-//         <div className="relative h-12 w-24 grayscale hover:grayscale-0">
-//           <Image
-//             src="/static/images/icrc-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="ICRC"
-//           />
-//         </div>
-//         <div className="relative h-12 w-24 grayscale hover:grayscale-0">
-//           <Image
-//             src="/harvard-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="Hardvard University"
-//           />
-//         </div>
-//         <div className="relative h-10 w-20 grayscale hover:grayscale-0">
-//           <Image
-//             src="/nhs-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="NHS"
-//           />
-//         </div>
-//         <div className="relative h-10 w-20 grayscale hover:grayscale-0">
-//           <Image
-//             src="/bcg-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="Boston Consulting Group"
-//           />
-//         </div>
-//         <div className="relative h-10 w-20 grayscale hover:grayscale-0">
-//           <Image
-//             src="/deloitte-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="Deloitte"
-//           />
-//         </div>
-//         <div className="relative h-10 w-20 grayscale hover:grayscale-0">
-//           <Image
-//             src="/ieee-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="IEEE"
-//           />
-//         </div>
-//         <div className="relative h-10 w-20 grayscale hover:grayscale-0">
-//           <Image
-//             src="/nasa-logo.svg"
-//             fill
-//             style={{ objectFit: "contain" }}
-//             alt="NASA"
-//           />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export const Testimonials = () => {
-//   return (
-//     <div>
-//       <h2 className="mb-12 text-center">Testimonials</h2>
-//       <div className="">
-//         {/* <Testimonial author="Dan">
-//           {`Rallly is the only service that meets all my needs and is 100%
-//         free. It's incredibly easy to use, no sign-in even required. And I
-//         trust rallly.co because the entire project is open source.`}
-//         </Testimonial>
-//         <Testimonial author="Robert">
-//           I was looking for something simple and clean (without tons of ads)
-//           that would be easy for me to administer and easy for others to use.
-//           This fit the bill perfectly.
-//         </Testimonial>
-//         <Testimonial author="Adrià">
-//           Awesome Doodle alternative. I love its open-source nature, and how
-//           easy it is to use thanks to its modern and clean UI.
-//         </Testimonial> */}
-//       </div>
-//       {/* <div className="mt-8 text-center">
-//         <Button className="rounded-full px-6" asChild>
-//           <Link
-//             target="_blank"
-//             href="https://www.trustpilot.com/evaluate/rallly.co"
-//           >
-//             <span>Share your experience</span>
-//             <ArrowRight className="size-4" />
-//           </Link>
-//         </Button>
-//       </div> */}
-//     </div>
-//   );
-// };
-
-// export const Testimonial = ({
-//   author,
-//   children,
-//   logo,
-// }: React.PropsWithChildren<{ author: string; logo?: string }>) => {
-//   return (
-//     <div className="relative flex flex-col space-y-4 rounded-md bg-gray-50 px-4 py-3 shadow-sm">
-//       <QuoteIcon className="size-4 text-gray-400" />
-//       <div className="flex justify-between">
-//         <div className="flex flex-col gap-2">
-//           <div className="font-semibold">{author}</div>
-//           <Image
-//             src="/static/images/stars-5.svg"
-//             width={100}
-//             height={30}
-//             alt="5 stars"
-//           />
-//         </div>
-//         {logo ? (
-//           <div className="relative size-16">
-//             <Image src={logo} fill alt="logo" />
-//           </div>
-//         ) : null}
-//       </div>
-//       <p className="grow text-sm leading-relaxed">{children}</p>
-//       <div className="relative h-8 w-24">
-//         <Image
-//           src="/trustpilot-logo.svg"
-//           fill
-//           alt="TrustPilot"
-//           style={{ objectPosition: "left", objectFit: "contain" }}
-//         />
-//       </div>
-//     </div>
-//   );
-// };
-
 const Mention = ({
   logo,
   children,
@@ -192,7 +51,8 @@ export const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="home:pcmagQuote"
+            ns="home"
+            i18nKey="pcmagQuote"
             defaults="“Set up a scheduling poll in as little time as possible.”"
           />
         </Mention>
@@ -210,7 +70,8 @@ export const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="home:hubspotQuote"
+            ns="home"
+            i18nKey="hubspotQuote"
             defaults="“The simplest choice for availability polling for large groups.”"
           />
         </Mention>
@@ -228,7 +89,8 @@ export const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="home:goodfirmsQuote"
+            ns="home"
+            i18nKey="goodfirmsQuote"
             defaults="“Unique in its simplicity and requires minimum interaction time.”"
           />
         </Mention>
@@ -246,7 +108,8 @@ export const MentionedBy = () => {
           }
         >
           <Trans
-            i18nKey="home:popsciQuote"
+            ns="home"
+            i18nKey="popsciQuote"
             defaults="“The perfect pick if you want to keep your RSVPs simple.”"
           />
         </Mention>
@@ -277,7 +140,8 @@ export const BigTestimonial = () => {
       <div className="text-center">
         <p className="max-w-xl text-center font-medium text-lg leading-normal">
           <Trans
-            i18nKey="home:ericQuote"
+            ns="home"
+            i18nKey="ericQuote"
             defaults="“If your scheduling workflow lives in emails, I strongly encourage you to try and let Rallly simplify your scheduling tasks for a more organized and less stressful workday.”"
           />
         </p>
@@ -287,7 +151,11 @@ export const BigTestimonial = () => {
             className="text-gray-500 text-sm hover:underline"
             href="https://www.trustpilot.com/reviews/645e1d1976733924e89d8203"
           >
-            <Trans i18nKey="home:viaTrustpilot" defaults="via Trustpilot" />
+            <Trans
+              ns="home"
+              i18nKey="viaTrustpilot"
+              defaults="via Trustpilot"
+            />
             <ArrowUpRight className="ml-1 inline size-3" />
           </Link>
         </p>
@@ -304,7 +172,8 @@ export const BigTestimonial = () => {
           <div className="font-semibold">Eric Fletcher</div>
           <div className="text-gray-500 text-sm">
             <Trans
-              i18nKey="home:ericJobTitle"
+              ns="home"
+              i18nKey="ericJobTitle"
               defaults="Executive Assistant at MIT"
             />
           </div>

@@ -5,11 +5,8 @@ import { MarketingHero } from "@/components/home/hero";
 import { BigTestimonial, Marketing, MentionedBy } from "@/components/marketing";
 import { getTranslation } from "@/i18n/server";
 
-export default async function Page(props: {
-  params: Promise<{ locale: string }>;
-}) {
-  const params = await props.params;
-  const { t } = await getTranslation(params.locale, ["home"]);
+export default async function Page() {
+  const { t } = await getTranslation(["home"]);
   return (
     <Marketing>
       <MarketingHero
@@ -21,18 +18,15 @@ export default async function Page(props: {
         })}
         callToAction={<Trans t={t} ns="home" i18nKey="createAPoll" />}
       />
-      <Bonus t={t} />
+      <Bonus />
       <BigTestimonial />
       <MentionedBy />
     </Marketing>
   );
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const params = await props.params;
-  const { t } = await getTranslation(params.locale, "home");
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getTranslation("home");
   return {
     title: t("doodleAlternativeMetaTitle", {
       ns: "home",

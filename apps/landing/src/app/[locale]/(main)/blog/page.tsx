@@ -4,11 +4,8 @@ import { getTranslation } from "@/i18n/server";
 import { getAllPosts } from "@/lib/api";
 import { PostPreview } from "./post-preview";
 
-export default async function Page(props: {
-  params: Promise<{ locale: string }>;
-}) {
-  const params = await props.params;
-  const { t } = await getTranslation(params.locale, "blog");
+export default async function Page() {
+  const { t } = await getTranslation("blog");
   const allPosts = getAllPosts([
     "title",
     "date",
@@ -45,11 +42,8 @@ export default async function Page(props: {
   );
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const params = await props.params;
-  const { t } = await getTranslation(params.locale, "blog");
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getTranslation("blog");
   return {
     title: t("blogTitle", {
       ns: "blog",

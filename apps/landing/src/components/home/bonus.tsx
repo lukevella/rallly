@@ -1,5 +1,4 @@
 import { prisma } from "@rallly/database";
-import type { TFunction } from "i18next";
 import {
   CalendarCheck2Icon,
   LanguagesIcon,
@@ -9,8 +8,10 @@ import {
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { BonusItem } from "@/components/home/bonus-item";
+import { getTranslation } from "@/i18n/server";
 
-export async function Bonus({ t }: { t: TFunction<"home" | "common"> }) {
+export async function Bonus() {
+  const { t } = await getTranslation();
   const userCount = await prisma.user.count();
   const roundedUserCount =
     userCount > 100000 ? Math.floor(userCount / 10000) * 10000 : userCount;
