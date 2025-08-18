@@ -134,8 +134,8 @@ importers:
         version: 17.6.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
       '@next/bundle-analyzer':
-        specifier: ^15.3.1
-        version: 15.3.1
+        specifier: ^15.4.6
+        version: 15.4.6
       '@rallly/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
@@ -193,9 +193,6 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.3.1
         version: 3.10.0(react-hook-form@7.56.1(react@19.1.0))
-      '@next/bundle-analyzer':
-        specifier: ^15.3.1
-        version: 15.3.1
       '@next/env':
         specifier: ^15.3.1
         version: 15.3.1
@@ -428,6 +425,9 @@ importers:
       '@babel/core':
         specifier: ^7.26.10
         version: 7.26.10
+      '@next/bundle-analyzer':
+        specifier: ^15.4.6
+        version: 15.4.6
       '@playwright/test':
         specifier: ^1.52.0
         version: 1.52.0
@@ -2708,8 +2708,8 @@ packages:
   '@mintlify/validation@0.1.375':
     resolution: {integrity: sha512-RFd0A9NrShueqe1rcC1NmMFPHtwu9loBys35kafLJkmBT/hajyZxu+w4akepdS3Cv5BDNfAeq4XHQCc6/OKl/Q==}
 
-  '@next/bundle-analyzer@15.3.1':
-    resolution: {integrity: sha512-NqUZrjVruGbdQaPE3OSEXP+ZuULqumeHVTuU9pOX1V0/9BWY9FOck3jgQGFdBtG41nOYuO8+CoHKDQAVIPQJrw==}
+  '@next/bundle-analyzer@15.4.6':
+    resolution: {integrity: sha512-LZWqTQgIpfhblT77VVc1r4qtHJY1pfZOAIx8zNtliU7L3pMjpNrG4rYWikJ7AyAI/RgYyt2sCVWqkeOZmFp7Zg==}
 
   '@next/env@15.2.4':
     resolution: {integrity: sha512-+SFtMgoiYP3WoSswuNmxJOCwi06TdWE733D+WPjpXIe4LXGULwEaofiiAy6kbS0+XjM5xF5n3lKuBwN2SnqD9g==}
@@ -11869,7 +11869,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@next/bundle-analyzer@15.3.1':
+  '@next/bundle-analyzer@15.4.6':
     dependencies:
       webpack-bundle-analyzer: 4.10.1
     transitivePeerDependencies:
