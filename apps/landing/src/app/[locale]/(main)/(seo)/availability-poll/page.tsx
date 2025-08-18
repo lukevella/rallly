@@ -31,7 +31,7 @@ export default async function Page(props: {
           />
         }
       />
-      <Bonus t={t} />
+      <Bonus />
       <BigTestimonial />
       <MentionedBy />
     </Marketing>

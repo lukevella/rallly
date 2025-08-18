@@ -8,7 +8,8 @@ import { linkToApp } from "@/lib/linkToApp";
 
 import { PriceTables } from "./pricing-table";
 
-const FAQ = async ({ t }: { t: TFunction<"pricing"> }) => {
+const FAQ = async () => {
+  const { t } = await getTranslation(undefined, "pricing");
   return (
     <section>
       <h2 className="font-bold text-2xl">
@@ -176,7 +177,7 @@ export default async function Page(props: {
         </div>
       </section>
       <hr className="border-transparent" />
-      <FAQ t={t} />
+      <FAQ />
     </article>
   );
 }
