@@ -4,7 +4,7 @@ import languages from "@rallly/languages";
 import { PostHogProvider } from "@rallly/posthog/client";
 import { Analytics } from "@vercel/analytics/react";
 import { domAnimation, LazyMotion } from "motion/react";
-import type { Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { PostHogPageView } from "@/components/posthog-page-view";
 import { sans } from "@/fonts/sans";
 import { I18nProvider } from "@/i18n/client/i18n-provider";
@@ -44,3 +44,7 @@ export default async function Root(props: {
     </html>
   );
 }
+
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL as string),
+};
