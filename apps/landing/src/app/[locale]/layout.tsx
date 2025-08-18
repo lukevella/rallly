@@ -19,26 +19,22 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default async function Root(props: {
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-}) {
-  const params = await props.params;
-
-  const { locale } = params;
-
+export default async function Root(props: { children: React.ReactNode }) {
   const { children } = props;
 
-  const { i18n } = await getTranslation(locale);
+  const { i18n } = await getTranslation();
   const translations = i18n.store.data;
 
   return (
-    <html lang={locale} className={sans.className}>
+    <html lang={i18n.resolvedLanguage} className={sans.className}>
       <body>
         <LazyMotion features={domAnimation}>
           <PostHogProvider>
             <PostHogPageView />
-            <I18nProvider locale={locale} resources={translations}>
+            <I18nProvider
+              locale={i18n.resolvedLanguage}
+              resources={translations}
+            >
               {children}
             </I18nProvider>
           </PostHogProvider>

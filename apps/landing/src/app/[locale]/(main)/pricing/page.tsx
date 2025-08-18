@@ -1,4 +1,3 @@
-import type { TFunction } from "i18next";
 import { TrendingUpIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
@@ -9,7 +8,7 @@ import { linkToApp } from "@/lib/linkToApp";
 import { PriceTables } from "./pricing-table";
 
 const FAQ = async () => {
-  const { t } = await getTranslation(undefined, "pricing");
+  const { t } = await getTranslation("pricing");
   return (
     <section>
       <h2 className="font-bold text-2xl">
@@ -123,11 +122,8 @@ const FAQ = async () => {
   );
 };
 
-export default async function Page(props: {
-  params: Promise<{ locale: string }>;
-}) {
-  const params = await props.params;
-  const { t } = await getTranslation(params.locale, "pricing");
+export default async function Page() {
+  const { t } = await getTranslation("pricing");
   return (
     <article className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-2 sm:p-6 sm:text-center">
@@ -182,11 +178,8 @@ export default async function Page(props: {
   );
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ locale: string }>;
-}) {
-  const params = await props.params;
-  const { t } = await getTranslation(params.locale, ["common", "pricing"]);
+export async function generateMetadata() {
+  const { t } = await getTranslation(["common", "pricing"]);
   return {
     title: t("pricing", { ns: "common", defaultValue: "Pricing" }),
     description: t("pricingDescription", {

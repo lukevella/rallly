@@ -4,7 +4,6 @@ import { defaultNS, fallbackLng, headerName } from "@/i18n/settings";
 import { i18next } from "./i18next";
 
 export async function getTranslation<Ns extends Namespace>(
-  locale: string = fallbackLng,
   ns: string | string[] = defaultNS,
 ) {
   const headerList = await headers();

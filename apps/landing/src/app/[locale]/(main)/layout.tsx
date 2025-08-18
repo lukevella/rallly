@@ -34,17 +34,10 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default async function Root(props: {
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-}) {
-  const params = await props.params;
-
-  const { locale } = params;
-
+export default async function Root(props: { children: React.ReactNode }) {
   const { children } = props;
 
-  const { t } = await getTranslation(locale);
+  const { t, i18n } = await getTranslation();
   return (
     <div className="relative z-10 mx-auto flex min-h-full w-full max-w-7xl flex-col space-y-8 p-4 sm:p-8">
       <header className="flex w-full items-center">
@@ -321,7 +314,7 @@ export default async function Root(props: {
                 <Trans ns="common" i18nKey="language" defaults="Language" />
               </div>
               <div className="mb-4">
-                <LanguageSelect language={params.locale} />
+                <LanguageSelect language={i18n.language} />
               </div>
               <a
                 href="https://support.rallly.co/contribute/translations"

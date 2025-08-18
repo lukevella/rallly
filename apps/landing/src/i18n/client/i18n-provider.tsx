@@ -12,7 +12,7 @@ export function I18nProvider({
   resources,
   children,
 }: {
-  locale: string;
+  locale?: string;
   resources?: Resource;
   children: React.ReactNode;
 }) {
