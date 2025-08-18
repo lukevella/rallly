@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
+import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 
 export default async function LicensingThankYouPage() {
@@ -9,9 +9,9 @@ export default async function LicensingThankYouPage() {
     <main className="relative flex h-dvh flex-col p-4 sm:justify-center sm:p-16">
       <div className="relative z-10 mx-auto w-full max-w-2xl space-y-6">
         <div className="py-4">
-          <Link className="inline-block rounded" href="/">
+          <LinkBase className="inline-block rounded" href="/">
             <Image src="/logo.svg" width={150} height={30} alt="rallly.co" />
-          </Link>
+          </LinkBase>
         </div>
         <div className="space-y-4">
           <h1 className="font-bold text-2xl tracking-tight">
@@ -48,7 +48,7 @@ export default async function LicensingThankYouPage() {
 
           <ul className="list-inside list-disc space-y-1">
             <li>
-              <Link
+              <a
                 className="text-link"
                 href="https://support.rallly.co/self-hosting/installation/docker"
               >
@@ -57,10 +57,10 @@ export default async function LicensingThankYouPage() {
                   i18nKey="licensingThankYouNextStepsInstallation"
                   defaults="Installation Guide"
                 />
-              </Link>
+              </a>
             </li>
             <li>
-              <Link
+              <a
                 className="text-link"
                 href="https://support.rallly.co/self-hosting/licensing#activating-your-license"
               >
@@ -69,7 +69,7 @@ export default async function LicensingThankYouPage() {
                   i18nKey="licensingThankYouNextStepsApplyLicense"
                   defaults="How to Apply Your License"
                 />
-              </Link>
+              </a>
             </li>
           </ul>
         </div>
@@ -81,12 +81,12 @@ export default async function LicensingThankYouPage() {
               i18nKey="licensingThankYouSupportPrompt"
               defaults="Need help or have questions? Visit our <0>self-hosted docs</0> or <1>contact us</1>."
               components={[
-                <Link
+                <a
                   key="self-hosted-docs"
                   href="https://support.rallly.co"
                   className="underline"
                 />,
-                <Link
+                <a
                   key="contact-us"
                   href="mailto:support@rallly.co"
                   className="underline"
@@ -94,13 +94,13 @@ export default async function LicensingThankYouPage() {
               ]}
             />
           </p>
-          <Link href="/" className="hover:underline">
+          <LinkBase href="/" className="hover:underline">
             <Trans
               t={t}
               i18nKey="licensingThankYouGoHomeLink"
               defaults="Return to Home"
             />
-          </Link>
+          </LinkBase>
         </div>
       </div>
     </main>

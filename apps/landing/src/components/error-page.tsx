@@ -2,9 +2,8 @@
 
 import { Button } from "@rallly/ui/button";
 import { FileSearchIcon } from "lucide-react";
-import Link from "next/link";
 import type * as React from "react";
-
+import { LinkBase } from "@/i18n/client/link";
 import { useTranslation } from "@/i18n/client/use-translation";
 
 export interface ComponentProps {
@@ -33,12 +32,10 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
         </div>
         <div className="flex justify-center space-x-3">
           <Button variant="primary" asChild>
-            <Link href="/">{t("goToHome")}</Link>
+            <LinkBase href="/">{t("goToHome")}</LinkBase>
           </Button>
           <Button asChild>
-            <Link href="https://support.rallly.co" passHref={true}>
-              {t("support")}
-            </Link>
+            <a href="https://support.rallly.co">{t("support")}</a>
           </Button>
         </div>
       </div>
