@@ -497,5 +497,5 @@
   "noSeatsAvailableAlertBillingDescription": "Erhöhe die Anzahl der Benutzerplätze in dieser Gruppe auf der <a>Abrechnungsseite</a>.",
   "noSeatsAvailableAlertSelfHostedDescription": "Du musst deinen Plan <a>upgraden</a>, um die Anzahl der Plätze in dieser Gruppe zu erhöhen.",
   "seatsUpdatedAlertTitle": "Benutzerplätze aktualisiert",
-  "seatsUpdatedAlertDescription": "Deine Benutzerplätze wurde erfolgreich aktualisiert. Die Änderungen werden in deinem nächsten Abrechnungszyklus angezeigt."
+  "seatsUpdatedAlertDescription": "Deine Benutzerplätze wurden erfolgreich aktualisiert. Die Änderungen werden in deinem nächsten Abrechnungszyklus angezeigt."
 }
