@@ -11,6 +11,7 @@
   "changeNameInfo": "This will not affect any votes you have already made.",
   "comments": "Comments",
   "continue": "Continue",
+  "configuredByEnvironmentVariable": "This setting has been configured by environment variable.",
   "copied": "Copied",
   "createdBy": "by <b>{name}</b>",
   "delete": "Delete",
