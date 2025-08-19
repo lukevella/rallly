@@ -1,0 +1,120 @@
+---
+icon: "credit-card"
+title: "Billing & Seats"
+description: "Understanding seat-based pricing, centralized billing, and subscription management for spaces."
+---
+
+## How Seat-Based Billing Works
+
+Rallly spaces use a seat-based pricing model that scales with your team size:
+
+<Card title="Seat-Based Pricing Benefits" icon="users">
+- **Easy scaling** - add or remove seats as your team changes
+- **Centralized billing** - one subscription for your entire team
+- **Pro features for all** - every member gets Pro benefits
+</Card>
+
+## Understanding Seats
+
+### What is a Seat?
+A seat represents one team member's access to your Pro space. Each member you invite to your space requires one seat.
+
+### Seat Allocation
+- **Used Seats**: Current number of active members in your space
+- **Total Seats**: Maximum number of members you're paying for
+- **Available Seats**: Remaining seats you can fill without increasing your bill
+
+<Note>
+You must have at least as many total seats as used seats. You cannot reduce total seats below your current member count.
+</Note>
+
+## Managing Your Subscription
+
+### Upgrading to Pro
+
+To upgrade your space to Pro:
+
+<Steps>
+  <Step title="Navigate to Billing Settings">
+    Go to your space settings and select the "Billing" tab.
+  </Step>
+  
+  <Step title="Choose Your Plan">
+    Select either monthly or yearly Pro billing. Yearly billing offers a discount.
+  </Step>
+  
+  <Step title="Complete Payment">
+    Enter your payment details and complete the subscription setup through Stripe.
+  </Step>
+</Steps>
+
+### Managing Seats
+
+You can adjust your seat allocation at any time:
+
+#### Adding Seats
+When you need to invite more members:
+
+1. **Navigate to Billing Settings**
+2. **Click "Manage Seats"**
+3. **Increase the seat count** to accommodate new members
+4. **Confirm the changes** - billing will be prorated immediately
+
+#### Removing Seats
+To reduce costs when team members leave:
+
+1. **Remove members** from your space first
+2. **Go to Billing Settings** and click "Manage Seats"
+3. **Decrease the seat count** to match your current needs
+4. **Confirm the changes** - adjustments will be credited to your next bill
+
+<Warning>
+You cannot reduce seats below your current member count. Remove members first, then adjust seat allocation.
+</Warning>
+
+## Billing Portal Access
+
+As a space owner, you have full access to Stripe's customer portal for:
+
+### Subscription Management
+- **View billing history** and download invoices
+- **Update payment methods** for automatic renewals
+- **Switch between monthly and yearly** billing cycles
+- **Manage seat quantities** with immediate proration
+
+### Payment Method Updates
+- **Add new cards** or payment methods
+- **Set default payment method** for renewals
+- **Update billing address** and tax information
+
+## Billing Timeline and Prorations
+
+### Immediate Changes
+- **Adding seats**: Prorated charge applied immediately
+- **Payment method updates**: Takes effect for next billing cycle
+- **Seat increases**: Available immediately for new invitations
+
+### Next Billing Cycle
+- **Seat reductions**: Credits applied to next bill
+- **Plan changes**: New pricing takes effect at renewal
+- **Cancellations**: Access continues until period end
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What happens if I exceed my seat limit?">
+    You cannot invite more members than you have seats available. You'll need to purchase additional seats first, then send invitations.
+  </Accordion>
+  
+  <Accordion title="How is proration calculated?">
+    When you add seats mid-cycle, you're charged a prorated amount for the remaining days in your billing period. When you remove seats, the credit is applied to your next bill.
+  </Accordion>
+  
+  <Accordion title="Can I downgrade from Pro to Hobby?">
+    Yes, but you'll lose Pro features and need to remove all members from your space. Cancel your subscription and it will downgrade at the end of your billing period.
+  </Accordion>
+  
+  <Accordion title="What happens to my polls if I cancel?">
+    Pro spaces that cancel will revert to Hobby tier limitations. Polls may be subject to automatic deletion based on inactivity rules.
+  </Accordion>
+</AccordionGroup>

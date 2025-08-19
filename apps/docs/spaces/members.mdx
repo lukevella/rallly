@@ -1,0 +1,163 @@
+---
+icon: "users"
+title: "Member Management"
+description: "Learn how to invite, manage, and organize team members in your Rallly space."
+---
+
+## Understanding Member Roles
+
+Rallly spaces have a clear hierarchy of roles and permissions:
+
+<CardGroup cols={2}>
+  <Card title="Owner" icon="crown">
+    **Full Control**
+    - Access to all polls and events
+    - Member management
+    - Space settings and configuration
+    - Billing management
+    - Seat management
+    - Can delete space
+  </Card>
+  <Card title="Admin" icon="shield">
+    **Team Management**
+    - Access to all polls and events
+    - Member management
+    - Space settings and configuration
+  </Card>
+  <Card title="Member" icon="user">
+    **Collaboration**
+     - Access to all polls and events
+
+  </Card>
+</CardGroup>
+
+## Inviting New Members
+
+### Prerequisites
+Before inviting members, ensure:
+- You have **admin or owner** permissions
+- Your space has **available seats**
+- You have the **email addresses** of people you want to invite
+
+### Invitation Process
+
+<Steps>
+  <Step title="Navigate to Members">
+    Go to your space settings and click on the "Members" tab.
+  </Step>
+  
+  <Step title="Send Invitation">
+    Click "Invite Member" and enter the email address of the person you want to invite.
+
+    <Note>
+    The person will receive an email invitation with instructions to join your space.
+    </Note>
+  </Step>
+  
+  <Step title="Set Initial Role">
+    Choose the appropriate role for the new member:
+    - **Member**: For most team members who need collaboration access
+    - **Admin**: For trusted team leads who should manage other members
+  </Step>
+  
+  <Step title="Monitor Pending Invites">
+    Track invitation status in the "Pending Invites" section until the person accepts.
+  </Step>
+</Steps>
+
+## Managing Existing Members
+
+### Changing Member Roles
+
+To change a member's role:
+
+1. **Find the member** in your member list
+2. **Click the dropdown menu** next to their name
+3. **Select "Change Role"** and choose the new role
+4. **Confirm the change** - it takes effect immediately
+
+<Warning>
+Changing roles affects what the member can do immediately. Be careful when granting or removing admin permissions.
+</Warning>
+
+### Removing Members
+
+To remove a member from your space:
+
+1. **Locate the member** you want to remove
+2. **Click the dropdown menu** and select "Remove from space"
+3. **Confirm the removal** - this action cannot be easily undone
+
+<Info>
+When you remove a member, they lose access to all polls and data immediately. Consider whether they need to export any important information first.
+</Info>
+
+## Managing Pending Invitations
+
+### Invitation States
+Invitations can be in several states:
+- **Pending**: Invitation sent, waiting for acceptance
+- **Expired**: Invitation has expired and needs to be resent
+- **Accepted**: Person has joined your space
+
+### Canceling Invitations
+To cancel a pending invitation:
+
+1. **Locate the pending invite**
+2. **Click "Cancel"** to revoke the invitation
+3. **Confirm the cancellation** - the invitation link will no longer work
+
+## Seat Management and Members
+
+### Seat Allocation
+- **Used Seats**: Equal to your current member count
+- **Available Seats**: How many more members you can invite
+- **Total Seats**: Your current subscription level
+
+### Adding Members vs Adding Seats
+<Steps>
+  <Step title="Check Available Seats">
+    Before inviting someone, verify you have available seats in your billing settings.
+  </Step>
+  
+  <Step title="Purchase Additional Seats (if needed)">
+    If you're at capacity, increase your seat count through billing management first.
+  </Step>
+  
+  <Step title="Send Invitation">
+    Once you have available seats, you can invite new members immediately.
+  </Step>
+</Steps>
+
+
+## Troubleshooting Common Issues
+
+<AccordionGroup>
+  <Accordion title="Invitation emails not being received">
+    - Check spam/junk folders
+    - Verify the email address is correct
+    - Resend the invitation
+    - Ask the recipient to whitelist rallly.co emails
+  </Accordion>
+  
+  <Accordion title="Cannot invite new members">
+    - Check if you have available seats
+    - Verify you have admin or owner permissions
+    - Ensure your subscription is active
+    - Try refreshing the page and trying again
+  </Accordion>
+  
+  <Accordion title="Member lost access after role change">
+    - Verify the role change was intentional
+    - Check if the member's permissions match their new role
+    - Have the member log out and log back in
+    - Contact support if issues persist
+  </Accordion>
+  
+  <Accordion title="Cannot remove a member">
+    - Ensure you have admin or owner permissions
+    - Check if the member has any active polls that need to be transferred
+    - Try using the member dropdown menu instead of bulk actions
+    - Contact support for assistance
+  </Accordion>
+</AccordionGroup>

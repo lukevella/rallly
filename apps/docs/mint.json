@@ -46,6 +46,15 @@
       "pages": ["workflow/create", "workflow/invite", "workflow/finalize"]
     },
     {
+      "group": "Spaces",
+      "pages": [
+        "spaces/introduction",
+        "spaces/managing-seats",
+        "spaces/members",
+        "spaces/billing"
+      ]
+    },
+    {
       "group": "Guides",
       "pages": ["guide/participant-guide"]
     },
