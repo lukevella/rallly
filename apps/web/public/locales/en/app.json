@@ -37,6 +37,7 @@
   "location": "Location",
   "locationPlaceholder": "Joe's Coffee Shop",
   "login": "Login",
+  "loginNotConfigured": "Login is currently not configured.",
   "logout": "Logout",
   "manage": "Manage",
   "mixedOptionsDescription": "You can't have both time and date options in the same poll. Which would you like to keep?",

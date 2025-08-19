@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Trans } from "react-i18next/TransWithoutContext";
 
+import { EmailProvider } from "@/auth/providers/email";
 import { GoogleProvider } from "@/auth/providers/google";
 import { MicrosoftProvider } from "@/auth/providers/microsoft";
 import { OIDCProvider } from "@/auth/providers/oidc";
@@ -41,6 +42,7 @@ export default async function LoginPage(props: {
   const searchParams = await props.searchParams;
 
   const { instanceSettings, t } = await loadData();
+  const emailProvider = EmailProvider();
   const oidcProvider = OIDCProvider();
   const socialProviders = [GoogleProvider(), MicrosoftProvider()].filter(
     Boolean,
@@ -56,17 +58,26 @@ export default async function LoginPage(props: {
           <Trans t={t} ns="app" i18nKey="loginTitle" defaults="Welcome" />
         </AuthPageTitle>
         <AuthPageDescription>
-          <Trans
-            t={t}
-            ns="app"
-            i18nKey="loginDescription"
-            defaults="Login to your account to continue"
-          />
+          {!emailProvider && !hasAlternateLoginMethods ? (
+            <Trans
+              t={t}
+              ns="app"
+              i18nKey="loginNotConfigured"
+              defaults="Login is currently not configured."
+            />
+          ) : (
+            <Trans
+              t={t}
+              ns="app"
+              i18nKey="loginDescription"
+              defaults="Login to your account to continue"
+            />
+          )}
         </AuthPageDescription>
       </AuthPageHeader>
       <AuthPageContent>
-        <LoginWithEmailForm />
-        {hasAlternateLoginMethods ? <OrDivider /> : null}
+        {emailProvider && <LoginWithEmailForm />}
+        {emailProvider && hasAlternateLoginMethods ? <OrDivider /> : null}
         {oidcProvider ? (
           <LoginWithOIDC
             name={oidcProvider.name}
