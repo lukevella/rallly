@@ -10,7 +10,7 @@ export type MemberAbilityContext = {
   space: { id: string; ownerId: string; role: MemberRole };
 };
 
-type Action = "cancel" | "create" | "read" | "update" | "delete";
+type Action = "cancel" | "create" | "read" | "update" | "delete" | "manage";
 type Subject = Subjects<{
   ScheduledEvent: {
     spaceId: string;
@@ -27,6 +27,7 @@ type Subject = Subjects<{
     id: string;
     ownerId: string;
   };
+  Billing: Record<string, never>;
 }>;
 
 export type MemberAbility = PureAbility<[Action, Subject], PrismaQuery>;
@@ -53,6 +54,7 @@ export function defineAbilityForMember(ctx?: MemberAbilityContext) {
     builder.can("delete", "Space", {
       ownerId: ctx.user.id,
     });
+    builder.can("manage", "Billing");
   }
 
   return builder.build();

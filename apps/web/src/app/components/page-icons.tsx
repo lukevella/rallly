@@ -83,7 +83,7 @@ export function SpacesPageIcon() {
 
 export function MembersPageIcon() {
   return (
-    <PageIcon color="indigo" size="md">
+    <PageIcon color="gray" size="md">
       <UsersIcon />
     </PageIcon>
   );
