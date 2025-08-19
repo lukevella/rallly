@@ -452,7 +452,7 @@
   "ownerPermissionsRequired": "Csak a munkaterület tulajdonosai férhetnek hozzá a számlázási beállításokhoz.",
   "loading": "Betöltés...",
   "endOfList": "Elérted a lista végét",
-  "attendeeCount": "{count, plural, =0 {Nincs résztvevő} one {1 résztvevő} other {# résztvevő}}",
+  "attendeeCount": "{count, plural, =0 {Nincsenek résztvevők} one {1 résztvevő} other {# résztvevő}}",
   "participantCount": "{count, plural, one {1 résztvevő} other {# résztvevő}}",
   "imageCropDialogTitle": "Kép levágása",
   "cropPreview": "Levágás előnézete",
@@ -497,5 +497,6 @@
   "noSeatsAvailableAlertBillingDescription": "Növeld meg a helyek számát ezen a munkaterületen a <a>számlázási oldalon</a>.",
   "noSeatsAvailableAlertSelfHostedDescription": "Előfizetést kell <a>váltanod</a>, hogy növelni tudd a helyek számát ezen a munkaterületen.",
   "seatsUpdatedAlertTitle": "Helyek frissítve",
-  "seatsUpdatedAlertDescription": "A helyek elosztásának frissítése sikeresen megtörtént. A változtatások a következő számlázási ciklusodban fognak megjelenni."
+  "seatsUpdatedAlertDescription": "A helyek elosztásának frissítése sikeresen megtörtént. A változtatások a következő számlázási ciklusodban fognak megjelenni.",
+  "memberCount": "{count, plural, =0 {Nincsenek tagok} one {1 tag} other {# tag}}"
 }
