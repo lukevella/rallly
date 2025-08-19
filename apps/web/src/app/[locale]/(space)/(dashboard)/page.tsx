@@ -6,9 +6,9 @@ import {
   BillingPageIcon,
   CreatePageIcon,
   EventPageIcon,
+  MembersPageIcon,
   PollPageIcon,
-  PreferencesPageIcon,
-  ProfilePageIcon,
+  SettingsPageIcon,
 } from "@/app/components/page-icons";
 import {
   PageContainer,
@@ -16,35 +16,53 @@ import {
   PageHeader,
   PageTitle,
 } from "@/app/components/page-layout";
-import { requireSpace } from "@/auth/data";
+import { requireSpace, requireUser } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted } from "@/contexts/environment";
 import { getUpcomingEventsCount } from "@/features/scheduled-event/data";
+import { getSpaceSeatCount, loadMembers } from "@/features/space/data";
+import { defineAbilityForMember } from "@/features/space/member/ability";
 import { getTranslation } from "@/i18n/server";
+import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { FeedbackAlert } from "./feedback-alert";
 
 async function loadData() {
-  const space = await requireSpace();
+  const [space, user] = await Promise.all([requireSpace(), requireUser()]);
 
-  const [livePollCount, upcomingEventCount] = await Promise.all([
-    prisma.poll.count({
-      where: {
-        spaceId: space.id,
-        status: "live",
-        deleted: false,
-      },
-    }),
-    getUpcomingEventsCount(),
-  ]);
+  const [livePollCount, upcomingEventCount, memberCount, seatCount] =
+    await Promise.all([
+      prisma.poll.count({
+        where: {
+          spaceId: space.id,
+          status: "live",
+          deleted: false,
+        },
+      }),
+      getUpcomingEventsCount(),
+      loadMembers().then((members) => members.total),
+      getSpaceSeatCount(space.id),
+    ]);
+
+  const ability = defineAbilityForMember({ space, user });
+  const canManageBilling = ability.can("manage", "Billing");
 
   return {
     livePollCount,
     upcomingEventCount,
+    memberCount,
+    seatCount,
+    canManageBilling,
   };
 }
 
 export default async function Page() {
-  const { livePollCount, upcomingEventCount } = await loadData();
+  const {
+    livePollCount,
+    upcomingEventCount,
+    memberCount,
+    seatCount,
+    canManageBilling,
+  } = await loadData();
 
   return (
     <PageContainer>
@@ -112,36 +130,53 @@ export default async function Page() {
         </div>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
-            <Trans i18nKey="account" defaults="Account" />
+            <Trans i18nKey="settings" defaults="Settings" />
           </h2>
           <TileGrid>
             <Tile asChild>
-              <Link href="/account/profile">
-                <ProfilePageIcon />
+              <Link href="/settings/general">
+                <SettingsPageIcon />
                 <TileTitle>
-                  <Trans i18nKey="profile" defaults="Profile" />
+                  <Trans i18nKey="general" defaults="General" />
                 </TileTitle>
               </Link>
             </Tile>
 
             <Tile asChild>
-              <Link href="/account/preferences">
-                <PreferencesPageIcon />
+              <Link href="/settings/members">
+                <MembersPageIcon />
                 <TileTitle>
-                  <Trans i18nKey="preferences" defaults="Preferences" />
+                  <Trans i18nKey="members" defaults="Members" />
                 </TileTitle>
+                <TileDescription>
+                  <Trans
+                    i18nKey="memberCount"
+                    defaults="{count, plural, =0 {No members} one {1 member} other {# members}}"
+                    values={{ count: memberCount }}
+                  />
+                </TileDescription>
               </Link>
             </Tile>
-            <IfCloudHosted>
-              <Tile asChild>
-                <Link href="/settings/billing">
-                  <BillingPageIcon />
-                  <TileTitle>
-                    <Trans i18nKey="billing" defaults="Billing" />
-                  </TileTitle>
-                </Link>
-              </Tile>
-            </IfCloudHosted>
+
+            <IfFeatureEnabled feature="billing">
+              {canManageBilling && (
+                <Tile asChild>
+                  <Link href="/settings/billing">
+                    <BillingPageIcon />
+                    <TileTitle>
+                      <Trans i18nKey="billing" defaults="Billing" />
+                    </TileTitle>
+                    <TileDescription>
+                      <Trans
+                        i18nKey="seatCount"
+                        defaults="{count, plural, =0 {No seats} one {1 seat} other {# seats}}"
+                        values={{ count: seatCount }}
+                      />
+                    </TileDescription>
+                  </Link>
+                </Tile>
+              )}
+            </IfFeatureEnabled>
           </TileGrid>
         </div>
       </PageContent>

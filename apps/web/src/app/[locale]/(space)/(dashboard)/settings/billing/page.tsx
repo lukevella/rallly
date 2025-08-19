@@ -12,6 +12,7 @@ import {
 import { Trans } from "@/components/trans";
 import { getSpaceSubscription } from "@/features/billing/data";
 import { loadMembers } from "@/features/space/data";
+import { defineAbilityForMember } from "@/features/space/member/ability";
 import { getTotalSeatsForSpace } from "@/features/space/utils";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -22,10 +23,10 @@ export default async function BillingSettingsPage() {
   }
   const [space, user] = await Promise.all([requireSpace(), requireUser()]);
 
-  // Check if user is owner - only owners can access billing
-  const isOwner = space.ownerId === user.id;
+  const ability = defineAbilityForMember({ space, user });
+  const canManageBilling = ability.can("manage", "Billing");
 
-  if (!isOwner) {
+  if (!canManageBilling) {
     return (
       <EmptyState>
         <EmptyStateIcon>
