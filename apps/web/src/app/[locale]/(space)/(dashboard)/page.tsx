@@ -20,8 +20,9 @@ import { requireSpace, requireUser } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted } from "@/contexts/environment";
 import { getUpcomingEventsCount } from "@/features/scheduled-event/data";
-import { getSpaceSeatCount, loadMembers } from "@/features/space/data";
+import { loadMembers } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
+import { getTotalSeatsForSpace } from "@/features/space/utils";
 import { getTranslation } from "@/i18n/server";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { FeedbackAlert } from "./feedback-alert";
@@ -40,7 +41,7 @@ async function loadData() {
       }),
       getUpcomingEventsCount(),
       loadMembers().then((members) => members.total),
-      getSpaceSeatCount(space.id),
+      getTotalSeatsForSpace(space.id),
     ]);
 
   const ability = defineAbilityForMember({ space, user });
