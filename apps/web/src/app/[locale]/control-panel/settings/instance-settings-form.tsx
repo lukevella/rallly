@@ -34,8 +34,10 @@ import { updateInstanceSettingsAction } from "./actions";
 
 export function InstanceSettingsForm({
   defaultValue,
+  allowRegistrationChange,
 }: {
   defaultValue: InstanceSettings;
+  allowRegistrationChange: boolean;
 }) {
   const form = useForm<InstanceSettings>({
     defaultValues: defaultValue,
@@ -96,6 +98,9 @@ export function InstanceSettingsForm({
                       <Switch
                         onCheckedChange={field.onChange}
                         checked={field.value}
+                        {...(!allowRegistrationChange
+                          ? { disabled: true }
+                          : {})}
                       />
                     </FormControl>
                     <FormLabel>
@@ -110,6 +115,13 @@ export function InstanceSettingsForm({
                       i18nKey="disableUserRegistrationDescription"
                       defaults="Prevent new users from registering an account."
                     />
+                    &nbsp;
+                    {!allowRegistrationChange && (
+                      <Trans
+                        i18nKey="configuredByEnvironmentVariable"
+                        defaults="This setting has been configured by environment variable."
+                      />
+                    )}
                   </FormDescription>
                 </FormItem>
               )}
