@@ -100,7 +100,7 @@ export default async function LoginPage(props: {
         ) : null}
       </AuthPageContent>
       <AuthErrors />
-      {!instanceSettings?.disableUserRegistration ? (
+      {emailProvider && !instanceSettings?.disableUserRegistration ? (
         <AuthPageExternal>
           <Trans
             t={t}

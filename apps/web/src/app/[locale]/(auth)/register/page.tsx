@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
 
+import { EmailProvider } from "@/auth/providers/email";
 import { getInstanceSettings } from "@/features/instance-settings/queries";
 import { getTranslation } from "@/i18n/server";
 import {
@@ -21,8 +22,9 @@ export default async function Register(props: {
   const params = await props.params;
   const { t } = await getTranslation(params.locale);
   const instanceSettings = await getInstanceSettings();
+  const emailProvider = EmailProvider();
 
-  if (instanceSettings?.disableUserRegistration) {
+  if (!emailProvider || instanceSettings?.disableUserRegistration) {
     return notFound();
   }
 
