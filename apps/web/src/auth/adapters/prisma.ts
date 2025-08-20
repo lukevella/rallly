@@ -13,6 +13,8 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@rallly/database";
 import type { Adapter } from "next-auth/adapters";
+import { trackSpaceCreated } from "@/features/space/analytics";
+import { createSpace } from "@/features/space/mutations";
 import { createUser } from "@/features/user/mutations";
 
 export function CustomPrismaAdapter(options: {
@@ -49,6 +51,12 @@ export function CustomPrismaAdapter(options: {
         timeFormat: user.timeFormat ?? undefined,
         locale: user.locale ?? undefined,
       });
+
+      const space = await createSpace({
+        ownerId: newUser.id,
+      });
+
+      trackSpaceCreated({ space, userId: newUser.id });
 
       return newUser;
     },

@@ -8,6 +8,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { waitUntil } from "@vercel/functions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { trackSpaceCreated } from "@/features/space/analytics";
 import { getMember, getSpaceSeatCount } from "@/features/space/data";
 import { createSpace } from "@/features/space/mutations";
 import { memberRoleSchema } from "@/features/space/schema";
@@ -79,10 +80,14 @@ export const createSpaceAction = authActionClient
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
-    await createSpace({
+    const space = await createSpace({
       name: parsedInput.name,
       ownerId: ctx.user.id,
     });
+
+    trackSpaceCreated({ space, userId: ctx.user.id });
+
+    return space;
   });
 
 export const deleteSpaceAction = spaceActionClient

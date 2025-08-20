@@ -1,6 +1,5 @@
 import type { TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { createSpace } from "@/features/space/mutations";
 
 export async function createUser({
   name,
@@ -33,11 +32,6 @@ export async function createUser({
       weekStart,
       role: "user",
     },
-  });
-
-  await createSpace({
-    name: "Personal",
-    ownerId: user.id,
   });
 
   return user;

@@ -8,6 +8,8 @@ import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
 import { isTemporaryEmail } from "@/auth/helpers/temp-email-domains";
 import { getInstanceSettings } from "@/features/instance-settings/queries";
+import { trackSpaceCreated } from "@/features/space/analytics";
+import { createSpace } from "@/features/space/mutations";
 import { createUser } from "@/features/user/mutations";
 import { getEmailClient } from "@/utils/emails";
 import { isValidName } from "@/utils/is-valid-name";
@@ -132,6 +134,12 @@ export const auth = router({
         weekStart: input.weekStart,
         locale: input.locale,
       });
+
+      const space = await createSpace({
+        ownerId: user.id,
+      });
+
+      trackSpaceCreated({ space, userId: user.id });
 
       if (ctx.user?.isGuest) {
         try {
