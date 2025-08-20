@@ -98,7 +98,7 @@ export function trackSpaceDeleted({
   });
 }
 
-export function trackMemberAdded({
+export function trackMemberJoin({
   spaceId,
   memberCount,
   userId,
@@ -119,7 +119,7 @@ export function trackMemberAdded({
 
   posthog.capture({
     distinctId: userId,
-    event: "space_member_add",
+    event: "space_member_join",
     properties: {
       space_id: spaceId,
       member_count: memberCount,
@@ -187,9 +187,11 @@ export function trackInviteSent({
 }
 
 export function trackSeatCountChanged({
+  userId,
   spaceId,
   seatCount,
 }: {
+  userId: string;
   spaceId: string;
   seatCount: number;
 }): void {
@@ -198,6 +200,83 @@ export function trackSeatCountChanged({
     groupKey: spaceId,
     properties: {
       seat_count: seatCount,
+    },
+  });
+
+  posthog?.capture({
+    distinctId: userId,
+    event: "space_seat_count_changed",
+    properties: {
+      space_id: spaceId,
+      seat_count: seatCount,
+    },
+    groups: {
+      space: spaceId,
+    },
+  });
+}
+
+export function trackMemberLeaveSpace({
+  spaceId,
+  memberCount,
+  userId,
+}: {
+  spaceId: string;
+  memberCount: number;
+  userId: string;
+}): void {
+  if (!posthog) return;
+
+  posthog.groupIdentify({
+    groupType: "space",
+    groupKey: spaceId,
+    properties: {
+      member_count: memberCount,
+    },
+  });
+
+  posthog.capture({
+    distinctId: userId,
+    event: "space_member_leave",
+    properties: {
+      space_id: spaceId,
+      member_count: memberCount,
+    },
+    groups: {
+      space: spaceId,
+    },
+  });
+}
+
+export function trackSetActiveSpace({
+  spaceId,
+  userId,
+  name,
+}: {
+  spaceId: string;
+  userId: string;
+  name: string;
+}) {
+  if (!posthog) return;
+
+  posthog.groupIdentify({
+    groupType: "space",
+    groupKey: spaceId,
+    properties: {
+      name,
+    },
+  });
+
+  posthog.capture({
+    distinctId: userId,
+    event: "space_set_active",
+    properties: {
+      $set: {
+        active_space_id: spaceId,
+      },
+    },
+    groups: {
+      space: spaceId,
     },
   });
 }

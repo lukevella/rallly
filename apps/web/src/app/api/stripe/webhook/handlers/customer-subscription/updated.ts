@@ -1,6 +1,7 @@
 import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
+import { trackSeatCountChanged } from "@/features/space/analytics";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
 import {
   getExpandedSubscription,
@@ -71,11 +72,9 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     },
   });
 
-  posthog?.groupIdentify({
-    groupType: "space",
-    groupKey: res.data.spaceId,
-    properties: {
-      seat_count: quantity,
-    },
+  trackSeatCountChanged({
+    userId: res.data.userId,
+    spaceId: res.data.spaceId,
+    seatCount: quantity,
   });
 }
