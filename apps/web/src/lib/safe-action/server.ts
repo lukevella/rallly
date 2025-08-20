@@ -1,6 +1,6 @@
 import "server-only";
 
-import { posthog } from "@rallly/posthog/server";
+import { PostHog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
 import { waitUntil } from "@vercel/functions";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
@@ -13,25 +13,25 @@ import { AppError } from "@/lib/errors";
 import type { Duration } from "@/lib/rate-limit";
 import { rateLimit } from "@/lib/rate-limit";
 
-const posthogMiddleware = createMiddleware<{
-  ctx: { user: { id: string } };
-  metadata: { actionName: string };
-}>().define(async ({ ctx, next, metadata }) => {
-  let properties: Record<string, unknown> | undefined;
+const posthogMiddleware = createMiddleware().define(async ({ next }) => {
+  if (!process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
+    return next({
+      ctx: {
+        posthog: null,
+      },
+    });
+  }
+
+  const posthog = new PostHog(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
+    host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+    flushAt: 20,
+    flushInterval: 10000,
+  });
 
   const result = await next({
     ctx: {
       posthog,
-      captureProperties: (props?: Record<string, unknown>) => {
-        properties = props;
-      },
     },
-  });
-
-  posthog?.capture({
-    distinctId: ctx.user.id,
-    event: metadata.actionName,
-    properties,
   });
 
   if (posthog) {
@@ -85,26 +85,24 @@ export const actionClient = createSafeActionClient({
 
     return "INTERNAL_SERVER_ERROR" as const;
   },
-});
+}).use(posthogMiddleware);
 
-export const authActionClient = actionClient
-  .use(async ({ next }) => {
-    const user = await getCurrentUser();
+export const authActionClient = actionClient.use(async ({ next }) => {
+  const user = await getCurrentUser();
 
-    if (!user) {
-      throw new AppError({
-        code: "UNAUTHORIZED",
-        message: "You are not authenticated.",
-      });
-    }
-
-    const ability = defineAbilityFor(user);
-
-    return next({
-      ctx: { user, ability },
+  if (!user) {
+    throw new AppError({
+      code: "UNAUTHORIZED",
+      message: "You are not authenticated.",
     });
-  })
-  .use(posthogMiddleware);
+  }
+
+  const ability = defineAbilityFor(user);
+
+  return next({
+    ctx: { user, ability },
+  });
+});
 
 export const adminActionClient = authActionClient.use(async ({ ctx, next }) => {
   if (ctx.user.role !== "admin") {

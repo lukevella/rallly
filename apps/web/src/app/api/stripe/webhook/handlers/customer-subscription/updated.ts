@@ -1,6 +1,7 @@
 import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
+import { updateSpaceGroup } from "@/features/space/analytics";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
 import {
   getExpandedSubscription,
@@ -57,6 +58,14 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     },
   });
 
+  updateSpaceGroup({
+    spaceId: res.data.spaceId,
+    properties: {
+      seatCount: quantity,
+      tier: isActive ? "pro" : "hobby",
+    },
+  });
+
   posthog?.capture({
     distinctId: res.data.userId,
     event: "subscription change",
@@ -65,6 +74,9 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
       $set: {
         tier: isActive ? "pro" : "hobby",
       },
+    },
+    groups: {
+      space: res.data.spaceId,
     },
   });
 }

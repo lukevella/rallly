@@ -20,39 +20,21 @@ export async function createUser({
   locale?: string;
   weekStart?: number;
 }) {
-  return await prisma.$transaction(async (tx) => {
-    const user = await tx.user.create({
-      data: {
-        name,
-        email,
-        emailVerified,
-        image,
-        timeZone,
-        timeFormat,
-        locale,
-        weekStart,
-        role: "user",
-      },
-    });
-
-    const space = await tx.space.create({
-      data: {
-        ownerId: user.id,
-        name: "Personal",
-      },
-    });
-
-    await tx.spaceMember.create({
-      data: {
-        spaceId: space.id,
-        userId: user.id,
-        role: "ADMIN",
-        lastSelectedAt: new Date(),
-      },
-    });
-
-    return user;
+  const user = await prisma.user.create({
+    data: {
+      name,
+      email,
+      emailVerified,
+      image,
+      timeZone,
+      timeFormat,
+      locale,
+      weekStart,
+      role: "user",
+    },
   });
+
+  return user;
 }
 
 export async function setActiveSpace({

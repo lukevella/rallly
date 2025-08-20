@@ -7,7 +7,18 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { waitUntil } from "@vercel/functions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import {
+  trackInviteSent,
+  trackMemberJoin,
+  trackMemberLeaveSpace,
+  trackMemberRemoved,
+  trackSetActiveSpace,
+  trackSpaceCreated,
+  trackSpaceDeleted,
+  trackSpaceUpdated,
+} from "@/features/space/analytics";
 import { getMember, getSpaceSeatCount } from "@/features/space/data";
+import { createSpace } from "@/features/space/mutations";
 import { memberRoleSchema } from "@/features/space/schema";
 import { getTotalSeatsForSpace, toDBRole } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
@@ -64,6 +75,12 @@ export const setActiveSpaceAction = authActionClient
       userId: ctx.user.id,
       spaceId: parsedInput.spaceId,
     });
+
+    trackSetActiveSpace({
+      spaceId: parsedInput.spaceId,
+      userId: ctx.user.id,
+      name: space.name,
+    });
   });
 
 export const createSpaceAction = authActionClient
@@ -77,19 +94,14 @@ export const createSpaceAction = authActionClient
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
-    await prisma.space.create({
-      data: {
-        name: parsedInput.name,
-        ownerId: ctx.user.id,
-        members: {
-          create: {
-            userId: ctx.user.id,
-            role: "ADMIN",
-            lastSelectedAt: new Date(),
-          },
-        },
-      },
+    const space = await createSpace({
+      name: parsedInput.name,
+      ownerId: ctx.user.id,
     });
+
+    trackSpaceCreated({ space, userId: ctx.user.id });
+
+    return space;
   });
 
 export const deleteSpaceAction = spaceActionClient
@@ -138,6 +150,11 @@ export const deleteSpaceAction = spaceActionClient
       where: {
         id: parsedInput.spaceId,
       },
+    });
+
+    trackSpaceDeleted({
+      spaceId: space.id,
+      userId: ctx.user.id,
     });
 
     revalidatePath("/", "layout");
@@ -232,29 +249,34 @@ export const inviteMemberAction = spaceActionClient
     }
 
     try {
-      await prisma.$transaction(async (tx) => {
-        const invite = await tx.spaceMemberInvite.create({
-          data: {
-            spaceId: ctx.space.id,
-            email: parsedInput.email,
-            role: toDBRole(parsedInput.role),
-            inviterId: ctx.user.id,
-          },
-        });
+      const invite = await prisma.spaceMemberInvite.create({
+        data: {
+          spaceId: ctx.space.id,
+          email: parsedInput.email,
+          role: toDBRole(parsedInput.role),
+          inviterId: ctx.user.id,
+        },
+      });
 
-        const emailClient = getEmailClient(
-          existingUser?.locale ?? ctx.user.locale,
-        );
+      const emailClient = getEmailClient(
+        existingUser?.locale ?? ctx.user.locale,
+      );
 
-        await emailClient.sendTemplate("SpaceInviteEmail", {
-          to: parsedInput.email,
-          props: {
-            spaceName: ctx.space.name,
-            inviterName: ctx.user.name,
-            spaceRole: parsedInput.role,
-            inviteUrl: absoluteUrl(`/accept-invite/${invite.id}`),
-          },
-        });
+      await emailClient.sendTemplate("SpaceInviteEmail", {
+        to: parsedInput.email,
+        props: {
+          spaceName: ctx.space.name,
+          inviterName: ctx.user.name,
+          spaceRole: parsedInput.role,
+          inviteUrl: absoluteUrl(`/accept-invite/${invite.id}`),
+        },
+      });
+
+      trackInviteSent({
+        spaceId: ctx.space.id,
+        userId: ctx.user.id,
+        role: parsedInput.role,
+        email: parsedInput.email,
       });
 
       return {
@@ -298,7 +320,7 @@ export const acceptInviteAction = authActionClient
       });
     }
 
-    await prisma.$transaction(async (tx) => {
+    const { memberCount } = await prisma.$transaction(async (tx) => {
       // Check seat availability before accepting the invite
       const [usedSeats, totalSeats] = await Promise.all([
         tx.spaceMember.count({ where: { spaceId: parsedInput.spaceId } }),
@@ -326,6 +348,8 @@ export const acceptInviteAction = authActionClient
           id: spaceMemberInvite.id,
         },
       });
+
+      return { memberCount: usedSeats + 1 };
     });
 
     try {
@@ -336,6 +360,12 @@ export const acceptInviteAction = authActionClient
     } catch {
       console.warn("Failed to update user's active space");
     }
+
+    trackMemberJoin({
+      spaceId: parsedInput.spaceId,
+      userId: ctx.user.id,
+      memberCount,
+    });
   });
 
 export const removeMemberAction = spaceActionClient
@@ -365,12 +395,22 @@ export const removeMemberAction = spaceActionClient
       });
     }
 
-    await prisma.$transaction(async (tx) => {
-      await tx.spaceMember.delete({
-        where: {
-          id: parsedInput.memberId,
-        },
-      });
+    const deletedMember = await prisma.spaceMember.delete({
+      where: {
+        id: parsedInput.memberId,
+      },
+    });
+
+    const memberCount = await prisma.spaceMember.count({
+      where: {
+        spaceId: member.spaceId,
+      },
+    });
+
+    trackMemberRemoved({
+      spaceId: member.spaceId,
+      userId: deletedMember.userId,
+      memberCount,
     });
   });
 
@@ -494,6 +534,12 @@ export const updateSpaceAction = spaceActionClient
     if (oldImage && parsedInput.image && oldImage !== parsedInput.image) {
       await deleteImageFromS3(oldImage);
     }
+
+    trackSpaceUpdated({
+      spaceId: ctx.space.id,
+      userId: ctx.user.id,
+      name: parsedInput.name,
+    });
   });
 
 export const getSpaceImageUploadUrlAction = spaceActionClient
@@ -688,6 +734,18 @@ export const leaveSpaceFromAccountAction = authActionClient
         },
       });
     });
+
+    const memberCount = await prisma.spaceMember.count({
+      where: {
+        spaceId: parsedInput.spaceId,
+      },
+    });
+
+    trackMemberLeaveSpace({
+      spaceId: parsedInput.spaceId,
+      userId: ctx.user.id,
+      memberCount,
+    });
   });
 
 export const leaveSpaceAction = spaceActionClient
@@ -757,5 +815,17 @@ export const leaveSpaceAction = spaceActionClient
           lastSelectedAt: new Date(),
         },
       });
+    });
+
+    const memberCount = await prisma.spaceMember.count({
+      where: {
+        spaceId: ctx.space.id,
+      },
+    });
+
+    trackMemberLeaveSpace({
+      spaceId: ctx.space.id,
+      userId: ctx.user.id,
+      memberCount,
     });
   });

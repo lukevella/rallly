@@ -302,6 +302,7 @@ export const polls = router({
         type: "poll_create",
         userId: ctx.user.id,
         pollId: poll.id,
+        spaceId: poll.spaceId ?? undefined,
         properties: {
           title: poll.title,
           optionCount: poll.options.length,

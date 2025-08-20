@@ -46,10 +46,6 @@ export const cancelEventAction = spaceActionClient
       },
     });
 
-    ctx.captureProperties({
-      eventId: parsedInput.eventId,
-    });
-
     // notify attendees
     const attendees = await prisma.scheduledEventInvite.findMany({
       where: {
