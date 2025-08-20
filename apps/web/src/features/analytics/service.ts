@@ -82,6 +82,7 @@ export class AnalyticsService {
         },
         groups: {
           poll: event.pollId,
+          ...("spaceId" in event ? { space: event.spaceId } : {}),
         },
       });
     } catch (error) {
