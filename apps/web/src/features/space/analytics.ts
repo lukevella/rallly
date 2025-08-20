@@ -166,19 +166,22 @@ export function trackInviteSent({
   spaceId,
   role,
   userId,
+  email,
 }: {
   spaceId: string;
   role: string;
   userId: string;
+  email: string;
 }): void {
   if (!posthog) return;
 
   posthog?.capture({
     distinctId: userId,
-    event: "space_invite_sent",
+    event: "space_member_invite",
     properties: {
       space_id: spaceId,
       role,
+      email,
     },
     groups: {
       space: spaceId,
@@ -205,7 +208,7 @@ export function trackSeatCountChanged({
 
   posthog?.capture({
     distinctId: userId,
-    event: "space_seat_count_changed",
+    event: "space_seat_count_change",
     properties: {
       space_id: spaceId,
       seat_count: seatCount,

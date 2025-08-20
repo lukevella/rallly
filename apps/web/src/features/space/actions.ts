@@ -8,6 +8,7 @@ import { waitUntil } from "@vercel/functions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import {
+  trackInviteSent,
   trackMemberJoin,
   trackMemberLeaveSpace,
   trackMemberRemoved,
@@ -248,29 +249,34 @@ export const inviteMemberAction = spaceActionClient
     }
 
     try {
-      await prisma.$transaction(async (tx) => {
-        const invite = await tx.spaceMemberInvite.create({
-          data: {
-            spaceId: ctx.space.id,
-            email: parsedInput.email,
-            role: toDBRole(parsedInput.role),
-            inviterId: ctx.user.id,
-          },
-        });
+      const invite = await prisma.spaceMemberInvite.create({
+        data: {
+          spaceId: ctx.space.id,
+          email: parsedInput.email,
+          role: toDBRole(parsedInput.role),
+          inviterId: ctx.user.id,
+        },
+      });
 
-        const emailClient = getEmailClient(
-          existingUser?.locale ?? ctx.user.locale,
-        );
+      const emailClient = getEmailClient(
+        existingUser?.locale ?? ctx.user.locale,
+      );
 
-        await emailClient.sendTemplate("SpaceInviteEmail", {
-          to: parsedInput.email,
-          props: {
-            spaceName: ctx.space.name,
-            inviterName: ctx.user.name,
-            spaceRole: parsedInput.role,
-            inviteUrl: absoluteUrl(`/accept-invite/${invite.id}`),
-          },
-        });
+      await emailClient.sendTemplate("SpaceInviteEmail", {
+        to: parsedInput.email,
+        props: {
+          spaceName: ctx.space.name,
+          inviterName: ctx.user.name,
+          spaceRole: parsedInput.role,
+          inviteUrl: absoluteUrl(`/accept-invite/${invite.id}`),
+        },
+      });
+
+      trackInviteSent({
+        spaceId: ctx.space.id,
+        userId: ctx.user.id,
+        role: parsedInput.role,
+        email: parsedInput.email,
       });
 
       return {
