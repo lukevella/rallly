@@ -66,5 +66,16 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
         tier: isActive ? "pro" : "hobby",
       },
     },
+    groups: {
+      space: res.data.spaceId,
+    },
+  });
+
+  posthog?.groupIdentify({
+    groupType: "space",
+    groupKey: res.data.spaceId,
+    properties: {
+      seat_count: quantity,
+    },
   });
 }
