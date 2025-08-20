@@ -1,5 +1,5 @@
 import { posthog } from "@rallly/posthog/server";
-import { toCamelCaseKeys } from "es-toolkit";
+import { toSnakeCaseKeys } from "es-toolkit";
 import type { SpaceTier } from "@/features/space/schema";
 
 export function updateSpaceGroup({
@@ -19,7 +19,7 @@ export function updateSpaceGroup({
   posthog?.groupIdentify({
     groupType: "space",
     groupKey: spaceId,
-    properties: toCamelCaseKeys(properties),
+    properties: toSnakeCaseKeys(properties),
   });
 }
 
