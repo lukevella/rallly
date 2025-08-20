@@ -9,6 +9,7 @@ import { waitUntil } from "@vercel/functions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getMember, getSpaceSeatCount } from "@/features/space/data";
+import { createSpace } from "@/features/space/mutations";
 import { memberRoleSchema } from "@/features/space/schema";
 import { getTotalSeatsForSpace, toDBRole } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
@@ -78,29 +79,9 @@ export const createSpaceAction = authActionClient
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
-    const space = await prisma.space.create({
-      data: {
-        name: parsedInput.name,
-        ownerId: ctx.user.id,
-        members: {
-          create: {
-            userId: ctx.user.id,
-            role: "ADMIN",
-            lastSelectedAt: new Date(),
-          },
-        },
-      },
-    });
-
-    posthog?.groupIdentify({
-      groupType: "space",
-      groupKey: space.id,
-      properties: {
-        name: space.name,
-        member_count: 1,
-        seat_count: 1,
-        tier: "hobby",
-      },
+    await createSpace({
+      name: parsedInput.name,
+      ownerId: ctx.user.id,
     });
   });
 
