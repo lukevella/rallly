@@ -3,6 +3,7 @@
 import { subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
+import { posthog } from "@rallly/posthog/server";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { waitUntil } from "@vercel/functions";
 import { revalidatePath } from "next/cache";
@@ -77,7 +78,7 @@ export const createSpaceAction = authActionClient
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
-    await prisma.space.create({
+    const space = await prisma.space.create({
       data: {
         name: parsedInput.name,
         ownerId: ctx.user.id,
@@ -88,6 +89,17 @@ export const createSpaceAction = authActionClient
             lastSelectedAt: new Date(),
           },
         },
+      },
+    });
+
+    posthog?.groupIdentify({
+      groupType: "space",
+      groupKey: space.id,
+      properties: {
+        name: space.name,
+        member_count: 1,
+        seat_count: 1,
+        tier: "hobby",
       },
     });
   });
@@ -137,6 +149,15 @@ export const deleteSpaceAction = spaceActionClient
     await prisma.space.delete({
       where: {
         id: parsedInput.spaceId,
+      },
+    });
+
+    posthog?.groupIdentify({
+      groupType: "space",
+      groupKey: space.id,
+      properties: {
+        deleted: true,
+        deleted_at: new Date(),
       },
     });
 
@@ -298,7 +319,7 @@ export const acceptInviteAction = authActionClient
       });
     }
 
-    await prisma.$transaction(async (tx) => {
+    const { memberCount } = await prisma.$transaction(async (tx) => {
       // Check seat availability before accepting the invite
       const [usedSeats, totalSeats] = await Promise.all([
         tx.spaceMember.count({ where: { spaceId: parsedInput.spaceId } }),
@@ -326,6 +347,8 @@ export const acceptInviteAction = authActionClient
           id: spaceMemberInvite.id,
         },
       });
+
+      return { memberCount: usedSeats + 1 };
     });
 
     try {
@@ -336,6 +359,14 @@ export const acceptInviteAction = authActionClient
     } catch {
       console.warn("Failed to update user's active space");
     }
+
+    posthog?.groupIdentify({
+      groupType: "space",
+      groupKey: parsedInput.spaceId,
+      properties: {
+        member_count: memberCount,
+      },
+    });
   });
 
 export const removeMemberAction = spaceActionClient
@@ -365,13 +396,28 @@ export const removeMemberAction = spaceActionClient
       });
     }
 
-    await prisma.$transaction(async (tx) => {
-      await tx.spaceMember.delete({
-        where: {
-          id: parsedInput.memberId,
-        },
-      });
+    const deletedMember = await prisma.spaceMember.delete({
+      where: {
+        id: parsedInput.memberId,
+      },
     });
+
+    waitUntil(
+      (async () => {
+        const memberCount = await prisma.spaceMember.count({
+          where: {
+            spaceId: member.spaceId,
+          },
+        });
+        posthog?.groupIdentify({
+          groupKey: deletedMember.spaceId,
+          groupType: "space",
+          properties: {
+            member_count: memberCount,
+          },
+        });
+      })(),
+    );
   });
 
 export const changeMemberRoleAction = spaceActionClient
@@ -494,6 +540,14 @@ export const updateSpaceAction = spaceActionClient
     if (oldImage && parsedInput.image && oldImage !== parsedInput.image) {
       await deleteImageFromS3(oldImage);
     }
+
+    posthog?.groupIdentify({
+      groupKey: ctx.space.id,
+      groupType: "space",
+      properties: {
+        name: parsedInput.name,
+      },
+    });
   });
 
 export const getSpaceImageUploadUrlAction = spaceActionClient
@@ -688,6 +742,24 @@ export const leaveSpaceFromAccountAction = authActionClient
         },
       });
     });
+
+    waitUntil(
+      (async () => {
+        const memberCount = await prisma.spaceMember.count({
+          where: {
+            spaceId: parsedInput.spaceId,
+          },
+        });
+
+        posthog?.groupIdentify({
+          groupKey: parsedInput.spaceId,
+          groupType: "space",
+          properties: {
+            member_count: memberCount,
+          },
+        });
+      })(),
+    );
   });
 
 export const leaveSpaceAction = spaceActionClient
@@ -758,4 +830,22 @@ export const leaveSpaceAction = spaceActionClient
         },
       });
     });
+
+    waitUntil(
+      (async () => {
+        const memberCount = await prisma.spaceMember.count({
+          where: {
+            spaceId: ctx.space.id,
+          },
+        });
+
+        posthog?.groupIdentify({
+          groupKey: ctx.space.id,
+          groupType: "space",
+          properties: {
+            member_count: memberCount,
+          },
+        });
+      })(),
+    );
   });

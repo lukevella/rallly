@@ -48,6 +48,7 @@ export type PollEvent =
 // Poll events
 export interface PollCreateEvent extends BaseEventData {
   type: "poll_create";
+  spaceId?: string;
   properties: {
     title: string;
     optionCount: number;

@@ -1,5 +1,6 @@
 import type { TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { posthog } from "@rallly/posthog/server";
 
 export async function createUser({
   name,
@@ -20,7 +21,7 @@ export async function createUser({
   locale?: string;
   weekStart?: number;
 }) {
-  return await prisma.$transaction(async (tx) => {
+  const { user, space } = await prisma.$transaction(async (tx) => {
     const user = await tx.user.create({
       data: {
         name,
@@ -51,8 +52,21 @@ export async function createUser({
       },
     });
 
-    return user;
+    return { user, space };
   });
+
+  posthog?.groupIdentify({
+    groupType: "space",
+    groupKey: space.id,
+    properties: {
+      name: space.name,
+      member_count: 1,
+      seat_count: 1,
+      tier: "hobby",
+    },
+  });
+
+  return user;
 }
 
 export async function setActiveSpace({
