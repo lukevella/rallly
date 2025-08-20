@@ -1,4 +1,27 @@
 import { posthog } from "@rallly/posthog/server";
+import { toCamelCaseKeys } from "es-toolkit";
+import type { SpaceTier } from "@/features/space/schema";
+
+export function updateSpaceGroup({
+  spaceId,
+  properties,
+}: {
+  spaceId: string;
+  properties: {
+    seatCount?: number;
+    memberCount?: number;
+    tier?: SpaceTier;
+    name?: string;
+    deleted?: boolean;
+    deletedAt?: Date;
+  };
+}) {
+  posthog?.groupIdentify({
+    groupType: "space",
+    groupKey: spaceId,
+    properties: toCamelCaseKeys(properties),
+  });
+}
 
 export function trackSpaceCreated({
   space,
@@ -12,13 +35,12 @@ export function trackSpaceCreated({
 }): void {
   if (!posthog) return;
 
-  posthog.groupIdentify({
-    groupType: "space",
-    groupKey: space.id,
+  updateSpaceGroup({
+    spaceId: space.id,
     properties: {
       name: space.name,
-      member_count: 1,
-      seat_count: 1,
+      memberCount: 1,
+      seatCount: 1,
       tier: "hobby",
     },
   });
@@ -47,9 +69,8 @@ export function trackSpaceUpdated({
 }): void {
   if (!posthog) return;
 
-  posthog.groupIdentify({
-    groupType: "space",
-    groupKey: spaceId,
+  updateSpaceGroup({
+    spaceId,
     properties: {
       name,
     },
@@ -77,12 +98,11 @@ export function trackSpaceDeleted({
 }): void {
   if (!posthog) return;
 
-  posthog.groupIdentify({
-    groupType: "space",
-    groupKey: spaceId,
+  updateSpaceGroup({
+    spaceId,
     properties: {
       deleted: true,
-      deleted_at: new Date(),
+      deletedAt: new Date(),
     },
   });
 
@@ -109,11 +129,10 @@ export function trackMemberJoin({
 }): void {
   if (!posthog) return;
 
-  posthog.groupIdentify({
-    groupType: "space",
-    groupKey: spaceId,
+  updateSpaceGroup({
+    spaceId,
     properties: {
-      member_count: memberCount,
+      memberCount,
     },
   });
 
@@ -141,11 +160,10 @@ export function trackMemberRemoved({
 }): void {
   if (!posthog) return;
 
-  posthog.groupIdentify({
-    groupType: "space",
-    groupKey: spaceId,
+  updateSpaceGroup({
+    spaceId,
     properties: {
-      member_count: memberCount,
+      memberCount,
     },
   });
 
@@ -189,36 +207,6 @@ export function trackInviteSent({
   });
 }
 
-export function trackSeatCountChanged({
-  userId,
-  spaceId,
-  seatCount,
-}: {
-  userId: string;
-  spaceId: string;
-  seatCount: number;
-}): void {
-  posthog?.groupIdentify({
-    groupType: "space",
-    groupKey: spaceId,
-    properties: {
-      seat_count: seatCount,
-    },
-  });
-
-  posthog?.capture({
-    distinctId: userId,
-    event: "space_seat_count_change",
-    properties: {
-      space_id: spaceId,
-      seat_count: seatCount,
-    },
-    groups: {
-      space: spaceId,
-    },
-  });
-}
-
 export function trackMemberLeaveSpace({
   spaceId,
   memberCount,
@@ -230,11 +218,10 @@ export function trackMemberLeaveSpace({
 }): void {
   if (!posthog) return;
 
-  posthog.groupIdentify({
-    groupType: "space",
-    groupKey: spaceId,
+  updateSpaceGroup({
+    spaceId,
     properties: {
-      member_count: memberCount,
+      memberCount,
     },
   });
 
@@ -262,9 +249,8 @@ export function trackSetActiveSpace({
 }) {
   if (!posthog) return;
 
-  posthog.groupIdentify({
-    groupType: "space",
-    groupKey: spaceId,
+  updateSpaceGroup({
+    spaceId,
     properties: {
       name,
     },
