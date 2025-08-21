@@ -18,7 +18,6 @@ import {
   LifeBuoyIcon,
   ListIcon,
   LogOutIcon,
-  MegaphoneIcon,
   Settings2Icon,
   UserIcon,
 } from "lucide-react";
@@ -27,7 +26,6 @@ import { signOut } from "next-auth/react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
-import { isFeedbackEnabled } from "@/utils/constants";
 import { useAuthenticatedUser } from "./user-provider";
 
 export const UserDropdown = ({ className }: { className?: string }) => {
@@ -120,18 +118,6 @@ export const UserDropdown = ({ className }: { className?: string }) => {
             </Link>
           </DropdownMenuItem>
         </IfSelfHosted>
-        {isFeedbackEnabled ? (
-          <DropdownMenuItem asChild={true}>
-            <Link
-              target="_blank"
-              href="https://feedback.rallly.co"
-              className="flex items-center gap-x-2"
-            >
-              <MegaphoneIcon className="size-4 text-muted-foreground" />
-              <Trans i18nKey="feedback" defaults="Feedback" />
-            </Link>
-          </DropdownMenuItem>
-        ) : null}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={async () => {

@@ -21,6 +21,12 @@ export const submitFeedbackAction = authActionClient
         subject: "Feedback",
         text: `User: ${ctx.user.name} (${ctx.user.email})\n\n${content}`,
       });
+
+      ctx.posthog?.capture({
+        event: "feedback_send",
+        distinctId: ctx.user.id,
+      });
+
       return {
         success: true,
       };

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
 import {
   DropdownMenu,
@@ -12,10 +13,11 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
-import { CirclePlusIcon } from "lucide-react";
+import { ChevronsUpDownIcon, CirclePlusIcon } from "lucide-react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/components/trans";
 import { setActiveSpaceAction } from "@/features/space/actions";
+import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { CreateSpaceDialog } from "./create-space-dialog";
 import { SpaceIcon } from "./space-icon";
@@ -23,7 +25,6 @@ import { SpaceIcon } from "./space-icon";
 export function SpaceDropdown({
   spaces,
   activeSpaceId,
-  children,
 }: {
   spaces: {
     id: string;
@@ -32,11 +33,11 @@ export function SpaceDropdown({
     image?: string;
   }[];
   activeSpaceId: string;
-  children?: React.ReactNode;
 }) {
   const setActiveSpace = useSafeAction(setActiveSpaceAction);
   const newSpaceDialog = useDialog();
   const activeSpace = spaces.find((space) => space.id === activeSpaceId);
+
   if (!activeSpace) {
     return null;
   }
@@ -44,8 +45,21 @@ export function SpaceDropdown({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild={Boolean(children)}>
-          {children}
+        <DropdownMenuTrigger asChild={true}>
+          <Button className="flex h-auto w-full p-2" variant="ghost">
+            <SpaceIcon src={activeSpace.image} name={activeSpace.name} />
+            <div className="min-w-0 flex-1 px-0.5 text-left">
+              <div className="truncate font-medium text-sm">
+                {activeSpace.name}
+              </div>
+              <div className="text-muted-foreground text-xs">
+                <SpaceTierLabel tier={activeSpace.tier} />
+              </div>
+            </div>
+            <Icon>
+              <ChevronsUpDownIcon />
+            </Icon>
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           className="min-w-[var(--radix-dropdown-menu-trigger-width)]"
