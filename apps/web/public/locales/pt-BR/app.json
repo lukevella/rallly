@@ -481,5 +481,22 @@
   "mySpaces": "Meus Espaços",
   "spacesDescription": "Gerencie os espaços aos quais você pertence",
   "noSpaces": "Nenhum espaço encontrado",
-  "noSpacesDescription": "Você ainda não é membro de nenhum espaço"
+  "noSpacesDescription": "Você ainda não é membro de nenhum espaço",
+  "manageSeats": "Gerenciar Assentos",
+  "manageSeatsDescription": "Ajuste o número de assentos para seu espaço.",
+  "addSeats": "{count, plural, one {Adicionar # assento} other {Adicionar # assentos}}",
+  "removeSeats": "{count, plural, one {Remover # assento} other {Remover # assentos}}",
+  "noChanges": "Nenhuma alteração",
+  "totalSeats": "Total de Assentos",
+  "currentlyUsing": "Atualmente usando {usedSeats} de {currentSeats} assentos",
+  "decreaseSeats": "Diminuir assentos",
+  "increaseSeats": "Aumentar assentos",
+  "manageSubscription": "Gerenciar Inscrição",
+  "seatUsage": "{usedSeats} de {totalSeats} assentos usados",
+  "noSeatsAvailableAlertTitle": "Nenhum assento disponível",
+  "noSeatsAvailableAlertBillingDescription": "Aumente o número de assentos neste espaço na <a>página de cobrança</a>.",
+  "noSeatsAvailableAlertSelfHostedDescription": "Você precisará <a>atualizar</a> para aumentar o número de assentos neste espaço.",
+  "seatsUpdatedAlertTitle": "Assentos Atualizados",
+  "seatsUpdatedAlertDescription": "A alocação do seu assento foi atualizada com sucesso. As mudanças serão refletidas no seu próximo ciclo de cobrança.",
+  "memberCount": "{count, plural, =0 {Nenhum membro} one {1 membro} other {# membros}}"
 }

@@ -25,5 +25,15 @@
   "status": "状态",
   "when2MeetAlternative": "When2Meet 替代品",
   "meetingPoll": "会议投票",
-  "signUp": "注册"
+  "signUp": "注册",
+  "licensingThankYouTitle": "感谢您的购买！",
+  "licensingThankYouSubtitle": "您的 Rallly 自托管许可证已确认。我们很高兴您加入我们！",
+  "licensingThankYouLicense": "下一步",
+  "licensingThankYouLicenseEmailed": "您的许可证密钥已发送到您在结账时提供的电子邮件地址。请检查您的收件箱。",
+  "licensingThankYouNextStepsInstallation": "安装指南",
+  "licensingThankYouNextStepsApplyLicense": "如何应用您的许可证",
+  "licensingThankYouSupportPrompt": "需要帮助或有问题？请访问我们的<0>自托管文档</0>或<1>联系我们</1>。",
+  "licensingThankYouGoHomeLink": "返回首页",
+  "openSource": "我们是开源的！",
+  "starOnGitHub": "在 GitHub 上 Star"
 }

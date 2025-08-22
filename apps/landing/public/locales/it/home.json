@@ -1,6 +1,8 @@
 {
   "createPageLikeThis": "Crea una pagina come questa in pochi secondi!",
   "noLoginRequired": "Login non necessario",
+  "headline": "Trova il tempo migliore per incontrare",
+  "subheading": "Coordinare riunioni di gruppo senza lo scambio continuo di email",
   "pcmagQuote": "Imposta un sondaggio di pianificazione in pochissimo tempo",
   "hubspotQuote": "La soluzione più semplice per i sondaggi di fattibilità per gruppi numerosi",
   "goodfirmsQuote": "Unico nella sua semplicità, richiede un tempo d'interazione minimo",
@@ -37,6 +39,5 @@
   "meetingPoll": "Crea sondaggi di riunioni professionali con Rallly",
   "meetingPollDescription": "I sondaggi di riunione sono un ottimo modo per avere la disponibilità delle persone. Rallly ti permette di creare bellissimi sondaggi di riunione con facilità.",
   "meetingPollMetaTitle": "Sondaggio di Riunione",
-  "meetingPollMetaDescription": "Pianifica facilmente le riunioni con la nostra funzione di sondaggio, assicurando la disponibilità di tutte le persone.",
-  "quickCreateBlog": "Introduzione A Creazione Rapida"
+  "meetingPollMetaDescription": "Pianifica facilmente le riunioni con la nostra funzione di sondaggio, assicurando la disponibilità di tutte le persone."
 }
