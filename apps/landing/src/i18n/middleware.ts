@@ -67,5 +67,5 @@ export function i18nMiddleware(req: NextRequest) {
     return NextResponse.rewrite(newUrl, { request: { headers } });
   }
 
-  return NextResponse.next({ headers });
+  return NextResponse.next({ request: { headers } });
 }
