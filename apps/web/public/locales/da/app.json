@@ -497,5 +497,6 @@
   "noSeatsAvailableAlertBillingDescription": "Forøg antallet af pladser i dette rum fra <a>faktureringsside</a>.",
   "noSeatsAvailableAlertSelfHostedDescription": "Du skal <a>opgradere</a> for at øge antallet af pladser i dette rum.",
   "seatsUpdatedAlertTitle": "Sæder opdateret",
-  "seatsUpdatedAlertDescription": "Din pladstildeling er blevet opdateret. Ændringerne vil blive afspejlet i din næste faktureringsperiode."
+  "seatsUpdatedAlertDescription": "Din pladstildeling er blevet opdateret. Ændringerne vil blive afspejlet i din næste faktureringsperiode.",
+  "memberCount": "{count, plural, =0 {Ingen medlemmer} one {1 medlem} other {# medlemmer}}"
 }
