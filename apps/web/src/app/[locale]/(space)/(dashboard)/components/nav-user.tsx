@@ -14,7 +14,7 @@ import {
   ChevronDownIcon,
   LayersIcon,
   LogOutIcon,
-  SettingsIcon,
+  Settings2Icon,
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -72,7 +72,7 @@ export function NavUser({
           <DropdownMenuItem asChild>
             <Link href="/account/preferences">
               <Icon>
-                <SettingsIcon />
+                <Settings2Icon />
               </Icon>
               <Trans i18nKey="preferences" defaults="Preferences" />
             </Link>
