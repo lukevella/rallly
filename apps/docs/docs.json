@@ -1,0 +1,162 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Rallly",
+  "colors": {
+    "primary": "#4f39f6",
+    "light": "#F8FAFC",
+    "dark": "#4f39f6"
+  },
+  "favicon": "/favicon.png",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "faq"
+            ]
+          },
+          {
+            "group": "How it Works",
+            "pages": [
+              "workflow/create",
+              "workflow/invite",
+              "workflow/finalize"
+            ]
+          },
+          {
+            "group": "Spaces",
+            "pages": [
+              "spaces/introduction",
+              "spaces/managing-seats",
+              "spaces/members",
+              "spaces/billing"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guide/participant-guide"
+            ]
+          },
+          {
+            "group": "Contact",
+            "pages": [
+              "contact/support"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Self-Hosting",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "self-hosting/introduction",
+              {
+                "group": "Installation",
+                "icon": "server",
+                "pages": [
+                  "self-hosting/installation/docker"
+                ]
+              },
+              "self-hosting/licensing",
+              "self-hosting/configuration"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "self-hosting/control-panel"
+            ]
+          },
+          {
+            "group": "Misc",
+            "pages": [
+              "self-hosting/managed-hosting"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Contribute",
+        "groups": [
+          {
+            "group": "Contribute",
+            "pages": [
+              "contribute/introduction"
+            ]
+          },
+          {
+            "group": "How to Contribute",
+            "pages": [
+              "contribute/donations",
+              "contribute/translations",
+              "contribute/documentation"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://rallly.co"
+  },
+  "background": {
+    "color": {
+      "light": "#FFFFFF",
+      "dark": "#18181B"
+    }
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Contact",
+        "href": "https://support.rallly.co/contact/support"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://github.com/lukevella/rallly"
+    }
+  },
+  "footer": {
+    "socials": {
+      "twitter": "https://twitter.com/ralllyco",
+      "linkedin": "https://www.linkedin.com/company/rallly/",
+      "github": "https://github.com/lukevella/rallly",
+      "discord": "https://discord.com/invite/uzg4ZcHbuM",
+      "website": "https://rallly.co/"
+    }
+  },
+  "redirects": [
+    {
+      "source": "/administrators/creating-a-meeting-poll",
+      "destination": "/workflow/create"
+    },
+    {
+      "source": "/administrators/sharing-a-meeting-poll",
+      "destination": "/workflow/invite"
+    },
+    {
+      "source": "/participants/submitting-a-response",
+      "destination": "/guide/participant-guide"
+    },
+    {
+      "source": "/participants/editing-a-response",
+      "destination": "/guide/participant-guide"
+    },
+    {
+      "source": "/self-hosting/pricing",
+      "destination": "/self-hosting/licensing"
+    }
+  ]
+}
