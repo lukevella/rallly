@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
 import {
@@ -14,6 +15,7 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import { ChevronsUpDownIcon, CirclePlusIcon } from "lucide-react";
+import React from "react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/components/trans";
 import { setActiveSpaceAction } from "@/features/space/actions";
@@ -24,7 +26,7 @@ import { SpaceIcon } from "./space-icon";
 
 export function SpaceDropdown({
   spaces,
-  activeSpaceId,
+  initialSpaceId,
 }: {
   spaces: {
     id: string;
@@ -32,11 +34,14 @@ export function SpaceDropdown({
     tier: "hobby" | "pro";
     image?: string;
   }[];
-  activeSpaceId: string;
+  initialSpaceId: string;
 }) {
+  const [selectedSpaceId, setSelectedSpaceId] = React.useState(initialSpaceId);
+  const [isPending, startTransition] = React.useTransition();
+
   const setActiveSpace = useSafeAction(setActiveSpaceAction);
   const newSpaceDialog = useDialog();
-  const activeSpace = spaces.find((space) => space.id === activeSpaceId);
+  const activeSpace = spaces.find((space) => space.id === selectedSpaceId);
 
   if (!activeSpace) {
     return null;
@@ -46,7 +51,13 @@ export function SpaceDropdown({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild={true}>
-          <Button className="flex h-auto w-full p-2" variant="ghost">
+          <Button
+            className={cn("flex h-auto w-full p-2", {
+              "pointer-events-none animate-pulse":
+                setActiveSpace.isPending || isPending,
+            })}
+            variant="ghost"
+          >
             <SpaceIcon src={activeSpace.image} name={activeSpace.name} />
             <div className="min-w-0 flex-1 px-0.5 text-left">
               <div className="truncate font-medium text-sm">
@@ -69,10 +80,13 @@ export function SpaceDropdown({
             <Trans i18nKey="spaces" defaults="Spaces" />
           </DropdownMenuLabel>
           <DropdownMenuRadioGroup
-            value={activeSpaceId}
+            value={selectedSpaceId}
             onValueChange={(value) => {
-              if (value === activeSpaceId) return;
-              setActiveSpace.execute({ spaceId: value });
+              if (value === selectedSpaceId) return;
+              setSelectedSpaceId(value);
+              startTransition(() => {
+                setActiveSpace.execute({ spaceId: value });
+              });
             }}
           >
             {spaces.map((space) => (
@@ -95,7 +109,7 @@ export function SpaceDropdown({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {setActiveSpace.isExecuting ? <RouterLoadingIndicator /> : null}
+      {isPending ? <RouterLoadingIndicator /> : null}
       <CreateSpaceDialog {...newSpaceDialog.dialogProps} />
     </>
   );

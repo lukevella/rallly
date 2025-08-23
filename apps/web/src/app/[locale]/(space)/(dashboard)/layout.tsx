@@ -38,7 +38,7 @@ export default async function Layout({
       <CommandMenu />
       <Sidebar variant="inset">
         <SidebarHeader>
-          <SpaceDropdown spaces={spaces} activeSpaceId={activeSpace.id} />
+          <SpaceDropdown spaces={spaces} initialSpaceId={activeSpace.id} />
         </SidebarHeader>
         <SidebarContent>
           <SpaceSidebarMenu />
