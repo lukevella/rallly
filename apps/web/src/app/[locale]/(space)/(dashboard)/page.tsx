@@ -93,7 +93,7 @@ export default async function Page() {
         </div>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
-            <Trans i18nKey="homeNavTitle" defaults="Navigation" />
+            <Trans i18nKey="content" defaults="Content" />
           </h2>
           <TileGrid>
             <Tile asChild>
@@ -131,14 +131,14 @@ export default async function Page() {
         </div>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
-            <Trans i18nKey="settings" defaults="Settings" />
+            <Trans i18nKey="manage" defaults="Manage" />
           </h2>
           <TileGrid>
             <Tile asChild>
               <Link href="/settings/general">
                 <SettingsPageIcon />
                 <TileTitle>
-                  <Trans i18nKey="general" defaults="General" />
+                  <Trans i18nKey="settings" defaults="Settings" />
                 </TileTitle>
               </Link>
             </Tile>
