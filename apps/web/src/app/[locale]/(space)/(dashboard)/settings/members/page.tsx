@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
+import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Badge } from "@rallly/ui/badge";
 import { InfoIcon } from "lucide-react";
 import type { Metadata } from "next";
@@ -138,12 +138,6 @@ export default async function MembersSettingsPage() {
           {totalSeats - usedSeats <= 0 ? (
             <Alert variant="info">
               <InfoIcon />
-              <AlertTitle>
-                <Trans
-                  i18nKey="noSeatsAvailableAlertTitle"
-                  defaults="No Seats Available"
-                />
-              </AlertTitle>
               <AlertDescription>
                 <IfCloudHosted>
                   <p>
