@@ -139,8 +139,6 @@ export const auth = router({
         ownerId: user.id,
       });
 
-      trackSpaceCreated({ space, userId: user.id });
-
       if (ctx.user?.isGuest) {
         try {
           await mergeGuestsIntoUser(user.id, [ctx.user.id]);
@@ -165,6 +163,8 @@ export const auth = router({
           },
         },
       });
+
+      trackSpaceCreated({ space, userId: user.id });
 
       return {
         ok: true,
