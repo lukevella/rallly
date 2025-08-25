@@ -497,5 +497,6 @@
   "noSeatsAvailableAlertBillingDescription": "Aumenta el número de asientos en este espacio desde la <a>página de facturación</a>.",
   "noSeatsAvailableAlertSelfHostedDescription": "Necesitarás <a>mejorar la cuenta</a> para aumentar el número de asientos en este espacio.",
   "seatsUpdatedAlertTitle": "Asientos actualizados",
-  "seatsUpdatedAlertDescription": "Tu asignación de asientos ha sido actualizada con éxito. Los cambios se reflejarán en tu próximo ciclo de facturación."
+  "seatsUpdatedAlertDescription": "Tu asignación de asientos ha sido actualizada con éxito. Los cambios se reflejarán en tu próximo ciclo de facturación.",
+  "memberCount": "{count, plural, =0 {Sin miembros} one {1 miembro} other {# miembros}}"
 }
