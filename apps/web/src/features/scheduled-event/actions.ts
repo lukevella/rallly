@@ -5,6 +5,7 @@ import { z } from "zod";
 import { AppError } from "@/lib/errors";
 import { spaceActionClient } from "@/lib/safe-action/server";
 import { getEmailClient } from "@/utils/emails";
+import { createIcsEvent } from "@/utils/ics";
 import { formatEventDateTime } from "./utils";
 
 export const cancelEventAction = spaceActionClient
@@ -37,14 +38,56 @@ export const cancelEventAction = spaceActionClient
       });
     }
 
-    await prisma.scheduledEvent.update({
+    const updatedEvent = await prisma.scheduledEvent.update({
       where: {
         id: parsedInput.eventId,
       },
       data: {
         status: "canceled",
+        sequence: {
+          increment: 1,
+        },
+      },
+      include: {
+        invites: true,
       },
     });
+
+    const cancelEvent = createIcsEvent({
+      uid: updatedEvent.uid,
+      sequence: updatedEvent.sequence,
+      title: updatedEvent.title,
+      description: updatedEvent.description ?? undefined,
+      location: updatedEvent.location ?? undefined,
+      start: updatedEvent.start,
+      end: updatedEvent.end,
+      allDay: updatedEvent.allDay,
+      timeZone: updatedEvent.timeZone ?? undefined,
+      organizer: {
+        name: ctx.user.name,
+        email: ctx.user.email,
+      },
+      attendees: updatedEvent.invites.map((invite) => ({
+        name: invite.inviteeName,
+        email: invite.inviteeEmail,
+      })),
+      method: "cancel",
+      status: "CANCELLED",
+    });
+
+    if (cancelEvent.error) {
+      throw new AppError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: `Failed to generate cancellation ICS: ${cancelEvent.error.message}`,
+      });
+    }
+
+    if (!cancelEvent.value) {
+      throw new AppError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to generate cancellation ICS",
+      });
+    }
 
     // notify attendees
     const attendees = await prisma.scheduledEventInvite.findMany({
@@ -78,6 +121,11 @@ export const cancelEventAction = spaceActionClient
             dow,
             date,
             time,
+          },
+          icalEvent: {
+            filename: "cancel.ics",
+            method: "cancel",
+            content: cancelEvent.value,
           },
         });
       }

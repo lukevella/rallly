@@ -18,6 +18,7 @@ type SendEmailOptions<T extends TemplateName> = {
   };
   props: TemplateProps<T>;
   attachments?: Mail.Options["attachments"];
+  icalEvent?: Mail.Options["icalEvent"];
 };
 
 type EmailProviderConfig =

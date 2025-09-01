@@ -30,6 +30,8 @@ model ScheduledEvent {
   end         DateTime
   allDay      Boolean              @default(false) @map("all_day")
   deletedAt   DateTime?            @map("deleted_at")
+  sequence    Int                  @default(0)
+  uid         String               @unique
 
   user             User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   space            Space                  @relation(fields: [spaceId], references: [id], onDelete: Cascade)
