@@ -117,6 +117,7 @@ export class EmailClient {
         html,
         text,
         attachments: options.attachments,
+        icalEvent: options.icalEvent,
       });
     } catch (e) {
       const enhancedError = new Error(
