@@ -847,7 +847,10 @@ export const polls = router({
             id: eventId,
             uid: `${eventId}@rallly.co`,
             start: eventStart.toDate(),
-            end: eventStart.add(option.duration, "minute").toDate(),
+            end:
+              option.duration > 0
+                ? eventStart.add(option.duration, "minute").toDate()
+                : eventStart.add(1, "day").toDate(),
             title: poll.title,
             location: poll.location,
             timeZone: poll.timeZone,
