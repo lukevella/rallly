@@ -818,19 +818,17 @@ export const polls = router({
           email: a.email as string,
         }));
 
-      const eventEnd =
-        option.duration > 0
-          ? eventStart.add(option.duration, "minutes")
-          : eventStart.add(1, "day");
-
       const event = createIcsEvent({
         uid,
         sequence: 0,
         title: poll.title,
         location: poll.location ?? undefined,
         description: poll.description ?? undefined,
-        start: eventStart.toDate(),
-        end: eventEnd.toDate(),
+        start: option.startTime,
+        end:
+          option.duration > 0
+            ? dayjs(option.startTime).add(option.duration, "minute").toDate()
+            : dayjs(option.startTime).add(1, "day").toDate(),
         allDay: option.duration === 0,
         timeZone: poll.timeZone ?? undefined,
         organizer: {

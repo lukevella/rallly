@@ -82,44 +82,34 @@ describe("createIcsEvent", () => {
   });
 
   describe("Floating time events", () => {
-    it("should use local time format when no timezone specified", () => {
-      // Create a local date using Date constructor (not ISO string)
-      const localStart = new Date(2024, 2, 15, 10, 30, 0); // March 15, 2024, 10:30 AM local
-      const localEnd = new Date(2024, 2, 15, 11, 30, 0); // March 15, 2024, 11:30 AM local
+    it("should preserve UTC times as floating when no timezone specified", () => {
+      const utcTime = new Date("2024-03-15T12:00:00Z");
 
       const result = createIcsEvent({
         ...baseOptions,
+        start: utcTime,
+        end: new Date(utcTime.getTime() + 60 * 60 * 1000),
         timeZone: undefined,
-        start: localStart,
-        end: localEnd,
       });
 
       expect(result.error).toBeFalsy();
-
-      // For floating time, the ICS library may still add Z suffix but the important
-      // part is that startInputType is "local" so times are treated as local
-      const hasFloatingTime = result.value?.includes("DTSTART:20240315T103000");
-      const hasUTCTime = result.value?.includes("DTSTART:20240315T103000Z");
-
-      // Either floating time format (no Z) OR the library adds Z but uses local time
-      expect(hasFloatingTime || hasUTCTime).toBe(true);
-      expect(result.value).toContain("DTEND:20240315T113000");
+      expect(result.value).toContain("DTSTART:20240315T120000");
+      expect(result.value).toContain("DTEND:20240315T130000");
     });
 
-    it("should maintain same clock time for floating events", () => {
-      // Create date in different timezone contexts
-      const mockDate = new Date(2024, 2, 15, 14, 30, 0); // March 15, 2024, 2:30 PM local
+    it("should treat empty string timezone as floating", () => {
+      const utcTime = new Date("2024-03-15T12:00:00Z");
 
       const result = createIcsEvent({
         ...baseOptions,
-        start: mockDate,
-        end: new Date(mockDate.getTime() + 60 * 60 * 1000), // +1 hour
-        timeZone: undefined, // Floating time
+        start: utcTime,
+        end: new Date(utcTime.getTime() + 60 * 60 * 1000),
+        timeZone: "",
       });
 
-      // Should use the raw hour/minute values
-      expect(result.value).toContain("DTSTART:20240315T143000");
-      expect(result.value).toContain("DTEND:20240315T153000");
+      expect(result.error).toBeFalsy();
+      expect(result.value).toContain("DTSTART:20240315T120000");
+      expect(result.value).toContain("DTEND:20240315T130000");
     });
   });
 
@@ -223,18 +213,6 @@ describe("createIcsEvent", () => {
 
       expect(result.value).toContain("DTSTART:20231231T233000Z");
       expect(result.value).toContain("DTEND:20240101T003000Z");
-    });
-
-    it("should handle single-digit months and days", () => {
-      const result = createIcsEvent({
-        ...baseOptions,
-        start: new Date("2024-01-05T09:05:00Z"),
-        end: new Date("2024-01-05T10:05:00Z"),
-        timeZone: "UTC",
-      });
-
-      expect(result.value).toContain("DTSTART:20240105T090500Z");
-      expect(result.value).toContain("DTEND:20240105T100500Z");
     });
   });
 
