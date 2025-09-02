@@ -63,10 +63,14 @@ export function createIcsEvent(options: CreateIcsEventOptions): {
       attendees,
       method,
       status,
-      start: [start.getFullYear(), start.getMonth() + 1, start.getDate()],
-      end: [end.getFullYear(), end.getMonth() + 1, end.getDate()],
+      start: [
+        start.getUTCFullYear(),
+        start.getUTCMonth() + 1,
+        start.getUTCDate(),
+      ],
+      end: [end.getUTCFullYear(), end.getUTCMonth() + 1, end.getUTCDate()],
     };
-  } else if (timeZone) {
+  } else {
     // Timezone-aware events: convert to UTC
     eventAttributes = {
       uid,
@@ -93,36 +97,7 @@ export function createIcsEvent(options: CreateIcsEventOptions): {
         end.getUTCHours(),
         end.getUTCMinutes(),
       ],
-      startInputType: "utc",
-    };
-  } else {
-    // Floating time events: use local time values
-    eventAttributes = {
-      uid,
-      productId,
-      sequence,
-      title,
-      description,
-      location,
-      organizer,
-      attendees,
-      method,
-      status,
-      start: [
-        start.getFullYear(),
-        start.getMonth() + 1,
-        start.getDate(),
-        start.getHours(),
-        start.getMinutes(),
-      ],
-      end: [
-        end.getFullYear(),
-        end.getMonth() + 1,
-        end.getDate(),
-        end.getHours(),
-        end.getMinutes(),
-      ],
-      startInputType: "local",
+      startInputType: timeZone ? "utc" : "local",
     };
   }
 
