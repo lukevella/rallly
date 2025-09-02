@@ -69,6 +69,12 @@ export class AnalyticsService {
           this.setPoll(event.pollId, toSnakeCaseKeys(event.properties));
           break;
 
+        case "poll_response_submit":
+          this.setPoll(event.pollId, {
+            participant_count: event.properties.totalResponses,
+          });
+          break;
+
         default:
           break;
       }
