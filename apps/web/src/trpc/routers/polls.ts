@@ -804,10 +804,43 @@ export const polls = router({
         });
       }
 
-      const scheduledEvent = await prisma.$transaction(async (tx) => {
-        // Pre-generate ID for UID creation
-        const eventId = nanoid();
+      const eventId = nanoid();
+      const uid = `${eventId}@rallly.co`;
 
+      const attendees = poll.participants.filter((p) =>
+        p.votes.some((v) => v.optionId === input.optionId && v.type !== "no"),
+      );
+
+      const icsAttendees = attendees
+        .filter((a) => !!a.email) // remove participants without email
+        .map((a) => ({
+          name: a.name,
+          email: a.email as string,
+        }));
+
+      const eventEnd =
+        option.duration > 0
+          ? eventStart.add(option.duration, "minutes")
+          : eventStart.add(1, "day");
+
+      const event = createIcsEvent({
+        uid,
+        sequence: 0,
+        title: poll.title,
+        location: poll.location ?? undefined,
+        description: poll.description ?? undefined,
+        start: eventStart.toDate(),
+        end: eventEnd.toDate(),
+        allDay: option.duration === 0,
+        timeZone: poll.timeZone ?? undefined,
+        organizer: {
+          name: poll.user.name,
+          email: poll.user.email,
+        },
+        attendees: icsAttendees,
+      });
+
+      const scheduledEvent = await prisma.$transaction(async (tx) => {
         // create scheduled event
         const event = await tx.scheduledEvent.create({
           data: {
@@ -859,39 +892,6 @@ export const polls = router({
         });
 
         return event;
-      });
-
-      const attendees = poll.participants.filter((p) =>
-        p.votes.some((v) => v.optionId === input.optionId && v.type !== "no"),
-      );
-
-      const icsAttendees = attendees
-        .filter((a) => !!a.email) // remove participants without email
-        .map((a) => ({
-          name: a.name,
-          email: a.email as string,
-        }));
-
-      const eventEnd =
-        option.duration > 0
-          ? eventStart.add(option.duration, "minutes")
-          : eventStart.add(1, "day");
-
-      const event = createIcsEvent({
-        uid: scheduledEvent.uid,
-        sequence: scheduledEvent.sequence,
-        title: poll.title,
-        location: poll.location ?? undefined,
-        description: poll.description ?? undefined,
-        start: eventStart.toDate(),
-        end: eventEnd.toDate(),
-        allDay: option.duration === 0,
-        timeZone: poll.timeZone ?? undefined,
-        organizer: {
-          name: poll.user.name,
-          email: poll.user.email,
-        },
-        attendees: icsAttendees,
       });
 
       if (event.error) {
