@@ -18,6 +18,7 @@ type SendEmailOptions<T extends TemplateName> = {
   };
   props: TemplateProps<T>;
   attachments?: Mail.Options["attachments"];
+  icalEvent?: Mail.Options["icalEvent"];
 };
 
 type EmailProviderConfig =
@@ -116,6 +117,7 @@ export class EmailClient {
         html,
         text,
         attachments: options.attachments,
+        icalEvent: options.icalEvent,
       });
     } catch (e) {
       const enhancedError = new Error(

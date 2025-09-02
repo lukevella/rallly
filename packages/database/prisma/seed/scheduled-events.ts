@@ -109,6 +109,7 @@ async function createScheduledEventForUser({
   await prisma.scheduledEvent.create({
     data: {
       title,
+      uid: faker.datatype.uuid(),
       description,
       start: startTime, // Use correct model field name 'start'
       end: endTime, // Use correct model field name 'end'

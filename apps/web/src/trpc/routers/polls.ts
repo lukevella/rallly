@@ -5,7 +5,6 @@ import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
-import * as ics from "ics";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getCurrentUserSpace } from "@/auth/data";
@@ -14,6 +13,7 @@ import { getPolls } from "@/features/poll/data";
 import { canUserManagePoll } from "@/features/poll/helpers";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getEmailClient } from "@/utils/emails";
+import { createIcsEvent } from "@/utils/ics";
 import {
   createRateLimitMiddleware,
   possiblyPublicProcedure,
@@ -804,10 +804,48 @@ export const polls = router({
         });
       }
 
+      const eventId = nanoid();
+      const uid = `${eventId}@rallly.co`;
+
+      const attendees = poll.participants.filter((p) =>
+        p.votes.some((v) => v.optionId === input.optionId && v.type !== "no"),
+      );
+
+      const icsAttendees = attendees
+        .filter((a) => !!a.email) // remove participants without email
+        .map((a) => ({
+          name: a.name,
+          email: a.email as string,
+        }));
+
+      const eventEnd =
+        option.duration > 0
+          ? eventStart.add(option.duration, "minutes")
+          : eventStart.add(1, "day");
+
+      const event = createIcsEvent({
+        uid,
+        sequence: 0,
+        title: poll.title,
+        location: poll.location ?? undefined,
+        description: poll.description ?? undefined,
+        start: eventStart.toDate(),
+        end: eventEnd.toDate(),
+        allDay: option.duration === 0,
+        timeZone: poll.timeZone ?? undefined,
+        organizer: {
+          name: poll.user.name,
+          email: poll.user.email,
+        },
+        attendees: icsAttendees,
+      });
+
       const scheduledEvent = await prisma.$transaction(async (tx) => {
         // create scheduled event
         const event = await tx.scheduledEvent.create({
           data: {
+            id: eventId,
+            uid: `${eventId}@rallly.co`,
             start: eventStart.toDate(),
             end: eventStart.add(option.duration, "minute").toDate(),
             title: poll.title,
@@ -854,56 +892,6 @@ export const polls = router({
         });
 
         return event;
-      });
-
-      const attendees = poll.participants.filter((p) =>
-        p.votes.some((v) => v.optionId === input.optionId && v.type !== "no"),
-      );
-
-      const icsAttendees = attendees
-        .filter((a) => !!a.email) // remove participants without email
-        .map((a) => ({
-          name: a.name,
-          email: a.email ?? undefined,
-        }));
-
-      const utcStart = eventStart.utc();
-      const eventEnd =
-        option.duration > 0
-          ? eventStart.add(option.duration, "minutes")
-          : eventStart.add(1, "day");
-
-      const event = ics.createEvent({
-        uid: scheduledEvent.id,
-        sequence: 0, // TODO: Get sequence from database
-        title: poll.title,
-        location: poll.location ?? undefined,
-        description: poll.description ?? undefined,
-        organizer: {
-          name: poll.user.name,
-          email: poll.user.email,
-        },
-        attendees: icsAttendees,
-        ...(option.duration > 0
-          ? {
-              start: [
-                utcStart.year(),
-                utcStart.month() + 1,
-                utcStart.date(),
-                utcStart.hour(),
-                utcStart.minute(),
-              ],
-              startInputType: poll.timeZone ? "utc" : "local",
-              duration: { minutes: option.duration },
-            }
-          : {
-              start: [
-                eventStart.year(),
-                eventStart.month() + 1,
-                eventStart.date(),
-              ],
-              end: [eventEnd.year(), eventEnd.month() + 1, eventEnd.date()],
-            }),
       });
 
       if (event.error) {
@@ -978,7 +966,11 @@ export const polls = router({
             dow,
             time,
           },
-          attachments: [{ filename: "event.ics", content: event.value }],
+          icalEvent: {
+            filename: "invite.ics",
+            method: "request",
+            content: event.value,
+          },
         });
 
         for (const p of participantsToEmail) {
