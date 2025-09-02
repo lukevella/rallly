@@ -95,6 +95,8 @@ describe("createIcsEvent", () => {
       expect(result.error).toBeFalsy();
       expect(result.value).toContain("DTSTART:20240315T120000");
       expect(result.value).toContain("DTEND:20240315T130000");
+      expect(result.value).not.toContain("DTSTART:20240315T120000Z");
+      expect(result.value).not.toContain("DTEND:20240315T130000Z");
     });
 
     it("should treat empty string timezone as floating", () => {
@@ -110,6 +112,8 @@ describe("createIcsEvent", () => {
       expect(result.error).toBeFalsy();
       expect(result.value).toContain("DTSTART:20240315T120000");
       expect(result.value).toContain("DTEND:20240315T130000");
+      expect(result.value).not.toContain("DTSTART:20240315T120000Z");
+      expect(result.value).not.toContain("DTEND:20240315T130000Z");
     });
   });
 
