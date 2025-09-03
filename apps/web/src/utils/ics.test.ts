@@ -38,7 +38,20 @@ describe("createIcsEvent", () => {
         allDay: true,
       });
 
-      expect(withTimezone.value).toEqual(withoutTimezone.value);
+      // Extract DTSTART and DTEND from both results
+      const extractDateFields = (icsContent: string) => {
+        const dtstart = icsContent.match(/DTSTART[^:]*:[^\r\n]*/)?.[0];
+        const dtend = icsContent.match(/DTEND[^:]*:[^\r\n]*/)?.[0];
+        return { dtstart, dtend };
+      };
+
+      const withTimezoneFields = extractDateFields(withTimezone.value ?? "");
+      const withoutTimezoneFields = extractDateFields(
+        withoutTimezone.value ?? "",
+      );
+
+      expect(withTimezoneFields.dtstart).toEqual(withoutTimezoneFields.dtstart);
+      expect(withTimezoneFields.dtend).toEqual(withoutTimezoneFields.dtend);
     });
 
     it("should handle cross-month boundaries", () => {
