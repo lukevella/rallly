@@ -14,7 +14,7 @@ test.describe("House-keeping API", () => {
   const createdUserIds: string[] = [];
 
   // API Secret for authentication
-  const API_SECRET = process.env.API_SECRET;
+  const CRON_SECRET = process.env.CRON_SECRET;
 
   test.beforeAll(async () => {
     // Clean up any existing test data
@@ -134,7 +134,7 @@ test.describe("House-keeping API", () => {
       `${baseURL}/api/house-keeping/delete-inactive-polls`,
       {
         headers: {
-          Authorization: `Bearer ${API_SECRET}`,
+          Authorization: `Bearer ${CRON_SECRET}`,
         },
       },
     );
@@ -222,7 +222,7 @@ test.describe("House-keeping API", () => {
       `${baseURL}/api/house-keeping/remove-deleted-polls`,
       {
         headers: {
-          Authorization: `Bearer ${API_SECRET}`,
+          Authorization: `Bearer ${CRON_SECRET}`,
         },
         data: {}, // Empty JSON body
       },
