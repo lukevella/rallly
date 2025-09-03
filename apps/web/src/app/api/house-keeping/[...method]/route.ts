@@ -12,9 +12,12 @@ app.use("*", async (c, next) => {
     return bearerAuth({ token: process.env.CRON_SECRET })(c, next);
   }
 
-  return c.json({
-    error: "CRON_SECRET is not set in environment variables",
-  });
+  return c.json(
+    {
+      error: "CRON_SECRET is not set in environment variables",
+    },
+    500,
+  );
 });
 
 /**
