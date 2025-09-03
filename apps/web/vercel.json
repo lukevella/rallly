@@ -10,7 +10,7 @@
     },
     {
       "path": "/api/house-keeping/remove-deleted-polls",
-      "schedule": "0 6 * * *"
+      "schedule": "30 6 * * *"
     }
   ]
 }
