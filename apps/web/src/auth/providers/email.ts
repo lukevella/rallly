@@ -38,7 +38,7 @@ export const EmailProvider = () => {
                 }),
                 code: token,
               },
-            }
+            },
           );
         }
       },

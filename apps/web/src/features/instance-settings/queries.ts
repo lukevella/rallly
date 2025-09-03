@@ -42,5 +42,5 @@ export const getInstanceSettings = unstable_cache(
   [],
   {
     tags: [instanceSettingsTag],
-  }
+  },
 );
