@@ -130,7 +130,7 @@ test.describe("House-keeping API", () => {
     createdPollIds.push(oldPollWithRecentViews.id);
 
     // Call the delete-inactive-polls endpoint
-    const response = await request.post(
+    const response = await request.get(
       `${baseURL}/api/house-keeping/delete-inactive-polls`,
       {
         headers: {
@@ -218,13 +218,12 @@ test.describe("House-keeping API", () => {
     createdPollIds.push(recentDeletedPoll.id);
 
     // Call the remove-deleted-polls endpoint
-    const response = await request.post(
+    const response = await request.get(
       `${baseURL}/api/house-keeping/remove-deleted-polls`,
       {
         headers: {
           Authorization: `Bearer ${CRON_SECRET}`,
         },
-        data: {}, // Empty JSON body
       },
     );
 
