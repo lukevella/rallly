@@ -43,12 +43,12 @@ description: Using environment variable to configure a self-hosted instance of R
 
 <ParamField path="SMTP_HOST">The host address of your SMTP server</ParamField>
 
-<ParamField path="SMTP_PORT" default="25 or 465">
-  The port of your SMTP server
+<ParamField path="SMTP_PORT" default="25">
+  The port of your SMTP server. Common values: 587 (STARTTLS), 465 (SSL), 25 (plain)
 </ParamField>
 
 <ParamField path="SMTP_SECURE" default="false">
-  Set to "true" if SSL is enabled for your SMTP connection
+  Set to "true" if SSL is enabled for your SMTP connection (typically for port 465)
 </ParamField>
 
 <ParamField path="SMTP_USER" default="">
@@ -59,8 +59,13 @@ description: Using environment variable to configure a self-hosted instance of R
   The password (if auth is enabled on your SMTP server)
 </ParamField>
 
-<ParamField path="SMTP_TLS_ENABLED" default={"false"}>
-  Enable TLS for your SMTP connection
+<ParamField path="SMTP_REJECT_UNAUTHORIZED" default="true">
+  Validate TLS certificates. Set to `false` to ignore certificate errors (useful for self-signed certificates, not recommended for production)
+</ParamField>
+
+<ParamField path="SMTP_TLS_ENABLED" default="false">
+  <Warning>Deprecated: Use `SMTP_REJECT_UNAUTHORIZED=false` to disable certificate validation</Warning>
+  Legacy option that is no longer used
 </ParamField>
 
 ## Auth
