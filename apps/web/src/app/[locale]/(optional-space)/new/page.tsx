@@ -8,7 +8,7 @@ import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
 import { getTranslation } from "@/i18n/server";
 import { getLoggedIn } from "@/next-auth";
-import { getRegistrationEnabled } from "@/utils/is-registration-enabled";
+import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import { BackButton } from "./back-button";
 
 export default async function Page() {

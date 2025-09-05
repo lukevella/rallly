@@ -13,7 +13,7 @@ import { createSpace } from "@/features/space/mutations";
 
 import { createUser } from "@/features/user/mutations";
 import { getEmailClient } from "@/utils/emails";
-import { getRegistrationEnabled } from "@/utils/is-registration-enabled";
+import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import { isValidName } from "@/utils/is-valid-name";
 import { createToken, decryptToken } from "@/utils/session";
 import { createRateLimitMiddleware, publicProcedure, router } from "../trpc";
