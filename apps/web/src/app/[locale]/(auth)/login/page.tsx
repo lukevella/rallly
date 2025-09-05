@@ -4,8 +4,9 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { GoogleProvider } from "@/auth/providers/google";
 import { MicrosoftProvider } from "@/auth/providers/microsoft";
 import { OIDCProvider } from "@/auth/providers/oidc";
-import { getInstanceSettings } from "@/features/instance-settings/queries";
 import { getTranslation } from "@/i18n/server";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
+import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import {
   AuthPageContainer,
   AuthPageContent,
@@ -22,13 +23,13 @@ import { OrDivider } from "./components/or-divider";
 import { SSOProvider } from "./components/sso-provider";
 
 async function loadData() {
-  const [instanceSettings, { t }] = await Promise.all([
-    getInstanceSettings(),
+  const [isRegistrationEnabled, { t }] = await Promise.all([
+    getRegistrationEnabled(),
     getTranslation(),
   ]);
 
   return {
-    instanceSettings,
+    isRegistrationEnabled,
     t,
   };
 }
@@ -40,7 +41,8 @@ export default async function LoginPage(props: {
 }) {
   const searchParams = await props.searchParams;
 
-  const { instanceSettings, t } = await loadData();
+  const { isRegistrationEnabled, t } = await loadData();
+  const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
   const oidcProvider = OIDCProvider();
   const socialProviders = [GoogleProvider(), MicrosoftProvider()].filter(
     Boolean,
@@ -56,17 +58,26 @@ export default async function LoginPage(props: {
           <Trans t={t} ns="app" i18nKey="loginTitle" defaults="Welcome" />
         </AuthPageTitle>
         <AuthPageDescription>
-          <Trans
-            t={t}
-            ns="app"
-            i18nKey="loginDescription"
-            defaults="Login to your account to continue"
-          />
+          {!isEmailLoginEnabled && !hasAlternateLoginMethods ? (
+            <Trans
+              t={t}
+              ns="app"
+              i18nKey="loginNotConfigured"
+              defaults="Login is currently not configured."
+            />
+          ) : (
+            <Trans
+              t={t}
+              ns="app"
+              i18nKey="loginDescription"
+              defaults="Login to your account to continue"
+            />
+          )}
         </AuthPageDescription>
       </AuthPageHeader>
       <AuthPageContent>
-        <LoginWithEmailForm />
-        {hasAlternateLoginMethods ? <OrDivider /> : null}
+        {isEmailLoginEnabled && <LoginWithEmailForm />}
+        {isEmailLoginEnabled && hasAlternateLoginMethods ? <OrDivider /> : null}
         {oidcProvider ? (
           <LoginWithOIDC
             name={oidcProvider.name}
@@ -89,7 +100,7 @@ export default async function LoginPage(props: {
         ) : null}
       </AuthPageContent>
       <AuthErrors />
-      {!instanceSettings?.disableUserRegistration ? (
+      {isRegistrationEnabled ? (
         <AuthPageExternal>
           <Trans
             t={t}

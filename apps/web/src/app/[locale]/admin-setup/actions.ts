@@ -16,14 +16,22 @@ export const makeMeAdminAction = authActionClient
       });
     }
 
-    await prisma.user.update({
-      where: {
-        id: ctx.user.id,
-      },
-      data: {
-        role: "admin",
-      },
-    });
+    try {
+      await prisma.user.update({
+        where: {
+          id: ctx.user.id,
+        },
+        data: {
+          role: "admin",
+        },
+      });
+    } catch (error) {
+      throw new AppError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to update user role",
+        cause: error,
+      });
+    }
 
     redirect("/control-panel");
   });
