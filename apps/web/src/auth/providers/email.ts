@@ -7,41 +7,42 @@ import { env } from "@/env";
 import { getEmailClient } from "@/utils/emails";
 
 export const EmailProvider = () => {
-  if (env.EMAIL_LOGIN_ENABLED === "true") {
-    return NodemailerProvider({
-      server: "none", // This value is required even though we don't need it
-      from: process.env.NOREPLY_EMAIL,
-      id: "email",
-      maxAge: 15 * 60,
-      generateVerificationToken() {
-        return generateOtp();
-      },
-      async sendVerificationRequest({ identifier: email, token, url }) {
-        const user = await prisma.user.findUnique({
-          where: {
-            email,
-          },
-          select: {
-            name: true,
-            locale: true,
-          },
-        });
-
-        if (user) {
-          await getEmailClient(user.locale ?? undefined).sendTemplate(
-            "LoginEmail",
-            {
-              to: email,
-              props: {
-                magicLink: absoluteUrl("/auth/login", {
-                  magicLink: url,
-                }),
-                code: token,
-              },
-            },
-          );
-        }
-      },
-    });
+  if (env.EMAIL_LOGIN_ENABLED !== "true") {
+    return null;
   }
+  return NodemailerProvider({
+    server: "none", // This value is required even though we don't need it
+    from: process.env.NOREPLY_EMAIL,
+    id: "email",
+    maxAge: 15 * 60,
+    generateVerificationToken() {
+      return generateOtp();
+    },
+    async sendVerificationRequest({ identifier: email, token, url }) {
+      const user = await prisma.user.findUnique({
+        where: {
+          email,
+        },
+        select: {
+          name: true,
+          locale: true,
+        },
+      });
+
+      if (user) {
+        await getEmailClient(user.locale ?? undefined).sendTemplate(
+          "LoginEmail",
+          {
+            to: email,
+            props: {
+              magicLink: absoluteUrl("/auth/login", {
+                magicLink: url,
+              }),
+              code: token,
+            },
+          },
+        );
+      }
+    },
+  });
 };
