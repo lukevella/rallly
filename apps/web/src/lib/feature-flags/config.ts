@@ -1,3 +1,4 @@
+import "server-only";
 import { env } from "@/env";
 import { isBillingEnabled } from "@/features/billing/constants";
 import { isFeedbackEnabled } from "@/features/feedback/constants";

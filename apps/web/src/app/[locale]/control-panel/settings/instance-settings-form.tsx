@@ -40,13 +40,18 @@ export function InstanceSettingsForm({
 }: {
   defaultValue: InstanceSettings;
 }) {
+  const isRegistrationEnabled = useFeatureFlag("registration");
+
   const form = useForm<InstanceSettings>({
-    defaultValues: defaultValue,
+    defaultValues: {
+      ...defaultValue,
+      disableUserRegistration:
+        !isRegistrationEnabled || Boolean(defaultValue.disableUserRegistration),
+    },
     resolver: zodResolver(instanceSettingsSchema),
   });
 
   const updateInstanceSettings = useSafeAction(updateInstanceSettingsAction);
-  const isRegistrationEnabled = useFeatureFlag("registration");
 
   const { t } = useTranslation();
 
@@ -99,7 +104,7 @@ export function InstanceSettingsForm({
                     <FormControl>
                       <Switch
                         onCheckedChange={field.onChange}
-                        checked={!isRegistrationEnabled || field.value}
+                        checked={field.value}
                         disabled={!isRegistrationEnabled}
                       />
                     </FormControl>
