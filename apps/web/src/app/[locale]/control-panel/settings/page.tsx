@@ -24,7 +24,6 @@ async function loadData() {
 
 export default async function SettingsPage() {
   const { instanceSettings } = await loadData();
-  const { allowRegistrationChange, ...settings } = instanceSettings;
 
   return (
     <FullWidthLayout>
@@ -40,10 +39,7 @@ export default async function SettingsPage() {
         </FullWidthLayoutTitle>
       </FullWidthLayoutHeader>
       <FullWidthLayoutContent>
-        <InstanceSettingsForm
-          defaultValue={settings}
-          allowRegistrationChange={allowRegistrationChange}
-        />
+        <InstanceSettingsForm defaultValue={instanceSettings} />
       </FullWidthLayoutContent>
     </FullWidthLayout>
   );

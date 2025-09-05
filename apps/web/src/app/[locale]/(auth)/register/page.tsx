@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
-
-import { EmailProvider } from "@/auth/providers/email";
-import { getInstanceSettings } from "@/features/instance-settings/queries";
 import { getTranslation } from "@/i18n/server";
+import { getRegistrationEnabled } from "@/utils/is-registration-enabled";
 import {
   AuthPageContainer,
   AuthPageContent,
@@ -21,10 +19,9 @@ export default async function Register(props: {
 }) {
   const params = await props.params;
   const { t } = await getTranslation(params.locale);
-  const instanceSettings = await getInstanceSettings();
-  const emailProvider = EmailProvider();
+  const isRegistrationEnabled = await getRegistrationEnabled();
 
-  if (!emailProvider || instanceSettings?.disableUserRegistration) {
+  if (!isRegistrationEnabled) {
     return notFound();
   }
 

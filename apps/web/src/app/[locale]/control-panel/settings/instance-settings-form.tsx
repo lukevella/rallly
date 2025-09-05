@@ -6,6 +6,7 @@ import {
   ActionBarGroup,
   ActionBarTitle,
 } from "@rallly/ui/action-bar";
+import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -17,6 +18,7 @@ import {
 } from "@rallly/ui/form";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { ContainerIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import {
   SettingsGroup,
@@ -29,15 +31,14 @@ import { Trans } from "@/components/trans";
 import type { InstanceSettings } from "@/features/instance-settings/schema";
 import { instanceSettingsSchema } from "@/features/instance-settings/schema";
 import { useTranslation } from "@/i18n/client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { updateInstanceSettingsAction } from "./actions";
 
 export function InstanceSettingsForm({
   defaultValue,
-  allowRegistrationChange,
 }: {
   defaultValue: InstanceSettings;
-  allowRegistrationChange: boolean;
 }) {
   const form = useForm<InstanceSettings>({
     defaultValues: defaultValue,
@@ -45,6 +46,7 @@ export function InstanceSettingsForm({
   });
 
   const updateInstanceSettings = useSafeAction(updateInstanceSettingsAction);
+  const isRegistrationEnabled = useFeatureFlag("registration");
 
   const { t } = useTranslation();
 
@@ -97,10 +99,8 @@ export function InstanceSettingsForm({
                     <FormControl>
                       <Switch
                         onCheckedChange={field.onChange}
-                        checked={field.value}
-                        {...(!allowRegistrationChange
-                          ? { disabled: true }
-                          : {})}
+                        checked={!isRegistrationEnabled || field.value}
+                        disabled={!isRegistrationEnabled}
                       />
                     </FormControl>
                     <FormLabel>
@@ -115,17 +115,23 @@ export function InstanceSettingsForm({
                       i18nKey="disableUserRegistrationDescription"
                       defaults="Prevent new users from registering an account."
                     />
-                    &nbsp;
-                    {!allowRegistrationChange && (
-                      <Trans
-                        i18nKey="configuredByEnvironmentVariable"
-                        defaults="This setting has been configured by environment variable."
-                      />
-                    )}
                   </FormDescription>
                 </FormItem>
               )}
             />
+            {!isRegistrationEnabled && (
+              <Alert variant="note" className="mt-4">
+                <ContainerIcon />
+                <AlertDescription>
+                  <p>
+                    <Trans
+                      i18nKey="configuredByEnvironmentVariable"
+                      defaults="This setting has been configured by environment variable."
+                    />
+                  </p>
+                </AlertDescription>
+              </Alert>
+            )}
           </SettingsGroupContent>
         </SettingsGroup>
         <ActionBar open={form.formState.isDirty}>

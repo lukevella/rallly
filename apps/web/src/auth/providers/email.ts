@@ -7,7 +7,7 @@ import { env } from "@/env";
 import { getEmailClient } from "@/utils/emails";
 
 export const EmailProvider = () => {
-  if (env.ALLOW_EMAIL_LOGIN === "true") {
+  if (env.EMAIL_LOGIN_ENABLED === "true") {
     return NodemailerProvider({
       server: "none", // This value is required even though we don't need it
       from: process.env.NOREPLY_EMAIL,
