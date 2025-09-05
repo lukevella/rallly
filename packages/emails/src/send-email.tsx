@@ -176,12 +176,36 @@ export class EmailClient {
       }
       case "smtp": {
         const hasAuth = process.env.SMTP_USER || process.env.SMTP_PWD;
+        const port = process.env.SMTP_PORT
+          ? Number.parseInt(process.env.SMTP_PORT)
+          : undefined;
+
+        const secure = process.env.SMTP_SECURE === "true";
+
+        // Log deprecation warning for legacy variable
+        if (process.env.SMTP_TLS_ENABLED === "true") {
+          console.warn(
+            "⚠️  SMTP_TLS_ENABLED is deprecated and no longer affects certificate validation. Use SMTP_REJECT_UNAUTHORIZED instead.",
+          );
+        }
+
+        const rejectUnauthorized =
+          process.env.SMTP_REJECT_UNAUTHORIZED !== "false";
+
+        // Warn about security change if no explicit setting
+        if (
+          process.env.SMTP_REJECT_UNAUTHORIZED === undefined &&
+          process.env.SMTP_TLS_ENABLED === undefined
+        ) {
+          console.warn(
+            "⚠️  Certificate validation is now enabled by default for SMTP connections. Set SMTP_REJECT_UNAUTHORIZED=true to silence this warning, or SMTP_REJECT_UNAUTHORIZED=false if using self-signed certificates.",
+          );
+        }
+
         this.cachedTransport = createTransport({
           host: process.env.SMTP_HOST,
-          port: process.env.SMTP_PORT
-            ? Number.parseInt(process.env.SMTP_PORT)
-            : undefined,
-          secure: process.env.SMTP_SECURE === "true",
+          port,
+          secure,
           auth: hasAuth
             ? {
                 user: process.env.SMTP_USER,
@@ -189,7 +213,7 @@ export class EmailClient {
               }
             : undefined,
           tls: {
-            rejectUnauthorized: process.env.SMTP_TLS_ENABLED === "true",
+            rejectUnauthorized,
           },
         });
         break;
