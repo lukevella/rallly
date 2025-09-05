@@ -3,13 +3,14 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { generateOtp } from "@rallly/utils/nanoid";
 import NodemailerProvider from "next-auth/providers/nodemailer";
 
-import { env } from "@/env";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { getEmailClient } from "@/utils/emails";
 
 export const EmailProvider = () => {
-  if (env.EMAIL_LOGIN_ENABLED !== "true") {
+  if (!isFeatureEnabled("emailLogin")) {
     return null;
   }
+
   return NodemailerProvider({
     server: "none", // This value is required even though we don't need it
     from: process.env.NOREPLY_EMAIL,
