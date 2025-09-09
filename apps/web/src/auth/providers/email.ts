@@ -3,11 +3,10 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { generateOtp } from "@rallly/utils/nanoid";
 import NodemailerProvider from "next-auth/providers/nodemailer";
 
-import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { getEmailClient } from "@/utils/emails";
 
 export const EmailProvider = () => {
-  if (!isFeatureEnabled("emailLogin")) {
+  if (process.env.EMAIL_LOGIN_ENABLED === "false") {
     return null;
   }
 
