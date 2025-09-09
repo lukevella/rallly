@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Trans } from "react-i18next/TransWithoutContext";
 
 import { GoogleProvider } from "@/auth/providers/google";
 import { MicrosoftProvider } from "@/auth/providers/microsoft";
 import { OIDCProvider } from "@/auth/providers/oidc";
+import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
@@ -23,14 +23,10 @@ import { OrDivider } from "./components/or-divider";
 import { SSOProvider } from "./components/sso-provider";
 
 async function loadData() {
-  const [isRegistrationEnabled, { t }] = await Promise.all([
-    getRegistrationEnabled(),
-    getTranslation(),
-  ]);
+  const [isRegistrationEnabled] = await Promise.all([getRegistrationEnabled()]);
 
   return {
     isRegistrationEnabled,
-    t,
   };
 }
 
@@ -41,7 +37,7 @@ export default async function LoginPage(props: {
 }) {
   const searchParams = await props.searchParams;
 
-  const { isRegistrationEnabled, t } = await loadData();
+  const { isRegistrationEnabled } = await loadData();
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
   const oidcProvider = OIDCProvider();
   const socialProviders = [GoogleProvider(), MicrosoftProvider()].filter(
@@ -55,19 +51,17 @@ export default async function LoginPage(props: {
     <AuthPageContainer>
       <AuthPageHeader>
         <AuthPageTitle>
-          <Trans t={t} ns="app" i18nKey="loginTitle" defaults="Welcome" />
+          <Trans i18nKey="loginTitle" defaults="Welcome" />
         </AuthPageTitle>
         <AuthPageDescription>
           {!isEmailLoginEnabled && !hasAlternateLoginMethods ? (
             <Trans
-              t={t}
               ns="app"
               i18nKey="loginNotConfigured"
               defaults="Login is currently not configured."
             />
           ) : (
             <Trans
-              t={t}
               ns="app"
               i18nKey="loginDescription"
               defaults="Login to your account to continue"
@@ -103,7 +97,6 @@ export default async function LoginPage(props: {
       {isRegistrationEnabled ? (
         <AuthPageExternal>
           <Trans
-            t={t}
             i18nKey="loginFooter"
             defaults="Don't have an account? <a>Sign up</a>"
             components={{
