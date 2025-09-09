@@ -16,7 +16,7 @@ import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
 import { getLocale } from "@/i18n/server/get-locale";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
-import { getFeatureFlagConfig } from "@/lib/feature-flags/config";
+import { featureFlagConfig } from "@/lib/feature-flags/config";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 import { auth } from "@/next-auth";
 import { TRPCProvider } from "@/trpc/client/provider";
@@ -80,7 +80,7 @@ export default async function Root({
   return (
     <html lang={locale} className={inter.className}>
       <body>
-        <FeatureFlagsProvider value={getFeatureFlagConfig()}>
+        <FeatureFlagsProvider value={featureFlagConfig}>
           <Toaster />
           <I18nProvider locale={locale}>
             <TRPCProvider>

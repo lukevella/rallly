@@ -5,15 +5,13 @@ import { isFeedbackEnabled } from "@/features/feedback/constants";
 import type { FeatureFlagConfig } from "@/lib/feature-flags/types";
 import { isStorageEnabled } from "@/lib/storage";
 
-export const getFeatureFlagConfig = (): FeatureFlagConfig => {
-  const isEmailLoginEnabled = env.EMAIL_LOGIN_ENABLED !== "false";
-  const isRegistrationEnabled = env.REGISTRATION_ENABLED !== "false";
+const isEmailLoginEnabled = env.EMAIL_LOGIN_ENABLED !== "false";
+const isRegistrationEnabled = env.REGISTRATION_ENABLED !== "false";
 
-  return {
-    storage: isStorageEnabled,
-    billing: isBillingEnabled,
-    feedback: isFeedbackEnabled,
-    emailLogin: isEmailLoginEnabled,
-    registration: isEmailLoginEnabled && isRegistrationEnabled,
-  };
+export const featureFlagConfig: FeatureFlagConfig = {
+  storage: isStorageEnabled,
+  billing: isBillingEnabled,
+  feedback: isFeedbackEnabled,
+  emailLogin: isEmailLoginEnabled,
+  registration: isEmailLoginEnabled && isRegistrationEnabled,
 };
