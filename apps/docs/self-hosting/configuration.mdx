@@ -65,6 +65,18 @@ description: Using environment variable to configure a self-hosted instance of R
 
 ## Auth
 
+<ParamField path="EMAIL_LOGIN_ENABLED" default="true">
+  Set to "false" to disable email-based login (magic link authentication).
+  When disabled, users can only authenticate via configured OAuth providers
+  (Google, Microsoft, OIDC) and user registration is automatically disabled.
+</ParamField>
+
+<ParamField path="REGISTRATION_ENABLED" default="true">
+  Set to "false" to disable user registration globally. This environment variable
+  takes precedence over the database setting configured via the admin UI.
+  Registration requires email login to be enabled.
+</ParamField>
+
 <ParamField path="ALLOWED_EMAILS">
   Comma separated list of email addresses that are allowed to register and
   login. Wildcard characters are supported. Example: Setting it to

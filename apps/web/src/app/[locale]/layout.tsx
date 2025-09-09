@@ -8,7 +8,6 @@ import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import type React from "react";
-
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { requireUser } from "@/auth/data";
 import { UserProvider } from "@/components/user-provider";
@@ -17,7 +16,7 @@ import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
 import { getLocale } from "@/i18n/server/get-locale";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
-import { featureFlagConfig } from "@/lib/feature-flags/config";
+import { getFeatureFlagConfig } from "@/lib/feature-flags/config";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 import { auth } from "@/next-auth";
 import { TRPCProvider } from "@/trpc/client/provider";
@@ -81,7 +80,7 @@ export default async function Root({
   return (
     <html lang={locale} className={inter.className}>
       <body>
-        <FeatureFlagsProvider value={featureFlagConfig}>
+        <FeatureFlagsProvider value={getFeatureFlagConfig()}>
           <Toaster />
           <I18nProvider locale={locale}>
             <TRPCProvider>

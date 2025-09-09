@@ -7,11 +7,13 @@ import { z } from "zod";
 import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
 import { isTemporaryEmail } from "@/auth/helpers/temp-email-domains";
-import { getInstanceSettings } from "@/features/instance-settings/queries";
+
 import { trackSpaceCreated } from "@/features/space/analytics";
 import { createSpace } from "@/features/space/mutations";
+
 import { createUser } from "@/features/user/mutations";
 import { getEmailClient } from "@/utils/emails";
+import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import { isValidName } from "@/utils/is-valid-name";
 import { createToken, decryptToken } from "@/utils/session";
 import { createRateLimitMiddleware, publicProcedure, router } from "../trpc";
@@ -55,8 +57,8 @@ export const auth = router({
               | "temporaryEmailNotAllowed";
           }
       > => {
-        const instanceSettings = await getInstanceSettings();
-        if (instanceSettings.disableUserRegistration) {
+        const isRegistrationEnabled = await getRegistrationEnabled();
+        if (!isRegistrationEnabled) {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "User registration is disabled",
