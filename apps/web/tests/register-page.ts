@@ -22,7 +22,7 @@ export class RegisterPage {
 
     // Handle verification code
     const code = await getCode(email);
-    await this.page.getByText("Finish Registering").waitFor();
+    await this.page.getByRole("heading", { name: "Finish Registering" }).waitFor();
     await this.page.getByPlaceholder("Enter your 6-digit code").fill(code);
 
     // Verify successful registration

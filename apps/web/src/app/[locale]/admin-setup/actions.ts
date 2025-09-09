@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@rallly/database";
-import { redirect } from "next/navigation";
+import { RedirectType, redirect } from "next/navigation";
 import { AppError } from "@/lib/errors";
 import { authActionClient } from "@/lib/safe-action/server";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
@@ -33,5 +33,5 @@ export const makeMeAdminAction = authActionClient
       });
     }
 
-    redirect("/control-panel");
+    redirect("/control-panel", RedirectType.replace);
   });
