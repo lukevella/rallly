@@ -50,8 +50,8 @@ export const env = createEnv({
      * Example: "user@example.com, *@example.com, *@*.example.com"
      */
     ALLOWED_EMAILS: z.string().optional(),
-    EMAIL_LOGIN_ENABLED: z.enum(["true", "false"]).default("true"),
-    REGISTRATION_ENABLED: z.enum(["true", "false"]).default("true"),
+    EMAIL_LOGIN_ENABLED: z.enum(["true", "false"]).optional(),
+    REGISTRATION_ENABLED: z.enum(["true", "false"]).optional(),
     /**
      * Email addresses for support and no-reply emails.
      */
