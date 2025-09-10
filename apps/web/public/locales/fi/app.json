@@ -453,7 +453,6 @@
   "loading": "Ladataan...",
   "endOfList": "Olet tullut luettelon loppuun",
   "attendeeCount": "{count, plural, =0 {Ei osallistujia} one {1 osallistuja} other {# osallistujaa}}",
-  "participantCount": "{count, plural, one {1 osallistuja} other {# osallistujaa}}",
   "imageCropDialogTitle": "Rajaa kuva",
   "cropPreview": "Rajauksen esikatselu",
   "annualSavings": "Säästä {amount} vuosilaskutuksella",
@@ -481,5 +480,8 @@
   "mySpaces": "Omat tilat",
   "spacesDescription": "Hallitse tiloja, joihin kuulut",
   "noSpaces": "Tiloja ei löytynyt",
-  "noSpacesDescription": "Et olet vielä minkään tilan jäsen"
+  "noSpacesDescription": "Et olet vielä minkään tilan jäsen",
+  "addSeats": "{count, plural, one {Add # Seat} other {Add # Seats}}",
+  "removeSeats": "{count, plural, one {Remove # Seat} other {Remove # Seats}}",
+  "memberCount": "{count, plural, =0 {No members} one {1 member} other {# members}}"
 }
