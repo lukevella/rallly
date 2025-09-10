@@ -61,6 +61,8 @@ description: Using environment variable to configure a self-hosted instance of R
 
 <ParamField path="SMTP_REJECT_UNAUTHORIZED" default="true">
   Validate TLS certificates. Set to `false` to ignore certificate errors (useful for self-signed certificates, not recommended for production)
+  
+  <Note>This option is only available from v4.4.0 and later.</Note>
 </ParamField>
 
 <ParamField path="SMTP_TLS_ENABLED">
@@ -74,12 +76,16 @@ description: Using environment variable to configure a self-hosted instance of R
   Set to "false" to disable email-based login (magic link authentication).
   When disabled, users can only authenticate via configured OAuth providers
   (Google, Microsoft, OIDC) and user registration is automatically disabled.
+  
+  <Note>This option is only available from v4.4.0 and later.</Note>
 </ParamField>
 
 <ParamField path="REGISTRATION_ENABLED" default="true">
   Set to "false" to disable user registration globally. This environment variable
   takes precedence over the database setting configured via the admin UI.
   Registration requires email login to be enabled.
+  
+  <Note>This option is only available from v4.4.0 and later.</Note>
 </ParamField>
 
 <ParamField path="ALLOWED_EMAILS">
