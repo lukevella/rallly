@@ -453,7 +453,13 @@
   "loading": "Загрузка...",
   "endOfList": "Вы достигли конца списка",
   "attendeeCount": "{count, plural, =0 {Нет участников} one {1 участник} few {2 участника} many {3 участников} other {# участников}}",
-  "participantCount": "{count, plural, one {1 участник} other {# участников}}",
   "imageCropDialogTitle": "Обрезать изображение",
-  "cropPreview": "Предварительный просмотр"
+  "cropPreview": "Предварительный просмотр",
+  "currentPlan": "Текущий план",
+  "planHobbyDescription": "Для обычных пользователей",
+  "extendedPollLifetimeDescription": "Храните опросы бессрочно",
+  "confirmSpaceName": "Пожалуйста, введите название пространства для подтверждения:",
+  "addSeats": "{count, plural, one {Add # Seat} other {Add # Seats}}",
+  "removeSeats": "{count, plural, one {Remove # Seat} other {Remove # Seats}}",
+  "memberCount": "{count, plural, =0 {No members} one {1 member} other {# members}}"
 }
