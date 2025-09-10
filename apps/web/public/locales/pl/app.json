@@ -350,5 +350,18 @@
   "disableUserRegistrationDescription": "Zapobiegaj zarejestrowaniu się nowych użytkowników.",
   "authenticationAndSecurity": "Uwierzytelnianie i bezpieczeństwo",
   "authenticationAndSecurityDescription": "Zarządzaj ustawieniami uwierzytelniania i zabezpieczeń",
-  "youHaveUnsavedChanges": "Masz niezapisane zmiany"
+  "youHaveUnsavedChanges": "Masz niezapisane zmiany",
+  "allMembers": "Wszyscy",
+  "invalidEmailAddress": "Wpisz prawidłowy adres e-mail",
+  "uploadImage": "Prześlij",
+  "removeImage": "Usuń",
+  "imageUploadDescription": "Do 2 MB, JPG lub PNG",
+  "billingPlanTitle": "Plan",
+  "attendeeCount": "{count, plural, =0 {No attendees} one {1 attendee} other {# attendees}}",
+  "currentPlan": "Aktualny plan",
+  "planHobbyDescription": "Dla zwykłych użytkowników",
+  "extendedPollLifetimeDescription": "Przechowuj ankiety w nieskończoność",
+  "addSeats": "{count, plural, one {Add # Seat} other {Add # Seats}}",
+  "removeSeats": "{count, plural, one {Remove # Seat} other {Remove # Seats}}",
+  "memberCount": "{count, plural, =0 {No members} one {1 member} other {# members}}"
 }
