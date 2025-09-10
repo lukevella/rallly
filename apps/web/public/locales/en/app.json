@@ -455,7 +455,7 @@
   "loading": "Loading...",
   "endOfList": "You've reached the end of the list",
   "attendeeCount": "{count, plural, =0 {No attendees} one {1 attendee} other {# attendees}}",
-  "participantCount": "{count, plural, one {1 participant} other {# participants}}",
+  "participantCount": "{count, plural, =0 {No participants} one {1 participant} other {# participants}}",
   "imageCropDialogTitle": "Crop Image",
   "cropPreview": "Crop preview",
   "annualSavings": "Save {amount} with yearly billing",
