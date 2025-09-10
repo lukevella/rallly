@@ -120,6 +120,7 @@
   "notificationsGuestTooltip": "Crie uma conta ou entre na sua conta para ativar notificações",
   "dateAndTimeDescription": "Mude as suas definições de data e hora preferidas",
   "createdTime": "Criado {relativeTime}",
+  "planFree": "Grátis",
   "Billing": "Cobrança",
   "becomeATranslator": "Ajude a traduzir",
   "noPolls": "Sem votações",
@@ -348,5 +349,17 @@
   "disableUserRegistration": "Desativar registo de utilizadores",
   "disableUserRegistrationDescription": "Impedir novos utilizadores de registar uma conta.",
   "authenticationAndSecurity": "Autenticação e Segurança",
-  "authenticationAndSecurityDescription": "Gerir as configurações de autenticação e segurança"
+  "authenticationAndSecurityDescription": "Gerir as configurações de autenticação e segurança",
+  "allMembers": "Todos",
+  "invalidEmailAddress": "Por favor, introduza um endereço de email válido",
+  "uploadImage": "Carregar",
+  "removeImage": "Remover",
+  "imageUploadDescription": "Até 2MB, JPG ou PNG",
+  "billingPlanTitle": "Plano",
+  "attendeeCount": "{count, plural, =0 {No attendees} one {1 attendee} other {# attendees}}",
+  "planHobbyDescription": "Para utilizadores casuais",
+  "extendedPollLifetimeDescription": "Mantenha votações indefinidamente",
+  "addSeats": "{count, plural, one {Add # Seat} other {Add # Seats}}",
+  "removeSeats": "{count, plural, one {Remove # Seat} other {Remove # Seats}}",
+  "memberCount": "{count, plural, =0 {No members} one {1 member} other {# members}}"
 }
