@@ -269,6 +269,7 @@
   "paginationNext": "Neste",
   "upgradeToProDesc": "Lås opp alle Pro-funksjoner",
   "sendFeedbackSuccess": "Takk for din tilbakemelding!",
+  "canceled": "Kansellert",
   "tomorrow": "I morgen",
   "yesterday": "I går",
   "lastWeek": "Forrige uke",
@@ -325,5 +326,17 @@
   "authErrorsUserNotFound": "Fant ingen konto tilknyttet denne e-postadressen. Sjekk e-postadressen eller registrer en ny konto.",
   "authenticationAndSecurity": "Autentisering og sikkerhet",
   "authenticationAndSecurityDescription": "Administrer autentiserings- og sikkerhetsinnstillinger",
-  "youHaveUnsavedChanges": "Du har ulagrede endringer"
+  "youHaveUnsavedChanges": "Du har ulagrede endringer",
+  "allMembers": "Alle",
+  "uploadImage": "Last opp",
+  "removeImage": "Fjern",
+  "imageUploadDescription": "Opptil 2 MB, JPG eller PNG",
+  "billingPlanTitle": "Abonnement",
+  "attendeeCount": "{count, plural, =0 {No attendees} one {1 attendee} other {# attendees}}",
+  "currentPlan": "Gjeldende abonnement",
+  "planHobbyDescription": "For grunnleggende bruk",
+  "extendedPollLifetimeDescription": "Behold avstemninger på ubestemt tid",
+  "addSeats": "{count, plural, one {Add # Seat} other {Add # Seats}}",
+  "removeSeats": "{count, plural, one {Remove # Seat} other {Remove # Seats}}",
+  "memberCount": "{count, plural, =0 {No members} one {1 member} other {# members}}"
 }
