@@ -453,11 +453,15 @@
   "loading": "Laden...",
   "endOfList": "Je hebt het einde van de lijst bereikt",
   "attendeeCount": "{count, plural, =0 {Geen aanwezigen} one {1 aanwezige} other {# aanwezigen}}",
-  "participantCount": "{count, plural, one {1 deelnemer} other {# deelnemers}}",
   "imageCropDialogTitle": "Afbeelding bijsnijden",
   "cropPreview": "Voorbeeld",
   "annualSavings": "Bespaar {amount} met jaarlijkse facturering",
   "annualDiscount": "Betaal voor {payMonths, number} maanden, krijg er 12.",
   "currentPlan": "Huidig abonnement",
-  "planHobbyDescription": "Voor normaal gebruik"
+  "planHobbyDescription": "Voor normaal gebruik",
+  "extendedPollLifetimeDescription": "Behoud polls voor onbepaalde tijd",
+  "confirmSpaceName": "Voer de naam van de ruimte in ter bevestiging:",
+  "addSeats": "{count, plural, one {Add # Seat} other {Add # Seats}}",
+  "removeSeats": "{count, plural, one {Remove # Seat} other {Remove # Seats}}",
+  "memberCount": "{count, plural, =0 {No members} one {1 member} other {# members}}"
 }
