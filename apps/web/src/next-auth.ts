@@ -32,11 +32,13 @@ const {
   }),
   providers: [
     RegistrationTokenProvider,
-    EmailProvider,
     GuestProvider,
-    ...([GoogleProvider(), OIDCProvider(), MicrosoftProvider()].filter(
-      Boolean,
-    ) as Provider[]),
+    ...([
+      EmailProvider(),
+      GoogleProvider(),
+      OIDCProvider(),
+      MicrosoftProvider(),
+    ].filter(Boolean) as Provider[]),
   ],
   pages: {
     signIn: "/login",

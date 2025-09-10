@@ -50,6 +50,8 @@ export const env = createEnv({
      * Example: "user@example.com, *@example.com, *@*.example.com"
      */
     ALLOWED_EMAILS: z.string().optional(),
+    EMAIL_LOGIN_ENABLED: z.enum(["true", "false"]).default("true"),
+    REGISTRATION_ENABLED: z.enum(["true", "false"]).default("true"),
     /**
      * Email addresses for support and no-reply emails.
      */
@@ -116,6 +118,8 @@ export const env = createEnv({
     SMTP_SECURE: process.env.SMTP_SECURE,
     SMTP_PORT: process.env.SMTP_PORT,
     ALLOWED_EMAILS: process.env.ALLOWED_EMAILS,
+    EMAIL_LOGIN_ENABLED: process.env.EMAIL_LOGIN_ENABLED,
+    REGISTRATION_ENABLED: process.env.REGISTRATION_ENABLED,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_REGION: process.env.AWS_REGION,
