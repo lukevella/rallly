@@ -5,7 +5,6 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
-
 import type { PollStatus } from "../schema";
 
 export const PollList = StackedList;
@@ -44,7 +43,7 @@ export function PollListItem({
               <span className="cursor-help text-muted-foreground text-sm">
                 <Trans
                   i18nKey="participantCount"
-                  defaults="{count, plural, one {1 participant} other {# participants}}"
+                  defaults="{count, plural, =0 {No participants} =1 {1 participant} other {# participants}}"
                   values={{ count: participants.length }}
                 />
               </span>
@@ -70,8 +69,8 @@ export function PollListItem({
           <span className="text-muted-foreground text-sm">
             <Trans
               i18nKey="participantCount"
-              defaults="{count, plural, one {1 participant} other {# participants}}"
-              values={{ count: 0 }}
+              defaults="{count, plural, =0 {No participants} =1 {1 participant} other {# participants}}"
+              values={{ count: participants.length }}
             />
           </span>
         )}
