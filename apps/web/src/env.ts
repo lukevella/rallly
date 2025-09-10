@@ -35,8 +35,11 @@ export const env = createEnv({
     SMTP_HOST: z.string().optional(),
     SMTP_USER: z.string().optional(),
     SMTP_PWD: z.string().optional(),
-    SMTP_SECURE: z.string().optional(),
+    SMTP_SECURE: z.enum(["true", "false"]).optional(),
     SMTP_PORT: z.string().optional(),
+    SMTP_REJECT_UNAUTHORIZED: z.enum(["true", "false"]).optional(),
+    /** @deprecated Use SMTP_REJECT_UNAUTHORIZED instead */
+    SMTP_TLS_ENABLED: z.enum(["true", "false"]).optional(),
     /**
      * AWS SES Configuration
      */
@@ -117,6 +120,8 @@ export const env = createEnv({
     SMTP_PWD: process.env.SMTP_PWD,
     SMTP_SECURE: process.env.SMTP_SECURE,
     SMTP_PORT: process.env.SMTP_PORT,
+    SMTP_REJECT_UNAUTHORIZED: process.env.SMTP_REJECT_UNAUTHORIZED,
+    SMTP_TLS_ENABLED: process.env.SMTP_TLS_ENABLED,
     ALLOWED_EMAILS: process.env.ALLOWED_EMAILS,
     EMAIL_LOGIN_ENABLED: process.env.EMAIL_LOGIN_ENABLED,
     REGISTRATION_ENABLED: process.env.REGISTRATION_ENABLED,
