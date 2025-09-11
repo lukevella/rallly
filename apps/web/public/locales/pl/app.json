@@ -358,6 +358,7 @@
   "imageUploadDescription": "Do 2 MB, JPG lub PNG",
   "billingPlanTitle": "Plan",
   "attendeeCount": "{count, plural, =0 {No attendees} one {1 attendee} other {# attendees}}",
+  "participantCount": "{count, plural, =0 {No participants} one {1 participant} other {# participants}}",
   "currentPlan": "Aktualny plan",
   "planHobbyDescription": "Dla zwykłych użytkowników",
   "extendedPollLifetimeDescription": "Przechowuj ankiety w nieskończoność",
