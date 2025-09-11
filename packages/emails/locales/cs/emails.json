@@ -63,6 +63,7 @@
   "abandoned_checkout_preview": "Exkluzivní nabídka: Získejte {discount}% slevu z prvního roku Rallly Pro!",
   "abandoned_checkout_subject": "Získejte {discount}% slevu z prvního roku Rallly Pro",
   "abandoned_checkout_signoff": "S pozdravem,",
+  "license_key_plan": "Plán",
   "spaceInvite_content": "{inviterName} vás pozval, abyste se připojil k {spaceName} jako {role}.",
   "spaceInvite_preview": "Byli jste pozváni k připojení do {spaceName}",
   "spaceInvite_heading": "Jste zváni!",
