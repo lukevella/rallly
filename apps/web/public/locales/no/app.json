@@ -333,6 +333,7 @@
   "imageUploadDescription": "Opptil 2 MB, JPG eller PNG",
   "billingPlanTitle": "Abonnement",
   "attendeeCount": "{count, plural, =0 {No attendees} one {1 attendee} other {# attendees}}",
+  "participantCount": "{count, plural, =0 {Ingen deltakere} one {1 deltaker} other {# deltakere}}",
   "currentPlan": "Gjeldende abonnement",
   "planHobbyDescription": "For grunnleggende bruk",
   "extendedPollLifetimeDescription": "Behold avstemninger på ubestemt tid",
