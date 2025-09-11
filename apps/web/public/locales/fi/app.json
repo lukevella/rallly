@@ -453,6 +453,7 @@
   "loading": "Ladataan...",
   "endOfList": "Olet tullut luettelon loppuun",
   "attendeeCount": "{count, plural, =0 {Ei osallistujia} one {1 osallistuja} other {# osallistujaa}}",
+  "participantCount": "{count, plural, =0 {No participants} one {1 participant} other {# participants}}",
   "imageCropDialogTitle": "Rajaa kuva",
   "cropPreview": "Rajauksen esikatselu",
   "annualSavings": "Säästä {amount} vuosilaskutuksella",
