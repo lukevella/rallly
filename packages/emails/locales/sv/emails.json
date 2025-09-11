@@ -62,5 +62,6 @@
   "abandoned_checkout_support": "Om du har några frågor om Rallly Pro eller behöver hjälp med något alls, svara bara på detta mejl. Jag är här för att hjälpa till!",
   "abandoned_checkout_preview": "Exklusivt erbjudande: Få {discount}% rabatt på ditt första år av Rallly Pro!",
   "abandoned_checkout_subject": "Få {discount}% rabatt på ditt första år av Rallly Pro",
-  "abandoned_checkout_signoff": "Vänliga hälsningar,"
+  "abandoned_checkout_signoff": "Vänliga hälsningar,",
+  "license_key_plan": "Plan"
 }
