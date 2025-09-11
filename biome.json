@@ -66,6 +66,13 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["apps/**/src/**", "packages/**/src/**"]
+    "includes": ["apps/**/src/**", "packages/**/src/**"],
+    "experimentalScannerIgnores": [
+      "dist",
+      "test-results",
+      ".next",
+      ".turbo",
+      "playwright-report"
+    ]
   }
 }
