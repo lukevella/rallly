@@ -357,6 +357,7 @@
   "imageUploadDescription": "Até 2MB, JPG ou PNG",
   "billingPlanTitle": "Plano",
   "attendeeCount": "{count, plural, =0 {No attendees} one {1 attendee} other {# attendees}}",
+  "participantCount": "{count, plural, =0 {No participants} one {1 participant} other {# participants}}",
   "planHobbyDescription": "Para utilizadores casuais",
   "extendedPollLifetimeDescription": "Mantenha votações indefinidamente",
   "addSeats": "{count, plural, one {Add # Seat} other {Add # Seats}}",
