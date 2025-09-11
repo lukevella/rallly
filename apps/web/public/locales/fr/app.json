@@ -309,6 +309,7 @@
   "leaveSpaceInstruction": "Saisissez le nom de l'espace pour confirmer :",
   "leaveSpace": "Quitter l'espace",
   "attendeeCount": "{count, plural, =0 {No attendees} one {1 attendee} other {# attendees}}",
+  "participantCount": "{count, plural, =0 {Aucun participant} one {1 participant} other {# participants}}",
   "currentPlan": "Abonnement actuel",
   "planHobbyDescription": "Pour les utilisateurs occasionnels",
   "extendedPollLifetimeDescription": "Conserver les sondages indéfiniment",
