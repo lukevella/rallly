@@ -453,6 +453,7 @@
   "loading": "Cargando...",
   "endOfList": "Has llegado al final de la lista",
   "attendeeCount": "{count, plural, =0 {Sin asistentes} one {1 asistente} other {# asistentes}}",
+  "participantCount": "{count, plural, =0 {Ningún participante} one {1 participante} other {# participantes}}",
   "imageCropDialogTitle": "Recortar imagen",
   "cropPreview": "Vista previa de recorte",
   "annualSavings": "Ahorra {amount} con la facturación anual",
