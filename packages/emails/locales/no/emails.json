@@ -46,5 +46,7 @@
   "common_viewOn": "Se på {domain}",
   "newComment_preview": "Gå til avstemningen din for å se hva de sa.",
   "newComment_heading": "Ny kommentar",
-  "changeEmailRequest_subject": "Bekreft din nye e-postadresse"
+  "changeEmailRequest_subject": "Bekreft din nye e-postadresse",
+  "license_key_plan": "Abonnement",
+  "license_key_licenseKey": "Lisensnøkkel"
 }
