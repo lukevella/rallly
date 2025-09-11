@@ -453,6 +453,7 @@
   "loading": "Indlæser...",
   "endOfList": "Du har nået afslutningen på listen",
   "attendeeCount": "{count, plural, =0 {Ingen deltagere} one {1 deltager} other {# deltagere}}",
+  "participantCount": "{count, plural, =0 {No participants} one {1 participant} other {# participants}}",
   "imageCropDialogTitle": "Beskær billede",
   "cropPreview": "Beskær forhåndsvisning",
   "annualSavings": "Spar {amount} med årlig fakturering",
