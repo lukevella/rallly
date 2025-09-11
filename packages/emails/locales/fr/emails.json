@@ -62,5 +62,10 @@
   "abandoned_checkout_support": "Si vous avez des questions à propos de Rallly Pro ou si vous avez besoin d'aide, répondez à cet e-mail. Je suis là pour vous aider !",
   "abandoned_checkout_preview": "Offre exclusive : Obtenez {discount}% de réduction sur votre première année de Rallly Pro!",
   "abandoned_checkout_subject": "Obtenez {discount}% de réduction sur votre première année de Rallly Pro",
-  "abandoned_checkout_signoff": "Cordialement,"
+  "abandoned_checkout_signoff": "Cordialement,",
+  "license_key_plan": "Forfait",
+  "license_key_licenseKey": "Clé de licence",
+  "license_key_nextStepsHeading": "Étapes suivantes",
+  "eventCanceledPreview": "Événement annulé",
+  "eventCanceledHeading": "Événement annulé"
 }
