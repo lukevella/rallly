@@ -455,6 +455,7 @@
   "loading": "Betöltés...",
   "endOfList": "Elérted a lista végét",
   "attendeeCount": "{count, plural, =0 {Nincsenek résztvevők} one {1 résztvevő} other {# résztvevő}}",
+  "participantCount": "{count, plural, =0 {Nincsenek résztvevők} one {1 résztvevő} other {# résztvevő}}",
   "imageCropDialogTitle": "Kép levágása",
   "cropPreview": "Levágás előnézete",
   "annualSavings": "Spórolj {amount}-t évi számlázással",
