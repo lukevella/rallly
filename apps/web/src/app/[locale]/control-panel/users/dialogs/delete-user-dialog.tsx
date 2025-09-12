@@ -31,7 +31,6 @@ const useSchema = (email: string) => {
   const { t } = useTranslation();
   return z.object({
     email: z
-      .string()
       .email()
       .refine((value) => value.toLowerCase() === email.toLowerCase(), {
         message: t("emailDoesNotMatch", {

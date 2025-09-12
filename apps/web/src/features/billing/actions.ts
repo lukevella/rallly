@@ -13,7 +13,7 @@ export const updateSeatsAction = spaceActionClient
   })
   .inputSchema(
     z.object({
-      seatDelta: z.number().int(),
+      seatDelta: z.int(),
     }),
   )
   .action(async ({ ctx, parsedInput }) => {

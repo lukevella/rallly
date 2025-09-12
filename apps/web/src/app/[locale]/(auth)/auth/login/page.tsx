@@ -9,13 +9,13 @@ import { LoginPage } from "./components/login-page";
 export const dynamic = "force-dynamic";
 
 const searchParamsSchema = z.object({
-  magicLink: z.string().url(),
+  magicLink: z.url(),
 });
 
 type SearchParams = z.infer<typeof searchParamsSchema>;
 
 const magicLinkParams = z.object({
-  email: z.string().email(),
+  email: z.email(),
   token: z.string(),
 });
 

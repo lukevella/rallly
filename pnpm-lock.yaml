@@ -165,7 +165,7 @@ importers:
     dependencies:
       '@ai-sdk/openai':
         specifier: ^1.2.0
-        version: 1.3.20(zod@3.25.20)
+        version: 1.3.20(zod@4.1.8)
       '@auth/prisma-adapter':
         specifier: ^2.7.4
         version: 2.9.0(@prisma/client@6.8.2(prisma@6.8.2(typescript@5.8.3))(typescript@5.8.3))(nodemailer@6.10.1)
@@ -188,8 +188,8 @@ importers:
         specifier: ^0.1.4
         version: 0.1.4(hono-rate-limiter@0.2.3(hono@4.7.10))
       '@hono/zod-validator':
-        specifier: ^0.5.0
-        version: 0.5.0(hono@4.7.10)(zod@3.25.20)
+        specifier: ^0.7.2
+        version: 0.7.2(hono@4.7.10)(zod@4.1.8)
       '@hookform/resolvers':
         specifier: ^3.3.1
         version: 3.10.0(react-hook-form@7.56.1(react@19.1.0))
@@ -246,7 +246,7 @@ importers:
         version: 8.1.0(typescript@5.8.3)
       '@t3-oss/env-nextjs':
         specifier: ^0.11.0
-        version: 0.11.1(typescript@5.8.3)(zod@3.25.20)
+        version: 0.11.1(typescript@5.8.3)(zod@4.1.8)
       '@tanstack/react-query':
         specifier: ^5.74.11
         version: 5.74.11(react@19.1.0)
@@ -282,7 +282,7 @@ importers:
         version: 3.0.0
       ai:
         specifier: ^4.1.50
-        version: 4.3.10(react@19.1.0)(zod@3.25.20)
+        version: 4.3.10(react@19.1.0)(zod@4.1.8)
       autoprefixer:
         specifier: ^10.4.13
         version: 10.4.21(postcss@8.5.3)
@@ -419,8 +419,8 @@ importers:
         specifier: ^1.5.1
         version: 1.5.2
       zod:
-        specifier: ^3.25.6
-        version: 3.25.20
+        specifier: ^4.1.8
+        version: 4.1.8
     devDependencies:
       '@babel/core':
         specifier: ^7.26.10
@@ -2257,11 +2257,11 @@ packages:
     peerDependencies:
       hono-rate-limiter: ^0.2.1
 
-  '@hono/zod-validator@0.5.0':
-    resolution: {integrity: sha512-ds5bW6DCgAnNHP33E3ieSbaZFd5dkV52ZjyaXtGoR06APFrCtzAsKZxTHwOrJNBdXsi0e5wNwo5L4nVEVnJUdg==}
+  '@hono/zod-validator@0.7.2':
+    resolution: {integrity: sha512-ub5eL/NeZ4eLZawu78JpW/J+dugDAYhwqUIdp9KYScI6PZECij4Hx4UsrthlEUutqDDhPwRI0MscUfNkvn/mqQ==}
     peerDependencies:
       hono: '>=3.9.0'
-      zod: ^3.19.1
+      zod: ^3.25.0 || ^4.0.0
 
   '@hookform/resolvers@3.10.0':
     resolution: {integrity: sha512-79Dv+3mDF7i+2ajj7SkypSKHhl1cbln1OGavqrsF7p6mbUv11xpqpacPsGDCTRvCSjEEIez2ef1NveSVL3b0Ag==}
@@ -9577,6 +9577,9 @@ packages:
   zod@3.25.20:
     resolution: {integrity: sha512-z03fqpTMDF1G02VLKUMt6vyACE7rNWkh3gpXVHgPTw28NPtDFRGvcpTtPwn2kMKtQ0idtYJUTxchytmnqYswcw==}
 
+  zod@4.1.8:
+    resolution: {integrity: sha512-5R1P+WwQqmmMIEACyzSvo4JXHY5WiAFHRMg+zBZKgKS+Q1viRa0C1hmUKtHltoIFKtIdki3pRxkmpP74jnNYHQ==}
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -9584,39 +9587,39 @@ snapshots:
 
   '@adobe/css-tools@4.4.4': {}
 
-  '@ai-sdk/openai@1.3.20(zod@3.25.20)':
+  '@ai-sdk/openai@1.3.20(zod@4.1.8)':
     dependencies:
       '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.7(zod@3.25.20)
-      zod: 3.25.20
+      '@ai-sdk/provider-utils': 2.2.7(zod@4.1.8)
+      zod: 4.1.8
 
-  '@ai-sdk/provider-utils@2.2.7(zod@3.25.20)':
+  '@ai-sdk/provider-utils@2.2.7(zod@4.1.8)':
     dependencies:
       '@ai-sdk/provider': 1.1.3
       nanoid: 3.3.11
       secure-json-parse: 2.7.0
-      zod: 3.25.20
+      zod: 4.1.8
 
   '@ai-sdk/provider@1.1.3':
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/react@1.2.9(react@19.1.0)(zod@3.25.20)':
+  '@ai-sdk/react@1.2.9(react@19.1.0)(zod@4.1.8)':
     dependencies:
-      '@ai-sdk/provider-utils': 2.2.7(zod@3.25.20)
-      '@ai-sdk/ui-utils': 1.2.8(zod@3.25.20)
+      '@ai-sdk/provider-utils': 2.2.7(zod@4.1.8)
+      '@ai-sdk/ui-utils': 1.2.8(zod@4.1.8)
       react: 19.1.0
       swr: 2.3.3(react@19.1.0)
       throttleit: 2.1.0
     optionalDependencies:
-      zod: 3.25.20
+      zod: 4.1.8
 
-  '@ai-sdk/ui-utils@1.2.8(zod@3.25.20)':
+  '@ai-sdk/ui-utils@1.2.8(zod@4.1.8)':
     dependencies:
       '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.7(zod@3.25.20)
-      zod: 3.25.20
-      zod-to-json-schema: 3.24.5(zod@3.25.20)
+      '@ai-sdk/provider-utils': 2.2.7(zod@4.1.8)
+      zod: 4.1.8
+      zod-to-json-schema: 3.24.5(zod@4.1.8)
 
   '@alcalzone/ansi-tokenize@0.2.0':
     dependencies:
@@ -11412,10 +11415,10 @@ snapshots:
     dependencies:
       hono-rate-limiter: 0.2.3(hono@4.7.10)
 
-  '@hono/zod-validator@0.5.0(hono@4.7.10)(zod@3.25.20)':
+  '@hono/zod-validator@0.7.2(hono@4.7.10)(zod@4.1.8)':
     dependencies:
       hono: 4.7.10
-      zod: 3.25.20
+      zod: 4.1.8
 
   '@hookform/resolvers@3.10.0(react-hook-form@7.56.1(react@19.1.0))':
     dependencies:
@@ -14036,16 +14039,16 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
-  '@t3-oss/env-core@0.11.1(typescript@5.8.3)(zod@3.25.20)':
+  '@t3-oss/env-core@0.11.1(typescript@5.8.3)(zod@4.1.8)':
     dependencies:
-      zod: 3.25.20
+      zod: 4.1.8
     optionalDependencies:
       typescript: 5.8.3
 
-  '@t3-oss/env-nextjs@0.11.1(typescript@5.8.3)(zod@3.25.20)':
+  '@t3-oss/env-nextjs@0.11.1(typescript@5.8.3)(zod@4.1.8)':
     dependencies:
-      '@t3-oss/env-core': 0.11.1(typescript@5.8.3)(zod@3.25.20)
-      zod: 3.25.20
+      '@t3-oss/env-core': 0.11.1(typescript@5.8.3)(zod@4.1.8)
+      zod: 4.1.8
     optionalDependencies:
       typescript: 5.8.3
 
@@ -14625,15 +14628,15 @@ snapshots:
       clean-stack: 4.2.0
       indent-string: 5.0.0
 
-  ai@4.3.10(react@19.1.0)(zod@3.25.20):
+  ai@4.3.10(react@19.1.0)(zod@4.1.8):
     dependencies:
       '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.7(zod@3.25.20)
-      '@ai-sdk/react': 1.2.9(react@19.1.0)(zod@3.25.20)
-      '@ai-sdk/ui-utils': 1.2.8(zod@3.25.20)
+      '@ai-sdk/provider-utils': 2.2.7(zod@4.1.8)
+      '@ai-sdk/react': 1.2.9(react@19.1.0)(zod@4.1.8)
+      '@ai-sdk/ui-utils': 1.2.8(zod@4.1.8)
       '@opentelemetry/api': 1.9.0
       jsondiffpatch: 0.6.0
-      zod: 3.25.20
+      zod: 4.1.8
     optionalDependencies:
       react: 19.1.0
 
@@ -20115,8 +20118,14 @@ snapshots:
     dependencies:
       zod: 3.25.20
 
+  zod-to-json-schema@3.24.5(zod@4.1.8):
+    dependencies:
+      zod: 4.1.8
+
   zod@3.23.8: {}
 
   zod@3.25.20: {}
+
+  zod@4.1.8: {}
 
   zwitch@2.0.4: {}

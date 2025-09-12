@@ -7,7 +7,7 @@ export const env = createEnv({
    * Will throw if you access these variables on the client.
    */
   server: {
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.url(),
     NODE_ENV: z
       .enum(["development", "production", "test"])
       .default("development"),
@@ -58,8 +58,8 @@ export const env = createEnv({
     /**
      * Email addresses for support and no-reply emails.
      */
-    SUPPORT_EMAIL: z.string().email(),
-    NOREPLY_EMAIL: z.string().email().optional(),
+    SUPPORT_EMAIL: z.email(),
+    NOREPLY_EMAIL: z.email().optional(),
     NOREPLY_EMAIL_NAME: z.string().default("Rallly"),
 
     /**
@@ -93,7 +93,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_POSTHOG_API_KEY: z.string().optional(),
-    NEXT_PUBLIC_POSTHOG_API_HOST: z.string().url().optional(),
+    NEXT_PUBLIC_POSTHOG_API_HOST: z.url().optional(),
     NEXT_PUBLIC_SELF_HOSTED: z.enum(["true", "false"]).optional(),
   },
   /*

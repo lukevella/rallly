@@ -21,7 +21,7 @@ import { checkLicenseKey } from "../helpers/check-license-key";
 
 const formSchema = z.object({
   licenseKey: z.string().trim().min(1).refine(checkLicenseKey, {
-    message: "Invalid license key",
+    error: "Invalid license key",
   }),
 });
 
