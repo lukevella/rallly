@@ -45,7 +45,7 @@ function useInviteMemberFormSchema() {
 
   return useMemo(() => {
     return z.object({
-      email: z.string().email({
+      email: z.email({
         message: t("invalidEmailAddress", {
           defaultValue: "Please enter a valid email address",
         }),
@@ -197,7 +197,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.values(memberRoleSchema.Values).map((role) => (
+                      {Object.values(memberRoleSchema.enum).map((role) => (
                         <SelectItem key={role} value={role}>
                           <SpaceRole role={role} />
                         </SelectItem>

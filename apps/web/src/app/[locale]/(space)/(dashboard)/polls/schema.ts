@@ -3,7 +3,7 @@ import { pollStatusSchema } from "@/features/poll/schema";
 
 export const DEFAULT_PAGE_SIZE = 10;
 
-export const pageSchema = z.coerce.number().optional().default(1);
+export const pageSchema = z.coerce.number().default(1);
 
 export const querySchema = z
   .string()

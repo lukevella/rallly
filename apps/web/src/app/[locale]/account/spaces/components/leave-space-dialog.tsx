@@ -48,7 +48,7 @@ export function LeaveSpaceDialog({
           .string()
           .transform((s) => s.trim())
           .refine((val) => val === spaceName, {
-            message: t("spaceNameMismatch", {
+            error: t("spaceNameMismatch", {
               defaultValue: "Space name does not match",
             }),
           }),

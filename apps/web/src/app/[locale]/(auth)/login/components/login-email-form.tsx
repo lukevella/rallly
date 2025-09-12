@@ -24,7 +24,7 @@ function useLoginWithEmailSchema() {
   const { t } = useTranslation();
   return React.useMemo(() => {
     return z.object({
-      identifier: z.string().email(t("validEmail")),
+      identifier: z.email(t("validEmail")),
     });
   }, [t]);
 }

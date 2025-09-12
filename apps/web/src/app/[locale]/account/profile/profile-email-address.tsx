@@ -25,7 +25,7 @@ import { useAuthenticatedUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
 
 const emailChangeFormData = z.object({
-  email: z.string().email(),
+  email: z.email(),
 });
 
 type EmailChangeFormData = z.infer<typeof emailChangeFormData>;

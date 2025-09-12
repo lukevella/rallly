@@ -16,7 +16,7 @@
     "docker:start": "./scripts/docker-start.sh"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^1.2.0",
+    "@ai-sdk/openai":"^2.0.28",
     "@auth/prisma-adapter": "^2.7.4",
     "@aws-sdk/client-s3": "^3.645.0",
     "@aws-sdk/s3-request-presigner": "^3.645.0",
@@ -24,8 +24,8 @@
     "@casl/prisma": "^1.5.1",
     "@casl/react": "^5.0.0",
     "@hono-rate-limiter/redis": "^0.1.4",
-    "@hono/zod-validator": "^0.5.0",
-    "@hookform/resolvers": "^3.3.1",
+    "@hono/zod-validator": "^0.7.2",
+    "@hookform/resolvers": "^5.2.1",
     "@next/env": "^15.3.1",
     "@panva/hkdf": "^1.2.1",
     "@prisma/client": "^6.8.2",
@@ -43,7 +43,7 @@
     "@rallly/utils": "workspace:*",
     "@sentry/nextjs": "^9.14.0",
     "@svgr/webpack": "^8.1.0",
-    "@t3-oss/env-nextjs": "^0.11.0",
+    "@t3-oss/env-nextjs": "^0.13.8",
     "@tanstack/react-query": "^5.74.11",
     "@tanstack/react-query-devtools": "^5.74.11",
     "@tanstack/react-table": "^8.9.1",
@@ -55,7 +55,7 @@
     "@upstash/ratelimit": "^1.2.1",
     "@vercel/functions": "^2.0.0",
     "@vercel/kv": "^3.0.0",
-    "ai": "^4.1.50",
+    "ai": "^5.0.41",
     "autoprefixer": "^10.4.13",
     "calendar-link": "^2.6.0",
     "class-variance-authority": "^0.7.1",
@@ -101,7 +101,7 @@
     "superjson": "^2.0.0",
     "tailwindcss": "^3.4.17",
     "timezone-soft": "^1.5.1",
-    "zod": "^3.25.6"
+    "zod": "^4.1.8"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",

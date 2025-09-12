@@ -91,7 +91,7 @@ export const user = router({
       return { success: true };
     }),
   requestEmailChange: privateProcedure
-    .input(z.object({ email: z.string().email() }))
+    .input(z.object({ email: z.email() }))
     .use(createRateLimitMiddleware("request_email_change", 5, "1 h"))
     .mutation(async ({ input, ctx }) => {
       const currentUser = await prisma.user.findUnique({

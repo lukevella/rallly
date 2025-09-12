@@ -23,7 +23,7 @@ export const auth = router({
   getUserInfo: publicProcedure
     .input(
       z.object({
-        email: z.string().email(),
+        email: z.email(),
       }),
     )
     .mutation(async ({ input }) => {
@@ -40,7 +40,7 @@ export const auth = router({
     .input(
       z.object({
         name: z.string().trim().min(1).max(100).refine(isValidName),
-        email: z.string().email(),
+        email: z.email(),
       }),
     )
     .mutation(

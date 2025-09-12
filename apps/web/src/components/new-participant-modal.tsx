@@ -20,13 +20,13 @@ import { useUser } from "./user-provider";
 const requiredEmailSchema = z.object({
   requireEmail: z.literal(true),
   name: z.string().trim().min(1).max(100),
-  email: z.string().email(),
+  email: z.email(),
 });
 
 const optionalEmailSchema = z.object({
   requireEmail: z.literal(false),
   name: z.string().trim().min(1).max(100),
-  email: z.string().email().or(z.literal("")),
+  email: z.email().or(z.literal("")),
 });
 
 const schema = z.union([requiredEmailSchema, optionalEmailSchema]);
