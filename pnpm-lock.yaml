@@ -37,7 +37,7 @@ importers:
     dependencies:
       mint:
         specifier: ^4.2.108
-        version: 4.2.108(@types/node@20.17.50)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)
+        version: 4.2.112(@types/node@20.17.50)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -186,10 +186,10 @@ importers:
         version: 5.0.0(@casl/ability@6.7.3)(react@19.1.0)
       '@hono-rate-limiter/redis':
         specifier: ^0.1.4
-        version: 0.1.4(hono-rate-limiter@0.2.3(hono@4.7.10))
+        version: 0.1.4(hono-rate-limiter@0.2.3(hono@4.9.7))
       '@hono/zod-validator':
         specifier: ^0.7.2
-        version: 0.7.2(hono@4.7.10)(zod@4.1.8)
+        version: 0.7.2(hono@4.9.7)(zod@4.1.8)
       '@hookform/resolvers':
         specifier: ^5.2.1
         version: 5.2.1(react-hook-form@7.56.1(react@19.1.0))
@@ -308,11 +308,11 @@ importers:
         specifier: ^1.39.9
         version: 1.39.9
       hono:
-        specifier: ^4.7.10
-        version: 4.7.10
+        specifier: ^4.9.7
+        version: 4.9.7
       hono-rate-limiter:
         specifier: ^0.2.1
-        version: 0.2.3(hono@4.7.10)
+        version: 0.2.3(hono@4.9.7)
       i18next:
         specifier: ^24.2.2
         version: 24.2.3(typescript@5.8.3)
@@ -2667,16 +2667,16 @@ packages:
       '@types/react': '>=16'
       react: '>=16'
 
-  '@mintlify/cli@4.0.712':
-    resolution: {integrity: sha512-U7HVzCAcdzHLVqZdtiBx5xMaUEDiyALpUza7V08QU3WrGX8yqIF48oGtWh0Db7B+Kdsl1s54e2jjcCjGh9mJfQ==}
+  '@mintlify/cli@4.0.716':
+    resolution: {integrity: sha512-iUwzpQSmk1IKaqyUPfFYmhwkTmUlocr55Dr6dfZBmXGcMRXn99ZO33RdL+i/pYbNeGbs97HUtoHFgLQJDeVkrA==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  '@mintlify/common@1.0.522':
-    resolution: {integrity: sha512-S6qWhil8ix1w+t6qsMamcg7SvinRefjy+15dvs0g/d2r8ojKI/qwy0p0IpbBI8PbMEznEtsDveOEFrdSe7A2sg==}
+  '@mintlify/common@1.0.526':
+    resolution: {integrity: sha512-VptyC/im6TDWIrB1BSG4/6L6x/prqJ8B8wbrGUGP5k/3669x0byxBxwIrArBvfhH/qis03pTVxCHHqJGciXTWQ==}
 
-  '@mintlify/link-rot@3.0.659':
-    resolution: {integrity: sha512-gCsCUE/WBzjIuuRIYBBGOR3dzQQFMxvhPJT55puyvU2iDzqe0CYqnhsu7en3Woh6P9Qae77WC5cSJcHqueXGxQ==}
+  '@mintlify/link-rot@3.0.663':
+    resolution: {integrity: sha512-YCBxk0aIeUn2ZtohryIhwAEs/4+VxsVpfHrWE4nilpr6PHxW0jxbRJNYazxuxunLESCoqQTvt5EeY/u3Fbztbg==}
     engines: {node: '>=18.0.0'}
 
   '@mintlify/mdx@2.0.5':
@@ -2685,28 +2685,28 @@ packages:
       react: ^18.3.1
       react-dom: ^18.3.1
 
-  '@mintlify/models@0.0.225':
-    resolution: {integrity: sha512-ICo0TWcPJU5tCLHkYqBm+TMnBLG+wmAwGUENh6H62faKecKQqyzIHujqoIzTjBpWDs4aEBwdB2zOWjHkjWHtjg==}
+  '@mintlify/models@0.0.227':
+    resolution: {integrity: sha512-rRoSA8Sikpi+r5hJJ06c5KanVg5flu3/7Tl30Bc4JSb2PXcoHAxwzzxYS1c8qFu6QaqPRBxlav+55m6kQMIiaA==}
     engines: {node: '>=18.0.0'}
 
   '@mintlify/openapi-parser@0.0.7':
     resolution: {integrity: sha512-3ecbkzPbsnkKVZJypVL0H5pCTR7a4iLv4cP7zbffzAwy+vpH70JmPxNVpPPP62yLrdZlfNcMxu5xKeT7fllgMg==}
     engines: {node: '>=18'}
 
-  '@mintlify/prebuild@1.0.646':
-    resolution: {integrity: sha512-dYCKAQXjrlqirtwSpRM4m5nL7dTcsJY1RhANuvDWJc19otgKyEeFpAgAVS/4oakEOaaw/WcggzcaB8JTBwBvGw==}
+  '@mintlify/prebuild@1.0.650':
+    resolution: {integrity: sha512-MUJ+Co2R6djo1THL7BFhAFVLhHF8DwKp/4A947PNF2fYI9Wpf5InzrIAk6a11QdazlTxdoUsJVR1+2cPJacSig==}
 
-  '@mintlify/previewing@4.0.695':
-    resolution: {integrity: sha512-u1L08SsSTKLvtSPUFBn+pt+jpoxEiF0faIWqtladEne5E2RTzAl+6IQH4tavhOYJ2Rha6WS/TYValyNHybHTaQ==}
+  '@mintlify/previewing@4.0.699':
+    resolution: {integrity: sha512-m+oth6bXWoSYgzGKpu0SEZhlqUBKs4G17e7KYvVR0I95oQhoCfiSbWjTlkmLeJoEUtVte2YcnfmuoQ8PqoJeAg==}
     engines: {node: '>=18.0.0'}
 
-  '@mintlify/scraping@4.0.381':
-    resolution: {integrity: sha512-UomfzWHSaVRrWisIp+VKbprUbJGbITY59RwyiinjhKWQrSTZ0dceZsEpfCG0cGDOKH6wluU1ewKRQtUZvSkyyg==}
+  '@mintlify/scraping@4.0.385':
+    resolution: {integrity: sha512-yQjjk/mhQUCVdvN4IQ/YV32amqQ1iOkZXQfMdv6BN02qh6V3QKBfod8b9ci8Mg3wEDoG/acptOqhvK3L7knBVg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  '@mintlify/validation@0.1.462':
-    resolution: {integrity: sha512-4ZicHpaqebfYy4NybuumKjU53H4RNGUkEt+iX+4XB+laAfGthzUaSaL/Hlebz7X+PSPpeW8Z3qvUiROai6zcZA==}
+  '@mintlify/validation@0.1.465':
+    resolution: {integrity: sha512-CeS/NHSACR5R9JxNm1cWm6/Vkg5r3e+yk+TVZqMZhVsy5+Pdz7wlQw0Q5dd7RYOOh4cZhWvoMsyBl1edqLwOmg==}
 
   '@next/bundle-analyzer@15.4.6':
     resolution: {integrity: sha512-LZWqTQgIpfhblT77VVc1r4qtHJY1pfZOAIx8zNtliU7L3pMjpNrG4rYWikJ7AyAI/RgYyt2sCVWqkeOZmFp7Zg==}
@@ -5382,10 +5382,6 @@ packages:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
 
-  chalk@5.4.1:
-    resolution: {integrity: sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w==}
-    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
-
   chalk@5.6.2:
     resolution: {integrity: sha512-7NzBL0rN6fMUW+f7A6Io4h40qQlG+xGmtMxfbnH/K7TAtt8JQWVQK+6g0UXKMeVJoyV5EkkNsErQ8pVD3bLHbA==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
@@ -6507,8 +6503,8 @@ packages:
     peerDependencies:
       hono: ^4.1.1
 
-  hono@4.7.10:
-    resolution: {integrity: sha512-QkACju9MiN59CKSY5JsGZCYmPZkA6sIW6OFCUp7qDjZu6S6KHtJHhAc9Uy9mV9F8PJ1/HQ3ybZF2yjCa/73fvQ==}
+  hono@4.9.7:
+    resolution: {integrity: sha512-t4Te6ERzIaC48W3x4hJmBwgNlLhmiEdEE5ViYb02ffw4ignHNHa5IBtPjmbKstmtKa8X6C35iWwK4HaqvrzG9w==}
     engines: {node: '>=16.9.0'}
 
   html-encoding-sniffer@4.0.0:
@@ -7428,8 +7424,8 @@ packages:
     resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
     engines: {node: '>= 8'}
 
-  mint@4.2.108:
-    resolution: {integrity: sha512-87VUnyQspBJv5t6cEOTPXcStKyLuHBsbOY5qIt+HKmYvGMRZbpGhZ9D+l8p3aB+tCyREdFu8kZsbheeBM+d01w==}
+  mint@4.2.112:
+    resolution: {integrity: sha512-6HZRwjFWozsCfWO6aVUXSAWVncsqOhCvRXaEeCxpsdJmDV82N4kFBoFpoiY076TVejo0vuTdg+6EmfG1kyhORA==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -11389,13 +11385,13 @@ snapshots:
     dependencies:
       is-negated-glob: 1.0.0
 
-  '@hono-rate-limiter/redis@0.1.4(hono-rate-limiter@0.2.3(hono@4.7.10))':
+  '@hono-rate-limiter/redis@0.1.4(hono-rate-limiter@0.2.3(hono@4.9.7))':
     dependencies:
-      hono-rate-limiter: 0.2.3(hono@4.7.10)
+      hono-rate-limiter: 0.2.3(hono@4.9.7)
 
-  '@hono/zod-validator@0.7.2(hono@4.7.10)(zod@4.1.8)':
+  '@hono/zod-validator@0.7.2(hono@4.9.7)(zod@4.1.8)':
     dependencies:
-      hono: 4.7.10
+      hono: 4.9.7
       zod: 4.1.8
 
   '@hookform/resolvers@5.2.1(react-hook-form@7.56.1(react@19.1.0))':
@@ -11771,15 +11767,15 @@ snapshots:
       '@types/react': 19.1.2
       react: 19.1.0
 
-  '@mintlify/cli@4.0.712(@types/node@20.17.50)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)':
+  '@mintlify/cli@4.0.716(@types/node@20.17.50)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)':
     dependencies:
-      '@mintlify/common': 1.0.522(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@mintlify/link-rot': 3.0.659(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
-      '@mintlify/models': 0.0.225
-      '@mintlify/prebuild': 1.0.646(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
-      '@mintlify/previewing': 4.0.695(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)
-      '@mintlify/validation': 0.1.462
-      chalk: 5.4.1
+      '@mintlify/common': 1.0.526(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@mintlify/link-rot': 3.0.663(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+      '@mintlify/models': 0.0.227
+      '@mintlify/prebuild': 1.0.650(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+      '@mintlify/previewing': 4.0.699(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)
+      '@mintlify/validation': 0.1.465
+      chalk: 5.6.2
       detect-port: 1.6.1
       fs-extra: 11.3.0
       gray-matter: 4.0.3
@@ -11803,13 +11799,13 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@mintlify/common@1.0.522(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@mintlify/common@1.0.526(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@asyncapi/parser': 3.4.0
       '@mintlify/mdx': 2.0.5(@types/react@19.1.2)(acorn@8.14.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@mintlify/models': 0.0.225
+      '@mintlify/models': 0.0.227
       '@mintlify/openapi-parser': 0.0.7
-      '@mintlify/validation': 0.1.462
+      '@mintlify/validation': 0.1.465
       '@sindresorhus/slugify': 2.2.1
       acorn: 8.14.1
       acorn-jsx: 5.3.2(acorn@8.14.1)
@@ -11855,12 +11851,12 @@ snapshots:
       - supports-color
       - ts-node
 
-  '@mintlify/link-rot@3.0.659(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)':
+  '@mintlify/link-rot@3.0.663(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)':
     dependencies:
-      '@mintlify/common': 1.0.522(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@mintlify/prebuild': 1.0.646(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
-      '@mintlify/previewing': 4.0.695(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)
-      '@mintlify/validation': 0.1.462
+      '@mintlify/common': 1.0.526(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@mintlify/prebuild': 1.0.650(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+      '@mintlify/previewing': 4.0.699(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)
+      '@mintlify/validation': 0.1.465
       fs-extra: 11.3.0
       unist-util-visit: 4.1.2
     transitivePeerDependencies:
@@ -11897,7 +11893,7 @@ snapshots:
       - acorn
       - supports-color
 
-  '@mintlify/models@0.0.225':
+  '@mintlify/models@0.0.227':
     dependencies:
       axios: 1.9.0
       openapi-types: 12.1.3
@@ -11913,13 +11909,13 @@ snapshots:
       leven: 4.0.0
       yaml: 2.7.1
 
-  '@mintlify/prebuild@1.0.646(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)':
+  '@mintlify/prebuild@1.0.650(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)':
     dependencies:
-      '@mintlify/common': 1.0.522(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@mintlify/common': 1.0.526(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mintlify/openapi-parser': 0.0.7
-      '@mintlify/scraping': 4.0.381(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
-      '@mintlify/validation': 0.1.462
-      chalk: 5.4.1
+      '@mintlify/scraping': 4.0.385(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+      '@mintlify/validation': 0.1.465
+      chalk: 5.6.2
       favicons: 7.2.0
       fs-extra: 11.3.0
       gray-matter: 4.0.3
@@ -11940,13 +11936,13 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@mintlify/previewing@4.0.695(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)':
+  '@mintlify/previewing@4.0.699(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)':
     dependencies:
-      '@mintlify/common': 1.0.522(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@mintlify/prebuild': 1.0.646(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
-      '@mintlify/validation': 0.1.462
+      '@mintlify/common': 1.0.526(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@mintlify/prebuild': 1.0.650(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+      '@mintlify/validation': 0.1.465
       better-opn: 3.0.2
-      chalk: 5.4.1
+      chalk: 5.6.2
       chokidar: 3.6.0
       express: 4.21.2
       fs-extra: 11.3.0
@@ -11976,9 +11972,9 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@mintlify/scraping@4.0.381(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)':
+  '@mintlify/scraping@4.0.385(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)':
     dependencies:
-      '@mintlify/common': 1.0.522(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@mintlify/common': 1.0.526(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mintlify/openapi-parser': 0.0.7
       fs-extra: 11.3.0
       hast-util-to-mdast: 10.1.2
@@ -12008,9 +12004,9 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@mintlify/validation@0.1.462':
+  '@mintlify/validation@0.1.465':
     dependencies:
-      '@mintlify/models': 0.0.225
+      '@mintlify/models': 0.0.227
       arktype: 2.1.22
       lcm: 0.0.3
       lodash: 4.17.21
@@ -14976,8 +14972,6 @@ snapshots:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
-  chalk@5.4.1: {}
-
   chalk@5.6.2: {}
 
   character-entities-html4@2.1.0: {}
@@ -16339,11 +16333,11 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
-  hono-rate-limiter@0.2.3(hono@4.7.10):
+  hono-rate-limiter@0.2.3(hono@4.9.7):
     dependencies:
-      hono: 4.7.10
+      hono: 4.9.7
 
-  hono@4.7.10: {}
+  hono@4.9.7: {}
 
   html-encoding-sniffer@4.0.0:
     dependencies:
@@ -17547,9 +17541,9 @@ snapshots:
       minipass: 3.3.6
       yallist: 4.0.0
 
-  mint@4.2.108(@types/node@20.17.50)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3):
+  mint@4.2.112(@types/node@20.17.50)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3):
     dependencies:
-      '@mintlify/cli': 4.0.712(@types/node@20.17.50)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)
+      '@mintlify/cli': 4.0.716(@types/node@20.17.50)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)
     transitivePeerDependencies:
       - '@types/node'
       - '@types/react'
