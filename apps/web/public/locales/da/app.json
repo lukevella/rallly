@@ -11,6 +11,7 @@
   "changeNameInfo": "Dette vil ikke berøre de afstemninger, som du allerede har foretaget.",
   "comments": "Kommentarer",
   "continue": "Fortsæt",
+  "configuredByEnvironmentVariable": "Denne indstilling er konfigureret af en miljøvariabel.",
   "copied": "Kopieret",
   "createdBy": "af <b>{name}</b>",
   "delete": "Slet",
