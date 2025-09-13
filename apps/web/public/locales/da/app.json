@@ -37,6 +37,7 @@
   "location": "Placering",
   "locationPlaceholder": "Joe's Kaffebutik",
   "login": "Log ind",
+  "loginNotConfigured": "Login er i øjeblikket ikke konfigureret.",
   "logout": "Log ud",
   "manage": "Administrér",
   "mixedOptionsDescription": "Du kan ikke have både tid og dato muligheder i den samme afstemning. Hvad vil du holde?",
