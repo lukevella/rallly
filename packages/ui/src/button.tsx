@@ -9,7 +9,7 @@ import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex select-none items-center justify-center whitespace-nowrap border border font-medium text-shadow disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex select-none items-center justify-center whitespace-nowrap border border text-shadow disabled:pointer-events-none disabled:opacity-50",
     "focus-visible:shadow-none",
   ),
   {
@@ -30,7 +30,7 @@ const buttonVariants = cva(
         link: "border-transparent text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-8 gap-x-2 rounded-md px-2 text-sm",
+        default: "h-8 gap-x-1.5 rounded-lg px-2 text-sm",
         sm: "h-7 gap-x-1.5 rounded-md px-1.5 text-sm",
         md: "h-9 gap-x-2 rounded-md px-2 text-sm",
         lg: "h-12 gap-x-3 rounded-lg px-4 text-base",
