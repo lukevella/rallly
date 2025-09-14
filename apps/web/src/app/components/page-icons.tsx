@@ -21,15 +21,16 @@ import type React from "react";
 const pageIconVariants = cva("inline-flex items-center justify-center", {
   variants: {
     color: {
-      darkGray: "bg-gray-700 text-white",
+      darkGray: "bg-gray-700 text-gray-300",
       indigo: "bg-indigo-500 text-white",
       gray: "bg-gray-200 text-gray-600",
       lime: "bg-lime-500 text-white",
       blue: "bg-blue-500 text-white",
-      rose: "bg-rose-500 text-white",
-      purple: "bg-purple-500 text-white",
+      rose: "bg-rose-500 text-rose-50",
+      purple: "bg-purple-500 text-purple-50",
     },
     size: {
+      xs: "size-5 rounded-md [&_svg]:size-3",
       sm: "size-7 rounded-md [&_svg]:size-4",
       md: "size-8 rounded-lg [&_svg]:size-4",
       lg: "size-9 rounded-lg [&_svg]:size-5",

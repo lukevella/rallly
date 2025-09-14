@@ -68,14 +68,14 @@ export const UserDropdown = ({ className }: { className?: string }) => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild={true}>
-          <Link href="/account/profile" className="flex items-center gap-x-2">
+          <Link href="/settings/profile" className="flex items-center gap-x-2">
             <UserIcon className="size-4 text-muted-foreground" />
             <Trans i18nKey="profile" defaults="Profile" />
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild={true}>
           <Link
-            href="/account/preferences"
+            href="/settings/preferences"
             className="flex items-center gap-x-2"
           >
             <Settings2Icon className="size-4 text-muted-foreground" />

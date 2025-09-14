@@ -18,7 +18,7 @@ export default async function Page() {
   ]);
 
   return (
-    <div>
+    <div className="absolute inset-0 h-dvh overflow-auto bg-gray-100">
       <div className="sticky top-0 z-20 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:grid-cols-3">
         <div className="mx-auto flex items-center justify-between gap-x-2">
           <div className="flex items-center gap-x-4 sm:flex-1">

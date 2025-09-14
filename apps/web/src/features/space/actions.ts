@@ -101,6 +101,8 @@ export const createSpaceAction = authActionClient
 
     trackSpaceCreated({ space, userId: ctx.user.id });
 
+    revalidatePath("/", "layout");
+
     return space;
   });
 

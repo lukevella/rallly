@@ -1,7 +1,8 @@
 import type { PollStatus } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
+import { Icon } from "@rallly/ui/icon";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { InboxIcon } from "lucide-react";
+import { InboxIcon, PlusIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PollsTabbedView } from "@/app/[locale]/(space)/(dashboard)/polls/polls-tabbed-view";
@@ -116,7 +117,10 @@ export default async function Page(props: {
           <PageHeaderActions>
             <Button variant="primary" asChild>
               <Link href="/new">
-                <Trans i18nKey="create" defaults="Create" />
+                <Icon>
+                  <PlusIcon />
+                </Icon>
+                <Trans i18nKey="newPoll" defaults="New Poll" />
               </Link>
             </Button>
           </PageHeaderActions>

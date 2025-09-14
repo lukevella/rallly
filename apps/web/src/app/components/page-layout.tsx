@@ -3,6 +3,8 @@
 import { cn } from "@rallly/ui";
 import { SidebarTrigger } from "@rallly/ui/sidebar";
 import { Skeleton } from "@rallly/ui/skeleton";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 
 export function PageContainer({
   children,
@@ -118,20 +120,33 @@ export function PageSkeleton() {
 }
 
 export function PageSectionGroup({ children }: { children?: React.ReactNode }) {
-  return <div className="space-y-6 lg:space-y-12">{children}</div>;
+  return <div className="space-y-6">{children}</div>;
 }
+
+const pageSectionVariants = cva("flex flex-col gap-4", {
+  variants: {
+    variant: {
+      card: "rounded-2xl border p-4",
+      default: "",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
+});
+
+export const PageSectionDivider = () => <hr />;
 
 export function PageSection({
   children,
   className,
+  variant,
 }: {
   children?: React.ReactNode;
   className?: string;
-}) {
+} & VariantProps<typeof pageSectionVariants>) {
   return (
-    <section
-      className={cn("grid gap-4 lg:grid-cols-[320px_1fr] lg:gap-12", className)}
-    >
+    <section className={cn(pageSectionVariants({ variant }), className)}>
       {children}
     </section>
   );
@@ -171,7 +186,7 @@ export function PageSectionDescription({
   return (
     <p
       className={cn(
-        "mt-1 text-pretty text-muted-foreground text-sm leading-normal",
+        "mt-0.5 text-pretty text-muted-foreground text-sm leading-normal",
         className,
       )}
     >

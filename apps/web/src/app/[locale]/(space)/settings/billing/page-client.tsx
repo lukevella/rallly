@@ -14,12 +14,11 @@ import {
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Trans } from "react-i18next";
-import { BillingPlan } from "@/app/[locale]/(space)/(dashboard)/settings/billing/components/billing-plan";
-import { ManageSeatsDialog } from "@/app/[locale]/(space)/(dashboard)/settings/billing/components/manage-seats-dialog";
 import {
   PageSection,
   PageSectionContent,
   PageSectionDescription,
+  PageSectionDivider,
   PageSectionGroup,
   PageSectionHeader,
   PageSectionTitle,
@@ -27,6 +26,8 @@ import {
 import { PayWallButton } from "@/features/billing/client";
 import { SubscriptionStatusLabel } from "@/features/billing/components/subscription-status-label";
 import type { SpaceTier } from "@/features/space/schema";
+import { BillingPlan } from "./components/billing-plan";
+import { ManageSeatsDialog } from "./components/manage-seats-dialog";
 
 export function BillingPageClient({
   tier,
@@ -150,6 +151,7 @@ export function BillingPageClient({
           ) : null}
         </PageSectionContent>
       </PageSection>
+      <PageSectionDivider />
       <PageSection>
         <PageSectionHeader>
           <PageSectionTitle>

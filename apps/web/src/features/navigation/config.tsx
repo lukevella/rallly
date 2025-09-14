@@ -1,15 +1,9 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import {
-  BarChart2Icon,
-  CalendarIcon,
-  HomeIcon,
-  SettingsIcon,
-} from "lucide-react";
+import { BarChart2Icon, CalendarIcon, HomeIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { useSpace } from "@/features/space/client";
 import { useTranslation } from "@/i18n/client";
 
 export interface NavigationItem {
@@ -35,7 +29,6 @@ export interface NavigationConfig {
 
 export const useSpaceMenu = () => {
   const { t } = useTranslation();
-  const space = useSpace();
   const pathname = usePathname();
   const config = React.useMemo<NavigationConfig>(
     () => ({
@@ -72,26 +65,9 @@ export const useSpaceMenu = () => {
             },
           ],
         },
-        ...(space.data.role === "admin"
-          ? [
-              {
-                id: "manage",
-                title: t("manage", { defaultValue: "Manage" }),
-                items: [
-                  {
-                    id: "settings",
-                    label: t("settings", { defaultValue: "Settings" }),
-                    href: "/settings/general",
-                    icon: SettingsIcon,
-                    isActive: pathname.startsWith("/settings"),
-                  },
-                ],
-              },
-            ]
-          : []),
       ],
     }),
-    [pathname, t, space],
+    [pathname, t],
   );
 
   return React.useMemo(

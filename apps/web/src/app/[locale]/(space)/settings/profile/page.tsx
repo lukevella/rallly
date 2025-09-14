@@ -5,17 +5,20 @@ import type { Metadata } from "next";
 
 import type { Params } from "@/app/[locale]/types";
 import {
-  PageContainer,
-  PageContent,
-  PageHeader,
   PageSection,
   PageSectionContent,
   PageSectionDescription,
   PageSectionGroup,
   PageSectionHeader,
   PageSectionTitle,
-  PageTitle,
 } from "@/app/components/page-layout";
+import {
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageDescription,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/app/components/settings-layout";
 import { requireUser } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
@@ -26,32 +29,27 @@ import { ProfileSettings } from "./profile-settings";
 export default async function Page() {
   const user = await requireUser();
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageTitle>
+    <SettingsPage>
+      <SettingsPageHeader>
+        <SettingsPageTitle>
           <Trans i18nKey="profile" defaults="Profile" />
-        </PageTitle>
-      </PageHeader>
-      <PageContent>
+        </SettingsPageTitle>
+        <SettingsPageDescription>
+          <Trans
+            i18nKey="profileDescription"
+            defaults="Set your public profile information"
+          />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
+      <SettingsPageContent>
         <PageSectionGroup>
-          <PageSection>
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans i18nKey="profile" defaults="Profile" />
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  i18nKey="profileDescription"
-                  defaults="Set your public profile information"
-                />
-              </PageSectionDescription>
-            </PageSectionHeader>
+          <PageSection variant="card">
             <PageSectionContent>
               <ProfileSettings name={user.name} image={user.image} />
             </PageSectionContent>
           </PageSection>
 
-          <PageSection>
+          <PageSection variant="card">
             <PageSectionHeader>
               <PageSectionTitle>
                 <Trans i18nKey="profileEmailAddress" defaults="Email Address" />
@@ -68,7 +66,7 @@ export default async function Page() {
             </PageSectionContent>
           </PageSection>
 
-          <PageSection>
+          <PageSection variant="card">
             <PageSectionHeader>
               <PageSectionTitle>
                 <Trans i18nKey="dangerZone" defaults="Danger Zone" />
@@ -92,8 +90,8 @@ export default async function Page() {
             </PageSectionContent>
           </PageSection>
         </PageSectionGroup>
-      </PageContent>
-    </PageContainer>
+      </SettingsPageContent>
+    </SettingsPage>
   );
 }
 

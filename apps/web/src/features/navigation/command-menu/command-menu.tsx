@@ -92,11 +92,11 @@ export function CommandMenu() {
           <CommandGroup
             heading={<Trans i18nKey="settings" defaults="Settings" />}
           >
-            <CommandItem onSelect={() => handleSelect("/account/profile")}>
+            <CommandItem onSelect={() => handleSelect("/settings/profile")}>
               <ProfilePageIcon size="sm" />
               <NavigationCommandLabel label={t("profile")} />
             </CommandItem>
-            <CommandItem onSelect={() => handleSelect("/account/preferences")}>
+            <CommandItem onSelect={() => handleSelect("/settings/preferences")}>
               <PreferencesPageIcon size="sm" />
               <NavigationCommandLabel label={t("preferences")} />
             </CommandItem>

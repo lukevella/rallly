@@ -87,5 +87,5 @@ export const GET = async (request: NextRequest) => {
 
   await handleEmailChange(token);
 
-  return NextResponse.redirect(new URL("/account/profile", request.url));
+  return NextResponse.redirect(new URL("/settings/profile", request.url));
 };
