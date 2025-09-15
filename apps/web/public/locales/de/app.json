@@ -491,7 +491,6 @@
   "increaseSeats": "Plätze erhöhen",
   "manageSubscription": "Abonnement verwalten",
   "seatUsage": "{usedSeats} von {totalSeats} Benutzerplätzen verwendet",
-  "noSeatsAvailableAlertTitle": "Keine Benutzerplätze verfügbar",
   "noSeatsAvailableAlertBillingDescription": "Erhöhe die Anzahl der Benutzerplätze in dieser Gruppe auf der <a>Abrechnungsseite</a>.",
   "noSeatsAvailableAlertSelfHostedDescription": "Du musst deinen Plan <a>upgraden</a>, um die Anzahl der Plätze in dieser Gruppe zu erhöhen.",
   "seatsUpdatedAlertTitle": "Benutzerplätze aktualisiert",
