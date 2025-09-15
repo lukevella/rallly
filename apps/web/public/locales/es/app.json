@@ -170,7 +170,6 @@
   "noParticipantsDescription": "Haz clic en <b>compartir</b> para invitar participantes",
   "timeShownIn": "Horas mostradas en {timeZone}",
   "pollStatusPausedDescription": "Los votos no pueden ser enviados o editados en este momento",
-  "eventHostTitle": "Administrar acceso",
   "eventHostDescription": "Eres el creador de esta encuesta",
   "deleteAccount": "Eliminar cuenta",
   "deleteAccountDialogTitle": "Eliminar cuenta",
