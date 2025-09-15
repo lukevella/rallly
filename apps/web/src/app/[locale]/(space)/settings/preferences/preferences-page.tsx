@@ -15,7 +15,7 @@ import { LanguagePreference } from "./components/language-preference";
 export function PreferencesPage() {
   return (
     <PageSectionGroup>
-      <PageSection>
+      <PageSection variant="card">
         <PageSectionHeader>
           <PageSectionTitle>
             <Trans i18nKey="language" defaults="Language" />
@@ -32,7 +32,7 @@ export function PreferencesPage() {
         </PageSectionContent>
       </PageSection>
 
-      <PageSection>
+      <PageSection variant="card">
         <PageSectionHeader>
           <PageSectionTitle>
             <Trans i18nKey="dateAndTime" defaults="Date & Time" />

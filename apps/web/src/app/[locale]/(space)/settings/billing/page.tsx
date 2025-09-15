@@ -1,7 +1,13 @@
 import { ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { BillingPageClient } from "@/app/[locale]/(space)/(dashboard)/settings/billing/page-client";
+import {
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageDescription,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/app/components/settings-layout";
 import { requireSpace, requireUser } from "@/auth/data";
 import {
   EmptyState,
@@ -16,6 +22,7 @@ import { defineAbilityForMember } from "@/features/space/member/ability";
 import { getTotalSeatsForSpace } from "@/features/space/utils";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
+import { BillingPageClient } from "./page-client";
 
 export default async function BillingSettingsPage() {
   if (!isFeatureEnabled("billing")) {
@@ -28,7 +35,7 @@ export default async function BillingSettingsPage() {
 
   if (!canManageBilling) {
     return (
-      <EmptyState>
+      <EmptyState className="h-full">
         <EmptyStateIcon>
           <ShieldXIcon />
         </EmptyStateIcon>
@@ -54,12 +61,27 @@ export default async function BillingSettingsPage() {
   const usedSeats = members.total;
 
   return (
-    <BillingPageClient
-      tier={space.tier}
-      subscription={subscription ?? undefined}
-      totalSeats={totalSeats}
-      usedSeats={usedSeats}
-    />
+    <SettingsPage>
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="billing" defaults="Billing" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
+          <Trans
+            i18nKey="billingDescription"
+            defaults="Manage your billing information and subscription."
+          />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
+      <SettingsPageContent>
+        <BillingPageClient
+          tier={space.tier}
+          subscription={subscription ?? undefined}
+          totalSeats={totalSeats}
+          usedSeats={usedSeats}
+        />
+      </SettingsPageContent>
+    </SettingsPage>
   );
 }
 

@@ -1,3 +1,4 @@
+import { Icon } from "@rallly/ui/icon";
 import {
   Sidebar,
   SidebarContent,
@@ -7,14 +8,19 @@ import {
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarSeparator,
 } from "@rallly/ui/sidebar";
+import { Settings2Icon } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { FeedbackMenuItem } from "@/app/[locale]/(space)/(dashboard)/components/feedback-menu-item";
 import { NavUser } from "@/app/[locale]/(space)/(dashboard)/components/nav-user";
 import { SpaceSidebarMenu } from "@/app/[locale]/(space)/(dashboard)/components/space-sidebar-menu";
 import { UpgradeMenuItem } from "@/app/[locale]/(space)/(dashboard)/components/upgrade-menu-item";
 import { requireSpace, requireUser } from "@/auth/data";
+import { Trans } from "@/components/trans";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
@@ -36,7 +42,7 @@ export default async function Layout({
   return (
     <SpaceSidebarProvider>
       <CommandMenu />
-      <Sidebar variant="inset">
+      <Sidebar>
         <SidebarHeader>
           <SpaceDropdown spaces={spaces} initialSpaceId={activeSpace.id} />
         </SidebarHeader>
@@ -51,6 +57,16 @@ export default async function Layout({
                 <IfFeatureEnabled feature="feedback">
                   <FeedbackMenuItem />
                 </IfFeatureEnabled>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/settings/preferences">
+                      <Icon>
+                        <Settings2Icon />
+                      </Icon>
+                      <Trans i18nKey="preferences" defaults="Preferences" />
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>

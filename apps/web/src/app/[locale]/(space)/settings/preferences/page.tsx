@@ -1,27 +1,34 @@
 import type { Metadata } from "next";
 import type { Params } from "@/app/[locale]/types";
 import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageTitle,
-} from "@/app/components/page-layout";
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageDescription,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/app/components/settings-layout";
 import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
 import { PreferencesPage } from "./preferences-page";
 
 export default async function Page() {
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageTitle>
+    <SettingsPage>
+      <SettingsPageHeader>
+        <SettingsPageTitle>
           <Trans i18nKey="preferences" defaults="Preferences" />
-        </PageTitle>
-      </PageHeader>
-      <PageContent>
+        </SettingsPageTitle>
+        <SettingsPageDescription>
+          <Trans
+            i18nKey="preferencesDescription"
+            defaults="Manage your preferences"
+          />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
+      <SettingsPageContent>
         <PreferencesPage />
-      </PageContent>
-    </PageContainer>
+      </SettingsPageContent>
+    </SettingsPage>
   );
 }
 

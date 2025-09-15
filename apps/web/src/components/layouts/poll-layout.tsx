@@ -28,7 +28,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   const pollLink = `/poll/${poll.id}`;
   const pathname = usePathname();
   return (
-    <div>
+    <div className="absolute inset-0 overflow-auto bg-gray-100">
       <div className="sticky top-0 z-40 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:flex-row">
         <div className="mx-auto flex max-w-4xl justify-between">
           <div className="flex min-w-0 items-center gap-x-2.5">

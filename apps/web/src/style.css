@@ -11,7 +11,7 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground bg-gray-100;
+    @apply text-foreground bg-background;
     font-feature-settings:
       "rlig" 1,
       "calt" 1;

@@ -56,21 +56,6 @@ const nextConfig = {
         destination: "/api/notifications/unsubscribe",
         permanent: true,
       },
-      {
-        source: "/settings/profile",
-        destination: "/account/profile",
-        permanent: true,
-      },
-      {
-        source: "/settings/preferences",
-        destination: "/account/preferences",
-        permanent: true,
-      },
-      {
-        source: "/account/billing",
-        destination: "/settings/billing",
-        permanent: false,
-      },
     ];
   },
   devIndicators: {

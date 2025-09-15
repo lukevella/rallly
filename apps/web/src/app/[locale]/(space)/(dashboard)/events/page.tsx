@@ -128,7 +128,7 @@ export default async function Page(props: {
         </PageHeader>
         <PageContent>
           <EventsTabbedView>
-            <div className="mb-6 flex gap-x-2">
+            <div className="mb-4 flex gap-x-2">
               <SearchInput
                 placeholder={t("searchEventsPlaceholder", {
                   defaultValue: "Search events by title...",

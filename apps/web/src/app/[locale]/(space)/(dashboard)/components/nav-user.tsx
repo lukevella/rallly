@@ -12,7 +12,6 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import {
   ChevronDownIcon,
-  LayersIcon,
   LogOutIcon,
   Settings2Icon,
   UserIcon,
@@ -62,7 +61,7 @@ export function NavUser({
             <Trans i18nKey="account" defaults="Account" />
           </DropdownMenuLabel>
           <DropdownMenuItem asChild>
-            <Link href="/account/profile">
+            <Link href="/settings/profile">
               <Icon>
                 <UserIcon />
               </Icon>
@@ -70,19 +69,11 @@ export function NavUser({
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/account/preferences">
+            <Link href="/settings/preferences">
               <Icon>
                 <Settings2Icon />
               </Icon>
               <Trans i18nKey="preferences" defaults="Preferences" />
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/account/spaces">
-              <Icon>
-                <LayersIcon />
-              </Icon>
-              <Trans i18nKey="spaces" defaults="Spaces" />
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
