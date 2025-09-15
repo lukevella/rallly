@@ -172,7 +172,6 @@
   "noParticipantsDescription": "Kattints a <b>Megosztás</b>ra a résztvevők meghívásához",
   "timeShownIn": "Megjelenítési időzóna: {timeZone}",
   "pollStatusPausedDescription": "Jelenleg nem lehet szavazni vagy korábbi választ módosítani",
-  "eventHostTitle": "Hozzáférés kezelése",
   "eventHostDescription": "Te vagy a létrehozója ennek a szavazásnak",
   "deleteAccount": "Fiók törlése",
   "deleteAccountDialogTitle": "Fiók törlése",
