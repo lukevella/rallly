@@ -491,7 +491,6 @@
   "increaseSeats": "Øg pladser",
   "manageSubscription": "Administrer abonnement",
   "seatUsage": "{usedSeats} af {totalSeats} pladser brugt",
-  "noSeatsAvailableAlertTitle": "Ingen pladser tilgængelige",
   "noSeatsAvailableAlertBillingDescription": "Forøg antallet af pladser i dette rum fra <a>faktureringsside</a>.",
   "noSeatsAvailableAlertSelfHostedDescription": "Du skal <a>opgradere</a> for at øge antallet af pladser i dette rum.",
   "seatsUpdatedAlertTitle": "Sæder opdateret",
