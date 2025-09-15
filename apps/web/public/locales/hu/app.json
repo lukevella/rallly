@@ -497,5 +497,6 @@
   "space": "Munkatér",
   "preferencesDescription": "Kezeld a beállításaidat",
   "spaceSettings": "Munkatér beállítások",
-  "generalSettingsAdminRoleRequired": "Adminnak kell lenned a változtatások végrehajtásához ebben a munkatérben."
+  "generalSettingsAdminRoleRequired": "Adminnak kell lenned a változtatások végrehajtásához ebben a munkatérben.",
+  "localeSyncToast": "A nyelv beállításaid megváltoztak"
 }
