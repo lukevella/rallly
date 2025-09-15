@@ -170,7 +170,6 @@
   "noParticipantsDescription": "Нажмите <b>Поделиться</b>, чтобы пригласить участников",
   "timeShownIn": "Показано время в {timeZone}",
   "pollStatusPausedDescription": "Голоса не могут быть поданы или изменены в данный момент",
-  "eventHostTitle": "Управление доступом",
   "eventHostDescription": "Вы создатель этого опроса",
   "deleteAccount": "Удалить аккаунт",
   "deleteAccountDialogTitle": "Удалить аккаунт",
