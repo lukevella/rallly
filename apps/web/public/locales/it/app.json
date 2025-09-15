@@ -491,7 +491,6 @@
   "increaseSeats": "Aumenta i posti",
   "manageSubscription": "Gestisci abbonamento",
   "seatUsage": "{usedSeats} di {totalSeats} posti utilizzati",
-  "noSeatsAvailableAlertTitle": "Nessun posto disponibile",
   "noSeatsAvailableAlertBillingDescription": "Aumenta il numero di posti in questo spazio dalla <a>pagina di fatturazione</a>.",
   "noSeatsAvailableAlertSelfHostedDescription": "Dovrai <a>aggiornare</a> per aumentare il numero di posti in questo spazio.",
   "seatsUpdatedAlertTitle": "Posti aggiornati",
