@@ -489,7 +489,6 @@
   "increaseSeats": "Aumentar asientos",
   "manageSubscription": "Administrar suscripción",
   "seatUsage": "{usedSeats} de {totalSeats} asientos utilizados",
-  "noSeatsAvailableAlertTitle": "No hay asientos disponibles",
   "noSeatsAvailableAlertBillingDescription": "Aumenta el número de asientos en este espacio desde la <a>página de facturación</a>.",
   "noSeatsAvailableAlertSelfHostedDescription": "Necesitarás <a>mejorar la cuenta</a> para aumentar el número de asientos en este espacio.",
   "seatsUpdatedAlertTitle": "Asientos actualizados",
