@@ -1,6 +1,5 @@
 import "../../style.css";
 
-import { supportedLngs } from "@rallly/languages";
 import { PostHogIdentify, PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/sonner";
 import { TooltipProvider } from "@rallly/ui/tooltip";
@@ -10,14 +9,15 @@ import { Inter } from "next/font/google";
 import type React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
+import type { Params } from "@/app/[locale]/types";
 import { requireUser } from "@/auth/data";
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
-import { getLocale } from "@/i18n/server/get-locale";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
 import { featureFlagConfig } from "@/lib/feature-flags/config";
+import { LocaleSync } from "@/lib/locale/client";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 import { auth } from "@/next-auth";
 import { TRPCProvider } from "@/trpc/client/provider";
@@ -36,7 +36,7 @@ export const viewport: Viewport = {
 };
 
 async function loadData() {
-  const [session, locale] = await Promise.all([auth(), getLocale()]);
+  const [session] = await Promise.all([auth()]);
 
   const user = session?.user
     ? !session.user.isGuest
@@ -56,27 +56,19 @@ async function loadData() {
 
   return {
     session,
-    locale,
     user,
   };
 }
 
 export default async function Root({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<Params>;
 }) {
-  const { locale: fallbackLocale, user } = await loadData();
-
-  let locale = fallbackLocale;
-
-  if (user?.locale) {
-    locale = user.locale;
-  }
-
-  if (!supportedLngs.includes(locale)) {
-    locale = fallbackLocale;
-  }
+  const { locale } = await params;
+  const { user } = await loadData();
 
   return (
     <html lang={locale} className={inter.className}>
@@ -91,6 +83,7 @@ export default async function Root({
                   <PostHogPageView />
                   <TooltipProvider>
                     <UserProvider user={user ?? undefined}>
+                      <LocaleSync userLocale={user?.locale ?? locale} />
                       <PreferencesProvider
                         initialValue={{
                           timeFormat: user?.timeFormat,

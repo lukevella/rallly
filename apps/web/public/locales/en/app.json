@@ -498,5 +498,6 @@
   "space": "Space",
   "preferencesDescription": "Manage your preferences",
   "spaceSettings": "Space Settings",
-  "generalSettingsAdminRoleRequired": "You need to be an admin to make changes to this space."
+  "generalSettingsAdminRoleRequired": "You need to be an admin to make changes to this space.",
+  "localeSyncToast": "Your language preferences have changed"
 }
