@@ -410,8 +410,6 @@
   "spaceUpdatedSuccess": "Ruimte bijgewerkt",
   "spaceUpdatedError": "Bijwerken van ruimte is mislukt",
   "generalSettings": "Algemene instellingen",
-  "spaceInformation": "Informatie ruimte",
-  "spaceInformationDescription": "Wijzig de naam en instellingen van de ruimte.",
   "general": "Algemeen",
   "generalSettingsDescription": "Beheer de instellingen van de ruimte, zoals naam, beschrijving en andere voorkeuren.",
   "membersDescription": "Deelnemers hebben toegang tot deze ruimte",
