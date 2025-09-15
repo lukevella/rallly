@@ -172,7 +172,6 @@
   "noParticipantsDescription": "Klicke auf <b>Teilen</b>, um Teilnehmer einzuladen",
   "timeShownIn": "Uhrzeiten werden in {timeZone} angezeigt",
   "pollStatusPausedDescription": "Stimmen können zurzeit nicht abgegeben oder bearbeitet werden",
-  "eventHostTitle": "Zugriff verwalten",
   "eventHostDescription": "Sie sind Ersteller*in dieser Abstimmung",
   "deleteAccount": "Konto löschen",
   "deleteAccountDialogTitle": "Konto löschen",
