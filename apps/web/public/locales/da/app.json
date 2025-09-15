@@ -172,7 +172,6 @@
   "noParticipantsDescription": "Klik på <b>Del</b> for at invitere deltagere",
   "timeShownIn": "Tider vises i {timeZone}",
   "pollStatusPausedDescription": "Stemmer kan ikke indsendes eller redigeres på dette tidspunkt",
-  "eventHostTitle": "Administrer adgang",
   "eventHostDescription": "Du er opretteren af denne afstemning",
   "deleteAccount": "Slet konto",
   "deleteAccountDialogTitle": "Slet konto",
