@@ -170,7 +170,6 @@
   "noParticipantsDescription": "Klikkaa <b>Jaa</b> kutsuaksesi osallistujia",
   "timeShownIn": "Aikavyöhyke: {timeZone}",
   "pollStatusPausedDescription": "Ääniä ei voi tällä hetkellä lähettää tai muokata",
-  "eventHostTitle": "Hallinnoi pääsyä",
   "eventHostDescription": "Olet tämän kyselyn luoja",
   "deleteAccount": "Poista tili",
   "deleteAccountDialogTitle": "Poista tili",
