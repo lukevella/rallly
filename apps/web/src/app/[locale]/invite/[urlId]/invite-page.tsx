@@ -1,7 +1,7 @@
 "use client";
-import { ArrowUpRightIcon, UserCircle2Icon } from "lucide-react";
+import { Alert, AlertDescription } from "@rallly/ui/alert";
+import { ArrowUpRightIcon, CrownIcon } from "lucide-react";
 import Link from "next/link";
-
 import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import { PollFooter } from "@/components/poll/poll-footer";
@@ -21,31 +21,28 @@ const GoToApp = () => {
   }
 
   return (
-    <div className="rounded-lg border border-primary-200 bg-primary-50/75 p-2.5 text-sm sm:p-1.5">
-      <div className="flex items-start justify-between sm:items-center">
-        <div className="flex gap-2.5 sm:items-center lg:px-2.5">
-          <UserCircle2Icon className="hidden size-4 text-primary-600 sm:block" />
-          <div className="flex grow flex-col gap-x-2.5 sm:flex-row">
-            <h4 className="font-medium text-primary-600">
-              <Trans i18nKey="eventHostTitle" defaults="Manage Access" />
-            </h4>
-            <p className="text-primary-600/75">
-              <Trans
-                i18nKey="eventHostDescription"
-                defaults="You are the creator of this poll"
-              />
-            </p>
+    <Alert variant="primary">
+      <CrownIcon />
+      <AlertDescription>
+        <div className="flex w-full flex-1 items-center gap-2">
+          <p className="flex-1">
+            <Trans
+              i18nKey="eventHostDescription"
+              defaults="You are the creator of this poll"
+            />
+          </p>
+          <div>
+            <Link
+              className="inline-flex items-center gap-2 text-primary hover:underline"
+              href={`/poll/${poll.id}`}
+            >
+              <Trans i18nKey="manage" defaults="Manage" />
+              <ArrowUpRightIcon className="size-4" />
+            </Link>
           </div>
         </div>
-        <Link
-          className="inline-flex h-9 items-center gap-x-2.5 rounded-md px-3 font-medium text-primary-600 hover:bg-primary-200/50 active:bg-primary-200"
-          href={`/poll/${poll.id}`}
-        >
-          <Trans i18nKey="manage" />
-          <ArrowUpRightIcon className="size-4" />
-        </Link>
-      </div>
-    </div>
+      </AlertDescription>
+    </Alert>
   );
 };
 

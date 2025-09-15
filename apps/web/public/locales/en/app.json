@@ -172,7 +172,6 @@
   "noParticipantsDescription": "Click <b>Share</b> to invite participants",
   "timeShownIn": "Times shown in {timeZone}",
   "pollStatusPausedDescription": "Votes cannot be submitted or edited at this time",
-  "eventHostTitle": "Manage Access",
   "eventHostDescription": "You are the creator of this poll",
   "deleteAccount": "Delete Account",
   "deleteAccountDialogTitle": "Delete Account",
