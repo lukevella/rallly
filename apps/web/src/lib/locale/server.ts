@@ -1,6 +1,6 @@
 import { defaultLocale, supportedLngs } from "@rallly/languages";
 import { getPreferredLocaleFromHeaders } from "@rallly/languages/get-preferred-locale";
-import type { NextRequest } from "next/server";
+import type { NextRequest, NextResponse } from "next/server";
 import { LOCALE_COOKIE_NAME } from "@/lib/locale/constants";
 
 export function getLocaleFromRequest(req: NextRequest) {
@@ -19,5 +19,19 @@ export function getLocaleFromRequest(req: NextRequest) {
 
   return getPreferredLocaleFromHeaders({
     acceptLanguageHeader,
+  });
+}
+
+export function setLocaleCookie(
+  req: NextRequest,
+  res: NextResponse,
+  locale: string,
+) {
+  if (req.cookies.get(LOCALE_COOKIE_NAME)) {
+    return;
+  }
+
+  res.cookies.set(LOCALE_COOKIE_NAME, locale, {
+    path: "/",
   });
 }

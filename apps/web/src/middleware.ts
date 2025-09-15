@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { withAuth } from "@/auth/edge";
-import { getLocaleFromRequest } from "@/lib/locale/server";
+import { getLocaleFromRequest, setLocaleCookie } from "@/lib/locale/server";
 
 export const middleware = withAuth(async (req) => {
   const { nextUrl } = req;
@@ -19,6 +19,9 @@ export const middleware = withAuth(async (req) => {
   newUrl.pathname = `/${locale}${pathname}`;
 
   const res = NextResponse.rewrite(newUrl);
+
+  setLocaleCookie(req, res, locale);
+
   res.headers.set("x-locale", locale);
   res.headers.set("x-pathname", pathname);
 
