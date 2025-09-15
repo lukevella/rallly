@@ -491,5 +491,12 @@
   "noSeatsAvailableAlertSelfHostedDescription": "Du musst deinen Plan <a>upgraden</a>, um die Anzahl der Plätze in dieser Gruppe zu erhöhen.",
   "seatsUpdatedAlertTitle": "Benutzerplätze aktualisiert",
   "seatsUpdatedAlertDescription": "Deine Benutzerplätze wurden erfolgreich aktualisiert. Die Änderungen werden in deinem nächsten Abrechnungszyklus angezeigt.",
-  "memberCount": "{count, plural, =0 {Keine Mitglieder} one {1 Mitglied} other {# Mitglieder}}"
+  "memberCount": "{count, plural, =0 {Keine Mitglieder} one {1 Mitglied} other {# Mitglieder}}",
+  "billingDescription": "Verwalte deine Zahlungsinformationen und dein Abonnement.",
+  "generalDescription": "Ändere die Einstellungen deiner aktuellen Gruppe",
+  "space": "Gruppe",
+  "preferencesDescription": "Einstellungen verwalten",
+  "spaceSettings": "Gruppeneinstellungen",
+  "generalSettingsAdminRoleRequired": "Du musst ein Admin sein, um Änderungen an dieser Gruppe vorzunehmen.",
+  "localeSyncToast": "Deine Spracheinstellungen wurden geändert"
 }
