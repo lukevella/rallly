@@ -23,7 +23,7 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/app/components/page-layout";
-import { PayWallButton } from "@/features/billing/client";
+import { useBilling } from "@/features/billing/client";
 import { SubscriptionStatusLabel } from "@/features/billing/components/subscription-status-label";
 import type { SpaceTier } from "@/features/space/schema";
 import { BillingPlan } from "./components/billing-plan";
@@ -48,6 +48,7 @@ export function BillingPageClient({
   const posthog = usePostHog();
 
   const searchParams = useSearchParams();
+  const { showPayWall } = useBilling();
 
   const didUpdateSeats = searchParams.has("seats_updated");
 
@@ -123,13 +124,15 @@ export function BillingPageClient({
                 </ManageSeatsDialog>
               </div>
             ) : (
-              <PayWallButton
+              <Button
+                variant="primary"
                 onClick={() => {
+                  showPayWall();
                   posthog?.capture("space_billing:upgrade_button_click");
                 }}
               >
                 <Trans i18nKey="upgradeToPro" />
-              </PayWallButton>
+              </Button>
             )}
           </div>
           {didUpdateSeats ? (
