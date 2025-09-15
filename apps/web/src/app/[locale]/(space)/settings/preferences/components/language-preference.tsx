@@ -10,6 +10,7 @@ import { LanguageSelect } from "@/components/poll/language-selector";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 
+import { setLocaleCookie } from "@/lib/locale/client";
 import { updateLocale } from "../actions";
 
 const formSchema = z.object({
@@ -33,6 +34,7 @@ export const LanguagePreference = () => {
         onSubmit={form.handleSubmit(async (data) => {
           await updateLocale(data.language);
           i18n.changeLanguage(data.language);
+          setLocaleCookie(data.language);
           form.reset({ language: data.language });
         })}
       >

@@ -2,6 +2,29 @@ import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 import { defaultLocale, supportedLngs } from "./index";
 
+export function getPreferredLocaleFromHeaders({
+  acceptLanguageHeader,
+}: {
+  acceptLanguageHeader: string;
+}) {
+  const preferredLanguages = new Negotiator({
+    headers: {
+      "accept-language": acceptLanguageHeader,
+    },
+  })
+    .languages()
+    .filter((lang) => lang !== "*");
+
+  try {
+    return match(preferredLanguages, supportedLngs, defaultLocale);
+  } catch (_error) {
+    return defaultLocale;
+  }
+}
+
+/**
+ * @deprecated Use getPreferredLocaleFromHeaders instead
+ */
 export function getPreferredLocale({
   userLocale,
   acceptLanguageHeader,
@@ -17,17 +40,7 @@ export function getPreferredLocale({
     return defaultLocale;
   }
 
-  const preferredLanguages = new Negotiator({
-    headers: {
-      "accept-language": acceptLanguageHeader,
-    },
-  })
-    .languages()
-    .filter((lang) => lang !== "*");
-
-  try {
-    return match(preferredLanguages, supportedLngs, defaultLocale);
-  } catch (_error) {
-    return defaultLocale;
-  }
+  return getPreferredLocaleFromHeaders({
+    acceptLanguageHeader,
+  });
 }
