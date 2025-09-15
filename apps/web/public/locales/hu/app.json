@@ -492,5 +492,11 @@
   "noSeatsAvailableAlertSelfHostedDescription": "Előfizetést kell <a>váltanod</a>, hogy növelni tudd a helyek számát ezen a munkaterületen.",
   "seatsUpdatedAlertTitle": "Helyek frissítve",
   "seatsUpdatedAlertDescription": "A helyek elosztásának frissítése sikeresen megtörtént. A változtatások a következő számlázási ciklusodban fognak megjelenni.",
-  "memberCount": "{count, plural, =0 {Nincsenek tagok} one {1 tag} other {# tag}}"
+  "memberCount": "{count, plural, =0 {Nincsenek tagok} one {1 tag} other {# tag}}",
+  "billingDescription": "Kezeld a számlázási információid és előfizetésed.",
+  "generalDescription": "Módosítsd a jelenlegi munkatered beállításait",
+  "space": "Munkatér",
+  "preferencesDescription": "Kezeld a beállításaidat",
+  "spaceSettings": "Munkatér beállítások",
+  "generalSettingsAdminRoleRequired": "Adminnak kell lenned a változtatások végrehajtásához ebben a munkatérben."
 }
