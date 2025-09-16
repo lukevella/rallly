@@ -13,7 +13,6 @@ import type { Params } from "@/app/[locale]/types";
 import { requireUser } from "@/auth/data";
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
-import { env } from "@/env";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
@@ -73,9 +72,6 @@ export default async function Root({
 
   return (
     <html lang={locale} className={inter.className}>
-      <head>
-        <base href={env.NEXT_PUBLIC_BASE_URL} />
-      </head>
       <body>
         <FeatureFlagsProvider value={featureFlagConfig}>
           <Toaster />

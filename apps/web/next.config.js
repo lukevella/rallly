@@ -20,6 +20,7 @@ const nextConfig = {
     "@rallly/posthog",
     "@rallly/emails",
   ],
+  assetPrefix: process.env.NEXT_PUBLIC_BASE_URL,
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
