@@ -170,7 +170,6 @@
   "noParticipantsDescription": "点击 <b>分享</b> 来邀请参与者",
   "timeShownIn": "目前以 {timeZone} 時區顯示",
   "pollStatusPausedDescription": "当前无法提交或编辑投票",
-  "eventHostTitle": "管理权限",
   "eventHostDescription": "您是本次投票的创建者",
   "deleteAccount": "删除账户",
   "deleteAccountDialogTitle": "删除账户",

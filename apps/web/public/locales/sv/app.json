@@ -170,7 +170,6 @@
   "noParticipantsDescription": "Klicka på <b>Dela</b> för att bjuda in deltagare",
   "timeShownIn": "Tidszon: {timeZone}",
   "pollStatusPausedDescription": "Röster kan inte lämnas in eller redigeras just nu",
-  "eventHostTitle": "Hantera åtkomst",
   "eventHostDescription": "Du är skaparen av denna enkät",
   "deleteAccount": "Radera konto",
   "deleteAccountDialogTitle": "Radera konto",
