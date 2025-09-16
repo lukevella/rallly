@@ -23,10 +23,12 @@ import {
   CopyIcon,
   LifeBuoyIcon,
   SettingsIcon,
+  SparklesIcon,
   TimerResetIcon,
   UserPlusIcon,
 } from "lucide-react";
 import React from "react";
+import { PageIcon } from "@/app/components/page-icons";
 import { Trans } from "@/components/trans";
 import { UpgradeButton } from "@/components/upgrade-button";
 import type { SpaceTier } from "@/features/space/schema";
@@ -163,9 +165,14 @@ export function PayWallDialog({
           <div className="grid min-h-0 grid-cols-1 md:grid-cols-2">
             <div className="flex flex-col p-6">
               <DialogHeader>
-                <DialogTitle>
-                  <Trans i18nKey="upgradePromptTitle" />
-                </DialogTitle>
+                <div className="flex items-center gap-3">
+                  <PageIcon size="sm" color="indigo">
+                    <SparklesIcon />
+                  </PageIcon>
+                  <DialogTitle>
+                    <Trans i18nKey="upgradePromptTitle" />
+                  </DialogTitle>
+                </div>
               </DialogHeader>
               <div className="mt-6 flex-1 space-y-6">
                 <Label>
