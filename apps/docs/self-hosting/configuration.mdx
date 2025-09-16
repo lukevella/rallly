@@ -200,6 +200,9 @@ https://<YOUR-DOMAIN>/api/auth/callback/oidc
 
 ## Storage (S3)
 
+Storage configuration is optional but required to enable features like user avatar uploads.
+For self-hosted deployments, [MinIO](https://min.io/) is the recommended S3-compatible storage solution. Alternatively, you can use cloud services like [AWS S3](https://aws.amazon.com/s3/), [DigitalOcean Spaces](https://www.digitalocean.com/products/spaces), or [Cloudflare R2](https://www.cloudflare.com/developer-platform/r2/).
+
 <ParamField path="S3_BUCKET_NAME">
   The name of your S3 bucket
 </ParamField>
