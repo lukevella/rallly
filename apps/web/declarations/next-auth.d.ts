@@ -13,7 +13,6 @@ declare module "next-auth" {
       isGuest: boolean;
       timeZone?: string | null;
       timeFormat?: TimeFormat | null;
-      locale?: string | null;
       weekStart?: number | null;
     } & DefaultSession["user"];
   }
@@ -34,7 +33,6 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
-    locale?: string | null;
     timeZone?: string | null;
     timeFormat?: TimeFormat | null;
     weekStart?: number | null;
