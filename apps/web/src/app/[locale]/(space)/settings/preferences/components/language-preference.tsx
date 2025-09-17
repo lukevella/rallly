@@ -3,13 +3,12 @@ import { Button } from "@rallly/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { LanguageSelect } from "@/components/poll/language-selector";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
-
 import { setLocaleCookie } from "@/lib/locale/client";
 import { updateLocale } from "../actions";
 
@@ -21,6 +20,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export const LanguagePreference = () => {
   const { i18n } = useTranslation();
+  const router = useRouter();
   const form = useForm<FormData>({
     defaultValues: {
       language: i18n.language,
@@ -33,9 +33,8 @@ export const LanguagePreference = () => {
       <form
         onSubmit={form.handleSubmit(async (data) => {
           await updateLocale(data.language);
-          i18n.changeLanguage(data.language);
           setLocaleCookie(data.language);
-          form.reset({ language: data.language });
+          router.refresh();
         })}
       >
         <FormField
