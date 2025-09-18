@@ -1,5 +1,4 @@
 "use client";
-import httpBackend from "i18next-http-backend";
 import type React from "react";
 import {
   I18nextProvider,
@@ -24,9 +23,6 @@ export function I18nProvider({
   const res = useAsync(async () => {
     return await initI18next({
       lng: locale,
-      middleware: (i18n) => {
-        i18n.use(httpBackend);
-      },
     });
   });
 
