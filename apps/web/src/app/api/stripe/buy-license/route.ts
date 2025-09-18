@@ -11,18 +11,25 @@ type Product = z.infer<typeof productSchema>;
 
 const mapProductToLicenseType: Record<
   Product,
-  { type: LicenseType; seats: number; promoCode?: string }
+  { lookupKey: string; type: LicenseType; seats: number }
 > = {
-  plus: { type: "PLUS", seats: 5 },
-  organization: { type: "ORGANIZATION", seats: 50, promoCode: "EARLYORG" },
+  plus: { lookupKey: "plus", type: "PLUS", seats: 5 },
+  organization: {
+    lookupKey: "early-organization",
+    type: "ORGANIZATION",
+    seats: 50,
+  },
 };
 
 export async function GET(request: NextRequest) {
   const product = productSchema.parse(
     request.nextUrl.searchParams.get("product"),
   );
+
+  const { lookupKey } = mapProductToLicenseType[product];
+
   const prices = await stripe.prices.list({
-    lookup_keys: [product],
+    lookup_keys: [lookupKey],
   });
 
   if (!prices.data || prices.data.length === 0) {
@@ -50,18 +57,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const { type, seats, promoCode } = mapProductToLicenseType[product];
-
-  let promoCodeId: string | undefined;
-
-  if (promoCode) {
-    const promotionCodes = await stripe.promotionCodes.list({
-      code: promoCode,
-      active: true,
-    });
-
-    promoCodeId = promotionCodes.data[0]?.id;
-  }
+  const { type, seats } = mapProductToLicenseType[product];
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -73,9 +69,7 @@ export async function GET(request: NextRequest) {
       ],
       mode: "payment",
       success_url: "https://rallly.co/licensing/thank-you",
-      ...(promoCodeId
-        ? { discounts: [{ promotion_code: promoCodeId }] }
-        : { allow_promotion_codes: true }),
+      allow_promotion_codes: true,
       metadata: {
         licenseType: type,
         version: 4,
