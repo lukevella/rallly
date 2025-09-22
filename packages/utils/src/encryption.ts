@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 
 const ALGORITHM = "aes-256-gcm";
-const IV_LENGTH = 16; // For AES, this is always 16
+const IV_LENGTH = 12; // GCM typically uses 12-byte IVs (NIST SP 800-38D)
 const SALT_LENGTH = 32;
 const AUTH_TAG_LENGTH = 16;
 const VERSION_LENGTH = 1; // For future algorithm migrations
@@ -28,23 +28,20 @@ export function encrypt(text: string, password: string): string {
     "sha256",
   );
 
-  const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
-  cipher.setAAD(Buffer.from("oauth-token")); // Additional authenticated data
+  const cipher = crypto.createCipheriv(ALGORITHM, key, iv, {
+    authTagLength: AUTH_TAG_LENGTH,
+  });
 
-  let encrypted = cipher.update(text, "utf8", "hex");
-  encrypted += cipher.final("hex");
+  const ciphertext = Buffer.concat([
+    cipher.update(text, "utf8"),
+    cipher.final(),
+  ]);
 
   const authTag = cipher.getAuthTag();
 
   // Combine version, salt, iv, authTag, and encrypted data
   const version = Buffer.from([CURRENT_VERSION]);
-  const combined = Buffer.concat([
-    version,
-    salt,
-    iv,
-    authTag,
-    Buffer.from(encrypted, "hex"),
-  ]);
+  const combined = Buffer.concat([version, salt, iv, authTag, ciphertext]);
 
   return combined.toString("base64");
 }
@@ -57,15 +54,21 @@ export function encrypt(text: string, password: string): string {
  */
 export function decrypt(encryptedData: string, password: string): string {
   const combined = Buffer.from(encryptedData, "base64");
-
+  if (combined.length < VERSION_LENGTH) {
+    throw new Error("Invalid encrypted payload");
+  }
   // Extract version first
-  const version = combined.subarray(0, VERSION_LENGTH)[0];
+  const version = combined.readUInt8(0);
 
   if (version !== CURRENT_VERSION) {
     throw new Error(`Unsupported encryption version: ${version}`);
   }
 
   // Extract components (offset by version)
+  const headerLen = VERSION_LENGTH + SALT_LENGTH + IV_LENGTH + AUTH_TAG_LENGTH;
+  if (combined.length < headerLen) {
+    throw new Error("Invalid encrypted payload");
+  }
   const salt = combined.subarray(VERSION_LENGTH, VERSION_LENGTH + SALT_LENGTH);
   const iv = combined.subarray(
     VERSION_LENGTH + SALT_LENGTH,
@@ -88,12 +91,14 @@ export function decrypt(encryptedData: string, password: string): string {
     "sha256",
   );
 
-  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-  decipher.setAAD(Buffer.from("oauth-token"));
+  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv, {
+    authTagLength: AUTH_TAG_LENGTH,
+  });
   decipher.setAuthTag(authTag);
 
-  let decrypted = decipher.update(encrypted.toString("hex"), "hex", "utf8");
-  decrypted += decipher.final("utf8");
-
-  return decrypted;
+  const plaintext = Buffer.concat([
+    decipher.update(encrypted),
+    decipher.final(),
+  ]).toString("utf8");
+  return plaintext;
 }

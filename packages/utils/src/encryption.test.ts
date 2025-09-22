@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: false positive */
 import { decrypt, encrypt } from "./encryption";
 
 describe("encryption", () => {
@@ -121,6 +120,13 @@ describe("encryption", () => {
       expect(() => decrypt(encrypted1, password2)).toThrow();
       expect(() => decrypt(encrypted2, password1)).toThrow();
     });
+
+    it("should handle empty password", () => {
+      const encrypted = encrypt(testData, "");
+      const decrypted = decrypt(encrypted, "");
+
+      expect(decrypted).toBe(testData);
+    });
   });
 
   describe("error handling", () => {
@@ -190,9 +196,9 @@ describe("encryption", () => {
       const buffer1 = Buffer.from(encrypted1, "base64");
       const buffer2 = Buffer.from(encrypted2, "base64");
 
-      // Extract IV (bytes 33-48, after version + salt)
-      const iv1 = buffer1.subarray(33, 49);
-      const iv2 = buffer2.subarray(33, 49);
+      // Extract IV (bytes 33-45, after version + salt)
+      const iv1 = buffer1.subarray(33, 45);
+      const iv2 = buffer2.subarray(33, 45);
 
       expect(iv1.equals(iv2)).toBe(false);
     });
@@ -227,8 +233,10 @@ describe("encryption", () => {
       const encrypted = encrypt(testData, testPassword);
       const buffer = Buffer.from(encrypted, "base64");
       // Tamper with the last byte (encrypted data)
-      // The buffer is guaranteed to have content from the encryption process, so the last element will not be undefined.
-      buffer[buffer.length - 1] = buffer[buffer.length - 1]! ^ 1;
+      const lastIndex = buffer.length - 1;
+      if (lastIndex >= 0 && buffer[lastIndex] !== undefined) {
+        buffer[lastIndex] ^= 1;
+      }
       const tamperedData = buffer.toString("base64");
 
       expect(() => {
@@ -240,8 +248,10 @@ describe("encryption", () => {
       const encrypted = encrypt(testData, testPassword);
       const buffer = Buffer.from(encrypted, "base64");
 
-      // Tamper with auth tag (bytes 49-64, after version + salt + iv)
-      buffer[50] = buffer[50]! ^ 1;
+      // Tamper with auth tag (bytes 45-61, after version + salt + iv)
+      if (buffer.length > 50 && buffer[50] !== undefined) {
+        buffer[50] ^= 1;
+      }
       const tamperedData = buffer.toString("base64");
 
       expect(() => {
@@ -253,8 +263,25 @@ describe("encryption", () => {
       const encrypted = encrypt(testData, testPassword);
       const buffer = Buffer.from(encrypted, "base64");
 
-      // Tamper with IV (bytes 33-48, after version + salt)
-      buffer[40] = buffer[40]! ^ 1;
+      // Tamper with IV (bytes 33-45, after version + salt)
+      if (buffer.length > 40 && buffer[40] !== undefined) {
+        buffer[40] ^= 1;
+      }
+      const tamperedData = buffer.toString("base64");
+
+      expect(() => {
+        decrypt(tamperedData, testPassword);
+      }).toThrow();
+    });
+
+    it("should detect tampering with salt", () => {
+      const encrypted = encrypt(testData, testPassword);
+      const buffer = Buffer.from(encrypted, "base64");
+
+      // Tamper with salt (bytes 1-33, after version)
+      if (buffer.length > 10 && buffer[10] !== undefined) {
+        buffer[10] ^= 1;
+      }
       const tamperedData = buffer.toString("base64");
 
       expect(() => {
