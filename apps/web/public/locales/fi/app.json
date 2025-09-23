@@ -491,7 +491,7 @@
   "noSeatsAvailableAlertSelfHostedDescription": "Sinun täytyy <a>vaihtaa sopimustasi</a> nostaaksesi lisenssien määrää tässä tilassa.",
   "seatsUpdatedAlertTitle": "Lisenssit päivitetty",
   "seatsUpdatedAlertDescription": "Lisenssimääräsi päivittäminen onnistui. Muutokset otetaan huomioon seuraavassa laskussasi.",
-  "memberCount": "{count, plural, =0 {No members} one {1 member} other {# members}}",
+  "memberCount": "{count, plural, =0 {Ei jäseniä} one {1 jäsen} other {# jäsentä}}",
   "billingDescription": "Hallinnoi laskutustietojasi ja tilaustasi.",
   "generalDescription": "Muuta tämänhetkisen tilasi asetuksia",
   "space": "Tila",
