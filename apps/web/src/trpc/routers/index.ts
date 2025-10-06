@@ -5,6 +5,7 @@ import utc from "dayjs/plugin/utc";
 
 import { mergeRouters, router } from "../trpc";
 import { auth } from "./auth";
+import { calendars } from "./calendars";
 import { events } from "./events";
 import { polls } from "./polls";
 import { user } from "./user";
@@ -19,6 +20,7 @@ export const appRouter = mergeRouters(
     events,
     polls,
     user,
+    calendars,
   }),
 );
 

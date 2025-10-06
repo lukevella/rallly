@@ -12,6 +12,7 @@ export const env = createEnv({
       .enum(["development", "production", "test"])
       .default("development"),
     SECRET_PASSWORD: z.string().min(32),
+    API_SECRET: z.string().min(32).optional(),
     /**
      * OIDC Configuration
      */
@@ -85,6 +86,19 @@ export const env = createEnv({
      */
     LICENSE_API_URL: z.string().optional(),
     LICENSE_API_AUTH_TOKEN: z.string().optional(),
+
+    /**
+     * Google Integration
+     */
+    GOOGLE_CLIENT_ID: z.string().optional(),
+    GOOGLE_CLIENT_SECRET: z.string().optional(),
+
+    /**
+     * Microsoft Integration
+     */
+    MICROSOFT_TENANT_ID: z.string().optional().default("common"),
+    MICROSOFT_CLIENT_ID: z.string().optional(),
+    MICROSOFT_CLIENT_SECRET: z.string().optional(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -107,6 +121,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     SECRET_PASSWORD: process.env.SECRET_PASSWORD,
+    API_SECRET: process.env.API_SECRET,
     OIDC_NAME: process.env.OIDC_NAME,
     OIDC_DISCOVERY_URL: process.env.OIDC_DISCOVERY_URL,
     OIDC_CLIENT_ID: process.env.OIDC_CLIENT_ID,
@@ -145,6 +160,11 @@ export const env = createEnv({
     MODERATION_ENABLED: process.env.MODERATION_ENABLED,
     LICENSE_API_URL: process.env.LICENSE_API_URL,
     LICENSE_API_AUTH_TOKEN: process.env.LICENSE_API_AUTH_TOKEN,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    MICROSOFT_TENANT_ID: process.env.MICROSOFT_TENANT_ID,
+    MICROSOFT_CLIENT_ID: process.env.MICROSOFT_CLIENT_ID,
+    MICROSOFT_CLIENT_SECRET: process.env.MICROSOFT_CLIENT_SECRET,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });

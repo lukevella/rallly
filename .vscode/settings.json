@@ -19,5 +19,5 @@
   "typescript.tsserver.log": "verbose",
   "typescript.tsserver.trace": "messages",
   "references.preferredLocation": "view",
-  "editor.defaultFormatter": "biomejs.biome"
+  "editor.defaultFormatter": "biomejs.biome",
 }
