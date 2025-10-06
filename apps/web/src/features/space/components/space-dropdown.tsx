@@ -14,7 +14,12 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
-import { ChevronsUpDownIcon, PlusIcon, SettingsIcon } from "lucide-react";
+import {
+  ChevronsUpDownIcon,
+  PlusIcon,
+  SettingsIcon,
+  UserPlusIcon,
+} from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
@@ -114,6 +119,14 @@ export function SpaceDropdown({
                 <SettingsIcon />
               </Icon>
               <Trans i18nKey="spaceSettings" defaults="Space Settings" />
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/settings/members">
+              <Icon>
+                <UserPlusIcon />
+              </Icon>
+              <Trans i18nKey="spaceInviteMember" defaults="Invite Member" />
             </Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
