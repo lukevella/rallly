@@ -498,5 +498,6 @@
   "preferencesDescription": "Kezeld a beállításaidat",
   "spaceSettings": "Munkatér beállítások",
   "generalSettingsAdminRoleRequired": "Adminnak kell lenned a változtatások végrehajtásához ebben a munkatérben.",
-  "localeSyncToast": "A nyelv beállításaid megváltoztak"
+  "localeSyncToast": "A nyelv beállításaid megváltoztak",
+  "spaceInviteMember": "Tag meghívása"
 }

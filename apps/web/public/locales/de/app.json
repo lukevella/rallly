@@ -498,5 +498,6 @@
   "preferencesDescription": "Einstellungen verwalten",
   "spaceSettings": "Gruppeneinstellungen",
   "generalSettingsAdminRoleRequired": "Du musst ein Admin sein, um Änderungen an dieser Gruppe vorzunehmen.",
-  "localeSyncToast": "Deine Spracheinstellungen wurden geändert"
+  "localeSyncToast": "Deine Spracheinstellungen wurden geändert",
+  "spaceInviteMember": "Mitglied einladen"
 }
