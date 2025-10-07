@@ -118,7 +118,6 @@ export const syncCalendars = async ({
           notIn: providerCalendarIds,
         },
         isDeleted: false,
-        lastSyncedAt: new Date(),
       },
       select: { id: true },
     });
@@ -136,6 +135,11 @@ export const syncCalendars = async ({
         data: {
           defaultDestinationCalendarId: null,
         },
+      });
+
+      await tx.providerCalendar.updateMany({
+        where: { id: { in: deletedCalendarIds } },
+        data: { isDeleted: true, lastSyncedAt: new Date() },
       });
     }
 
