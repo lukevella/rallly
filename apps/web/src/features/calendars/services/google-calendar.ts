@@ -40,7 +40,7 @@ export class GoogleCalendarService
       isPrimary: Boolean(item.primary),
       isSelected: Boolean(item.selected),
       isDeleted: Boolean(item.deleted),
-      isWritable: item.accessRole === "owner",
+      isWritable: item.accessRole === "owner" || item.accessRole === "writer",
       _rawData: item,
     }));
   }

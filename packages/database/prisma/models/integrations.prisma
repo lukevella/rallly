@@ -30,7 +30,7 @@ model CalendarConnection {
   userId            String                   @map("user_id")
   provider          String
   integrationId     String                   @map("integration_id")
-  providerAccountId String?                  @map("provider_account_id")
+  providerAccountId String                   @map("provider_account_id")
   email             String
   displayName       String?                  @map("display_name")
   

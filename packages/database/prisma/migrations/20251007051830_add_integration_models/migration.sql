@@ -26,7 +26,7 @@ CREATE TABLE "calendar_connections" (
     "user_id" TEXT NOT NULL,
     "provider" TEXT NOT NULL,
     "integration_id" TEXT NOT NULL,
-    "provider_account_id" TEXT,
+    "provider_account_id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "display_name" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

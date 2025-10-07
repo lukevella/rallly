@@ -6,22 +6,7 @@ import { Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { handle } from "hono/vercel";
 import { z } from "zod";
-import type {
-  CreateOAuthOptions,
-  OAuthClient,
-  OAuthConnection,
-  OAuthTokens,
-  UserInfo,
-} from "./types";
-
-// Re-export types and helpers
-export type {
-  CreateOAuthOptions,
-  OAuthClient,
-  OAuthConnection,
-  OAuthTokens,
-  UserInfo,
-};
+import type { CreateOAuthOptions } from "./types";
 
 export function OAuthIntegration<T extends string>(
   options: CreateOAuthOptions<T>,

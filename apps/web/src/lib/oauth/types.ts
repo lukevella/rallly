@@ -1,5 +1,3 @@
-export type IntegrationCategory = "calendar" | "conferencing";
-
 export interface OAuthTokens {
   accessToken: string;
   refreshToken?: string;
@@ -24,10 +22,6 @@ export interface OAuthConnection {
   providerAccountId: string;
   email: string;
   displayName?: string;
-  status: string;
-  lastSyncedAt?: Date;
-  syncErrors: number;
-  settings?: Record<string, unknown>;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,6 +1,6 @@
 import { prisma } from "@rallly/database";
 import { loadCredential } from "@/features/credentials/queries";
-import type { UserInfo } from "@/lib/oauth/server";
+import type { UserInfo } from "@/lib/oauth/types";
 import { createCalendarService } from "./service";
 
 export const createCalendarConnection = async (params: {
