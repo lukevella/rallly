@@ -16,7 +16,7 @@ export const connectToCalendar = (
   integrationId: string,
   options: ConnectOptions = {},
 ) => {
-  const redirectTo = options.redirectTo || window.location.href;
+  const redirectTo = options.redirectTo || window.location.pathname;
 
   const url = new URL(
     `/api/integrations/auth/${integrationId}`,

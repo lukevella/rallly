@@ -5,6 +5,6 @@ export function connect(provider: string) {
     `/api/integrations/auth/${provider}`,
     window.location.origin,
   );
-  url.searchParams.set("redirect", window.location.href);
+  url.searchParams.set("redirect", window.location.pathname);
   window.location.href = url.toString();
 }

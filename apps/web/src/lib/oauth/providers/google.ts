@@ -79,10 +79,10 @@ export class GoogleOAuthClient implements OAuthClient {
 
   async getUserInfo(tokens: OAuthTokens): Promise<UserInfo> {
     try {
-      const oauth2Client = new google.auth.OAuth2(
-        this.clientId,
-        this.clientSecret,
-      );
+      const oauth2Client = new google.auth.OAuth2({
+        clientId: this.clientId,
+        clientSecret: this.clientSecret,
+      });
       oauth2Client.setCredentials({
         access_token: tokens.accessToken,
         refresh_token: tokens.refreshToken,
