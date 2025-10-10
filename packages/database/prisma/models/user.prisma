@@ -58,13 +58,20 @@ model User {
   paymentMethods     PaymentMethod[]
   spaceMemberInvites SpaceMemberInvite[]
 
-  subscriptions      Subscription[]      @relation("UserToSubscription")
-  spaces   Space[]       @relation("UserSpaces")
-  memberOf SpaceMember[]
+  subscriptions Subscription[] @relation("UserToSubscription")
+  spaces        Space[]        @relation("UserSpaces")
+  memberOf      SpaceMember[]
 
   pollViews             PollView[]
   scheduledEvents       ScheduledEvent[]
   scheduledEventInvites ScheduledEventInvite[]
+
+  calendarConnections CalendarConnection[]
+  credentials         Credential[]
+
+  // Default destination calendar for new events
+  defaultDestinationCalendarId String?           @map("default_destination_calendar_id")
+  defaultDestinationCalendar   ProviderCalendar? @relation("UserDefaultDestinationCalendar", fields: [defaultDestinationCalendarId], references: [id], onDelete: SetNull)
 
   @@map("users")
 }

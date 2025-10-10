@@ -8,6 +8,7 @@ import {
 } from "@rallly/ui/sidebar";
 import {
   BoltIcon,
+  CalendarIcon,
   CreditCardIcon,
   PanelsTopLeftIcon,
   Settings2Icon,
@@ -42,6 +43,17 @@ export function AccountSidebarMenu() {
       href: "/settings/spaces",
     },
   ];
+
+  const isCalendarsEnabled = useFeatureFlag("calendars");
+
+  if (isCalendarsEnabled) {
+    menuItems.push({
+      id: "calendars",
+      label: t("calendars", { defaultValue: "Calendars" }),
+      icon: <CalendarIcon />,
+      href: "/settings/calendars",
+    });
+  }
 
   return (
     <SidebarMenu>
