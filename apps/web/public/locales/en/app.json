@@ -521,5 +521,8 @@
   "calendarSelectionSetError": "Failed to set calendar selection",
   "connectCalendar": "Connect Calendar",
   "connectGoogleCalendar": "Google Calendar",
-  "connectMicrosoftCalendar": "Microsoft Calendar"
+  "connectMicrosoftCalendar": "Microsoft Calendar",
+  "settingDefaultCalendar": "Setting default calendar...",
+  "defaultCalendarSetSuccess": "Default calendar set successfully",
+  "defaultCalendarSetError": "Failed to set default calendar"
 }
