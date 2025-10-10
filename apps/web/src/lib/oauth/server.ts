@@ -115,7 +115,12 @@ export function OAuthIntegration<T extends string>(
       const state = c.req.query("state");
       const storedState = getCookie(c, STATE);
       const codeVerifier = getCookie(c, CODE_VERIFIER);
-      const redirectTo = getCookie(c, REDIRECT_TO) || "/";
+      const storedRedirect = getCookie(c, REDIRECT_TO) || "/";
+
+      const redirectTo =
+        storedRedirect.startsWith("/") && !storedRedirect.startsWith("//")
+          ? storedRedirect
+          : "/";
 
       // Validate OAuth callback parameters
       if (
