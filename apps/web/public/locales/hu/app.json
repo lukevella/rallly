@@ -521,5 +521,8 @@
   "calendarSelectionSetError": "A naptár kiválasztás beállítása sikertelen",
   "connectCalendar": "Naptár csatlakoztatása",
   "connectGoogleCalendar": "Google Naptár",
-  "connectMicrosoftCalendar": "Microsoft Naptár"
+  "connectMicrosoftCalendar": "Microsoft Naptár",
+  "settingDefaultCalendar": "Alapértelmezett naptár beállítása...",
+  "defaultCalendarSetSuccess": "Alapértelmezett naptár sikeresen beállítva",
+  "defaultCalendarSetError": "Alapértelmezett naptár beállítása nem sikerült"
 }
