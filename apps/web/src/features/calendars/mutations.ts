@@ -204,3 +204,41 @@ export const setCalendarSelection = async (params: {
 
   return { success: true };
 };
+
+export const setDefaultCalendar = async ({
+  userId,
+  calendarId,
+}: {
+  userId: string;
+  calendarId: string | null;
+}) => {
+  if (calendarId) {
+    const calendar = await prisma.providerCalendar.findFirst({
+      where: { id: calendarId },
+      select: {
+        calendarConnectionId: true,
+        calendarConnection: {
+          select: { userId: true },
+        },
+      },
+    });
+
+    if (!calendar) {
+      return { success: false, error: "Calendar not found" as const };
+    }
+
+    if (calendar.calendarConnection.userId !== userId) {
+      return {
+        success: false,
+        error: "Calendar does not belong to user" as const,
+      };
+    }
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { defaultDestinationCalendarId: calendarId },
+  });
+
+  return { success: true };
+};

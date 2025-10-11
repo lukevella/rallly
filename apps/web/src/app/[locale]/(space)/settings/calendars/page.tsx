@@ -33,7 +33,10 @@ export default async function CalendarsPage() {
 
   const trpc = await createSSRHelper();
 
-  await trpc.calendars.list.prefetch();
+  await Promise.all([
+    trpc.calendars.list.prefetch(),
+    trpc.calendars.getDefault.prefetch(),
+  ]);
 
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>

@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   disconnectCalendarConnection,
   setCalendarSelection,
+  setDefaultCalendar,
   syncCalendars,
 } from "@/features/calendars/mutations";
 import { getCalendars, getDefaultCalendar } from "@/features/calendars/queries";
@@ -24,6 +25,14 @@ export const calendars = router({
   getDefault: privateProcedure.query(async ({ ctx }) => {
     return getDefaultCalendar(ctx.user.id);
   }),
+  setDefault: privateProcedure
+    .input(z.object({ calendarId: z.string().nullable() }))
+    .mutation(async ({ ctx, input }) => {
+      return setDefaultCalendar({
+        userId: ctx.user.id,
+        calendarId: input.calendarId,
+      });
+    }),
   setSelection: privateProcedure
     .input(
       z.object({
