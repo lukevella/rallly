@@ -521,5 +521,8 @@
   "calendarSelectionSetError": "Fehler beim Festlegen der Kalenderauswahl",
   "connectCalendar": "Kalender verbinden",
   "connectGoogleCalendar": "Google Kalender",
-  "connectMicrosoftCalendar": "Microsoft Kalender"
+  "connectMicrosoftCalendar": "Microsoft Kalender",
+  "settingDefaultCalendar": "Standardkalender wird festgelegt...",
+  "defaultCalendarSetSuccess": "Standardkalender erfolgreich festgelegt",
+  "defaultCalendarSetError": "Fehler beim Festlegen des Standardkalenders"
 }
