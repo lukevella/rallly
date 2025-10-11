@@ -491,5 +491,13 @@
   "noSeatsAvailableAlertSelfHostedDescription": "Dovrai <a>aggiornare</a> per aumentare il numero di posti in questo spazio.",
   "seatsUpdatedAlertTitle": "Posti aggiornati",
   "seatsUpdatedAlertDescription": "La tua assegnazione del posto è stata aggiornata con successo. Le modifiche saranno riflesse nel tuo prossimo ciclo di fatturazione.",
-  "memberCount": "{count, plural, =0 {Nessun membro} one {1 membro} other {# membri}}"
+  "memberCount": "{count, plural, =0 {Nessun membro} one {1 membro} other {# membri}}",
+  "billingDescription": "Gestisci le tue informazioni di fatturazione e abbonamento.",
+  "generalDescription": "Cambia le impostazioni del tuo spazio attuale",
+  "space": "Spazio",
+  "preferencesDescription": "Gestisci le tue preferenze",
+  "spaceSettings": "Impostazioni dello spazio",
+  "generalSettingsAdminRoleRequired": "Per apportare modifiche a questo spazio devi essere un amministratore.",
+  "localeSyncToast": "Le tue preferenze della lingua sono cambiate",
+  "spaceInviteMember": "Invita membro"
 }
