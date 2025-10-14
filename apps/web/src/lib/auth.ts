@@ -3,7 +3,6 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { emailOTP } from "better-auth/plugins";
-import { headers } from "next/headers";
 import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
 import { env } from "@/env";
 import { getLocale } from "@/i18n/server/get-locale";
