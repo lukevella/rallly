@@ -1,3 +1,4 @@
+
 enum TimeFormat {
   hours12
   hours24
@@ -8,18 +9,22 @@ enum TimeFormat {
 model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")
-  type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
   refresh_token     String? @db.Text
   access_token      String? @db.Text
   expires_at        Int?
-  token_type        String?
   scope             String?
   id_token          String? @db.Text
-  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
+  password              String? @map("password")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -35,8 +40,8 @@ enum UserRole {
 model User {
   id            String      @id @default(cuid())
   name          String
-  email         String      @unique() @db.Citext
-  emailVerified DateTime?   @map("email_verified")
+  email         String      @unique @db.Citext
+  emailVerified  Boolean?   @map("email_verified")
   image         String?
   timeZone      String?     @map("time_zone")
   weekStart     Int?        @map("week_start")
@@ -73,6 +78,8 @@ model User {
   defaultDestinationCalendarId String?           @map("default_destination_calendar_id")
   defaultDestinationCalendar   ProviderCalendar? @relation("UserDefaultDestinationCalendar", fields: [defaultDestinationCalendarId], references: [id], onDelete: SetNull)
 
+  sessions Session[]
+
   @@map("users")
 }
 
@@ -83,4 +90,30 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime @map("expires_at")
+  token     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  ipAddress String? @map("ip_address")
+  userAgent String? @map("user_agent")
+  userId    String @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("sessions")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verifications")
 }
