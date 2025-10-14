@@ -1,9 +1,11 @@
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
+import { headers } from "next/headers";
 import NextAuth from "next-auth";
 import type { Provider } from "next-auth/providers";
 import { cache } from "react";
 
+import { authLib } from "@/lib/auth";
 import { CustomPrismaAdapter } from "./auth/adapters/prisma";
 import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
@@ -174,6 +176,24 @@ const {
 
 const auth = cache(async () => {
   try {
+    // We are migrating to better-auth, so we need to support both next-auth and better-auth sessions
+    const betterAuthSession = await authLib.api.getSession({
+      headers: await headers(),
+    });
+
+    if (betterAuthSession) {
+      return {
+        user: {
+          id: betterAuthSession.user.id,
+          email: betterAuthSession.user.email,
+          name: betterAuthSession.user.name,
+          isGuest: !betterAuthSession.user.email,
+          image: betterAuthSession.user.image,
+        },
+        expires: betterAuthSession.session.expiresAt.toISOString(),
+      };
+    }
+
     const session = await originalAuth();
     if (session) {
       return session;
