@@ -17,11 +17,11 @@ import {
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
 import React from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/components/trans";
+import { signOut } from "@/lib/auth-client";
 
 export function NavUser({
   name,
@@ -80,9 +80,7 @@ export function NavUser({
           <DropdownMenuItem
             onClick={() => {
               startTransition(async () => {
-                await signOut({
-                  redirectTo: "/",
-                });
+                await signOut();
               });
             }}
           >
