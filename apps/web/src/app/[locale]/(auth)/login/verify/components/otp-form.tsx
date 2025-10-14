@@ -16,7 +16,7 @@ import { z } from "zod";
 
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
-
+import { authClient } from "@/lib/auth-client";
 import { InputOTP } from "../../../../../../components/input-otp";
 
 const otpFormSchema = z.object({
@@ -36,41 +36,17 @@ export function OTPForm({ email }: { email: string }) {
 
   const searchParams = useSearchParams();
   const handleSubmit = form.handleSubmit(async (data) => {
-    const url = `${
-      window.location.origin
-    }/api/auth/callback/email?email=${encodeURIComponent(email.toLowerCase())}&token=${data.otp}`;
+    const res = await authClient.signIn.emailOtp({
+      email,
+      otp: data.otp,
+    });
 
-    const res = await fetch(url);
-
-    if (!res.ok) {
-      switch (res.status) {
-        case 429:
-          form.setError("otp", {
-            message: t("tooManyAttempts", {
-              defaultValue: "Too many attempts, please try again later.",
-            }),
-          });
-          break;
-        default:
-          form.setError("otp", {
-            message: t("unknownError", {
-              defaultValue: "Something went wrong",
-            }),
-          });
-          break;
-      }
+    if (res.error) {
+      form.setError("otp", {
+        message: res.error.message,
+      });
     } else {
-      const resUrl = new URL(res.url);
-      const hasError = !!resUrl.searchParams.get("error");
-      if (hasError) {
-        form.setError("otp", {
-          message: t("wrongVerificationCode", {
-            defaultValue: "The code you entered is incorrect",
-          }),
-        });
-      } else {
-        window.location.href = searchParams?.get("redirectTo") ?? "/";
-      }
+      window.location.href = searchParams?.get("redirectTo") ?? "/";
     }
   });
 

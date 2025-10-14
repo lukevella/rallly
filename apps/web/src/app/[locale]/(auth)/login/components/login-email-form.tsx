@@ -11,7 +11,6 @@ import {
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -19,6 +18,7 @@ import { z } from "zod";
 
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Trans } from "@/components/trans";
+import { authClient } from "@/lib/auth-client";
 
 function useLoginWithEmailSchema() {
   const { t } = useTranslation();
@@ -49,34 +49,27 @@ export function LoginWithEmailForm() {
       <form
         className="space-y-4"
         onSubmit={handleSubmit(async ({ identifier }) => {
-          try {
-            const res = await signIn("email", {
-              email: identifier,
-              redirectTo: searchParams?.get("redirectTo") ?? undefined,
-              redirect: false,
-            });
+          const res = await authClient.emailOtp.sendVerificationOtp({
+            email: identifier,
+            type: "sign-in",
+          });
 
-            if (res?.error) {
-              throw new Error(res.error);
-            }
-
-            await setVerificationEmail(identifier);
-            // redirect to verify page with redirectTo
-            const redirectTo = searchParams?.get("redirectTo");
-            router.push(
-              `/login/verify${
-                redirectTo
-                  ? `?redirectTo=${encodeURIComponent(redirectTo)}`
-                  : ""
-              }`,
-            );
-          } catch (_e) {
+          if (res.error) {
             form.setError("identifier", {
-              message: t("userNotFound", {
-                defaultValue: "A user with that email doesn't exist",
-              }),
+              message: res.error.message,
             });
+
+            return;
           }
+
+          await setVerificationEmail(identifier);
+          // redirect to verify page with redirectTo
+          const redirectTo = searchParams?.get("redirectTo");
+          router.push(
+            `/login/verify${
+              redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ""
+            }`,
+          );
         })}
       >
         <FormField
