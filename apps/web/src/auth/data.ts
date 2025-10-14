@@ -93,7 +93,7 @@ export const requireUser = cache(async () => {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") ?? "/";
 
-  if (!session?.user) {
+  if (!session?.user || session.user.isGuest) {
     const searchParams = new URLSearchParams();
     searchParams.set("redirectTo", pathname);
     redirect(`/login?${searchParams.toString()}`);
