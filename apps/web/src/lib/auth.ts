@@ -23,7 +23,9 @@ import { getValueByPath } from "@/utils/get-value-by-path";
 const baseURL = absoluteUrl("/api/better-auth");
 
 const plugins: BetterAuthPlugin[] = [
-  lastLoginMethod(),
+  lastLoginMethod({
+    storeInDatabase: true,
+  }),
   admin(),
   emailOTP({
     disableSignUp: true,
