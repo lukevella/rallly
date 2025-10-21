@@ -1,22 +1,14 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
-import { headers } from "next/headers";
 import NextAuth from "next-auth";
-import { cache } from "react";
-import { authLib } from "@/lib/auth";
 import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
 import { GuestProvider } from "./auth/providers/guest";
 import { RegistrationTokenProvider } from "./auth/providers/registration-token";
 import { nextAuthConfig } from "./next-auth.config";
 
-const {
-  auth: originalAuth,
-  handlers,
-  signIn,
-  signOut: originalSignOut,
-} = NextAuth({
+const { auth, handlers, signIn, signOut } = NextAuth({
   ...nextAuthConfig,
   adapter: PrismaAdapter(prisma),
   providers: [RegistrationTokenProvider, GuestProvider],
@@ -151,38 +143,5 @@ const {
     },
   },
 });
-
-const auth = cache(async () => {
-  try {
-    return originalAuth();
-  } catch (e) {
-    console.error("FAILED TO GET LEGACY SESSION", e);
-    return null;
-  }
-});
-
-/**
- * If email is not set it means the user is a guest
- * @returns
- */
-export const getUserId = async () => {
-  const session = await auth();
-  return session?.user?.email ? session.user.id : undefined;
-};
-
-export const getLoggedIn = async () => {
-  const session = await auth();
-  return !!session?.user?.email;
-};
-
-const signOut = async () => {
-  await originalSignOut({
-    redirect: false,
-  });
-
-  await authLib.api.signOut({
-    headers: await headers(),
-  });
-};
 
 export { auth, handlers, signIn, signOut };

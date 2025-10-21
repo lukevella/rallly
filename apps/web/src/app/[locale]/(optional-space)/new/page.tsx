@@ -7,15 +7,17 @@ import { CreatePoll } from "@/components/create-poll";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
 import { getTranslation } from "@/i18n/server";
-import { getLoggedIn } from "@/next-auth";
+import { getUserIdIfLoggedIn } from "@/lib/auth";
 import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import { BackButton } from "./back-button";
 
 export default async function Page() {
-  const [isLoggedIn, isRegistrationEnabled] = await Promise.all([
-    getLoggedIn(),
+  const [userId, isRegistrationEnabled] = await Promise.all([
+    getUserIdIfLoggedIn(),
     getRegistrationEnabled(),
   ]);
+
+  const isLoggedIn = !!userId;
 
   return (
     <div className="absolute inset-0 h-dvh overflow-auto bg-gray-100">

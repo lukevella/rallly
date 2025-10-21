@@ -12,12 +12,13 @@ import {
   lastLoginMethod,
 } from "better-auth/plugins";
 import { headers } from "next/headers";
+import { cache } from "react";
 import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
 import { env } from "@/env";
 import { getLocale } from "@/i18n/server/get-locale";
 import { isKvEnabled, kv } from "@/lib/kv";
-import { auth as legacyAuth } from "@/next-auth";
+import { auth as legacyAuth, signOut as legacySignOut } from "@/next-auth";
 import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
 
@@ -222,25 +223,51 @@ export const authLib = betterAuth({
 
 export type Auth = typeof authLib;
 
-export const auth = async () => {
-  const session = await authLib.api.getSession({
-    headers: await headers(),
-  });
+export const auth = cache(async () => {
+  try {
+    const session = await authLib.api.getSession({
+      headers: await headers(),
+    });
 
-  if (session) {
-    return {
-      user: {
-        id: session.user.id,
-        email: session.user.email,
-        name: session.user.name,
-        isGuest: !session.user.email,
-        image: session.user.image,
-      },
-      expires: session.session.expiresAt.toISOString(),
-    };
+    if (session) {
+      return {
+        user: {
+          id: session.user.id,
+          email: session.user.email,
+          name: session.user.name,
+          isGuest: !session.user.email,
+          image: session.user.image,
+        },
+        expires: session.session.expiresAt.toISOString(),
+      };
+    }
+  } catch (e) {
+    console.error("FAILED TO GET SESSION", e);
+    return null;
   }
 
   // Fallback to legacy auth
   // TODO: Remove this once we have fully migrated to better-auth and there are no active legacy sessions left
-  return await legacyAuth();
+  try {
+    return await legacyAuth();
+  } catch (e) {
+    console.error("FAILED TO GET LEGACY SESSION", e);
+    return null;
+  }
+});
+
+export const signOut = async () => {
+  await Promise.all([
+    authLib.api.signOut({
+      headers: await headers(),
+    }),
+    legacySignOut({
+      redirect: false,
+    }),
+  ]);
+};
+
+export const getUserIdIfLoggedIn = async () => {
+  const session = await auth();
+  return session?.user?.isGuest ? undefined : session?.user?.id;
 };
