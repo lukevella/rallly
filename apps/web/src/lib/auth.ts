@@ -15,6 +15,8 @@ import { getValueByPath } from "@/utils/get-value-by-path";
 const plugins: BetterAuthPlugin[] = [
   emailOTP({
     disableSignUp: true,
+    expiresIn: 15 * 60,
+    overrideDefaultEmailVerification: true,
     async sendVerificationOTP({ email, otp, type }) {
       const locale = await getLocale();
       switch (type) {
@@ -149,6 +151,10 @@ export const authLib = betterAuth({
         },
       },
     },
+  },
+  session: {
+    expiresIn: 60 * 60 * 24 * 60, // 60 days
+    updateAge: 60 * 60 * 24, // 1 day
   },
 });
 
