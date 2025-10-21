@@ -49,8 +49,11 @@ export default async function LoginPage(props: {
 
   const hasGoogleProvider = !!authLib.options.socialProviders.google;
   const hasMicrosoftProvider = !!authLib.options.socialProviders.microsoft;
-
-  const hasAlternateLoginMethods = hasGoogleProvider || hasMicrosoftProvider;
+  const hasOidc = !!authLib.options.plugins.find(
+    (plugin) => plugin.id === "generic-oauth",
+  );
+  const hasAlternateLoginMethods =
+    hasGoogleProvider || hasMicrosoftProvider || hasOidc;
 
   return (
     <AuthPageContainer>
@@ -80,9 +83,7 @@ export default async function LoginPage(props: {
         {isEmailLoginEnabled && <LoginWithEmailForm />}
         {isEmailLoginEnabled && hasAlternateLoginMethods ? <OrDivider /> : null}
         <div className="grid gap-3">
-          {authLib.options.plugins.find(
-            (plugin) => plugin.id === "generic-oauth",
-          ) ? (
+          {hasOidc ? (
             <LoginWithOIDC
               name={env.OIDC_NAME}
               redirectTo={searchParams?.redirectTo}
