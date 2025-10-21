@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import { posthog } from "@rallly/posthog/server";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { BetterAuthPlugin } from "better-auth";
 import { APIError, betterAuth } from "better-auth";
@@ -156,7 +157,7 @@ export const authLib = betterAuth({
       ) {
         if (ctx.body?.email) {
           if (isEmailBlocked(ctx.body.email as string)) {
-            throw new APIError("FORBIDDEN", {
+            throw new APIError("BAD_REQUEST", {
               code: "EMAIL_BLOCKED",
               message:
                 "This email address is not allowed. Please use a different email or contact support.",
@@ -167,6 +168,26 @@ export const authLib = betterAuth({
     }),
   },
   databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          posthog?.capture({
+            distinctId: user.id,
+            event: "register",
+            properties: {
+              method: "sso",
+              $set: {
+                name: user.name,
+                email: user.email,
+                tier: "hobby",
+                timeZone: user.timeZone ?? undefined,
+                locale: user.locale ?? undefined,
+              },
+            },
+          });
+        },
+      },
+    },
     session: {
       create: {
         after: async (session) => {
