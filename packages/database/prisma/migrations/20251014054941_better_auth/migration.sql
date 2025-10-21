@@ -18,6 +18,13 @@ ADD COLUMN     "password" TEXT,
 ADD COLUMN     "refresh_token_expires_at" TIMESTAMP(3),
 ADD COLUMN     "updated_at" TIMESTAMP(3);
 
+-- Update existing accounts with updated_at
+UPDATE "accounts" SET "updated_at" = "created_at"
+WHERE "updated_at" IS NULL;
+
+-- Make updated_at not nullable
+ALTER TABLE "accounts" ALTER COLUMN "updated_at" SET NOT NULL;
+
 -- AlterTable - Preserve existing email verification status
 -- First add the new boolean column
 ALTER TABLE "users" ADD COLUMN "email_verified_boolean" BOOLEAN;

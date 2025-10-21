@@ -22,7 +22,7 @@ model Account {
   refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
   password              String?   @map("password")
   createdAt             DateTime  @default(now()) @map("created_at")
-  updatedAt             DateTime? @updatedAt @map("updated_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
