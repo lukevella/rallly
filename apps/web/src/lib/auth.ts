@@ -78,6 +78,7 @@ if (env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET && env.OIDC_DISCOVERY_URL) {
 }
 
 export const authLib = betterAuth({
+  secret: env.SECRET_PASSWORD,
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
