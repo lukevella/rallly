@@ -8,7 +8,7 @@ import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
 import { env } from "@/env";
 import { getLocale } from "@/i18n/server/get-locale";
 import { isKvEnabled, kv } from "@/lib/kv";
-import { auth } from "@/next-auth";
+import { legacyAuth } from "@/next-auth";
 import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
 
@@ -143,7 +143,7 @@ export const authLib = betterAuth({
       create: {
         after: async (session) => {
           // Merge legacy guest users into new user
-          const legacySession = await auth();
+          const legacySession = await legacyAuth();
 
           if (legacySession?.user?.isGuest) {
             await mergeGuestsIntoUser(session.userId, [legacySession.user.id]);

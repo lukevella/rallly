@@ -152,6 +152,15 @@ const {
   },
 });
 
+export const legacyAuth = cache(async () => {
+  try {
+    return originalAuth();
+  } catch (e) {
+    console.error("FAILED TO GET LEGACY SESSION", e);
+    return null;
+  }
+});
+
 const auth = cache(async () => {
   try {
     // We are migrating to better-auth, so we need to support both next-auth and better-auth sessions
@@ -171,14 +180,12 @@ const auth = cache(async () => {
         expires: betterAuthSession.session.expiresAt.toISOString(),
       };
     }
-
-    const session = await originalAuth();
-    if (session) {
-      return session;
-    }
   } catch (e) {
     console.error("FAILED TO GET SESSION", e);
+    return null;
   }
+
+  return await legacyAuth();
 });
 
 /**
@@ -205,4 +212,4 @@ const signOut = async () => {
   });
 };
 
-export { auth, handlers, signIn, signOut };
+export { auth, handlers, signIn, signOut, legacyAuth };
