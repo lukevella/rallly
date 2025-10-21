@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@rallly/ui/button";
 import { useRouter } from "next/navigation";
-import React, { useTransition } from "react";
+import React from "react";
 
 import { Logo } from "@/components/logo";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
@@ -12,11 +12,10 @@ import { trpc } from "@/trpc/client";
 
 export const LoginPage = ({ email, code }: { email: string; code: string }) => {
   const [error, setError] = React.useState<string | null>(null);
+  const [isLoading, setLoading] = React.useState(false);
 
   const { data } = trpc.user.getByEmail.useQuery({ email });
   const router = useRouter();
-
-  const [isPending, startTransition] = useTransition();
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
       <div className="mb-12">
@@ -44,9 +43,12 @@ export const LoginPage = ({ email, code }: { email: string; code: string }) => {
         <div>
           <Button
             size="lg"
-            loading={isPending}
+            loading={isLoading}
             onClick={async () => {
-              startTransition(async () => {
+              setLoading(true);
+              setError(null);
+
+              try {
                 const res = await authClient.signIn.emailOtp({
                   email,
                   otp: code,
@@ -56,7 +58,9 @@ export const LoginPage = ({ email, code }: { email: string; code: string }) => {
                 } else {
                   router.push("/");
                 }
-              });
+              } finally {
+                setLoading(false);
+              }
             }}
             variant="primary"
             className="w-full"
