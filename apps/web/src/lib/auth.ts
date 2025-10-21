@@ -3,7 +3,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { BetterAuthPlugin } from "better-auth";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { emailOTP, genericOAuth } from "better-auth/plugins";
+import { admin, emailOTP, genericOAuth } from "better-auth/plugins";
 import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
 import { env } from "@/env";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -15,6 +15,7 @@ import { getValueByPath } from "@/utils/get-value-by-path";
 const baseURL = absoluteUrl("/api/better-auth");
 
 const plugins: BetterAuthPlugin[] = [
+  admin(),
   emailOTP({
     disableSignUp: true,
     expiresIn: 15 * 60,

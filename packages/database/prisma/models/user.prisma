@@ -51,6 +51,7 @@ model User {
   banned        Boolean     @default(false)
   bannedAt      DateTime?   @map("banned_at")
   banReason     String?     @map("ban_reason")
+  banExpires    DateTime?   @map("ban_expires")
   role          UserRole    @default(user)
 
   comments           Comment[]
@@ -76,7 +77,8 @@ model User {
   defaultDestinationCalendarId String?           @map("default_destination_calendar_id")
   defaultDestinationCalendar   ProviderCalendar? @relation("UserDefaultDestinationCalendar", fields: [defaultDestinationCalendarId], references: [id], onDelete: SetNull)
 
-  sessions Session[]
+  sessions             Session[]
+  impersonatedSessions Session[] @relation("ImpersonatedSessions")
 
   @@map("users")
 }
@@ -91,15 +93,18 @@ model VerificationToken {
 }
 
 model Session {
-  id        String   @id
-  expiresAt DateTime @map("expires_at")
-  token     String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  ipAddress String?  @map("ip_address")
-  userAgent String?  @map("user_agent")
-  userId    String   @map("user_id")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                 String   @id
+  expiresAt          DateTime @map("expires_at")
+  token              String
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+  ipAddress          String?  @map("ip_address")
+  userAgent          String?  @map("user_agent")
+  userId             String   @map("user_id")
+  impersonatedBy     String?  @map("impersonated_by")
+  
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedByUser User?    @relation("ImpersonatedSessions", fields: [impersonatedBy], references: [id])
 
   @@unique([token])
   @@map("sessions")
