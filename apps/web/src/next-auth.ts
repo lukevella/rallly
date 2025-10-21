@@ -1,11 +1,10 @@
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import { headers } from "next/headers";
 import NextAuth from "next-auth";
 import { cache } from "react";
-
 import { authLib } from "@/lib/auth";
-import { CustomPrismaAdapter } from "./auth/adapters/prisma";
 import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
 import { GuestProvider } from "./auth/providers/guest";
@@ -19,14 +18,7 @@ const {
   signOut: originalSignOut,
 } = NextAuth({
   ...nextAuthConfig,
-  adapter: CustomPrismaAdapter({
-    migrateData: async (userId) => {
-      const session = await auth();
-      if (session?.user && session.user.email === null) {
-        await mergeGuestsIntoUser(userId, [session.user.id]);
-      }
-    },
-  }),
+  adapter: PrismaAdapter(prisma),
   providers: [RegistrationTokenProvider, GuestProvider],
   pages: {
     signIn: "/login",
