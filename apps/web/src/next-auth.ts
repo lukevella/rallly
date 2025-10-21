@@ -18,7 +18,7 @@ const {
   auth: originalAuth,
   handlers,
   signIn,
-  signOut,
+  signOut: originalSignOut,
 } = NextAuth({
   ...nextAuthConfig,
   adapter: CustomPrismaAdapter({
@@ -207,6 +207,16 @@ export const getUserId = async () => {
 export const getLoggedIn = async () => {
   const session = await auth();
   return !!session?.user?.email;
+};
+
+const signOut = async () => {
+  await originalSignOut({
+    redirect: false,
+  });
+
+  await authLib.api.signOut({
+    headers: await headers(),
+  });
 };
 
 export { auth, handlers, signIn, signOut };

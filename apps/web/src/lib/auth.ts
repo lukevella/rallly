@@ -42,6 +42,11 @@ const plugins: BetterAuthPlugin[] = [
 ];
 
 if (env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET && env.OIDC_DISCOVERY_URL) {
+  if (env.OIDC_ISSUER_URL) {
+    console.info(
+      "OIDC_ISSUER_URL is no longer used. You can remove it from your environment variables.",
+    );
+  }
   plugins.push(
     genericOAuth({
       config: [
