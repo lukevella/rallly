@@ -524,5 +524,6 @@
   "connectMicrosoftCalendar": "Microsoft Calendar",
   "settingDefaultCalendar": "Setting default calendar...",
   "defaultCalendarSetSuccess": "Default calendar set successfully",
-  "defaultCalendarSetError": "Failed to set default calendar"
+  "defaultCalendarSetError": "Failed to set default calendar",
+  "authErrorsOAuthSignInFailed": "An error occurred while signing in. Please try again or contact the system administrator."
 }
