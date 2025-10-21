@@ -2,14 +2,12 @@ import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import { headers } from "next/headers";
 import NextAuth from "next-auth";
-import type { Provider } from "next-auth/providers";
 import { cache } from "react";
 
 import { authLib } from "@/lib/auth";
 import { CustomPrismaAdapter } from "./auth/adapters/prisma";
 import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
-import { EmailProvider } from "./auth/providers/email";
 import { GuestProvider } from "./auth/providers/guest";
 import { RegistrationTokenProvider } from "./auth/providers/registration-token";
 import { nextAuthConfig } from "./next-auth.config";
@@ -29,11 +27,7 @@ const {
       }
     },
   }),
-  providers: [
-    RegistrationTokenProvider,
-    GuestProvider,
-    ...([EmailProvider()].filter(Boolean) as Provider[]),
-  ],
+  providers: [RegistrationTokenProvider, GuestProvider],
   pages: {
     signIn: "/login",
     verifyRequest: "/login/verify",
