@@ -203,6 +203,11 @@ export const authLib = betterAuth({
           if (legacySession?.user?.isGuest) {
             await mergeGuestsIntoUser(session.userId, [legacySession.user.id]);
           }
+
+          posthog?.capture({
+            distinctId: session.userId,
+            event: "login",
+          });
         },
       },
     },
