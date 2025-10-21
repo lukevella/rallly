@@ -10,10 +10,7 @@ import { CustomPrismaAdapter } from "./auth/adapters/prisma";
 import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
 import { EmailProvider } from "./auth/providers/email";
-import { GoogleProvider } from "./auth/providers/google";
 import { GuestProvider } from "./auth/providers/guest";
-import { MicrosoftProvider } from "./auth/providers/microsoft";
-import { OIDCProvider } from "./auth/providers/oidc";
 import { RegistrationTokenProvider } from "./auth/providers/registration-token";
 import { nextAuthConfig } from "./next-auth.config";
 
@@ -35,12 +32,7 @@ const {
   providers: [
     RegistrationTokenProvider,
     GuestProvider,
-    ...([
-      EmailProvider(),
-      GoogleProvider(),
-      OIDCProvider(),
-      MicrosoftProvider(),
-    ].filter(Boolean) as Provider[]),
+    ...([EmailProvider()].filter(Boolean) as Provider[]),
   ],
   pages: {
     signIn: "/login",

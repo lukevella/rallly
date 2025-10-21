@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import { signIn } from "next-auth/react";
 
 import { Trans } from "@/components/trans";
+import { authClient } from "@/lib/auth-client";
 
 export function LoginWithOIDC({
   name,
@@ -14,8 +14,9 @@ export function LoginWithOIDC({
   return (
     <Button
       onClick={() => {
-        signIn("oidc", {
-          redirectTo,
+        authClient.signIn.oauth2({
+          providerId: "oidc",
+          callbackURL: redirectTo,
         });
       }}
       className="w-full"

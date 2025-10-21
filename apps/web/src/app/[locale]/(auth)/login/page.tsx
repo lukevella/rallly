@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
-import { GoogleProvider } from "@/auth/providers/google";
-import { MicrosoftProvider } from "@/auth/providers/microsoft";
-import { OIDCProvider } from "@/auth/providers/oidc";
+import { env } from "@/env";
 import { getTranslation } from "@/i18n/server";
-import { authLib, getSession } from "@/lib/auth";
+import { authLib } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { auth } from "@/next-auth";
 import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
@@ -48,7 +46,6 @@ export default async function LoginPage(props: {
   }
   const { isRegistrationEnabled, t } = await loadData();
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
-  const oidcProvider = OIDCProvider();
 
   const hasGoogleProvider = !!authLib.options.socialProviders.google;
   const hasMicrosoftProvider = !!authLib.options.socialProviders.microsoft;
@@ -83,9 +80,11 @@ export default async function LoginPage(props: {
         {isEmailLoginEnabled && <LoginWithEmailForm />}
         {isEmailLoginEnabled && hasAlternateLoginMethods ? <OrDivider /> : null}
         <div className="grid gap-3">
-          {oidcProvider ? (
+          {authLib.options.plugins.find(
+            (plugin) => plugin.id === "generic-oauth",
+          ) ? (
             <LoginWithOIDC
-              name={oidcProvider.name}
+              name={env.OIDC_NAME}
               redirectTo={searchParams?.redirectTo}
             />
           ) : null}

@@ -1,47 +1,80 @@
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import type { BetterAuthPlugin } from "better-auth";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { emailOTP } from "better-auth/plugins";
+import { emailOTP, genericOAuth } from "better-auth/plugins";
 import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
 import { env } from "@/env";
 import { getLocale } from "@/i18n/server/get-locale";
 import { isKvEnabled, kv } from "@/lib/kv";
 import { auth } from "@/next-auth";
 import { getEmailClient } from "@/utils/emails";
+import { getValueByPath } from "@/utils/get-value-by-path";
+
+const plugins: BetterAuthPlugin[] = [
+  emailOTP({
+    disableSignUp: true,
+    async sendVerificationOTP({ email, otp, type }) {
+      const locale = await getLocale();
+      switch (type) {
+        case "sign-in":
+          await getEmailClient(locale).sendTemplate("LoginEmail", {
+            to: email,
+            props: {
+              magicLink: absoluteUrl("/auth/login", {
+                code: otp,
+                email,
+              }),
+              code: otp,
+            },
+          });
+          break;
+        case "email-verification":
+          await getEmailClient(locale).sendTemplate("RegisterEmail", {
+            to: email,
+            props: { code: otp },
+          });
+          break;
+      }
+    },
+  }),
+];
+
+if (env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET && env.OIDC_DISCOVERY_URL) {
+  plugins.push(
+    genericOAuth({
+      config: [
+        {
+          providerId: "oidc",
+          discoveryUrl: env.OIDC_DISCOVERY_URL,
+          clientId: env.OIDC_CLIENT_ID,
+          clientSecret: env.OIDC_CLIENT_SECRET,
+          scopes: ["openid", "profile", "email"],
+          mapProfileToUser(profile) {
+            return {
+              name: getValueByPath(profile, env.OIDC_NAME_CLAIM_PATH) as string,
+              email: getValueByPath(
+                profile,
+                env.OIDC_EMAIL_CLAIM_PATH,
+              ) as string,
+              image: getValueByPath(
+                profile,
+                env.OIDC_PICTURE_CLAIM_PATH,
+              ) as string,
+            };
+          },
+        },
+      ],
+    }),
+  );
+}
 
 export const authLib = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
-  plugins: [
-    emailOTP({
-      disableSignUp: true,
-      async sendVerificationOTP({ email, otp, type }) {
-        const locale = await getLocale();
-        switch (type) {
-          case "sign-in":
-            await getEmailClient(locale).sendTemplate("LoginEmail", {
-              to: email,
-              props: {
-                magicLink: absoluteUrl("/auth/login", {
-                  code: otp,
-                  email,
-                }),
-                code: otp,
-              },
-            });
-            break;
-          case "email-verification":
-            await getEmailClient(locale).sendTemplate("RegisterEmail", {
-              to: email,
-              props: { code: otp },
-            });
-            break;
-        }
-      },
-    }),
-  ],
+  plugins,
   socialProviders: {
     google:
       env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET

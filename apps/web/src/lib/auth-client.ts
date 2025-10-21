@@ -1,6 +1,7 @@
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import {
   emailOTPClient,
+  genericOAuthClient,
   inferAdditionalFields,
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
@@ -9,7 +10,11 @@ import type { Auth } from "@/lib/auth";
 
 export const authClient = createAuthClient({
   baseURL: absoluteUrl("/api/better-auth"),
-  plugins: [inferAdditionalFields<Auth>(), emailOTPClient()],
+  plugins: [
+    inferAdditionalFields<Auth>(),
+    emailOTPClient(),
+    genericOAuthClient(),
+  ],
 });
 
 export async function signOut() {
