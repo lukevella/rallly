@@ -4,7 +4,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 
-import { auth } from "@/next-auth";
+import { auth } from "@/lib/auth";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
 import { getEmailClient } from "@/utils/emails";

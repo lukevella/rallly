@@ -3,9 +3,8 @@ import { redirect } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { env } from "@/env";
 import { getTranslation } from "@/i18n/server";
-import { authLib } from "@/lib/auth";
+import { auth, authLib } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { auth } from "@/next-auth";
 import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import {
   AuthPageContainer,

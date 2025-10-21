@@ -6,8 +6,8 @@ import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { createSpaceDTO } from "@/features/space/data";
 import { getUser } from "@/features/user/data";
+import { auth } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
-import { auth } from "@/next-auth";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
 
 export const getCurrentUser = async () => {

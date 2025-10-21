@@ -1,6 +1,6 @@
 import { prisma } from "@rallly/database";
 
-import { auth } from "@/next-auth";
+import { auth } from "@/lib/auth";
 
 export async function getGuestPolls() {
   const session = await auth();

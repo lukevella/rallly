@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { auth } from "@/next-auth";
+import { auth } from "@/lib/auth";
 import type { DisableNotificationsPayload } from "@/trpc/types";
 import { decryptToken } from "@/utils/session";
 

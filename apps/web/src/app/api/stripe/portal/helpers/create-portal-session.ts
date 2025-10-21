@@ -5,7 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { auth } from "@/next-auth";
+import { auth } from "@/lib/auth";
 
 export function createStripePortalSessionHandler(path = "") {
   return async (request: NextRequest) => {

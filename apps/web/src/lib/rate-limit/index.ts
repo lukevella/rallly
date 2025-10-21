@@ -4,7 +4,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { kv } from "@vercel/kv";
 import { headers } from "next/headers";
 
-import { auth } from "@/next-auth";
+import { auth } from "@/lib/auth";
 
 import { isRateLimitEnabled } from "./constants";
 

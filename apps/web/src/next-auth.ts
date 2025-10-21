@@ -152,40 +152,13 @@ const {
   },
 });
 
-const legacyAuth = cache(async () => {
+const auth = cache(async () => {
   try {
     return originalAuth();
   } catch (e) {
     console.error("FAILED TO GET LEGACY SESSION", e);
     return null;
   }
-});
-
-const auth = cache(async () => {
-  try {
-    // We are migrating to better-auth, so we need to support both next-auth and better-auth sessions
-    const betterAuthSession = await authLib.api.getSession({
-      headers: await headers(),
-    });
-
-    if (betterAuthSession) {
-      return {
-        user: {
-          id: betterAuthSession.user.id,
-          email: betterAuthSession.user.email,
-          name: betterAuthSession.user.name,
-          isGuest: !betterAuthSession.user.email,
-          image: betterAuthSession.user.image,
-        },
-        expires: betterAuthSession.session.expiresAt.toISOString(),
-      };
-    }
-  } catch (e) {
-    console.error("FAILED TO GET SESSION", e);
-    return null;
-  }
-
-  return await legacyAuth();
 });
 
 /**
@@ -212,4 +185,4 @@ const signOut = async () => {
   });
 };
 
-export { auth, handlers, signIn, signOut, legacyAuth };
+export { auth, handlers, signIn, signOut };

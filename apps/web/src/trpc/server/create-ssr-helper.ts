@@ -2,7 +2,7 @@ import { createServerSideHelpers } from "@trpc/react-query/server";
 import { redirect } from "next/navigation";
 import superjson from "superjson";
 
-import { auth } from "@/next-auth";
+import { auth } from "@/lib/auth";
 
 import type { TRPCContext } from "../context";
 import { appRouter } from "../routers";
