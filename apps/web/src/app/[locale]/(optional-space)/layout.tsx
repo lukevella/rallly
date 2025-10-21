@@ -1,14 +1,14 @@
 import { requireSpace } from "@/auth/data";
 import { BillingProvider } from "@/features/billing/client";
 import { SpaceProvider } from "@/features/space/client";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  const session = await getSession();
 
   if (session?.user && !session.user.isGuest) {
     const space = await requireSpace();

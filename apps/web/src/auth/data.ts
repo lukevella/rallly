@@ -6,12 +6,12 @@ import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { createSpaceDTO } from "@/features/space/data";
 import { getUser } from "@/features/user/data";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
 
 export const getCurrentUser = async () => {
-  const session = await auth();
+  const session = await getSession();
 
   if (!session?.user) {
     return null;
@@ -89,7 +89,7 @@ export const requireAdmin = cache(async () => {
 });
 
 export const requireUser = cache(async () => {
-  const session = await auth();
+  const session = await getSession();
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") ?? "/";
 

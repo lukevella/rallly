@@ -223,7 +223,7 @@ export const authLib = betterAuth({
 
 export type Auth = typeof authLib;
 
-export const auth = cache(async () => {
+export const getSession = cache(async () => {
   try {
     const session = await authLib.api.getSession({
       headers: await headers(),
@@ -268,6 +268,6 @@ export const signOut = async () => {
 };
 
 export const getUserIdIfLoggedIn = async () => {
-  const session = await auth();
+  const session = await getSession();
   return session?.user?.isGuest ? undefined : session?.user?.id;
 };

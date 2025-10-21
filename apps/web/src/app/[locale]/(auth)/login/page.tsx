@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { env } from "@/env";
 import { getTranslation } from "@/i18n/server";
-import { auth, authLib } from "@/lib/auth";
+import { authLib, getSession } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import {
@@ -39,7 +39,7 @@ export default async function LoginPage(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const session = await auth();
+  const session = await getSession();
   if (session && !session.user?.isGuest) {
     return redirect("/");
   }

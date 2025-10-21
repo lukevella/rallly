@@ -5,7 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 
 export function createStripePortalSessionHandler(path = "") {
   return async (request: NextRequest) => {
@@ -34,7 +34,7 @@ export function createStripePortalSessionHandler(path = "") {
         );
       }
     } else {
-      const userSession = await auth();
+      const userSession = await getSession();
       if (!userSession?.user || userSession.user.email === null) {
         const url = new URL("/login", request.url);
         url.searchParams.set("redirectTo", request.nextUrl.pathname);
