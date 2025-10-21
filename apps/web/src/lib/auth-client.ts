@@ -3,6 +3,7 @@ import {
   emailOTPClient,
   genericOAuthClient,
   inferAdditionalFields,
+  lastLoginMethodClient,
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import { signOut as nextAuthSignOut } from "next-auth/react";
@@ -14,6 +15,7 @@ export const authClient = createAuthClient({
     inferAdditionalFields<Auth>(),
     emailOTPClient(),
     genericOAuthClient(),
+    lastLoginMethodClient(),
   ],
 });
 

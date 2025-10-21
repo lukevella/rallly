@@ -9,6 +9,7 @@ import {
   createAuthMiddleware,
   emailOTP,
   genericOAuth,
+  lastLoginMethod,
 } from "better-auth/plugins";
 import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
@@ -22,6 +23,7 @@ import { getValueByPath } from "@/utils/get-value-by-path";
 const baseURL = absoluteUrl("/api/better-auth");
 
 const plugins: BetterAuthPlugin[] = [
+  lastLoginMethod(),
   admin(),
   emailOTP({
     disableSignUp: true,
