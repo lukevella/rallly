@@ -16,7 +16,7 @@ ADD COLUMN     "access_token_expires_at" TIMESTAMP(3),
 ADD COLUMN     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 ADD COLUMN     "password" TEXT,
 ADD COLUMN     "refresh_token_expires_at" TIMESTAMP(3),
-ADD COLUMN     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ADD COLUMN     "updated_at" TIMESTAMP(3);
 
 -- AlterTable - Preserve existing email verification status
 -- First add the new boolean column

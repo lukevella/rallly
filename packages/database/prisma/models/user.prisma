@@ -1,4 +1,3 @@
-
 enum TimeFormat {
   hours12
   hours24
@@ -21,10 +20,9 @@ model Account {
 
   accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
   refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
-  password              String? @map("password")
+  password              String?   @map("password")
   createdAt             DateTime  @default(now()) @map("created_at")
-  updatedAt             DateTime  @updatedAt @map("updated_at")
-
+  updatedAt             DateTime? @updatedAt @map("updated_at")
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -41,7 +39,7 @@ model User {
   id            String      @id @default(cuid())
   name          String
   email         String      @unique @db.Citext
-  emailVerified  Boolean?   @map("email_verified")
+  emailVerified Boolean?    @map("email_verified")
   image         String?
   timeZone      String?     @map("time_zone")
   weekStart     Int?        @map("week_start")
@@ -98,9 +96,9 @@ model Session {
   token     String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  ipAddress String? @map("ip_address")
-  userAgent String? @map("user_agent")
-  userId    String @map("user_id")
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
