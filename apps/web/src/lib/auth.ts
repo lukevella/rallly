@@ -1,9 +1,15 @@
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { BetterAuthPlugin } from "better-auth";
-import { betterAuth } from "better-auth";
+import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { admin, emailOTP, genericOAuth } from "better-auth/plugins";
+import {
+  admin,
+  createAuthMiddleware,
+  emailOTP,
+  genericOAuth,
+} from "better-auth/plugins";
+import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
 import { env } from "@/env";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -141,6 +147,24 @@ export const authLib = betterAuth({
       accessToken: "access_token",
       idToken: "id_token",
     },
+  },
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (
+        ctx.path.includes("/sign-in") ||
+        ctx.path.includes("/send-verification-otp")
+      ) {
+        if (ctx.body?.email) {
+          if (isEmailBlocked(ctx.body.email as string)) {
+            throw new APIError("FORBIDDEN", {
+              code: "EMAIL_BLOCKED",
+              message:
+                "This email address is not allowed. Please use a different email or contact support.",
+            });
+          }
+        }
+      }
+    }),
   },
   databaseHooks: {
     session: {
