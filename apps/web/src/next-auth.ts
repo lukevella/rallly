@@ -152,7 +152,7 @@ const {
   },
 });
 
-export const legacyAuth = cache(async () => {
+const legacyAuth = cache(async () => {
   try {
     return originalAuth();
   } catch (e) {
