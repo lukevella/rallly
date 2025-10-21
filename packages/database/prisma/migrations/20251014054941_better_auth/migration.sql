@@ -4,7 +4,7 @@
   - You are about to drop the column `session_state` on the `accounts` table. All the data in the column will be lost.
   - You are about to drop the column `token_type` on the `accounts` table. All the data in the column will be lost.
   - You are about to drop the column `type` on the `accounts` table. All the data in the column will be lost.
-  - The `email_verified` column on the `users` table would be dropped and recreated. This will lead to data loss if there is data in the column.
+  - The `email_verified` column on the `users` table is being converted from TIMESTAMP to BOOLEAN. Existing verification status is preserved.
   - Added the required column `updated_at` to the `accounts` table without a default value. This is not possible if the table is not empty.
 
 */
@@ -18,9 +18,19 @@ ADD COLUMN     "password" TEXT,
 ADD COLUMN     "refresh_token_expires_at" TIMESTAMP(3),
 ADD COLUMN     "updated_at" TIMESTAMP(3) NOT NULL;
 
--- AlterTable
-ALTER TABLE "users" DROP COLUMN "email_verified",
-ADD COLUMN     "email_verified" BOOLEAN;
+-- AlterTable - Preserve existing email verification status
+-- First add the new boolean column
+ALTER TABLE "users" ADD COLUMN "email_verified_boolean" BOOLEAN;
+
+-- Convert existing DateTime values to BOOLEAN (NULL stays NULL, any timestamp becomes TRUE)
+UPDATE "users" SET "email_verified_boolean" = CASE 
+  WHEN "email_verified" IS NOT NULL THEN TRUE 
+  ELSE NULL 
+END;
+
+-- Drop the old column and rename the new one
+ALTER TABLE "users" DROP COLUMN "email_verified";
+ALTER TABLE "users" RENAME COLUMN "email_verified_boolean" TO "email_verified";
 
 -- CreateTable
 CREATE TABLE "sessions" (
