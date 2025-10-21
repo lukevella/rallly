@@ -93,6 +93,7 @@ export const authLib = betterAuth({
   secret: env.SECRET_PASSWORD,
   database: prismaAdapter(prisma, {
     provider: "postgresql",
+    transaction: true,
   }),
   plugins,
   socialProviders: {
