@@ -12,6 +12,8 @@ import { legacyAuth } from "@/next-auth";
 import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
 
+const baseURL = absoluteUrl("/api/better-auth");
+
 const plugins: BetterAuthPlugin[] = [
   emailOTP({
     disableSignUp: true,
@@ -157,6 +159,7 @@ export const authLib = betterAuth({
     expiresIn: 60 * 60 * 24 * 60, // 60 days
     updateAge: 60 * 60 * 24, // 1 day
   },
+  baseURL,
 });
 
 export type Auth = typeof authLib;
