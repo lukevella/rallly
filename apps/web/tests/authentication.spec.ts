@@ -126,14 +126,14 @@ test.describe.serial(() => {
 
     test("allow using different case in email", async ({ page }) => {
       await page.goto("/login");
-
+      const testDifferentCaseEmail = "Test@example.com"; // different case than the test user email
       await page
         .getByPlaceholder("jessie.smith@example.com")
-        .fill("Test@example.com");
+        .fill(testDifferentCaseEmail);
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
-      const code = await getCode(testUserEmail);
+      const code = await getCode(testDifferentCaseEmail);
 
       await page.getByPlaceholder("Enter your 6-digit code").fill(code);
 

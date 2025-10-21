@@ -55,10 +55,18 @@ export function LoginWithEmailForm() {
           });
 
           if (res.error) {
-            form.setError("identifier", {
-              message: res.error.message,
-            });
-
+            switch (res.error.code) {
+              case "USER_NOT_FOUND":
+                form.setError("identifier", {
+                  message: t("userNotFound"),
+                });
+                break;
+              default:
+                form.setError("identifier", {
+                  message: res.error.message,
+                });
+                break;
+            }
             return;
           }
 

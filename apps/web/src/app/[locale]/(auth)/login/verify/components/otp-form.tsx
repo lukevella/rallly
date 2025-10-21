@@ -42,9 +42,17 @@ export function OTPForm({ email }: { email: string }) {
     });
 
     if (res.error) {
-      form.setError("otp", {
-        message: res.error.message,
-      });
+      switch (res.error.code) {
+        case "INVALID_OTP":
+          form.setError("otp", {
+            message: t("wrongVerificationCode"),
+          });
+          return;
+        default:
+          form.setError("otp", {
+            message: res.error.message,
+          });
+      }
     } else {
       window.location.href = searchParams?.get("redirectTo") ?? "/";
     }
