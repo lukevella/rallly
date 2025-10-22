@@ -6,6 +6,7 @@ import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import {
   admin,
+  anonymous,
   createAuthMiddleware,
   emailOTP,
   genericOAuth,
@@ -15,6 +16,7 @@ import { headers } from "next/headers";
 import { cache } from "react";
 import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
+import { isTemporaryEmail } from "@/auth/helpers/temp-email-domains";
 import { env } from "@/env";
 import { getLocale } from "@/i18n/server/get-locale";
 import { isKvEnabled, kv } from "@/lib/kv";
@@ -24,40 +26,7 @@ import { getValueByPath } from "@/utils/get-value-by-path";
 
 const baseURL = absoluteUrl("/api/better-auth");
 
-const plugins: BetterAuthPlugin[] = [
-  lastLoginMethod({
-    storeInDatabase: true,
-  }),
-  admin(),
-  emailOTP({
-    disableSignUp: true,
-    expiresIn: 15 * 60,
-    overrideDefaultEmailVerification: true,
-    async sendVerificationOTP({ email, otp, type }) {
-      const locale = await getLocale();
-      switch (type) {
-        case "sign-in":
-          await getEmailClient(locale).sendTemplate("LoginEmail", {
-            to: email,
-            props: {
-              magicLink: absoluteUrl("/auth/login", {
-                code: otp,
-                email,
-              }),
-              code: otp,
-            },
-          });
-          break;
-        case "email-verification":
-          await getEmailClient(locale).sendTemplate("RegisterEmail", {
-            to: email,
-            props: { code: otp },
-          });
-          break;
-      }
-    },
-  }),
-];
+const plugins: BetterAuthPlugin[] = [];
 
 if (env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET && env.OIDC_DISCOVERY_URL) {
   if (env.OIDC_ISSUER_URL) {
@@ -96,11 +65,53 @@ if (env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET && env.OIDC_DISCOVERY_URL) {
 export const authLib = betterAuth({
   appName: "Rallly",
   secret: env.SECRET_PASSWORD,
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: true,
+  },
+  emailVerification: {
+    autoSignInAfterVerification: true,
+  },
   database: prismaAdapter(prisma, {
     provider: "postgresql",
     transaction: true,
   }),
-  plugins,
+  plugins: [
+    ...plugins,
+    admin(),
+    anonymous(),
+    lastLoginMethod({
+      storeInDatabase: true,
+    }),
+    emailOTP({
+      disableSignUp: true,
+      expiresIn: 15 * 60,
+      overrideDefaultEmailVerification: true,
+      async sendVerificationOTP({ email, otp, type }) {
+        const locale = await getLocale();
+        switch (type) {
+          case "sign-in":
+            await getEmailClient(locale).sendTemplate("LoginEmail", {
+              to: email,
+              props: {
+                magicLink: absoluteUrl("/auth/login", {
+                  code: otp,
+                  email,
+                }),
+                code: otp,
+              },
+            });
+            break;
+          case "email-verification":
+            await getEmailClient(locale).sendTemplate("RegisterEmail", {
+              to: email,
+              props: { code: otp },
+            });
+            break;
+        }
+      },
+    }),
+  ],
   socialProviders: {
     google:
       env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
@@ -160,8 +171,9 @@ export const authLib = betterAuth({
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       if (
-        ctx.path.includes("/sign-in") ||
-        ctx.path.includes("/send-verification-otp")
+        ctx.path.startsWith("/sign-in") ||
+        ctx.path.startsWith("/sign-up") ||
+        ctx.path.startsWith("/email-otp")
       ) {
         if (ctx.body?.email) {
           if (isEmailBlocked(ctx.body.email as string)) {
@@ -169,6 +181,13 @@ export const authLib = betterAuth({
               code: "EMAIL_BLOCKED",
               message:
                 "This email address is not allowed. Please use a different email or contact support.",
+            });
+          }
+          if (isTemporaryEmail(ctx.body.email as string)) {
+            throw new APIError("BAD_REQUEST", {
+              code: "TEMPORARY_EMAIL_NOT_ALLOWED",
+              message:
+                "Temporary email addresses are not allowed. Please use a different email.",
             });
           }
         }

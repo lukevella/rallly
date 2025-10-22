@@ -14,10 +14,11 @@ import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import type { RegisterNameFormValues } from "@/app/[locale]/(auth)/register/components/schema";
 import { InputOTP } from "@/components/input-otp";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
+import { authClient } from "@/lib/auth-client";
 import { trpc } from "@/trpc/client";
 import { useDayjs } from "@/utils/dayjs";
 import { validateRedirectUrl } from "@/utils/redirect";
@@ -46,35 +47,44 @@ export function OTPForm({ token }: { token: string }) {
     trpc.auth.authenticateRegistration.useMutation();
   const searchParams = useSearchParams();
   const handleSubmit = form.handleSubmit(async (data) => {
+    const formData = JSON.parse(token) as RegisterNameFormValues;
+    const res = await authClient.emailOtp.verifyEmail({
+      email: token,
+      otp: data.otp,
+    });
+
+    console.log({ res });
+
+    window.location.href =
+      validateRedirectUrl(searchParams?.get("redirectTo")) ?? "/";
+
     // get user's time zone
-    const res = await authenticateRegistration.mutateAsync({
-      token,
-      timeZone,
-      locale,
-      weekStart,
-      timeFormat,
-      code: data.otp,
-    });
+    // const res = await authenticateRegistration.mutateAsync({
+    //   token,
+    //   timeZone,
+    //   locale,
+    //   weekStart,
+    //   timeFormat,
+    //   code: data.otp,
+    // });
 
-    if (!res.user) {
-      form.setError("otp", {
-        message: t("wrongVerificationCode"),
-      });
-      return;
-    }
+    // if (!res.user) {
+    //   form.setError("otp", {
+    //     message: t("wrongVerificationCode"),
+    //   });
+    //   return;
+    // }
 
-    queryClient.invalidate();
+    // queryClient.invalidate();
 
-    signIn("registration-token", {
-      token,
-      redirectTo: validateRedirectUrl(searchParams?.get("redirectTo")) ?? "/",
-    });
+    // signIn("registration-token", {
+    //   token,
+    //   redirectTo: validateRedirectUrl(searchParams?.get("redirectTo")) ?? "/",
+    // });
   });
 
   const isLoading =
-    form.formState.isSubmitting ||
-    form.formState.isSubmitSuccessful ||
-    authenticateRegistration.isPending;
+    form.formState.isSubmitting || authenticateRegistration.isPending;
 
   return (
     <Form {...form}>

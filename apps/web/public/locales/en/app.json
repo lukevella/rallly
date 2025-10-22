@@ -525,5 +525,7 @@
   "settingDefaultCalendar": "Setting default calendar...",
   "defaultCalendarSetSuccess": "Default calendar set successfully",
   "defaultCalendarSetError": "Failed to set default calendar",
-  "authErrorsOAuthSignInFailed": "An error occurred while signing in. Please try again or contact the system administrator."
+  "authErrorsOAuthSignInFailed": "An error occurred while signing in. Please try again or contact the system administrator.",
+  "password": "Password",
+  "passwordDescription": "Must be at least 8 characters"
 }
