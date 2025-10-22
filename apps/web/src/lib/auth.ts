@@ -69,6 +69,14 @@ export const authLib = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
+    sendResetPassword: async ({ user, url }) => {
+      await getEmailClient(user.locale).sendTemplate("ResetPasswordEmail", {
+        to: user.email,
+        props: {
+          resetLink: url,
+        },
+      });
+    },
   },
   emailVerification: {
     autoSignInAfterVerification: true,
@@ -89,10 +97,13 @@ export const authLib = betterAuth({
       expiresIn: 15 * 60,
       overrideDefaultEmailVerification: true,
       async sendVerificationOTP({ email, otp, type }) {
-        const locale = await getLocale();
+        const locale = await getLocale(); // TODO: Get locale from email
+        const emailClient = getEmailClient(locale);
         switch (type) {
+          // We're not actually using the sign-in type anymore since we just we have `autoSignInAfterVerification` enabled.
+          // This lets us keep things a bit simpler since we share the same verification flow for both login and registration.
           case "sign-in":
-            await getEmailClient(locale).sendTemplate("LoginEmail", {
+            await emailClient.sendTemplate("LoginEmail", {
               to: email,
               props: {
                 magicLink: absoluteUrl("/auth/login", {
@@ -104,7 +115,7 @@ export const authLib = betterAuth({
             });
             break;
           case "email-verification":
-            await getEmailClient(locale).sendTemplate("RegisterEmail", {
+            await emailClient.sendTemplate("RegisterEmail", {
               to: email,
               props: { code: otp },
             });

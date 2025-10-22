@@ -23,6 +23,7 @@ import {
 import { Trans } from "@/components/trans";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/utils/redirect";
+import { LinkWithRedirectTo } from "../../components/link-with-redirect-to";
 
 function useLoginWithEmailSchema() {
   const { t } = useTranslation();
@@ -152,12 +153,24 @@ export function LoginWithEmailForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  <Trans i18nKey="password" defaults="Password" />
-                  <span className="ml-1 text-muted-foreground text-xs">
-                    <Trans i18nKey="optionalLabel" defaults="(Optional)" />
-                  </span>
-                </FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel>
+                    <Trans i18nKey="password" defaults="Password" />
+                    <span className="ml-1 text-muted-foreground text-xs">
+                      <Trans i18nKey="optionalLabel" defaults="(Optional)" />
+                    </span>
+                  </FormLabel>
+                  <LinkWithRedirectTo
+                    className="text-muted-foreground text-sm hover:underline"
+                    href="/forgot-password"
+                  >
+                    <Trans
+                      i18nKey="forgotPassword"
+                      defaults="Forgot password?"
+                    />
+                  </LinkWithRedirectTo>
+                </div>
+
                 <FormControl>
                   <Input
                     autoFocus={true}

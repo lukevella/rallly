@@ -10,6 +10,7 @@ import { NewParticipantEmail } from "./templates/new-participant";
 import { NewParticipantConfirmationEmail } from "./templates/new-participant-confirmation";
 import { NewPollEmail } from "./templates/new-poll";
 import { RegisterEmail } from "./templates/register";
+import { ResetPasswordEmail } from "./templates/reset-password";
 import { SpaceInviteEmail } from "./templates/space-invite";
 import type { TemplateName } from "./types";
 
@@ -22,6 +23,7 @@ const templates = {
   NewParticipantConfirmationEmail,
   NewPollEmail,
   RegisterEmail,
+  ResetPasswordEmail,
   ChangeEmailRequest,
   AbandonedCheckoutEmail,
   LicenseKeyEmail,
