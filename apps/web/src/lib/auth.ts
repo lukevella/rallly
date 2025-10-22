@@ -70,7 +70,10 @@ export const authLib = betterAuth({
     enabled: true,
     requireEmailVerification: true,
     sendResetPassword: async ({ user, url }) => {
-      await getEmailClient(user.locale).sendTemplate("ResetPasswordEmail", {
+      const locale =
+        "locale" in user ? (user.locale as string) : await getLocale();
+
+      await getEmailClient(locale).sendTemplate("ResetPasswordEmail", {
         to: user.email,
         props: {
           resetLink: url,
