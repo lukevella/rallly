@@ -57,6 +57,10 @@ export function LoginWithEmailForm() {
       <form
         className="space-y-4"
         onSubmit={handleSubmit(async ({ identifier, password }) => {
+          const validatedRedirectTo = validateRedirectUrl(
+            searchParams?.get("redirectTo"),
+          );
+
           if (password) {
             const res = await authClient.signIn.email({
               email: identifier,
@@ -64,14 +68,24 @@ export function LoginWithEmailForm() {
             });
 
             if (res.error) {
-              form.setError("password", {
-                message: res.error.message,
-              });
+              switch (res.error.code) {
+                case "INVALID_EMAIL_OR_PASSWORD":
+                  form.setError("password", {
+                    message: t("passwordIncorrect", {
+                      defaultValue: "Invalid email or password",
+                    }),
+                  });
+                  break;
+                default:
+                  form.setError("password", {
+                    message: res.error.message,
+                  });
+                  break;
+              }
               return;
             }
-            console.log({ res });
 
-            router.push("/");
+            router.push(validatedRedirectTo ?? "/");
 
             return;
           } else {
@@ -113,9 +127,7 @@ export function LoginWithEmailForm() {
 
             await setVerificationEmail(identifier);
             // redirect to verify page with redirectTo
-            const validatedRedirectTo = validateRedirectUrl(
-              searchParams?.get("redirectTo"),
-            );
+
             router.push(
               `/login/verify${
                 validatedRedirectTo
@@ -181,9 +193,13 @@ export function LoginWithEmailForm() {
                     {...field}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
+        ) : null}
+        {form.formState.errors.root?.message ? (
+          <FormMessage>{form.formState.errors.root.message}</FormMessage>
         ) : null}
         <div>
           <Button
