@@ -26,9 +26,6 @@ export class RegisterPage {
     await this.page.getByText("Finish Logging In").waitFor();
     await this.page.getByPlaceholder("Enter your 6-digit code").fill(code);
 
-    // Create space
-    await this.page.getByRole("button", { name: "Create Space" }).click();
-
     // Verify successful registration
     await expect(this.page.getByText(name)).toBeVisible();
   }

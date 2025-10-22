@@ -18,6 +18,7 @@ import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "@/auth/helpers/merge-user";
 import { isTemporaryEmail } from "@/auth/helpers/temp-email-domains";
 import { env } from "@/env";
+import { createSpace } from "@/features/space/mutations";
 import { getLocale } from "@/i18n/server/get-locale";
 import { isKvEnabled, kv } from "@/lib/kv";
 import { auth as legacyAuth, signOut as legacySignOut } from "@/next-auth";
@@ -198,6 +199,9 @@ export const authLib = betterAuth({
     user: {
       create: {
         after: async (user) => {
+          // create a space for the user
+          await createSpace({ name: "Personal", ownerId: user.id });
+
           posthog?.capture({
             distinctId: user.id,
             event: "register",
