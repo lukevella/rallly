@@ -10,20 +10,33 @@ export class LoginPage {
     await this.page.getByText("Welcome").waitFor();
   }
 
-  async login({ email }: { email: string }) {
-    // Fill in registration form
+  async login({ email, password }: { email: string; password?: string }) {
+    // Fill in email
     await this.page.getByPlaceholder("jessie.smith@example.com").fill(email);
 
     await this.page
       .getByRole("button", { name: "Continue with Email", exact: true })
       .click();
 
-    // Handle verification code
-    const code = await getCode(email);
-    await this.page.getByRole("heading", { name : "Finish Logging In" }).waitFor();
-    await this.page.getByPlaceholder("Enter your 6-digit code").fill(code);
+    // If password is provided and the password field appears, use password login
+    if (password) {
+      await this.page.getByPlaceholder("************").waitFor();
+      await this.page.getByPlaceholder("************").fill(password);
 
-    // Wait for page to load
-    await this.page.waitForLoadState("networkidle");
+      await this.page
+        .getByRole("button", { name: "Continue with Email", exact: true })
+        .click();
+
+      // Wait for page to load
+      await this.page.waitForLoadState("networkidle");
+    } else {
+      // Handle verification code for email OTP login
+      const code = await getCode(email);
+      await this.page.getByRole("heading", { name : "Finish Logging In" }).waitFor();
+      await this.page.getByPlaceholder("Enter your 6-digit code").fill(code);
+
+      // Wait for page to load
+      await this.page.waitForLoadState("networkidle");
+    }
   }
 }

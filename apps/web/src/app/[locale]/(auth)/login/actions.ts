@@ -22,7 +22,10 @@ export async function getLoginMethod(email: string) {
     },
   });
 
-  if (user?.accounts.some((account) => account.provider === "credential")) {
+  if (
+    user?.emailVerified &&
+    user?.accounts.some((account) => account.provider === "credential")
+  ) {
     return { data: "credential" as const, error: null };
   }
 

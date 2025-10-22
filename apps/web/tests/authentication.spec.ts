@@ -9,6 +9,7 @@ import { getCode } from "./utils";
 
 const testUserEmail = "test@example.com";
 const testExistingUserEmail = "existing-user-for-disabled-test@example.com";
+const testPassword = "TestPassword123!";
 
 test.describe.serial(() => {
   test.afterAll(async () => {
@@ -44,6 +45,7 @@ test.describe.serial(() => {
       await registerPage.register({
         name: "Test User",
         email: testUserEmail,
+        password: testPassword,
       });
     });
   });
@@ -58,6 +60,7 @@ test.describe.serial(() => {
       await page
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
+      await page.getByPlaceholder("************").fill(testPassword);
 
       await page.getByRole("button", { name: "Continue", exact: true }).click();
 
@@ -66,7 +69,7 @@ test.describe.serial(() => {
       ).toBeVisible();
     });
 
-    test("can login with magic link", async ({ page }) => {
+    test("can login with password", async ({ page }) => {
       await page.goto("/login");
 
       await page
@@ -75,29 +78,25 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
-      const html = await captureEmailHTML(testUserEmail);
+      // Password field should appear since user has a credential account
+      await page.getByPlaceholder("************").waitFor();
+      await page.getByPlaceholder("************").fill(testPassword);
 
-      const $ = load(html);
-
-      const magicLink = $("#magicLink").attr("href");
-
-      if (!magicLink) {
-        throw new Error("Magic link not found");
-      }
-
-      await page.goto(magicLink);
-
-      await page.getByRole("button", { name: "Login", exact: true }).click();
+      await page.getByRole("button", { name: "Continue with Email" }).click();
 
       await expect(page.getByText("Test User")).toBeVisible();
     });
-
+    
     test("shows error for invalid verification code", async ({ page }) => {
       await page.goto("/login");
 
       await page
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
+
+      await page.getByRole("button", { name: "Continue with Email" }).click();
+
+      expect(page.getByPlaceholder("************")).toBeVisible();
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
@@ -117,6 +116,10 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
+      expect(page.getByPlaceholder("************")).toBeVisible();
+
+      await page.getByRole("button", { name: "Continue with Email" }).click();
+
       const code = await getCode(testUserEmail);
 
       await page.getByPlaceholder("Enter your 6-digit code").fill(code);
@@ -133,9 +136,9 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
-      const code = await getCode(testDifferentCaseEmail);
-
-      await page.getByPlaceholder("Enter your 6-digit code").fill(code);
+      await page.getByPlaceholder("************").fill(testPassword);
+      
+      await page.getByRole("button", { name: "Continue with Email" }).click();
 
       await expect(page.getByText("Test User")).toBeVisible();
     });

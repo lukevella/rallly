@@ -11,10 +11,11 @@ export class RegisterPage {
     await this.page.getByText("Create Your Account").waitFor();
   }
 
-  async register({ name, email }: { name: string; email: string }) {
+  async register({ name, email, password }: { name: string; email: string; password: string }) {
     // Fill in registration form
     await this.page.getByPlaceholder("Jessie Smith").fill(name);
     await this.page.getByPlaceholder("jessie.smith@example.com").fill(email);
+    await this.page.getByPlaceholder("************").fill(password);
 
     await this.page
       .getByRole("button", { name: "Continue", exact: true })
@@ -22,8 +23,11 @@ export class RegisterPage {
 
     // Handle verification code
     const code = await getCode(email);
-    await this.page.getByText("Finish Registering").waitFor();
+    await this.page.getByText("Finish Logging In").waitFor();
     await this.page.getByPlaceholder("Enter your 6-digit code").fill(code);
+
+    // Create space
+    await this.page.getByRole("button", { name: "Create Space" }).click();
 
     // Verify successful registration
     await expect(this.page.getByText(name)).toBeVisible();

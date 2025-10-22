@@ -63,11 +63,6 @@ export function RegisterNameForm() {
               callbackURL: verifyURL,
             });
 
-            await authClient.emailOtp.sendVerificationOtp({
-              email: data.email,
-              type: "sign-in",
-            });
-
             if (res.error) {
               switch (res.error.code) {
                 case "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL":

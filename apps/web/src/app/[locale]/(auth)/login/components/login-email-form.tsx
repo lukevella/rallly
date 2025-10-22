@@ -86,7 +86,7 @@ export function LoginWithEmailForm() {
 
             const res = await authClient.emailOtp.sendVerificationOtp({
               email: identifier,
-              type: "sign-in",
+              type: "email-verification",
             });
 
             if (res.error) {

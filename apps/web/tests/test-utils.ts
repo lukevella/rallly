@@ -123,10 +123,11 @@ export async function createTestPoll({
   });
 }
 
-export async function loginWithEmail(page: Page, { email }: { email: string }) {
+export async function loginWithEmail(page: Page, { email, password }: { email: string; password?: string }) {
   const loginPage = new LoginPage(page);
   await loginPage.goto();
   await loginPage.login({
     email,
+    password,
   });
 }
