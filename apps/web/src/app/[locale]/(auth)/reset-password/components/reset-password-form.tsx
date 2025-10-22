@@ -40,7 +40,6 @@ export function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const resetPasswordSchema = useResetPasswordSchema();
-  const [error, setError] = React.useState<string | null>(null);
   const form = useForm<ResetPasswordValues>({
     defaultValues: {
       password: "",
@@ -71,73 +70,76 @@ export function ResetPasswordForm() {
   return (
     <Form {...form}>
       <form
-        className="space-y-4"
         onSubmit={handleSubmit(async ({ password }) => {
-          setError(null);
           const res = await authClient.resetPassword({
             newPassword: password,
             token,
           });
 
           if (res.error) {
-            setError(res.error.message);
+            form.setError("root", {
+              message: res.error.message,
+            });
             return;
           }
 
           router.push("/login");
         })}
       >
-        {error ? (
-          <div className="rounded-lg border border-destructive bg-destructive/10 p-3 text-destructive text-sm">
-            {error}
-          </div>
-        ) : null}
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                <Trans i18nKey="newPassword" defaults="New password" />
-              </FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  size="lg"
-                  type="password"
-                  disabled={formState.isSubmitting}
-                  autoFocus={true}
-                  placeholder="••••••••"
-                  error={!!formState.errors.password}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                <Trans i18nKey="confirmPassword" defaults="Confirm password" />
-              </FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  size="lg"
-                  type="password"
-                  disabled={formState.isSubmitting}
-                  placeholder="••••••••"
-                  error={!!formState.errors.confirmPassword}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div>
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans i18nKey="newPassword" defaults="New password" />
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    size="lg"
+                    type="password"
+                    disabled={formState.isSubmitting}
+                    autoFocus={true}
+                    placeholder="••••••••"
+                    error={!!formState.errors.password}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans
+                    i18nKey="confirmPassword"
+                    defaults="Confirm password"
+                  />
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    size="lg"
+                    type="password"
+                    disabled={formState.isSubmitting}
+                    placeholder="••••••••"
+                    error={!!formState.errors.confirmPassword}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {form.formState.errors.root?.message ? (
+            <FormMessage>{form.formState.errors.root.message}</FormMessage>
+          ) : null}
+        </div>
+        <div className="mt-6">
           <Button
             size="lg"
             loading={form.formState.isSubmitting}
