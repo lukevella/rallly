@@ -3,6 +3,7 @@ import { Button } from "@rallly/ui/button";
 
 import { Trans } from "@/components/trans";
 import { authClient } from "@/lib/auth-client";
+import { validateRedirectUrl } from "@/utils/redirect";
 
 export function LoginWithOIDC({
   name,
@@ -16,7 +17,7 @@ export function LoginWithOIDC({
       onClick={() => {
         authClient.signIn.oauth2({
           providerId: "oidc",
-          callbackURL: redirectTo,
+          callbackURL: validateRedirectUrl(redirectTo) || "/",
           errorCallbackURL: "/login?error=OAuthSignInFailed",
         });
       }}

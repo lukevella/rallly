@@ -17,6 +17,7 @@ import { z } from "zod";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
+import { validateRedirectUrl } from "@/utils/redirect";
 import { InputOTP } from "../../../../../../components/input-otp";
 
 const otpFormSchema = z.object({
@@ -54,7 +55,8 @@ export function OTPForm({ email }: { email: string }) {
           });
       }
     } else {
-      window.location.href = searchParams?.get("redirectTo") ?? "/";
+      window.location.href =
+        validateRedirectUrl(searchParams?.get("redirectTo")) ?? "/";
     }
   });
 

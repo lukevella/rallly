@@ -19,6 +19,7 @@ import { z } from "zod";
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Trans } from "@/components/trans";
 import { authClient } from "@/lib/auth-client";
+import { validateRedirectUrl } from "@/utils/redirect";
 
 function useLoginWithEmailSchema() {
   const { t } = useTranslation();
@@ -77,10 +78,14 @@ export function LoginWithEmailForm() {
 
           await setVerificationEmail(identifier);
           // redirect to verify page with redirectTo
-          const redirectTo = searchParams?.get("redirectTo");
+          const validatedRedirectTo = validateRedirectUrl(
+            searchParams?.get("redirectTo"),
+          );
           router.push(
             `/login/verify${
-              redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ""
+              validatedRedirectTo
+                ? `?redirectTo=${encodeURIComponent(validatedRedirectTo)}`
+                : ""
             }`,
           );
         })}

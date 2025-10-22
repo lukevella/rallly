@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
+import { validateRedirectUrl } from "@/utils/redirect";
 
 function SSOImage({ provider }: { provider: string }) {
   if (provider === "google") {
@@ -59,7 +60,7 @@ export function SSOProvider({
       onClick={() => {
         authClient.signIn.social({
           provider: providerId,
-          callbackURL: redirectTo,
+          callbackURL: validateRedirectUrl(redirectTo) || "/",
         });
       }}
     >

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { validateRedirectUrl } from "@/utils/redirect";
 
 export function LinkWithRedirectTo({
   href,
@@ -13,14 +14,16 @@ export function LinkWithRedirectTo({
   children?: React.ReactNode;
 }) {
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo");
+  const validatedRedirectTo = validateRedirectUrl(
+    searchParams.get("redirectTo"),
+  );
 
   return (
     <Link
       className={className}
       href={
-        redirectTo
-          ? `${href}?redirectTo=${encodeURIComponent(redirectTo)}`
+        validatedRedirectTo
+          ? `${href}?redirectTo=${encodeURIComponent(validatedRedirectTo)}`
           : href
       }
     >

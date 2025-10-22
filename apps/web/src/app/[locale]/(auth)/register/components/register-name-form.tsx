@@ -17,6 +17,7 @@ import type { z } from "zod";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
+import { validateRedirectUrl } from "@/utils/redirect";
 
 import { setToken } from "../actions";
 import { registerNameFormSchema } from "./schema";
@@ -44,9 +45,15 @@ export function RegisterNameForm() {
 
           if (res.ok) {
             await setToken(res.token);
-            const redirectTo = searchParams.get("redirectTo");
+            const validatedRedirectTo = validateRedirectUrl(
+              searchParams.get("redirectTo"),
+            );
             router.push(
-              `/register/verify${redirectTo ? `?redirectTo=${redirectTo}` : ""}`,
+              `/register/verify${
+                validatedRedirectTo
+                  ? `?redirectTo=${encodeURIComponent(validatedRedirectTo)}`
+                  : ""
+              }`,
             );
           } else {
             switch (res.reason) {

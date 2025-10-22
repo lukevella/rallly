@@ -20,6 +20,7 @@ import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { useDayjs } from "@/utils/dayjs";
+import { validateRedirectUrl } from "@/utils/redirect";
 
 const otpFormSchema = z.object({
   otp: z.string().length(6),
@@ -66,7 +67,7 @@ export function OTPForm({ token }: { token: string }) {
 
     signIn("registration-token", {
       token,
-      redirectTo: searchParams?.get("redirectTo") ?? "/",
+      redirectTo: validateRedirectUrl(searchParams?.get("redirectTo")) ?? "/",
     });
   });
 
