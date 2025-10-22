@@ -154,6 +154,9 @@ export function LoginWithEmailForm() {
               <FormItem>
                 <FormLabel>
                   <Trans i18nKey="password" defaults="Password" />
+                  <span className="ml-1 text-muted-foreground text-xs">
+                    <Trans i18nKey="optionalLabel" defaults="(Optional)" />
+                  </span>
                 </FormLabel>
                 <FormControl>
                   <Input
