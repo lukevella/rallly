@@ -26,7 +26,7 @@ import { registerNameFormSchema } from "./schema";
 type RegisterNameFormValues = z.infer<typeof registerNameFormSchema>;
 
 export function RegisterNameForm() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const searchParams = useSearchParams();
   const router = useRouter();
   const form = useForm<RegisterNameFormValues>({
@@ -60,6 +60,7 @@ export function RegisterNameForm() {
               password: data.password,
               name: data.name,
               timeZone: getBrowserTimeZone(),
+              locale: i18n.language,
               callbackURL: verifyURL,
             });
 

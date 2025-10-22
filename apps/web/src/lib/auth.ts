@@ -136,6 +136,10 @@ export const authLib = betterAuth({
         type: "string",
         input: true,
       },
+      locale: {
+        type: "string",
+        input: true,
+      },
     },
   },
   secondaryStorage: isKvEnabled
