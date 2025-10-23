@@ -532,10 +532,10 @@
   "forgotPasswordFooter": "Remember your password? <a>Back to login</a>",
   "forgotPassword": "Forgot Password?",
   "resetPasswordInvalidTokenMessage": "The password reset link is invalid or has expired. Please request a new one.",
-  "newPassword": "New password",
+  "newPassword": "New Password",
   "resetPassword": "Reset password",
   "resetPasswordTitle": "Create new password",
-  "resetPasswordDescription": "Enter your new password below to reset your account.",
+  "resetPasswordDescription": "Enter your new password below",
   "resetPasswordFooter": "Don't need to reset? <a>Back to login</a>",
   "passwordOrEmailIncorrect": "Invalid email or password",
   "passwordMinimumLength": "Password must be at least 8 characters",
@@ -552,5 +552,7 @@
   "continueWithEmail": "Continue with email",
   "loginWithEmail": "Login with email",
   "passwordMinLength": "Password must be at least 8 characters",
-  "setupPassword": "Set Password"
+  "setupPassword": "Set Password",
+  "passwordSetupSuccessful": "Password setup successful. You can now login with your email and password.",
+  "setupPasswordDescription": "Your account doesn't have a password yet. Click the button below to send a secure link to your email to set a password."
 }

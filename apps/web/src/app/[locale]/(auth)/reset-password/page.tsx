@@ -22,7 +22,7 @@ export default async function ResetPasswordPage() {
         <AuthPageDescription>
           <Trans
             i18nKey="resetPasswordDescription"
-            defaults="Enter your new password below to reset your account."
+            defaults="Enter your new password below"
           />
         </AuthPageDescription>
       </AuthPageHeader>

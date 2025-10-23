@@ -89,54 +89,59 @@ export function ChangePasswordForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-md space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)}>
         {form.formState.errors.root?.message && (
           <FormMessage>{form.formState.errors.root.message}</FormMessage>
         )}
 
-        <FormField
-          control={form.control}
-          name="currentPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                <Trans i18nKey="currentPassword" defaults="Current Password" />
-              </FormLabel>
-              <FormControl>
-                <PasswordInput
-                  {...field}
-                  disabled={formState.isSubmitting}
-                  placeholder="••••••••"
-                  error={!!formState.errors.currentPassword}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="currentPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans
+                    i18nKey="currentPassword"
+                    defaults="Current Password"
+                  />
+                </FormLabel>
+                <FormControl>
+                  <PasswordInput
+                    {...field}
+                    disabled={formState.isSubmitting}
+                    placeholder="••••••••"
+                    error={!!formState.errors.currentPassword}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="newPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                <Trans i18nKey="newPassword" defaults="New Password" />
-              </FormLabel>
-              <FormControl>
-                <PasswordInput
-                  {...field}
-                  disabled={formState.isSubmitting}
-                  placeholder="••••••••"
-                  error={!!formState.errors.newPassword}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans i18nKey="newPassword" defaults="New Password" />
+                </FormLabel>
+                <FormControl>
+                  <PasswordInput
+                    {...field}
+                    disabled={formState.isSubmitting}
+                    placeholder="••••••••"
+                    error={!!formState.errors.newPassword}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-        <div className="pt-2">
+        <div className="mt-6">
           <Button
             type="submit"
             loading={formState.isSubmitting}
