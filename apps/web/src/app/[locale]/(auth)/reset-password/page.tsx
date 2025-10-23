@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-import { Trans } from "react-i18next/TransWithoutContext";
+import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
-import { getSession } from "@/lib/auth";
 import {
   AuthPageContainer,
   AuthPageContent,
@@ -14,39 +12,17 @@ import {
 import { LinkWithRedirectTo } from "../components/link-with-redirect-to";
 import { ResetPasswordForm } from "./components/reset-password-form";
 
-async function loadData() {
-  const { t } = await getTranslation();
-
-  return {
-    t,
-  };
-}
-
 export default async function ResetPasswordPage() {
-  const session = await getSession();
-  if (session && !session.user?.isGuest) {
-    return redirect("/");
-  }
-
-  const { t } = await loadData();
-
   return (
     <AuthPageContainer>
       <AuthPageHeader>
         <AuthPageTitle>
-          <Trans
-            t={t}
-            ns="app"
-            i18nKey="resetPasswordTitle"
-            defaults="Create new password"
-          />
+          <Trans i18nKey="resetPasswordTitle" defaults="Set your password" />
         </AuthPageTitle>
         <AuthPageDescription>
           <Trans
-            t={t}
-            ns="app"
             i18nKey="resetPasswordDescription"
-            defaults="Enter your new password below to reset your account."
+            defaults="Enter your new password below."
           />
         </AuthPageDescription>
       </AuthPageHeader>
@@ -55,9 +31,8 @@ export default async function ResetPasswordPage() {
       </AuthPageContent>
       <AuthPageExternal>
         <Trans
-          t={t}
           i18nKey="resetPasswordFooter"
-          defaults="Don't need to reset? <a>Back to login</a>"
+          defaults="<a>Back to login</a>"
           components={{
             a: <LinkWithRedirectTo className="text-link" href="/login" />,
           }}

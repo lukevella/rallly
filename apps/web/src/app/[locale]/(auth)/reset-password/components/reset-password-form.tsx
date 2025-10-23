@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -15,7 +16,6 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-
 import { Trans } from "@/components/trans";
 import { authClient } from "@/lib/auth-client";
 
@@ -65,17 +65,16 @@ export function ResetPasswordForm() {
 
   if (!token) {
     return (
-      <div className="rounded-lg border border-border bg-destructive/10 p-4 text-destructive text-sm">
-        <p className="font-medium">
-          <Trans i18nKey="resetPasswordInvalidToken" defaults="Invalid token" />
-        </p>
-        <p className="mt-2">
-          <Trans
-            i18nKey="resetPasswordInvalidTokenMessage"
-            defaults="The password reset link is invalid or has expired. Please request a new one."
-          />
-        </p>
-      </div>
+      <Alert variant="destructive">
+        <AlertDescription>
+          <p>
+            <Trans
+              i18nKey="resetPasswordInvalidTokenMessage"
+              defaults="The password reset link is invalid or has expired. Please request a new one."
+            />
+          </p>
+        </AlertDescription>
+      </Alert>
     );
   }
 
@@ -95,7 +94,15 @@ export function ResetPasswordForm() {
             return;
           }
 
-          router.push("/login");
+          // Check if this came from password setup (redirectTo contains settings)
+          const redirectTo = searchParams?.get("redirectTo");
+          if (redirectTo?.includes("/settings/security")) {
+            // For password setup, redirect back to settings
+            router.push(redirectTo);
+          } else {
+            // For password reset, redirect to login
+            router.push("/login");
+          }
         })}
       >
         <div className="space-y-4">
@@ -159,7 +166,7 @@ export function ResetPasswordForm() {
             className="w-full"
             variant="primary"
           >
-            <Trans i18nKey="resetPassword" defaults="Reset password" />
+            <Trans i18nKey="resetPassword" defaults="Set password" />
           </Button>
         </div>
       </form>

@@ -532,7 +532,6 @@
   "forgotPasswordDescription": "Enter your email address and we'll send you a link to reset your password.",
   "forgotPasswordFooter": "Remember your password? <a>Back to login</a>",
   "forgotPassword": "Forgot Password?",
-  "resetPasswordInvalidToken": "Invalid token",
   "resetPasswordInvalidTokenMessage": "The password reset link is invalid or has expired. Please request a new one.",
   "newPassword": "New password",
   "confirmPassword": "Confirm password",
@@ -550,5 +549,6 @@
   "passwordChangedSuccess": "Your password has been changed successfully",
   "securityDescription": "Manage your account security and password settings",
   "changePasswordDescription": "Update your password to keep your account secure",
-  "passwordIncorrect": "Current password is incorrect"
+  "passwordIncorrect": "Current password is incorrect",
+  "passwordSetupSuccess": "A password reset link has been sent to your email. Follow the link to set your password."
 }

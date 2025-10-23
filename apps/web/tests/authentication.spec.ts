@@ -248,7 +248,7 @@ test.describe.serial(() => {
         await page.goto(resetLink);
 
         // Verify we're on the reset password page
-        await expect(page.getByText("Create new password")).toBeVisible();
+        await expect(page.getByText("Set your password")).toBeVisible();
 
         // Fill in new password
         const newPassword = "NewPassword456!";
@@ -256,7 +256,7 @@ test.describe.serial(() => {
         await page.getByLabel("Confirm password").fill(newPassword);
 
         // Submit form
-        await page.getByRole("button", { name: "Reset password" }).click();
+        await page.getByRole("button", { name: "Set password" }).click();
 
         // Should be redirected to login
         await expect(page).toHaveURL(/\/login/);
@@ -280,7 +280,7 @@ test.describe.serial(() => {
         await page.getByLabel("New password").fill("Password123!");
         await page.getByLabel("Confirm password").fill("DifferentPassword123!");
 
-        await page.getByRole("button", { name: "Reset password" }).click();
+        await page.getByRole("button", { name: "Set password" }).click();
         
         await expect(
           page.getByText(/passwords must match/i),
@@ -294,7 +294,7 @@ test.describe.serial(() => {
         // Fill fields and submit
         await page.getByLabel("New password").fill("Password123!");
         await page.getByLabel("Confirm password").fill("Password123!");
-        await page.getByRole("button", { name: "Reset password" }).click();
+        await page.getByRole("button", { name: "Set password" }).click();
 
         // Should show error message
         await expect(page.getByText("Invalid token")).toBeVisible();
@@ -324,7 +324,7 @@ test.describe.serial(() => {
         await page.goto(resetLink);
         await page.getByLabel("New password").fill(finalPassword);
         await page.getByLabel("Confirm password").fill(finalPassword);
-        await page.getByRole("button", { name: "Reset password" }).click();
+        await page.getByRole("button", { name: "Set password" }).click();
 
         // Now try to login with the new password
         await page.goto("/login");
@@ -382,7 +382,7 @@ test.describe.serial(() => {
         await page.getByLabel("Confirm password").fill(safePassword);
 
         // Submit form
-        await page.getByRole("button", { name: "Reset password" }).click();
+        await page.getByRole("button", { name: "Set password" }).click();
 
         // Should redirect to login, not external site
         await expect(page).toHaveURL(/\/login/);
