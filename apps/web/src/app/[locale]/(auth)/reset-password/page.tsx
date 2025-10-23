@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { Trans } from "@/components/trans";
+import { env } from "@/env";
 import { getTranslation } from "@/i18n/server";
 import {
   AuthPageContainer,
@@ -13,6 +15,9 @@ import { LinkWithRedirectTo } from "../components/link-with-redirect-to";
 import { ResetPasswordForm } from "./components/reset-password-form";
 
 export default async function ResetPasswordPage() {
+  if (env.EMAIL_LOGIN_ENABLED === "false") {
+    notFound();
+  }
   return (
     <AuthPageContainer>
       <AuthPageHeader>

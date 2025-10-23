@@ -67,7 +67,7 @@ export const authLib = betterAuth({
   appName: "Rallly",
   secret: env.SECRET_PASSWORD,
   emailAndPassword: {
-    enabled: true,
+    enabled: env.EMAIL_LOGIN_ENABLED !== "false",
     requireEmailVerification: true,
     sendResetPassword: async ({ user, url }) => {
       const locale =

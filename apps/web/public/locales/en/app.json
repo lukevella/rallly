@@ -527,7 +527,7 @@
   "forgotPasswordSubmitted": "Check your email",
   "forgotPasswordSubmittedMessage": "If an account exists with this email address, we've sent a password reset link to your inbox. Please check your email and follow the link to reset your password.",
   "sendResetLink": "Send reset link",
-  "forgotPasswordTitle": "Reset your password",
+  "forgotPasswordTitle": "Forgot Password",
   "forgotPasswordDescription": "Enter your email address and we'll send you a link to reset your password.",
   "forgotPasswordFooter": "Remember your password? <a>Back to login</a>",
   "forgotPassword": "Forgot Password?",

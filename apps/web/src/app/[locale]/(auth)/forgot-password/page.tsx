@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-import { Trans } from "react-i18next/TransWithoutContext";
+import { notFound, redirect } from "next/navigation";
+import { Trans } from "@/components/trans";
+import { env } from "@/env";
 import { getTranslation } from "@/i18n/server";
 import { getSession } from "@/lib/auth";
 import {
@@ -14,37 +15,23 @@ import {
 import { LinkWithRedirectTo } from "../components/link-with-redirect-to";
 import { ForgotPasswordForm } from "./components/forgot-password-form";
 
-async function loadData() {
-  const { t } = await getTranslation();
-
-  return {
-    t,
-  };
-}
-
 export default async function ForgotPasswordPage() {
+  if (env.EMAIL_LOGIN_ENABLED === "false") {
+    notFound();
+  }
   const session = await getSession();
   if (session && !session.user?.isGuest) {
     return redirect("/");
   }
 
-  const { t } = await loadData();
-
   return (
     <AuthPageContainer>
       <AuthPageHeader>
         <AuthPageTitle>
-          <Trans
-            t={t}
-            ns="app"
-            i18nKey="forgotPasswordTitle"
-            defaults="Reset your password"
-          />
+          <Trans i18nKey="forgotPasswordTitle" defaults="Forgot Password" />
         </AuthPageTitle>
         <AuthPageDescription>
           <Trans
-            t={t}
-            ns="app"
             i18nKey="forgotPasswordDescription"
             defaults="Enter your email address and we'll send you a link to reset your password."
           />
@@ -55,7 +42,6 @@ export default async function ForgotPasswordPage() {
       </AuthPageContent>
       <AuthPageExternal>
         <Trans
-          t={t}
           i18nKey="forgotPasswordFooter"
           defaults="Remember your password? <a>Back to login</a>"
           components={{
