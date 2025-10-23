@@ -18,11 +18,12 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import {
-  getLoginMethod,
+  getLoginMethodAction,
   setVerificationEmail,
 } from "@/app/[locale]/(auth)/login/actions";
 import { Trans } from "@/components/trans";
 import { authClient } from "@/lib/auth-client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { validateRedirectUrl } from "@/utils/redirect";
 
 function useLoginWithEmailSchema() {
@@ -51,6 +52,8 @@ export function LoginWithEmailForm() {
   });
   const { handleSubmit, formState } = form;
   const { t } = useTranslation();
+
+  const { executeAsync: getLoginMethod } = useSafeAction(getLoginMethodAction);
 
   return (
     <Form {...form}>
@@ -90,21 +93,11 @@ export function LoginWithEmailForm() {
             return;
           } else {
             if (!showPasswordField) {
-              const { data: loginMethod, error } =
-                await getLoginMethod(identifier);
+              const res = await getLoginMethod({
+                email: identifier,
+              });
 
-              if (error) {
-                switch (error) {
-                  case "TOO_MANY_REQUESTS":
-                    form.setError("identifier", {
-                      message: t("tooManyRequests"),
-                    });
-                    break;
-                }
-                return;
-              }
-
-              if (loginMethod === "credential") {
+              if (res.data?.method === "credential") {
                 // show password field
                 setShowPasswordField(true);
                 return;
