@@ -10,7 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
-import { Input } from "@rallly/ui/input";
+import { PasswordInput } from "@rallly/ui/password-input";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -22,27 +22,14 @@ import { authClient } from "@/lib/auth-client";
 function useResetPasswordSchema() {
   const { t } = useTranslation();
   return React.useMemo(() => {
-    return z
-      .object({
-        password: z.string().min(
-          8,
-          t("passwordMinimumLength", {
-            defaultValue: "Password must be at least 8 characters",
-          }),
-        ),
-        confirmPassword: z.string().min(
-          8,
-          t("passwordMinimumLength", {
-            defaultValue: "Password must be at least 8 characters",
-          }),
-        ),
-      })
-      .refine((data) => data.password === data.confirmPassword, {
-        message: t("passwordsMustMatch", {
-          defaultValue: "Passwords must match",
+    return z.object({
+      password: z.string().min(
+        8,
+        t("passwordMinimumLength", {
+          defaultValue: "Password must be at least 8 characters",
         }),
-        path: ["confirmPassword"],
-      });
+      ),
+    });
   }, [t]);
 }
 
@@ -55,7 +42,6 @@ export function ResetPasswordForm() {
   const form = useForm<ResetPasswordValues>({
     defaultValues: {
       password: "",
-      confirmPassword: "",
     },
     resolver: zodResolver(resetPasswordSchema),
   });
@@ -112,42 +98,16 @@ export function ResetPasswordForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  <Trans i18nKey="newPassword" defaults="New password" />
+                  <Trans i18nKey="password" defaults="Password" />
                 </FormLabel>
                 <FormControl>
-                  <Input
+                  <PasswordInput
                     {...field}
                     size="lg"
-                    type="password"
                     disabled={formState.isSubmitting}
                     autoFocus={true}
                     placeholder="••••••••"
                     error={!!formState.errors.password}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  <Trans
-                    i18nKey="confirmPassword"
-                    defaults="Confirm password"
-                  />
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    size="lg"
-                    type="password"
-                    disabled={formState.isSubmitting}
-                    placeholder="••••••••"
-                    error={!!formState.errors.confirmPassword}
                   />
                 </FormControl>
                 <FormMessage />

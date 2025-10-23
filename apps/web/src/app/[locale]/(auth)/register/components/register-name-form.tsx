@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { PasswordInput } from "@rallly/ui/password-input";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -157,7 +158,7 @@ export function RegisterNameForm() {
                   <Trans i18nKey="password" defaults="Password" />
                 </FormLabel>
                 <FormControl>
-                  <Input
+                  <PasswordInput
                     size="lg"
                     placeholder="************"
                     disabled={form.formState.isSubmitting}

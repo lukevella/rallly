@@ -9,7 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
-import { Input } from "@rallly/ui/input";
+import { PasswordInput } from "@rallly/ui/password-input";
 import { toast } from "@rallly/ui/sonner";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -22,33 +22,20 @@ import { authClient } from "@/lib/auth-client";
 function useChangePasswordSchema() {
   const { t } = useTranslation();
   return React.useMemo(() => {
-    return z
-      .object({
-        currentPassword: z
-          .string()
-          .min(
-            1,
-            t("passwordRequired", { defaultValue: "Password is required" }),
-          ),
-        newPassword: z
-          .string()
-          .min(
-            1,
-            t("passwordRequired", { defaultValue: "Password is required" }),
-          ),
-        confirmPassword: z
-          .string()
-          .min(
-            1,
-            t("passwordRequired", { defaultValue: "Password is required" }),
-          ),
-      })
-      .refine((data) => data.newPassword === data.confirmPassword, {
-        message: t("passwordsMustMatch", {
-          defaultValue: "Passwords must match",
+    return z.object({
+      currentPassword: z
+        .string()
+        .min(
+          1,
+          t("passwordRequired", { defaultValue: "Password is required" }),
+        ),
+      newPassword: z.string().min(
+        8,
+        t("passwordMinLength", {
+          defaultValue: "Password must be at least 8 characters",
         }),
-        path: ["confirmPassword"],
-      });
+      ),
+    });
   }, [t]);
 }
 
@@ -60,7 +47,6 @@ export function ChangePasswordForm() {
     defaultValues: {
       currentPassword: "",
       newPassword: "",
-      confirmPassword: "",
     },
     resolver: zodResolver(changePasswordSchema),
   });
@@ -117,9 +103,8 @@ export function ChangePasswordForm() {
                 <Trans i18nKey="currentPassword" defaults="Current Password" />
               </FormLabel>
               <FormControl>
-                <Input
+                <PasswordInput
                   {...field}
-                  type="password"
                   disabled={formState.isSubmitting}
                   placeholder="••••••••"
                   error={!!formState.errors.currentPassword}
@@ -139,34 +124,11 @@ export function ChangePasswordForm() {
                 <Trans i18nKey="newPassword" defaults="New Password" />
               </FormLabel>
               <FormControl>
-                <Input
+                <PasswordInput
                   {...field}
-                  type="password"
                   disabled={formState.isSubmitting}
                   placeholder="••••••••"
                   error={!!formState.errors.newPassword}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                <Trans i18nKey="confirmPassword" defaults="Confirm Password" />
-              </FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="password"
-                  disabled={formState.isSubmitting}
-                  placeholder="••••••••"
-                  error={!!formState.errors.confirmPassword}
                 />
               </FormControl>
               <FormMessage />

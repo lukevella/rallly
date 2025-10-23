@@ -63,7 +63,7 @@ export default async function SecurityPage() {
             <PageSection variant="card">
               <PageSectionHeader>
                 <PageSectionTitle>
-                  <Trans i18nKey="changePassword" defaults="Set Password" />
+                  <Trans i18nKey="setupPassword" defaults="Set Password" />
                 </PageSectionTitle>
                 <PageSectionDescription>
                   <Trans

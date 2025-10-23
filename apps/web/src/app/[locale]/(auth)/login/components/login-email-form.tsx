@@ -55,6 +55,8 @@ export function LoginWithEmailForm() {
 
   const { executeAsync: getLoginMethod } = useSafeAction(getLoginMethodAction);
 
+  const isPasswordLogin = showPasswordField && !!form.watch("password");
+
   return (
     <Form {...form}>
       <form
@@ -216,11 +218,21 @@ export function LoginWithEmailForm() {
             className="w-full"
             variant="primary"
           >
-            <Trans
-              i18nKey="continueWith"
-              defaults="Continue with {provider}"
-              values={{ provider: t("email") }}
-            />
+            {showPasswordField ? (
+              isPasswordLogin ? (
+                <Trans
+                  i18nKey="loginWithPassword"
+                  defaults="Login with password"
+                />
+              ) : (
+                <Trans
+                  i18nKey="continueWithEmail"
+                  defaults="Continue with email"
+                />
+              )
+            ) : (
+              <Trans i18nKey="loginWithEmail" defaults="Login with email" />
+            )}
           </Button>
         </div>
       </form>

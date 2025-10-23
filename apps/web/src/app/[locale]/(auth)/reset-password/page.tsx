@@ -17,12 +17,12 @@ export default async function ResetPasswordPage() {
     <AuthPageContainer>
       <AuthPageHeader>
         <AuthPageTitle>
-          <Trans i18nKey="resetPasswordTitle" defaults="Set your password" />
+          <Trans i18nKey="resetPasswordTitle" defaults="Create new password" />
         </AuthPageTitle>
         <AuthPageDescription>
           <Trans
             i18nKey="resetPasswordDescription"
-            defaults="Enter your new password below."
+            defaults="Enter your new password below to reset your account."
           />
         </AuthPageDescription>
       </AuthPageHeader>
