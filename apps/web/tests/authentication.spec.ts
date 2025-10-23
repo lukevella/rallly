@@ -178,6 +178,10 @@ test.describe.serial(() => {
         // Verify we're on the forgot password page
         await expect(page).toHaveURL(/\/forgot-password/);
         await expect(page.getByRole("heading", { name: "Reset your password" })).toBeVisible();
+
+        // Verify email is pre-filled as a UX improvement
+        const emailInput = page.getByPlaceholder("jessie.smith@example.com");
+        await expect(emailInput).toHaveValue(testUserEmail);
       });
 
       test("can request password reset with email", async ({ page }) => {

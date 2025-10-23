@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -30,11 +31,13 @@ function useForgotPasswordSchema() {
 type ForgotPasswordValues = z.infer<ReturnType<typeof useForgotPasswordSchema>>;
 
 export function ForgotPasswordForm() {
+  const searchParams = useSearchParams();
+  const emailFromUrl = searchParams?.get("email") || "";
   const forgotPasswordSchema = useForgotPasswordSchema();
   const [submitted, setSubmitted] = React.useState(false);
   const form = useForm<ForgotPasswordValues>({
     defaultValues: {
-      email: "",
+      email: emailFromUrl,
     },
     resolver: zodResolver(forgotPasswordSchema),
   });

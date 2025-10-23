@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -23,7 +24,6 @@ import {
 import { Trans } from "@/components/trans";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/utils/redirect";
-import { LinkWithRedirectTo } from "../../components/link-with-redirect-to";
 
 function useLoginWithEmailSchema() {
   const { t } = useTranslation();
@@ -172,15 +172,17 @@ export function LoginWithEmailForm() {
                       <Trans i18nKey="optionalLabel" defaults="(Optional)" />
                     </span>
                   </FormLabel>
-                  <LinkWithRedirectTo
+                  <Link
+                    href={`/forgot-password?email=${encodeURIComponent(
+                      form.watch("identifier"),
+                    )}`}
                     className="text-muted-foreground text-sm hover:underline"
-                    href="/forgot-password"
                   >
                     <Trans
                       i18nKey="forgotPassword"
                       defaults="Forgot password?"
                     />
-                  </LinkWithRedirectTo>
+                  </Link>
                 </div>
 
                 <FormControl>
