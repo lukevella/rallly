@@ -2,6 +2,7 @@
 
 import { prisma } from "@rallly/database";
 import { cookies } from "next/headers";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function setVerificationEmail(email: string) {
   const cookieStore = await cookies();
@@ -15,10 +16,21 @@ export async function setVerificationEmail(email: string) {
 }
 
 export async function getLoginMethod(email: string) {
+  const res = await rateLimit("get_login_method", 100, "1m");
+
+  if (!res.success) {
+    return { data: null, error: "TOO_MANY_REQUESTS" as const };
+  }
+
   const user = await prisma.user.findUnique({
     where: { email },
-    include: {
-      accounts: true,
+    select: {
+      emailVerified: true,
+      accounts: {
+        select: {
+          provider: true,
+        },
+      },
     },
   });
 

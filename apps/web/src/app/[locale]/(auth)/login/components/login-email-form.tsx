@@ -90,7 +90,19 @@ export function LoginWithEmailForm() {
             return;
           } else {
             if (!showPasswordField) {
-              const { data: loginMethod } = await getLoginMethod(identifier);
+              const { data: loginMethod, error } =
+                await getLoginMethod(identifier);
+
+              if (error) {
+                switch (error) {
+                  case "TOO_MANY_REQUESTS":
+                    form.setError("identifier", {
+                      message: t("tooManyRequests"),
+                    });
+                    break;
+                }
+                return;
+              }
 
               if (loginMethod === "credential") {
                 // show password field
