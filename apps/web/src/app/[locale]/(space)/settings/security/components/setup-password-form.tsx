@@ -4,7 +4,6 @@ import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
 import { MailWarningIcon } from "lucide-react";
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { Trans } from "@/components/trans";
 import { useAuthenticatedUser } from "@/components/user-provider";
 import { authClient } from "@/lib/auth-client";
@@ -13,7 +12,6 @@ export function SetupPasswordForm() {
   const { user } = useAuthenticatedUser();
   const [isLoading, setIsLoading] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
-  const { t } = useTranslation();
 
   const onSubmit = async () => {
     setIsLoading(true);
