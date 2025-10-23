@@ -540,7 +540,15 @@
   "resetPasswordTitle": "Create new password",
   "resetPasswordDescription": "Enter your new password below to reset your account.",
   "resetPasswordFooter": "Don't need to reset? <a>Back to login</a>",
-  "passwordIncorrect": "Invalid email or password",
+  "passwordOrEmailIncorrect": "Invalid email or password",
   "passwordMinimumLength": "Password must be at least 8 characters",
-  "passwordsMustMatch": "Passwords must match"
+  "passwordsMustMatch": "Passwords must match",
+  "security": "Security",
+  "currentPassword": "Current Password",
+  "changePassword": "Change Password",
+  "passwordRequired": "Password is required",
+  "passwordChangedSuccess": "Your password has been changed successfully",
+  "securityDescription": "Manage your account security and password settings",
+  "changePasswordDescription": "Update your password to keep your account secure",
+  "passwordIncorrect": "Current password is incorrect"
 }

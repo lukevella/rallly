@@ -74,7 +74,7 @@ export function LoginWithEmailForm() {
               switch (res.error.code) {
                 case "INVALID_EMAIL_OR_PASSWORD":
                   form.setError("password", {
-                    message: t("passwordIncorrect", {
+                    message: t("passwordOrEmailIncorrect", {
                       defaultValue: "Invalid email or password",
                     }),
                   });

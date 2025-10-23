@@ -10,6 +10,7 @@ import {
   BoltIcon,
   CalendarIcon,
   CreditCardIcon,
+  LockIcon,
   PanelsTopLeftIcon,
   Settings2Icon,
   UserIcon,
@@ -29,6 +30,12 @@ export function AccountSidebarMenu() {
       label: t("profile", { defaultValue: "Profile" }),
       icon: <UserIcon />,
       href: "/settings/profile",
+    },
+    {
+      id: "security",
+      label: t("security", { defaultValue: "Security" }),
+      icon: <LockIcon />,
+      href: "/settings/security",
     },
     {
       id: "preferences",
