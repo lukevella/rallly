@@ -531,15 +531,16 @@
   "forgotPasswordTitle": "Reset your password",
   "forgotPasswordDescription": "Enter your email address and we'll send you a link to reset your password.",
   "forgotPasswordFooter": "Remember your password? <a>Back to login</a>",
-  "forgotPassword": "Forgot Password",
+  "forgotPassword": "Forgot Password?",
   "resetPasswordInvalidToken": "Invalid token",
   "resetPasswordInvalidTokenMessage": "The password reset link is invalid or has expired. Please request a new one.",
   "newPassword": "New password",
   "confirmPassword": "Confirm password",
   "resetPassword": "Reset password",
-  "passwordRequired": "__STRING_NOT_TRANSLATED__",
-  "passwordsMustMatch": "__STRING_NOT_TRANSLATED__",
   "resetPasswordTitle": "Create new password",
   "resetPasswordDescription": "Enter your new password below to reset your account.",
-  "resetPasswordFooter": "Don't need to reset? <a>Back to login</a>"
+  "resetPasswordFooter": "Don't need to reset? <a>Back to login</a>",
+  "passwordIncorrect": "Invalid email or password",
+  "passwordMinimumLength": "Password must be at least 8 characters",
+  "passwordsMustMatch": "Passwords must match"
 }

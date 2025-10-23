@@ -80,6 +80,12 @@ export const authLib = betterAuth({
         },
       });
     },
+    onPasswordReset: async ({ user }) => {
+      posthog?.capture({
+        distinctId: user.id,
+        event: "password_reset",
+      });
+    },
   },
   emailVerification: {
     autoSignInAfterVerification: true,

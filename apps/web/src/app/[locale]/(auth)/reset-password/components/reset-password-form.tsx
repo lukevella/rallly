@@ -24,11 +24,23 @@ function useResetPasswordSchema() {
   return React.useMemo(() => {
     return z
       .object({
-        password: z.string().min(1, t("passwordRequired")),
-        confirmPassword: z.string().min(1, t("passwordRequired")),
+        password: z.string().min(
+          8,
+          t("passwordMinimumLength", {
+            defaultValue: "Password must be at least 8 characters",
+          }),
+        ),
+        confirmPassword: z.string().min(
+          8,
+          t("passwordMinimumLength", {
+            defaultValue: "Password must be at least 8 characters",
+          }),
+        ),
       })
       .refine((data) => data.password === data.confirmPassword, {
-        message: t("passwordsMustMatch"),
+        message: t("passwordsMustMatch", {
+          defaultValue: "Passwords must match",
+        }),
         path: ["confirmPassword"],
       });
   }, [t]);
