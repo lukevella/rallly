@@ -38,7 +38,7 @@ export function PasswordStrengthMeter({
               "h-1 rounded-full bg-gray-200 transition-all duration-300",
               {
                 "bg-red-500": quality === "weak" && bar === 1,
-                "bg-yellow-500": quality === "fair" && bar <= 2,
+                "bg-amber-500": quality === "fair" && bar <= 2,
                 "bg-green-500": quality === "good" && bar <= 3,
                 "bg-teal-500": quality === "strong" && bar <= 4,
               },
@@ -54,7 +54,7 @@ export function PasswordStrengthMeter({
           className={cn("font-medium", {
             "text-gray-500": quality === "veryWeak",
             "text-red-600": quality === "weak",
-            "text-yellow-600": quality === "fair",
+            "text-amber-600": quality === "fair",
             "text-green-600": quality === "good",
             "text-teal-600": quality === "strong",
           })}
