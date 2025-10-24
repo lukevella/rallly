@@ -13,3 +13,12 @@ export const getUserHasPassword = async (userId: string) => {
   });
   return !!account;
 };
+
+export const getUserHasNoAccounts = async (userId: string) => {
+  const accountCount = await prisma.account.count({
+    where: {
+      userId,
+    },
+  });
+  return accountCount === 0;
+};

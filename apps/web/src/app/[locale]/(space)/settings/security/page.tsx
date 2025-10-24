@@ -79,12 +79,12 @@ export default async function SecurityPage({
               </PageSectionContent>
             </PageSection>
           ) : (
-            <PageSection>
+            <PageSection variant="card">
               <PageSectionHeader>
                 <PageSectionTitle>
                   <Trans i18nKey="setupPassword" defaults="Set Password" />
                 </PageSectionTitle>
-                <PageSectionDescription>
+                <PageSectionDescription className="max-w-lg">
                   <Trans
                     i18nKey="setupPasswordDescription"
                     defaults="Your account doesn't have a password yet. Click the button below to send a secure link to your email to set a password."

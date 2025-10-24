@@ -554,5 +554,9 @@
   "passwordMinLength": "Password must be at least 8 characters",
   "setupPassword": "Set Password",
   "passwordSetupSuccessful": "Password setup successful. You can now login with your email and password.",
-  "setupPasswordDescription": "Your account doesn't have a password yet. Click the button below to send a secure link to your email to set a password."
+  "setupPasswordDescription": "Your account doesn't have a password yet. Click the button below to send a secure link to your email to set a password.",
+  "setupPasswordAlertTitle": "Login quicker with a password",
+  "setupPasswordAlertDesc": "Set up a password to make logging in faster and more convenient.",
+  "dismissPasswordSetup": "Don't show again",
+  "setupPasswordButton": "Set up password"
 }
