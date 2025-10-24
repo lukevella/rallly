@@ -17,6 +17,7 @@ import {
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
@@ -32,8 +33,8 @@ export function NavUser({
   image?: string;
   email: string;
 }) {
-  const [isPending, startTransition] = React.useTransition();
-
+  const [isPending, setIsPending] = React.useState(false);
+  const router = useRouter();
   return (
     <>
       {isPending && <RouterLoadingIndicator />}
@@ -78,10 +79,9 @@ export function NavUser({
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            onClick={() => {
-              startTransition(async () => {
-                await signOut();
-              });
+            onClick={async () => {
+              setIsPending(true);
+              await signOut();
             }}
           >
             <Icon>

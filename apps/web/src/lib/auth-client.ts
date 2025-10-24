@@ -24,4 +24,5 @@ export async function signOut() {
     authClient.signOut(),
     nextAuthSignOut({ redirect: false }),
   ]);
+  window.location.href = "/login";
 }
