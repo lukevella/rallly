@@ -14,7 +14,6 @@ import { PasswordInput } from "@rallly/ui/password-input";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Trans } from "@/components/trans";
 import { PasswordStrengthMeter } from "@/features/password/components/password-strength-meter";
@@ -22,21 +21,20 @@ import { useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { validateRedirectUrl } from "@/utils/redirect";
-import { registerNameFormSchema } from "./schema";
-
-type RegisterNameFormValues = z.infer<typeof registerNameFormSchema>;
+import { useRegisterNameFormSchema } from "./schema";
 
 export function RegisterNameForm() {
+  const schema = useRegisterNameFormSchema();
   const { t, i18n } = useTranslation();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const form = useForm<RegisterNameFormValues>({
+  const form = useForm({
     defaultValues: {
       name: "",
       email: "",
       password: "",
     },
-    resolver: zodResolver(registerNameFormSchema),
+    resolver: zodResolver(schema),
   });
 
   return (

@@ -15,28 +15,26 @@ export class LoginPage {
     await this.page.getByPlaceholder("jessie.smith@example.com").fill(email);
 
     await this.page
-      .getByRole("button", { name: "Continue with Email", exact: true })
+      .getByRole("button", { name: "Continue with email" })
       .click();
 
     // If password is provided and the password field appears, use password login
     if (password) {
-      await this.page.getByPlaceholder("••••••••").waitFor();
-      await this.page.getByPlaceholder("••••••••").fill(password);
+      await this.page.getByLabel("Password").fill(password);
 
       await this.page
-        .getByRole("button", { name: "Continue with Email", exact: true })
+        .getByRole("button", { name: "Login with password" })
         .click();
 
-      // Wait for page to load
-      await this.page.waitForLoadState("networkidle");
     } else {
       // Handle verification code for email OTP login
       const code = await getCode(email);
       await this.page.getByRole("heading", { name : "Finish Logging In" }).waitFor();
       await this.page.getByPlaceholder("Enter your 6-digit code").fill(code);
 
-      // Wait for page to load
-      await this.page.waitForLoadState("networkidle");
     }
+
+    // Wait for page to load
+    await this.page.waitForLoadState("networkidle");
   }
 }

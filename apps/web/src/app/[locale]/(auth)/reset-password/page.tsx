@@ -22,7 +22,7 @@ export default async function ResetPasswordPage() {
     <AuthPageContainer>
       <AuthPageHeader>
         <AuthPageTitle>
-          <Trans i18nKey="resetPasswordTitle" defaults="Create new password" />
+          <Trans i18nKey="resetPasswordTitle" defaults="Reset Password" />
         </AuthPageTitle>
         <AuthPageDescription>
           <Trans
@@ -53,6 +53,6 @@ export async function generateMetadata(props: {
   const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {
-    title: t("resetPassword", { defaultValue: "Reset Password" }),
+    title: t("resetPasswordTitle", { defaultValue: "Reset Password" }),
   };
 }

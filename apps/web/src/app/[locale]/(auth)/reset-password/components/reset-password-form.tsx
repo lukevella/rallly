@@ -12,14 +12,11 @@ import {
 } from "@rallly/ui/form";
 import { PasswordInput } from "@rallly/ui/password-input";
 import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Trans } from "@/components/trans";
-import {
-  PasswordStrengthMeter,
-  usePasswordValidationSchema,
-} from "@/features/password";
+import { PasswordStrengthMeter } from "@/features/password/components/password-strength-meter";
+import { usePasswordValidationSchema } from "@/features/password/schema";
 import { authClient } from "@/lib/auth-client";
 
 function useResetPasswordSchema() {
@@ -29,13 +26,11 @@ function useResetPasswordSchema() {
   });
 }
 
-type ResetPasswordValues = z.infer<ReturnType<typeof useResetPasswordSchema>>;
-
 export function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const resetPasswordSchema = useResetPasswordSchema();
-  const form = useForm<ResetPasswordValues>({
+  const form = useForm({
     defaultValues: {
       password: "",
     },
@@ -106,9 +101,10 @@ export function ResetPasswordForm() {
                     error={!!formState.errors.password}
                   />
                 </FormControl>
-                <div className="mt-2">
-                  <PasswordStrengthMeter password={field.value} />
-                </div>
+                <PasswordStrengthMeter
+                  password={field.value}
+                  className="mt-2"
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -125,7 +121,7 @@ export function ResetPasswordForm() {
             className="w-full"
             variant="primary"
           >
-            <Trans i18nKey="resetPassword" defaults="Set password" />
+            <Trans i18nKey="resetPasswordButton" defaults="Reset password" />
           </Button>
         </div>
       </form>

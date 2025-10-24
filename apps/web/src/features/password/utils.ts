@@ -1,34 +1,43 @@
+import zxcvbn from "zxcvbn";
 import type { PasswordQuality } from "@/features/password/types";
 
+/**
+ * Calculate password strength using zxcvbn
+ * @returns Score from 0-4:
+ * - 0: too guessable (very weak)
+ * - 1: very guessable (weak)
+ * - 2: somewhat guessable (fair)
+ * - 3: safely unguessable (good)
+ * - 4: very unguessable (strong)
+ */
 export function calculatePasswordStrength(password: string): number {
   if (!password) return 0;
-
-  let charsetSize = 0;
-  if (/[a-z]/.test(password)) charsetSize += 26;
-  if (/[A-Z]/.test(password)) charsetSize += 26;
-  if (/[0-9]/.test(password)) charsetSize += 10;
-  if (/[^a-zA-Z0-9]/.test(password)) charsetSize += 32;
-
-  if (charsetSize === 0) return 0;
-
-  const entropy = password.length * Math.log2(charsetSize);
-
-  return Math.min(100, Math.round((entropy / 60) * 100));
+  const result = zxcvbn(password);
+  return result.score;
 }
 
 export function getPasswordQuality(password: string): PasswordQuality {
-  const strength = calculatePasswordStrength(password);
-  if (strength === 0) return "veryWeak";
-  if (strength < 40) return "weak";
-  if (strength < 65) return "fair";
-  if (strength < 85) return "good";
-  return "strong";
+  const score = calculatePasswordStrength(password);
+  switch (score) {
+    case 0:
+      return "veryWeak";
+    case 1:
+      return "weak";
+    case 2:
+      return "fair";
+    case 3:
+      return "good";
+    case 4:
+      return "strong";
+    default:
+      return "veryWeak";
+  }
 }
 
 export const passwordQualityThresholds: Record<PasswordQuality, number> = {
   veryWeak: 0,
-  weak: 40,
-  fair: 65,
-  good: 85,
-  strong: 100,
+  weak: 1,
+  fair: 2,
+  good: 3,
+  strong: 4,
 };

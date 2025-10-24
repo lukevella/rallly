@@ -1,30 +1,15 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
-import { load } from "cheerio";
 
-import { captureEmailHTML } from "./mailpit/mailpit";
 import { RegisterPage } from "./register-page";
 import { createUserInDb, loginWithEmail } from "./test-utils";
-import { getCode } from "./utils";
+import { getCode, getPasswordResetLink } from "./utils";
 
 const testUserEmail = "test@example.com";
 const testExistingUserEmail = "existing-user-for-disabled-test@example.com";
 const testPassword = "TestPassword123!";
 
-/**
- * Extract the password reset link from the email HTML
- */
-async function getPasswordResetLink(email: string): Promise<string> {
-  const html = await captureEmailHTML(email);
-  const $ = load(html);
 
-  const resetLink = $("#resetLink").attr("href");
-  if (!resetLink) {
-    throw new Error("Reset link not found in email");
-  }
-
-  return resetLink;
-}
 
 test.describe.serial(() => {
   test.afterAll(async () => {
@@ -46,7 +31,7 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
 
-      await page.getByRole("button", { name: "Continue with Email" }).click();
+      await page.getByRole("button", { name: "Continue with email" }).click();
 
       // Make sure the user doesn't exist yet and that logging in is not possible
       await expect(
@@ -65,7 +50,7 @@ test.describe.serial(() => {
     });
   });
 
-  test.describe("existing user", () => {
+  test.describe("Existing User", () => {
     test("can't register with the same email", async ({ page }) => {
       await page.goto("/register");
 
@@ -91,13 +76,13 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
 
-      await page.getByRole("button", { name: "Continue with Email" }).click();
+      await page.getByRole("button", { name: "Continue with email" }).click();
 
       // Password field should appear since user has a credential account
       await page.getByPlaceholder("••••••••").waitFor();
       await page.getByPlaceholder("••••••••").fill(testPassword);
 
-      await page.getByRole("button", { name: "Continue with Email" }).click();
+      await page.getByRole("button", { name: "Login with password" }).click();
 
       await expect(page.getByText("Test User")).toBeVisible();
     });
@@ -109,11 +94,11 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
 
-      await page.getByRole("button", { name: "Continue with Email" }).click();
+      await page.getByRole("button", { name: "Continue with email" }).click();
 
       expect(page.getByPlaceholder("••••••••")).toBeVisible();
 
-      await page.getByRole("button", { name: "Continue with Email" }).click();
+      await page.getByRole("button", { name: "Login with email" }).click();
 
       await page.getByPlaceholder("Enter your 6-digit code").fill("000000");
 
@@ -129,11 +114,11 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
 
-      await page.getByRole("button", { name: "Continue with Email" }).click();
+      await page.getByRole("button", { name: "Continue with email" }).click();
 
       expect(page.getByPlaceholder("••••••••")).toBeVisible();
 
-      await page.getByRole("button", { name: "Continue with Email" }).click();
+      await page.getByRole("button", { name: "Login with email" }).click();
 
       const code = await getCode(testUserEmail);
 
@@ -149,11 +134,11 @@ test.describe.serial(() => {
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testDifferentCaseEmail);
 
-      await page.getByRole("button", { name: "Continue with Email" }).click();
+      await page.getByRole("button", { name: "Continue with email" }).click();
 
       await page.getByPlaceholder("••••••••").fill(testPassword);
       
-      await page.getByRole("button", { name: "Continue with Email" }).click();
+      await page.getByRole("button", { name: "Login with password" }).click();
 
       await expect(page.getByText("Test User")).toBeVisible();
     });
@@ -167,7 +152,7 @@ test.describe.serial(() => {
 
         // Enter email to trigger password field rendering
         await page.getByPlaceholder("jessie.smith@example.com").fill(testUserEmail);
-        await page.getByRole("button", { name: "Continue with Email" }).click();
+        await page.getByRole("button", { name: "Continue with email" }).click();
 
         // Password field should now be visible since user has a credential account
         await page.getByPlaceholder("••••••••").waitFor();
@@ -177,7 +162,7 @@ test.describe.serial(() => {
 
         // Verify we're on the forgot password page
         await expect(page).toHaveURL(/\/forgot-password/);
-        await expect(page.getByRole("heading", { name: "Reset your password" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "Forgot Password" })).toBeVisible();
 
         // Verify email is pre-filled as a UX improvement
         const emailInput = page.getByPlaceholder("jessie.smith@example.com");
@@ -188,7 +173,7 @@ test.describe.serial(() => {
         await page.goto("/forgot-password");
 
         // Wait for forgot password page to load
-        await page.getByRole("heading", { name: "Reset your password" }).waitFor();
+        await page.getByRole("heading", { name: "Forgot Password" }).waitFor();
 
         // Fill in email
         await page.getByPlaceholder("jessie.smith@example.com").fill(testUserEmail);
@@ -248,43 +233,17 @@ test.describe.serial(() => {
         await page.goto(resetLink);
 
         // Verify we're on the reset password page
-        await expect(page.getByText("Set your password")).toBeVisible();
+        await expect(page.getByRole("heading", { name: "Reset Password" })).toBeVisible();
 
         // Fill in new password
         const newPassword = "NewPassword456!";
-        await page.getByLabel("New password").fill(newPassword);
-        await page.getByLabel("Confirm password").fill(newPassword);
+        await page.getByLabel("Password").fill(newPassword);
 
         // Submit form
-        await page.getByRole("button", { name: "Set password" }).click();
+        await page.getByRole("button", { name: "Reset password" }).click();
 
         // Should be redirected to login
         await expect(page).toHaveURL(/\/login/);
-      });
-
-      test("shows error when passwords don't match", async ({ page }) => {
-        // Request a password reset
-        await page.goto("/forgot-password");
-        await page
-          .getByPlaceholder("jessie.smith@example.com")
-          .fill(testUserEmail);
-        await page.getByRole("button", { name: "Send reset link" }).click();
-
-        // Get the reset token from email
-        const resetLink = await getPasswordResetLink(testUserEmail);
-
-        // Navigate to reset password page with token
-        await page.goto(resetLink);
-
-        // Fill in mismatched passwords
-        await page.getByLabel("New password").fill("Password123!");
-        await page.getByLabel("Confirm password").fill("DifferentPassword123!");
-
-        await page.getByRole("button", { name: "Set password" }).click();
-        
-        await expect(
-          page.getByText(/passwords must match/i),
-        ).toBeVisible();
       });
 
       test("shows error for invalid token", async ({ page }) => {
@@ -292,9 +251,8 @@ test.describe.serial(() => {
         await page.goto("/reset-password?token=invalid-token-123");
         
         // Fill fields and submit
-        await page.getByLabel("New password").fill("Password123!");
-        await page.getByLabel("Confirm password").fill("Password123!");
-        await page.getByRole("button", { name: "Set password" }).click();
+        await page.getByLabel("Password").fill("NewPassword456!");
+        await page.getByRole("button", { name: "Reset password" }).click();
 
         // Should show error message
         await expect(page.getByText("Invalid token")).toBeVisible();
@@ -305,7 +263,7 @@ test.describe.serial(() => {
         await page.goto("/reset-password");
 
         // Should show error message
-        await expect(page.getByText("Invalid token")).toBeVisible();
+        await expect(page.getByText(/password reset link is invalid/i)).toBeVisible();
       });
 
       test("can login with new password after reset", async ({ page }) => {
@@ -322,20 +280,18 @@ test.describe.serial(() => {
         // Reset to a new password
         const finalPassword = "FinalPassword789!";
         await page.goto(resetLink);
-        await page.getByLabel("New password").fill(finalPassword);
-        await page.getByLabel("Confirm password").fill(finalPassword);
-        await page.getByRole("button", { name: "Set password" }).click();
+        await page.getByLabel("Password").fill(finalPassword);
+        await page.getByRole("button", { name: "Reset password" }).click();
 
         // Now try to login with the new password
         await page.goto("/login");
         await page
           .getByPlaceholder("jessie.smith@example.com")
           .fill(testUserEmail);
-        await page.getByRole("button", { name: "Continue with Email" }).click();
+        await page.getByRole("button", { name: "Continue with email" }).click();
 
-        await page.getByPlaceholder("••••••••").waitFor();
-        await page.getByPlaceholder("••••••••").fill(finalPassword);
-        await page.getByRole("button", { name: "Continue with Email" }).click();
+        await page.getByLabel("Password").fill(finalPassword);
+        await page.getByRole("button", { name: "Login with password" }).click();
 
         // Should be logged in
         await expect(page.getByText("Test User")).toBeVisible();
@@ -378,11 +334,10 @@ test.describe.serial(() => {
 
         // Fill in password
         const safePassword = "SafePassword123!";
-        await page.getByLabel("New password").fill(safePassword);
-        await page.getByLabel("Confirm password").fill(safePassword);
+        await page.getByLabel("Password").fill(safePassword);
 
         // Submit form
-        await page.getByRole("button", { name: "Set password" }).click();
+        await page.getByRole("button", { name: "Reset password" }).click();
 
         // Should redirect to login, not external site
         await expect(page).toHaveURL(/\/login/);
@@ -390,7 +345,7 @@ test.describe.serial(() => {
     });
   });
 
-  test.describe("when user registration is disabled", () => {
+  test.describe("When User Registration is Disabled", () => {
     test.beforeAll(async () => {
       await prisma.instanceSettings.update({
         where: { id: 1 },

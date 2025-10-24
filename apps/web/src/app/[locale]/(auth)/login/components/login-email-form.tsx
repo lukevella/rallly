@@ -198,7 +198,7 @@ export function LoginWithEmailForm() {
                     size="lg"
                     type="password"
                     disabled={form.formState.isSubmitting}
-                    placeholder="************"
+                    placeholder="••••••••"
                     {...field}
                   />
                 </FormControl>
@@ -225,13 +225,13 @@ export function LoginWithEmailForm() {
                   defaults="Login with password"
                 />
               ) : (
-                <Trans
-                  i18nKey="continueWithEmail"
-                  defaults="Continue with email"
-                />
+                <Trans i18nKey="loginWithEmail" defaults="Login with email" />
               )
             ) : (
-              <Trans i18nKey="loginWithEmail" defaults="Login with email" />
+              <Trans
+                i18nKey="continueWithEmail"
+                defaults="Continue with email"
+              />
             )}
           </Button>
         </div>
