@@ -35,7 +35,7 @@ async function loadData() {
   const [
     livePollCount,
     upcomingEventCount,
-    memberCount,
+    { total: memberCount },
     seatCount,
     hasNoAccounts,
   ] = await Promise.all([
@@ -47,7 +47,7 @@ async function loadData() {
       },
     }),
     getUpcomingEventsCount(),
-    loadMembers().then((members) => members.total),
+    loadMembers(),
     getTotalSeatsForSpace(space.id),
     getUserHasNoAccounts(user.id),
   ]);

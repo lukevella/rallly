@@ -13,7 +13,7 @@ async function createContext(): Promise<TRPCContext> {
     user: session?.user
       ? {
           id: session.user.id,
-          isGuest: !session.user.email,
+          isGuest: session.user.isGuest,
           locale: session.user.locale ?? undefined,
           image: session.user.image ?? undefined,
         }
