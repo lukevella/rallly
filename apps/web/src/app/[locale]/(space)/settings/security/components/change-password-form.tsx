@@ -22,20 +22,27 @@ import { authClient } from "@/lib/auth-client";
 function useChangePasswordSchema() {
   const { t } = useTranslation();
   return React.useMemo(() => {
-    return z.object({
-      currentPassword: z
-        .string()
-        .min(
-          1,
-          t("passwordRequired", { defaultValue: "Password is required" }),
+    return z
+      .object({
+        currentPassword: z
+          .string()
+          .min(
+            1,
+            t("passwordRequired", { defaultValue: "Password is required" }),
+          ),
+        newPassword: z.string().min(
+          8,
+          t("passwordMinLength", {
+            defaultValue: "Password must be at least 8 characters",
+          }),
         ),
-      newPassword: z.string().min(
-        8,
-        t("passwordMinLength", {
-          defaultValue: "Password must be at least 8 characters",
+      })
+      .refine((data) => data.currentPassword !== data.newPassword, {
+        message: t("passwordsMustBeDifferent", {
+          defaultValue: "New password must be different from current password",
         }),
-      ),
-    });
+        path: ["newPassword"],
+      });
   }, [t]);
 }
 
@@ -94,7 +101,7 @@ export function ChangePasswordForm() {
           <FormMessage>{form.formState.errors.root.message}</FormMessage>
         )}
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4">
           <FormField
             control={form.control}
             name="currentPassword"
