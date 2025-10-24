@@ -42,7 +42,7 @@ export function FeedbackAlert() {
         </Button>
         <Button variant="primary" asChild>
           <Link
-            href="https://senja.io/p/rallly/r/uwwiXJ"
+            href="https://www.trustpilot.com/evaluate/rallly.co"
             target="_blank"
             rel="noopener noreferrer"
           >
