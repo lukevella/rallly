@@ -14,23 +14,19 @@ import { PasswordInput } from "@rallly/ui/password-input";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { Trans } from "@/components/trans";
+import {
+  PasswordStrengthMeter,
+  usePasswordValidationSchema,
+} from "@/features/password";
 import { authClient } from "@/lib/auth-client";
 
 function useResetPasswordSchema() {
-  const { t } = useTranslation();
-  return React.useMemo(() => {
-    return z.object({
-      password: z.string().min(
-        8,
-        t("passwordMinimumLength", {
-          defaultValue: "Password must be at least 8 characters",
-        }),
-      ),
-    });
-  }, [t]);
+  const passwordValidation = usePasswordValidationSchema();
+  return z.object({
+    password: passwordValidation,
+  });
 }
 
 type ResetPasswordValues = z.infer<ReturnType<typeof useResetPasswordSchema>>;
@@ -110,6 +106,9 @@ export function ResetPasswordForm() {
                     error={!!formState.errors.password}
                   />
                 </FormControl>
+                <div className="mt-2">
+                  <PasswordStrengthMeter password={field.value} />
+                </div>
                 <FormMessage />
               </FormItem>
             )}

@@ -4,7 +4,6 @@ import { Button } from "@rallly/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,6 +17,7 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Trans } from "@/components/trans";
+import { PasswordStrengthMeter } from "@/features/password/components/password-strength-meter";
 import { useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
@@ -166,12 +166,10 @@ export function RegisterNameForm() {
                     type="password"
                   />
                 </FormControl>
-                <FormDescription>
-                  <Trans
-                    i18nKey="passwordDescription"
-                    defaults="Must be at least 8 characters"
-                  />
-                </FormDescription>
+                <PasswordStrengthMeter
+                  password={field.value}
+                  className="mt-2"
+                />
                 <FormMessage />
               </FormItem>
             )}

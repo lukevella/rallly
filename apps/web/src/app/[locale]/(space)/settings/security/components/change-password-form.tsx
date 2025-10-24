@@ -11,39 +11,34 @@ import {
 } from "@rallly/ui/form";
 import { PasswordInput } from "@rallly/ui/password-input";
 import { toast } from "@rallly/ui/sonner";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-
 import { Trans } from "@/components/trans";
+import { PasswordStrengthMeter } from "@/features/password/components/password-strength-meter";
+import { usePasswordValidationSchema } from "@/features/password/schema";
 import { authClient } from "@/lib/auth-client";
 
 function useChangePasswordSchema() {
   const { t } = useTranslation();
-  return React.useMemo(() => {
-    return z
-      .object({
-        currentPassword: z
-          .string()
-          .min(
-            1,
-            t("passwordRequired", { defaultValue: "Password is required" }),
-          ),
-        newPassword: z.string().min(
-          8,
-          t("passwordMinLength", {
-            defaultValue: "Password must be at least 8 characters",
-          }),
+  const passwordValidation = usePasswordValidationSchema();
+
+  return z
+    .object({
+      currentPassword: z
+        .string()
+        .min(
+          1,
+          t("passwordRequired", { defaultValue: "Password is required" }),
         ),
-      })
-      .refine((data) => data.currentPassword !== data.newPassword, {
-        message: t("passwordsMustBeDifferent", {
-          defaultValue: "New password must be different from current password",
-        }),
-        path: ["newPassword"],
-      });
-  }, [t]);
+      newPassword: passwordValidation,
+    })
+    .refine((data) => data.currentPassword !== data.newPassword, {
+      message: t("passwordsMustBeDifferent", {
+        defaultValue: "New password must be different from current password",
+      }),
+      path: ["newPassword"],
+    });
 }
 
 type ChangePasswordValues = z.infer<ReturnType<typeof useChangePasswordSchema>>;
@@ -85,7 +80,6 @@ export function ChangePasswordForm() {
       return;
     }
 
-    // Clear form and show success toast
     form.reset();
     toast.success(
       t("passwordChangedSuccess", {
@@ -142,6 +136,10 @@ export function ChangePasswordForm() {
                     error={!!formState.errors.newPassword}
                   />
                 </FormControl>
+                <PasswordStrengthMeter
+                  password={field.value}
+                  className="mt-2"
+                />
                 <FormMessage />
               </FormItem>
             )}
