@@ -17,7 +17,6 @@ import {
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
@@ -34,7 +33,6 @@ export function NavUser({
   email: string;
 }) {
   const [isPending, setIsPending] = React.useState(false);
-  const router = useRouter();
   return (
     <>
       {isPending && <RouterLoadingIndicator />}
