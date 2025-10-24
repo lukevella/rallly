@@ -20,5 +20,8 @@ export const authClient = createAuthClient({
 });
 
 export async function signOut() {
-  await Promise.all([authClient.signOut(), nextAuthSignOut()]);
+  await Promise.all([
+    authClient.signOut(),
+    nextAuthSignOut({ redirect: false }),
+  ]);
 }
