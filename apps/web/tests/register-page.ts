@@ -15,7 +15,7 @@ export class RegisterPage {
     // Fill in registration form
     await this.page.getByPlaceholder("Jessie Smith").fill(name);
     await this.page.getByPlaceholder("jessie.smith@example.com").fill(email);
-    await this.page.getByPlaceholder("************").fill(password);
+    await this.page.getByPlaceholder("••••••••").fill(password);
 
     await this.page
       .getByRole("button", { name: "Continue", exact: true })

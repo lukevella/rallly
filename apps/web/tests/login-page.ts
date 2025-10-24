@@ -20,8 +20,8 @@ export class LoginPage {
 
     // If password is provided and the password field appears, use password login
     if (password) {
-      await this.page.getByPlaceholder("************").waitFor();
-      await this.page.getByPlaceholder("************").fill(password);
+      await this.page.getByPlaceholder("••••••••").waitFor();
+      await this.page.getByPlaceholder("••••••••").fill(password);
 
       await this.page
         .getByRole("button", { name: "Continue with Email", exact: true })

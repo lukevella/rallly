@@ -75,7 +75,7 @@ test.describe.serial(() => {
       await page
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
-      await page.getByPlaceholder("************").fill(testPassword);
+      await page.getByPlaceholder("••••••••").fill(testPassword);
 
       await page.getByRole("button", { name: "Continue", exact: true }).click();
 
@@ -94,8 +94,8 @@ test.describe.serial(() => {
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
       // Password field should appear since user has a credential account
-      await page.getByPlaceholder("************").waitFor();
-      await page.getByPlaceholder("************").fill(testPassword);
+      await page.getByPlaceholder("••••••••").waitFor();
+      await page.getByPlaceholder("••••••••").fill(testPassword);
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
@@ -111,7 +111,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
-      expect(page.getByPlaceholder("************")).toBeVisible();
+      expect(page.getByPlaceholder("••••••••")).toBeVisible();
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
@@ -131,7 +131,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
-      expect(page.getByPlaceholder("************")).toBeVisible();
+      expect(page.getByPlaceholder("••••••••")).toBeVisible();
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
@@ -151,7 +151,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
-      await page.getByPlaceholder("************").fill(testPassword);
+      await page.getByPlaceholder("••••••••").fill(testPassword);
       
       await page.getByRole("button", { name: "Continue with Email" }).click();
 
@@ -170,7 +170,7 @@ test.describe.serial(() => {
         await page.getByRole("button", { name: "Continue with Email" }).click();
 
         // Password field should now be visible since user has a credential account
-        await page.getByPlaceholder("************").waitFor();
+        await page.getByPlaceholder("••••••••").waitFor();
 
         // Now click forgot password link
         await page.getByRole("link", { name: "Forgot password?" }).click();
@@ -333,8 +333,8 @@ test.describe.serial(() => {
           .fill(testUserEmail);
         await page.getByRole("button", { name: "Continue with Email" }).click();
 
-        await page.getByPlaceholder("************").waitFor();
-        await page.getByPlaceholder("************").fill(finalPassword);
+        await page.getByPlaceholder("••••••••").waitFor();
+        await page.getByPlaceholder("••••••••").fill(finalPassword);
         await page.getByRole("button", { name: "Continue with Email" }).click();
 
         // Should be logged in

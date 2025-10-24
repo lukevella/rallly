@@ -160,7 +160,7 @@ export function RegisterNameForm() {
                 <FormControl>
                   <PasswordInput
                     size="lg"
-                    placeholder="************"
+                    placeholder="••••••••"
                     disabled={form.formState.isSubmitting}
                     {...field}
                     type="password"
