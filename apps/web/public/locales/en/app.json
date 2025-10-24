@@ -548,7 +548,6 @@
   "loginWithPassword": "Login with password",
   "continueWithEmail": "Continue with email",
   "loginWithEmail": "Login with email",
-  "setupPassword": "Set Password",
   "passwordSetupSuccessful": "Password setup successful. You can now login with your email and password.",
   "setupPasswordDescription": "Your account doesn't have a password yet. Click the button below to send a secure link to your email to set a password.",
   "setupPasswordAlertTitle": "Login quicker with a password",
@@ -563,5 +562,7 @@
   "passwordStrengthFair": "Fair",
   "passwordStrengthGood": "Good",
   "passwordStrengthStrong": "Strong",
-  "passwordTooWeak": "Password is too weak. Please use a stronger password."
+  "passwordTooWeak": "Password is too weak. Please use a stronger password.",
+  "resetPasswordButton": "Reset password",
+  "passwordStrength": "Password Strength"
 }
