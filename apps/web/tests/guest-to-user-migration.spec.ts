@@ -9,7 +9,7 @@ import { RegisterPage } from "./register-page";
 const testUser = {
   name: "Test User",
   email: "testuser@example.com",
-  password: "password",
+  password: "TestPassword456!",
 };
 
 test.describe.serial(() => {
