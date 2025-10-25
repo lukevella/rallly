@@ -528,7 +528,7 @@
   "sendResetLink": "Link zum Zurücksetzen senden",
   "forgotPasswordTitle": "Passwort vergessen",
   "forgotPasswordDescription": "Gib deine E-Mail-Adresse ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.",
-  "forgotPasswordFooter": "Password wieder eingefallen? <a>Zurück zur Anmeldung</a>",
+  "forgotPasswordFooter": "Passwort wieder eingefallen? <a>Zurück zur Anmeldung</a>",
   "forgotPassword": "Passwort vergessen?",
   "resetPasswordInvalidTokenMessage": "Dieser Passwort-Zurücksetzen-Link ist ungültig oder abgelaufen. Bitte fordere einen neuen an.",
   "newPassword": "Neues Passwort",
