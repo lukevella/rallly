@@ -8,18 +8,21 @@ enum TimeFormat {
 model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")
-  type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
   refresh_token     String? @db.Text
   access_token      String? @db.Text
   expires_at        Int?
-  token_type        String?
   scope             String?
   id_token          String? @db.Text
-  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
+  password              String?   @map("password")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -33,22 +36,24 @@ enum UserRole {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  name          String
-  email         String      @unique() @db.Citext
-  emailVerified DateTime?   @map("email_verified")
-  image         String?
-  timeZone      String?     @map("time_zone")
-  weekStart     Int?        @map("week_start")
-  timeFormat    TimeFormat? @map("time_format")
-  locale        String?
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime?   @updatedAt @map("updated_at")
-  customerId    String?     @map("customer_id")
-  banned        Boolean     @default(false)
-  bannedAt      DateTime?   @map("banned_at")
-  banReason     String?     @map("ban_reason")
-  role          UserRole    @default(user)
+  id              String      @id @default(cuid())
+  name            String
+  email           String      @unique @db.Citext
+  emailVerified   Boolean?    @map("email_verified")
+  image           String?
+  timeZone        String?     @map("time_zone")
+  weekStart       Int?        @map("week_start")
+  timeFormat      TimeFormat? @map("time_format")
+  locale          String?
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime?   @updatedAt @map("updated_at")
+  customerId      String?     @map("customer_id")
+  banned          Boolean     @default(false)
+  bannedAt        DateTime?   @map("banned_at")
+  banReason       String?     @map("ban_reason")
+  banExpires      DateTime?   @map("ban_expires")
+  role            UserRole    @default(user)
+  lastLoginMethod String?     @map("last_login_method")
 
   comments           Comment[]
   polls              Poll[]
@@ -73,6 +78,9 @@ model User {
   defaultDestinationCalendarId String?           @map("default_destination_calendar_id")
   defaultDestinationCalendar   ProviderCalendar? @relation("UserDefaultDestinationCalendar", fields: [defaultDestinationCalendarId], references: [id], onDelete: SetNull)
 
+  sessions             Session[]
+  impersonatedSessions Session[] @relation("ImpersonatedSessions")
+
   @@map("users")
 }
 
@@ -83,4 +91,33 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Session {
+  id             String   @id
+  expiresAt      DateTime @map("expires_at")
+  token          String
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  ipAddress      String?  @map("ip_address")
+  userAgent      String?  @map("user_agent")
+  userId         String   @map("user_id")
+  impersonatedBy String?  @map("impersonated_by")
+
+  user               User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedByUser User? @relation("ImpersonatedSessions", fields: [impersonatedBy], references: [id])
+
+  @@unique([token])
+  @@map("sessions")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime @map("expires_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("verifications")
 }

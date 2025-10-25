@@ -9,15 +9,11 @@ import { LoginPage } from "./components/login-page";
 export const dynamic = "force-dynamic";
 
 const searchParamsSchema = z.object({
-  magicLink: z.url(),
+  email: z.email(),
+  code: z.string(),
 });
 
 type SearchParams = z.infer<typeof searchParamsSchema>;
-
-const magicLinkParams = z.object({
-  email: z.email(),
-  token: z.string(),
-});
 
 export default async function Page(props: {
   searchParams: Promise<SearchParams>;
@@ -29,21 +25,9 @@ export default async function Page(props: {
     return notFound();
   }
 
-  const { magicLink } = parse.data;
+  const { email, code } = parse.data;
 
-  const url = new URL(magicLink);
-
-  const parseMagicLink = magicLinkParams.safeParse(
-    Object.fromEntries(url.searchParams),
-  );
-
-  if (!parseMagicLink.success) {
-    return notFound();
-  }
-
-  const { email } = parseMagicLink.data;
-
-  return <LoginPage magicLink={magicLink} email={email} />;
+  return <LoginPage email={email} code={code} />;
 }
 
 export async function generateMetadata(props: {

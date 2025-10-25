@@ -2,10 +2,13 @@
 
 import { prisma } from "@rallly/database";
 
-import { getUserId } from "@/next-auth";
+import { getUserIdIfLoggedIn } from "@/lib/auth";
 
 export async function updateLocale(locale: string) {
-  const userId = await getUserId();
+  const userId = await getUserIdIfLoggedIn();
+  if (!userId) {
+    throw new Error("User not found");
+  }
   await prisma.user.update({
     where: {
       id: userId,

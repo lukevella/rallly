@@ -2,19 +2,19 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { BellOffIcon, BellRingIcon } from "lucide-react";
-import { signIn } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
 import type * as React from "react";
-
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
-
 import { usePoll } from "../poll-context";
 
 const NotificationsToggle: React.FunctionComponent = () => {
   const { poll } = usePoll();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const { data: watchers } = trpc.polls.getWatchers.useQuery(
     {
@@ -73,7 +73,7 @@ const NotificationsToggle: React.FunctionComponent = () => {
           variant="ghost"
           onClick={async () => {
             if (!user || user.isGuest) {
-              signIn();
+              router.push(`/login?redirectTo=${encodeURIComponent(pathname)}`);
               return;
             }
             // toggle

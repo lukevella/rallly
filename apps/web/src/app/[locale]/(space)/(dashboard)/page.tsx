@@ -23,26 +23,34 @@ import { getUpcomingEventsCount } from "@/features/scheduled-event/data";
 import { loadMembers } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { getTotalSeatsForSpace } from "@/features/space/utils";
+import { getUserHasNoAccounts } from "@/features/user/queries";
 import { getTranslation } from "@/i18n/server";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { FeedbackAlert } from "./feedback-alert";
+import { PasswordSetupAlert } from "./password-setup-alert";
 
 async function loadData() {
   const [space, user] = await Promise.all([requireSpace(), requireUser()]);
 
-  const [livePollCount, upcomingEventCount, memberCount, seatCount] =
-    await Promise.all([
-      prisma.poll.count({
-        where: {
-          spaceId: space.id,
-          status: "live",
-          deleted: false,
-        },
-      }),
-      getUpcomingEventsCount(),
-      loadMembers().then((members) => members.total),
-      getTotalSeatsForSpace(space.id),
-    ]);
+  const [
+    livePollCount,
+    upcomingEventCount,
+    { total: memberCount },
+    seatCount,
+    hasNoAccounts,
+  ] = await Promise.all([
+    prisma.poll.count({
+      where: {
+        spaceId: space.id,
+        status: "live",
+        deleted: false,
+      },
+    }),
+    getUpcomingEventsCount(),
+    loadMembers(),
+    getTotalSeatsForSpace(space.id),
+    getUserHasNoAccounts(user.id),
+  ]);
 
   const ability = defineAbilityForMember({ space, user });
   const canManageBilling = ability.can("manage", "Billing");
@@ -53,6 +61,7 @@ async function loadData() {
     memberCount,
     seatCount,
     canManageBilling,
+    hasNoAccounts,
   };
 }
 
@@ -63,6 +72,7 @@ export default async function Page() {
     memberCount,
     seatCount,
     canManageBilling,
+    hasNoAccounts,
   } = await loadData();
 
   return (
@@ -73,9 +83,12 @@ export default async function Page() {
         </PageTitle>
       </PageHeader>
       <PageContent className="space-y-8">
-        <IfCloudHosted>
-          <FeedbackAlert />
-        </IfCloudHosted>
+        <div className="space-y-4">
+          {hasNoAccounts ? <PasswordSetupAlert /> : null}
+          <IfCloudHosted>
+            <FeedbackAlert />
+          </IfCloudHosted>
+        </div>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
             <Trans i18nKey="homeActionsTitle" defaults="Actions" />

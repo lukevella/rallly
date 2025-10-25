@@ -4,13 +4,13 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 
-import { auth } from "@/next-auth";
+import { getSession } from "@/lib/auth";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
 import { getEmailClient } from "@/utils/emails";
 
 const handler = async (req: NextRequest) => {
-  const session = await auth();
+  const session = await getSession();
   const ip = ipAddress(req);
   const ja4Digest = req.headers.get("x-vercel-ja4-digest");
 

@@ -14,3 +14,18 @@ export const getCode = async (email: string) => {
 
   return $("#code").text().trim();
 };
+
+/**
+ * Extract the password reset link from the email HTML
+ */
+export async function getPasswordResetLink(email: string): Promise<string> {
+  const html = await captureEmailHTML(email);
+  const $ = load(html);
+
+  const resetLink = $("#resetLink").attr("href");
+  if (!resetLink) {
+    throw new Error("Reset link not found in email");
+  }
+
+  return resetLink;
+}

@@ -2,9 +2,9 @@
 
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
 import { authActionClient } from "@/lib/safe-action/server";
-import { signOut } from "@/next-auth";
 
 export const deleteCurrentUserAction = authActionClient
   .metadata({ actionName: "delete_current_user" })

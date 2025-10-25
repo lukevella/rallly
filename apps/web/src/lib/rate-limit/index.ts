@@ -4,7 +4,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { kv } from "@vercel/kv";
 import { headers } from "next/headers";
 
-import { auth } from "@/next-auth";
+import { getSession } from "@/lib/auth";
 
 import { isRateLimitEnabled } from "./constants";
 
@@ -26,7 +26,7 @@ export async function rateLimit(
     };
   }
 
-  const session = await auth();
+  const session = await getSession();
   const identifier = session?.user?.id || (await getIPAddress());
   try {
     const ratelimit = new Ratelimit({

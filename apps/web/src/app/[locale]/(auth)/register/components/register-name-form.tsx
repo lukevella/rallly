@@ -10,65 +10,95 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { PasswordInput } from "@rallly/ui/password-input";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
-
+import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Trans } from "@/components/trans";
+import { PasswordStrengthMeter } from "@/features/password/components/password-strength-meter";
 import { useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
-
-import { setToken } from "../actions";
-import { registerNameFormSchema } from "./schema";
-
-type RegisterNameFormValues = z.infer<typeof registerNameFormSchema>;
+import { authClient } from "@/lib/auth-client";
+import { getBrowserTimeZone } from "@/utils/date-time-utils";
+import { validateRedirectUrl } from "@/utils/redirect";
+import { useRegisterNameFormSchema } from "./schema";
 
 export function RegisterNameForm() {
-  const { t } = useTranslation();
+  const schema = useRegisterNameFormSchema();
+  const { t, i18n } = useTranslation();
   const searchParams = useSearchParams();
-  const form = useForm<RegisterNameFormValues>({
+  const router = useRouter();
+  const form = useForm({
     defaultValues: {
       name: "",
       email: "",
+      password: "",
     },
-    resolver: zodResolver(registerNameFormSchema),
+    resolver: zodResolver(schema),
   });
 
-  const registerUser = trpc.auth.requestRegistration.useMutation();
-  const router = useRouter();
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
-          const res = await registerUser.mutateAsync(data);
+          const validatedRedirectTo = validateRedirectUrl(
+            searchParams.get("redirectTo"),
+          );
 
-          if (res.ok) {
-            await setToken(res.token);
-            const redirectTo = searchParams.get("redirectTo");
-            router.push(
-              `/register/verify${redirectTo ? `?redirectTo=${redirectTo}` : ""}`,
-            );
-          } else {
-            switch (res.reason) {
-              case "emailNotAllowed":
-                form.setError("email", {
-                  message: t("emailNotAllowed"),
-                });
-                break;
-              case "temporaryEmailNotAllowed":
-                form.setError("email", {
-                  message: t("temporaryEmailNotAllowed", {
-                    defaultValue:
-                      "Temporary or disposable email addresses are not allowed.",
-                  }),
-                });
-                break;
-              case "userAlreadyExists":
-                form.setError("email", {
-                  message: t("userAlreadyExists"),
-                });
-                break;
+          const verifyURL = absoluteUrl(
+            `/login/verify${
+              validatedRedirectTo
+                ? `?redirectTo=${encodeURIComponent(validatedRedirectTo)}`
+                : ""
+            }`,
+          );
+
+          try {
+            const res = await authClient.signUp.email({
+              email: data.email,
+              password: data.password,
+              name: data.name,
+              timeZone: getBrowserTimeZone(),
+              locale: i18n.language,
+              callbackURL: verifyURL,
+            });
+
+            if (res.error) {
+              switch (res.error.code) {
+                case "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL":
+                  form.setError("email", {
+                    message: t("userAlreadyExists"),
+                  });
+                  break;
+                case "EMAIL_BLOCKED":
+                  form.setError("email", {
+                    message: t("emailNotAllowed"),
+                  });
+                  break;
+                case "TEMPORARY_EMAIL_NOT_ALLOWED":
+                  form.setError("email", {
+                    message: t("temporaryEmailNotAllowed"),
+                  });
+                  break;
+                default:
+                  form.setError("email", {
+                    message: res.error.message,
+                  });
+                  break;
+              }
             }
+
+            if (res.data?.user?.email) {
+              await setVerificationEmail(res.data.user.email);
+              router.push(verifyURL);
+            }
+          } catch (error) {
+            if (error instanceof Error) {
+              form.setError("root", {
+                message: error.message,
+              });
+            }
+            console.error(error);
           }
         })}
       >
@@ -117,12 +147,38 @@ export function RegisterNameForm() {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans i18nKey="password" defaults="Password" />
+                </FormLabel>
+                <FormControl>
+                  <PasswordInput
+                    size="lg"
+                    placeholder="••••••••"
+                    disabled={form.formState.isSubmitting}
+                    {...field}
+                    type="password"
+                  />
+                </FormControl>
+                <PasswordStrengthMeter
+                  password={field.value}
+                  className="mt-2"
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
+        {form.formState.errors.root?.message ? (
+          <FormMessage>{form.formState.errors.root.message}</FormMessage>
+        ) : null}
         <div className="mt-6">
           <Button
-            loading={
-              form.formState.isSubmitting || form.formState.isSubmitSuccessful
-            }
+            loading={form.formState.isSubmitting}
             className="w-full"
             variant="primary"
             type="submit"

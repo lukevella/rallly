@@ -1,18 +1,11 @@
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { withAuth } from "@/auth/edge";
 import { getLocaleFromRequest, setLocaleCookie } from "@/lib/locale/server";
 
-export const middleware = withAuth(async (req) => {
+export const middleware = async (req: NextRequest) => {
   const { nextUrl } = req;
   const newUrl = nextUrl.clone();
   const pathname = newUrl.pathname;
-
-  const isLoggedIn = req.auth?.user?.email;
-  // if the user is already logged in, don't let them access the login page
-  if (/^\/(login)/.test(pathname) && isLoggedIn) {
-    newUrl.pathname = "/";
-    return NextResponse.redirect(newUrl);
-  }
 
   const locale = getLocaleFromRequest(req);
 
@@ -26,7 +19,7 @@ export const middleware = withAuth(async (req) => {
   res.headers.set("x-pathname", pathname);
 
   return res;
-});
+};
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|static|.*\\.).*)"],

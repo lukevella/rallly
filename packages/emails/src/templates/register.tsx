@@ -6,6 +6,7 @@ import {
   Card,
   Domain,
   Heading,
+  Link,
   Text,
   trackingWide,
 } from "../components/styled-components";
@@ -63,13 +64,14 @@ export const RegisterEmail = ({ code, ctx }: RegisterEmailProps) => {
           <Trans
             i18n={ctx.i18n}
             t={ctx.t}
-            i18nKey="register_footer"
-            ns="emails"
-            values={{ domain: ctx.domain }}
+            i18nKey="login_content2"
+            defaults="You're receiving this email because a request was made to login to <domain />. If this wasn't you contact <a>{supportEmail}</a>."
+            values={{ supportEmail: ctx.supportEmail }}
             components={{
               domain: <Domain ctx={ctx} />,
+              a: <Link href={`mailto:${ctx.supportEmail}`} />,
             }}
-            defaults="You're receiving this email because a request was made to register an account on <domain />. If this wasn't you, please ignore this email."
+            ns="emails"
           />
         </Text>
       </Section>

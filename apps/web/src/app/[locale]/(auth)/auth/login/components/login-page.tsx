@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -8,33 +7,13 @@ import { Logo } from "@/components/logo";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { authClient } from "@/lib/auth-client";
 import { trpc } from "@/trpc/client";
 
-type PageProps = { magicLink: string; email: string };
-
-export const LoginPage = ({ magicLink, email }: PageProps) => {
-  const { t } = useTranslation();
+export const LoginPage = ({ email, code }: { email: string; code: string }) => {
   const [error, setError] = React.useState<string | null>(null);
+  const [isLoading, setLoading] = React.useState(false);
 
-  const magicLinkFetch = useMutation({
-    mutationFn: async () => {
-      const res = await fetch(magicLink);
-      return res;
-    },
-    onSuccess: async (data) => {
-      if (!data.url.includes("auth/error")) {
-        router.push(data.url);
-      } else {
-        setError(
-          t("loginMagicLinkError", {
-            defaultValue:
-              "This link is invalid or expired. Please request a new link.",
-          }),
-        );
-      }
-    },
-  });
   const { data } = trpc.user.getByEmail.useQuery({ email });
   const router = useRouter();
   return (
@@ -64,9 +43,24 @@ export const LoginPage = ({ magicLink, email }: PageProps) => {
         <div>
           <Button
             size="lg"
-            loading={magicLinkFetch.isPending}
+            loading={isLoading}
             onClick={async () => {
-              await magicLinkFetch.mutateAsync();
+              setLoading(true);
+              setError(null);
+
+              try {
+                const res = await authClient.signIn.emailOtp({
+                  email,
+                  otp: code,
+                });
+                if (res.error) {
+                  setError(res.error.message ?? "An error occurred");
+                } else {
+                  router.push("/");
+                }
+              } finally {
+                setLoading(false);
+              }
             }}
             variant="primary"
             className="w-full"

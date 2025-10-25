@@ -52,6 +52,15 @@ export function AuthErrors() {
           })}
         </p>
       );
+    case "OAuthSignInFailed":
+      return (
+        <p className="text-destructive text-sm">
+          {t("authErrorsOAuthSignInFailed", {
+            defaultValue:
+              "An error occurred while signing in. Please try again or contact the system administrator.",
+          })}
+        </p>
+      );
     default:
       return null;
   }

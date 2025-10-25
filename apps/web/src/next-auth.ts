@@ -1,10 +1,8 @@
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import NextAuth from "next-auth";
 import type { Provider } from "next-auth/providers";
-import { cache } from "react";
-
-import { CustomPrismaAdapter } from "./auth/adapters/prisma";
 import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
 import { EmailProvider } from "./auth/providers/email";
@@ -15,21 +13,9 @@ import { OIDCProvider } from "./auth/providers/oidc";
 import { RegistrationTokenProvider } from "./auth/providers/registration-token";
 import { nextAuthConfig } from "./next-auth.config";
 
-const {
-  auth: originalAuth,
-  handlers,
-  signIn,
-  signOut,
-} = NextAuth({
+const { auth, handlers, signIn, signOut } = NextAuth({
   ...nextAuthConfig,
-  adapter: CustomPrismaAdapter({
-    migrateData: async (userId) => {
-      const session = await auth();
-      if (session?.user && session.user.email === null) {
-        await mergeGuestsIntoUser(userId, [session.user.id]);
-      }
-    },
-  }),
+  adapter: PrismaAdapter(prisma),
   providers: [
     RegistrationTokenProvider,
     GuestProvider,
@@ -171,30 +157,5 @@ const {
     },
   },
 });
-
-const auth = cache(async () => {
-  try {
-    const session = await originalAuth();
-    if (session) {
-      return session;
-    }
-  } catch (e) {
-    console.error("FAILED TO GET SESSION", e);
-  }
-});
-
-/**
- * If email is not set it means the user is a guest
- * @returns
- */
-export const getUserId = async () => {
-  const session = await auth();
-  return session?.user?.email ? session.user.id : undefined;
-};
-
-export const getLoggedIn = async () => {
-  const session = await auth();
-  return !!session?.user?.email;
-};
 
 export { auth, handlers, signIn, signOut };

@@ -13,7 +13,7 @@ export async function createUser({
 }: {
   name: string;
   email: string;
-  emailVerified?: Date;
+  emailVerified?: boolean;
   image?: string;
   timeZone?: string;
   timeFormat?: TimeFormat;

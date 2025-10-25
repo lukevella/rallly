@@ -1,26 +1,20 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
 import React from "react";
 import { Trans } from "@/components/trans";
+import { signOut } from "@/lib/auth-client";
 
 export function SignOutButton() {
-  const pathname = usePathname();
-  const [isPending, startTransition] = React.useTransition();
+  const [isPending, setIsPending] = React.useState(false);
   return (
     <Button
       variant="link"
       loading={isPending}
-      onClick={() =>
-        startTransition(
-          async () =>
-            await signOut({
-              redirectTo: pathname,
-            }),
-        )
-      }
+      onClick={async () => {
+        setIsPending(true);
+        await signOut();
+      }}
     >
       <Trans
         i18nKey="loginWithAnotherAccount"

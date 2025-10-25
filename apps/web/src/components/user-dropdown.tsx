@@ -22,10 +22,10 @@ import {
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
+import { signOut } from "@/lib/auth-client";
 import { useAuthenticatedUser } from "./user-provider";
 
 export const UserDropdown = ({ className }: { className?: string }) => {

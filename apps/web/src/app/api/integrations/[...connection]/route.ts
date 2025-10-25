@@ -4,9 +4,9 @@ import {
   syncCalendars,
 } from "@/features/calendars/mutations";
 import { saveOAuthCredentials } from "@/features/credentials/mutations";
+import { getSession } from "@/lib/auth";
 import { GoogleOAuthClient } from "@/lib/oauth/providers/google";
 import { OAuthIntegration } from "@/lib/oauth/server";
-import { auth } from "@/next-auth";
 
 type Integration = "google-calendar" | "outlook-calendar";
 
@@ -34,7 +34,7 @@ const { handler } = OAuthIntegration<Integration>({
             providerAccountId,
             userInfo,
           }) => {
-            const session = await auth();
+            const session = await getSession();
             if (!session?.user) {
               throw new Error("User not found");
             }

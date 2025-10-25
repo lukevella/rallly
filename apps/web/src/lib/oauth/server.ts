@@ -6,6 +6,7 @@ import { Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { handle } from "hono/vercel";
 import { z } from "zod";
+import { validateRedirectUrl } from "@/utils/redirect";
 import type { CreateOAuthOptions } from "./types";
 
 export function OAuthIntegration<T extends string>(
@@ -55,7 +56,7 @@ export function OAuthIntegration<T extends string>(
 
       const state = generateState();
       const codeVerifier = generateCodeVerifier();
-      const redirectTo = c.req.query("redirect") || "/";
+      const redirectTo = validateRedirectUrl(c.req.query("redirect")) || "/";
 
       const authorizationUrl = integration.getAuthorizationUrl(
         state,
@@ -117,10 +118,7 @@ export function OAuthIntegration<T extends string>(
       const codeVerifier = getCookie(c, CODE_VERIFIER);
       const storedRedirect = getCookie(c, REDIRECT_TO) || "/";
 
-      const redirectTo =
-        storedRedirect.startsWith("/") && !storedRedirect.startsWith("//")
-          ? storedRedirect
-          : "/";
+      const redirectTo = validateRedirectUrl(storedRedirect) || "/";
 
       // Validate OAuth callback parameters
       if (

@@ -6,7 +6,11 @@ import { LoginPage } from "./login-page";
 import { deleteAllMessages } from "./mailpit/mailpit";
 import { RegisterPage } from "./register-page";
 
-const TEST_USER_EMAIL = "testuser@example.com";
+const testUser = {
+  name: "Test User",
+  email: "testuser@example.com",
+  password: "TestPassword456!",
+};
 
 test.describe.serial(() => {
   test.beforeAll(async () => {
@@ -17,7 +21,7 @@ test.describe.serial(() => {
     // Clean up the test user
     await prisma.user.delete({
       where: {
-        email: TEST_USER_EMAIL,
+        email: testUser.email,
       },
     });
   });
@@ -36,10 +40,7 @@ test.describe.serial(() => {
 
     // Step 3: Complete registration
     const registerPage = new RegisterPage(page);
-    await registerPage.register({
-      name: "Test User",
-      email: TEST_USER_EMAIL,
-    });
+    await registerPage.register(testUser);
 
     await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
   });
@@ -59,7 +60,8 @@ test.describe.serial(() => {
     // Step 3: Complete lplogin
     const loginPage = new LoginPage(page);
     await loginPage.login({
-      email: TEST_USER_EMAIL,
+      email: testUser.email,
+      password: testUser.password,
     });
 
     // Step 4: Navigate back to the poll

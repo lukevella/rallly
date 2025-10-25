@@ -15,11 +15,11 @@ import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
+import { getSession } from "@/lib/auth";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
 import { featureFlagConfig } from "@/lib/feature-flags/config";
 import { LocaleSync } from "@/lib/locale/client";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
-import { auth } from "@/next-auth";
 import { TRPCProvider } from "@/trpc/client/provider";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { PostHogPageView } from "../posthog-page-view";
@@ -36,7 +36,7 @@ export const viewport: Viewport = {
 };
 
 async function loadData() {
-  const [session] = await Promise.all([auth()]);
+  const [session] = await Promise.all([getSession()]);
 
   const user = session?.user
     ? !session.user.isGuest
