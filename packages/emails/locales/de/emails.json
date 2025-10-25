@@ -37,7 +37,6 @@
   "newPoll_heading": "Neue Umfrage erstellt",
   "newPoll_button": "Umfrage verwalten",
   "newPoll_subject": "Lass uns einen Termin für {title} finden!",
-  "register_footer": "Sie erhalten diese E-Mail, weil eine Anfrage zur Registrierung eines Kontos bei <domain /> gestellt wurde. Wenn dies nicht Sie waren, ignorieren Sie bitte diese E-Mail.",
   "register_preview": "Dein 6-stelliger Code lautet: {code}",
   "register_heading": "Bestätige Deine E-Mail-Adresse",
   "register_text": "Bitte verwende den folgenden 6-stelligen Verifizierungscode zur Bestätigung Deiner E-Mail",
