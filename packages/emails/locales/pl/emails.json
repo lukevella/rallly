@@ -37,7 +37,6 @@
   "newPoll_heading": "Nowa ankieta utworzona",
   "newPoll_button": "Zarządzaj ankietą",
   "newPoll_subject": "Znaleźć datę dla {title}!",
-  "register_footer": "Otrzymujesz ten e-mail, ponieważ dokonano prośby o zarejestrowanie konta na <domain />. Jeśli to nie ty, zignoruj ten e-mail.",
   "register_preview": "Twój 6-cyfrowy kod to: {code}",
   "register_heading": "Zweryfikuj swój adres e-mail",
   "register_text": "Proszę użyć poniższego 6-cyfrowego kodu weryfikacyjnego, aby zweryfikować swój e-mail",
