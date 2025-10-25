@@ -38,8 +38,8 @@ export function NavUser({
       {isPending && <RouterLoadingIndicator />}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="flex h-auto w-full p-2" variant="ghost">
-            <OptimizedAvatarImage size="lg" src={image} name={name} />
+          <Button className="flex h-auto w-full gap-2 p-2" variant="ghost">
+            <OptimizedAvatarImage size="md" src={image} name={name} />
             <div className="flex-1 truncate text-left">
               <div className="font-medium">{name}</div>
               <div className="mt-0.5 truncate font-normal text-muted-foreground text-xs">
