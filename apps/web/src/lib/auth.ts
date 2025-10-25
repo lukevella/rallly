@@ -223,8 +223,17 @@ export const authLib = betterAuth({
     user: {
       create: {
         after: async (user) => {
-          // create a space for the user
-          await createSpace({ name: "Personal", ownerId: user.id });
+          // check if user exists in prisma
+          const existingUser = await prisma.user.findUnique({
+            where: {
+              id: user.id,
+            },
+          });
+
+          if (existingUser) {
+            // create a space for the user
+            await createSpace({ name: "Personal", ownerId: user.id });
+          }
 
           posthog?.capture({
             distinctId: user.id,
