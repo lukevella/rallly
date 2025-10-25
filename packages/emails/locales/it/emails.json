@@ -37,7 +37,6 @@
   "newPoll_heading": "Nuovo Sondaggio Creato",
   "newPoll_button": "Gestisci Sondaggio",
   "newPoll_subject": "Troviamo una data per {title}!",
-  "register_footer": "Hai ricevuto questa email perché è stata effettuata una richiesta di registrazione di un account su <domain />. Se non sei stato tu, ignora questa email.",
   "register_preview": "Il tuo codice a 6 cifre è: {code}",
   "register_heading": "Verifica il tuo indirizzo email",
   "register_text": "Si prega di utilizzare il seguente codice di verifica a 6 cifre per verificare la tua email",
