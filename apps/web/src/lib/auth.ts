@@ -249,8 +249,16 @@ export const authLib = betterAuth({
           // Merge legacy guest users into new user
           const legacySession = await legacyAuth();
 
-          if (legacySession?.user?.isGuest) {
-            await mergeGuestsIntoUser(session.userId, [legacySession.user.id]);
+          if (legacySession) {
+            if (legacySession.user?.isGuest) {
+              await mergeGuestsIntoUser(session.userId, [
+                legacySession.user.id,
+              ]);
+            }
+            // Delete legacy session
+            await legacySignOut({
+              redirect: false,
+            });
           }
 
           posthog?.capture({
