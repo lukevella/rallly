@@ -37,7 +37,6 @@
   "newPoll_heading": "Nueva encuesta creada",
   "newPoll_button": "Administrar encuesta",
   "newPoll_subject": "¡Busquemos una fecha para {title}!",
-  "register_footer": "Estás recibiendo este correo electrónico porque se realizó una solicitud para registrar una cuenta en <domain />. Si no fuiste tú, por favor, ignora este correo electrónico.",
   "register_preview": "Tu código de 6 dígitos es: {code}",
   "register_heading": "Verifica tu dirección de correo electrónico",
   "register_text": "Por favor, utiliza el siguiente código de verificación de 6 dígitos para verificar tu correo electrónico",
