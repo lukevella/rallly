@@ -37,7 +37,6 @@
   "newPoll_heading": "Ny afstemning oprettet",
   "newPoll_button": "Administrer afstemning",
   "newPoll_subject": "Lad os finde en dato for {title}!",
-  "register_footer": "Du modtager denne e-mail, fordi der blev anmodet om at registrere en konto på <domain />. Hvis det ikke var dig, bedes du ignorere denne e-mail.",
   "register_preview": "Din 6-cifrede kode er: {code}",
   "register_heading": "Bekræft din e-mail adresse",
   "register_text": "Brug venligst den følgende 6-cifrede verifikationskode til at verificere din e-mail",
