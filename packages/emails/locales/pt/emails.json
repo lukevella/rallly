@@ -37,7 +37,6 @@
   "newPoll_heading": "Nova Votação Criada",
   "newPoll_button": "Gerir Votação",
   "newPoll_subject": "Vamos encontrar uma data para {title}!",
-  "register_footer": "Você está a receber este correio eletrónico porque foi feita uma solicitação para registar uma conta em <domain />. Se não foi você, por favor, ignore este email.",
   "register_preview": "Seu código de 6 dígitos é: {code}",
   "register_heading": "Verifique o seu correio eletrónico",
   "register_text": "Por favor, use o seguinte código de verificação de 6 dígitos para verificar o seu endereço de correio eletrónico",
