@@ -239,7 +239,7 @@ export const authLib = betterAuth({
             distinctId: user.id,
             event: "register",
             properties: {
-              method: "sso",
+              method: user.lastLoginMethod,
               $set: {
                 name: user.name,
                 email: user.email,
