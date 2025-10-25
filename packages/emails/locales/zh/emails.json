@@ -37,7 +37,6 @@
   "newPoll_heading": "新投票已创建",
   "newPoll_button": "管理投票",
   "newPoll_subject": "让我们为 {title} 找个日期！",
-  "register_footer": "您收到此电子邮件是因为有人请求在<domain />上注册账户。如果这不是您，请忽略此电子邮件。",
   "register_preview": "您的6位代码是：{code}",
   "register_heading": "验证您的电子邮件地址",
   "register_text": "请使用以下6位验证码验证您的电子邮件",
@@ -62,5 +61,7 @@
   "abandoned_checkout_support": "如果您有任何关于 Rallly Pro 的问题或需要任何帮助，只需回复这封电子邮件。我来帮忙！",
   "abandoned_checkout_preview": "独家优惠：在你的第一年获得 {discount}% Rallly Pro折扣！",
   "abandoned_checkout_subject": "在第一年获取 {discount}%的折扣",
-  "abandoned_checkout_signoff": "向您致谢，"
+  "abandoned_checkout_signoff": "向您致谢，",
+  "license_key_plan": "方案",
+  "license_key_nextStepsHeading": "下一步"
 }
