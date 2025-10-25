@@ -37,7 +37,6 @@
   "newPoll_heading": "Nieuwe poll gemaakt",
   "newPoll_button": "Poll beheren",
   "newPoll_subject": "Laten we een datum vinden voor {title}!",
-  "register_footer": "Je ontvangt dit bericht omdat er een verzoek is gedaan om een account te registreren op <domain />. Als jij dit niet was, dan kun je dit bericht negeren.",
   "register_preview": "Je 6-cijferige code is: {code}",
   "register_heading": "Verifieer je e-mailadres",
   "register_text": "Gebruik de volgende 6-cijferige verificatiecode om je e-mailadres te verifiëren",
