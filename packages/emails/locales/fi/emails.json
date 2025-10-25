@@ -37,7 +37,6 @@
   "newPoll_heading": "Uusi kysely luotu",
   "newPoll_button": "Hallinnoi kyselyä",
   "newPoll_subject": "Etsitään päivämäärää {title}!",
-  "register_footer": "Saat tämän sähköpostin, koska tiliä varattiin <domain />. Jos tämä ei ollut sinä, voit ignoroida tämän viestin.",
   "register_preview": "6-numeroinen koodisi on: {code}",
   "register_heading": "Vahvista sähköpostiosoitteesi",
   "register_text": "Käytä seuraavaa 6-numerosta vahvistuskoodia vahvistaaksesi sähköpostiosoitteesi",
