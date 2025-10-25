@@ -82,5 +82,11 @@
   "spaceInvite_preview": "Du wurdest eingeladen, {spaceName} beizutreten",
   "spaceInvite_heading": "Du wurdest eingeladen!",
   "spaceInvite_button": "Einladung annehmen",
-  "spaceInvite_subject": "Du wurdest eingeladen, {spaceName} beizutreten"
+  "spaceInvite_subject": "Du wurdest eingeladen, {spaceName} beizutreten",
+  "resetPassword_button": "Passwort zurücksetzen",
+  "resetPassword_content2": "Wenn du das Zurücksetzen des Passworts nicht angefordert hast, kannst du diese E-Mail ignorieren. Dein Passwort ändert sich nicht, es sei denn, du erstellst ein neues. Wenn du diese Anfrage für verdächtig hältst, wenden dich an <a>{supportEmail}</a>.",
+  "resetPassword_preview": "Verwende diesen Link, um dein Passwort zurückzusetzen.",
+  "resetPassword_heading": "Passwort zurücksetzen",
+  "resetPassword_content": "Wir haben eine Anfrage zum Zurücksetzen deines Passworts erhalten. Klicke auf die Schaltfläche unten, um ein neues Passwort zu erstellen.",
+  "resetPassword_subject": "Passwort zurücksetzen"
 }
