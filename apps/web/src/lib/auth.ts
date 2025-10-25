@@ -92,7 +92,7 @@ export const authLib = betterAuth({
   },
   database: prismaAdapter(prisma, {
     provider: "postgresql",
-    transaction: true,
+    transaction: false, // when set to true, there is an issue where the after() hook is called before the user is actually created in the database
   }),
   plugins: [
     ...plugins,
