@@ -37,7 +37,6 @@
   "newPoll_heading": "Ny avstemning opprettet",
   "newPoll_button": "Administrer avstemning",
   "newPoll_subject": "La oss finne en dato for {title}!",
-  "register_footer": "Du mottar denne e-posten fordi en forespørsel ble gjort om å registrere en konto på <domain />. Hvis dette ikke var deg, vennligst ignorer denne e-posten.",
   "register_preview": "Din sekssifrede kode er: {code}",
   "register_heading": "Bekreft e-postadressen din",
   "register_text": "Vennligst bruk den følgende sekssifrede bekreftelseskoden for å bekrefte e-posten din",
@@ -46,5 +45,7 @@
   "common_viewOn": "Se på {domain}",
   "newComment_preview": "Gå til avstemningen din for å se hva de sa.",
   "newComment_heading": "Ny kommentar",
-  "changeEmailRequest_subject": "Bekreft din nye e-postadresse"
+  "changeEmailRequest_subject": "Bekreft din nye e-postadresse",
+  "license_key_plan": "Abonnement",
+  "license_key_licenseKey": "Lisensnøkkel"
 }
