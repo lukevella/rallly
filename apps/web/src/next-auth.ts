@@ -3,8 +3,6 @@ import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import NextAuth from "next-auth";
 import { env } from "@/env";
-import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
-import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
 import { GuestProvider } from "./auth/providers/guest";
 
 const { auth, handlers, signIn, signOut } = NextAuth({
@@ -67,45 +65,9 @@ const { auth, handlers, signIn, signOut } = NextAuth({
     },
   },
   callbacks: {
-    async signIn({ user, email, profile }) {
-      if (email?.verificationRequest) {
-        const isRegisteredUser =
-          (await prisma.user.count({
-            where: {
-              email: user.email as string,
-            },
-          })) > 0;
-        if (!isRegisteredUser) {
-          return "/login?error=EmailNotVerified";
-        }
-      }
-
-      if (user.banned) {
-        return "/login?error=Banned";
-      }
-
-      // Make sure email is allowed
-      const emailToTest = user.email || profile?.email;
-      if (emailToTest) {
-        if (isEmailBlocked(emailToTest) || (await isEmailBanned(emailToTest))) {
-          return "/login?error=EmailBlocked";
-        }
-      }
-
-      // If this is an existing registered user
-      if (user.id && user.role && user.email) {
-        // merge guest user into existing user
-        const session = await auth();
-        if (session?.user && !session.user.email) {
-          await mergeGuestsIntoUser(user.id, [session.user.id]);
-        }
-      }
-
-      return true;
-    },
     async jwt({ token }) {
       const userId = token.sub;
-      const isGuest = userId?.startsWith("guest-");
+      const isGuest = !token.email;
 
       if (userId && !isGuest) {
         const user = await prisma.user.findUnique({
