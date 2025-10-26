@@ -2,6 +2,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
 import NextAuth from "next-auth";
+import { env } from "@/env";
 import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
 import { GuestProvider } from "./auth/providers/guest";
@@ -10,7 +11,7 @@ const { auth, handlers, signIn, signOut } = NextAuth({
   session: {
     strategy: "jwt",
   },
-  secret: process.env.SECRET_PASSWORD,
+  secret: env.SECRET_PASSWORD,
   adapter: PrismaAdapter(prisma),
   providers: [GuestProvider],
   pages: {
