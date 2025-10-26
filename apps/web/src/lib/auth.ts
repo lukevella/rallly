@@ -112,13 +112,9 @@ export const authLib = betterAuth({
           // We're not actually using the sign-in type anymore since we just we have `autoSignInAfterVerification` enabled.
           // This lets us keep things a bit simpler since we share the same verification flow for both login and registration.
           case "sign-in":
-            await emailClient.sendTemplate("LoginEmail", {
+            await emailClient.sendTemplate("RegisterEmail", {
               to: email,
               props: {
-                magicLink: absoluteUrl("/auth/login", {
-                  code: otp,
-                  email,
-                }),
                 code: otp,
               },
             });
