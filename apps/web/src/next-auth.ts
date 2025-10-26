@@ -5,19 +5,18 @@ import NextAuth from "next-auth";
 import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
 import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
 import { GuestProvider } from "./auth/providers/guest";
-import { nextAuthConfig } from "./next-auth.config";
 
 const { auth, handlers, signIn, signOut } = NextAuth({
-  ...nextAuthConfig,
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.SECRET_PASSWORD,
   adapter: PrismaAdapter(prisma),
   providers: [GuestProvider],
   pages: {
     signIn: "/login",
     verifyRequest: "/login/verify",
     error: "/auth/error",
-  },
-  session: {
-    strategy: "jwt",
   },
   jwt: {
     maxAge: 60 * 60 * 24 * 60,
@@ -67,7 +66,6 @@ const { auth, handlers, signIn, signOut } = NextAuth({
     },
   },
   callbacks: {
-    ...nextAuthConfig.callbacks,
     async signIn({ user, email, profile }) {
       if (email?.verificationRequest) {
         const isRegisteredUser =
