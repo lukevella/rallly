@@ -40,7 +40,7 @@ export default async function LoginPage(props: {
 }) {
   const searchParams = await props.searchParams;
   const session = await getSession();
-  if (session && !session.user?.isGuest) {
+  if (session?.user && !session.user.isGuest) {
     return redirect("/");
   }
   const { isRegistrationEnabled, t } = await loadData();
