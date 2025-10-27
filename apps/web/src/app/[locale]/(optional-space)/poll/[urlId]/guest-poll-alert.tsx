@@ -6,15 +6,9 @@ import { LoginLink } from "@/components/login-link";
 import { RegisterLink } from "@/components/register-link";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
-import { usePoll } from "@/contexts/poll";
 
 export const GuestPollAlert = () => {
-  const poll = usePoll();
   const { user } = useUser();
-
-  if (poll.user) {
-    return null;
-  }
 
   if (user?.isGuest === false) {
     return null;
