@@ -29,8 +29,6 @@ export function PostHogIdentify({ distinctId }: { distinctId?: string }) {
   React.useEffect(() => {
     if (distinctId) {
       posthog?.identify(distinctId);
-    } else {
-      posthog?.reset();
     }
   }, [distinctId]);
   return null;

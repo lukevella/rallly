@@ -50,7 +50,9 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
                   );
                   break;
                 case "FORBIDDEN":
-                  signOut();
+                  signOut().then(() => {
+                    posthog?.reset();
+                  });
                   break;
                 default:
                   console.error(error);

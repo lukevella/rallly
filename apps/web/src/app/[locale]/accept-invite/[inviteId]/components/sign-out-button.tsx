@@ -1,5 +1,6 @@
 "use client";
 
+import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import React from "react";
 import { Trans } from "@/components/trans";
@@ -7,6 +8,7 @@ import { signOut } from "@/lib/auth-client";
 
 export function SignOutButton() {
   const [isPending, setIsPending] = React.useState(false);
+  const posthog = usePostHog();
   return (
     <Button
       variant="link"
@@ -14,6 +16,7 @@ export function SignOutButton() {
       onClick={async () => {
         setIsPending(true);
         await signOut();
+        posthog?.reset();
       }}
     >
       <Trans

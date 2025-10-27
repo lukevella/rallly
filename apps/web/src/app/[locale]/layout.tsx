@@ -79,7 +79,9 @@ export default async function Root({
             <TRPCProvider>
               <LazyMotion features={domAnimation}>
                 <PostHogProvider>
-                  <PostHogIdentify distinctId={user?.id} />
+                  <PostHogIdentify
+                    distinctId={user && !user.isGuest ? user.id : undefined}
+                  />
                   <PostHogPageView />
                   <TooltipProvider>
                     <UserProvider user={user ?? undefined}>

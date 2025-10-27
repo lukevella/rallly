@@ -1,4 +1,5 @@
 "use client";
+import { usePostHog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
@@ -30,6 +31,7 @@ import { useAuthenticatedUser } from "./user-provider";
 
 export const UserDropdown = ({ className }: { className?: string }) => {
   const { user } = useAuthenticatedUser();
+  const posthog = usePostHog();
   if (!user) return null;
   return (
     <DropdownMenu modal={false}>
@@ -123,6 +125,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         <DropdownMenuItem
           onClick={async () => {
             await signOut();
+            posthog?.reset();
           }}
           className="flex items-center gap-x-2"
         >
