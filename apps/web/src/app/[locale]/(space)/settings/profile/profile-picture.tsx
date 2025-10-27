@@ -32,7 +32,7 @@ function ProfilePictureUpload() {
     posthog?.capture("remove profile picture");
   };
 
-  if (!user) return null;
+  if (!user) return <div>You need to be logged in to see this page.</div>;
 
   return (
     <ImageUpload>

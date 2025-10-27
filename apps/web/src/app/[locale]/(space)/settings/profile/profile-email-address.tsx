@@ -35,7 +35,7 @@ export const ProfileEmailAddress = () => {
   const posthog = usePostHog();
   const form = useForm<EmailChangeFormData>({
     defaultValues: {
-      email: user.email,
+      email: user?.email,
     },
     resolver: zodResolver(emailChangeFormData),
   });
@@ -84,6 +84,11 @@ export const ProfileEmailAddress = () => {
   }, [posthog, t]);
 
   const { handleSubmit, formState, reset } = form;
+
+  if (!user) {
+    return <div>You need to be logged in to see this page.</div>;
+  }
+
   return (
     <div className="grid gap-y-4">
       <Form {...form}>

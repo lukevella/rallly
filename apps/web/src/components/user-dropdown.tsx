@@ -30,6 +30,7 @@ import { useAuthenticatedUser } from "./user-provider";
 
 export const UserDropdown = ({ className }: { className?: string }) => {
   const { user } = useAuthenticatedUser();
+  if (!user) return null;
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger

@@ -32,7 +32,7 @@ export const useUser = () => {
 export const useAuthenticatedUser = () => {
   const { user } = useUser();
   if (!user || user.isGuest) {
-    throw new Error("User is not defined");
+    return { user: null };
   }
 
   return { user };
