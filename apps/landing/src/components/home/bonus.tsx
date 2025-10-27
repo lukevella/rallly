@@ -12,7 +12,11 @@ import { getTranslation } from "@/i18n/server";
 
 export async function Bonus() {
   const { t } = await getTranslation();
-  const userCount = await prisma.user.count();
+  const userCount = await prisma.user.count({
+    where: {
+      isAnonymous: false,
+    },
+  });
   const roundedUserCount =
     userCount > 100000 ? Math.floor(userCount / 10000) * 10000 : userCount;
   return (
