@@ -1,6 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@rallly/database";
-import { posthog } from "@rallly/posthog/server";
 import NextAuth from "next-auth";
 import { env } from "@/env";
 import { GuestProvider } from "./auth/providers/guest";
@@ -25,43 +24,6 @@ const { auth, handlers, signIn, signOut } = NextAuth({
       options: {
         maxAge: 60 * 60 * 24 * 60,
       },
-    },
-  },
-  events: {
-    createUser({ user }) {
-      if (user.id) {
-        posthog?.capture({
-          distinctId: user.id,
-          event: "register",
-          properties: {
-            method: "sso",
-            $set: {
-              name: user.name,
-              email: user.email,
-              tier: "hobby",
-              timeZone: user.timeZone ?? undefined,
-              locale: user.locale ?? undefined,
-            },
-          },
-        });
-      }
-    },
-    signIn({ user, account }) {
-      if (user.id) {
-        posthog?.capture({
-          distinctId: user.id,
-          event: "login",
-          properties: {
-            method: account?.provider,
-            $set: {
-              name: user.name,
-              email: user.email,
-              timeZone: user.timeZone ?? undefined,
-              locale: user.locale ?? undefined,
-            },
-          },
-        });
-      }
     },
   },
   callbacks: {
