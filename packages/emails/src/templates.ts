@@ -4,7 +4,6 @@ import { EventCanceledEmail } from "./templates/event-canceled";
 import { FinalizeHostEmail } from "./templates/finalized-host";
 import { FinalizeParticipantEmail } from "./templates/finalized-participant";
 import { LicenseKeyEmail } from "./templates/license-key";
-import { LoginEmail } from "./templates/login";
 import { NewCommentEmail } from "./templates/new-comment";
 import { NewParticipantEmail } from "./templates/new-participant";
 import { NewParticipantConfirmationEmail } from "./templates/new-participant-confirmation";
@@ -17,7 +16,6 @@ import type { TemplateName } from "./types";
 const templates = {
   FinalizeHostEmail,
   FinalizeParticipantEmail,
-  LoginEmail,
   NewCommentEmail,
   NewParticipantEmail,
   NewParticipantConfirmationEmail,

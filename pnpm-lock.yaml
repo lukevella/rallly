@@ -196,9 +196,6 @@ importers:
       '@next/env':
         specifier: ^15.3.1
         version: 15.4.6
-      '@panva/hkdf':
-        specifier: ^1.2.1
-        version: 1.2.1
       '@prisma/client':
         specifier: ^6.8.2
         version: 6.8.2(prisma@6.8.2(typescript@5.8.3))(typescript@5.8.3)
@@ -340,9 +337,6 @@ importers:
       iron-session:
         specifier: ^6.3.1
         version: 6.3.1(express@4.21.2)(next@15.4.6(@babel/core@7.28.3)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
-      jose:
-        specifier: ^5.9.6
-        version: 5.10.0
       js-cookie:
         specifier: ^3.0.1
         version: 3.0.5

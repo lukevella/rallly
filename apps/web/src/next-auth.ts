@@ -1,38 +1,20 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@rallly/database";
-import { posthog } from "@rallly/posthog/server";
 import NextAuth from "next-auth";
-import type { Provider } from "next-auth/providers";
-import { isEmailBanned, isEmailBlocked } from "./auth/helpers/is-email-blocked";
-import { mergeGuestsIntoUser } from "./auth/helpers/merge-user";
-import { EmailProvider } from "./auth/providers/email";
-import { GoogleProvider } from "./auth/providers/google";
+import { env } from "@/env";
 import { GuestProvider } from "./auth/providers/guest";
-import { MicrosoftProvider } from "./auth/providers/microsoft";
-import { OIDCProvider } from "./auth/providers/oidc";
-import { RegistrationTokenProvider } from "./auth/providers/registration-token";
-import { nextAuthConfig } from "./next-auth.config";
 
 const { auth, handlers, signIn, signOut } = NextAuth({
-  ...nextAuthConfig,
+  session: {
+    strategy: "jwt",
+  },
+  secret: env.SECRET_PASSWORD,
   adapter: PrismaAdapter(prisma),
-  providers: [
-    RegistrationTokenProvider,
-    GuestProvider,
-    ...([
-      EmailProvider(),
-      GoogleProvider(),
-      OIDCProvider(),
-      MicrosoftProvider(),
-    ].filter(Boolean) as Provider[]),
-  ],
+  providers: [GuestProvider],
   pages: {
     signIn: "/login",
     verifyRequest: "/login/verify",
     error: "/auth/error",
-  },
-  session: {
-    strategy: "jwt",
   },
   jwt: {
     maxAge: 60 * 60 * 24 * 60,
@@ -44,84 +26,10 @@ const { auth, handlers, signIn, signOut } = NextAuth({
       },
     },
   },
-  events: {
-    createUser({ user }) {
-      if (user.id) {
-        posthog?.capture({
-          distinctId: user.id,
-          event: "register",
-          properties: {
-            method: "sso",
-            $set: {
-              name: user.name,
-              email: user.email,
-              tier: "hobby",
-              timeZone: user.timeZone ?? undefined,
-              locale: user.locale ?? undefined,
-            },
-          },
-        });
-      }
-    },
-    signIn({ user, account }) {
-      if (user.id) {
-        posthog?.capture({
-          distinctId: user.id,
-          event: "login",
-          properties: {
-            method: account?.provider,
-            $set: {
-              name: user.name,
-              email: user.email,
-              timeZone: user.timeZone ?? undefined,
-              locale: user.locale ?? undefined,
-            },
-          },
-        });
-      }
-    },
-  },
   callbacks: {
-    ...nextAuthConfig.callbacks,
-    async signIn({ user, email, profile }) {
-      if (email?.verificationRequest) {
-        const isRegisteredUser =
-          (await prisma.user.count({
-            where: {
-              email: user.email as string,
-            },
-          })) > 0;
-        if (!isRegisteredUser) {
-          return "/login?error=EmailNotVerified";
-        }
-      }
-
-      if (user.banned) {
-        return "/login?error=Banned";
-      }
-
-      // Make sure email is allowed
-      const emailToTest = user.email || profile?.email;
-      if (emailToTest) {
-        if (isEmailBlocked(emailToTest) || (await isEmailBanned(emailToTest))) {
-          return "/login?error=EmailBlocked";
-        }
-      }
-
-      // If this is an existing registered user
-      if (user.id && user.role && user.email) {
-        // merge guest user into existing user
-        const session = await auth();
-        if (session?.user && !session.user.email) {
-          await mergeGuestsIntoUser(user.id, [session.user.id]);
-        }
-      }
-
-      return true;
-    },
     async jwt({ token }) {
       const userId = token.sub;
-      const isGuest = userId?.startsWith("guest-");
+      const isGuest = !token.email;
 
       if (userId && !isGuest) {
         const user = await prisma.user.findUnique({
