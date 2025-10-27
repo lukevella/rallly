@@ -5,6 +5,7 @@ export async function canUserManagePoll(
   user: {
     id: string;
     isGuest: boolean;
+    isLegacyGuest: boolean;
   },
   poll: {
     userId?: string | null;
@@ -12,17 +13,17 @@ export async function canUserManagePoll(
     spaceId?: string | null;
   },
 ) {
-  if (user.isGuest) {
+  if (user.isLegacyGuest) {
     // guest user is owner
     return poll.guestId === user.id;
   }
 
-  if (poll.userId && !user.isGuest && poll.userId === user.id) {
+  if (poll.userId && poll.userId === user.id) {
     // user is owner
     return true;
   }
 
-  if (poll.spaceId && !user.isGuest) {
+  if (poll.spaceId) {
     const space = await prisma.spaceMember.findUnique({
       where: {
         spaceId_userId: {

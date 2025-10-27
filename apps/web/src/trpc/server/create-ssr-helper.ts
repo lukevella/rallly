@@ -16,6 +16,7 @@ async function createContext(): Promise<TRPCContext> {
           isGuest: session.user.isGuest,
           locale: session.user.locale ?? undefined,
           image: session.user.image ?? undefined,
+          isLegacyGuest: session.legacy && session.user.isGuest,
         }
       : undefined,
   };

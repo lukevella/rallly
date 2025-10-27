@@ -1,10 +1,10 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 import React from "react";
 import type { UserAbility } from "@/features/user/ability";
 import { defineAbilityFor } from "@/features/user/ability";
 import type { UserDTO } from "@/features/user/schema";
+import { authClient } from "@/lib/auth-client";
 import { isOwner } from "@/utils/permissions";
 import { useRequiredContext } from "./use-required-context";
 
@@ -51,9 +51,7 @@ export const UserProvider = ({
       user,
       createGuestIfNeeded: async () => {
         if (!user) {
-          await signIn("guest", {
-            redirect: false,
-          });
+          await authClient.signIn.anonymous();
           router.refresh();
         }
       },

@@ -1,5 +1,6 @@
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import {
+  anonymousClient,
   emailOTPClient,
   genericOAuthClient,
   inferAdditionalFields,
@@ -16,6 +17,7 @@ export const authClient = createAuthClient({
     emailOTPClient(),
     genericOAuthClient(),
     lastLoginMethodClient(),
+    anonymousClient(),
   ],
 });
 
