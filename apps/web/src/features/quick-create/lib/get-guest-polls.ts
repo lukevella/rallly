@@ -4,16 +4,15 @@ import { getSession } from "@/lib/auth";
 
 export async function getGuestPolls() {
   const session = await getSession();
-  const user = session?.user;
-  const guestId = !user?.email ? user?.id : null;
 
-  if (!guestId) {
+  if (session?.user?.isGuest !== true) {
     return [];
   }
 
   const recentlyCreatedPolls = await prisma.poll.findMany({
     where: {
-      guestId,
+      guestId: session.legacy ? session.user.id : undefined,
+      userId: session.legacy ? undefined : session.user.id,
       deleted: false,
     },
     select: {

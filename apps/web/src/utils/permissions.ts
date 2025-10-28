@@ -3,7 +3,7 @@ export function isOwner(
   user: { id: string; isGuest: boolean },
 ) {
   if (user.isGuest) {
-    return resource.guestId === user.id;
+    return resource.userId === user.id || resource.guestId === user.id;
   }
 
   return resource.userId === user.id;

@@ -15,6 +15,7 @@ declare module "next-auth" {
       timeFormat?: TimeFormat | null;
       weekStart?: number | null;
     } & DefaultSession["user"];
+    legacy?: boolean;
   }
 
   interface User extends DefaultUser {

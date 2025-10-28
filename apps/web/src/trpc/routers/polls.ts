@@ -99,6 +99,7 @@ export const polls = router({
       {} as Record<PollStatus, number>,
     );
   }),
+  /** @deprecated */
   infiniteList: privateProcedure
     .input(
       z.object({
@@ -111,7 +112,7 @@ export const polls = router({
       const { cursor, limit, status } = input;
       const polls = await prisma.poll.findMany({
         where: {
-          ...(ctx.user.isGuest
+          ...(ctx.user.isLegacyGuest
             ? { guestId: ctx.user.id }
             : { userId: ctx.user.id }),
           deletedAt: null,
@@ -242,7 +243,7 @@ export const polls = router({
           description: input.description,
           adminUrlId: adminToken,
           participantUrlId,
-          ...(ctx.user.isGuest
+          ...(ctx.user.isLegacyGuest
             ? { guestId: ctx.user.id }
             : { userId: ctx.user.id }),
           watchers: !ctx.user.isGuest

@@ -176,7 +176,9 @@ export const participants = router({
                 name: name,
                 email,
                 timeZone,
-                ...(user.isGuest ? { guestId: user.id } : { userId: user.id }),
+                ...(user.isLegacyGuest
+                  ? { guestId: user.id }
+                  : { userId: user.id }),
                 locale: user.locale ?? undefined,
               },
               include: {
@@ -260,7 +262,7 @@ export const participants = router({
             participantId: participant.id,
             hasEmail: !!email,
             totalResponses,
-            isCreator: ctx.user.isGuest
+            isCreator: ctx.user.isLegacyGuest
               ? participant.poll.guestId === ctx.user.id
               : participant.poll.userId === ctx.user.id,
           },

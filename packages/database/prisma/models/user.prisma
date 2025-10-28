@@ -54,6 +54,7 @@ model User {
   banExpires      DateTime?   @map("ban_expires")
   role            UserRole    @default(user)
   lastLoginMethod String?     @map("last_login_method")
+  isAnonymous     Boolean     @default(false) @map("anonymous")
 
   comments           Comment[]
   polls              Poll[]

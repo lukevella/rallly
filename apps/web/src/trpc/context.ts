@@ -3,6 +3,7 @@ type User = {
   isGuest: boolean;
   locale?: string;
   image?: string;
+  isLegacyGuest: boolean;
 };
 
 export type TRPCContext = {

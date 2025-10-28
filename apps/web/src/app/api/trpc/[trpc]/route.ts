@@ -25,11 +25,12 @@ const handler = async (req: NextRequest) => {
       const user = session?.user
         ? {
             id: session.user.id,
-            isGuest: !session.user.email,
+            isGuest: session.user.isGuest,
             locale: session.user.locale ?? undefined,
             image: session.user.image ?? undefined,
             getEmailClient: () =>
               getEmailClient(session.user?.locale ?? undefined),
+            isLegacyGuest: session.legacy && session.user.isGuest,
           }
         : undefined;
 
