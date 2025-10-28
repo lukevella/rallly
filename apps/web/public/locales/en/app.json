@@ -209,10 +209,7 @@
   "unsubscribeToastTitle": "You have disabled notifications",
   "unsubscribeToastDescription": "You will no longer receive notifications for this poll",
   "emailChangeSuccess": "Email changed successfully",
-  "emailChangeSuccessDescription": "Your email has been updated",
-  "emailChangeFailed": "Email change failed",
   "emailChangeInvalidToken": "The verification link is invalid or has expired. Please try again.",
-  "emailChangeError": "An error occurred while changing your email",
   "emailChangeRequestSent": "Verify your new email address",
   "emailChangeRequestSentDescription": "To complete the change, please check your email for a verification link.",
   "profileEmailAddress": "Email Address",
@@ -560,5 +557,6 @@
   "passwordStrengthStrong": "Strong",
   "passwordTooWeak": "Password is too weak. Please use a stronger password.",
   "resetPasswordButton": "Reset password",
-  "passwordStrength": "Password Strength"
+  "passwordStrength": "Password Strength",
+  "emailChangeInvalidUserId": "Please login with the same email address as the one you used to request the change."
 }

@@ -18,6 +18,8 @@ const alertVariants = cva(
         warning:
           "border-yellow-200 bg-yellow-50 text-yellow-900 has-[[data-slot=alert-description]]:text-yellow-800/90 [&>svg]:text-yellow-600",
         tip: "border-green-200 bg-green-50 text-green-900 has-[[data-slot=alert-description]]:text-green-800/90 [&>svg]:text-green-600",
+        success:
+          "border-green-200 bg-green-50 text-green-900 has-[[data-slot=alert-description]]:text-green-800/90 [&>svg]:text-green-600",
         note: "border-gray-200 bg-gray-50 text-gray-900 has-[[data-slot=alert-description]]:text-gray-700/90 [&>svg]:text-gray-600",
       },
     },
