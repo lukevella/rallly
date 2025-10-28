@@ -39,7 +39,7 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
   const quantity = subscriptionItem.quantity ?? 1;
 
   // Update the subscription in the database
-  await prisma.subscription.update({
+  const updatedSubscription = await prisma.subscription.update({
     where: {
       id: subscription.id,
     },
@@ -56,27 +56,41 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
       periodEnd: toDate(subscription.current_period_end),
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
     },
-  });
-
-  updateSpaceGroup({
-    spaceId: res.data.spaceId,
-    properties: {
-      seatCount: quantity,
-      tier: isActive ? "pro" : "hobby",
+    include: {
+      space: true,
     },
   });
 
-  posthog?.capture({
-    distinctId: res.data.userId,
-    event: "subscription change",
-    properties: {
-      type: event.type,
-      $set: {
+  if (updatedSubscription.space) {
+    updateSpaceGroup({
+      spaceId: updatedSubscription.space.id,
+      properties: {
+        name: updatedSubscription.space.name,
+        seatCount: quantity,
         tier: isActive ? "pro" : "hobby",
       },
-    },
-    groups: {
-      space: res.data.spaceId,
-    },
-  });
+    });
+
+    posthog?.capture({
+      distinctId: res.data.userId,
+      uuid: event.id,
+      event: "subscription change",
+      properties: {
+        type: event.type,
+        interval,
+        $set: {
+          tier: isActive ? "pro" : "hobby",
+        },
+      },
+      groups: {
+        space: res.data.spaceId,
+      },
+    });
+  } else {
+    console.error("Failed to update space group on subscription.updated", {
+      eventId: event.id,
+      subscriptionId: subscription.id,
+      spaceId: res.data.spaceId,
+    });
+  }
 }

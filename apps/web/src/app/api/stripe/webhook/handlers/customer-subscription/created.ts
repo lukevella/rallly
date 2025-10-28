@@ -1,5 +1,7 @@
 import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
+import { posthog } from "@rallly/posthog/server";
+import { updateSpaceGroup } from "@/features/space/analytics";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
 import {
   getExpandedSubscription,
@@ -38,7 +40,7 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
   const quantity = subscriptionItem.quantity ?? 1;
   // If user already has a subscription, update it or replace it
   // Update the existing subscription with new data
-  await prisma.subscription.upsert({
+  const updatedSubscription = await prisma.subscription.upsert({
     where: { id: subscription.id },
     create: {
       id: subscription.id,
@@ -74,5 +76,46 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
       spaceId,
     },
+    include: {
+      space: true,
+    },
   });
+
+  if (updatedSubscription.space) {
+    const space = await prisma.space.findUniqueOrThrow({
+      where: {
+        id: spaceId,
+      },
+    });
+
+    updateSpaceGroup({
+      spaceId,
+      properties: {
+        name: space?.name,
+        seatCount: quantity,
+        tier: isActive ? "pro" : "hobby",
+      },
+    });
+
+    posthog?.capture({
+      distinctId: userId,
+      uuid: event.id,
+      event: "upgrade",
+      properties: {
+        interval,
+        $set: {
+          tier: isActive ? "pro" : "hobby",
+        },
+      },
+      groups: {
+        space: spaceId,
+      },
+    });
+  } else {
+    console.error("Failed to update space group on subscription.created", {
+      eventId: event.id,
+      subscriptionId: subscription.id,
+      spaceId: spaceId,
+    });
+  }
 }

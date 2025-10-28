@@ -1,34 +1,9 @@
 import type { Stripe } from "@rallly/billing";
-import { stripe } from "@rallly/billing";
 import { posthog } from "@rallly/posthog/server";
 import { env } from "@/env";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
 import { licenseManager } from "@/features/licensing/server";
-import { subscriptionCheckoutMetadataSchema } from "@/features/subscription/schema";
 import { getEmailClient } from "@/utils/emails";
-
-async function handleSubscriptionCheckoutSessionCompleted(
-  checkoutSession: Stripe.Checkout.Session,
-) {
-  const { userId } = subscriptionCheckoutMetadataSchema.parse(
-    checkoutSession.metadata,
-  );
-
-  const subscription = await stripe.subscriptions.retrieve(
-    checkoutSession.subscription as string,
-  );
-
-  posthog?.capture({
-    distinctId: userId,
-    event: "upgrade",
-    properties: {
-      interval: subscription.items.data[0].price.recurring?.interval,
-      $set: {
-        tier: "pro",
-      },
-    },
-  });
-}
 
 async function handleSelfHostedCheckoutSessionCompleted(
   checkoutSession: Stripe.Checkout.Session,
@@ -109,7 +84,5 @@ export async function onCheckoutSessionCompleted(event: Stripe.Event) {
 
   if (checkoutSession.subscription === null) {
     await handleSelfHostedCheckoutSessionCompleted(checkoutSession);
-  } else {
-    await handleSubscriptionCheckoutSessionCompleted(checkoutSession);
   }
 }
