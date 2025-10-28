@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePostHog } from "@rallly/posthog/client";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import {
@@ -13,9 +12,8 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { toast } from "@rallly/ui/sonner";
-import Cookies from "js-cookie";
-import { InfoIcon } from "lucide-react";
+import { CheckCircleIcon, InfoIcon, XIcon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -32,7 +30,6 @@ type EmailChangeFormData = z.infer<typeof emailChangeFormData>;
 export const ProfileEmailAddress = () => {
   const { user } = useAuthenticatedUser();
   const requestEmailChange = trpc.user.requestEmailChange.useMutation();
-  const posthog = usePostHog();
   const form = useForm<EmailChangeFormData>({
     defaultValues: {
       email: user?.email,
@@ -41,47 +38,12 @@ export const ProfileEmailAddress = () => {
   });
   const { t } = useTranslation("app");
 
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+  const didEmailChange = searchParams.get("emailChanged") === "true";
+
   const [didRequestEmailChange, setDidRequestEmailChange] =
     React.useState(false);
-
-  React.useEffect(() => {
-    const success = Cookies.get("email-change-success");
-    const error = Cookies.get("email-change-error");
-
-    if (success) {
-      posthog.capture("email change completed");
-      toast.message(
-        t("emailChangeSuccess", {
-          defaultValue: "Email changed successfully",
-        }),
-        {
-          description: t("emailChangeSuccessDescription", {
-            defaultValue: "Your email has been updated",
-          }),
-        },
-      );
-    }
-
-    if (error) {
-      posthog.capture("email change failed", { error });
-      toast.error(
-        t("emailChangeFailed", {
-          defaultValue: "Email change failed",
-        }),
-        {
-          description:
-            error === "invalidToken"
-              ? t("emailChangeInvalidToken", {
-                  defaultValue:
-                    "The verification link is invalid or has expired. Please try again.",
-                })
-              : t("emailChangeError", {
-                  defaultValue: "An error occurred while changing your email",
-                }),
-        },
-      );
-    }
-  }, [posthog, t]);
 
   const { handleSubmit, formState, reset } = form;
 
@@ -95,7 +57,6 @@ export const ProfileEmailAddress = () => {
         <form
           onSubmit={handleSubmit(async (data) => {
             if (data.email !== user.email) {
-              posthog.capture("email change requested");
               const res = await requestEmailChange.mutateAsync({
                 email: data.email,
               });
@@ -145,6 +106,45 @@ export const ProfileEmailAddress = () => {
                     <Trans
                       i18nKey="emailChangeRequestSentDescription"
                       defaults="To complete the change, please check your email for a verification link."
+                    />
+                  </p>
+                </AlertDescription>
+              </Alert>
+            ) : null}
+            {didEmailChange ? (
+              <Alert variant="success">
+                <CheckCircleIcon />
+                <AlertDescription>
+                  <p>
+                    <Trans
+                      i18nKey="emailChangeSuccess"
+                      defaults="Email changed successfully"
+                    />
+                  </p>
+                </AlertDescription>
+              </Alert>
+            ) : null}
+            {error === "invalidToken" ? (
+              <Alert variant="destructive">
+                <XIcon />
+                <AlertDescription>
+                  <p>
+                    <Trans
+                      i18nKey="emailChangeInvalidToken"
+                      defaults="The verification link is invalid or has expired. Please try again."
+                    />
+                  </p>
+                </AlertDescription>
+              </Alert>
+            ) : null}
+            {error === "invalidUserId" ? (
+              <Alert variant="destructive">
+                <XIcon />
+                <AlertDescription>
+                  <p>
+                    <Trans
+                      i18nKey="emailChangeInvalidUserId"
+                      defaults="Please login with the same email address as the one you used to request the change."
                     />
                   </p>
                 </AlertDescription>

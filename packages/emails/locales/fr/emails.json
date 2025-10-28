@@ -12,7 +12,13 @@
   "finalizeParticipant_heading": "Date finale réservée !",
   "finalizeParticipant_content2": "Veuillez trouver ci-joint une invitation de calendrier pour cet événement.",
   "finalizeParticipant_subject": "Date réservée pour {title}",
+  "login_button": "Connectez-vous à {domain}",
   "login_content2": "Vous recevez cet e-mail parce qu'une demande a été faite pour se connecter à <domain />. Si ce n'était pas vous, contactez <a>{supportEmail}</a>.",
+  "login_preview": "Utilisez ce lien pour vous connecter sur cet appareil.",
+  "login_heading": "Connexion",
+  "login_content": "Entrez ce code de vérification à usage unique à 6 chiffres :",
+  "login_codeValid": "Ce code est valable pendant 15 minutes",
+  "login_subject": "{code} est votre code à 6 chiffres",
   "newComment_content": "<b>{authorName}</b> a commenté <b>{title}</b>.",
   "newComment_subject": "{authorName} a commenté {title}",
   "newParticipantConfirmation_content": "Votre réponse à <b>{title}</b> a été soumise.",
@@ -31,6 +37,7 @@
   "newPoll_heading": "Nouveau sondage créé",
   "newPoll_button": "Gérer le sondage",
   "newPoll_subject": "Trouvons une date pour {title} !",
+  "register_footer": "Vous recevez cet e-mail parce qu'une demande a été faite pour enregistrer un compte sur <domain />. Si ce n'était pas vous, veuillez ignorer cet e-mail.",
   "register_preview": "Votre code à 6 chiffres est : {code}",
   "register_heading": "Vérifiez votre e-mail",
   "register_text": "Veuillez utiliser le code de vérification à 6 chiffres suivant pour vérifier votre e-mail",
@@ -55,10 +62,5 @@
   "abandoned_checkout_support": "Si vous avez des questions à propos de Rallly Pro ou si vous avez besoin d'aide, répondez à cet e-mail. Je suis là pour vous aider !",
   "abandoned_checkout_preview": "Offre exclusive : Obtenez {discount}% de réduction sur votre première année de Rallly Pro!",
   "abandoned_checkout_subject": "Obtenez {discount}% de réduction sur votre première année de Rallly Pro",
-  "abandoned_checkout_signoff": "Cordialement,",
-  "license_key_plan": "Forfait",
-  "license_key_licenseKey": "Clé de licence",
-  "license_key_nextStepsHeading": "Étapes suivantes",
-  "eventCanceledPreview": "Événement annulé",
-  "eventCanceledHeading": "Événement annulé"
+  "abandoned_checkout_signoff": "Cordialement,"
 }

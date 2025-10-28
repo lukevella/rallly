@@ -12,7 +12,13 @@
   "finalizeParticipant_heading": "最终日期已预订！",
   "finalizeParticipant_content2": "请查收有关此活动的日历邀请。",
   "finalizeParticipant_subject": "预订的日期为 {title}",
+  "login_button": "登录到{domain}",
   "login_content2": "您收到此电子邮件是因为有人请求登录<domain />。如果这不是您，请联系<a>{supportEmail}</a>。",
+  "login_preview": "使用此链接在此设备上登录。",
+  "login_heading": "登入",
+  "login_content": "输入此一次性6位验证码：",
+  "login_codeValid": "此码有效期为15分钟",
+  "login_subject": "{code} 是您的6位代码",
   "newComment_content": "<b>{authorName}</b> 在<b>{title}</b>上评论了。",
   "newComment_subject": "{authorName} 对 {title} 进行了评论",
   "newParticipantConfirmation_content": "您对<b>{title}</b>的回复已提交。",
@@ -31,6 +37,7 @@
   "newPoll_heading": "新投票已创建",
   "newPoll_button": "管理投票",
   "newPoll_subject": "让我们为 {title} 找个日期！",
+  "register_footer": "您收到此电子邮件是因为有人请求在<domain />上注册账户。如果这不是您，请忽略此电子邮件。",
   "register_preview": "您的6位代码是：{code}",
   "register_heading": "验证您的电子邮件地址",
   "register_text": "请使用以下6位验证码验证您的电子邮件",
@@ -55,7 +62,5 @@
   "abandoned_checkout_support": "如果您有任何关于 Rallly Pro 的问题或需要任何帮助，只需回复这封电子邮件。我来帮忙！",
   "abandoned_checkout_preview": "独家优惠：在你的第一年获得 {discount}% Rallly Pro折扣！",
   "abandoned_checkout_subject": "在第一年获取 {discount}%的折扣",
-  "abandoned_checkout_signoff": "向您致谢，",
-  "license_key_plan": "方案",
-  "license_key_nextStepsHeading": "下一步"
+  "abandoned_checkout_signoff": "向您致谢，"
 }
