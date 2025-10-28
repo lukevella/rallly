@@ -76,5 +76,11 @@
   "spaceInvite_preview": "Meghívást kaptál, hogy csatlakozz ide: {spaceName}",
   "spaceInvite_heading": "Meghívást kaptál!",
   "spaceInvite_button": "Meghívás elfogadása",
-  "spaceInvite_subject": "Meghívtak, hogy csatlakozz ide: {spaceName}"
+  "spaceInvite_subject": "Meghívtak, hogy csatlakozz ide: {spaceName}",
+  "resetPassword_button": "Jelszó visszaállítása",
+  "resetPassword_content2": "Ha nem kértél jelszó visszaállítást, figyelmen kívül hagyhatod ezt az emailt. A jelszavad nem fog megváltozni, hacsak nem hozol létre egy újat. Ha ez a kérés gyanús, lépj kapcsolatba a <a>{supportEmail}</a> email címmel.",
+  "resetPassword_preview": "Használd ezt a linket a jelszó visszaállításához.",
+  "resetPassword_heading": "Állítsd vissza a jelszavad",
+  "resetPassword_content": "Kaptunk egy kérésd, hogy állítsuk vissza a jelszavad. Kattints az alábbi gombra egy új jelszó létrehozásához.",
+  "resetPassword_subject": "Jelszó visszaállítása"
 }
