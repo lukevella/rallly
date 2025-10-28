@@ -143,7 +143,7 @@ export const auth = router({
 
       if (ctx.user?.isGuest) {
         try {
-          await mergeGuestsIntoUser(user.id, [ctx.user.id]);
+          await mergeGuestsIntoUser(user.id, ctx.user.id);
         } catch (err) {
           Sentry.captureException(err);
         }

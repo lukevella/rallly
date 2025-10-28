@@ -18,16 +18,8 @@ const getActiveSpaceForUser = async ({ userId }: { userId: string }) => {
   return spaceMember?.spaceId;
 };
 
-export const mergeGuestsIntoUser = async (
-  userId: string,
-  guestIds: string[],
-) => {
+export const mergeGuestsIntoUser = async (userId: string, guestId: string) => {
   const spaceId = await getActiveSpaceForUser({ userId });
-  const guestId = guestIds[0];
-  if (!guestId) {
-    console.error(`User ${userId} has no active space or default space`);
-    return;
-  }
 
   try {
     await prisma.$transaction(async (tx) => {
