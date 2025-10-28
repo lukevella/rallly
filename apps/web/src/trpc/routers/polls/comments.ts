@@ -86,7 +86,9 @@ export const comments = router({
           content,
           pollId,
           authorName,
-          userId: ctx.user.id,
+          ...(ctx.user.isLegacyGuest
+            ? { guestId: ctx.user.id }
+            : { userId: ctx.user.id }),
         },
         select: {
           id: true,
