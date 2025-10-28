@@ -24,7 +24,7 @@ export const mergeGuestsIntoUser = async (
 ) => {
   const spaceId = await getActiveSpaceForUser({ userId });
   const guestId = guestIds[0];
-  if (!spaceId || !guestId) {
+  if (!guestId) {
     console.error(`User ${userId} has no active space or default space`);
     return;
   }
