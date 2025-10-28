@@ -50,7 +50,8 @@ export const UserProvider = ({
     return {
       user,
       createGuestIfNeeded: async () => {
-        if (!user) {
+        const isLegacyGuest = user?.id.startsWith("user-");
+        if (!user || isLegacyGuest) {
           await authClient.signIn.anonymous();
           router.refresh();
         }
