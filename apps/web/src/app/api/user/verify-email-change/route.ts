@@ -22,9 +22,9 @@ export const GET = async (request: NextRequest) => {
   const session = await getSession();
 
   if (!session?.user || session.user.isGuest) {
-    return NextResponse.redirect(
-      new URL(`/login?redirectTo=${request.url}`, request.url),
-    );
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirectTo", request.url);
+    return NextResponse.redirect(loginUrl);
   }
 
   const payload = await decryptToken<EmailChangePayload>(token);
