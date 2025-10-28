@@ -557,5 +557,6 @@
   "passwordStrengthStrong": "Stark",
   "passwordTooWeak": "Das Passwort ist zu schwach. Bitte verwende ein stärkeres Passwort.",
   "resetPasswordButton": "Passwort zurücksetzen",
-  "passwordStrength": "Passwortstärke"
+  "passwordStrength": "Passwortstärke",
+  "emailChangeInvalidUserId": "Bitte melde dich mit derselben E-Mail-Adresse an, die du für die Anfrage zur Änderung verwendet hast."
 }
