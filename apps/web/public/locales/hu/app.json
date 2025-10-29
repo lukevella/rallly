@@ -557,5 +557,6 @@
   "passwordStrengthStrong": "Erős",
   "passwordTooWeak": "A jelszó túl gyenge. Kérjük, használj erősebb jelszót.",
   "resetPasswordButton": "Jelszó visszaállítása",
-  "passwordStrength": "Jelszó erőssége"
+  "passwordStrength": "Jelszó erőssége",
+  "emailChangeInvalidUserId": "Kérjük, jelentkezz be ugyanazzal az email címmel, amelyet a változtatás kéréséhez használtál."
 }
