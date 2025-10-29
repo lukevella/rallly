@@ -76,5 +76,11 @@
   "spaceInvite_preview": "Você foi convidado a ingressar em {spaceName}",
   "spaceInvite_heading": "Você está convidado!",
   "spaceInvite_button": "Aceitar convite",
-  "spaceInvite_subject": "Você está convidado a ingressar em {spaceName}"
+  "spaceInvite_subject": "Você está convidado a ingressar em {spaceName}",
+  "resetPassword_button": "Redefinir Senha",
+  "resetPassword_content2": "Se você não solicitou uma redefinição de senha, ignore este e-mail. Sua senha não mudará a menos que você crie uma nova. Se esta solicitação for suspeita, contate <a>{supportEmail}</a>.",
+  "resetPassword_preview": "Use este link para redefinir sua senha.",
+  "resetPassword_heading": "Redefina sua senha",
+  "resetPassword_content": "Recebemos uma solicitação para redefinir sua senha. Clique no botão abaixo para criar uma nova senha.",
+  "resetPassword_subject": "Redefina sua senha"
 }
