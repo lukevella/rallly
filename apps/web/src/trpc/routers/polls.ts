@@ -473,6 +473,7 @@ export const polls = router({
             title: updatedPoll.title,
             hasLocation: !!updatedPoll.location,
             hasDescription: !!updatedPoll.description,
+            isGuest: ctx.user.isGuest,
           },
         });
       }
@@ -484,6 +485,7 @@ export const polls = router({
           pollId,
           properties: {
             optionCount: updatedPoll._count.options,
+            isGuest: ctx.user.isGuest,
           },
         });
       }
@@ -498,6 +500,7 @@ export const polls = router({
             hideParticipants: !!updatedPoll.hideParticipants,
             hideScores: !!updatedPoll.hideScores,
             requireParticipantEmail: !!updatedPoll.requireParticipantEmail,
+            isGuest: ctx.user.isGuest,
           },
         });
       }
@@ -523,6 +526,9 @@ export const polls = router({
         type: "poll_delete",
         userId: ctx.user.id,
         pollId,
+        properties: {
+          isGuest: ctx.user.isGuest,
+        },
       });
 
       revalidatePath("/", "layout");
@@ -1070,6 +1076,9 @@ export const polls = router({
         type: "poll_pause",
         pollId: input.pollId,
         userId: ctx.user.id,
+        properties: {
+          isGuest: ctx.user.isGuest,
+        },
       });
     }),
   duplicate: proProcedure
@@ -1157,6 +1166,9 @@ export const polls = router({
         type: "poll_resume",
         userId: ctx.user.id,
         pollId: input.pollId,
+        properties: {
+          isGuest: ctx.user.isGuest,
+        },
       });
     }),
 });

@@ -265,6 +265,7 @@ export const participants = router({
             isCreator: ctx.user.isLegacyGuest
               ? participant.poll.guestId === ctx.user.id
               : participant.poll.userId === ctx.user.id,
+            isGuest: ctx.user.isGuest,
           },
         });
 

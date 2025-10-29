@@ -79,12 +79,20 @@ export class AnalyticsService {
           break;
       }
 
+      const isGuest =
+        event.properties && "isGuest" in event.properties
+          ? event.properties.isGuest
+          : false;
+
       this.posthog.capture({
         distinctId: event.userId,
         event: event.type,
         properties: {
           poll_id: event.pollId,
           ...toSnakeCaseKeys(event.properties ?? {}),
+          // Prevent person profile creation for anonymous/guest users
+          // This reduces costs while still allowing event tracking
+          ...(isGuest ? { $process_person_profile: false } : {}),
         },
         groups: {
           poll: event.pollId,

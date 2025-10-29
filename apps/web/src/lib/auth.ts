@@ -280,10 +280,22 @@ export const authLib = betterAuth({
             });
           }
 
-          posthog?.capture({
-            distinctId: session.userId,
-            event: "login",
+          const user = await prisma.user.findUnique({
+            where: { id: session.userId },
+            select: { isAnonymous: true, lastLoginMethod: true },
           });
+
+          // Only track login events for non-anonymous users
+          // Anonymous users shouldn't trigger login events or create person profiles
+          if (user && !user.isAnonymous) {
+            posthog?.capture({
+              distinctId: session.userId,
+              event: "login",
+              properties: {
+                method: user.lastLoginMethod,
+              },
+            });
+          }
         },
       },
     },
