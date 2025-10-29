@@ -83,7 +83,7 @@
     "motion": "^12.6.2",
     "nanoid": "^5.0.9",
     "next": "^15.4.6",
-    "next-auth": "^5.0.0-beta.25",
+    "next-auth": "^5.0.0-beta.30",
     "next-safe-action": "^8.0.7",
     "php-serialize": "^4.1.1",
     "postcss": "^8.4.31",
