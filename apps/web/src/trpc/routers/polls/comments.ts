@@ -153,6 +153,7 @@ export const comments = router({
         pollId,
         properties: {
           commentId: newComment.id,
+          isGuest: ctx.user.isGuest,
         },
       });
 

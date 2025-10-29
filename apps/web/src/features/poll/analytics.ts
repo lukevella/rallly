@@ -69,6 +69,7 @@ export interface PollUpdateDetailsEvent extends BaseEventData {
     title: string;
     hasDescription: boolean;
     hasLocation: boolean;
+    isGuest: boolean;
   };
 }
 
@@ -76,6 +77,7 @@ export interface PollUpdateOptionsEvent extends BaseEventData {
   type: "poll_update_options";
   properties: {
     optionCount: number;
+    isGuest: boolean;
   };
 }
 
@@ -86,12 +88,15 @@ export interface PollUpdateSettingsEvent extends BaseEventData {
     hideParticipants: boolean;
     disableComments: boolean;
     requireParticipantEmail: boolean;
+    isGuest: boolean;
   };
 }
 
 export interface PollDeleteEvent extends BaseEventData {
   type: "poll_delete";
-  properties?: Record<string, never>; // No additional properties
+  properties?: {
+    isGuest: boolean;
+  };
 }
 
 export interface PollFinalizeEvent extends BaseEventData {
@@ -109,10 +114,16 @@ export interface PollReopenEvent extends BaseEventData {
 
 export interface PollPauseEvent extends BaseEventData {
   type: "poll_pause";
+  properties?: {
+    isGuest: boolean;
+  };
 }
 
 export interface PollResumeEvent extends BaseEventData {
   type: "poll_resume";
+  properties?: {
+    isGuest: boolean;
+  };
 }
 
 export interface PollWatchEvent extends BaseEventData {
@@ -130,6 +141,7 @@ export interface PollResponseSubmitEvent extends BaseEventData {
     hasEmail: boolean;
     totalResponses: number;
     isCreator: boolean;
+    isGuest: boolean;
   };
 }
 
@@ -152,6 +164,7 @@ export interface PollCommentAddEvent extends BaseEventData {
   type: "poll_comment_add";
   properties: {
     commentId: string;
+    isGuest: boolean;
   };
 }
 
