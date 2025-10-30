@@ -26,6 +26,7 @@ import { getTotalSeatsForSpace } from "@/features/space/utils";
 import { getUserHasNoAccounts } from "@/features/user/queries";
 import { getTranslation } from "@/i18n/server";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { FeedbackAlert } from "./feedback-alert";
 import { PasswordSetupAlert } from "./password-setup-alert";
 
@@ -75,6 +76,8 @@ export default async function Page() {
     hasNoAccounts,
   } = await loadData();
 
+  const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
+
   return (
     <PageContainer>
       <PageHeader>
@@ -84,7 +87,7 @@ export default async function Page() {
       </PageHeader>
       <PageContent className="space-y-8">
         <div className="space-y-4">
-          {hasNoAccounts ? <PasswordSetupAlert /> : null}
+          {hasNoAccounts && isEmailLoginEnabled ? <PasswordSetupAlert /> : null}
           <IfCloudHosted>
             <FeedbackAlert />
           </IfCloudHosted>
