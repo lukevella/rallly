@@ -12,13 +12,7 @@
   "finalizeParticipant_heading": "Slutdatum bokat!",
   "finalizeParticipant_content2": "En kalenderinbjudan för detta evenemang bifogas.",
   "finalizeParticipant_subject": "Datum bokat för {title}",
-  "login_button": "Logga in på {domain}",
   "login_content2": "Du får detta e-postmeddelande eftersom en begäran gjordes för att logga in på <domain />. Om detta inte var du kan du kontakta <a>{supportEmail}</a>.",
-  "login_preview": "Använd denna länk för att logga in på denna enhet.",
-  "login_heading": "Logga in",
-  "login_content": "Ange denna 6-siffrig engångskod för verifiering:",
-  "login_codeValid": "Denna kod är giltig i 15 minuter",
-  "login_subject": "{code} är din 6-siffriga kod",
   "newComment_content": "<b>{authorName}</b> har kommenterat på <b>{title}</b>.",
   "newComment_subject": "{authorName} har kommenterat på {title}",
   "newParticipantConfirmation_content": "Ditt svar på <b>{title}</b> har skickats.",
@@ -37,7 +31,6 @@
   "newPoll_heading": "Ny förfrågan skapad",
   "newPoll_button": "Hantera förfrågan",
   "newPoll_subject": "Låt oss hitta ett datum för {title}!",
-  "register_footer": "Du får detta e-postmeddelande eftersom en begäran gjordes för att registrera ett konto på <domain />. Om detta inte var du, vänligen ignorera detta e-postmeddelande.",
   "register_preview": "Din 6-siffriga kod är: {code}",
   "register_heading": "Bekräfta din e-postadress",
   "register_text": "Vänligen använd följande 6-siffriga verifieringskod för att verifiera din e-post",
@@ -62,5 +55,6 @@
   "abandoned_checkout_support": "Om du har några frågor om Rallly Pro eller behöver hjälp med något alls, svara bara på detta mejl. Jag är här för att hjälpa till!",
   "abandoned_checkout_preview": "Exklusivt erbjudande: Få {discount}% rabatt på ditt första år av Rallly Pro!",
   "abandoned_checkout_subject": "Få {discount}% rabatt på ditt första år av Rallly Pro",
-  "abandoned_checkout_signoff": "Vänliga hälsningar,"
+  "abandoned_checkout_signoff": "Vänliga hälsningar,",
+  "license_key_plan": "Plan"
 }

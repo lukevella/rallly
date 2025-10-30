@@ -302,5 +302,7 @@
   "confirmSpaceName": "Saisissez le nom de l'espace pour confirmer :",
   "addSeats": "{count, plural, one {Add # Seat} other {Add # Seats}}",
   "removeSeats": "{count, plural, one {Remove # Seat} other {Remove # Seats}}",
-  "memberCount": "{count, plural, =0 {No members} one {1 member} other {# members}}"
+  "memberCount": "{count, plural, =0 {Aucun membre} one {1 membre} other {# membres}}",
+  "dismissPasswordSetup": "Ne plus afficher",
+  "invalidEmail": "Veuillez saisir une adresse e-mail valide"
 }
