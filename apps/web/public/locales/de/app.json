@@ -558,5 +558,6 @@
   "passwordTooWeak": "Das Passwort ist zu schwach. Bitte verwende ein stärkeres Passwort.",
   "resetPasswordButton": "Passwort zurücksetzen",
   "passwordStrength": "Passwortstärke",
-  "emailChangeInvalidUserId": "Bitte melde dich mit derselben E-Mail-Adresse an, die du für die Anfrage zur Änderung verwendet hast."
+  "emailChangeInvalidUserId": "Bitte melde dich mit derselben E-Mail-Adresse an, die du für die Anfrage zur Änderung verwendet hast.",
+  "ssoAuthenticationOnly": "Die Authentifizierung wird über Single Sign-On (SSO) verwaltet. Die Passwortverwaltung ist nicht verfügbar."
 }
