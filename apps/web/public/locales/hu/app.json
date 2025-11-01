@@ -558,5 +558,6 @@
   "passwordTooWeak": "A jelszó túl gyenge. Kérjük, használj erősebb jelszót.",
   "resetPasswordButton": "Jelszó visszaállítása",
   "passwordStrength": "Jelszó erőssége",
-  "emailChangeInvalidUserId": "Kérjük, jelentkezz be ugyanazzal az email címmel, amelyet a változtatás kéréséhez használtál."
+  "emailChangeInvalidUserId": "Kérjük, jelentkezz be ugyanazzal az email címmel, amelyet a változtatás kéréséhez használtál.",
+  "ssoAuthenticationOnly": "A hitelesítést a Single Sign-On (SSO) kezeli. A jelszókezelés nem elérhető."
 }
