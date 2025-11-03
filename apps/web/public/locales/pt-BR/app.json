@@ -558,5 +558,6 @@
   "passwordTooWeak": "A senha é muito fraca. Por favor, use uma senha mais forte.",
   "resetPasswordButton": "Redefinir Senha",
   "passwordStrength": "Força da senha",
-  "emailChangeInvalidUserId": "Por favor, faça login com o mesmo endereço de e-mail que você usou para solicitar a alteração."
+  "emailChangeInvalidUserId": "Por favor, faça login com o mesmo endereço de e-mail que você usou para solicitar a alteração.",
+  "ssoAuthenticationOnly": "A autenticação é gerenciada através de Login Único (SSO). Gerenciamento de senha não está disponível."
 }
