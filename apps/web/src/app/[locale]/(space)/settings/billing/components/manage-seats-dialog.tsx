@@ -135,11 +135,7 @@ export function ManageSeatsDialog({
   const canRemoveSeats = newSeatCount >= usedSeats;
   const hasChanges = seatDelta !== 0;
 
-  const { execute: updateSeats, isPending } = useSafeAction(updateSeatsAction, {
-    onSuccess: ({ data }) => {
-      window.location.href = data.portalSessionUrl;
-    },
-  });
+  const { execute: updateSeats, isPending } = useSafeAction(updateSeatsAction);
 
   const handleUpdate = async () => {
     updateSeats({ seatDelta });

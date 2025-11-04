@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getSpaceSubscription } from "@/features/billing/data";
 import { createStripeSubscriptionUpdateConfirmation } from "@/features/billing/utils";
@@ -65,24 +66,24 @@ export const updateSeatsAction = spaceActionClient
       });
     }
 
-    try {
-      const portalSessionUrl = await createStripeSubscriptionUpdateConfirmation(
-        {
-          customerId: ctx.user.customerId,
-          newSeatCount,
-          subscriptionId: subscription.id,
-          subscriptionItemId: subscription.subscriptionItemId,
-        },
-      );
+    let portalSessionUrl: string | undefined;
 
-      return {
-        portalSessionUrl,
-      };
+    try {
+      portalSessionUrl = await createStripeSubscriptionUpdateConfirmation({
+        customerId: ctx.user.customerId,
+        newSeatCount,
+        subscriptionId: subscription.id,
+        subscriptionItemId: subscription.subscriptionItemId,
+      });
     } catch (error) {
       throw new AppError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to create billing portal session",
         cause: error,
       });
+    } finally {
+      if (portalSessionUrl) {
+        redirect(portalSessionUrl);
+      }
     }
   });
