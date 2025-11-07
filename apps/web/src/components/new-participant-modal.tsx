@@ -90,7 +90,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
 
   const isEmailRequired = poll.requireParticipantEmail;
   const { timezone } = useTimezone();
-  const { user, createGuestIfNeeded } = useUser();
+  const { user } = useUser();
   const isLoggedIn = user && !user.isGuest;
   const { register, setError, formState, handleSubmit } =
     useForm<NewParticipantFormData>({
@@ -111,7 +111,6 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
     <form
       onSubmit={handleSubmit(async (data) => {
         try {
-          await createGuestIfNeeded();
           const newParticipant = await addParticipant.mutateAsync({
             name: data.name,
             votes: props.votes,

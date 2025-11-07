@@ -16,7 +16,6 @@ import useFormPersist from "react-hook-form-persist";
 import { useUnmount } from "react-use";
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
 import type { NewEventData } from "./forms";
 import { PollDetailsForm, PollOptionsForm } from "./forms";
@@ -38,7 +37,6 @@ export interface CreatePollPageProps {
 
 export const CreatePoll: React.FunctionComponent = () => {
   const router = useRouter();
-  const { createGuestIfNeeded } = useUser();
   const form = useForm<NewEventData>({
     defaultValues: {
       title: "",
@@ -74,7 +72,6 @@ export const CreatePoll: React.FunctionComponent = () => {
       <form
         onSubmit={form.handleSubmit(async (formData) => {
           const title = required(formData?.title);
-          await createGuestIfNeeded();
           await createPoll.mutateAsync(
             {
               title: title,

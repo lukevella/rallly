@@ -8,6 +8,7 @@ import superjson from "superjson";
 import { getCurrentUserSpace } from "@/auth/data";
 import { AnalyticsService } from "@/features/analytics/service";
 import { isQuickCreateEnabled } from "@/features/quick-create";
+import { authLib } from "@/lib/auth";
 import { isSelfHosted } from "@/utils/constants";
 import type { TRPCContext } from "./context";
 
@@ -61,9 +62,24 @@ export const possiblyPublicProcedure = procedureWithAnalytics.use(
 // creating a guest user if needed
 export const requireUserMiddleware = middleware(async ({ ctx, next }) => {
   if (!ctx.user) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "This method requires a user",
+    const res = await authLib.api.signInAnonymous();
+
+    if (!res) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Failed to create guest user",
+      });
+    }
+
+    return next({
+      ctx: {
+        user: {
+          id: res.user.id,
+          isGuest: true,
+          locale: ctx.locale,
+          isLegacyGuest: false,
+        },
+      },
     });
   }
 
