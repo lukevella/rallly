@@ -54,7 +54,7 @@
     "@upstash/ratelimit": "^1.2.1",
     "@vercel/functions": "^2.0.0",
     "@vercel/kv": "^3.0.0",
-    "ai": "^5.0.41",
+    "ai": "^5.0.52",
     "arctic": "^3.7.0",
     "autoprefixer": "^10.4.13",
     "better-auth": "^1.3.31",
