@@ -29,6 +29,7 @@ export async function createUserInDb({
       data: {
         name: "Personal",
         ownerId: user.id,
+        tier: "hobby"
       },
     });
 
