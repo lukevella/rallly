@@ -47,11 +47,11 @@ export async function createUserInDb({
 export async function createSpaceInDb({
   name,
   ownerId,
-  tier = "pro",
+  tier
 }: {
   name: string;
   ownerId: string;
-  tier?: SpaceTier;
+  tier: SpaceTier;
 }) {
   return prisma.space.create({
     data: {
