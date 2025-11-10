@@ -45,13 +45,8 @@ app.get("/delete-inactive-polls", async (c) => {
         { spaceId: null },
         {
           space: {
-            subscription: null,
-          },
-        },
-        {
-          space: {
-            subscription: {
-              active: false,
+            tier: {
+              not: "pro",
             },
           },
         },

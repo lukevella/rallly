@@ -1,5 +1,5 @@
 import type { Page } from "@playwright/test";
-import type { UserRole } from "@rallly/database";
+import type { SpaceTier, UserRole } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
 import { LoginPage } from "./login-page";
@@ -29,6 +29,7 @@ export async function createUserInDb({
       data: {
         name: "Personal",
         ownerId: user.id,
+        tier: "hobby"
       },
     });
 
@@ -44,34 +45,20 @@ export async function createUserInDb({
   });
 }
 
-export async function createSpaceWithSubscription({
+export async function createSpaceInDb({
   name,
   ownerId,
-  subscriptionId = "sub_test",
+  tier
 }: {
   name: string;
   ownerId: string;
-  subscriptionId?: string;
+  tier: SpaceTier;
 }) {
-  return await prisma.space.create({
+  return prisma.space.create({
     data: {
       name,
       ownerId,
-      subscription: {
-        create: {
-          id: subscriptionId,
-          priceId: "price_test",
-          amount: 1000,
-          status: "active",
-          active: true,
-          subscriptionItemId: "si_test",
-          currency: "USD",
-          interval: "month",
-          periodStart: new Date(),
-          periodEnd: dayjs().add(30, "day").toDate(),
-          userId: ownerId,
-        },
-      },
+      tier,
     },
   });
 }

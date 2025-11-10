@@ -28,30 +28,11 @@ async function createUser({
         create: {
           id: space.id,
           name: space.name,
+          tier: space.isPro ? "pro" : "hobby",
         },
       },
     },
   });
-
-  if (space.isPro) {
-    await prisma.subscription.create({
-      data: {
-        id: "sub-1",
-        spaceId: space.id,
-        userId: user.id,
-        subscriptionItemId: "subitem-1",
-        quantity: 1,
-        active: true,
-        amount: 700,
-        currency: "USD",
-        interval: "month",
-        periodStart: new Date(),
-        periodEnd: dayjs().add(1, "month").toDate(),
-        priceId: "price_1M6ZJZGZJZJZJZJZJZJZJZJZ",
-        status: "active",
-      },
-    });
-  }
 
   await prisma.spaceMember.create({
     data: {
@@ -83,6 +64,7 @@ async function createTeamSpace() {
       id: "team-space-1",
       name: "Acme Corp Team",
       ownerId: teamOwner.id,
+      tier: "pro",
     },
   });
 
@@ -164,25 +146,6 @@ async function createTeamSpace() {
       },
     }),
   ]);
-
-  // Add Pro subscription for the team space
-  await prisma.subscription.create({
-    data: {
-      id: "team-sub-1",
-      spaceId: teamSpace.id,
-      userId: teamOwner.id,
-      subscriptionItemId: "team-subitem-1",
-      quantity: 5, // Team of 5
-      active: true,
-      amount: 2800, // $28 for team plan
-      currency: "USD",
-      interval: "month",
-      periodStart: new Date(),
-      periodEnd: dayjs().add(1, "month").toDate(),
-      priceId: "price_team_monthly",
-      status: "active",
-    },
-  });
 
   console.info(`✓ Seeded team space with ${[teamOwner, ...teamMembers].length} members`);
   

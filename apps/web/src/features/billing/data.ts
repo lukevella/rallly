@@ -2,10 +2,18 @@ import { prisma } from "@rallly/database";
 import type { SpaceTier } from "@/features/space/schema";
 
 export async function getSpaceSubscription(spaceId: string) {
-  const subscription = await prisma.subscription.findUnique({
+  const subscription = await prisma.subscription.findFirst({
     where: {
       spaceId,
     },
+    orderBy: [
+      {
+        active: "desc",
+      },
+      {
+        createdAt: "desc",
+      },
+    ],
   });
 
   if (!subscription) {

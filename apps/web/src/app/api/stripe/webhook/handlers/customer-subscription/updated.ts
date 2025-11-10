@@ -29,6 +29,10 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     throw new Error("Invalid subscription metadata");
   }
 
+  const { userId, spaceId } = res.data;
+
+  const tier = isActive ? "pro" : "hobby";
+
   const subscriptionItem = subscription.items.data[0];
 
   if (!subscriptionItem) {
@@ -39,58 +43,60 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
   const quantity = subscriptionItem.quantity ?? 1;
 
   // Update the subscription in the database
-  const updatedSubscription = await prisma.subscription.update({
-    where: {
-      id: subscription.id,
-    },
-    data: {
-      active: isActive,
-      priceId,
-      currency,
-      interval,
-      subscriptionItemId,
-      quantity,
-      amount,
-      status: subscription.status,
-      periodStart: toDate(subscription.current_period_start),
-      periodEnd: toDate(subscription.current_period_end),
-      cancelAtPeriodEnd: subscription.cancel_at_period_end,
-    },
-    include: {
-      space: true,
+  await prisma.$transaction(async (tx) => {
+    await tx.subscription.update({
+      where: {
+        id: subscription.id,
+      },
+      data: {
+        active: isActive,
+        priceId,
+        currency,
+        interval,
+        subscriptionItemId,
+        quantity,
+        amount,
+        status: subscription.status,
+        periodStart: toDate(subscription.current_period_start),
+        periodEnd: toDate(subscription.current_period_end),
+        cancelAtPeriodEnd: subscription.cancel_at_period_end,
+      },
+      include: {
+        space: true,
+      },
+    });
+
+    await tx.space.update({
+      where: {
+        id: spaceId,
+      },
+      data: {
+        tier,
+      },
+    });
+  });
+
+  updateSpaceGroup({
+    spaceId,
+    properties: {
+      seatCount: quantity,
+      tier,
     },
   });
 
-  if (updatedSubscription.space) {
-    updateSpaceGroup({
-      spaceId: updatedSubscription.space.id,
-      properties: {
-        name: updatedSubscription.space.name,
-        seatCount: quantity,
-        tier: isActive ? "pro" : "hobby",
+  posthog?.capture({
+    distinctId: userId,
+    uuid: event.id,
+    event: "subscription change",
+    properties: {
+      type: event.type,
+      interval,
+      $set: {
+        tier,
       },
-    });
-
-    posthog?.capture({
-      distinctId: res.data.userId,
-      uuid: event.id,
-      event: "subscription change",
-      properties: {
-        type: event.type,
-        interval,
-        $set: {
-          tier: isActive ? "pro" : "hobby",
-        },
-      },
-      groups: {
-        space: res.data.spaceId,
-      },
-    });
-  } else {
-    console.error("Failed to update space group on subscription.updated", {
-      eventId: event.id,
-      subscriptionId: subscription.id,
-      spaceId: res.data.spaceId,
-    });
-  }
+    },
+    groups: {
+      space: spaceId,
+    },
+  });
 }

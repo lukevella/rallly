@@ -47,11 +47,7 @@ export const getCurrentUserSpace = async () => {
           id: true,
           name: true,
           ownerId: true,
-          subscription: {
-            select: {
-              active: true,
-            },
-          },
+          tier: true,
         },
       },
     },
@@ -70,7 +66,7 @@ export const getCurrentUserSpace = async () => {
       id: spaceMember.space.id,
       ownerId: spaceMember.space.ownerId,
       name: spaceMember.space.name,
-      subscription: spaceMember.space.subscription,
+      tier: spaceMember.space.tier,
       role: spaceMember.role,
     }),
   };
@@ -120,9 +116,12 @@ export const requireSpace = cache(async () => {
     },
     include: {
       space: {
-        include: {
-          subscription: true,
-          members: true,
+        select: {
+          id: true,
+          ownerId: true,
+          name: true,
+          tier: true,
+          image: true,
         },
       },
     },
@@ -136,7 +135,7 @@ export const requireSpace = cache(async () => {
     id: spaceMember.space.id,
     ownerId: spaceMember.space.ownerId,
     name: spaceMember.space.name,
-    subscription: spaceMember.space.subscription,
+    tier: spaceMember.space.tier,
     role: spaceMember.role,
     image: spaceMember.space.image,
   });

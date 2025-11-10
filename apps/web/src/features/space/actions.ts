@@ -120,8 +120,10 @@ export const deleteSpaceAction = spaceActionClient
       where: {
         id: parsedInput.spaceId,
       },
-      include: {
-        subscription: true,
+      select: {
+        id: true,
+        ownerId: true,
+        tier: true,
       },
     });
 
@@ -140,7 +142,7 @@ export const deleteSpaceAction = spaceActionClient
     }
 
     // Check if space has an active subscription
-    if (space.subscription?.active) {
+    if (space.tier === "pro") {
       throw new AppError({
         code: "FORBIDDEN",
         message:
