@@ -44,11 +44,11 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
 
   // Update the subscription in the database
   await prisma.$transaction(async (tx) => {
-    await tx.subscription.update({
+    await tx.subscription.upsert({
       where: {
         id: subscription.id,
       },
-      data: {
+      update: {
         active: isActive,
         priceId,
         currency,
@@ -61,8 +61,21 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
         periodEnd: toDate(subscription.current_period_end),
         cancelAtPeriodEnd: subscription.cancel_at_period_end,
       },
-      include: {
-        space: true,
+      create: {
+        id: subscription.id,
+        userId,
+        spaceId,
+        active: isActive,
+        priceId,
+        currency,
+        interval,
+        subscriptionItemId,
+        quantity,
+        amount,
+        status: subscription.status,
+        periodStart: toDate(subscription.current_period_start),
+        periodEnd: toDate(subscription.current_period_end),
+        cancelAtPeriodEnd: subscription.cancel_at_period_end,
       },
     });
 
