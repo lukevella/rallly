@@ -40,46 +40,95 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
   const quantity = subscriptionItem.quantity ?? 1;
   // If user already has a subscription, update it or replace it
   // Update the existing subscription with new data
-  const updatedSubscription = await prisma.subscription.upsert({
-    where: { id: subscription.id },
-    create: {
-      id: subscription.id,
-      userId,
-      active: isActive,
-      quantity,
-      subscriptionItemId,
-      priceId,
-      currency,
-      interval,
-      amount,
-      status: subscription.status,
-      createdAt: toDate(subscription.created),
-      periodStart: toDate(subscription.current_period_start),
-      periodEnd: toDate(subscription.current_period_end),
-      cancelAtPeriodEnd: subscription.cancel_at_period_end,
-      spaceId,
-    },
-    update: {
-      id: subscription.id,
-      userId,
-      active: isActive,
-      subscriptionItemId,
-      quantity,
-      priceId,
-      currency,
-      interval,
-      amount,
-      status: subscription.status,
-      createdAt: toDate(subscription.created),
-      periodStart: toDate(subscription.current_period_start),
-      periodEnd: toDate(subscription.current_period_end),
-      cancelAtPeriodEnd: subscription.cancel_at_period_end,
-      spaceId,
-    },
-    include: {
-      space: true,
-    },
-  });
+  const { subscription: updatedSubscription, hasActiveSubscription } =
+    await prisma.$transaction(async (tx) => {
+      if (isActive && spaceId) {
+        await tx.subscription.updateMany({
+          where: {
+            spaceId,
+            active: true,
+            NOT: {
+              id: subscription.id,
+            },
+          },
+          data: {
+            active: false,
+          },
+        });
+      }
+
+      const subscriptionRecord = await tx.subscription.upsert({
+        where: { id: subscription.id },
+        create: {
+          id: subscription.id,
+          userId,
+          active: isActive,
+          quantity,
+          subscriptionItemId,
+          priceId,
+          currency,
+          interval,
+          amount,
+          status: subscription.status,
+          createdAt: toDate(subscription.created),
+          periodStart: toDate(subscription.current_period_start),
+          periodEnd: toDate(subscription.current_period_end),
+          cancelAtPeriodEnd: subscription.cancel_at_period_end,
+          spaceId,
+        },
+        update: {
+          id: subscription.id,
+          userId,
+          active: isActive,
+          subscriptionItemId,
+          quantity,
+          priceId,
+          currency,
+          interval,
+          amount,
+          status: subscription.status,
+          createdAt: toDate(subscription.created),
+          periodStart: toDate(subscription.current_period_start),
+          periodEnd: toDate(subscription.current_period_end),
+          cancelAtPeriodEnd: subscription.cancel_at_period_end,
+          spaceId,
+        },
+        include: {
+          space: true,
+        },
+      });
+
+      if (spaceId) {
+        const activeSubscription = await tx.subscription.findFirst({
+          where: {
+            spaceId,
+            active: true,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        await tx.space.update({
+          where: {
+            id: spaceId,
+          },
+          data: {
+            tier: activeSubscription ? "pro" : "hobby",
+          },
+        });
+
+        return {
+          subscription: subscriptionRecord,
+          hasActiveSubscription: Boolean(activeSubscription),
+        };
+      }
+
+      return {
+        subscription: subscriptionRecord,
+        hasActiveSubscription: subscriptionRecord.active,
+      };
+    });
 
   if (updatedSubscription.space) {
     const space = await prisma.space.findUniqueOrThrow({
@@ -93,7 +142,7 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
       properties: {
         name: space?.name,
         seatCount: quantity,
-        tier: isActive ? "pro" : "hobby",
+        tier: hasActiveSubscription ? "pro" : "hobby",
       },
     });
 
@@ -104,7 +153,7 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
       properties: {
         interval,
         $set: {
-          tier: isActive ? "pro" : "hobby",
+          tier: hasActiveSubscription ? "pro" : "hobby",
         },
       },
       groups: {

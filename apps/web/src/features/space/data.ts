@@ -1,5 +1,8 @@
 import { accessibleBy } from "@casl/prisma";
-import type { SpaceMemberRole as DBSpaceMemberRole } from "@rallly/database";
+import type {
+  SpaceMemberRole as DBSpaceMemberRole,
+  SpaceTier as DBSpaceTier,
+} from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { cache } from "react";
 import { requireSpace, requireUser } from "@/auth/data";
@@ -35,14 +38,6 @@ function createMemberDTO(member: {
   } satisfies MemberDTO;
 }
 
-function getSpaceTier(space: {
-  subscription: {
-    active: boolean;
-  } | null;
-}) {
-  return isSelfHosted ? "pro" : space.subscription?.active ? "pro" : "hobby";
-}
-
 export async function getSpaceSeatCount(spaceId: string) {
   return await prisma.spaceMember.count({
     where: {
@@ -57,15 +52,13 @@ export function createSpaceDTO(space: {
   name: string;
   role: DBSpaceMemberRole;
   image?: string | null;
-  subscription: {
-    active: boolean;
-  } | null;
+  tier: DBSpaceTier;
 }) {
   return {
     id: space.id,
     name: space.name,
     ownerId: space.ownerId,
-    tier: getSpaceTier(space),
+    tier: isSelfHosted ? "pro" : space.tier,
     role: fromDBRole(space.role),
     image: space.image ?? undefined,
   } satisfies SpaceDTO;
@@ -81,11 +74,7 @@ export const loadSpaces = cache(async () => {
       name: true,
       ownerId: true,
       image: true,
-      subscription: {
-        select: {
-          active: true,
-        },
-      },
+      tier: true,
       members: {
         where: {
           userId: user.id,
@@ -112,7 +101,7 @@ export const loadSpaces = cache(async () => {
         id: space.id,
         name: space.name,
         ownerId: space.ownerId,
-        tier: space.subscription?.active ? "pro" : "hobby",
+        tier: isSelfHosted ? "pro" : space.tier,
         role: fromDBRole(role),
         image: space.image ?? undefined,
       } satisfies SpaceDTO;
@@ -134,9 +123,10 @@ export const loadSpace = cache(async ({ id }: { id: string }) => {
 
 export const loadSubscription = cache(async () => {
   const space = await requireSpace();
-  const subscription = await prisma.subscription.findUnique({
+  const subscription = await prisma.subscription.findFirst({
     where: {
       spaceId: space.id,
+      active: true,
     },
     select: {
       id: true,

@@ -1,15 +1,16 @@
 model Space {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
   image     String?
-  ownerId   String   @map("owner_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  ownerId   String    @map("owner_id")
+  tier      SpaceTier @default(hobby)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
 
   owner           User             @relation("UserSpaces", fields: [ownerId], references: [id], onDelete: Cascade)
   polls           Poll[]
   scheduledEvents ScheduledEvent[]
-  subscription    Subscription?    @relation("SpaceToSubscription")
+  subscriptions   Subscription[]   @relation("SpaceToSubscription")
 
   members SpaceMember[]
 
@@ -22,6 +23,13 @@ model Space {
 enum SpaceMemberRole {
   ADMIN
   MEMBER
+}
+
+enum SpaceTier {
+  hobby
+  pro
+
+  @@map("space_tiers")
 }
 
 model SpaceMember {

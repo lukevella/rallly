@@ -39,27 +39,76 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
   const quantity = subscriptionItem.quantity ?? 1;
 
   // Update the subscription in the database
-  const updatedSubscription = await prisma.subscription.update({
-    where: {
-      id: subscription.id,
-    },
-    data: {
-      active: isActive,
-      priceId,
-      currency,
-      interval,
-      subscriptionItemId,
-      quantity,
-      amount,
-      status: subscription.status,
-      periodStart: toDate(subscription.current_period_start),
-      periodEnd: toDate(subscription.current_period_end),
-      cancelAtPeriodEnd: subscription.cancel_at_period_end,
-    },
-    include: {
-      space: true,
-    },
-  });
+  const { subscription: updatedSubscription, hasActiveSubscription } =
+    await prisma.$transaction(async (tx) => {
+      const updated = await tx.subscription.update({
+        where: {
+          id: subscription.id,
+        },
+        data: {
+          active: isActive,
+          priceId,
+          currency,
+          interval,
+          subscriptionItemId,
+          quantity,
+          amount,
+          status: subscription.status,
+          periodStart: toDate(subscription.current_period_start),
+          periodEnd: toDate(subscription.current_period_end),
+          cancelAtPeriodEnd: subscription.cancel_at_period_end,
+        },
+        include: {
+          space: true,
+        },
+      });
+
+      if (isActive && updated.spaceId) {
+        await tx.subscription.updateMany({
+          where: {
+            spaceId: updated.spaceId,
+            active: true,
+            NOT: {
+              id: updated.id,
+            },
+          },
+          data: {
+            active: false,
+          },
+        });
+      }
+
+      if (updated.spaceId) {
+        const activeSubscription = await tx.subscription.findFirst({
+          where: {
+            spaceId: updated.spaceId,
+            active: true,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        await tx.space.update({
+          where: {
+            id: updated.spaceId,
+          },
+          data: {
+            tier: activeSubscription ? "pro" : "hobby",
+          },
+        });
+
+        return {
+          subscription: updated,
+          hasActiveSubscription: Boolean(activeSubscription),
+        };
+      }
+
+      return {
+        subscription: updated,
+        hasActiveSubscription: updated.active,
+      };
+    });
 
   if (updatedSubscription.space) {
     updateSpaceGroup({
@@ -67,7 +116,7 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
       properties: {
         name: updatedSubscription.space.name,
         seatCount: quantity,
-        tier: isActive ? "pro" : "hobby",
+        tier: hasActiveSubscription ? "pro" : "hobby",
       },
     });
 
@@ -79,7 +128,7 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
         type: event.type,
         interval,
         $set: {
-          tier: isActive ? "pro" : "hobby",
+          tier: hasActiveSubscription ? "pro" : "hobby",
         },
       },
       groups: {

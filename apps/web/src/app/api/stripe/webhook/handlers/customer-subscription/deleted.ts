@@ -2,16 +2,21 @@ import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
-import { z } from "zod";
-
-const subscriptionMetadataSchema = z.object({
-  userId: z.string(),
-});
+import { subscriptionMetadataSchema } from "@/features/subscription/schema";
 
 export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
   const subscription = await stripe.subscriptions.retrieve(
     (event.data.object as Stripe.Subscription).id,
   );
+
+  const existingSubscription = await prisma.subscription.findUnique({
+    where: {
+      id: subscription.id,
+    },
+    select: {
+      spaceId: true,
+    },
+  });
 
   // void any unpaid invoices
   const invoices = await stripe.invoices.list({
@@ -30,6 +35,31 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     },
   });
 
+  let hasActiveSubscription = false;
+
+  if (existingSubscription?.spaceId) {
+    const activeSubscription = await prisma.subscription.findFirst({
+      where: {
+        spaceId: existingSubscription.spaceId,
+        active: true,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    hasActiveSubscription = Boolean(activeSubscription);
+
+    await prisma.space.update({
+      where: {
+        id: existingSubscription.spaceId,
+      },
+      data: {
+        tier: activeSubscription ? "pro" : "hobby",
+      },
+    });
+  }
+
   const { userId } = subscriptionMetadataSchema.parse(subscription.metadata);
 
   posthog?.capture({
@@ -37,7 +67,7 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     event: "subscription cancel",
     properties: {
       $set: {
-        tier: "hobby",
+        tier: hasActiveSubscription ? "pro" : "hobby",
       },
     },
   });

@@ -53,11 +53,7 @@ function defineAbilityForUser(
   cannot("delete", "User", {
     spaces: {
       some: {
-        subscription: {
-          is: {
-            active: true,
-          },
-        },
+        tier: "pro",
       },
     },
   });

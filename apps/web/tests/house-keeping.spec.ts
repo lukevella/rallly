@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
-import { createUserInDb, createSpaceWithSubscription, createTestPoll } from "./test-utils";
+import { createUserInDb, createSpaceInDb, createTestPoll } from "./test-utils";
 
 /**
  * This test suite tests the house-keeping API endpoints:
@@ -71,10 +71,10 @@ test.describe("House-keeping API", () => {
     createdUserIds.push(spaceOwner.id);
 
     // Create a space with an active subscription
-    const paidSpace = await createSpaceWithSubscription({
+    const paidSpace = await createSpaceInDb({
       name: "Paid Space",
       ownerId: spaceOwner.id,
-      subscriptionId: "sub_test_paid",
+      tier: "pro",
     });
 
     // Create test polls - These should be marked as deleted (free space, old, no future dates)
