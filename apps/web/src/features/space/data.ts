@@ -121,29 +121,6 @@ export const loadSpace = cache(async ({ id }: { id: string }) => {
   return space;
 });
 
-export const loadSubscription = cache(async () => {
-  const space = await requireSpace();
-  const subscription = await prisma.subscription.findFirst({
-    where: {
-      spaceId: space.id,
-      active: true,
-    },
-    select: {
-      id: true,
-      active: true,
-      amount: true,
-      currency: true,
-      interval: true,
-      status: true,
-      quantity: true,
-      periodEnd: true,
-      cancelAtPeriodEnd: true,
-    },
-  });
-
-  return subscription;
-});
-
 export const loadPaymentMethods = cache(async () => {
   const user = await requireUser();
   const paymentMethods = await prisma.paymentMethod.findMany({
