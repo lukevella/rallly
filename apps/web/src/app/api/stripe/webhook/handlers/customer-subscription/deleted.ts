@@ -9,15 +9,6 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     (event.data.object as Stripe.Subscription).id,
   );
 
-  const existingSubscription = await prisma.subscription.findUnique({
-    where: {
-      id: subscription.id,
-    },
-    select: {
-      spaceId: true,
-    },
-  });
-
   // void any unpaid invoices
   const invoices = await stripe.invoices.list({
     subscription: subscription.id,
@@ -28,46 +19,37 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     await stripe.invoices.voidInvoice(invoice.id);
   }
 
-  // delete the subscription from the database
-  await prisma.subscription.delete({
-    where: {
-      id: subscription.id,
-    },
-  });
+  const { userId, spaceId } = subscriptionMetadataSchema.parse(
+    subscription.metadata,
+  );
 
-  let hasActiveSubscription = false;
-
-  if (existingSubscription?.spaceId) {
-    const activeSubscription = await prisma.subscription.findFirst({
+  await prisma.$transaction(async (tx) => {
+    await tx.subscription.update({
       where: {
-        spaceId: existingSubscription.spaceId,
-        active: true,
-      },
-      select: {
-        id: true,
-      },
-    });
-
-    hasActiveSubscription = Boolean(activeSubscription);
-
-    await prisma.space.update({
-      where: {
-        id: existingSubscription.spaceId,
+        id: subscription.id,
       },
       data: {
-        tier: activeSubscription ? "pro" : "hobby",
+        active: false,
+        status: "canceled",
       },
     });
-  }
 
-  const { userId } = subscriptionMetadataSchema.parse(subscription.metadata);
+    await tx.space.update({
+      where: {
+        id: spaceId,
+      },
+      data: {
+        tier: "hobby",
+      },
+    });
+  });
 
   posthog?.capture({
     distinctId: userId,
     event: "subscription cancel",
     properties: {
       $set: {
-        tier: hasActiveSubscription ? "pro" : "hobby",
+        tier: "hobby",
       },
     },
   });
