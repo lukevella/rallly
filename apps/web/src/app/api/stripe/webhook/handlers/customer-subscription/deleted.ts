@@ -2,6 +2,7 @@ import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { posthog } from "@rallly/posthog/server";
+import { updateSpaceGroup } from "@/features/space/analytics";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
 
 export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
@@ -44,6 +45,13 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     });
   });
 
+  updateSpaceGroup({
+    spaceId,
+    properties: {
+      tier: "hobby",
+    },
+  });
+
   posthog?.capture({
     distinctId: userId,
     event: "subscription cancel",
@@ -51,6 +59,9 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
       $set: {
         tier: "hobby",
       },
+    },
+    groups: {
+      space: spaceId,
     },
   });
 }
