@@ -3,16 +3,16 @@ enum CredentialType {
 }
 
 model Credential {
-  id                String           @id @default(cuid())
-  userId            String           @map("user_id")
+  id                String         @id @default(cuid())
+  userId            String         @map("user_id")
   provider          String
-  providerAccountId String           @map("provider_account_id")
+  providerAccountId String         @map("provider_account_id")
   type              CredentialType
-  secret            String           @map("secret")
+  secret            String         @map("secret")
   scopes            String[]
-  expiresAt         DateTime?        @map("expires_at")
-  createdAt         DateTime         @default(now()) @map("created_at")
-  updatedAt         DateTime         @updatedAt @map("updated_at")
+  expiresAt         DateTime?      @map("expires_at")
+  createdAt         DateTime       @default(now()) @map("created_at")
+  updatedAt         DateTime       @updatedAt @map("updated_at")
 
   // Relationships
   calendarConnections CalendarConnection[]
@@ -24,18 +24,17 @@ model Credential {
   @@map("credentials")
 }
 
-
 model CalendarConnection {
-  id                String                   @id @default(cuid())
-  userId            String                   @map("user_id")
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
   provider          String
-  integrationId     String                   @map("integration_id")
-  providerAccountId String                   @map("provider_account_id")
+  integrationId     String  @map("integration_id")
+  providerAccountId String  @map("provider_account_id")
   email             String
-  displayName       String?                  @map("display_name")
-  
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
+  displayName       String? @map("display_name")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relationships
   credential        Credential         @relation(fields: [credentialId], references: [id], onDelete: Cascade)
@@ -54,28 +53,28 @@ model ProviderCalendar {
 
   // Provider's calendar data - common fields across all providers
   providerCalendarId String  @map("provider_calendar_id")
-  name               String 
+  name               String
   isPrimary          Boolean @default(false) @map("primary")
   timeZone           String? @map("time_zone")
 
   // Selection and sync preferences  
-  isSelected   Boolean @default(false) @map("selected")
+  isSelected Boolean @default(false) @map("selected")
 
   // Provider state tracking
-  isDeleted Boolean @default(false) @map("deleted")
+  isDeleted  Boolean @default(false) @map("deleted")
   isWritable Boolean @default(false) @map("writable")
 
   // Provider-specific metadata stored as JSON
   providerData Json? @map("provider_data")
 
   // Timestamps
-  lastSyncedAt DateTime  @default(now()) @map("last_synced_at")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
+  lastSyncedAt DateTime @default(now()) @map("last_synced_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   // Relationships
-  calendarConnection CalendarConnection @relation(fields: [calendarConnectionId], references: [id], onDelete: Cascade)
-  userDefaultDestination User[] @relation("UserDefaultDestinationCalendar")
+  calendarConnection     CalendarConnection @relation(fields: [calendarConnectionId], references: [id], onDelete: Cascade)
+  userDefaultDestination User[]             @relation("UserDefaultDestinationCalendar")
 
   // Indexes and constraints
   @@unique([calendarConnectionId, providerCalendarId], name: "connection_calendar_unique")
