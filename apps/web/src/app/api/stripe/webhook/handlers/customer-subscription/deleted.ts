@@ -20,9 +20,13 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     await stripe.invoices.voidInvoice(invoice.id);
   }
 
-  const { userId, spaceId } = subscriptionMetadataSchema.parse(
-    subscription.metadata,
-  );
+  const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
+  
+  if (!res.success) {
+    throw new Error("Invalid subscription metadata");
+  }
+  
+  const { userId, spaceId } = res.data;
 
   await prisma.$transaction(async (tx) => {
     await tx.subscription.update({
