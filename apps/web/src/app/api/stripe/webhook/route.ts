@@ -1,15 +1,12 @@
 import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
-import { posthog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
-import { waitUntil } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { isSelfHosted } from "@/utils/constants";
-import { withPosthog } from "@/utils/posthog";
 import { getEventHandler } from "./handlers";
 
-export const POST = withPosthog(async (request: NextRequest) => {
+export const POST = async (request: NextRequest) => {
   if (isSelfHosted) {
     return NextResponse.json(
       { error: "This endpoint is not available on self-hosted instances" },
@@ -54,10 +51,6 @@ export const POST = withPosthog(async (request: NextRequest) => {
 
     await handler(event);
 
-    if (posthog) {
-      waitUntil(posthog.flush());
-    }
-
     return NextResponse.json({ received: true });
   } catch (err) {
     Sentry.captureException(err);
@@ -68,4 +61,4 @@ export const POST = withPosthog(async (request: NextRequest) => {
       { status: 400 },
     );
   }
-});
+};
