@@ -22,6 +22,7 @@ export function absoluteUrl(
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL ??
     getVercelUrl() ??
+    (typeof window !== "undefined" ? window.location.origin : null) ??
     `http://localhost:${port}`;
 
   const url = new URL(subpath, baseUrl);
