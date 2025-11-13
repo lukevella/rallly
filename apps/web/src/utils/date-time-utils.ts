@@ -155,3 +155,19 @@ export const expectTimeOption = (d: DateTimeOption): TimeOption => {
   }
   return d;
 };
+
+export function isDateTodayOrFuture(date: Date | string | number): boolean {
+  const now = new Date();
+  const d = new Date(date);
+
+  const isSameDay =
+    d.getFullYear() === now.getFullYear() &&
+    d.getMonth() === now.getMonth() &&
+    d.getDate() === now.getDate();
+
+  if (isSameDay) {
+    return true;
+  }
+
+  return d > now;
+}

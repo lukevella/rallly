@@ -20,6 +20,7 @@ import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
+import { isDateTodayOrFuture } from "@/utils/date-time-utils";
 
 const formSchema = z.object({
   mode: z.enum(["new", "edit", "view"]),
@@ -41,8 +42,13 @@ export const useVotingForm = () => {
   const { participants } = useParticipants();
   const form = useFormContext<VotingFormValues>();
 
+  const hasValidDate = options.length > 0
+    ? isDateTodayOrFuture(options[0].startTime)
+    : false;
+
   return {
     ...form,
+    hasValidDate,
     newParticipant: () => {
       form.reset({
         mode: "new",

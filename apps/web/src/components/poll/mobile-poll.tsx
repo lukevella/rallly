@@ -206,6 +206,7 @@ const MobilePoll: React.FunctionComponent = () => {
                 type="submit"
                 variant="primary"
                 loading={formState.isSubmitting}
+                disabled={!votingForm.hasValidDate}
               >
                 {selectedParticipantId ? t("save") : t("continue")}
               </Button>
