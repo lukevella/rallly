@@ -1,4 +1,3 @@
-import { absoluteUrl } from "@rallly/utils/absolute-url";
 import {
   anonymousClient,
   emailOTPClient,
@@ -8,10 +7,11 @@ import {
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import { signOut as nextAuthSignOut } from "next-auth/react";
+import { env } from "@/env";
 import type { Auth } from "@/lib/auth";
 
 export const authClient = createAuthClient({
-  baseURL: absoluteUrl("/api/better-auth"),
+  baseURL: `${env.NEXT_PUBLIC_BASE_URL}/api/better-auth`,
   plugins: [
     inferAdditionalFields<Auth>(),
     emailOTPClient(),

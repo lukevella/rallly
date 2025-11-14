@@ -1,5 +1,8 @@
 import { createEnv } from "@t3-oss/env-nextjs";
+import { env as runtimeEnv } from "next-runtime-env";
 import { z } from "zod";
+
+const vercelUrl = process.env.NEXT_PUBLIC_VERCEL_URL;
 
 export const env = createEnv({
   /*
@@ -106,7 +109,7 @@ export const env = createEnv({
    * You'll get type errors if these are not prefixed with NEXT_PUBLIC_.
    */
   client: {
-    NEXT_PUBLIC_BASE_URL: z.url().optional(),
+    NEXT_PUBLIC_BASE_URL: z.url(),
     NEXT_PUBLIC_POSTHOG_API_KEY: z.string().optional(),
     NEXT_PUBLIC_POSTHOG_API_HOST: z.url().optional(),
     NEXT_PUBLIC_SELF_HOSTED: z.enum(["true", "false"]).optional(),
@@ -149,10 +152,12 @@ export const env = createEnv({
     S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
     S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
     S3_REGION: process.env.S3_REGION,
-    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
-    NEXT_PUBLIC_POSTHOG_API_KEY: process.env.NEXT_PUBLIC_POSTHOG_API_KEY,
-    NEXT_PUBLIC_POSTHOG_API_HOST: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
-    NEXT_PUBLIC_SELF_HOSTED: process.env.NEXT_PUBLIC_SELF_HOSTED,
+    NEXT_PUBLIC_BASE_URL:
+      runtimeEnv("NEXT_PUBLIC_BASE_URL") ??
+      (vercelUrl ? `https://${vercelUrl}` : undefined),
+    NEXT_PUBLIC_POSTHOG_API_KEY: runtimeEnv("NEXT_PUBLIC_POSTHOG_API_KEY"),
+    NEXT_PUBLIC_POSTHOG_API_HOST: runtimeEnv("NEXT_PUBLIC_POSTHOG_API_HOST"),
+    NEXT_PUBLIC_SELF_HOSTED: runtimeEnv("NEXT_PUBLIC_SELF_HOSTED"),
     SUPPORT_EMAIL: process.env.SUPPORT_EMAIL,
     NOREPLY_EMAIL: process.env.NOREPLY_EMAIL,
     NOREPLY_EMAIL_NAME: process.env.NOREPLY_EMAIL_NAME,

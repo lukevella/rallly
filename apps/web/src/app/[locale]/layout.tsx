@@ -6,6 +6,7 @@ import { TooltipProvider } from "@rallly/ui/tooltip";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { PublicEnvScript } from "next-runtime-env";
 import type React from "react";
 
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
@@ -72,6 +73,9 @@ export default async function Root({
 
   return (
     <html lang={locale} className={inter.className}>
+      <head>
+        <PublicEnvScript />
+      </head>
       <body>
         <FeatureFlagsProvider value={featureFlagConfig}>
           <Toaster />
