@@ -371,13 +371,14 @@ const DesktopPoll: React.FunctionComponent = () => {
                             type="submit"
                             variant="primary"
                             form="voting-form"
-                            className={!votingForm.hasValidDate ? "opacity-50 cursor-not-allowed" : ""}
+                            className={cn({
+                              "cursor-not-allowed opacity-50": !votingForm.hasValidDate,
+                            })}
                             onClick={(e) => {
                               if (!votingForm.hasValidDate) {
-                                e.preventDefault(); // bloqueia a submissão
+                                e.preventDefault();
                                 return;
                               }
-                              // submit normal
                             }}
                           >
                             <Trans i18nKey="continue" />
