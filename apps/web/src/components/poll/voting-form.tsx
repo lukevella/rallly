@@ -41,9 +41,9 @@ export const useVotingForm = () => {
   const { options } = usePoll();
   const { participants } = useParticipants();
   const form = useFormContext<VotingFormValues>();
-
+  
   const hasValidDate = options.length > 0
-    ? isDateTodayOrFuture(options[0].startTime)
+    ? options.some(option => isDateTodayOrFuture(option.startTime))
     : false;
 
   return {
