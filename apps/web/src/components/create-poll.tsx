@@ -73,13 +73,13 @@ export const CreatePoll: React.FunctionComponent = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (formData) => {
-          const title = required(formData?.title);
+          const title = required(formData?.title.trim());
           await createGuestIfNeeded();
           await createPoll.mutateAsync(
             {
               title: title,
-              location: formData?.location,
-              description: formData?.description,
+              location: formData?.location.trim(),
+              description: formData?.description.trim(),
               timeZone: formData?.timeZone,
               hideParticipants: formData?.hideParticipants,
               disableComments: formData?.disableComments,
