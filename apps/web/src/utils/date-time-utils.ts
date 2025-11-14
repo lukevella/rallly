@@ -160,8 +160,9 @@ export function isDateTodayOrFuture(
   date: Date | string | number,
   timeZone?: string,
 ): boolean {
-  const now = timeZone ? dayjs().tz(timeZone).startOf("day") : dayjs().startOf("day");
-  const d = timeZone ? dayjs(date).tz(timeZone).startOf("day") : dayjs(date).startOf("day");
+  const now = timeZone ? dayjs().tz(timeZone) : dayjs();
+  const d = timeZone ? dayjs(date).tz(timeZone) : dayjs(date);
 
-  return d.isSame(now, "day") || d.isAfter(now, "day");
+  // Compare full datetime; allow current minute to avoid edge cases
+  return d.isAfter(now) || d.isSame(now, "minute");
 }
