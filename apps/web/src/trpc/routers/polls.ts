@@ -171,8 +171,8 @@ export const polls = router({
       z.object({
         title: z.string().trim().min(1),
         timeZone: z.string().optional(),
-        location: z.string().optional(),
-        description: z.string().optional(),
+        location: z.string().trim().optional(),
+        description: z.string().trim().optional(),
         hideParticipants: z.boolean().optional(),
         hideScores: z.boolean().optional(),
         disableComments: z.boolean().optional(),
@@ -211,6 +211,9 @@ export const polls = router({
       return next();
     })
     .mutation(async ({ ctx, input }) => {
+      const title = input.title;
+      const location = input.location || undefined;
+      const description = input.description || undefined;
       const adminToken = nanoid();
       const participantUrlId = nanoid();
       const pollId = nanoid();
@@ -237,10 +240,10 @@ export const polls = router({
         },
         data: {
           id: pollId,
-          title: input.title,
+          title,
           timeZone: input.timeZone,
-          location: input.location,
-          description: input.description,
+          location,
+          description,
           adminUrlId: adminToken,
           participantUrlId,
           ...(ctx.user.isLegacyGuest
@@ -307,8 +310,8 @@ export const polls = router({
         properties: {
           title: poll.title,
           optionCount: poll.options.length,
-          hasLocation: !!input.location,
-          hasDescription: !!input.description,
+          hasLocation: !!location,
+          hasDescription: !!description,
           timezone: input.timeZone,
           disableCommnets: poll.disableComments,
           hideParticipants: poll.hideParticipants,
@@ -326,10 +329,10 @@ export const polls = router({
     .input(
       z.object({
         urlId: z.string(),
-        title: z.string().optional(),
+        title: z.string().trim().optional(),
         timeZone: z.string().optional(),
-        location: z.string().optional(),
-        description: z.string().optional(),
+        location: z.string().trim().optional(),
+        description: z.string().trim().optional(),
         optionsToDelete: z.string().array().optional(),
         optionsToAdd: z.string().array().optional(),
         hideParticipants: z.boolean().optional(),

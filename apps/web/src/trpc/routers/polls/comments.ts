@@ -76,8 +76,8 @@ export const comments = router({
     .input(
       z.object({
         pollId: z.string(),
-        authorName: z.string(),
-        content: z.string(),
+        authorName: z.string().trim().min(1),
+        content: z.string().trim().min(1),
       }),
     )
     .mutation(async ({ ctx, input: { pollId, authorName, content } }) => {
