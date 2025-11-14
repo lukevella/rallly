@@ -156,18 +156,12 @@ export const expectTimeOption = (d: DateTimeOption): TimeOption => {
   return d;
 };
 
-export function isDateTodayOrFuture(date: Date | string | number): boolean {
-  const now = new Date();
-  const d = new Date(date);
+export function isDateTodayOrFuture(
+  date: Date | string | number,
+  timeZone?: string,
+): boolean {
+  const now = timeZone ? dayjs().tz(timeZone).startOf("day") : dayjs().startOf("day");
+  const d = timeZone ? dayjs(date).tz(timeZone).startOf("day") : dayjs(date).startOf("day");
 
-  const isSameDay =
-    d.getFullYear() === now.getFullYear() &&
-    d.getMonth() === now.getMonth() &&
-    d.getDate() === now.getDate();
-
-  if (isSameDay) {
-    return true;
-  }
-
-  return d > now;
+  return d.isSame(now, "day") || d.isAfter(now, "day");
 }
