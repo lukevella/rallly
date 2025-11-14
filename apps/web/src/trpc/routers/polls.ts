@@ -329,10 +329,10 @@ export const polls = router({
     .input(
       z.object({
         urlId: z.string(),
-        title: z.string().optional(),
+        title: z.string().trim().optional(),
         timeZone: z.string().optional(),
-        location: z.string().optional(),
-        description: z.string().optional(),
+        location: z.string().trim().optional(),
+        description: z.string().trim().optional(),
         optionsToDelete: z.string().array().optional(),
         optionsToAdd: z.string().array().optional(),
         hideParticipants: z.boolean().optional(),

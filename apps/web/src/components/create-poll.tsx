@@ -78,8 +78,8 @@ export const CreatePoll: React.FunctionComponent = () => {
           await createPoll.mutateAsync(
             {
               title: title,
-              location: formData?.location.trim(),
-              description: formData?.description.trim(),
+              location: formData?.location?.trim(),
+              description: formData?.description?.trim(),
               timeZone: formData?.timeZone,
               hideParticipants: formData?.hideParticipants,
               disableComments: formData?.disableComments,
