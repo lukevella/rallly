@@ -200,7 +200,7 @@ const MobilePoll: React.FunctionComponent = () => {
             }}
           >
             <CardFooter>
-              <div className="w-full items-center flex flex-col gap-2">
+              <div className="flex w-full flex-col items-center gap-2">
                 <Button
                   form="voting-form"
                   className="w-full"
