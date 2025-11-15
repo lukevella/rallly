@@ -57,6 +57,11 @@ const nextConfig = {
         destination: "/api/notifications/unsubscribe",
         permanent: true,
       },
+      {
+        source: "/api/auth/callback/oidc",
+        destination: "/api/better-auth/oauth2/callback/oidc",
+        permanent: false,
+      },
     ];
   },
   devIndicators: {
