@@ -147,7 +147,6 @@ The following must be set for OIDC to work:
 - `OIDC_DISCOVERY_URL`
 - `OIDC_CLIENT_ID`
 - `OIDC_CLIENT_SECRET`
-- `OIDC_ISSUER_URL`
 
 <Accordion title="Setup">
 Your OAuth 2.0 application needs to be configured with the following scopes:
@@ -172,6 +171,7 @@ https://<YOUR-DOMAIN>/api/auth/callback/oidc
 </ParamField>
 
 <ParamField path="OIDC_ISSUER_URL">
+  <Warning>Deprecated from v4.5.0: This option is no longer used.</Warning>
   URL of the issuer for your OIDC provider. You can get this from your OpenId
   Configuration endpoint.
 </ParamField>
