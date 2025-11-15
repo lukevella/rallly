@@ -200,15 +200,29 @@ const MobilePoll: React.FunctionComponent = () => {
             }}
           >
             <CardFooter>
-              <Button
-                form="voting-form"
-                className="w-full"
-                type="submit"
-                variant="primary"
-                loading={formState.isSubmitting}
-              >
-                {selectedParticipantId ? t("save") : t("continue")}
-              </Button>
+              <div className="flex w-full flex-col items-center gap-2">
+                <Button
+                  form="voting-form"
+                  className="w-full"
+                  type="submit"
+                  variant="primary"
+                  loading={formState.isSubmitting}
+                  disabled={!votingForm.hasValidDate}
+                  aria-describedby={!votingForm.hasValidDate ? "date-validation-error" : undefined}
+                >
+                  {selectedParticipantId ? t("save") : t("continue")}
+                </Button>
+
+                {!votingForm.hasValidDate && (
+                  <p id="date-validation-error" className="text-red-500 text-xs" role="alert">
+                    <Trans
+                      i18nKey="timePast"
+                      defaults="Invalid date. You cannot respond with a date in the past"
+                    />
+                  </p>
+                )}
+              </div>
+              
             </CardFooter>
           </m.div>
         ) : null}

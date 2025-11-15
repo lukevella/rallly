@@ -120,7 +120,7 @@ const DesktopPoll: React.FunctionComponent = () => {
   const { t } = useTranslation();
   const votingForm = useVotingForm();
   const mode = votingForm.watch("mode");
-
+  
   const { participants } = useParticipants();
   const visibleParticipants = useVisibleParticipants();
 
@@ -365,13 +365,34 @@ const DesktopPoll: React.FunctionComponent = () => {
                           }}
                         />
                       </p>
-                      <Button
-                        type="submit"
-                        variant="primary"
-                        form="voting-form"
-                      >
-                        <Trans i18nKey="continue" />
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type="submit"
+                            variant="primary"
+                            form="voting-form"
+                            className={cn({
+                              "cursor-not-allowed opacity-50": !votingForm.hasValidDate,
+                            })}
+                            onClick={(e) => {
+                              if (!votingForm.hasValidDate) {
+                                e.preventDefault();
+                                return;
+                              }
+                            }}
+                          >
+                            <Trans i18nKey="continue" />
+                          </Button>
+                        </TooltipTrigger>
+                        {!votingForm.hasValidDate && (
+                          <TooltipContent className="text-xs">
+                            <Trans
+                              i18nKey="timePast"
+                              defaults="Invalid date. You cannot respond with a date in the past"
+                            />
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
                     </div>
                   ) : null}
                 </RemoveScroll>

@@ -155,3 +155,14 @@ export const expectTimeOption = (d: DateTimeOption): TimeOption => {
   }
   return d;
 };
+
+export function isDateTodayOrFuture(
+  date: Date | string | number,
+  timeZone?: string,
+): boolean {
+  const now = timeZone ? dayjs().tz(timeZone) : dayjs();
+  const d = timeZone ? dayjs(date).tz(timeZone) : dayjs(date);
+
+  // Compare full datetime; allow current minute to avoid edge cases
+  return d.isAfter(now) || d.isSame(now, "minute");
+}
