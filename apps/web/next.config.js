@@ -62,6 +62,16 @@ const nextConfig = {
         destination: "/api/better-auth/oauth2/callback/oidc",
         permanent: false,
       },
+      {
+        source: "/api/auth/callback/google",
+        destination: "/api/better-auth/callback/google",
+        permanent: false,
+      },
+      {
+        source: "/api/auth/callback/microsoft-entra-id",
+        destination: "/api/better-auth/callback/microsoft",
+        permanent: false,
+      },
     ];
   },
   devIndicators: {
