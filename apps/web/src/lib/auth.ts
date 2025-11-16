@@ -49,6 +49,7 @@ if (env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET && env.OIDC_DISCOVERY_URL) {
           clientSecret: env.OIDC_CLIENT_SECRET,
           scopes: ["openid", "profile", "email"],
           redirectURI: absoluteUrl("/api/auth/callback/oidc"),
+          pkce: true,
           mapProfileToUser(profile) {
             return {
               name: getValueByPath(profile, env.OIDC_NAME_CLAIM_PATH) as string,
