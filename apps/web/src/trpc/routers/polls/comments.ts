@@ -95,7 +95,7 @@ export const comments = router({
 
         if (!user) {
           throw new TRPCError({
-            code: "UNAUTHORIZED",
+            code: "INTERNAL_SERVER_ERROR",
             message: "User not found",
           });
         }
