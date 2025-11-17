@@ -180,15 +180,12 @@ export const comments = router({
         });
       }
 
-      const hasAdminAccess = await hasPollAdminAccess(
-        comment.pollId,
-        ctx.user.id,
-      );
+      const isAuthor =
+        comment.userId === ctx.user.id || comment.guestId === ctx.user.id;
 
       if (
-        comment.userId !== ctx.user.id &&
-        comment.guestId !== ctx.user.id &&
-        !hasAdminAccess
+        !isAuthor &&
+        !(await hasPollAdminAccess(comment.pollId, ctx.user.id))
       ) {
         throw new TRPCError({
           code: "FORBIDDEN",
