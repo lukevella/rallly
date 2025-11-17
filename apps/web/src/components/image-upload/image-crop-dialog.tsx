@@ -50,7 +50,7 @@ export function ImageCropDialog({
       makeAspectCrop(
         {
           unit: "%",
-          width: 90,
+          width: 100,
         },
         1, // 1:1 aspect ratio
         width,
