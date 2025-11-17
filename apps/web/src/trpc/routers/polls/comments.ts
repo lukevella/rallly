@@ -80,7 +80,31 @@ export const comments = router({
         content: z.string().trim().min(1),
       }),
     )
-    .mutation(async ({ ctx, input: { pollId, authorName, content } }) => {
+    .mutation(async ({ ctx, input }) => {
+      let authorName = input.authorName;
+
+      if (!ctx.user.isGuest) {
+        const user = await prisma.user.findUnique({
+          where: {
+            id: ctx.user.id,
+          },
+          select: {
+            name: true,
+          },
+        });
+
+        if (!user) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "User not found",
+          });
+        }
+
+        authorName = user.name;
+      }
+
+      const { content, pollId } = input;
+
       const newComment = await prisma.comment.create({
         data: {
           content,
