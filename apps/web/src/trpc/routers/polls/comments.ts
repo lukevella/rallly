@@ -2,6 +2,7 @@ import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 import {
@@ -169,13 +170,29 @@ export const comments = router({
     .mutation(async ({ input: { commentId }, ctx }) => {
       const comment = await prisma.comment.findUnique({
         where: { id: commentId },
-        select: { pollId: true },
+        select: { pollId: true, userId: true, guestId: true },
       });
 
       if (!comment) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Comment not found",
+        });
+      }
+
+      const hasAdminAccess = await hasPollAdminAccess(
+        comment.pollId,
+        ctx.user.id,
+      );
+
+      if (
+        comment.userId !== ctx.user.id &&
+        comment.guestId !== ctx.user.id &&
+        !hasAdminAccess
+      ) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to delete this comment",
         });
       }
 
