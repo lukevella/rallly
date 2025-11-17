@@ -11,6 +11,7 @@ import { getCurrentUserSpace } from "@/auth/data";
 import { moderateContent } from "@/features/moderation";
 import { getPolls } from "@/features/poll/data";
 import { canUserManagePoll } from "@/features/poll/helpers";
+import { hasPollAdminAccess } from "@/features/poll/query";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getEmailClient } from "@/utils/emails";
 import { createIcsEvent } from "@/utils/ics";
@@ -25,17 +26,6 @@ import {
 } from "../trpc";
 import { comments } from "./polls/comments";
 import { participants } from "./polls/participants";
-
-const hasPollAdminAccess = async (pollId: string, userId: string) => {
-  const poll = await prisma.poll.findFirst({
-    where: {
-      id: pollId,
-      OR: [{ userId: userId }, { space: { members: { some: { userId } } } }],
-    },
-  });
-
-  return poll !== null;
-};
 
 const getPollIdFromAdminUrlId = async (urlId: string) => {
   const res = await prisma.poll.findUnique({
