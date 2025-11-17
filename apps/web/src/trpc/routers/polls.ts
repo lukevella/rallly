@@ -26,6 +26,17 @@ import {
 import { comments } from "./polls/comments";
 import { participants } from "./polls/participants";
 
+const hasPollAdminAccess = async (pollId: string, userId: string) => {
+  const poll = await prisma.poll.findFirst({
+    where: {
+      id: pollId,
+      OR: [{ userId: userId }, { space: { members: { some: { userId } } } }],
+    },
+  });
+
+  return poll !== null;
+};
+
 const getPollIdFromAdminUrlId = async (urlId: string) => {
   const res = await prisma.poll.findUnique({
     select: {
@@ -556,6 +567,15 @@ export const polls = router({
   watch: privateProcedure
     .input(z.object({ pollId: z.string() }))
     .mutation(async ({ input, ctx }) => {
+      const hasAccess = await hasPollAdminAccess(input.pollId, ctx.user.id);
+
+      if (!hasAccess) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to watch this poll",
+        });
+      }
+
       await prisma.watcher.create({
         data: {
           pollId: input.pollId,
@@ -723,6 +743,15 @@ export const polls = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      const hasAccess = await hasPollAdminAccess(input.pollId, ctx.user.id);
+
+      if (!hasAccess) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to book a date for this poll",
+        });
+      }
+
       const poll = await prisma.poll.findUnique({
         where: {
           id: input.pollId,
@@ -1031,6 +1060,15 @@ export const polls = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      const hasAccess = await hasPollAdminAccess(input.pollId, ctx.user.id);
+
+      if (!hasAccess) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to reopen this poll",
+        });
+      }
+
       await prisma.$transaction(async () => {
         const poll = await prisma.poll.update({
           where: {
@@ -1066,6 +1104,15 @@ export const polls = router({
     )
     .use(requireUserMiddleware)
     .mutation(async ({ input, ctx }) => {
+      const hasAccess = await hasPollAdminAccess(input.pollId, ctx.user.id);
+
+      if (!hasAccess) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to pause this poll",
+        });
+      }
+
       await prisma.poll.update({
         where: {
           id: input.pollId,
@@ -1092,6 +1139,15 @@ export const polls = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      const hasAccess = await hasPollAdminAccess(input.pollId, ctx.user.id);
+
+      if (!hasAccess) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to duplicate this poll",
+        });
+      }
+
       const poll = await prisma.poll.findUnique({
         where: {
           id: input.pollId,
@@ -1155,6 +1211,15 @@ export const polls = router({
     )
     .use(requireUserMiddleware)
     .mutation(async ({ input, ctx }) => {
+      const hasAccess = await hasPollAdminAccess(input.pollId, ctx.user.id);
+
+      if (!hasAccess) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to resume this poll",
+        });
+      }
+
       await prisma.poll.update({
         where: {
           id: input.pollId,
