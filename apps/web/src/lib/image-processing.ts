@@ -69,6 +69,12 @@ export function getCroppedImg(
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
+  // Fill canvas with white background for PNGs with transparency
+  if (fileType === "image/png") {
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, outputWidth, outputHeight);
+  }
+
   // Draw the cropped and resized image
   ctx.drawImage(
     image,
