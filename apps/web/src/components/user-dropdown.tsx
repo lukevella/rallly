@@ -27,12 +27,20 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
 import { signOut } from "@/lib/auth-client";
-import { useAuthenticatedUser } from "./user-provider";
 
-export const UserDropdown = ({ className }: { className?: string }) => {
-  const { user } = useAuthenticatedUser();
+export const UserDropdown = ({
+  name,
+  image,
+  email,
+  className,
+}: {
+  name: string;
+  image?: string;
+  email?: string;
+  className?: string;
+}) => {
   const posthog = usePostHog();
-  if (!user) return null;
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger
@@ -41,12 +49,8 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         className={cn("group min-w-0", className)}
       >
         <Button variant="ghost">
-          <OptimizedAvatarImage
-            src={user.image ?? undefined}
-            name={user.name}
-            size="sm"
-          />
-          <span className="truncate">{user.name}</span>
+          <OptimizedAvatarImage src={image} name={name} size="sm" />
+          <span className="truncate">{name}</span>
           <Icon>
             <ChevronDownIcon />
           </Icon>
@@ -55,10 +59,10 @@ export const UserDropdown = ({ className }: { className?: string }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel className="flex items-center gap-2">
           <div className="grow">
-            <div>{user.isGuest ? <Trans i18nKey="guest" /> : user.name}</div>
-            {user.email ? (
+            <div className="font-medium text-foreground text-sm">{name}</div>
+            {email ? (
               <div className="font-normal text-muted-foreground text-xs">
-                {user.email}
+                {email}
               </div>
             ) : null}
           </div>

@@ -29,15 +29,6 @@ export const useUser = () => {
   return useRequiredContext(UserContext, "UserContext");
 };
 
-export const useAuthenticatedUser = () => {
-  const { user } = useUser();
-  if (!user || user.isGuest) {
-    return { user: null };
-  }
-
-  return { user };
-};
-
 export const UserProvider = ({
   children,
   user,

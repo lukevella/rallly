@@ -3,21 +3,19 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { PollPageIcon } from "@/app/components/page-icons";
+import { getCurrentUser } from "@/auth/data";
 import { CreatePoll } from "@/components/create-poll";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
 import { getTranslation } from "@/i18n/server";
-import { getUserIdIfLoggedIn } from "@/lib/auth";
 import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import { BackButton } from "./back-button";
 
 export default async function Page() {
-  const [userId, isRegistrationEnabled] = await Promise.all([
-    getUserIdIfLoggedIn(),
+  const [user, isRegistrationEnabled] = await Promise.all([
+    getCurrentUser(),
     getRegistrationEnabled(),
   ]);
-
-  const isLoggedIn = !!userId;
 
   return (
     <div className="absolute inset-0 h-dvh overflow-auto bg-gray-100">
@@ -37,8 +35,12 @@ export default async function Page() {
             </div>
           </div>
           <div className="flex flex-1 justify-end">
-            {isLoggedIn ? (
-              <UserDropdown />
+            {user ? (
+              <UserDropdown
+                name={user.name}
+                image={user.image ?? undefined}
+                email={user.email ?? undefined}
+              />
             ) : (
               <div className="flex items-center gap-x-2">
                 <Button variant="ghost" asChild>

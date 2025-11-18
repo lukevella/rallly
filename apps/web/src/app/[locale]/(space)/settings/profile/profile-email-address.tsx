@@ -19,7 +19,6 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { Trans } from "@/components/trans";
-import { useAuthenticatedUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
 
 const emailChangeFormData = z.object({
@@ -27,12 +26,12 @@ const emailChangeFormData = z.object({
 });
 
 type EmailChangeFormData = z.infer<typeof emailChangeFormData>;
-export const ProfileEmailAddress = () => {
-  const { user } = useAuthenticatedUser();
+
+export const ProfileEmailAddress = ({ email }: { email: string }) => {
   const requestEmailChange = trpc.user.requestEmailChange.useMutation();
   const form = useForm<EmailChangeFormData>({
     defaultValues: {
-      email: user?.email,
+      email,
     },
     resolver: zodResolver(emailChangeFormData),
   });
@@ -47,16 +46,12 @@ export const ProfileEmailAddress = () => {
 
   const { handleSubmit, formState, reset } = form;
 
-  if (!user) {
-    return <div>You need to be logged in to see this page.</div>;
-  }
-
   return (
     <div className="grid gap-y-4">
       <Form {...form}>
         <form
           onSubmit={handleSubmit(async (data) => {
-            if (data.email !== user.email) {
+            if (data.email !== email) {
               const res = await requestEmailChange.mutateAsync({
                 email: data.email,
               });
