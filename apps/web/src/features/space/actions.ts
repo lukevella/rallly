@@ -124,6 +124,14 @@ export const deleteSpaceAction = spaceActionClient
         id: true,
         ownerId: true,
         tier: true,
+        subscriptions: {
+          where: {
+            active: true,
+          },
+          select: {
+            id: true,
+          },
+        },
       },
     });
 
@@ -137,12 +145,12 @@ export const deleteSpaceAction = spaceActionClient
     if (ctx.getMemberAbility().cannot("delete", subject("Space", space))) {
       throw new AppError({
         code: "FORBIDDEN",
-        message: "You do not have access to this space",
+        message: "You do not have permission to delete to this space",
       });
     }
 
     // Check if space has an active subscription
-    if (space.tier === "pro") {
+    if (space.subscriptions.length > 0) {
       throw new AppError({
         code: "FORBIDDEN",
         message:
