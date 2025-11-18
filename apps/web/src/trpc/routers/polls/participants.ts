@@ -4,7 +4,7 @@ import * as Sentry from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
-
+import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 
@@ -17,6 +17,32 @@ import {
 import type { DisableNotificationsPayload } from "../../types";
 
 const MAX_PARTICIPANTS = 1000;
+
+async function canModifyParticipant(participantId: string, userId: string) {
+  const participant = await prisma.participant.findUnique({
+    where: { id: participantId },
+    select: { id: true, pollId: true, userId: true, guestId: true },
+  });
+
+  if (!participant) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Participant not found",
+    });
+  }
+
+  const isOwner =
+    participant.userId === userId || participant.guestId === userId;
+
+  if (!isOwner && !(await hasPollAdminAccess(participant.pollId, userId))) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "You are not allowed to modify this participant",
+    });
+  }
+
+  return participant;
+}
 
 async function sendNewParticipantNotifcationEmail({
   pollId,
@@ -112,7 +138,12 @@ export const participants = router({
     )
     .use(requireUserMiddleware)
     .mutation(async ({ input: { participantId }, ctx }) => {
-      const participant = await prisma.participant.update({
+      const participant = await canModifyParticipant(
+        participantId,
+        ctx.user.id,
+      );
+
+      await prisma.participant.update({
         where: {
           id: participantId,
         },
@@ -122,16 +153,14 @@ export const participants = router({
         },
       });
 
-      if (participant) {
-        ctx.analytics.trackEvent({
-          type: "poll_response_delete",
-          userId: ctx.user.id,
-          pollId: participant.pollId,
-          properties: {
-            participantId,
-          },
-        });
-      }
+      ctx.analytics.trackEvent({
+        type: "poll_response_delete",
+        userId: ctx.user.id,
+        pollId: participant.pollId,
+        properties: {
+          participantId,
+        },
+      });
     }),
   add: publicProcedure
     .use(createRateLimitMiddleware("add_participant", 5, "1 m"))
@@ -274,7 +303,10 @@ export const participants = router({
     ),
   rename: publicProcedure
     .input(z.object({ participantId: z.string(), newName: z.string() }))
-    .mutation(async ({ input: { participantId, newName } }) => {
+    .use(requireUserMiddleware)
+    .mutation(async ({ input: { participantId, newName }, ctx }) => {
+      await canModifyParticipant(participantId, ctx.user.id);
+
       await prisma.participant.update({
         where: {
           id: participantId,
@@ -299,13 +331,19 @@ export const participants = router({
       }),
     )
     .use(requireUserMiddleware)
-    .mutation(async ({ input: { pollId, participantId, votes }, ctx }) => {
+    .mutation(async ({ input: { participantId, votes }, ctx }) => {
+      const existingParticipant = await canModifyParticipant(
+        participantId,
+        ctx.user.id,
+      );
+
+      const pollId = existingParticipant.pollId;
+
       const participant = await prisma.$transaction(async (tx) => {
         // Delete existing votes
         await tx.vote.deleteMany({
           where: {
             participantId,
-            pollId,
           },
         });
 
