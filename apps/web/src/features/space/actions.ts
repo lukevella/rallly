@@ -145,7 +145,7 @@ export const deleteSpaceAction = spaceActionClient
     if (ctx.getMemberAbility().cannot("delete", subject("Space", space))) {
       throw new AppError({
         code: "FORBIDDEN",
-        message: "You do not have permission to delete to this space",
+        message: "You do not have permission to delete this space",
       });
     }
 
