@@ -76,5 +76,11 @@
   "spaceInvite_preview": "Sei stato invitato ad unirti a {spaceName}",
   "spaceInvite_heading": "Sei invitato!",
   "spaceInvite_button": "Accetta l'invito",
-  "spaceInvite_subject": "Sei invitato ad unirti a {spaceName}"
+  "spaceInvite_subject": "Sei invitato ad unirti a {spaceName}",
+  "resetPassword_button": "Resetta la password",
+  "resetPassword_content2": "Se non hai richiesto il reset della password, puoi ignorare questa email. La tua password non cambierà a meno che non ne ne crei una nuova. Se questa richiesta è sospetta, contattare <a>{supportEmail}</a>.",
+  "resetPassword_preview": "Usa questo link per reimpostare la password.",
+  "resetPassword_heading": "Resetta la password",
+  "resetPassword_content": "Abbiamo ricevuto una richiesta per reimpostare la tua password. Clicca sul pulsante qui sotto per creare una nuova password.",
+  "resetPassword_subject": "Resetta la tua password"
 }
