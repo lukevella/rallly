@@ -62,7 +62,7 @@ export default async function Page() {
               </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
-              <ProfileEmailAddress />
+              <ProfileEmailAddress email={user.email} />
             </PageSectionContent>
           </PageSection>
 

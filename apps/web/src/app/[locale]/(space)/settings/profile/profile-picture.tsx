@@ -8,12 +8,16 @@ import {
   ImageUploadPreview,
 } from "@/components/image-upload";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { useAuthenticatedUser } from "@/components/user-provider";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { trpc } from "@/trpc/client";
 
-function ProfilePictureUpload() {
-  const { user } = useAuthenticatedUser();
+function ProfilePictureUpload({
+  image,
+  name,
+}: {
+  image?: string;
+  name: string;
+}) {
   const router = useRouter();
   const posthog = usePostHog();
 
@@ -32,22 +36,16 @@ function ProfilePictureUpload() {
     posthog?.capture("remove profile picture");
   };
 
-  if (!user) return <div>You need to be logged in to see this page.</div>;
-
   return (
     <ImageUpload>
       <ImageUploadPreview>
-        <OptimizedAvatarImage
-          src={user.image ?? undefined}
-          name={user.name}
-          size="xl"
-        />
+        <OptimizedAvatarImage src={image} name={name} size="xl" />
       </ImageUploadPreview>
       <ImageUploadControl
         keyPrefix="avatars"
         onUploadSuccess={handleUploadSuccess}
         onRemoveSuccess={handleRemoveSuccess}
-        hasCurrentImage={!!user.image}
+        hasCurrentImage={!!image}
       />
     </ImageUpload>
   );
@@ -63,7 +61,7 @@ export function ProfilePicture({
   const isStorageEnabled = useFeatureFlag("storage");
 
   if (isStorageEnabled) {
-    return <ProfilePictureUpload />;
+    return <ProfilePictureUpload image={image} name={name} />;
   }
 
   return <OptimizedAvatarImage src={image} name={name} size="lg" />;

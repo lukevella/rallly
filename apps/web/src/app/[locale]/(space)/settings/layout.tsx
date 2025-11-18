@@ -21,7 +21,7 @@ import { Trans } from "@/components/trans";
 import { BillingProvider } from "@/features/billing/client";
 import { AccountSidebarMenu, SpaceSidebarMenu } from "./components/sidebar";
 
-export default async function ProfileLayout({
+export default async function Layout({
   children,
 }: {
   children?: React.ReactNode;

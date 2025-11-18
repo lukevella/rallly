@@ -104,7 +104,7 @@ export default async function SecurityPage({
                     </PageSectionDescription>
                   </PageSectionHeader>
                   <PageSectionContent>
-                    <SetupPasswordForm />
+                    <SetupPasswordForm email={user.email} />
                   </PageSectionContent>
                 </PageSection>
               )}

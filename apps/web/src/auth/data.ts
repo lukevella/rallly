@@ -10,10 +10,14 @@ import { getSession } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
 
+/**
+ * Gets the current user if they are logged in, otherwise null.
+ * @returns The current user if they are logged in, otherwise null.
+ */
 export const getCurrentUser = async () => {
   const session = await getSession();
 
-  if (!session?.user) {
+  if (!session?.user || session.user.isGuest) {
     return null;
   }
 
