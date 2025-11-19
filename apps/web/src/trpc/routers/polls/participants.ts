@@ -153,12 +153,14 @@ export const participants = router({
         },
       });
 
-      ctx.analytics.trackEvent({
-        type: "poll_response_delete",
-        userId: ctx.user.id,
-        pollId: participant.pollId,
+      ctx.posthog?.capture({
+        distinctId: ctx.user.id,
+        event: "poll_response_delete",
         properties: {
-          participantId,
+          participant_id: participant.id,
+        },
+        groups: {
+          poll: participant.pollId,
         },
       });
     }),
@@ -282,19 +284,26 @@ export const participants = router({
           }),
         );
 
-        // Track participant addition analytics
-        ctx.analytics.trackEvent({
-          type: "poll_response_submit",
-          userId: user.id,
-          pollId,
+        ctx.posthog?.groupIdentify({
+          groupType: "poll",
+          groupKey: pollId,
           properties: {
-            participantId: participant.id,
-            hasEmail: !!email,
-            totalResponses,
-            isCreator: ctx.user.isLegacyGuest
-              ? participant.poll.guestId === ctx.user.id
-              : participant.poll.userId === ctx.user.id,
-            isGuest: ctx.user.isGuest,
+            participant_count: totalResponses,
+          },
+        });
+
+        // Track participant addition analytics
+        ctx.posthog?.capture({
+          distinctId: ctx.user.id,
+          event: "poll_response_submit",
+          properties: {
+            participant_id: participant.id,
+            participant_name: participant.name,
+            has_email: !!email,
+            total_responses: totalResponses,
+          },
+          groups: {
+            poll: pollId,
           },
         });
 
@@ -383,12 +392,11 @@ export const participants = router({
         });
       });
 
-      ctx.analytics.trackEvent({
-        type: "poll_response_update",
-        userId: ctx.user.id,
-        pollId,
-        properties: {
-          participantId,
+      ctx.posthog?.capture({
+        distinctId: ctx.user.id,
+        event: "poll_response_update",
+        groups: {
+          poll: pollId,
         },
       });
 

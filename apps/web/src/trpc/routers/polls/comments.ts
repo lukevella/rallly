@@ -172,13 +172,14 @@ export const comments = router({
       }
 
       // Track comment addition analytics
-      ctx.analytics.trackEvent({
-        type: "poll_comment_add",
-        userId: ctx.user.id,
-        pollId,
+      ctx.posthog?.capture({
+        distinctId: ctx.user.id,
+        event: "poll_comment_add",
         properties: {
-          commentId: newComment.id,
-          isGuest: ctx.user.isGuest,
+          is_guest: ctx.user.isGuest,
+        },
+        groups: {
+          poll: pollId,
         },
       });
 
@@ -225,12 +226,11 @@ export const comments = router({
 
       // Track comment deletion analytics
       if (comment) {
-        ctx.analytics.trackEvent({
-          type: "poll_comment_delete",
-          userId: ctx.user.id,
-          pollId: comment.pollId,
-          properties: {
-            commentId,
+        ctx.posthog?.capture({
+          distinctId: ctx.user.id,
+          event: "poll_comment_delete",
+          groups: {
+            poll: comment.pollId,
           },
         });
       }

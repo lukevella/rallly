@@ -1,6 +1,5 @@
 import type { PollStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { posthog } from "@rallly/posthog/server";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
@@ -196,7 +195,7 @@ export const polls = router({
       ]);
 
       if (isFlaggedContent) {
-        posthog?.capture({
+        ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
           properties: {
@@ -303,11 +302,26 @@ export const polls = router({
         }
       }
 
-      ctx.analytics.trackEvent({
-        type: "poll_create",
-        userId: ctx.user.id,
-        pollId: poll.id,
-        spaceId: poll.spaceId ?? undefined,
+      ctx.posthog?.groupIdentify({
+        groupType: "poll",
+        groupKey: poll.id,
+        properties: {
+          name: poll.title,
+          status: poll.status,
+          is_guest: ctx.user.isGuest,
+          created_at: poll.createdAt,
+          participant_count: 0,
+          comment_count: 0,
+          option_count: poll.options.length,
+          has_location: !!location,
+          has_description: !!description,
+          timezone: input.timeZone,
+        },
+      });
+
+      ctx.posthog?.capture({
+        event: "poll_create",
+        distinctId: ctx.user.id,
         properties: {
           title: poll.title,
           optionCount: poll.options.length,
@@ -319,6 +333,10 @@ export const polls = router({
           hideScores: poll.hideScores,
           requireParticipantEmail: poll.requireParticipantEmail,
           isGuest: ctx.user.isGuest,
+        },
+        groups: {
+          poll: poll.id,
+          ...(poll.spaceId ? { space: poll.spaceId } : {}),
         },
       });
 
@@ -352,7 +370,7 @@ export const polls = router({
       ]);
 
       if (isFlaggedContent) {
-        posthog?.capture({
+        ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
           properties: {
@@ -469,42 +487,46 @@ export const polls = router({
         input.requireParticipantEmail !== undefined;
 
       if (hasDetailsUpdate) {
-        ctx.analytics.trackEvent({
-          type: "poll_update_details",
-          userId: ctx.user.id,
-          pollId,
+        ctx.posthog?.capture({
+          event: "poll_update_details",
+          distinctId: ctx.user.id,
           properties: {
             title: updatedPoll.title,
-            hasLocation: !!updatedPoll.location,
-            hasDescription: !!updatedPoll.description,
-            isGuest: ctx.user.isGuest,
+            has_location: !!updatedPoll.location,
+            has_description: !!updatedPoll.description,
+            is_guest: ctx.user.isGuest,
+          },
+          groups: {
+            poll: pollId,
           },
         });
       }
 
       if (hasOptionsUpdate) {
-        ctx.analytics.trackEvent({
-          type: "poll_update_options",
-          userId: ctx.user.id,
-          pollId,
+        ctx.posthog?.capture({
+          event: "poll_update_options",
+          distinctId: ctx.user.id,
           properties: {
-            optionCount: updatedPoll._count.options,
-            isGuest: ctx.user.isGuest,
+            option_count: updatedPoll._count.options,
+          },
+          groups: {
+            poll: pollId,
           },
         });
       }
 
       if (hasSettingsUpdate) {
-        ctx.analytics.trackEvent({
-          type: "poll_update_settings",
-          userId: ctx.user.id,
-          pollId,
+        ctx.posthog?.capture({
+          event: "poll_update_settings",
+          distinctId: ctx.user.id,
           properties: {
-            disableComments: !!updatedPoll.disableComments,
-            hideParticipants: !!updatedPoll.hideParticipants,
-            hideScores: !!updatedPoll.hideScores,
-            requireParticipantEmail: !!updatedPoll.requireParticipantEmail,
-            isGuest: ctx.user.isGuest,
+            disable_comments: !!updatedPoll.disableComments,
+            hide_participants: !!updatedPoll.hideParticipants,
+            hide_scores: !!updatedPoll.hideScores,
+            require_participant_email: !!updatedPoll.requireParticipantEmail,
+          },
+          groups: {
+            poll: pollId,
           },
         });
       }
@@ -526,12 +548,11 @@ export const polls = router({
       });
 
       // Track poll deletion analytics
-      ctx.analytics.trackEvent({
-        type: "poll_delete",
-        userId: ctx.user.id,
-        pollId,
-        properties: {
-          isGuest: ctx.user.isGuest,
+      ctx.posthog?.capture({
+        event: "poll_delete",
+        distinctId: ctx.user.id,
+        groups: {
+          poll: pollId,
         },
       });
 
@@ -574,10 +595,15 @@ export const polls = router({
       });
 
       // Track poll watch analytics
-      ctx.analytics.trackEvent({
-        type: "poll_watch",
-        userId: ctx.user.id,
-        pollId: input.pollId,
+      ctx.posthog?.capture({
+        event: "poll_watch",
+        distinctId: ctx.user.id,
+        properties: {
+          is_guest: ctx.user.isGuest,
+        },
+        groups: {
+          poll: input.pollId,
+        },
       });
     }),
   unwatch: privateProcedure
@@ -601,10 +627,12 @@ export const polls = router({
         });
 
         // Track poll unwatch analytics
-        ctx.analytics.trackEvent({
-          type: "poll_unwatch",
-          userId: ctx.user.id,
-          pollId: input.pollId,
+        ctx.posthog?.capture({
+          event: "poll_unwatch",
+          distinctId: ctx.user.id,
+          groups: {
+            poll: input.pollId,
+          },
         });
       }
     }),
@@ -1029,14 +1057,16 @@ export const polls = router({
           );
         }
 
-        ctx.analytics.trackEvent({
-          type: "poll_finalize",
-          pollId: poll.id,
-          userId: ctx.user.id,
+        ctx.posthog?.capture({
+          event: "poll_finalize",
+          distinctId: ctx.user.id,
           properties: {
-            attendeeCount: attendees.length,
-            daysSinceCreated: dayjs().diff(poll.createdAt, "day"),
-            participantCount: poll.participants.length,
+            attendee_count: attendees.length,
+            days_since_created: dayjs().diff(poll.createdAt, "day"),
+            participant_count: poll.participants.length,
+          },
+          groups: {
+            poll: poll.id,
           },
         });
 
@@ -1078,10 +1108,12 @@ export const polls = router({
         }
       });
 
-      ctx.analytics.trackEvent({
-        type: "poll_reopen",
-        pollId: input.pollId,
-        userId: ctx.user.id,
+      ctx.posthog?.capture({
+        event: "poll_reopen",
+        distinctId: ctx.user.id,
+        groups: {
+          poll: input.pollId,
+        },
       });
 
       revalidatePath("/", "layout");
@@ -1112,12 +1144,11 @@ export const polls = router({
         },
       });
 
-      ctx.analytics.trackEvent({
-        type: "poll_pause",
-        pollId: input.pollId,
-        userId: ctx.user.id,
-        properties: {
-          isGuest: ctx.user.isGuest,
+      ctx.posthog?.capture({
+        event: "poll_pause",
+        distinctId: ctx.user.id,
+        groups: {
+          poll: input.pollId,
         },
       });
     }),
@@ -1220,12 +1251,11 @@ export const polls = router({
       });
 
       // Track poll resume analytics
-      ctx.analytics.trackEvent({
-        type: "poll_resume",
-        userId: ctx.user.id,
-        pollId: input.pollId,
-        properties: {
-          isGuest: ctx.user.isGuest,
+      ctx.posthog?.capture({
+        event: "poll_resume",
+        distinctId: ctx.user.id,
+        groups: {
+          poll: input.pollId,
         },
       });
     }),
