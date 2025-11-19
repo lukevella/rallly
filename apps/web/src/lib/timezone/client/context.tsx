@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import * as React from "react";
 
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
+import { getBrowserTimeZone, normalizeTimeZone } from "@/utils/date-time-utils";
 
 dayjs.extend(timezone);
 
@@ -24,19 +24,14 @@ export const TimezoneProvider = ({
   children,
   initialTimezone,
 }: TimezoneProviderProps) => {
-  const [timezone, setTimezone] = React.useState(() => {
+  const [timezone, setTimezone] = React.useState<string>(() => {
     if (initialTimezone) {
-      try {
-        dayjs().tz(initialTimezone);
-        return initialTimezone;
-      } catch (error) {
-        console.warn(error);
-      }
+      return normalizeTimeZone(initialTimezone);
     }
-
     return getBrowserTimeZone();
   });
 
+  console.log("timezone", timezone);
   const value = React.useMemo(() => ({ timezone, setTimezone }), [timezone]);
 
   return (
