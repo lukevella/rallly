@@ -1,6 +1,6 @@
 import { prisma } from "@rallly/database";
-import { posthog } from "@rallly/posthog/server";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { waitUntil } from "@vercel/functions";
 import type { BetterAuthPlugin } from "better-auth";
 import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
@@ -21,6 +21,7 @@ import {
 } from "@/auth/helpers/merge-user";
 import { isTemporaryEmail } from "@/auth/helpers/temp-email-domains";
 import { env } from "@/env";
+import { PostHogClient } from "@/features/analytics/posthog";
 import { createSpace } from "@/features/space/mutations";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -87,10 +88,14 @@ export const authLib = betterAuth({
       });
     },
     onPasswordReset: async ({ user }) => {
+      const posthog = PostHogClient();
       posthog?.capture({
         distinctId: user.id,
         event: "password_reset",
       });
+      if (posthog) {
+        waitUntil(posthog.shutdown());
+      }
     },
   },
   emailVerification: {
@@ -246,6 +251,8 @@ export const authLib = betterAuth({
             },
           });
 
+          const posthog = PostHogClient();
+
           if (existingUser) {
             // create a space for the user
             const space = await createSpace({
@@ -279,6 +286,10 @@ export const authLib = betterAuth({
               },
             },
           });
+
+          if (posthog) {
+            waitUntil(posthog.shutdown());
+          }
         },
       },
     },
@@ -306,13 +317,17 @@ export const authLib = betterAuth({
           // Only track login events for non-anonymous users
           // Anonymous users shouldn't trigger login events or create person profiles
           if (user && !user.isAnonymous) {
+            const posthog = PostHogClient();
+
             posthog?.capture({
               distinctId: session.userId,
               event: "login",
-              properties: {
-                method: user.lastLoginMethod,
-              },
+              properties: { method: user.lastLoginMethod },
             });
+
+            if (posthog) {
+              waitUntil(posthog.shutdown());
+            }
           }
         },
       },

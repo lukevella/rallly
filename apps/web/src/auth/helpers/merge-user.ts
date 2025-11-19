@@ -1,6 +1,7 @@
 import { prisma } from "@rallly/database";
-import { posthog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
+import { waitUntil } from "@vercel/functions";
+import { PostHogClient } from "@/features/analytics/posthog";
 
 const getActiveSpaceForUser = async ({ userId }: { userId: string }) => {
   const spaceMember = await prisma.spaceMember.findFirst({
@@ -56,11 +57,18 @@ export const mergeGuestsIntoUser = async (userId: string, guestId: string) => {
         }),
       ]);
     });
+
+    const posthog = PostHogClient();
+
     posthog?.capture({
       distinctId: userId,
       event: "$merge_dangerously",
       properties: { alias: guestId },
     });
+
+    if (posthog) {
+      waitUntil(posthog.shutdown());
+    }
   } catch (error) {
     Sentry.captureException(error);
   }
@@ -114,12 +122,17 @@ export const linkAnonymousUser = async (
       ]);
     });
 
+    const posthog = PostHogClient();
     // Merge user identities in PostHog
     posthog?.capture({
       distinctId: authenticatedUserId,
       event: "$merge_dangerously",
       properties: { alias: anonymousUserId },
     });
+
+    if (posthog) {
+      waitUntil(posthog.shutdown());
+    }
   } catch (error) {
     Sentry.captureException(error);
   }

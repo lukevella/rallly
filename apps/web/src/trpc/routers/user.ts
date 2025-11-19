@@ -1,5 +1,4 @@
 import { prisma } from "@rallly/database";
-import { posthog } from "@rallly/posthog/server";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -140,7 +139,7 @@ export const user = router({
         },
       });
 
-      posthog?.capture({
+      ctx.posthog?.capture({
         event: "account_email_change_request",
         distinctId: ctx.user.id,
         properties: {

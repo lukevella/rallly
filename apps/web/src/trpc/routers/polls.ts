@@ -1,6 +1,5 @@
 import type { PollStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { posthog } from "@rallly/posthog/server";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
@@ -196,7 +195,7 @@ export const polls = router({
       ]);
 
       if (isFlaggedContent) {
-        posthog?.capture({
+        ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
           properties: {
@@ -371,7 +370,7 @@ export const polls = router({
       ]);
 
       if (isFlaggedContent) {
-        posthog?.capture({
+        ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
           properties: {

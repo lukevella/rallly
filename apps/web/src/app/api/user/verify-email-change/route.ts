@@ -1,9 +1,10 @@
 import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
-import { posthog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
+import { waitUntil } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { PostHogClient } from "@/features/analytics/posthog";
 import { getSession } from "@/lib/auth";
 import { decryptToken } from "@/utils/session";
 
@@ -49,16 +50,6 @@ export const GET = async (request: NextRequest) => {
     },
   });
 
-  posthog?.capture({
-    event: "account_email_change_complete",
-    distinctId: payload.userId,
-    properties: {
-      $set: {
-        email: payload.toEmail,
-      },
-    },
-  });
-
   try {
     if (user.customerId) {
       await stripe.customers.update(user.customerId, {
@@ -69,6 +60,8 @@ export const GET = async (request: NextRequest) => {
     Sentry.captureException(error);
   }
 
+  const posthog = PostHogClient();
+
   posthog?.capture({
     event: "account_email_change_complete",
     distinctId: session.user.id,
@@ -78,6 +71,10 @@ export const GET = async (request: NextRequest) => {
       },
     },
   });
+
+  if (posthog) {
+    waitUntil(posthog.shutdown());
+  }
 
   return NextResponse.redirect(
     new URL("/settings/profile?emailChanged=true", request.url),
