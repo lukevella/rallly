@@ -1,11 +1,11 @@
 import "server-only";
 
-import { PostHog } from "@rallly/posthog/server";
 import * as Sentry from "@sentry/nextjs";
 import { waitUntil } from "@vercel/functions";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import z from "zod";
 import { getCurrentUser, getCurrentUserSpace } from "@/auth/data";
+import { PostHogClient } from "@/features/analytics/posthog";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { defineAbilityFor } from "@/features/user/ability";
@@ -14,13 +14,7 @@ import type { Duration } from "@/lib/rate-limit";
 import { rateLimit } from "@/lib/rate-limit";
 
 export const posthogMiddleware = createMiddleware().define(async ({ next }) => {
-  const posthog = process.env.NEXT_PUBLIC_POSTHOG_API_KEY
-    ? new PostHog(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
-        host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
-        flushAt: 20,
-        flushInterval: 10000,
-      })
-    : null;
+  const posthog = PostHogClient();
 
   const result = await next({
     ctx: {
