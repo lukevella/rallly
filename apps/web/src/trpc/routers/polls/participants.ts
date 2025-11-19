@@ -284,12 +284,21 @@ export const participants = router({
           }),
         );
 
+        ctx.posthog?.groupIdentify({
+          groupType: "poll",
+          groupKey: pollId,
+          properties: {
+            participant_count: totalResponses,
+          },
+        });
+
         // Track participant addition analytics
         ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "poll_response_submit",
           properties: {
-            participantId: participant.id,
+            participant_id: participant.id,
+            participant_name: participant.name,
             has_email: !!email,
             total_responses: totalResponses,
           },
