@@ -313,7 +313,6 @@ export const inviteMemberAction = spaceActionClient
         event: "space_member_invite",
         properties: {
           role: parsedInput.role,
-          email: parsedInput.email,
         },
         groups: {
           space: ctx.space.id,
