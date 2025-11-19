@@ -248,7 +248,21 @@ export const authLib = betterAuth({
 
           if (existingUser) {
             // create a space for the user
-            await createSpace({ name: "Personal", ownerId: user.id });
+            const space = await createSpace({
+              name: "Personal",
+              ownerId: user.id,
+            });
+
+            posthog?.groupIdentify({
+              groupType: "space",
+              groupKey: space.id,
+              properties: {
+                name: space.name,
+                memberCount: 1,
+                seatCount: 1,
+                tier: "hobby",
+              },
+            });
           }
 
           posthog?.capture({

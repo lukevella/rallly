@@ -7,16 +7,6 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { waitUntil } from "@vercel/functions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import {
-  trackInviteSent,
-  trackMemberJoin,
-  trackMemberLeaveSpace,
-  trackMemberRemoved,
-  trackSetActiveSpace,
-  trackSpaceCreated,
-  trackSpaceDeleted,
-  trackSpaceUpdated,
-} from "@/features/space/analytics";
 import { getMember, getSpaceSeatCount } from "@/features/space/data";
 import { createSpace } from "@/features/space/mutations";
 import { memberRoleSchema } from "@/features/space/schema";
@@ -26,6 +16,7 @@ import { AppError } from "@/lib/errors";
 import {
   authActionClient,
   createRateLimitMiddleware,
+  posthogMiddleware,
   spaceActionClient,
 } from "@/lib/safe-action/server";
 import {
@@ -76,10 +67,16 @@ export const setActiveSpaceAction = authActionClient
       spaceId: parsedInput.spaceId,
     });
 
-    trackSetActiveSpace({
-      spaceId: parsedInput.spaceId,
-      userId: ctx.user.id,
-      name: space.name,
+    ctx.posthog?.capture({
+      distinctId: ctx.user.id,
+      event: "space_set_active",
+      properties: {
+        space_id: parsedInput.spaceId,
+        space_name: space.name,
+      },
+      groups: {
+        space: parsedInput.spaceId,
+      },
     });
   });
 
@@ -88,6 +85,7 @@ export const createSpaceAction = authActionClient
     actionName: "space_create",
   })
   .use(createRateLimitMiddleware(5, "1h"))
+  .use(posthogMiddleware)
   .inputSchema(
     z.object({
       name: z.string().min(1).max(100),
@@ -99,7 +97,27 @@ export const createSpaceAction = authActionClient
       ownerId: ctx.user.id,
     });
 
-    trackSpaceCreated({ space, userId: ctx.user.id });
+    ctx.posthog?.groupIdentify({
+      groupType: "space",
+      groupKey: space.id,
+      properties: {
+        name: space.name,
+        memberCount: 1,
+        seatCount: 1,
+        tier: "hobby",
+      },
+    });
+
+    ctx.posthog?.capture({
+      distinctId: ctx.user.id,
+      event: "space_create",
+      properties: {
+        space_name: space.name,
+      },
+      groups: {
+        space: space.id,
+      },
+    });
 
     revalidatePath("/", "layout");
 
@@ -164,9 +182,15 @@ export const deleteSpaceAction = spaceActionClient
       },
     });
 
-    trackSpaceDeleted({
-      spaceId: space.id,
-      userId: ctx.user.id,
+    ctx.posthog?.capture({
+      distinctId: ctx.user.id,
+      event: "space_delete",
+      properties: {
+        space_id: space.id,
+      },
+      groups: {
+        space: space.id,
+      },
     });
 
     revalidatePath("/", "layout");
@@ -284,11 +308,16 @@ export const inviteMemberAction = spaceActionClient
         },
       });
 
-      trackInviteSent({
-        spaceId: ctx.space.id,
-        userId: ctx.user.id,
-        role: parsedInput.role,
-        email: parsedInput.email,
+      ctx.posthog?.capture({
+        distinctId: ctx.user.id,
+        event: "space_member_invite",
+        properties: {
+          role: parsedInput.role,
+          email: parsedInput.email,
+        },
+        groups: {
+          space: ctx.space.id,
+        },
       });
 
       return {
@@ -373,10 +402,15 @@ export const acceptInviteAction = authActionClient
       console.warn("Failed to update user's active space");
     }
 
-    trackMemberJoin({
-      spaceId: parsedInput.spaceId,
-      userId: ctx.user.id,
-      memberCount,
+    ctx.posthog?.capture({
+      distinctId: ctx.user.id,
+      event: "space_member_join",
+      properties: {
+        member_count: memberCount,
+      },
+      groups: {
+        space: parsedInput.spaceId,
+      },
     });
   });
 
@@ -419,10 +453,16 @@ export const removeMemberAction = spaceActionClient
       },
     });
 
-    trackMemberRemoved({
-      spaceId: member.spaceId,
-      userId: deletedMember.userId,
-      memberCount,
+    ctx.posthog?.capture({
+      distinctId: ctx.user.id,
+      event: "space_member_remove",
+      properties: {
+        member_count: memberCount,
+        deleted_member_user_id: deletedMember.userId,
+      },
+      groups: {
+        space: member.spaceId,
+      },
     });
   });
 
@@ -547,10 +587,15 @@ export const updateSpaceAction = spaceActionClient
       await deleteImageFromS3(oldImage);
     }
 
-    trackSpaceUpdated({
-      spaceId: ctx.space.id,
-      userId: ctx.user.id,
-      name: parsedInput.name,
+    ctx.posthog?.capture({
+      distinctId: ctx.user.id,
+      event: "space_update",
+      properties: {
+        space_name: parsedInput.name,
+      },
+      groups: {
+        space: ctx.space.id,
+      },
     });
   });
 
@@ -753,10 +798,15 @@ export const leaveSpaceFromAccountAction = authActionClient
       },
     });
 
-    trackMemberLeaveSpace({
-      spaceId: parsedInput.spaceId,
-      userId: ctx.user.id,
-      memberCount,
+    ctx.posthog?.capture({
+      distinctId: ctx.user.id,
+      event: "space_member_leave",
+      properties: {
+        member_count: memberCount,
+      },
+      groups: {
+        space: parsedInput.spaceId,
+      },
     });
   });
 
@@ -835,9 +885,14 @@ export const leaveSpaceAction = spaceActionClient
       },
     });
 
-    trackMemberLeaveSpace({
-      spaceId: ctx.space.id,
-      userId: ctx.user.id,
-      memberCount,
+    ctx.posthog?.capture({
+      distinctId: ctx.user.id,
+      event: "space_member_leave",
+      properties: {
+        member_count: memberCount,
+      },
+      groups: {
+        space: ctx.space.id,
+      },
     });
   });

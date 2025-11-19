@@ -1,5 +1,6 @@
 "use client";
 
+import { usePostHog } from "@rallly/posthog/client";
 import React from "react";
 import type { MemberAbility } from "@/features/space/member/ability";
 import { defineAbilityForMember } from "@/features/space/member/ability";
@@ -54,6 +55,15 @@ export const SpaceProvider = ({
     }),
     [data, userId],
   );
+
+  const posthog = usePostHog();
+
+  React.useEffect(() => {
+    posthog?.group("space", data.id, {
+      name: data.name,
+      tier: data.tier,
+    });
+  }, [posthog, data.id, data.name, data.tier]);
 
   return (
     <SpaceContext.Provider value={value}>{children}</SpaceContext.Provider>

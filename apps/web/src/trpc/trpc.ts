@@ -1,12 +1,11 @@
 import { prisma } from "@rallly/database";
-import { posthog } from "@rallly/posthog/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { waitUntil } from "@vercel/functions";
 import { kv } from "@vercel/kv";
 import superjson from "superjson";
 import { getCurrentUserSpace } from "@/auth/data";
-import { AnalyticsService } from "@/features/analytics/service";
+import { PostHogClient } from "@/features/analytics/posthog";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { isSelfHosted } from "@/utils/constants";
 import type { TRPCContext } from "./context";
@@ -22,23 +21,21 @@ export const router = t.router;
 
 export const middleware = t.middleware;
 
-export const procedureWithAnalytics = t.procedure.use(
-  async ({ next, type }) => {
-    const analytics = new AnalyticsService();
+export const procedureWithAnalytics = t.procedure.use(async ({ next }) => {
+  const posthog = PostHogClient();
 
-    const res = await next({
-      ctx: {
-        analytics,
-      },
-    });
+  const res = await next({
+    ctx: {
+      posthog,
+    },
+  });
 
-    if (type === "mutation") {
-      waitUntil(analytics.shutdown());
-    }
+  if (posthog) {
+    waitUntil(posthog.shutdown());
+  }
 
-    return res;
-  },
-);
+  return res;
+});
 
 export const publicProcedure = procedureWithAnalytics;
 
@@ -161,15 +158,6 @@ export const createRateLimitMiddleware = (
     const res = await ratelimit.limit(`${name}:${ctx.identifier}`);
 
     if (!res.success) {
-      posthog?.capture({
-        distinctId: ctx.user?.id ?? "system",
-        event: "ratelimit_exceeded",
-        properties: {
-          name,
-          requests,
-          duration,
-        },
-      });
       throw new TRPCError({
         code: "TOO_MANY_REQUESTS",
         message: "Too many requests",

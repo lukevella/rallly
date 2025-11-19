@@ -13,7 +13,7 @@ import { AppError } from "@/lib/errors";
 import type { Duration } from "@/lib/rate-limit";
 import { rateLimit } from "@/lib/rate-limit";
 
-const posthogMiddleware = createMiddleware().define(async ({ next }) => {
+export const posthogMiddleware = createMiddleware().define(async ({ next }) => {
   const posthog = process.env.NEXT_PUBLIC_POSTHOG_API_KEY
     ? new PostHog(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
         host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
