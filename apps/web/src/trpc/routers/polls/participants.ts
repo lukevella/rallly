@@ -157,7 +157,7 @@ export const participants = router({
         distinctId: ctx.user.id,
         event: "poll_response_delete",
         properties: {
-          participantId,
+          participant_id: participant.id,
         },
         groups: {
           poll: participant.pollId,
