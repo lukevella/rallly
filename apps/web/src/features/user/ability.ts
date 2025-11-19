@@ -51,9 +51,9 @@ function defineAbilityForUser(
 
   // Cannot delete user if they have active subscriptions
   cannot("delete", "User", {
-    spaces: {
+    subscriptions: {
       some: {
-        tier: "pro",
+        active: true,
       },
     },
   });
