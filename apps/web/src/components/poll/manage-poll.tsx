@@ -217,7 +217,7 @@ const ManagePoll: React.FunctionComponent<{
                   <CalendarCheck2Icon />
                 </Icon>
                 <Trans i18nKey="finishPoll" defaults="Finalize" />
-                <ProBadge />
+                {space.data.tier !== "pro" ? <ProBadge /> : null}
               </DropdownMenuItem>
               <PauseResumeToggle />
             </>
@@ -244,7 +244,7 @@ const ManagePoll: React.FunctionComponent<{
           >
             <DropdownMenuItemIconLabel icon={CopyIcon}>
               <Trans i18nKey="duplicate" defaults="Duplicate" />
-              <ProBadge />
+              {space.data.tier !== "pro" ? <ProBadge /> : null}
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
           <DropdownMenuSeparator />

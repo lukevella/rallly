@@ -119,7 +119,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
               <Setting>
                 <AtSignIcon className="size-5 shrink-0 translate-y-0.5" />
                 <SettingContent>
-                  <SettingTitle pro>
+                  <SettingTitle pro={isFree}>
                     <Trans
                       i18nKey="requireParticipantEmailLabel"
                       defaults="Make email address required for participants"
@@ -150,7 +150,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
               <Setting>
                 <EyeIcon className="size-5 shrink-0 translate-y-0.5" />
                 <SettingContent>
-                  <SettingTitle pro>
+                  <SettingTitle pro={isFree}>
                     <Trans
                       i18nKey="hideParticipantsLabel"
                       defaults="Hide participants from each other"
@@ -181,7 +181,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
               <Setting>
                 <VoteIcon className="size-5 shrink-0 translate-y-0.5" />
                 <SettingContent>
-                  <SettingTitle htmlFor={field.name} pro>
+                  <SettingTitle htmlFor={field.name} pro={isFree}>
                     <Trans
                       i18nKey="hideScoresLabel"
                       defaults="Hide scores until after a participant has voted"
