@@ -1,5 +1,6 @@
 "use client";
 
+import { defaultLocale } from "@rallly/languages";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
@@ -13,9 +14,10 @@ export const LinkBase = ({
   className?: string;
 }) => {
   const { i18n } = useTranslation();
-  const newHref = href.startsWith("/")
-    ? `/${i18n.resolvedLanguage}${href}`
-    : href;
+  const locale =
+    i18n.resolvedLanguage === defaultLocale ? "" : `/${i18n.resolvedLanguage}`;
+  const newHref = href.startsWith("/") ? `${locale}${href}` : href;
+
   return (
     <Link className={className} href={newHref}>
       {children}
