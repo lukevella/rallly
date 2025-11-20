@@ -1,5 +1,5 @@
 {
-  "createPageLikeThis": "Opret en side som denne hurtigt!",
+  "createPageLikeThis": "Opret hurtigt en side som denne!",
   "noLoginRequired": "Intet login påkrævet",
   "headline": "Find det bedste tidspunkt at mødes",
   "subheading": "Koordinere gruppemøder uden frem-og-tilbage e-mails",
@@ -30,6 +30,7 @@
   "freeSchedulingPollTitle": "Find en dato for din næste begivenhed",
   "freeSchedulingPollDescription": "Rallly lader dig oprette pæne og lette planlægningsafstemninger, så du kan finde det bedste tidspunkt for din næste begivenhed.",
   "new": "Ny",
+  "metaTitle": "Rallly: Gratis mødeplanlægningsværktøj for grupper",
   "metaDescription": "Opret afstemninger og stemme for at finde den bedste dag eller tid. Et gratis alternativ til Doodle.",
   "when2meetAlternativeMetaTitle": "Bedste When2Meet alternativ: Rallly",
   "when2meetAlternativeMetaDescription": "Find en bedre måde at planlægge møder med Rallly, det bedste gratis alternativ til When2Meet. Let at bruge og gratis.",
