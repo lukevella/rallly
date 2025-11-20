@@ -76,5 +76,11 @@
   "spaceInvite_preview": "Du er inviteret til at deltage i {spaceName}",
   "spaceInvite_heading": "Du er inviteret!",
   "spaceInvite_button": "Accepter invitation",
-  "spaceInvite_subject": "Du er inviteret til at deltage i {spaceName}"
+  "spaceInvite_subject": "Du er inviteret til at deltage i {spaceName}",
+  "resetPassword_button": "Nulstil adgangskode",
+  "resetPassword_content2": "Hvis du ikke har anmodet om at nulstille din adgangskode, kan du ignorere denne e-mail. Din adgangskode vil ikke blive ændret, medmindre du opretter en ny. Hvis denne anmodning virker mistænkelig, skal du kontakte <a>{supportEmail}</a>.",
+  "resetPassword_preview": "Brug dette link til at nulstille din adgangskode.",
+  "resetPassword_heading": "Nulstil adgangskode",
+  "resetPassword_content": "Vi har modtaget en anmodning om at nulstille din adgangskode. Klik på knappen nedenfor for at oprette en ny adgangskode.",
+  "resetPassword_subject": "Nulstil adgangskode"
 }
