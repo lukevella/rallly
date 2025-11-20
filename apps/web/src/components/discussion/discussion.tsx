@@ -1,5 +1,4 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
@@ -70,8 +69,6 @@ function NewCommentForm({
 
   const pollId = poll.id;
 
-  const posthog = usePostHog();
-
   const { register, reset, control, handleSubmit, formState } =
     useForm<CommentForm>({
       defaultValues: {
@@ -81,9 +78,6 @@ function NewCommentForm({
     });
 
   const addComment = trpc.polls.comments.add.useMutation({
-    onSuccess: () => {
-      posthog?.capture("created comment");
-    },
     onError: (error) => {
       toast.error(error.message);
     },
@@ -156,7 +150,6 @@ function DiscussionInner() {
   const pollId = poll.id;
 
   const { data: comments } = trpc.polls.comments.list.useQuery({ pollId });
-  const posthog = usePostHog();
 
   const queryClient = trpc.useUtils();
 
@@ -168,9 +161,6 @@ function DiscussionInner() {
           return [...existingComments].filter(({ id }) => id !== commentId);
         },
       );
-    },
-    onSuccess: () => {
-      posthog?.capture("deleted comment");
     },
   });
 
