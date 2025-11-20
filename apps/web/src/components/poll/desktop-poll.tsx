@@ -13,7 +13,6 @@ import {
   Users2Icon,
 } from "lucide-react";
 import * as React from "react";
-import { RemoveScroll } from "react-remove-scroll";
 import { useMeasure, useScroll } from "react-use";
 import useClickAway from "react-use/lib/useClickAway";
 
@@ -93,7 +92,10 @@ const DesktopPoll: React.FunctionComponent = () => {
 
   const [measureRef, { height }] = useMeasure<HTMLDivElement>();
 
+  const [didScroll, setDidScroll] = React.useState(false);
+
   const goToNextPage = () => {
+    setDidScroll(true);
     if (scrollRef.current) {
       scrollRef.current.scrollLeft += 235;
     }
@@ -168,6 +170,7 @@ const DesktopPoll: React.FunctionComponent = () => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
+                    className="relative"
                     variant="ghost"
                     size="icon"
                     disabled={Boolean(
@@ -182,6 +185,12 @@ const DesktopPoll: React.FunctionComponent = () => {
                     <Icon>
                       <ArrowRightIcon />
                     </Icon>
+                    {!didScroll ? (
+                      <span className="-top-0.5 -right-0.5 absolute flex size-2">
+                        <span className="absolute top-0 right-0 inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
+                        <span className="relative inline-flex size-2 rounded-full bg-rose-500" />
+                      </span>
+                    ) : null}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -210,7 +219,7 @@ const DesktopPoll: React.FunctionComponent = () => {
               </TooltipContent>
             </Tooltip>
           ) : (
-            <Tooltip>
+            <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
@@ -293,8 +302,12 @@ const DesktopPoll: React.FunctionComponent = () => {
                   )}
                 />
 
-                <RemoveScroll
-                  enabled={expanded}
+                <div
+                  onScroll={() => {
+                    if (!didScroll) {
+                      setDidScroll(true);
+                    }
+                  }}
                   ref={scrollRef}
                   className={cn(
                     "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 flex-grow overflow-auto scroll-smooth",
@@ -374,7 +387,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                       </Button>
                     </div>
                   ) : null}
-                </RemoveScroll>
+                </div>
               </div>
             ) : (
               <EmptyState className="p-16">
