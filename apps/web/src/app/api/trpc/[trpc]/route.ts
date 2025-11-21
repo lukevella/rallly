@@ -5,6 +5,7 @@ import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 
 import { getSession } from "@/lib/auth";
+import { getLocaleFromRequest } from "@/lib/locale/server";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
 import { getEmailClient } from "@/utils/emails";
@@ -13,6 +14,7 @@ const handler = async (req: NextRequest) => {
   const session = await getSession();
   const ip = ipAddress(req);
   const ja4Digest = req.headers.get("x-vercel-ja4-digest");
+  const reqLocale = getLocaleFromRequest(req);
 
   return fetchRequestHandler({
     endpoint: "/api/trpc",
@@ -26,7 +28,7 @@ const handler = async (req: NextRequest) => {
         ? {
             id: session.user.id,
             isGuest: session.user.isGuest,
-            locale: session.user.locale ?? undefined,
+            locale: session.user.locale ?? reqLocale,
             image: session.user.image ?? undefined,
             getEmailClient: () =>
               getEmailClient(session.user?.locale ?? undefined),

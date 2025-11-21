@@ -183,8 +183,6 @@ export const participants = router({
     )
     .mutation(
       async ({ ctx, input: { pollId, votes, name, email, timeZone } }) => {
-        const { user } = ctx;
-
         const { participant, totalResponses } = await prisma.$transaction(
           async (prisma) => {
             const participantCount = await prisma.participant.count({
@@ -207,10 +205,10 @@ export const participants = router({
                 name: name,
                 email,
                 timeZone,
-                ...(user.isLegacyGuest
-                  ? { guestId: user.id }
-                  : { userId: user.id }),
-                locale: user.locale ?? undefined,
+                ...(ctx.user.isLegacyGuest
+                  ? { guestId: ctx.user.id }
+                  : { userId: ctx.user.id }),
+                locale: ctx.user.locale ?? undefined,
               },
               include: {
                 poll: {
@@ -256,7 +254,7 @@ export const participants = router({
 
         if (email) {
           const token = await createToken(
-            { userId: user.id },
+            { userId: ctx.user.id },
             {
               ttl: 0, // basically forever
             },
