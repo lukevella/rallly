@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: default
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  serviceName: "postgres"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        env:
+        - name: POSTGRES_USER
+          value: rallly
+        - name: POSTGRES_PASSWORD
+          value: change_me_password
+        - name: POSTGRES_DB
+          value: rallly
+        ports:
+        - containerPort: 5432
+          name: postgres
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

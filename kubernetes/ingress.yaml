@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rallly
+  namespace: default
+  annotations:
+    # Example for cert-manager (uncomment if using)
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    
+    # Example for NGINX ingress controller size limit
+    # nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: rallly.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: rallly
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - rallly.example.com
+    secretName: rallly-tls
