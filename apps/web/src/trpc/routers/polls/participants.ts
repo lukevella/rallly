@@ -147,6 +147,11 @@ export const participants = router({
           ctx.user && (await hasPollAdminAccess(pollId, ctx.user.id));
         if (!isAdmin) {
           return participants.map((participant) => {
+            // If the current user is the participant, return the participant
+            if (ctx.user && participant.userId === ctx.user.id) {
+              return participant;
+            }
+
             return {
               ...participant,
               name: "Anonymous",
