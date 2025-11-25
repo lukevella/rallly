@@ -16,15 +16,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "border-primary bg-primary text-white hover:bg-primary-500 focus-visible:ring-offset-1 disabled:border-transparent disabled:bg-gray-400",
+          "border-primary bg-primary text-white focus-visible:ring-2 focus-visible:ring-gray-300 focus-visible:ring-offset-1 active:bg-primary-500 disabled:border-transparent disabled:bg-gray-400",
         destructive:
           "border-destructive bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 focus-visible:ring-offset-1 active:bg-destructive",
         default:
-          "bg-gray-50 hover:bg-gray-100 focus-visible:ring-offset-1 active:bg-gray-200",
+          "bg-white hover:bg-gray-50 focus-visible:ring-offset-1 active:bg-gray-100",
         secondary:
           "border-secondary bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-offset-1",
         ghost:
-          "border-transparent bg-transparent text-gray-800 hover:bg-gray-500/10 focus:ring-2 focus:ring-gray-200 active:bg-gray-500/20 data-[state=open]:bg-gray-500/20",
+          "border-transparent bg-transparent text-gray-800 hover:bg-gray-500/10 focus-visible:ring-2 focus-visible:ring-gray-200 active:bg-gray-500/20 data-[state=open]:bg-gray-500/20",
         actionBar:
           "border-transparent bg-action-bar text-action-bar-foreground hover:bg-action-bar-foreground/10 data-[state=open]:bg-action-bar-foreground/20",
         link: "border-transparent text-primary underline-offset-4 hover:underline",
