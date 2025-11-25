@@ -107,7 +107,18 @@ export const participants = router({
         pollId: z.string(),
       }),
     )
-    .query(async ({ input: { pollId } }) => {
+    .query(async ({ ctx, input: { pollId } }) => {
+      const poll = await prisma.poll.findUnique({
+        where: { id: pollId },
+        select: {
+          hideParticipants: true,
+        },
+      });
+
+      if (!poll) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
+      }
+
       const participants = await prisma.participant.findMany({
         where: {
           pollId,
@@ -128,6 +139,23 @@ export const participants = router({
           { name: "desc" },
         ],
       });
+
+      // Hide participants if the poll has hideParticipants enabled
+      // and the current user is not an admin
+      if (poll.hideParticipants) {
+        const isAdmin =
+          ctx.user && (await hasPollAdminAccess(pollId, ctx.user.id));
+        if (!isAdmin) {
+          return participants.map((participant) => {
+            return {
+              ...participant,
+              name: "Anonymous",
+              email: null,
+            };
+          });
+        }
+      }
+
       return participants;
     }),
   delete: publicProcedure
