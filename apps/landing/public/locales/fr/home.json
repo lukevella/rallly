@@ -30,6 +30,7 @@
   "freeSchedulingPollTitle": "Trouvez une date pour votre prochain événement",
   "freeSchedulingPollDescription": "Rallly vous permet de créer des sondages beaux et simples afin de trouver le meilleur moment pour votre prochain événement.",
   "new": "Nouveau",
+  "metaTitle": "Rallly - Outil de planification de réunions de groupe gratuit",
   "metaDescription": "Créez des sondages et votez pour trouver le meilleur jour ou la meilleure heure. Une alternative gratuite à Doodle.",
   "when2meetAlternativeMetaTitle": "Meilleure Alternative à When2Meet : Rallly",
   "when2meetAlternativeMetaDescription": "Trouvez une meilleure façon de planifier des réunions avec Rallly, la meilleure alternative gratuite à When2Meet. Facile à utiliser et gratuit.",
@@ -38,5 +39,6 @@
   "meetingPoll": "Créez des sondages professionnels avec Rallly",
   "meetingPollDescription": "Les sondages de réunion sont un excellent moyen d'obtenir les disponibilités. Rallly vous permet de créer de beaux sondages de réunion en toute simplicité.",
   "meetingPollMetaTitle": "Sondage de Réunion",
-  "meetingPollMetaDescription": "Planifiez facilement des réunions avec notre fonction de sondage, assurant ainsi la disponibilité de chacun."
+  "meetingPollMetaDescription": "Planifiez facilement des réunions avec notre fonction de sondage, assurant ainsi la disponibilité de chacun.",
+  "spacesBlog": "Présentation des espaces"
 }
