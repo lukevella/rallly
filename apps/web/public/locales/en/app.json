@@ -149,7 +149,6 @@
   "expand": "Expand",
   "supportDescription": "Need help with anything?",
   "contactSupport": "Contact Support",
-  "pricing": "Pricing",
   "pollSettingsDescription": "Customize the behaviour of your poll",
   "requireParticipantEmailLabel": "Make email address required for participants",
   "hideParticipantsLabel": "Hide participant list from other participants",
@@ -559,5 +558,6 @@
   "resetPasswordButton": "Reset password",
   "passwordStrength": "Password Strength",
   "emailChangeInvalidUserId": "Please login with the same email address as the one you used to request the change.",
-  "ssoAuthenticationOnly": "Authentication is managed through Single Sign-On (SSO). Password management is not available."
+  "ssoAuthenticationOnly": "Authentication is managed through Single Sign-On (SSO). Password management is not available.",
+  "oidcAutoSignInDescription": "You are being redirected to the login page..."
 }
