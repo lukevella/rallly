@@ -2,11 +2,13 @@ import { Button } from "@rallly/ui/button";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { redirect } from "next/navigation";
 import { PollPageIcon } from "@/app/components/page-icons";
 import { getCurrentUser } from "@/auth/data";
 import { CreatePoll } from "@/components/create-poll";
 import { Trans } from "@/components/trans";
 import { UserDropdown } from "@/components/user-dropdown";
+import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getTranslation } from "@/i18n/server";
 import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import { BackButton } from "./back-button";
@@ -16,6 +18,10 @@ export default async function Page() {
     getCurrentUser(),
     getRegistrationEnabled(),
   ]);
+
+  if (!user && !isQuickCreateEnabled) {
+    redirect(`/login?redirectTo=${encodeURIComponent("/new")}`);
+  }
 
   return (
     <div className="absolute inset-0 h-dvh overflow-auto bg-gray-100">
