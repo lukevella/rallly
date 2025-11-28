@@ -558,5 +558,6 @@
   "resetPasswordButton": "Passwort zurücksetzen",
   "passwordStrength": "Passwortstärke",
   "emailChangeInvalidUserId": "Bitte melde dich mit derselben E-Mail-Adresse an, die du für die Anfrage zur Änderung verwendet hast.",
-  "ssoAuthenticationOnly": "Die Authentifizierung wird über Single Sign-On (SSO) verwaltet. Die Passwortverwaltung ist nicht verfügbar."
+  "ssoAuthenticationOnly": "Die Authentifizierung wird über Single Sign-On (SSO) verwaltet. Die Passwortverwaltung ist nicht verfügbar.",
+  "oidcAutoSignInDescription": "Du wirst zur Anmeldeseite weitergeleitet..."
 }
