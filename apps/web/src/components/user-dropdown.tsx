@@ -15,7 +15,6 @@ import {
   ArrowUpRight,
   ChevronDownIcon,
   CreditCardIcon,
-  GemIcon,
   LifeBuoyIcon,
   ListIcon,
   LogOutIcon,
@@ -25,7 +24,7 @@ import {
 import Link from "next/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
-import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
+import { IfCloudHosted } from "@/contexts/environment";
 import { signOut } from "@/lib/auth-client";
 
 export const UserDropdown = ({
@@ -113,18 +112,6 @@ export const UserDropdown = ({
             </Icon>
           </Link>
         </DropdownMenuItem>
-        <IfSelfHosted>
-          <DropdownMenuItem asChild={true}>
-            <Link
-              target="_blank"
-              href="https://support.rallly.co/self-hosting/pricing"
-              className="flex items-center gap-x-2"
-            >
-              <GemIcon className="size-4 text-muted-foreground" />
-              <Trans i18nKey="pricing" defaults="Pricing" />
-            </Link>
-          </DropdownMenuItem>
-        </IfSelfHosted>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={async () => {
