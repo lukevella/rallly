@@ -558,5 +558,6 @@
   "resetPasswordButton": "Jelszó visszaállítása",
   "passwordStrength": "Jelszó erőssége",
   "emailChangeInvalidUserId": "Kérjük, jelentkezz be ugyanazzal az email címmel, amelyet a változtatás kéréséhez használtál.",
-  "ssoAuthenticationOnly": "A hitelesítést a Single Sign-On (SSO) kezeli. A jelszókezelés nem elérhető."
+  "ssoAuthenticationOnly": "A hitelesítést a Single Sign-On (SSO) kezeli. A jelszókezelés nem elérhető.",
+  "oidcAutoSignInDescription": "Átirányítunk a bejelentkező oldalra..."
 }
