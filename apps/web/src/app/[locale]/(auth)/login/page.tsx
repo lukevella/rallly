@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
+import { OIDCAutoSignIn } from "@/app/[locale]/(auth)/login/components/oidc-auto-sign-in";
 import { env } from "@/env";
 import { getTranslation } from "@/i18n/server";
 import { authLib, getSession } from "@/lib/auth";
@@ -36,6 +37,7 @@ async function loadData() {
 export default async function LoginPage(props: {
   searchParams?: Promise<{
     redirectTo?: string;
+    error?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
@@ -51,8 +53,21 @@ export default async function LoginPage(props: {
   const hasOidc = !!authLib.options.plugins.find(
     (plugin) => plugin.id === "generic-oauth",
   );
-  const hasAlternateLoginMethods =
-    hasGoogleProvider || hasMicrosoftProvider || hasOidc;
+
+  const hasSocialLogin = hasGoogleProvider || hasMicrosoftProvider;
+
+  const hasAlternateLoginMethods = hasSocialLogin || hasOidc;
+
+  const hasError = !!searchParams?.error;
+
+  const shouldAutoSignIn =
+    hasOidc && !hasError && !isEmailLoginEnabled && !hasSocialLogin;
+  /**
+   * If there is only one login method available, we should automatically redirect to the login page.
+   */
+  if (shouldAutoSignIn) {
+    return <OIDCAutoSignIn />;
+  }
 
   return (
     <AuthPageContainer>
