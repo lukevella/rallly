@@ -149,7 +149,6 @@
   "expand": "Kinyit",
   "supportDescription": "Segítségre van szükséged?",
   "contactSupport": "Ügyféltámogatás",
-  "pricing": "Árazás",
   "pollSettingsDescription": "Szabd testre a szavazásod",
   "requireParticipantEmailLabel": "A résztvevőknek kötelező megadni email címet szavazáskor",
   "hideParticipantsLabel": "Résztvevők listájának elrejtése a többi résztvevő elől",
@@ -559,5 +558,6 @@
   "resetPasswordButton": "Jelszó visszaállítása",
   "passwordStrength": "Jelszó erőssége",
   "emailChangeInvalidUserId": "Kérjük, jelentkezz be ugyanazzal az email címmel, amelyet a változtatás kéréséhez használtál.",
-  "ssoAuthenticationOnly": "A hitelesítést a Single Sign-On (SSO) kezeli. A jelszókezelés nem elérhető."
+  "ssoAuthenticationOnly": "A hitelesítést a Single Sign-On (SSO) kezeli. A jelszókezelés nem elérhető.",
+  "oidcAutoSignInDescription": "Átirányítunk a bejelentkező oldalra..."
 }

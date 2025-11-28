@@ -21,7 +21,7 @@
   "newParticipantConfirmation_footnote": "Ezt az emailt azért kaptad, mert egy <domain /> válasz érkezett. Ha ez nem te voltál, kérjük, hogy hagyd figyelmen kívül ezt az emailt.",
   "newParticipantConfirmation_preview": "A válaszod szerkesztéséhez használd az alábbi hivatkozást",
   "newParticipantConfirmation_heading": "Szavazat megerősítés",
-  "newParticipantConfirmation_subject": "Köszönjük a válaszad erre: {title}",
+  "newParticipantConfirmation_subject": "Köszönjük a válaszod erre: {title}",
   "newParticipant_content": "<b>{name}</b> szavazott erre: <b>{title}</b>.",
   "newParticipant_content2": "Irány a szavazás, hogy láthasd az új szavazatokat.",
   "newParticipant_preview": "Irány a szavazás, hogy láthasd az új szavazatokat.",
