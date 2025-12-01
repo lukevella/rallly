@@ -65,7 +65,7 @@ export const InviteDialog = () => {
           <Trans i18nKey="share" defaults="Share" />
         </Button>
       </DialogTrigger>
-      <DialogContent data-testid="invite-participant-dialog">
+      <DialogContent data-testid="invite-participant-dialog" className="sm:max-w-[600px]">
         <div className="flex">
           <Share2Icon className="size-6 text-primary" />
         </div>
@@ -75,43 +75,36 @@ export const InviteDialog = () => {
           </DialogTitle>
           <DialogDescription>
             <Trans
-              i18nKey="inviteParticipantsDescription"
-              defaults="Copy and share the invite link to start gathering responses from your participants."
+              i18nKey="copyLinkOrScanQrCode"
+              defaults="Copy the link or scan the QR code to vote."
             />
           </DialogDescription>
         </DialogHeader>
-        <div className="min-w-0">
-          <p className="mb-2 text-sm">
-            <Trans i18nKey="inviteLink" defaults="Invite Link" />
-          </p>
-          <div className="flex gap-2">
-            <CopyInviteLinkButton />
-            <div className="shrink-0">
-              <Button asChild>
-                <Link target="_blank" href={`/invite/${poll.id}`}>
-                  <ArrowUpRightIcon className="size-4" />
-                </Link>
-              </Button>
+        <div className="flex gap-4">
+          <div className="min-w-0 flex-1">
+            <p className="mb-2 text-sm">
+              <Trans i18nKey="inviteLink" defaults="Invite Link" />
+            </p>
+            <div className="flex gap-2">
+              <CopyInviteLinkButton />
+              <div className="shrink-0">
+                <Button asChild>
+                  <Link target="_blank" href={`/invite/${poll.id}`}>
+                    <ArrowUpRightIcon className="size-4" />
+                  </Link>
+                </Button>
+              </div>
             </div>
+            <p className="mt-3 text-muted-foreground text-sm">
+              <Trans
+                i18nKey="anyoneWithLinkCanVote"
+                defaults="Anyone with this link can vote."
+              />
+            </p>
           </div>
-        </div>
-        <p className="text-muted-foreground text-sm">
-          <Trans
-            i18nKey="inviteParticipantLinkInfo"
-            defaults="Anyone with this link will be able to vote on your poll."
-          />
-        </p>
-        <div className="border-t pt-4">
-          <p className="mb-2 font-medium text-sm">
-            <Trans i18nKey="qrCode" defaults="QR Code" />
-          </p>
-          <p className="mb-4 text-muted-foreground text-sm">
-            <Trans
-              i18nKey="qrCodeDescription"
-              defaults="Share this QR code in presentations or print it for physical distribution."
-            />
-          </p>
-          <QRCodeDisplay url={poll.inviteLink} pollId={poll.id} />
+          <div className="shrink-0">
+            <QRCodeDisplay url={poll.inviteLink} pollId={poll.id} size={160} />
+          </div>
         </div>
       </DialogContent>
     </Dialog>

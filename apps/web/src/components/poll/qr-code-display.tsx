@@ -84,8 +84,8 @@ export function QRCodeDisplay({
   };
 
   return (
-    <div className={cn("flex flex-col gap-4", className)}>
-      <div className="flex justify-center rounded-lg border bg-white p-4">
+    <div className={cn("flex flex-col gap-3", className)}>
+      <div className="flex justify-center rounded-lg border bg-white p-2.5">
         <QRCodeCanvas
           ref={canvasRef}
           value={url}
@@ -93,7 +93,7 @@ export function QRCodeDisplay({
           level={level}
           bgColor="#FFFFFF"
           fgColor="#000000"
-          marginSize={4}
+          marginSize={1}
           aria-label="QR code for poll invitation"
         />
       </div>
@@ -101,12 +101,13 @@ export function QRCodeDisplay({
       <Button
         onClick={handleDownload}
         disabled={isDownloading}
+        variant="primary"
         className="w-full"
       >
         <Icon>
           <DownloadIcon />
         </Icon>
-        <Trans i18nKey="downloadQrCode" defaults="Download QR Code" />
+        <Trans i18nKey="save" defaults="Save" />
       </Button>
 
       {error && (

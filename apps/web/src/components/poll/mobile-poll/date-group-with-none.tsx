@@ -2,10 +2,12 @@
 
 import type { VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
-import { Checkbox } from "@rallly/ui/checkbox";
 import * as React from "react";
 import { Trans } from "@/components/trans";
 import type { ParsedDateTimeOpton } from "@/utils/date-time-utils";
+
+import VoteIcon from "../vote-icon";
+import { toggleVote } from "../vote-selector";
 
 export interface DateGroupWithNoneProps {
   dateLabel: string;
@@ -26,44 +28,64 @@ export function DateGroupWithNone({
   children,
   className,
 }: DateGroupWithNoneProps) {
-  const allSlotsNo = React.useMemo(() => {
-    return options.every((opt) => {
+  const noneVote = React.useMemo(() => {
+    const allVotes = options.map((opt) => {
       const vote = votes.find((v) => v?.optionId === opt.optionId);
-      return vote?.type === "no";
+      return vote?.type;
     });
+    
+    if (allVotes.every((v) => v === "yes")) return "yes";
+    if (allVotes.every((v) => v === "ifNeedBe")) return "ifNeedBe";
+    if (allVotes.every((v) => v === "no")) return "no";
+    
+    return undefined;
   }, [options, votes]);
 
-  const [noneChecked, setNoneChecked] = React.useState(allSlotsNo);
-
-  React.useEffect(() => {
-    setNoneChecked(allSlotsNo);
-  }, [allSlotsNo]);
-
-  const handleNoneChange = (checked: boolean) => {
-    if (checked) {
-      const optionIds = options.map((opt) => opt.optionId);
-      onVotesChange(optionIds, "no");
-    }
-  };
+  const handleNoneClick = React.useCallback(() => {
+    if (!editable) return;
+    
+    const nextVote = toggleVote(noneVote);
+    const optionIds = options.map((opt) => opt.optionId);
+    onVotesChange(optionIds, nextVote);
+  }, [editable, noneVote, options, onVotesChange]);
 
   return (
     <div className={cn("space-y-0", className)}>
       {editable ? (
-        <div className="flex items-center gap-3 border-b bg-gray-50 px-4 py-3">
-          <Checkbox
-            id={`none-${dateLabel}`}
-            checked={noneChecked}
-            onCheckedChange={handleNoneChange}
-          />
-          <label
-            htmlFor={`none-${dateLabel}`}
-            className="flex flex-1 cursor-pointer items-center justify-between text-sm"
+        <div className="border-b bg-gray-50 px-4 py-3">
+          <div className="mb-2 font-medium text-gray-900 text-sm">
+            {dateLabel}
+          </div>
+          <button
+            type="button"
+            onClick={handleNoneClick}
+            className={cn(
+              "flex w-full items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors",
+              {
+                "border-green-500 bg-green-50 text-green-700":
+                  noneVote === "yes",
+                "border-amber-500 bg-amber-50 text-amber-700":
+                  noneVote === "ifNeedBe",
+                "border-red-500 bg-red-50 text-red-700": noneVote === "no",
+                "border-gray-300 bg-white text-gray-600": !noneVote,
+              },
+            )}
           >
-            <span className="font-medium">{dateLabel}</span>
-            <span className="text-muted-foreground text-xs">
-              <Trans i18nKey="noneOption" defaults="None" />
+            <div className="flex size-5 items-center justify-center">
+              <VoteIcon type={noneVote} size="sm" />
+            </div>
+            <span className="font-medium">
+              {noneVote === "yes" ? (
+                <Trans i18nKey="allDay" defaults="All day" />
+              ) : noneVote === "ifNeedBe" ? (
+                <Trans i18nKey="allDayIfNeeded" defaults="All day if needed" />
+              ) : noneVote === "no" ? (
+                <Trans i18nKey="notThisDay" defaults="Not this day" />
+              ) : (
+                <Trans i18nKey="selectAllTimes" defaults="Select all times" />
+              )}
             </span>
-          </label>
+          </button>
         </div>
       ) : null}
       <div className="divide-y">{children}</div>

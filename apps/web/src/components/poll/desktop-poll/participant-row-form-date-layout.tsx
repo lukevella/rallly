@@ -17,7 +17,7 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { YouAvatar } from "@/components/poll/you-avatar";
-import { usePoll } from "@/components/poll-context";
+import { usePoll } from "@/contexts/poll";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 
@@ -38,7 +38,8 @@ export function ParticipantRowFormDateLayout({
   className,
 }: ParticipantRowFormDateLayoutProps) {
   const { t } = useTranslation();
-  const { optionIds } = usePoll();
+  const poll = usePoll();
+  const optionIds = React.useMemo(() => poll.options.map((option) => option.id), [poll.options]);
   const form = useVotingForm();
 
   React.useEffect(() => {
@@ -66,12 +67,18 @@ export function ParticipantRowFormDateLayout({
     return map;
   }, [votes]);
 
-  const handleVoteChange = (optionId: string, type: VoteType) => {
-    const voteIndex = optionIds.findIndex((id) => id === optionId);
-    if (voteIndex !== -1) {
-      form.setValue(`votes.${voteIndex}`, { optionId, type });
-    }
-  };
+  const handleVoteChange = React.useCallback(
+    (optionId: string, type: VoteType) => {
+      const currentVotes = form.getValues("votes");
+      const voteIndex = optionIds.findIndex((id) => id === optionId);
+      if (voteIndex !== -1) {
+        const newVotes = [...currentVotes];
+        newVotes[voteIndex] = { optionId, type };
+        form.setValue("votes", newVotes, { shouldDirty: true, shouldValidate: true });
+      }
+    },
+    [optionIds, form],
+  );
 
   return (
     <div className={cn("space-y-4 border-b bg-gray-50 p-4", className)}>

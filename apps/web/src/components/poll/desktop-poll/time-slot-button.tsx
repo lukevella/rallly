@@ -34,8 +34,8 @@ export function TimeSlotButton({
         {
           "border-green-200 bg-green-50": vote === "yes",
           "border-amber-200 bg-amber-50": vote === "ifNeedBe",
-          "border-gray-200 bg-gray-100": vote === "no" || !vote,
-          "border-gray-200 bg-white": !vote && !editable,
+          "border-gray-200 bg-gray-100": vote === "no",
+          "border-gray-200 bg-white": !vote,
         },
         className,
       )}
@@ -45,7 +45,7 @@ export function TimeSlotButton({
         <div className="text-gray-500">-</div>
         <div>{endTime}</div>
       </div>
-      {editable ? (
+      {editable && onChange ? (
         <VoteSelector value={vote} onChange={onChange} />
       ) : vote ? (
         <div className="flex size-7 items-center justify-center">

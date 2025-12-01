@@ -67,11 +67,11 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
               name="votes"
               render={({ field }) => {
                 const handleVotesChange = (
-                  optionIds: string[],
+                  targetOptionIds: string[],
                   type: VoteType,
                 ) => {
                   const newValue = [...field.value];
-                  for (const optionId of optionIds) {
+                  for (const optionId of targetOptionIds) {
                     const index = optionIds.findIndex((id) => id === optionId);
                     if (index !== -1) {
                       newValue[index] = { optionId, type };

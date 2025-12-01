@@ -138,7 +138,9 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
             setIsNewParticipantModalOpen(true);
           }
         })}
-      />
+      >
+        {children}
+      </form>
       <Dialog
         open={isNewParticipantModalOpen}
         onOpenChange={setIsNewParticipantModalOpen}
@@ -168,7 +170,6 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
           />
         </DialogContent>
       </Dialog>
-      {children}
     </FormProvider>
   );
 };
