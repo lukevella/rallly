@@ -14,6 +14,7 @@ import React from "react";
 import { useCopyToClipboard } from "react-use";
 
 import { useParticipants } from "@/components/participants-provider";
+import { QRCodeDisplay } from "@/components/poll/qr-code-display";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 
@@ -100,6 +101,18 @@ export const InviteDialog = () => {
             defaults="Anyone with this link will be able to vote on your poll."
           />
         </p>
+        <div className="border-t pt-4">
+          <p className="mb-2 font-medium text-sm">
+            <Trans i18nKey="qrCode" defaults="QR Code" />
+          </p>
+          <p className="mb-4 text-muted-foreground text-sm">
+            <Trans
+              i18nKey="qrCodeDescription"
+              defaults="Share this QR code in presentations or print it for physical distribution."
+            />
+          </p>
+          <QRCodeDisplay url={poll.inviteLink} pollId={poll.id} />
+        </div>
       </DialogContent>
     </Dialog>
   );

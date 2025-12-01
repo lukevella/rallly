@@ -35,7 +35,9 @@ import {
 } from "../participants-provider";
 import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";
+import { ParticipantRowFormDateLayout } from "./desktop-poll/participant-row-form-date-layout";
 import PollHeader from "./desktop-poll/poll-header";
+import { groupOptionsByDate } from "./group-by-date";
 
 function EscapeListener({ onEscape }: { onEscape: () => void }) {
   React.useEffect(() => {
@@ -93,6 +95,16 @@ const DesktopPoll: React.FunctionComponent = () => {
   const [measureRef, { height }] = useMeasure<HTMLDivElement>();
 
   const [didScroll, setDidScroll] = React.useState(false);
+
+  const useRowLayout = React.useMemo(
+    () => poll.options.some((opt) => opt.duration > 0),
+    [poll.options],
+  );
+
+  const dateGroups = React.useMemo(
+    () => (useRowLayout ? groupOptionsByDate(poll.options) : []),
+    [useRowLayout, poll.options],
+  );
 
   const goToNextPage = () => {
     setDidScroll(true);
@@ -313,51 +325,58 @@ const DesktopPoll: React.FunctionComponent = () => {
                     "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 flex-grow overflow-auto scroll-smooth",
                   )}
                 >
-                  <table className="w-full table-auto border-separate border-spacing-0 bg-gray-50">
-                    <thead>
-                      <PollHeader />
-                    </thead>
-                    <tbody>
-                      {mode === "new" ? (
-                        <ParticipantRowForm isNew={true} />
-                      ) : null}
-                      {visibleParticipants.length > 0
-                        ? visibleParticipants.map((participant, i) => {
-                            return (
-                              <ParticipantRow
-                                // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
-                                key={i}
-                                participant={{
-                                  id: participant.id,
-                                  name: participant.name,
-                                  userId: participant.userId ?? undefined,
-                                  guestId: participant.guestId ?? undefined,
-                                  email: participant.email ?? undefined,
-                                  votes: participant.votes,
-                                }}
-                                editMode={
-                                  votingForm.watch("mode") === "edit" &&
-                                  votingForm.watch("participantId") ===
-                                    participant.id
-                                }
-                                className={
-                                  i === visibleParticipants.length - 1
-                                    ? "last-row"
-                                    : ""
-                                }
-                                onChangeEditMode={(isEditing) => {
-                                  if (isEditing) {
-                                    votingForm.setEditingParticipantId(
-                                      participant.id,
-                                    );
+                  {useRowLayout && (mode === "new" || mode === "edit") ? (
+                    <ParticipantRowFormDateLayout
+                      isNew={mode === "new"}
+                      dateGroups={dateGroups}
+                    />
+                  ) : (
+                    <table className="w-full table-auto border-separate border-spacing-0 bg-gray-50">
+                      <thead>
+                        <PollHeader />
+                      </thead>
+                      <tbody>
+                        {mode === "new" ? (
+                          <ParticipantRowForm isNew={true} />
+                        ) : null}
+                        {visibleParticipants.length > 0
+                          ? visibleParticipants.map((participant, i) => {
+                              return (
+                                <ParticipantRow
+                                  // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
+                                  key={i}
+                                  participant={{
+                                    id: participant.id,
+                                    name: participant.name,
+                                    userId: participant.userId ?? undefined,
+                                    guestId: participant.guestId ?? undefined,
+                                    email: participant.email ?? undefined,
+                                    votes: participant.votes,
+                                  }}
+                                  editMode={
+                                    votingForm.watch("mode") === "edit" &&
+                                    votingForm.watch("participantId") ===
+                                      participant.id
                                   }
-                                }}
-                              />
-                            );
-                          })
-                        : null}
-                    </tbody>
-                  </table>
+                                  className={
+                                    i === visibleParticipants.length - 1
+                                      ? "last-row"
+                                      : ""
+                                  }
+                                  onChangeEditMode={(isEditing) => {
+                                    if (isEditing) {
+                                      votingForm.setEditingParticipantId(
+                                        participant.id,
+                                      );
+                                    }
+                                  }}
+                                />
+                              );
+                            })
+                          : null}
+                      </tbody>
+                    </table>
+                  )}
                   {mode === "new" ? (
                     <div className="sticky left-[235px] flex w-[calc(100%-235px)] items-center justify-between gap-4 border-t border-l bg-gray-50 p-3">
                       <Button

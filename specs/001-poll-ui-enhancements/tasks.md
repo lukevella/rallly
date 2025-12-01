@@ -52,11 +52,11 @@
 
 ### Implementation for User Story 1
 
-- [ ] T006 [P] [US1] Create QRCodeDisplay component in apps/web/src/components/poll/qr-code-display.tsx
-- [ ] T007 [US1] Modify InviteDialog to add QR code section in apps/web/src/components/invite-dialog.tsx
-- [ ] T008 [US1] Add error handling and retry logic to QRCodeDisplay component
-- [ ] T009 [US1] Add i18n keys for QR code feature (downloadQrCode, qrCode, qrCodeDescription, qrCodeError)
-- [ ] T010 [US1] Run pnpm i18n:scan to extract translation keys
+- [X] T006 [P] [US1] Create QRCodeDisplay component in apps/web/src/components/poll/qr-code-display.tsx
+- [X] T007 [US1] Modify InviteDialog to add QR code section in apps/web/src/components/invite-dialog.tsx
+- [X] T008 [US1] Add error handling and retry logic to QRCodeDisplay component
+- [X] T009 [US1] Add i18n keys for QR code feature (downloadQrCode, qrCode, qrCodeDescription, qrCodeError)
+- [X] T010 [US1] Run pnpm i18n:scan to extract translation keys
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -79,15 +79,15 @@
 
 ### Implementation for User Story 2
 
-- [ ] T011 [P] [US2] Create TimeSlotButton component in apps/web/src/components/poll/desktop-poll/time-slot-button.tsx
-- [ ] T012 [P] [US2] Create DateRow component in apps/web/src/components/poll/desktop-poll/date-row.tsx
-- [ ] T013 [US2] Modify DesktopPoll to add conditional row layout in apps/web/src/components/poll/desktop-poll.tsx
-- [ ] T014 [US2] Add useMemo for date grouping and vote map transformations in DesktopPoll
-- [ ] T015 [US2] Implement None checkbox bidirectional sync logic in DateRow component
-- [ ] T016 [US2] Add responsive horizontal scroll for time slots in DateRow component
-- [ ] T017 [US2] Modify MobilePoll to support row layout in apps/web/src/components/poll/mobile-poll/poll-options.tsx
-- [ ] T018 [US2] Add i18n keys for row layout feature (noneOption, noneOptionDescription, voteYes, voteNo, voteIfNeedBe)
-- [ ] T019 [US2] Run pnpm i18n:scan to extract translation keys
+- [X] T011 [P] [US2] Create TimeSlotButton component in apps/web/src/components/poll/desktop-poll/time-slot-button.tsx
+- [X] T012 [P] [US2] Create DateRow component in apps/web/src/components/poll/desktop-poll/date-row.tsx
+- [X] T013 [US2] Modify DesktopPoll to add conditional row layout in apps/web/src/components/poll/desktop-poll.tsx
+- [X] T014 [US2] Add useMemo for date grouping and vote map transformations in DesktopPoll
+- [X] T015 [US2] Implement None checkbox bidirectional sync logic in DateRow component
+- [X] T016 [US2] Add responsive horizontal scroll for time slots in DateRow component
+- [X] T017 [US2] Modify MobilePoll to support row layout in apps/web/src/components/poll/mobile-poll/poll-options.tsx
+- [X] T018 [US2] Add i18n keys for row layout feature (noneOption, noneOptionDescription, voteYes, voteNo, voteIfNeedBe)
+- [X] T019 [US2] Run pnpm i18n:scan to extract translation keys
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 

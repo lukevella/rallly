@@ -559,5 +559,10 @@
   "passwordStrength": "Password Strength",
   "emailChangeInvalidUserId": "Please login with the same email address as the one you used to request the change.",
   "ssoAuthenticationOnly": "Authentication is managed through Single Sign-On (SSO). Password management is not available.",
-  "oidcAutoSignInDescription": "You are being redirected to the login page..."
+  "oidcAutoSignInDescription": "You are being redirected to the login page...",
+  "qrCode": "QR Code",
+  "qrCodeDescription": "Share this QR code in presentations or print it for physical distribution.",
+  "noneOption": "None",
+  "downloadQrCode": "Download QR Code",
+  "qrCodeError": "Failed to generate QR code. Please try again."
 }
