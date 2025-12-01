@@ -9,7 +9,8 @@ const schema = z.object({
   author: z.string().nullish(),
 });
 
-export const runtime = "edge";
+// Disabled due to Vercel free tier edge function size limits
+// export const runtime = "edge";
 
 const regularFont = fetch(
   new URL("/public/static/fonts/inter-regular.ttf", import.meta.url),
