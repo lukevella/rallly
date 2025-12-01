@@ -25,9 +25,9 @@
 
 **Purpose**: Project initialization and dependency management
 
-- [ ] T001 Install qrcode.react dependency in package.json
-- [ ] T002 [P] Run pnpm install to update dependencies
-- [ ] T003 [P] Verify qrcode.react types are available (@types/qrcode.react if needed)
+- [X] T001 Install qrcode.react dependency in package.json
+- [X] T002 [P] Run pnpm install to update dependencies
+- [X] T003 [P] Verify qrcode.react types are available (@types/qrcode.react if needed)
 
 ---
 
@@ -37,8 +37,8 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Create date grouping helper function in apps/web/src/components/poll/group-by-date.ts
-- [ ] T005 [P] Add unit test for groupOptionsByDate function (if tests requested)
+- [X] T004 Create date grouping helper function in apps/web/src/components/poll/group-by-date.ts
+- [X] T005 [P] Add unit test for groupOptionsByDate function (if tests requested)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
