@@ -113,11 +113,6 @@ export function LoginWithEmailForm() {
 
             if (res.error) {
               switch (res.error.code) {
-                case "USER_NOT_FOUND":
-                  form.setError("identifier", {
-                    message: t("userNotFound"),
-                  });
-                  break;
                 case "EMAIL_BLOCKED":
                   form.setError("identifier", {
                     message: t("authErrorsEmailBlocked"),

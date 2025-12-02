@@ -1,3 +1,4 @@
+
 enum TimeFormat {
   hours12
   hours24
@@ -25,6 +26,7 @@ model Account {
   updatedAt             DateTime  @updatedAt @map("updated_at")
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
   @@map("accounts")
 }
 
@@ -114,11 +116,12 @@ model Session {
 
 model Verification {
   id         String   @id
-  identifier String
+  identifier String   @unique
   value      String
   expiresAt  DateTime @map("expires_at")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("verifications")
+  @@index([identifier])
 }
