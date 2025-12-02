@@ -552,5 +552,6 @@
   "resetPasswordButton": "Réinitialiser le mot de passe",
   "passwordStrength": "Robustesse du mot de passe",
   "emailChangeInvalidUserId": "Veuillez vous connecter avec la même adresse e-mail que celle que vous avez utilisée pour demander le changement.",
-  "ssoAuthenticationOnly": "L'authentification est gérée par Single Sign-On (SSO). La gestion des mots de passe n'est pas disponible."
+  "ssoAuthenticationOnly": "L'authentification est gérée par Single Sign-On (SSO). La gestion des mots de passe n'est pas disponible.",
+  "loginVerifyCheckEmail": "Si un compte existe avec cet e-mail, vous recevrez un code de vérification à <b>{{email}}</b>"
 }
