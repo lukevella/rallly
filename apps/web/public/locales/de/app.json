@@ -557,5 +557,6 @@
   "passwordStrength": "Passwortstärke",
   "emailChangeInvalidUserId": "Bitte melde dich mit derselben E-Mail-Adresse an, die du für die Anfrage zur Änderung verwendet hast.",
   "ssoAuthenticationOnly": "Die Authentifizierung wird über Single Sign-On (SSO) verwaltet. Die Passwortverwaltung ist nicht verfügbar.",
-  "oidcAutoSignInDescription": "Du wirst zur Anmeldeseite weitergeleitet..."
+  "oidcAutoSignInDescription": "Du wirst zur Anmeldeseite weitergeleitet...",
+  "loginVerifyCheckEmail": "Wenn ein Konto mit dieser E-Mail-Adresse existiert, erhältst du einen Bestätigungscode an <b>{{email}}</b>"
 }
