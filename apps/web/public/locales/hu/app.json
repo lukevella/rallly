@@ -220,7 +220,6 @@
   "verifyEmail": "Hitelesítsd az email címed",
   "alreadyHaveAccount": "Van már fiókod? <a>Jelentkezz be</a>",
   "loginDescription": "Lépj be a folytatáshoz",
-  "userNotFound": "Nem létezik fiók ezzel az email címmel",
   "loginTitle": "Üdvözlünk",
   "registerTitle": "Fiók létrehozása",
   "registerDescription": "Egyszerűsítsd az ütemezési folyamataid és takaríts meg időt",
@@ -233,7 +232,6 @@
   "quickCreateGetNotifications": "Email értesítések",
   "quickCreateManagePollsFromAnyDevice": "Bármilyen eszközről kezelheted szavazásaidat",
   "loginVerifyTitle": "Bejelentkezés befejezése",
-  "loginVerifyDescription": "Ellenőrizd az emailed az ellenőrző kódért",
   "tooManyRequests": "Túl sok oldallekérés",
   "tooManyRequestsDescription": "Kérjük próbáld újra később.",
   "billingSubscriptionDescription": "Jelenlegi előfizetésed kezelése.",
@@ -559,5 +557,6 @@
   "passwordStrength": "Jelszó erőssége",
   "emailChangeInvalidUserId": "Kérjük, jelentkezz be ugyanazzal az email címmel, amelyet a változtatás kéréséhez használtál.",
   "ssoAuthenticationOnly": "A hitelesítést a Single Sign-On (SSO) kezeli. A jelszókezelés nem elérhető.",
-  "oidcAutoSignInDescription": "Átirányítunk a bejelentkező oldalra..."
+  "oidcAutoSignInDescription": "Átirányítunk a bejelentkező oldalra...",
+  "loginVerifyCheckEmail": "Ha létezik ilyen email címmel fiók, akkor egy ellenőrző kódot fogsz kapni a(z) <b>{{email}}</b> címre"
 }
