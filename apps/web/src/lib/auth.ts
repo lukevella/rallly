@@ -73,6 +73,9 @@ if (env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET && env.OIDC_DISCOVERY_URL) {
 export const authLib = betterAuth({
   appName: "Rallly",
   secret: env.SECRET_PASSWORD,
+  experimental: {
+    joins: true,
+  },
   emailAndPassword: {
     enabled: env.EMAIL_LOGIN_ENABLED !== "false",
     requireEmailVerification: true,
@@ -132,18 +135,22 @@ export const authLib = betterAuth({
           // We're not actually using the sign-in type anymore since we just we have `autoSignInAfterVerification` enabled.
           // This lets us keep things a bit simpler since we share the same verification flow for both login and registration.
           case "sign-in":
-            await emailClient.sendTemplate("RegisterEmail", {
-              to: email,
-              props: {
-                code: otp,
-              },
-            });
+            waitUntil(
+              emailClient.sendTemplate("RegisterEmail", {
+                to: email,
+                props: {
+                  code: otp,
+                },
+              }),
+            );
             break;
           case "email-verification":
-            await emailClient.sendTemplate("RegisterEmail", {
-              to: email,
-              props: { code: otp },
-            });
+            waitUntil(
+              emailClient.sendTemplate("RegisterEmail", {
+                to: email,
+                props: { code: otp },
+              }),
+            );
             break;
         }
       },
@@ -399,3 +406,5 @@ export const getUserIdIfLoggedIn = async () => {
   const session = await getSession();
   return session?.user?.isGuest ? undefined : session?.user?.id;
 };
+
+export default authLib;

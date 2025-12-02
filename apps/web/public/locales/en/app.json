@@ -220,7 +220,6 @@
   "verifyEmail": "Verify your email",
   "alreadyHaveAccount": "Already have an account? <a>Log in</a>",
   "loginDescription": "Login to your account to continue",
-  "userNotFound": "A user with that email doesn't exist",
   "loginTitle": "Welcome",
   "registerTitle": "Create Your Account",
   "registerDescription": "Streamline your scheduling process and save time",
@@ -233,7 +232,6 @@
   "quickCreateGetNotifications": "Get email notifications",
   "quickCreateManagePollsFromAnyDevice": "Manage your polls from any device",
   "loginVerifyTitle": "Finish Logging In",
-  "loginVerifyDescription": "Check your email for the verification code",
   "tooManyRequests": "Too many requests",
   "tooManyRequestsDescription": "Please try again later.",
   "billingSubscriptionDescription": "Manage your current subscription plan.",
@@ -559,5 +557,6 @@
   "passwordStrength": "Password Strength",
   "emailChangeInvalidUserId": "Please login with the same email address as the one you used to request the change.",
   "ssoAuthenticationOnly": "Authentication is managed through Single Sign-On (SSO). Password management is not available.",
-  "oidcAutoSignInDescription": "You are being redirected to the login page..."
+  "oidcAutoSignInDescription": "You are being redirected to the login page...",
+  "loginVerifyCheckEmail": "If an account exists with this email, you will receive a verification code at <b>{{email}}</b>"
 }

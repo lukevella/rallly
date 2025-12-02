@@ -23,22 +23,6 @@ test.describe.serial(() => {
   });
 
   test.describe("new user", () => {
-    test("shows that user doesn't exist yet", async ({ page }) => {
-      await page.goto("/login");
-
-      // your login page test logic
-      await page
-        .getByPlaceholder("jessie.smith@example.com")
-        .fill(testUserEmail);
-
-      await page.getByRole("button", { name: "Continue with email" }).click();
-
-      // Make sure the user doesn't exist yet and that logging in is not possible
-      await expect(
-        page.getByText("A user with that email doesn't exist"),
-      ).toBeVisible();
-    });
-
     test("user registration", async ({ page }) => {
       const registerPage = new RegisterPage(page);
       registerPage.goto();
