@@ -12,7 +12,7 @@ export function AuthPageContainer({ children }: { children: React.ReactNode }) {
 }
 
 export function AuthPageHeader({ children }: { children: React.ReactNode }) {
-  return <div className="space-y-1 text-center">{children}</div>;
+  return <div className="text-center">{children}</div>;
 }
 
 export function AuthPageTitle({ children }: { children: React.ReactNode }) {
@@ -24,7 +24,7 @@ export function AuthPageDescription({
 }: {
   children: React.ReactNode;
 }) {
-  return <p className="text-muted-foreground">{children}</p>;
+  return <p className="mt-2 text-muted-foreground">{children}</p>;
 }
 
 export function AuthPageContent({ children }: { children: React.ReactNode }) {
