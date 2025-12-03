@@ -558,5 +558,5 @@
   "emailChangeInvalidUserId": "Please login with the same email address as the one you used to request the change.",
   "ssoAuthenticationOnly": "Authentication is managed through Single Sign-On (SSO). Password management is not available.",
   "oidcAutoSignInDescription": "You are being redirected to the login page...",
-  "loginVerifyCheckEmail": "If an account exists with this email, you will receive a verification code at <b>{email}</b>"
+  "loginVerifyCheckEmail": "If an account exists with this email, you will receive a verification code at <b>{{email}}</b>"
 }
