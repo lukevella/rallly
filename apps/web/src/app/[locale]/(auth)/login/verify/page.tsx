@@ -38,7 +38,7 @@ export default async function VerifyPage() {
             t={t}
             ns="app"
             i18nKey="loginVerifyCheckEmail"
-            defaults="If an account exists with this email, you will receive a verification code at <b>{{email}}</b>"
+            defaults="If an account exists with this email, you will receive a verification code at <b>{email}</b>"
             values={{ email }}
             components={{
               b: <strong className="font-medium text-gray-800" />,
