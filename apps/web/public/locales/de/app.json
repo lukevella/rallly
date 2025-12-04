@@ -220,7 +220,6 @@
   "verifyEmail": "Bestätige deine E-Mail-Adresse",
   "alreadyHaveAccount": "Du hast bereits ein Konto? <a>Anmelden</a>",
   "loginDescription": "Melde dich an, um fortzufahren",
-  "userNotFound": "Es existiert kein Benutzer mit dieser E-Mail-Adresse",
   "loginTitle": "Willkommen",
   "registerTitle": "Erstelle dein Konto",
   "registerDescription": "Spare Zeit mit einem reibungslosen Planungsprozess",
@@ -233,7 +232,6 @@
   "quickCreateGetNotifications": "Erhalte E-Mail-Benachrichtigungen",
   "quickCreateManagePollsFromAnyDevice": "Verwalte deine Umfragen von allen Geräten",
   "loginVerifyTitle": "Anmeldung abschließen",
-  "loginVerifyDescription": "Der Bestätigungscode wurde dir per E-Mail gesendet",
   "tooManyRequests": "Zu viele Anfragen",
   "tooManyRequestsDescription": "Bitte versuche es später erneut.",
   "billingSubscriptionDescription": "Verwalte deinen aktuellen Abonnementplan.",
@@ -559,5 +557,6 @@
   "passwordStrength": "Passwortstärke",
   "emailChangeInvalidUserId": "Bitte melde dich mit derselben E-Mail-Adresse an, die du für die Anfrage zur Änderung verwendet hast.",
   "ssoAuthenticationOnly": "Die Authentifizierung wird über Single Sign-On (SSO) verwaltet. Die Passwortverwaltung ist nicht verfügbar.",
-  "oidcAutoSignInDescription": "Du wirst zur Anmeldeseite weitergeleitet..."
+  "oidcAutoSignInDescription": "Du wirst zur Anmeldeseite weitergeleitet...",
+  "loginVerifyCheckEmail": "Wenn ein Konto mit dieser E-Mail-Adresse existiert, erhältst du einen Bestätigungscode an <b>{email}</b>"
 }
