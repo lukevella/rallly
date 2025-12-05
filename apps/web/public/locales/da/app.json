@@ -556,5 +556,7 @@
   "resetPasswordButton": "Nulstil adgangskode",
   "passwordStrength": "Adgangskode styrke",
   "emailChangeInvalidUserId": "Log venligst ind med den samme e-mailadresse som den, du brugte til at anmode om ændringen.",
-  "ssoAuthenticationOnly": "Godkendelse administreres via Single Sign-On (SSO). Adgangskodehåndtering er ikke tilgængelig."
+  "ssoAuthenticationOnly": "Godkendelse administreres via Single Sign-On (SSO). Adgangskodehåndtering er ikke tilgængelig.",
+  "oidcAutoSignInDescription": "Du bliver omdirigeret til login-siden...",
+  "loginVerifyCheckEmail": "Hvis der findes en konto med denne e-mail, vil du modtage en bekræftelseskode på <b>{email}</b>"
 }
