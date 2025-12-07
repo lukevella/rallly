@@ -556,5 +556,7 @@
   "resetPasswordButton": "Resetta password",
   "passwordStrength": "Forza della password",
   "emailChangeInvalidUserId": "Effettua l'accesso con lo stesso indirizzo email utilizzato per richiedere la modifica.",
-  "ssoAuthenticationOnly": "L'autenticazione è gestita tramite Single Sign-On (SSO). La gestione delle password non è disponibile."
+  "ssoAuthenticationOnly": "L'autenticazione è gestita tramite Single Sign-On (SSO). La gestione delle password non è disponibile.",
+  "oidcAutoSignInDescription": "Sei stato reindirizzato alla pagina di login...",
+  "loginVerifyCheckEmail": "Se esiste un account con questa email, riceverai un codice di verifica su <b>{email}</b>"
 }
