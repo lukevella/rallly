@@ -916,11 +916,10 @@ export const polls = router({
             invites: {
               createMany: {
                 data: poll.participants
-                  .filter((p) => p.email || p.user?.email) // Filter out participants without email
+                  .filter((p) => !!p.email)
                   .map((p) => ({
                     inviteeName: p.name,
-                    inviteeEmail:
-                      p.user?.email ?? p.email ?? `${p.id}@rallly.co`,
+                    inviteeEmail: p.email as string,
                     inviteeTimeZone:
                       p.user?.timeZone ?? p.timeZone ?? poll.timeZone,
                     status: (
