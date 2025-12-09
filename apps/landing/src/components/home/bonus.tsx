@@ -4,13 +4,15 @@ import {
   Users2Icon,
   ZapIcon,
 } from "lucide-react";
-
+import { Trans } from "react-i18next/TransWithoutContext";
 import { BonusItem } from "@/components/home/bonus-item";
-import { Trans } from "@/i18n/client/trans";
+import { getTranslation } from "@/i18n/server";
 import { getUserCount } from "@/lib/data";
 
-export async function Bonus() {
+export async function Bonus(props: { locale: string }) {
   const userCount = await getUserCount();
+  const { t } = await getTranslation(props.locale, ["home"]);
+
   return (
     <div className="mx-auto flex flex-wrap justify-center gap-2 whitespace-nowrap text-center sm:grid-cols-4 sm:gap-4 sm:gap-x-8">
       <BonusItem
@@ -18,6 +20,7 @@ export async function Bonus() {
         icon={<Users2Icon className="size-4" />}
       >
         <Trans
+          t={t}
           i18nKey="statsUsersRegistered"
           ns="home"
           defaults="{count, number, ::compact-short} registered users"
@@ -30,6 +33,7 @@ export async function Bonus() {
         icon={<CalendarCheck2Icon className="size-4" />}
       >
         <Trans
+          t={t}
           ns="home"
           i18nKey="statsPollsCreated"
           values={{ count: 300 * 1000 }}
@@ -42,6 +46,7 @@ export async function Bonus() {
         icon={<LanguagesIcon className="size-4" />}
       >
         <Trans
+          t={t}
           ns="home"
           i18nKey="statsLanguagesSupported"
           defaults="10+ languages supported"
@@ -53,6 +58,7 @@ export async function Bonus() {
         icon={<ZapIcon className="size-4" />}
       >
         <Trans
+          t={t}
           ns="home"
           i18nKey="noLoginRequired"
           defaults="No login required"

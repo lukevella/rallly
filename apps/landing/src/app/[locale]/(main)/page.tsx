@@ -25,7 +25,7 @@ export default async function Page(props: {
           ns: "home",
         })}
       />
-      <Bonus />
+      <Bonus locale={locale} />
       <BigTestimonial />
       <MentionedBy />
     </Marketing>

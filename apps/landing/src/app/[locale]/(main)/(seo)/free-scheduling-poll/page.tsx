@@ -21,7 +21,7 @@ export default async function Page(props: {
         })}
         callToAction={<Trans t={t} ns="home" i18nKey="createASchedulingPoll" />}
       />
-      <Bonus />
+      <Bonus locale={locale} />
       <BigTestimonial />
       <MentionedBy />
     </Marketing>
