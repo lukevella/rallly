@@ -7,8 +7,8 @@ import { linkToApp } from "@/lib/linkToApp";
 
 import { PriceTables } from "./pricing-table";
 
-const FAQ = async () => {
-  const { t } = await getTranslation("pricing");
+const FAQ = async (props: { locale: string }) => {
+  const { t } = await getTranslation(props.locale, "pricing");
   return (
     <section>
       <h2 className="font-bold text-2xl">
@@ -122,8 +122,11 @@ const FAQ = async () => {
   );
 };
 
-export default async function Page() {
-  const { t } = await getTranslation("pricing");
+export default async function Page(props: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await props.params;
+  const { t } = await getTranslation(locale, "pricing");
   return (
     <article className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-2 sm:p-6 sm:text-center">
@@ -173,13 +176,16 @@ export default async function Page() {
         </div>
       </section>
       <hr className="border-transparent" />
-      <FAQ />
+      <FAQ locale={locale} />
     </article>
   );
 }
 
-export async function generateMetadata() {
-  const { t } = await getTranslation(["common", "pricing"]);
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await props.params;
+  const { t } = await getTranslation(locale, ["common", "pricing"]);
   return {
     title: t("pricing", { ns: "common", defaultValue: "Pricing" }),
     description: t("pricingDescription", {

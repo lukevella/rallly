@@ -3,8 +3,11 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 
-export default async function LicensingThankYouPage() {
-  const { t } = await getTranslation();
+export default async function LicensingThankYouPage(props: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await props.params;
+  const { t } = await getTranslation(locale);
   return (
     <main className="relative flex h-dvh flex-col p-4 sm:justify-center sm:p-16">
       <div className="relative z-10 mx-auto w-full max-w-2xl space-y-6">
