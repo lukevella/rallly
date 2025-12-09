@@ -5,6 +5,7 @@ import { PostHogProvider } from "@rallly/posthog/client";
 import { Analytics } from "@vercel/analytics/react";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { PostHogPageView } from "@/components/posthog-page-view";
 import { sans } from "@/fonts/sans";
 import { I18nProvider } from "@/i18n/client/i18n-provider";
@@ -19,10 +20,14 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default async function Root(props: { children: React.ReactNode }) {
-  const { children } = props;
+export default async function Root(props: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { children, params } = props;
+  const { locale } = await params;
 
-  const { i18n } = await getTranslation();
+  const { i18n } = await getTranslation(locale);
   const translations = i18n.store.data;
 
   return (
@@ -30,7 +35,9 @@ export default async function Root(props: { children: React.ReactNode }) {
       <body>
         <LazyMotion features={domAnimation}>
           <PostHogProvider>
-            <PostHogPageView />
+            <Suspense fallback={null}>
+              <PostHogPageView />
+            </Suspense>
             <I18nProvider
               locale={i18n.resolvedLanguage}
               resources={translations}

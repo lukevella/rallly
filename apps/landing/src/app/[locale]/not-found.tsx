@@ -1,11 +1,10 @@
+"use client";
+
 import ErrorPage from "@/components/error-page";
-import { getTranslation } from "@/i18n/server";
+import { useTranslation } from "@/i18n/client/use-translation";
 
-export default async function Page() {
-  // TODO (Luke Vella) [2023-11-03]: not-found doesn't have access to params right now
-  // See: https://github.com/vercel/next.js/discussions/43179
-  const { t } = await getTranslation();
-
+export default function Page() {
+  const { t } = useTranslation("common");
   return (
     <ErrorPage
       title={t("notFoundTitle")}

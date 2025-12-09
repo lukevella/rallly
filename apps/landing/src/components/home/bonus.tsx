@@ -1,4 +1,3 @@
-import { prisma } from "@rallly/database";
 import {
   CalendarCheck2Icon,
   LanguagesIcon,
@@ -6,19 +5,14 @@ import {
   ZapIcon,
 } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
-
 import { BonusItem } from "@/components/home/bonus-item";
 import { getTranslation } from "@/i18n/server";
+import { getUserCount } from "@/lib/data";
 
-export async function Bonus() {
-  const { t } = await getTranslation();
-  const userCount = await prisma.user.count({
-    where: {
-      isAnonymous: false,
-    },
-  });
-  const roundedUserCount =
-    userCount > 100000 ? Math.floor(userCount / 10000) * 10000 : userCount;
+export async function Bonus(props: { locale: string }) {
+  const userCount = await getUserCount();
+  const { t } = await getTranslation(props.locale, ["home"]);
+
   return (
     <div className="mx-auto flex flex-wrap justify-center gap-2 whitespace-nowrap text-center sm:grid-cols-4 sm:gap-4 sm:gap-x-8">
       <BonusItem
@@ -30,7 +24,7 @@ export async function Bonus() {
           i18nKey="statsUsersRegistered"
           ns="home"
           defaults="{count, number, ::compact-short} registered users"
-          values={{ count: roundedUserCount }}
+          values={{ count: userCount }}
         />
       </BonusItem>
       <BonusItem

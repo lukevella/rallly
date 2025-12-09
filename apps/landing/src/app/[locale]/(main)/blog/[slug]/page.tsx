@@ -9,7 +9,7 @@ import PostHeader from "@/components/blog/post-header";
 import { getAllPosts, getPostBySlug } from "@/lib/api";
 
 export default async function Page(props: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
   const params = await props.params;
   const post = getPostBySlug(params.slug, [
@@ -71,7 +71,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(props: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
   const post = getPostBySlug(params.slug, [

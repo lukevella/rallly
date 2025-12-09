@@ -2,7 +2,7 @@
 
 import { defaultLocale } from "@rallly/languages";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "@/i18n/client/use-translation";
 
 export const LinkBase = ({
   href,
