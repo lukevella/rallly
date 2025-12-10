@@ -1,0 +1,90 @@
+# Rallly
+
+## Overview
+
+Rallly is an open-source scheduling poll application designed to help people find common times to schedule meetings and events. It eliminates the back-and-forth email chains by allowing hosts to create polls with multiple date and time options, which participants can then vote on to find the best time that works for everyone.
+
+## Pronunciation
+
+Rallly is pronounced like "rally" but with an extra L. The name comes from the concept of "rallying people together" to make things happen.
+
+## Core Functionality
+
+### Scheduling Polls
+
+Rallly's primary feature is creating scheduling polls where:
+- Hosts select multiple date and time options for an event
+- Participants vote on their preferred options
+- The host can see which times work best for the group
+- The host can finalize the poll by selecting the most suitable option
+
+### Quick Create
+
+Rallly offers a "Quick Create" feature that allows users to create and manage polls without signing up for an account. This makes it easy for new users to get started immediately. When ready, users can sign up and have all their existing polls automatically added to their account.
+
+## Usage Models
+
+### Individual Use
+
+Users can create personal polls and share them with participants. Most features are free, making it accessible for personal scheduling needs.
+
+### Team Use (Spaces)
+
+Rallly offers "Spaces" for team collaboration, which includes:
+- Centralized billing for organizations
+- Member management with role-based permissions
+- Shared poll organization within the workspace
+- Seat-based pricing that scales with team size
+- All Space members get access to Pro features without individual subscriptions
+
+## Pricing
+
+Most of Rallly's features are free, and most users will never need to pay. However, there are Pro features available for users who need:
+- Poll finalization capabilities
+- Calendar invite generation
+- Extended poll lifetime
+- Priority support
+
+Teams can benefit from centralized billing through Spaces, paying only for the seats they need.
+
+## Technical Stack
+
+Rallly is built with modern web technologies:
+- **Next.js** - React framework for the web application
+- **Prisma** - Database ORM
+- **tRPC** - End-to-end typesafe APIs
+- **TailwindCSS** - Utility-first CSS framework
+
+## Open Source
+
+Rallly is open-source software licensed under the GNU Affero General Public License Version 3 (AGPLv3) or any later version. The source code is available on GitHub, and the project welcomes contributions from the community.
+
+## Self-Hosting
+
+Rallly can be self-hosted, allowing organizations to run their own instance of the application. This provides full control over data and customization options.
+
+## Key Features
+
+- No account required to create polls (Quick Create)
+- Multi-language support (translated into many languages)
+- Mobile-responsive design
+- Calendar integration capabilities
+- Poll finalization and calendar invite generation (Pro)
+- Team collaboration through Spaces
+- Open-source and self-hostable
+
+## Use Cases
+
+Rallly is ideal for:
+- Scheduling team meetings
+- Organizing social events with friends
+- Coordinating client calls
+- Planning cross-functional project meetings
+- Any scenario where multiple people need to find a common time
+
+## Website
+
+- Main website: https://rallly.co
+- Application: https://app.rallly.co
+- Documentation: https://support.rallly.co
+- GitHub: https://github.com/lukevella/rallly
