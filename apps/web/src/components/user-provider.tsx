@@ -49,9 +49,7 @@ export const UserProvider = ({
       },
       getAbility: () => defineAbilityFor(user),
       ownsObject: (resource) => {
-        return user
-          ? isOwner(resource, { id: user.id, isGuest: user.isGuest })
-          : false;
+        return user ? isOwner(resource, { id: user.id }) : false;
       },
     };
   }, [user, router]);
