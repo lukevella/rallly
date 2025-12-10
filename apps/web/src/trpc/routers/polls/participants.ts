@@ -14,7 +14,7 @@ import {
   router,
 } from "../../trpc";
 import type { DisableNotificationsPayload } from "../../types";
-import { createParticipantEditToken, getUserIdFromToken } from "./utils";
+import { createParticipantEditToken, resolveUserId } from "./utils";
 
 const MAX_PARTICIPANTS = 1000;
 
@@ -171,15 +171,7 @@ export const participants = router({
       }),
     )
     .mutation(async ({ input: { participantId, token }, ctx }) => {
-      const userIdFromToken = await getUserIdFromToken(token);
-      const userId = userIdFromToken ?? ctx.user?.id;
-
-      if (!userId) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "This method requires a user or valid token",
-        });
-      }
+      const userId = await resolveUserId(token, ctx.user);
 
       const participant = await canModifyParticipant(participantId, userId);
 
@@ -352,15 +344,7 @@ export const participants = router({
       }),
     )
     .mutation(async ({ input: { participantId, newName, token }, ctx }) => {
-      const userIdFromToken = await getUserIdFromToken(token);
-      const userId = userIdFromToken ?? ctx.user?.id;
-
-      if (!userId) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "This method requires a user or valid token",
-        });
-      }
+      const userId = await resolveUserId(token, ctx.user);
 
       await canModifyParticipant(participantId, userId);
 
@@ -389,15 +373,7 @@ export const participants = router({
       }),
     )
     .mutation(async ({ input: { participantId, votes, token }, ctx }) => {
-      const userIdFromToken = await getUserIdFromToken(token);
-      const userId = userIdFromToken ?? ctx.user?.id;
-
-      if (!userId) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "This method requires a user or valid token",
-        });
-      }
+      const userId = await resolveUserId(token, ctx.user);
 
       const existingParticipant = await canModifyParticipant(
         participantId,

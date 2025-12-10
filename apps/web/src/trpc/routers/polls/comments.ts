@@ -12,7 +12,7 @@ import {
   router,
 } from "../../trpc";
 import type { DisableNotificationsPayload } from "../../types";
-import { getUserIdFromToken } from "./utils";
+import { resolveUserId } from "./utils";
 
 export const comments = router({
   list: publicProcedure
@@ -194,15 +194,7 @@ export const comments = router({
       }),
     )
     .mutation(async ({ input: { commentId, token }, ctx }) => {
-      const userIdFromToken = await getUserIdFromToken(token);
-      const userId = userIdFromToken ?? ctx.user?.id;
-
-      if (!userId) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "This method requires a user or valid token",
-        });
-      }
+      const userId = await resolveUserId(token, ctx.user);
 
       const comment = await prisma.comment.findUnique({
         where: { id: commentId },
