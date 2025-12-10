@@ -1,4 +1,5 @@
 import { toast } from "@rallly/ui/sonner";
+import { useSearchParams } from "next/navigation";
 import { usePoll } from "@/components/poll-context";
 import { trpc } from "@/trpc/client";
 import type { ParticipantForm } from "./types";
@@ -11,6 +12,11 @@ export const normalizeVotes = (
     optionId,
     type: votes[i]?.type ?? ("no" as const),
   }));
+};
+
+export const useEditToken = () => {
+  const searchParams = useSearchParams();
+  return searchParams.get("token") ?? undefined;
 };
 
 export const useAddParticipantMutation = () => {
