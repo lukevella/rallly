@@ -347,7 +347,7 @@ export const participants = router({
     .input(
       z.object({
         participantId: z.string(),
-        newName: z.string(),
+        newName: z.string().min(1, "Participant name is required").max(100),
         token: z.string().optional(),
       }),
     )
