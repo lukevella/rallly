@@ -14,6 +14,7 @@ import { NewParticipantForm } from "@/components/new-participant-modal";
 import { useParticipants } from "@/components/participants-provider";
 import {
   normalizeVotes,
+  useEditToken,
   useUpdateParticipantMutation,
 } from "@/components/poll/mutations";
 import { Trans } from "@/components/trans";
@@ -82,6 +83,7 @@ export const useVotingForm = () => {
 export const VotingForm = ({ children }: React.PropsWithChildren) => {
   const { id: pollId, options } = usePoll();
   const updateParticipant = useUpdateParticipantMutation();
+  const token = useEditToken();
   const { participants } = useParticipants();
 
   const { canAddNewParticipant, canEditParticipant } = usePermissions();
@@ -124,6 +126,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
               participantId: data.participantId,
               pollId,
               votes: normalizeVotes(optionIds, data.votes),
+              token,
             });
 
             form.reset({

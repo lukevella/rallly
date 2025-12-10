@@ -7,7 +7,6 @@ import { z } from "zod";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
-
 import {
   createRateLimitMiddleware,
   publicProcedure,
@@ -15,6 +14,7 @@ import {
   router,
 } from "../../trpc";
 import type { DisableNotificationsPayload } from "../../types";
+import { createParticipantEditToken, getUserIdFromToken } from "./utils";
 
 const MAX_PARTICIPANTS = 1000;
 
@@ -167,14 +167,21 @@ export const participants = router({
     .input(
       z.object({
         participantId: z.string(),
+        token: z.string().optional(),
       }),
     )
-    .use(requireUserMiddleware)
-    .mutation(async ({ input: { participantId }, ctx }) => {
-      const participant = await canModifyParticipant(
-        participantId,
-        ctx.user.id,
-      );
+    .mutation(async ({ input: { participantId, token }, ctx }) => {
+      const userIdFromToken = await getUserIdFromToken(token);
+      const userId = userIdFromToken ?? ctx.user?.id;
+
+      if (!userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "This method requires a user or valid token",
+        });
+      }
+
+      const participant = await canModifyParticipant(participantId, userId);
 
       await prisma.participant.update({
         where: {
@@ -187,7 +194,7 @@ export const participants = router({
       });
 
       ctx.posthog?.capture({
-        distinctId: ctx.user.id,
+        distinctId: userId,
         event: "poll_response_delete",
         properties: {
           participant_id: participant.id,
@@ -286,12 +293,7 @@ export const participants = router({
         );
 
         if (email) {
-          const token = await createToken(
-            { userId: ctx.user.id },
-            {
-              ttl: 0, // basically forever
-            },
-          );
+          const token = await createParticipantEditToken(ctx.user.id);
 
           getEmailClient(ctx.user.locale).queueTemplate(
             "NewParticipantConfirmationEmail",
@@ -342,10 +344,25 @@ export const participants = router({
       },
     ),
   rename: publicProcedure
-    .input(z.object({ participantId: z.string(), newName: z.string() }))
-    .use(requireUserMiddleware)
-    .mutation(async ({ input: { participantId, newName }, ctx }) => {
-      await canModifyParticipant(participantId, ctx.user.id);
+    .input(
+      z.object({
+        participantId: z.string(),
+        newName: z.string(),
+        token: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input: { participantId, newName, token }, ctx }) => {
+      const userIdFromToken = await getUserIdFromToken(token);
+      const userId = userIdFromToken ?? ctx.user?.id;
+
+      if (!userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "This method requires a user or valid token",
+        });
+      }
+
+      await canModifyParticipant(participantId, userId);
 
       await prisma.participant.update({
         where: {
@@ -368,13 +385,23 @@ export const participants = router({
             type: z.enum(["yes", "no", "ifNeedBe"]),
           })
           .array(),
+        token: z.string().optional(),
       }),
     )
-    .use(requireUserMiddleware)
-    .mutation(async ({ input: { participantId, votes }, ctx }) => {
+    .mutation(async ({ input: { participantId, votes, token }, ctx }) => {
+      const userIdFromToken = await getUserIdFromToken(token);
+      const userId = userIdFromToken ?? ctx.user?.id;
+
+      if (!userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "This method requires a user or valid token",
+        });
+      }
+
       const existingParticipant = await canModifyParticipant(
         participantId,
-        ctx.user.id,
+        userId,
       );
 
       const pollId = existingParticipant.pollId;
@@ -424,7 +451,7 @@ export const participants = router({
       });
 
       ctx.posthog?.capture({
-        distinctId: ctx.user.id,
+        distinctId: userId,
         event: "poll_response_update",
         groups: {
           poll: pollId,

@@ -12,6 +12,7 @@ import {
   router,
 } from "../../trpc";
 import type { DisableNotificationsPayload } from "../../types";
+import { getUserIdFromToken } from "./utils";
 
 export const comments = router({
   list: publicProcedure
@@ -189,10 +190,20 @@ export const comments = router({
     .input(
       z.object({
         commentId: z.string(),
+        token: z.string().optional(),
       }),
     )
-    .use(requireUserMiddleware)
-    .mutation(async ({ input: { commentId }, ctx }) => {
+    .mutation(async ({ input: { commentId, token }, ctx }) => {
+      const userIdFromToken = await getUserIdFromToken(token);
+      const userId = userIdFromToken ?? ctx.user?.id;
+
+      if (!userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "This method requires a user or valid token",
+        });
+      }
+
       const comment = await prisma.comment.findUnique({
         where: { id: commentId },
         select: { pollId: true, userId: true, guestId: true },
@@ -205,13 +216,9 @@ export const comments = router({
         });
       }
 
-      const isAuthor =
-        comment.userId === ctx.user.id || comment.guestId === ctx.user.id;
+      const isAuthor = comment.userId === userId || comment.guestId === userId;
 
-      if (
-        !isAuthor &&
-        !(await hasPollAdminAccess(comment.pollId, ctx.user.id))
-      ) {
+      if (!isAuthor && !(await hasPollAdminAccess(comment.pollId, userId))) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You are not allowed to delete this comment",
@@ -227,7 +234,7 @@ export const comments = router({
       // Track comment deletion analytics
       if (comment) {
         ctx.posthog?.capture({
-          distinctId: ctx.user.id,
+          distinctId: userId,
           event: "poll_comment_delete",
           groups: {
             poll: comment.pollId,

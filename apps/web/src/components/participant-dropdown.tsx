@@ -35,7 +35,10 @@ import { useForm } from "react-hook-form";
 import { useMount } from "react-use";
 import { z } from "zod";
 
-import { useDeleteParticipantMutation } from "@/components/poll/mutations";
+import {
+  useDeleteParticipantMutation,
+  useEditToken,
+} from "@/components/poll/mutations";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
@@ -136,6 +139,7 @@ const DeleteParticipantModal = ({
   participantName: string;
 }) => {
   const deleteParticipant = useDeleteParticipantMutation();
+  const token = useEditToken();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -164,6 +168,7 @@ const DeleteParticipantModal = ({
             onClick={async () => {
               deleteParticipant.mutate({
                 participantId,
+                token,
               });
               onOpenChange(false);
             }}
@@ -191,6 +196,7 @@ const ChangeNameModal = (props: {
   onOpenChange: (open: boolean) => void;
 }) => {
   const posthog = usePostHog();
+  const token = useEditToken();
   const changeName = trpc.polls.participants.rename.useMutation({
     onSuccess: (_, { participantId, newName }) => {
       posthog?.capture("changed name", {
@@ -215,18 +221,21 @@ const ChangeNameModal = (props: {
     });
   });
 
+  const { participantId, onOpenChange } = props;
+
   const handler = React.useCallback<SubmitHandler<ChangeNameForm>>(
     async ({ name }) => {
       if (formState.isDirty) {
         // change name
         await changeName.mutateAsync({
-          participantId: props.participantId,
+          participantId,
           newName: name,
+          token,
         });
       }
-      props.onOpenChange(false);
+      onOpenChange(false);
     },
-    [changeName, formState.isDirty, props],
+    [changeName, formState.isDirty, participantId, token, onOpenChange],
   );
 
   const { requiredString } = useFormValidation();

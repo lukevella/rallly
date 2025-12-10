@@ -30,6 +30,7 @@ import { Controller, useForm } from "react-hook-form";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";
 import { useParticipants } from "@/components/participants-provider";
+import { useEditToken } from "@/components/poll/mutations";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
@@ -148,6 +149,7 @@ function DiscussionInner() {
   const poll = usePoll();
 
   const pollId = poll.id;
+  const token = useEditToken();
 
   const { data: comments } = trpc.polls.comments.list.useQuery({ pollId });
 
@@ -218,6 +220,7 @@ function DiscussionInner() {
                                 onClick={() => {
                                   deleteComment.mutate({
                                     commentId: comment.id,
+                                    token,
                                   });
                                 }}
                               >
