@@ -2,13 +2,14 @@
   "name": "@rallly/tailwind-config",
   "version": "0.0.0",
   "private": true,
-  "main": "tailwind.config.js",
-  "types": "tailwind.config.d.ts",
+  "type": "module",
   "exports": {
-    ".": "./shared-styles.css"
+    ".": "./shared-styles.css",
+    "./postcss": "./postcss.config.js"
   },
   "dependencies": {
-    "tailwindcss": "^4.1.17"
+    "tailwindcss": "^4.1.17",
+    "postcss": "^8.5.6"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",

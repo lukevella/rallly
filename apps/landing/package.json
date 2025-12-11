@@ -2,6 +2,7 @@
   "name": "@rallly/landing",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "cross-env PORT=3001 TAILWIND_MODE=watch next dev --turbopack",
     "build": "next build",
