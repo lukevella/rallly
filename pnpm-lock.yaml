@@ -651,6 +651,9 @@ importers:
 
   packages/tailwind-config:
     dependencies:
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
       tailwindcss:
         specifier: ^4.1.17
         version: 4.1.17
