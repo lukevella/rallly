@@ -459,7 +459,7 @@ importers:
         specifier: ^4.14.178
         version: 4.17.16
       '@types/node':
-        specifier: ^20.11.1
+        specifier: ^20.17.50
         version: 20.17.50
       '@types/react':
         specifier: 19.1.2
@@ -533,7 +533,7 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: ^20.11.1
+        specifier: ^20.17.50
         version: 20.17.50
       prisma:
         specifier: ^6.8.2
@@ -643,7 +643,7 @@ importers:
         specifier: ^3.0.1
         version: 3.0.6
       '@types/node':
-        specifier: ^20.11.1
+        specifier: ^20.17.50
         version: 20.17.50
       '@types/react':
         specifier: 19.1.2
@@ -790,7 +790,7 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
-        specifier: ^20.11.1
+        specifier: ^20.17.50
         version: 20.17.50
       vitest:
         specifier: ^2.1.9

@@ -18,7 +18,7 @@
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "@rallly/tsconfig": "workspace:*",
-    "@types/node": "^20.11.1",
+    "@types/node": "^20.17.50",
     "prisma": "^6.8.2",
     "tsx": "^4.6.2"
   }
