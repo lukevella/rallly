@@ -145,6 +145,9 @@ importers:
       '@types/lodash':
         specifier: ^4.14.178
         version: 4.17.16
+      '@types/node':
+        specifier: ^20.17.50
+        version: 20.17.50
       '@types/react':
         specifier: 19.1.2
         version: 19.1.2
