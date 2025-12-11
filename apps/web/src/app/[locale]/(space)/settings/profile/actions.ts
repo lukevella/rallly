@@ -14,9 +14,9 @@ export const deleteCurrentUserAction = authActionClient
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
-        spaces: {
+        subscriptions: {
           select: {
-            tier: true,
+            active: true,
           },
         },
       },
@@ -33,6 +33,14 @@ export const deleteCurrentUserAction = authActionClient
       throw new AppError({
         code: "UNAUTHORIZED",
         message: "You are not authorized to delete this user",
+      });
+    }
+
+    // Check if user has active subscriptions
+    if (user.subscriptions.some((subscription) => subscription.active)) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "User has active subscriptions",
       });
     }
 
