@@ -36,7 +36,7 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
         position="top"
         className="p-0"
       >
-        <Command className="**:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 **:[[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:size-4 **:[[cmdk-input]]:h-12 **:[[cmdk-item]]:p-2 [&_[cmdk-item]_svg]:size-4">
+        <Command className="[[cmdk-group-heading]]:**:px-2 [[cmdk-group-heading]]:**:font-medium [[cmdk-group-heading]]:**:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [[cmdk-group]]:**:px-2 [&_[cmdk-input-wrapper]_svg]:size-4 [[cmdk-input]]:**:h-12 [[cmdk-item]]:**:p-2 [&_[cmdk-item]_svg]:size-4">
           {children}
         </Command>
       </DialogContent>
@@ -101,7 +101,7 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      "overflow-hidden p-2 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:py-1.5 **:[[cmdk-group-heading]]:text-gray-500 **:[[cmdk-group-heading]]:text-sm",
+      "overflow-hidden p-2 [[cmdk-group-heading]]:**:px-2 [[cmdk-group-heading]]:**:py-1.5 [[cmdk-group-heading]]:**:text-gray-500 [[cmdk-group-heading]]:**:text-sm",
       className,
     )}
     {...props}

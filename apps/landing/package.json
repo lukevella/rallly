@@ -28,7 +28,6 @@
     "i18next-resources-to-backend": "^1.2.1",
     "intl-messageformat": "^10.7.15",
     "lodash": "^4.17.21",
-    "tailwindcss": "^3.4.17",
     "lucide-react": "^0.479.0",
     "motion": "^12.6.2",
     "nanoid": "^5.0.9",
@@ -38,7 +37,8 @@
     "react": "^19.1.4",
     "react-dom": "^19.1.4",
     "react-i18next": "^15.5.1",
-    "react-use": "^17.6.0"
+    "react-use": "^17.6.0",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^15.5.9",

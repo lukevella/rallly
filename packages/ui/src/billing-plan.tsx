@@ -9,7 +9,7 @@ export const BillingPlan = ({
   return (
     <div
       className={cn(
-        "space-y-4 rounded-md border bg-white px-5 py-4 shadow-xs backdrop-blur-xs",
+        "space-y-4 rounded-md border bg-white px-5 py-4 shadow-2xs backdrop-blur-xs",
         className,
       )}
     >

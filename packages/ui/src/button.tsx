@@ -18,7 +18,7 @@ const buttonVariants = cva(
         primary:
           "border-primary bg-primary text-white focus-visible:ring-2 focus-visible:ring-gray-300 focus-visible:ring-offset-1 active:bg-primary-500 disabled:border-transparent disabled:bg-gray-400",
         destructive:
-          "border-destructive bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 focus-visible:ring-offset-1 active:bg-destructive",
+          "border-destructive bg-destructive text-destructive-foreground shadow-2xs hover:bg-destructive/90 focus-visible:ring-offset-1 active:bg-destructive",
         default:
           "bg-white hover:bg-gray-50 focus-visible:ring-offset-1 active:bg-gray-100",
         secondary:
