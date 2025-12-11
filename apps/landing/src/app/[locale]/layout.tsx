@@ -1,4 +1,5 @@
-import "../../style.css";
+import "./globals.css";
+import "@rallly/ui/style.css";
 
 import languages from "@rallly/languages";
 import { PostHogProvider } from "@rallly/posthog/client";

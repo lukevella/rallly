@@ -4,6 +4,9 @@
   "private": true,
   "main": "tailwind.config.js",
   "types": "tailwind.config.d.ts",
+  "exports": {
+    ".": "./shared-styles.css"
+  },
   "dependencies": {
     "tailwindcss": "^4.1.17"
   },

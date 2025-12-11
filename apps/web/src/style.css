@@ -1,4 +1,0 @@
-@source '../../../packages/ui/src/**/*.{ts,tsx}';
-@source '../../../packages/tailwind-config/tailwind.config.js';
-
-@import '../../../packages/tailwind-config/shared-styles.css';
