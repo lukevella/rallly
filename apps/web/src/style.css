@@ -138,7 +138,7 @@
   .heading-sm {
     @apply mb-4 text-xl font-bold text-gray-800;
   }
-  .text {
+  .text-body {
     @apply text-lg leading-relaxed text-gray-500;
   }
 }
