@@ -69,7 +69,7 @@ export function PageHeaderActions({
   className?: string;
 }) {
   return (
-    <div className={cn("flex items-center gap-2 sm:flex-shrink-0", className)}>
+    <div className={cn("flex items-center gap-2 sm:shrink-0", className)}>
       {children}
     </div>
   );

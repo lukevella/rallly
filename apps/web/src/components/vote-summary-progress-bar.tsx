@@ -27,7 +27,7 @@ export const VoteSummaryProgressBar = (props: {
   no: string[];
 }) => {
   return (
-    <div className="flex h-1.5 grow overflow-hidden rounded bg-slate-100">
+    <div className="flex h-1.5 grow overflow-hidden rounded-sm bg-slate-100">
       <Tooltip>
         <TooltipTrigger asChild>
           <div

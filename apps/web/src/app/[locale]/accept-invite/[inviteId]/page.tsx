@@ -47,7 +47,7 @@ export default async function JoinPage({
   return (
     <div className="flex h-dvh flex-col items-center gap-12 py-12">
       <FullLogoLink />
-      <div className="flex w-full max-w-sm flex-col rounded-xl border bg-white p-12 text-center shadow-sm">
+      <div className="flex w-full max-w-sm flex-col rounded-xl border bg-white p-12 text-center shadow-xs">
         <div className="mx-auto mb-4">
           <SpaceIcon
             src={invite.space.image ?? undefined}

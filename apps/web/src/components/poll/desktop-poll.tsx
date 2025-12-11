@@ -297,7 +297,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                 <div
                   aria-hidden="true"
                   className={cn(
-                    "pointer-events-none absolute top-0 bottom-0 left-[235px] z-30 w-4 border-l bg-gradient-to-r from-gray-800/5 via-transparent to-transparent transition-opacity",
+                    "pointer-events-none absolute top-0 bottom-0 left-[235px] z-30 w-4 border-l bg-linear-to-r from-gray-800/5 via-transparent to-transparent transition-opacity",
                     x > 0 ? "opacity-100" : "opacity-0",
                   )}
                 />
@@ -310,7 +310,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                   }}
                   ref={scrollRef}
                   className={cn(
-                    "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 flex-grow overflow-auto scroll-smooth",
+                    "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 grow overflow-auto scroll-smooth",
                   )}
                 >
                   <table className="w-full table-auto border-separate border-spacing-0 bg-gray-50">
