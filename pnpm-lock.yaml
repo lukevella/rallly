@@ -132,6 +132,9 @@ importers:
       react-use:
         specifier: ^17.6.0
         version: 17.6.0(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.17
     devDependencies:
       '@next/bundle-analyzer':
         specifier: ^15.5.9
@@ -649,21 +652,21 @@ importers:
   packages/tailwind-config:
     dependencies:
       tailwindcss:
-        specifier: ^3.4.17
-        version: 3.4.17
+        specifier: ^4.1.17
+        version: 4.1.17
     devDependencies:
       '@tailwindcss/typography':
         specifier: ^0.5.13
-        version: 0.5.16(tailwindcss@3.4.17)
+        version: 0.5.16(tailwindcss@4.1.17)
       autoprefixer:
         specifier: ^10.4.13
         version: 10.4.21(postcss@8.5.6)
       tailwind-scrollbar:
         specifier: ^3.0.4
-        version: 3.1.0(tailwindcss@3.4.17)
+        version: 3.1.0(tailwindcss@4.1.17)
       tailwindcss-animate:
         specifier: ^1.0.5
-        version: 1.0.7(tailwindcss@3.4.17)
+        version: 1.0.7(tailwindcss@4.1.17)
 
   packages/tsconfig:
     devDependencies:
@@ -14905,13 +14908,13 @@ snapshots:
       postcss: 8.5.6
       tailwindcss: 4.1.17
 
-  '@tailwindcss/typography@0.5.16(tailwindcss@3.4.17)':
+  '@tailwindcss/typography@0.5.16(tailwindcss@4.1.17)':
     dependencies:
       lodash.castarray: 4.4.0
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.4.17
+      tailwindcss: 4.1.17
 
   '@tanstack/query-core@5.90.12': {}
 
@@ -20715,7 +20718,7 @@ snapshots:
 
   sucrase@3.35.0:
     dependencies:
-      '@jridgewell/gen-mapping': 0.3.8
+      '@jridgewell/gen-mapping': 0.3.13
       commander: 4.1.1
       glob: 10.4.5
       lines-and-columns: 1.2.4
@@ -20755,13 +20758,13 @@ snapshots:
 
   tailwind-merge@1.14.0: {}
 
-  tailwind-scrollbar@3.1.0(tailwindcss@3.4.17):
+  tailwind-scrollbar@3.1.0(tailwindcss@4.1.17):
     dependencies:
-      tailwindcss: 3.4.17
+      tailwindcss: 4.1.17
 
-  tailwindcss-animate@1.0.7(tailwindcss@3.4.17):
+  tailwindcss-animate@1.0.7(tailwindcss@4.1.17):
     dependencies:
-      tailwindcss: 3.4.17
+      tailwindcss: 4.1.17
 
   tailwindcss@3.4.17:
     dependencies:

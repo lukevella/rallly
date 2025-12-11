@@ -28,6 +28,7 @@
     "i18next-resources-to-backend": "^1.2.1",
     "intl-messageformat": "^10.7.15",
     "lodash": "^4.17.21",
+    "tailwindcss": "^3.4.17",
     "lucide-react": "^0.479.0",
     "motion": "^12.6.2",
     "nanoid": "^5.0.9",
