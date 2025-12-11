@@ -58,7 +58,7 @@ export const deleteUserAction = adminActionClient
       userId: z.string(),
     }),
   )
-  .action(async ({ ctx, parsedInput }) => {
+  .action(async ({ parsedInput }) => {
     const userId = parsedInput.userId;
 
     const user = await prisma.user.findUnique({
@@ -79,11 +79,11 @@ export const deleteUserAction = adminActionClient
       });
     }
 
-    if (ctx.ability.cannot("delete", subject("User", user))) {
+    // Check if user has active subscriptions
+    if (user.subscriptions.some((subscription) => subscription.active)) {
       throw new AppError({
         code: "FORBIDDEN",
-        message: "This user cannot be deleted",
-        cause: ctx.ability.relevantRuleFor("delete", subject("User", user)),
+        message: "User has active subscriptions",
       });
     }
 

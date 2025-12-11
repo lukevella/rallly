@@ -14,7 +14,7 @@ export const createUserDTO = (user: User): UserDTO => ({
   locale: user.locale ?? undefined,
   weekStart: user.weekStart ?? undefined,
   customerId: user.customerId ?? undefined,
-  isGuest: false,
+  isGuest: user.isAnonymous,
 });
 
 export const getUser = cache(async (id: string) => {
