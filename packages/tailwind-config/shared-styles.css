@@ -1,0 +1,200 @@
+@import 'tailwindcss';
+
+@theme {
+  --shadow-huge:
+    0px 51px 78px rgb(17 7 53 / 5%), 0px 21.3066px 35.4944px rgb(17 7 53 / 4%),
+    0px 11.3915px 18.9418px rgb(17 7 53 / 3%),
+    0px 6.38599px 9.8801px rgb(17 7 53 / 3%),
+    0px 3.39155px 4.58665px rgb(17 7 53 / 2%),
+    0px 1.4113px 1.55262px rgb(17 7 53 / 1%),
+    inset 0px 1px 0px rgb(41 56 78 / 5%);
+
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+  --color-primary-950: #1e1b4b;
+  --color-primary: #4f46e5;
+  --color-primary-foreground: #eef2ff;
+  --color-primary-background: #eef2ff;
+
+  --color-secondary-background: #eef2ff;
+  --color-secondary: #eef2ff;
+  --color-secondary-foreground: #4f46e5;
+
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+
+  --color-border: #e5e7eb;
+
+  --color-input: #e5e7eb;
+  --color-input-background: #fff;
+  --color-input-foreground: #374151;
+
+  --color-ring: #d1d5db;
+
+  --color-destructive: #e11d48;
+  --color-destructive-background: #fff1f2;
+  --color-destructive-foreground: #fff1f2;
+
+  --color-background: #fff;
+  --color-foreground: #374151;
+
+  --color-accent: #f3f4f6;
+
+  --color-action-bar: #1f2937;
+  --color-action-bar-foreground: #f9fafb;
+
+  --color-muted: #f3f4f6;
+  --color-muted-background: #f9fafb;
+  --color-muted-foreground: #6b7280;
+
+  --color-popover: #fff;
+  --color-popover-foreground: #374151;
+
+  --color-card: #fff;
+  --color-card-background: #fff;
+  --color-card-foreground: #374151;
+
+  --color-sidebar: #f3f4f6;
+  --color-sidebar-foreground: #374151;
+  --color-sidebar-border: #e5e7eb;
+
+  --color-sidebar-accent: #e5e7eb;
+  --color-sidebar-accent-foreground: #1f2937;
+
+  --animate-wiggle: wiggle 0.2s ease-in-out;
+  --animate-pop-in: popIn 0.1s ease-out;
+
+  --breakpoint-xs: 375px;
+
+  --ease-in-expo: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+
+  --font-sans:
+    var(--font-inter), ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(-1deg);
+    }
+    50% {
+      transform: rotate(1deg);
+    }
+  }
+  @keyframes popIn {
+    0% {
+      transform: scale(0.8) translateY(-10px);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1) translateY(0px);
+      opacity: 1;
+      translate-y: 0;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility text-link {
+  @apply text-primary rounded-md font-medium outline-hidden hover:underline focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-1;
+}
+
+@utility btn {
+  @apply inline-flex h-9 select-none items-center justify-center gap-x-1.5 whitespace-nowrap rounded-md border px-2.5 text-sm font-medium;
+  &a {
+    @apply cursor-pointer hover:no-underline;
+  }
+}
+
+@utility btn-default {
+  @apply btn bg-white/50 text-gray-700 hover:bg-gray-50 hover:shadow-xs active:bg-gray-200 active:shadow-none;
+}
+
+@utility bg-diagonal-lines {
+  background-color: #f9fafb;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='0' x2='100%' y2='100%' stroke='%23e5e7eb' stroke-width='1'/%3E%3C/svg%3E");
+  background-repeat: repeat-y;
+}
+
+@layer utilities {
+  :root {
+    --spacing: 0.25rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply text-foreground bg-background;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+  }
+  html {
+    @apply h-full font-sans text-base text-gray-700;
+  }
+  body,
+  #__next {
+    @apply h-full;
+  }
+
+  label {
+    @apply block text-sm;
+  }
+
+  p {
+    @apply leading-normal;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    @apply rounded-sm outline-hidden;
+  }
+}
+
+@layer components {
+
+  button[disabled] {
+    @apply cursor-not-allowed;
+  }
+}
