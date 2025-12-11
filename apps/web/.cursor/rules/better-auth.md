@@ -24703,7 +24703,7 @@ export function SignInPage() {
             <div className="relative">
                 <Button 
                     onClick={() => authClient.signIn.email({...})}
-                    variant={lastMethod === "email" ? "default" : "outline"}
+                    variant={lastMethod === "email" ? "default" : "outline-solid"}
                     className="w-full"
                 >
                     Sign in with Email
@@ -24717,7 +24717,7 @@ export function SignInPage() {
             <div className="relative">
                 <Button 
                     onClick={() => authClient.signIn.social({ provider: "google" })}
-                    variant={lastMethod === "google" ? "default" : "outline"}
+                    variant={lastMethod === "google" ? "default" : "outline-solid"}
                     className="w-full"
                 >
                     Continue with Google
@@ -24730,7 +24730,7 @@ export function SignInPage() {
             <div className="relative">
                 <Button 
                     onClick={() => authClient.signIn.social({ provider: "github" })}
-                    variant={lastMethod === "github" ? "default" : "outline"}
+                    variant={lastMethod === "github" ? "default" : "outline-solid"}
                     className="w-full"
                 >
                     Continue with GitHub

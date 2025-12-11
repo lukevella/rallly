@@ -50,7 +50,7 @@ function KeyBenefitsItem({
 }) {
   return (
     <li className="flex items-center gap-3">
-      <div className="rounded-lg border bg-gradient-to-b from-white to-gray-50 p-2">
+      <div className="rounded-lg border bg-linear-to-b from-white to-gray-50 p-2">
         <Icon>{icon}</Icon>
       </div>
       <div>
@@ -101,7 +101,7 @@ function PlanRadioGroupItem({
   return (
     <label
       htmlFor={id}
-      className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border p-4 transition-colors has-[[data-state=checked]]:border-primary-300 has-[[data-state=checked]]:bg-primary-background has-[[data-state=checked]]:ring-primary"
+      className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border p-4 transition-colors has-data-[state=checked]:border-primary-300 has-data-[state=checked]:bg-primary-background has-data-[state=checked]:ring-primary"
     >
       <RadioGroupItem value={value} id={id} />
       <div className="flex-1">

@@ -34,7 +34,7 @@ export default async function Layout({
               cx={10}
               cy={10}
               className={cn(
-                "[mask-image:radial-gradient(400px_circle_at_top,white,transparent)]",
+                "mask-[radial-gradient(400px_circle_at_top,white,transparent)]",
               )}
             />
           </div>

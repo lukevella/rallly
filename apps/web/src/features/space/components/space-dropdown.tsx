@@ -79,7 +79,7 @@ export function SpaceDropdown({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="min-w-[var(--radix-dropdown-menu-trigger-width)]"
+          className="min-w-(--radix-dropdown-menu-trigger-width)"
           align="start"
         >
           <DropdownMenuLabel>
