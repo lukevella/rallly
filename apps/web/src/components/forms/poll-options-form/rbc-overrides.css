@@ -1,73 +1,78 @@
 .rbc-time-view {
-  @apply border-0 border-b border-t border-gray-100;
+  border: 0;
+  border-bottom: 1px solid var(--color-gray-100);
+  border-top: 1px solid var(--color-gray-100);
 }
 
 .rbc-today {
-  @apply bg-gray-50 bg-opacity-50;
+  background-color: color-mix(in srgb, var(--color-gray-50) 50%, transparent);
 }
 
 .rbc-time-content > * + * > * {
-  @apply border-gray-200;
+  border-color: var(--color-gray-200);
 }
 
 .rbc-time-header.rbc-overflowing,
 .rbc-time-header-content,
 .rbc-header {
-  @apply border-gray-100;
+  border-color: var(--color-gray-100);
 }
 
 .rbc-time-content {
-  @apply border-t-0;
+  border-top: 0;
 }
 
 .rbc-time-view .rbc-allday-cell {
-  @apply hidden;
+  display: none;
 }
 
 .rbc-current-time-indicator {
-  @apply bg-rose-400;
+  background-color: #fb7185;
 }
 
 .rbc-header + .rbc-header {
-  @apply border-l-0;
+  border-left: 0;
 }
 
 .rbc-time-slot {
-  @apply pl-2 pt-1;
+  padding-left: 0.5rem;
+  padding-top: 0.25rem;
 }
 
 .rbc-timeslot-group {
-  @apply border-gray-100;
+  border-color: var(--color-gray-100);
 }
 
 .rbc-day-slot .rbc-time-slot {
-  @apply border-gray-100;
-}
-
-.rbc-day-slot .rbc-time-slot {
-  @apply border-dashed border-gray-50;
+  border-style: dashed;
+  border-color: var(--color-gray-50);
 }
 
 .rbc-day-slot .rbc-events-container {
-  @apply mr-2;
+  margin-right: 0.5rem;
 }
 
 .rbc-slot-selection {
-  @apply bg-gray-100/50 leading-tight text-gray-600;
+  background-color: color-mix(in srgb, var(--color-gray-100) 50%, transparent);
+  line-height: 1.25;
+  color: var(--color-gray-600);
 }
 
 .rbc-header.rbc-today {
-  @apply bg-white text-rose-600;
+  background-color: var(--color-background);
+  color: #e11d48;
 }
 
 .rbc-button-link {
-  @apply pointer-events-none m-1 w-full;
+  pointer-events: none;
+  margin: 0.25rem;
+  width: 100%;
 }
 
 .rbc-time-content > * + * > * {
-  @apply border-gray-100;
+  border-color: var(--color-gray-100);
 }
 
 .rbc-time-header-gutter {
-  @apply border-b border-gray-100;
+  border-bottom: 1px solid var(--color-gray-100);
 }
