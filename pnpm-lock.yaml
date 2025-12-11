@@ -200,8 +200,8 @@ importers:
         specifier: ^5.2.1
         version: 5.2.1(react-hook-form@7.56.1(react@19.2.1))
       '@next/env':
-        specifier: ^15.3.1
-        version: 15.4.6
+        specifier: ^15.4.8
+        version: 15.5.7
       '@prisma/client':
         specifier: ^6.8.2
         version: 6.8.2(prisma@6.8.2(typescript@5.8.3))(typescript@5.8.3)
@@ -2729,9 +2729,6 @@ packages:
 
   '@next/env@15.2.4':
     resolution: {integrity: sha512-+SFtMgoiYP3WoSswuNmxJOCwi06TdWE733D+WPjpXIe4LXGULwEaofiiAy6kbS0+XjM5xF5n3lKuBwN2SnqD9g==}
-
-  '@next/env@15.4.6':
-    resolution: {integrity: sha512-yHDKVTcHrZy/8TWhj0B23ylKv5ypocuCwey9ZqPyv4rPdUdRzpGCkSi03t04KBPyU96kxVtUqx6O3nE1kpxASQ==}
 
   '@next/env@15.5.7':
     resolution: {integrity: sha512-4h6Y2NyEkIEN7Z8YxkA27pq6zTkS09bUSYC0xjd0NpwFxjnIKeZEeH591o5WECSmjpUhLn3H2QLJcDye3Uzcvg==}
@@ -12353,8 +12350,6 @@ snapshots:
       - utf-8-validate
 
   '@next/env@15.2.4': {}
-
-  '@next/env@15.4.6': {}
 
   '@next/env@15.5.7': {}
 
