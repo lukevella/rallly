@@ -5,7 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./shared-styles.css",
-    "./postcss": "./postcss.config.js"
+    "./postcss": "./postcss.config.mjs"
   },
   "dependencies": {
     "postcss": "^8.5.6",
