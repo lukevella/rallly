@@ -59,7 +59,10 @@ const VoteSummary = ({
 
   return (
     <div
-      className={cn("flex flex-wrap gap-1.5 rounded-sm border p-1.5", className)}
+      className={cn(
+        "flex flex-wrap gap-1.5 rounded-sm border p-1.5",
+        className,
+      )}
     >
       {voteTypes.map((voteType) => {
         const votes = voteByType[voteType];

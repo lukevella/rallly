@@ -187,7 +187,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                       <span
                         aria-hidden
                         className={cn(
-                          "z-0 absolute inset-1 rounded-md border",
+                          "absolute inset-1 z-0 rounded-md border",
                           day.selected
                             ? "border-primary-300 border-dashed shadow-xs group-hover:border-primary-400"
                             : "border-transparent border-dashed group-hover:border-gray-400 group-active:bg-gray-200",

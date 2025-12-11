@@ -39,7 +39,7 @@ export function DescriptionDetails({
       {...props}
       className={cn(
         className,
-        "pt-1 pb-3 text-gray-800 sm:border-gray-800/5 sm:border-t sm:py-3 dark:text-white dark:sm:border-white/5 sm:nth-2:border-none",
+        "pt-1 pb-3 text-gray-800 sm:border-gray-800/5 sm:border-t sm:nth-2:border-none sm:py-3 dark:text-white dark:sm:border-white/5",
       )}
     />
   );
