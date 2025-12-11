@@ -4,3 +4,7 @@
 @source '../../../packages/tailwind-config/tailwind.config.js';
 
 @import '../../../packages/tailwind-config/shared-styles.css';
+
+body {
+  @apply bg-gray-100;
+}
