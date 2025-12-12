@@ -16,11 +16,6 @@
   "hint": "Se ei maksa mitään! Kirjautumista ei tarvita.",
   "doodleAlternative": "Paras ilmainen vaihtoehto Doodlelle",
   "doodleAlternativeDescription": "Rallly on kaikkien kaipaama vaihtoehto Doodlelle. Jo tuhannet käyttäjät ovat vaihtaneet ja nauttivat nyt ammattimaisista kokouskyselyistä intuitiivisella ja helpolla käyttöliittymällä ilman mainoksia.        ",
-  "availabilityPollCta": "Luo kokouskysely",
-  "availabilityPollMetaTitle": "Kokouskysely | Sujuvoita aikataulutusta Ralllylla",
-  "availabilityPollMetaDescription": "Ajoita kokouksia ja tapahtumia saumattomasti Ralllyn kokouskyselyjen avulla. Sujuva ja tehokas suunnittelukokemus, jolla varmistat kaikkien mahdollisuuden osallistua.",
-  "availabilityPollTitle": "Kokouskyselyt",
-  "availabilityPollDescription": "Kyllästyttääkö kamppailu kaikille sopivan kokousajan etsimisen kanssa? Sujuvoita aikataulujen luomista kokouskyselyillä - tehokkaalla työkalulla, joka on suunniteltu helpottamaan ja tehostamaan tapahtumien ja kokousten suunnittelua.",
   "createAPoll": "Luo tapaamiskysely",
   "doodleAlternativeMetaTitle": "Paras ilmainen vaihtoehto Doodlelle | Rallly",
   "doodleAlternativeMetaDescription": "Etsitkö vaihtoehtoa Doodlelle? Kokeile Ralllya! Se on ilmainen ja helppokäyttöinen, eikä se vaadi tunnusta.",
@@ -36,9 +31,5 @@
   "when2meetAlternativeMetaDescription": "Löydä parempi tapa aikatauluttaa kokouksia Ralllyn avulla, joka on paras ilmainen vaihtoehto When2Meetille. Helppokäyttöinen ja ilmainen.",
   "when2meetAlternative": "Käytätkö yhä When2Meetiä?",
   "when2meetAlternativeDescription": "Luo ammattimaisia, mainoksettomia kokouskyselyitä ilmaiseksi Ralllyn avulla.",
-  "meetingPoll": "Luo ammattimaisia kokouskyselyitä Ralllyn avulla",
-  "meetingPollDescription": "Kokouskyselyt ovat loistava tapa tiedustella muille sopivia aikoja. Rallly avulla voit luoda kauniita kokouskyselyitä helposti.",
-  "meetingPollMetaTitle": "Kokouskysely",
-  "meetingPollMetaDescription": "Kyselyominaisuutemme avulla aikataulutat kokoukset helposti ja varmistat kaikille sopivan ajan.",
   "spacesBlog": "Esittelyssä tilat"
 }

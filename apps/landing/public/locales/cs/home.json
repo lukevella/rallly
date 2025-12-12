@@ -16,11 +16,6 @@
   "hint": "Zdarma! Bez nutnosti přihlášení.",
   "doodleAlternative": "Nejlepší bezplatná alternativa k Doodle",
   "doodleAlternativeDescription": "Rallly je tady pro vás, pokud hledáte alternativu k Doodle. Tisíce uživatelů již přešly a nyní si užívají profesionální hlasování o termínech schůzek bez reklam v intuitivním a snadno použitelném rozhraní.        ",
-  "availabilityPollCta": "Vytvořit hlasování o termínu",
-  "availabilityPollMetaTitle": "Anketa dostupnosti | Zjednodušení plánování s Rallly",
-  "availabilityPollMetaDescription": "Plánujte schůzky a události bez problémů pomocí Rallly. Zajistěte, aby byla zohledněna časové možnosti všech účastníků a plánování probíhalo hladce a efektivně.",
-  "availabilityPollTitle": "Dostupná hlasování",
-  "availabilityPollDescription": "Už vás nebaví hledat čas schůzky, který by vyhovoval všem? Zjednodušte plánování pomocí hlasování - výkonného nástroje, který je navržen tak, aby zjednodušil a optimalizoval plánování událostí a schůzek.",
   "createAPoll": "Vytvořit hlasování o schůzce",
   "doodleAlternativeMetaTitle": "Nejlepší bezplatná alternativa k Doodle | Rallly",
   "doodleAlternativeMetaDescription": "Hledáte alternativu k Doodle? Zkuste Rallly! Je zdarma, je jednoduchá a nevyžaduje žádný účet.",
@@ -34,9 +29,5 @@
   "when2meetAlternativeMetaTitle": "Nejlepší When2Meet Alternativa: Rallly",
   "when2meetAlternativeMetaDescription": "Najděte jednodušší způsob, jak plánovat schůzky – s Rallly, nejlepší bezplatnou alternativou k When2Meet. Snadné použití a zcela zdarma.",
   "when2meetAlternative": "Stále používáte When2Meet?",
-  "when2meetAlternativeDescription": "Vytvářejte profesionální ankety pro schůzky bez reklam zdarma s Rallly.",
-  "meetingPoll": "Vytvářejte profesionální ankety pro schůzky s Rallly",
-  "meetingPollDescription": "Plánovací ankety představují efektivní způsob, jak zjistit, kdy mají lidé čas. Služba Rallly umožňuje jednoduše vytvářet přehledné a atraktivní ankety na domlouvání schůzek.",
-  "meetingPollMetaTitle": "Plánovací anketa",
-  "meetingPollMetaDescription": "Jednoduše naplánujte schůzky s naší funkcí průzkumu, které zajistí dostupnost pro všechny."
+  "when2meetAlternativeDescription": "Vytvářejte profesionální ankety pro schůzky bez reklam zdarma s Rallly."
 }

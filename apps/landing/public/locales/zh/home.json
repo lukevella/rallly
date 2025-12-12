@@ -16,11 +16,6 @@
   "hint": "无需登录即可免费使用",
   "doodleAlternative": "最好的 Doodle 免费替代方案",
   "doodleAlternativeDescription": "Rallly 是万众瞩目的 Doodle 替代方案。成千上万的用户已经进行了切换，并开始在直观且易于使用的界面中享受专业的无广告会议投票。        ",
-  "availabilityPollCta": "创建可用性投票",
-  "availabilityPollMetaTitle": "可用性调查 | 与 Rallly 一起简化日程安排",
-  "availabilityPollMetaDescription": "通过 Rallly 的可用性投票无缝安排会议和活动。确保考虑到每个人的空闲时间以获得流畅高效的规划体验。",
-  "availabilityPollTitle": "可用性投票",
-  "availabilityPollDescription": "很难找到一个对每个人都满意的会议时间？ 通过可用性投票来精简您的日程安排 - 这是一个强大的工具，旨在简化和优化您的活动和会议规划。",
   "createAPoll": "创建会议投票",
   "doodleAlternativeMetaTitle": "最好的免费 Doodle 替代方案 | Rallly",
   "doodleAlternativeMetaDescription": "正在寻找 Doodle 替代方案吗？试试 Rallly！免费，易于使用，不需要账户。",
@@ -34,9 +29,5 @@
   "when2meetAlternativeMetaTitle": "最好的 When2Meet 替代品：Rallly",
   "when2meetAlternativeMetaDescription": "找到更好的方法来安排会议与Rallly，Rallly是When2Meet的替代品。简单、易用且免费。",
   "when2meetAlternative": "仍在使用 When2Meet？",
-  "when2meetAlternativeDescription": "创建免费专业的、无广告的会议投票。",
-  "meetingPoll": "通过Rallly创建专业会议投票",
-  "meetingPollDescription": "会议投票是让人们能够获得的一个好方法。很高兴让你能够轻松地创造会议投票。",
-  "meetingPollMetaTitle": "会议投票",
-  "meetingPollMetaDescription": "用我们的会议投票功能轻松安排会议，确保每个人都能参加。"
+  "when2meetAlternativeDescription": "创建免费专业的、无广告的会议投票。"
 }

@@ -14,11 +14,6 @@
   "hint": "Det är gratis! Ingen inloggning krävs.",
   "doodleAlternative": "Det bästa gratisalternativet till Doodle",
   "doodleAlternativeDescription": "Rallly är Doodle-alternativet som alla letar efter. Tusentals användare har redan gjort bytet och njuter nu av professionella annonsfria  mötesförfrågningar i ett intuitivt och lättanvänt gränssnitt.        ",
-  "availabilityPollCta": "Skapa en förfrågan om tillgänglighet",
-  "availabilityPollMetaTitle": "Förfrågan om tillgänglighet | Effektivisera schemaläggning med Rallly",
-  "availabilityPollMetaDescription": "Schemalägg möten och evenemang sömlöst med Ralllys förfrågan om tillgänglighet. Se till att allas tillgänglighet beaktas för en smidig och effektiv planering.",
-  "availabilityPollTitle": "Förfrågan om tillgänglighet",
-  "availabilityPollDescription": "Trött på att kämpa för att hitta en mötestid som passar alla? Effektivisera schemaläggningen med en förfrågan om tillgänglighet - ett kraftfullt verktyg designat för att förenkla och optimera din planering av evenemang och möten.",
   "createAPoll": "Skapa en mötes-förfrågan",
   "doodleAlternativeMetaTitle": "Bästa gratis doodlealternativ | Rallly",
   "doodleAlternativeMetaDescription": "Letar du efter ett Doodle-alternativ? Testa Rallly! Det är gratis, lätt att använda och kräver inget konto.",
@@ -32,9 +27,5 @@
   "when2meetAlternativeMetaTitle": "Bästa alternativet till When2Meet: Rallly",
   "when2meetAlternativeMetaDescription": "Hitta ett bättre sätt att schemalägga möten med Rallly, det bästa fria alternativet till When2Meet. Lätt att använda och gratis.",
   "when2meetAlternative": "Använder du fortfarande When2Meet?",
-  "when2meetAlternativeDescription": "Skapa professionella, reklamfria mötes-förfrågningar gratis med Rallly.",
-  "meetingPoll": "Skapa professionella mötes-förfrågningar med Rallly",
-  "meetingPollDescription": "Mötes-förfrågningar är ett bra sätt att reda på om personer är tillgängliga. Rallly låter dig enkelt skapa snygga förfrågningar.",
-  "meetingPollMetaTitle": "Mötesförfrågan",
-  "meetingPollMetaDescription": "Med vår förfrågningsfunktion kan du enkelt schemalägga möten så att allas tillgänglighet beaktas."
+  "when2meetAlternativeDescription": "Skapa professionella, reklamfria mötes-förfrågningar gratis med Rallly."
 }
