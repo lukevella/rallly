@@ -1,7 +1,7 @@
 {
   "name": "rallly",
   "private": true,
-  "version": "4.5.10",
+  "version": "4.5.11",
   "scripts": {
     "dev": "turbo dev --filter=@rallly/web",
     "dev:emails": "turbo dev --filter=@rallly/emails",
