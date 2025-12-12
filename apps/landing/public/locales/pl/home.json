@@ -16,11 +16,6 @@
   "hint": "To nic nie kosztuje! Nie wymaga logowania.",
   "doodleAlternative": "Najlepsza darmowa alternatywa dla Doodle",
   "doodleAlternativeDescription": "Rallly to alternatywa dla Doodle, której wszyscy szukają. Tysiące użytkowników dokonało już zmiany i cieszy się teraz profesjonalnymi ankietami spotkań bez reklam w intuicyjnym i łatwym w użyciu interfejsie.        ",
-  "availabilityPollCta": "Utwórz ankietę dostępności",
-  "availabilityPollMetaTitle": "Ankieta dostępności | Usprawnij planowanie z Rallly",
-  "availabilityPollMetaDescription": "Płynnie planuj spotkania i wydarzenia za pomocą ankiety dostępności Rallly. Upewnij się, że dostępność wszystkich osób jest brana pod uwagę, aby zapewnić płynne i wydajne planowanie.",
-  "availabilityPollTitle": "Ankiety dostępności",
-  "availabilityPollDescription": "Masz już dość szukania terminu spotkania, który będzie odpowiedni dla wszystkich? Usprawnij planowanie dzięki ankiecie dostępności - potężnemu narzędziu zaprojektowanemu w celu uproszczenia i optymalizacji planowania wydarzeń i spotkań.",
   "createAPoll": "Utwórz ankietę spotkania",
   "doodleAlternativeMetaTitle": "Najlepsza darmowa alternatywa dla Doodle | Rallly",
   "doodleAlternativeMetaDescription": "Szukasz alternatywy dla Doodle? Wypróbuj Rallly! Jest darmowa, łatwa w użyciu i nie wymaga zakładania konta.",
@@ -34,9 +29,5 @@
   "when2meetAlternativeMetaTitle": "Najlepsza alternatywa dla When2Meet: Rallly",
   "when2meetAlternativeMetaDescription": "Znajdź lepszy sposób na planowanie spotkań z Rallly, najlepszą darmową alternatywą dla When2Meet. Łatwa w użyciu i darmowa.",
   "when2meetAlternative": "Nadal używasz When2Meet?",
-  "when2meetAlternativeDescription": "Twórz profesjonalne, wolne od reklam ankiety na spotkania za darmo dzięki Rallly.",
-  "meetingPoll": "Twórz profesjonalne ankiety na spotkania z Rallly",
-  "meetingPollDescription": "Ankiety spotkań to świetny sposób na uzyskanie dostępności ludzi. Rallly pozwala z łatwością tworzyć piękne ankiety spotkań.",
-  "meetingPollMetaTitle": "Ankieta dotycząca spotkania",
-  "meetingPollMetaDescription": "Łatwo planuj spotkania dzięki naszej funkcji ankiet, zapewniając dostępność każdego uczestnika."
+  "when2meetAlternativeDescription": "Twórz profesjonalne, wolne od reklam ankiety na spotkania za darmo dzięki Rallly."
 }
