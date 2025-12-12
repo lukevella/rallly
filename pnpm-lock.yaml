@@ -112,7 +112,7 @@ importers:
         specifier: ^5.0.9
         version: 5.1.5
       next:
-        specifier: ^15.4.9
+        specifier: ^15.4.10
         version: 15.5.7(@babel/core@7.28.3)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       next-mdx-remote:
         specifier: ^5.0.0
@@ -134,7 +134,7 @@ importers:
         version: 17.6.0(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
     devDependencies:
       '@next/bundle-analyzer':
-        specifier: ^15.4.9
+        specifier: ^15.4.10
         version: 15.5.7
       '@rallly/tsconfig':
         specifier: workspace:*
@@ -365,7 +365,7 @@ importers:
         specifier: ^5.0.9
         version: 5.1.5
       next:
-        specifier: ^15.4.9
+        specifier: ^15.4.10
         version: 15.5.7(@babel/core@7.28.3)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       next-auth:
         specifier: ^5.0.0-beta.25
@@ -432,7 +432,7 @@ importers:
         specifier: ^7.26.10
         version: 7.28.3
       '@next/bundle-analyzer':
-        specifier: ^15.4.9
+        specifier: ^15.4.10
         version: 15.5.7
       '@playwright/test':
         specifier: ^1.52.0
@@ -7746,6 +7746,7 @@ packages:
   next@15.5.7:
     resolution: {integrity: sha512-+t2/0jIJ48kUpGKkdlhgkv+zPTEOoXyr60qXe68eB/pl3CMJaLeIGjzp5D6Oqt25hCBiBTt8wEeeAzfJvUKnPQ==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
+    deprecated: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
