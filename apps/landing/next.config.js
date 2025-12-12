@@ -96,6 +96,16 @@ const nextConfig = {
         destination: "/",
         permanent: true,
       },
+      {
+        source: "/availability-poll",
+        destination: "/free-scheduling-poll",
+        permanent: true,
+      },
+      {
+        source: "/meeting-poll", 
+        destination: "/free-scheduling-poll",
+        permanent: true,
+      },
     ];
   },
 };

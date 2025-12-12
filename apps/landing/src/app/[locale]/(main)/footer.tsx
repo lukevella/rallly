@@ -225,30 +225,6 @@ export const Footer: React.FunctionComponent = () => {
                 />
               </LinkBase>
             </li>
-            <li>
-              <LinkBase
-                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
-                href="/meeting-poll"
-              >
-                <Trans
-                  ns="common"
-                  i18nKey="meetingPoll"
-                  defaults="Meeting Poll"
-                />
-              </LinkBase>
-            </li>
-            <li>
-              <LinkBase
-                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
-                href="/availability-poll"
-              >
-                <Trans
-                  ns="common"
-                  i18nKey="availabilityPoll"
-                  defaults="Availability Poll"
-                />
-              </LinkBase>
-            </li>
           </ul>
         </div>
         <div className="lg:w-2/6">
