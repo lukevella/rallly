@@ -16,8 +16,8 @@ Additionally, two additional vulnerabilities ([CVE-2025-55183](https://www.cve.o
 
 ## Timeline
 
-- **December 3, 2024**: React2Shell ([CVE-2025-55182](https://www.cve.org/CVERecord?id=CVE-2025-55182)) was announced and patched in v4.5.8
-- **December 11, 2024**: Two additional CVEs ([CVE-2025-55183](https://www.cve.org/CVERecord?id=CVE-2025-55183), [CVE-2025-55184](https://www.cve.org/CVERecord?id=CVE-2025-55184)) were announced and are patched in v4.5.10
+- **December 3, 2025**: React2Shell ([CVE-2025-55182](https://www.cve.org/CVERecord?id=CVE-2025-55182)) was announced and patched in v4.5.8
+- **December 11, 2025**: Two additional CVEs ([CVE-2025-55183](https://www.cve.org/CVERecord?id=CVE-2025-55183), [CVE-2025-55184](https://www.cve.org/CVERecord?id=CVE-2025-55184)) were announced and are patched in v4.5.10
 
 ## Action Required
 
