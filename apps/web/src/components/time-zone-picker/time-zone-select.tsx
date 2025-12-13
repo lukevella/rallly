@@ -37,7 +37,7 @@ export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
           defaultValue: "Search…",
         })}
       />
-      <CommandList className="max-h-[300px] w-[var(--radix-popover-trigger-width)] max-w-[var(--radix-popover-content-available-width)] overflow-y-auto">
+      <CommandList className="max-h-[300px] w-(--radix-popover-trigger-width) max-w-(--radix-popover-content-available-width) overflow-y-auto">
         <CommandEmpty>
           <Trans
             i18nKey="timeZoneSelect__noOption"

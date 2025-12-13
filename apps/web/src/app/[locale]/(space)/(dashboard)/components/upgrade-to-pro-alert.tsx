@@ -8,7 +8,7 @@ import { PayWallButton } from "@/features/billing/client";
 export function UpgradeToProAlert() {
   const posthog = usePostHog();
   return (
-    <div className="relative overflow-hidden rounded-xl border bg-gray-50 p-3 text-sm shadow-sm">
+    <div className="relative overflow-hidden rounded-xl border bg-gray-50 p-3 text-sm shadow-xs">
       <SparklesIcon className="-top-4 absolute right-0 z-0 size-16 text-gray-200" />
       <div className="relative z-10">
         <h2 className="font-semibold">

@@ -54,7 +54,7 @@ export function NavUser({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="w-[var(--radix-dropdown-menu-trigger-width)]"
+          className="w-(--radix-dropdown-menu-trigger-width)"
           align="end"
           side="top"
         >

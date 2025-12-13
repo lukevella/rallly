@@ -151,7 +151,7 @@ export default async function Page(props: {
         <PriceTables />
       </section>
       <section>
-        <div className="flex flex-col gap-4 rounded-md border border-cyan-800/10 bg-gradient-to-b from-cyan-50 to-cyan-50/60 p-4 text-cyan-800 shadow-sm sm:flex-row sm:gap-6 sm:p-5">
+        <div className="flex flex-col gap-4 rounded-md border border-cyan-800/10 bg-linear-to-b from-cyan-50 to-cyan-50/60 p-4 text-cyan-800 shadow-xs sm:flex-row sm:gap-6 sm:p-5">
           <div>
             <TrendingUpIcon className="size-6" />
           </div>

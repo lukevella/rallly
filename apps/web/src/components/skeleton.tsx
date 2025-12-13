@@ -22,7 +22,7 @@ export function SkeletonCard({
   className?: string;
 }) {
   return (
-    <div className={cn("rounded-md bg-white shadow-sm", className)}>
+    <div className={cn("rounded-md bg-white shadow-xs", className)}>
       {children}
     </div>
   );
