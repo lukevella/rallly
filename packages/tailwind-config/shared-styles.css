@@ -1,4 +1,9 @@
 @import 'tailwindcss';
+
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animate";
+@plugin "tailwind-scrollbar";
+
 @source "../../packages/ui/src/**/*.{ts,tsx}";
 
 @theme {
@@ -54,7 +59,7 @@
   --color-destructive-foreground: #fff1f2;
 
   --color-background: #fff;
-  --color-foreground: #374151;
+  --color-foreground: var(--color-gray-700);
 
   --color-accent: #f3f4f6;
 
@@ -79,8 +84,6 @@
   --color-sidebar-accent: #e5e7eb;
   --color-sidebar-accent-foreground: #1f2937;
 
-  --animate-wiggle: wiggle 0.2s ease-in-out;
-
   --breakpoint-xs: 375px;
 
   --ease-in-expo: cubic-bezier(0.68, -0.6, 0.32, 1.6);
@@ -89,16 +92,6 @@
   --font-sans:
     var(--font-inter), ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-
-  @keyframes wiggle {
-    0%,
-    100% {
-      transform: rotate(-1deg);
-    }
-    50% {
-      transform: rotate(1deg);
-    }
-  }
 }
 
 /*
