@@ -507,5 +507,9 @@
   "calendarSelectionSetError": "Kalenterin valinta ei onnistunut",
   "connectCalendar": "Yhdistä kalenteri",
   "connectGoogleCalendar": "Google-kalenteri",
-  "connectMicrosoftCalendar": "Microsoft-kalenteri"
+  "connectMicrosoftCalendar": "Microsoft-kalenteri",
+  "settingDefaultCalendar": "Asetetaan oletuskalenteria...",
+  "defaultCalendarSetSuccess": "Oletuskalenterin asettaminen onnistui",
+  "defaultCalendarSetError": "Oletuskalenterin asettaminen epäonnistui",
+  "authErrorsOAuthSignInFailed": "Kirjautumisen aikana tapahtui virhe. Yritä uudelleen tai ota yhteyttä järjestelmänvalvojaan."
 }
