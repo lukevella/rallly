@@ -27,7 +27,7 @@
 }
 
 .rbc-current-time-indicator {
-  background-color: #fb7185;
+  background-color: var(--color-rose-400);
 }
 
 .rbc-header + .rbc-header {
@@ -60,7 +60,7 @@
 
 .rbc-header.rbc-today {
   background-color: var(--color-background);
-  color: #e11d48;
+  color: var(--color-rose-600);
 }
 
 .rbc-button-link {
