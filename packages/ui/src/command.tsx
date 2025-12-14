@@ -31,7 +31,7 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
       <DialogContent
-        hideCloseButton={true}
+        showCloseButton={false}
         size="xl"
         position="top"
         className="p-0"
