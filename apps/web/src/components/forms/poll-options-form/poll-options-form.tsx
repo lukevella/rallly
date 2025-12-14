@@ -22,6 +22,7 @@ import { useFormContext } from "react-hook-form";
 import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
+import { AISuggestionsPanel } from "@/features/time-suggestions/components/ai-suggestions-panel";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import type { NewEventData } from "../types";
@@ -79,6 +80,12 @@ const PollOptionsForm = ({
   const datesOnly =
     options.length === 0 ||
     options.some((option) => option.type !== "timeSlot");
+  
+  // Check if time slots are enabled
+  // In Week View, time slots are always enabled
+  // In Month View, time slots are enabled when timeZone is set or there are timeSlot options
+  const isWeekView = watchView === "week";
+  const timeSlotsEnabled = isWeekView || !!watchTimeZone || options.some((option) => option.type === "timeSlot");
 
   const dateOrTimeRangeDialog = useDialog();
 
@@ -211,6 +218,17 @@ const PollOptionsForm = ({
           )}
         />
       </div>
+      {timeSlotsEnabled && (watchDuration || 60) ? (
+        <div className="border-t p-4">
+          <AISuggestionsPanel
+            dateRange={{
+              start: navigationDate,
+              end: new Date(navigationDate.getTime() + 14 * 24 * 60 * 60 * 1000), // 2 weeks
+            }}
+            enabled={true}
+          />
+        </div>
+      ) : null}
       {!datesOnly ? (
         <FormField
           control={form.control}

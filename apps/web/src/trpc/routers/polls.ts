@@ -752,7 +752,7 @@ export const polls = router({
         return { ...res, adminUrlId: "", inviteLink, event };
       }
     }),
-  book: proProcedure
+  book: privateProcedure
     .input(
       z.object({
         pollId: z.string(),

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 next build",
     "build:test": "NODE_ENV=test next build",
     "analyze": "cross-env ANALYZE=true next build",
     "start": "next start",

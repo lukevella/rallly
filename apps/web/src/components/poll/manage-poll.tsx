@@ -201,23 +201,13 @@ const ManagePoll: React.FunctionComponent<{
               <DropdownMenuItem
                 disabled={!!poll.event}
                 onClick={() => {
-                  if (space.data.tier !== "pro") {
-                    showPayWall();
-                    posthog?.capture("trigger paywall", {
-                      poll_id: poll.id,
-                      from: "manage-poll",
-                      action: "finalize",
-                    });
-                  } else {
-                    finalizeDialog.trigger();
-                  }
+                  finalizeDialog.trigger();
                 }}
               >
                 <Icon>
                   <CalendarCheck2Icon />
                 </Icon>
                 <Trans i18nKey="finishPoll" defaults="Finalize" />
-                {space.data.tier !== "pro" ? <ProBadge /> : null}
               </DropdownMenuItem>
               <PauseResumeToggle />
             </>

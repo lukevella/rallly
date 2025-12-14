@@ -8,6 +8,7 @@ import { auth } from "./auth";
 import { calendars } from "./calendars";
 import { events } from "./events";
 import { polls } from "./polls";
+import { timeSuggestions } from "./time-suggestions";
 import { user } from "./user";
 
 dayjs.extend(toArray); // used for creating ics
@@ -21,6 +22,7 @@ export const appRouter = mergeRouters(
     polls,
     user,
     calendars,
+    timeSuggestions,
   }),
 );
 
