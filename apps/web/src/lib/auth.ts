@@ -217,6 +217,10 @@ export const authLib = betterAuth({
       accessToken: "access_token",
       idToken: "id_token",
     },
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google"],
+    },
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
