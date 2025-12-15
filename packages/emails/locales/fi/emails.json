@@ -76,5 +76,11 @@
   "spaceInvite_preview": "Olet saanut kutsun liittyä tilaan {spaceName}",
   "spaceInvite_heading": "Olet saanut kutsun!",
   "spaceInvite_button": "Hyväksy kutsu",
-  "spaceInvite_subject": "Olet saanut kutsun liittyä tilaan {spaceName}"
+  "spaceInvite_subject": "Olet saanut kutsun liittyä tilaan {spaceName}",
+  "resetPassword_button": "Vaihda salasana",
+  "resetPassword_content2": "Jos et pyytänyt salasanan vaihtoa, voit jättää tämän viestin huomiotta. Salasanasi ei muutu, ellet luo uutta. Jos tämä pyyntö vaikuttaa epäilyttävältä, ota yhteyttä osoitteeseen <a>{supportEmail}</a>.",
+  "resetPassword_preview": "Käytä tätä linkkiä vaihtaaksesi salasanasi.",
+  "resetPassword_heading": "Vaihda salasana",
+  "resetPassword_content": "Olemme saaneet pyynnön vaihtaa salasanasi. Napsauta alla olevaa painiketta luodaksesi uuden salasanan.",
+  "resetPassword_subject": "Vaihda salasanasi"
 }
