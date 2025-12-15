@@ -12,10 +12,10 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { Label } from "@rallly/ui/label";
 import { TRPCClientError } from "@trpc/client";
 import { useForm } from "react-hook-form";
 import z from "zod";
-
 import { usePoll } from "@/contexts/poll";
 import { useTranslation } from "@/i18n/client";
 import { useTimezone } from "@/lib/timezone/client/context";
@@ -184,13 +184,10 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
           )}
         />
 
-        <FormItem>
-          <FormLabel>{t("response")}</FormLabel>
-          <FormControl>
-            <VoteSummary votes={props.votes} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
+        <div className="flex flex-col gap-1.5">
+          <Label>{t("response")}</Label>
+          <VoteSummary votes={props.votes} />
+        </div>
 
         {formState.errors.root?.message ? (
           <FormMessage>{formState.errors.root.message}</FormMessage>
