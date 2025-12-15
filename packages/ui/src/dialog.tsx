@@ -5,8 +5,6 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { XIcon } from "lucide-react";
 import React from "react";
-import { Button } from "./button";
-import { Icon } from "./icon";
 import { cn } from "./lib/utils";
 
 function Dialog({
@@ -93,13 +91,9 @@ function DialogContent({
       >
         {children}
         {showCloseButton && (
-          <DialogClose asChild className="absolute top-2 right-2">
-            <Button size="icon" variant="ghost">
-              <Icon>
-                <XIcon />
-              </Icon>
-              <span className="sr-only">Close</span>
-            </Button>
+          <DialogClose className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0">
+            <XIcon />
+            <span className="sr-only">Close</span>
           </DialogClose>
         )}
       </DialogPrimitive.Content>
