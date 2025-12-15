@@ -30,12 +30,7 @@ type CommandDialogProps = DialogProps;
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
-      <DialogContent
-        showCloseButton={false}
-        size="xl"
-        position="top"
-        className="p-0"
-      >
+      <DialogContent showCloseButton={false} size="xl" className="p-0">
         <Command className="[&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:size-4 [&_[cmdk-item]_svg]:size-4 [[cmdk-group-heading]]:**:px-2 [[cmdk-group-heading]]:**:font-medium [[cmdk-group-heading]]:**:text-muted-foreground [[cmdk-group]]:**:px-2 [[cmdk-input]]:**:h-12 [[cmdk-item]]:**:p-2">
           {children}
         </Command>

@@ -12,9 +12,9 @@ const inputVariants = cva(
   {
     variants: {
       size: {
-        default: "h-8 rounded-lg px-3 py-1 text-sm",
+        default: "h-8 rounded-lg px-2.5 py-1 text-sm",
         sm: "h-7 rounded-md px-2 text-sm",
-        lg: "h-12 rounded-lg px-4 text-base",
+        lg: "h-12 rounded-lg px-3 text-base",
       },
       error: {
         true: "border-destructive aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
@@ -43,5 +43,7 @@ function Input({
     />
   );
 }
+
+export type InputProps = React.ComponentProps<typeof Input>;
 
 export { Input };

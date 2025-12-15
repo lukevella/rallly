@@ -12,8 +12,6 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { Label } from "@rallly/ui/label";
-import * as Sentry from "@sentry/nextjs";
 import { TRPCClientError } from "@trpc/client";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -65,7 +63,7 @@ const VoteSummary = ({
   return (
     <div
       className={cn(
-        "flex flex-wrap gap-1.5 rounded-sm border p-1.5",
+        "flex flex-wrap gap-1.5 rounded-lg border p-1.5",
         className,
       )}
     >
@@ -113,7 +111,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
     },
   });
 
-  const { register, setError, formState, handleSubmit } = form;
+  const { setError, formState, handleSubmit } = form;
   const addParticipant = useAddParticipantMutation();
 
   return (
@@ -136,7 +134,6 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                 message: error.message,
               });
             }
-            Sentry.captureException(error);
           }
         })}
         className="space-y-4"
@@ -195,7 +192,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         {formState.errors.root?.message ? (
           <FormMessage>{formState.errors.root.message}</FormMessage>
         ) : null}
-        <div className="flex gap-2">
+        <div className="mt-6 flex gap-2">
           <Button onClick={props.onCancel}>{t("cancel")}</Button>
           <Button
             type="submit"
