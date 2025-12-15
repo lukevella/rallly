@@ -202,8 +202,8 @@ export function PayWallDialog({
 
               <div className="space-y-4 pt-4">
                 {selectedPlan === "pro" && (
-                  <div className="flex justify-between gap-4 rounded-lg border border-dashed bg-muted-background p-4">
-                    <div>
+                  <div className="flex items-start justify-between gap-4 rounded-lg border border-dashed bg-muted-background p-4">
+                    <div className="mt-1">
                       <BadgeDollarSignIcon className="size-4 text-green-500" />
                     </div>
                     <div className="flex-1 space-y-2">
@@ -230,11 +230,13 @@ export function PayWallDialog({
                         />
                       </p>
                     </div>
-                    <Switch
-                      checked={isAnnual}
-                      onCheckedChange={setIsAnnual}
-                      id="annual-switch"
-                    />
+                    <div className="mt-1">
+                      <Switch
+                        checked={isAnnual}
+                        onCheckedChange={setIsAnnual}
+                        id="annual-switch"
+                      />
+                    </div>
                   </div>
                 )}
                 <TabsContent value="pro">
