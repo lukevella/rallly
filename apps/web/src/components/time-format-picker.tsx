@@ -20,14 +20,14 @@ const TimeFormatPicker = ({
         {/* biome-ignore lint/a11y/noLabelWithoutControl: Fix this later */}
         <label className="flex items-center gap-x-2">
           <RadioGroupItem value="hours12" />
-          <span>
+          <span className="text-sm">
             <Trans i18nKey="12h" />
           </span>
         </label>
         {/* biome-ignore lint/a11y/noLabelWithoutControl: Fix this later */}
         <label className="flex items-center gap-x-2">
           <RadioGroupItem value="hours24" />
-          <span>
+          <span className="text-sm">
             <Trans i18nKey="24h" />
           </span>
         </label>
