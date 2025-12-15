@@ -16,9 +16,6 @@ const inputVariants = cva(
         sm: "h-7 rounded-md px-2 text-sm",
         lg: "h-12 rounded-lg px-3 text-base",
       },
-      error: {
-        true: "border-destructive aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
-      },
     },
     defaultVariants: {
       size: "default",
@@ -29,7 +26,6 @@ const inputVariants = cva(
 function Input({
   className,
   type,
-  error = false,
   size = "default",
   ...props
 }: Omit<React.ComponentProps<"input">, "size"> &
@@ -38,7 +34,7 @@ function Input({
     <input
       type={type}
       data-slot="input"
-      className={inputVariants({ size, className, error })}
+      className={inputVariants({ size, className })}
       {...props}
     />
   );

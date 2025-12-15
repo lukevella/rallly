@@ -97,7 +97,6 @@ export function ForgotPasswordForm() {
                   disabled={formState.isSubmitting}
                   autoFocus={true}
                   placeholder={t("emailPlaceholder")}
-                  error={!!formState.errors.email}
                 />
               </FormControl>
               <FormMessage />

@@ -154,7 +154,6 @@ export function LoginWithEmailForm() {
                   disabled={formState.isSubmitting}
                   autoFocus={true}
                   placeholder={t("emailPlaceholder")}
-                  error={!!formState.errors.identifier}
                 />
               </FormControl>
               <FormMessage />

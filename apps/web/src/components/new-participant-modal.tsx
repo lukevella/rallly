@@ -173,7 +173,6 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
               <FormControl>
                 <Input
                   className="w-full"
-                  error={!!formState.errors.email}
                   disabled={formState.isSubmitting}
                   placeholder={t("emailPlaceholder")}
                   {...field}

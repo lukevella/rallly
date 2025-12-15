@@ -117,7 +117,7 @@ function NewCommentForm({
               placeholder={t("yourName")}
               className="lg:w-48"
               data-1p-ignore="true"
-              error={!!formState.errors.authorName}
+              aria-invalid={!!formState.errors.authorName}
               {...field}
             />
           )}

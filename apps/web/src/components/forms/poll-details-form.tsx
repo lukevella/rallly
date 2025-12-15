@@ -39,7 +39,6 @@ export const PollDetailsForm = () => {
             <Input
               {...field}
               type="text"
-              error={!!errors.title}
               id="title"
               className="w-full"
               placeholder={t("titlePlaceholder")}
