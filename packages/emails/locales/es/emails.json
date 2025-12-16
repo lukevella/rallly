@@ -76,5 +76,11 @@
   "spaceInvite_preview": "Te han invitado a unirte a {spaceName}",
   "spaceInvite_heading": "¡Te han invitado!",
   "spaceInvite_button": "Aceptar invitación",
-  "spaceInvite_subject": "Te han invitado a unirte a {spaceName}"
+  "spaceInvite_subject": "Te han invitado a unirte a {spaceName}",
+  "resetPassword_button": "Restablecer contraseña",
+  "resetPassword_content2": "Si no solicitaste el restablecimiento de tu contraseña puedes ignorar este correo electrónico. Tu contraseña no cambiará a menos que crees una nueva. Si esta solicitud es sospechosa, ponte en contacto con <a>{supportEmail}</a>.",
+  "resetPassword_preview": "Utiliza este enlace para restablecer tu contraseña.",
+  "resetPassword_heading": "Restablece tu contraseña",
+  "resetPassword_content": "Hemos recibido una solicitud para restablecer tu contraseña. Haz clic en el botón de abajo para crear una nueva contraseña.",
+  "resetPassword_subject": "Restablece tu contraseña"
 }
