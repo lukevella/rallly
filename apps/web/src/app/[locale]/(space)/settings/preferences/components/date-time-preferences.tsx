@@ -1,6 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
-import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@rallly/ui/form";
 import {
   Select,
   SelectContent,
@@ -60,6 +66,7 @@ const DateTimePreferencesForm = () => {
                     <Trans i18nKey="timeZone" />
                   </FormLabel>
                   <TimeZoneSelect
+                    className="w-fit"
                     value={field.value}
                     onValueChange={field.onChange}
                   />
@@ -76,10 +83,12 @@ const DateTimePreferencesForm = () => {
                   <FormLabel>
                     <Trans i18nKey="timeFormat" />
                   </FormLabel>
-                  <TimeFormatPicker
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
+                  <FormControl>
+                    <TimeFormatPicker
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
                 </FormItem>
               );
             }}
@@ -99,7 +108,7 @@ const DateTimePreferencesForm = () => {
                       field.onChange(Number.parseInt(value));
                     }}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="w-fit">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

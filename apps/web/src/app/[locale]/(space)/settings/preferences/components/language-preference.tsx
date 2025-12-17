@@ -1,6 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
-import { Form, FormField, FormItem, FormLabel } from "@rallly/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@rallly/ui/form";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -45,7 +51,13 @@ export const LanguagePreference = () => {
               <FormLabel>
                 <Trans i18nKey="common_language" />
               </FormLabel>
-              <LanguageSelect value={field.value} onChange={field.onChange} />
+              <FormControl>
+                <LanguageSelect
+                  className="w-fit"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
             </FormItem>
           )}
         />
