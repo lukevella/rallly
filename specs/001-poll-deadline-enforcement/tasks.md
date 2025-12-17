@@ -72,7 +72,7 @@
 ### QA Testing for Phase 3 (User Story 1)
 
 - [x] T074 [P] [US1] Create Phase 3 QA test file with Gherkin scenarios in `specs/001-poll-deadline-enforcement/tests/phase-3-user-story-1.feature`
-- [ ] T075 [US1] Execute Phase 3 QA tests: Verify deadline can be set during poll creation, validation works correctly, and timezone conversion is accurate (QA Stop Point - do not proceed to Phase 4 until Phase 3 tests pass)
+- [x] T075 [US1] Execute Phase 3 QA tests: Verify deadline can be set during poll creation, validation works correctly, and timezone conversion is accurate (QA Stop Point - do not proceed to Phase 4 until Phase 3 tests pass)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - users can set deadlines when creating polls and deadlines are stored correctly
 
@@ -86,18 +86,18 @@
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Create DeadlineCountdown component in `apps/web/src/components/poll/deadline-countdown.tsx` with real-time countdown logic using dayjs
-- [ ] T021 [P] [US2] Create DeadlineDisplay component in `apps/web/src/components/deadline-display.tsx` with styling logic based on time remaining (neutral/warning/urgent/passed states)
-- [ ] T022 [US2] Create utility function to calculate deadline status (upcoming/warning/urgent/passed) based on hours remaining in `apps/web/src/utils/deadline-utils.ts`
-- [ ] T023 [US2] Create utility function to format deadline for display with timezone conversion in `apps/web/src/utils/deadline-utils.ts`
-- [ ] T024 [US2] Add DeadlineDisplay component to EventCard in `apps/web/src/components/event-card.tsx` to show deadline prominently on poll pages
-- [ ] T025 [US2] Implement client-side countdown update using React.useEffect and setInterval in DeadlineCountdown component (updates every 60 seconds)
-- [ ] T026 [US2] Add i18n translation keys for deadline display text (deadline, deadlineLabel, deadlineRemaining, deadlinePassed) using Trans component
+- [x] T020 [P] [US2] Create DeadlineCountdown component in `apps/web/src/components/poll/deadline-countdown.tsx` with real-time countdown logic using dayjs
+- [x] T021 [P] [US2] Create DeadlineDisplay component in `apps/web/src/components/deadline-display.tsx` with styling logic based on time remaining (neutral/warning/urgent/passed states)
+- [x] T022 [US2] Create utility function to calculate deadline status (upcoming/warning/urgent/passed) based on hours remaining in `apps/web/src/utils/deadline-utils.ts`
+- [x] T023 [US2] Create utility function to format deadline for display with timezone conversion in `apps/web/src/utils/deadline-utils.ts`
+- [x] T024 [US2] Add DeadlineDisplay component to EventCard in `apps/web/src/components/event-card.tsx` to show deadline prominently on poll pages
+- [x] T025 [US2] Implement client-side countdown update using React.useEffect and setInterval in DeadlineCountdown component (updates every 60 seconds)
+- [x] T026 [US2] Add i18n translation keys for deadline display text (deadline, deadlineLabel, deadlineRemaining, deadlinePassed) using Trans component
 
 ### QA Testing for Phase 4 (User Story 2)
 
-- [ ] T076 [P] [US2] Create Phase 4 QA test file with Gherkin scenarios in `specs/001-poll-deadline-enforcement/tests/phase-4-user-story-2.feature`
-- [ ] T077 [US2] Execute Phase 4 QA tests: Verify deadline display and countdown work correctly with proper styling, regression test Phase 3 (QA Stop Point - do not proceed to Phase 5 until Phases 3-4 tests pass)
+- [x] T076 [P] [US2] Create Phase 4 QA test file with Gherkin scenarios in `specs/001-poll-deadline-enforcement/tests/phase-4-user-story-2.feature`
+- [x] T077 [US2] Execute Phase 4 QA tests: Verify deadline display and countdown work correctly with proper styling, regression test Phase 3 (QA Stop Point - do not proceed to Phase 5 until Phases 3-4 tests pass)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - deadlines can be set and displayed with real-time countdown
 

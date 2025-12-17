@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import dayjs from "dayjs";
 import { DotIcon, MapPinIcon, PauseIcon } from "lucide-react";
+import { DeadlineDisplay } from "@/components/deadline-display";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import VoteIcon from "@/components/poll/vote-icon";
 import { PollStatusBadge } from "@/components/poll-status";
@@ -75,6 +76,12 @@ export function EventCard() {
             <p className="min-w-0 whitespace-pre-wrap text-pretty text-sm leading-relaxed">
               <TruncatedLinkify>{poll.description}</TruncatedLinkify>
             </p>
+          ) : null}
+          {poll.deadline ? (
+            <DeadlineDisplay
+              deadline={poll.deadline}
+              pollTimeZone={poll.timeZone}
+            />
           ) : null}
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:flex-wrap sm:items-center">
             <IconGuide />
