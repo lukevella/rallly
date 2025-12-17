@@ -31,7 +31,7 @@
     "lucide-react": "^0.479.0",
     "motion": "^12.6.2",
     "nanoid": "^5.0.9",
-    "next": "^15.5.8",
+    "next": "^15.5.9",
     "next-mdx-remote": "^5.0.0",
     "next-seo": "^6.1.0",
     "react": "^19.1.4",
@@ -40,7 +40,7 @@
     "react-use": "^17.6.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^15.5.8",
+    "@next/bundle-analyzer": "^15.5.9",
     "@rallly/tsconfig": "workspace:*",
     "@types/color-hash": "^1.0.2",
     "@types/lodash": "^4.14.178",
