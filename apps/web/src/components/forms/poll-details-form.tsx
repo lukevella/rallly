@@ -7,12 +7,14 @@ import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 import { useFormValidation } from "@/utils/form-validation";
 
+import { DeadlinePicker } from "./deadline-picker";
 import type { NewEventData } from "./types";
 
 export interface PollDetailsData {
   title: string;
   location: string;
   description: string;
+  deadline: string | null;
 }
 
 export const PollDetailsForm = () => {
@@ -83,6 +85,7 @@ export const PollDetailsForm = () => {
           {...register("description")}
         />
       </FormItem>
+      <DeadlinePicker />
     </div>
   );
 };

@@ -19,6 +19,7 @@ export type GetPollApiResponse = {
   participantUrlId: string;
   createdAt: Date;
   deleted: boolean;
+  deadline: Date | null;
 };
 
 export type Vote = {

@@ -57,21 +57,21 @@
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Add deadline field to PollDetailsFormData type in `apps/web/src/components/forms/types.ts`
-- [ ] T010 [US1] Create deadline date/time picker component in `apps/web/src/components/forms/deadline-picker.tsx` using dayjs and existing date/time picker patterns from poll-options-form
-- [ ] T011 [US1] Add deadline field to PollDetailsForm component in `apps/web/src/components/forms/poll-details-form.tsx` with optional label and validation
-- [ ] T012 [US1] Add deadline validation to NewEventData form schema (client-side Zod validation) ensuring deadline is in future
-- [ ] T013 [US1] Update polls.create mutation input schema to accept optional deadline parameter in `apps/web/src/trpc/routers/polls.ts`
-- [ ] T014 [US1] Add deadline validation in polls.create mutation (server-side) ensuring deadline is in future
-- [ ] T015 [US1] Convert deadline from user timezone to UTC in polls.create mutation before storing in database
-- [ ] T016 [US1] Include deadline field in polls.create mutation data object
-- [ ] T017 [US1] Update CreatePoll component to pass deadline from form to polls.create mutation in `apps/web/src/components/create-poll.tsx`
-- [ ] T018 [US1] Include deadline field in polls.get query select statement in `apps/web/src/trpc/routers/polls.ts`
-- [ ] T019 [US1] Update Poll type definitions to include deadline field (if needed in shared types)
+- [x] T009 [US1] Add deadline field to PollDetailsFormData type in `apps/web/src/components/forms/types.ts`
+- [x] T010 [US1] Create deadline date/time picker component in `apps/web/src/components/forms/deadline-picker.tsx` using dayjs and existing date/time picker patterns from poll-options-form
+- [x] T011 [US1] Add deadline field to PollDetailsForm component in `apps/web/src/components/forms/poll-details-form.tsx` with optional label and validation
+- [x] T012 [US1] Add deadline validation to NewEventData form schema (client-side Zod validation) ensuring deadline is in future
+- [x] T013 [US1] Update polls.create mutation input schema to accept optional deadline parameter in `apps/web/src/trpc/routers/polls.ts`
+- [x] T014 [US1] Add deadline validation in polls.create mutation (server-side) ensuring deadline is in future
+- [x] T015 [US1] Convert deadline from user timezone to UTC in polls.create mutation before storing in database
+- [x] T016 [US1] Include deadline field in polls.create mutation data object
+- [x] T017 [US1] Update CreatePoll component to pass deadline from form to polls.create mutation in `apps/web/src/components/create-poll.tsx`
+- [x] T018 [US1] Include deadline field in polls.get query select statement in `apps/web/src/trpc/routers/polls.ts`
+- [x] T019 [US1] Update Poll type definitions to include deadline field (if needed in shared types)
 
 ### QA Testing for Phase 3 (User Story 1)
 
-- [ ] T074 [P] [US1] Create Phase 3 QA test file with Gherkin scenarios in `specs/001-poll-deadline-enforcement/tests/phase-3-user-story-1.feature`
+- [x] T074 [P] [US1] Create Phase 3 QA test file with Gherkin scenarios in `specs/001-poll-deadline-enforcement/tests/phase-3-user-story-1.feature`
 - [ ] T075 [US1] Execute Phase 3 QA tests: Verify deadline can be set during poll creation, validation works correctly, and timezone conversion is accurate (QA Stop Point - do not proceed to Phase 4 until Phase 3 tests pass)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - users can set deadlines when creating polls and deadlines are stored correctly

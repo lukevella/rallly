@@ -177,6 +177,14 @@ export const polls = router({
         hideScores: z.boolean().optional(),
         disableComments: z.boolean().optional(),
         requireParticipantEmail: z.boolean().optional(),
+        deadline: z.string().optional().refine(
+          (date) => {
+            if (!date) return true;
+            const deadlineDate = dayjs(date);
+            return deadlineDate.isAfter(dayjs());
+          },
+          { message: "Deadline must be in the future" },
+        ),
         options: z
           .object({
             startDate: z.string(),
@@ -218,6 +226,16 @@ export const polls = router({
       const participantUrlId = nanoid();
       const pollId = nanoid();
       let spaceId: string | undefined;
+
+      let deadline: Date | undefined;
+      if (input.deadline) {
+        const deadlineDate = dayjs(input.deadline);
+        if (input.timeZone) {
+          deadline = deadlineDate.tz(input.timeZone).utc().toDate();
+        } else {
+          deadline = deadlineDate.utc().toDate();
+        }
+      }
 
       if (!ctx.user.isGuest) {
         const data = await getCurrentUserSpace();
@@ -275,6 +293,7 @@ export const polls = router({
           disableComments: input.disableComments,
           hideScores: input.hideScores,
           requireParticipantEmail: input.requireParticipantEmail,
+          deadline,
           spaceId,
         },
       });
@@ -659,6 +678,7 @@ export const polls = router({
           disableComments: true,
           hideScores: true,
           requireParticipantEmail: true,
+          deadline: true,
           options: {
             select: {
               id: true,
