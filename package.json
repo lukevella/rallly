@@ -3,7 +3,7 @@
   "private": true,
   "version": "4.5.11",
   "scripts": {
-    "dev": "turbo dev --filter=@rallly/web",
+    "dev": "NODE_ENV=development && turbo dev --filter=@rallly/web",
     "dev:emails": "turbo dev --filter=@rallly/emails",
     "dev:landing": "dotenv -c development turbo dev --filter=@rallly/landing",
     "start": "turbo run start --filter=@rallly/web",

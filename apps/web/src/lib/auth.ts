@@ -129,6 +129,10 @@ export const authLib = betterAuth({
       expiresIn: 15 * 60,
       overrideDefaultEmailVerification: true,
       async sendVerificationOTP({ email, otp, type }) {
+        // Log OTP code in development for easier testing
+        if (env.NODE_ENV === "development") {
+          console.log(`[OTP Code] Email: ${email} | Code: ${otp}`);
+        }
         const locale = await getLocale(); // TODO: Get locale from email
         const emailClient = getEmailClient(locale);
         switch (type) {
