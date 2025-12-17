@@ -107,7 +107,7 @@
   "devDependencies": {
     "@babel/core": "^7.26.10",
     "@next/bundle-analyzer": "^15.4.10",
-    "@playwright/test": "^1.52.0",
+    "@playwright/test": "^1.57.0",
     "@rallly/tsconfig": "workspace:*",
     "@testing-library/jest-dom": "^6.7.0",
     "@testing-library/react": "^16.3.0",
