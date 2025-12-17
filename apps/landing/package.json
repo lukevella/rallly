@@ -44,7 +44,7 @@
     "@rallly/tsconfig": "workspace:*",
     "@types/color-hash": "^1.0.2",
     "@types/lodash": "^4.14.178",
-    "@types/node": "^20.17.50",
+    "@types/node": "^20.19.0",
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
     "cross-env": "^7.0.3",
