@@ -172,3 +172,10 @@ See `.env.development` for complete development defaults.
 - Use `pnpm i18n:scan` to extract new translation keys
 - **IMPORTANT**: When TypeScript errors occur for missing i18n keys, run `pnpm i18n:scan` instead of manually adding keys. This command automatically scans the codebase for `Trans` components and generates the necessary translation entries.
 - **Pluralization**: Always use ICU message format for plurals. Example: `{count, plural, =0 {No items} one {1 item} other {# items}}` instead of separate singular/plural translation keys.
+
+## Active Technologies
+- TypeScript 5.8.2, Node.js 20.x + Next.js 15.4.10, React 19.1.4, Prisma 6.8.2, tRPC 11.1.2, dayjs 1.11.13 (001-poll-deadline-enforcement)
+- PostgreSQL 14.2 via Prisma ORM (deadline field already exists in Poll model) (001-poll-deadline-enforcement)
+
+## Recent Changes
+- 001-poll-deadline-enforcement: Added TypeScript 5.8.2, Node.js 20.x + Next.js 15.4.10, React 19.1.4, Prisma 6.8.2, tRPC 11.1.2, dayjs 1.11.13

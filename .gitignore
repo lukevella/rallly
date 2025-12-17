@@ -16,7 +16,6 @@ node_modules
 /build
 
 # misc
-.DS_Store
 *.pem
 
 # debug
@@ -40,3 +39,91 @@ playwright-report
 test-results
 .kiro
 .vercel
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+
+# IDE - Cursor
+.cursor/
+
+# OS - macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# OS - Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# OS - Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.cache/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Test artifacts
+*.lcov
+.nyc_output
+.coverage
+htmlcov/
+.pytest_cache/
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Spec/test artifacts (if any generated)
+specs/**/test-results/
+specs/**/coverage/
+specs/**/.test-*
