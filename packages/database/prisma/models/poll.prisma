@@ -46,12 +46,14 @@ model Poll {
   comments       Comment[]
   votes          Vote[]
   views          PollView[]
+  reminders      Reminder[]
   space          Space?          @relation(fields: [spaceId], references: [id], onDelete: SetNull)
   spaceId        String?         @map("space_id")
 
   @@index([guestId], type: Hash)
   @@index([spaceId], type: Hash)
   @@index([userId], type: Hash)
+  @@index([deadline])
   @@map("polls")
 }
 
@@ -82,7 +84,8 @@ model Participant {
   deleted   Boolean   @default(false)
   deletedAt DateTime? @map("deleted_at")
 
-  votes Vote[]
+  votes      Vote[]
+  reminders  Reminder[]
 
   poll Poll  @relation(fields: [pollId], references: [id], onDelete: Cascade)
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)

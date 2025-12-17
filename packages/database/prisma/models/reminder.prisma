@@ -1,0 +1,25 @@
+enum ReminderType {
+  twentyFourHours
+  sixHours
+  oneHour
+
+  @@map("reminder_type")
+}
+
+model Reminder {
+  id            String       @id @default(cuid())
+  pollId        String       @map("poll_id")
+  participantId String       @map("participant_id")
+  reminderType  ReminderType @map("reminder_type")
+  sentAt        DateTime     @map("sent_at")
+  createdAt     DateTime     @default(now()) @map("created_at")
+
+  poll        Poll        @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([pollId, participantId, reminderType], name: "unique_reminder")
+  @@index([pollId, participantId, reminderType])
+  @@index([pollId, sentAt])
+  @@map("reminders")
+}
+
