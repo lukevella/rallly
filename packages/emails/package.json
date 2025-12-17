@@ -31,7 +31,8 @@
     "@rallly/tailwind-config": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
     "@rallly/utils": "workspace:*",
+    "@react-email/preview-server": "5.0.8",
     "@types/nodemailer": "^6.4.14",
-    "react-email": "^4.0.7"
+    "react-email": "^5.0.8"
   }
 }
