@@ -346,9 +346,6 @@ importers:
       linkify-react:
         specifier: ^4.1.3
         version: 4.2.0(linkifyjs@4.2.0)(react@19.2.1)
-      linkifyjs:
-        specifier: ^4.1.3
-        version: 4.2.0
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
