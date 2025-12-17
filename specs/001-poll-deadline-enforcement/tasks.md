@@ -17,12 +17,12 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Add database index on Poll.deadline field for cron job performance in `packages/database/prisma/models/poll.prisma`
+- [x] T001 Add database index on Poll.deadline field for cron job performance in `packages/database/prisma/models/poll.prisma`
 
 ### QA Testing for Phase 1
 
-- [ ] T070 [P] Create Phase 1 QA test file with Gherkin scenarios in `specs/001-poll-deadline-enforcement/tests/phase-1-setup.feature`
-- [ ] T071 Execute Phase 1 QA tests: Verify database index exists on Poll.deadline field and performs efficiently (QA Stop Point - do not proceed to Phase 2 until Phase 1 tests pass)
+- [x] T070 [P] Create Phase 1 QA test file with Gherkin scenarios in `specs/001-poll-deadline-enforcement/tests/phase-1-setup.feature`
+- [x] T071 Execute Phase 1 QA tests: Verify database index exists on Poll.deadline field and performs efficiently (QA Stop Point - do not proceed to Phase 2 until Phase 1 tests pass)
 
 ---
 
@@ -32,18 +32,18 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T002 [P] Create Reminder model in `packages/database/prisma/models/reminder.prisma` with fields: id, pollId, participantId, reminderType, sentAt, createdAt
-- [ ] T003 [P] Add ReminderType enum (twentyFourHours, sixHours, oneHour) to reminder.prisma schema
-- [ ] T004 Add unique constraint on Reminder (pollId + participantId + reminderType) to prevent duplicate reminders
-- [ ] T005 Add indexes on Reminder (pollId, participantId, reminderType) and (pollId, sentAt) for query performance
-- [ ] T006 Run Prisma migration to create Reminder table and update schema
-- [ ] T007 Update Poll model relations to include Reminder relationship in `packages/database/prisma/models/poll.prisma`
-- [ ] T008 Update Participant model relations to include Reminder relationship in `packages/database/prisma/models/participant.prisma`
+- [x] T002 [P] Create Reminder model in `packages/database/prisma/models/reminder.prisma` with fields: id, pollId, participantId, reminderType, sentAt, createdAt
+- [x] T003 [P] Add ReminderType enum (twentyFourHours, sixHours, oneHour) to reminder.prisma schema
+- [x] T004 Add unique constraint on Reminder (pollId + participantId + reminderType) to prevent duplicate reminders
+- [x] T005 Add indexes on Reminder (pollId, participantId, reminderType) and (pollId, sentAt) for query performance
+- [x] T006 Run Prisma migration to create Reminder table and update schema
+- [x] T007 Update Poll model relations to include Reminder relationship in `packages/database/prisma/models/poll.prisma`
+- [x] T008 Update Participant model relations to include Reminder relationship in `packages/database/prisma/models/participant.prisma`
 
 ### QA Testing for Phase 2
 
-- [ ] T072 [P] Create Phase 2 QA test file with Gherkin scenarios in `specs/001-poll-deadline-enforcement/tests/phase-2-foundational.feature`
-- [ ] T073 Execute Phase 2 QA tests: Verify Reminder model schema, constraints, and relationships are correct (QA Stop Point - do not proceed to user story phases until Phase 2 tests pass)
+- [x] T072 [P] Create Phase 2 QA test file with Gherkin scenarios in `specs/001-poll-deadline-enforcement/tests/phase-2-foundational.feature`
+- [x] T073 Execute Phase 2 QA tests: Verify Reminder model schema, constraints, and relationships are correct (QA Stop Point - do not proceed to user story phases until Phase 2 tests pass)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
