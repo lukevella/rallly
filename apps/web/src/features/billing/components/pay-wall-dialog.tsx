@@ -84,7 +84,7 @@ function PlanRadioGroupItem({
   return (
     <label
       htmlFor={id}
-      className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border p-4 transition-colors has-data-[state=checked]:border-primary-300 has-data-[state=checked]:bg-primary-background has-data-[state=checked]:ring-primary"
+      className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border p-4 transition-colors has-data-[state=checked]:border-primary/50 has-data-[state=checked]:bg-primary/10 has-data-[state=checked]:ring-primary"
     >
       <RadioGroupItem value={value} id={id} />
       <div className="flex-1">

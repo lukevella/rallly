@@ -15,24 +15,8 @@
     0px 1.4113px 1.55262px rgb(17 7 53 / 1%),
     inset 0px 1px 0px rgb(41 56 78 / 5%);
 
-  --color-primary-50: #eef2ff;
-  --color-primary-100: #e0e7ff;
-  --color-primary-200: #c7d2fe;
-  --color-primary-300: #a5b4fc;
-  --color-primary-400: #818cf8;
-  --color-primary-500: #6366f1;
   --color-primary: #4f46e5;
-  --color-primary-700: #4338ca;
-  --color-primary-800: #3730a3;
-  --color-primary-900: #312e81;
-  --color-primary-950: #1e1b4b;
-  --color-primary: #4f46e5;
-  --color-primary-foreground: #eef2ff;
-  --color-primary-background: #eef2ff;
-
-  --color-secondary-background: #eef2ff;
-  --color-secondary: #eef2ff;
-  --color-secondary-foreground: #4f46e5;
+  --color-primary-foreground: #ffffff;
 
   --color-gray-50: #f9fafb;
   --color-gray-100: #f3f4f6;

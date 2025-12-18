@@ -14,6 +14,7 @@ import type { Params } from "@/app/[locale]/types";
 import { requireUser } from "@/auth/data";
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
+import { env } from "@/env";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
 import { getSession } from "@/lib/auth";
@@ -22,6 +23,7 @@ import { featureFlagConfig } from "@/lib/feature-flags/config";
 import { LocaleSync } from "@/lib/locale/client";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 import { TRPCProvider } from "@/trpc/client/provider";
+import { getForegroundColor } from "@/utils/color";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { PostHogPageView } from "../posthog-page-view";
 
@@ -71,8 +73,21 @@ export default async function Root({
   const { locale } = await params;
   const { user } = await loadData();
 
+  const primaryColor = env.PRIMARY_COLOR;
+
   return (
-    <html lang={locale} className={inter.className}>
+    <html
+      lang={locale}
+      className={inter.className}
+      style={
+        primaryColor
+          ? ({
+              "--color-primary": primaryColor,
+              "--color-primary-foreground": getForegroundColor(primaryColor),
+            } as React.CSSProperties)
+          : undefined
+      }
+    >
       <head>
         <PublicEnvScript />
       </head>

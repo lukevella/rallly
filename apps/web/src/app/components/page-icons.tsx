@@ -114,7 +114,7 @@ export function CreatePageIcon() {
 
 export function PollPageIcon(props: PageIconVariantProps) {
   return (
-    <PageIcon color="purple" size="md" {...props}>
+    <PageIcon color="gray" size="md" {...props}>
       <BarChart2Icon />
     </PageIcon>
   );
@@ -122,7 +122,7 @@ export function PollPageIcon(props: PageIconVariantProps) {
 
 export function EventPageIcon(props: PageIconVariantProps) {
   return (
-    <PageIcon color="rose" size="md" {...props}>
+    <PageIcon color="gray" size="md" {...props}>
       <CalendarIcon />
     </PageIcon>
   );

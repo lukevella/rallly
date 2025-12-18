@@ -15,7 +15,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-primary text-white active:bg-primary-500 disabled:border-transparent disabled:bg-gray-400",
+          "bg-primary text-white active:bg-primary/90 disabled:border-transparent disabled:bg-gray-400",
         destructive:
           "border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive",
         default:
