@@ -107,6 +107,11 @@ export const env = createEnv({
      * Primary color for theming (hex format, e.g., "#4f46e5")
      */
     PRIMARY_COLOR: z.string().optional(),
+    /**
+     * Logo URL for the email logo
+     */
+    LOGO_URL: z.url().optional(),
+    LOGO_ICON_URL: z.url().optional(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -176,6 +181,8 @@ export const env = createEnv({
     MICROSOFT_CLIENT_ID: process.env.MICROSOFT_CLIENT_ID,
     MICROSOFT_CLIENT_SECRET: process.env.MICROSOFT_CLIENT_SECRET,
     PRIMARY_COLOR: process.env.PRIMARY_COLOR,
+    LOGO_URL: process.env.LOGO_URL,
+    LOGO_ICON_URL: process.env.LOGO_ICON_URL,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });

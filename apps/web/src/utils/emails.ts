@@ -4,7 +4,6 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
-import { isSelfHosted } from "@/utils/constants";
 
 export const getEmailClient = (locale?: string) => {
   return new EmailClient({
@@ -18,8 +17,8 @@ export const getEmailClient = (locale?: string) => {
       },
     },
     config: {
-      logoUrl: isSelfHosted
-        ? absoluteUrl("/images/rallly-logo-mark.png")
+      logoUrl: env.LOGO_ICON_URL
+        ? env.LOGO_ICON_URL
         : "https://d39ixtfgglw55o.cloudfront.net/images/rallly-logo-mark.png",
       baseUrl: absoluteUrl(),
       domain: absoluteUrl().replace(/(^\w+:|^)\/\//, ""),
