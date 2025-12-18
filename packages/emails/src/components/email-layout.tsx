@@ -42,8 +42,7 @@ export const EmailLayout = ({
         <Container style={containerStyles}>
           <Img
             src={logoUrl}
-            width="32"
-            height="32"
+            height="42"
             style={{
               marginBottom: 32,
             }}

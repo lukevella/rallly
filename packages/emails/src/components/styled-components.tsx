@@ -188,5 +188,3 @@ export const trackingWide = {
 
 export const fontFamily =
   "'Inter UI', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif";
-
-export const primaryColor = "#4F46E5";

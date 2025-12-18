@@ -1,13 +1,11 @@
-import Image from "next/image";
+import { env } from "@/env";
 
 const sizes = {
   sm: {
-    width: 140,
     height: 22,
   },
   md: {
-    width: 150,
-    height: 30,
+    height: 48,
   },
 };
 
@@ -19,12 +17,13 @@ export const Logo = ({
   size?: keyof typeof sizes;
 }) => {
   return (
-    <Image
-      priority={true}
+    // biome-ignore lint/performance/noImgElement: we don't need Image component here
+    <img
       className={className}
-      src="/static/logo.svg"
-      width={sizes[size].width}
-      height={sizes[size].height}
+      src={env.LOGO_URL ?? "/static/logo.svg"}
+      style={{
+        height: sizes[size].height,
+      }}
       alt="Rallly"
     />
   );
