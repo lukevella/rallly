@@ -33,7 +33,7 @@ const GoToApp = () => {
           </p>
           <div>
             <Link
-              className="inline-flex items-center gap-2 text-primary hover:underline"
+              className="inline-flex items-center gap-2 hover:underline"
               href={`/poll/${poll.id}`}
             >
               <Trans i18nKey="manage" defaults="Manage" />

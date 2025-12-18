@@ -22,5 +22,5 @@ export function getForegroundColor(backgroundColor: string): string {
   if (!rgb) return "#ffffff";
 
   const luminance = getRelativeLuminance(rgb.r, rgb.g, rgb.b);
-  return luminance > 0.179 ? "#1f2937" : "#ffffff";
+  return luminance > 0.5 ? "#101828" : "#ffffff";
 }
