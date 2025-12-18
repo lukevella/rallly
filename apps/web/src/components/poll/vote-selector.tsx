@@ -37,7 +37,7 @@ export const VoteSelector = React.forwardRef<
       onBlur={onBlur}
       onKeyDown={onKeyDown}
       className={cn(
-        "flex size-7 items-center justify-center rounded-md border bg-white ring-gray-200 focus:ring-2",
+        "flex size-7 items-center justify-center rounded-lg border border-input-border bg-input ring-ring focus:ring-2",
         className,
       )}
       onClick={() => {

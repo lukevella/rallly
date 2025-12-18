@@ -23,7 +23,7 @@ const pageIconVariants = cva("inline-flex items-center justify-center", {
     color: {
       darkGray: "bg-gray-700 text-gray-300",
       indigo: "bg-indigo-500 text-white",
-      gray: "bg-gray-200 text-gray-600",
+      gray: "bg-gray-500/20 text-gray-500/95",
       lime: "bg-lime-500 text-white",
       blue: "bg-blue-500 text-white",
       rose: "bg-rose-500 text-rose-50",
@@ -31,7 +31,7 @@ const pageIconVariants = cva("inline-flex items-center justify-center", {
       primary: "bg-primary text-primary-foreground",
     },
     size: {
-      xs: "size-5 rounded-md [&_svg]:size-3",
+      xs: "size-6 rounded-md [&_svg]:size-3",
       sm: "size-7 rounded-md [&_svg]:size-4",
       md: "size-8 rounded-lg [&_svg]:size-4",
       lg: "size-9 rounded-lg [&_svg]:size-5",
@@ -115,7 +115,7 @@ export function CreatePageIcon() {
 
 export function PollPageIcon(props: PageIconVariantProps) {
   return (
-    <PageIcon color="primary" size="md" {...props}>
+    <PageIcon color="gray" size="md" {...props}>
       <BarChart2Icon />
     </PageIcon>
   );
@@ -123,7 +123,7 @@ export function PollPageIcon(props: PageIconVariantProps) {
 
 export function EventPageIcon(props: PageIconVariantProps) {
   return (
-    <PageIcon color="primary" size="md" {...props}>
+    <PageIcon color="gray" size="md" {...props}>
       <CalendarIcon />
     </PageIcon>
   );

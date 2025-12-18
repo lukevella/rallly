@@ -48,7 +48,7 @@ export const ParticipantRowView: React.FunctionComponent<{
     >
       <td
         style={{ minWidth: 235, maxWidth: 235 }}
-        className="sticky left-0 z-10 h-12 bg-white px-4"
+        className="sticky left-0 z-10 h-12 bg-background px-4"
       >
         <div className="flex max-w-full items-center justify-between gap-x-2">
           <Participant>
@@ -70,24 +70,12 @@ export const ParticipantRowView: React.FunctionComponent<{
           <td
             // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
             key={i}
-            className={cn(
-              "h-12 border-t border-l",
-              !vote || vote === "no" ? "bg-gray-100" : "bg-white",
-              {
-                "bg-gray-100": vote === "no",
-                // "bg-waves": vote === "ifNeedBe",
-              },
-            )}
+            className={cn("h-12 border-t border-l")}
           >
             <div className={cn("flex items-center justify-center")}>
               <div
                 className={cn(
                   "inline-flex h-7 w-7 items-center justify-center rounded-full",
-                  {
-                    "bg-green-50": vote === "yes",
-                    "bg-amber-50": vote === "ifNeedBe",
-                    "bg-gray-200": vote === "no",
-                  },
                 )}
               >
                 <VoteIcon type={vote} />
@@ -96,7 +84,7 @@ export const ParticipantRowView: React.FunctionComponent<{
           </td>
         );
       })}
-      <td className="border-l bg-diagonal-lines" />
+      <td className="border-l bg-muted" />
     </tr>
   );
 };

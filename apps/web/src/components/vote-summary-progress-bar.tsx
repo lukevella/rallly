@@ -27,7 +27,7 @@ export const VoteSummaryProgressBar = (props: {
   no: string[];
 }) => {
   return (
-    <div className="flex h-1.5 grow overflow-hidden rounded-sm bg-slate-100">
+    <div className="flex h-1.5 grow overflow-hidden rounded-sm bg-muted">
       <Tooltip>
         <TooltipTrigger asChild>
           <div
@@ -57,7 +57,7 @@ export const VoteSummaryProgressBar = (props: {
       <Tooltip>
         <TooltipTrigger asChild>
           <div
-            className="h-full bg-gray-300 opacity-75 hover:opacity-100"
+            className="h-full bg-transparent opacity-75 hover:opacity-100"
             style={{
               width: `${(props.no.length / props.total) * 100}%`,
             }}

@@ -5,7 +5,7 @@ const sizes = {
     height: 22,
   },
   md: {
-    height: 48,
+    height: 32,
   },
 };
 

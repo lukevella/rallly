@@ -2,6 +2,7 @@ import "./globals.css";
 
 import { PostHogIdentify, PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/sonner";
+import { ThemeProvider } from "@rallly/ui/theme-provider";
 import { TooltipProvider } from "@rallly/ui/tooltip";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
@@ -79,11 +80,12 @@ export default async function Root({
     <html
       lang={locale}
       className={inter.className}
+      suppressHydrationWarning={true}
       style={
         primaryColor
           ? ({
-              "--color-primary": primaryColor,
-              "--color-primary-foreground": getForegroundColor(primaryColor),
+              "--primary": primaryColor,
+              "--primary-foreground": getForegroundColor(primaryColor),
             } as React.CSSProperties)
           : undefined
       }
@@ -92,40 +94,42 @@ export default async function Root({
         <PublicEnvScript />
       </head>
       <body>
-        <FeatureFlagsProvider value={featureFlagConfig}>
-          <Toaster />
-          <I18nProvider locale={locale}>
-            <TRPCProvider>
-              <LazyMotion features={domAnimation}>
-                <PostHogProvider>
-                  <PostHogIdentify
-                    distinctId={user && !user.isGuest ? user.id : undefined}
-                  />
-                  <PostHogPageView />
-                  <TooltipProvider>
-                    <UserProvider user={user ?? undefined}>
-                      <LocaleSync userLocale={user?.locale ?? locale} />
-                      <PreferencesProvider
-                        initialValue={{
-                          timeFormat: user?.timeFormat,
-                          timeZone: user?.timeZone,
-                          weekStart: user?.weekStart,
-                        }}
-                      >
-                        <TimezoneProvider initialTimezone={user?.timeZone}>
-                          <ConnectedDayjsProvider>
-                            {children}
-                            <TimeZoneChangeDetector />
-                          </ConnectedDayjsProvider>
-                        </TimezoneProvider>
-                      </PreferencesProvider>
-                    </UserProvider>
-                  </TooltipProvider>
-                </PostHogProvider>
-              </LazyMotion>
-            </TRPCProvider>
-          </I18nProvider>
-        </FeatureFlagsProvider>
+        <ThemeProvider>
+          <FeatureFlagsProvider value={featureFlagConfig}>
+            <Toaster />
+            <I18nProvider locale={locale}>
+              <TRPCProvider>
+                <LazyMotion features={domAnimation}>
+                  <PostHogProvider>
+                    <PostHogIdentify
+                      distinctId={user && !user.isGuest ? user.id : undefined}
+                    />
+                    <PostHogPageView />
+                    <TooltipProvider>
+                      <UserProvider user={user ?? undefined}>
+                        <LocaleSync userLocale={user?.locale ?? locale} />
+                        <PreferencesProvider
+                          initialValue={{
+                            timeFormat: user?.timeFormat,
+                            timeZone: user?.timeZone,
+                            weekStart: user?.weekStart,
+                          }}
+                        >
+                          <TimezoneProvider initialTimezone={user?.timeZone}>
+                            <ConnectedDayjsProvider>
+                              {children}
+                              <TimeZoneChangeDetector />
+                            </ConnectedDayjsProvider>
+                          </TimezoneProvider>
+                        </PreferencesProvider>
+                      </UserProvider>
+                    </TooltipProvider>
+                  </PostHogProvider>
+                </LazyMotion>
+              </TRPCProvider>
+            </I18nProvider>
+          </FeatureFlagsProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -17,14 +17,14 @@ export const SpaceTierIcon = ({ tier }: { tier: SpaceTier }) => {
   switch (tier) {
     case "hobby":
       return (
-        <div className="inline-flex size-10 items-center justify-center rounded-md border border-gray-200 bg-gray-50 text-xs">
-          <HandHeartIcon className="size-5 text-gray-500" />
+        <div className="inline-flex size-10 items-center justify-center rounded-md border border-muted-border bg-muted text-muted-foreground text-xs">
+          <HandHeartIcon className="size-5" />
         </div>
       );
     case "pro":
       return (
-        <div className="inline-flex size-10 items-center justify-center rounded-md border border-indigo-200 bg-indigo-50 text-xs">
-          <SparklesIcon className="size-5 text-indigo-500" />
+        <div className="inline-flex size-10 items-center justify-center rounded-md border border-primary-border bg-primary text-xs">
+          <SparklesIcon className="size-5 text-primary-foreground" />
         </div>
       );
   }

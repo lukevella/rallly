@@ -102,7 +102,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               <div
                 // onClick prop doesn't work properly. Seems like some other element is cancelling the event before it reaches this element
                 onMouseUp={props.onClick}
-                className="group absolute ml-1 flex max-h-full flex-col justify-between overflow-hidden rounded-lg border border-primary/50 border-dashed bg-white/50 p-1 text-primary text-xs shadow-xs hover:cursor-pointer hover:border-primary/60"
+                className="group absolute ml-1 flex max-h-full flex-col justify-between overflow-hidden rounded-lg border border-popover-border bg-popover p-1 text-foreground text-xs shadow-xs backdrop-blur-sm hover:cursor-pointer"
                 style={{
                   top: `calc(${props.style?.top}% + 4px)`,
                   height: `calc(${props.style?.height}% - 8px)`,
@@ -144,7 +144,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             children?: React.ReactNode;
           }) {
             return (
-              <div className="h-6 text-gray-500 text-xs leading-none">
+              <div className="h-6 text-muted-foreground text-xs leading-none">
                 {children}
               </div>
             );

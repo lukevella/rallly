@@ -1,6 +1,12 @@
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { Card, CardFooter, CardHeader, CardTitle } from "@rallly/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import {
   Select,
@@ -55,6 +61,8 @@ const MobilePoll: React.FunctionComponent = () => {
 
   const { canEditParticipant, canAddNewParticipant } = usePermissions();
 
+  console.log({ canAddNewParticipant, selectedParticipant });
+
   const { t } = useTranslation();
 
   const isEditing = votingForm.watch("mode") !== "view";
@@ -70,7 +78,7 @@ const MobilePoll: React.FunctionComponent = () => {
         </div>
       </CardHeader>
 
-      <div className="sticky top-0 z-20 flex flex-col space-y-2 border-b bg-gray-50 p-2">
+      <div className="flex flex-col space-y-2 border-b p-2">
         <div className="flex gap-x-2.5">
           {selectedParticipantId || !isEditing ? (
             <Select
@@ -168,9 +176,9 @@ const MobilePoll: React.FunctionComponent = () => {
         </div>
       </div>
       {poll.options[0]?.duration !== 0 && poll.timeZone ? (
-        <CardHeader>
+        <CardContent className="border-b">
           <TimesShownIn />
-        </CardHeader>
+        </CardContent>
       ) : null}
       <GroupedOptions
         selectedParticipantId={selectedParticipantId}
@@ -199,12 +207,13 @@ const MobilePoll: React.FunctionComponent = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <CardFooter>
+            <CardFooter className="border-t">
               <Button
                 form="voting-form"
                 className="w-full"
                 type="submit"
                 variant="primary"
+                size="md"
                 loading={formState.isSubmitting}
               >
                 {selectedParticipantId ? t("save") : t("continue")}

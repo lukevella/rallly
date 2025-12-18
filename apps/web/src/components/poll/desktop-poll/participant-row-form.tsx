@@ -57,7 +57,7 @@ const ParticipantRowForm = ({
     <tr className={cn("group", className)}>
       <td
         style={{ minWidth: 235, maxWidth: 235 }}
-        className="sticky left-0 z-10 h-12 bg-white px-4"
+        className="sticky left-0 z-10 h-12 px-4"
       >
         <div className="flex items-center justify-between gap-x-2.5">
           <Participant>
@@ -105,10 +105,7 @@ const ParticipantRowForm = ({
       </td>
       {optionIds.map((optionId, i) => {
         return (
-          <td
-            key={optionId}
-            className="relative h-12 border-t border-l bg-gray-50"
-          >
+          <td key={optionId} className="relative h-12 border-t border-l">
             <Controller
               control={form.control}
               name={`votes.${i}`}
@@ -122,7 +119,7 @@ const ParticipantRowForm = ({
                       type: toggleVote(field.value?.type),
                     });
                   }}
-                  className="absolute inset-0 flex cursor-pointer items-center justify-center hover:bg-gray-100 active:bg-gray-200/50 active:ring-1 active:ring-gray-200 active:ring-inset"
+                  className="absolute inset-0 flex items-center justify-center"
                 >
                   <VoteSelector
                     value={field.value?.type}
@@ -136,7 +133,7 @@ const ParticipantRowForm = ({
           </td>
         );
       })}
-      <td className="border-l bg-diagonal-lines" />
+      <td className="border-l bg-muted" />
     </tr>
   );
 };

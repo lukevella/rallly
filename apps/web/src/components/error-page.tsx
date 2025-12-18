@@ -21,9 +21,9 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
     <div className="flex h-[calc(100vh-100px)] w-full items-center justify-center">
       <div className="space-y-8">
         <div className="space-y-4 text-center">
-          <Icon className="mb-4 inline-block size-24 text-gray-400" />
-          <div className="mb-2 font-bold text-3xl text-primary">{title}</div>
-          <p className="text-gray-600">{description}</p>
+          <Icon className="mb-4 inline-block size-24 text-muted-foreground" />
+          <div className="mb-2 font-bold text-3xl text-foreground">{title}</div>
+          <p className="text-muted-foreground">{description}</p>
         </div>
         <div className="flex justify-center space-x-3">
           <Button variant="primary" asChild>

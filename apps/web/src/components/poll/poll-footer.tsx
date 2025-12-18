@@ -4,7 +4,7 @@ import { Trans } from "@/components/trans";
 
 export function PollFooter() {
   return (
-    <div className="pt-4 pb-12 text-center text-gray-500 text-sm">
+    <div className="pt-4 pb-12 text-center text-muted-foreground text-sm">
       <Trans
         defaults="Powered by <a>{name}</a>"
         i18nKey="poweredByRallly"
