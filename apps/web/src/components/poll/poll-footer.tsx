@@ -12,7 +12,7 @@ export function PollFooter() {
         components={{
           a: (
             <Link
-              className="rounded-none border-b border-b-gray-500 font-semibold hover:text-primary-600"
+              className="rounded-none border-b border-b-gray-500 font-semibold hover:text-primary"
               href="https://rallly.co"
             />
           ),

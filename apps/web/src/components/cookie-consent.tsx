@@ -43,7 +43,7 @@ const CookieConsentPopover = () => {
               <div className="flex items-center space-x-6">
                 <Link
                   href="/privacy-policy"
-                  className="text-gray-500 hover:text-primary-600"
+                  className="text-gray-500 hover:text-primary"
                 >
                   Privacy Policy
                 </Link>
@@ -53,7 +53,7 @@ const CookieConsentPopover = () => {
                     Cookies.set("rallly_cookie_consent", "1", { expires: 365 });
                     setVisible(false);
                   }}
-                  className="grow rounded-md bg-primary-600 px-5 py-1 font-semibold text-white shadow-xs transition-all hover:bg-primary-600/90 focus:ring-2 focus:ring-primary-200 active:bg-primary-600/90"
+                  className="grow rounded-md bg-primary px-5 py-1 font-semibold text-white shadow-xs transition-all hover:bg-primary/90 focus:ring-2 focus:ring-primary-200 active:bg-primary/90"
                 >
                   OK
                 </button>
