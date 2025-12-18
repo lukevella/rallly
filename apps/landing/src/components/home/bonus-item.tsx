@@ -24,7 +24,7 @@ export const BonusItem = ({
       viewport={{ once: true, amount: "all" }}
       className="flex justify-center"
     >
-      <div className="flex items-center justify-center gap-x-2.5 rounded-full border bg-gray-50 p-1 pr-6 shadow-sm">
+      <div className="flex items-center justify-center gap-x-2.5 rounded-full border bg-gray-50 p-1 pr-6 shadow-xs">
         <span
           className={cn("rounded-full bg-primary p-2 text-gray-50", className)}
         >

@@ -50,7 +50,7 @@ function KeyBenefitsItem({
 }) {
   return (
     <li className="flex items-center gap-3">
-      <div className="rounded-lg border bg-gradient-to-b from-white to-gray-50 p-2">
+      <div className="rounded-lg border bg-linear-to-b from-white to-gray-50 p-2">
         <Icon>{icon}</Icon>
       </div>
       <div>
@@ -101,7 +101,7 @@ function PlanRadioGroupItem({
   return (
     <label
       htmlFor={id}
-      className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border p-4 transition-colors has-[[data-state=checked]]:border-primary-300 has-[[data-state=checked]]:bg-primary-background has-[[data-state=checked]]:ring-primary"
+      className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border p-4 transition-colors has-data-[state=checked]:border-primary-300 has-data-[state=checked]:bg-primary-background has-data-[state=checked]:ring-primary"
     >
       <RadioGroupItem value={value} id={id} />
       <div className="flex-1">
@@ -202,8 +202,8 @@ export function PayWallDialog({
 
               <div className="space-y-4 pt-4">
                 {selectedPlan === "pro" && (
-                  <div className="flex justify-between gap-4 rounded-lg border border-dashed bg-muted-background p-4">
-                    <div>
+                  <div className="flex items-start justify-between gap-4 rounded-lg border border-dashed bg-muted-background p-4">
+                    <div className="mt-1">
                       <BadgeDollarSignIcon className="size-4 text-green-500" />
                     </div>
                     <div className="flex-1 space-y-2">
@@ -230,11 +230,13 @@ export function PayWallDialog({
                         />
                       </p>
                     </div>
-                    <Switch
-                      checked={isAnnual}
-                      onCheckedChange={setIsAnnual}
-                      id="annual-switch"
-                    />
+                    <div className="mt-1">
+                      <Switch
+                        checked={isAnnual}
+                        onCheckedChange={setIsAnnual}
+                        id="annual-switch"
+                      />
+                    </div>
                   </div>
                 )}
                 <TabsContent value="pro">

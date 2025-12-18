@@ -37,7 +37,8 @@
     "react": "^19.1.4",
     "react-dom": "^19.1.4",
     "react-i18next": "^15.5.1",
-    "react-use": "^17.6.0"
+    "react-use": "^17.6.0",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^15.5.9",

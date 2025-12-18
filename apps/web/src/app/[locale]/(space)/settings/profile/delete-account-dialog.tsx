@@ -86,7 +86,6 @@ export function DeleteAccountDialog({
                     <Input
                       autoComplete="off"
                       data-1p-ignore
-                      error={!!form.formState.errors.email}
                       placeholder={email}
                       {...field}
                     />

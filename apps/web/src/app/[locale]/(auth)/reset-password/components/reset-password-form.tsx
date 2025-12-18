@@ -98,7 +98,6 @@ export function ResetPasswordForm() {
                     disabled={formState.isSubmitting}
                     autoFocus={true}
                     placeholder="••••••••"
-                    error={!!formState.errors.password}
                   />
                 </FormControl>
                 <PasswordStrengthMeter

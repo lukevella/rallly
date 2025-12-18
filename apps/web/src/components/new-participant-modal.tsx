@@ -3,13 +3,19 @@ import type { VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { FormMessage } from "@rallly/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import * as Sentry from "@sentry/nextjs";
+import { Label } from "@rallly/ui/label";
 import { TRPCClientError } from "@trpc/client";
 import { useForm } from "react-hook-form";
 import z from "zod";
-
 import { usePoll } from "@/contexts/poll";
 import { useTranslation } from "@/i18n/client";
 import { useTimezone } from "@/lib/timezone/client/context";
@@ -59,7 +65,10 @@ const VoteSummary = ({
 
   return (
     <div
-      className={cn("flex flex-wrap gap-1.5 rounded border p-1.5", className)}
+      className={cn(
+        "flex flex-wrap gap-1.5 rounded-lg border p-1.5",
+        className,
+      )}
     >
       {voteTypes.map((voteType) => {
         const votes = voteByType[voteType];
@@ -92,100 +101,107 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const { timezone } = useTimezone();
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = user && !user.isGuest;
-  const { register, setError, formState, handleSubmit } =
-    useForm<NewParticipantFormData>({
-      resolver: zodResolver(schema),
-      defaultValues: {
-        requireEmail: isEmailRequired,
-        ...(isLoggedIn
-          ? { name: user.name, email: user.email ?? "" }
-          : {
-              name: "",
-              email: "",
-            }),
-      },
-    });
+  const form = useForm<NewParticipantFormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      requireEmail: isEmailRequired,
+      ...(isLoggedIn
+        ? { name: user.name, email: user.email ?? "" }
+        : {
+            name: "",
+            email: "",
+          }),
+    },
+  });
+
+  const { setError, formState, handleSubmit } = form;
   const addParticipant = useAddParticipantMutation();
 
   return (
-    <form
-      onSubmit={handleSubmit(async (data) => {
-        try {
-          await createGuestIfNeeded();
-          const newParticipant = await addParticipant.mutateAsync({
-            name: data.name,
-            votes: props.votes,
-            email: data.email,
-            pollId: poll.id,
-            timeZone: timezone,
-          });
-          props.onSubmit?.(newParticipant);
-        } catch (error) {
-          if (error instanceof TRPCClientError) {
-            setError("root", {
-              message: error.message,
+    <Form {...form}>
+      <form
+        onSubmit={handleSubmit(async (data) => {
+          try {
+            await createGuestIfNeeded();
+            const newParticipant = await addParticipant.mutateAsync({
+              name: data.name,
+              votes: props.votes,
+              email: data.email,
+              pollId: poll.id,
+              timeZone: timezone,
             });
+            props.onSubmit?.(newParticipant);
+          } catch (error) {
+            if (error instanceof TRPCClientError) {
+              setError("root", {
+                message: error.message,
+              });
+            }
           }
-          Sentry.captureException(error);
-        }
-      })}
-      className="space-y-4"
-    >
-      <fieldset>
-        <label htmlFor="name" className="mb-1 text-gray-500">
-          {t("name")}
-        </label>
-        <Input
-          className="w-full"
-          data-1p-ignore="true"
-          autoFocus={true}
-          error={!!formState.errors.name}
-          disabled={formState.isSubmitting}
-          placeholder={t("namePlaceholder")}
-          {...register("name")}
+        })}
+        className="space-y-4"
+      >
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("name")}</FormLabel>
+              <FormControl>
+                <Input
+                  className="w-full"
+                  data-1p-ignore="true"
+                  autoFocus={true}
+                  disabled={formState.isSubmitting}
+                  placeholder={t("namePlaceholder")}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        {formState.errors.name?.message ? (
-          <div className="mt-2 text-rose-500 text-sm">
-            {formState.errors.name.message}
-          </div>
-        ) : null}
-      </fieldset>
-      <fieldset>
-        <label htmlFor="email" className="mb-1 text-gray-500">
-          {t("email")}
-          {!isEmailRequired ? ` (${t("optional")})` : null}
-        </label>
-        <Input
-          className="w-full"
-          error={!!formState.errors.email}
-          disabled={formState.isSubmitting}
-          placeholder={t("emailPlaceholder")}
-          {...register("email")}
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                {t("email")}
+                {!isEmailRequired ? ` (${t("optional")})` : null}
+              </FormLabel>
+              <FormControl>
+                <Input
+                  className="w-full"
+                  disabled={formState.isSubmitting}
+                  placeholder={t("emailPlaceholder")}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        {formState.errors.email?.message ? (
-          <div className="mt-1 text-rose-500 text-sm">
-            {formState.errors.email.message}
-          </div>
+
+        <div className="flex flex-col gap-1.5">
+          <Label>{t("response")}</Label>
+          <VoteSummary votes={props.votes} />
+        </div>
+
+        {formState.errors.root?.message ? (
+          <FormMessage>{formState.errors.root.message}</FormMessage>
         ) : null}
-      </fieldset>
-      <fieldset>
-        {/* biome-ignore lint/a11y/noLabelWithoutControl: Fix this later */}
-        <label className="mb-1 text-gray-500">{t("response")}</label>
-        <VoteSummary votes={props.votes} />
-      </fieldset>
-      {formState.errors.root?.message ? (
-        <FormMessage>{formState.errors.root.message}</FormMessage>
-      ) : null}
-      <div className="flex gap-2">
-        <Button onClick={props.onCancel}>{t("cancel")}</Button>
-        <Button
-          type="submit"
-          variant="primary"
-          loading={formState.isSubmitting}
-        >
-          {t("submit")}
-        </Button>
-      </div>
-    </form>
+        <div className="mt-6 flex gap-2">
+          <Button onClick={props.onCancel}>{t("cancel")}</Button>
+          <Button
+            type="submit"
+            variant="primary"
+            loading={formState.isSubmitting}
+          >
+            {t("submit")}
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };

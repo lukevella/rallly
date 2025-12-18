@@ -2,14 +2,15 @@
 // with Sentry.
 // https://nextjs.org/docs/api-reference/next.config.js/introduction
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
+import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
+import createBundleAnalyzer from "@next/bundle-analyzer";
 
-const { withSentryConfig } = require("@sentry/nextjs");
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
+const withBundleAnalyzer = createBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   output:
     process.env.NEXT_PUBLIC_SELF_HOSTED === "true" ? "standalone" : undefined,
   productionBrowserSourceMaps: true,
@@ -118,7 +119,7 @@ const withBundleAnalyzerConfig = withBundleAnalyzer(nextConfig);
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-module.exports =
+export default
   process.env.NEXT_PUBLIC_SELF_HOSTED === "true"
     ? withBundleAnalyzerConfig
     : withSentryConfig(withBundleAnalyzerConfig, sentryWebpackPluginOptions);

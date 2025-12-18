@@ -1,16 +1,19 @@
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
+import type { NextConfig } from "next";
+
+import createBundleAnalyzer from "@next/bundle-analyzer";
+
+const withBundleAnalyzer = createBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
-
+  
 const appBaseUrl = process.env.NEXT_PUBLIC_APP_BASE_URL;
 
-function createAppUrl(subpath) {
+function createAppUrl(subpath: string) {
   const url = new URL(subpath, appBaseUrl);
   return url.href;
 }
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   productionBrowserSourceMaps: true,
   transpilePackages: [
     "@rallly/ui",
@@ -68,7 +71,7 @@ const nextConfig = {
       },
       {
         source: "/profile",
-        destination: createAppUrl(),
+        destination: createAppUrl("/profile"),
         permanent: true,
       },
       {
@@ -122,4 +125,4 @@ const nextConfig = {
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-module.exports = withBundleAnalyzer(nextConfig);
+export default withBundleAnalyzer(nextConfig);

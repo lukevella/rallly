@@ -1,4 +1,4 @@
-import "../../style.css";
+import "./globals.css";
 
 import { PostHogIdentify, PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/sonner";
