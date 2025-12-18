@@ -149,7 +149,7 @@ export function PayWallDialog({
             <div className="flex flex-col p-6">
               <DialogHeader>
                 <div className="flex items-center gap-3">
-                  <PageIcon size="sm" color="indigo">
+                  <PageIcon size="sm" color="primary">
                     <SparklesIcon />
                   </PageIcon>
                   <DialogTitle>
