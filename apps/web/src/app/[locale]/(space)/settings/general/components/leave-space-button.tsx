@@ -112,7 +112,6 @@ function LeaveSpaceDialog({
                     <Input
                       autoComplete="off"
                       data-1p-ignore
-                      error={!!form.formState.errors.spaceName}
                       placeholder={spaceName}
                       {...field}
                     />

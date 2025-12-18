@@ -6,7 +6,7 @@ const Maintenance: React.FunctionComponent = () => {
       <Head>
         <title>Down for maintenance - Be right back</title>
       </Head>
-      <div className="w-96 rounded-lg border bg-white p-8 text-center shadow-sm">
+      <div className="w-96 rounded-lg border bg-white p-8 text-center shadow-xs">
         <div className="">
           The site is currently down for some maintenance and will be back
           shortly…

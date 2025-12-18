@@ -12,7 +12,7 @@ export default async function LicensingThankYouPage(props: {
     <main className="relative flex h-dvh flex-col p-4 sm:justify-center sm:p-16">
       <div className="relative z-10 mx-auto w-full max-w-2xl space-y-6">
         <div className="py-4">
-          <LinkBase className="inline-block rounded" href="/">
+          <LinkBase className="inline-block rounded-sm" href="/">
             <Image src="/logo.svg" width={150} height={30} alt="rallly.co" />
           </LinkBase>
         </div>

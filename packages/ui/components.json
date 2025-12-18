@@ -3,13 +3,6 @@
   "style": "default",
   "rsc": true,
   "tsx": true,
-  "tailwind": {
-    "config": "tailwind.config.js",
-    "css": "src/styles/globals.css",
-    "baseColor": "gray",
-    "cssVariables": false,
-    "prefix": ""
-  },
   "aliases": {
     "components": "@rallly/ui",
     "ui": "src",

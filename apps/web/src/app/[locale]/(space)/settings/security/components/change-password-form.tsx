@@ -112,7 +112,6 @@ export function ChangePasswordForm() {
                     {...field}
                     disabled={formState.isSubmitting}
                     placeholder="••••••••"
-                    error={!!formState.errors.currentPassword}
                   />
                 </FormControl>
                 <FormMessage />
@@ -133,7 +132,6 @@ export function ChangePasswordForm() {
                     {...field}
                     disabled={formState.isSubmitting}
                     placeholder="••••••••"
-                    error={!!formState.errors.newPassword}
                   />
                 </FormControl>
                 <PasswordStrengthMeter

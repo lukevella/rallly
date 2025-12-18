@@ -47,7 +47,7 @@ const Modal: React.FunctionComponent<ModalProps> = ({
         </DialogHeader>
         <p className="text-sm">{content}</p>
         <DialogFooter>
-          <DialogClose>
+          <DialogClose asChild>
             <Button>{cancelText}</Button>
           </DialogClose>
           <Button
