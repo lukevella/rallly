@@ -163,7 +163,7 @@ export default async function MembersSettingsPage() {
                           components={{
                             a: (
                               <Link
-                                className="underline"
+                                className="underline hover:text-foreground"
                                 href="/settings/billing"
                               />
                             ),
@@ -179,7 +179,7 @@ export default async function MembersSettingsPage() {
                           components={{
                             a: (
                               <Link
-                                className="underline"
+                                className="underline hover:text-foreground"
                                 prefetch={false}
                                 href="https://support.rallly.co/self-hosting/licensing"
                               />

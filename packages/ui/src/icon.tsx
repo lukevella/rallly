@@ -8,9 +8,9 @@ import { cn } from "./lib/utils";
 const iconVariants = cva("", {
   variants: {
     variant: {
-      default: "text-gray-500",
-      success: "text-green-500",
-      danger: "text-rose-500",
+      default: "text-muted-foreground",
+      success: "text-success",
+      danger: "text-destructive",
       primary: "text-primary",
     },
     size: {

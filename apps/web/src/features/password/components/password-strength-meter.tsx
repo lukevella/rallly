@@ -35,12 +35,15 @@ export function PasswordStrengthMeter({
           <div
             key={`password-strength-bar-${bar}`}
             className={cn(
-              "h-1 rounded-full bg-gray-200 transition-all duration-300",
+              "h-1 rounded-full bg-gray-200 transition-all duration-300 dark:bg-gray-700",
               {
-                "bg-red-500": quality === "weak" && bar === 1,
-                "bg-amber-500": quality === "fair" && bar <= 2,
-                "bg-green-500": quality === "good" && bar <= 3,
-                "bg-teal-500": quality === "strong" && bar <= 4,
+                "bg-red-500 dark:bg-red-700": quality === "weak" && bar === 1,
+                "bg-amber-500 dark:bg-amber-700":
+                  quality === "fair" && bar <= 2,
+                "bg-green-500 dark:bg-green-700":
+                  quality === "good" && bar <= 3,
+                "bg-teal-500 dark:bg-teal-700":
+                  quality === "strong" && bar <= 4,
               },
             )}
           />

@@ -63,7 +63,6 @@ export const LanguagePreference = () => {
         />
         <div className="mt-6 flex flex-wrap gap-2">
           <Button
-            variant="primary"
             disabled={!form.formState.isDirty}
             loading={form.formState.isSubmitting}
             type="submit"

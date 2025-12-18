@@ -126,7 +126,7 @@ export function PageSectionGroup({ children }: { children?: React.ReactNode }) {
 const pageSectionVariants = cva("flex flex-col gap-4", {
   variants: {
     variant: {
-      card: "rounded-2xl border p-4",
+      card: "rounded-2xl border bg-card p-4",
       default: "",
     },
   },

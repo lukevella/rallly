@@ -110,17 +110,12 @@ export const env = createEnv({
     /**
      * Primary color for theming (hex format, e.g., "#4f46e5")
      */
-    PRIMARY_COLOR: z.string().optional().default("#4f39f6"),
+    PRIMARY_COLOR: z.string().optional(),
     /**
      * Logo URL for the email logo
      */
-    LOGO_URL: z.url().optional().default("/static/logo.svg"),
-    LOGO_ICON_URL: z
-      .url()
-      .optional()
-      .default(
-        "https://d39ixtfgglw55o.cloudfront.net/images/rallly-logo-mark.png",
-      ),
+    LOGO_URL: z.url().optional(),
+    LOGO_ICON_URL: z.url().optional(),
   },
   /*
    * Environment variables available on the client (and server).

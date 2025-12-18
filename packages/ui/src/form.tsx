@@ -72,7 +72,7 @@ const FormItem = React.forwardRef<
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("grid gap-1.5", className)} {...props} />
+      <div ref={ref} className={cn("grid gap-2", className)} {...props} />
     </FormItemContext.Provider>
   );
 });
@@ -87,7 +87,7 @@ const FormLabel = React.forwardRef<
   return (
     <Label
       ref={ref}
-      className={cn("font-medium text-sm", className)}
+      className={cn("font-normal text-sm", className)}
       htmlFor={formItemId}
       {...props}
     />

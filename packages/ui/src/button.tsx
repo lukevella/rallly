@@ -9,21 +9,21 @@ import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+    "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md font-normal text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   ),
   {
     variants: {
       variant: {
         primary:
-          "bg-primary text-primary-foreground active:bg-primary/90 disabled:border-transparent disabled:bg-gray-400",
+          "bg-primary text-primary-foreground hover:bg-primary/90 active:opacity-90",
         destructive:
-          "border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive",
+          "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 active:opacity-90",
         default:
-          "border bg-white shadow-xs hover:bg-gray-50 active:bg-gray-100",
+          "border border-input-border bg-input shadow-xs hover:bg-accent active:opacity-90",
         secondary:
           "border-secondary bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-offset-1",
         ghost:
-          "border-transparent bg-transparent text-gray-800 hover:bg-gray-500/10 active:bg-gray-500/20 data-[state=open]:bg-gray-500/20",
+          "border-transparent bg-transparent text-foreground hover:bg-accent data-[state=open]:bg-accent",
         actionBar:
           "border-transparent bg-action-bar text-action-bar-foreground hover:bg-action-bar-foreground/10 data-[state=open]:bg-action-bar-foreground/20",
         link: "border-transparent text-primary underline-offset-4 hover:underline",

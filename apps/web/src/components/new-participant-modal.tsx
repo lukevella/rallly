@@ -79,7 +79,7 @@ const VoteSummary = ({
         return (
           <div
             key={voteType}
-            className="flex h-8 select-none gap-2.5 rounded-lg border bg-gray-50 p-1 text-sm"
+            className="flex h-8 select-none gap-2.5 rounded-lg border bg-muted p-1 text-sm"
           >
             <div className="flex items-center gap-2">
               <VoteIcon type={voteType} />

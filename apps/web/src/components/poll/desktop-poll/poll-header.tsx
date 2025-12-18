@@ -48,10 +48,10 @@ const TimelineRow = ({
     <tr>
       <th
         style={{ minWidth: 235, top }}
-        className="sticky left-0 z-30 bg-white pr-4 pl-4"
+        className="sticky left-0 z-30 bg-background pr-4 pl-4"
       />
       {children}
-      <th className="w-full min-w-4 border-l" />
+      <th className="w-full min-w-4 border-l bg-muted" />
     </tr>
   );
 };
@@ -75,7 +75,7 @@ const PollHeader: React.FunctionComponent = () => {
               key={option.optionId}
               style={{ height: monthRowHeight }}
               className={cn(
-                "sticky top-0 space-y-3 bg-gray-50",
+                "sticky top-0 space-y-3 bg-background",
                 firstOfMonth ? "left-[235px] z-20 border-l" : "z-10",
               )}
             >
@@ -114,7 +114,7 @@ const PollHeader: React.FunctionComponent = () => {
                 top: monthRowHeight,
               }}
               className={cn(
-                "sticky space-y-2 border-t bg-gray-50",
+                "sticky space-y-2 border-t bg-background",
                 firstOfDay ? "z-20" : "z-10",
                 {
                   "border-l": firstOfDay,
@@ -139,7 +139,7 @@ const PollHeader: React.FunctionComponent = () => {
             <th
               key={option.optionId}
               style={{ minWidth: 80, maxWidth: 90, top: scoreRowTop }}
-              className="sticky z-20 border-l bg-gray-50 pb-2.5 align-top"
+              className="sticky z-20 border-l bg-background pb-2.5 align-top"
             >
               <div className="flex flex-col items-center gap-3">
                 {option.type === "timeSlot" ? (

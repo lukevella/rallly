@@ -54,7 +54,7 @@ export default async function SecurityPage({
         {isEmailLoginEnabled ? (
           <>
             {setupPassword ? (
-              <Alert variant="tip">
+              <Alert variant="success">
                 <ShieldCheckIcon />
                 <AlertDescription>
                   <p>

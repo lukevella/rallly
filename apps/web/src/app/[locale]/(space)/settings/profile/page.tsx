@@ -81,7 +81,7 @@ export default async function Page() {
             <PageSectionContent>
               <DeleteAccountDialog email={user.email}>
                 <DialogTrigger asChild>
-                  <Button className="text-destructive">
+                  <Button variant="destructive">
                     <TrashIcon className="size-4" />
                     <Trans i18nKey="deleteAccount" defaults="Delete Account" />
                   </Button>

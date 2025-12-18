@@ -17,7 +17,7 @@ const Command = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "flex h-full w-full flex-col overflow-hidden rounded-md bg-white",
+      "flex h-full w-full flex-col overflow-hidden rounded-lg bg-popover",
       className,
     )}
     {...props}
@@ -124,7 +124,7 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center gap-2 rounded-md p-2 text-sm outline-hidden aria-selected:bg-gray-100 data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+      "relative flex cursor-default select-none items-center gap-2 rounded-lg p-2 text-sm outline-hidden aria-selected:bg-accent data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
       className,
     )}
     {...props}
@@ -140,7 +140,7 @@ const CommandItemShortcut = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex h-12 cursor-pointer select-none items-center gap-3 rounded-xl px-3 font-medium outline-hidden aria-selected:bg-gray-100 data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+      "relative flex h-12 cursor-pointer select-none items-center gap-3 rounded-xl px-3 font-medium outline-hidden aria-selected:bg-muted data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
       className,
     )}
     {...props}

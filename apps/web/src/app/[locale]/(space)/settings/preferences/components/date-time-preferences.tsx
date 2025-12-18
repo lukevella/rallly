@@ -128,7 +128,6 @@ const DateTimePreferencesForm = () => {
           <Button
             loading={formState.isSubmitting}
             type="submit"
-            variant="primary"
             disabled={!formState.isDirty}
           >
             <Trans i18nKey="save" />

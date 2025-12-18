@@ -5,26 +5,23 @@ import type * as React from "react";
 import { cn } from "./lib/utils";
 
 const alertVariants = cva(
-  "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg border px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
+  "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
   {
     variants: {
       variant: {
         default: "bg-card text-card-foreground",
         primary:
-          "bg-primary has-data-[slot=alert-description]:text-primary-foreground/90 [&>svg]:text-primary-foreground",
-        destructive:
-          "border-destructive/20 bg-destructive-background text-destructive has-data-[slot=alert-description]:opacity-90",
-        info: "border-blue-200 bg-blue-50 text-blue-900 has-data-[slot=alert-description]:text-blue-800/90 [&>svg]:text-blue-600",
+          "bg-primary *:data-[slot=alert-description]:text-primary-foreground/90 [&>svg]:text-primary-foreground",
+        info: "bg-info text-info-foreground *:data-[slot=alert-description]:text-info-foreground/90 [&>svg]:text-info-foreground/90",
         warning:
-          "border-yellow-200 bg-yellow-50 text-yellow-900 has-data-[slot=alert-description]:text-yellow-800/90 [&>svg]:text-yellow-600",
-        tip: "border-green-200 bg-green-50 text-green-900 has-data-[slot=alert-description]:text-green-800/90 [&>svg]:text-green-600",
+          "bg-warning text-warning-foreground *:data-[slot=alert-description]:text-warning-foreground/90 [&>svg]:text-warning-foreground/90",
         success:
-          "border-green-200 bg-green-50 text-green-900 has-data-[slot=alert-description]:text-green-800/90 [&>svg]:text-green-600",
-        note: "border-gray-200 bg-gray-50 text-gray-900 has-data-[slot=alert-description]:text-gray-700/90 [&>svg]:text-gray-600",
+          "bg-success text-success-foreground *:data-[slot=alert-description]:text-success-foreground/90 [&>svg]:text-success-foreground/90",
+        note: "bg-muted text-muted-foreground *:data-[slot=alert-description]:text-muted-foreground/75 [&>svg]:text-muted-foreground/90",
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "note",
     },
   },
 );

@@ -29,11 +29,11 @@ export const GuestPollAlert = () => {
             defaults="<0>Create an account</0> or <1>login</1> to claim this poll."
             components={[
               <RegisterLink
-                className="underline hover:text-gray-800"
+                className="underline hover:text-foreground"
                 key="register"
               />,
               <LoginLink
-                className="underline hover:text-gray-800"
+                className="underline hover:text-foreground"
                 key="login"
               />,
             ]}

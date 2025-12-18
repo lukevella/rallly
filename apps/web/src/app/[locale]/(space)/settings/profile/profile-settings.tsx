@@ -75,7 +75,6 @@ export const ProfileSettings = ({
             <div className="mt-4 flex">
               <Button
                 loading={formState.isSubmitting}
-                variant="primary"
                 type="submit"
                 disabled={!formState.isDirty}
               >
