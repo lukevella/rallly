@@ -31,9 +31,9 @@ const Steps: React.FunctionComponent<StepsProps> = ({
               // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
               key={i}
               className={cn("h-2 w-2 rounded-full transition-all", {
-                "bg-primary-400": i <= current,
+                "bg-primary/70": i <= current,
                 "bg-gray-300": i > current,
-                "animate-pulse ring-4 ring-primary-200": i === current,
+                "animate-pulse ring-4 ring-primary/30": i === current,
               })}
             />
           );

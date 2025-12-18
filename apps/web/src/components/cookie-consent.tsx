@@ -53,7 +53,7 @@ const CookieConsentPopover = () => {
                     Cookies.set("rallly_cookie_consent", "1", { expires: 365 });
                     setVisible(false);
                   }}
-                  className="grow rounded-md bg-primary px-5 py-1 font-semibold text-white shadow-xs transition-all hover:bg-primary/90 focus:ring-2 focus:ring-primary-200 active:bg-primary/90"
+                  className="grow rounded-md bg-primary px-5 py-1 font-semibold text-white shadow-xs transition-all hover:bg-primary/90 focus:ring-2 focus:ring-primary/30 active:bg-primary/90"
                 >
                   OK
                 </button>

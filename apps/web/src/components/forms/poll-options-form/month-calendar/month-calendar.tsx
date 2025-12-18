@@ -189,7 +189,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         className={cn(
                           "absolute inset-1 z-0 rounded-md border",
                           day.selected
-                            ? "border-primary-300 border-dashed shadow-xs group-hover:border-primary-400"
+                            ? "border-primary/50 border-dashed shadow-xs group-hover:border-primary/60"
                             : "border-transparent border-dashed group-hover:border-gray-400 group-active:bg-gray-200",
                         )}
                       />
