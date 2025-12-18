@@ -4,7 +4,6 @@ import { pricingData } from "@rallly/billing/pricing";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -66,22 +65,6 @@ function SubHeading({ children }: { children?: React.ReactNode }) {
     <h3 className="font-medium text-muted-foreground text-xs uppercase">
       {children}
     </h3>
-  );
-}
-
-function PlanRadioGroup({
-  value,
-  onValueChange,
-  children,
-}: {
-  value: string;
-  onValueChange: (value: string) => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <RadioGroup value={value} onValueChange={onValueChange}>
-      {children}
-    </RadioGroup>
   );
 }
 
@@ -174,11 +157,12 @@ export function PayWallDialog({
                   </DialogTitle>
                 </div>
               </DialogHeader>
-              <div className="mt-6 flex-1 space-y-6">
-                <Label>
+              <div className="mt-6 flex flex-1 flex-col gap-4">
+                <Label htmlFor="plan">
                   <Trans i18nKey="selectPlan" defaults="Select Plan:" />
                 </Label>
-                <PlanRadioGroup
+                <RadioGroup
+                  id="plan"
                   value={selectedPlan}
                   onValueChange={handleChangePlan}
                 >
@@ -197,7 +181,7 @@ export function PayWallDialog({
                       <Trans i18nKey="perSeatMonth" defaults="/seat/mo" />
                     }
                   />
-                </PlanRadioGroup>
+                </RadioGroup>
               </div>
 
               <div className="space-y-4 pt-4">
@@ -239,18 +223,17 @@ export function PayWallDialog({
                     </div>
                   </div>
                 )}
-                <TabsContent value="pro">
-                  <UpgradeButton className="w-full" annual={isAnnual}>
-                    <Trans i18nKey="upgrade" defaults="Upgrade" />
-                  </UpgradeButton>
-                </TabsContent>
-                <TabsContent value="hobby">
-                  <DialogClose asChild>
-                    <Button size="md" disabled={true} className="w-full">
-                      <Trans i18nKey="currentPlan" defaults="Current Plan" />
-                    </Button>
-                  </DialogClose>
-                </TabsContent>
+                {selectedPlan === "pro" ? (
+                  <TabsContent value="pro">
+                    <UpgradeButton className="w-full" annual={isAnnual}>
+                      <Trans i18nKey="upgrade" defaults="Upgrade" />
+                    </UpgradeButton>
+                  </TabsContent>
+                ) : (
+                  <Button disabled={true} size="lg" className="w-full">
+                    <Trans i18nKey="currentPlan" defaults="Current Plan" />
+                  </Button>
+                )}
               </div>
             </div>
 
