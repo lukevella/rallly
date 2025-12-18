@@ -180,7 +180,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                           "text-rose-600": day.today && !day.selected,
                           "bg-gray-50 text-gray-500":
                             day.outOfMonth && !day.isPast,
-                          "text-primary-600": day.selected,
+                          "text-primary": day.selected,
                         },
                       )}
                     >
