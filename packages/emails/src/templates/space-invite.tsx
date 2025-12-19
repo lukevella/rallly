@@ -45,7 +45,7 @@ export const SpaceInviteEmail = ({
       />
     </Text>
     <Section style={{ marginBottom: 16 }}>
-      <Button href={inviteUrl} id="inviteUrl">
+      <Button href={inviteUrl} id="inviteUrl" color={ctx.primaryColor}>
         {ctx.t("spaceInvite_button", {
           defaultValue: "Accept Invitation",
           ns: "emails",

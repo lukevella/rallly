@@ -107,7 +107,7 @@ const FinalizeHostEmail = ({
         })}
       </Text>
       <Section style={{ marginTop: 32 }}>
-        <Button href={pollUrl}>
+        <Button href={pollUrl} color={ctx.primaryColor}>
           {ctx.t("finalizeHost_button", {
             defaultValue: "View Event",
             ns: "emails",

@@ -38,16 +38,22 @@ export const Text = (
 
 export const Domain = ({ ctx }: { ctx: EmailContext }) => {
   const { baseUrl, domain } = ctx;
-  return <Link href={baseUrl}>{domain}</Link>;
+  return (
+    <Link color={ctx.primaryColor} href={baseUrl}>
+      {domain}
+    </Link>
+  );
 };
 
-export const Button = (props: React.ComponentProps<typeof UnstyledButton>) => {
+export const Button = (
+  props: React.ComponentProps<typeof UnstyledButton> & { color?: string },
+) => {
   return (
     <UnstyledButton
       {...props}
       className={props.className}
       style={{
-        backgroundColor: "#4F46E5",
+        backgroundColor: props.color ?? "#4F46E5",
         borderRadius: "4px",
         padding: "14px",
         fontFamily,
@@ -64,11 +70,11 @@ export const Button = (props: React.ComponentProps<typeof UnstyledButton>) => {
   );
 };
 
-export const Link = (props: LinkProps) => {
+export const Link = (props: LinkProps & { color?: string }) => {
   return (
     <UnstyledLink
       {...props}
-      style={{ color: "#4F46E5", fontFamily, ...props.style }}
+      style={{ color: props.color ?? "#4F46E5", fontFamily, ...props.style }}
     />
   );
 };

@@ -10,6 +10,8 @@ export type EmailContext = {
   supportEmail: string;
   i18n: I18nInstance;
   t: TFunction;
+  appName?: string;
+  primaryColor?: string;
 };
 
 export type TemplateName = keyof EmailTemplates;
