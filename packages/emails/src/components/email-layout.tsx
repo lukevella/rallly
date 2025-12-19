@@ -61,7 +61,10 @@ export const EmailLayout = ({
                   values={{ domain: "rallly.co" }}
                   components={{
                     a: (
-                      <Link href="https://rallly.co?utm_source=email&utm_medium=transactional" />
+                      <Link
+                        color={ctx.primaryColor}
+                        href="https://rallly.co?utm_source=email&utm_medium=transactional"
+                      />
                     ),
                   }}
                 />

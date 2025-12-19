@@ -69,7 +69,12 @@ export const RegisterEmail = ({ code, ctx }: RegisterEmailProps) => {
             values={{ supportEmail: ctx.supportEmail }}
             components={{
               domain: <Domain ctx={ctx} />,
-              a: <Link href={`mailto:${ctx.supportEmail}`} />,
+              a: (
+                <Link
+                  color={ctx.primaryColor}
+                  href={`mailto:${ctx.supportEmail}`}
+                />
+              ),
             }}
             ns="emails"
           />

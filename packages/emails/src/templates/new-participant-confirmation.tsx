@@ -59,7 +59,7 @@ const NewParticipantConfirmationEmail = ({
         />
       </Text>
       <Section style={{ marginTop: 32 }}>
-        <Button id="editSubmissionUrl" href={editSubmissionUrl}>
+        <Button id="editSubmissionUrl" href={editSubmissionUrl} color={ctx.primaryColor}>
           <Trans
             i18n={ctx.i18n}
             t={ctx.t}

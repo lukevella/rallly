@@ -103,7 +103,9 @@ const FinalizeParticipantEmail = ({
         })}
       </Text>
       <Section style={{ marginTop: 32 }}>
-        <Button href={pollUrl}>View Event</Button>
+        <Button href={pollUrl} color={ctx.primaryColor}>
+          View Event
+        </Button>
       </Section>
     </EmailLayout>
   );

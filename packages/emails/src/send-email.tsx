@@ -55,6 +55,7 @@ type EmailClientConfig = {
     baseUrl: string;
     domain: string;
     supportEmail: string;
+    primaryColor: string;
   };
 
   locale?: string;
