@@ -49,7 +49,7 @@ body {
     @apply my-12;
   }
   a {
-    @apply text-primary-600 hover:underline;
+    @apply text-primary hover:underline;
   }
   blockquote {
     @apply my-6 border-l-4 border-gray-300 pl-4 italic text-gray-700;
