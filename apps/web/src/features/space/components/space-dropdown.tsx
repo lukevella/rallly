@@ -58,7 +58,7 @@ export function SpaceDropdown({
       <DropdownMenu>
         <DropdownMenuTrigger asChild={true}>
           <Button
-            className={cn("flex h-auto w-full p-2", {
+            className={cn("flex h-auto w-full gap-2.5 p-2", {
               "pointer-events-none animate-pulse":
                 setActiveSpace.isPending || isPending,
             })}
