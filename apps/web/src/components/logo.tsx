@@ -24,7 +24,7 @@ export const Logo = ({
       style={{
         height: sizes[size].height,
       }}
-      alt="Rallly"
+      alt={env.APP_NAME}
     />
   );
 };

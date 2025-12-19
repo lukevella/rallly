@@ -46,7 +46,7 @@ export const EmailLayout = ({
             style={{
               marginBottom: 32,
             }}
-            alt="Rallly Logo"
+            alt={ctx.appName}
           />
           {children}
           {poweredBy ? (
