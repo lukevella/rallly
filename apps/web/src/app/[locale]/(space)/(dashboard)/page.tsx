@@ -18,7 +18,6 @@ import {
 } from "@/app/components/page-layout";
 import { requireSpace, requireUser } from "@/auth/data";
 import { Trans } from "@/components/trans";
-import { IfCloudHosted } from "@/contexts/environment";
 import { getUpcomingEventsCount } from "@/features/scheduled-event/data";
 import { loadMembers } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
@@ -27,7 +26,6 @@ import { getUserHasNoAccounts } from "@/features/user/queries";
 import { getTranslation } from "@/i18n/server";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { FeedbackAlert } from "./feedback-alert";
 import { PasswordSetupAlert } from "./password-setup-alert";
 
 async function loadData() {
@@ -88,9 +86,6 @@ export default async function Page() {
       <PageContent className="space-y-8">
         <div className="space-y-4">
           {hasNoAccounts && isEmailLoginEnabled ? <PasswordSetupAlert /> : null}
-          <IfCloudHosted>
-            <FeedbackAlert />
-          </IfCloudHosted>
         </div>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
