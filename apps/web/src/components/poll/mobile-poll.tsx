@@ -81,7 +81,7 @@ const MobilePoll: React.FunctionComponent = () => {
               }}
               disabled={isEditing}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="flex-1">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
