@@ -27,7 +27,7 @@ export function OptimizedAvatarImage({
             width={128}
             height={128}
             alt={name}
-            style={{ objectFit: "cover" }}
+            className="object-cover object-center"
             onLoad={() => {
               setLoaded(true);
             }}
