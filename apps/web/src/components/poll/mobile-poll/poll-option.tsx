@@ -130,9 +130,9 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
         selectorRef.current?.click();
       }}
     >
-      <div className="flex h-7 items-center justify-between gap-x-4">
-        <div className="shrink-0">{children}</div>
-        <div className="flex items-center gap-x-4">
+      <div className="flex h-7 min-w-0 items-center justify-between gap-x-4">
+        <div className="min-w-0 shrink">{children}</div>
+        <div className="flex shrink-0 items-center gap-x-4">
           {role === "participant" && poll.hideParticipants ? (
             <ConnectedScoreSummary optionId={optionId} />
           ) : (
@@ -152,7 +152,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           )}
 
           {showVotes ? (
-            <div className="relative flex size-7 items-center justify-center">
+            <div className="relative flex size-7 shrink-0 items-center justify-center">
               {editable ? (
                 <VoteSelector
                   ref={selectorRef}
