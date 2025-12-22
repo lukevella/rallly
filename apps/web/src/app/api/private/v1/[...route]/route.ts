@@ -5,15 +5,19 @@ import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { waitUntil } from "@vercel/functions";
 import dayjs from "dayjs";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
 import { z } from "zod";
+import type { ExplicitOptionInput } from "../utils/time-slots";
+import { generateTimeSlots, toPollOption } from "../utils/time-slots";
 
-dayjs.extend(timezone);
 dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrBefore);
 
 type ApiAuth = {
   userId: string;
@@ -114,9 +118,10 @@ const createPollInputSchema = z
   .object({
     title: z.string().trim().min(1),
     description: z.string().trim().optional(),
-    timezone: z.string().min(1),
+    timezone: z.string().min(1), // TODO: Should this be optional? Use user timezone
     requireParticipantEmail: z.boolean().default(false),
     locale: z.string().optional(),
+    duration: z.number().int().positive().optional(),
     options: z
       .array(
         z.union([
@@ -155,6 +160,9 @@ const createPollInputSchema = z
   })
   .refine((value) => value.options?.length || value.slotGenerator, {
     message: "Either `options` or `slotGenerator` must be provided",
+  })
+  .refine((value) => (value.slotGenerator ? !!value.duration : true), {
+    message: "`duration` is required when `slotGenerator` is provided",
   });
 
 app.post("/polls", zValidator("json", createPollInputSchema), async (c) => {
@@ -163,123 +171,17 @@ app.post("/polls", zValidator("json", createPollInputSchema), async (c) => {
 
   const pollId = nanoid();
 
-  const hasTzOffset = (value: string) =>
-    /[zZ]$|[+-]\d{2}:\d{2}$|[+-]\d{4}$/.test(value);
-
-  const parseDateTimeInTimeZone = (value: string, timeZone: string) => {
-    return hasTzOffset(value) ? dayjs(value) : dayjs.tz(value, timeZone);
-  };
-
-  const toPollOption = (
-    value:
-      | { date: string; from: string; to: string }
-      | { start: string; end: string },
-    timeZone: string,
-  ) => {
-    const start =
-      "date" in value
-        ? dayjs.tz(`${value.date}T${value.from}`, timeZone)
-        : parseDateTimeInTimeZone(value.start, timeZone);
-
-    const end =
-      "date" in value
-        ? dayjs.tz(`${value.date}T${value.to}`, timeZone)
-        : parseDateTimeInTimeZone(value.end, timeZone);
-
-    const duration = end.diff(start, "minute");
-    if (duration <= 0) {
-      return null;
-    }
-
-    return {
-      startTime: start.toDate(),
-      duration,
-    };
-  };
-
-  const generateSlots = (
-    generator: NonNullable<typeof input.slotGenerator>,
-  ) => {
-    const dayMap: Record<string, number> = {
-      sun: 0,
-      mon: 1,
-      tue: 2,
-      wed: 3,
-      thu: 4,
-      fri: 5,
-      sat: 6,
-    };
-
-    const allowed = new Set(generator.daysOfWeek.map((d) => dayMap[d]));
-
-    const startDay = dayjs
-      .tz(generator.startDate, input.timezone)
-      .startOf("day");
-    const endDay = dayjs.tz(generator.endDate, input.timezone).startOf("day");
-
-    const from = dayjs.tz(
-      `${generator.startDate}T${generator.fromTime}`,
-      input.timezone,
-    );
-    const to = dayjs.tz(
-      `${generator.startDate}T${generator.toTime}`,
-      input.timezone,
-    );
-    if (!to.isAfter(from)) {
-      return [];
-    }
-
-    const results: Array<{ startTime: Date; duration: number }> = [];
-    for (
-      let cursor = startDay;
-      cursor.isSameOrBefore(endDay, "day");
-      cursor = cursor.add(1, "day")
-    ) {
-      if (!allowed.has(cursor.day())) {
-        continue;
-      }
-
-      const date = cursor.format("YYYY-MM-DD");
-      const windowStart = dayjs.tz(
-        `${date}T${generator.fromTime}`,
-        input.timezone,
-      );
-      const windowEnd = dayjs.tz(`${date}T${generator.toTime}`, input.timezone);
-      if (!windowEnd.isAfter(windowStart)) {
-        continue;
-      }
-
-      if (generator.discreteIntervalMinutes) {
-        for (
-          let t = windowStart;
-          t
-            .add(generator.discreteIntervalMinutes, "minute")
-            .isSameOrBefore(windowEnd);
-          t = t.add(generator.discreteIntervalMinutes, "minute")
-        ) {
-          results.push({
-            startTime: t.toDate(),
-            duration: generator.discreteIntervalMinutes,
-          });
-        }
-      } else {
-        results.push({
-          startTime: windowStart.toDate(),
-          duration: windowEnd.diff(windowStart, "minute"),
-        });
-      }
-    }
-
-    return results;
-  };
-
   const explicitOptions =
     input.options
-      ?.map((o) => toPollOption(o, input.timezone))
+      ?.map((o) => toPollOption(o as ExplicitOptionInput, input.timezone))
       .filter(Boolean) ?? [];
 
   const generatedOptions = input.slotGenerator
-    ? generateSlots(input.slotGenerator)
+    ? generateTimeSlots(
+        input.slotGenerator,
+        input.timezone,
+        input.duration ?? 0,
+      )
     : [];
 
   const options = [...explicitOptions, ...generatedOptions];
