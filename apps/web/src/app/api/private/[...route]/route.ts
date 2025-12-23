@@ -46,7 +46,7 @@ type Env = {
   Variables: Variables;
 };
 
-const app = new Hono<Env>().basePath("/api/private/v1");
+const app = new Hono<Env>().basePath("/api/private");
 
 const MAX_OPTIONS = 100;
 
@@ -261,7 +261,7 @@ app.get(
         title: "Rallly Private API",
         version: "0.0.1",
       },
-      servers: [{ url: "/api/private/v1" }],
+      servers: [{ url: "/api/private" }],
       components: {
         securitySchemes: {
           bearerAuth: {
@@ -277,7 +277,7 @@ app.get(
 app.get(
   "/docs",
   Scalar({
-    url: "/api/private/v1/openapi",
+    url: "/api/private/openapi",
     pageTitle: "Rallly Private API Documentation",
     theme: "purple",
   }),
@@ -483,3 +483,4 @@ app.post(
 
 export const GET = handle(app);
 export const POST = handle(app);
+
