@@ -155,13 +155,47 @@ const slotGeneratorSchema = z
   })
   .openapi("SlotGenerator");
 
-const optionSchema = z.union([
+const timeOptionSchema = z.union([
   z.iso.datetime().openapi({
     description: "ISO datetime start time",
     example: "2025-01-15T09:00:00Z",
   }),
   slotGeneratorSchema,
 ]);
+
+const slotsInputSchema = z
+  .object({
+    duration: z.number().int().min(15).max(1440).openapi({
+      description: "Duration in minutes for each time slot",
+      example: 30,
+    }),
+    timezone: z
+      .string()
+      .refine(isSupportedTimeZone, {
+        message: "Timezone must be a valid IANA timezone",
+      })
+      .optional()
+      .openapi({
+        description:
+          "IANA timezone. Defaults to user's timezone if not provided.",
+        example: "Europe/London",
+      }),
+    times: z
+      .union([slotGeneratorSchema, z.array(timeOptionSchema).min(1)])
+      .openapi({
+        description:
+          "Times to include. Can be a slot generator or an array of ISO datetime strings and/or slot generators.",
+      }),
+  })
+  .openapi("SlotsInput");
+
+const datesInputSchema = z
+  .array(z.iso.date())
+  .min(1)
+  .openapi({
+    description: "Array of ISO dates for all-day options",
+    example: ["2025-01-15", "2025-01-16", "2025-01-17"],
+  });
 
 const createPollInputSchema = z
   .object({
@@ -178,20 +212,14 @@ const createPollInputSchema = z
       .max(255)
       .optional()
       .openapi({ example: "Zoom" }),
-    timezone: z
-      .string()
-      .refine(isSupportedTimeZone, {
-        message: "Timezone must be a valid IANA timezone",
-      })
-      .optional(),
-    duration: z.number().int().min(15).max(1440).openapi({
-      description: "Duration in minutes for each option",
-      example: 30,
-    }),
-    options: z.array(optionSchema).min(1).openapi({
-      description:
-        "Array of options. Each option can be an ISO datetime string (start time) or a slot generator object.",
-    }),
+    dates: datesInputSchema.optional(),
+    slots: slotsInputSchema.optional(),
+  })
+  .refine((data) => data.dates || data.slots, {
+    message: "Either 'dates' or 'slots' must be provided",
+  })
+  .refine((data) => !(data.dates && data.slots), {
+    message: "Cannot provide both 'dates' and 'slots'",
   })
   .openapi("CreatePollInput");
 
@@ -231,7 +259,7 @@ app.get(
     documentation: {
       info: {
         title: "Rallly Private API",
-        version: "1.0.0",
+        version: "0.0.1",
       },
       servers: [{ url: "/api/private/v1" }],
       components: {
@@ -302,12 +330,71 @@ app.post(
       select: { timeZone: true },
     });
 
-    const timezone = input.timezone ?? user?.timeZone;
+    const pollId = nanoid();
+
+    // Process dates (all-day options)
+    if (input.dates) {
+      const uniqueDates = [...new Set(input.dates)];
+      const options = uniqueDates.map((date) => ({
+        startTime: new Date(`${date}T00:00:00.000Z`),
+        duration: 0,
+      }));
+
+      if (options.length > MAX_OPTIONS) {
+        return c.json(
+          apiError(
+            "TOO_MANY_OPTIONS",
+            `Too many options (${options.length}). Maximum allowed is ${MAX_OPTIONS}.`,
+          ),
+          400,
+        );
+      }
+
+      const spaceMember = await prisma.spaceMember.findFirst({
+        where: { userId },
+        orderBy: { lastSelectedAt: "desc" },
+        select: { spaceId: true },
+      });
+
+      const poll = await prisma.poll.create({
+        data: {
+          id: pollId,
+          title: input.title,
+          description: input.description || undefined,
+          adminUrlId: nanoid(),
+          participantUrlId: nanoid(),
+          userId,
+          watchers: { create: { userId } },
+          options: { createMany: { data: options } },
+          spaceId: spaceMember?.spaceId,
+        },
+        select: { id: true },
+      });
+
+      return c.json({
+        data: {
+          id: poll.id,
+          adminUrl: absoluteUrl(`/poll/${poll.id}`),
+          inviteUrl: shortUrl(`/invite/${poll.id}`),
+        },
+      });
+    }
+
+    // Process slots (time-based options)
+    if (!input.slots) {
+      return c.json(
+        apiError("INVALID_INPUT", "Either 'dates' or 'slots' must be provided"),
+        400,
+      );
+    }
+    const slots = input.slots;
+    const timezone = slots.timezone ?? user?.timeZone;
+
     if (!timezone) {
       return c.json(
         apiError(
           "TIMEZONE_REQUIRED",
-          "Timezone is required. Either provide a timezone in the request or set one in your profile.",
+          "Timezone is required. Either provide a timezone in slots or set one in your profile.",
         ),
         400,
       );
@@ -323,20 +410,20 @@ app.post(
       );
     }
 
-    const pollId = nanoid();
-    const duration = input.duration;
+    const duration = slots.duration;
+    const times = Array.isArray(slots.times) ? slots.times : [slots.times];
 
-    const timeSlots = input.options.flatMap((option) => {
-      if (typeof option === "string") {
-        return parseStartTime(option, timezone, duration);
+    const timeSlots = times.flatMap((time) => {
+      if (typeof time === "string") {
+        return parseStartTime(time, timezone, duration);
       }
       const slotGenerator: SlotGeneratorInput = {
-        startDate: option.startDate,
-        endDate: option.endDate,
-        daysOfWeek: option.days,
-        fromTime: option.startTime,
-        toTime: option.endTime,
-        interval: option.interval,
+        startDate: time.startDate,
+        endDate: time.endDate,
+        daysOfWeek: time.days,
+        fromTime: time.startTime,
+        toTime: time.endTime,
+        interval: time.interval,
       };
       return generateTimeSlots(slotGenerator, timezone, duration);
     });
@@ -377,22 +464,11 @@ app.post(
         adminUrlId: nanoid(),
         participantUrlId: nanoid(),
         userId,
-        watchers: {
-          create: {
-            userId,
-          },
-        },
-        options: {
-          createMany: {
-            data: options,
-          },
-        },
-        requireParticipantEmail: true,
+        watchers: { create: { userId } },
+        options: { createMany: { data: options } },
         spaceId: spaceMember?.spaceId,
       },
-      select: {
-        id: true,
-      },
+      select: { id: true },
     });
 
     return c.json({
