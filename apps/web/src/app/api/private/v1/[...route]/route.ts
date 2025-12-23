@@ -181,7 +181,7 @@ const createPollInputSchema = z
           "IANA timezone. Defaults to user's timezone if not provided",
         example: "Europe/London",
       }),
-    requireParticipantEmail: z.boolean().default(false),
+    requireEmail: z.boolean().default(false),
     locale: z.string().optional().openapi({ example: "en" }),
     duration: z.number().int().min(15).max(1440).openapi({
       description: "Duration in minutes for each option",
@@ -347,7 +347,7 @@ app.post(
             data: options,
           },
         },
-        requireParticipantEmail: input.requireParticipantEmail,
+        requireEmail: input.requireEmail,
         spaceId: spaceMember?.spaceId,
       },
       select: {
