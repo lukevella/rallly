@@ -262,9 +262,10 @@ app.get(
 );
 
 app.get(
-  "/scalar",
+  "/docs",
   Scalar({
     url: "/api/private/v1/openapi",
+    pageTitle: "Rallly Private API Documentation",
   }),
 );
 
