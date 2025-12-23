@@ -33,17 +33,21 @@ export function getCroppedImg(
     throw new Error("No 2d context");
   }
 
+  // Calculate scale factors between displayed and natural image dimensions
   const scaleX = image.naturalWidth / image.width;
   const scaleY = image.naturalHeight / image.height;
 
-  // Calculate the actual crop dimensions
-  const cropWidth = crop.width * scaleX;
-  const cropHeight = crop.height * scaleY;
+  // Calculate source coordinates with integer precision to avoid sub-pixel cropping
+  // This fixes the issue where images appear shifted due to floating-point rounding
+  const sourceX = Math.round(crop.x * scaleX);
+  const sourceY = Math.round(crop.y * scaleY);
+  const sourceWidth = Math.round(crop.width * scaleX);
+  const sourceHeight = Math.round(crop.height * scaleY);
 
   // Calculate optimized dimensions while maintaining aspect ratio
-  const aspectRatio = cropWidth / cropHeight;
-  let outputWidth = cropWidth;
-  let outputHeight = cropHeight;
+  const aspectRatio = sourceWidth / sourceHeight;
+  let outputWidth = sourceWidth;
+  let outputHeight = sourceHeight;
 
   // Resize if the image is larger than our maximum dimensions
   if (
@@ -53,17 +57,17 @@ export function getCroppedImg(
     if (aspectRatio > 1) {
       // Width is the constraining dimension
       outputWidth = Math.min(IMAGE_OPTIMIZATION.MAX_WIDTH, outputWidth);
-      outputHeight = outputWidth / aspectRatio;
+      outputHeight = Math.round(outputWidth / aspectRatio);
     } else {
       // Height is the constraining dimension
       outputHeight = Math.min(IMAGE_OPTIMIZATION.MAX_HEIGHT, outputHeight);
-      outputWidth = outputHeight * aspectRatio;
+      outputWidth = Math.round(outputHeight * aspectRatio);
     }
   }
 
-  // Set canvas dimensions to the optimized size
-  canvas.width = outputWidth;
-  canvas.height = outputHeight;
+  // Set canvas dimensions (must be integers to avoid sub-pixel issues)
+  canvas.width = Math.round(outputWidth);
+  canvas.height = Math.round(outputHeight);
 
   // Enable high-quality image scaling
   ctx.imageSmoothingEnabled = true;
@@ -72,20 +76,20 @@ export function getCroppedImg(
   // Fill canvas with white background for PNGs with transparency
   if (fileType === "image/png") {
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, outputWidth, outputHeight);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  // Draw the cropped and resized image
+  // Draw the cropped and resized image using precise integer coordinates
   ctx.drawImage(
     image,
-    crop.x * scaleX,
-    crop.y * scaleY,
-    cropWidth,
-    cropHeight,
+    sourceX,
+    sourceY,
+    sourceWidth,
+    sourceHeight,
     0,
     0,
-    outputWidth,
-    outputHeight,
+    canvas.width,
+    canvas.height,
   );
 
   return new Promise((resolve, reject) => {
