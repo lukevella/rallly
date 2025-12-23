@@ -18,6 +18,7 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
+import { supportedTimeZones } from "@/utils/supported-time-zones";
 import type {
   ExplicitOptionInput,
   SlotGeneratorInput,
@@ -118,7 +119,10 @@ const apiKeyAuth = bearerAuth({
       return false;
     }
 
-    c.set("apiAuth", { userId: apiKey.userId, apiKeyId: apiKey.id });
+    c.set("apiAuth", {
+      userId: apiKey.userId,
+      apiKeyId: apiKey.id,
+    });
 
     waitUntil(
       prisma.apiKey.update({
@@ -166,7 +170,7 @@ const slotGeneratorSchema = z
     ),
     fromTime: timeSchema,
     toTime: timeSchema,
-    discreteIntervalMinutes: z.number().int().positive().optional(),
+    discreteIntervalMinutes: z.number().int().min(15).max(1440).optional(),
   })
   .openapi("SlotGenerator");
 
@@ -191,10 +195,18 @@ const createPollInputBaseSchema = z
       .max(255)
       .optional()
       .openapi({ example: "Zoom" }),
-    timezone: z.string().min(1).openapi({
-      description: "IANA timezone",
-      example: "Europe/London",
-    }), // TODO: Should this be optional? Use user timezone
+    timezone: z
+      .string()
+      .min(1)
+      .refine((tz) => supportedTimeZones.includes(tz), {
+        message: "Timezone must be a valid IANA timezone",
+      })
+      .optional()
+      .openapi({
+        description:
+          "IANA timezone. Defaults to user's timezone if not provided",
+        example: "Europe/London",
+      }),
     requireParticipantEmail: z.boolean().default(false),
     locale: z.string().optional().openapi({ example: "en" }),
     duration: z
@@ -243,7 +255,6 @@ app.get(
   "/openapi",
   openAPIRouteHandler(app, {
     documentation: {
-      openapi: "3.1.0",
       info: {
         title: "Rallly Private API",
         version: "1.0.0",
@@ -266,6 +277,7 @@ app.get(
   Scalar({
     url: "/api/private/v1/openapi",
     pageTitle: "Rallly Private API Documentation",
+    theme: "purple",
   }),
 );
 
@@ -299,17 +311,42 @@ app.post(
     const input = c.req.valid("json");
     const { userId } = c.get("apiAuth");
 
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { timeZone: true },
+    });
+
+    const timezone = input.timezone ?? user?.timeZone;
+    if (!timezone) {
+      return c.json(
+        {
+          error:
+            "Timezone is required. Either provide a timezone in the request or set a timezone in your user profile.",
+        },
+        400,
+      );
+    }
+
+    if (!supportedTimeZones.includes(timezone)) {
+      return c.json(
+        {
+          error: `Invalid timezone: ${timezone}. Please provide a valid IANA timezone.`,
+        },
+        400,
+      );
+    }
+
     const pollId = nanoid();
 
     const explicitOptions =
       input.options
-        ?.map((o) => toTimeSlot(o as ExplicitOptionInput, input.timezone))
+        ?.map((o) => toTimeSlot(o as ExplicitOptionInput, timezone))
         .filter(Boolean) ?? [];
 
     const generateOptionsFromSlotGenerator = (
       slotGenerator: SlotGeneratorInput,
       duration: number,
-    ) => generateTimeSlots(slotGenerator, input.timezone, duration);
+    ) => generateTimeSlots(slotGenerator, timezone, duration);
 
     const duration = input.duration;
     const slotGenerators = input.slotGenerator
@@ -340,7 +377,7 @@ app.post(
       data: {
         id: pollId,
         title: input.title,
-        timeZone: input.timezone,
+        timeZone: timezone,
         description: input.description || undefined,
         adminUrlId: nanoid(),
         participantUrlId: nanoid(),

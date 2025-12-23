@@ -137,7 +137,11 @@ export const generateTimeSlots = (
     const interval = generator.discreteIntervalMinutes ?? durationMinutes;
     const totalMinutes = windowEnd.diff(windowStart, "minute");
 
-    for (let offset = 0; offset + duration <= totalMinutes; offset += interval) {
+    for (
+      let offset = 0;
+      offset + duration <= totalMinutes;
+      offset += interval
+    ) {
       const t = windowStart.add(offset, "minute");
       results.push({
         startTime: t.toDate(),
