@@ -312,7 +312,7 @@ app.post(
         daysOfWeek: option.days,
         fromTime: option.startTime,
         toTime: option.endTime,
-        discreteIntervalMinutes: option.interval,
+        interval: option.interval,
       };
       return generateTimeSlots(slotGenerator, timezone, duration);
     });

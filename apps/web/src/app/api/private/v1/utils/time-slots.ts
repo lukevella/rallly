@@ -13,7 +13,7 @@ export type SlotGeneratorInput = {
   daysOfWeek: Array<"mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun">;
   fromTime: string;
   toTime: string;
-  discreteIntervalMinutes?: number;
+  interval?: number;
 };
 
 export type TimeSlot = {
@@ -111,7 +111,7 @@ export const generateTimeSlots = (
     }
 
     const duration = durationMinutes;
-    const interval = generator.discreteIntervalMinutes ?? durationMinutes;
+    const interval = generator.interval ?? durationMinutes;
     const totalMinutes = windowEnd.diff(windowStart, "minute");
 
     for (
