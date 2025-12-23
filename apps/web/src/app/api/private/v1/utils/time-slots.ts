@@ -7,10 +7,6 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isSameOrBefore);
 
-export type ExplicitOptionInput =
-  | { date: string; from: string; to: string }
-  | { start: string; end: string };
-
 export type SlotGeneratorInput = {
   startDate: string;
   endDate: string;
@@ -36,42 +32,23 @@ export const dedupeTimeSlots = (slots: Array<TimeSlot>) => {
 const hasTzOffset = (value: string) =>
   /[zZ]$|[+-]\d{2}:\d{2}$|[+-]\d{4}$/.test(value);
 
-const parseDateTimeInTimeZone = (value: string, timeZone: string) => {
-  return hasTzOffset(value) ? dayjs(value) : dayjs(value).tz(timeZone, true);
-};
+const parseDateTimeInTimeZone = (value: string, timeZone: string) =>
+  hasTzOffset(value) ? dayjs(value) : dayjs(value).tz(timeZone, true);
 
 const parseLocalDateTimeInTimeZone = (
   date: string,
   time: string,
   timeZone: string,
-) => {
-  return dayjs(`${date}T${time}`).tz(timeZone, true);
-};
+) => dayjs(`${date}T${time}`).tz(timeZone, true);
 
-export const toTimeSlot = (
-  value: ExplicitOptionInput,
+export const parseStartTime = (
+  startTime: string,
   timeZone: string,
-): TimeSlot | null => {
-  const start =
-    "date" in value
-      ? parseLocalDateTimeInTimeZone(value.date, value.from, timeZone)
-      : parseDateTimeInTimeZone(value.start, timeZone);
-
-  const end =
-    "date" in value
-      ? parseLocalDateTimeInTimeZone(value.date, value.to, timeZone)
-      : parseDateTimeInTimeZone(value.end, timeZone);
-
-  const duration = end.diff(start, "minute");
-  if (duration <= 0) {
-    return null;
-  }
-
-  return {
-    startTime: start.toDate(),
-    duration,
-  };
-};
+  duration: number,
+): TimeSlot => ({
+  startTime: parseDateTimeInTimeZone(startTime, timeZone).toDate(),
+  duration,
+});
 
 export const generateTimeSlots = (
   generator: SlotGeneratorInput,

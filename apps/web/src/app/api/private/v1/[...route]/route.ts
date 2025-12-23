@@ -19,14 +19,11 @@ import {
   validator,
 } from "hono-openapi";
 import { supportedTimeZones } from "@/utils/supported-time-zones";
-import type {
-  ExplicitOptionInput,
-  SlotGeneratorInput,
-} from "../utils/time-slots";
+import type { SlotGeneratorInput } from "../utils/time-slots";
 import {
   dedupeTimeSlots,
   generateTimeSlots,
-  toTimeSlot,
+  parseStartTime,
 } from "../utils/time-slots";
 
 dayjs.extend(utc);
@@ -135,52 +132,29 @@ const apiKeyAuth = bearerAuth({
   },
 });
 
-const explicitTimeRangeOptionSchema = z
-  .object({
-    date: dateSchema,
-    from: timeSchema,
-    to: timeSchema,
-  })
-  .openapi("ExplicitTimeRangeOption")
-  .refine(
-    (value) =>
-      dayjs(`${value.date}T${value.to}`).isAfter(`${value.date}T${value.from}`),
-    { message: "`to` must be after `from`" },
-  );
-
-const explicitDateTimeOptionSchema = z
-  .object({
-    start: z.iso.datetime().openapi({
-      description: "Start datetime",
-      example: "2025-12-23T09:30:00Z",
-    }),
-    end: z.iso.datetime().openapi({
-      description: "End datetime",
-      example: "2025-12-23T10:00:00Z",
-    }),
-  })
-  .openapi("ExplicitDateTimeOption");
-
 const slotGeneratorSchema = z
   .object({
     startDate: dateSchema,
     endDate: dateSchema,
-    daysOfWeek: z.array(
-      z.enum(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]),
-    ),
-    fromTime: timeSchema,
-    toTime: timeSchema,
-    discreteIntervalMinutes: z.number().int().min(15).max(1440).optional(),
+    days: z.array(z.enum(["mon", "tue", "wed", "thu", "fri", "sat", "sun"])),
+    startTime: timeSchema,
+    endTime: timeSchema,
+    interval: z.number().int().min(15).max(1440).optional().openapi({
+      description: "Interval in minutes between slots. Defaults to duration.",
+      example: 30,
+    }),
   })
   .openapi("SlotGenerator");
 
-const slotGeneratorInputSchema = z
-  .union([slotGeneratorSchema, z.array(slotGeneratorSchema).min(1)])
-  .openapi({
-    description: "A slot generator or list of slot generators",
-  });
+const optionSchema = z.union([
+  z.string().datetime().openapi({
+    description: "ISO datetime start time",
+    example: "2025-01-15T09:00:00Z",
+  }),
+  slotGeneratorSchema,
+]);
 
-const createPollInputBaseSchema = z
+const createPollInputSchema = z
   .object({
     title: z.string().trim().min(1).openapi({ example: "Team sync" }),
     description: z
@@ -209,27 +183,16 @@ const createPollInputBaseSchema = z
       }),
     requireParticipantEmail: z.boolean().default(false),
     locale: z.string().optional().openapi({ example: "en" }),
-    duration: z
-      .number()
-      .int()
-      .min(15)
-      .max(1440) // 1440 minutes = 24 hours
-      .openapi({ example: 30 }),
-    options: z
-      .array(
-        z.union([explicitTimeRangeOptionSchema, explicitDateTimeOptionSchema]),
-      )
-      .optional(),
-    slotGenerator: slotGeneratorInputSchema.optional(),
+    duration: z.number().int().min(15).max(1440).openapi({
+      description: "Duration in minutes for each option",
+      example: 30,
+    }),
+    options: z.array(optionSchema).min(1).openapi({
+      description:
+        "Array of options. Each option can be an ISO datetime string (start time) or a slot generator object.",
+    }),
   })
   .openapi("CreatePollInput");
-
-const createPollInputSchema = createPollInputBaseSchema.refine(
-  (value) => value.options?.length || value.slotGenerator,
-  {
-    message: "Either `options` or `slotGenerator` must be provided",
-  },
-);
 
 const createPollSuccessResponseSchema = z
   .object({
@@ -337,32 +300,24 @@ app.post(
     }
 
     const pollId = nanoid();
-
-    const explicitOptions =
-      input.options
-        ?.map((o) => toTimeSlot(o as ExplicitOptionInput, timezone))
-        .filter(Boolean) ?? [];
-
-    const generateOptionsFromSlotGenerator = (
-      slotGenerator: SlotGeneratorInput,
-      duration: number,
-    ) => generateTimeSlots(slotGenerator, timezone, duration);
-
     const duration = input.duration;
-    const slotGenerators = input.slotGenerator
-      ? Array.isArray(input.slotGenerator)
-        ? input.slotGenerator
-        : [input.slotGenerator]
-      : [];
 
-    const generatedOptions = slotGenerators.flatMap((slotGenerator) =>
-      generateOptionsFromSlotGenerator(
-        slotGenerator as SlotGeneratorInput,
-        duration,
-      ),
-    );
+    const timeSlots = input.options.flatMap((option) => {
+      if (typeof option === "string") {
+        return parseStartTime(option, timezone, duration);
+      }
+      const slotGenerator: SlotGeneratorInput = {
+        startDate: option.startDate,
+        endDate: option.endDate,
+        daysOfWeek: option.days,
+        fromTime: option.startTime,
+        toTime: option.endTime,
+        discreteIntervalMinutes: option.interval,
+      };
+      return generateTimeSlots(slotGenerator, timezone, duration);
+    });
 
-    const options = dedupeTimeSlots([...explicitOptions, ...generatedOptions]);
+    const options = dedupeTimeSlots(timeSlots);
     if (!options.length) {
       return c.json({ error: "No valid options generated" }, 400);
     }
