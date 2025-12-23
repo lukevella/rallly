@@ -286,11 +286,11 @@ app.get(
 app.post(
   "/polls",
   apiKeyAuth,
-  rateLimiter<{ Variables: Variables }>({
+  rateLimiter<Env>({
     windowMs: 60 * 1000,
     limit: 60,
     keyGenerator: (c) => {
-      const apiKeyId = c.var.apiAuth.apiKeyId;
+      const { apiKeyId } = c.get("apiAuth");
       return `private-api:polls-create:${apiKeyId}`;
     },
     store: isKvEnabled ? new RedisStore({ client: kv }) : undefined,
@@ -481,6 +481,7 @@ app.post(
   },
 );
 
+export { app };
+
 export const GET = handle(app);
 export const POST = handle(app);
-
