@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { z } from "@hono/zod-openapi";
+import { RedisStore } from "@hono-rate-limiter/redis";
 import { prisma } from "@rallly/database";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
@@ -18,6 +19,8 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
+import { rateLimiter } from "hono-rate-limiter";
+import { isKvEnabled, kv } from "@/lib/kv";
 import { supportedTimeZones } from "@/utils/supported-time-zones";
 import type { SlotGeneratorInput } from "../utils/time-slots";
 import {
@@ -39,7 +42,11 @@ type Variables = {
   apiAuth: ApiAuth;
 };
 
-const app = new Hono<{ Variables: Variables }>().basePath("/api/private/v1");
+type Env = {
+  Variables: Variables;
+};
+
+const app = new Hono<Env>().basePath("/api/private/v1");
 
 const MAX_OPTIONS = 100;
 
@@ -149,7 +156,7 @@ const slotGeneratorSchema = z
   .openapi("SlotGenerator");
 
 const optionSchema = z.union([
-  z.string().datetime().openapi({
+  z.iso.datetime().openapi({
     description: "ISO datetime start time",
     example: "2025-01-15T09:00:00Z",
   }),
@@ -183,7 +190,6 @@ const createPollInputSchema = z
           "IANA timezone. Defaults to user's timezone if not provided",
         example: "Europe/London",
       }),
-    requireEmail: z.boolean().default(false),
     duration: z.number().int().min(15).max(1440).openapi({
       description: "Duration in minutes for each option",
       example: 30,
@@ -258,6 +264,15 @@ app.get(
 app.post(
   "/polls",
   apiKeyAuth,
+  rateLimiter<{ Variables: Variables }>({
+    windowMs: 60 * 1000,
+    limit: 60,
+    keyGenerator: (c) => {
+      const apiKeyId = c.var.apiAuth.apiKeyId;
+      return `private-api:polls-create:${apiKeyId}`;
+    },
+    store: isKvEnabled ? new RedisStore({ client: kv }) : undefined,
+  }),
   describeRoute({
     tags: ["Polls"],
     summary: "Create a poll",
@@ -378,7 +393,7 @@ app.post(
             data: options,
           },
         },
-        requireEmail: input.requireEmail,
+        requireParticipantEmail: true,
         spaceId: spaceMember?.spaceId,
       },
       select: {
