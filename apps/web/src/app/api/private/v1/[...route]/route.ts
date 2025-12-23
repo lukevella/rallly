@@ -41,6 +41,8 @@ type Variables = {
 
 const app = new Hono<{ Variables: Variables }>().basePath("/api/private/v1");
 
+const MAX_OPTIONS = 100;
+
 const dateSchema = z.iso.date().openapi({
   description: "Date in YYYY-MM-DD format",
   example: "2025-12-23",
@@ -182,7 +184,6 @@ const createPollInputSchema = z
         example: "Europe/London",
       }),
     requireEmail: z.boolean().default(false),
-    locale: z.string().optional().openapi({ example: "en" }),
     duration: z.number().int().min(15).max(1440).openapi({
       description: "Duration in minutes for each option",
       example: 30,
@@ -210,9 +211,19 @@ const createPollSuccessResponseSchema = z
 
 const errorResponseSchema = z
   .object({
-    error: z.string().openapi({ example: "No valid options generated" }),
+    error: z.object({
+      code: z.string().openapi({ example: "TIMEZONE_REQUIRED" }),
+      message: z.string().openapi({
+        example:
+          "Timezone is required. Either provide a timezone in the request or set one in your profile.",
+      }),
+    }),
   })
   .openapi("ErrorResponse");
+
+const apiError = (code: string, message: string) => ({
+  error: { code, message },
+});
 
 app.get(
   "/openapi",
@@ -248,7 +259,10 @@ app.post(
   "/polls",
   apiKeyAuth,
   describeRoute({
-    description: "Create a poll",
+    tags: ["Polls"],
+    summary: "Create a poll",
+    description:
+      "Creates a new poll with the specified options or slot generators.",
     security: [{ bearerAuth: [] }],
     responses: {
       200: {
@@ -282,19 +296,20 @@ app.post(
     const timezone = input.timezone ?? user?.timeZone;
     if (!timezone) {
       return c.json(
-        {
-          error:
-            "Timezone is required. Either provide a timezone in the request or set a timezone in your user profile.",
-        },
+        apiError(
+          "TIMEZONE_REQUIRED",
+          "Timezone is required. Either provide a timezone in the request or set one in your profile.",
+        ),
         400,
       );
     }
 
     if (!supportedTimeZones.includes(timezone)) {
       return c.json(
-        {
-          error: `Invalid timezone: ${timezone}. Please provide a valid IANA timezone.`,
-        },
+        apiError(
+          "INVALID_TIMEZONE",
+          `Invalid timezone: ${timezone}. Please provide a valid IANA timezone.`,
+        ),
         400,
       );
     }
@@ -319,7 +334,23 @@ app.post(
 
     const options = dedupeTimeSlots(timeSlots);
     if (!options.length) {
-      return c.json({ error: "No valid options generated" }, 400);
+      return c.json(
+        apiError(
+          "NO_OPTIONS_GENERATED",
+          "No valid options were generated. Check that your slot generators produce valid time slots.",
+        ),
+        400,
+      );
+    }
+
+    if (options.length > MAX_OPTIONS) {
+      return c.json(
+        apiError(
+          "TOO_MANY_OPTIONS",
+          `Too many options generated (${options.length}). Maximum allowed is ${MAX_OPTIONS}.`,
+        ),
+        400,
+      );
     }
 
     const spaceMember = await prisma.spaceMember.findFirst({
