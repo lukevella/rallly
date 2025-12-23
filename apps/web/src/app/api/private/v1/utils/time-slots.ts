@@ -20,9 +20,17 @@ export type SlotGeneratorInput = {
   discreteIntervalMinutes?: number;
 };
 
-export type PollOptionCreateManyInput = {
+export type TimeSlot = {
   startTime: Date;
   duration: number;
+};
+
+export const dedupeTimeSlots = (slots: Array<TimeSlot>) => {
+  const unique = new Map<string, TimeSlot>();
+  for (const slot of slots) {
+    unique.set(`${slot.startTime.getTime()}:${slot.duration}`, slot);
+  }
+  return Array.from(unique.values());
 };
 
 const hasTzOffset = (value: string) =>
@@ -40,10 +48,10 @@ const parseLocalDateTimeInTimeZone = (
   return dayjs(`${date}T${time}`).tz(timeZone, true);
 };
 
-export const toPollOption = (
+export const toTimeSlot = (
   value: ExplicitOptionInput,
   timeZone: string,
-): PollOptionCreateManyInput | null => {
+): TimeSlot | null => {
   const start =
     "date" in value
       ? parseLocalDateTimeInTimeZone(value.date, value.from, timeZone)
@@ -69,7 +77,7 @@ export const generateTimeSlots = (
   generator: SlotGeneratorInput,
   timeZone: string,
   durationMinutes: number,
-): Array<PollOptionCreateManyInput> => {
+): Array<TimeSlot> => {
   const dayMap: Record<SlotGeneratorInput["daysOfWeek"][number], number> = {
     sun: 0,
     mon: 1,
@@ -99,7 +107,7 @@ export const generateTimeSlots = (
     return [];
   }
 
-  const results: Array<PollOptionCreateManyInput> = [];
+  const results: Array<TimeSlot> = [];
 
   for (
     let cursor = startDay;
@@ -138,10 +146,5 @@ export const generateTimeSlots = (
     }
   }
 
-  const unique = new Map<string, PollOptionCreateManyInput>();
-  for (const option of results) {
-    unique.set(`${option.startTime.getTime()}:${option.duration}`, option);
-  }
-
-  return Array.from(unique.values());
+  return dedupeTimeSlots(results);
 };

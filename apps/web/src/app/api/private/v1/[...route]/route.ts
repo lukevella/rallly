@@ -18,8 +18,15 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
-import type { ExplicitOptionInput } from "../utils/time-slots";
-import { generateTimeSlots, toPollOption } from "../utils/time-slots";
+import type {
+  ExplicitOptionInput,
+  SlotGeneratorInput,
+} from "../utils/time-slots";
+import {
+  dedupeTimeSlots,
+  generateTimeSlots,
+  toTimeSlot,
+} from "../utils/time-slots";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -36,21 +43,15 @@ type Variables = {
 
 const app = new Hono<{ Variables: Variables }>().basePath("/api/private/v1");
 
-const dateSchema = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/)
-  .openapi({
-    description: "Date in YYYY-MM-DD format",
-    example: "2025-12-23",
-  });
+const dateSchema = z.iso.date().openapi({
+  description: "Date in YYYY-MM-DD format",
+  example: "2025-12-23",
+});
 
-const timeSchema = z
-  .string()
-  .regex(/^\d{2}:\d{2}$/)
-  .openapi({
-    description: "Time in HH:mm (24-hour) format",
-    example: "09:30",
-  });
+const timeSchema = z.iso.time().openapi({
+  description: "Time in HH:mm (24-hour) format",
+  example: "09:30",
+});
 
 const extractApiKeyPrefix = (rawKey: string) => {
   const parts = rawKey.split("_").filter(Boolean);
@@ -145,11 +146,11 @@ const explicitTimeRangeOptionSchema = z
 
 const explicitDateTimeOptionSchema = z
   .object({
-    start: z.string().min(1).openapi({
+    start: z.iso.datetime().openapi({
       description: "Start datetime",
       example: "2025-12-23T09:30:00Z",
     }),
-    end: z.string().min(1).openapi({
+    end: z.iso.datetime().openapi({
       description: "End datetime",
       example: "2025-12-23T10:00:00Z",
     }),
@@ -169,37 +170,54 @@ const slotGeneratorSchema = z
   })
   .openapi("SlotGenerator");
 
+const slotGeneratorInputSchema = z
+  .union([slotGeneratorSchema, z.array(slotGeneratorSchema).min(1)])
+  .openapi({
+    description: "A slot generator or list of slot generators",
+  });
+
 const createPollInputBaseSchema = z
   .object({
     title: z.string().trim().min(1).openapi({ example: "Team sync" }),
     description: z
       .string()
       .trim()
+      .max(1000)
       .optional()
       .openapi({ example: "Pick a time that works for everyone" }),
+    location: z
+      .string()
+      .trim()
+      .max(255)
+      .optional()
+      .openapi({ example: "Zoom" }),
     timezone: z.string().min(1).openapi({
       description: "IANA timezone",
-      example: "Europe/Malta",
+      example: "Europe/London",
     }), // TODO: Should this be optional? Use user timezone
     requireParticipantEmail: z.boolean().default(false),
     locale: z.string().optional().openapi({ example: "en" }),
-    duration: z.number().int().positive().optional().openapi({ example: 30 }),
+    duration: z
+      .number()
+      .int()
+      .min(15)
+      .max(1440) // 1440 minutes = 24 hours
+      .openapi({ example: 30 }),
     options: z
       .array(
         z.union([explicitTimeRangeOptionSchema, explicitDateTimeOptionSchema]),
       )
       .optional(),
-    slotGenerator: slotGeneratorSchema.optional(),
+    slotGenerator: slotGeneratorInputSchema.optional(),
   })
   .openapi("CreatePollInput");
 
-const createPollInputSchema = createPollInputBaseSchema
-  .refine((value) => value.options?.length || value.slotGenerator, {
+const createPollInputSchema = createPollInputBaseSchema.refine(
+  (value) => value.options?.length || value.slotGenerator,
+  {
     message: "Either `options` or `slotGenerator` must be provided",
-  })
-  .refine((value) => (value.slotGenerator ? !!value.duration : true), {
-    message: "`duration` is required when `slotGenerator` is provided",
-  });
+  },
+);
 
 const createPollSuccessResponseSchema = z
   .object({
@@ -284,18 +302,29 @@ app.post(
 
     const explicitOptions =
       input.options
-        ?.map((o) => toPollOption(o as ExplicitOptionInput, input.timezone))
+        ?.map((o) => toTimeSlot(o as ExplicitOptionInput, input.timezone))
         .filter(Boolean) ?? [];
 
-    const generatedOptions = input.slotGenerator
-      ? generateTimeSlots(
-          input.slotGenerator,
-          input.timezone,
-          input.duration ?? 0,
-        )
+    const generateOptionsFromSlotGenerator = (
+      slotGenerator: SlotGeneratorInput,
+      duration: number,
+    ) => generateTimeSlots(slotGenerator, input.timezone, duration);
+
+    const duration = input.duration;
+    const slotGenerators = input.slotGenerator
+      ? Array.isArray(input.slotGenerator)
+        ? input.slotGenerator
+        : [input.slotGenerator]
       : [];
 
-    const options = [...explicitOptions, ...generatedOptions];
+    const generatedOptions = slotGenerators.flatMap((slotGenerator) =>
+      generateOptionsFromSlotGenerator(
+        slotGenerator as SlotGeneratorInput,
+        duration,
+      ),
+    );
+
+    const options = dedupeTimeSlots([...explicitOptions, ...generatedOptions]);
     if (!options.length) {
       return c.json({ error: "No valid options generated" }, 400);
     }
