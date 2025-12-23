@@ -21,7 +21,7 @@ import {
 } from "hono-openapi";
 import { rateLimiter } from "hono-rate-limiter";
 import { isKvEnabled, kv } from "@/lib/kv";
-import { supportedTimeZones } from "@/utils/supported-time-zones";
+import { isSupportedTimeZone } from "@/utils/supported-time-zones";
 import type { SlotGeneratorInput } from "../utils/time-slots";
 import {
   dedupeTimeSlots,
@@ -180,16 +180,10 @@ const createPollInputSchema = z
       .openapi({ example: "Zoom" }),
     timezone: z
       .string()
-      .min(1)
-      .refine((tz) => supportedTimeZones.includes(tz), {
+      .refine(isSupportedTimeZone, {
         message: "Timezone must be a valid IANA timezone",
       })
-      .optional()
-      .openapi({
-        description:
-          "IANA timezone. Defaults to user's timezone if not provided",
-        example: "Europe/London",
-      }),
+      .optional(),
     duration: z.number().int().min(15).max(1440).openapi({
       description: "Duration in minutes for each option",
       example: 30,
@@ -319,7 +313,7 @@ app.post(
       );
     }
 
-    if (!supportedTimeZones.includes(timezone)) {
+    if (!isSupportedTimeZone(timezone)) {
       return c.json(
         apiError(
           "INVALID_TIMEZONE",
