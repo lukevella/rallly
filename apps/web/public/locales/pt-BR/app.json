@@ -279,11 +279,7 @@
   "canceledEventsEmptyStateTitle": "Nenhum evento cancelado",
   "canceledEventsEmptyStateDescription": "Eventos cancelados aparecerão aqui.",
   "pending": "Pendente",
-  "helpUsImprove": "Ajude-nos a melhorar",
-  "helpUsImproveDesc": "Reserve alguns minutos para compartilhar seu feedback e nos ajudar a moldar o futuro de Rallly.",
-  "giveFeedback": "Dar feedback",
   "homeActionsTitle": "Ações",
-  "dismissFeedback": "Não mostrar novamente",
   "livePollCount": "{count} ao vivo",
   "upcomingEventCount": "{count} por vir",
   "adminSetupCta": "Faça de mim um administrador",
@@ -556,5 +552,7 @@
   "resetPasswordButton": "Redefinir Senha",
   "passwordStrength": "Força da senha",
   "emailChangeInvalidUserId": "Por favor, faça login com o mesmo endereço de e-mail que você usou para solicitar a alteração.",
-  "ssoAuthenticationOnly": "A autenticação é gerenciada através de Login Único (SSO). Gerenciamento de senha não está disponível."
+  "ssoAuthenticationOnly": "A autenticação é gerenciada através de Login Único (SSO). Gerenciamento de senha não está disponível.",
+  "oidcAutoSignInDescription": "Você está sendo redirecionado para a página de login...",
+  "loginVerifyCheckEmail": "Se uma conta existir com esse e-mail, você receberá um código de verificação em <b>{email}</b>"
 }
