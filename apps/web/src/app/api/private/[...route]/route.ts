@@ -1,17 +1,7 @@
-import crypto from "node:crypto";
-import { z } from "@hono/zod-openapi";
 import { RedisStore } from "@hono-rate-limiter/redis";
 import { prisma } from "@rallly/database";
-import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
-import { nanoid } from "@rallly/utils/nanoid";
 import { Scalar } from "@scalar/hono-api-reference";
-import { waitUntil } from "@vercel/functions";
-import dayjs from "dayjs";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 import { Hono } from "hono";
-import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
 import {
   describeRoute,
@@ -22,6 +12,13 @@ import {
 import { rateLimiter } from "hono-rate-limiter";
 import { isKvEnabled, kv } from "@/lib/kv";
 import { isSupportedTimeZone } from "@/utils/supported-time-zones";
+import {
+  createPollInputSchema,
+  createPollSuccessResponseSchema,
+  errorResponseSchema,
+} from "../schemas";
+import { apiKeyAuth } from "../utils/api-key";
+import { apiError, createPoll } from "../utils/poll";
 import type { SlotGeneratorInput } from "../utils/time-slots";
 import {
   dedupeTimeSlots,
@@ -29,229 +26,18 @@ import {
   parseStartTime,
 } from "../utils/time-slots";
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(isSameOrBefore);
-
-type ApiAuth = {
-  userId: string;
-  apiKeyId: string;
-};
-
-type Variables = {
-  apiAuth: ApiAuth;
-};
-
 type Env = {
-  Variables: Variables;
+  Variables: {
+    apiAuth: {
+      userId: string;
+      apiKeyId: string;
+    };
+  };
 };
 
 const app = new Hono<Env>().basePath("/api/private");
 
 const MAX_OPTIONS = 100;
-
-const dateSchema = z.iso.date().openapi({
-  description: "Date in YYYY-MM-DD format",
-  example: "2025-12-23",
-});
-
-const timeSchema = z.iso.time().openapi({
-  description: "Time in HH:mm (24-hour) format",
-  example: "09:30",
-});
-
-const extractApiKeyPrefix = (rawKey: string) => {
-  const parts = rawKey.split("_").filter(Boolean);
-  if (parts.length >= 3 && parts[1]) {
-    return parts[1];
-  }
-  return rawKey.slice(0, 12);
-};
-
-const isHexSha256 = (value: string) => /^[a-f0-9]{64}$/i.test(value);
-
-const hashApiKey = (rawKey: string, salt?: string) => {
-  const input = salt ? `${salt}:${rawKey}` : rawKey;
-  return crypto.createHash("sha256").update(input).digest("hex");
-};
-
-const verifyApiKey = (rawKey: string, stored: string) => {
-  const trimmed = stored.trim();
-  if (trimmed.startsWith("sha256$")) {
-    const [, salt, hash] = trimmed.split("$");
-    if (!salt || !hash || !isHexSha256(hash)) {
-      return false;
-    }
-    const computed = hashApiKey(rawKey, salt);
-    return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(hash));
-  }
-
-  if (!isHexSha256(trimmed)) {
-    return false;
-  }
-
-  const computed = hashApiKey(rawKey);
-  return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(trimmed));
-};
-
-const apiKeyAuth = bearerAuth({
-  verifyToken: async (rawKey, c) => {
-    const prefix = extractApiKeyPrefix(rawKey);
-
-    const apiKey = await prisma.apiKey.findUnique({
-      where: { prefix },
-      select: {
-        id: true,
-        userId: true,
-        hashedKey: true,
-        expiresAt: true,
-        revokedAt: true,
-      },
-    });
-
-    if (!apiKey) {
-      return false;
-    }
-
-    if (apiKey.revokedAt) {
-      return false;
-    }
-
-    if (apiKey.expiresAt && apiKey.expiresAt <= new Date()) {
-      return false;
-    }
-
-    if (!verifyApiKey(rawKey, apiKey.hashedKey)) {
-      return false;
-    }
-
-    c.set("apiAuth", {
-      userId: apiKey.userId,
-      apiKeyId: apiKey.id,
-    });
-
-    waitUntil(
-      prisma.apiKey.update({
-        where: { id: apiKey.id },
-        data: { lastUsedAt: new Date() },
-      }),
-    );
-
-    return true;
-  },
-});
-
-const slotGeneratorSchema = z
-  .object({
-    startDate: dateSchema,
-    endDate: dateSchema,
-    days: z.array(z.enum(["mon", "tue", "wed", "thu", "fri", "sat", "sun"])),
-    startTime: timeSchema,
-    endTime: timeSchema,
-    interval: z.number().int().min(15).max(1440).optional().openapi({
-      description: "Interval in minutes between slots. Defaults to duration.",
-      example: 30,
-    }),
-  })
-  .openapi("SlotGenerator");
-
-const timeOptionSchema = z.union([
-  z.iso.datetime().openapi({
-    description: "ISO datetime start time",
-    example: "2025-01-15T09:00:00Z",
-  }),
-  slotGeneratorSchema,
-]);
-
-const slotsInputSchema = z
-  .object({
-    duration: z.number().int().min(15).max(1440).openapi({
-      description: "Duration in minutes for each time slot",
-      example: 30,
-    }),
-    timezone: z
-      .string()
-      .refine(isSupportedTimeZone, {
-        message: "Timezone must be a valid IANA timezone",
-      })
-      .optional()
-      .openapi({
-        description:
-          "IANA timezone. Defaults to user's timezone if not provided.",
-        example: "Europe/London",
-      }),
-    times: z
-      .union([slotGeneratorSchema, z.array(timeOptionSchema).min(1)])
-      .openapi({
-        description:
-          "Times to include. Can be a slot generator or an array of ISO datetime strings and/or slot generators.",
-      }),
-  })
-  .openapi("SlotsInput");
-
-const datesInputSchema = z
-  .array(z.iso.date())
-  .min(1)
-  .openapi({
-    description: "Array of ISO dates for all-day options",
-    example: ["2025-01-15", "2025-01-16", "2025-01-17"],
-  });
-
-const createPollInputSchema = z
-  .object({
-    title: z.string().trim().min(1).openapi({ example: "Team sync" }),
-    description: z
-      .string()
-      .trim()
-      .max(1000)
-      .optional()
-      .openapi({ example: "Pick a time that works for everyone" }),
-    location: z
-      .string()
-      .trim()
-      .max(255)
-      .optional()
-      .openapi({ example: "Zoom" }),
-    dates: datesInputSchema.optional(),
-    slots: slotsInputSchema.optional(),
-  })
-  .refine((data) => data.dates || data.slots, {
-    message: "Either 'dates' or 'slots' must be provided",
-  })
-  .refine((data) => !(data.dates && data.slots), {
-    message: "Cannot provide both 'dates' and 'slots'",
-  })
-  .openapi("CreatePollInput");
-
-const createPollSuccessResponseSchema = z
-  .object({
-    data: z.object({
-      id: z.string().openapi({ example: "p_123abc" }),
-      adminUrl: z
-        .string()
-        .openapi({ example: "https://example.com/poll/p_123abc" }),
-      inviteUrl: z
-        .string()
-        .openapi({ example: "https://example.com/invite/p_123abc" }),
-    }),
-  })
-  .openapi("CreatePollResponse");
-
-const errorResponseSchema = z
-  .object({
-    error: z.object({
-      code: z.string().openapi({ example: "TIMEZONE_REQUIRED" }),
-      message: z.string().openapi({
-        example:
-          "Timezone is required. Either provide a timezone in the request or set one in your profile.",
-      }),
-    }),
-  })
-  .openapi("ErrorResponse");
-
-const apiError = (code: string, message: string) => ({
-  error: { code, message },
-});
 
 app.get(
   "/openapi",
@@ -330,8 +116,6 @@ app.post(
       select: { timeZone: true },
     });
 
-    const pollId = nanoid();
-
     // Process dates (all-day options)
     if (input.dates) {
       const uniqueDates = [...new Set(input.dates)];
@@ -350,35 +134,15 @@ app.post(
         );
       }
 
-      const spaceMember = await prisma.spaceMember.findFirst({
-        where: { userId },
-        orderBy: { lastSelectedAt: "desc" },
-        select: { spaceId: true },
+      const result = await createPoll({
+        userId,
+        title: input.title,
+        description: input.description,
+        location: input.location,
+        options,
       });
 
-      const poll = await prisma.poll.create({
-        data: {
-          id: pollId,
-          title: input.title,
-          description: input.description,
-          location: input.location,
-          adminUrlId: nanoid(),
-          participantUrlId: nanoid(),
-          userId,
-          watchers: { create: { userId } },
-          options: { createMany: { data: options } },
-          spaceId: spaceMember?.spaceId,
-        },
-        select: { id: true },
-      });
-
-      return c.json({
-        data: {
-          id: poll.id,
-          adminUrl: absoluteUrl(`/poll/${poll.id}`),
-          inviteUrl: shortUrl(`/invite/${poll.id}`),
-        },
-      });
+      return c.json(result);
     }
 
     // Process slots (time-based options)
@@ -388,10 +152,11 @@ app.post(
         400,
       );
     }
-    const slots = input.slots;
-    const timezone = slots.timezone ?? user?.timeZone;
 
-    if (!timezone) {
+    const slots = input.slots;
+    const timeZone = slots.timezone ?? user?.timeZone;
+
+    if (!timeZone) {
       return c.json(
         apiError(
           "TIMEZONE_REQUIRED",
@@ -401,11 +166,11 @@ app.post(
       );
     }
 
-    if (!isSupportedTimeZone(timezone)) {
+    if (!isSupportedTimeZone(timeZone)) {
       return c.json(
         apiError(
           "INVALID_TIMEZONE",
-          `Invalid timezone: ${timezone}. Please provide a valid IANA timezone.`,
+          `Invalid timezone: ${timeZone}. Please provide a valid IANA timezone.`,
         ),
         400,
       );
@@ -416,7 +181,7 @@ app.post(
 
     const timeSlots = times.flatMap((time) => {
       if (typeof time === "string") {
-        return parseStartTime(time, timezone, duration);
+        return parseStartTime(time, timeZone, duration);
       }
       const slotGenerator: SlotGeneratorInput = {
         startDate: time.startDate,
@@ -426,10 +191,11 @@ app.post(
         toTime: time.endTime,
         interval: time.interval,
       };
-      return generateTimeSlots(slotGenerator, timezone, duration);
+      return generateTimeSlots(slotGenerator, timeZone, duration);
     });
 
     const options = dedupeTimeSlots(timeSlots);
+
     if (!options.length) {
       return c.json(
         apiError(
@@ -450,34 +216,20 @@ app.post(
       );
     }
 
-    const spaceMember = await prisma.spaceMember.findFirst({
-      where: { userId },
-      orderBy: { lastSelectedAt: "desc" },
-      select: { spaceId: true },
-    });
-
-    const poll = await prisma.poll.create({
-      data: {
-        id: pollId,
-        title: input.title,
-        timeZone: timezone,
-        description: input.description,
-        location: input.location,
-        adminUrlId: nanoid(),
-        participantUrlId: nanoid(),
-        userId,
-        watchers: { create: { userId } },
-        options: { createMany: { data: options } },
-        spaceId: spaceMember?.spaceId,
-      },
-      select: { id: true },
+    const poll = await createPoll({
+      userId,
+      title: input.title,
+      description: input.description,
+      location: input.location,
+      timeZone,
+      options,
     });
 
     return c.json({
       data: {
         id: poll.id,
-        adminUrl: absoluteUrl(`/poll/${poll.id}`),
-        inviteUrl: shortUrl(`/invite/${poll.id}`),
+        adminUrl: poll.adminUrl,
+        inviteUrl: poll.inviteUrl,
       },
     });
   },
