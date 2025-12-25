@@ -44,10 +44,15 @@ const createMockApiKey = (rawKey: string) => {
   const hashedKey = crypto.createHash("sha256").update(rawKey).digest("hex");
   return {
     id: "api-key-id",
+    name: "Test API Key",
+    prefix: "abc123",
     userId: "test-user-id",
     hashedKey,
+    lastUsedAt: null,
     expiresAt: null,
     revokedAt: null,
+    createdAt: new Date("2025-01-01"),
+    updatedAt: new Date("2025-01-01"),
   };
 };
 
