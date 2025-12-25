@@ -234,6 +234,31 @@ describe("Private API - /polls", () => {
       );
     });
 
+    it("should save location when provided", async () => {
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team offsite",
+          location: "Conference Room A",
+          dates: ["2025-01-15"],
+        }),
+      });
+
+      expect(res.status).toBe(200);
+      expect(prisma.poll.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            title: "Team offsite",
+            location: "Conference Room A",
+          }),
+        }),
+      );
+    });
+
     it("should return error when too many date options", async () => {
       const dates = Array.from({ length: 101 }, (_, i) => {
         const date = new Date(2025, 0, 1 + i);
