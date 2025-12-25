@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@rallly/database", () => ({
   prisma: {
@@ -173,9 +173,18 @@ describe("Private API - /polls", () => {
             options: {
               createMany: {
                 data: [
-                  { startTime: new Date("2025-01-15T00:00:00.000Z"), duration: 0 },
-                  { startTime: new Date("2025-01-16T00:00:00.000Z"), duration: 0 },
-                  { startTime: new Date("2025-01-17T00:00:00.000Z"), duration: 0 },
+                  {
+                    startTime: new Date("2025-01-15T00:00:00.000Z"),
+                    duration: 0,
+                  },
+                  {
+                    startTime: new Date("2025-01-16T00:00:00.000Z"),
+                    duration: 0,
+                  },
+                  {
+                    startTime: new Date("2025-01-17T00:00:00.000Z"),
+                    duration: 0,
+                  },
                 ],
               },
             },
@@ -204,8 +213,14 @@ describe("Private API - /polls", () => {
             options: {
               createMany: {
                 data: [
-                  { startTime: new Date("2025-01-15T00:00:00.000Z"), duration: 0 },
-                  { startTime: new Date("2025-01-16T00:00:00.000Z"), duration: 0 },
+                  {
+                    startTime: new Date("2025-01-15T00:00:00.000Z"),
+                    duration: 0,
+                  },
+                  {
+                    startTime: new Date("2025-01-16T00:00:00.000Z"),
+                    duration: 0,
+                  },
                 ],
               },
             },
@@ -455,4 +470,3 @@ describe("Private API - /polls", () => {
     });
   });
 });
-

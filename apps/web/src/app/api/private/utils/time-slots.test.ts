@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   dedupeTimeSlots,
   generateTimeSlots,
@@ -8,7 +8,11 @@ import {
 describe("time-slots utilities", () => {
   describe("parseStartTime", () => {
     it("should parse ISO datetime with timezone offset", () => {
-      const result = parseStartTime("2025-01-15T09:00:00Z", "Europe/London", 30);
+      const result = parseStartTime(
+        "2025-01-15T09:00:00Z",
+        "Europe/London",
+        30,
+      );
 
       expect(result.startTime).toEqual(new Date("2025-01-15T09:00:00Z"));
       expect(result.duration).toBe(30);
@@ -214,11 +218,8 @@ describe("time-slots utilities", () => {
         30,
       );
 
-      const uniqueTimes = new Set(
-        result.map((s) => s.startTime.toISOString()),
-      );
+      const uniqueTimes = new Set(result.map((s) => s.startTime.toISOString()));
       expect(result.length).toBe(uniqueTimes.size);
     });
   });
 });
-
