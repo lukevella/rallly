@@ -98,6 +98,11 @@ export const createPollInputSchema = z
       description: "Disable the comments section",
       example: false,
     }),
+    spaceId: z.string().optional().openapi({
+      description:
+        "ID of the space to create the poll in. Defaults to user's most recently used space.",
+      example: "space_abc123",
+    }),
     dates: datesInputSchema.optional(),
     slots: slotsInputSchema.optional(),
   })
@@ -119,6 +124,16 @@ export const createPollSuccessResponseSchema = z
       inviteUrl: z
         .string()
         .openapi({ example: "https://example.com/invite/p_123abc" }),
+      space: z
+        .object({
+          id: z.string(),
+          name: z.string(),
+        })
+        .nullable()
+        .openapi({
+          description: "The space the poll was created in, or null if personal",
+          example: { id: "space_abc123", name: "My Team" },
+        }),
     }),
   })
   .openapi("CreatePollResponse");
