@@ -134,7 +134,7 @@ app.post(
         );
       }
 
-      const result = await createPoll({
+      const poll = await createPoll({
         userId,
         title: input.title,
         description: input.description,
@@ -142,7 +142,13 @@ app.post(
         options,
       });
 
-      return c.json(result);
+      return c.json({
+        data: {
+          id: poll.id,
+          adminUrl: poll.adminUrl,
+          inviteUrl: poll.inviteUrl,
+        },
+      });
     }
 
     // Process slots (time-based options)
