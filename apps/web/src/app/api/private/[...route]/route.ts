@@ -139,6 +139,10 @@ app.post(
         title: input.title,
         description: input.description,
         location: input.location,
+        requireParticipantEmail: input.requireEmail,
+        hideParticipants: input.hideParticipants,
+        hideScores: input.hideScores,
+        disableComments: input.disableComments,
         options,
       });
 
@@ -228,6 +232,10 @@ app.post(
       description: input.description,
       location: input.location,
       timeZone,
+      requireParticipantEmail: input.requireEmail,
+      hideParticipants: input.hideParticipants,
+      hideScores: input.hideScores,
+      disableComments: input.disableComments,
       options,
     });
 

@@ -13,6 +13,10 @@ export type CreatePollParams = {
   description?: string;
   location?: string;
   timeZone?: string;
+  requireParticipantEmail?: boolean;
+  hideParticipants?: boolean;
+  hideScores?: boolean;
+  disableComments?: boolean;
   options: PollOption[];
 };
 
@@ -22,6 +26,10 @@ export const createPoll = async ({
   description,
   location,
   timeZone,
+  requireParticipantEmail,
+  hideParticipants,
+  hideScores,
+  disableComments,
   options,
 }: CreatePollParams) => {
   const spaceMember = await prisma.spaceMember.findFirst({
@@ -37,6 +45,10 @@ export const createPoll = async ({
       description,
       location,
       timeZone,
+      requireParticipantEmail,
+      hideParticipants,
+      hideScores,
+      disableComments,
       adminUrlId: nanoid(),
       participantUrlId: nanoid(),
       userId,
@@ -44,7 +56,7 @@ export const createPoll = async ({
       options: { createMany: { data: options } },
       spaceId: spaceMember?.spaceId,
     },
-    select: { id: true, title: true, location: true, description: true },
+    select: { id: true },
   });
 
   return {
