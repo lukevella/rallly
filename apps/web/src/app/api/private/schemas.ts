@@ -82,6 +82,22 @@ export const createPollInputSchema = z
       .max(255)
       .optional()
       .openapi({ example: "Zoom" }),
+    requireEmail: z.boolean().optional().openapi({
+      description: "Require participants to provide their email address",
+      example: true,
+    }),
+    hideParticipants: z.boolean().optional().openapi({
+      description: "Hide participant names from other participants",
+      example: false,
+    }),
+    hideScores: z.boolean().optional().openapi({
+      description: "Hide vote counts from participants",
+      example: false,
+    }),
+    disableComments: z.boolean().optional().openapi({
+      description: "Disable the comments section",
+      example: false,
+    }),
     dates: datesInputSchema.optional(),
     slots: slotsInputSchema.optional(),
   })
