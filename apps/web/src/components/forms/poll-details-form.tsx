@@ -20,10 +20,7 @@ export const PollDetailsForm = () => {
   const form = useFormContext<NewEventData>();
 
   const { requiredString } = useFormValidation();
-  const {
-    register,
-    formState: { errors },
-  } = form;
+  const { register } = form;
 
   return (
     <div className="grid gap-4 py-1">

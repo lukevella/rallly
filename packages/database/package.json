@@ -8,6 +8,7 @@
     "db:deploy": "prisma migrate deploy",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
+    "db:create-api-key": "tsx prisma/scripts/create-api-key.ts",
     "type-check": "tsc --pretty --noEmit"
   },
   "exports": "./index.ts",

@@ -428,3 +428,9 @@ export const supportedTimeZones = [
   "Pacific/Wake",
   "Pacific/Wallis",
 ] as const;
+
+export function isSupportedTimeZone(timeZone: string) {
+  return supportedTimeZones.includes(
+    timeZone as (typeof supportedTimeZones)[number],
+  );
+}
