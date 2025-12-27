@@ -68,8 +68,8 @@ export function ScheduledEvent() {
 
   return (
     <>
-      <div className="rounded-lg border bg-white p-0.5 shadow-xs">
-        <div className="flex h-9 items-center gap-x-2 rounded-md bg-gray-100 px-2">
+      <div className="rounded-lg border-card-border bg-card p-0.5 shadow-xs">
+        <div className="flex h-9 items-center gap-x-2 rounded-md bg-gray-100 px-2 text-card-foreground dark:bg-gray-800">
           <CalendarIcon className="size-4" />
           <h2 className="font-medium text-sm">
             <Trans i18nKey="schedulateDate" defaults="Scheduled Date" />
