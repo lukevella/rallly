@@ -144,7 +144,7 @@ export const FinalizePollForm = ({
                   <RadioGroup
                     onValueChange={field.onChange}
                     value={field.value}
-                    className="grid max-h-96 gap-2 overflow-y-auto rounded-xl border bg-muted p-2"
+                    className="grid max-h-96 gap-2 overflow-y-auto rounded-xl bg-gray-100 p-2 dark:bg-gray-900"
                   >
                     {options.map((option) => {
                       const start = adjustTimeZone(
