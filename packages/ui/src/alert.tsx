@@ -17,6 +17,8 @@ const alertVariants = cva(
         success:
           "bg-green-50 text-green-700 *:data-[slot=alert-description]:text-green-700/90 dark:bg-green-950 dark:text-green-100 dark:data-[slot=alert-description]:text-green-100/90 [&>svg]:text-green-700/90 dark:[&>svg]:text-green-100/90",
         note: "bg-muted text-muted-foreground *:data-[slot=alert-description]:text-muted-foreground/75 [&>svg]:text-muted-foreground/90",
+        error:
+          "bg-rose-50 text-rose-700 *:data-[slot=alert-description]:text-rose-700/90 dark:bg-rose-950 dark:text-rose-100 dark:data-[slot=alert-description]:text-rose-100/90 [&>svg]:text-rose-700/90 dark:[&>svg]:text-rose-100/90",
       },
     },
     defaultVariants: {
