@@ -10,7 +10,7 @@ export function StackedList({
   return (
     <ul
       className={cn(
-        "divide-y overflow-hidden rounded-xl border bg-card",
+        "divide-y overflow-hidden rounded-xl border border-card-border bg-card",
         className,
       )}
     >
