@@ -112,7 +112,7 @@
   --popover-foreground: var(--color-gray-300);
   --popover-accent: var(--color-gray-700);
 
-  --card: #27272a50;
+  --card: color-mix(in srgb, var(--color-gray-800) 25%, transparent);
   --card-border: var(--color-gray-800);
   --card-foreground: var(--color-gray-300);
   --card-accent: var(--color-gray-800);
