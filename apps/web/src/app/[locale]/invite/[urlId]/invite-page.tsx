@@ -1,6 +1,15 @@
 "use client";
 import { Alert, AlertDescription } from "@rallly/ui/alert";
-import { ArrowUpRightIcon, CrownIcon } from "lucide-react";
+import { Icon } from "@rallly/ui/icon";
+import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/tabs";
+import { useTheme } from "@rallly/ui/theme-provider";
+import {
+  ArrowUpRightIcon,
+  CrownIcon,
+  MonitorIcon,
+  MoonIcon,
+  SunIcon,
+} from "lucide-react";
 import Link from "next/link";
 import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
@@ -48,11 +57,33 @@ const GoToApp = () => {
 
 export function InvitePage() {
   const poll = usePoll();
+  const { theme, setTheme } = useTheme();
 
   return (
     <div className="h-dvh overflow-auto overscroll-none bg-poll p-3 sm:p-6">
       <PollViewTracker pollId={poll.id} />
-      <div className="mx-auto w-full max-w-4xl space-y-4">
+      <div className="mb-4 flex justify-end">
+        <Tabs value={theme} onValueChange={setTheme}>
+          <TabsList>
+            <TabsTrigger value="system">
+              <Icon>
+                <MonitorIcon />
+              </Icon>
+            </TabsTrigger>
+            <TabsTrigger value="light">
+              <Icon>
+                <SunIcon />
+              </Icon>
+            </TabsTrigger>
+            <TabsTrigger value="dark">
+              <Icon>
+                <MoonIcon />
+              </Icon>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+      <div className="mx-auto w-full max-w-4xl space-y-2 md:space-y-4">
         <GoToApp />
         <EventCard />
         <ScheduledEvent />

@@ -113,8 +113,7 @@ export const env = createEnv({
     PRIMARY_COLOR: z
       .string()
       .regex(/^#(?:[0-9a-f]{3}){1,2}$/i, "Invalid hex color")
-      .optional()
-      .default("#4f46e5"),
+      .optional(),
     /**
      * Logo URL for the email logo
      */

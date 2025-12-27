@@ -119,7 +119,10 @@ const ParticipantRowForm = ({
                       type: toggleVote(field.value?.type),
                     });
                   }}
-                  className="absolute inset-0 flex items-center justify-center"
+                  className={cn(
+                    "absolute inset-0 flex cursor-pointer items-center justify-center transition-colors",
+                    "hover:bg-gray-100 active:bg-gray-200/50 active:ring-1 active:ring-gray-200 active:ring-inset dark:active:bg-gray-700/50 dark:active:ring-gray-700 dark:active:ring-inset dark:hover:bg-gray-800",
+                  )}
                 >
                   <VoteSelector
                     value={field.value?.type}
@@ -133,7 +136,7 @@ const ParticipantRowForm = ({
           </td>
         );
       })}
-      <td className="border-l bg-muted" />
+      <td className="border-l" />
     </tr>
   );
 };
