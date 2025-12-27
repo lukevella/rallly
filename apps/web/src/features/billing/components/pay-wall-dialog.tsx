@@ -143,7 +143,10 @@ export function PayWallDialog({
         }
       }}
     >
-      <DialogContent size="4xl" className="overflow-hidden p-0 lg:h-[500px]">
+      <DialogContent
+        size="4xl"
+        className="overflow-hidden p-0 lg:min-h-[500px]"
+      >
         <Tabs value={selectedPlan} onValueChange={handleChangePlan} asChild>
           <div className="grid min-h-0 grid-cols-1 md:grid-cols-2">
             <div className="flex flex-col p-6">
