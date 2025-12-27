@@ -44,6 +44,7 @@
   --popover-border: var(--color-gray-200);
 
   --card: var(--color-white);
+  --card-border: var(--color-gray-200);
   --card-accent: var(--color-gray-100);
   --card-foreground: var(--color-gray-800);
 
@@ -112,6 +113,7 @@
   --popover-accent: var(--color-gray-700);
 
   --card: #27272a50;
+  --card-border: var(--color-gray-800);
   --card-foreground: var(--color-gray-300);
   --card-accent: var(--color-gray-800);
 
@@ -160,6 +162,7 @@
   --color-popover-accent: var(--popover-accent);
   
   --color-card: var(--card);
+  --color-card-border: var(--card-border);
   --color-card-accent: var(--card-accent);
   --color-card-foreground: var(--card-foreground);
 

@@ -119,8 +119,8 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   return (
     <div
       role="button"
-      className={cn("space-y-4 bg-background p-4", {
-        "bg-accent": editable && active,
+      className={cn("space-y-4 bg-background p-4 transition-colors", {
+        "bg-accent/50": editable && active,
       })}
       onPointerDown={() => setActive(editable)}
       onPointerUp={() => setActive(false)}
