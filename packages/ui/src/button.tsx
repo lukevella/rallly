@@ -19,7 +19,7 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 active:opacity-90",
         default:
-          "border border-input-border bg-input shadow-xs hover:bg-accent active:opacity-90",
+          "border border-input-border bg-input shadow-xs hover:bg-accent active:shadow-none",
         ghost:
           "border-transparent bg-transparent text-foreground hover:bg-accent data-[state=open]:bg-accent",
         actionBar:
