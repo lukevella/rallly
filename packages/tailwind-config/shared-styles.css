@@ -31,8 +31,9 @@
   --accent-border: var(--color-gray-300);
   --accent-foreground: var(--color-gray-800);
 
-  --action-bar: #1f2937;
-  --action-bar-foreground: #f9fafb;
+  --action-bar: var(--color-gray-800);
+  --action-bar-border: var(--color-gray-700);
+  --action-bar-foreground: var(--color-gray-100);
 
   --muted: oklch(.92 .004 286.32 / .5);
   --muted-foreground: var(--color-gray-600);
@@ -100,9 +101,6 @@
   --accent-border: var(--color-gray-600);
   --accent-foreground: var(--color-gray-100);
 
-  --action-bar: #1f2937;
-  --action-bar-foreground: #f9fafb;
-
   --muted: var(--color-gray-800);
   --muted-foreground: var(--color-gray-400);
   --muted-border: var(--color-gray-700);
@@ -150,6 +148,7 @@
   --color-accent-foreground: var(--accent-foreground);
 
   --color-action-bar: var(--action-bar);
+  --color-action-bar-border: var(--action-bar-border);
   --color-action-bar-foreground: var(--action-bar-foreground);
 
   --color-muted: var(--muted);
