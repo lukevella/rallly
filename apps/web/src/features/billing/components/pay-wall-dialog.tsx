@@ -186,15 +186,15 @@ export function PayWallDialog({
 
               <div className="space-y-4 pt-4">
                 {selectedPlan === "pro" && (
-                  <div className="b flex items-start justify-between gap-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-700">
+                  <label
+                    htmlFor="annual-switch"
+                    className="flex items-start justify-between gap-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-700"
+                  >
                     <div className="mt-1">
                       <BadgeDollarSignIcon className="size-5 text-green-500 dark:text-green-400" />
                     </div>
-                    <div className="flex-1 space-y-2">
-                      <label
-                        htmlFor="annual-switch"
-                        className="text-sm leading-4"
-                      >
+                    <div className="flex-1">
+                      <div className="text-sm">
                         <Trans
                           defaults="Save {amount} with yearly billing"
                           i18nKey="annualSavings"
@@ -206,8 +206,8 @@ export function PayWallDialog({
                             ),
                           }}
                         />
-                      </label>
-                      <p className="text-muted-foreground text-sm">
+                      </div>
+                      <div className="text-muted-foreground text-sm">
                         <Trans
                           defaults="Pay for {payMonths, number} months, get 12."
                           i18nKey="annualDiscount"
@@ -215,7 +215,7 @@ export function PayWallDialog({
                             payMonths: 8,
                           }}
                         />
-                      </p>
+                      </div>
                     </div>
                     <div className="mt-1">
                       <Switch
@@ -224,7 +224,7 @@ export function PayWallDialog({
                         id="annual-switch"
                       />
                     </div>
-                  </div>
+                  </label>
                 )}
                 {selectedPlan === "pro" ? (
                   <TabsContent value="pro">
