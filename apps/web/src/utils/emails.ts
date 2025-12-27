@@ -24,6 +24,7 @@ export const getEmailClient = (locale?: string) => {
       domain: absoluteUrl().replace(/(^\w+:|^)\/\//, ""),
       supportEmail: env.SUPPORT_EMAIL,
       primaryColor: env.PRIMARY_COLOR ?? "#4f46e5",
+      appName: env.APP_NAME,
     },
     locale,
     onError: (e) => {

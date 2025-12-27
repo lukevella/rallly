@@ -27,7 +27,7 @@ export const ParticipantName = ({
         }
       }}
       className={cn("truncate text-sm", {
-        "hover:-translate-x-2 hover:cursor-pointer hover:overflow-visible hover:whitespace-nowrap hover:rounded-md hover:bg-white hover:p-2":
+        "hover:-translate-x-2 hover:cursor-pointer hover:overflow-visible hover:whitespace-nowrap hover:rounded-md hover:bg-background hover:p-2":
           isTruncated,
       })}
     >
