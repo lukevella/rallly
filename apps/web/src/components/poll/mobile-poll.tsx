@@ -61,8 +61,6 @@ const MobilePoll: React.FunctionComponent = () => {
 
   const { canEditParticipant, canAddNewParticipant } = usePermissions();
 
-  console.log({ canAddNewParticipant, selectedParticipant });
-
   const { t } = useTranslation();
 
   const isEditing = votingForm.watch("mode") !== "view";

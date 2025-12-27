@@ -10,7 +10,7 @@ export type EmailContext = {
   supportEmail: string;
   i18n: I18nInstance;
   t: TFunction;
-  appName?: string;
+  appName: string;
   primaryColor?: string;
 };
 

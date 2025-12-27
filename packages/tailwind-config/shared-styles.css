@@ -118,14 +118,8 @@
   --success: var(--color-green-950);
   --success-foreground: var(--color-green-100);
 
-  --info: var(--color-blue-950);
-  --info-foreground: var(--color-blue-100);
-
   --warning: var(--color-yellow-950);
   --warning-foreground: var(--color-yellow-100);
-
-  --tip: var(--color-green-950);
-  --tip-foreground: var(--color-green-100);
 
   --poll: var(--color-gray-900);
 }
