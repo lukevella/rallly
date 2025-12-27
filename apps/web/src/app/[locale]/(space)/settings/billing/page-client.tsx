@@ -136,7 +136,7 @@ export function BillingPageClient({
             )}
           </div>
           {didUpdateSeats ? (
-            <Alert variant="tip">
+            <Alert variant="success">
               <CheckCircleIcon />
               <AlertTitle>
                 <Trans

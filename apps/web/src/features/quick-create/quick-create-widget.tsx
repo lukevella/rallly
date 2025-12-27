@@ -16,7 +16,7 @@ export async function QuickCreateWidget() {
   return (
     <div className="space-y-8">
       <div className="space-y-6">
-        <div className="inline-flex items-center justify-center gap-2 rounded-md font-medium text-primary">
+        <div className="inline-flex items-center justify-center gap-2 rounded-md font-medium">
           <ZapIcon className="size-5" />
           <h2>
             <Trans
@@ -96,9 +96,7 @@ export async function QuickCreateWidget() {
         </div>
         <ul className="space-y-2 text-muted-foreground">
           <li className="flex items-center gap-2">
-            <Icon variant="success" size="lg">
-              <CheckIcon />
-            </Icon>
+            <CheckIcon className="size-5 text-green-600 dark:text-green-500" />
             <Trans
               t={t}
               ns="app"
@@ -107,9 +105,7 @@ export async function QuickCreateWidget() {
             />
           </li>
           <li className="flex items-center gap-2">
-            <Icon variant="success" size="lg">
-              <CheckIcon />
-            </Icon>
+            <CheckIcon className="size-5 text-green-600 dark:text-green-500" />
             <Trans
               t={t}
               ns="app"
@@ -118,9 +114,7 @@ export async function QuickCreateWidget() {
             />
           </li>
           <li className="flex items-center gap-2">
-            <Icon variant="success" size="lg">
-              <CheckIcon />
-            </Icon>
+            <CheckIcon className="size-5 text-green-600 dark:text-green-500" />
             <Trans
               t={t}
               ns="app"

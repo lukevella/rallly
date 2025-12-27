@@ -22,7 +22,7 @@ const ActionBar = React.forwardRef<
         forceMount={true}
         ref={ref}
         className={cn(
-          "-translate-x-1/2 fixed bottom-3 z-50 flex items-start gap-2 rounded-xl bg-action-bar p-2 text-action-bar-foreground shadow-lg transition-transform duration-200 ease-out data-[state=closed]:pointer-events-none data-[state=closed]:translate-y-full data-[state=open]:translate-y-0 data-[state=closed]:opacity-0 data-[state=open]:opacity-100",
+          "-translate-x-1/2 fixed bottom-3 z-50 flex items-center gap-2 rounded-xl border border-action-bar-border bg-action-bar p-2 text-action-bar-foreground shadow-lg transition-transform duration-200 ease-out data-[state=closed]:pointer-events-none data-[state=closed]:translate-y-full data-[state=open]:translate-y-0 data-[state=closed]:opacity-0 data-[state=open]:opacity-100",
           "left-1/2 md:bottom-16 md:w-fit",
           "w-[calc(100%-24px)]",
           className,

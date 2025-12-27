@@ -11,14 +11,14 @@ export const DateIconInner = (props: {
   return (
     <div
       className={cn(
-        "inline-flex size-10 flex-col overflow-hidden rounded-md border bg-gray-50 text-center text-slate-800",
+        "inline-flex size-10 flex-col overflow-hidden rounded-md border bg-card text-center text-card-foreground",
         props.className,
       )}
     >
-      <div className="border-gray-200 border-b font-normal text-muted-foreground text-xs leading-4">
+      <div className="font-normal text-[10px] text-muted-foreground leading-4">
         {props.dow}
       </div>
-      <div className="flex grow items-center justify-center bg-white font-medium text-sm leading-none tracking-tight">
+      <div className="flex grow items-center justify-center font-medium text-sm leading-none tracking-tight">
         {props.day}
       </div>
     </div>

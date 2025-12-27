@@ -100,7 +100,7 @@ export const Footer: React.FunctionComponent = () => {
             <a
               target="_blank"
               href="https://twitter.com/ralllyco"
-              className="text-gray-500 text-sm hover:text-primary-600 hover:no-underline"
+              className="text-gray-500 text-sm hover:text-primary hover:no-underline"
               rel="noreferrer noopener"
             >
               <TwitterIcon className="size-5" />
@@ -108,7 +108,7 @@ export const Footer: React.FunctionComponent = () => {
             <a
               target="_blank"
               href="https://discord.gg/uzg4ZcHbuM"
-              className="text-gray-500 text-sm hover:text-primary-600 hover:no-underline"
+              className="text-gray-500 text-sm hover:text-primary hover:no-underline"
               rel="noreferrer noopener"
             >
               <DiscordIcon className="size-5" />
@@ -116,7 +116,7 @@ export const Footer: React.FunctionComponent = () => {
             <a
               target="_blank"
               href="https://www.linkedin.com/company/rallly"
-              className="text-gray-500 text-sm hover:text-primary-600 hover:no-underline"
+              className="text-gray-500 text-sm hover:text-primary hover:no-underline"
               rel="noreferrer noopener"
             >
               <LinkedinIcon className="size-5" />
@@ -124,7 +124,7 @@ export const Footer: React.FunctionComponent = () => {
             <a
               target="_blank"
               href="https://github.com/lukevella/rallly"
-              className="text-gray-500 text-sm hover:text-primary-600 hover:no-underline"
+              className="text-gray-500 text-sm hover:text-primary hover:no-underline"
               rel="noreferrer noopener"
             >
               <GithubIcon className="size-5" />
@@ -236,7 +236,7 @@ export const Footer: React.FunctionComponent = () => {
           </div>
           <a
             href="https://support.rallly.co/contribute/translations"
-            className="inline-flex h-8 items-center rounded-md border px-3 text-gray-500 text-xs hover:border-primary-600 hover:text-primary-600"
+            className="inline-flex h-8 items-center rounded-md border px-3 text-gray-500 text-xs hover:border-primary hover:text-primary"
           >
             <LanguagesIcon className="mr-2 size-5" />
             <Trans ns="common" i18nKey="volunteerTranslator" /> &rarr;

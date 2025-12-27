@@ -73,7 +73,9 @@ const ScoreSummary: React.FunctionComponent<PopularityScoreProps> = React.memo(
       <span
         className={cn(
           "relative inline-flex items-center gap-x-1 text-xs",
-          highlight ? "font-medium text-gray-800" : "font-normal text-gray-500",
+          highlight
+            ? "font-medium text-foreground"
+            : "font-normal text-muted-foreground",
         )}
         style={{
           opacity: Math.max(score / highScore, 0.2),

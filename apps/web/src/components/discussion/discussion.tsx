@@ -184,7 +184,7 @@ function DiscussionInner() {
         </CardTitle>
       </CardHeader>
       {comments.length ? (
-        <CardContent className="border-b">
+        <CardContent>
           <div className="space-y-4">
             {comments.map((comment) => {
               const canDelete = role === "admin" || session.ownsObject(comment);
@@ -206,12 +206,12 @@ function DiscussionInner() {
                         ) : null}
                       </Participant>
                       <div className="flex items-center gap-2 text-sm">
-                        <div className="text-gray-500">
+                        <div className="text-muted-foreground">
                           {dayjs(comment.createdAt).fromNow()}
                         </div>
                         {canDelete && (
                           <DropdownMenu>
-                            <DropdownMenuTrigger className="text-gray-500 hover:text-foreground">
+                            <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground">
                               <MoreHorizontalIcon className="size-4" />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">
@@ -243,7 +243,7 @@ function DiscussionInner() {
         </CardContent>
       ) : null}
       {!poll.event ? (
-        <CardFooter className="border-t-0">
+        <CardFooter>
           {isWriting ? (
             <NewCommentForm
               onSubmit={() => {
@@ -256,7 +256,7 @@ function DiscussionInner() {
           ) : (
             <button
               type="button"
-              className="flex w-full rounded-lg border border-input bg-input-background px-2 py-2 text-left text-muted-foreground text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-1"
+              className="flex w-full rounded-lg border border-input-border bg-input px-2 py-2 text-left text-muted-foreground text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-1"
               onClick={() => setIsWriting(true)}
             >
               <Trans
@@ -275,7 +275,7 @@ export default function Discussion() {
   const poll = usePoll();
   if (poll.disableComments) {
     return (
-      <p className="rounded-lg bg-gray-100 p-4 text-center text-muted-foreground text-sm">
+      <p className="rounded-lg bg-muted p-4 text-center text-muted-foreground text-sm">
         <Icon>
           <MessageSquareOffIcon className="mr-2 inline-block" />
         </Icon>

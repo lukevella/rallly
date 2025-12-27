@@ -109,6 +109,7 @@ export const LicenseKeyEmail = ({
           components={{
             a: (
               <Link
+                color={ctx.primaryColor}
                 className="text-link"
                 href="https://support.rallly.co/self-hosting/licensing#activating-your-license"
               />
@@ -134,7 +135,7 @@ export const LicenseKeyEmail = ({
           }
           values={{ supportEmail: ctx.supportEmail }}
           components={{
-            a: <Link className="text-link" href="mailto:support@rallly.co" />,
+            a: <Link color={ctx.primaryColor} className="text-link" href="mailto:support@rallly.co" />,
           }}
         />
       </Text>

@@ -5,26 +5,24 @@ import type * as React from "react";
 import { cn } from "./lib/utils";
 
 const alertVariants = cva(
-  "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg border px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
+  "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
   {
     variants: {
       variant: {
-        default: "bg-card text-card-foreground",
         primary:
-          "border-primary-200 bg-primary-50 has-data-[slot=alert-description]:text-primary-700/90 [&>svg]:text-primary-600",
-        destructive:
-          "border-destructive/20 bg-destructive-background text-destructive has-data-[slot=alert-description]:opacity-90",
-        info: "border-blue-200 bg-blue-50 text-blue-900 has-data-[slot=alert-description]:text-blue-800/90 [&>svg]:text-blue-600",
+          "bg-primary *:data-[slot=alert-description]:text-primary-foreground/90 [&>svg]:text-primary-foreground",
+        info: "bg-blue-50 text-blue-500 *:data-[slot=alert-description]:text-blue-700/90 dark:bg-blue-950 dark:text-blue-100 dark:*:data-[slot=alert-description]:text-blue-100/90 [&>svg]:text-blue-700/90 dark:[&>svg]:text-blue-100/90",
         warning:
-          "border-yellow-200 bg-yellow-50 text-yellow-900 has-data-[slot=alert-description]:text-yellow-800/90 [&>svg]:text-yellow-600",
-        tip: "border-green-200 bg-green-50 text-green-900 has-data-[slot=alert-description]:text-green-800/90 [&>svg]:text-green-600",
+          "bg-yellow-50 text-yellow-500 *:data-[slot=alert-description]:text-yellow-500/90 dark:bg-yellow-950 dark:text-yellow-100 dark:*:data-[slot=alert-description]:text-yellow-100/90 [&>svg]:text-yellow-700/90 dark:[&>svg]:text-yellow-100/90",
         success:
-          "border-green-200 bg-green-50 text-green-900 has-data-[slot=alert-description]:text-green-800/90 [&>svg]:text-green-600",
-        note: "border-gray-200 bg-gray-50 text-gray-900 has-data-[slot=alert-description]:text-gray-700/90 [&>svg]:text-gray-600",
+          "bg-green-50 text-green-500 *:data-[slot=alert-description]:text-green-500/90 dark:bg-green-950 dark:text-green-100 dark:*:data-[slot=alert-description]:text-green-100/90 [&>svg]:text-green-700/90 dark:[&>svg]:text-green-100/90",
+        note: "bg-muted text-muted-foreground *:data-[slot=alert-description]:text-muted-foreground/75 [&>svg]:text-muted-foreground/90",
+        error:
+          "bg-rose-50 text-rose-500 *:data-[slot=alert-description]:text-rose-500/90 dark:bg-rose-950 dark:text-rose-100 dark:*:data-[slot=alert-description]:text-rose-100/90 [&>svg]:text-rose-700/90 dark:[&>svg]:text-rose-100/90",
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "note",
     },
   },
 );

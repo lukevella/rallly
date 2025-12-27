@@ -36,8 +36,8 @@ export function EventCard() {
   const { t } = useTranslation();
   return (
     <>
-      <Card className="bg-gray-50">
-        <RandomGradientBar seed={poll.id} />
+      <Card>
+        <RandomGradientBar />
         <CardContent className="space-y-4 sm:space-y-6">
           <div className="flex flex-col items-start gap-4 lg:flex-row lg:justify-between">
             <div>
@@ -45,7 +45,7 @@ export function EventCard() {
                 {poll.title}
               </h1>
               <CardDescription>
-                <span className="flex items-center gap-0.5 whitespace-nowrap text-gray-500 text-sm">
+                <span className="flex items-center gap-0.5 whitespace-nowrap text-muted-foreground text-sm">
                   <span>
                     <Trans
                       i18nKey="createdBy"
@@ -79,7 +79,7 @@ export function EventCard() {
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:flex-wrap sm:items-center">
             <IconGuide />
             {poll.location ? (
-              <p className="truncate whitespace-nowrap text-muted-foregroun text-sm">
+              <p className="truncate whitespace-nowrap text-muted-foreground text-sm">
                 <Icon>
                   <MapPinIcon className="-mt-0.5 mr-1.5 inline-block" />
                 </Icon>

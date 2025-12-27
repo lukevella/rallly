@@ -13,11 +13,13 @@ export default async function Page() {
     <div className="flex h-screen w-full items-center justify-center">
       <div className="space-y-8">
         <div className="space-y-4 text-center">
-          <FileSearchIcon className="mb-4 inline-block size-24 text-gray-400" />
-          <div className="mb-2 font-bold text-3xl text-primary-600">
+          <FileSearchIcon className="mb-4 inline-block size-24 text-muted-foreground" />
+          <div className="mb-2 font-bold text-3xl text-foreground">
             {t("errors_notFoundTitle")}
           </div>
-          <p className="text-gray-600">{t("errors_notFoundDescription")}</p>
+          <p className="text-muted-foreground">
+            {t("errors_notFoundDescription")}
+          </p>
         </div>
         <div className="flex justify-center space-x-3">
           <Button variant="primary" asChild>

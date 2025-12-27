@@ -26,7 +26,7 @@ export function PollStatusIcon({
       case "live":
         return <CirclePlayIcon className="size-4 text-amber-500" />;
       case "paused":
-        return <CirclePauseIcon className="size-4 text-gray-400" />;
+        return <CirclePauseIcon className="size-4 text-gray-500" />;
       case "finalized":
         return <CircleCheckIcon className="size-4 text-green-500" />;
     }

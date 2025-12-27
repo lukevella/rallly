@@ -51,7 +51,7 @@ export const ChangeEmailRequest = ({
         })}
       </Text>
       <Section>
-        <Button href={verificationUrl}>
+        <Button href={verificationUrl} color={ctx.primaryColor}>
           {ctx.t("changeEmailRequest_button", {
             ns: "emails",
             defaultValue: "Verify Email Address",

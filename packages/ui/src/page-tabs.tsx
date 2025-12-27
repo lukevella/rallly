@@ -13,21 +13,24 @@ const TabsList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn("-mb-px flex space-x-4 border-gray-200 border-b", className)}
+    className={cn(
+      "-mb-px flex space-x-4 border-gray-200 border-b border-b-border",
+      className,
+    )}
     {...props}
   />
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
 
 const TabsTrigger = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  React.ComponentRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
       "inline-flex h-9 items-center whitespace-nowrap rounded-none border-b-2 px-1 pt-1 pb-1 font-medium text-sm ring-offset-background transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-      "data-[state=active]:border-indigo-500 data-[state=inactive]:border-transparent data-[state=active]:text-indigo-600 data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:border-gray-300 data-[state=inactive]:hover:text-gray-700",
+      "data-[state=active]:border-primary data-[state=inactive]:border-transparent data-[state=active]:text-primary data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:border-accent-border data-[state=inactive]:hover:text-accent-foreground",
       className,
     )}
     {...props}
