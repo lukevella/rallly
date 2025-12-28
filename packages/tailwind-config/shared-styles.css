@@ -25,7 +25,7 @@
   --destructive-foreground: var(--color-rose-100);
 
   --background: var(--color-white);
-  --foreground: var(--color-gray-800);
+  --foreground: var(--color-gray-700);
 
   --accent: oklch(.552 .016 285.938 / .1);
   --accent-border: var(--color-gray-300);
