@@ -70,10 +70,7 @@ export const ParticipantRowView: React.FunctionComponent<{
           <td
             // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
             key={i}
-            className={cn("h-12 border-t border-l", {
-              "bg-background/50": !vote || vote === "no",
-              "bg-background": vote === "yes" || vote === "ifNeedBe",
-            })}
+            className={cn("h-12 border-t border-l bg-background")}
           >
             <div className={cn("flex items-center justify-center")}>
               <VoteIcon type={vote} />

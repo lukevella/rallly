@@ -76,7 +76,9 @@ const PollHeader: React.FunctionComponent = () => {
               style={{ height: monthRowHeight }}
               className={cn(
                 "sticky top-0 space-y-3 bg-background",
-                firstOfMonth ? "left-[235px] z-20 border-l" : "z-10",
+                firstOfMonth
+                  ? "left-[235px] z-20 border-card-border border-l"
+                  : "z-10",
               )}
             >
               <div className="flex">

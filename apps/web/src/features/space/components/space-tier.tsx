@@ -7,9 +7,9 @@ import type { SpaceTier } from "@/features/space/schema";
 export const SpaceTierLabel = ({ tier }: { tier: SpaceTier }) => {
   switch (tier) {
     case "hobby":
-      return PLAN_NAMES.HOBBY;
+      return <span className="text-muted-foreground">{PLAN_NAMES.HOBBY}</span>;
     case "pro":
-      return PLAN_NAMES.PRO;
+      return <span className="text-primary">{PLAN_NAMES.PRO}</span>;
   }
 };
 
