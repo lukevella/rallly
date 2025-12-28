@@ -38,7 +38,7 @@ export default async function Page(props: {
         </div>
         <div className="mt-8 flex items-center gap-x-4">
           <Image
-            src="/static/images/luke-vella.jpg"
+            src="https://d39ixtfgglw55o.cloudfront.net/images/luke.webp"
             width={48}
             height={48}
             className="rounded-full"

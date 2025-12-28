@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "d39ixtfgglw55o.cloudfront.net",
+      },
+    ],
+  },
   turbopack: {
     rules: {
       "*.svg": {
