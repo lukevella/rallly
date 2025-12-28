@@ -24,8 +24,8 @@ export default async function Page() {
   }
 
   return (
-    <div className="absolute inset-0 h-dvh overflow-auto bg-poll">
-      <div className="sticky top-0 z-20 border-b bg-poll/90 p-3 backdrop-blur-md sm:grid-cols-3">
+    <div className="absolute inset-0 h-dvh overflow-auto bg-gray-100 dark:bg-gray-900">
+      <div className="sticky top-0 z-20 border-b bg-gray-100/900 p-3 backdrop-blur-md sm:grid-cols-3 dark:bg-gray-900/90">
         <div className="mx-auto flex items-center justify-between gap-x-2">
           <div className="flex items-center gap-x-4 sm:flex-1">
             <BackButton />

@@ -9,7 +9,7 @@ const iconVariants = cva("", {
   variants: {
     variant: {
       default: "text-muted-foreground",
-      success: "text-success",
+      success: "text-green-600 dark:text-green-500",
       danger: "text-destructive",
       primary: "text-primary",
     },

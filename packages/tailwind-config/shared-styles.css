@@ -55,20 +55,6 @@
 
   --sidebar-accent: var(--color-gray-200);
   --sidebar-accent-foreground: var(--color-gray-800);
-
-  --success: var(--color-green-50);
-  --success-foreground: var(--color-green-700);
-
-  --info: var(--color-blue-50);
-  --info-foreground: var(--color-blue-700);
-
-  --warning: var(--color-yellow-50);
-  --warning-foreground: var(--color-yellow-700);
-
-  --tip: var(--color-green-50);
-  --tip-foreground: var(--color-green-700);
-
-  --poll: var(--color-gray-100);
 }
 
 .dark {
@@ -114,14 +100,6 @@
   --card-border: var(--color-gray-800);
   --card-foreground: var(--color-gray-300);
   --card-accent: var(--color-gray-800);
-
-  --success: var(--color-green-950);
-  --success-foreground: var(--color-green-100);
-
-  --warning: var(--color-yellow-950);
-  --warning-foreground: var(--color-yellow-100);
-
-  --poll: var(--color-gray-900);
 }
 
 @theme inline {
@@ -171,20 +149,6 @@
 
   --color-sidebar-accent: var(--sidebar-accent);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-
-  --color-poll: var(--poll);
-
-  --color-info: var(--info);
-  --color-info-foreground: var(--info-foreground);
-
-  --color-warning: var(--warning);
-  --color-warning-foreground: var(--warning-foreground);
-
-  --color-tip: var(--tip);
-  --color-tip-foreground: var(--tip-foreground);
 }
 
 @theme {
