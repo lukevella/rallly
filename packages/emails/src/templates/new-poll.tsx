@@ -54,7 +54,9 @@ export const NewPollEmail = ({
       </Text>
       <Card style={{ textAlign: "center" }}>
         <Text style={{ textAlign: "center" }}>
-          <Link color={ctx.primaryColor} href={participantLink}>{participantLink}</Link>
+          <Link color={ctx.primaryColor} href={participantLink}>
+            {participantLink}
+          </Link>
         </Text>
       </Card>
       <Button href={adminLink} color={ctx.primaryColor}>

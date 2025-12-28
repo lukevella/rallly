@@ -135,7 +135,13 @@ export const LicenseKeyEmail = ({
           }
           values={{ supportEmail: ctx.supportEmail }}
           components={{
-            a: <Link color={ctx.primaryColor} className="text-link" href="mailto:support@rallly.co" />,
+            a: (
+              <Link
+                color={ctx.primaryColor}
+                className="text-link"
+                href="mailto:support@rallly.co"
+              />
+            ),
           }}
         />
       </Text>

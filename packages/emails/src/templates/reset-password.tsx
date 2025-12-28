@@ -54,7 +54,12 @@ export const ResetPasswordEmail = ({
           defaults="If you didn't request a password reset, you can ignore this email. Your password will not change unless you create a new one. If this request is suspicious, contact <a>{supportEmail}</a>."
           values={{ supportEmail: ctx.supportEmail }}
           components={{
-            a: <Link color={ctx.primaryColor} href={`mailto:${ctx.supportEmail}`} />,
+            a: (
+              <Link
+                color={ctx.primaryColor}
+                href={`mailto:${ctx.supportEmail}`}
+              />
+            ),
           }}
           ns="emails"
         />
