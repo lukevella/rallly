@@ -1,12 +1,19 @@
-import { SettingsIcon } from "lucide-react";
-import { PageIcon } from "@/app/components/page-icons";
-import { requireAdmin } from "@/auth/data";
 import {
-  FullWidthLayout,
-  FullWidthLayoutContent,
-  FullWidthLayoutHeader,
-  FullWidthLayoutTitle,
-} from "@/components/full-width-layout";
+  PageSection,
+  PageSectionContent,
+  PageSectionDescription,
+  PageSectionGroup,
+  PageSectionHeader,
+  PageSectionTitle,
+} from "@/app/components/page-layout";
+import {
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageDescription,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/app/components/settings-layout";
+import { requireAdmin } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { getInstanceSettings } from "@/features/instance-settings/queries";
 import { InstanceSettingsForm } from "./instance-settings-form";
@@ -22,25 +29,45 @@ async function loadData() {
   };
 }
 
-export default async function SettingsPage() {
+export default async function InstanceSettingsPage() {
   const { instanceSettings } = await loadData();
 
   return (
-    <FullWidthLayout>
-      <FullWidthLayoutHeader>
-        <FullWidthLayoutTitle
-          icon={
-            <PageIcon size="sm" color="darkGray">
-              <SettingsIcon />
-            </PageIcon>
-          }
-        >
+    <SettingsPage>
+      <SettingsPageHeader>
+        <SettingsPageTitle>
           <Trans i18nKey="settings" defaults="Settings" />
-        </FullWidthLayoutTitle>
-      </FullWidthLayoutHeader>
-      <FullWidthLayoutContent>
-        <InstanceSettingsForm defaultValue={instanceSettings} />
-      </FullWidthLayoutContent>
-    </FullWidthLayout>
+        </SettingsPageTitle>
+        <SettingsPageDescription>
+          <Trans
+            i18nKey="instanceSettingsDescription"
+            defaults="Configure your instance settings"
+          />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
+      <SettingsPageContent>
+        <PageSectionGroup>
+          <PageSection variant="card">
+            <PageSectionHeader>
+              <PageSectionTitle>
+                <Trans
+                  i18nKey="authenticationAndSecurity"
+                  defaults="Authentication & Security"
+                />
+              </PageSectionTitle>
+              <PageSectionDescription>
+                <Trans
+                  i18nKey="authenticationAndSecurityDescription"
+                  defaults="Manage authentication and security settings"
+                />
+              </PageSectionDescription>
+            </PageSectionHeader>
+            <PageSectionContent>
+              <InstanceSettingsForm defaultValue={instanceSettings} />
+            </PageSectionContent>
+          </PageSection>
+        </PageSectionGroup>
+      </SettingsPageContent>
+    </SettingsPage>
   );
 }
