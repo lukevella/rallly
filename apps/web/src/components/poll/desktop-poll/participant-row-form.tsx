@@ -24,6 +24,7 @@ import { toggleVote, VoteSelector } from "../vote-selector";
 export interface ParticipantRowFormProps {
   name?: string;
   className?: string;
+  email?: string;
   isYou?: boolean;
   isNew?: boolean;
   onCancel?: () => void;
@@ -31,6 +32,7 @@ export interface ParticipantRowFormProps {
 
 const ParticipantRowForm = ({
   name,
+  email,
   isNew,
   className,
 }: ParticipantRowFormProps) => {
@@ -62,7 +64,11 @@ const ParticipantRowForm = ({
         <div className="flex items-center justify-between gap-x-2.5">
           <Participant>
             {name ? (
-              <OptimizedAvatarImage name={participantName} size="sm" />
+              <OptimizedAvatarImage
+                name={participantName}
+                size="sm"
+                email={email}
+              />
             ) : (
               <YouAvatar />
             )}

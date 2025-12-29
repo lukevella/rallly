@@ -34,12 +34,13 @@ export interface ParticipantRowProps {
 
 export const ParticipantRowView: React.FunctionComponent<{
   name: string;
+  email?: string;
   action?: React.ReactNode;
   votes: Array<VoteType | undefined>;
   className?: string;
   isYou?: boolean;
   participantId: string;
-}> = ({ name, action, votes, className, isYou, participantId }) => {
+}> = ({ name, email, action, votes, className, isYou, participantId }) => {
   return (
     <tr
       data-testid="participant-row"
@@ -52,7 +53,7 @@ export const ParticipantRowView: React.FunctionComponent<{
       >
         <div className="flex max-w-full items-center justify-between gap-x-1">
           <Participant>
-            <OptimizedAvatarImage size="sm" name={name} />
+            <OptimizedAvatarImage size="sm" name={name} email={email} />
             <ParticipantName>{name}</ParticipantName>
           </Participant>
           <div className="flex items-center gap-x-2">
@@ -104,6 +105,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
       <ParticipantRowForm
         className={className}
         name={participant.name}
+        email={participant.email}
         isYou={isYou}
         onCancel={() => onChangeEditMode?.(false)}
       />
@@ -114,6 +116,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
     <ParticipantRowView
       className={className}
       name={participant.name}
+      email={participant.email}
       votes={optionIds.map((optionId) => {
         return getVote(participant.id, optionId);
       })}
