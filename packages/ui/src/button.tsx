@@ -9,17 +9,16 @@ import { cn } from "./lib/utils";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md font-normal text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+    "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap font-normal text-sm outline-none transition-opacity focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 active:opacity-90 active:shadow-none disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   ),
   {
     variants: {
       variant: {
-        primary:
-          "bg-primary text-primary-foreground hover:bg-primary/90 active:opacity-90",
+        primary: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 active:opacity-90",
+          "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90",
         default:
-          "border border-input-border bg-input shadow-xs hover:bg-accent active:shadow-none",
+          "border border-input-border bg-input shadow-xs hover:bg-accent",
         ghost:
           "border-transparent bg-transparent text-foreground hover:bg-accent data-[state=open]:bg-accent",
         actionBar:
