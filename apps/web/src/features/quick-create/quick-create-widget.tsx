@@ -50,7 +50,7 @@ export async function QuickCreateWidget() {
                 <li key={poll.id}>
                   <Link
                     href={`/poll/${poll.id}`}
-                    className="flex items-center gap-3 rounded-2xl border bg-white p-3 hover:bg-gray-50 active:bg-gray-100"
+                    className="flex items-center gap-3 rounded-2xl border border-card-border bg-card p-3 hover:bg-card-accent"
                   >
                     <div>
                       <PollPageIcon size="xl" />
