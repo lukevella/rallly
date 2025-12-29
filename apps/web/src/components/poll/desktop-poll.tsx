@@ -294,101 +294,98 @@ const DesktopPoll: React.FunctionComponent = () => {
               </div>
             ) : null}
             {participants.length > 0 || mode !== "view" ? (
-              <div className="relative flex min-h-0 flex-col">
-                <div
-                  aria-hidden="true"
-                  className={cn(
-                    "pointer-events-none absolute top-0 bottom-0 left-[235px] z-30 w-4 border-l bg-linear-to-r from-gray-800/5 via-transparent to-transparent transition-opacity",
-                    x > 0 ? "opacity-100" : "opacity-0",
-                  )}
-                />
-
-                <div
-                  onScroll={() => {
-                    if (!didScroll) {
-                      setDidScroll(true);
-                    }
-                  }}
-                  ref={scrollRef}
-                  className={cn(
-                    "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 max-h-[calc(100vh-200px)] grow overflow-auto scroll-smooth",
-                  )}
-                >
-                  <table className="w-full table-auto border-separate border-spacing-0 bg-muted/50">
-                    <thead>
-                      <PollHeader />
-                    </thead>
-                    <tbody>
-                      {mode === "new" ? (
-                        <ParticipantRowForm isNew={true} />
-                      ) : null}
-                      {visibleParticipants.length > 0
-                        ? visibleParticipants.map((participant, i) => {
-                            return (
-                              <ParticipantRow
-                                // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
-                                key={i}
-                                participant={{
-                                  id: participant.id,
-                                  name: participant.name,
-                                  userId: participant.userId ?? undefined,
-                                  guestId: participant.guestId ?? undefined,
-                                  email: participant.email ?? undefined,
-                                  votes: participant.votes,
-                                }}
-                                editMode={
-                                  votingForm.watch("mode") === "edit" &&
-                                  votingForm.watch("participantId") ===
-                                    participant.id
-                                }
-                                className={
-                                  i === visibleParticipants.length - 1
-                                    ? "last-row"
-                                    : ""
-                                }
-                                onChangeEditMode={(isEditing) => {
-                                  if (isEditing) {
-                                    votingForm.setEditingParticipantId(
-                                      participant.id,
-                                    );
+              <div>
+                <div className="relative flex min-h-0 flex-col">
+                  <div
+                    aria-hidden="true"
+                    className={cn(
+                      "pointer-events-none absolute top-0 bottom-0 left-[235px] z-30 w-4 border-l bg-linear-to-r from-gray-800/5 via-transparent to-transparent transition-opacity",
+                      x > 0 ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                  <div
+                    onScroll={() => {
+                      if (!didScroll) {
+                        setDidScroll(true);
+                      }
+                    }}
+                    ref={scrollRef}
+                    className={cn(
+                      "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 max-h-[calc(100vh-200px)] grow overflow-auto scroll-smooth",
+                    )}
+                  >
+                    <table className="w-full table-auto border-separate border-spacing-0 bg-muted/50">
+                      <thead>
+                        <PollHeader />
+                      </thead>
+                      <tbody className="relative">
+                        {mode === "new" ? (
+                          <ParticipantRowForm isNew={true} />
+                        ) : null}
+                        {visibleParticipants.length > 0
+                          ? visibleParticipants.map((participant, i) => {
+                              return (
+                                <ParticipantRow
+                                  // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
+                                  key={i}
+                                  participant={{
+                                    id: participant.id,
+                                    name: participant.name,
+                                    userId: participant.userId ?? undefined,
+                                    guestId: participant.guestId ?? undefined,
+                                    email: participant.email ?? undefined,
+                                    votes: participant.votes,
+                                  }}
+                                  editMode={
+                                    votingForm.watch("mode") === "edit" &&
+                                    votingForm.watch("participantId") ===
+                                      participant.id
                                   }
-                                }}
-                              />
-                            );
-                          })
-                        : null}
-                    </tbody>
-                  </table>
-                  {mode === "new" ? (
-                    <div className="sticky bottom-0 left-0 z-20 flex items-center justify-between gap-4 border-t bg-background p-3">
-                      <Button
-                        onClick={() => {
-                          votingForm.cancel();
-                        }}
-                      >
-                        <Trans i18nKey="cancel" />
-                      </Button>
-                      <p className="hidden min-w-0 truncate text-sm md:block">
-                        <Trans
-                          i18nKey="saveInstruction"
-                          values={{
-                            action: mode === "new" ? t("continue") : t("save"),
-                          }}
-                          components={{
-                            b: <strong className="font-semibold" />,
-                          }}
-                        />
-                      </p>
-                      <Button
-                        type="submit"
-                        variant="primary"
-                        form="voting-form"
-                      >
-                        <Trans i18nKey="continue" />
-                      </Button>
-                    </div>
-                  ) : null}
+                                  className={
+                                    i === visibleParticipants.length - 1
+                                      ? "last-row"
+                                      : ""
+                                  }
+                                  onChangeEditMode={(isEditing) => {
+                                    if (isEditing) {
+                                      votingForm.setEditingParticipantId(
+                                        participant.id,
+                                      );
+                                    }
+                                  }}
+                                />
+                              );
+                            })
+                          : null}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
+                {mode === "new" ? (
+                  <div className="flex items-center justify-between gap-4 border-t p-3">
+                    <Button
+                      onClick={() => {
+                        votingForm.cancel();
+                      }}
+                    >
+                      <Trans i18nKey="cancel" />
+                    </Button>
+                    <p className="hidden min-w-0 truncate text-sm md:block">
+                      <Trans
+                        i18nKey="saveInstruction"
+                        values={{
+                          action: mode === "new" ? t("continue") : t("save"),
+                        }}
+                        components={{
+                          b: <strong className="font-semibold" />,
+                        }}
+                      />
+                    </p>
+                    <Button type="submit" variant="primary" form="voting-form">
+                      <Trans i18nKey="continue" />
+                    </Button>
+                  </div>
+                ) : null}
               </div>
             ) : (
               <EmptyState className="p-16">
