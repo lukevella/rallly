@@ -293,9 +293,9 @@ const DesktopPoll: React.FunctionComponent = () => {
                 <TimesShownIn />
               </div>
             ) : null}
-            {participants.length > 0 || mode !== "view" ? (
-              <div>
-                <div className="relative flex min-h-0 flex-col">
+            <div className="flex min-h-0 flex-1 flex-col">
+              {participants.length > 0 || mode !== "view" ? (
+                <div className="relative flex min-h-0 flex-1 flex-col">
                   <div
                     aria-hidden="true"
                     className={cn(
@@ -311,7 +311,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                     }}
                     ref={scrollRef}
                     className={cn(
-                      "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 max-h-[calc(100vh-200px)] grow overflow-auto scroll-smooth",
+                      "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 h-full min-h-0 grow overflow-auto scroll-smooth",
                     )}
                   >
                     <table className="w-full table-auto border-separate border-spacing-0 bg-muted/50">
@@ -361,49 +361,52 @@ const DesktopPoll: React.FunctionComponent = () => {
                     </table>
                   </div>
                 </div>
-                {mode === "new" ? (
-                  <div className="flex items-center justify-between gap-4 border-t p-3">
-                    <Button
-                      onClick={() => {
-                        votingForm.cancel();
+              ) : (
+                <EmptyState className="p-16">
+                  <EmptyStateIcon>
+                    <Users2Icon />
+                  </EmptyStateIcon>
+                  <EmptyStateTitle>
+                    <Trans
+                      i18nKey="noParticipants"
+                      defaults="No participants"
+                    />
+                  </EmptyStateTitle>
+                  <EmptyStateDescription>
+                    <Trans
+                      i18nKey="noParticipantsDescription"
+                      components={{ b: <strong className="font-semibold" /> }}
+                      defaults="Click <b>Share</b> to invite participants"
+                    />
+                  </EmptyStateDescription>
+                </EmptyState>
+              )}
+              {mode === "new" ? (
+                <div className="flex items-center justify-between gap-4 border-t p-3">
+                  <Button
+                    onClick={() => {
+                      votingForm.cancel();
+                    }}
+                  >
+                    <Trans i18nKey="cancel" />
+                  </Button>
+                  <p className="hidden min-w-0 truncate text-sm md:block">
+                    <Trans
+                      i18nKey="saveInstruction"
+                      values={{
+                        action: mode === "new" ? t("continue") : t("save"),
                       }}
-                    >
-                      <Trans i18nKey="cancel" />
-                    </Button>
-                    <p className="hidden min-w-0 truncate text-sm md:block">
-                      <Trans
-                        i18nKey="saveInstruction"
-                        values={{
-                          action: mode === "new" ? t("continue") : t("save"),
-                        }}
-                        components={{
-                          b: <strong className="font-semibold" />,
-                        }}
-                      />
-                    </p>
-                    <Button type="submit" variant="primary" form="voting-form">
-                      <Trans i18nKey="continue" />
-                    </Button>
-                  </div>
-                ) : null}
-              </div>
-            ) : (
-              <EmptyState className="p-16">
-                <EmptyStateIcon>
-                  <Users2Icon />
-                </EmptyStateIcon>
-                <EmptyStateTitle>
-                  <Trans i18nKey="noParticipants" defaults="No participants" />
-                </EmptyStateTitle>
-                <EmptyStateDescription>
-                  <Trans
-                    i18nKey="noParticipantsDescription"
-                    components={{ b: <strong className="font-semibold" /> }}
-                    defaults="Click <b>Share</b> to invite participants"
-                  />
-                </EmptyStateDescription>
-              </EmptyState>
-            )}
+                      components={{
+                        b: <strong className="font-semibold" />,
+                      }}
+                    />
+                  </p>
+                  <Button type="submit" variant="primary" form="voting-form">
+                    <Trans i18nKey="continue" />
+                  </Button>
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
