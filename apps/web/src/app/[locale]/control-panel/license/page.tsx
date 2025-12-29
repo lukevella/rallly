@@ -20,6 +20,11 @@ import {
 } from "@/app/components/settings-layout";
 import { requireAdmin } from "@/auth/data";
 import {
+  DescriptionList,
+  DescriptionListTitle,
+  DescriptionListValue,
+} from "@/components/description-list";
+import {
   EmptyState,
   EmptyStateDescription,
   EmptyStateFooter,
@@ -35,18 +40,6 @@ import { getTranslation } from "@/i18n/server";
 async function loadData() {
   const [license] = await Promise.all([loadInstanceLicense(), requireAdmin()]);
   return { license };
-}
-
-function DescriptionList({ children }: { children: React.ReactNode }) {
-  return <dl>{children}</dl>;
-}
-
-function DescriptionListTitle({ children }: { children: React.ReactNode }) {
-  return <dt className="mb-1 text-muted-foreground text-xs">{children}</dt>;
-}
-
-function DescriptionListValue({ children }: { children: React.ReactNode }) {
-  return <dd className="mb-4 font-mono text-sm">{children}</dd>;
 }
 
 export default async function LicensePage() {
