@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "@rallly/ui/sidebar";
-import { Settings2Icon } from "lucide-react";
+import { GaugeIcon, Settings2Icon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FeedbackMenuItem } from "@/app/[locale]/(space)/(dashboard)/components/feedback-menu-item";
@@ -57,6 +57,21 @@ export default async function Layout({
                 <IfFeatureEnabled feature="feedback">
                   <FeedbackMenuItem />
                 </IfFeatureEnabled>
+                {user.role === "admin" ? (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <Link href="/control-panel">
+                        <Icon>
+                          <GaugeIcon />
+                        </Icon>
+                        <Trans
+                          i18nKey="controlPanel"
+                          defaults="Control Panel"
+                        />
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ) : null}
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <Link href="/settings/preferences">
