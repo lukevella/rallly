@@ -232,7 +232,7 @@ function DiscussionInner() {
                         )}
                       </div>
                     </div>
-                    <div className="w-fit whitespace-pre-wrap pl-7 text-sm leading-relaxed">
+                    <div className="w-fit whitespace-pre-wrap pl-8 text-sm leading-relaxed">
                       <TruncatedLinkify>{comment.content}</TruncatedLinkify>
                     </div>
                   </div>
