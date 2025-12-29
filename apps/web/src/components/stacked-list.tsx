@@ -8,7 +8,12 @@ export function StackedList({
   className?: string;
 }) {
   return (
-    <ul className={cn("divide-y overflow-hidden rounded-xl border", className)}>
+    <ul
+      className={cn(
+        "divide-y overflow-hidden rounded-xl border border-card-border bg-card",
+        className,
+      )}
+    >
       {children}
     </ul>
   );
@@ -24,7 +29,7 @@ export function StackedListItem({
   return (
     <li
       className={cn(
-        "flex items-center gap-x-6 p-4 hover:bg-gray-50",
+        "flex items-center gap-x-6 p-4 hover:bg-card-accent",
         className,
       )}
     >

@@ -7,24 +7,33 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
+import { useTheme } from "@rallly/ui/theme-provider";
 import {
   ArrowUpRight,
   ChevronDownIcon,
-  CreditCardIcon,
   LifeBuoyIcon,
   ListIcon,
   LogOutIcon,
+  MonitorIcon,
+  MoonIcon,
   Settings2Icon,
+  SunIcon,
+  SunMoonIcon,
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
-import { IfCloudHosted } from "@/contexts/environment";
 import { signOut } from "@/lib/auth-client";
 
 export const UserDropdown = ({
@@ -39,6 +48,7 @@ export const UserDropdown = ({
   className?: string;
 }) => {
   const posthog = usePostHog();
+  const { theme, setTheme } = useTheme();
 
   return (
     <DropdownMenu modal={false}>
@@ -88,17 +98,7 @@ export const UserDropdown = ({
             <Trans i18nKey="preferences" defaults="Preferences" />
           </Link>
         </DropdownMenuItem>
-        <IfCloudHosted>
-          <DropdownMenuItem asChild={true}>
-            <Link
-              href="/settings/billing"
-              className="flex items-center gap-x-2"
-            >
-              <CreditCardIcon className="size-4 text-muted-foreground" />
-              <Trans i18nKey="Billing" defaults="Billing" />
-            </Link>
-          </DropdownMenuItem>
-        </IfCloudHosted>
+
         <DropdownMenuItem asChild={true}>
           <Link
             target="_blank"
@@ -112,6 +112,39 @@ export const UserDropdown = ({
             </Icon>
           </Link>
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>
+            <Icon>
+              <SunMoonIcon />
+            </Icon>
+            <Trans i18nKey="theme" defaults="Theme" />
+          </DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+                <DropdownMenuRadioItem value="system">
+                  <Icon>
+                    <MonitorIcon />
+                  </Icon>
+                  <Trans i18nKey="themeSystem" defaults="System" />
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="light">
+                  <Icon>
+                    <SunIcon />
+                  </Icon>
+                  <Trans i18nKey="themeLight" defaults="Light" />
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="dark">
+                  <Icon>
+                    <MoonIcon />
+                  </Icon>
+                  <Trans i18nKey="themeDark" defaults="Dark" />
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={async () => {

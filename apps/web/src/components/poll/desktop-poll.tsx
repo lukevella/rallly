@@ -250,15 +250,16 @@ const DesktopPoll: React.FunctionComponent = () => {
         <div
           className={cn(
             expanded
-              ? "fixed top-0 left-0 z-50 flex h-full w-full items-center justify-center bg-gray-900/25 p-8"
+              ? "fixed top-0 left-0 z-50 flex h-full w-full items-center justify-center p-8"
               : "",
           )}
         >
           <div
             className={cn(
-              "flex max-h-full flex-col overflow-hidden rounded-md bg-white",
+              "flex max-h-full flex-col overflow-hidden rounded-lg",
               {
-                "w-full max-w-7xl shadow-huge": expanded,
+                "w-full max-w-7xl border border-popover-border bg-background shadow-2xl":
+                  expanded,
               },
             )}
             ref={containerRef}
@@ -288,7 +289,7 @@ const DesktopPoll: React.FunctionComponent = () => {
               <TableControls />
             </CardHeader>
             {poll.options[0]?.duration !== 0 && poll.timeZone ? (
-              <div className="border-b bg-gray-50 px-4 py-3">
+              <div className="border-b px-4 py-3">
                 <TimesShownIn />
               </div>
             ) : null}
@@ -313,7 +314,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                     "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 grow overflow-auto scroll-smooth",
                   )}
                 >
-                  <table className="w-full table-auto border-separate border-spacing-0 bg-gray-50">
+                  <table className="w-full table-auto border-separate border-spacing-0 bg-muted/50">
                     <thead>
                       <PollHeader />
                     </thead>
@@ -359,7 +360,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                     </tbody>
                   </table>
                   {mode === "new" ? (
-                    <div className="sticky left-[235px] flex w-[calc(100%-235px)] items-center justify-between gap-4 border-t border-l bg-gray-50 p-3">
+                    <div className="sticky left-[235px] flex w-[calc(100%-235px)] items-center justify-between gap-4 border-t border-l p-3">
                       <Button
                         onClick={() => {
                           votingForm.cancel();

@@ -8,10 +8,10 @@ import { cn } from "./lib/utils";
 const iconVariants = cva("", {
   variants: {
     variant: {
-      default: "text-gray-500",
-      success: "text-green-500",
-      danger: "text-rose-500",
-      primary: "text-primary-600",
+      default: "text-muted-foreground",
+      success: "text-green-600 dark:text-green-500",
+      danger: "text-destructive",
+      primary: "text-primary",
     },
     size: {
       sm: "h-3 w-3",
@@ -40,7 +40,7 @@ export function Icon({
     <Slot
       className={cn(
         iconVariants({ size, variant }),
-        "group shrink-0 group-[.bg-destructive]:text-destructive-foreground group-[.bg-primary]:text-primary-50",
+        "group shrink-0 group-[.bg-destructive]:text-destructive-foreground group-[.bg-primary]:text-primary-foreground",
         className,
       )}
     >

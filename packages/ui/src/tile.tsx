@@ -18,7 +18,7 @@ const Tile = React.forwardRef<
     <Comp
       ref={ref}
       className={cn(
-        "relative flex flex-col justify-end rounded-xl border bg-background p-3 text-card-foreground hover:bg-gray-50 active:bg-gray-100",
+        "relative flex flex-col justify-end rounded-xl border border-card-border bg-card p-3 text-card-foreground shadow-xs hover:bg-card-accent",
         className,
       )}
       {...props}

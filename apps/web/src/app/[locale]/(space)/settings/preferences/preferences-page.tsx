@@ -11,6 +11,7 @@ import {
 import { Trans } from "@/components/trans";
 import { DateTimePreferences } from "./components/date-time-preferences";
 import { LanguagePreference } from "./components/language-preference";
+import { ThemePreference } from "./components/theme-preference";
 
 export function PreferencesPage() {
   return (
@@ -29,6 +30,23 @@ export function PreferencesPage() {
         </PageSectionHeader>
         <PageSectionContent>
           <LanguagePreference />
+        </PageSectionContent>
+      </PageSection>
+
+      <PageSection variant="card">
+        <PageSectionHeader>
+          <PageSectionTitle>
+            <Trans i18nKey="theme" defaults="Theme" />
+          </PageSectionTitle>
+          <PageSectionDescription>
+            <Trans
+              i18nKey="themeDescription"
+              defaults="Choose your preferred appearance"
+            />
+          </PageSectionDescription>
+        </PageSectionHeader>
+        <PageSectionContent>
+          <ThemePreference />
         </PageSectionContent>
       </PageSection>
 

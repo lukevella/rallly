@@ -1,21 +1,21 @@
 .rbc-time-view {
   border: 0;
-  border-bottom: 1px solid var(--color-gray-100);
-  border-top: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--color-border-muted);
+  border-top: 1px solid var(--color-border-muted);
 }
 
 .rbc-today {
-  background-color: color-mix(in srgb, var(--color-gray-50) 50%, transparent);
+  background-color: color-mix(in srgb, var(--color-muted) 50%, transparent);
 }
 
 .rbc-time-content > * + * > * {
-  border-color: var(--color-gray-200);
+  border-color: var(--color-border);
 }
 
 .rbc-time-header.rbc-overflowing,
 .rbc-time-header-content,
 .rbc-header {
-  border-color: var(--color-gray-100);
+  border-color: var(--color-border-muted);
 }
 
 .rbc-time-content {
@@ -40,12 +40,12 @@
 }
 
 .rbc-timeslot-group {
-  border-color: var(--color-gray-100);
+  border-color: var(--color-border-muted);
 }
 
 .rbc-day-slot .rbc-time-slot {
   border-style: dashed;
-  border-color: var(--color-gray-50);
+  border-color: var(--color-border-muted);
 }
 
 .rbc-day-slot .rbc-events-container {
@@ -53,14 +53,17 @@
 }
 
 .rbc-slot-selection {
-  background-color: color-mix(in srgb, var(--color-gray-100) 50%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-border-muted) 50%,
+    transparent
+  );
   line-height: 1.25;
   color: var(--color-gray-600);
 }
 
 .rbc-header.rbc-today {
-  background-color: var(--color-background);
-  color: var(--color-rose-600);
+  color: var(--color-rose-500);
 }
 
 .rbc-button-link {
@@ -70,5 +73,5 @@
 }
 
 .rbc-time-header-gutter {
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--color-border-muted);
 }

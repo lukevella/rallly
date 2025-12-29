@@ -92,7 +92,7 @@ export const AbandonedCheckoutEmail = ({
             {couponCode}
           </Text>
         </Card>
-        <Button href={recoveryUrl} id="recoveryUrl">
+        <Button href={recoveryUrl} id="recoveryUrl" color={ctx.primaryColor}>
           <Trans
             i18n={ctx.i18n}
             t={ctx.t}

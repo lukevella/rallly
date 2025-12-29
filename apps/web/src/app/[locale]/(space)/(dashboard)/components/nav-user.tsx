@@ -7,14 +7,25 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
+import { useTheme } from "@rallly/ui/theme-provider";
 import {
   ChevronDownIcon,
   LogOutIcon,
+  MonitorIcon,
+  MoonIcon,
   Settings2Icon,
+  SunIcon,
+  SunMoonIcon,
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -35,6 +46,7 @@ export function NavUser({
 }) {
   const [isPending, setIsPending] = React.useState(false);
   const posthog = usePostHog();
+  const { theme, setTheme } = useTheme();
   return (
     <>
       {isPending && <RouterLoadingIndicator />}
@@ -77,6 +89,39 @@ export function NavUser({
               <Trans i18nKey="preferences" defaults="Preferences" />
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <Icon>
+                <SunMoonIcon />
+              </Icon>
+              <Trans i18nKey="theme" defaults="Theme" />
+            </DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+                  <DropdownMenuRadioItem value="system">
+                    <Icon>
+                      <MonitorIcon />
+                    </Icon>
+                    <Trans i18nKey="themeSystem" defaults="System" />
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="light">
+                    <Icon>
+                      <SunIcon />
+                    </Icon>
+                    <Trans i18nKey="themeLight" defaults="Light" />
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="dark">
+                    <Icon>
+                      <MoonIcon />
+                    </Icon>
+                    <Trans i18nKey="themeDark" defaults="Dark" />
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={async () => {

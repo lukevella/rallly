@@ -42,7 +42,7 @@ export function ResetPasswordForm() {
 
   if (!token) {
     return (
-      <Alert variant="destructive">
+      <Alert variant="error">
         <AlertDescription>
           <p>
             <Trans

@@ -28,7 +28,7 @@ export const NotificationEmail = ({
     <EmailLayout ctx={ctx} preview={preview}>
       {children}
       <Section style={{ marginTop: 32, marginBottom: 32 }}>
-        <Button href={pollUrl}>
+        <Button href={pollUrl} color={ctx.primaryColor}>
           {ctx.t("common_viewOn", {
             ns: "emails",
             defaultValue: "View on {domain}",
@@ -46,6 +46,7 @@ export const NotificationEmail = ({
           components={{
             a: (
               <Link
+                color={ctx.primaryColor}
                 className="whitespace-nowrap"
                 href={disableNotificationsUrl}
               />
