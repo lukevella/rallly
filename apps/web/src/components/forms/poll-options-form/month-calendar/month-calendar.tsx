@@ -181,7 +181,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                           "text-rose-600": day.today && !day.selected,
                           "bg-muted/50 text-muted-foreground":
                             day.outOfMonth && !day.isPast,
-                          "text-primary": day.selected,
+                          "text-foreground": day.selected,
                         },
                       )}
                     >
@@ -190,8 +190,8 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         className={cn(
                           "absolute inset-1 z-0 rounded-md border",
                           day.selected
-                            ? "border-primary/50 border-dashed shadow-xs group-hover:border-primary/60"
-                            : "border-transparent border-dashed group-hover:border-accent-border group-active:bg-accent",
+                            ? "border-accent-border bg-accent shadow-xs group-hover:border-accent-border"
+                            : "border-transparent group-hover:border-accent-border group-active:bg-accent",
                         )}
                       />
                       <span className="z-10">{day.day}</span>
