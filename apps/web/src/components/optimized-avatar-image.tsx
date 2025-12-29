@@ -4,7 +4,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import Image from "next/image";
 import React from "react";
 
-async function getGravatarUrl(email: string): Promise<string> {
+async function getGravatarUrl(email: string): Promise<string | null> {
+  if (typeof crypto === "undefined" || !crypto.subtle) {
+    return null;
+  }
+
   const normalizedEmail = email.trim().toLowerCase();
   const encoder = new TextEncoder();
   const data = encoder.encode(normalizedEmail);
@@ -34,7 +38,11 @@ export function OptimizedAvatarImage({
 
   React.useEffect(() => {
     if (!src && email) {
-      getGravatarUrl(email).then(setGravatarUrl);
+      getGravatarUrl(email)
+        .then(setGravatarUrl)
+        .catch(() => {
+          setGravatarUrl(null);
+        });
     }
   }, [src, email]);
 
