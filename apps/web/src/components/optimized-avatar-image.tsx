@@ -17,7 +17,7 @@ async function getGravatarUrl(email: string): Promise<string | null> {
   const hashHex = hashArray
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
-  return `https://0.gravatar.com/avatar/${hashHex}?d=404&s=128`;
+  return `https://0.gravatar.com/avatar/${hashHex}?d=404&s=128&r=g`;
 }
 
 export function OptimizedAvatarImage({
