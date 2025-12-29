@@ -54,7 +54,7 @@ test.describe
       await expect(page).toHaveURL("/control-panel");
 
       await expect(
-        page.getByRole("heading", { name: "Control Panel" }),
+        page.getByRole("heading", { name: "Home" }),
       ).toBeVisible();
     });
   });

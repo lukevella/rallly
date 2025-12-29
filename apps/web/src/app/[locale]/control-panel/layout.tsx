@@ -1,5 +1,8 @@
-import { SidebarInset } from "@rallly/ui/sidebar";
+import { Icon } from "@rallly/ui/icon";
+import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
+import { GaugeIcon } from "lucide-react";
 import type { Metadata } from "next";
+import { Trans } from "@/components/trans";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { getTranslation } from "@/i18n/server";
@@ -17,8 +20,21 @@ export default async function AdminLayout({
       <ControlPanelSidebar />
       <SidebarInset>
         <LicenseLimitWarning />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <div className="flex-1">{children}</div>
+        <div className="flex flex-1 flex-col">
+          <header className="sticky top-0 z-10 border-b bg-background/90 p-3 backdrop-blur-xs md:hidden">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger />
+              <div className="flex items-center gap-2">
+                <Icon>
+                  <GaugeIcon />
+                </Icon>
+                <span className="font-medium text-sm">
+                  <Trans i18nKey="controlPanel" defaults="Control Panel" />
+                </span>
+              </div>
+            </div>
+          </header>
+          <main className="flex-1 p-4 lg:py-12">{children}</main>
         </div>
       </SidebarInset>
     </ControlPanelSidebarProvider>

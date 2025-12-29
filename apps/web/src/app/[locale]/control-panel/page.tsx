@@ -3,7 +3,6 @@ import { cn } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
 import { Tile, TileGrid, TileTitle } from "@rallly/ui/tile";
 import {
-  GaugeIcon,
   InfinityIcon,
   KeySquareIcon,
   SettingsIcon,
@@ -12,13 +11,13 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageIcon } from "@/app/components/page-icons";
-import { requireAdmin } from "@/auth/data";
 import {
-  FullWidthLayout,
-  FullWidthLayoutContent,
-  FullWidthLayoutHeader,
-  FullWidthLayoutTitle,
-} from "@/components/full-width-layout";
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/app/components/settings-layout";
+import { requireAdmin } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { loadInstanceLicense } from "@/features/licensing/data";
 
@@ -42,23 +41,14 @@ export default async function AdminPage() {
   const tier = license?.type;
 
   return (
-    <FullWidthLayout>
-      <FullWidthLayoutHeader>
-        <FullWidthLayoutTitle
-          icon={
-            <PageIcon size="sm" color="indigo">
-              <GaugeIcon />
-            </PageIcon>
-          }
-        >
-          <Trans i18nKey="controlPanel" defaults="Control Panel" />
-        </FullWidthLayoutTitle>
-      </FullWidthLayoutHeader>
-      <FullWidthLayoutContent>
+    <SettingsPage>
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="home" defaults="Home" />
+        </SettingsPageTitle>
+      </SettingsPageHeader>
+      <SettingsPageContent>
         <div className="space-y-4">
-          <h2 className="text-muted-foreground text-sm">
-            <Trans i18nKey="homeNavTitle" defaults="Navigation" />
-          </h2>
           <TileGrid>
             {/* USERS */}
             <Tile asChild>
@@ -134,8 +124,8 @@ export default async function AdminPage() {
             </Tile>
           </TileGrid>
         </div>
-      </FullWidthLayoutContent>
-    </FullWidthLayout>
+      </SettingsPageContent>
+    </SettingsPage>
   );
 }
 
