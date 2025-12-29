@@ -1,4 +1,3 @@
-
 enum TimeFormat {
   hours12
   hours24
@@ -92,7 +91,7 @@ model ApiKey {
   id        String @id @default(cuid())
   userId    String @map("user_id")
   name      String
-  prefix     String @unique
+  prefix    String @unique
   hashedKey String @map("hashed_key") @db.Text
 
   lastUsedAt DateTime? @map("last_used_at")
@@ -146,6 +145,6 @@ model Verification {
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@map("verifications")
   @@index([identifier])
+  @@map("verifications")
 }
