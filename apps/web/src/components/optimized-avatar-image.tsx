@@ -54,6 +54,7 @@ export function OptimizedAvatarImage({
     .slice(0, 2)
     .map((word) => word[0])
     .join("")
+    .replace(/[^\p{L}]/gu, "")
     .toUpperCase();
 
   const imageSrc = src || gravatarUrl;
@@ -78,7 +79,7 @@ export function OptimizedAvatarImage({
       ) : null}
       {!imageSrc || !isLoaded ? (
         <AvatarFallback seed={name} className={cn("shrink-0")}>
-          {/^[A-Z]+$/.test(initials) ? (
+          {/^\p{L}+$/u.test(initials) ? (
             initials
           ) : (
             <Icon>
