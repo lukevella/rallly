@@ -360,7 +360,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                     </tbody>
                   </table>
                   {mode === "new" ? (
-                    <div className="sticky bottom-0 z-20 flex items-center justify-between gap-4 border-t bg-background p-3">
+                    <div className="sticky bottom-0 left-0 z-20 flex items-center justify-between gap-4 border-t bg-background p-3">
                       <Button
                         onClick={() => {
                           votingForm.cancel();
