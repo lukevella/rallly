@@ -256,7 +256,7 @@ const DesktopPoll: React.FunctionComponent = () => {
         >
           <div
             className={cn(
-              "flex max-h-full flex-col overflow-hidden rounded-lg",
+              "flex max-h-full flex-col overflow-hidden rounded-2xl",
               {
                 "w-full max-w-7xl border border-popover-border bg-background shadow-2xl":
                   expanded,
@@ -360,7 +360,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                     </tbody>
                   </table>
                   {mode === "new" ? (
-                    <div className="sticky left-[235px] flex w-[calc(100%-235px)] items-center justify-between gap-4 border-t border-l p-3">
+                    <div className="sticky bottom-0 z-20 flex items-center justify-between gap-4 border-t bg-background p-3">
                       <Button
                         onClick={() => {
                           votingForm.cancel();
