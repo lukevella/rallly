@@ -11,4 +11,3 @@ function DescriptionListValue({ children }: { children: React.ReactNode }) {
 }
 
 export { DescriptionList, DescriptionListTitle, DescriptionListValue };
-
