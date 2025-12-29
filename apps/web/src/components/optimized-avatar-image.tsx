@@ -1,6 +1,8 @@
 "use client";
 import { cn } from "@rallly/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
+import { Icon } from "@rallly/ui/icon";
+import { UserIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
@@ -47,10 +49,12 @@ export function OptimizedAvatarImage({
   }, [src, email]);
 
   const initials = name
+    .trim()
     .split(" ")
     .slice(0, 2)
     .map((word) => word[0])
-    .join("");
+    .join("")
+    .toUpperCase();
 
   const imageSrc = src || gravatarUrl;
 
@@ -74,7 +78,13 @@ export function OptimizedAvatarImage({
       ) : null}
       {!imageSrc || !isLoaded ? (
         <AvatarFallback seed={name} className={cn("shrink-0")}>
-          {initials}
+          {/^[A-Z]+$/.test(initials) ? (
+            initials
+          ) : (
+            <Icon>
+              <UserIcon />
+            </Icon>
+          )}
         </AvatarFallback>
       ) : null}
     </Avatar>
