@@ -2,6 +2,7 @@ import "./globals.css";
 
 import { PostHogIdentify, PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/sonner";
+import { ThemeProvider } from "@rallly/ui/theme-provider";
 import { TooltipProvider } from "@rallly/ui/tooltip";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
@@ -14,6 +15,7 @@ import type { Params } from "@/app/[locale]/types";
 import { requireUser } from "@/auth/data";
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
+import { env } from "@/env";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
 import { getSession } from "@/lib/auth";
@@ -22,6 +24,7 @@ import { featureFlagConfig } from "@/lib/feature-flags/config";
 import { LocaleSync } from "@/lib/locale/client";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 import { TRPCProvider } from "@/trpc/client/provider";
+import { getForegroundColor } from "@/utils/color";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { PostHogPageView } from "../posthog-page-view";
 
@@ -71,46 +74,62 @@ export default async function Root({
   const { locale } = await params;
   const { user } = await loadData();
 
+  const primaryColor = env.PRIMARY_COLOR;
+
   return (
-    <html lang={locale} className={inter.className}>
+    <html
+      lang={locale}
+      className={inter.className}
+      suppressHydrationWarning={true}
+      style={
+        primaryColor
+          ? ({
+              "--primary": primaryColor,
+              "--primary-foreground": getForegroundColor(primaryColor),
+            } as React.CSSProperties)
+          : undefined
+      }
+    >
       <head>
         <PublicEnvScript />
       </head>
       <body>
-        <FeatureFlagsProvider value={featureFlagConfig}>
-          <Toaster />
-          <I18nProvider locale={locale}>
-            <TRPCProvider>
-              <LazyMotion features={domAnimation}>
-                <PostHogProvider>
-                  <PostHogIdentify
-                    distinctId={user && !user.isGuest ? user.id : undefined}
-                  />
-                  <PostHogPageView />
-                  <TooltipProvider>
-                    <UserProvider user={user ?? undefined}>
-                      <LocaleSync userLocale={user?.locale ?? locale} />
-                      <PreferencesProvider
-                        initialValue={{
-                          timeFormat: user?.timeFormat,
-                          timeZone: user?.timeZone,
-                          weekStart: user?.weekStart,
-                        }}
-                      >
-                        <TimezoneProvider initialTimezone={user?.timeZone}>
-                          <ConnectedDayjsProvider>
-                            {children}
-                            <TimeZoneChangeDetector />
-                          </ConnectedDayjsProvider>
-                        </TimezoneProvider>
-                      </PreferencesProvider>
-                    </UserProvider>
-                  </TooltipProvider>
-                </PostHogProvider>
-              </LazyMotion>
-            </TRPCProvider>
-          </I18nProvider>
-        </FeatureFlagsProvider>
+        <ThemeProvider>
+          <FeatureFlagsProvider value={featureFlagConfig}>
+            <Toaster />
+            <I18nProvider locale={locale}>
+              <TRPCProvider>
+                <LazyMotion features={domAnimation}>
+                  <PostHogProvider>
+                    <PostHogIdentify
+                      distinctId={user && !user.isGuest ? user.id : undefined}
+                    />
+                    <PostHogPageView />
+                    <TooltipProvider>
+                      <UserProvider user={user ?? undefined}>
+                        <LocaleSync userLocale={user?.locale ?? locale} />
+                        <PreferencesProvider
+                          initialValue={{
+                            timeFormat: user?.timeFormat,
+                            timeZone: user?.timeZone,
+                            weekStart: user?.weekStart,
+                          }}
+                        >
+                          <TimezoneProvider initialTimezone={user?.timeZone}>
+                            <ConnectedDayjsProvider>
+                              {children}
+                              <TimeZoneChangeDetector />
+                            </ConnectedDayjsProvider>
+                          </TimezoneProvider>
+                        </PreferencesProvider>
+                      </UserProvider>
+                    </TooltipProvider>
+                  </PostHogProvider>
+                </LazyMotion>
+              </TRPCProvider>
+            </I18nProvider>
+          </FeatureFlagsProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
@@ -119,8 +138,8 @@ export default async function Root({
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
-      template: "%s | Rallly",
-      default: "Rallly",
+      template: `%s | ${env.APP_NAME}`,
+      default: env.APP_NAME,
     },
   };
 }

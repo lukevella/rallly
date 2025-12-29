@@ -10,7 +10,7 @@ import { YesIcon } from "@/components/vote-icon/yes-icon";
 const iconVariants = cva("", {
   variants: {
     size: {
-      sm: "size-4",
+      sm: "size-3",
       md: "size-5",
     },
   },

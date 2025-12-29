@@ -1,10 +1,155 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animate";
 @plugin "tailwind-scrollbar";
 
 @source "../../packages/ui/src/**/*.{ts,tsx}";
+
+:root {
+  --primary: var(--color-indigo-600);
+  --primary-foreground: var(--color-white);
+
+  --border: var(--color-gray-200);
+  --border-muted: oklch(.871 .006 286.286 / .5);
+
+  --input: var(--color-white);
+  --input-border: var(--color-gray-200);
+  --input-foreground: var(--color-gray-800);
+
+  --ring: #d1d5db;
+
+  --destructive: var(--color-rose-600);
+  --destructive-foreground: var(--color-rose-100);
+
+  --background: var(--color-white);
+  --foreground: var(--color-gray-700);
+
+  --accent: oklch(.552 .016 285.938 / .1);
+  --accent-border: var(--color-gray-300);
+  --accent-foreground: var(--color-gray-800);
+
+  --action-bar: var(--color-gray-800);
+  --action-bar-border: var(--color-gray-700);
+  --action-bar-foreground: var(--color-gray-100);
+
+  --muted: oklch(.92 .004 286.32 / .5);
+  --muted-foreground: var(--color-gray-600);
+  --muted-border: oklch(.871 .006 286.286);
+
+  --popover: var(--color-white);
+  --popover-foreground: var(--color-gray-800);
+  --popover-accent: oklch(.552 .016 285.938 / .1);
+  --popover-border: var(--color-gray-200);
+
+  --card: var(--color-white);
+  --card-border: var(--color-gray-200);
+  --card-accent: var(--color-gray-100);
+  --card-foreground: var(--color-gray-800);
+
+  --sidebar: var(--color-gray-100);
+  --sidebar-foreground: var(--color-gray-800);
+  --sidebar-border: var(--color-gray-200);
+
+  --sidebar-accent: var(--color-gray-200);
+  --sidebar-accent-foreground: var(--color-gray-800);
+}
+
+.dark {
+  --background: var(--color-gray-900);
+  --foreground: var(--color-gray-300);
+
+  --primary: var(--color-indigo-500);
+  --primary-foreground: var(--color-indigo-50);
+
+  --sidebar: var(--color-gray-900);
+  --sidebar-foreground: var(--color-gray-100);
+  --sidebar-border: var(--color-gray-800);
+
+  --sidebar-accent: var(--color-gray-800);
+  --sidebar-accent-foreground: #f9fafb;
+
+  --border: oklch(.274 .006 286.033);
+  --border-muted: oklch(.274 .006 286.033 / .5);
+
+  --input: var(--color-gray-800);
+  --input-border: var(--color-gray-700);
+  --input-foreground: var(--color-gray-100);
+
+  --ring: var(--color-gray-600);
+
+  --destructive: var(--color-rose-500);
+  --destructive-foreground: var(--color-rose-50);
+
+  --accent: var(--color-gray-700);
+  --accent-border: var(--color-gray-600);
+  --accent-foreground: var(--color-gray-100);
+
+  --muted: var(--color-gray-800);
+  --muted-foreground: var(--color-gray-400);
+  --muted-border: var(--color-gray-700);
+
+  --popover: var(--color-gray-800);
+  --popover-border: var(--color-gray-700);
+  --popover-foreground: var(--color-gray-300);
+  --popover-accent: var(--color-gray-700);
+
+  --card: color-mix(in srgb, var(--color-gray-800) 25%, transparent);
+  --card-border: var(--color-gray-800);
+  --card-foreground: var(--color-gray-300);
+  --card-accent: var(--color-gray-800);
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-border: var(--border);
+  --color-border-muted: var(--border-muted);
+
+  --color-input: var(--input);
+  --color-input-border: var(--input-border);
+  --color-input-foreground: var(--input-foreground);
+
+  --color-ring: var(--ring);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-border: var(--accent-border);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-action-bar: var(--action-bar);
+  --color-action-bar-border: var(--action-bar-border);
+  --color-action-bar-foreground: var(--action-bar-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted-border: var(--muted-border);
+
+  --color-popover: var(--popover);
+  --color-popover-border: var(--popover-border);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover-accent: var(--popover-accent);
+  
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-card-accent: var(--card-accent);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+}
 
 @theme {
   --shadow-huge:
@@ -15,75 +160,6 @@
     0px 1.4113px 1.55262px rgb(17 7 53 / 1%),
     inset 0px 1px 0px rgb(41 56 78 / 5%);
 
-  --color-primary-50: #eef2ff;
-  --color-primary-100: #e0e7ff;
-  --color-primary-200: #c7d2fe;
-  --color-primary-300: #a5b4fc;
-  --color-primary-400: #818cf8;
-  --color-primary-500: #6366f1;
-  --color-primary-600: #4f46e5;
-  --color-primary-700: #4338ca;
-  --color-primary-800: #3730a3;
-  --color-primary-900: #312e81;
-  --color-primary-950: #1e1b4b;
-  --color-primary: #4f46e5;
-  --color-primary-foreground: #eef2ff;
-  --color-primary-background: #eef2ff;
-
-  --color-secondary-background: #eef2ff;
-  --color-secondary: #eef2ff;
-  --color-secondary-foreground: #4f46e5;
-
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6b7280;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1f2937;
-  --color-gray-900: #111827;
-  --color-gray-950: #030712;
-
-  --color-border: #e5e7eb;
-
-  --color-input: #e5e7eb;
-  --color-input-background: #fff;
-  --color-input-foreground: #374151;
-
-  --color-ring: #d1d5db;
-
-  --color-destructive: #e11d48;
-  --color-destructive-background: #fff1f2;
-  --color-destructive-foreground: #fff1f2;
-
-  --color-background: #fff;
-  --color-foreground: var(--color-gray-700);
-
-  --color-accent: #f3f4f6;
-
-  --color-action-bar: #1f2937;
-  --color-action-bar-foreground: #f9fafb;
-
-  --color-muted: #f3f4f6;
-  --color-muted-background: #f9fafb;
-  --color-muted-foreground: #6b7280;
-
-  --color-popover: #fff;
-  --color-popover-foreground: #374151;
-
-  --color-card: #fff;
-  --color-card-background: #fff;
-  --color-card-foreground: #374151;
-
-  --color-sidebar: #f3f4f6;
-  --color-sidebar-foreground: #374151;
-  --color-sidebar-border: #e5e7eb;
-
-  --color-sidebar-accent: #e5e7eb;
-  --color-sidebar-accent-foreground: #1f2937;
-
   --breakpoint-xs: 375px;
 
   --ease-in-expo: cubic-bezier(0.68, -0.6, 0.32, 1.6);
@@ -92,6 +168,19 @@
   --font-sans:
     var(--font-inter), ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --color-gray-50: var(--color-zinc-50);
+  --color-gray-100: var(--color-zinc-100);
+  --color-gray-200: var(--color-zinc-200);
+  --color-gray-300: var(--color-zinc-300);
+  --color-gray-400: var(--color-zinc-400);
+  --color-gray-500: var(--color-zinc-500);
+  --color-gray-600: var(--color-zinc-600);
+  --color-gray-700: var(--color-zinc-700);
+  --color-gray-800: var(--color-zinc-800);
+  --color-gray-900: var(--color-zinc-900);
+  --color-gray-950: var(--color-zinc-950);
+  
 }
 
 /*
@@ -108,18 +197,12 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: var(--color-border, currentcolor);
   }
 }
 
 @utility text-link {
   @apply text-primary rounded-md font-medium outline-hidden hover:underline focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-1;
-}
-
-@utility bg-diagonal-lines {
-  background-color: #f9fafb;
-  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='0' x2='100%' y2='100%' stroke='%23e5e7eb' stroke-width='1'/%3E%3C/svg%3E");
-  background-repeat: repeat-y;
 }
 
 @layer utilities {

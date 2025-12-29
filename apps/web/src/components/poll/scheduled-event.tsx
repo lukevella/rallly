@@ -23,15 +23,13 @@ function DateIcon({ start }: { start: Date }) {
   const d = adjustTimeZone(start, !poll.timeZone);
   return (
     <time
-      className="inline-flex size-12 flex-col rounded-lg border text-center"
+      className="inline-flex size-12 flex-col items-center justify-center gap-1 rounded-lg border text-center"
       dateTime={d.toISOString()}
     >
-      <div className="border-green-600/10 border-b p-px text-xs">
+      <div className="text-[10px] text-muted-foreground uppercase">
         {d.format("MMM")}
       </div>
-      <div className="inline-flex grow items-center justify-center font-bold text-sm">
-        {d.format("D")}
-      </div>
+      <div className="font-bold text-sm">{d.format("D")}</div>
     </time>
   );
 }
@@ -70,8 +68,8 @@ export function ScheduledEvent() {
 
   return (
     <>
-      <div className="rounded-lg border bg-white p-0.5 shadow-xs">
-        <div className="flex h-9 items-center gap-x-2 rounded-md bg-gray-100 px-2">
+      <div className="rounded-lg border-card-border bg-card p-0.5 shadow-xs">
+        <div className="flex h-9 items-center gap-x-2 rounded-md bg-gray-100 px-2 text-card-foreground dark:bg-gray-800">
           <CalendarIcon className="size-4" />
           <h2 className="font-medium text-sm">
             <Trans i18nKey="schedulateDate" defaults="Scheduled Date" />

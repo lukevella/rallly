@@ -99,7 +99,7 @@ export default async function Root(props: {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel className="space-y-2">
-                  <Button variant="secondary" className="w-full" asChild>
+                  <Button variant="default" className="w-full" asChild>
                     <LinkBase href={linkToApp("/login")}>
                       <Trans t={t} i18nKey="login" defaults="Login" />
                     </LinkBase>

@@ -120,7 +120,7 @@ export const ProfileEmailAddress = ({ email }: { email: string }) => {
               </Alert>
             ) : null}
             {error === "invalidToken" ? (
-              <Alert variant="destructive">
+              <Alert variant="warning">
                 <XIcon />
                 <AlertDescription>
                   <p>
@@ -133,7 +133,7 @@ export const ProfileEmailAddress = ({ email }: { email: string }) => {
               </Alert>
             ) : null}
             {error === "invalidUserId" ? (
-              <Alert variant="destructive">
+              <Alert variant="warning">
                 <XIcon />
                 <AlertDescription>
                   <p>
@@ -148,7 +148,6 @@ export const ProfileEmailAddress = ({ email }: { email: string }) => {
             <div className="mt-4 flex">
               <Button
                 loading={formState.isSubmitting}
-                variant="primary"
                 type="submit"
                 disabled={!formState.isDirty}
               >

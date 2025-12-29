@@ -72,7 +72,7 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
                 <div className="flex items-center gap-2">
                   <span>{dayjs(option).format("LT")}</span>
                   {after ? (
-                    <span className="text-gray-500 text-sm">
+                    <span className="text-muted-foreground text-sm">
                       {getDuration(dayjs(after), dayjs(option))}
                     </span>
                   ) : null}
@@ -85,7 +85,7 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
             <div className="flex items-center gap-2">
               <span>{dayjs(value).format("LT")}</span>
               {after ? (
-                <span className="text-gray-500 text-sm">
+                <span className="text-muted-foreground text-sm">
                   {getDuration(dayjs(after), dayjs(value))}
                 </span>
               ) : null}

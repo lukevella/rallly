@@ -25,9 +25,7 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
           {icon || (
             <FileSearchIcon className="mb-4 inline-block size-24 text-gray-400" />
           )}
-          <div className="mb-2 font-bold text-3xl text-primary-600">
-            {title}
-          </div>
+          <div className="mb-2 font-bold text-3xl text-primary">{title}</div>
           <p className="text-gray-600">{description}</p>
         </div>
         <div className="flex justify-center space-x-3">

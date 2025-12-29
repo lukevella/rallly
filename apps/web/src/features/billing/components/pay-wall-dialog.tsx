@@ -49,7 +49,7 @@ function KeyBenefitsItem({
 }) {
   return (
     <li className="flex items-center gap-3">
-      <div className="rounded-lg border bg-linear-to-b from-white to-gray-50 p-2">
+      <div className="rounded-lg border bg-muted p-2 text-muted-foreground">
         <Icon>{icon}</Icon>
       </div>
       <div>
@@ -84,7 +84,7 @@ function PlanRadioGroupItem({
   return (
     <label
       htmlFor={id}
-      className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border p-4 transition-colors has-data-[state=checked]:border-primary-300 has-data-[state=checked]:bg-primary-background has-data-[state=checked]:ring-primary"
+      className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-popover-border p-4 transition-colors has-data-[state=checked]:border-primary has-data-[state=checked]:bg-primary/5 has-data-[state=checked]:ring-primary"
     >
       <RadioGroupItem value={value} id={id} />
       <div className="flex-1">
@@ -143,13 +143,16 @@ export function PayWallDialog({
         }
       }}
     >
-      <DialogContent size="4xl" className="overflow-hidden p-0 lg:h-[500px]">
+      <DialogContent
+        size="4xl"
+        className="overflow-hidden p-0 lg:min-h-[500px]"
+      >
         <Tabs value={selectedPlan} onValueChange={handleChangePlan} asChild>
           <div className="grid min-h-0 grid-cols-1 md:grid-cols-2">
             <div className="flex flex-col p-6">
               <DialogHeader>
                 <div className="flex items-center gap-3">
-                  <PageIcon size="sm" color="indigo">
+                  <PageIcon size="sm" color="primary">
                     <SparklesIcon />
                   </PageIcon>
                   <DialogTitle>
@@ -186,12 +189,15 @@ export function PayWallDialog({
 
               <div className="space-y-4 pt-4">
                 {selectedPlan === "pro" && (
-                  <div className="flex items-start justify-between gap-4 rounded-lg border border-dashed bg-muted-background p-4">
+                  <label
+                    htmlFor="annual-switch"
+                    className="flex items-start justify-between gap-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-700"
+                  >
                     <div className="mt-1">
-                      <BadgeDollarSignIcon className="size-4 text-green-500" />
+                      <BadgeDollarSignIcon className="size-5 text-green-500 dark:text-green-400" />
                     </div>
-                    <div className="flex-1 space-y-2">
-                      <Label htmlFor="annual-switch" className="leading-4">
+                    <div className="flex-1">
+                      <div className="text-sm">
                         <Trans
                           defaults="Save {amount} with yearly billing"
                           i18nKey="annualSavings"
@@ -203,8 +209,8 @@ export function PayWallDialog({
                             ),
                           }}
                         />
-                      </Label>
-                      <p className="text-muted-foreground text-sm">
+                      </div>
+                      <div className="text-muted-foreground text-sm">
                         <Trans
                           defaults="Pay for {payMonths, number} months, get 12."
                           i18nKey="annualDiscount"
@@ -212,7 +218,7 @@ export function PayWallDialog({
                             payMonths: 8,
                           }}
                         />
-                      </p>
+                      </div>
                     </div>
                     <div className="mt-1">
                       <Switch
@@ -221,7 +227,7 @@ export function PayWallDialog({
                         id="annual-switch"
                       />
                     </div>
-                  </div>
+                  </label>
                 )}
                 {selectedPlan === "pro" ? (
                   <TabsContent value="pro">
@@ -238,7 +244,7 @@ export function PayWallDialog({
             </div>
 
             {/* Right Side - Plan Benefits */}
-            <div className="hidden overflow-y-auto bg-muted-background px-6 py-6 md:block">
+            <div className="hidden overflow-y-auto bg-gray-100 px-6 py-6 md:block dark:bg-gray-900">
               <TabsContent value="hobby" className="space-y-6">
                 <DialogHeader>
                   <DialogTitle>{PLAN_NAMES.HOBBY}</DialogTitle>

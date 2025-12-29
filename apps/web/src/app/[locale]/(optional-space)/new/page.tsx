@@ -24,15 +24,15 @@ export default async function Page() {
   }
 
   return (
-    <div className="absolute inset-0 h-dvh overflow-auto bg-gray-100">
-      <div className="sticky top-0 z-20 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:grid-cols-3">
+    <div className="absolute inset-0 h-dvh overflow-auto bg-gray-100 dark:bg-gray-900">
+      <div className="sticky top-0 z-20 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:grid-cols-3 dark:bg-gray-900/90">
         <div className="mx-auto flex items-center justify-between gap-x-2">
           <div className="flex items-center gap-x-4 sm:flex-1">
             <BackButton />
           </div>
           <div className="flex flex-1 sm:justify-center">
-            <div className="flex items-center gap-x-3">
-              <PollPageIcon size="sm" />
+            <div className="flex items-center gap-x-2">
+              <PollPageIcon size="xs" />
               <div className="flex items-baseline gap-x-8">
                 <h1 className="font-semibold">
                   <Trans i18nKey="poll" defaults="Poll" />

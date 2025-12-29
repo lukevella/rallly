@@ -54,10 +54,12 @@ export const NewPollEmail = ({
       </Text>
       <Card style={{ textAlign: "center" }}>
         <Text style={{ textAlign: "center" }}>
-          <Link href={participantLink}>{participantLink}</Link>
+          <Link color={ctx.primaryColor} href={participantLink}>
+            {participantLink}
+          </Link>
         </Text>
       </Card>
-      <Button href={adminLink}>
+      <Button href={adminLink} color={ctx.primaryColor}>
         {ctx.t("newPoll_button", {
           defaultValue: "Manage Poll",
           ns: "emails",
