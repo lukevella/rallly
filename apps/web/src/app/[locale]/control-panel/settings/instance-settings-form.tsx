@@ -66,7 +66,7 @@ export function InstanceSettingsForm({
           onValueChange={handleChange}
           disabled={!isRegistrationEnabled}
         >
-          <SelectTrigger className="w-32">
+          <SelectTrigger id="userRegistration" className="w-32">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
