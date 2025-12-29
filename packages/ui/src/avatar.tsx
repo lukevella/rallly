@@ -7,8 +7,8 @@ import * as React from "react";
 const avatarVariants = cva("relative flex shrink-0 overflow-hidden", {
   variants: {
     size: {
-      xl: "size-12 rounded-2xl text-lg",
-      lg: "size-10 rounded-xl text-base",
+      xl: "size-12 rounded-xl text-lg",
+      lg: "size-10 rounded-lg text-base",
       md: "size-8 rounded-lg text-sm",
       sm: "size-6 rounded-md text-[10px]",
     },
