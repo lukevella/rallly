@@ -16,6 +16,11 @@ export function OptimizedAvatarImage({
   className?: string;
 }) {
   const [isLoaded, setLoaded] = React.useState(false);
+  const initials = name
+    .split(" ")
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("");
   return (
     <Avatar className={cn("rounded-full", className)} size={size}>
       {src ? (
@@ -36,7 +41,7 @@ export function OptimizedAvatarImage({
       ) : null}
       {!src || !isLoaded ? (
         <AvatarFallback seed={name} className={cn("shrink-0")}>
-          {name?.[0]?.toUpperCase()}
+          {initials}
         </AvatarFallback>
       ) : null}
     </Avatar>
