@@ -105,7 +105,10 @@ const ParticipantRowForm = ({
       </td>
       {optionIds.map((optionId, i) => {
         return (
-          <td key={optionId} className="relative h-12 border-t border-l">
+          <td
+            key={optionId}
+            className="relative h-12 border-b border-l group-[.last-row]:border-b-0"
+          >
             <Controller
               control={form.control}
               name={`votes.${i}`}

@@ -311,7 +311,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                   }}
                   ref={scrollRef}
                   className={cn(
-                    "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 grow overflow-auto scroll-smooth",
+                    "scrollbar-thin hover:scrollbar-thumb-gray-400 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 max-h-[calc(100vh-200px)] grow overflow-auto scroll-smooth",
                   )}
                 >
                   <table className="w-full table-auto border-separate border-spacing-0 bg-muted/50">
