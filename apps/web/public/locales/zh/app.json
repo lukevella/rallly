@@ -251,7 +251,6 @@
   "commandMenuNoResults": "无结果",
   "commandMenu": "命令菜单",
   "commandMenuDescription": "选择一个命令",
-  "homeNavTitle": "导航",
   "account": "账户",
   "signOut": "退出登录",
   "paginationItems": "显示{totalItems}的{startItem} - {endItem}",
