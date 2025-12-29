@@ -4,7 +4,13 @@ import { UsersIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import z from "zod";
-import { PageIcon } from "@/app/components/page-icons";
+import {
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageDescription,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/app/components/settings-layout";
 import { requireUser } from "@/auth/data";
 import {
   EmptyState,
@@ -12,12 +18,6 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import {
-  FullWidthLayout,
-  FullWidthLayoutContent,
-  FullWidthLayoutHeader,
-  FullWidthLayoutTitle,
-} from "@/components/full-width-layout";
 import { Pagination } from "@/components/pagination";
 import { StackedList } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
@@ -119,19 +119,19 @@ export default async function AdminPage(props: {
   const totalItems = totalUsers;
 
   return (
-    <FullWidthLayout>
-      <FullWidthLayoutHeader>
-        <FullWidthLayoutTitle
-          icon={
-            <PageIcon size="sm" color="darkGray">
-              <UsersIcon />
-            </PageIcon>
-          }
-        >
+    <SettingsPage>
+      <SettingsPageHeader>
+        <SettingsPageTitle>
           <Trans i18nKey="users" defaults="Users" />
-        </FullWidthLayoutTitle>
-      </FullWidthLayoutHeader>
-      <FullWidthLayoutContent>
+        </SettingsPageTitle>
+        <SettingsPageDescription>
+          <Trans
+            i18nKey="usersDescription"
+            defaults="Manage users on this instance"
+          />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
+      <SettingsPageContent>
         <div className="space-y-4">
           <UserSearchInput />
           <UsersTabbedView>
@@ -173,8 +173,8 @@ export default async function AdminPage(props: {
             )}
           </UsersTabbedView>
         </div>
-      </FullWidthLayoutContent>
-    </FullWidthLayout>
+      </SettingsPageContent>
+    </SettingsPage>
   );
 }
 

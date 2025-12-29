@@ -10,7 +10,14 @@ import { Icon } from "@rallly/ui/icon";
 import dayjs from "dayjs";
 import { KeySquareIcon, PlusIcon, ShoppingBagIcon } from "lucide-react";
 import type { Metadata } from "next";
-import { PageIcon } from "@/app/components/page-icons";
+import { PageSection } from "@/app/components/page-layout";
+import {
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageDescription,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/app/components/settings-layout";
 import { requireAdmin } from "@/auth/data";
 import {
   EmptyState,
@@ -19,12 +26,6 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import {
-  FullWidthLayout,
-  FullWidthLayoutContent,
-  FullWidthLayoutHeader,
-  FullWidthLayoutTitle,
-} from "@/components/full-width-layout";
 import { Trans } from "@/components/trans";
 import { LicenseKeyForm } from "@/features/licensing/components/license-key-form";
 import { RemoveLicenseButton } from "@/features/licensing/components/remove-license-button";
@@ -51,21 +52,21 @@ function DescriptionListValue({ children }: { children: React.ReactNode }) {
 export default async function LicensePage() {
   const { license } = await loadData();
   return (
-    <FullWidthLayout>
-      <FullWidthLayoutHeader>
-        <FullWidthLayoutTitle
-          icon={
-            <PageIcon size="sm" color="darkGray">
-              <KeySquareIcon />
-            </PageIcon>
-          }
-        >
+    <SettingsPage>
+      <SettingsPageHeader>
+        <SettingsPageTitle>
           <Trans i18nKey="license" defaults="License" />
-        </FullWidthLayoutTitle>
-      </FullWidthLayoutHeader>
-      <FullWidthLayoutContent>
+        </SettingsPageTitle>
+        <SettingsPageDescription>
+          <Trans
+            i18nKey="licenseKeyDescription"
+            defaults="Manage your instance license"
+          />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
+      <SettingsPageContent>
         {license ? (
-          <div>
+          <PageSection variant="card">
             <DescriptionList>
               <DescriptionListTitle>
                 <Trans i18nKey="licenseType" defaults="License Type" />
@@ -111,10 +112,10 @@ export default async function LicensePage() {
                 {dayjs(license.issuedAt).format("YYYY-MM-DD")}
               </DescriptionListValue>
             </DescriptionList>
-            <div className="mt-6">
+            <div>
               <RemoveLicenseButton />
             </div>
-          </div>
+          </PageSection>
         ) : (
           <EmptyState className="h-full">
             <EmptyStateIcon>
@@ -126,7 +127,7 @@ export default async function LicensePage() {
             <EmptyStateDescription>
               <Trans
                 i18nKey="noLicenseKeyDescription"
-                defaults="This instance doesn’t have a license key yet."
+                defaults="This instance doesn't have a license key yet."
               />
             </EmptyStateDescription>
             <EmptyStateFooter className="flex gap-2">
@@ -169,8 +170,8 @@ export default async function LicensePage() {
             </EmptyStateFooter>
           </EmptyState>
         )}
-      </FullWidthLayoutContent>
-    </FullWidthLayout>
+      </SettingsPageContent>
+    </SettingsPage>
   );
 }
 
