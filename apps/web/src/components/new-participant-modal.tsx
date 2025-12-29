@@ -64,12 +64,7 @@ const VoteSummary = ({
   const voteTypes = Object.keys(voteByType) as VoteType[];
 
   return (
-    <div
-      className={cn(
-        "flex flex-wrap gap-1.5 rounded-lg border p-1.5",
-        className,
-      )}
-    >
+    <div className={cn("flex flex-wrap gap-1", className)}>
       {voteTypes.map((voteType) => {
         const votes = voteByType[voteType];
         const count = votes.length;
@@ -79,11 +74,11 @@ const VoteSummary = ({
         return (
           <div
             key={voteType}
-            className="flex h-8 select-none gap-2.5 rounded-lg border bg-muted p-1 text-sm"
+            className="flex h-8 select-none gap-2.5 rounded-lg border p-1 text-sm dark:border-gray-600 dark:bg-gray-700"
           >
             <div className="flex items-center gap-2">
               <VoteIcon type={voteType} />
-              <div className="text-muted-foreground">{t(voteType)}</div>
+              <div className="text-xs">{t(voteType)}</div>
             </div>
             <Badge>{voteByType[voteType].length}</Badge>
           </div>
@@ -183,7 +178,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
           )}
         />
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-2">
           <Label>{t("response")}</Label>
           <VoteSummary votes={props.votes} />
         </div>
