@@ -70,7 +70,9 @@ export const ParticipantRowView: React.FunctionComponent<{
           <td
             // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
             key={i}
-            className={cn("h-12 border-t border-l bg-background")}
+            className={cn(
+              "h-12 border-b border-l bg-background group-[.last-row]:border-b-0",
+            )}
           >
             <div className={cn("flex items-center justify-center")}>
               <VoteIcon type={vote} />
@@ -100,6 +102,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   if (editMode) {
     return (
       <ParticipantRowForm
+        className={className}
         name={participant.name}
         isYou={isYou}
         onCancel={() => onChangeEditMode?.(false)}
