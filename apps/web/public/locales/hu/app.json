@@ -547,5 +547,19 @@
   "emailChangeInvalidUserId": "Kérjük, jelentkezz be ugyanazzal az email címmel, amelyet a változtatás kéréséhez használtál.",
   "ssoAuthenticationOnly": "A hitelesítést a Single Sign-On (SSO) kezeli. A jelszókezelés nem elérhető.",
   "oidcAutoSignInDescription": "Átirányítunk a bejelentkező oldalra...",
-  "loginVerifyCheckEmail": "Ha létezik ilyen email címmel fiók, akkor egy ellenőrző kódot fogsz kapni a(z) <b>{email}</b> címre"
+  "loginVerifyCheckEmail": "Ha létezik ilyen email címmel fiók, akkor egy ellenőrző kódot fogsz kapni a(z) <b>{email}</b> címre",
+  "themeSystem": "Rendszer",
+  "themeLight": "Világos",
+  "themeDark": "Sötét",
+  "theme": "Téma",
+  "themeDescription": "Válaszd ki a preferált megjelenést",
+  "licenseKeyDescription": "Kezeld a példányod licencét",
+  "userRegistration": "Felhasználó regisztráció",
+  "userRegistrationDescription": "Ha szeretnéd, hogy új felhasználói fiókokat lehessen létrehozni.",
+  "enabled": "Engedélyezve",
+  "disabled": "Letiltva",
+  "saving": "Mentés...",
+  "saved": "Elmentve",
+  "instanceSettingsDescription": "Konfiguráld a példányod beállításait",
+  "usersDescription": "Felhasználók kezelése ezen a példányon"
 }
