@@ -547,5 +547,19 @@
   "emailChangeInvalidUserId": "Bitte melde dich mit derselben E-Mail-Adresse an, die du für die Anfrage zur Änderung verwendet hast.",
   "ssoAuthenticationOnly": "Die Authentifizierung wird über Single Sign-On (SSO) verwaltet. Die Passwortverwaltung ist nicht verfügbar.",
   "oidcAutoSignInDescription": "Du wirst zur Anmeldeseite weitergeleitet...",
-  "loginVerifyCheckEmail": "Wenn ein Konto mit dieser E-Mail-Adresse existiert, erhältst du einen Bestätigungscode an <b>{email}</b>"
+  "loginVerifyCheckEmail": "Wenn ein Konto mit dieser E-Mail-Adresse existiert, erhältst du einen Bestätigungscode an <b>{email}</b>",
+  "themeSystem": "System",
+  "themeLight": "Hell",
+  "themeDark": "Dunkel",
+  "theme": "Design",
+  "themeDescription": "Wähle dein bevorzugtes Erscheinungsbild",
+  "licenseKeyDescription": "Verwalte den Lizenzschlüssel deiner Instanz",
+  "userRegistration": "Benutzerregistrierung",
+  "userRegistrationDescription": "Erlaube neuen Nutzern, sich zu registrieren.",
+  "enabled": "Aktiviert",
+  "disabled": "Deaktiviert",
+  "saving": "Wird gespeichert...",
+  "saved": "Gespeichert",
+  "instanceSettingsDescription": "Instanz-Einstellungen konfigurieren",
+  "usersDescription": "Benutzer in dieser Instanz verwalten"
 }
