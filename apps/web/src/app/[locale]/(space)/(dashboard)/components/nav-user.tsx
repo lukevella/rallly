@@ -17,7 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
-import { useTheme } from "@rallly/ui/theme-provider";
 import {
   ChevronDownIcon,
   LogOutIcon,
@@ -33,6 +32,7 @@ import React from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/components/trans";
+import { useTheme } from "@/features/theme/client";
 import { signOut } from "@/lib/auth-client";
 
 export function NavUser({
