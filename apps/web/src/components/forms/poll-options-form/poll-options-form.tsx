@@ -203,7 +203,7 @@ const PollOptionsForm = ({
                 }}
               />
               {formState.errors.options ? (
-                <div className="border-t bg-red-50 p-3 text-center">
+                <div className="border-t p-3 text-center text-destructive">
                   <FormMessage />
                 </div>
               ) : null}
