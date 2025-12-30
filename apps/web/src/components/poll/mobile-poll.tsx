@@ -108,7 +108,11 @@ const MobilePoll: React.FunctionComponent = () => {
                 {visibleParticipants.map((participant) => (
                   <SelectItem key={participant.id} value={participant.id}>
                     <Participant>
-                      <OptimizedAvatarImage name={participant.name} size="sm" />
+                      <OptimizedAvatarImage
+                        name={participant.name}
+                        email={participant.email ?? undefined}
+                        size="sm"
+                      />
                       <ParticipantName>{participant.name}</ParticipantName>
                       {session.ownsObject(participant) && (
                         <Badge>
