@@ -1,6 +1,6 @@
 "use client";
 import posthog from "posthog-js";
-import React from "react";
+import type React from "react";
 
 export { usePostHog } from "posthog-js/react";
 
@@ -23,15 +23,6 @@ if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   return <BasePostHogProvider client={posthog}>{children}</BasePostHogProvider>;
-}
-
-export function PostHogIdentify({ distinctId }: { distinctId?: string }) {
-  React.useEffect(() => {
-    if (distinctId) {
-      posthog?.identify(distinctId);
-    }
-  }, [distinctId]);
-  return null;
 }
 
 export { posthog };

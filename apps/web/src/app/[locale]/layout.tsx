@@ -1,6 +1,6 @@
 import "./globals.css";
 
-import { PostHogIdentify, PostHogProvider } from "@rallly/posthog/client";
+import { PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/sonner";
 import { ThemeProvider } from "@rallly/ui/theme-provider";
 import { TooltipProvider } from "@rallly/ui/tooltip";
@@ -9,7 +9,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { PublicEnvScript } from "next-runtime-env";
 import type React from "react";
-
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import type { Params } from "@/app/[locale]/types";
 import { requireUser } from "@/auth/data";
@@ -27,6 +26,7 @@ import { TRPCProvider } from "@/trpc/client/provider";
 import { getForegroundColor } from "@/utils/color";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { PostHogPageView } from "../posthog-page-view";
+import { PostHogIdentify } from "./posthog-identify";
 
 const inter = Inter({
   subsets: ["latin"],
