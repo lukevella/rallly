@@ -43,7 +43,9 @@ async function loadData({
     notFound();
   }
 
-  const where: Prisma.UserWhereInput = {};
+  const where: Prisma.UserWhereInput = {
+    isAnonymous: false,
+  };
 
   if (q) {
     where.OR = [
