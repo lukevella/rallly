@@ -1,7 +1,11 @@
 import { prisma } from "@rallly/database";
 
 export const getUserCount = async () => {
-  return await prisma.user.count();
+  return await prisma.user.count({
+    where: {
+      isAnonymous: false,
+    },
+  });
 };
 
 export const getUserHasPassword = async (userId: string) => {
