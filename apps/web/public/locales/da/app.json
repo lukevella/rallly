@@ -547,5 +547,17 @@
   "emailChangeInvalidUserId": "Log venligst ind med den samme e-mailadresse som den, du brugte til at anmode om ændringen.",
   "ssoAuthenticationOnly": "Godkendelse administreres via Single Sign-On (SSO). Adgangskodehåndtering er ikke tilgængelig.",
   "oidcAutoSignInDescription": "Du bliver omdirigeret til login-siden...",
-  "loginVerifyCheckEmail": "Hvis der findes en konto med denne e-mail, vil du modtage en bekræftelseskode på <b>{email}</b>"
+  "loginVerifyCheckEmail": "Hvis der findes en konto med denne e-mail, vil du modtage en bekræftelseskode på <b>{email}</b>",
+  "themeSystem": "System",
+  "themeLight": "Lys",
+  "themeDark": "Mørk",
+  "theme": "Tema",
+  "themeDescription": "Vælg dit foretrukne udseende",
+  "licenseKeyDescription": "Administrer din instanslicens",
+  "userRegistration": "Bruger Registrering",
+  "userRegistrationDescription": "Tillad nye brugere at registrere en konto.",
+  "enabled": "Aktiveret",
+  "disabled": "Deaktiveret",
+  "saving": "Gemmer...",
+  "saved": "Gemt"
 }
