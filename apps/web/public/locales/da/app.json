@@ -559,5 +559,7 @@
   "enabled": "Aktiveret",
   "disabled": "Deaktiveret",
   "saving": "Gemmer...",
-  "saved": "Gemt"
+  "saved": "Gemt",
+  "instanceSettingsDescription": "Konfigurer dine instansindstillinger",
+  "usersDescription": "Håndter brugere på denne instans"
 }
