@@ -16,7 +16,7 @@ export async function QuickCreateWidget() {
   return (
     <div className="space-y-8">
       <div className="space-y-6">
-        <div className="inline-flex items-center justify-center gap-2 rounded-md font-medium">
+        <div className="inline-flex items-center justify-center gap-2 rounded-md font-medium text-primary">
           <ZapIcon className="size-5" />
           <h2>
             <Trans
