@@ -70,7 +70,7 @@ COPY --from=installer /root/.cache/node/corepack/ /app/.cache/node/corepack/
 # Copy app files
 COPY --from=builder /app/scripts/docker-start.sh ./
 COPY --from=builder /app/packages/database/prisma ./prisma
-COPY --from=installer /app/apps/web/next.config.js .
+COPY --from=installer /app/apps/web/next.config.ts .
 COPY --from=installer /app/apps/web/package.json .
 
 # Copy Next.js standalone output
