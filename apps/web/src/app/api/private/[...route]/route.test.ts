@@ -32,7 +32,7 @@ vi.mock("@vercel/functions", () => ({
 }));
 
 vi.mock("@/lib/kv", () => ({
-  isKvEnabled: false,
+  isKvEnabled: () => false,
   kv: null,
 }));
 

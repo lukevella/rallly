@@ -79,7 +79,7 @@ app.post(
       const { apiKeyId } = c.get("apiAuth");
       return `private-api:polls-create:${apiKeyId}`;
     },
-    store: isKvEnabled ? new RedisStore({ client: kv }) : undefined,
+    store: isKvEnabled() ? new RedisStore({ client: kv }) : undefined,
   }),
   describeRoute({
     tags: ["Polls"],

@@ -187,7 +187,7 @@ export const authLib = betterAuth({
       },
     },
   },
-  secondaryStorage: isKvEnabled
+  secondaryStorage: isKvEnabled()
     ? {
         set: async (key: string, value: string, ttl?: number) => {
           if (ttl) {
@@ -207,7 +207,7 @@ export const authLib = betterAuth({
       }
     : undefined,
   rateLimit: {
-    storage: isKvEnabled ? "secondary-storage" : "memory",
+    storage: isKvEnabled() ? "secondary-storage" : "memory",
   },
   account: {
     fields: {

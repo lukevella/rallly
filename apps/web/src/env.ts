@@ -1,5 +1,4 @@
 import { createEnv } from "@t3-oss/env-nextjs";
-import { env as runtimeEnv } from "next-runtime-env";
 import { z } from "zod";
 
 const vercelUrl = process.env.NEXT_PUBLIC_VERCEL_URL;
@@ -119,6 +118,12 @@ export const env = createEnv({
      */
     LOGO_URL: z.url().optional(),
     LOGO_ICON_URL: z.url().optional(),
+    /**
+     *
+     */
+    KV_REST_API_URL: z.url().optional(),
+    KV_REST_API_TOKEN: z.string().optional(),
+    KV_URL: z.url().optional(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -170,11 +175,11 @@ export const env = createEnv({
     S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
     S3_REGION: process.env.S3_REGION,
     NEXT_PUBLIC_BASE_URL:
-      runtimeEnv("NEXT_PUBLIC_BASE_URL") ??
+      process.env.NEXT_PUBLIC_BASE_URL ??
       (vercelUrl ? `https://${vercelUrl}` : undefined),
-    NEXT_PUBLIC_POSTHOG_API_KEY: runtimeEnv("NEXT_PUBLIC_POSTHOG_API_KEY"),
-    NEXT_PUBLIC_POSTHOG_API_HOST: runtimeEnv("NEXT_PUBLIC_POSTHOG_API_HOST"),
-    NEXT_PUBLIC_SELF_HOSTED: runtimeEnv("NEXT_PUBLIC_SELF_HOSTED"),
+    NEXT_PUBLIC_POSTHOG_API_KEY: process.env.NEXT_PUBLIC_POSTHOG_API_KEY,
+    NEXT_PUBLIC_POSTHOG_API_HOST: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+    NEXT_PUBLIC_SELF_HOSTED: process.env.NEXT_PUBLIC_SELF_HOSTED,
     SUPPORT_EMAIL: process.env.SUPPORT_EMAIL,
     NOREPLY_EMAIL: process.env.NOREPLY_EMAIL,
     NOREPLY_EMAIL_NAME: process.env.NOREPLY_EMAIL_NAME,
@@ -191,6 +196,9 @@ export const env = createEnv({
     LOGO_URL: process.env.LOGO_URL,
     LOGO_ICON_URL: process.env.LOGO_ICON_URL,
     APP_NAME: process.env.APP_NAME,
+    KV_REST_API_URL: process.env.KV_REST_API_URL,
+    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
+    KV_URL: process.env.KV_URL,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });
