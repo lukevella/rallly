@@ -21,7 +21,7 @@ export const cached_getInstanceLicense = unstable_cache(
 );
 
 export const loadInstanceLicense = cache(async () => {
-  const license = await getInstanceLicense();
+  const license = await cached_getInstanceLicense();
 
   if (!license) {
     return null;
