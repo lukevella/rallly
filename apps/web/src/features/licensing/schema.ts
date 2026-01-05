@@ -70,6 +70,7 @@ export const validateLicenseKeyResponseSchema = apiResponseSchema(
     seats: z.coerce.number().nullable(),
     type: licenseTypeSchema,
     version: z.coerce.number().nullable(),
+    whiteLabelAddon: z.boolean(),
   }),
 );
 

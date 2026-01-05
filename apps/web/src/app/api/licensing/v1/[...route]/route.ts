@@ -140,6 +140,7 @@ app.post(
         seats: license.seats,
         type: license.type,
         version: license.version,
+        whiteLabelAddon: license.whiteLabelAddon,
       },
     } satisfies ValidateLicenseKeyResponse);
   },
