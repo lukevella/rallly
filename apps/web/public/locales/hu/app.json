@@ -560,5 +560,8 @@
   "saving": "Mentés...",
   "saved": "Elmentve",
   "instanceSettingsDescription": "Konfiguráld a példányod beállításait",
-  "usersDescription": "Felhasználók kezelése ezen a példányon"
+  "usersDescription": "Felhasználók kezelése ezen a példányon",
+  "whiteLabelAddon": "White Label bővítmény",
+  "whiteLabelAddonDescription": "Ez a bővítmény lehetővé teszi, hogy a Rallly-t a saját logóddal és színeiddel használhasd.",
+  "refreshLicense": "Licenc frissítése"
 }
