@@ -77,10 +77,10 @@ app.post(
   rateLimiter({
     keyGenerator: async (c) => {
       const { key, fingerprint } = await c.req.json();
-      return `validate-key:${key}:${fingerprint}`;
+      return `validate-license-key:${key}:${fingerprint}`;
     },
     windowMs: 60 * 1000,
-    limit: 10,
+    limit: 100,
     store: isKvAvailable
       ? new RedisStore({
           client: kv,
