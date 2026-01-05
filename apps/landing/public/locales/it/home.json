@@ -7,7 +7,7 @@
   "hubspotQuote": "La soluzione più semplice per i sondaggi di fattibilità per gruppi numerosi",
   "goodfirmsQuote": "Unico nella sua semplicità, richiede un tempo d'interazione minimo",
   "popsciQuote": "La scelta perfetta se volete mantenere il vostro RSVP semplice",
-  "ericQuote": "Se il vostro flusso di lavoro di pianificazione passa per le e-mail, vi incoraggio caldamente a lasciare che Rallly semplifichi le vostre attività di pianificazione per una giornata di lavoro più organizzata e meno stressante",
+  "ericQuote": "Se il vostro flusso di lavoro di pianificazione passa per le e-mail, vi incoraggio caldamente a lasciare che Rallly semplifichi le vostre attività di pianificazione per una giornata di lavoro più organizzata e meno stressante.",
   "viaTrustpilot": "via Trustpilot",
   "ericJobTitle": "Assistente esecutivo al MIT",
   "statsUsersRegistered": "{count, number, ::compact-short}+ utenze registrate",
@@ -25,11 +25,10 @@
   "freeSchedulingPollTitle": "Trova una data per il tuo prossimo evento",
   "freeSchedulingPollDescription": "Rallly ti permette di creare sondaggi di programmazione belli e facili da usare in modo da poter trovare il momento migliore per il tuo prossimo evento.",
   "new": "Nuovo",
-  "metaTitle": "Rally: strumento gratuito per la pianificazione di riunioni di gruppo",
+  "metaTitle": "Rallly: strumento gratuito per la pianificazione di riunioni di gruppo",
   "metaDescription": "Crea sondaggi e vota per trovare il miglior giorno o orario. Un alternativa gratuita a Doodle.",
   "when2meetAlternativeMetaTitle": "Migliore Alternativa a When2Meet: Rallly",
   "when2meetAlternativeMetaDescription": "Trova un modo migliore per pianificare le riunioni con Rallly, la migliore alternativa gratuita a When2Meet. Facile da usare e gratis.",
   "when2meetAlternative": "Stai ancora usando When2Meet?",
-  "when2meetAlternativeDescription": "Crea sondaggi di riunioni professionali, senza pubblicità, gratis, con Rallly.",
-  "spacesBlog": "Introduzione degli spazi"
+  "when2meetAlternativeDescription": "Crea sondaggi di riunioni professionali, senza pubblicità, gratis, con Rallly."
 }
