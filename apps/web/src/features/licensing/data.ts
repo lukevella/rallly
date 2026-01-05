@@ -1,13 +1,24 @@
 import { prisma } from "@rallly/database";
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
+import { INSTANCE_LICENSE_TAG } from "@/features/licensing/constants";
 
 export function getInstanceLicense() {
+  console.log("Getting instance license");
   return prisma.instanceLicense.findFirst({
     orderBy: {
       id: "asc",
     },
   });
 }
+
+export const cached_getInstanceLicense = unstable_cache(
+  getInstanceLicense,
+  [],
+  {
+    tags: [INSTANCE_LICENSE_TAG],
+  },
+);
 
 export const loadInstanceLicense = cache(async () => {
   const license = await getInstanceLicense();
@@ -27,5 +38,6 @@ export const loadInstanceLicense = cache(async () => {
         ? Number.POSITIVE_INFINITY
         : 1,
     type: license.type,
+    whiteLabelAddon: license.whiteLabelAddon,
   };
 });

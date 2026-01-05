@@ -15,8 +15,9 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Trans } from "@/components/trans";
+import { validateLicenseKeyAction } from "@/features/licensing/actions";
 import { useTranslation } from "@/i18n/client";
-import { validateLicenseKey } from "../actions/validate-license";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { checkLicenseKey } from "../helpers/check-license-key";
 
 const formSchema = z.object({
@@ -37,36 +38,20 @@ export function LicenseKeyForm() {
     resolver: zodResolver(formSchema),
   });
 
+  const validateLicenseKey = useSafeAction(validateLicenseKeyAction);
+
   const onSubmit = async (data: LicenseKeyFormValues) => {
     try {
-      const { error } = await validateLicenseKey(data.licenseKey);
+      const result = await validateLicenseKey.executeAsync({
+        key: data.licenseKey,
+      });
 
-      if (error) {
-        switch (error) {
-          case "Rate limit exceeded":
-            form.setError("licenseKey", {
-              message: t("licenseKeyErrorRateLimitExceeded", {
-                defaultValue: "Rate limit exceeded",
-              }),
-            });
-            break;
-          case "Invalid license key":
-            form.setError("licenseKey", {
-              message: t("licenseKeyErrorInvalidLicenseKey", {
-                defaultValue: "Invalid license key",
-              }),
-            });
-            break;
-          default:
-            form.setError("licenseKey", {
-              message: t("licenseKeyGenericError", {
-                defaultValue:
-                  "An error occurred while validating the license key",
-              }),
-            });
-            break;
-        }
-        return;
+      if (!result.data) {
+        form.setError("licenseKey", {
+          message: t("licenseKeyErrorInvalidLicenseKey", {
+            defaultValue: "Invalid license key",
+          }),
+        });
       }
     } catch (_error) {
       form.setError("licenseKey", {

@@ -49,6 +49,10 @@ export class LicenseManager {
       body: JSON.stringify(input),
     });
 
+    if (!res.ok) {
+      console.error(await res.json());
+    }
+
     return validateLicenseKeyResponseSchema.parse(await res.json());
   }
 }
