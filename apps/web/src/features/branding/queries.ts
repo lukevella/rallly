@@ -4,10 +4,12 @@ import type React from "react";
 import { env } from "@/env";
 import { adjustColorForContrast, getForegroundColor } from "@/utils/color";
 import {
+  DARK_MODE_BACKGROUND,
   DEFAULT_APP_NAME,
   DEFAULT_LOGO_ICON_URL,
   DEFAULT_LOGO_URL,
   DEFAULT_PRIMARY_COLOR,
+  LIGHT_MODE_BACKGROUND,
 } from "./constants";
 
 export function getPrimaryColor() {
@@ -21,18 +23,14 @@ export function getAppName() {
 export async function getBrandingCssProperties() {
   const primaryColor = getPrimaryColor();
 
-  const lightModeBackground = "#ffffff";
-  const darkModeBackground = "#171717";
-
   const primaryColorLight = adjustColorForContrast(
     primaryColor,
-    lightModeBackground,
+    LIGHT_MODE_BACKGROUND,
   );
 
-  const primaryColorDark = adjustColorForContrast(
-    primaryColor,
-    darkModeBackground,
-  );
+  const primaryColorDark =
+    env.PRIMARY_COLOR_DARK ??
+    adjustColorForContrast(primaryColor, DARK_MODE_BACKGROUND);
 
   return {
     "--primary-light": primaryColorLight,
