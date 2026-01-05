@@ -55,7 +55,7 @@ export default async function AdminPage() {
               <Link href="/control-panel/users">
                 <div className="flex justify-between">
                   <div>
-                    <PageIcon color="darkGray">
+                    <PageIcon>
                       <UsersIcon />
                     </PageIcon>
                     <TileTitle>
@@ -91,7 +91,7 @@ export default async function AdminPage() {
             <Tile asChild>
               <Link href="/control-panel/license">
                 <div className="flex justify-between">
-                  <PageIcon color="darkGray">
+                  <PageIcon>
                     <KeySquareIcon />
                   </PageIcon>
                   {tier ? (
@@ -113,7 +113,7 @@ export default async function AdminPage() {
             <Tile asChild>
               <Link href="/control-panel/settings">
                 <div className="flex justify-between">
-                  <PageIcon color="darkGray">
+                  <PageIcon>
                     <SettingsIcon />
                   </PageIcon>
                 </div>
