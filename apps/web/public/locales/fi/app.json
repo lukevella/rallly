@@ -546,5 +546,22 @@
   "emailChangeInvalidUserId": "Kirjaudu sisään samalla sähköpostiosoitteella, jota käytit muutoksen pyytämiseen.",
   "ssoAuthenticationOnly": "Tunnistautumista hallitaan kertakirjautumisen (SSO) kautta. Salasanan hallinta ei ole käytettävissä.",
   "oidcAutoSignInDescription": "Sinut ohjataan kirjautumissivulle...",
-  "loginVerifyCheckEmail": "Jos tälle sähköpostiosoitteelle on rekisteröity tili, saat vahvistuskoodin osoitteeseen <b>{email}</b>"
+  "loginVerifyCheckEmail": "Jos tälle sähköpostiosoitteelle on rekisteröity tili, saat vahvistuskoodin osoitteeseen <b>{email}</b>",
+  "themeSystem": "Järjestelmä",
+  "themeLight": "Vaalea",
+  "themeDark": "Tumma",
+  "theme": "Teema",
+  "themeDescription": "Valitse haluamasi ulkoasu",
+  "licenseKeyDescription": "Hallitse instanssisi lisenssiä",
+  "userRegistration": "Käytttäjärekisteröinti",
+  "userRegistrationDescription": "Anna uusien käyttäjien rekisteröidä tili.",
+  "enabled": "Käytössä",
+  "disabled": "Pois käytöstä",
+  "saving": "Tallennetaan...",
+  "saved": "Tallennettu",
+  "instanceSettingsDescription": "Määritä instanssisi asetukset",
+  "usersDescription": "Hallinnoi instanssin käyttäjiä",
+  "whiteLabelAddon": "White label -lisäosa",
+  "whiteLabelAddonDescription": "Tällä lisäosalla voit brändätä Ralllyn omalla logollasi ja väreilläsi.",
+  "refreshLicense": "Päivitä lisenssi"
 }
