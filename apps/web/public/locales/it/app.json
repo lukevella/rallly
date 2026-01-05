@@ -316,7 +316,6 @@
   "licenseType": "Tipo di licenza",
   "removeLicense": "Rimuovi Licenza",
   "removeLicenseDescription": "Sei sicuro di voler rimuovere questa licenza?",
-  "licenseKeyErrorRateLimitExceeded": "Superato il limite di frequenza",
   "licenseKeyErrorInvalidLicenseKey": "Chiave di licenza non valida",
   "licenseKeyGenericError": "Si è verificato un errore durante la convalida della chiave di licenza",
   "activate": "Attiva",

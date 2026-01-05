@@ -314,7 +314,6 @@
   "licenseType": "Licentietype",
   "removeLicense": "Licentie verwijderen",
   "removeLicenseDescription": "Weet je zeker dat je deze licentie wilt verwijderen?",
-  "licenseKeyErrorRateLimitExceeded": "Tarieflimiet overschreden",
   "licenseKeyErrorInvalidLicenseKey": "Ongeldige licentiesleutel",
   "licenseKeyGenericError": "Er is een fout opgetreden tijdens het valideren van de licentiesleutel",
   "activate": "Activeren",

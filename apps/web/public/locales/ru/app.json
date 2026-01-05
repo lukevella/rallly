@@ -314,7 +314,6 @@
   "licenseType": "Тип лицензии",
   "removeLicense": "Удалить лицензию",
   "removeLicenseDescription": "Вы уверены, что хотите удалить эту лицензию?",
-  "licenseKeyErrorRateLimitExceeded": "Превышен лимит частоты запросов",
   "licenseKeyErrorInvalidLicenseKey": "Недействительный лицензионный ключ",
   "licenseKeyGenericError": "Произошла ошибка при проверке лицензионного ключа",
   "activate": "Активировать",

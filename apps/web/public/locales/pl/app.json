@@ -312,7 +312,6 @@
   "licenseType": "Typ licencji",
   "removeLicense": "Usuń licencję",
   "removeLicenseDescription": "Czy na pewno chcesz usunąć tą licencję?",
-  "licenseKeyErrorRateLimitExceeded": "Przekroczono limit zapytań",
   "licenseKeyErrorInvalidLicenseKey": "Nieprawidłowy klucz licencyjny",
   "licenseKeyGenericError": "Wystąpił błąd podczas sprawdzania poprawności klucza licencji",
   "activate": "Aktywuj",

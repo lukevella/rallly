@@ -316,7 +316,6 @@
   "licenseType": "许可证类型",
   "removeLicense": "移除许可证",
   "removeLicenseDescription": "确定移除此许可证？",
-  "licenseKeyErrorRateLimitExceeded": "超出速率限制",
   "licenseKeyErrorInvalidLicenseKey": "无效的许可证密钥",
   "licenseKeyGenericError": "验证许可证密钥时发生错误",
   "activate": "启用",

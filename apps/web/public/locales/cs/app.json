@@ -313,7 +313,6 @@
   "licenseType": "Typ licence",
   "removeLicense": "Odstranit licenci",
   "removeLicenseDescription": "Opravdu chcete odstranit tuto licenci?",
-  "licenseKeyErrorRateLimitExceeded": "Limit požadavků dosažen",
   "licenseKeyErrorInvalidLicenseKey": "Nesprávný licenční klíč",
   "licenseKeyGenericError": "Při validaci licenčního klíče nastala chyba",
   "activate": "Aktivovat",
