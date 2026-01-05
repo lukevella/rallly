@@ -79,7 +79,7 @@ app.post(
       const { key, fingerprint } = await c.req.json();
       return `validate-key:${key}:${fingerprint}`;
     },
-    windowMs: 60 * 60 * 1000,
+    windowMs: 60 * 1000,
     limit: 10,
     store: isKvAvailable
       ? new RedisStore({
