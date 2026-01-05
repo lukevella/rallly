@@ -10,6 +10,7 @@ import {
   ArrowLeftIcon,
   HomeIcon,
   KeySquareIcon,
+  PaletteIcon,
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
@@ -49,6 +50,10 @@ export async function ControlPanelSidebar({
             <NavItem href="/control-panel/license">
               <KeySquareIcon className="size-4" />
               <Trans i18nKey="license" defaults="License" />
+            </NavItem>
+            <NavItem href="/control-panel/branding">
+              <PaletteIcon className="size-4" />
+              <Trans i18nKey="branding" defaults="Branding" />
             </NavItem>
             <NavItem href="/control-panel/settings">
               <SettingsIcon className="size-4" />
