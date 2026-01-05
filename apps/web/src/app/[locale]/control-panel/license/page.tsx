@@ -124,7 +124,7 @@ export default async function LicensePage() {
                 </div>
               </div>
             </PageSection>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-4 lg:grid-cols-2">
               <Card>
                 <CardHeader className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-2">
