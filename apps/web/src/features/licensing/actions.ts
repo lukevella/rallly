@@ -116,6 +116,8 @@ export const validateLicenseKeyAction = adminActionClient
       },
     });
 
+    revalidateTag(INSTANCE_LICENSE_TAG);
+
     return {
       valid: true,
     };
