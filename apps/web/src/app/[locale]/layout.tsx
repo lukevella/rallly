@@ -13,6 +13,7 @@ import { requireUser } from "@/auth/data";
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { env } from "@/env";
+import { getBrandingCssProperties } from "@/features/branding/queries";
 import { ThemeProvider } from "@/features/theme/client";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
@@ -22,7 +23,6 @@ import { featureFlagConfig } from "@/lib/feature-flags/config";
 import { LocaleSync } from "@/lib/locale/client";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 import { TRPCProvider } from "@/trpc/client/provider";
-import { getForegroundColor } from "@/utils/color";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { PostHogPageView } from "../posthog-page-view";
 import { PostHogIdentify } from "./posthog-identify";
@@ -73,21 +73,14 @@ export default async function Root({
   const { locale } = await params;
   const { user } = await loadData();
 
-  const primaryColor = env.PRIMARY_COLOR;
+  const brandingStyles = await getBrandingCssProperties();
 
   return (
     <html
       lang={locale}
       className={inter.className}
       suppressHydrationWarning={true}
-      style={
-        primaryColor
-          ? ({
-              "--primary": primaryColor,
-              "--primary-foreground": getForegroundColor(primaryColor),
-            } as React.CSSProperties)
-          : undefined
-      }
+      style={brandingStyles}
     >
       <body>
         <ThemeProvider>

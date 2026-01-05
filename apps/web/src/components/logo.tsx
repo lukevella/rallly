@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { getLogoUrl } from "@/features/branding/queries";
 
 const sizes = {
   sm: {
@@ -9,18 +10,20 @@ const sizes = {
   },
 };
 
-export const Logo = ({
+export const Logo = async ({
   className,
   size = "md",
 }: {
   className?: string;
   size?: keyof typeof sizes;
 }) => {
+  const logoUrl = getLogoUrl();
+
   return (
     // biome-ignore lint/performance/noImgElement: we don't need Image component here
     <img
       className={className}
-      src={env.LOGO_URL ?? "/static/logo.svg"}
+      src={logoUrl}
       style={{
         height: sizes[size].height,
       }}

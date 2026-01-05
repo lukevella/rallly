@@ -111,11 +111,16 @@ export const env = createEnv({
      */
     PRIMARY_COLOR: z
       .string()
-      .regex(/^#(?:[0-9a-f]{3}){1,2}$/i, "Invalid hex color")
+      .regex(/^#[0-9a-fA-F]{6}$/, "Invalid hex color")
       .optional(),
     /**
-     * Logo URL for the email logo
+     * Primary color for dark mode theming (hex format, e.g., "#6366f1")
+     * If not set, will be computed from PRIMARY_COLOR
      */
+    PRIMARY_COLOR_DARK: z
+      .string()
+      .regex(/^#[0-9a-fA-F]{6}$/, "Invalid hex color")
+      .optional(),
     LOGO_URL: z.url().optional(),
     LOGO_ICON_URL: z.url().optional(),
     /**
@@ -193,6 +198,7 @@ export const env = createEnv({
     MICROSOFT_CLIENT_ID: process.env.MICROSOFT_CLIENT_ID,
     MICROSOFT_CLIENT_SECRET: process.env.MICROSOFT_CLIENT_SECRET,
     PRIMARY_COLOR: process.env.PRIMARY_COLOR,
+    PRIMARY_COLOR_DARK: process.env.PRIMARY_COLOR_DARK,
     LOGO_URL: process.env.LOGO_URL,
     LOGO_ICON_URL: process.env.LOGO_ICON_URL,
     APP_NAME: process.env.APP_NAME,
