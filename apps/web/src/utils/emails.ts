@@ -4,6 +4,11 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
+import {
+  getAppName,
+  getLogoIconUrl,
+  getPrimaryColor,
+} from "@/features/branding/queries";
 
 export const getEmailClient = (locale?: string) => {
   return new EmailClient({
@@ -17,14 +22,12 @@ export const getEmailClient = (locale?: string) => {
       },
     },
     config: {
-      logoUrl: env.LOGO_ICON_URL
-        ? env.LOGO_ICON_URL
-        : "https://d39ixtfgglw55o.cloudfront.net/images/rallly-logo-mark.png",
+      logoUrl: getLogoIconUrl(),
       baseUrl: absoluteUrl(),
       domain: absoluteUrl().replace(/(^\w+:|^)\/\//, ""),
       supportEmail: env.SUPPORT_EMAIL,
-      primaryColor: env.PRIMARY_COLOR ?? "#4f46e5",
-      appName: env.APP_NAME,
+      primaryColor: getPrimaryColor(),
+      appName: getAppName(),
     },
     locale,
     onError: (e) => {

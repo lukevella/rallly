@@ -9,8 +9,8 @@
 @source "../../packages/ui/src/**/*.{ts,tsx}";
 
 :root {
-  --primary: var(--color-indigo-600);
-  --primary-foreground: var(--color-white);
+  --primary: var(--primary-light, var(--color-indigo-600));
+  --primary-foreground: var(--primary-light-foreground, var(--color-white));
 
   --border: var(--color-gray-200);
   --border-muted: oklch(.871 .006 286.286 / .5);
@@ -61,8 +61,8 @@
   --background: var(--color-gray-900);
   --foreground: var(--color-gray-300);
 
-  --primary: var(--color-indigo-500);
-  --primary-foreground: var(--color-indigo-50);
+  --primary: var(--primary-dark, var(--color-indigo-500));
+  --primary-foreground: var(--primary-dark-foreground, var(--color-indigo-50));
 
   --sidebar: var(--color-gray-900);
   --sidebar-foreground: var(--color-gray-100);
