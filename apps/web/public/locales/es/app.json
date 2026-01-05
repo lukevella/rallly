@@ -316,7 +316,6 @@
   "licenseType": "Tipo de licencia",
   "removeLicense": "Eliminar licencia",
   "removeLicenseDescription": "¿Confirmas que deseas eliminar esta licencia?",
-  "licenseKeyErrorRateLimitExceeded": "Límite de tasa excedido",
   "licenseKeyErrorInvalidLicenseKey": "Clave de licencia no válida",
   "licenseKeyGenericError": "Ocurrió un error al validar la clave de licencia",
   "activate": "Activar",
