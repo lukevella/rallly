@@ -563,5 +563,17 @@
   "usersDescription": "Hallinnoi instanssin käyttäjiä",
   "whiteLabelAddon": "White label -lisäosa",
   "whiteLabelAddonDescription": "Tällä lisäosalla voit brändätä Ralllyn omalla logollasi ja väreilläsi.",
-  "refreshLicense": "Päivitä lisenssi"
+  "refreshLicense": "Päivitä lisenssi",
+  "setEnvironmentVariable": "Tämän arvon voi muuttaa asettamalla <env /> -ympäristömuuttujan.",
+  "branding": "Brändäys",
+  "brandingDescription": "Näytä instanssisi brändiasetukset",
+  "customBrandingAlertDescription": "Mukautettu brändäys on saatavilla Enterprise-lisenssien haltijoille maksullisena lisäosana.",
+  "colors": "Värit",
+  "colorsDescription": "Teeman päävärit",
+  "primaryColor": "Pääväri",
+  "primaryColorDark": "Pääväri (tumma teema)",
+  "logos": "Logot",
+  "logosDescription": "Sovelluksessa käytettävät logokuvat",
+  "logo": "Logo",
+  "logoIcon": "Logokuvake"
 }
