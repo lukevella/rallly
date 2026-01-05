@@ -316,7 +316,6 @@
   "licenseType": "Lisenssityyppi",
   "removeLicense": "Poista lisenssi",
   "removeLicenseDescription": "Haluatko varmasti poistaa tämän lisenssin?",
-  "licenseKeyErrorRateLimitExceeded": "Pyyntöraja ylittynyt",
   "licenseKeyErrorInvalidLicenseKey": "Virheellinen lisenssiavain",
   "licenseKeyGenericError": "Lisenssiavaimen vahvistamisessa tapahtui virhe",
   "activate": "Aktivoi",
