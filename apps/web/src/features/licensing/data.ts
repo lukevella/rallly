@@ -4,7 +4,6 @@ import { cache } from "react";
 import { INSTANCE_LICENSE_TAG } from "@/features/licensing/constants";
 
 export function getInstanceLicense() {
-  console.log("Getting instance license");
   return prisma.instanceLicense.findFirst({
     orderBy: {
       id: "asc",
