@@ -316,7 +316,6 @@
   "licenseType": "Licenc típusa",
   "removeLicense": "Licenc eltávolítása",
   "removeLicenseDescription": "Biztosan el szeretnéd távolítani ezt a licencet?",
-  "licenseKeyErrorRateLimitExceeded": "Túl sok próbálkozás",
   "licenseKeyErrorInvalidLicenseKey": "Érvénytelen licenckulcs",
   "licenseKeyGenericError": "Hiba történt a licenckulcs ellenőrzése közben",
   "activate": "Aktiválás",
