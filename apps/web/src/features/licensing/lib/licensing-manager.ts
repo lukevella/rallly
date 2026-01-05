@@ -1,3 +1,4 @@
+import { AppError } from "@/lib/errors";
 import type {
   CreateLicenseInput,
   ValidateLicenseInputKeySchema,
@@ -49,6 +50,17 @@ export class LicenseManager {
       body: JSON.stringify(input),
     });
 
-    return validateLicenseKeyResponseSchema.parse(await res.json());
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error(data);
+      throw new AppError({
+        code: "INTERNAL_SERVER_ERROR",
+        cause: data,
+        message: "Failed to validate license",
+      });
+    }
+
+    return validateLicenseKeyResponseSchema.parse(data);
   }
 }

@@ -1,6 +1,6 @@
 import type { SpaceMemberRole as PrismaSpaceMemberRole } from "@prisma/client";
 import { getSpaceSubscription } from "@/features/billing/data";
-import { getInstanceLicense } from "@/features/licensing/data";
+import { cached_getInstanceLicense } from "@/features/licensing/data";
 import type { LicenseType } from "@/features/licensing/schema";
 import type { MemberRole } from "@/features/space/schema";
 import { AppError } from "@/lib/errors";
@@ -60,7 +60,7 @@ export async function getTotalSeatsForSpace(spaceId: string): Promise<number> {
   try {
     if (isSelfHosted) {
       // For self-hosted instances, get seat limit from instance license
-      const license = await getInstanceLicense();
+      const license = await cached_getInstanceLicense();
 
       if (!license) {
         // No license found, return default limit

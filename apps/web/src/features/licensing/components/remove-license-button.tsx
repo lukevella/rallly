@@ -13,6 +13,7 @@ import {
   useDialog,
 } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { XIcon } from "lucide-react";
 import { useTransition } from "react";
 import { Trans } from "@/components/trans";
@@ -25,14 +26,23 @@ export function RemoveLicenseButton() {
   const removeInstanceLicense = useSafeAction(removeInstanceLicenseAction);
   return (
     <Dialog {...dialog.dialogProps}>
-      <DialogTrigger asChild>
-        <Button onClick={() => dialog.trigger()}>
-          <Icon>
-            <XIcon />
-          </Icon>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DialogTrigger asChild>
+            <Button variant="ghost" onClick={() => dialog.trigger()}>
+              <Icon>
+                <XIcon />
+              </Icon>
+              <span className="sr-only">
+                <Trans i18nKey="removeLicense" defaults="Remove License" />
+              </span>
+            </Button>
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>
           <Trans i18nKey="removeLicense" defaults="Remove License" />
-        </Button>
-      </DialogTrigger>
+        </TooltipContent>
+      </Tooltip>
       <DialogContent size="sm">
         <DialogHeader>
           <DialogTitle>

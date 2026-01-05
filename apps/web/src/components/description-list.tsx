@@ -7,7 +7,7 @@ function DescriptionListTitle({ children }: { children: React.ReactNode }) {
 }
 
 function DescriptionListValue({ children }: { children: React.ReactNode }) {
-  return <dd className="mb-4 font-mono text-sm">{children}</dd>;
+  return <dd className="mb-4 font-mono text-sm last:mb-0">{children}</dd>;
 }
 
 export { DescriptionList, DescriptionListTitle, DescriptionListValue };

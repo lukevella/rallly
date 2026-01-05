@@ -316,7 +316,6 @@
   "licenseType": "License Type",
   "removeLicense": "Remove License",
   "removeLicenseDescription": "Are you sure you want to remove this license?",
-  "licenseKeyErrorRateLimitExceeded": "Rate limit exceeded",
   "licenseKeyErrorInvalidLicenseKey": "Invalid license key",
   "licenseKeyGenericError": "An error occurred while validating the license key",
   "activate": "Activate",
@@ -561,5 +560,8 @@
   "saving": "Saving...",
   "saved": "Saved",
   "instanceSettingsDescription": "Configure your instance settings",
-  "usersDescription": "Manage users on this instance"
+  "usersDescription": "Manage users on this instance",
+  "whiteLabelAddon": "White Label Add-on",
+  "whiteLabelAddonDescription": "This add-on allows you to brand Rallly with your own logo and colors.",
+  "refreshLicense": "Refresh License"
 }
