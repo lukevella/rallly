@@ -563,5 +563,17 @@
   "usersDescription": "Manage users on this instance",
   "whiteLabelAddon": "White Label Add-on",
   "whiteLabelAddonDescription": "This add-on allows you to brand Rallly with your own logo and colors.",
-  "refreshLicense": "Refresh License"
+  "refreshLicense": "Refresh License",
+  "setEnvironmentVariable": "This value can be changed by setting the <env /> environment variable.",
+  "branding": "Branding",
+  "brandingDescription": "View your instance branding configuration",
+  "customBrandingAlertDescription": "Custom branding is available to Enterprise license holders as a paid add-on.",
+  "colors": "Colors",
+  "colorsDescription": "Primary colors used for theming",
+  "primaryColor": "Primary Color",
+  "primaryColorDark": "Primary Color (Dark Mode)",
+  "logos": "Logos",
+  "logosDescription": "Logo images used throughout the application",
+  "logo": "Logo",
+  "logoIcon": "Logo Icon"
 }

@@ -2,6 +2,7 @@ import "server-only";
 
 import type React from "react";
 import { env } from "@/env";
+import { loadInstanceLicense } from "@/features/licensing/data";
 import { adjustColorForContrast, getForegroundColor } from "@/utils/color";
 import {
   DARK_MODE_BACKGROUND,
@@ -46,4 +47,9 @@ export function getLogoUrl() {
 
 export function getLogoIconUrl() {
   return env.LOGO_ICON_URL ?? DEFAULT_LOGO_ICON_URL;
+}
+
+export async function hasWhiteLabelAddon() {
+  const license = await loadInstanceLicense();
+  return license?.whiteLabelAddon ?? false;
 }

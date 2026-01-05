@@ -5,6 +5,7 @@ import { Tile, TileGrid, TileTitle } from "@rallly/ui/tile";
 import {
   InfinityIcon,
   KeySquareIcon,
+  PaletteIcon,
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
@@ -106,6 +107,19 @@ export default async function AdminPage() {
                 </div>
                 <TileTitle>
                   <Trans i18nKey="license" defaults="License" />
+                </TileTitle>
+              </Link>
+            </Tile>
+            {/* BRANDING */}
+            <Tile asChild>
+              <Link href="/control-panel/branding">
+                <div className="flex justify-between">
+                  <PageIcon>
+                    <PaletteIcon />
+                  </PageIcon>
+                </div>
+                <TileTitle>
+                  <Trans i18nKey="branding" defaults="Branding" />
                 </TileTitle>
               </Link>
             </Tile>
