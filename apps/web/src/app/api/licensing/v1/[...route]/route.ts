@@ -106,6 +106,7 @@ app.post(
         seats: true,
         type: true,
         version: true,
+        whiteLabelAddon: true,
       },
     });
 
