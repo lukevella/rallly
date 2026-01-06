@@ -2,6 +2,7 @@ import "server-only";
 
 import type React from "react";
 import { env } from "@/env";
+import { loadInstanceLicense } from "@/features/licensing/data";
 import { adjustColorForContrast, getForegroundColor } from "@/utils/color";
 import {
   DARK_MODE_BACKGROUND,
@@ -50,4 +51,23 @@ export function getLogoUrl() {
 
 export function getLogoIconUrl() {
   return env.LOGO_ICON_URL ?? DEFAULT_LOGO_ICON_URL;
+}
+
+export function getHideAttribution() {
+  // This function is called synchronously in feature flag config,
+  // so we need to check the license synchronously
+  // The actual license check will be done at runtime when needed
+  return env.HIDE_ATTRIBUTION === "true";
+}
+
+export async function shouldHideAttribution() {
+  const license = await loadInstanceLicense();
+  const hasWhiteLabelAddon = !!license?.whiteLabelAddon;
+
+  // Only hide if both the env var is set and the user has white-label add-on
+  if (!hasWhiteLabelAddon) {
+    return false;
+  }
+
+  return env.HIDE_ATTRIBUTION === "true";
 }

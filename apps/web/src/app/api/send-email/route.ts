@@ -15,7 +15,7 @@ export const POST = async (req: NextRequest) => {
 
     // TODO: Add validation for templateName and options
 
-    const emailClient = getEmailClient(body.locale);
+    const emailClient = await getEmailClient(body.locale);
 
     try {
       await emailClient.sendTemplate(body.templateName, body.options);

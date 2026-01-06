@@ -70,7 +70,7 @@ async function handleSelfHostedCheckoutSessionCompleted(
     );
   }
 
-  const emailClient = getEmailClient();
+  const emailClient = await getEmailClient();
 
   await emailClient.sendTemplate("LicenseKeyEmail", {
     to: email,

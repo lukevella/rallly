@@ -57,6 +57,7 @@ type EmailClientConfig = {
     supportEmail: string;
     primaryColor: string;
     appName: string;
+    hideAttribution: boolean;
   };
 
   locale?: string;

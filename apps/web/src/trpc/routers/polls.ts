@@ -290,7 +290,10 @@ export const polls = router({
         });
 
         if (user) {
-          getEmailClient(ctx.user.locale).queueTemplate("NewPollEmail", {
+          const emailClient = await getEmailClient(
+            ctx.user.locale ?? undefined,
+          );
+          emailClient.queueTemplate("NewPollEmail", {
             to: user.email,
             props: {
               title: poll.title,
@@ -786,6 +789,7 @@ export const polls = router({
             select: {
               name: true,
               email: true,
+              locale: true,
             },
           },
           participants: {
@@ -1004,7 +1008,8 @@ export const polls = router({
           timeZone: scheduledEvent.timeZone,
         });
 
-        getEmailClient(ctx.user.locale).queueTemplate("FinalizeHostEmail", {
+        const emailClient = await getEmailClient(poll.user.locale ?? undefined);
+        emailClient.queueTemplate("FinalizeHostEmail", {
           to: poll.user.email,
           props: {
             name: poll.user.name,
@@ -1038,22 +1043,24 @@ export const polls = router({
             timeZone: scheduledEvent.timeZone,
             inviteeTimeZone: p.timeZone,
           });
-          getEmailClient(p.locale ?? undefined).queueTemplate(
-            "FinalizeParticipantEmail",
-            {
-              to: p.email,
-              props: {
-                pollUrl: absoluteUrl(`/invite/${poll.id}`),
-                title: poll.title,
-                hostName: poll.user?.name ?? "",
-                date,
-                day,
-                dow,
-                time,
-              },
-              attachments: [{ filename: "event.ics", content: event.value }],
+          const emailClient = await getEmailClient(p.locale ?? undefined);
+          emailClient.queueTemplate("FinalizeParticipantEmail", {
+            to: p.email,
+            props: {
+              pollUrl: absoluteUrl(`/invite/${poll.id}`),
+              title: poll.title,
+              hostName: poll.user?.name ?? "",
+              date,
+              day,
+              dow,
+              time,
             },
-          );
+            icalEvent: {
+              filename: "invite.ics",
+              method: "request",
+              content: event.value,
+            },
+          });
         }
 
         ctx.posthog?.capture({

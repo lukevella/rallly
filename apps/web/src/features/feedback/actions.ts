@@ -16,7 +16,8 @@ export const submitFeedbackAction = authActionClient
   .action(async ({ ctx, parsedInput }) => {
     try {
       const { content } = parsedInput;
-      getEmailClient().sendEmail({
+      const emailClient = await getEmailClient();
+      emailClient.sendEmail({
         to: "feedback@rallly.co",
         subject: "Feedback",
         text: `User: ${ctx.user.name} (${ctx.user.email})\n\n${content}`,

@@ -1,8 +1,16 @@
+"use client";
 import Link from "next/link";
 
 import { Trans } from "@/components/trans";
+import { useBranding } from "@/features/branding/client";
 
 export function PollFooter() {
+  const { hideAttribution } = useBranding();
+
+  if (hideAttribution) {
+    return null;
+  }
+
   return (
     <div className="pt-4 pb-12 text-center text-muted-foreground text-sm">
       <Trans
