@@ -1,6 +1,7 @@
 import "server-only";
 
 import { env } from "@/env";
+import { getWhiteLabelAddon } from "@/features/licensing/data";
 import { adjustColorForContrast } from "@/utils/color";
 import type { BrandingConfig } from "./client";
 import {
@@ -13,7 +14,7 @@ import {
   LIGHT_MODE_BACKGROUND,
 } from "./constants";
 
-export function getDefaultBrandingConfig(): BrandingConfig {
+function getDefaultBrandingConfig(): BrandingConfig {
   const baseColor = DEFAULT_PRIMARY_COLOR;
   const light = adjustColorForContrast(baseColor, LIGHT_MODE_BACKGROUND);
   const dark = adjustColorForContrast(baseColor, DARK_MODE_BACKGROUND);
@@ -33,7 +34,7 @@ export function getDefaultBrandingConfig(): BrandingConfig {
   };
 }
 
-export async function getBrandingConfig() {
+async function getCustomBrandingConfig() {
   const baseColor = env.PRIMARY_COLOR ?? DEFAULT_PRIMARY_COLOR;
   const light = adjustColorForContrast(baseColor, LIGHT_MODE_BACKGROUND);
   const dark =
@@ -53,4 +54,16 @@ export async function getBrandingConfig() {
     hideAttribution: env.HIDE_ATTRIBUTION === "true",
     appName: env.APP_NAME ?? DEFAULT_APP_NAME,
   };
+}
+
+/**
+ * Returns the branding config for the current instance.
+ * Automatically checks if the white label addon is enabled and returns
+ * the appropriate config (custom or default).
+ */
+export async function getInstanceBrandingConfig(): Promise<BrandingConfig> {
+  const hasWhiteLabelAddon = await getWhiteLabelAddon();
+  return hasWhiteLabelAddon
+    ? await getCustomBrandingConfig()
+    : getDefaultBrandingConfig();
 }

@@ -4,10 +4,10 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
-import { getBrandingConfig } from "@/features/branding/queries";
+import { getCustomBrandingConfig } from "@/features/branding/queries";
 
 export const getEmailClient = async (locale?: string) => {
-  const brandingConfig = await getBrandingConfig();
+  const brandingConfig = await getCustomBrandingConfig();
 
   return new EmailClient({
     provider: {

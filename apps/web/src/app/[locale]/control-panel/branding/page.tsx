@@ -19,14 +19,14 @@ import {
 } from "@/app/components/settings-layout";
 import { requireAdmin } from "@/auth/data";
 import { Trans } from "@/components/trans";
-import { getBrandingConfig } from "@/features/branding/queries";
+import { getCustomBrandingConfig } from "@/features/branding/queries";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getTranslation } from "@/i18n/server";
 
 async function loadData() {
   const [license, brandingConfig] = await Promise.all([
     loadInstanceLicense(),
-    getBrandingConfig(),
+    getCustomBrandingConfig(),
     requireAdmin(),
   ]);
 

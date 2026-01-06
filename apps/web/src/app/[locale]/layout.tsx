@@ -13,11 +13,7 @@ import { requireUser } from "@/auth/data";
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { BrandingProvider } from "@/features/branding/client";
-import {
-  getBrandingConfig,
-  getDefaultBrandingConfig,
-} from "@/features/branding/queries";
-import { getWhiteLabelAddon } from "@/features/licensing/data";
+import { getInstanceBrandingConfig } from "@/features/branding/queries";
 import { ThemeProvider } from "@/features/theme/client";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
@@ -44,9 +40,9 @@ export const viewport: Viewport = {
 };
 
 async function loadData() {
-  const [session, hasWhiteLabelAddon] = await Promise.all([
+  const [session, brandingConfig] = await Promise.all([
     getSession(),
-    getWhiteLabelAddon(),
+    getInstanceBrandingConfig(),
   ]);
 
   const user = session?.user
@@ -65,15 +61,10 @@ async function loadData() {
         } satisfies UserDTO)
     : null;
 
-  const brandingConfig = hasWhiteLabelAddon
-    ? await getBrandingConfig()
-    : getDefaultBrandingConfig();
-
   return {
     session,
     user,
     brandingConfig,
-    hasWhiteLabelAddon,
   };
 }
 
@@ -150,10 +141,7 @@ export default async function Root({
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hasWhiteLabelAddon = await getWhiteLabelAddon();
-  const brandingConfig = hasWhiteLabelAddon
-    ? await getBrandingConfig()
-    : getDefaultBrandingConfig();
+  const brandingConfig = await getInstanceBrandingConfig();
 
   return {
     title: {

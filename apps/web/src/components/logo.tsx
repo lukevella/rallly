@@ -1,6 +1,6 @@
 import { cn } from "@rallly/ui";
 import { env } from "@/env";
-import { getBrandingConfig } from "@/features/branding/queries";
+import { getInstanceBrandingConfig } from "@/features/branding/queries";
 
 const sizes = {
   sm: {
@@ -18,7 +18,7 @@ export const Logo = async ({
   className?: string;
   size?: keyof typeof sizes;
 }) => {
-  const { logo } = await getBrandingConfig();
+  const { logo } = await getInstanceBrandingConfig();
 
   return (
     <div
