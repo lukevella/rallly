@@ -575,5 +575,6 @@
   "logos": "Logot",
   "logosDescription": "Sovelluksessa käytettävät logokuvat",
   "logo": "Logo",
-  "logoIcon": "Logokuvake"
+  "logoIcon": "Logokuvake",
+  "logoDark": "Logo (tumma tila)"
 }
