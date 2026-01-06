@@ -162,12 +162,12 @@ export const comments = router({
         emailClient.queueTemplate("NewCommentEmail", {
           to: email,
           props: {
-            title: poll.title,
-            authorName: watcher.user.name,
+            authorName,
             pollUrl: absoluteUrl(`/poll/${poll.id}`),
             disableNotificationsUrl: absoluteUrl(
               `/api/notifications/unsubscribe?token=${token}`,
             ),
+            title: poll.title,
           },
         });
       }
