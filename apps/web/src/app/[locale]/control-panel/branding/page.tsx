@@ -19,32 +19,25 @@ import {
 } from "@/app/components/settings-layout";
 import { requireAdmin } from "@/auth/data";
 import { Trans } from "@/components/trans";
-import {
-  getLogoIconUrl,
-  getLogoUrl,
-  getPrimaryColor,
-  shouldHideAttribution,
-} from "@/features/branding/queries";
+import { getBrandingConfig } from "@/features/branding/queries";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getTranslation } from "@/i18n/server";
 
 async function loadData() {
-  const [license, logoUrls, primaryColors] = await Promise.all([
+  const [license, brandingConfig] = await Promise.all([
     loadInstanceLicense(),
-    getLogoUrl(),
-    getPrimaryColor(),
-    getPrimaryColor(),
+    getBrandingConfig(),
     requireAdmin(),
   ]);
 
   return {
-    primaryColorLight: primaryColors.light,
-    primaryColorDark: primaryColors.dark,
-    logoUrlLight: logoUrls.light,
-    logoUrlDark: logoUrls.dark,
+    primaryColorLight: brandingConfig.primaryColor.light,
+    primaryColorDark: brandingConfig.primaryColor.dark,
+    logoUrlLight: brandingConfig.logo.light,
+    logoUrlDark: brandingConfig.logo.dark,
     hasWhiteLabelAddon: !!license?.whiteLabelAddon,
-    logoIconUrl: await getLogoIconUrl(),
-    hideAttribution: await shouldHideAttribution(),
+    logoIconUrl: brandingConfig.logoIcon,
+    hideAttribution: brandingConfig.hideAttribution,
   };
 }
 

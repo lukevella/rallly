@@ -14,10 +14,7 @@ import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { env } from "@/env";
 import { BrandingProvider } from "@/features/branding/client";
-import {
-  getBrandingCssProperties,
-  shouldHideAttribution,
-} from "@/features/branding/queries";
+import { getBrandingConfig } from "@/features/branding/queries";
 import { getWhiteLabelAddon } from "@/features/licensing/data";
 import { ThemeProvider } from "@/features/theme/client";
 import type { UserDTO } from "@/features/user/schema";
@@ -28,6 +25,7 @@ import { featureFlagConfig } from "@/lib/feature-flags/config";
 import { LocaleSync } from "@/lib/locale/client";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 import { TRPCProvider } from "@/trpc/client/provider";
+import { getForegroundColor } from "@/utils/color";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { PostHogPageView } from "../posthog-page-view";
 import { PostHogIdentify } from "./posthog-identify";
@@ -82,13 +80,22 @@ export default async function Root({
   const { locale } = await params;
   const { user, hasWhiteLabelAddon } = await loadData();
 
-  const brandingStyles = hasWhiteLabelAddon
-    ? await getBrandingCssProperties()
+  const brandingConfig = hasWhiteLabelAddon ? await getBrandingConfig() : null;
+
+  const brandingStyles = brandingConfig
+    ? ({
+        "--primary-light": brandingConfig.primaryColor.light,
+        "--primary-light-foreground": getForegroundColor(
+          brandingConfig.primaryColor.light,
+        ),
+        "--primary-dark": brandingConfig.primaryColor.dark,
+        "--primary-dark-foreground": getForegroundColor(
+          brandingConfig.primaryColor.dark,
+        ),
+      } as React.CSSProperties)
     : undefined;
 
-  const hideAttribution = hasWhiteLabelAddon
-    ? await shouldHideAttribution()
-    : false;
+  const hideAttribution = brandingConfig?.hideAttribution ?? false;
 
   return (
     <html
