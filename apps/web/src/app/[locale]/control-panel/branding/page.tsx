@@ -119,7 +119,7 @@ export default async function BrandingPage() {
                 <div className="text-muted-foreground text-xs">
                   <Trans i18nKey="name" defaults="App Name" />
                 </div>
-                <Input value={appName} disabled readOnly />
+                <Input value={appName} readOnly />
                 <SetEnvironmentVariableAlert variable="APP_NAME" />
               </div>
             </PageSectionContent>
