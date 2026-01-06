@@ -34,7 +34,7 @@ function getDefaultBrandingConfig(): BrandingConfig {
   };
 }
 
-async function getCustomBrandingConfig() {
+export async function getCustomBrandingConfig() {
   const baseColor = env.PRIMARY_COLOR ?? DEFAULT_PRIMARY_COLOR;
   const light = adjustColorForContrast(baseColor, LIGHT_MODE_BACKGROUND);
   const dark =
