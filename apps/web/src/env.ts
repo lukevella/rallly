@@ -122,6 +122,7 @@ export const env = createEnv({
       .regex(/^#[0-9a-fA-F]{6}$/, "Invalid hex color")
       .optional(),
     LOGO_URL: z.url().optional(),
+    LOGO_URL_DARK: z.url().optional(),
     LOGO_ICON_URL: z.url().optional(),
     /**
      *
@@ -200,6 +201,7 @@ export const env = createEnv({
     PRIMARY_COLOR: process.env.PRIMARY_COLOR,
     PRIMARY_COLOR_DARK: process.env.PRIMARY_COLOR_DARK,
     LOGO_URL: process.env.LOGO_URL,
+    LOGO_URL_DARK: process.env.LOGO_URL_DARK,
     LOGO_ICON_URL: process.env.LOGO_ICON_URL,
     APP_NAME: process.env.APP_NAME,
     KV_REST_API_URL: process.env.KV_REST_API_URL,

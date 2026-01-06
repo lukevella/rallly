@@ -19,8 +19,8 @@ export default async function SetupPage() {
     <div className="flex min-h-dvh justify-center bg-background p-4 sm:items-center">
       <div className="w-full max-w-sm">
         <article className="space-y-8 lg:space-y-10">
-          <div className="py-8">
-            <Logo className="mx-auto" />
+          <div className="flex justify-center py-8">
+            <Logo />
           </div>
           <header className="text-center">
             <h1 className="font-bold text-2xl">

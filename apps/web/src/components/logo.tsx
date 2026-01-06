@@ -1,3 +1,5 @@
+import { cn } from "@rallly/ui";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { env } from "@/env";
 import { getLogoUrl } from "@/features/branding/queries";
 
@@ -17,17 +19,32 @@ export const Logo = async ({
   className?: string;
   size?: keyof typeof sizes;
 }) => {
-  const logoUrl = getLogoUrl();
+  const { light, dark } = getLogoUrl();
 
   return (
-    // biome-ignore lint/performance/noImgElement: we don't need Image component here
-    <img
-      className={className}
-      src={logoUrl}
-      style={{
-        height: sizes[size].height,
-      }}
-      alt={env.APP_NAME}
-    />
+    <a
+      href={absoluteUrl()}
+      className={cn("inline-block", className)}
+      style={{ height: sizes[size].height }}
+    >
+      {/* biome-ignore lint/performance/noImgElement: we don't need Image component here */}
+      <img
+        src={light}
+        alt={env.APP_NAME}
+        className="block h-full w-auto object-contain dark:hidden"
+        style={{
+          height: sizes[size].height,
+        }}
+      />
+      {/* biome-ignore lint/performance/noImgElement: we don't need Image component here */}
+      <img
+        src={dark}
+        alt={env.APP_NAME}
+        className="hidden h-full w-auto object-contain dark:block"
+        style={{
+          height: sizes[size].height,
+        }}
+      />
+    </a>
   );
 };
