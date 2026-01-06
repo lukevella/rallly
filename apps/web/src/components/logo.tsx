@@ -1,5 +1,4 @@
 import { cn } from "@rallly/ui";
-import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { env } from "@/env";
 import { getLogoUrl } from "@/features/branding/queries";
 
@@ -22,8 +21,7 @@ export const Logo = async ({
   const { light, dark } = getLogoUrl();
 
   return (
-    <a
-      href={absoluteUrl()}
+    <div
       className={cn("inline-block", className)}
       style={{ height: sizes[size].height }}
     >
@@ -45,6 +43,6 @@ export const Logo = async ({
           height: sizes[size].height,
         }}
       />
-    </a>
+    </div>
   );
 };
