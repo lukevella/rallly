@@ -1055,7 +1055,11 @@ export const polls = router({
               dow,
               time,
             },
-            attachments: [{ filename: "event.ics", content: event.value }],
+            icalEvent: {
+              filename: "invite.ics",
+              method: "request",
+              content: event.value,
+            },
           });
         }
 
