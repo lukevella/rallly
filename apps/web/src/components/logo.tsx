@@ -18,7 +18,7 @@ export const Logo = async ({
   className?: string;
   size?: keyof typeof sizes;
 }) => {
-  const { light, dark } = getLogoUrl();
+  const { light, dark } = await getLogoUrl();
 
   return (
     <div

@@ -23,11 +23,11 @@ export const getEmailClient = async (locale?: string) => {
       },
     },
     config: {
-      logoUrl: getLogoIconUrl(),
+      logoUrl: await getLogoIconUrl(),
       baseUrl: absoluteUrl(),
       domain: absoluteUrl().replace(/(^\w+:|^)\/\//, ""),
       supportEmail: env.SUPPORT_EMAIL,
-      primaryColor: getPrimaryColor().light,
+      primaryColor: (await getPrimaryColor()).light,
       appName: getAppName(),
       hideAttribution: await shouldHideAttribution(),
     },

@@ -29,16 +29,21 @@ import { loadInstanceLicense } from "@/features/licensing/data";
 import { getTranslation } from "@/i18n/server";
 
 async function loadData() {
-  const [license] = await Promise.all([loadInstanceLicense(), requireAdmin()]);
-  const logoUrls = getLogoUrl();
-  const primaryColors = getPrimaryColor();
+  const [license, logoUrls, primaryColors] = await Promise.all([
+    loadInstanceLicense(),
+    getLogoUrl(),
+    getPrimaryColor(),
+    getPrimaryColor(),
+    requireAdmin(),
+  ]);
+
   return {
     primaryColorLight: primaryColors.light,
     primaryColorDark: primaryColors.dark,
     logoUrlLight: logoUrls.light,
     logoUrlDark: logoUrls.dark,
     hasWhiteLabelAddon: !!license?.whiteLabelAddon,
-    logoIconUrl: getLogoIconUrl(),
+    logoIconUrl: await getLogoIconUrl(),
     hideAttribution: await shouldHideAttribution(),
   };
 }

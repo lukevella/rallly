@@ -2,7 +2,6 @@ import "server-only";
 
 import type React from "react";
 import { env } from "@/env";
-import { loadInstanceLicense } from "@/features/licensing/data";
 import { adjustColorForContrast, getForegroundColor } from "@/utils/color";
 import {
   DARK_MODE_BACKGROUND,
@@ -14,7 +13,7 @@ import {
   LIGHT_MODE_BACKGROUND,
 } from "./constants";
 
-export function getPrimaryColor() {
+export async function getPrimaryColor() {
   const baseColor = env.PRIMARY_COLOR ?? DEFAULT_PRIMARY_COLOR;
   const light = adjustColorForContrast(baseColor, LIGHT_MODE_BACKGROUND);
   const dark =
@@ -32,7 +31,7 @@ export function getAppName() {
 }
 
 export async function getBrandingCssProperties() {
-  const { light, dark } = getPrimaryColor();
+  const { light, dark } = await getPrimaryColor();
 
   return {
     "--primary-light": light,
@@ -42,14 +41,14 @@ export async function getBrandingCssProperties() {
   } as React.CSSProperties;
 }
 
-export function getLogoUrl() {
+export async function getLogoUrl() {
   return {
     light: env.LOGO_URL ?? DEFAULT_LOGO_URL,
     dark: env.LOGO_URL_DARK ?? env.LOGO_URL ?? DEFAULT_LOGO_URL_DARK,
   };
 }
 
-export function getLogoIconUrl() {
+export async function getLogoIconUrl() {
   return env.LOGO_ICON_URL ?? DEFAULT_LOGO_ICON_URL;
 }
 
@@ -61,13 +60,5 @@ export function getHideAttribution() {
 }
 
 export async function shouldHideAttribution() {
-  const license = await loadInstanceLicense();
-  const hasWhiteLabelAddon = !!license?.whiteLabelAddon;
-
-  // Only hide if both the env var is set and the user has white-label add-on
-  if (!hasWhiteLabelAddon) {
-    return false;
-  }
-
   return env.HIDE_ATTRIBUTION === "true";
 }

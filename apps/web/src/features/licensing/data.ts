@@ -56,3 +56,8 @@ export const didExceedLicenseLimit = async () => {
 
   return license.seats < userCount;
 };
+
+export const getWhiteLabelAddon = async () => {
+  const license = await loadInstanceLicense();
+  return license?.whiteLabelAddon ?? false;
+};

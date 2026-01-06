@@ -18,6 +18,7 @@ import {
   getBrandingCssProperties,
   shouldHideAttribution,
 } from "@/features/branding/queries";
+import { getWhiteLabelAddon } from "@/features/licensing/data";
 import { ThemeProvider } from "@/features/theme/client";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
@@ -43,7 +44,10 @@ export const viewport: Viewport = {
 };
 
 async function loadData() {
-  const [session] = await Promise.all([getSession()]);
+  const [session, hasWhiteLabelAddon] = await Promise.all([
+    getSession(),
+    getWhiteLabelAddon(),
+  ]);
 
   const user = session?.user
     ? !session.user.isGuest
@@ -64,6 +68,7 @@ async function loadData() {
   return {
     session,
     user,
+    hasWhiteLabelAddon,
   };
 }
 
@@ -75,12 +80,15 @@ export default async function Root({
   params: Promise<Params>;
 }) {
   const { locale } = await params;
-  const { user } = await loadData();
+  const { user, hasWhiteLabelAddon } = await loadData();
 
-  const [brandingStyles, hideAttribution] = await Promise.all([
-    getBrandingCssProperties(),
-    shouldHideAttribution(),
-  ]);
+  const brandingStyles = hasWhiteLabelAddon
+    ? await getBrandingCssProperties()
+    : undefined;
+
+  const hideAttribution = hasWhiteLabelAddon
+    ? await shouldHideAttribution()
+    : false;
 
   return (
     <html
