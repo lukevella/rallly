@@ -294,7 +294,7 @@ export const inviteMemberAction = spaceActionClient
         },
       });
 
-      const emailClient = getEmailClient(
+      const emailClient = await getEmailClient(
         existingUser?.locale ?? ctx.user.locale,
       );
 

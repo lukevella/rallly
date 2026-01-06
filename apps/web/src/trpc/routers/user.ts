@@ -128,7 +128,7 @@ export const user = router({
         },
       );
 
-      getEmailClient(ctx.user.locale).sendTemplate("ChangeEmailRequest", {
+      (await ctx.getEmailClient()).sendTemplate("ChangeEmailRequest", {
         to: input.email,
         props: {
           verificationUrl: absoluteUrl(

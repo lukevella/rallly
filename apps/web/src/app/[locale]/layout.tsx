@@ -13,7 +13,11 @@ import { requireUser } from "@/auth/data";
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { env } from "@/env";
-import { getBrandingCssProperties } from "@/features/branding/queries";
+import { BrandingProvider } from "@/features/branding/client";
+import {
+  getBrandingCssProperties,
+  shouldHidePoweredBy,
+} from "@/features/branding/queries";
 import { ThemeProvider } from "@/features/theme/client";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
@@ -73,7 +77,10 @@ export default async function Root({
   const { locale } = await params;
   const { user } = await loadData();
 
-  const brandingStyles = await getBrandingCssProperties();
+  const [brandingStyles, hidePoweredBy] = await Promise.all([
+    getBrandingCssProperties(),
+    shouldHidePoweredBy(),
+  ]);
 
   return (
     <html
@@ -85,38 +92,40 @@ export default async function Root({
       <body>
         <ThemeProvider>
           <FeatureFlagsProvider value={featureFlagConfig}>
-            <Toaster />
-            <I18nProvider locale={locale}>
-              <TRPCProvider>
-                <LazyMotion features={domAnimation}>
-                  <PostHogProvider>
-                    <PostHogIdentify
-                      distinctId={user && !user.isGuest ? user.id : undefined}
-                    />
-                    <PostHogPageView />
-                    <TooltipProvider>
-                      <UserProvider user={user ?? undefined}>
-                        <LocaleSync userLocale={user?.locale ?? locale} />
-                        <PreferencesProvider
-                          initialValue={{
-                            timeFormat: user?.timeFormat,
-                            timeZone: user?.timeZone,
-                            weekStart: user?.weekStart,
-                          }}
-                        >
-                          <TimezoneProvider initialTimezone={user?.timeZone}>
-                            <ConnectedDayjsProvider>
-                              {children}
-                              <TimeZoneChangeDetector />
-                            </ConnectedDayjsProvider>
-                          </TimezoneProvider>
-                        </PreferencesProvider>
-                      </UserProvider>
-                    </TooltipProvider>
-                  </PostHogProvider>
-                </LazyMotion>
-              </TRPCProvider>
-            </I18nProvider>
+            <BrandingProvider value={{ hidePoweredBy }}>
+              <Toaster />
+              <I18nProvider locale={locale}>
+                <TRPCProvider>
+                  <LazyMotion features={domAnimation}>
+                    <PostHogProvider>
+                      <PostHogIdentify
+                        distinctId={user && !user.isGuest ? user.id : undefined}
+                      />
+                      <PostHogPageView />
+                      <TooltipProvider>
+                        <UserProvider user={user ?? undefined}>
+                          <LocaleSync userLocale={user?.locale ?? locale} />
+                          <PreferencesProvider
+                            initialValue={{
+                              timeFormat: user?.timeFormat,
+                              timeZone: user?.timeZone,
+                              weekStart: user?.weekStart,
+                            }}
+                          >
+                            <TimezoneProvider initialTimezone={user?.timeZone}>
+                              <ConnectedDayjsProvider>
+                                {children}
+                                <TimeZoneChangeDetector />
+                              </ConnectedDayjsProvider>
+                            </TimezoneProvider>
+                          </PreferencesProvider>
+                        </UserProvider>
+                      </TooltipProvider>
+                    </PostHogProvider>
+                  </LazyMotion>
+                </TRPCProvider>
+              </I18nProvider>
+            </BrandingProvider>
           </FeatureFlagsProvider>
         </ThemeProvider>
       </body>

@@ -1,4 +1,5 @@
 import { Alert, AlertDescription } from "@rallly/ui/alert";
+import { Switch } from "@rallly/ui/switch";
 import { CodeIcon, GemIcon } from "lucide-react";
 import type { Metadata } from "next";
 import {
@@ -22,6 +23,7 @@ import {
   getLogoIconUrl,
   getLogoUrl,
   getPrimaryColor,
+  shouldHidePoweredBy,
 } from "@/features/branding/queries";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getTranslation } from "@/i18n/server";
@@ -37,6 +39,7 @@ async function loadData() {
     logoUrlDark: logoUrls.dark,
     hasWhiteLabelAddon: !!license?.whiteLabelAddon,
     logoIconUrl: getLogoIconUrl(),
+    hidePoweredBy: await shouldHidePoweredBy(),
   };
 }
 
@@ -67,6 +70,7 @@ export default async function BrandingPage() {
     logoUrlDark,
     logoIconUrl,
     hasWhiteLabelAddon,
+    hidePoweredBy,
   } = await loadData();
 
   return (
@@ -209,6 +213,30 @@ export default async function BrandingPage() {
                   </div>
                   <SetEnvironmentVariableAlert variable="LOGO_ICON_URL" />
                 </div>
+              </div>
+            </PageSectionContent>
+          </PageSection>
+          <PageSection variant="card">
+            <PageSectionHeader>
+              <PageSectionTitle>
+                <Trans i18nKey="poweredBy" defaults="Powered By" />
+              </PageSectionTitle>
+              <PageSectionDescription>
+                <Trans
+                  i18nKey="poweredByDescription"
+                  defaults="Control the visibility of the 'Powered by rallly.co' text"
+                />
+              </PageSectionDescription>
+            </PageSectionHeader>
+            <PageSectionContent>
+              <div className="space-y-2">
+                <div className="text-muted-foreground text-xs">
+                  <Trans i18nKey="hidePoweredBy" defaults="Hide Powered By" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch checked={hidePoweredBy} disabled />
+                </div>
+                <SetEnvironmentVariableAlert variable="HIDE_POWERED_BY" />
               </div>
             </PageSectionContent>
           </PageSection>

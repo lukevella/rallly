@@ -79,7 +79,7 @@ async function sendNewParticipantNotifcationEmail({
           { watcherId: watcher.id, pollId },
           { ttl: 0 },
         );
-        await getEmailClient(watcherLocale).sendTemplate(
+        await (await ctx.getEmailClient()).sendTemplate(
           "NewParticipantEmail",
           {
             to: email,
@@ -287,7 +287,7 @@ export const participants = router({
         if (email) {
           const token = await createParticipantEditToken(ctx.user.id);
 
-          getEmailClient(ctx.user.locale).queueTemplate(
+          (await ctx.getEmailClient()).queueTemplate(
             "NewParticipantConfirmationEmail",
             {
               to: email,

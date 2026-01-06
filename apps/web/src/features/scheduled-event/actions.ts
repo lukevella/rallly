@@ -112,7 +112,7 @@ export const cancelEventAction = spaceActionClient
           inviteeTimeZone: attendee.inviteeTimeZone,
         });
 
-        getEmailClient().queueTemplate("EventCanceledEmail", {
+        (await getEmailClient()).queueTemplate("EventCanceledEmail", {
           to: attendee.inviteeEmail,
           props: {
             title: event.title,

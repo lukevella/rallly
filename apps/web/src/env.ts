@@ -125,6 +125,11 @@ export const env = createEnv({
     LOGO_URL_DARK: z.url().optional(),
     LOGO_ICON_URL: z.url().optional(),
     /**
+     * Hide "Powered by rallly.co" text on invite pages and emails
+     * @default "false"
+     */
+    HIDE_POWERED_BY: z.enum(["true", "false"]).default("false"),
+    /**
      *
      */
     KV_REST_API_URL: z.url().optional(),
@@ -204,6 +209,7 @@ export const env = createEnv({
     LOGO_URL_DARK: process.env.LOGO_URL_DARK,
     LOGO_ICON_URL: process.env.LOGO_ICON_URL,
     APP_NAME: process.env.APP_NAME,
+    HIDE_POWERED_BY: process.env.HIDE_POWERED_BY,
     KV_REST_API_URL: process.env.KV_REST_API_URL,
     KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     KV_URL: process.env.KV_URL,

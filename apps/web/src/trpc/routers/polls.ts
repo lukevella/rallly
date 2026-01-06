@@ -290,7 +290,7 @@ export const polls = router({
         });
 
         if (user) {
-          getEmailClient(ctx.user.locale).queueTemplate("NewPollEmail", {
+          (await ctx.getEmailClient()).queueTemplate("NewPollEmail", {
             to: user.email,
             props: {
               title: poll.title,
@@ -1004,7 +1004,7 @@ export const polls = router({
           timeZone: scheduledEvent.timeZone,
         });
 
-        getEmailClient(ctx.user.locale).queueTemplate("FinalizeHostEmail", {
+        (await ctx.getEmailClient()).queueTemplate("FinalizeHostEmail", {
           to: poll.user.email,
           props: {
             name: poll.user.name,
@@ -1038,7 +1038,7 @@ export const polls = router({
             timeZone: scheduledEvent.timeZone,
             inviteeTimeZone: p.timeZone,
           });
-          getEmailClient(p.locale ?? undefined).queueTemplate(
+          (await ctx.getEmailClient()).queueTemplate(
             "FinalizeParticipantEmail",
             {
               to: p.email,

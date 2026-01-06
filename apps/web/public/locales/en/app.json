@@ -576,5 +576,8 @@
   "logosDescription": "Logo images used throughout the application",
   "logo": "Logo",
   "logoIcon": "Logo Icon",
-  "logoDark": "Logo (Dark Mode)"
+  "logoDark": "Logo (Dark Mode)",
+  "poweredBy": "Powered By",
+  "poweredByDescription": "Control the visibility of the 'Powered by rallly.co' text",
+  "hidePoweredBy": "Hide Powered By"
 }

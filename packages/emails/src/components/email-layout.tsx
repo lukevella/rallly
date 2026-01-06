@@ -34,6 +34,7 @@ export const EmailLayout = ({
   poweredBy = true,
 }: React.PropsWithChildren<EmailLayoutProps>) => {
   const { logoUrl } = ctx;
+  const shouldShowPoweredBy = poweredBy && !ctx.hidePoweredBy;
   return (
     <Html>
       <Head />
@@ -49,7 +50,7 @@ export const EmailLayout = ({
             alt={ctx.appName}
           />
           {children}
-          {poweredBy ? (
+          {shouldShowPoweredBy ? (
             <Section>
               <Text light={true}>
                 <Trans

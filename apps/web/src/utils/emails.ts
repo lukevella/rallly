@@ -8,9 +8,10 @@ import {
   getAppName,
   getLogoIconUrl,
   getPrimaryColor,
+  shouldHidePoweredBy,
 } from "@/features/branding/queries";
 
-export const getEmailClient = (locale?: string) => {
+export const getEmailClient = async (locale?: string) => {
   return new EmailClient({
     provider: {
       name: (process.env.EMAIL_PROVIDER as SupportedEmailProviders) ?? "smtp",
@@ -28,6 +29,7 @@ export const getEmailClient = (locale?: string) => {
       supportEmail: env.SUPPORT_EMAIL,
       primaryColor: getPrimaryColor().light,
       appName: getAppName(),
+      hidePoweredBy: await shouldHidePoweredBy(),
     },
     locale,
     onError: (e) => {
