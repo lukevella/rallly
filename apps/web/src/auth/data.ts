@@ -86,6 +86,8 @@ export const requireAdmin = cache(async () => {
 
     notFound();
   }
+
+  return user;
 });
 
 export const requireUser = cache(async () => {
