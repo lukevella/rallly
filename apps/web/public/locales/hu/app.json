@@ -576,5 +576,8 @@
   "logosDescription": "A logók több helyen is feltűnhetnek",
   "logo": "Logó",
   "logoIcon": "Logó ikon",
-  "logoDark": "Logó (sötét mód)"
+  "logoDark": "Logó (sötét mód)",
+  "attribution": "Készítő megjelölés",
+  "attributionDescription": "Szabályozd a készítő megjelölésének láthatóságát",
+  "hideAttribution": "Készítő megjelölés elrejtése"
 }
