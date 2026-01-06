@@ -575,5 +575,6 @@
   "logos": "Logos",
   "logosDescription": "Logo images used throughout the application",
   "logo": "Logo",
-  "logoIcon": "Logo Icon"
+  "logoIcon": "Logo Icon",
+  "logoDark": "Logo (Dark Mode)"
 }
