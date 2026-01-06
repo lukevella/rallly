@@ -18,22 +18,24 @@ import {
 } from "@/app/components/settings-layout";
 import { requireAdmin } from "@/auth/data";
 import { Trans } from "@/components/trans";
-import { env } from "@/env";
 import {
   getLogoIconUrl,
   getLogoUrl,
   getPrimaryColor,
-  hasWhiteLabelAddon,
 } from "@/features/branding/queries";
+import { loadInstanceLicense } from "@/features/licensing/data";
 import { getTranslation } from "@/i18n/server";
 
 async function loadData() {
-  await requireAdmin();
+  const [license] = await Promise.all([loadInstanceLicense(), requireAdmin()]);
+  const logoUrls = getLogoUrl();
+  const primaryColors = getPrimaryColor();
   return {
-    primaryColor: getPrimaryColor(),
-    primaryColorDark: env.PRIMARY_COLOR_DARK,
-    logoUrl: getLogoUrl(),
-    hasWhiteLabelAddon: await hasWhiteLabelAddon(),
+    primaryColorLight: primaryColors.light,
+    primaryColorDark: primaryColors.dark,
+    logoUrlLight: logoUrls.light,
+    logoUrlDark: logoUrls.dark,
+    hasWhiteLabelAddon: !!license?.whiteLabelAddon,
     logoIconUrl: getLogoIconUrl(),
   };
 }
@@ -59,9 +61,10 @@ function SetEnvironmentVariableAlert({ variable }: { variable: string }) {
 
 export default async function BrandingPage() {
   const {
-    primaryColor,
+    primaryColorLight,
     primaryColorDark,
-    logoUrl,
+    logoUrlLight,
+    logoUrlDark,
     logoIconUrl,
     hasWhiteLabelAddon,
   } = await loadData();
@@ -115,32 +118,32 @@ export default async function BrandingPage() {
                   <div className="flex items-center gap-2">
                     <div
                       className="size-8 rounded border"
-                      style={{ backgroundColor: primaryColor }}
+                      style={{ backgroundColor: primaryColorLight }}
                     />
-                    <span className="font-mono text-sm">{primaryColor}</span>
+                    <span className="font-mono text-sm">
+                      {primaryColorLight}
+                    </span>
                   </div>
                   <SetEnvironmentVariableAlert variable="PRIMARY_COLOR" />
                 </div>
-                {primaryColorDark ? (
-                  <div className="space-y-2">
-                    <div className="text-muted-foreground text-xs">
-                      <Trans
-                        i18nKey="primaryColorDark"
-                        defaults="Primary Color (Dark Mode)"
-                      />
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="size-8 rounded border"
-                        style={{ backgroundColor: primaryColorDark }}
-                      />
-                      <span className="font-mono text-sm">
-                        {primaryColorDark}
-                      </span>
-                    </div>
-                    <SetEnvironmentVariableAlert variable="PRIMARY_COLOR_DARK" />
+                <div className="space-y-2">
+                  <div className="text-muted-foreground text-xs">
+                    <Trans
+                      i18nKey="primaryColorDark"
+                      defaults="Primary Color (Dark Mode)"
+                    />
                   </div>
-                ) : null}
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="size-8 rounded border"
+                      style={{ backgroundColor: primaryColorDark }}
+                    />
+                    <span className="font-mono text-sm">
+                      {primaryColorDark}
+                    </span>
+                  </div>
+                  <SetEnvironmentVariableAlert variable="PRIMARY_COLOR_DARK" />
+                </div>
               </div>
             </PageSectionContent>
           </PageSection>
@@ -163,10 +166,10 @@ export default async function BrandingPage() {
                     <Trans i18nKey="logo" defaults="Logo" />
                   </div>
                   <div className="flex items-center gap-4">
-                    <div className="flex w-48 items-center justify-center overflow-hidden rounded border">
+                    <div className="flex w-48 items-center justify-center overflow-hidden rounded border bg-white">
                       {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
                       <img
-                        src={logoUrl}
+                        src={logoUrlLight}
                         alt="Logo"
                         className="max-h-full max-w-full object-contain p-2"
                       />
@@ -176,10 +179,26 @@ export default async function BrandingPage() {
                 </div>
                 <div className="space-y-2">
                   <div className="text-muted-foreground text-xs">
+                    <Trans i18nKey="logoDark" defaults="Logo (Dark Mode)" />
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="flex w-48 items-center justify-center overflow-hidden rounded border bg-gray-900">
+                      {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
+                      <img
+                        src={logoUrlDark}
+                        alt="Logo (Dark Mode)"
+                        className="max-h-full max-w-full object-contain p-2"
+                      />
+                    </div>
+                  </div>
+                  <SetEnvironmentVariableAlert variable="LOGO_URL_DARK" />
+                </div>
+                <div className="space-y-2">
+                  <div className="text-muted-foreground text-xs">
                     <Trans i18nKey="logoIcon" defaults="Logo Icon" />
                   </div>
                   <div className="flex items-center gap-4">
-                    <div className="flex size-16 items-center justify-center overflow-hidden rounded border">
+                    <div className="flex size-16 items-center justify-center overflow-hidden rounded border bg-white">
                       {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
                       <img
                         src={logoIconUrl}
