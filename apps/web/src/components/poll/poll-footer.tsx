@@ -5,9 +5,9 @@ import { Trans } from "@/components/trans";
 import { useBranding } from "@/features/branding/client";
 
 export function PollFooter() {
-  const { hidePoweredBy } = useBranding();
+  const { hideAttribution } = useBranding();
 
-  if (hidePoweredBy) {
+  if (hideAttribution) {
     return null;
   }
 

@@ -16,7 +16,7 @@ import { env } from "@/env";
 import { BrandingProvider } from "@/features/branding/client";
 import {
   getBrandingCssProperties,
-  shouldHidePoweredBy,
+  shouldHideAttribution,
 } from "@/features/branding/queries";
 import { ThemeProvider } from "@/features/theme/client";
 import type { UserDTO } from "@/features/user/schema";
@@ -77,9 +77,9 @@ export default async function Root({
   const { locale } = await params;
   const { user } = await loadData();
 
-  const [brandingStyles, hidePoweredBy] = await Promise.all([
+  const [brandingStyles, hideAttribution] = await Promise.all([
     getBrandingCssProperties(),
-    shouldHidePoweredBy(),
+    shouldHideAttribution(),
   ]);
 
   return (
@@ -92,7 +92,7 @@ export default async function Root({
       <body>
         <ThemeProvider>
           <FeatureFlagsProvider value={featureFlagConfig}>
-            <BrandingProvider value={{ hidePoweredBy }}>
+            <BrandingProvider value={{ hideAttribution }}>
               <Toaster />
               <I18nProvider locale={locale}>
                 <TRPCProvider>

@@ -3,7 +3,7 @@
 import React from "react";
 
 export interface BrandingConfig {
-  hidePoweredBy: boolean;
+  hideAttribution: boolean;
 }
 
 const BrandingContext = React.createContext<BrandingConfig | undefined>(

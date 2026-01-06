@@ -577,7 +577,7 @@
   "logo": "Logo",
   "logoIcon": "Logo Icon",
   "logoDark": "Logo (Dark Mode)",
-  "poweredBy": "Powered By",
-  "poweredByDescription": "Control the visibility of the 'Powered by rallly.co' text",
-  "hidePoweredBy": "Hide Powered By"
+  "attribution": "Attribution",
+  "attributionDescription": "Control the visibility of the attribution text",
+  "hideAttribution": "Hide Attribution"
 }

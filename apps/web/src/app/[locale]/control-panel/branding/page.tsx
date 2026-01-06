@@ -23,7 +23,7 @@ import {
   getLogoIconUrl,
   getLogoUrl,
   getPrimaryColor,
-  shouldHidePoweredBy,
+  shouldHideAttribution,
 } from "@/features/branding/queries";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getTranslation } from "@/i18n/server";
@@ -39,7 +39,7 @@ async function loadData() {
     logoUrlDark: logoUrls.dark,
     hasWhiteLabelAddon: !!license?.whiteLabelAddon,
     logoIconUrl: getLogoIconUrl(),
-    hidePoweredBy: await shouldHidePoweredBy(),
+    hideAttribution: await shouldHideAttribution(),
   };
 }
 
@@ -70,7 +70,7 @@ export default async function BrandingPage() {
     logoUrlDark,
     logoIconUrl,
     hasWhiteLabelAddon,
-    hidePoweredBy,
+    hideAttribution,
   } = await loadData();
 
   return (
@@ -219,24 +219,27 @@ export default async function BrandingPage() {
           <PageSection variant="card">
             <PageSectionHeader>
               <PageSectionTitle>
-                <Trans i18nKey="poweredBy" defaults="Powered By" />
+                <Trans i18nKey="attribution" defaults="Attribution" />
               </PageSectionTitle>
               <PageSectionDescription>
                 <Trans
-                  i18nKey="poweredByDescription"
-                  defaults="Control the visibility of the 'Powered by rallly.co' text"
+                  i18nKey="attributionDescription"
+                  defaults="Control the visibility of the attribution text"
                 />
               </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
               <div className="space-y-2">
                 <div className="text-muted-foreground text-xs">
-                  <Trans i18nKey="hidePoweredBy" defaults="Hide Powered By" />
+                  <Trans
+                    i18nKey="hideAttribution"
+                    defaults="Hide Attribution"
+                  />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Switch checked={hidePoweredBy} disabled />
+                  <Switch checked={hideAttribution} disabled />
                 </div>
-                <SetEnvironmentVariableAlert variable="HIDE_POWERED_BY" />
+                <SetEnvironmentVariableAlert variable="HIDE_ATTRIBUTION" />
               </div>
             </PageSectionContent>
           </PageSection>

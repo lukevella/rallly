@@ -12,7 +12,7 @@ export type EmailContext = {
   t: TFunction;
   appName: string;
   primaryColor?: string;
-  hidePoweredBy?: boolean;
+  hideAttribution?: boolean;
 };
 
 export type TemplateName = keyof EmailTemplates;
