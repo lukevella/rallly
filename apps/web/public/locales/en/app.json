@@ -576,8 +576,5 @@
   "logosDescription": "Logo images used throughout the application",
   "logo": "Logo",
   "logoIcon": "Logo Icon",
-  "logoDark": "Logo (Dark Mode)",
-  "attribution": "Attribution",
-  "attributionDescription": "Control the visibility of the attribution text",
-  "hideAttribution": "Hide Attribution"
+  "logoDark": "Logo (Dark Mode)"
 }
