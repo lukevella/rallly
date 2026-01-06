@@ -13,6 +13,7 @@ export interface BrandingConfig {
   };
   logoIcon: string;
   hideAttribution: boolean;
+  appName: string;
 }
 
 const BrandingContext = React.createContext<BrandingConfig | undefined>(

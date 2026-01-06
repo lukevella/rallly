@@ -12,9 +12,11 @@ import type { Params } from "@/app/[locale]/types";
 import { requireUser } from "@/auth/data";
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
-import { env } from "@/env";
 import { BrandingProvider } from "@/features/branding/client";
-import { getBrandingConfig } from "@/features/branding/queries";
+import {
+  getBrandingConfig,
+  getDefaultBrandingConfig,
+} from "@/features/branding/queries";
 import { getWhiteLabelAddon } from "@/features/licensing/data";
 import { ThemeProvider } from "@/features/theme/client";
 import type { UserDTO } from "@/features/user/schema";
@@ -42,9 +44,8 @@ export const viewport: Viewport = {
 };
 
 async function loadData() {
-  const [session, brandingConfig, hasWhiteLabelAddon] = await Promise.all([
+  const [session, hasWhiteLabelAddon] = await Promise.all([
     getSession(),
-    getBrandingConfig(),
     getWhiteLabelAddon(),
   ]);
 
@@ -64,6 +65,10 @@ async function loadData() {
         } satisfies UserDTO)
     : null;
 
+  const brandingConfig = hasWhiteLabelAddon
+    ? await getBrandingConfig()
+    : getDefaultBrandingConfig();
+
   return {
     session,
     user,
@@ -82,18 +87,16 @@ export default async function Root({
   const { locale } = await params;
   const { user, brandingConfig } = await loadData();
 
-  const brandingStyles = brandingConfig
-    ? ({
-        "--primary-light": brandingConfig.primaryColor.light,
-        "--primary-light-foreground": getForegroundColor(
-          brandingConfig.primaryColor.light,
-        ),
-        "--primary-dark": brandingConfig.primaryColor.dark,
-        "--primary-dark-foreground": getForegroundColor(
-          brandingConfig.primaryColor.dark,
-        ),
-      } as React.CSSProperties)
-    : undefined;
+  const brandingStyles = {
+    "--primary-light": brandingConfig.primaryColor.light,
+    "--primary-light-foreground": getForegroundColor(
+      brandingConfig.primaryColor.light,
+    ),
+    "--primary-dark": brandingConfig.primaryColor.dark,
+    "--primary-dark-foreground": getForegroundColor(
+      brandingConfig.primaryColor.dark,
+    ),
+  } as React.CSSProperties;
 
   return (
     <html
@@ -147,10 +150,15 @@ export default async function Root({
 }
 
 export async function generateMetadata(): Promise<Metadata> {
+  const hasWhiteLabelAddon = await getWhiteLabelAddon();
+  const brandingConfig = hasWhiteLabelAddon
+    ? await getBrandingConfig()
+    : getDefaultBrandingConfig();
+
   return {
     title: {
-      template: `%s | ${env.APP_NAME}`,
-      default: env.APP_NAME,
+      template: `%s | ${brandingConfig.appName}`,
+      default: brandingConfig.appName,
     },
   };
 }

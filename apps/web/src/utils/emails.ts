@@ -4,7 +4,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
-import { getAppName, getBrandingConfig } from "@/features/branding/queries";
+import { getBrandingConfig } from "@/features/branding/queries";
 
 export const getEmailClient = async (locale?: string) => {
   const brandingConfig = await getBrandingConfig();
@@ -25,7 +25,7 @@ export const getEmailClient = async (locale?: string) => {
       domain: absoluteUrl().replace(/(^\w+:|^)\/\//, ""),
       supportEmail: env.SUPPORT_EMAIL,
       primaryColor: brandingConfig.primaryColor.light,
-      appName: getAppName(),
+      appName: brandingConfig.appName,
       hideAttribution: brandingConfig.hideAttribution,
     },
     locale,
