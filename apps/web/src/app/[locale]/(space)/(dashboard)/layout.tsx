@@ -16,7 +16,7 @@ import { GaugeIcon, Settings2Icon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FeedbackMenuItem } from "@/app/[locale]/(space)/(dashboard)/components/feedback-menu-item";
-import { NavUser } from "@/app/[locale]/(space)/(dashboard)/components/nav-user";
+import { NavUser } from "@/components/nav-user";
 import { SpaceSidebarMenu } from "@/app/[locale]/(space)/(dashboard)/components/space-sidebar-menu";
 import { UpgradeMenuItem } from "@/app/[locale]/(space)/(dashboard)/components/upgrade-menu-item";
 import { requireSpace, requireUser } from "@/auth/data";

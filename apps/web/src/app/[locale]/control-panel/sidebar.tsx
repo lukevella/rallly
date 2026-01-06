@@ -1,6 +1,7 @@
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
@@ -16,13 +17,21 @@ import {
 } from "lucide-react";
 import type * as React from "react";
 
+import { NavUser } from "@/components/nav-user";
 import { Trans } from "@/components/trans";
 
 import { NavItem } from "./nav-item";
 
 export async function ControlPanelSidebar({
+  user,
   ...props
-}: React.ComponentProps<typeof Sidebar>) {
+}: React.ComponentProps<typeof Sidebar> & {
+  user: {
+    name: string;
+    image?: string | null;
+    email: string;
+  };
+}) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -62,6 +71,13 @@ export async function ControlPanelSidebar({
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <NavUser
+          name={user.name}
+          image={user.image ?? undefined}
+          email={user.email}
+        />
+      </SidebarFooter>
     </Sidebar>
   );
 }
