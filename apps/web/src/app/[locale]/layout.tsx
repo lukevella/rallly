@@ -42,8 +42,9 @@ export const viewport: Viewport = {
 };
 
 async function loadData() {
-  const [session, hasWhiteLabelAddon] = await Promise.all([
+  const [session, brandingConfig, hasWhiteLabelAddon] = await Promise.all([
     getSession(),
+    getBrandingConfig(),
     getWhiteLabelAddon(),
   ]);
 
@@ -66,6 +67,7 @@ async function loadData() {
   return {
     session,
     user,
+    brandingConfig,
     hasWhiteLabelAddon,
   };
 }
@@ -78,9 +80,7 @@ export default async function Root({
   params: Promise<Params>;
 }) {
   const { locale } = await params;
-  const { user, hasWhiteLabelAddon } = await loadData();
-
-  const brandingConfig = hasWhiteLabelAddon ? await getBrandingConfig() : null;
+  const { user, brandingConfig } = await loadData();
 
   const brandingStyles = brandingConfig
     ? ({
@@ -95,8 +95,6 @@ export default async function Root({
       } as React.CSSProperties)
     : undefined;
 
-  const hideAttribution = brandingConfig?.hideAttribution ?? false;
-
   return (
     <html
       lang={locale}
@@ -107,7 +105,7 @@ export default async function Root({
       <body>
         <ThemeProvider>
           <FeatureFlagsProvider value={featureFlagConfig}>
-            <BrandingProvider value={{ hideAttribution }}>
+            <BrandingProvider value={brandingConfig}>
               <Toaster />
               <I18nProvider locale={locale}>
                 <TRPCProvider>
