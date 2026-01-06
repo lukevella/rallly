@@ -156,20 +156,20 @@ export const comments = router({
           { ttl: 0 },
         );
 
-        (await ctx.getEmailClient()).queueTemplate(
-          "NewCommentEmail",
-          {
-            to: email,
-            props: {
-              authorName,
-              pollUrl: absoluteUrl(`/poll/${poll.id}`),
-              disableNotificationsUrl: absoluteUrl(
-                `/api/notifications/unsubscribe?token=${token}`,
-              ),
-              title: poll.title,
-            },
-          },
+        const emailClient = await getEmailClient(
+          watcher.user.locale ?? undefined,
         );
+        emailClient.queueTemplate("NewCommentEmail", {
+          to: email,
+          props: {
+            title: poll.title,
+            authorName: watcher.user.name,
+            pollUrl: absoluteUrl(`/poll/${poll.id}`),
+            disableNotificationsUrl: absoluteUrl(
+              `/api/notifications/unsubscribe?token=${token}`,
+            ),
+          },
+        });
       }
 
       // Track comment addition analytics

@@ -15,10 +15,7 @@ interface BrandingProviderProps {
   children: React.ReactNode;
 }
 
-export function BrandingProvider({
-  value,
-  children,
-}: BrandingProviderProps) {
+export function BrandingProvider({ value, children }: BrandingProviderProps) {
   return (
     <BrandingContext.Provider value={value}>
       {children}
@@ -33,4 +30,3 @@ export function useBranding(): BrandingConfig {
   }
   return context;
 }
-

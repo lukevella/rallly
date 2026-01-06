@@ -79,20 +79,18 @@ async function sendNewParticipantNotifcationEmail({
           { watcherId: watcher.id, pollId },
           { ttl: 0 },
         );
-        await (await ctx.getEmailClient()).sendTemplate(
-          "NewParticipantEmail",
-          {
-            to: email,
-            props: {
-              participantName,
-              pollUrl: absoluteUrl(`/poll/${pollId}`),
-              disableNotificationsUrl: absoluteUrl(
-                `/api/notifications/unsubscribe?token=${token}`,
-              ),
-              title: pollTitle,
-            },
+        const emailClient = await getEmailClient(watcherLocale);
+        await emailClient.sendTemplate("NewParticipantEmail", {
+          to: email,
+          props: {
+            participantName,
+            pollUrl: absoluteUrl(`/poll/${pollId}`),
+            disableNotificationsUrl: absoluteUrl(
+              `/api/notifications/unsubscribe?token=${token}`,
+            ),
+            title: pollTitle,
           },
-        );
+        });
       } catch (err) {
         Sentry.captureException(err);
       }
@@ -287,18 +285,19 @@ export const participants = router({
         if (email) {
           const token = await createParticipantEditToken(ctx.user.id);
 
-          (await ctx.getEmailClient()).queueTemplate(
-            "NewParticipantConfirmationEmail",
-            {
-              to: email,
-              props: {
-                title: participant.poll.title,
-                editSubmissionUrl: absoluteUrl(
-                  `/invite/${participant.poll.id}?token=${token}`,
-                ),
-              },
-            },
+          const emailClient = await getEmailClient(
+            ctx.user.locale ?? undefined,
           );
+
+          emailClient.queueTemplate("NewParticipantConfirmationEmail", {
+            to: email,
+            props: {
+              title: participant.poll.title,
+              editSubmissionUrl: absoluteUrl(
+                `/invite/${participant.poll.id}?token=${token}`,
+              ),
+            },
+          });
         }
 
         waitUntil(
