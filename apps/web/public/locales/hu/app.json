@@ -564,7 +564,7 @@
   "whiteLabelAddon": "White Label bővítmény",
   "whiteLabelAddonDescription": "Ez a bővítmény lehetővé teszi, hogy a Rallly-t a saját logóddal és színeiddel használhasd.",
   "refreshLicense": "Licenc frissítése",
-  "setEnvironmentVariable": "Ez az érték módosítható az <env /> környezeti változó beállításával.",
+  "setEnvironmentVariable": "Ez az érték a(z) <env /> környezeti változón keresztül módosítható.",
   "branding": "Arculat",
   "brandingDescription": "Tekintsd meg a példányod arculati konfigurációját",
   "customBrandingAlertDescription": "Az egyedi arculat elérhető a Vállalati lincenccel rendelkezőknek fizetős bővítményként.",
@@ -573,7 +573,11 @@
   "primaryColor": "Elsődleges szín",
   "primaryColorDark": "Elsődleges szín (sötét mód)",
   "logos": "Logók",
-  "logosDescription": "A logók az alkalmazás egészén használhatóak",
+  "logosDescription": "A logók több helyen is feltűnhetnek",
   "logo": "Logó",
-  "logoIcon": "Logó ikon"
+  "logoIcon": "Logó ikon",
+  "logoDark": "Logó (sötét mód)",
+  "attribution": "Készítő megjelölés",
+  "attributionDescription": "Szabályozd a készítő megjelölésének láthatóságát",
+  "hideAttribution": "Készítő megjelölés elrejtése"
 }
