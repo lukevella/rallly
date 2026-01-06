@@ -1,4 +1,3 @@
-import { prisma } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
 import { Tile, TileGrid, TileTitle } from "@rallly/ui/tile";
@@ -21,10 +20,11 @@ import {
 import { requireAdmin } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { loadInstanceLicense } from "@/features/licensing/data";
+import { getUserCount } from "@/features/user/queries";
 
 async function loadData() {
   const [userCount, license] = await Promise.all([
-    prisma.user.count(),
+    getUserCount(),
     loadInstanceLicense(),
     requireAdmin(),
   ]);
