@@ -1,7 +1,8 @@
 import "server-only";
 
+import { cache } from "react";
 import { env } from "@/env";
-import { getWhiteLabelAddon } from "@/features/licensing/data";
+import { loadInstanceLicense } from "@/features/licensing/data";
 import { adjustColorForContrast } from "@/utils/color";
 import type { BrandingConfig } from "./client";
 import {
@@ -61,9 +62,10 @@ export async function getCustomBrandingConfig() {
  * Automatically checks if the white label addon is enabled and returns
  * the appropriate config (custom or default).
  */
-export async function getInstanceBrandingConfig(): Promise<BrandingConfig> {
-  const hasWhiteLabelAddon = await getWhiteLabelAddon();
+export const getInstanceBrandingConfig = cache(async () => {
+  const license = await loadInstanceLicense();
+  const hasWhiteLabelAddon = license?.whiteLabelAddon ?? false;
   return hasWhiteLabelAddon
     ? await getCustomBrandingConfig()
     : getDefaultBrandingConfig();
-}
+});

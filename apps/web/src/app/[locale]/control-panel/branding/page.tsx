@@ -36,7 +36,7 @@ async function loadData() {
     primaryColorDark: brandingConfig.primaryColor.dark,
     logoUrlLight: brandingConfig.logo.light,
     logoUrlDark: brandingConfig.logo.dark,
-    hasWhiteLabelAddon: !!license?.whiteLabelAddon,
+    hasWhiteLabelAddon: license?.whiteLabelAddon ?? false,
     logoIconUrl: brandingConfig.logoIcon,
     hideAttribution: brandingConfig.hideAttribution,
     appName: brandingConfig.appName,

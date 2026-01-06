@@ -19,6 +19,7 @@ import {
 } from "@/app/components/settings-layout";
 import { requireAdmin } from "@/auth/data";
 import { Trans } from "@/components/trans";
+import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getUserCount } from "@/features/user/queries";
 
@@ -38,7 +39,7 @@ async function loadData() {
 export default async function AdminPage() {
   const { userCount, license } = await loadData();
 
-  const userLimit = license?.seats ?? 1;
+  const userLimit = license?.seats ?? DEFAULT_SEAT_LIMIT;
   const tier = license?.type;
 
   return (

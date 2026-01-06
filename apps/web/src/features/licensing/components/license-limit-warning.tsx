@@ -1,11 +1,23 @@
 import Link from "next/link";
 import { Trans } from "@/components/trans";
-import { didExceedLicenseLimit } from "@/features/licensing/data";
+import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
+import { loadInstanceLicense } from "@/features/licensing/data";
+import { getUserCount } from "@/features/user/queries";
+import { isSelfHosted } from "@/utils/constants";
 
 export async function LicenseLimitWarning() {
-  const exceeded = await didExceedLicenseLimit();
+  if (!isSelfHosted) {
+    return null;
+  }
 
-  if (!exceeded) {
+  const [userCount, license] = await Promise.all([
+    getUserCount(),
+    loadInstanceLicense(),
+  ]);
+
+  const userLimit = license?.seats ?? DEFAULT_SEAT_LIMIT;
+
+  if (userCount <= userLimit) {
     return null;
   }
 
