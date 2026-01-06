@@ -4,14 +4,11 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
-import {
-  getAppName,
-  getLogoIconUrl,
-  getPrimaryColor,
-  shouldHideAttribution,
-} from "@/features/branding/queries";
+import { getInstanceBrandingConfig } from "@/features/branding/queries";
 
 export const getEmailClient = async (locale?: string) => {
+  const brandingConfig = await getInstanceBrandingConfig();
+
   return new EmailClient({
     provider: {
       name: (process.env.EMAIL_PROVIDER as SupportedEmailProviders) ?? "smtp",
@@ -23,13 +20,13 @@ export const getEmailClient = async (locale?: string) => {
       },
     },
     config: {
-      logoUrl: getLogoIconUrl(),
+      logoUrl: brandingConfig.logoIcon,
       baseUrl: absoluteUrl(),
       domain: absoluteUrl().replace(/(^\w+:|^)\/\//, ""),
       supportEmail: env.SUPPORT_EMAIL,
-      primaryColor: getPrimaryColor().light,
-      appName: getAppName(),
-      hideAttribution: await shouldHideAttribution(),
+      primaryColor: brandingConfig.primaryColor.light,
+      appName: brandingConfig.appName,
+      hideAttribution: brandingConfig.hideAttribution,
     },
     locale,
     onError: (e) => {

@@ -1,4 +1,5 @@
 import { Alert, AlertDescription } from "@rallly/ui/alert";
+import { Input } from "@rallly/ui/input";
 import { Switch } from "@rallly/ui/switch";
 import { CodeIcon, GemIcon } from "lucide-react";
 import type { Metadata } from "next";
@@ -19,27 +20,26 @@ import {
 } from "@/app/components/settings-layout";
 import { requireAdmin } from "@/auth/data";
 import { Trans } from "@/components/trans";
-import {
-  getLogoIconUrl,
-  getLogoUrl,
-  getPrimaryColor,
-  shouldHideAttribution,
-} from "@/features/branding/queries";
+import { getCustomBrandingConfig } from "@/features/branding/queries";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getTranslation } from "@/i18n/server";
 
 async function loadData() {
-  const [license] = await Promise.all([loadInstanceLicense(), requireAdmin()]);
-  const logoUrls = getLogoUrl();
-  const primaryColors = getPrimaryColor();
+  const [license, brandingConfig] = await Promise.all([
+    loadInstanceLicense(),
+    getCustomBrandingConfig(),
+    requireAdmin(),
+  ]);
+
   return {
-    primaryColorLight: primaryColors.light,
-    primaryColorDark: primaryColors.dark,
-    logoUrlLight: logoUrls.light,
-    logoUrlDark: logoUrls.dark,
-    hasWhiteLabelAddon: !!license?.whiteLabelAddon,
-    logoIconUrl: getLogoIconUrl(),
-    hideAttribution: await shouldHideAttribution(),
+    primaryColorLight: brandingConfig.primaryColor.light,
+    primaryColorDark: brandingConfig.primaryColor.dark,
+    logoUrlLight: brandingConfig.logo.light,
+    logoUrlDark: brandingConfig.logo.dark,
+    hasWhiteLabelAddon: license?.whiteLabelAddon ?? false,
+    logoIconUrl: brandingConfig.logoIcon,
+    hideAttribution: brandingConfig.hideAttribution,
+    appName: brandingConfig.appName,
   };
 }
 
@@ -71,6 +71,7 @@ export default async function BrandingPage() {
     logoIconUrl,
     hasWhiteLabelAddon,
     hideAttribution,
+    appName,
   } = await loadData();
 
   return (
@@ -101,6 +102,28 @@ export default async function BrandingPage() {
           </Alert>
         ) : null}
         <PageSectionGroup>
+          <PageSection variant="card">
+            <PageSectionHeader>
+              <PageSectionTitle>
+                <Trans i18nKey="general" defaults="General" />
+              </PageSectionTitle>
+              <PageSectionDescription>
+                <Trans
+                  i18nKey="brandingDescription"
+                  defaults="View your instance branding configuration"
+                />
+              </PageSectionDescription>
+            </PageSectionHeader>
+            <PageSectionContent>
+              <div className="space-y-2">
+                <div className="text-muted-foreground text-xs">
+                  <Trans i18nKey="name" defaults="App Name" />
+                </div>
+                <Input value={appName} readOnly />
+                <SetEnvironmentVariableAlert variable="APP_NAME" />
+              </div>
+            </PageSectionContent>
+          </PageSection>
           <PageSection variant="card">
             <PageSectionHeader>
               <PageSectionTitle>

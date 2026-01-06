@@ -1,6 +1,6 @@
 import { cn } from "@rallly/ui";
 import { env } from "@/env";
-import { getLogoUrl } from "@/features/branding/queries";
+import { getInstanceBrandingConfig } from "@/features/branding/queries";
 
 const sizes = {
   sm: {
@@ -18,7 +18,7 @@ export const Logo = async ({
   className?: string;
   size?: keyof typeof sizes;
 }) => {
-  const { light, dark } = getLogoUrl();
+  const { logo } = await getInstanceBrandingConfig();
 
   return (
     <div
@@ -27,7 +27,7 @@ export const Logo = async ({
     >
       {/* biome-ignore lint/performance/noImgElement: we don't need Image component here */}
       <img
-        src={light}
+        src={logo.light}
         alt={env.APP_NAME}
         className="block h-full w-auto object-contain dark:hidden"
         style={{
@@ -36,7 +36,7 @@ export const Logo = async ({
       />
       {/* biome-ignore lint/performance/noImgElement: we don't need Image component here */}
       <img
-        src={dark}
+        src={logo.dark}
         alt={env.APP_NAME}
         className="hidden h-full w-auto object-contain dark:block"
         style={{

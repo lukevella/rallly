@@ -1,8 +1,10 @@
 import { prisma } from "@rallly/database";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
-import { INSTANCE_LICENSE_TAG } from "@/features/licensing/constants";
-import { getUserCount } from "@/features/user/queries";
+import {
+  DEFAULT_SEAT_LIMIT,
+  INSTANCE_LICENSE_TAG,
+} from "@/features/licensing/constants";
 import { isSelfHosted } from "@/utils/constants";
 
 export function getInstanceLicense() {
@@ -22,6 +24,10 @@ export const cached_getInstanceLicense = unstable_cache(
 );
 
 export const loadInstanceLicense = cache(async () => {
+  if (!isSelfHosted) {
+    return null;
+  }
+
   const license = await cached_getInstanceLicense();
 
   if (!license) {
@@ -42,17 +48,21 @@ export const loadInstanceLicense = cache(async () => {
   };
 });
 
-export const didExceedLicenseLimit = async () => {
+export const getUserLimit = async () => {
   if (!isSelfHosted) {
-    return false;
+    return Number.POSITIVE_INFINITY;
   }
 
   const license = await loadInstanceLicense();
-  const userCount = await getUserCount();
 
   if (!license) {
-    return userCount > 1;
+    return DEFAULT_SEAT_LIMIT;
   }
 
-  return license.seats < userCount;
+  return license.seats;
+};
+
+export const getWhiteLabelAddon = async () => {
+  const license = await loadInstanceLicense();
+  return license?.whiteLabelAddon ?? false;
 };

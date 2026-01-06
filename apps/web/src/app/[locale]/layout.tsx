@@ -12,12 +12,8 @@ import type { Params } from "@/app/[locale]/types";
 import { requireUser } from "@/auth/data";
 import { UserProvider } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
-import { env } from "@/env";
 import { BrandingProvider } from "@/features/branding/client";
-import {
-  getBrandingCssProperties,
-  shouldHideAttribution,
-} from "@/features/branding/queries";
+import { getInstanceBrandingConfig } from "@/features/branding/queries";
 import { ThemeProvider } from "@/features/theme/client";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
@@ -27,6 +23,7 @@ import { featureFlagConfig } from "@/lib/feature-flags/config";
 import { LocaleSync } from "@/lib/locale/client";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 import { TRPCProvider } from "@/trpc/client/provider";
+import { getForegroundColor } from "@/utils/color";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { PostHogPageView } from "../posthog-page-view";
 import { PostHogIdentify } from "./posthog-identify";
@@ -43,7 +40,10 @@ export const viewport: Viewport = {
 };
 
 async function loadData() {
-  const [session] = await Promise.all([getSession()]);
+  const [session, brandingConfig] = await Promise.all([
+    getSession(),
+    getInstanceBrandingConfig(),
+  ]);
 
   const user = session?.user
     ? !session.user.isGuest
@@ -64,6 +64,7 @@ async function loadData() {
   return {
     session,
     user,
+    brandingConfig,
   };
 }
 
@@ -75,12 +76,18 @@ export default async function Root({
   params: Promise<Params>;
 }) {
   const { locale } = await params;
-  const { user } = await loadData();
+  const { user, brandingConfig } = await loadData();
 
-  const [brandingStyles, hideAttribution] = await Promise.all([
-    getBrandingCssProperties(),
-    shouldHideAttribution(),
-  ]);
+  const brandingStyles = {
+    "--primary-light": brandingConfig.primaryColor.light,
+    "--primary-light-foreground": getForegroundColor(
+      brandingConfig.primaryColor.light,
+    ),
+    "--primary-dark": brandingConfig.primaryColor.dark,
+    "--primary-dark-foreground": getForegroundColor(
+      brandingConfig.primaryColor.dark,
+    ),
+  } as React.CSSProperties;
 
   return (
     <html
@@ -92,7 +99,7 @@ export default async function Root({
       <body>
         <ThemeProvider>
           <FeatureFlagsProvider value={featureFlagConfig}>
-            <BrandingProvider value={{ hideAttribution }}>
+            <BrandingProvider value={brandingConfig}>
               <Toaster />
               <I18nProvider locale={locale}>
                 <TRPCProvider>
@@ -134,10 +141,12 @@ export default async function Root({
 }
 
 export async function generateMetadata(): Promise<Metadata> {
+  const brandingConfig = await getInstanceBrandingConfig();
+
   return {
     title: {
-      template: `%s | ${env.APP_NAME}`,
-      default: env.APP_NAME,
+      template: `%s | ${brandingConfig.appName}`,
+      default: brandingConfig.appName,
     },
   };
 }

@@ -3,7 +3,17 @@
 import React from "react";
 
 export interface BrandingConfig {
+  primaryColor: {
+    light: string;
+    dark: string;
+  };
+  logo: {
+    light: string;
+    dark: string;
+  };
+  logoIcon: string;
   hideAttribution: boolean;
+  appName: string;
 }
 
 const BrandingContext = React.createContext<BrandingConfig | undefined>(

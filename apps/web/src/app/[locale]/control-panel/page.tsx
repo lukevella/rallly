@@ -1,4 +1,3 @@
-import { prisma } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
 import { Tile, TileGrid, TileTitle } from "@rallly/ui/tile";
@@ -20,11 +19,13 @@ import {
 } from "@/app/components/settings-layout";
 import { requireAdmin } from "@/auth/data";
 import { Trans } from "@/components/trans";
+import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
 import { loadInstanceLicense } from "@/features/licensing/data";
+import { getUserCount } from "@/features/user/queries";
 
 async function loadData() {
   const [userCount, license] = await Promise.all([
-    prisma.user.count(),
+    getUserCount(),
     loadInstanceLicense(),
     requireAdmin(),
   ]);
@@ -38,7 +39,7 @@ async function loadData() {
 export default async function AdminPage() {
   const { userCount, license } = await loadData();
 
-  const userLimit = license?.seats ?? 1;
+  const userLimit = license?.seats ?? DEFAULT_SEAT_LIMIT;
   const tier = license?.type;
 
   return (
