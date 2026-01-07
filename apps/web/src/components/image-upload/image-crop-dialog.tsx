@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@rallly/ui/dialog";
 import React from "react";
-import type { Crop, PixelCrop } from "react-image-crop";
+import type { Crop, PercentCrop } from "react-image-crop";
 import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { Trans } from "@/components/trans";
@@ -41,7 +41,7 @@ export function ImageCropDialog({
 }: ImageCropDialogProps) {
   const { t } = useTranslation();
   const [crop, setCrop] = React.useState<Crop>();
-  const [completedCrop, setCompletedCrop] = React.useState<PixelCrop>();
+  const [completedCrop, setCompletedCrop] = React.useState<PercentCrop>();
   const imgRef = React.useRef<HTMLImageElement>(null);
 
   const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -102,7 +102,9 @@ export function ImageCropDialog({
             <ReactCrop
               crop={crop}
               onChange={(_, percentCrop) => setCrop(percentCrop)}
-              onComplete={(c) => setCompletedCrop(c)}
+              onComplete={(_, percentCrop) => {
+                setCompletedCrop(percentCrop);
+              }}
               aspect={1}
               minWidth={100}
               minHeight={100}
