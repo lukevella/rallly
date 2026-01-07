@@ -17,7 +17,7 @@ import {
   createPollSuccessResponseSchema,
   errorResponseSchema,
 } from "../schemas";
-import { apiKeyAuth } from "../utils/api-key";
+import { spaceApiKeyAuth } from "../utils/api-key";
 import { apiError, createPoll } from "../utils/poll";
 import type { SlotGeneratorInput } from "../utils/time-slots";
 import {
@@ -29,7 +29,8 @@ import {
 type Env = {
   Variables: {
     apiAuth: {
-      userId: string;
+      spaceId: string;
+      spaceOwnerId: string;
       apiKeyId: string;
     };
   };
@@ -71,7 +72,7 @@ app.get(
 
 app.post(
   "/polls",
-  apiKeyAuth,
+  spaceApiKeyAuth,
   rateLimiter<Env>({
     windowMs: 60 * 1000,
     limit: 60,
@@ -109,12 +110,22 @@ app.post(
   validator("json", createPollInputSchema),
   async (c) => {
     const input = c.req.valid("json");
-    const { userId } = c.get("apiAuth");
+    const apiAuth = c.get("apiAuth");
+
+    if (!("spaceId" in apiAuth)) {
+      return c.json(apiError("UNAUTHORIZED", "Space API key required"), 401);
+    }
+
+    const { spaceId, spaceOwnerId } = apiAuth;
 
     const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { timeZone: true },
+      where: { id: spaceOwnerId },
+      select: { id: true, timeZone: true },
     });
+
+    if (!user) {
+      return c.json(apiError("UNAUTHORIZED", "User not found"), 401);
+    }
 
     // Process dates (all-day options)
     if (input.dates) {
@@ -135,7 +146,7 @@ app.post(
       }
 
       const poll = await createPoll({
-        userId,
+        userId: user.id,
         title: input.title,
         description: input.description,
         location: input.location,
@@ -144,6 +155,8 @@ app.post(
         hideScores: input.hideScores,
         disableComments: input.disableComments,
         options,
+        spaceId,
+        spaceOwnerId,
       });
 
       return c.json({
@@ -227,7 +240,7 @@ app.post(
     }
 
     const poll = await createPoll({
-      userId,
+      userId: spaceOwnerId,
       title: input.title,
       description: input.description,
       location: input.location,
@@ -237,6 +250,8 @@ app.post(
       hideScores: input.hideScores,
       disableComments: input.disableComments,
       options,
+      spaceId,
+      spaceOwnerId,
     });
 
     return c.json({

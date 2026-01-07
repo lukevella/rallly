@@ -37,18 +37,23 @@ const verifyApiKey = (rawKey: string, stored: string) => {
   return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(trimmed));
 };
 
-export const apiKeyAuth = bearerAuth({
+export const spaceApiKeyAuth = bearerAuth({
   verifyToken: async (rawKey, c) => {
     const prefix = extractApiKeyPrefix(rawKey);
 
-    const apiKey = await prisma.apiKey.findUnique({
+    const apiKey = await prisma.spaceApiKey.findUnique({
       where: { prefix },
       select: {
         id: true,
-        userId: true,
+        spaceId: true,
         hashedKey: true,
         expiresAt: true,
         revokedAt: true,
+        space: {
+          select: {
+            ownerId: true,
+          },
+        },
       },
     });
 
@@ -69,12 +74,13 @@ export const apiKeyAuth = bearerAuth({
     }
 
     c.set("apiAuth", {
-      userId: apiKey.userId,
+      spaceId: apiKey.spaceId,
+      spaceOwnerId: apiKey.space.ownerId,
       apiKeyId: apiKey.id,
     });
 
     waitUntil(
-      prisma.apiKey.update({
+      prisma.spaceApiKey.update({
         where: { id: apiKey.id },
         data: { lastUsedAt: new Date() },
       }),
