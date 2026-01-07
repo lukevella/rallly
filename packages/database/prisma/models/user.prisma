@@ -64,7 +64,6 @@ model User {
   participants       Participant[]
   paymentMethods     PaymentMethod[]
   spaceMemberInvites SpaceMemberInvite[]
-  apiKeys            ApiKey[]
 
   subscriptions Subscription[] @relation("UserToSubscription")
   spaces        Space[]        @relation("UserSpaces")
@@ -85,29 +84,6 @@ model User {
   impersonatedSessions Session[] @relation("ImpersonatedSessions")
 
   @@map("users")
-}
-
-model ApiKey {
-  id        String @id @default(cuid())
-  userId    String @map("user_id")
-  name      String
-  prefix    String @unique
-  hashedKey String @map("hashed_key") @db.Text
-
-  lastUsedAt DateTime? @map("last_used_at")
-  expiresAt  DateTime? @map("expires_at")
-  revokedAt  DateTime? @map("revoked_at")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, name], name: "user_api_key_name_unique")
-  @@index([userId], name: "api_key_user_idx")
-  @@index([expiresAt], name: "api_key_expires_idx")
-  @@index([revokedAt], name: "api_key_revoked_idx")
-  @@map("api_keys")
 }
 
 model VerificationToken {
