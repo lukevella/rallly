@@ -3,6 +3,7 @@ import { Icon } from "@rallly/ui/icon";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -17,6 +18,8 @@ import {
 import { ArrowLeftIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
+import { requireUser } from "@/auth/data";
+import { NavUser } from "@/components/nav-user";
 import { Trans } from "@/components/trans";
 import { BillingProvider } from "@/features/billing/client";
 import { AccountSidebarMenu, SpaceSidebarMenu } from "./components/sidebar";
@@ -26,6 +29,8 @@ export default async function Layout({
 }: {
   children?: React.ReactNode;
 }) {
+  const user = await requireUser();
+
   return (
     <BillingProvider>
       <SidebarProvider>
@@ -69,6 +74,13 @@ export default async function Layout({
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
+          <SidebarFooter>
+            <NavUser
+              name={user.name}
+              image={user.image ?? undefined}
+              email={user.email}
+            />
+          </SidebarFooter>
         </Sidebar>
         <SidebarInset>
           <div className="flex flex-1 flex-col">
