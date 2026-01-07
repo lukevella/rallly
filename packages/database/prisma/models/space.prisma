@@ -16,6 +16,8 @@ model Space {
 
   memberInvites SpaceMemberInvite[]
 
+  apiKeys SpaceApiKey[]
+
   @@index([ownerId], type: Hash)
   @@map("spaces")
 }
@@ -65,4 +67,26 @@ model SpaceMemberInvite {
   @@unique([spaceId, email])
   @@index([spaceId], type: Hash, map: "space_member_invites_space_id_idx")
   @@map("space_member_invites")
+}
+
+model SpaceApiKey {
+  id        String @id @default(cuid())
+  spaceId   String @map("space_id")
+  name      String
+  prefix    String @unique
+  hashedKey String @map("hashed_key") @db.Text
+
+  lastUsedAt DateTime? @map("last_used_at")
+  expiresAt  DateTime? @map("expires_at")
+  revokedAt  DateTime? @map("revoked_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+
+  @@index([spaceId], name: "space_api_key_space_idx")
+  @@index([expiresAt], name: "space_api_key_expires_idx")
+  @@index([revokedAt], name: "space_api_key_revoked_idx")
+  @@map("space_api_keys")
 }
