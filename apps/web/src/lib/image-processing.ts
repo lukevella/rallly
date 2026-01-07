@@ -1,4 +1,4 @@
-import type { PixelCrop } from "react-image-crop";
+import type { PercentCrop } from "react-image-crop";
 
 // Configuration for image optimization
 export const IMAGE_OPTIMIZATION = {
@@ -16,14 +16,14 @@ export const IMAGE_OPTIMIZATION = {
 /**
  * Converts a cropped image to an optimized file with compression and format selection
  * @param image - The source image element
- * @param crop - The crop coordinates
+ * @param crop - The crop coordinates in percentage (0-100)
  * @param fileName - Original filename
  * @param fileType - Original file MIME type
  * @returns Promise resolving to optimized File
  */
 export function getCroppedImg(
   image: HTMLImageElement,
-  crop: PixelCrop,
+  crop: PercentCrop,
   fileName: string,
   fileType: string,
 ): Promise<File> {
@@ -33,17 +33,26 @@ export function getCroppedImg(
     throw new Error("No 2d context");
   }
 
+  // Convert percent crop to pixel values based on displayed image dimensions
+  const cropX = (crop.x / 100) * image.width;
+  const cropY = (crop.y / 100) * image.height;
+  const cropWidth = (crop.width / 100) * image.width;
+  const cropHeight = (crop.height / 100) * image.height;
+
+  // Scale to natural image dimensions
   const scaleX = image.naturalWidth / image.width;
   const scaleY = image.naturalHeight / image.height;
 
-  // Calculate the actual crop dimensions
-  const cropWidth = crop.width * scaleX;
-  const cropHeight = crop.height * scaleY;
+  // Calculate the actual crop dimensions in natural image coordinates
+  const naturalCropX = cropX * scaleX;
+  const naturalCropY = cropY * scaleY;
+  const naturalCropWidth = cropWidth * scaleX;
+  const naturalCropHeight = cropHeight * scaleY;
 
   // Calculate optimized dimensions while maintaining aspect ratio
-  const aspectRatio = cropWidth / cropHeight;
-  let outputWidth = cropWidth;
-  let outputHeight = cropHeight;
+  const aspectRatio = naturalCropWidth / naturalCropHeight;
+  let outputWidth = naturalCropWidth;
+  let outputHeight = naturalCropHeight;
 
   // Resize if the image is larger than our maximum dimensions
   if (
@@ -78,10 +87,10 @@ export function getCroppedImg(
   // Draw the cropped and resized image
   ctx.drawImage(
     image,
-    crop.x * scaleX,
-    crop.y * scaleY,
-    cropWidth,
-    cropHeight,
+    naturalCropX,
+    naturalCropY,
+    naturalCropWidth,
+    naturalCropHeight,
     0,
     0,
     outputWidth,
