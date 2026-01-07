@@ -9,8 +9,6 @@ export const IMAGE_OPTIMIZATION = {
   JPEG_QUALITY: 0.85,
   // PNG quality (0.1 to 1.0)
   PNG_QUALITY: 0.9,
-  // Convert PNG to JPEG if the result is significantly smaller
-  CONVERT_PNG_TO_JPEG_THRESHOLD: 0.7,
 } as const;
 
 /**
@@ -79,12 +77,6 @@ export function getCroppedImg(
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
-  // Fill canvas with white background for PNGs with transparency
-  if (fileType === "image/png") {
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, outputWidth, outputHeight);
-  }
-
   // Draw the cropped and resized image
   ctx.drawImage(
     image,
@@ -119,65 +111,9 @@ export function getCroppedImg(
       );
     };
 
-    // Optimize based on original file type
-    if (fileType === "image/jpeg") {
-      createFile("image/jpeg", IMAGE_OPTIMIZATION.JPEG_QUALITY);
-    } else if (fileType === "image/png") {
-      // For PNG files, we'll compare PNG vs JPEG compression
-      // First create a JPEG version
-      canvas.toBlob(
-        (jpegBlob) => {
-          if (!jpegBlob) {
-            // Fallback to PNG if JPEG creation fails
-            createFile("image/png", IMAGE_OPTIMIZATION.PNG_QUALITY);
-            return;
-          }
-
-          // Create PNG version
-          canvas.toBlob(
-            (pngBlob) => {
-              if (!pngBlob) {
-                // Use the JPEG if PNG creation fails
-                const jpegFileName = `${fileName.replace(/\.[^/.]+$/, "")}.jpg`;
-                const jpegFile = new File([jpegBlob], jpegFileName, {
-                  type: "image/jpeg",
-                  lastModified: Date.now(),
-                });
-                resolve(jpegFile);
-                return;
-              }
-
-              // Compare file sizes and use the more efficient format
-              const jpegSize = jpegBlob.size;
-              const pngSize = pngBlob.size;
-
-              if (
-                jpegSize <
-                pngSize * IMAGE_OPTIMIZATION.CONVERT_PNG_TO_JPEG_THRESHOLD
-              ) {
-                // JPEG is significantly smaller, use it
-                const jpegFileName = `${fileName.replace(/\.[^/.]+$/, "")}.jpg`;
-                const jpegFile = new File([jpegBlob], jpegFileName, {
-                  type: "image/jpeg",
-                  lastModified: Date.now(),
-                });
-                resolve(jpegFile);
-              } else {
-                // PNG is more efficient or the difference isn't significant
-                const pngFile = new File([pngBlob], fileName, {
-                  type: "image/png",
-                  lastModified: Date.now(),
-                });
-                resolve(pngFile);
-              }
-            },
-            "image/png",
-            IMAGE_OPTIMIZATION.PNG_QUALITY,
-          );
-        },
-        "image/jpeg",
-        IMAGE_OPTIMIZATION.JPEG_QUALITY,
-      );
+    if (fileType === "image/png") {
+      // Keep PNG files as PNG to preserve transparency
+      createFile("image/png", IMAGE_OPTIMIZATION.PNG_QUALITY);
     } else {
       // For other formats, default to JPEG
       createFile("image/jpeg", IMAGE_OPTIMIZATION.JPEG_QUALITY, "_optimized");
