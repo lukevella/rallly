@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@rallly/database", () => ({
   prisma: {
-    apiKey: {
+    spaceApiKey: {
       findUnique: vi.fn(),
       update: vi.fn(),
     },
@@ -46,26 +46,30 @@ const createMockApiKey = (rawKey: string) => {
     id: "api-key-id",
     name: "Test API Key",
     prefix: "abc123",
-    userId: "test-user-id",
+    spaceId: "test-space-id",
     hashedKey,
     lastUsedAt: null,
     expiresAt: null,
     revokedAt: null,
     createdAt: new Date("2025-01-01"),
     updatedAt: new Date("2025-01-01"),
+    space: {
+      ownerId: "test-user-id",
+    },
   };
 };
 
 describe("Private API - /polls", () => {
-  const testApiKey = "rallly_abc123_secretkey";
+  const testApiKey = "sk_abc123_secretkey";
   const mockApiKey = createMockApiKey(testApiKey);
 
   beforeEach(() => {
     vi.clearAllMocks();
 
-    vi.mocked(prisma.apiKey.findUnique).mockResolvedValue(mockApiKey);
-    vi.mocked(prisma.apiKey.update).mockResolvedValue({} as never);
+    vi.mocked(prisma.spaceApiKey.findUnique).mockResolvedValue(mockApiKey);
+    vi.mocked(prisma.spaceApiKey.update).mockResolvedValue({} as never);
     vi.mocked(prisma.user.findUnique).mockResolvedValue({
+      id: "test-user-id",
       timeZone: "Europe/London",
     } as never);
     vi.mocked(prisma.spaceMember.findFirst).mockResolvedValue(null);
@@ -89,7 +93,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return 401 with invalid API key", async () => {
-      vi.mocked(prisma.apiKey.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.spaceApiKey.findUnique).mockResolvedValue(null);
 
       const res = await app.request("/api/private/polls", {
         method: "POST",
@@ -107,7 +111,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return 401 with revoked API key", async () => {
-      vi.mocked(prisma.apiKey.findUnique).mockResolvedValue({
+      vi.mocked(prisma.spaceApiKey.findUnique).mockResolvedValue({
         ...mockApiKey,
         revokedAt: new Date(),
       });
@@ -128,7 +132,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return 401 with expired API key", async () => {
-      vi.mocked(prisma.apiKey.findUnique).mockResolvedValue({
+      vi.mocked(prisma.spaceApiKey.findUnique).mockResolvedValue({
         ...mockApiKey,
         expiresAt: new Date("2020-01-01"),
       });

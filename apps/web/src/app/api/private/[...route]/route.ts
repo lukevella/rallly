@@ -110,13 +110,7 @@ app.post(
   validator("json", createPollInputSchema),
   async (c) => {
     const input = c.req.valid("json");
-    const apiAuth = c.get("apiAuth");
-
-    if (!("spaceId" in apiAuth)) {
-      return c.json(apiError("UNAUTHORIZED", "Space API key required"), 401);
-    }
-
-    const { spaceId, spaceOwnerId } = apiAuth;
+    const { spaceId, spaceOwnerId } = c.get("apiAuth");
 
     const user = await prisma.user.findUnique({
       where: { id: spaceOwnerId },
