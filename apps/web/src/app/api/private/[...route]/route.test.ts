@@ -202,42 +202,6 @@ describe("Private API - /polls", () => {
       );
     });
 
-    it("should deduplicate date options", async () => {
-      const res = await app.request("/api/private/polls", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${testApiKey}`,
-        },
-        body: JSON.stringify({
-          title: "Test Poll",
-          dates: ["2025-01-15", "2025-01-15", "2025-01-16"],
-        }),
-      });
-
-      expect(res.status).toBe(200);
-      expect(prisma.poll.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: expect.objectContaining({
-            options: {
-              createMany: {
-                data: [
-                  {
-                    startTime: new Date("2025-01-15T00:00:00.000Z"),
-                    duration: 0,
-                  },
-                  {
-                    startTime: new Date("2025-01-16T00:00:00.000Z"),
-                    duration: 0,
-                  },
-                ],
-              },
-            },
-          }),
-        }),
-      );
-    });
-
     it("should save location when provided", async () => {
       const res = await app.request("/api/private/polls", {
         method: "POST",
@@ -284,6 +248,25 @@ describe("Private API - /polls", () => {
       expect(res.status).toBe(400);
       const json = await res.json();
       expect(json.error.code).toBe("TOO_MANY_OPTIONS");
+    });
+
+    it("should return error when duplicate dates are provided", async () => {
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Test Poll",
+          dates: ["2025-01-15", "2025-01-16", "2025-01-15", "2025-01-17"],
+        }),
+      });
+
+      expect(res.status).toBe(400);
+      const json = await res.json();
+      expect(json.error.code).toBe("DUPLICATE_DATES");
+      expect(json.error.message).toContain("Duplicate dates found");
     });
   });
 

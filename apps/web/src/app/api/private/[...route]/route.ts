@@ -123,21 +123,32 @@ app.post(
 
     // Process dates (all-day options)
     if (input.dates) {
-      const uniqueDates = [...new Set(input.dates)];
-      const options = uniqueDates.map((date) => ({
-        startTime: new Date(`${date}T00:00:00.000Z`),
-        duration: 0,
-      }));
-
-      if (options.length > MAX_OPTIONS) {
+      if (input.dates.length > MAX_OPTIONS) {
         return c.json(
           apiError(
             "TOO_MANY_OPTIONS",
-            `Too many options (${options.length}). Maximum allowed is ${MAX_OPTIONS}.`,
+            `Too many options (${input.dates.length}). Maximum allowed is ${MAX_OPTIONS}.`,
           ),
           400,
         );
       }
+
+      const uniqueDates = [...new Set(input.dates)];
+      if (uniqueDates.length < input.dates.length) {
+        const duplicateCount = input.dates.length - uniqueDates.length;
+        return c.json(
+          apiError(
+            "DUPLICATE_DATES",
+            `Duplicate dates found. Please remove ${duplicateCount} duplicate date${duplicateCount > 1 ? "s" : ""}.`,
+          ),
+          400,
+        );
+      }
+
+      const options = uniqueDates.map((date) => ({
+        startTime: new Date(`${date}T00:00:00.000Z`),
+        duration: 0,
+      }));
 
       const poll = await createPoll({
         userId: user.id,
