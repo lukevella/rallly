@@ -44,10 +44,11 @@ export function getCroppedImg(
   const scaleY = image.naturalHeight / image.height;
 
   // Calculate the actual crop dimensions in natural image coordinates
-  const naturalCropX = cropX * scaleX;
-  const naturalCropY = cropY * scaleY;
-  const naturalCropWidth = cropWidth * scaleX;
-  const naturalCropHeight = cropHeight * scaleY;
+  // Round to integers to avoid sub-pixel rendering artifacts
+  const naturalCropX = Math.round(cropX * scaleX);
+  const naturalCropY = Math.round(cropY * scaleY);
+  const naturalCropWidth = Math.round(cropWidth * scaleX);
+  const naturalCropHeight = Math.round(cropHeight * scaleY);
 
   // Calculate optimized dimensions while maintaining aspect ratio
   const aspectRatio = naturalCropWidth / naturalCropHeight;
@@ -62,11 +63,11 @@ export function getCroppedImg(
     if (aspectRatio > 1) {
       // Width is the constraining dimension
       outputWidth = Math.min(IMAGE_OPTIMIZATION.MAX_WIDTH, outputWidth);
-      outputHeight = outputWidth / aspectRatio;
+      outputHeight = Math.round(outputWidth / aspectRatio);
     } else {
       // Height is the constraining dimension
       outputHeight = Math.min(IMAGE_OPTIMIZATION.MAX_HEIGHT, outputHeight);
-      outputWidth = outputHeight * aspectRatio;
+      outputWidth = Math.round(outputHeight * aspectRatio);
     }
   }
 
