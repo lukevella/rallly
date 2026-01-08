@@ -32,18 +32,25 @@ export const dedupeTimeSlots = (slots: Array<TimeSlot>) => {
 const hasTzOffset = (value: string) =>
   /[zZ]$|[+-]\d{2}:\d{2}$|[+-]\d{4}$/.test(value);
 
-const parseDateTimeInTimeZone = (value: string, timeZone: string) =>
-  hasTzOffset(value) ? dayjs(value) : dayjs(value).tz(timeZone, true);
+const parseDateTimeInTimeZone = (value: string, timeZone?: string) =>
+  hasTzOffset(value)
+    ? dayjs(value)
+    : timeZone
+      ? dayjs(value).tz(timeZone, true)
+      : dayjs(value).utc(true);
 
 const parseLocalDateTimeInTimeZone = (
   date: string,
   time: string,
-  timeZone: string,
-) => dayjs(`${date}T${time}`).tz(timeZone, true);
+  timeZone: string | undefined,
+) =>
+  timeZone
+    ? dayjs(`${date}T${time}`).tz(timeZone, true)
+    : dayjs(`${date}T${time}`).utc(true);
 
 export const parseStartTime = (
   startTime: string,
-  timeZone: string,
+  timeZone: string | undefined,
   duration: number,
 ): TimeSlot => ({
   startTime: parseDateTimeInTimeZone(startTime, timeZone).toDate(),
@@ -52,7 +59,7 @@ export const parseStartTime = (
 
 export const generateTimeSlots = (
   generator: SlotGeneratorInput,
-  timeZone: string,
+  timeZone: string | undefined,
   durationMinutes: number,
 ): Array<TimeSlot> => {
   const dayMap: Record<SlotGeneratorInput["daysOfWeek"][number], number> = {
@@ -67,8 +74,12 @@ export const generateTimeSlots = (
 
   const allowed = new Set(generator.daysOfWeek.map((d) => dayMap[d]));
 
-  const startDay = dayjs(generator.startDate).tz(timeZone, true).startOf("day");
-  const endDay = dayjs(generator.endDate).tz(timeZone, true).startOf("day");
+  const startDay = timeZone
+    ? dayjs(generator.startDate).tz(timeZone, true).startOf("day")
+    : dayjs(generator.startDate).utc(true).startOf("day");
+  const endDay = timeZone
+    ? dayjs(generator.endDate).tz(timeZone, true).startOf("day")
+    : dayjs(generator.endDate).utc(true).startOf("day");
 
   const from = parseLocalDateTimeInTimeZone(
     generator.startDate,

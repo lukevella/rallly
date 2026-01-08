@@ -18,8 +18,7 @@ export type CreatePollParams = {
   hideScores?: boolean;
   disableComments?: boolean;
   options: PollOption[];
-  spaceId?: string;
-  spaceOwnerId?: string;
+  spaceId: string;
 };
 
 export const createPoll = async ({
@@ -34,21 +33,7 @@ export const createPoll = async ({
   disableComments,
   options,
   spaceId,
-  spaceOwnerId,
 }: CreatePollParams) => {
-  // If spaceId and spaceOwnerId are provided, use them directly
-  // Otherwise, fall back to looking up the user's most recent space
-  const finalUserId = spaceOwnerId ?? userId;
-  const finalSpaceId =
-    spaceId ??
-    (
-      await prisma.spaceMember.findFirst({
-        where: { userId },
-        orderBy: { lastSelectedAt: "desc" },
-        select: { spaceId: true },
-      })
-    )?.spaceId;
-
   const poll = await prisma.poll.create({
     data: {
       id: nanoid(),
@@ -62,10 +47,10 @@ export const createPoll = async ({
       disableComments,
       adminUrlId: nanoid(),
       participantUrlId: nanoid(),
-      userId: finalUserId,
-      watchers: { create: { userId: finalUserId } },
+      userId,
+      watchers: { create: { userId } },
+      spaceId,
       options: { createMany: { data: options } },
-      spaceId: finalSpaceId,
     },
     select: { id: true },
   });

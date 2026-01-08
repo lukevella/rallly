@@ -112,13 +112,49 @@ app.post(
     const input = c.req.valid("json");
     const { spaceId, spaceOwnerId } = c.get("apiAuth");
 
-    const user = await prisma.user.findUnique({
-      where: { id: spaceOwnerId },
-      select: { id: true, timeZone: true },
-    });
+    // Determine the organizer userId
+    let organizerUserId = spaceOwnerId;
 
-    if (!user) {
-      return c.json(apiError("UNAUTHORIZED", "User not found"), 401);
+    if (input.organizer) {
+      let organizerUser = null;
+
+      // Find user by email
+      organizerUser = await prisma.user.findUnique({
+        where: { email: input.organizer.email },
+        select: { id: true, email: true },
+      });
+
+      if (!organizerUser) {
+        return c.json(
+          apiError(
+            "ORGANIZER_NOT_MEMBER",
+            "The specified organizer is not a member of this space.",
+          ),
+          400,
+        );
+      }
+
+      // Verify the organizer is a member of the space
+      const spaceMember = await prisma.spaceMember.findUnique({
+        where: {
+          spaceId_userId: {
+            spaceId,
+            userId: organizerUser.id,
+          },
+        },
+      });
+
+      if (!spaceMember) {
+        return c.json(
+          apiError(
+            "ORGANIZER_NOT_MEMBER",
+            "The specified organizer is not a member of this space.",
+          ),
+          400,
+        );
+      }
+
+      organizerUserId = organizerUser.id;
     }
 
     // Process dates (all-day options)
@@ -151,7 +187,7 @@ app.post(
       }));
 
       const poll = await createPoll({
-        userId: user.id,
+        userId: organizerUserId,
         title: input.title,
         description: input.description,
         location: input.location,
@@ -161,7 +197,6 @@ app.post(
         disableComments: input.disableComments,
         options,
         spaceId,
-        spaceOwnerId,
       });
 
       return c.json({
@@ -182,19 +217,9 @@ app.post(
     }
 
     const slots = input.slots;
-    const timeZone = slots.timezone ?? user?.timeZone;
+    const timeZone = slots.timezone;
 
-    if (!timeZone) {
-      return c.json(
-        apiError(
-          "TIMEZONE_REQUIRED",
-          "Timezone is required. Either provide a timezone in slots or set one in your profile.",
-        ),
-        400,
-      );
-    }
-
-    if (!isSupportedTimeZone(timeZone)) {
+    if (timeZone && !isSupportedTimeZone(timeZone)) {
       return c.json(
         apiError(
           "INVALID_TIMEZONE",
@@ -245,7 +270,7 @@ app.post(
     }
 
     const poll = await createPoll({
-      userId: spaceOwnerId,
+      userId: organizerUserId,
       title: input.title,
       description: input.description,
       location: input.location,
@@ -256,7 +281,6 @@ app.post(
       disableComments: input.disableComments,
       options,
       spaceId,
-      spaceOwnerId,
     });
 
     return c.json({

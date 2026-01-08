@@ -47,7 +47,7 @@ const slotsInputSchema = z
       .optional()
       .openapi({
         description:
-          "IANA timezone. Defaults to user's timezone if not provided.",
+          "IANA timezone. If not provided, times will be stored as UTC and no timezone will be set on the poll (indicating floating times).",
         example: "Europe/London",
       }),
     times: z
@@ -103,6 +103,21 @@ export const createPollInputSchema = z
         "ID of the space to create the poll in. Defaults to user's most recently used space.",
       example: "space_abc123",
     }),
+    organizer: z
+      .object({
+        email: z.email().openapi({
+          description: "Email address of the organizer",
+          example: "organizer@example.com",
+        }),
+      })
+      .optional()
+      .refine((data) => !data || data.id || data.email, {
+        message: "Either 'id' or 'email' must be provided for organizer",
+      })
+      .openapi({
+        description:
+          "Organizer of the poll. Defaults to the space owner if not provided. The organizer must be a member of the space.",
+      }),
     dates: datesInputSchema.optional(),
     slots: slotsInputSchema.optional(),
   })
