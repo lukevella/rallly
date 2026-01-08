@@ -1,7 +1,8 @@
 import { prisma } from "@rallly/database";
+import { Card } from "@rallly/ui/card";
 import { notFound } from "next/navigation";
-import { FullLogoLink } from "@/app/components/full-logo-link";
 import { requireUser } from "@/auth/data";
+import { Logo } from "@/components/logo";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/components/trans";
 import { SpaceIcon } from "@/features/space/components/space-icon";
@@ -46,8 +47,8 @@ export default async function JoinPage({
 
   return (
     <div className="flex h-dvh flex-col items-center gap-12 py-12">
-      <FullLogoLink />
-      <div className="flex w-full max-w-sm flex-col rounded-xl border bg-white p-12 text-center shadow-xs">
+      <Logo />
+      <Card className="flex w-full max-w-sm flex-col p-12 text-center">
         <div className="mx-auto mb-4">
           <SpaceIcon
             src={invite.space.image ?? undefined}
@@ -99,7 +100,7 @@ export default async function JoinPage({
             <AcceptInviteButton spaceId={invite.spaceId} />
           )}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
