@@ -1,10 +1,10 @@
 import { Button } from "@rallly/ui/button";
+import { Card } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import { LogInIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
 import {
   isQuickCreateEnabled,
   QuickCreateWidget,
@@ -19,7 +19,7 @@ export default async function QuickCreatePage() {
   const { t } = await getTranslation();
   return (
     <div className="flex h-dvh p-2">
-      <div className="flex flex-1 flex-col gap-6 rounded-xl border bg-white p-6">
+      <Card className="flex flex-1 flex-col gap-6 p-6">
         <div className="mx-auto w-full max-w-md flex-1">
           <div className="space-y-8">
             <div className="flex-1">
@@ -37,7 +37,7 @@ export default async function QuickCreatePage() {
             </Link>
           </Button>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

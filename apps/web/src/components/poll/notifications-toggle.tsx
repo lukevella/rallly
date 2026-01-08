@@ -4,7 +4,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { BellOffIcon, BellRingIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import type * as React from "react";
-import { Skeleton } from "@/components/skeleton";
 import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
 import { useTranslation } from "@/i18n/client";
@@ -60,10 +59,6 @@ const NotificationsToggle: React.FunctionComponent = () => {
   });
 
   const { t } = useTranslation();
-
-  if (!watchers) {
-    return <Skeleton className="size-9" />;
-  }
 
   return (
     <Tooltip>
