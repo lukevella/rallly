@@ -4,6 +4,7 @@ import { cache } from "react";
 import { env } from "@/env";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { adjustColorForContrast } from "@/utils/color";
+import { isSelfHosted } from "@/utils/constants";
 import type { BrandingConfig } from "./client";
 import {
   DARK_MODE_BACKGROUND,
@@ -35,7 +36,7 @@ function getDefaultBrandingConfig(): BrandingConfig {
   };
 }
 
-export async function getCustomBrandingConfig() {
+export function getCustomBrandingConfig() {
   const baseColor = env.PRIMARY_COLOR ?? DEFAULT_PRIMARY_COLOR;
   const light = adjustColorForContrast(baseColor, LIGHT_MODE_BACKGROUND);
   const dark =
@@ -63,9 +64,12 @@ export async function getCustomBrandingConfig() {
  * the appropriate config (custom or default).
  */
 export const getInstanceBrandingConfig = cache(async () => {
+  if (!isSelfHosted) {
+    return getCustomBrandingConfig();
+  }
   const license = await loadInstanceLicense();
   const hasWhiteLabelAddon = license?.whiteLabelAddon ?? false;
   return hasWhiteLabelAddon
-    ? await getCustomBrandingConfig()
+    ? getCustomBrandingConfig()
     : getDefaultBrandingConfig();
 });
