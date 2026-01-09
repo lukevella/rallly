@@ -116,30 +116,16 @@ app.post(
     let organizerUserId = spaceOwnerId;
 
     if (input.organizer) {
-      let organizerUser = null;
-
-      // Find user by email
-      organizerUser = await prisma.user.findUnique({
-        where: { email: input.organizer.email },
-        select: { id: true, email: true },
-      });
-
-      if (!organizerUser) {
-        return c.json(
-          apiError(
-            "ORGANIZER_NOT_MEMBER",
-            "The specified organizer is not a member of this space.",
-          ),
-          400,
-        );
-      }
-
-      // Verify the organizer is a member of the space
-      const spaceMember = await prisma.spaceMember.findUnique({
+      const spaceMember = await prisma.spaceMember.findFirst({
         where: {
-          spaceId_userId: {
-            spaceId,
-            userId: organizerUser.id,
+          spaceId,
+          user: {
+            email: input.organizer.email,
+          },
+        },
+        include: {
+          user: {
+            select: { id: true, email: true },
           },
         },
       });
@@ -154,7 +140,7 @@ app.post(
         );
       }
 
-      organizerUserId = organizerUser.id;
+      organizerUserId = spaceMember.user.id;
     }
 
     // Process dates (all-day options)
