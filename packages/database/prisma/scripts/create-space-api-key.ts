@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 
 type Args = {
   spaceId?: string;
-  spaceName?: string;
   name?: string;
   expiresAt?: string;
 };
@@ -23,9 +22,6 @@ const parseArgs = (argv: string[]) => {
     }
     if (normalizedKey === "space-id") {
       return { ...acc, spaceId: normalizedValue };
-    }
-    if (normalizedKey === "space-name") {
-      return { ...acc, spaceName: normalizedValue };
     }
     if (normalizedKey === "name") {
       return { ...acc, name: normalizedValue };
@@ -49,16 +45,11 @@ async function main() {
     throw new Error("Missing required arg: --name");
   }
 
-  if (!args.spaceId && !args.spaceName) {
+  if (!args.spaceId) {
     throw new Error("Missing required arg: --space-id or --space-name");
   }
 
-  const space = args.spaceId
-    ? await prisma.space.findUnique({ where: { id: args.spaceId }, select: { id: true } })
-    : await prisma.space.findFirst({
-        where: { name: args.spaceName },
-        select: { id: true },
-      });
+  const space = await prisma.space.findUnique({ where: { id: args.spaceId }, select: { id: true } });
 
   if (!space) {
     throw new Error("Space not found");
