@@ -111,9 +111,6 @@ export const createPollInputSchema = z
         }),
       })
       .optional()
-      .refine((data) => !data || data.id || data.email, {
-        message: "Either 'id' or 'email' must be provided for organizer",
-      })
       .openapi({
         description:
           "Organizer of the poll. Defaults to the space owner if not provided. The organizer must be a member of the space.",
