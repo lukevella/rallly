@@ -213,74 +213,68 @@ export const participants = router({
     )
     .mutation(
       async ({ ctx, input: { pollId, votes, name, email, timeZone } }) => {
-        const { participant, totalResponses } = await prisma.$transaction(
-          async (prisma) => {
-            const participantCount = await prisma.participant.count({
-              where: {
-                pollId,
-                deleted: false,
-              },
-            });
+        const participantCount = await prisma.participant.count({
+          where: {
+            pollId,
+            deleted: false,
+          },
+        });
 
-            if (participantCount >= MAX_PARTICIPANTS) {
-              throw new TRPCError({
-                code: "BAD_REQUEST",
-                message: `This poll has reached its maximum limit of ${MAX_PARTICIPANTS} participants`,
-              });
-            }
+        if (participantCount >= MAX_PARTICIPANTS) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `This poll has reached its maximum limit of ${MAX_PARTICIPANTS} participants`,
+          });
+        }
 
-            const participant = await prisma.participant.create({
-              data: {
-                pollId: pollId,
-                name: name,
-                email,
-                timeZone,
-                ...(ctx.user.isLegacyGuest
-                  ? { guestId: ctx.user.id }
-                  : { userId: ctx.user.id }),
-                locale: ctx.user.locale ?? undefined,
-              },
-              include: {
-                poll: {
-                  select: {
-                    id: true,
-                    title: true,
-                    userId: true,
-                    guestId: true,
-                  },
-                },
-              },
-            });
+        const options = await prisma.option.findMany({
+          where: {
+            pollId,
+          },
+          select: {
+            id: true,
+          },
+        });
 
-            const options = await prisma.option.findMany({
-              where: {
-                pollId,
+        const existingOptionIds = new Set(options.map((option) => option.id));
+
+        const validVotes = votes.filter(({ optionId }) =>
+          existingOptionIds.has(optionId),
+        );
+
+        const participant = await prisma.participant.create({
+          data: {
+            pollId: pollId,
+            name: name,
+            email,
+            timeZone,
+            ...(ctx.user.isLegacyGuest
+              ? { guestId: ctx.user.id }
+              : { userId: ctx.user.id }),
+            locale: ctx.user.locale ?? undefined,
+            votes: {
+              createMany: {
+                data: validVotes.map(({ optionId, type }) => ({
+                  pollId,
+                  optionId,
+                  type,
+                })),
               },
+            },
+          },
+          include: {
+            poll: {
               select: {
                 id: true,
+                title: true,
+                userId: true,
+                guestId: true,
               },
-            });
-
-            const existingOptionIds = new Set(
-              options.map((option) => option.id),
-            );
-
-            const validVotes = votes.filter(({ optionId }) =>
-              existingOptionIds.has(optionId),
-            );
-
-            await prisma.vote.createMany({
-              data: validVotes.map(({ optionId, type }) => ({
-                optionId,
-                type,
-                pollId,
-                participantId: participant.id,
-              })),
-            });
-
-            return { participant, totalResponses: participantCount + 1 };
+            },
           },
-        );
+        });
+
+        const totalResponses = participantCount + 1;
 
         if (email) {
           const token = await createParticipantEditToken(ctx.user.id);
