@@ -1,5 +1,4 @@
 import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
-import * as Sentry from "@sentry/nextjs";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
@@ -48,9 +47,6 @@ const handler = async (req: NextRequest) => {
       } satisfies TRPCContext;
     },
     onError({ error }) {
-      if (error.code === "INTERNAL_SERVER_ERROR") {
-        Sentry.captureException(error);
-      }
       if (error.code === "TOO_MANY_REQUESTS") {
         console.warn("Too many requests", {
           path: req.nextUrl.pathname,
