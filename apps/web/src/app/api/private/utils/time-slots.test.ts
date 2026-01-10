@@ -48,6 +48,20 @@ describe("time-slots utilities", () => {
 
       expect(result.startTime).toEqual(new Date("2025-01-15T17:00:00Z"));
     });
+
+    it("should parse datetime without offset as UTC when timezone is undefined", () => {
+      const result = parseStartTime("2025-01-15T09:00:00", undefined, 30);
+
+      expect(result.startTime).toEqual(new Date("2025-01-15T09:00:00Z"));
+      expect(result.duration).toBe(30);
+    });
+
+    it("should parse ISO datetime with timezone offset as-is when timezone is undefined", () => {
+      const result = parseStartTime("2025-01-15T09:00:00Z", undefined, 30);
+
+      expect(result.startTime).toEqual(new Date("2025-01-15T09:00:00Z"));
+      expect(result.duration).toBe(30);
+    });
   });
 
   describe("dedupeTimeSlots", () => {
@@ -220,6 +234,25 @@ describe("time-slots utilities", () => {
 
       const uniqueTimes = new Set(result.map((s) => s.startTime.toISOString()));
       expect(result.length).toBe(uniqueTimes.size);
+    });
+
+    it("should generate slots as UTC when timezone is undefined", () => {
+      const result = generateTimeSlots(
+        {
+          startDate: "2025-01-15",
+          endDate: "2025-01-15",
+          daysOfWeek: ["wed"],
+          fromTime: "09:00",
+          toTime: "10:00",
+        },
+        undefined,
+        30,
+      );
+
+      expect(result).toHaveLength(2);
+      expect(result[0].startTime).toEqual(new Date("2025-01-15T09:00:00Z"));
+      expect(result[1].startTime).toEqual(new Date("2025-01-15T09:30:00Z"));
+      expect(result[0].duration).toBe(30);
     });
   });
 });

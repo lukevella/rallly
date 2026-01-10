@@ -70,7 +70,6 @@ describe("Private API - /polls", () => {
     vi.mocked(prisma.spaceApiKey.update).mockResolvedValue({} as never);
     vi.mocked(prisma.user.findUnique).mockResolvedValue({
       id: "test-user-id",
-      timeZone: "Europe/London",
     } as never);
     vi.mocked(prisma.spaceMember.findFirst).mockResolvedValue(null);
     vi.mocked(prisma.poll.create).mockResolvedValue({
@@ -302,7 +301,7 @@ describe("Private API - /polls", () => {
       );
     });
 
-    it("should use user timezone when not provided in request", async () => {
+    it("should create poll without timezone when not provided in request", async () => {
       const res = await app.request("/api/private/polls", {
         method: "POST",
         headers: {
@@ -322,35 +321,10 @@ describe("Private API - /polls", () => {
       expect(prisma.poll.create).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
-            timeZone: "Europe/London",
+            timeZone: undefined,
           }),
         }),
       );
-    });
-
-    it("should return error when timezone is missing and user has no timezone", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({
-        timeZone: null,
-      } as never);
-
-      const res = await app.request("/api/private/polls", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${testApiKey}`,
-        },
-        body: JSON.stringify({
-          title: "Team sync",
-          slots: {
-            duration: 30,
-            times: ["2025-01-15T09:00:00Z"],
-          },
-        }),
-      });
-
-      expect(res.status).toBe(400);
-      const json = await res.json();
-      expect(json.error.code).toBe("TIMEZONE_REQUIRED");
     });
 
     it("should return error for invalid timezone", async () => {
