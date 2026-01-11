@@ -15,22 +15,26 @@ import { requireSpace, requireUser } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
 import { ApiKeysList } from "./components/api-keys-list";
+import { CreateApiKeyButton } from "./components/create-api-key-button";
 
 export default async function ApiKeysSettingsPage() {
   const [_space, _user] = await Promise.all([requireSpace(), requireUser()]);
 
   return (
     <SettingsPage>
-      <SettingsPageHeader>
-        <SettingsPageTitle>
-          <Trans i18nKey="apiKeys" defaults="API Keys" />
-        </SettingsPageTitle>
-        <SettingsPageDescription>
-          <Trans
-            i18nKey="apiKeysDescription"
-            defaults="Manage API keys for programmatic access to your space"
-          />
-        </SettingsPageDescription>
+      <SettingsPageHeader className="flex-row items-center justify-between">
+        <div>
+          <SettingsPageTitle>
+            <Trans i18nKey="apiKeys" defaults="API Keys" />
+          </SettingsPageTitle>
+          <SettingsPageDescription>
+            <Trans
+              i18nKey="apiKeysDescription"
+              defaults="Manage API keys for programmatic access to your space"
+            />
+          </SettingsPageDescription>
+        </div>
+        <CreateApiKeyButton />
       </SettingsPageHeader>
       <SettingsPageContent>
         <PageSectionGroup>

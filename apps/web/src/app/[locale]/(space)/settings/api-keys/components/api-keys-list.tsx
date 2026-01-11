@@ -53,7 +53,7 @@ export function ApiKeysList() {
             <div>
               <div className="font-semibold text-sm">{apiKey.name}</div>
               <div className="text-muted-foreground text-sm">
-                {apiKey.prefix}
+                {`sk_${apiKey.prefix}`}
                 &bull;&bull;&bull;&bull;
               </div>
             </div>
