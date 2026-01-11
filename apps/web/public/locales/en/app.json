@@ -587,5 +587,10 @@
   "noApiKeys": "No API keys found",
   "noApiKeysDescription": "Create an API key to access your space programmatically",
   "lastUsedAt": "Last used {date}",
-  "neverUsed": "Never used"
+  "neverUsed": "Never used",
+  "deleteApiKey": "Delete API key",
+  "deleteApiKeyConfirmation": "Are you sure you want to delete <b>{name}</b>? This action cannot be undone.",
+  "deleteApiKeyLoading": "Deleting API key...",
+  "deleteApiKeySuccess": "API key deleted successfully",
+  "deleteApiKeyError": "Failed to delete API key"
 }

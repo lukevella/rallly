@@ -12,6 +12,7 @@ import { Spinner } from "@/components/spinner";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { trpc } from "@/trpc/client";
+import { DeleteApiKeyButton } from "./delete-api-key-button";
 
 export function ApiKeysList() {
   const { data: apiKeys } = trpc.apiKeys.list.useQuery();
@@ -70,6 +71,7 @@ export function ApiKeysList() {
               <Trans i18nKey="neverUsed" defaults="Never used" />
             )}
           </div>
+          <DeleteApiKeyButton apiKeyId={apiKey.id} apiKeyName={apiKey.name} />
         </StackedListItem>
       ))}
     </StackedList>
