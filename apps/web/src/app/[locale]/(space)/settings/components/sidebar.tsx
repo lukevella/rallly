@@ -10,6 +10,7 @@ import {
   BoltIcon,
   CalendarIcon,
   CreditCardIcon,
+  KeyIcon,
   LockIcon,
   PanelsTopLeftIcon,
   Settings2Icon,
@@ -94,6 +95,12 @@ export function SpaceSidebarMenu() {
       label: t("members", { defaultValue: "Members" }),
       icon: <UsersIcon />,
       href: "/settings/members",
+    },
+    {
+      id: "apiKeys",
+      label: t("apiKeys", { defaultValue: "API Keys" }),
+      icon: <KeyIcon />,
+      href: "/settings/api-keys",
     },
     ...(isBillingEnabled
       ? [

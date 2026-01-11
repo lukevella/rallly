@@ -579,5 +579,9 @@
   "logoDark": "Logo (Dark Mode)",
   "attribution": "Attribution",
   "attributionDescription": "Control the visibility of the attribution text",
-  "hideAttribution": "Hide Attribution"
+  "hideAttribution": "Hide Attribution",
+  "apiKeys": "API Keys",
+  "apiKeysDescription": "Manage API keys for programmatic access to your space",
+  "apiKeysSettings": "API Keys Settings",
+  "apiKeysSettingsDescription": "Create and manage API keys for programmatic access to your space."
 }
