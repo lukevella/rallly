@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import {
+  PageSection,
+  PageSectionContent,
+  PageSectionGroup,
+} from "@/app/components/page-layout";
+import {
   SettingsPage,
   SettingsPageContent,
   SettingsPageDescription,
@@ -9,6 +14,7 @@ import {
 import { requireSpace, requireUser } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
+import { ApiKeysList } from "./components/api-keys-list";
 
 export default async function ApiKeysSettingsPage() {
   const [_space, _user] = await Promise.all([requireSpace(), requireUser()]);
@@ -27,7 +33,13 @@ export default async function ApiKeysSettingsPage() {
         </SettingsPageDescription>
       </SettingsPageHeader>
       <SettingsPageContent>
-        {/* TODO: Add API keys list and creation form */}
+        <PageSectionGroup>
+          <PageSection>
+            <PageSectionContent>
+              <ApiKeysList />
+            </PageSectionContent>
+          </PageSection>
+        </PageSectionGroup>
       </SettingsPageContent>
     </SettingsPage>
   );
