@@ -588,11 +588,6 @@
   "noApiKeysDescription": "Create an API key to access your space programmatically",
   "lastUsedAt": "Last used {date}",
   "neverUsed": "Never used",
-  "deleteApiKey": "Delete API key",
-  "deleteApiKeyConfirmation": "Are you sure you want to delete <b>{name}</b>? This action cannot be undone.",
-  "deleteApiKeyLoading": "Deleting API key...",
-  "deleteApiKeySuccess": "API key deleted successfully",
-  "deleteApiKeyError": "Failed to delete API key",
   "createApiKey": "Create API key",
   "apiKeyCreated": "API key created",
   "apiKeyCreatedDescription": "Copy your API key now. You won't be able to see it again.",
@@ -602,5 +597,12 @@
   "createApiKeyDescription": "Create a new API key for programmatic access to your space",
   "apiKeyCopied": "API key copied to clipboard",
   "createApiKeyError": "Failed to create API key",
-  "apiKeyNamePlaceholder": "e.g., Production API"
+  "apiKeyNamePlaceholder": "e.g., Production API",
+  "active": "Active",
+  "revokeApiKey": "Revoke API key",
+  "revokeApiKeyConfirmation": "Are you sure you want to revoke {name}? This will immediately disable the key.",
+  "revoke": "Revoke",
+  "revokeApiKeyLoading": "Revoking API key...",
+  "revokeApiKeySuccess": "API key revoked successfully",
+  "revokeApiKeyError": "Failed to revoke API key"
 }

@@ -19,12 +19,12 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
-import { MoreHorizontalIcon, TrashIcon } from "lucide-react";
+import { BanIcon, MoreHorizontalIcon } from "lucide-react";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
-export function DeleteApiKeyButton({
+export function RevokeApiKeyButton({
   apiKeyId,
   apiKeyName,
 }: {
@@ -32,8 +32,8 @@ export function DeleteApiKeyButton({
   apiKeyName: string;
 }) {
   const { t } = useTranslation();
-  const deleteDialog = useDialog();
-  const deleteApiKey = trpc.apiKeys.delete.useMutation();
+  const revokeDialog = useDialog();
+  const revokeApiKey = trpc.apiKeys.revoke.useMutation();
   const utils = trpc.useUtils();
 
   return (
@@ -49,25 +49,25 @@ export function DeleteApiKeyButton({
         <DropdownMenuContent align="end">
           <DropdownMenuItem
             onClick={() => {
-              deleteDialog.trigger();
+              revokeDialog.trigger();
             }}
             className="text-destructive"
           >
-            <TrashIcon className="size-4" />
-            <Trans i18nKey="deleteApiKey" defaults="Delete API key" />
+            <BanIcon className="size-4" />
+            <Trans i18nKey="revokeApiKey" defaults="Revoke API key" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <Dialog {...deleteDialog.dialogProps}>
+      <Dialog {...revokeDialog.dialogProps}>
         <DialogContent size="sm">
           <DialogHeader>
             <DialogTitle>
-              <Trans i18nKey="deleteApiKey" defaults="Delete API key" />
+              <Trans i18nKey="revokeApiKey" defaults="Revoke API key" />
             </DialogTitle>
             <DialogDescription>
               <Trans
-                i18nKey="deleteApiKeyConfirmation"
-                defaults="Are you sure you want to delete {name}? This action cannot be undone."
+                i18nKey="revokeApiKeyConfirmation"
+                defaults="Are you sure you want to revoke {name}? This will immediately disable the key."
                 values={{ name: apiKeyName }}
                 components={{
                   b: <b className="whitespace-nowrap font-bold" />,
@@ -80,7 +80,7 @@ export function DeleteApiKeyButton({
               variant="destructive"
               onClick={() => {
                 toast.promise(
-                  deleteApiKey
+                  revokeApiKey
                     .mutateAsync({
                       id: apiKeyId,
                     })
@@ -88,21 +88,21 @@ export function DeleteApiKeyButton({
                       utils.apiKeys.list.invalidate();
                     }),
                   {
-                    loading: t("deleteApiKeyLoading", {
-                      defaultValue: "Deleting API key...",
+                    loading: t("revokeApiKeyLoading", {
+                      defaultValue: "Revoking API key...",
                     }),
-                    success: t("deleteApiKeySuccess", {
-                      defaultValue: "API key deleted successfully",
+                    success: t("revokeApiKeySuccess", {
+                      defaultValue: "API key revoked successfully",
                     }),
-                    error: t("deleteApiKeyError", {
-                      defaultValue: "Failed to delete API key",
+                    error: t("revokeApiKeyError", {
+                      defaultValue: "Failed to revoke API key",
                     }),
                   },
                 );
-                deleteDialog.dismiss();
+                revokeDialog.dismiss();
               }}
             >
-              <Trans i18nKey="delete" defaults="Delete" />
+              <Trans i18nKey="revoke" defaults="Revoke" />
             </Button>
             <DialogClose asChild>
               <Button>
