@@ -598,11 +598,9 @@
   "apiKeyCopied": "API key copied to clipboard",
   "createApiKeyError": "Failed to create API key",
   "apiKeyNamePlaceholder": "e.g., Production API",
-  "active": "Active",
-  "revokeApiKey": "Revoke API key",
-  "revokeApiKeyConfirmation": "Are you sure you want to revoke {name}? This will immediately disable the key.",
-  "revoke": "Revoke",
-  "revokeApiKeyLoading": "Revoking API key...",
-  "revokeApiKeySuccess": "API key revoked successfully",
-  "revokeApiKeyError": "Failed to revoke API key"
+  "deleteApiKey": "Delete API key",
+  "deleteApiKeyConfirmation": "Are you sure you want to delete {name}? This action cannot be undone.",
+  "deleteApiKeyLoading": "Deleting API key...",
+  "deleteApiKeySuccess": "API key deleted successfully",
+  "deleteApiKeyError": "Failed to delete API key"
 }

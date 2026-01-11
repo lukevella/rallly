@@ -25,11 +25,11 @@ export const apiKeys = router({
     const keys = await prisma.spaceApiKey.findMany({
       where: {
         spaceId: data.space.id,
+        revokedAt: null,
       },
       select: {
         id: true,
         name: true,
-        revokedAt: true,
         prefix: true,
         lastUsedAt: true,
         expiresAt: true,
@@ -76,7 +76,7 @@ export const apiKeys = router({
 
       return { apiKey };
     }),
-  revoke: privateProcedure
+  delete: privateProcedure
     .input(
       z.object({
         id: z.string(),
@@ -94,7 +94,7 @@ export const apiKeys = router({
 
       const apiKey = await prisma.spaceApiKey.findUnique({
         where: { id: input.id },
-        select: { spaceId: true, revokedAt: true },
+        select: { spaceId: true },
       });
 
       if (!apiKey) {
@@ -107,20 +107,12 @@ export const apiKeys = router({
       if (apiKey.spaceId !== data.space.id) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "You do not have permission to revoke this API key",
+          message: "You do not have permission to delete this API key",
         });
       }
 
-      if (apiKey.revokedAt) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "API key is already revoked",
-        });
-      }
-
-      await prisma.spaceApiKey.update({
+      await prisma.spaceApiKey.delete({
         where: { id: input.id },
-        data: { revokedAt: new Date() },
       });
     }),
 });
