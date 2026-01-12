@@ -4,6 +4,7 @@ vi.mock("@rallly/database", () => ({
   prisma: {
     spaceApiKey: {
       findUnique: vi.fn(),
+      findMany: vi.fn(),
       update: vi.fn(),
     },
     user: {
@@ -36,12 +37,16 @@ vi.mock("@/lib/kv", () => ({
   kv: null,
 }));
 
-import crypto from "node:crypto";
 import { prisma } from "@rallly/database";
+import { hashApiKey, randomToken } from "@/features/developer/utils";
 import { app } from "./route";
 
 const createMockApiKey = (rawKey: string) => {
-  const hashedKey = crypto.createHash("sha256").update(rawKey).digest("hex");
+  // Use the new salted hash format
+  const salt = randomToken(12);
+  const hash = hashApiKey(rawKey, salt);
+  const hashedKey = `sha256$${salt}$${hash}`;
+
   return {
     id: "api-key-id",
     name: "Test API Key",
@@ -66,6 +71,8 @@ describe("Private API - /polls", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
+    // Mock findMany for the timing-safe lookup
+    vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([mockApiKey]);
     vi.mocked(prisma.spaceApiKey.findUnique).mockResolvedValue(mockApiKey);
     vi.mocked(prisma.spaceApiKey.update).mockResolvedValue({} as never);
     vi.mocked(prisma.user.findUnique).mockResolvedValue({
@@ -92,7 +99,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return 401 with invalid API key", async () => {
-      vi.mocked(prisma.spaceApiKey.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([]);
 
       const res = await app.request("/api/private/polls", {
         method: "POST",
@@ -110,10 +117,8 @@ describe("Private API - /polls", () => {
     });
 
     it("should return 401 with revoked API key", async () => {
-      vi.mocked(prisma.spaceApiKey.findUnique).mockResolvedValue({
-        ...mockApiKey,
-        revokedAt: new Date(),
-      });
+      // Revoked keys are filtered out by the database query
+      vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([]);
 
       const res = await app.request("/api/private/polls", {
         method: "POST",
@@ -131,10 +136,8 @@ describe("Private API - /polls", () => {
     });
 
     it("should return 401 with expired API key", async () => {
-      vi.mocked(prisma.spaceApiKey.findUnique).mockResolvedValue({
-        ...mockApiKey,
-        expiresAt: new Date("2020-01-01"),
-      });
+      // Expired keys are filtered out by the database query
+      vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([]);
 
       const res = await app.request("/api/private/polls", {
         method: "POST",
