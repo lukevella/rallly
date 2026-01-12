@@ -36,6 +36,8 @@ export default async function Layout({
 }) {
   const [user, space] = await Promise.all([requireUser(), requireSpace()]);
   const isSpaceOwner = space.ownerId === user.id;
+  const isProSpace = space.tier === "pro";
+  const canAccessDeveloperTools = isProSpace || isSpaceOwner;
 
   return (
     <BillingProvider>
@@ -79,7 +81,9 @@ export default async function Layout({
                 <SpaceSidebarMenu />
               </SidebarGroupContent>
             </SidebarGroup>
-            {!isSelfHosted && isSpaceOwner ? <DeveloperSidebarMenu /> : null}
+            {!isSelfHosted && canAccessDeveloperTools ? (
+              <DeveloperSidebarMenu />
+            ) : null}
           </SidebarContent>
           <SidebarFooter>
             <NavUser

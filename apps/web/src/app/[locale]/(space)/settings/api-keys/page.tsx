@@ -31,7 +31,7 @@ export default async function ApiKeysSettingsPage() {
 
   const [space, user] = await Promise.all([requireSpace(), requireUser()]);
 
-  if (space.ownerId !== user.id) {
+  if (space.tier !== "pro" && space.ownerId !== user.id) {
     return notFound();
   }
 
