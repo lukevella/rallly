@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import {
   PageSection,
   PageSectionContent,
@@ -18,7 +19,11 @@ import { ApiKeysList } from "./components/api-keys-list";
 import { CreateApiKeyButton } from "./components/create-api-key-button";
 
 export default async function ApiKeysSettingsPage() {
-  const [_space, _user] = await Promise.all([requireSpace(), requireUser()]);
+  const [space, user] = await Promise.all([requireSpace(), requireUser()]);
+
+  if (space.ownerId !== user.id) {
+    return notFound();
+  }
 
   return (
     <SettingsPage>
