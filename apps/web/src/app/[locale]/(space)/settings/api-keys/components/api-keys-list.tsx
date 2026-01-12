@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@rallly/ui/badge";
 import { Icon } from "@rallly/ui/icon";
 import { KeyIcon } from "lucide-react";
 import {
@@ -12,7 +13,7 @@ import { Spinner } from "@/components/spinner";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { trpc } from "@/trpc/client";
-import { DeleteApiKeyButton } from "./delete-api-key-button";
+import { RevokeApiKeyButton } from "./revoke-api-key-button";
 
 export function ApiKeysList() {
   const { data: apiKeys } = trpc.apiKeys.list.useQuery();
@@ -51,7 +52,18 @@ export function ApiKeysList() {
               </Icon>
             </div>
             <div>
-              <div className="font-semibold text-sm">{apiKey.name}</div>
+              <div className="flex items-center gap-2">
+                <div className="font-semibold text-sm">{apiKey.name}</div>
+                {!apiKey.revokedAt ? (
+                  <Badge variant="green">
+                    <Trans i18nKey="active" defaults="Active" />
+                  </Badge>
+                ) : (
+                  <Badge variant="destructive">
+                    <Trans i18nKey="revoked" defaults="Revoked" />
+                  </Badge>
+                )}
+              </div>
               <div className="text-muted-foreground text-sm">
                 {`sk_${apiKey.prefix}`}
                 &bull;&bull;&bull;&bull;
@@ -71,7 +83,9 @@ export function ApiKeysList() {
               <Trans i18nKey="neverUsed" defaults="Never used" />
             )}
           </div>
-          <DeleteApiKeyButton apiKeyId={apiKey.id} apiKeyName={apiKey.name} />
+          {!apiKey.revokedAt ? (
+            <RevokeApiKeyButton apiKeyId={apiKey.id} apiKeyName={apiKey.name} />
+          ) : null}
         </StackedListItem>
       ))}
     </StackedList>

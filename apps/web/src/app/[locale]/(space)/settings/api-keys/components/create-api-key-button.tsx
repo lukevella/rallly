@@ -66,8 +66,8 @@ export function CreateApiKeyButton() {
       setDidCopy(true);
       setTimeout(() => setDidCopy(false), 2000);
       toast.success(
-        t("apiKeyCopied", {
-          defaultValue: "API key copied to clipboard",
+        t("copiedToClipboard", {
+          defaultValue: "Copied to clipboard",
         }),
       );
     }
@@ -81,8 +81,8 @@ export function CreateApiKeyButton() {
       form.reset();
     } catch {
       toast.error(
-        t("createApiKeyError", {
-          defaultValue: "Failed to create API key",
+        t("createFailed", {
+          defaultValue: "Failed to create",
         }),
       );
     }
@@ -180,7 +180,7 @@ export function CreateApiKeyButton() {
                             <Input
                               {...field}
                               placeholder={t("apiKeyNamePlaceholder", {
-                                defaultValue: "e.g., Production API",
+                                defaultValue: "My App",
                               })}
                               autoFocus
                             />

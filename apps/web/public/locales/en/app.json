@@ -595,13 +595,14 @@
   "yourApiKey": "Your API key",
   "done": "Done",
   "createApiKeyDescription": "Create a new API key for programmatic access to your space",
-  "apiKeyCopied": "API key copied to clipboard",
-  "createApiKeyError": "Failed to create API key",
-  "apiKeyNamePlaceholder": "e.g., Production API",
-  "deleteApiKey": "Delete API key",
-  "deleteApiKeyConfirmation": "Are you sure you want to delete {name}? This action cannot be undone.",
-  "deleteApiKeyLoading": "Deleting API key...",
-  "deleteApiKeySuccess": "API key deleted successfully",
-  "deleteApiKeyError": "Failed to delete API key",
-  "developer": "Developer"
+  "apiKeyNamePlaceholder": "My App",
+  "developer": "Developer",
+  "active": "Active",
+  "revoked": "Revoked",
+  "revoke": "Revoke",
+  "copiedToClipboard": "Copied to clipboard",
+  "createFailed": "Failed to create",
+  "revokeConfirmation": "Are you sure you want to revoke {name}? This will immediately disable the key.",
+  "revoking": "Revoking...",
+  "revokeFailed": "Failed to revoke"
 }
