@@ -7,6 +7,8 @@ import superjson from "superjson";
 import { getCurrentUserSpace } from "@/auth/data";
 import { PostHogClient } from "@/features/analytics/posthog";
 import { isQuickCreateEnabled } from "@/features/quick-create";
+import { getActiveSpaceForUser } from "@/features/space/data";
+import { getUser } from "@/features/user/data";
 import { isSelfHosted } from "@/utils/constants";
 import type { TRPCContext } from "./context";
 
@@ -134,7 +136,7 @@ export const proProcedure = privateProcedure.use(async ({ next }) => {
 });
 
 export const spaceOwnerCloudOnlyProcedure = privateProcedure.use(
-  async ({ next }) => {
+  async ({ ctx, next }) => {
     if (isSelfHosted) {
       throw new TRPCError({
         code: "FORBIDDEN",
@@ -142,16 +144,18 @@ export const spaceOwnerCloudOnlyProcedure = privateProcedure.use(
       });
     }
 
-    const data = await getCurrentUserSpace();
+    const user = await getUser(ctx.user.id);
 
-    if (!data) {
+    if (!user) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "User must be logged in with a space selected",
       });
     }
 
-    if (data.space.ownerId !== data.user.id) {
+    const space = await getActiveSpaceForUser(user.id);
+
+    if (!space || space.ownerId !== user.id) {
       throw new TRPCError({
         code: "FORBIDDEN",
         message: "Only the space owner can perform this action",
@@ -160,8 +164,8 @@ export const spaceOwnerCloudOnlyProcedure = privateProcedure.use(
 
     return next({
       ctx: {
-        space: data.space,
-        user: data.user,
+        space,
+        user,
       },
     });
   },
