@@ -233,3 +233,26 @@ export const loadInvites = cache(async () => {
     role: fromDBRole(invite.role),
   }));
 });
+
+export const getActiveSpaceForUser = async (userId: string) => {
+  const spaceMember = await prisma.spaceMember.findFirst({
+    where: {
+      userId,
+    },
+    orderBy: {
+      lastSelectedAt: "desc",
+    },
+    include: {
+      space: true,
+    },
+  });
+
+  if (!spaceMember) {
+    return null;
+  }
+
+  return createSpaceDTO({
+    ...spaceMember.space,
+    role: spaceMember.role,
+  });
+};

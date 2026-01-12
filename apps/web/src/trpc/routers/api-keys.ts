@@ -2,10 +2,10 @@ import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createApiKey } from "@/features/developer/utils";
-import { router, spaceOwnerProcedure } from "../trpc";
+import { router, spaceOwnerCloudOnlyProcedure } from "../trpc";
 
 export const apiKeys = router({
-  list: spaceOwnerProcedure.query(async ({ ctx }) => {
+  list: spaceOwnerCloudOnlyProcedure.query(async ({ ctx }) => {
     const keys = await prisma.spaceApiKey.findMany({
       where: {
         spaceId: ctx.space.id,
@@ -26,7 +26,7 @@ export const apiKeys = router({
 
     return keys;
   }),
-  create: spaceOwnerProcedure
+  create: spaceOwnerCloudOnlyProcedure
     .input(
       z.object({
         name: z.string().min(1).max(100),
@@ -46,7 +46,7 @@ export const apiKeys = router({
 
       return { apiKey };
     }),
-  revoke: spaceOwnerProcedure
+  revoke: spaceOwnerCloudOnlyProcedure
     .input(
       z.object({
         id: z.string(),

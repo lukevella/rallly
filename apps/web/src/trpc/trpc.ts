@@ -7,6 +7,8 @@ import superjson from "superjson";
 import { getCurrentUserSpace } from "@/auth/data";
 import { PostHogClient } from "@/features/analytics/posthog";
 import { isQuickCreateEnabled } from "@/features/quick-create";
+import { getActiveSpaceForUser } from "@/features/space/data";
+import { getUser } from "@/features/user/data";
 import { isSelfHosted } from "@/utils/constants";
 import type { TRPCContext } from "./context";
 
@@ -98,17 +100,25 @@ export const requireUserMiddleware = middleware(async ({ ctx, next }) => {
 
 export const privateProcedure = procedureWithAnalytics.use(
   async ({ ctx, next }) => {
-    const { user } = ctx;
-    if (!user || user.isGuest !== false) {
+    if (!ctx.user || ctx.user.isGuest !== false) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Login is required",
       });
     }
 
+    const user = await getUser(ctx.user.id);
+
+    if (!user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User does not exist",
+      });
+    }
+
     return next({
       ctx: {
-        user,
+        user: ctx.user,
       },
     });
   },
@@ -133,30 +143,32 @@ export const proProcedure = privateProcedure.use(async ({ next }) => {
   return next();
 });
 
-export const spaceOwnerProcedure = privateProcedure.use(async ({ next }) => {
-  const data = await getCurrentUserSpace();
+export const spaceOwnerCloudOnlyProcedure = privateProcedure.use(
+  async ({ ctx, next }) => {
+    if (isSelfHosted) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "This method is only available on the cloud",
+      });
+    }
 
-  if (!data) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "User must be logged in with a space selected",
+    const space = await getActiveSpaceForUser(ctx.user.id);
+
+    if (!space || space.ownerId !== ctx.user.id) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Only the space owner can perform this action",
+      });
+    }
+
+    return next({
+      ctx: {
+        space,
+        user: ctx.user,
+      },
     });
-  }
-
-  if (data.space.ownerId !== data.user.id) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "Only the space owner can perform this action",
-    });
-  }
-
-  return next({
-    ctx: {
-      space: data.space,
-      user: data.user,
-    },
-  });
-});
+  },
+);
 
 export const createRateLimitMiddleware = (
   name: string,
