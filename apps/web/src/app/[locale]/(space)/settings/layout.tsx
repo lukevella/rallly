@@ -22,6 +22,7 @@ import { requireSpace, requireUser } from "@/auth/data";
 import { NavUser } from "@/components/nav-user";
 import { Trans } from "@/components/trans";
 import { BillingProvider } from "@/features/billing/client";
+import { isSelfHosted } from "@/utils/constants";
 import {
   AccountSidebarMenu,
   DeveloperSidebarMenu,
@@ -78,7 +79,7 @@ export default async function Layout({
                 <SpaceSidebarMenu />
               </SidebarGroupContent>
             </SidebarGroup>
-            {isSpaceOwner ? <DeveloperSidebarMenu /> : null}
+            {!isSelfHosted && isSpaceOwner ? <DeveloperSidebarMenu /> : null}
           </SidebarContent>
           <SidebarFooter>
             <NavUser
