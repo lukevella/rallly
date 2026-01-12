@@ -1,7 +1,11 @@
 "use client";
 
+import { useFeatureFlagEnabled } from "@rallly/posthog/client";
 import { Icon } from "@rallly/ui/icon";
 import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -19,6 +23,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Trans } from "@/components/trans";
+import { useUser } from "@/components/user-provider";
+import { useSpace } from "@/features/space/client";
 import { useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 
@@ -96,12 +103,6 @@ export function SpaceSidebarMenu() {
       icon: <UsersIcon />,
       href: "/settings/members",
     },
-    {
-      id: "apiKeys",
-      label: t("apiKeys", { defaultValue: "API Keys" }),
-      icon: <KeyIcon />,
-      href: "/settings/api-keys",
-    },
     ...(isBillingEnabled
       ? [
           {
@@ -127,5 +128,52 @@ export function SpaceSidebarMenu() {
         </SidebarMenuItem>
       ))}
     </SidebarMenu>
+  );
+}
+
+export function DeveloperSidebarMenu() {
+  const { t } = useTranslation();
+  const pathname = usePathname();
+  const isApiKeysEnabled = useFeatureFlagEnabled("api-keys");
+  const space = useSpace();
+  const { user } = useUser();
+
+  // Only show to space owner
+  if (!isApiKeysEnabled || !user || space.data.ownerId !== user.id) {
+    return null;
+  }
+
+  const menuItems = [
+    {
+      id: "apiKeys",
+      label: t("apiKeys", { defaultValue: "API Keys" }),
+      icon: <KeyIcon />,
+      href: "/settings/api-keys",
+    },
+  ];
+
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel>
+        <Trans i18nKey="developer" defaults="Developer" />
+      </SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {menuItems.map((item) => (
+            <SidebarMenuItem key={item.id}>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.startsWith(item.href)}
+              >
+                <Link href={item.href} className="flex items-center gap-x-2">
+                  <Icon>{item.icon}</Icon>
+                  {item.label}
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
   );
 }

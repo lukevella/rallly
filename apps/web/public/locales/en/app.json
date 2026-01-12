@@ -602,5 +602,6 @@
   "deleteApiKeyConfirmation": "Are you sure you want to delete {name}? This action cannot be undone.",
   "deleteApiKeyLoading": "Deleting API key...",
   "deleteApiKeySuccess": "API key deleted successfully",
-  "deleteApiKeyError": "Failed to delete API key"
+  "deleteApiKeyError": "Failed to delete API key",
+  "developer": "Developer"
 }
