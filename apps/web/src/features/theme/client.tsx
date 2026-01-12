@@ -17,7 +17,7 @@ export const useTheme = () => {
       theme,
       setTheme: (theme: string) => {
         setTheme(theme);
-        posthog?.capture("theme_change", { $set: { theme } });
+        posthog?.capture("theme_change", { theme });
       },
     }),
     [theme, setTheme, posthog],
