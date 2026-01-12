@@ -34,6 +34,7 @@ export default async function Layout({
   children?: React.ReactNode;
 }) {
   const [user, space] = await Promise.all([requireUser(), requireSpace()]);
+  const isSpaceOwner = space.ownerId === user.id;
 
   return (
     <BillingProvider>
@@ -77,7 +78,7 @@ export default async function Layout({
                 <SpaceSidebarMenu />
               </SidebarGroupContent>
             </SidebarGroup>
-            {space.ownerId === user.id ? <DeveloperSidebarMenu /> : null}
+            {isSpaceOwner ? <DeveloperSidebarMenu /> : null}
           </SidebarContent>
           <SidebarFooter>
             <NavUser

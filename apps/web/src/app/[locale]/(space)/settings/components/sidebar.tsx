@@ -24,8 +24,6 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Trans } from "@/components/trans";
-import { useUser } from "@/components/user-provider";
-import { useSpace } from "@/features/space/client";
 import { useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 
@@ -134,12 +132,9 @@ export function SpaceSidebarMenu() {
 export function DeveloperSidebarMenu() {
   const { t } = useTranslation();
   const pathname = usePathname();
-  const isApiKeysEnabled = useFeatureFlagEnabled("api-keys");
-  const space = useSpace();
-  const { user } = useUser();
+  const isDeveloperToolsEnabled = useFeatureFlagEnabled("developer-tools");
 
-  // Only show to space owner
-  if (!isApiKeysEnabled || !user || space.data.ownerId !== user.id) {
+  if (!isDeveloperToolsEnabled) {
     return null;
   }
 
