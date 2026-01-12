@@ -2,7 +2,7 @@
 import posthog from "posthog-js";
 import type React from "react";
 
-export { usePostHog } from "posthog-js/react";
+export { useFeatureFlagEnabled, usePostHog } from "posthog-js/react";
 
 import { PostHogProvider as BasePostHogProvider } from "posthog-js/react";
 

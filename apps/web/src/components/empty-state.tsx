@@ -22,7 +22,7 @@ export function EmptyState({
 
 export function EmptyStateIcon({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mb-4 inline-flex rounded-full border bg-linear-to-b from-gray-50 to-white p-4 dark:border-gray-700 dark:from-gray-900 dark:to-gray-800">
+    <div className="mb-4 inline-flex rounded-full border p-4">
       <Icon size="xl" className="opacity-50">
         {children}
       </Icon>

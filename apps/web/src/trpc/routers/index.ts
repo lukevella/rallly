@@ -4,6 +4,7 @@ import toArray from "dayjs/plugin/toArray";
 import utc from "dayjs/plugin/utc";
 
 import { mergeRouters, router } from "../trpc";
+import { apiKeys } from "./api-keys";
 import { auth } from "./auth";
 import { calendars } from "./calendars";
 import { events } from "./events";
@@ -16,6 +17,7 @@ dayjs.extend(utc);
 
 export const appRouter = mergeRouters(
   router({
+    apiKeys,
     auth,
     events,
     polls,

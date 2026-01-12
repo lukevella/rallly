@@ -1,7 +1,11 @@
 "use client";
 
+import { useFeatureFlagEnabled } from "@rallly/posthog/client";
 import { Icon } from "@rallly/ui/icon";
 import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -10,6 +14,7 @@ import {
   BoltIcon,
   CalendarIcon,
   CreditCardIcon,
+  KeyIcon,
   LockIcon,
   PanelsTopLeftIcon,
   Settings2Icon,
@@ -18,6 +23,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 
@@ -120,5 +126,49 @@ export function SpaceSidebarMenu() {
         </SidebarMenuItem>
       ))}
     </SidebarMenu>
+  );
+}
+
+export function DeveloperSidebarMenu() {
+  const { t } = useTranslation();
+  const pathname = usePathname();
+  const isDeveloperToolsEnabled = useFeatureFlagEnabled("developer-tools");
+
+  if (!isDeveloperToolsEnabled) {
+    return null;
+  }
+
+  const menuItems = [
+    {
+      id: "apiKeys",
+      label: t("apiKeys", { defaultValue: "API Keys" }),
+      icon: <KeyIcon />,
+      href: "/settings/api-keys",
+    },
+  ];
+
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel>
+        <Trans i18nKey="developer" defaults="Developer" />
+      </SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {menuItems.map((item) => (
+            <SidebarMenuItem key={item.id}>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.startsWith(item.href)}
+              >
+                <Link href={item.href} className="flex items-center gap-x-2">
+                  <Icon>{item.icon}</Icon>
+                  {item.label}
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
   );
 }

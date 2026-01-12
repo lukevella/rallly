@@ -2,49 +2,27 @@ import crypto from "node:crypto";
 import { prisma } from "@rallly/database";
 import { waitUntil } from "@vercel/functions";
 import { bearerAuth } from "hono/bearer-auth";
-
-const extractApiKeyPrefix = (rawKey: string) => {
-  const parts = rawKey.split("_").filter(Boolean);
-  if (parts.length >= 3 && parts[1]) {
-    return parts[1];
-  }
-  return rawKey.slice(0, 12);
-};
-
-const isHexSha256 = (value: string) => /^[a-f0-9]{64}$/i.test(value);
-
-const hashApiKey = (rawKey: string, salt?: string) => {
-  const input = salt ? `${salt}:${rawKey}` : rawKey;
-  return crypto.createHash("sha256").update(input).digest("hex");
-};
-
-const verifyApiKey = (rawKey: string, stored: string) => {
-  const trimmed = stored.trim();
-  if (trimmed.startsWith("sha256$")) {
-    const [, salt, hash] = trimmed.split("$");
-    if (!salt || !hash || !isHexSha256(hash)) {
-      return false;
-    }
-    const computed = hashApiKey(rawKey, salt);
-    return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(hash));
-  }
-
-  if (!isHexSha256(trimmed)) {
-    return false;
-  }
-
-  const computed = hashApiKey(rawKey);
-  return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(trimmed));
-};
+import { extractApiKeyPrefix, verifyApiKey } from "@/features/developer/utils";
 
 export const spaceApiKeyAuth = bearerAuth({
   verifyToken: async (rawKey, c) => {
     const prefix = extractApiKeyPrefix(rawKey);
+    const prefixBuffer = Buffer.from(prefix);
 
-    const apiKey = await prisma.spaceApiKey.findUnique({
-      where: { prefix },
+    // Query candidate keys to avoid timing attack via database lookup
+    // We use a partial prefix match to narrow the search space
+    const now = new Date();
+    const candidateKeys = await prisma.spaceApiKey.findMany({
+      where: {
+        prefix: {
+          startsWith: prefix.slice(0, Math.min(4, prefix.length)),
+        },
+        revokedAt: null,
+        OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+      },
       select: {
         id: true,
+        prefix: true,
         spaceId: true,
         hashedKey: true,
         expiresAt: true,
@@ -57,31 +35,36 @@ export const spaceApiKeyAuth = bearerAuth({
       },
     });
 
-    if (!apiKey) {
-      return false;
+    // Constant-time search through candidates
+    let validKey = null;
+    for (const candidate of candidateKeys) {
+      // Timing-safe prefix comparison
+      const candidateBuffer = Buffer.from(candidate.prefix);
+      if (
+        prefixBuffer.length === candidateBuffer.length &&
+        crypto.timingSafeEqual(prefixBuffer, candidateBuffer)
+      ) {
+        // Verify the full key hash
+        if (verifyApiKey(rawKey, candidate.hashedKey)) {
+          validKey = candidate;
+          // Continue iterating to maintain constant time
+        }
+      }
     }
 
-    if (apiKey.revokedAt) {
-      return false;
-    }
-
-    if (apiKey.expiresAt && apiKey.expiresAt <= new Date()) {
-      return false;
-    }
-
-    if (!verifyApiKey(rawKey, apiKey.hashedKey)) {
+    if (!validKey) {
       return false;
     }
 
     c.set("apiAuth", {
-      spaceId: apiKey.spaceId,
-      spaceOwnerId: apiKey.space.ownerId,
-      apiKeyId: apiKey.id,
+      spaceId: validKey.spaceId,
+      spaceOwnerId: validKey.space.ownerId,
+      apiKeyId: validKey.id,
     });
 
     waitUntil(
       prisma.spaceApiKey.update({
-        where: { id: apiKey.id },
+        where: { id: validKey.id },
         data: { lastUsedAt: new Date() },
       }),
     );
