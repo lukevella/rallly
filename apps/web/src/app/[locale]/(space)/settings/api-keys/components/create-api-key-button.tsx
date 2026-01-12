@@ -24,7 +24,7 @@ import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
 import { AlertTriangleIcon, CheckIcon, CopyIcon, PlusIcon } from "lucide-react";
-import { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useCopyToClipboard } from "react-use";
 import { z } from "zod";
@@ -41,11 +41,11 @@ type FormData = z.infer<typeof formSchema>;
 export function CreateApiKeyButton() {
   const { t } = useTranslation();
   const dialog = useDialog();
-  const [createdApiKey, setCreatedApiKey] = useState<string | null>(null);
+  const [createdApiKey, setCreatedApiKey] = React.useState<string | null>(null);
   const createApiKey = trpc.apiKeys.create.useMutation();
   const utils = trpc.useUtils();
   const [, copy] = useCopyToClipboard();
-  const [didCopy, setDidCopy] = useState(false);
+  const [didCopy, setDidCopy] = React.useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),

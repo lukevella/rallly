@@ -2,6 +2,7 @@
 
 import { Badge } from "@rallly/ui/badge";
 import { Icon } from "@rallly/ui/icon";
+import dayjs from "dayjs";
 import { KeyIcon } from "lucide-react";
 import {
   EmptyState,
@@ -76,7 +77,7 @@ export function ApiKeysList() {
                 i18nKey="lastUsedAt"
                 defaults="Last used {date}"
                 values={{
-                  date: new Date(apiKey.lastUsedAt).toLocaleDateString(),
+                  date: dayjs(apiKey.lastUsedAt).fromNow(),
                 }}
               />
             ) : (
