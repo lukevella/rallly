@@ -1,14 +1,8 @@
-import crypto from "node:crypto";
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { createApiKey } from "@/features/developer/utils";
 import { router, spaceOwnerProcedure } from "../trpc";
-
-const randomToken = (bytes: number) =>
-  crypto.randomBytes(bytes).toString("base64url");
-
-const sha256Hex = (value: string) =>
-  crypto.createHash("sha256").update(value).digest("hex");
 
 export const apiKeys = router({
   list: spaceOwnerProcedure.query(async ({ ctx }) => {
@@ -39,12 +33,7 @@ export const apiKeys = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const prefix = randomToken(6);
-      const secret = randomToken(24);
-      const apiKey = `sk_${prefix}_${secret}`;
-
-      const salt = randomToken(12);
-      const hashedKey = `sha256$${salt}$${sha256Hex(`${salt}:${apiKey}`)}`;
+      const { apiKey, prefix, hashedKey } = createApiKey();
 
       await prisma.spaceApiKey.create({
         data: {
