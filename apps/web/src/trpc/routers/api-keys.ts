@@ -2,8 +2,7 @@ import crypto from "node:crypto";
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { getCurrentUserSpace } from "@/auth/data";
-import { privateProcedure, router } from "../trpc";
+import { router, spaceOwnerProcedure } from "../trpc";
 
 const randomToken = (bytes: number) =>
   crypto.randomBytes(bytes).toString("base64url");
@@ -12,19 +11,10 @@ const sha256Hex = (value: string) =>
   crypto.createHash("sha256").update(value).digest("hex");
 
 export const apiKeys = router({
-  list: privateProcedure.query(async () => {
-    const data = await getCurrentUserSpace();
-
-    if (!data) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "User must be logged in with a space selected",
-      });
-    }
-
+  list: spaceOwnerProcedure.query(async ({ ctx }) => {
     const keys = await prisma.spaceApiKey.findMany({
       where: {
-        spaceId: data.space.id,
+        spaceId: ctx.space.id,
       },
       select: {
         id: true,
@@ -42,22 +32,13 @@ export const apiKeys = router({
 
     return keys;
   }),
-  create: privateProcedure
+  create: spaceOwnerProcedure
     .input(
       z.object({
         name: z.string().min(1).max(100),
       }),
     )
-    .mutation(async ({ input }) => {
-      const data = await getCurrentUserSpace();
-
-      if (!data) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "User must be logged in with a space selected",
-        });
-      }
-
+    .mutation(async ({ input, ctx }) => {
       const prefix = randomToken(6);
       const secret = randomToken(24);
       const apiKey = `sk_${prefix}_${secret}`;
@@ -67,7 +48,7 @@ export const apiKeys = router({
 
       await prisma.spaceApiKey.create({
         data: {
-          spaceId: data.space.id,
+          spaceId: ctx.space.id,
           name: input.name,
           prefix,
           hashedKey,
@@ -76,22 +57,13 @@ export const apiKeys = router({
 
       return { apiKey };
     }),
-  revoke: privateProcedure
+  revoke: spaceOwnerProcedure
     .input(
       z.object({
         id: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
-      const data = await getCurrentUserSpace();
-
-      if (!data) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "User must be logged in with a space selected",
-        });
-      }
-
+    .mutation(async ({ input, ctx }) => {
       const apiKey = await prisma.spaceApiKey.findUnique({
         where: { id: input.id },
         select: { spaceId: true, revokedAt: true },
@@ -104,7 +76,7 @@ export const apiKeys = router({
         });
       }
 
-      if (apiKey.spaceId !== data.space.id) {
+      if (apiKey.spaceId !== ctx.space.id) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You do not have permission to revoke this API key",

@@ -133,6 +133,31 @@ export const proProcedure = privateProcedure.use(async ({ next }) => {
   return next();
 });
 
+export const spaceOwnerProcedure = privateProcedure.use(async ({ next }) => {
+  const data = await getCurrentUserSpace();
+
+  if (!data) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "User must be logged in with a space selected",
+    });
+  }
+
+  if (data.space.ownerId !== data.user.id) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Only the space owner can perform this action",
+    });
+  }
+
+  return next({
+    ctx: {
+      space: data.space,
+      user: data.user,
+    },
+  });
+});
+
 export const createRateLimitMiddleware = (
   name: string,
   requests: number,
