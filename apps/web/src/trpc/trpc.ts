@@ -112,13 +112,13 @@ export const privateProcedure = procedureWithAnalytics.use(
     if (!user) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: "Logged in user does not exist anymore",
+        message: "User does not exist",
       });
     }
 
     return next({
       ctx: {
-        user,
+        user: ctx.user,
       },
     });
   },
