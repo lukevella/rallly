@@ -15,15 +15,32 @@ import {
 } from "@/app/components/settings-layout";
 import { requireSpace, requireUser } from "@/auth/data";
 import { Trans } from "@/components/trans";
+import { PostHogClient } from "@/features/analytics/posthog";
 import { getTranslation } from "@/i18n/server";
 import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { isSelfHosted } from "@/utils/constants";
 import { ApiKeysList } from "./components/api-keys-list";
 import { CreateApiKeyButton } from "./components/create-api-key-button";
 
 export default async function ApiKeysSettingsPage() {
+  if (isSelfHosted) {
+    return notFound();
+  }
+
+  const posthog = PostHogClient();
+
   const [space, user] = await Promise.all([requireSpace(), requireUser()]);
 
   if (space.ownerId !== user.id) {
+    return notFound();
+  }
+
+  const isFeatureFlagEnabled = await posthog?.isFeatureEnabled(
+    "developer-tools",
+    user.id,
+  );
+
+  if (!isFeatureFlagEnabled) {
     return notFound();
   }
 
