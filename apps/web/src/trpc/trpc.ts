@@ -100,11 +100,19 @@ export const requireUserMiddleware = middleware(async ({ ctx, next }) => {
 
 export const privateProcedure = procedureWithAnalytics.use(
   async ({ ctx, next }) => {
-    const { user } = ctx;
-    if (!user || user.isGuest !== false) {
+    if (!ctx.user || ctx.user.isGuest !== false) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Login is required",
+      });
+    }
+
+    const user = await getUser(ctx.user.id);
+
+    if (!user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Logged in user does not exist anymore",
       });
     }
 
@@ -144,18 +152,9 @@ export const spaceOwnerCloudOnlyProcedure = privateProcedure.use(
       });
     }
 
-    const user = await getUser(ctx.user.id);
+    const space = await getActiveSpaceForUser(ctx.user.id);
 
-    if (!user) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "User must be logged in with a space selected",
-      });
-    }
-
-    const space = await getActiveSpaceForUser(user.id);
-
-    if (!space || space.ownerId !== user.id) {
+    if (!space || space.ownerId !== ctx.user.id) {
       throw new TRPCError({
         code: "FORBIDDEN",
         message: "Only the space owner can perform this action",
@@ -165,7 +164,7 @@ export const spaceOwnerCloudOnlyProcedure = privateProcedure.use(
     return next({
       ctx: {
         space,
-        user,
+        user: ctx.user,
       },
     });
   },
