@@ -19,6 +19,7 @@ import {
   createPollSuccessResponseSchema,
   deletePollSuccessResponseSchema,
   errorResponseSchema,
+  getPollResultsSuccessResponseSchema,
   getPollSuccessResponseSchema,
 } from "../schemas";
 import { spaceApiKeyAuth } from "../utils/api-key";
@@ -422,6 +423,131 @@ app.get(
         })),
         adminUrl: absoluteUrl(`/poll/${poll.id}`),
         inviteUrl: shortUrl(`/invite/${poll.id}`),
+      },
+    });
+  },
+);
+
+app.get(
+  "/polls/:pollId/results",
+  spaceApiKeyAuth,
+  rateLimiter<Env>({
+    windowMs: 60 * 1000,
+    limit: 120,
+    keyGenerator: (c) => {
+      const { apiKeyId } = c.get("apiAuth");
+      return `private-api:polls-results:${apiKeyId}`;
+    },
+    store: isKvEnabled() ? new RedisStore({ client: kv }) : undefined,
+  }),
+  describeRoute({
+    tags: ["Polls"],
+    summary: "Get poll results",
+    description:
+      "Retrieves aggregated voting results for a poll. Returns vote counts per option without individual participant data.",
+    security: [{ bearerAuth: [] }],
+    responses: {
+      200: {
+        description: "Successful response",
+        content: {
+          "application/json": {
+            schema: resolver(getPollResultsSuccessResponseSchema),
+          },
+        },
+      },
+      404: {
+        description: "Poll not found",
+        content: {
+          "application/json": {
+            schema: resolver(errorResponseSchema),
+          },
+        },
+      },
+    },
+  }),
+  async (c) => {
+    const { pollId } = c.req.param();
+    const { spaceId } = c.get("apiAuth");
+
+    const poll = await prisma.poll.findFirst({
+      where: {
+        id: pollId,
+        spaceId,
+        deleted: false,
+      },
+      select: {
+        id: true,
+        options: {
+          select: {
+            id: true,
+            startTime: true,
+            duration: true,
+            votes: {
+              select: {
+                type: true,
+              },
+            },
+          },
+          orderBy: {
+            startTime: "asc",
+          },
+        },
+        _count: {
+          select: {
+            participants: {
+              where: { deleted: false },
+            },
+          },
+        },
+      },
+    });
+
+    if (!poll) {
+      return c.json(
+        apiError(
+          "POLL_NOT_FOUND",
+          "Poll not found or does not belong to this space.",
+        ),
+        404,
+      );
+    }
+
+    // Calculate scores for each option
+    // Ranking: total availability (yes + ifNeedBe) is primary, yes votes as tiebreaker
+    // Score formula: (yes + ifNeedBe) * 1000 + yes
+    const optionResults = poll.options.map((option) => {
+      const votes = { yes: 0, ifNeedBe: 0, no: 0 };
+      for (const vote of option.votes) {
+        if (vote.type === "yes") votes.yes++;
+        else if (vote.type === "ifNeedBe") votes.ifNeedBe++;
+        else if (vote.type === "no") votes.no++;
+      }
+      const score = (votes.yes + votes.ifNeedBe) * 1000 + votes.yes;
+
+      return {
+        id: option.id,
+        startTime: option.startTime.toISOString(),
+        duration: option.duration,
+        votes,
+        score,
+      };
+    });
+
+    // Find the high score
+    const highScore = Math.max(...optionResults.map((o) => o.score), 0);
+
+    // Add isTopChoice flag
+    const options = optionResults.map((option) => ({
+      ...option,
+      isTopChoice: option.score === highScore && option.score > 0,
+    }));
+
+    return c.json({
+      data: {
+        pollId: poll.id,
+        participantCount: poll._count.participants,
+        options,
+        highScore,
       },
     });
   },

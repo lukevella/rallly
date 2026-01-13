@@ -204,3 +204,49 @@ export const getPollSuccessResponseSchema = z
 // Create poll returns the same shape as get poll
 export const createPollSuccessResponseSchema =
   getPollSuccessResponseSchema.openapi("CreatePollResponse");
+
+export const voteCountsSchema = z
+  .object({
+    yes: z.int().positive().openapi({ example: 5 }),
+    ifNeedBe: z.int().positive().openapi({ example: 2 }),
+    no: z.int().positive().openapi({ example: 1 }),
+  })
+  .openapi("VoteCounts");
+
+export const optionResultSchema = z
+  .object({
+    id: z.string().openapi({ example: "opt_abc123" }),
+    startTime: z.iso.datetime().openapi({ example: "2025-01-15T09:00:00Z" }),
+    duration: z.int().positive().openapi({
+      description: "Duration in minutes. 0 indicates an all-day option.",
+      example: 30,
+    }),
+    votes: voteCountsSchema,
+    score: z.int().positive().openapi({
+      description:
+        "Ranking score: (yes + ifNeedBe) * 1000 + yes. Total availability is primary, yes votes break ties.",
+      example: 5004,
+    }),
+    isTopChoice: z.boolean().openapi({
+      description: "Whether this option has the highest score",
+      example: true,
+    }),
+  })
+  .openapi("OptionResult");
+
+export const getPollResultsSuccessResponseSchema = z
+  .object({
+    data: z.object({
+      pollId: z.string().openapi({ example: "p_123abc" }),
+      participantCount: z.int().positive().openapi({
+        description: "Total number of participants",
+        example: 8,
+      }),
+      options: z.array(optionResultSchema),
+      highScore: z.int().positive().openapi({
+        description: "Highest score across all options",
+        example: 7,
+      }),
+    }),
+  })
+  .openapi("GetPollResultsResponse");

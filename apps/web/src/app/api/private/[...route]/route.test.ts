@@ -595,7 +595,7 @@ describe("Private API - /polls", () => {
       expect(json.data.title).toBe("Team sync");
       expect(json.data.description).toBe("Weekly team meeting");
       expect(json.data.location).toBe("Zoom");
-      expect(json.data.timeZone).toBe("Europe/London");
+      expect(json.data.timezone).toBe("Europe/London");
       expect(json.data.status).toBe("live");
       expect(json.data.createdAt).toBe("2025-01-10T12:00:00.000Z");
       expect(json.data.user).toEqual({
@@ -683,6 +683,247 @@ describe("Private API - /polls", () => {
 
     it("should return 401 without authorization", async () => {
       const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "GET",
+      });
+
+      expect(res.status).toBe(401);
+    });
+  });
+
+  describe("Get poll results", () => {
+    it("should return aggregated vote results", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue({
+        id: "test-poll-id",
+        options: [
+          {
+            id: "opt-1",
+            startTime: new Date("2025-01-15T09:00:00Z"),
+            duration: 30,
+            votes: [
+              { type: "yes" },
+              { type: "yes" },
+              { type: "yes" },
+              { type: "ifNeedBe" },
+              { type: "no" },
+            ],
+          },
+          {
+            id: "opt-2",
+            startTime: new Date("2025-01-15T10:00:00Z"),
+            duration: 30,
+            votes: [{ type: "yes" }, { type: "no" }, { type: "no" }],
+          },
+          {
+            id: "opt-3",
+            startTime: new Date("2025-01-15T11:00:00Z"),
+            duration: 30,
+            votes: [],
+          },
+        ],
+        _count: { participants: 5 },
+      } as never);
+
+      const res = await app.request("/api/private/polls/test-poll-id/results", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+
+      expect(json.data.pollId).toBe("test-poll-id");
+      expect(json.data.participantCount).toBe(5);
+      expect(json.data.highScore).toBe(4003); // (3+1)*1000 + 3 = 4003
+      expect(json.data.options).toHaveLength(3);
+
+      // First option: 3 yes, 1 ifNeedBe = (3+1)*1000 + 3 = 4003 (top choice)
+      expect(json.data.options[0]).toEqual({
+        id: "opt-1",
+        startTime: "2025-01-15T09:00:00.000Z",
+        duration: 30,
+        votes: { yes: 3, ifNeedBe: 1, no: 1 },
+        score: 4003,
+        isTopChoice: true,
+      });
+
+      // Second option: 1 yes = (1+0)*1000 + 1 = 1001
+      expect(json.data.options[1]).toEqual({
+        id: "opt-2",
+        startTime: "2025-01-15T10:00:00.000Z",
+        duration: 30,
+        votes: { yes: 1, ifNeedBe: 0, no: 2 },
+        score: 1001,
+        isTopChoice: false,
+      });
+
+      // Third option: no votes = score 0
+      expect(json.data.options[2]).toEqual({
+        id: "opt-3",
+        startTime: "2025-01-15T11:00:00.000Z",
+        duration: 30,
+        votes: { yes: 0, ifNeedBe: 0, no: 0 },
+        score: 0,
+        isTopChoice: false,
+      });
+    });
+
+    it("should handle ties for top choice", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue({
+        id: "test-poll-id",
+        options: [
+          {
+            id: "opt-1",
+            startTime: new Date("2025-01-15T09:00:00Z"),
+            duration: 30,
+            votes: [{ type: "yes" }, { type: "yes" }],
+          },
+          {
+            id: "opt-2",
+            startTime: new Date("2025-01-15T10:00:00Z"),
+            duration: 30,
+            votes: [{ type: "yes" }, { type: "yes" }],
+          },
+        ],
+        _count: { participants: 2 },
+      } as never);
+
+      const res = await app.request("/api/private/polls/test-poll-id/results", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+
+      // Both options have score 2002, both should be top choice
+      expect(json.data.options[0].isTopChoice).toBe(true);
+      expect(json.data.options[1].isTopChoice).toBe(true);
+      expect(json.data.highScore).toBe(2002);
+    });
+
+    it("should prioritize total availability over yes votes", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue({
+        id: "test-poll-id",
+        options: [
+          {
+            id: "opt-1",
+            startTime: new Date("2025-01-15T09:00:00Z"),
+            duration: 30,
+            // 4 yes = 4 available = (4)*1000 + 4 = 4004
+            votes: [
+              { type: "yes" },
+              { type: "yes" },
+              { type: "yes" },
+              { type: "yes" },
+            ],
+          },
+          {
+            id: "opt-2",
+            startTime: new Date("2025-01-15T10:00:00Z"),
+            duration: 30,
+            // 3 yes + 2 ifNeedBe = 5 available = (5)*1000 + 3 = 5003 (winner)
+            votes: [
+              { type: "yes" },
+              { type: "yes" },
+              { type: "yes" },
+              { type: "ifNeedBe" },
+              { type: "ifNeedBe" },
+            ],
+          },
+        ],
+        _count: { participants: 5 },
+      } as never);
+
+      const res = await app.request("/api/private/polls/test-poll-id/results", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+
+      // 5 available (5003) beats 4 available (4004) even though opt-1 has more yes votes
+      expect(json.data.options[0].score).toBe(4004);
+      expect(json.data.options[0].isTopChoice).toBe(false);
+      expect(json.data.options[1].score).toBe(5003);
+      expect(json.data.options[1].isTopChoice).toBe(true);
+    });
+
+    it("should use yes votes as tiebreaker when availability is equal", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue({
+        id: "test-poll-id",
+        options: [
+          {
+            id: "opt-1",
+            startTime: new Date("2025-01-15T09:00:00Z"),
+            duration: 30,
+            // 3 yes + 1 ifNeedBe = 4 available = (4)*1000 + 3 = 4003
+            votes: [
+              { type: "yes" },
+              { type: "yes" },
+              { type: "yes" },
+              { type: "ifNeedBe" },
+            ],
+          },
+          {
+            id: "opt-2",
+            startTime: new Date("2025-01-15T10:00:00Z"),
+            duration: 30,
+            // 4 yes = 4 available = (4)*1000 + 4 = 4004 (winner due to more yes)
+            votes: [
+              { type: "yes" },
+              { type: "yes" },
+              { type: "yes" },
+              { type: "yes" },
+            ],
+          },
+        ],
+        _count: { participants: 4 },
+      } as never);
+
+      const res = await app.request("/api/private/polls/test-poll-id/results", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+
+      // Same availability (4), but opt-2 has more yes votes
+      expect(json.data.options[0].score).toBe(4003);
+      expect(json.data.options[0].isTopChoice).toBe(false);
+      expect(json.data.options[1].score).toBe(4004);
+      expect(json.data.options[1].isTopChoice).toBe(true);
+    });
+
+    it("should return 404 when poll not found", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue(null);
+
+      const res = await app.request(
+        "/api/private/polls/nonexistent-poll/results",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${testApiKey}`,
+          },
+        },
+      );
+
+      expect(res.status).toBe(404);
+      const json = await res.json();
+      expect(json.error.code).toBe("POLL_NOT_FOUND");
+    });
+
+    it("should return 401 without authorization", async () => {
+      const res = await app.request("/api/private/polls/test-poll-id/results", {
         method: "GET",
       });
 
