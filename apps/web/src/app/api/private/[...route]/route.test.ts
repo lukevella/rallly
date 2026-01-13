@@ -1,9 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockDeletePoll = vi.fn();
+const mockCreatePoll = vi.fn();
 
 vi.mock("@/features/poll/mutations", () => ({
   deletePoll: (...args: unknown[]) => mockDeletePoll(...args),
+  createPoll: (...args: unknown[]) => mockCreatePoll(...args),
 }));
 
 vi.mock("@rallly/database", () => ({
@@ -21,6 +23,7 @@ vi.mock("@rallly/database", () => ({
     },
     poll: {
       create: vi.fn(),
+      findFirst: vi.fn(),
     },
   },
 }));
@@ -85,9 +88,24 @@ describe("Private API - /polls", () => {
       id: "test-user-id",
     } as never);
     vi.mocked(prisma.spaceMember.findFirst).mockResolvedValue(null);
-    vi.mocked(prisma.poll.create).mockResolvedValue({
+
+    // Mock createPoll mutation
+    mockCreatePoll.mockResolvedValue({
       id: "test-poll-id",
-    } as never);
+      title: "Test Poll",
+      description: null,
+      location: null,
+      timeZone: null,
+      status: "live",
+      createdAt: new Date("2025-01-10T12:00:00Z"),
+      user: {
+        name: "Test User",
+        image: null,
+      },
+      options: [],
+      adminUrl: "https://example.com/poll/test-poll-id",
+      inviteUrl: "https://example.com/invite/test-poll-id",
+    });
   });
 
   describe("Authentication", () => {
@@ -183,29 +201,23 @@ describe("Private API - /polls", () => {
         "https://example.com/invite/test-poll-id",
       );
 
-      expect(prisma.poll.create).toHaveBeenCalledWith(
+      expect(mockCreatePoll).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({
-            title: "Team offsite",
-            options: {
-              createMany: {
-                data: [
-                  {
-                    startTime: new Date("2025-01-15T00:00:00.000Z"),
-                    duration: 0,
-                  },
-                  {
-                    startTime: new Date("2025-01-16T00:00:00.000Z"),
-                    duration: 0,
-                  },
-                  {
-                    startTime: new Date("2025-01-17T00:00:00.000Z"),
-                    duration: 0,
-                  },
-                ],
-              },
+          title: "Team offsite",
+          options: [
+            {
+              startTime: new Date("2025-01-15T00:00:00.000Z"),
+              duration: 0,
             },
-          }),
+            {
+              startTime: new Date("2025-01-16T00:00:00.000Z"),
+              duration: 0,
+            },
+            {
+              startTime: new Date("2025-01-17T00:00:00.000Z"),
+              duration: 0,
+            },
+          ],
         }),
       );
     });
@@ -225,12 +237,10 @@ describe("Private API - /polls", () => {
       });
 
       expect(res.status).toBe(200);
-      expect(prisma.poll.create).toHaveBeenCalledWith(
+      expect(mockCreatePoll).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({
-            title: "Team offsite",
-            location: "Conference Room A",
-          }),
+          title: "Team offsite",
+          location: "Conference Room A",
         }),
       );
     });
@@ -300,12 +310,10 @@ describe("Private API - /polls", () => {
       const json = await res.json();
       expect(json.data.id).toBe("test-poll-id");
 
-      expect(prisma.poll.create).toHaveBeenCalledWith(
+      expect(mockCreatePoll).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({
-            title: "Team sync",
-            timeZone: "Europe/London",
-          }),
+          title: "Team sync",
+          timeZone: "Europe/London",
         }),
       );
     });
@@ -327,11 +335,9 @@ describe("Private API - /polls", () => {
       });
 
       expect(res.status).toBe(200);
-      expect(prisma.poll.create).toHaveBeenCalledWith(
+      expect(mockCreatePoll).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({
-            timeZone: undefined,
-          }),
+          timeZone: undefined,
         }),
       );
     });
@@ -380,7 +386,7 @@ describe("Private API - /polls", () => {
       });
 
       expect(res.status).toBe(200);
-      expect(prisma.poll.create).toHaveBeenCalled();
+      expect(mockCreatePoll).toHaveBeenCalled();
     });
   });
 
@@ -543,6 +549,144 @@ describe("Private API - /polls", () => {
       expect(res.status).toBe(404);
       const json = await res.json();
       expect(json.error.code).toBe("POLL_NOT_FOUND");
+    });
+  });
+
+  describe("Get poll", () => {
+    const mockPoll = {
+      id: "test-poll-id",
+      title: "Team sync",
+      description: "Weekly team meeting",
+      location: "Zoom",
+      timeZone: "Europe/London",
+      status: "live",
+      createdAt: new Date("2025-01-10T12:00:00Z"),
+      user: {
+        name: "John Doe",
+        image: "https://example.com/avatar.jpg",
+      },
+      options: [
+        {
+          id: "opt-1",
+          startTime: new Date("2025-01-15T09:00:00Z"),
+          duration: 30,
+        },
+        {
+          id: "opt-2",
+          startTime: new Date("2025-01-15T10:00:00Z"),
+          duration: 30,
+        },
+      ],
+    };
+
+    it("should return poll data", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue(mockPoll as never);
+
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.data.id).toBe("test-poll-id");
+      expect(json.data.title).toBe("Team sync");
+      expect(json.data.description).toBe("Weekly team meeting");
+      expect(json.data.location).toBe("Zoom");
+      expect(json.data.timeZone).toBe("Europe/London");
+      expect(json.data.status).toBe("live");
+      expect(json.data.createdAt).toBe("2025-01-10T12:00:00.000Z");
+      expect(json.data.user).toEqual({
+        name: "John Doe",
+        image: "https://example.com/avatar.jpg",
+      });
+      expect(json.data.options).toHaveLength(2);
+      expect(json.data.options[0]).toEqual({
+        id: "opt-1",
+        startTime: "2025-01-15T09:00:00.000Z",
+        duration: 30,
+      });
+      expect(json.data.adminUrl).toBe("https://example.com/poll/test-poll-id");
+      expect(json.data.inviteUrl).toBe(
+        "https://example.com/invite/test-poll-id",
+      );
+
+      expect(prisma.poll.findFirst).toHaveBeenCalledWith({
+        where: {
+          id: "test-poll-id",
+          spaceId: "test-space-id",
+          deleted: false,
+        },
+        select: expect.objectContaining({
+          id: true,
+          title: true,
+          description: true,
+          location: true,
+          timeZone: true,
+          status: true,
+          createdAt: true,
+          user: expect.any(Object),
+          options: expect.any(Object),
+        }),
+      });
+    });
+
+    it("should return poll without user when user is null", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue({
+        ...mockPoll,
+        user: null,
+      } as never);
+
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.data.user).toBeNull();
+    });
+
+    it("should return 404 when poll not found", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue(null);
+
+      const res = await app.request("/api/private/polls/nonexistent-poll", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(404);
+      const json = await res.json();
+      expect(json.error.code).toBe("POLL_NOT_FOUND");
+    });
+
+    it("should return 404 when poll belongs to different space", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue(null);
+
+      const res = await app.request("/api/private/polls/other-space-poll", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(404);
+      const json = await res.json();
+      expect(json.error.code).toBe("POLL_NOT_FOUND");
+    });
+
+    it("should return 401 without authorization", async () => {
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "GET",
+      });
+
+      expect(res.status).toBe(401);
     });
   });
 });

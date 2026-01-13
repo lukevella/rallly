@@ -126,30 +126,6 @@ export const createPollInputSchema = z
   })
   .openapi("CreatePollInput");
 
-export const createPollSuccessResponseSchema = z
-  .object({
-    data: z.object({
-      id: z.string().openapi({ example: "p_123abc" }),
-      adminUrl: z
-        .string()
-        .openapi({ example: "https://example.com/poll/p_123abc" }),
-      inviteUrl: z
-        .string()
-        .openapi({ example: "https://example.com/invite/p_123abc" }),
-      space: z
-        .object({
-          id: z.string(),
-          name: z.string(),
-        })
-        .nullable()
-        .openapi({
-          description: "The space the poll was created in, or null if personal",
-          example: { id: "space_abc123", name: "My Team" },
-        }),
-    }),
-  })
-  .openapi("CreatePollResponse");
-
 export const errorResponseSchema = z
   .object({
     error: z.object({
@@ -170,3 +146,61 @@ export const deletePollSuccessResponseSchema = z
     }),
   })
   .openapi("DeletePollResponse");
+
+export const pollStatusSchema = z
+  .enum(["live", "paused", "finalized"])
+  .openapi("PollStatus");
+
+export const pollOptionSchema = z
+  .object({
+    id: z.string().openapi({ example: "opt_abc123" }),
+    startTime: z.iso.datetime().openapi({ example: "2025-01-15T09:00:00Z" }),
+    duration: z.number().int().openapi({
+      description: "Duration in minutes. 0 indicates an all-day option.",
+      example: 30,
+    }),
+  })
+  .openapi("PollOption");
+
+export const pollUserSchema = z
+  .object({
+    name: z.string().openapi({ example: "John Doe" }),
+    image: z
+      .string()
+      .nullable()
+      .openapi({ example: "https://example.com/avatar.jpg" }),
+  })
+  .openapi("PollUser");
+
+export const getPollSuccessResponseSchema = z
+  .object({
+    data: z.object({
+      id: z.string().openapi({ example: "p_123abc" }),
+      title: z.string().openapi({ example: "Team sync" }),
+      description: z.string().nullable().openapi({
+        example: "Pick a time that works for everyone",
+      }),
+      location: z.string().nullable().openapi({ example: "Zoom" }),
+      timezone: z.string().nullable().openapi({ example: "Europe/London" }),
+      status: pollStatusSchema,
+      createdAt: z
+        .string()
+        .datetime()
+        .openapi({ example: "2025-01-10T12:00:00Z" }),
+      user: pollUserSchema.nullable().openapi({
+        description: "The poll organizer",
+      }),
+      options: z.array(pollOptionSchema),
+      adminUrl: z
+        .string()
+        .openapi({ example: "https://example.com/poll/p_123abc" }),
+      inviteUrl: z
+        .string()
+        .openapi({ example: "https://example.com/invite/p_123abc" }),
+    }),
+  })
+  .openapi("GetPollResponse");
+
+// Create poll returns the same shape as get poll
+export const createPollSuccessResponseSchema =
+  getPollSuccessResponseSchema.openapi("CreatePollResponse");
