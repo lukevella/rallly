@@ -222,3 +222,39 @@ For self-hosted deployments, [MinIO](https://min.io/) is the recommended S3-comp
 <ParamField path="S3_ENDPOINT">
   The endpoint of your S3 server. Can be left empty if using AWS S3.
 </ParamField>
+
+## Branding
+
+These options allow you to customize the branding of your Rallly instance. See [White Labeling](/self-hosting/white-labeling) for more details.
+
+<Note>
+These options are available from v4.6.0 and later and require an Enterprise license with a white-label add-on.
+</Note>
+
+<ParamField path="APP_NAME" default="Rallly">
+  The name of your application. Appears in page titles, navigation, and emails.
+</ParamField>
+
+<ParamField path="PRIMARY_COLOR" default="#4f46e5">
+  The primary brand color for light mode. Must be a valid hex color code.
+</ParamField>
+
+<ParamField path="PRIMARY_COLOR_DARK">
+  The primary brand color for dark mode. Auto-calculated from `PRIMARY_COLOR` if not set.
+</ParamField>
+
+<ParamField path="LOGO_URL" default="/static/logo.svg">
+  URL to your logo for light mode. SVG format recommended.
+</ParamField>
+
+<ParamField path="LOGO_URL_DARK">
+  URL to your logo for dark mode. Falls back to `LOGO_URL` if not set.
+</ParamField>
+
+<ParamField path="LOGO_ICON_URL" default="/images/rallly-logo-mark.png">
+  URL to your logo icon used in emails and as a favicon.
+</ParamField>
+
+<ParamField path="HIDE_ATTRIBUTION" default="false">
+  Set to `true` to hide "Powered by Rallly" attribution in polls and emails.
+</ParamField>

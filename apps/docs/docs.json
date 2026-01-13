@@ -66,6 +66,7 @@
                 ]
               },
               "self-hosting/licensing",
+              "self-hosting/white-labeling",
               "self-hosting/configuration"
             ]
           },
