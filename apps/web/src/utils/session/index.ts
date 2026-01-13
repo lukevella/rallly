@@ -35,6 +35,6 @@ export const createToken = async <T extends Record<string, unknown>>(
 ) => {
   return await sealData(payload, {
     password: sessionConfig.password,
-    ttl: options?.ttl ?? 60 * 15, // 15 minutes
+    ttl: options?.ttl !== undefined ? options.ttl : 60 * 15, // 15 minutes
   });
 };
