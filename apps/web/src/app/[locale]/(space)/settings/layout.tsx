@@ -22,7 +22,7 @@ import { requireSpace, requireUser } from "@/auth/data";
 import { NavUser } from "@/components/nav-user";
 import { Trans } from "@/components/trans";
 import { BillingProvider } from "@/features/billing/client";
-import { isSelfHosted } from "@/utils/constants";
+import { isApiAccessEnabled } from "@/features/developer/data";
 import {
   AccountSidebarMenu,
   DeveloperSidebarMenu,
@@ -35,9 +35,7 @@ export default async function Layout({
   children?: React.ReactNode;
 }) {
   const [user, space] = await Promise.all([requireUser(), requireSpace()]);
-  const isSpaceOwner = space.ownerId === user.id;
-  const isProSpace = space.tier === "pro";
-  const canAccessDeveloperTools = isProSpace || isSpaceOwner;
+  const canAccessDeveloperTools = await isApiAccessEnabled(user, space);
 
   return (
     <BillingProvider>
@@ -81,9 +79,7 @@ export default async function Layout({
                 <SpaceSidebarMenu />
               </SidebarGroupContent>
             </SidebarGroup>
-            {!isSelfHosted && canAccessDeveloperTools ? (
-              <DeveloperSidebarMenu />
-            ) : null}
+            {canAccessDeveloperTools ? <DeveloperSidebarMenu /> : null}
           </SidebarContent>
           <SidebarFooter>
             <NavUser
