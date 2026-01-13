@@ -930,4 +930,152 @@ describe("Private API - /polls", () => {
       expect(res.status).toBe(401);
     });
   });
+
+  describe("Get poll participants", () => {
+    it("should return participants with their votes", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue({
+        id: "test-poll-id",
+        participants: [
+          {
+            id: "participant-1",
+            name: "Alice",
+            email: "alice@example.com",
+            createdAt: new Date("2025-01-10T10:00:00Z"),
+            votes: [
+              {
+                type: "yes",
+                option: {
+                  startTime: new Date("2025-01-15T09:00:00Z"),
+                  duration: 30,
+                },
+              },
+              {
+                type: "no",
+                option: {
+                  startTime: new Date("2025-01-15T10:00:00Z"),
+                  duration: 30,
+                },
+              },
+            ],
+          },
+          {
+            id: "participant-2",
+            name: "Bob",
+            email: null,
+            createdAt: new Date("2025-01-10T11:00:00Z"),
+            votes: [
+              {
+                type: "ifNeedBe",
+                option: {
+                  startTime: new Date("2025-01-15T09:00:00Z"),
+                  duration: 30,
+                },
+              },
+              {
+                type: "yes",
+                option: {
+                  startTime: new Date("2025-01-15T10:00:00Z"),
+                  duration: 30,
+                },
+              },
+            ],
+          },
+        ],
+      } as never);
+
+      const res = await app.request(
+        "/api/private/polls/test-poll-id/participants",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${testApiKey}`,
+          },
+        },
+      );
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+
+      expect(json.data.pollId).toBe("test-poll-id");
+      expect(json.data.participants).toHaveLength(2);
+
+      expect(json.data.participants[0]).toEqual({
+        id: "participant-1",
+        name: "Alice",
+        email: "alice@example.com",
+        createdAt: "2025-01-10T10:00:00.000Z",
+        votes: [
+          { startTime: "2025-01-15T09:00:00.000Z", duration: 30, type: "yes" },
+          { startTime: "2025-01-15T10:00:00.000Z", duration: 30, type: "no" },
+        ],
+      });
+
+      expect(json.data.participants[1]).toEqual({
+        id: "participant-2",
+        name: "Bob",
+        email: null,
+        createdAt: "2025-01-10T11:00:00.000Z",
+        votes: [
+          {
+            startTime: "2025-01-15T09:00:00.000Z",
+            duration: 30,
+            type: "ifNeedBe",
+          },
+          { startTime: "2025-01-15T10:00:00.000Z", duration: 30, type: "yes" },
+        ],
+      });
+    });
+
+    it("should return empty array when no participants", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue({
+        id: "test-poll-id",
+        participants: [],
+      } as never);
+
+      const res = await app.request(
+        "/api/private/polls/test-poll-id/participants",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${testApiKey}`,
+          },
+        },
+      );
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+
+      expect(json.data.pollId).toBe("test-poll-id");
+      expect(json.data.participants).toEqual([]);
+    });
+
+    it("should return 404 when poll not found", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue(null);
+
+      const res = await app.request(
+        "/api/private/polls/nonexistent-poll/participants",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${testApiKey}`,
+          },
+        },
+      );
+
+      expect(res.status).toBe(404);
+      const json = await res.json();
+      expect(json.error.code).toBe("POLL_NOT_FOUND");
+    });
+
+    it("should return 401 without authorization", async () => {
+      const res = await app.request(
+        "/api/private/polls/test-poll-id/participants",
+        {
+          method: "GET",
+        },
+      );
+
+      expect(res.status).toBe(401);
+    });
+  });
 });

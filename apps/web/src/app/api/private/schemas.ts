@@ -250,3 +250,40 @@ export const getPollResultsSuccessResponseSchema = z
     }),
   })
   .openapi("GetPollResultsResponse");
+
+export const voteTypeSchema = z
+  .enum(["yes", "ifNeedBe", "no"])
+  .openapi("VoteType");
+
+export const participantVoteSchema = z
+  .object({
+    startTime: z.iso.datetime().openapi({ example: "2025-01-15T09:00:00Z" }),
+    duration: z.number().int().openapi({
+      description: "Duration in minutes. 0 indicates an all-day option.",
+      example: 30,
+    }),
+    type: voteTypeSchema,
+  })
+  .openapi("ParticipantVote");
+
+export const participantSchema = z
+  .object({
+    id: z.string().openapi({ example: "participant_abc123" }),
+    name: z.string().openapi({ example: "Jane Smith" }),
+    email: z.string().nullable().openapi({ example: "jane@example.com" }),
+    createdAt: z
+      .string()
+      .datetime()
+      .openapi({ example: "2025-01-10T12:00:00Z" }),
+    votes: z.array(participantVoteSchema),
+  })
+  .openapi("Participant");
+
+export const getPollParticipantsSuccessResponseSchema = z
+  .object({
+    data: z.object({
+      pollId: z.string().openapi({ example: "p_123abc" }),
+      participants: z.array(participantSchema),
+    }),
+  })
+  .openapi("GetPollParticipantsResponse");

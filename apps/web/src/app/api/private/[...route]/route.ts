@@ -19,6 +19,7 @@ import {
   createPollSuccessResponseSchema,
   deletePollSuccessResponseSchema,
   errorResponseSchema,
+  getPollParticipantsSuccessResponseSchema,
   getPollResultsSuccessResponseSchema,
   getPollSuccessResponseSchema,
 } from "../schemas";
@@ -548,6 +549,110 @@ app.get(
         participantCount: poll._count.participants,
         options,
         highScore,
+      },
+    });
+  },
+);
+
+app.get(
+  "/polls/:pollId/participants",
+  spaceApiKeyAuth,
+  rateLimiter<Env>({
+    windowMs: 60 * 1000,
+    limit: 120,
+    keyGenerator: (c) => {
+      const { apiKeyId } = c.get("apiAuth");
+      return `private-api:polls-participants:${apiKeyId}`;
+    },
+    store: isKvEnabled() ? new RedisStore({ client: kv }) : undefined,
+  }),
+  describeRoute({
+    tags: ["Polls"],
+    summary: "Get poll participants",
+    description:
+      "Retrieves all participants and their votes for a poll. The poll must belong to the space associated with the API key.",
+    security: [{ bearerAuth: [] }],
+    responses: {
+      200: {
+        description: "Successful response",
+        content: {
+          "application/json": {
+            schema: resolver(getPollParticipantsSuccessResponseSchema),
+          },
+        },
+      },
+      404: {
+        description: "Poll not found",
+        content: {
+          "application/json": {
+            schema: resolver(errorResponseSchema),
+          },
+        },
+      },
+    },
+  }),
+  async (c) => {
+    const { pollId } = c.req.param();
+    const { spaceId } = c.get("apiAuth");
+
+    const poll = await prisma.poll.findFirst({
+      where: {
+        id: pollId,
+        spaceId,
+        deleted: false,
+      },
+      select: {
+        id: true,
+        participants: {
+          where: { deleted: false },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            createdAt: true,
+            votes: {
+              select: {
+                type: true,
+                option: {
+                  select: {
+                    startTime: true,
+                    duration: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+      },
+    });
+
+    if (!poll) {
+      return c.json(
+        apiError(
+          "POLL_NOT_FOUND",
+          "Poll not found or does not belong to this space.",
+        ),
+        404,
+      );
+    }
+
+    return c.json({
+      data: {
+        pollId: poll.id,
+        participants: poll.participants.map((participant) => ({
+          id: participant.id,
+          name: participant.name,
+          email: participant.email,
+          createdAt: participant.createdAt.toISOString(),
+          votes: participant.votes.map((vote) => ({
+            startTime: vote.option.startTime.toISOString(),
+            duration: vote.option.duration,
+            type: vote.type,
+          })),
+        })),
       },
     });
   },
