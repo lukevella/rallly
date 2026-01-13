@@ -10,11 +10,13 @@ import {
   validator,
 } from "hono-openapi";
 import { rateLimiter } from "hono-rate-limiter";
+import { deletePoll } from "@/features/poll/mutations";
 import { isKvEnabled, kv } from "@/lib/kv";
 import { isSupportedTimeZone } from "@/utils/supported-time-zones";
 import {
   createPollInputSchema,
   createPollSuccessResponseSchema,
+  deletePollSuccessResponseSchema,
   errorResponseSchema,
 } from "../schemas";
 import { spaceApiKeyAuth } from "../utils/api-key";
@@ -48,7 +50,6 @@ app.get(
         title: "Rallly Private API",
         version: "0.0.1",
       },
-      servers: [{ url: "/api/private" }],
       components: {
         securitySchemes: {
           bearerAuth: {
@@ -279,7 +280,70 @@ app.post(
   },
 );
 
+app.delete(
+  "/polls/:pollId",
+  spaceApiKeyAuth,
+  rateLimiter<Env>({
+    windowMs: 60 * 1000,
+    limit: 60,
+    keyGenerator: (c) => {
+      const { apiKeyId } = c.get("apiAuth");
+      return `private-api:polls-delete:${apiKeyId}`;
+    },
+    store: isKvEnabled() ? new RedisStore({ client: kv }) : undefined,
+  }),
+  describeRoute({
+    tags: ["Polls"],
+    summary: "Delete a poll",
+    description:
+      "Deletes a poll by ID. The poll must belong to the space associated with the API key.",
+    security: [{ bearerAuth: [] }],
+    responses: {
+      200: {
+        description: "Poll deleted successfully",
+        content: {
+          "application/json": {
+            schema: resolver(deletePollSuccessResponseSchema),
+          },
+        },
+      },
+      404: {
+        description: "Poll not found",
+        content: {
+          "application/json": {
+            schema: resolver(errorResponseSchema),
+          },
+        },
+      },
+    },
+  }),
+  async (c) => {
+    const { pollId } = c.req.param();
+    const { spaceId } = c.get("apiAuth");
+
+    const result = await deletePoll(pollId, spaceId);
+
+    if (!result) {
+      return c.json(
+        apiError(
+          "POLL_NOT_FOUND",
+          "Poll not found or does not belong to this space.",
+        ),
+        404,
+      );
+    }
+
+    return c.json({
+      data: {
+        id: result.id,
+        deleted: true as const,
+      },
+    });
+  },
+);
+
 export { app };
 
 export const GET = handle(app);
 export const POST = handle(app);
+export const DELETE = handle(app);

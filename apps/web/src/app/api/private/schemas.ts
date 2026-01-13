@@ -161,3 +161,12 @@ export const errorResponseSchema = z
     }),
   })
   .openapi("ErrorResponse");
+
+export const deletePollSuccessResponseSchema = z
+  .object({
+    data: z.object({
+      id: z.string().openapi({ example: "p_123abc" }),
+      deleted: z.literal(true).openapi({ example: true }),
+    }),
+  })
+  .openapi("DeletePollResponse");

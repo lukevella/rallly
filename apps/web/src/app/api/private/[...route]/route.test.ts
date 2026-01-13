@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+const mockDeletePoll = vi.fn();
+
+vi.mock("@/features/poll/mutations", () => ({
+  deletePoll: (...args: unknown[]) => mockDeletePoll(...args),
+}));
+
 vi.mock("@rallly/database", () => ({
   prisma: {
     spaceApiKey: {
@@ -461,6 +467,82 @@ describe("Private API - /polls", () => {
 
       expect(res.status).toBe(200);
       expect(res.headers.get("content-type")).toContain("text/html");
+    });
+  });
+
+  describe("Delete poll", () => {
+    it("should delete a poll", async () => {
+      mockDeletePoll.mockResolvedValue({ id: "test-poll-id" });
+
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.data.id).toBe("test-poll-id");
+      expect(json.data.deleted).toBe(true);
+
+      expect(mockDeletePoll).toHaveBeenCalledWith(
+        "test-poll-id",
+        "test-space-id",
+      );
+    });
+
+    it("should return 404 when poll not found", async () => {
+      mockDeletePoll.mockResolvedValue(null);
+
+      const res = await app.request("/api/private/polls/nonexistent-poll", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(404);
+      const json = await res.json();
+      expect(json.error.code).toBe("POLL_NOT_FOUND");
+    });
+
+    it("should return 404 when poll belongs to different space", async () => {
+      mockDeletePoll.mockResolvedValue(null);
+
+      const res = await app.request("/api/private/polls/other-space-poll", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(404);
+      const json = await res.json();
+      expect(json.error.code).toBe("POLL_NOT_FOUND");
+    });
+
+    it("should return 401 without authorization", async () => {
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "DELETE",
+      });
+
+      expect(res.status).toBe(401);
+    });
+
+    it("should return 404 when poll is already deleted", async () => {
+      mockDeletePoll.mockResolvedValue(null);
+
+      const res = await app.request("/api/private/polls/deleted-poll-id", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(404);
+      const json = await res.json();
+      expect(json.error.code).toBe("POLL_NOT_FOUND");
     });
   });
 });
