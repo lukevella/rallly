@@ -6,6 +6,7 @@ import { kv } from "@vercel/kv";
 import superjson from "superjson";
 import { getCurrentUserSpace } from "@/auth/data";
 import { PostHogClient } from "@/features/analytics/posthog";
+import { isApiAccessEnabled } from "@/features/developer/data";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { getUser } from "@/features/user/data";
@@ -145,19 +146,30 @@ export const proProcedure = privateProcedure.use(async ({ next }) => {
 
 export const spaceOwnerCloudOnlyProcedure = privateProcedure.use(
   async ({ ctx, next }) => {
-    if (isSelfHosted) {
+    const space = await getActiveSpaceForUser(ctx.user.id);
+
+    if (!space) {
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: "This method is only available on the cloud",
+        message: "No active space found",
       });
     }
 
-    const space = await getActiveSpaceForUser(ctx.user.id);
+    const user = await getUser(ctx.user.id);
 
-    if (!space || space.ownerId !== ctx.user.id) {
+    if (!user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User does not exist",
+      });
+    }
+
+    const hasAccess = await isApiAccessEnabled(user, space);
+
+    if (!hasAccess) {
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: "Only the space owner can perform this action",
+        message: "API access is not enabled for this user or space",
       });
     }
 

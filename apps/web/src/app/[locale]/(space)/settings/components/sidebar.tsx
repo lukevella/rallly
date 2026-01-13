@@ -1,6 +1,5 @@
 "use client";
 
-import { useFeatureFlagEnabled } from "@rallly/posthog/client";
 import { Icon } from "@rallly/ui/icon";
 import {
   SidebarGroup,
@@ -132,11 +131,6 @@ export function SpaceSidebarMenu() {
 export function DeveloperSidebarMenu() {
   const { t } = useTranslation();
   const pathname = usePathname();
-  const isDeveloperToolsEnabled = useFeatureFlagEnabled("developer-tools");
-
-  if (!isDeveloperToolsEnabled) {
-    return null;
-  }
 
   const menuItems = [
     {
