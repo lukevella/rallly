@@ -3,6 +3,152 @@ import { prisma } from "@rallly/database";
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { requireSpace } from "@/auth/data";
 
+export async function getPollResults({
+  pollId,
+  spaceId,
+}: {
+  pollId: string;
+  spaceId: string;
+}) {
+  // Run poll query and vote aggregation in parallel
+  const [poll, voteCounts] = await Promise.all([
+    prisma.poll.findFirst({
+      where: {
+        id: pollId,
+        spaceId,
+        deleted: false,
+      },
+      select: {
+        id: true,
+        options: {
+          select: {
+            id: true,
+            startTime: true,
+            duration: true,
+          },
+          orderBy: {
+            startTime: "asc",
+          },
+        },
+        _count: {
+          select: {
+            participants: {
+              where: { deleted: false },
+            },
+          },
+        },
+      },
+    }),
+    prisma.vote.groupBy({
+      by: ["optionId", "type"],
+      where: {
+        pollId,
+        participant: { deleted: false },
+      },
+      _count: true,
+    }),
+  ]);
+
+  if (!poll) {
+    return null;
+  }
+
+  // Build vote counts map from groupBy results
+  const votesByOption = new Map<
+    string,
+    Array<{ type: string; count: number }>
+  >();
+
+  for (const row of voteCounts) {
+    let votes = votesByOption.get(row.optionId);
+    if (!votes) {
+      votes = [];
+      votesByOption.set(row.optionId, votes);
+    }
+    votes.push({ type: row.type, count: row._count });
+  }
+
+  // Helper to get count for a specific vote type
+  const getCount = (
+    votes: Array<{ type: string; count: number }>,
+    type: string,
+  ) => votes.find((v) => v.type === type)?.count ?? 0;
+
+  // Calculate scores for each option
+  // Ranking: total availability (yes + ifNeedBe) is primary, yes votes as tiebreaker
+  // Score formula: (yes + ifNeedBe) * 1000 + yes
+  const optionResults = poll.options.map((option) => {
+    const votes = votesByOption.get(option.id) ?? [];
+    const yesCount = getCount(votes, "yes");
+    const ifNeedBeCount = getCount(votes, "ifNeedBe");
+    const score = (yesCount + ifNeedBeCount) * 1000 + yesCount;
+
+    return {
+      id: option.id,
+      startTime: option.startTime,
+      duration: option.duration,
+      votes,
+      score,
+    };
+  });
+
+  // Find the high score
+  const highScore = Math.max(...optionResults.map((o) => o.score), 0);
+
+  // Add isTopChoice flag
+  const options = optionResults.map((option) => ({
+    ...option,
+    isTopChoice: option.score === highScore && option.score > 0,
+  }));
+
+  return {
+    pollId: poll.id,
+    participantCount: poll._count.participants,
+    options,
+    highScore,
+  };
+}
+
+export async function getPollParticipants({
+  pollId,
+  spaceId,
+}: {
+  pollId: string;
+  spaceId: string;
+}) {
+  const poll = await prisma.poll.findFirst({
+    where: {
+      id: pollId,
+      spaceId,
+      deleted: false,
+    },
+    select: {
+      id: true,
+      participants: {
+        where: { deleted: false },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+    },
+  });
+
+  if (!poll) {
+    return null;
+  }
+
+  return {
+    pollId: poll.id,
+    participants: poll.participants,
+  };
+}
+
 type PollFilters = {
   status?: PollStatus;
   page?: number;
