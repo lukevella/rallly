@@ -11,6 +11,7 @@ import {
   validator,
 } from "hono-openapi";
 import { rateLimiter } from "hono-rate-limiter";
+import { getPollParticipants, getPollResults } from "@/features/poll/data";
 import { createPoll, deletePoll } from "@/features/poll/mutations";
 import { isKvEnabled, kv } from "@/lib/kv";
 import { isSupportedTimeZone } from "@/utils/supported-time-zones";
@@ -470,40 +471,9 @@ app.get(
     const { pollId } = c.req.param();
     const { spaceId } = c.get("apiAuth");
 
-    const poll = await prisma.poll.findFirst({
-      where: {
-        id: pollId,
-        spaceId,
-        deleted: false,
-      },
-      select: {
-        id: true,
-        options: {
-          select: {
-            id: true,
-            startTime: true,
-            duration: true,
-            votes: {
-              select: {
-                type: true,
-              },
-            },
-          },
-          orderBy: {
-            startTime: "asc",
-          },
-        },
-        _count: {
-          select: {
-            participants: {
-              where: { deleted: false },
-            },
-          },
-        },
-      },
-    });
+    const data = await getPollResults({ pollId, spaceId });
 
-    if (!poll) {
+    if (!data) {
       return c.json(
         apiError(
           "POLL_NOT_FOUND",
@@ -513,43 +483,8 @@ app.get(
       );
     }
 
-    // Calculate scores for each option
-    // Ranking: total availability (yes + ifNeedBe) is primary, yes votes as tiebreaker
-    // Score formula: (yes + ifNeedBe) * 1000 + yes
-    const optionResults = poll.options.map((option) => {
-      const votes = { yes: 0, ifNeedBe: 0, no: 0 };
-      for (const vote of option.votes) {
-        if (vote.type === "yes") votes.yes++;
-        else if (vote.type === "ifNeedBe") votes.ifNeedBe++;
-        else if (vote.type === "no") votes.no++;
-      }
-      const score = (votes.yes + votes.ifNeedBe) * 1000 + votes.yes;
-
-      return {
-        id: option.id,
-        startTime: option.startTime.toISOString(),
-        duration: option.duration,
-        votes,
-        score,
-      };
-    });
-
-    // Find the high score
-    const highScore = Math.max(...optionResults.map((o) => o.score), 0);
-
-    // Add isTopChoice flag
-    const options = optionResults.map((option) => ({
-      ...option,
-      isTopChoice: option.score === highScore && option.score > 0,
-    }));
-
     return c.json({
-      data: {
-        pollId: poll.id,
-        participantCount: poll._count.participants,
-        options,
-        highScore,
-      },
+      data,
     });
   },
 );
@@ -595,41 +530,9 @@ app.get(
     const { pollId } = c.req.param();
     const { spaceId } = c.get("apiAuth");
 
-    const poll = await prisma.poll.findFirst({
-      where: {
-        id: pollId,
-        spaceId,
-        deleted: false,
-      },
-      select: {
-        id: true,
-        participants: {
-          where: { deleted: false },
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            createdAt: true,
-            votes: {
-              select: {
-                type: true,
-                option: {
-                  select: {
-                    startTime: true,
-                    duration: true,
-                  },
-                },
-              },
-            },
-          },
-          orderBy: {
-            createdAt: "asc",
-          },
-        },
-      },
-    });
+    const data = await getPollParticipants({ pollId, spaceId });
 
-    if (!poll) {
+    if (!data) {
       return c.json(
         apiError(
           "POLL_NOT_FOUND",
@@ -640,20 +543,7 @@ app.get(
     }
 
     return c.json({
-      data: {
-        pollId: poll.id,
-        participants: poll.participants.map((participant) => ({
-          id: participant.id,
-          name: participant.name,
-          email: participant.email,
-          createdAt: participant.createdAt.toISOString(),
-          votes: participant.votes.map((vote) => ({
-            startTime: vote.option.startTime.toISOString(),
-            duration: vote.option.duration,
-            type: vote.type,
-          })),
-        })),
-      },
+      data,
     });
   },
 );

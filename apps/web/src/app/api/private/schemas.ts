@@ -205,13 +205,18 @@ export const getPollSuccessResponseSchema = z
 export const createPollSuccessResponseSchema =
   getPollSuccessResponseSchema.openapi("CreatePollResponse");
 
-export const voteCountsSchema = z
+export const voteCountSchema = z
   .object({
-    yes: z.int().nonnegative().openapi({ example: 5 }),
-    ifNeedBe: z.int().nonnegative().openapi({ example: 2 }),
-    no: z.int().nonnegative().openapi({ example: 1 }),
+    type: z.string().openapi({
+      description: "The vote type (e.g., yes, ifNeedBe, no)",
+      example: "yes",
+    }),
+    count: z.int().nonnegative().openapi({
+      description: "Number of votes of this type",
+      example: 5,
+    }),
   })
-  .openapi("VoteCounts");
+  .openapi("VoteCount");
 
 export const optionResultSchema = z
   .object({
@@ -221,7 +226,9 @@ export const optionResultSchema = z
       description: "Duration in minutes. 0 indicates an all-day option.",
       example: 30,
     }),
-    votes: voteCountsSchema,
+    votes: z.array(voteCountSchema).openapi({
+      description: "Array of vote counts by type",
+    }),
     score: z.int().nonnegative().openapi({
       description:
         "Ranking score: (yes + ifNeedBe) * 1000 + yes. Total availability is primary, yes votes break ties.",
@@ -251,31 +258,12 @@ export const getPollResultsSuccessResponseSchema = z
   })
   .openapi("GetPollResultsResponse");
 
-export const voteTypeSchema = z
-  .enum(["yes", "ifNeedBe", "no"])
-  .openapi("VoteType");
-
-export const participantVoteSchema = z
-  .object({
-    startTime: z.iso.datetime().openapi({ example: "2025-01-15T09:00:00Z" }),
-    duration: z.number().int().openapi({
-      description: "Duration in minutes. 0 indicates an all-day option.",
-      example: 30,
-    }),
-    type: voteTypeSchema,
-  })
-  .openapi("ParticipantVote");
-
 export const participantSchema = z
   .object({
     id: z.string().openapi({ example: "participant_abc123" }),
     name: z.string().openapi({ example: "Jane Smith" }),
     email: z.string().nullable().openapi({ example: "jane@example.com" }),
-    createdAt: z
-      .string()
-      .datetime()
-      .openapi({ example: "2025-01-10T12:00:00Z" }),
-    votes: z.array(participantVoteSchema),
+    createdAt: z.iso.datetime().openapi({ example: "2025-01-10T12:00:00Z" }),
   })
   .openapi("Participant");
 
