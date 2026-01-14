@@ -16,7 +16,6 @@ export async function uploadImage({
     body: file,
     headers: {
       "Content-Type": fileType,
-      "Content-Length": file.size.toString(),
     },
   });
 
