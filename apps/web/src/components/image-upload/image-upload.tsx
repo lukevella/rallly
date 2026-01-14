@@ -20,7 +20,7 @@ import {
 } from "@/lib/image-processing";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { getImageUploadUrlAction } from "@/lib/storage/actions";
-import { uploadImage } from "@/lib/storage/image-upload";
+import { uploadImage } from "@/lib/storage/upload-client";
 
 export function ImageUpload({ className, children }: ImageUploadProps) {
   return (
