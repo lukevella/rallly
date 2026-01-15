@@ -138,5 +138,5 @@ export const generateTimeSlots = (
     }
   }
 
-  return dedupeTimeSlots(results);
+  return results;
 };
