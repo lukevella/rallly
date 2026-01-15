@@ -4,7 +4,7 @@ date: "2025-12-12"
 excerpt: Important security updates addressing React Server Components vulnerabilities including React2Shell. Self-hosters should update immediately.
 ---
 
-**This announcement is only relevant to self-hosted Rallly installations.** If you use Rallly's hosted service at [rallly.co](https://rallly.co), you do not need to take any action. Our servers were patched within hours of the CVEs being announced, and there was no breach of our servers during that time.
+**This announcement is only relevant to self-hosted Rallly installations.** If you use Rallly's hosted service at [rallly.co](https://rallly.co), you do not need to take any action. The servers were patched within hours of the CVEs being announced, and there was no breach during that time.
 
 ---
 
@@ -19,10 +19,10 @@ The React team later discovered that the fix for CVE-2025-55184 was incomplete, 
 ## Timeline
 
 - **December 3, 2025**: React2Shell ([CVE-2025-55182](https://www.cve.org/CVERecord?id=CVE-2025-55182)) was announced by the React team
-- **December 4, 2025**: We published v4.5.7 (updated Next.js package)
-- **December 8, 2025**: We published v4.5.8 (updated React package, fully protected against React2Shell)
-- **December 11, 2025**: Two additional CVEs ([CVE-2025-55183](https://www.cve.org/CVERecord?id=CVE-2025-55183), [CVE-2025-55184](https://www.cve.org/CVERecord?id=CVE-2025-55184)) were announced by the React team. We published v4.5.10 in response
-- **December 12, 2025**: The React team announced that the fix for CVE-2025-55184 was incomplete. The additional fix is disclosed as [CVE-2025-67779](https://www.cve.org/CVERecord?id=CVE-2025-67779). We published v4.5.11 in response
+- **December 4, 2025**: I published v4.5.7 (updated Next.js package)
+- **December 8, 2025**: I published v4.5.8 (updated React package, fully protected against React2Shell)
+- **December 11, 2025**: Two additional CVEs ([CVE-2025-55183](https://www.cve.org/CVERecord?id=CVE-2025-55183), [CVE-2025-55184](https://www.cve.org/CVERecord?id=CVE-2025-55184)) were announced by the React team. I published v4.5.10 in response
+- **December 12, 2025**: The React team announced that the fix for CVE-2025-55184 was incomplete. The additional fix is disclosed as [CVE-2025-67779](https://www.cve.org/CVERecord?id=CVE-2025-67779). I published v4.5.11 in response
 
 ## Action Required
 

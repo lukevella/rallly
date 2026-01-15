@@ -10,6 +10,6 @@ Rallly now supports a new dark theme, giving you more control over how the app l
 
 By default, Rallly follows your system preferences so if your device is set to dark mode, Rallly will automatically switch to match. You can also manually toggle between light and dark themes in your account preferences.
 
-This update is part of a larger effort to make Rallly more customizable. You might notice some subtle changes to the app's appearance. We're building theming capabilities that will let you customize colors and branding to match your company's visual identity. More on that soon.
+This update is part of a larger effort to make Rallly more customizable. You might notice some subtle changes to the app's appearance. I'm building theming capabilities that will let you customize colors and branding to match your company's visual identity. More on that soon.
 
 I'd love to hear what you think. Share your feedback at [feedback@rallly.co](mailto:feedback@rallly.co).
