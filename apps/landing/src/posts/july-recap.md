@@ -13,7 +13,7 @@ Knowing that there is value in what I've built is a huge morale boost and drives
 
 I've been burning the midnight oil to roll out features based on the [feedback](https://feedback.rallly.co) I've received. Here's some highlights:
 
-**Easier Poll Creation** - Creating a meeting poll is now quicker than ever with our revamped poll creation form. We've streamlined the process, condensing everything onto a single page for a faster and more efficient setup.
+**Easier Poll Creation** - Creating a meeting poll is now quicker than ever with the revamped poll creation form. I've streamlined the process, condensing everything onto a single page for a faster and more efficient setup.
 
 **Hide participants/Hide scores** - Polls can now be configured with different behaviors.
 You can keep your participant details private by hiding the participant list or avoid voting bias by hiding the poll results until after a participant has voted.

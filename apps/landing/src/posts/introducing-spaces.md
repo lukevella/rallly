@@ -4,7 +4,7 @@ date: "2025-08-21"
 excerpt: Centralized billing, member management, and seamless collaboration in one place.
 ---
 
-We're excited to introduce **Spaces** - Rallly's new team collaboration feature that transforms how organizations manage scheduling and billing. Instead of juggling multiple individual Pro subscriptions, Spaces brings your entire team together under one unified workspace.
+I'm excited to introduce **Spaces** - Rallly's new team collaboration feature that transforms how organizations manage scheduling and billing. Instead of juggling multiple individual Pro subscriptions, Spaces brings your entire team together under one unified workspace.
 
 ![Rallly Spaces](https://d39ixtfgglw55o.cloudfront.net/images/spaces.webp)
 
@@ -41,10 +41,10 @@ Whether you're a startup coordinating standup meetings, a marketing agency sched
 
 Ready to streamline your team's scheduling? Creating your first Space takes just a few clicks, and existing Pro users can easily migrate to the new team-based billing model.
 
-Spaces represent our commitment to making Rallly the best scheduling solution for teams of all sizes. With your support, we'll continue building features that make coordination effortless.
+Spaces represent my commitment to making Rallly the best scheduling solution for teams of all sizes. With your support, I'll continue building features that make coordination effortless.
 
 ---
 
-Questions about Spaces? We'd love to hear your [feedback](mailto:feedback@rallly.co) and help you get set up!
+Questions about Spaces? I'd love to hear your [feedback](mailto:feedback@rallly.co) and help you get set up!
 
 Happy scheduling!

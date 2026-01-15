@@ -10,7 +10,7 @@ Did you know over half of all Rallly users are on mobile devices?
 
 The [first major update](/blog/new-version-announcment) released just two weeks ago addressed quite a few usability
 issues already by introducing dedicated UI components for mobile devices and
-today we're building on top of that to deliver an even better user experience. So what's new?
+today I'm building on top of that to deliver an even better user experience. So what's new?
 
 ## Grouped times
 

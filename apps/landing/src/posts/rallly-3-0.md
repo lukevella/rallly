@@ -1,10 +1,10 @@
 ---
 title: Introducing Rallly 3.0 - What's new?
 date: "2023-06-19"
-excerpt: Rallly 3.0 is a significant stepping stone as we had towards expanding Rallly with more features.
+excerpt: Rallly 3.0 is a significant stepping stone as I head towards expanding Rallly with more features.
 ---
 
-Rallly 3.0 is a significant stepping stone as we head towards expanding Rallly with more features. Check out the post about [the future of Rallly](/blog/the-future-of-rallly) if you'd like to learn more about where things are going, but in the meantime let's go over this update in detail and I'll explain some of the changes that were made.
+Rallly 3.0 is a significant stepping stone as I head towards expanding Rallly with more features. Check out the post about [the future of Rallly](/blog/the-future-of-rallly) if you'd like to learn more about where things are going, but in the meantime let's go over this update in detail and I'll explain some of the changes that were made.
 
 ## Navigation
 
