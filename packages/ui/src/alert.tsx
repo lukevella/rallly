@@ -5,20 +5,20 @@ import type * as React from "react";
 import { cn } from "./lib/utils";
 
 const alertVariants = cva(
-  "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-xl px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
+  "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-xl border px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
   {
     variants: {
       variant: {
         primary:
-          "bg-primary *:data-[slot=alert-description]:text-primary-foreground/90 [&>svg]:text-primary-foreground",
-        info: "bg-blue-50 text-blue-700 *:data-[slot=alert-description]:text-blue-700/90 dark:bg-blue-950 dark:text-blue-100 dark:*:data-[slot=alert-description]:text-blue-100/90 [&>svg]:text-blue-700/90 dark:[&>svg]:text-blue-100/90",
+          "border-transparent bg-primary *:data-[slot=alert-description]:text-primary-foreground/90 [&>svg]:text-primary-foreground",
+        info: "border-blue-200 bg-blue-50 text-blue-700 *:data-[slot=alert-description]:text-blue-700/90 dark:border-blue-900 dark:bg-blue-950 dark:text-blue-100 dark:*:data-[slot=alert-description]:text-blue-100/90 [&>svg]:text-blue-700/90 dark:[&>svg]:text-blue-100/90",
         warning:
-          "bg-yellow-50 text-yellow-700 *:data-[slot=alert-description]:text-yellow-700/90 dark:bg-yellow-950 dark:text-yellow-100 dark:*:data-[slot=alert-description]:text-yellow-100/90 [&>svg]:text-yellow-700/90 dark:[&>svg]:text-yellow-100/90",
+          "border-yellow-200 bg-yellow-50 text-yellow-700 *:data-[slot=alert-description]:text-yellow-700/90 dark:border-yellow-900 dark:bg-yellow-950 dark:text-yellow-100 dark:*:data-[slot=alert-description]:text-yellow-100/90 [&>svg]:text-yellow-700/90 dark:[&>svg]:text-yellow-100/90",
         success:
-          "bg-green-50 text-green-700 *:data-[slot=alert-description]:text-green-700/90 dark:bg-green-950 dark:text-green-100 dark:*:data-[slot=alert-description]:text-green-100/90 [&>svg]:text-green-700/90 dark:[&>svg]:text-green-100/90",
-        note: "bg-muted text-muted-foreground *:data-[slot=alert-description]:text-muted-foreground/75 [&>svg]:text-muted-foreground/90",
+          "border-green-200 bg-green-50 text-green-700 *:data-[slot=alert-description]:text-green-700/90 dark:border-green-900 dark:bg-green-950 dark:text-green-100 dark:*:data-[slot=alert-description]:text-green-100/90 [&>svg]:text-green-700/90 dark:[&>svg]:text-green-100/90",
+        note: "border-muted-border bg-muted *:data-[slot=alert-description]:text-muted-foreground/75 [&>svg]:text-muted-foreground/90",
         error:
-          "bg-rose-50 text-rose-700 *:data-[slot=alert-description]:text-rose-700/90 dark:bg-rose-950 dark:text-rose-100 dark:*:data-[slot=alert-description]:text-rose-100/90 [&>svg]:text-rose-700/90 dark:[&>svg]:text-rose-100/90",
+          "border-rose-200 bg-rose-50 text-rose-700 *:data-[slot=alert-description]:text-rose-700/90 dark:border-rose-900 dark:bg-rose-950 dark:text-rose-100 dark:*:data-[slot=alert-description]:text-rose-100/90 [&>svg]:text-rose-700/90 dark:[&>svg]:text-rose-100/90",
       },
     },
     defaultVariants: {
