@@ -1,4 +1,4 @@
-import { prisma } from "../";
+import { prisma } from "@rallly/database";
 import { seedPolls } from "./seed/polls";
 import { seedScheduledEvents } from "./seed/scheduled-events";
 import { seedUsers } from "./seed/users";
