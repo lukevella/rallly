@@ -5,7 +5,12 @@ import { PrismaClient } from "../generated/prisma/client";
 
 export type * from "../generated/prisma/client";
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: 10,
+  idleTimeoutMillis: 5000,
+  connectionTimeoutMillis: 10000,
+});
 
 attachDatabasePool(pool);
 
