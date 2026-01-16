@@ -1,4 +1,4 @@
-import type { TimeFormat } from "@prisma/client";
+import type { TimeFormat } from "@rallly/database";
 import z from "zod";
 
 export const userRoleSchema = z.enum(["admin", "user"]);

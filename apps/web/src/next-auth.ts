@@ -1,5 +1,3 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@rallly/database";
 import NextAuth from "next-auth";
 import { env } from "@/env";
 import { GuestProvider } from "./auth/providers/guest";
@@ -9,7 +7,6 @@ const { auth, handlers, signIn, signOut } = NextAuth({
     strategy: "jwt",
   },
   secret: env.SECRET_PASSWORD,
-  adapter: PrismaAdapter(prisma),
   providers: [GuestProvider],
   pages: {
     signIn: "/login",
@@ -27,31 +24,6 @@ const { auth, handlers, signIn, signOut } = NextAuth({
     },
   },
   callbacks: {
-    async jwt({ token }) {
-      const userId = token.sub;
-      const isGuest = !token.email;
-
-      if (userId && !isGuest) {
-        const user = await prisma.user.findUnique({
-          where: {
-            id: userId,
-          },
-          select: {
-            name: true,
-            email: true,
-            image: true,
-          },
-        });
-
-        if (user) {
-          token.name = user.name;
-          token.email = user.email;
-          token.picture = user.image;
-        }
-      }
-
-      return token;
-    },
     async session({ session, token }) {
       if (token.sub) {
         session.user.id = token.sub;

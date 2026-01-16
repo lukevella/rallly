@@ -12,11 +12,11 @@
     "build:landing": "turbo run build --filter=@rallly/landing",
     "build:test": "turbo build:test",
     "docs:dev": "turbo dev --filter=@rallly/docs...",
-    "db:deploy": "prisma migrate deploy",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "db:reset": "prisma migrate reset",
-    "db:push": "prisma db push",
+    "db:deploy": "pnpm --filter @rallly/database exec prisma migrate deploy",
+    "db:generate": "pnpm --filter @rallly/database exec prisma generate",
+    "db:migrate": "pnpm --filter @rallly/database exec prisma migrate dev",
+    "db:reset": "pnpm --filter @rallly/database exec prisma migrate reset",
+    "db:push": "pnpm --filter @rallly/database exec prisma db push",
     "docker:up": "docker compose -f docker-compose.dev.yml up -d && pnpm dlx wait-on --timeout 60000 tcp:localhost:5450",
     "docker:down": "docker compose -f docker-compose.dev.yml down --volumes --remove-orphans",
     "test:integration": "turbo test:integration",
@@ -29,22 +29,18 @@
     "sherif": "npx sherif@latest",
     "sherif:fix": "npx sherif@latest --fix"
   },
-  "prisma": {
-    "seed": "pnpm --filter @rallly/database db:seed",
-    "schema": "./packages/database/prisma"
-  },
   "devDependencies": {
     "@biomejs/biome": "2.1.1",
     "@playwright/test": "^1.57.0",
     "dotenv-cli": "^8.0.0",
     "prettier": "^3.5.3",
-    "prisma": "^6.8.2",
+    "prisma": "^7.2.0",
     "turbo": "^2.6.3",
     "typescript": "^5.8.2",
     "vitest": "^4.0.16"
   },
   "engines": {
-    "node": "20.x"
+    "node": ">=20.20.0"
   },
   "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
 }

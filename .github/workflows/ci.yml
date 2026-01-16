@@ -55,6 +55,9 @@ jobs:
       - uses: ./.github/actions/setup-node
       - uses: ./.github/actions/pnpm-install
 
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+
       - name: Run tests
         run: pnpm test:unit
 

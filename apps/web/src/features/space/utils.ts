@@ -1,4 +1,4 @@
-import type { SpaceMemberRole as PrismaSpaceMemberRole } from "@prisma/client";
+import type { SpaceMemberRole as PrismaSpaceMemberRole } from "@rallly/database";
 import { getSpaceSubscription } from "@/features/billing/data";
 import { cached_getInstanceLicense } from "@/features/licensing/data";
 import type { LicenseType } from "@/features/licensing/schema";
