@@ -40,9 +40,9 @@ const Screenshot = () => {
           i18nKey="createPageLikeThis"
           defaults="Create a page like this in seconds!"
         />
-        <span className="-translate-x-1/2 absolute top-full left-1/2 z-10 h-8 w-px bg-gray-800" />
-        <span className="-bottom-12 -translate-x-1/2 absolute left-1/2 z-10 inline-block size-3 origin-center rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-        <span className="-bottom-12 -translate-x-1/2 absolute left-1/2 z-10 inline-block size-3 origin-center animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
+        <span className="absolute top-full left-1/2 z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
+        <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-center -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
+        <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-center -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
       </m.div>
       <m.div
         transition={{

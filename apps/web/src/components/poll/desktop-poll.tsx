@@ -186,7 +186,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                       <ArrowRightIcon />
                     </Icon>
                     {!didScroll ? (
-                      <span className="-top-0.5 -right-0.5 absolute flex size-2">
+                      <span className="absolute -top-0.5 -right-0.5 flex size-2">
                         <span className="absolute top-0 right-0 inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
                         <span className="relative inline-flex size-2 rounded-full bg-rose-500" />
                       </span>

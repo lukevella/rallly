@@ -35,7 +35,7 @@ export const ParticipantAvatarBar = ({
   const hiddenCount = totalParticipants - visibleCount;
 
   return (
-    <ul className="-space-x-1 flex cursor-default items-center rounded-full bg-background p-0.5">
+    <ul className="flex cursor-default items-center -space-x-1 rounded-full bg-background p-0.5">
       {visibleParticipants.map((participant, index) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
         <Tooltip delayDuration={100} key={index}>

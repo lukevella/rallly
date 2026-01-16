@@ -2,9 +2,10 @@
 // with Sentry.
 // https://nextjs.org/docs/api-reference/next.config.js/introduction
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
-import type { NextConfig } from "next";
-import { withSentryConfig } from "@sentry/nextjs";
+
 import createBundleAnalyzer from "@next/bundle-analyzer";
+import { withSentryConfig } from "@sentry/nextjs";
+import type { NextConfig } from "next";
 
 const withBundleAnalyzer = createBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -119,7 +120,6 @@ const withBundleAnalyzerConfig = withBundleAnalyzer(nextConfig);
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-export default
-  process.env.NEXT_PUBLIC_SELF_HOSTED === "true"
-    ? withBundleAnalyzerConfig
-    : withSentryConfig(withBundleAnalyzerConfig, sentryWebpackPluginOptions);
+export default process.env.NEXT_PUBLIC_SELF_HOSTED === "true"
+  ? withBundleAnalyzerConfig
+  : withSentryConfig(withBundleAnalyzerConfig, sentryWebpackPluginOptions);

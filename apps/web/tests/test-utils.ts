@@ -29,7 +29,7 @@ export async function createUserInDb({
       data: {
         name: "Personal",
         ownerId: user.id,
-        tier: "hobby"
+        tier: "hobby",
       },
     });
 
@@ -48,7 +48,7 @@ export async function createUserInDb({
 export async function createSpaceInDb({
   name,
   ownerId,
-  tier
+  tier,
 }: {
   name: string;
   ownerId: string;
@@ -110,7 +110,10 @@ export async function createTestPoll({
   });
 }
 
-export async function loginWithEmail(page: Page, { email, password }: { email: string; password?: string }) {
+export async function loginWithEmail(
+  page: Page,
+  { email, password }: { email: string; password?: string },
+) {
   const loginPage = new LoginPage(page);
   await loginPage.goto();
   await loginPage.login({

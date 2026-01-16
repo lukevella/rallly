@@ -14,7 +14,7 @@ export type GoogleServiceParams = {
 export class GoogleService {
   oauth2Client: Auth.OAuth2Client;
 
-  constructor(private readonly params: GoogleServiceParams) {
+  constructor(readonly params: GoogleServiceParams) {
     this.oauth2Client = new google.auth.OAuth2({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
