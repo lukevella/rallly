@@ -29,7 +29,7 @@ export default async function Page(props: {
           />
         </h1>
       </header>
-      <div className="mb-16 grid grid-cols-1 gap-8">
+      <div className="mb-16 grid grid-cols-1 gap-4">
         {allPosts.map((post) => (
           <PostPreview
             key={post.slug}

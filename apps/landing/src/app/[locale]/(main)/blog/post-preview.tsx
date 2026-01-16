@@ -23,7 +23,7 @@ export const PostPreview = ({ title, date, excerpt, slug }: Props) => {
         </div>
       </div>
       <div className="grow">
-        <h3 className="mb-3 font-bold text-lg tracking-tight">
+        <h3 className="mb-2 font-bold text-lg tracking-tight">
           <Link
             as={`/blog/${slug}`}
             href="/blog/[slug]"
@@ -32,7 +32,9 @@ export const PostPreview = ({ title, date, excerpt, slug }: Props) => {
             {title}
           </Link>
         </h3>
-        <p className="mb-4 text-gray-600 text-lg leading-relaxed">{excerpt}</p>
+        <p className="mb-4 text-base text-gray-600 leading-relaxed">
+          {excerpt}
+        </p>
       </div>
     </article>
   );

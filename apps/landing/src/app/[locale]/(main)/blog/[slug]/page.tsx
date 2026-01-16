@@ -1,10 +1,10 @@
+import { Button } from "@rallly/ui/button";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
-
 import PostHeader from "@/components/blog/post-header";
 import { getAllPosts, getPostBySlug } from "@/lib/api";
 
@@ -23,15 +23,14 @@ export default async function Page(props: {
 
   return (
     <div>
-      <nav className="mb-2">
-        <Link
-          className="inline-flex items-center gap-x-2 font-medium text-muted-foreground text-sm hover:text-primary"
-          href="/blog"
-        >
-          <ArrowLeftIcon className="size-4" /> All Posts
-        </Link>
+      <nav className="mb-4">
+        <Button asChild variant="ghost">
+          <Link href="/blog">
+            <ArrowLeftIcon className="size-4" /> All Posts
+          </Link>
+        </Button>
       </nav>
-      <article className="space-y-8">
+      <article className="space-y-4">
         <PostHeader title={post.title} date={post.date} />
         <div className="blog-content">
           <MDXRemote source={post.content} />
@@ -45,10 +44,12 @@ export default async function Page(props: {
             alt="Luke Vella"
           />
           <div>
-            <div className="font-medium leading-none">Luke Vella</div>
+            <div className="font-medium text-foreground leading-none">
+              Luke Vella
+            </div>
             <div>
               <Link
-                className="text-muted-foreground text-sm hover:text-primary"
+                className="text-muted-foreground text-sm hover:underline"
                 href="https://twitter.com/imlukevella"
               >
                 @imlukevella
