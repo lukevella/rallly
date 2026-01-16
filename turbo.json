@@ -3,6 +3,7 @@
   "globalDependencies": [".env"],
   "tasks": {
     "build": {
+      "dependsOn": ["^build", "^db:generate"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "build:test": {
@@ -11,11 +12,11 @@
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "@rallly/web#build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "^db:generate"],
       "outputs": [".next/**"]
     },
     "@rallly/landing#build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "^db:generate"],
       "outputs": [".next/**"]
     },
     "test": {
@@ -33,11 +34,19 @@
     "db:generate": {
       "cache": false
     },
+    "db:migrate": {
+      "cache": false
+    },
+    "db:deploy": {
+      "cache": false
+    },
     "type-check": {
       "outputs": []
     },
     "dev": {
-      "cache": false
+      "dependsOn": ["^db:generate"],
+      "cache": false,
+      "persistent": true
     },
     "start": {
       "cache": false,

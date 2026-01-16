@@ -58,7 +58,7 @@ RUN apt-get update \
 WORKDIR /app
 
 # Install prisma globally needed for runtime operations like migrations
-RUN pnpm add -g prisma@6
+RUN pnpm add -g prisma@7
 
 # Don't run production as root
 RUN addgroup --system nodejs \
@@ -70,6 +70,7 @@ COPY --from=installer /root/.cache/node/corepack/ /app/.cache/node/corepack/
 # Copy app files
 COPY --from=builder /app/scripts/docker-start.sh ./
 COPY --from=builder /app/packages/database/prisma ./prisma
+COPY --from=builder /app/packages/database/prisma.config.ts ./
 COPY --from=installer /app/apps/web/next.config.ts .
 COPY --from=installer /app/apps/web/package.json .
 
