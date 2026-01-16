@@ -11,7 +11,15 @@ export class RegisterPage {
     await this.page.getByText("Create Your Account").waitFor();
   }
 
-  async register({ name, email, password }: { name: string; email: string; password: string }) {
+  async register({
+    name,
+    email,
+    password,
+  }: {
+    name: string;
+    email: string;
+    password: string;
+  }) {
     // Fill in registration form
     await this.page.getByPlaceholder("Jessie Smith").fill(name);
     await this.page.getByPlaceholder("jessie.smith@example.com").fill(email);

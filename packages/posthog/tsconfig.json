@@ -1,8 +1,5 @@
 {
   "extends": "@rallly/tsconfig/next.json",
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-  ],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

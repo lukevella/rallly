@@ -4,6 +4,9 @@
   "buildCommand": "cd ../.. && pnpm db:generate && pnpm build:landing",
   "outputDirectory": ".next",
   "rewrites": [
-    { "source": "/poll/:path*", "destination": "https://app.rallly.co/invite/:path*" }
+    {
+      "source": "/poll/:path*",
+      "destination": "https://app.rallly.co/invite/:path*"
+    }
   ]
 }

@@ -1,5 +1,4 @@
 import { prisma } from "@rallly/database";
-import dayjs from "dayjs";
 
 async function createUser({
   id,
@@ -47,7 +46,7 @@ async function createUser({
 
 async function createTeamSpace() {
   console.info("Creating team space...");
-  
+
   // Create team owner first
   const teamOwner = await prisma.user.create({
     data: {
@@ -147,8 +146,10 @@ async function createTeamSpace() {
     }),
   ]);
 
-  console.info(`✓ Seeded team space with ${[teamOwner, ...teamMembers].length} members`);
-  
+  console.info(
+    `✓ Seeded team space with ${[teamOwner, ...teamMembers].length} members`,
+  );
+
   return [teamOwner, ...teamMembers];
 }
 
