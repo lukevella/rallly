@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-import type { PollOptionsData } from "@/components/forms";
 import PollOptionsForm from "@/components/forms/poll-options-form";
 import { useModalContext } from "@/components/modal/modal-provider";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
@@ -54,10 +53,10 @@ const Page = () => {
     firstDate = firstDate.utc();
   }
 
-  const form = useForm<PollOptionsData>({
+  const form = useForm({
     defaultValues: {
       navigationDate: firstDate.format("YYYY-MM-DD"),
-      view: "month",
+      view: "month" as const,
       options: poll.options.map((option) => {
         let start = dayjs(option.startTime);
         if (poll.timeZone) {
@@ -67,7 +66,7 @@ const Page = () => {
         }
         return option.duration > 0
           ? {
-              type: "timeSlot",
+              type: "timeSlot" as const,
               start: start.format("YYYY-MM-DDTHH:mm:ss"),
               duration: option.duration,
               end: start
@@ -75,7 +74,7 @@ const Page = () => {
                 .format("YYYY-MM-DDTHH:mm:ss"),
             }
           : {
-              type: "date",
+              type: "date" as const,
               date: start.format("YYYY-MM-DD"),
             };
       }),

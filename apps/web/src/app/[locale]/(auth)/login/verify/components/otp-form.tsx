@@ -24,11 +24,9 @@ const otpFormSchema = z.object({
   otp: z.string().length(6),
 });
 
-type OTPFormValues = z.infer<typeof otpFormSchema>;
-
 export function OTPForm({ email }: { email: string }) {
   const { t } = useTranslation();
-  const form = useForm<OTPFormValues>({
+  const form = useForm({
     defaultValues: {
       otp: "",
     },

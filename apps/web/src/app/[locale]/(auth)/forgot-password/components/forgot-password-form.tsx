@@ -28,14 +28,12 @@ function useForgotPasswordSchema() {
   }, [t]);
 }
 
-type ForgotPasswordValues = z.infer<ReturnType<typeof useForgotPasswordSchema>>;
-
 export function ForgotPasswordForm() {
   const searchParams = useSearchParams();
   const emailFromUrl = searchParams?.get("email") || "";
   const forgotPasswordSchema = useForgotPasswordSchema();
   const [submitted, setSubmitted] = React.useState(false);
-  const form = useForm<ForgotPasswordValues>({
+  const form = useForm({
     defaultValues: {
       email: emailFromUrl,
     },

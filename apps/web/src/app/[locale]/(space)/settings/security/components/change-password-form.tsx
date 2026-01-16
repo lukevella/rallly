@@ -41,11 +41,9 @@ function useChangePasswordSchema() {
     });
 }
 
-type ChangePasswordValues = z.infer<ReturnType<typeof useChangePasswordSchema>>;
-
 export function ChangePasswordForm() {
   const changePasswordSchema = useChangePasswordSchema();
-  const form = useForm<ChangePasswordValues>({
+  const form = useForm({
     defaultValues: {
       currentPassword: "",
       newPassword: "",
@@ -55,42 +53,42 @@ export function ChangePasswordForm() {
   const { handleSubmit, formState } = form;
   const { t } = useTranslation();
 
-  const onSubmit = async (data: ChangePasswordValues) => {
-    const res = await authClient.changePassword({
-      currentPassword: data.currentPassword,
-      newPassword: data.newPassword,
-      revokeOtherSessions: true,
-    });
-
-    if (res.error) {
-      switch (res.error.code) {
-        case "INVALID_PASSWORD":
-          form.setError("currentPassword", {
-            message: t("passwordIncorrect", {
-              defaultValue: "Current password is incorrect",
-            }),
-          });
-          break;
-        default:
-          form.setError("root", {
-            message: res.error.message,
-          });
-          break;
-      }
-      return;
-    }
-
-    form.reset();
-    toast.success(
-      t("passwordChangedSuccess", {
-        defaultValue: "Your password has been changed successfully",
-      }),
-    );
-  };
-
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(async (data) => {
+          const res = await authClient.changePassword({
+            currentPassword: data.currentPassword,
+            newPassword: data.newPassword,
+            revokeOtherSessions: true,
+          });
+
+          if (res.error) {
+            switch (res.error.code) {
+              case "INVALID_PASSWORD":
+                form.setError("currentPassword", {
+                  message: t("passwordIncorrect", {
+                    defaultValue: "Current password is incorrect",
+                  }),
+                });
+                break;
+              default:
+                form.setError("root", {
+                  message: res.error.message,
+                });
+                break;
+            }
+            return;
+          }
+
+          form.reset();
+          toast.success(
+            t("passwordChangedSuccess", {
+              defaultValue: "Your password has been changed successfully",
+            }),
+          );
+        })}
+      >
         {form.formState.errors.root?.message && (
           <FormMessage>{form.formState.errors.root.message}</FormMessage>
         )}

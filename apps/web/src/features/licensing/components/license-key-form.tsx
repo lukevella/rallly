@@ -26,12 +26,10 @@ const formSchema = z.object({
   }),
 });
 
-type LicenseKeyFormValues = z.infer<typeof formSchema>;
-
 export function LicenseKeyForm() {
   const { t } = useTranslation();
   const router = useRouter();
-  const form = useForm<LicenseKeyFormValues>({
+  const form = useForm({
     defaultValues: {
       licenseKey: "",
     },
@@ -40,32 +38,34 @@ export function LicenseKeyForm() {
 
   const validateLicenseKey = useSafeAction(validateLicenseKeyAction);
 
-  const onSubmit = async (data: LicenseKeyFormValues) => {
-    try {
-      const result = await validateLicenseKey.executeAsync({
-        key: data.licenseKey,
-      });
-
-      if (!result.data) {
-        form.setError("licenseKey", {
-          message: t("licenseKeyErrorInvalidLicenseKey", {
-            defaultValue: "Invalid license key",
-          }),
-        });
-      }
-    } catch (_error) {
-      form.setError("licenseKey", {
-        message: t("licenseKeyGenericError", {
-          defaultValue: "An error occurred while validating the license key",
-        }),
-      });
-    }
-    router.refresh();
-  };
-
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="space-y-4"
+        onSubmit={form.handleSubmit(async (data) => {
+          try {
+            const result = await validateLicenseKey.executeAsync({
+              key: data.licenseKey,
+            });
+
+            if (!result.data) {
+              form.setError("licenseKey", {
+                message: t("licenseKeyErrorInvalidLicenseKey", {
+                  defaultValue: "Invalid license key",
+                }),
+              });
+            }
+          } catch (_error) {
+            form.setError("licenseKey", {
+              message: t("licenseKeyGenericError", {
+                defaultValue:
+                  "An error occurred while validating the license key",
+              }),
+            });
+          }
+          router.refresh();
+        })}
+      >
         <FormField
           name="licenseKey"
           render={({ field }) => {

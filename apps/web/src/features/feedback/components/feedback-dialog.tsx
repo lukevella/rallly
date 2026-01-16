@@ -20,12 +20,11 @@ import { Trans } from "@/components/trans";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { isSelfHosted } from "@/utils/constants";
 import { submitFeedbackAction } from "../actions";
-import type { Feedback } from "../schema";
 import { feedbackSchema } from "../schema";
 
 export function FeedbackDialog(props: DialogProps) {
   const submitFeedback = useSafeAction(submitFeedbackAction);
-  const form = useForm<Feedback>({
+  const form = useForm({
     resolver: zodResolver(feedbackSchema),
   });
 

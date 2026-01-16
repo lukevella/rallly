@@ -36,8 +36,6 @@ const formSchema = z.object({
   name: z.string().min(1).max(100),
 });
 
-type FormData = z.infer<typeof formSchema>;
-
 export function CreateApiKeyButton() {
   const { t } = useTranslation();
   const dialog = useDialog();
@@ -47,7 +45,7 @@ export function CreateApiKeyButton() {
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
 
-  const form = useForm<FormData>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -68,21 +66,6 @@ export function CreateApiKeyButton() {
       toast.success(
         t("copiedToClipboard", {
           defaultValue: "Copied to clipboard",
-        }),
-      );
-    }
-  };
-
-  const onSubmit = async (data: FormData) => {
-    try {
-      const result = await createApiKey.mutateAsync(data);
-      setCreatedApiKey(result.apiKey);
-      await utils.apiKeys.list.invalidate();
-      form.reset();
-    } catch {
-      toast.error(
-        t("createFailed", {
-          defaultValue: "Failed to create",
         }),
       );
     }
@@ -166,7 +149,22 @@ export function CreateApiKeyButton() {
                 </DialogDescription>
               </DialogHeader>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
+                <form
+                  onSubmit={form.handleSubmit(async (data) => {
+                    try {
+                      const result = await createApiKey.mutateAsync(data);
+                      setCreatedApiKey(result.apiKey);
+                      await utils.apiKeys.list.invalidate();
+                      form.reset();
+                    } catch {
+                      toast.error(
+                        t("createFailed", {
+                          defaultValue: "Failed to create",
+                        }),
+                      );
+                    }
+                  })}
+                >
                   <div className="space-y-4">
                     <FormField
                       control={form.control}

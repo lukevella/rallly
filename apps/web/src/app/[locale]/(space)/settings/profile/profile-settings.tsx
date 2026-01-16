@@ -23,8 +23,6 @@ const profileSettingsFormData = z.object({
   name: z.string().min(1).max(100),
 });
 
-type ProfileSettingsFormData = z.infer<typeof profileSettingsFormData>;
-
 export const ProfileSettings = ({
   name,
   image,
@@ -34,7 +32,7 @@ export const ProfileSettings = ({
 }) => {
   const changeName = trpc.user.changeName.useMutation();
   const router = useRouter();
-  const form = useForm<ProfileSettingsFormData>({
+  const form = useForm({
     defaultValues: {
       name,
     },

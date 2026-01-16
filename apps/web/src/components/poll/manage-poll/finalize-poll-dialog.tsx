@@ -114,10 +114,10 @@ export const FinalizePollForm = ({
       return { ...option, votes: scoreByOptionId[option.id] };
     });
 
-  const form = useForm<FinalizeFormData>({
+  const form = useForm({
     defaultValues: {
       selectedOptionId: options[0].id,
-      notify: "all",
+      notify: "all" as const,
     },
     resolver: zodResolver(formSchema),
   });
