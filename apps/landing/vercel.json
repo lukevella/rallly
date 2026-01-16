@@ -1,8 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "pnpm install",
-  "buildCommand": "pnpm build",
-  "outputDirectory": ".next",
+  "buildCommand": "cd ../../ && pnpm build:landing",
   "rewrites": [
     { "source": "/poll/:path*", "destination": "https://app.rallly.co/invite/:path*" }
   ]
