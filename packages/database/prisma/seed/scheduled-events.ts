@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import type { ScheduledEventInviteStatus } from "@prisma/client";
-import { ScheduledEventStatus } from "@prisma/client"; // Ensure Prisma is imported
+import type { ScheduledEventInviteStatus } from "../../generated/prisma/client";
+import { ScheduledEventStatus } from "../../generated/prisma/client";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
 import { randInt } from "./utils";

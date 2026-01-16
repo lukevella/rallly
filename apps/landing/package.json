@@ -11,7 +11,8 @@
     "i18n:scan": "i18next-scanner --config i18next-scanner.config.js"
   },
   "dependencies": {
-    "@prisma/client": "^6.8.2",
+    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "^7.2.0",
     "@rallly/billing": "workspace:*",
     "@rallly/database": "workspace:*",
     "@rallly/languages": "workspace:*",
@@ -34,6 +35,7 @@
     "next": "^15.5.9",
     "next-mdx-remote": "^5.0.0",
     "next-seo": "^6.1.0",
+    "pg": "^8.17.1",
     "react": "^19.1.4",
     "react-dom": "^19.1.4",
     "react-i18next": "^15.5.1",
