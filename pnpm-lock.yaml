@@ -299,8 +299,8 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       '@vercel/functions':
-        specifier: ^2.0.0
-        version: 2.0.0(@aws-sdk/credential-provider-web-identity@3.797.0)
+        specifier: ^3.3.6
+        version: 3.3.6(@aws-sdk/credential-provider-web-identity@3.797.0)
       '@vercel/kv':
         specifier: ^3.0.0
         version: 3.0.0
@@ -543,6 +543,9 @@ importers:
       '@prisma/client':
         specifier: ^7.2.0
         version: 7.2.0(prisma@7.2.0(@types/react@19.1.2)(react-dom@19.2.1(react@19.2.3))(react@19.2.3)(typescript@5.8.3))(typescript@5.8.3)
+      '@vercel/functions':
+        specifier: ^3.3.6
+        version: 3.3.6(@aws-sdk/credential-provider-web-identity@3.797.0)
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -586,8 +589,8 @@ importers:
         specifier: ^1.0.6
         version: 1.0.6(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@vercel/functions':
-        specifier: ^2.0.0
-        version: 2.0.0(@aws-sdk/credential-provider-web-identity@3.797.0)
+        specifier: ^3.3.6
+        version: 3.3.6(@aws-sdk/credential-provider-web-identity@3.797.0)
       i18next:
         specifier: ^24.2.2
         version: 24.2.3(typescript@5.8.3)
@@ -5159,9 +5162,9 @@ packages:
       vue-router:
         optional: true
 
-  '@vercel/functions@2.0.0':
-    resolution: {integrity: sha512-BSwIihLHoV18gerKZJyGuqd3rtaYM6rJvET1kOwKktshucyaHXTJel7Cxegs+sdX0NZqsX4LO2MFnMU2jG01Cw==}
-    engines: {node: '>= 18'}
+  '@vercel/functions@3.3.6':
+    resolution: {integrity: sha512-mLKK3H+v1XjzTiksYN7XV4sl/n8tqb0DeavoUzjFKRQMmx5x+vy1jIl24GY4C8D2dinQPV1ZuCSPhJptBeeE/A==}
+    engines: {node: '>= 20'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
     peerDependenciesMeta:
@@ -5171,6 +5174,10 @@ packages:
   '@vercel/kv@3.0.0':
     resolution: {integrity: sha512-pKT8fRnfyYk2MgvyB6fn6ipJPCdfZwiKDdw7vB+HL50rjboEBHDVBEcnwfkEpVSp2AjNtoaOUH7zG+bVC/rvSg==}
     engines: {node: '>=14.6'}
+
+  '@vercel/oidc@3.1.0':
+    resolution: {integrity: sha512-Fw28YZpRnA3cAHHDlkt7xQHiJ0fcL+NRcIqsocZQUSmbzeIKRpwttJjik5ZGanXP+vlA4SbTg+AbA3bP363l+w==}
+    engines: {node: '>= 20'}
 
   '@vitejs/plugin-react@5.0.0':
     resolution: {integrity: sha512-Jx9JfsTa05bYkS9xo0hkofp2dCmp1blrKjw9JONs5BTHOvJCgLbaPSuZLGSVJW6u2qe0tc4eevY0+gSNNi0YCw==}
@@ -15850,13 +15857,17 @@ snapshots:
       next: 15.5.9(@babel/core@7.28.3)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react: 19.2.1
 
-  '@vercel/functions@2.0.0(@aws-sdk/credential-provider-web-identity@3.797.0)':
+  '@vercel/functions@3.3.6(@aws-sdk/credential-provider-web-identity@3.797.0)':
+    dependencies:
+      '@vercel/oidc': 3.1.0
     optionalDependencies:
       '@aws-sdk/credential-provider-web-identity': 3.797.0
 
   '@vercel/kv@3.0.0':
     dependencies:
       '@upstash/redis': 1.34.8
+
+  '@vercel/oidc@3.1.0': {}
 
   '@vitejs/plugin-react@5.0.0(vite@7.3.0(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.2))':
     dependencies:
