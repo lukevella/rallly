@@ -35,9 +35,9 @@
   --action-bar-border: var(--color-gray-700);
   --action-bar-foreground: var(--color-gray-100);
 
-  --muted: oklch(0.92 0.004 286.32 / 0.5);
+  --muted: var(--color-gray-50);
   --muted-foreground: var(--color-gray-600);
-  --muted-border: oklch(0.871 0.006 286.286);
+  --muted-border: var(--color-gray-200);
 
   --popover: var(--color-white);
   --popover-foreground: var(--color-gray-800);
@@ -62,7 +62,7 @@
   --foreground: var(--color-gray-300);
 
   --primary: var(--primary-dark, var(--color-indigo-500));
-  --primary-foreground: var(--primary-dark-foreground, var(--color-indigo-50));
+  --primary-foreground: var(--primary-dark-foreground, var(--color-white));
 
   --sidebar: var(--color-gray-900);
   --sidebar-foreground: var(--color-gray-100);
