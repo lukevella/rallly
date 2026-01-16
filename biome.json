@@ -66,9 +66,6 @@
     "clientKind": "git",
     "useIgnoreFile": true
   },
-  "files": {
-    "includes": ["apps/*/src/**", "packages/*/src/**"]
-  },
   "css": {
     "parser": {
       "tailwindDirectives": true
