@@ -30,7 +30,7 @@
     "sherif:fix": "npx sherif@latest --fix"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.1.1",
+    "@biomejs/biome": "^2.3.11",
     "@playwright/test": "^1.57.0",
     "dotenv-cli": "^8.0.0",
     "prettier": "^3.5.3",

@@ -21,7 +21,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
         />
         <button
           type="button"
-          className="-translate-y-1/2 absolute top-1/2 right-4"
+          className="absolute top-1/2 right-4 -translate-y-1/2"
           onClick={() => setShowPassword(!showPassword)}
           disabled={props.disabled}
         >
