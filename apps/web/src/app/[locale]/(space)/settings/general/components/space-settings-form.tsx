@@ -38,8 +38,6 @@ const spaceSettingsSchema = z.object({
     .max(100, "Space name must be less than 100 characters"),
 });
 
-type SpaceSettingsData = z.infer<typeof spaceSettingsSchema>;
-
 interface SpaceSettingsFormProps {
   space: SpaceDTO;
   disabled?: boolean;
@@ -56,31 +54,12 @@ export function SpaceSettingsForm({
   const updateImage = useSafeAction(updateSpaceImageAction);
   const removeImage = useSafeAction(removeSpaceImageAction);
 
-  const form = useForm<SpaceSettingsData>({
+  const form = useForm({
     resolver: zodResolver(spaceSettingsSchema),
     defaultValues: {
       name: space.name,
     },
   });
-
-  const onSubmit = async (data: SpaceSettingsData) => {
-    toast.promise(
-      updateSpace.executeAsync({
-        name: data.name,
-      }),
-      {
-        loading: t("updatingSpace", { defaultValue: "Updating space..." }),
-        success: t("spaceUpdatedSuccess", {
-          defaultValue: "Space updated successfully",
-        }),
-        error: t("spaceUpdatedError", {
-          defaultValue: "Failed to update space",
-        }),
-      },
-    );
-
-    form.reset(data);
-  };
 
   const handleImageUploadSuccess = async (imageKey: string) => {
     await updateImage.executeAsync({ imageKey });
@@ -94,7 +73,29 @@ export function SpaceSettingsForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(async (data) => {
+          toast.promise(
+            updateSpace.executeAsync({
+              name: data.name,
+            }),
+            {
+              loading: t("updatingSpace", {
+                defaultValue: "Updating space...",
+              }),
+              success: t("spaceUpdatedSuccess", {
+                defaultValue: "Space updated successfully",
+              }),
+              error: t("spaceUpdatedError", {
+                defaultValue: "Failed to update space",
+              }),
+            },
+          );
+
+          form.reset(data);
+        })}
+        className="space-y-6"
+      >
         <div>
           <FormLabel>
             <Trans i18nKey="image" defaults="Image" />

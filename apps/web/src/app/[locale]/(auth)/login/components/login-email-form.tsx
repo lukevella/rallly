@@ -36,14 +36,12 @@ function useLoginWithEmailSchema() {
   }, [t]);
 }
 
-type LoginWithEmailValues = z.infer<ReturnType<typeof useLoginWithEmailSchema>>;
-
 export function LoginWithEmailForm() {
   const router = useRouter();
   const loginWithEmailSchema = useLoginWithEmailSchema();
   const searchParams = useSearchParams();
   const [showPasswordField, setShowPasswordField] = React.useState(false);
-  const form = useForm<LoginWithEmailValues>({
+  const form = useForm({
     defaultValues: {
       identifier: "",
       password: "",

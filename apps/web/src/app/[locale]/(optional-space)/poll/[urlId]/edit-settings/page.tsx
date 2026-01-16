@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-import type { PollSettingsFormData } from "@/components/forms/poll-settings";
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { Trans } from "@/components/trans";
@@ -25,7 +24,7 @@ const Page = () => {
 
   const update = useUpdatePollMutation();
 
-  const form = useForm<PollSettingsFormData>({
+  const form = useForm({
     defaultValues: {
       hideParticipants: poll.hideParticipants,
       hideScores: poll.hideScores,

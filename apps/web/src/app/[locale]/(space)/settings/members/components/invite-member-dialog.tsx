@@ -59,10 +59,10 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
   const { t } = useTranslation();
   const formSchema = useInviteMemberFormSchema();
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm({
     defaultValues: {
       email: "",
-      role: "member",
+      role: "member" as const,
     },
     resolver: zodResolver(formSchema),
   });

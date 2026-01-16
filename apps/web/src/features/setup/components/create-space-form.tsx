@@ -24,13 +24,11 @@ const createSpaceFormSchema = z.object({
   name: z.string().min(1).max(100),
 });
 
-type CreateSpaceFormValues = z.infer<typeof createSpaceFormSchema>;
-
 export function CreateSpaceForm() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const form = useForm<CreateSpaceFormValues>({
+  const form = useForm({
     resolver: zodResolver(createSpaceFormSchema),
     defaultValues: {
       name: t("personal", { defaultValue: "Personal" }),

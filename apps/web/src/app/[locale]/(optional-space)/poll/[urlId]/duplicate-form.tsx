@@ -17,18 +17,16 @@ const formSchema = z.object({
   title: z.string().trim().min(1),
 });
 
-type DuplicateFormData = z.infer<typeof formSchema>;
-
 export function DuplicateForm({
   name,
   onSubmit,
   defaultValues,
 }: {
   name?: string;
-  onSubmit?: (data: DuplicateFormData) => void;
-  defaultValues?: DuplicateFormData;
+  onSubmit?: (data: z.infer<typeof formSchema>) => void;
+  defaultValues?: z.infer<typeof formSchema>;
 }) {
-  const form = useForm<DuplicateFormData>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues,
   });

@@ -31,12 +31,10 @@ const createSpaceFormSchema = z.object({
   name: z.string().min(1).max(100),
 });
 
-type CreateSpaceFormValues = z.infer<typeof createSpaceFormSchema>;
-
 export function CreateSpaceDialog(props: DialogProps) {
   const { t } = useTranslation();
 
-  const form = useForm<CreateSpaceFormValues>({
+  const form = useForm({
     resolver: zodResolver(createSpaceFormSchema),
     defaultValues: {
       name: "",

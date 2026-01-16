@@ -13,7 +13,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-import type { PollDetailsData } from "@/components/forms/poll-details-form";
 import { PollDetailsForm } from "@/components/forms/poll-details-form";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { usePoll } from "@/components/poll-context";
@@ -32,7 +31,7 @@ const Page = () => {
     router.push(pollLink);
   };
 
-  const form = useForm<PollDetailsData>({
+  const form = useForm({
     defaultValues: {
       title: poll.title,
       location: poll.location ?? "",
