@@ -1,11 +1,11 @@
-# Base stage with Node.js 20 and Corepack enabled
-FROM node:20 AS base
+# Base stage with Node.js 24 and Corepack enabled
+FROM node:24 AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-# Slim base stage with Node.js 20 and Corepack enabled
-FROM node:20-slim AS base-slim
+# Slim base stage with Node.js 24 and Corepack enabled
+FROM node:24-slim AS base-slim
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
