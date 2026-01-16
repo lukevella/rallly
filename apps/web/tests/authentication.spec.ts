@@ -9,8 +9,6 @@ const testUserEmail = "test@example.com";
 const testExistingUserEmail = "existing-user-for-disabled-test@example.com";
 const testPassword = "TestPassword123!";
 
-
-
 test.describe.serial(() => {
   test.afterAll(async () => {
     await prisma.user.deleteMany({
@@ -70,7 +68,7 @@ test.describe.serial(() => {
 
       await expect(page.getByText("Test User")).toBeVisible();
     });
-    
+
     test("shows error for invalid verification code", async ({ page }) => {
       await page.goto("/login");
 
@@ -121,7 +119,7 @@ test.describe.serial(() => {
       await page.getByRole("button", { name: "Continue with email" }).click();
 
       await page.getByPlaceholder("••••••••").fill(testPassword);
-      
+
       await page.getByRole("button", { name: "Login with password" }).click();
 
       await expect(page.getByText("Test User")).toBeVisible();
@@ -135,7 +133,9 @@ test.describe.serial(() => {
         await page.getByText("Welcome").waitFor();
 
         // Enter email to trigger password field rendering
-        await page.getByPlaceholder("jessie.smith@example.com").fill(testUserEmail);
+        await page
+          .getByPlaceholder("jessie.smith@example.com")
+          .fill(testUserEmail);
         await page.getByRole("button", { name: "Continue with email" }).click();
 
         // Password field should now be visible since user has a credential account
@@ -146,7 +146,9 @@ test.describe.serial(() => {
 
         // Verify we're on the forgot password page
         await expect(page).toHaveURL(/\/forgot-password/);
-        await expect(page.getByRole("heading", { name: "Forgot Password" })).toBeVisible();
+        await expect(
+          page.getByRole("heading", { name: "Forgot Password" }),
+        ).toBeVisible();
 
         // Verify email is pre-filled as a UX improvement
         const emailInput = page.getByPlaceholder("jessie.smith@example.com");
@@ -160,21 +162,27 @@ test.describe.serial(() => {
         await page.getByRole("heading", { name: "Forgot Password" }).waitFor();
 
         // Fill in email
-        await page.getByPlaceholder("jessie.smith@example.com").fill(testUserEmail);
+        await page
+          .getByPlaceholder("jessie.smith@example.com")
+          .fill(testUserEmail);
 
         // Submit form
         await page.getByRole("button", { name: "Send reset link" }).click();
 
         // Verify success message
-        await expect(page.getByText("Check your email", {
-          exact: true,
-        })).toBeVisible();
+        await expect(
+          page.getByText("Check your email", {
+            exact: true,
+          }),
+        ).toBeVisible();
         await expect(
           page.getByText(/sent a password reset link to your inbox/),
         ).toBeVisible();
       });
 
-      test("doesn't reveal whether email exists in system", async ({ page }) => {
+      test("doesn't reveal whether email exists in system", async ({
+        page,
+      }) => {
         await page.goto("/forgot-password");
 
         // Fill in non-existent email
@@ -187,12 +195,16 @@ test.describe.serial(() => {
 
         // Should show the same success message for both existing and non-existing emails
         // This prevents email enumeration attacks
-        await expect(page.getByText("Check your email", {
-          exact: true,
-        })).toBeVisible();
+        await expect(
+          page.getByText("Check your email", {
+            exact: true,
+          }),
+        ).toBeVisible();
       });
 
-      test("displays back to login link on forgot password page", async ({ page }) => {
+      test("displays back to login link on forgot password page", async ({
+        page,
+      }) => {
         await page.goto("/forgot-password");
 
         // Verify back to login link
@@ -217,7 +229,9 @@ test.describe.serial(() => {
         await page.goto(resetLink);
 
         // Verify we're on the reset password page
-        await expect(page.getByRole("heading", { name: "Reset Password" })).toBeVisible();
+        await expect(
+          page.getByRole("heading", { name: "Reset Password" }),
+        ).toBeVisible();
 
         // Fill in new password
         const newPassword = "NewPassword456!";
@@ -233,7 +247,7 @@ test.describe.serial(() => {
       test("shows error for invalid token", async ({ page }) => {
         // Navigate to reset password with invalid token
         await page.goto("/reset-password?token=invalid-token-123");
-        
+
         // Fill fields and submit
         await page.getByLabel("Password").fill("NewPassword456!");
         await page.getByRole("button", { name: "Reset password" }).click();
@@ -247,7 +261,9 @@ test.describe.serial(() => {
         await page.goto("/reset-password");
 
         // Should show error message
-        await expect(page.getByText(/password reset link is invalid/i)).toBeVisible();
+        await expect(
+          page.getByText(/password reset link is invalid/i),
+        ).toBeVisible();
       });
 
       test("can login with new password after reset", async ({ page }) => {
@@ -312,9 +328,7 @@ test.describe.serial(() => {
         const resetLink = await getPasswordResetLink(testUserEmail);
 
         // Try to use redirect injection
-        await page.goto(
-          `${resetLink}&redirectTo=https://evil.com`,
-        );
+        await page.goto(`${resetLink}&redirectTo=https://evil.com`);
 
         // Fill in password
         const safePassword = "SafePassword123!";

@@ -36,9 +36,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
       {options.map((option) => {
         const participants = getParticipantsWhoVotedForOption(option.optionId);
         const score = getScore(option.optionId);
-        const index = optionIds.findIndex(
-          (optionId) => option.optionId === optionId,
-        );
+        const index = optionIds.indexOf(option.optionId);
         return (
           <Controller
             key={option.optionId}

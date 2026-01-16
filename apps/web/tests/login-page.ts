@@ -25,13 +25,13 @@ export class LoginPage {
       await this.page
         .getByRole("button", { name: "Login with password" })
         .click();
-
     } else {
       // Handle verification code for email OTP login
       const code = await getCode(email);
-      await this.page.getByRole("heading", { name : "Finish Logging In" }).waitFor();
+      await this.page
+        .getByRole("heading", { name: "Finish Logging In" })
+        .waitFor();
       await this.page.getByPlaceholder("Enter your 6-digit code").fill(code);
-
     }
 
     // Wait for page to load

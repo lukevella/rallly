@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
-import { createUserInDb, createSpaceInDb, createTestPoll } from "./test-utils";
+import { createSpaceInDb, createTestPoll, createUserInDb } from "./test-utils";
 
 /**
  * This test suite tests the house-keeping API endpoints:

@@ -180,7 +180,7 @@ export class EmailClient {
       case "smtp": {
         const hasAuth = process.env.SMTP_USER || process.env.SMTP_PWD;
         const port = process.env.SMTP_PORT
-          ? Number.parseInt(process.env.SMTP_PORT)
+          ? Number.parseInt(process.env.SMTP_PORT, 10)
           : undefined;
 
         const secure = process.env.SMTP_SECURE === "true";

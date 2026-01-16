@@ -15,18 +15,11 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": [
-              "introduction",
-              "faq"
-            ]
+            "pages": ["introduction", "faq"]
           },
           {
             "group": "How it Works",
-            "pages": [
-              "workflow/create",
-              "workflow/invite",
-              "workflow/finalize"
-            ]
+            "pages": ["workflow/create", "workflow/invite", "workflow/finalize"]
           },
           {
             "group": "Spaces",
@@ -39,15 +32,11 @@
           },
           {
             "group": "Guides",
-            "pages": [
-              "guide/participant-guide"
-            ]
+            "pages": ["guide/participant-guide"]
           },
           {
             "group": "Contact",
-            "pages": [
-              "contact/support"
-            ]
+            "pages": ["contact/support"]
           }
         ]
       },
@@ -61,9 +50,7 @@
               {
                 "group": "Installation",
                 "icon": "server",
-                "pages": [
-                  "self-hosting/installation/docker"
-                ]
+                "pages": ["self-hosting/installation/docker"]
               },
               "self-hosting/licensing",
               "self-hosting/white-labeling",
@@ -72,15 +59,11 @@
           },
           {
             "group": "Guides",
-            "pages": [
-              "self-hosting/control-panel"
-            ]
+            "pages": ["self-hosting/control-panel"]
           },
           {
             "group": "Misc",
-            "pages": [
-              "self-hosting/managed-hosting"
-            ]
+            "pages": ["self-hosting/managed-hosting"]
           }
         ]
       },
@@ -89,9 +72,7 @@
         "groups": [
           {
             "group": "Contribute",
-            "pages": [
-              "contribute/introduction"
-            ]
+            "pages": ["contribute/introduction"]
           },
           {
             "group": "How to Contribute",

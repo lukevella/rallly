@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
-import type { VoteType } from "../../generated/prisma/client";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
+import type { VoteType } from "../../generated/prisma/client";
 
 import { randInt } from "./utils";
 
@@ -65,47 +65,56 @@ function generateDescription() {
 
 async function addTeamParticipantsToPolls() {
   console.info("Adding team members as participants to polls...");
-  
+
   // Get all team members
   const teamMembers = await prisma.user.findMany({
     where: {
       id: {
-        in: ["team-owner", "team-admin", "team-member-1", "team-member-2", "team-member-3"]
-      }
-    }
+        in: [
+          "team-owner",
+          "team-admin",
+          "team-member-1",
+          "team-member-2",
+          "team-member-3",
+        ],
+      },
+    },
   });
 
   // Get team space polls
   const teamPolls = await prisma.poll.findMany({
     where: {
-      spaceId: "team-space-1"
+      spaceId: "team-space-1",
     },
     include: {
       options: true,
-      participants: true
-    }
+      participants: true,
+    },
   });
 
   // Add team members as participants to some polls
   for (const poll of teamPolls) {
     // Skip if poll already has team participants
-    const existingTeamParticipants = poll.participants.filter(p => 
-      teamMembers.some(tm => tm.email === p.email)
+    const existingTeamParticipants = poll.participants.filter((p) =>
+      teamMembers.some((tm) => tm.email === p.email),
     );
-    
+
     if (existingTeamParticipants.length > 0) continue;
 
     // Add 2-4 random team members as participants
     const numParticipants = randInt(3, 2);
-    const selectedMembers = faker.helpers.arrayElements(teamMembers, numParticipants);
-    
+    const selectedMembers = faker.helpers.arrayElements(
+      teamMembers,
+      numParticipants,
+    );
+
     for (const member of selectedMembers) {
       const participant = await prisma.participant.create({
         data: {
           pollId: poll.id,
           name: member.name,
           email: member.email,
-        }
+        },
       });
 
       // Add votes for this participant
@@ -125,7 +134,7 @@ async function addTeamParticipantsToPolls() {
     }
   }
 
-  console.info(`✓ Added team participation to polls`);
+  console.info("✓ Added team participation to polls");
 }
 
 async function createPollForUser({
@@ -220,56 +229,53 @@ async function seedTeamPolls() {
     return;
   }
 
-  // Create polls from different team members
-  const teamMemberIds = teamSpace.members.map((member) => member.userId);
-  
   // Create more realistic team polls
   const teamPollPromises = [
     // Owner creates strategic polls
     ...Array.from({ length: 8 }).map(() =>
-      createPollForUser({ 
-        userId: "team-owner", 
-        spaceId: teamSpace.id 
+      createPollForUser({
+        userId: "team-owner",
+        spaceId: teamSpace.id,
       }),
     ),
     // Admin creates operational polls
     ...Array.from({ length: 6 }).map(() =>
-      createPollForUser({ 
-        userId: "team-admin", 
-        spaceId: teamSpace.id 
+      createPollForUser({
+        userId: "team-admin",
+        spaceId: teamSpace.id,
       }),
     ),
     // Members create various polls
     ...Array.from({ length: 4 }).map(() =>
-      createPollForUser({ 
-        userId: "team-member-1", 
-        spaceId: teamSpace.id 
+      createPollForUser({
+        userId: "team-member-1",
+        spaceId: teamSpace.id,
       }),
     ),
     ...Array.from({ length: 3 }).map(() =>
-      createPollForUser({ 
-        userId: "team-member-2", 
-        spaceId: teamSpace.id 
+      createPollForUser({
+        userId: "team-member-2",
+        spaceId: teamSpace.id,
       }),
     ),
     ...Array.from({ length: 2 }).map(() =>
-      createPollForUser({ 
-        userId: "team-member-3", 
-        spaceId: teamSpace.id 
+      createPollForUser({
+        userId: "team-member-3",
+        spaceId: teamSpace.id,
       }),
     ),
   ];
 
   await Promise.all(teamPollPromises);
   console.info(`✓ Seeded ${teamPollPromises.length} team polls`);
-  
+
   // Add cross-team participation
   await addTeamParticipantsToPolls();
 }
 
 export async function seedPolls(userId: string) {
   console.info(`Seeding polls for user ${userId}...`);
-  
+
   // Handle team space separately
   if (userId === "team-owner") {
     await seedTeamPolls();
@@ -277,9 +283,16 @@ export async function seedPolls(userId: string) {
   }
 
   // Skip other team members as they're handled in team polling
-  const teamMemberIds = ["team-admin", "team-member-1", "team-member-2", "team-member-3"];
+  const teamMemberIds = [
+    "team-admin",
+    "team-member-1",
+    "team-member-2",
+    "team-member-3",
+  ];
   if (teamMemberIds.includes(userId)) {
-    console.info(`Skipping individual polls for team member ${userId} (included in team polls)`);
+    console.info(
+      `Skipping individual polls for team member ${userId} (included in team polls)`,
+    );
     return;
   }
 

@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -13,7 +13,7 @@
   --primary-foreground: var(--primary-light-foreground, var(--color-white));
 
   --border: var(--color-gray-200);
-  --border-muted: oklch(.871 .006 286.286 / .5);
+  --border-muted: oklch(0.871 0.006 286.286 / 0.5);
 
   --input: var(--color-white);
   --input-border: var(--color-gray-200);
@@ -27,7 +27,7 @@
   --background: var(--color-white);
   --foreground: var(--color-gray-700);
 
-  --accent: oklch(.552 .016 285.938 / .1);
+  --accent: oklch(0.552 0.016 285.938 / 0.1);
   --accent-border: var(--color-gray-300);
   --accent-foreground: var(--color-gray-800);
 
@@ -35,13 +35,13 @@
   --action-bar-border: var(--color-gray-700);
   --action-bar-foreground: var(--color-gray-100);
 
-  --muted: oklch(.92 .004 286.32 / .5);
+  --muted: oklch(0.92 0.004 286.32 / 0.5);
   --muted-foreground: var(--color-gray-600);
-  --muted-border: oklch(.871 .006 286.286);
+  --muted-border: oklch(0.871 0.006 286.286);
 
   --popover: var(--color-white);
   --popover-foreground: var(--color-gray-800);
-  --popover-accent: oklch(.552 .016 285.938 / .1);
+  --popover-accent: oklch(0.552 0.016 285.938 / 0.1);
   --popover-border: var(--color-gray-200);
 
   --card: var(--color-white);
@@ -71,8 +71,8 @@
   --sidebar-accent: var(--color-gray-800);
   --sidebar-accent-foreground: #f9fafb;
 
-  --border: oklch(.274 .006 286.033);
-  --border-muted: oklch(.274 .006 286.033 / .5);
+  --border: oklch(0.274 0.006 286.033);
+  --border-muted: oklch(0.274 0.006 286.033 / 0.5);
 
   --input: var(--color-gray-800);
   --input-border: var(--color-gray-700);
@@ -137,7 +137,7 @@
   --color-popover-border: var(--popover-border);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover-accent: var(--popover-accent);
-  
+
   --color-card: var(--card);
   --color-card-border: var(--card-border);
   --color-card-accent: var(--card-accent);
@@ -167,7 +167,7 @@
 
   --font-sans:
     var(--font-inter), ui-sans-serif, system-ui, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   --color-gray-50: var(--color-zinc-50);
   --color-gray-100: var(--color-zinc-100);
@@ -180,7 +180,6 @@
   --color-gray-800: var(--color-zinc-800);
   --color-gray-900: var(--color-zinc-900);
   --color-gray-950: var(--color-zinc-950);
-  
 }
 
 /*
