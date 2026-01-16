@@ -22,12 +22,10 @@ const formSchema = z.object({
   language: z.string(),
 });
 
-type FormData = z.infer<typeof formSchema>;
-
 export const LanguagePreference = () => {
   const { i18n } = useTranslation();
   const router = useRouter();
-  const form = useForm<FormData>({
+  const form = useForm({
     defaultValues: {
       language: i18n.language,
     },

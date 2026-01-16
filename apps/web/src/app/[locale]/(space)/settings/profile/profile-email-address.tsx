@@ -25,11 +25,9 @@ const emailChangeFormData = z.object({
   email: z.email(),
 });
 
-type EmailChangeFormData = z.infer<typeof emailChangeFormData>;
-
 export const ProfileEmailAddress = ({ email }: { email: string }) => {
   const requestEmailChange = trpc.user.requestEmailChange.useMutation();
-  const form = useForm<EmailChangeFormData>({
+  const form = useForm({
     defaultValues: {
       email,
     },

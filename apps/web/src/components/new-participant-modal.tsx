@@ -37,8 +37,6 @@ const optionalEmailSchema = z.object({
 
 const schema = z.union([requiredEmailSchema, optionalEmailSchema]);
 
-type NewParticipantFormData = z.infer<typeof schema>;
-
 interface NewParticipantModalProps {
   votes: { optionId: string; type: VoteType }[];
   onSubmit?: (data: { id: string }) => void;
@@ -96,7 +94,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const { timezone } = useTimezone();
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = user && !user.isGuest;
-  const form = useForm<NewParticipantFormData>({
+  const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       requireEmail: isEmailRequired,

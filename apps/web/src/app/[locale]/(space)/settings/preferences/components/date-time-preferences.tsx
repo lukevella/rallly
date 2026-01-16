@@ -30,13 +30,11 @@ const formSchema = z.object({
   weekStart: z.number().min(0).max(6),
 });
 
-type FormData = z.infer<typeof formSchema>;
-
 const DateTimePreferencesForm = () => {
   const { timeFormat, weekStart, timeZone } = useDayjs();
   const { updatePreferences } = usePreferences();
 
-  const form = useForm<FormData>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       timeFormat,

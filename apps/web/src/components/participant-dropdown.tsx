@@ -206,7 +206,7 @@ const ChangeNameModal = (props: {
       });
     },
   });
-  const form = useForm<ChangeNameForm>({
+  const form = useForm({
     defaultValues: {
       name: props.oldName,
     },
