@@ -16,7 +16,7 @@
     "@aws-sdk/credential-provider-node": "^3.501.0",
     "@react-email/components": "^0.0.36",
     "@react-email/render": "^1.0.6",
-    "@vercel/functions": "^2.0.0",
+    "@vercel/functions": "^3.3.6",
     "i18next": "^24.2.2",
     "i18next-icu": "^2.3.0",
     "i18next-resources-to-backend": "^1.2.1",

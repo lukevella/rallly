@@ -11,11 +11,12 @@
     "type-check": "tsc --pretty --noEmit"
   },
   "exports": {
-    ".": "./index.ts"
+    ".": "./src/client.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
+    "@vercel/functions": "^3.3.6",
     "dayjs": "^1.11.13",
     "pg": "^8.17.1"
   },
