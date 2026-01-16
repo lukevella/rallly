@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd ../../ && pnpm build:landing",
+  "buildCommand": "cd ../.. && pnpm build:landing",
   "rewrites": [
     { "source": "/poll/:path*", "destination": "https://app.rallly.co/invite/:path*" }
   ]
