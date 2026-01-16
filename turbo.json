@@ -11,14 +11,6 @@
       "inputs": ["src/**/*", "!tests/**/*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
-    "@rallly/web#build": {
-      "dependsOn": ["^build", "^db:generate"],
-      "outputs": [".next/**"]
-    },
-    "@rallly/landing#build": {
-      "dependsOn": ["^build", "^db:generate"],
-      "outputs": [".next/**"]
-    },
     "test": {
       "inputs": ["src/**/*", "tests/**/*"],
       "env": ["CI"],
