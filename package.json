@@ -27,8 +27,8 @@
     "i18n:scan": "turbo i18n:scan",
     "type-check": "turbo type-check",
     "release": "./scripts/create-release.sh",
-    "sherif": "npx sherif@latest",
-    "sherif:fix": "npx sherif@latest --fix"
+    "sherif": "pnpx sherif@latest",
+    "sherif:fix": "pnpx sherif@latest --fix"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
