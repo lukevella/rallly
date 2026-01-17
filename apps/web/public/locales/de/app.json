@@ -108,6 +108,7 @@
   "notificationsValue": "Benachrichtigungen: <b>{value}</b>",
   "notificationsOn": "Benachrichtigungen sind aktiv",
   "notificationsOff": "Benachrichtigungen sind deaktiviert",
+  "pollStatusOpen": "Offen",
   "reopenPoll": "Umfrage wiedereröffnen",
   "allDay": "Ganztägig",
   "editDetailsDescription": "Änder die Details deiner Veranstaltung.",
@@ -593,5 +594,14 @@
   "revokeConfirmation": "Bist du sicher, dass du {name} widerrufen möchtest? Dadurch wird der Schlüssel sofort deaktiviert.",
   "revoking": "Widerrufen...",
   "revokeFailed": "Fehler beim Widerrufen",
-  "learnMore": "Mehr erfahren"
+  "learnMore": "Mehr erfahren",
+  "openPollCount": "{count} offen",
+  "pollStatusClosed": "Geschlossen",
+  "pollStatusScheduled": "Geplant",
+  "pollStatusClosedDescription": "Derzeit können keine Stimmen abgegeben oder bearbeitet werden",
+  "closePoll": "Schließen",
+  "pollStatusCanceled": "Abgesagt",
+  "schedulePoll": "Planen",
+  "schedulePollDescription": "Wähle ein finales Datum für deinen Termin.",
+  "featureNameSchedule": "Umfrage planen"
 }
