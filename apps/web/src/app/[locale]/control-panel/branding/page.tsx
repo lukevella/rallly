@@ -91,12 +91,22 @@ export default async function BrandingPage() {
         {!hasWhiteLabelAddon ? (
           <Alert variant="primary">
             <GemIcon />
-            <AlertDescription>
-              <p>
+            <AlertDescription className="flex gap-2">
+              <p className="flex-1">
                 <Trans
                   i18nKey="customBrandingAlertDescription"
                   defaults="Custom branding is available to Enterprise license holders as a paid add-on."
                 />
+              </p>
+              <p>
+                <a
+                  href="https://support.rallly.co/self-hosting/white-labeling"
+                  target="_blank"
+                  className="underline"
+                  rel="noreferrer"
+                >
+                  <Trans i18nKey="learnMore" defaults="Learn more" />
+                </a>
               </p>
             </AlertDescription>
           </Alert>

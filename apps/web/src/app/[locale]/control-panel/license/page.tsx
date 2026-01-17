@@ -155,6 +155,16 @@ export default async function LicensePage() {
                       defaults="This add-on allows you to brand Rallly with your own logo and colors."
                     />
                   </p>
+                  <p className="mt-4 text-sm">
+                    <a
+                      href="https://support.rallly.co/self-hosting/white-labeling"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-link"
+                    >
+                      <Trans i18nKey="learnMore" defaults="Learn more" />
+                    </a>
+                  </p>
                 </CardContent>
               </Card>
             </div>
