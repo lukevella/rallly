@@ -604,5 +604,6 @@
   "createFailed": "Nem sikerült létrehozni",
   "revokeConfirmation": "Biztos vagy benne, hogy visszavonod: {name}? Ez azonnal letiltja a kulcsot.",
   "revoking": "Visszavonás...",
-  "revokeFailed": "Nem sikerült visszavonni"
+  "revokeFailed": "Nem sikerült visszavonni",
+  "learnMore": "Tudj meg többet"
 }
