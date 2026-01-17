@@ -604,5 +604,6 @@
   "createFailed": "Failed to create",
   "revokeConfirmation": "Are you sure you want to revoke {name}? This will immediately disable the key.",
   "revoking": "Revoking...",
-  "revokeFailed": "Failed to revoke"
+  "revokeFailed": "Failed to revoke",
+  "learnMore": "Learn more"
 }
