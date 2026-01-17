@@ -34,14 +34,14 @@ export function PollsTabbedView({ children }: { children: React.ReactNode }) {
   return (
     <Tabs value={tab} onValueChange={handleTabChange}>
       <TabsList>
-        <TabsTrigger value="live">
-          <Trans i18nKey="pollStatusOpen" defaults="Live" />
+        <TabsTrigger value="open">
+          <Trans i18nKey="pollStatusOpen" defaults="Open" />
         </TabsTrigger>
-        <TabsTrigger value="paused">
-          <Trans i18nKey="pollStatusPaused" defaults="Paused" />
+        <TabsTrigger value="closed">
+          <Trans i18nKey="pollStatusClosed" defaults="Closed" />
         </TabsTrigger>
-        <TabsTrigger value="finalized">
-          <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />
+        <TabsTrigger value="scheduled">
+          <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
         </TabsTrigger>
       </TabsList>
       <TabsContent

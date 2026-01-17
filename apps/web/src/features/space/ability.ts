@@ -4,7 +4,7 @@ import type { PrismaQuery } from "@casl/prisma";
 import { createPrismaAbility } from "@casl/prisma";
 import type { SpaceTier } from "./schema";
 
-type Action = "invite" | "finalize" | "duplicate" | "update";
+type Action = "invite" | "schedule" | "duplicate" | "update";
 type Subject = "Member" | "Poll" | "AdvancedPollSettings";
 
 export type SpaceAbilityContext = {
@@ -17,7 +17,7 @@ export function defineAbilityForSpace(context?: SpaceAbilityContext) {
 
   if (context?.tier === "pro") {
     can("invite", "Member");
-    can(["finalize", "duplicate"], "Poll");
+    can(["schedule", "duplicate"], "Poll");
     can("update", "AdvancedPollSettings");
   }
 

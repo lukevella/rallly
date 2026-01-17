@@ -32,7 +32,7 @@ async function loadData() {
   const [space, user] = await Promise.all([requireSpace(), requireUser()]);
 
   const [
-    livePollCount,
+    openPollCount,
     upcomingEventCount,
     { total: memberCount },
     seatCount,
@@ -41,7 +41,7 @@ async function loadData() {
     prisma.poll.count({
       where: {
         spaceId: space.id,
-        status: "live",
+        status: "open",
         deleted: false,
       },
     }),
@@ -55,7 +55,7 @@ async function loadData() {
   const canManageBilling = ability.can("manage", "Billing");
 
   return {
-    livePollCount,
+    openPollCount,
     upcomingEventCount,
     memberCount,
     seatCount,
@@ -66,7 +66,7 @@ async function loadData() {
 
 export default async function Page() {
   const {
-    livePollCount,
+    openPollCount,
     upcomingEventCount,
     memberCount,
     seatCount,
@@ -115,9 +115,9 @@ export default async function Page() {
                 </TileTitle>
                 <TileDescription>
                   <Trans
-                    i18nKey="livePollCount"
-                    defaults="{count} live"
-                    values={{ count: livePollCount }}
+                    i18nKey="openPollCount"
+                    defaults="{count} open"
+                    values={{ count: openPollCount }}
                   />
                 </TileDescription>
               </Link>

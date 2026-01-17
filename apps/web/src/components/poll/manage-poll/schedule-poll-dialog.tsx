@@ -38,7 +38,7 @@ const formSchema = z.object({
   notify: z.enum(["none", "all", "attendees"]),
 });
 
-type FinalizeFormData = z.infer<typeof formSchema>;
+type ScheduleFormData = z.infer<typeof formSchema>;
 
 type OptionScore = {
   yes: string[];
@@ -77,12 +77,12 @@ function DateIcon({ start }: { start: Date }) {
   return <DateIconInner dow={d.format("ddd")} day={d.format("D")} />;
 }
 
-export const FinalizePollForm = ({
+export const SchedulePollForm = ({
   name,
   onSubmit,
 }: {
   name: string;
-  onSubmit?: (data: FinalizeFormData) => void;
+  onSubmit?: (data: ScheduleFormData) => void;
 }) => {
   const poll = usePoll();
 
@@ -212,7 +212,7 @@ export const FinalizePollForm = ({
   );
 };
 
-export function FinalizePollDialog(props: DialogProps) {
+export function SchedulePollDialog(props: DialogProps) {
   const poll = usePoll();
   const scheduleEvent = trpc.polls.book.useMutation();
   return (
@@ -220,17 +220,17 @@ export function FinalizePollDialog(props: DialogProps) {
       <DialogContent size="2xl">
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey="finalize" />
+            <Trans i18nKey="schedulePoll" defaults="Schedule" />
           </DialogTitle>
           <DialogDescription>
             <Trans
-              i18nKey="finalizeDescription"
+              i18nKey="schedulePollDescription"
               defaults="Select a final date for your event."
             />
           </DialogDescription>
         </DialogHeader>
-        <FinalizePollForm
-          name="finalize-form"
+        <SchedulePollForm
+          name="schedule-form"
           onSubmit={(data) => {
             scheduleEvent.mutate({
               pollId: poll.id,
@@ -249,10 +249,10 @@ export function FinalizePollDialog(props: DialogProps) {
           <Button
             loading={scheduleEvent.isPending}
             type="submit"
-            form="finalize-form"
+            form="schedule-form"
             variant="primary"
           >
-            <Trans i18nKey="finalize" />
+            <Trans i18nKey="schedulePoll" defaults="Schedule" />
           </Button>
         </DialogFooter>
       </DialogContent>

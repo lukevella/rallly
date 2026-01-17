@@ -148,7 +148,7 @@ export const deletePollSuccessResponseSchema = z
   .openapi("DeletePollResponse");
 
 export const pollStatusSchema = z
-  .enum(["live", "paused", "finalized"])
+  .enum(["open", "closed", "scheduled", "canceled"])
   .openapi("PollStatus");
 
 export const pollOptionSchema = z

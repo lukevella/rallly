@@ -3,7 +3,7 @@ import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { Card, CardContent, CardDescription } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import dayjs from "dayjs";
-import { DotIcon, MapPinIcon, PauseIcon } from "lucide-react";
+import { CircleStopIcon, DotIcon, MapPinIcon } from "lucide-react";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import VoteIcon from "@/components/poll/vote-icon";
 import { PollStatusBadge } from "@/components/poll-status";
@@ -69,7 +69,9 @@ export function EventCard() {
                 </span>
               </CardDescription>
             </div>
-            <PollStatusBadge status={poll.status} />
+            {poll.status !== "open" ? (
+              <PollStatusBadge status={poll.status} />
+            ) : null}
           </div>
           {poll.description ? (
             <p className="min-w-0 whitespace-pre-wrap text-pretty text-sm leading-relaxed">
@@ -89,16 +91,16 @@ export function EventCard() {
           </div>
         </CardContent>
       </Card>
-      {poll.status === "paused" ? (
+      {poll.status === "closed" ? (
         <Alert>
-          <PauseIcon />
+          <CircleStopIcon />
           <AlertTitle>
-            <Trans i18nKey="pollStatusPaused" />
+            <Trans i18nKey="pollStatusClosed" defaults="Closed" />
           </AlertTitle>
           <AlertDescription>
             <p>
               <Trans
-                i18nKey="pollStatusPausedDescription"
+                i18nKey="pollStatusClosedDescription"
                 defaults="Votes cannot be submitted or edited at this time"
               />
             </p>

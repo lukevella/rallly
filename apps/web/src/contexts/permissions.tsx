@@ -32,9 +32,9 @@ export const usePermissions = () => {
   return {
     isUser: (userId: string) =>
       userId === user?.id || userId === context.userId,
-    canAddNewParticipant: poll.status === "live",
+    canAddNewParticipant: poll.status === "open",
     canEditParticipant: (participantId: string) => {
-      if (poll.status !== "live") {
+      if (poll.status !== "open") {
         return false;
       }
 
