@@ -599,7 +599,6 @@
   "pollStatusClosed": "Closed",
   "pollStatusScheduled": "Scheduled",
   "pollStatusClosedDescription": "Votes cannot be submitted or edited at this time",
-  "i18nKey": "defaults",
   "closePoll": "Close",
   "pollStatusCanceled": "Canceled",
   "schedulePoll": "Schedule",
