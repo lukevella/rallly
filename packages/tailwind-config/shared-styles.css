@@ -35,7 +35,7 @@
   --action-bar-border: var(--color-gray-700);
   --action-bar-foreground: var(--color-gray-100);
 
-  --muted: var(--color-gray-50);
+  --muted: var(--color-gray-100);
   --muted-foreground: var(--color-gray-600);
   --muted-border: var(--color-gray-200);
 
