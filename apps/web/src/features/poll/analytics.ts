@@ -32,10 +32,9 @@ export type PollEvent =
   | PollUpdateOptionsEvent
   | PollUpdateSettingsEvent
   | PollDeleteEvent
-  | PollFinalizeEvent
+  | PollScheduleEvent
   | PollReopenEvent
-  | PollPauseEvent
-  | PollResumeEvent
+  | PollCloseEvent
   | PollWatchEvent
   | PollUnwatchEvent
   | PollResponseSubmitEvent
@@ -99,8 +98,8 @@ export interface PollDeleteEvent extends BaseEventData {
   };
 }
 
-export interface PollFinalizeEvent extends BaseEventData {
-  type: "poll_finalize";
+export interface PollScheduleEvent extends BaseEventData {
+  type: "poll_schedule";
   properties: {
     participantCount: number;
     attendeeCount: number;
@@ -112,15 +111,8 @@ export interface PollReopenEvent extends BaseEventData {
   type: "poll_reopen";
 }
 
-export interface PollPauseEvent extends BaseEventData {
-  type: "poll_pause";
-  properties?: {
-    isGuest: boolean;
-  };
-}
-
-export interface PollResumeEvent extends BaseEventData {
-  type: "poll_resume";
+export interface PollCloseEvent extends BaseEventData {
+  type: "poll_close";
   properties?: {
     isGuest: boolean;
   };

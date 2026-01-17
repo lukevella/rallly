@@ -11,41 +11,21 @@ export const PollStatusLabel = ({
   status: PollStatus;
   className?: string;
 }) => {
-  switch (status) {
-    case "live":
-      return (
-        <span
-          className={cn("inline-flex items-center gap-x-2 text-sm", className)}
-        >
-          <PollStatusIcon status={status} />
-          <Trans i18nKey="pollStatusOpen" defaults="Live" />
-        </span>
-      );
-    case "paused":
-      return (
-        <span
-          className={cn(
-            "inline-flex items-center gap-x-2 rounded-full text-sm",
-            className,
-          )}
-        >
-          <PollStatusIcon status={status} />
-          <Trans i18nKey="pollStatusPaused" defaults="Paused" />
-        </span>
-      );
-    case "finalized":
-      return (
-        <span
-          className={cn(
-            "inline-flex items-center gap-x-2 rounded-full text-sm",
-            className,
-          )}
-        >
-          <PollStatusIcon status={status} />
-          <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />
-        </span>
-      );
-  }
+  const labels = {
+    open: { i18nKey: "pollStatusOpen", defaults: "Open" },
+    closed: { i18nKey: "pollStatusClosed", defaults: "Closed" },
+    scheduled: { i18nKey: "pollStatusScheduled", defaults: "Scheduled" },
+    canceled: { i18nKey: "pollStatusCanceled", defaults: "Canceled" },
+  } as const;
+
+  const { i18nKey, defaults } = labels[status];
+
+  return (
+    <span className={cn("inline-flex items-center gap-x-2 text-sm", className)}>
+      <PollStatusIcon status={status} />
+      <Trans i18nKey={i18nKey} defaults={defaults} />
+    </span>
+  );
 };
 
 export const PollStatusBadge = ({ status }: { status: PollStatus }) => {

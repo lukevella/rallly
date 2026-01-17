@@ -169,7 +169,12 @@ async function createPollForUser({
           id: spaceId,
         },
       },
-      status: faker.helpers.arrayElement(["live", "paused", "finalized"]),
+      status: faker.helpers.arrayElement([
+        "open",
+        "closed",
+        "scheduled",
+        "canceled",
+      ]),
       timeZone: duration !== 0 ? "Europe/London" : undefined,
       options: {
         create: Array.from({ length: numberOfOptions }).map(() => {

@@ -309,13 +309,13 @@ export function PayWallDialog({
                       icon={<CalendarCheckIcon />}
                       title={
                         <Trans
-                          i18nKey="featureNameFinalize"
-                          defaults="Finalize Poll"
+                          i18nKey="featureNameSchedule"
+                          defaults="Schedule Poll"
                         />
                       }
                       description={
                         <Trans
-                          i18nKey="finalizePollDescription"
+                          i18nKey="schedulePollDescription"
                           defaults="Lock in the final meeting time and notify participants"
                         />
                       }

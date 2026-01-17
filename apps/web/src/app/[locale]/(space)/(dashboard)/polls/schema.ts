@@ -12,8 +12,8 @@ export const querySchema = z
 
 export const statusSchema = pollStatusSchema
   .optional()
-  .catch("live")
-  .default("live");
+  .catch("open")
+  .default("open");
 
 export const pageSizeSchema = z.coerce
   .number()

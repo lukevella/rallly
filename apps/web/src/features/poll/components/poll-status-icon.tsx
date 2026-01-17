@@ -6,7 +6,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@rallly/ui/tooltip";
-import { CircleCheckIcon, CirclePauseIcon, CirclePlayIcon } from "lucide-react";
+import {
+  CircleCheckIcon,
+  CircleIcon,
+  CircleStopIcon,
+  CircleXIcon,
+} from "lucide-react";
 
 import { Trans } from "@/components/trans";
 
@@ -23,23 +28,27 @@ export function PollStatusIcon({
 }: PollStatusIconProps) {
   const icon = (() => {
     switch (status) {
-      case "live":
-        return <CirclePlayIcon className="size-4 text-amber-500" />;
-      case "paused":
-        return <CirclePauseIcon className="size-4 text-gray-500" />;
-      case "finalized":
+      case "open":
+        return <CircleIcon className="size-4 text-gray-500" />;
+      case "closed":
+        return <CircleStopIcon className="size-4 text-gray-500" />;
+      case "scheduled":
         return <CircleCheckIcon className="size-4 text-green-500" />;
+      case "canceled":
+        return <CircleXIcon className="size-4 text-rose-500" />;
     }
   })();
 
   const label = (() => {
     switch (status) {
-      case "live":
-        return <Trans i18nKey="pollStatusOpen" defaults="Live" />;
-      case "paused":
-        return <Trans i18nKey="pollStatusPaused" defaults="Paused" />;
-      case "finalized":
-        return <Trans i18nKey="pollStatusFinalized" defaults="Finalized" />;
+      case "open":
+        return <Trans i18nKey="pollStatusOpen" defaults="Open" />;
+      case "closed":
+        return <Trans i18nKey="pollStatusClosed" defaults="Closed" />;
+      case "scheduled":
+        return <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />;
+      case "canceled":
+        return <Trans i18nKey="pollStatusCanceled" defaults="Canceled" />;
     }
   })();
 

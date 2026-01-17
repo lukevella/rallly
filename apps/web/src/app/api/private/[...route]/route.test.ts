@@ -106,7 +106,7 @@ describe("Private API - /polls", () => {
       description: null,
       location: null,
       timeZone: null,
-      status: "live",
+      status: "open",
       createdAt: new Date("2025-01-10T12:00:00Z"),
       user: {
         name: "Test User",
@@ -569,7 +569,7 @@ describe("Private API - /polls", () => {
       description: "Weekly team meeting",
       location: "Zoom",
       timeZone: "Europe/London",
-      status: "live",
+      status: "open",
       createdAt: new Date("2025-01-10T12:00:00Z"),
       user: {
         name: "John Doe",
@@ -606,7 +606,7 @@ describe("Private API - /polls", () => {
       expect(json.data.description).toBe("Weekly team meeting");
       expect(json.data.location).toBe("Zoom");
       expect(json.data.timezone).toBe("Europe/London");
-      expect(json.data.status).toBe("live");
+      expect(json.data.status).toBe("open");
       expect(json.data.createdAt).toBe("2025-01-10T12:00:00.000Z");
       expect(json.data.user).toEqual({
         name: "John Doe",

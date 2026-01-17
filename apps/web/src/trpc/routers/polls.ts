@@ -49,7 +49,7 @@ export const polls = router({
   infiniteChronological: privateProcedure
     .input(
       z.object({
-        status: z.enum(["live", "paused", "finalized"]).optional(),
+        status: z.enum(["open", "closed", "scheduled", "canceled"]).optional(),
         search: z.string().optional(),
         member: z.string().optional(),
         cursor: z.number().optional().default(1),
@@ -103,7 +103,7 @@ export const polls = router({
   infiniteList: privateProcedure
     .input(
       z.object({
-        status: z.enum(["all", "live", "paused", "finalized"]),
+        status: z.enum(["all", "open", "closed", "scheduled", "canceled"]),
         cursor: z.string().optional(),
         limit: z.number(),
       }),
@@ -947,7 +947,7 @@ export const polls = router({
             id: poll.id,
           },
           data: {
-            status: "finalized",
+            status: "scheduled",
             scheduledEventId: event.id,
           },
         });
@@ -1064,7 +1064,7 @@ export const polls = router({
         }
 
         ctx.posthog?.capture({
-          event: "poll_finalize",
+          event: "poll_schedule",
           distinctId: ctx.user.id,
           properties: {
             attendee_count: attendees.length,
@@ -1101,7 +1101,7 @@ export const polls = router({
             id: input.pollId,
           },
           data: {
-            status: "live",
+            status: "open",
           },
         });
 
@@ -1124,7 +1124,7 @@ export const polls = router({
 
       revalidatePath("/", "layout");
     }),
-  pause: possiblyPublicProcedure
+  close: possiblyPublicProcedure
     .input(
       z.object({
         pollId: z.string(),
@@ -1137,7 +1137,7 @@ export const polls = router({
       if (!hasAccess) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "You are not allowed to pause this poll",
+          message: "You are not allowed to close this poll",
         });
       }
 
@@ -1146,12 +1146,12 @@ export const polls = router({
           id: input.pollId,
         },
         data: {
-          status: "paused",
+          status: "closed",
         },
       });
 
       ctx.posthog?.capture({
-        event: "poll_pause",
+        event: "poll_close",
         distinctId: ctx.user.id,
         groups: {
           poll: input.pollId,
@@ -1229,40 +1229,5 @@ export const polls = router({
       });
 
       return newPoll;
-    }),
-  resume: possiblyPublicProcedure
-    .input(
-      z.object({
-        pollId: z.string(),
-      }),
-    )
-    .use(requireUserMiddleware)
-    .mutation(async ({ input, ctx }) => {
-      const hasAccess = await hasPollAdminAccess(input.pollId, ctx.user.id);
-
-      if (!hasAccess) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You are not allowed to resume this poll",
-        });
-      }
-
-      await prisma.poll.update({
-        where: {
-          id: input.pollId,
-        },
-        data: {
-          status: "live",
-        },
-      });
-
-      // Track poll resume analytics
-      ctx.posthog?.capture({
-        event: "poll_resume",
-        distinctId: ctx.user.id,
-        groups: {
-          poll: input.pollId,
-        },
-      });
     }),
 });

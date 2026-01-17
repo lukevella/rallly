@@ -7,9 +7,10 @@ enum ParticipantVisibility {
 }
 
 enum PollStatus {
-  live
-  paused
-  finalized
+  open
+  closed
+  scheduled
+  canceled
 
   @@map("poll_status")
 }
@@ -25,7 +26,7 @@ model Poll {
   userId                  String?    @map("user_id")
   guestId                 String?    @map("guest_id")
   timeZone                String?    @map("time_zone")
-  status                  PollStatus @default(live)
+  status                  PollStatus @default(open)
   deleted                 Boolean    @default(false)
   deletedAt               DateTime?  @map("deleted_at")
   touchedAt               DateTime   @default(now()) @map("touched_at") // @deprecated

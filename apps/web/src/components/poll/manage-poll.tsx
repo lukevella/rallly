@@ -13,12 +13,11 @@ import { Icon } from "@rallly/ui/icon";
 import {
   CalendarCheck2Icon,
   ChevronDownIcon,
+  CircleStopIcon,
   CopyIcon,
   DownloadIcon,
-  PauseIcon,
   PencilIcon,
   PlayIcon,
-  RotateCcwIcon,
   Settings2Icon,
   SettingsIcon,
   TableIcon,
@@ -28,7 +27,7 @@ import Link from "next/link";
 import * as React from "react";
 
 import { DuplicateDialog } from "@/app/[locale]/(optional-space)/poll/[urlId]/duplicate-dialog";
-import { FinalizePollDialog } from "@/components/poll/manage-poll/finalize-poll-dialog";
+import { SchedulePollDialog } from "@/components/poll/manage-poll/schedule-poll-dialog";
 import { ProBadge } from "@/components/pro-badge";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
@@ -38,37 +37,37 @@ import { trpc } from "@/trpc/client";
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
 
-function PauseResumeToggle() {
+function OpenCloseToggle() {
   const poll = usePoll();
   const queryClient = trpc.useUtils();
-  const resume = trpc.polls.resume.useMutation({
+  const openPoll = trpc.polls.reopen.useMutation({
     onSuccess: (_data, vars) => {
       queryClient.polls.get.setData({ urlId: vars.pollId }, (oldData) => {
         if (!oldData) return oldData;
         return {
           ...oldData,
-          status: "live",
+          status: "open",
         };
       });
     },
   });
-  const pause = trpc.polls.pause.useMutation({
+  const closePoll = trpc.polls.close.useMutation({
     onSuccess: (_data, vars) => {
       queryClient.polls.get.setData({ urlId: vars.pollId }, (oldData) => {
         if (!oldData) return oldData;
         return {
           ...oldData,
-          status: "paused",
+          status: "closed",
         };
       });
     },
   });
 
-  if (poll.status === "paused") {
+  if (poll.status === "closed") {
     return (
       <DropdownMenuItem
         onClick={() => {
-          resume.mutate(
+          openPoll.mutate(
             { pollId: poll.id },
             {
               onSuccess: () => {
@@ -76,7 +75,7 @@ function PauseResumeToggle() {
                   if (!oldData) return oldData;
                   return {
                     ...oldData,
-                    status: "live",
+                    status: "open",
                   };
                 });
               },
@@ -87,14 +86,14 @@ function PauseResumeToggle() {
         <Icon>
           <PlayIcon />
         </Icon>
-        <Trans i18nKey="resumePoll" />
+        <Trans i18nKey="reopenPoll" defaults="Reopen" />
       </DropdownMenuItem>
     );
   } else {
     return (
       <DropdownMenuItem
         onClick={() => {
-          pause.mutate(
+          closePoll.mutate(
             { pollId: poll.id },
             {
               onSuccess: () => {
@@ -102,7 +101,7 @@ function PauseResumeToggle() {
                   if (!oldData) return oldData;
                   return {
                     ...oldData,
-                    status: "paused",
+                    status: "closed",
                   };
                 });
               },
@@ -111,9 +110,9 @@ function PauseResumeToggle() {
         }}
       >
         <Icon>
-          <PauseIcon />
+          <CircleStopIcon />
         </Icon>
-        <Trans i18nKey="pausePoll" />
+        <Trans i18nKey="closePoll" defaults="Close" />
       </DropdownMenuItem>
     );
   }
@@ -123,25 +122,11 @@ const ManagePoll: React.FunctionComponent<{
   disabled?: boolean;
 }> = ({ disabled }) => {
   const poll = usePoll();
-  const queryClient = trpc.useUtils();
   const space = useSpace();
-  const reopen = trpc.polls.reopen.useMutation({
-    onMutate: () => {
-      queryClient.polls.get.setData({ urlId: poll.id }, (oldPoll) => {
-        if (!oldPoll) {
-          return;
-        }
-        return {
-          ...oldPoll,
-          event: null,
-        };
-      });
-    },
-  });
 
   const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
   const duplicateDialog = useDialog();
-  const finalizeDialog = useDialog();
+  const scheduleDialog = useDialog();
   const { showPayWall } = useBilling();
   const posthog = usePostHog();
   const { exportToCsv } = useCsvExporter();
@@ -185,18 +170,7 @@ const ManagePoll: React.FunctionComponent<{
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          {poll.status === "finalized" ? (
-            <DropdownMenuItem
-              onClick={() => {
-                reopen.mutate({ pollId: poll.id });
-              }}
-            >
-              <Icon>
-                <RotateCcwIcon />
-              </Icon>
-              <Trans i18nKey="reopenPoll" defaults="Reopen" />
-            </DropdownMenuItem>
-          ) : (
+          {poll.status === "scheduled" || poll.status === "canceled" ? null : (
             <>
               <DropdownMenuItem
                 disabled={!!poll.event}
@@ -206,20 +180,20 @@ const ManagePoll: React.FunctionComponent<{
                     posthog?.capture("trigger paywall", {
                       poll_id: poll.id,
                       from: "manage-poll",
-                      action: "finalize",
+                      action: "schedule",
                     });
                   } else {
-                    finalizeDialog.trigger();
+                    scheduleDialog.trigger();
                   }
                 }}
               >
                 <Icon>
                   <CalendarCheck2Icon />
                 </Icon>
-                <Trans i18nKey="finishPoll" defaults="Finalize" />
+                <Trans i18nKey="schedulePoll" defaults="Schedule" />
                 {space.data.tier !== "pro" ? <ProBadge /> : null}
               </DropdownMenuItem>
-              <PauseResumeToggle />
+              <OpenCloseToggle />
             </>
           )}
           <DropdownMenuSeparator />
@@ -269,7 +243,7 @@ const ManagePoll: React.FunctionComponent<{
         pollTitle={poll.title}
         {...duplicateDialog.dialogProps}
       />
-      <FinalizePollDialog {...finalizeDialog.dialogProps} />
+      <SchedulePollDialog {...scheduleDialog.dialogProps} />
     </>
   );
 };
