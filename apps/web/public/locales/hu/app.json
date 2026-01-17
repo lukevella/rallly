@@ -108,6 +108,7 @@
   "notificationsValue": "Értesítések: <b>{value}</b>",
   "notificationsOn": "Be",
   "notificationsOff": "Ki",
+  "pollStatusOpen": "Aktív",
   "reopenPoll": "Szavazás újranyitása",
   "allDay": "Egész nap",
   "editDetailsDescription": "Változtasd meg az eseményed részleteit.",
@@ -593,5 +594,14 @@
   "revokeConfirmation": "Biztos vagy benne, hogy visszavonod: {name}? Ez azonnal letiltja a kulcsot.",
   "revoking": "Visszavonás...",
   "revokeFailed": "Nem sikerült visszavonni",
-  "learnMore": "Tudj meg többet"
+  "learnMore": "Tudj meg többet",
+  "openPollCount": "{count} aktív",
+  "pollStatusClosed": "Szüneteltetve",
+  "pollStatusScheduled": "Véglegesített",
+  "pollStatusClosedDescription": "Jelenleg nem lehet szavazni vagy korábbi választ módosítani",
+  "closePoll": "Szüneteltetés",
+  "pollStatusCanceled": "Lemondva",
+  "schedulePoll": "Véglegesítés",
+  "schedulePollDescription": "Válassz egy végleges dátumot az eseményedhez.",
+  "featureNameSchedule": "Szavazás véglegesítése"
 }
