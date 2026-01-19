@@ -1,9 +1,12 @@
 import { stripe } from "@rallly/billing";
 import type { LicenseType } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import type { LicenseCheckoutMetadata } from "@/features/licensing/schema";
+
+const logger = createLogger("api/stripe/buy-license");
 
 const productSchema = z.enum(["plus", "organization"]);
 
@@ -33,24 +36,23 @@ export async function GET(request: NextRequest) {
   });
 
   if (!prices.data || prices.data.length === 0) {
-    // Log this error on your server, as it might indicate a misconfiguration
-    console.error(`No price found for lookup_key: ${product}`);
+    logger.error({ product }, "No price found for lookup_key");
     return NextResponse.json(
       { error: "Pricing information not found for this product." },
       { status: 500 },
     ); // Or 404 if you prefer
   }
   if (prices.data.length > 1) {
-    // This might indicate a configuration issue (e.g., duplicate lookup keys)
-    console.warn(
-      `Multiple prices found for lookup_key: ${product}. Using the first one.`,
+    logger.warn(
+      { product },
+      "Multiple prices found for lookup_key, using the first one",
     );
   }
 
   const price = prices.data[0];
 
   if (!price.id) {
-    console.error(`Price object for ${product} is missing an ID.`);
+    logger.error({ product }, "Price object is missing an ID");
     return NextResponse.json(
       { error: "Price configuration error." },
       { status: 500 },
@@ -92,7 +94,7 @@ export async function GET(request: NextRequest) {
       { status: 500 },
     );
   } catch (error) {
-    console.error("Stripe API error:", error);
+    logger.error({ error }, "Stripe API error");
     let errorMessage =
       "An unexpected error occurred with our payment processor.";
 

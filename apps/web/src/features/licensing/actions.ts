@@ -1,12 +1,15 @@
 "use server";
 
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { revalidateTag } from "next/cache";
 import { INSTANCE_LICENSE_TAG } from "@/features/licensing/constants";
 import { validateLicenseKeyInputSchema } from "@/features/licensing/schema";
 import { AppError } from "@/lib/errors";
 import { adminActionClient } from "@/lib/safe-action/server";
 import { licenseManager } from "./server";
+
+const logger = createLogger("licensing/actions");
 
 export const removeInstanceLicenseAction = adminActionClient
   .metadata({
@@ -80,8 +83,8 @@ export const refreshInstanceLicenseAction = adminActionClient
         success: true,
         message: "License refreshed successfully",
       };
-    } catch (_error) {
-      console.error(_error);
+    } catch (error) {
+      logger.error({ error }, "Failed to refresh license");
       throw new AppError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to validate license",

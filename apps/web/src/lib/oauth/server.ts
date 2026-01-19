@@ -1,6 +1,7 @@
 import "server-only";
 
 import { zValidator } from "@hono/zod-validator";
+import { createLogger } from "@rallly/logger";
 import { generateCodeVerifier, generateState } from "arctic";
 import { Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
@@ -8,6 +9,8 @@ import { handle } from "hono/vercel";
 import { z } from "zod";
 import { validateRedirectUrl } from "@/utils/redirect";
 import type { CreateOAuthOptions } from "./types";
+
+const logger = createLogger("oauth");
 
 export function OAuthIntegration<T extends string>(
   options: CreateOAuthOptions<T>,
@@ -90,7 +93,7 @@ export function OAuthIntegration<T extends string>(
 
       return c.redirect(authorizationUrl.toString());
     } catch (error) {
-      console.error("OAuth auth initiation failed:", error);
+      logger.error({ error }, "OAuth auth initiation failed");
 
       return c.json({ error: "Failed to initiate OAuth connection" }, 404);
     }
@@ -152,7 +155,7 @@ export function OAuthIntegration<T extends string>(
 
       return c.redirect(successUrl.toString());
     } catch (error) {
-      console.error("OAuth connection failed:", error);
+      logger.error({ error }, "OAuth connection failed");
 
       const redirectTo = getCookie(c, REDIRECT_TO) || "/";
       const errorUrl = new URL(redirectTo, c.req.url);

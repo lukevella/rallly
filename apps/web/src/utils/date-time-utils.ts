@@ -1,3 +1,4 @@
+import { createLogger } from "@rallly/logger";
 import dayjs from "dayjs";
 
 import { supportedTimeZones } from "@/utils/supported-time-zones";
@@ -6,6 +7,8 @@ import type {
   DateTimeOption,
   TimeOption,
 } from "../components/forms/poll-options-form";
+
+const logger = createLogger("date-time-utils");
 
 export function parseIanaTimezone(timezone: string): {
   region: string;
@@ -27,7 +30,7 @@ function getTimeZoneOffset(timeZone: string) {
   try {
     return dayjs().tz(timeZone).utcOffset();
   } catch {
-    console.error(`Failed to resolve timezone ${timeZone}`);
+    logger.error({ timeZone }, "Failed to resolve timezone");
     return 0;
   }
 }
@@ -77,7 +80,7 @@ export function normalizeTimeZone(timeZone: string) {
   if (!tz) {
     // In theory this shouldn't happen
     tz = "America/New_York";
-    console.error(`Unable to resolve timezone ${timeZone}`);
+    logger.error({ timeZone }, "Unable to resolve timezone");
   }
 
   return tz;

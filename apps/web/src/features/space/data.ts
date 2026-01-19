@@ -4,8 +4,12 @@ import type {
   SpaceTier as DBSpaceTier,
 } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { cache } from "react";
 import { requireSpace, requireUser } from "@/auth/data";
+
+const logger = createLogger("space/data");
+
 import type { MemberDTO } from "@/features/space/member/types";
 import type { SpaceDTO } from "@/features/space/types";
 import { fromDBRole } from "@/features/space/utils";
@@ -91,8 +95,9 @@ export const loadSpaces = cache(async () => {
       const role = space.members[0]?.role;
 
       if (!role) {
-        console.warn(
-          `User ${user.id} does not have access to space ${space.id}`,
+        logger.warn(
+          { userId: user.id, spaceId: space.id },
+          "User does not have access to space",
         );
         return null;
       }

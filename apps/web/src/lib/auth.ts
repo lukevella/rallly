@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { waitUntil } from "@vercel/functions";
 import type { BetterAuthPlugin } from "better-auth";
@@ -32,11 +33,13 @@ import { getValueByPath } from "@/utils/get-value-by-path";
 
 const baseURL = absoluteUrl("/api/better-auth");
 
+const logger = createLogger("auth");
+
 const plugins: BetterAuthPlugin[] = [];
 
 if (env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET && env.OIDC_DISCOVERY_URL) {
   if (env.OIDC_ISSUER_URL) {
-    console.info(
+    logger.info(
       "OIDC_ISSUER_URL is no longer used. You can remove it from your environment variables.",
     );
   }
@@ -369,7 +372,7 @@ export const getSession = cache(async () => {
       };
     }
   } catch (e) {
-    console.error("FAILED TO GET SESSION", e);
+    logger.error({ error: e }, "Failed to get session");
     return null;
   }
 
@@ -384,7 +387,7 @@ export const getSession = cache(async () => {
       };
     }
   } catch (e) {
-    console.error("FAILED TO GET LEGACY SESSION", e);
+    logger.error({ error: e }, "Failed to get legacy session");
     return null;
   }
 

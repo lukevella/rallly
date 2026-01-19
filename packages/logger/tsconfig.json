@@ -1,0 +1,7 @@
+{
+  "extends": "@rallly/tsconfig/node.json",
+  "compilerOptions": {
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}
