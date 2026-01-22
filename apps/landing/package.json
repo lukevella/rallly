@@ -11,8 +11,8 @@
     "i18n:scan": "i18next-scanner --config i18next-scanner.config.js"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.2.0",
-    "@prisma/client": "^7.2.0",
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
     "@rallly/billing": "workspace:*",
     "@rallly/database": "workspace:*",
     "@rallly/languages": "workspace:*",
