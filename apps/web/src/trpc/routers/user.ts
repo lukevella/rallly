@@ -95,7 +95,7 @@ export const user = router({
     .mutation(async ({ input, ctx }) => {
       const currentUser = await prisma.user.findUnique({
         where: { id: ctx.user.id },
-        select: { email: true, id: true },
+        select: { email: true, id: true, locale: true },
       });
 
       if (!currentUser) {
@@ -128,7 +128,7 @@ export const user = router({
         },
       );
 
-      const emailClient = await getEmailClient();
+      const emailClient = await getEmailClient(currentUser.locale ?? undefined);
 
       emailClient.sendTemplate("ChangeEmailRequest", {
         to: input.email,
