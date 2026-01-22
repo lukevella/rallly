@@ -1185,6 +1185,7 @@ export const polls = router({
           timeZone: true,
           hideParticipants: true,
           hideScores: true,
+          requireParticipantEmail: true,
           disableComments: true,
           spaceId: true,
           options: {
@@ -1211,6 +1212,7 @@ export const polls = router({
           timeZone: poll.timeZone,
           location: poll.location,
           spaceId: poll.spaceId,
+          requireParticipantEmail: poll.requireParticipantEmail,
           description: poll.description,
           hideParticipants: poll.hideParticipants,
           hideScores: poll.hideScores,
