@@ -1,10 +1,13 @@
 import type { SpaceMemberRole as PrismaSpaceMemberRole } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { getSpaceSubscription } from "@/features/billing/data";
 import { cached_getInstanceLicense } from "@/features/licensing/data";
 import type { LicenseType } from "@/features/licensing/schema";
 import type { MemberRole } from "@/features/space/schema";
 import { AppError } from "@/lib/errors";
 import { isSelfHosted } from "@/utils/constants";
+
+const logger = createLogger("space/utils");
 
 export const toDBRole = (role: MemberRole): PrismaSpaceMemberRole => {
   switch (role) {
@@ -86,8 +89,7 @@ export async function getTotalSeatsForSpace(spaceId: string): Promise<number> {
       return subscription.quantity || DEFAULT_SEAT_LIMIT;
     }
   } catch (error) {
-    // Log the error for debugging but don't expose internal details
-    console.error(`Failed to get total seats for space ${spaceId}:`, error);
+    logger.error({ error, spaceId }, "Failed to get total seats for space");
 
     if (error instanceof AppError) {
       throw error;

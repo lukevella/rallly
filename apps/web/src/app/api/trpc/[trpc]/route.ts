@@ -1,9 +1,13 @@
 import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
+import { createLogger } from "@rallly/logger";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 
 import { getSession } from "@/lib/auth";
+
+const logger = createLogger("api/trpc");
+
 import { getLocaleFromRequest } from "@/lib/locale/server";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
@@ -48,12 +52,15 @@ const handler = async (req: NextRequest) => {
     },
     onError({ error }) {
       if (error.code === "TOO_MANY_REQUESTS") {
-        console.warn("Too many requests", {
-          path: req.nextUrl.pathname,
-          userId: session?.user?.id,
-          ip,
-          ja4Digest,
-        });
+        logger.warn(
+          {
+            path: req.nextUrl.pathname,
+            userId: session?.user?.id,
+            ip,
+            ja4Digest,
+          },
+          "Too many requests",
+        );
       }
     },
   });

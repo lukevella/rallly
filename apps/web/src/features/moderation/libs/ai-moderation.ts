@@ -1,5 +1,8 @@
 import { openai } from "@ai-sdk/openai";
+import { createLogger } from "@rallly/logger";
 import { generateText } from "ai";
+
+const logger = createLogger("moderation/ai");
 
 /**
  * Moderates content using OpenAI's GPT-4 to detect inappropriate content
@@ -22,7 +25,7 @@ export async function moderateContentWithAI(text: string) {
 
     return result.text.includes("FLAGGED");
   } catch (err) {
-    console.error("❌ AI moderation failed:", err);
+    logger.error({ error: err }, "AI moderation failed");
     return false;
   }
 }

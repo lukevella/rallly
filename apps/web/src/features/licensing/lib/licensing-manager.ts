@@ -1,3 +1,4 @@
+import { createLogger } from "@rallly/logger";
 import { AppError } from "@/lib/errors";
 import type {
   CreateLicenseInput,
@@ -7,6 +8,8 @@ import {
   createLicenseResponseSchema,
   validateLicenseKeyResponseSchema,
 } from "../schema";
+
+const logger = createLogger("licensing/manager");
 
 export class LicenseManager {
   apiUrl: string;
@@ -53,7 +56,7 @@ export class LicenseManager {
     const data = await res.json();
 
     if (!res.ok) {
-      console.error(data);
+      logger.error({ data }, "License validation failed");
       throw new AppError({
         code: "INTERNAL_SERVER_ERROR",
         cause: data,

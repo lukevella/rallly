@@ -27,7 +27,7 @@ function getTimeZoneOffset(timeZone: string) {
   try {
     return dayjs().tz(timeZone).utcOffset();
   } catch {
-    console.error(`Failed to resolve timezone ${timeZone}`);
+    console.error({ timeZone }, "Failed to resolve timezone");
     return 0;
   }
 }
@@ -77,7 +77,7 @@ export function normalizeTimeZone(timeZone: string) {
   if (!tz) {
     // In theory this shouldn't happen
     tz = "America/New_York";
-    console.error(`Unable to resolve timezone ${timeZone}`);
+    console.error({ timeZone }, "Unable to resolve timezone");
   }
 
   return tz;

@@ -1,7 +1,10 @@
+import { createLogger } from "@rallly/logger";
 import { env } from "@/env";
 
 import { moderateContentWithAI } from "./libs/ai-moderation";
 import { containsSuspiciousPatterns } from "./libs/pattern-moderation";
+
+const logger = createLogger("moderation");
 
 /**
  * Moderates content to detect spam, inappropriate content, or abuse
@@ -20,7 +23,7 @@ export async function moderateContent(content: Array<string | undefined>) {
 
   // Check if OpenAI API key is available
   if (!env.OPENAI_API_KEY) {
-    console.warn(
+    logger.warn(
       "Content moderation is enabled but OPENAI_API_KEY is not set. AI-based moderation will be skipped.",
     );
     return false;
@@ -33,17 +36,15 @@ export async function moderateContent(content: Array<string | undefined>) {
 
   // If suspicious patterns are found, perform AI moderation
   if (hasSuspiciousPatterns) {
-    console.info(
-      "⚠️ Suspicious patterns detected, performing AI moderation check",
-    );
+    logger.info("Suspicious patterns detected, performing AI moderation check");
     try {
       const isFlagged = await moderateContentWithAI(textToModerate);
       if (isFlagged) {
-        console.warn("🚫 Content flagged by AI moderation");
+        logger.warn("Content flagged by AI moderation");
       }
       return isFlagged;
     } catch (error) {
-      console.error("Error during AI content moderation:", error);
+      logger.error({ error }, "Error during AI content moderation");
       return false;
     }
   }

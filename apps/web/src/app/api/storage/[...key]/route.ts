@@ -1,9 +1,12 @@
 import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { createLogger } from "@rallly/logger";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { env } from "@/env";
 import { getS3Client } from "@/lib/storage/s3";
+
+const logger = createLogger("api/storage");
 
 async function getAvatar(key: string) {
   const s3Client = getS3Client();
@@ -51,7 +54,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error(error);
+    logger.error({ error, imageKey }, "Failed to fetch object from storage");
     return NextResponse.json(
       { error: "Failed to fetch object" },
       { status: 500 },

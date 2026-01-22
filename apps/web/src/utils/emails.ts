@@ -1,10 +1,13 @@
 import type { SupportedEmailProviders } from "@rallly/emails";
 import { EmailClient } from "@rallly/emails";
+import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
 import { getInstanceBrandingConfig } from "@/features/branding/queries";
+
+const logger = createLogger("emails");
 
 export const getEmailClient = async (locale?: string) => {
   const brandingConfig = await getInstanceBrandingConfig();
@@ -30,7 +33,7 @@ export const getEmailClient = async (locale?: string) => {
     },
     locale,
     onError: (e) => {
-      console.error(e);
+      logger.error({ error: e }, "Email client error");
       Sentry.captureException(e);
     },
   });

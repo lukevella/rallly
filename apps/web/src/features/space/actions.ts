@@ -3,10 +3,14 @@
 import { subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { waitUntil } from "@vercel/functions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+
+const logger = createLogger("space/actions");
+
 import { getMember, getSpaceSeatCount } from "@/features/space/data";
 import { createSpace } from "@/features/space/mutations";
 import { memberRoleSchema } from "@/features/space/schema";
@@ -324,8 +328,8 @@ export const inviteMemberAction = spaceActionClient
         code: "INVITE_SENT" as const,
         message: "Invitation sent successfully",
       };
-    } catch {
-      console.error("Failed to send invitation");
+    } catch (error) {
+      logger.error({ error }, "Failed to send invitation");
       return {
         success: false,
         code: "INVITE_FAILED" as const,
@@ -397,8 +401,8 @@ export const acceptInviteAction = authActionClient
         userId: ctx.user.id,
         spaceId: parsedInput.spaceId,
       });
-    } catch {
-      console.warn("Failed to update user's active space");
+    } catch (error) {
+      logger.warn({ error }, "Failed to update user's active space");
     }
 
     ctx.posthog?.capture({

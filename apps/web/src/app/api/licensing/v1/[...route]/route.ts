@@ -1,12 +1,16 @@
 import { zValidator } from "@hono/zod-validator";
 import { RedisStore } from "@hono-rate-limiter/redis";
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { kv } from "@vercel/kv";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
 import { rateLimiter } from "hono-rate-limiter";
 import { env } from "@/env";
+
+const logger = createLogger("api/licensing");
+
 import { generateLicenseKey } from "@/features/licensing/helpers/generate-license-key";
 import type {
   CreateLicenseResponse,
@@ -65,7 +69,7 @@ if (env.LICENSE_API_AUTH_TOKEN) {
           data: { key: license.licenseKey },
         } satisfies CreateLicenseResponse);
       } catch (error) {
-        console.error("Failed to create license:", error);
+        logger.error({ error }, "Failed to create license");
         return c.json({ error: "Failed to create license" }, 500);
       }
     },
