@@ -33,7 +33,7 @@ export const apiKeys = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { apiKey, prefix, hashedKey } = createApiKey();
+      const { apiKey, prefix, hashedKey } = await createApiKey();
 
       await prisma.spaceApiKey.create({
         data: {

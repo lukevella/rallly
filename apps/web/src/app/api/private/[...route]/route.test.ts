@@ -57,19 +57,32 @@ vi.mock("@/lib/kv", () => ({
 }));
 
 import { prisma } from "@rallly/database";
-import { hashApiKey, randomToken } from "@/features/developer/utils";
+import { createApiKey } from "@/features/developer/utils";
 import { app } from "./route";
 
-const createMockApiKey = (rawKey: string) => {
-  // Use the new salted hash format
-  const salt = randomToken(12);
-  const hash = hashApiKey(rawKey, salt);
-  const hashedKey = `sha256$${salt}$${hash}`;
+// Pre-generated test API key and hash (created once, reused across all tests)
+let testApiKey: string;
+let mockApiKey: {
+  id: string;
+  name: string;
+  prefix: string;
+  spaceId: string;
+  hashedKey: string;
+  lastUsedAt: null;
+  expiresAt: null;
+  revokedAt: null;
+  createdAt: Date;
+  updatedAt: Date;
+  space: { ownerId: string };
+};
 
-  return {
+beforeAll(async () => {
+  const { apiKey, prefix, hashedKey } = await createApiKey();
+  testApiKey = apiKey;
+  mockApiKey = {
     id: "api-key-id",
     name: "Test API Key",
-    prefix: "abc123",
+    prefix,
     spaceId: "test-space-id",
     hashedKey,
     lastUsedAt: null,
@@ -81,12 +94,9 @@ const createMockApiKey = (rawKey: string) => {
       ownerId: "test-user-id",
     },
   };
-};
+});
 
 describe("Private API - /polls", () => {
-  const testApiKey = "sk_abc123_secretkey";
-  const mockApiKey = createMockApiKey(testApiKey);
-
   beforeEach(() => {
     vi.clearAllMocks();
 
