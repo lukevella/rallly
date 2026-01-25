@@ -35,7 +35,7 @@
     "@playwright/test": "^1.57.0",
     "dotenv-cli": "^8.0.0",
     "prettier": "^3.5.3",
-    "prisma": "^7.2.0",
+    "prisma": "^7.3.0",
     "turbo": "^2.6.3",
     "typescript": "^5.8.2",
     "vitest": "^4.0.16"

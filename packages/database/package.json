@@ -14,8 +14,8 @@
     ".": "./src/client.ts"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.2.0",
-    "@prisma/client": "^7.2.0",
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
     "@vercel/functions": "^3.3.6",
     "dayjs": "^1.11.13",
     "dotenv": "^17.2.3",
@@ -26,7 +26,7 @@
     "@rallly/tsconfig": "workspace:*",
     "@types/node": "^24.1.0",
     "@types/pg": "^8.11.0",
-    "prisma": "^7.2.0",
+    "prisma": "^7.3.0",
     "tsx": "^4.6.2"
   }
 }
