@@ -74,12 +74,9 @@ export const generateTimeSlots = (
 
   const allowed = new Set(generator.daysOfWeek.map((d) => dayMap[d]));
 
-  const startDay = timeZone
-    ? dayjs(generator.startDate).tz(timeZone, true).startOf("day")
-    : dayjs(generator.startDate).utc(true).startOf("day");
-  const endDay = timeZone
-    ? dayjs(generator.endDate).tz(timeZone, true).startOf("day")
-    : dayjs(generator.endDate).utc(true).startOf("day");
+  // Use UTC for date iteration to avoid local timezone interference
+  const startDay = dayjs.utc(generator.startDate).startOf("day");
+  const endDay = dayjs.utc(generator.endDate).startOf("day");
 
   const from = parseLocalDateTimeInTimeZone(
     generator.startDate,
@@ -102,11 +99,12 @@ export const generateTimeSlots = (
     cursor.isSameOrBefore(endDay, "day");
     cursor = cursor.add(1, "day")
   ) {
-    if (!allowed.has(cursor.day())) {
+    const date = cursor.format("YYYY-MM-DD");
+    // Get day of week in the target timezone
+    const dayInTz = timeZone ? dayjs.tz(date, timeZone).day() : cursor.day();
+    if (!allowed.has(dayInTz)) {
       continue;
     }
-
-    const date = cursor.format("YYYY-MM-DD");
     const windowStart = parseLocalDateTimeInTimeZone(
       date,
       generator.fromTime,
