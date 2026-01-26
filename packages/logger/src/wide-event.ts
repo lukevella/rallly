@@ -103,6 +103,6 @@ export function createWideEvent(
   return {
     requestId: options?.requestId ?? randomUUID(),
     timestamp: new Date().toISOString(),
-    service: options?.service ?? "unknown",
+    ...options,
   };
 }

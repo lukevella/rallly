@@ -9,14 +9,13 @@ import { getSession } from "@/lib/auth";
 import { getLocaleFromRequest } from "@/lib/locale/server";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
-import { getEmailClient } from "@/utils/emails";
 
 const handler = async (req: NextRequest) => {
   const session = await getSession();
   const ip = ipAddress(req);
   const ja4Digest = req.headers.get("x-vercel-ja4-digest") ?? undefined;
   const reqLocale = getLocaleFromRequest(req);
-
+  const startTime = Date.now();
   const event = createWideEvent({
     service: "trpc",
     requestId:
@@ -41,15 +40,18 @@ const handler = async (req: NextRequest) => {
       req,
       router: appRouter,
       createContext: async () => {
+        const locale = session?.user?.locale ?? reqLocale;
+        const isLegacyGuest = session?.legacy && session?.user?.isGuest;
+
+        event.isLegacyGuest = isLegacyGuest;
+
         const user = session?.user
           ? {
               id: session.user.id,
               isGuest: session.user.isGuest,
-              locale: session.user.locale ?? reqLocale,
+              locale,
               image: session.user.image ?? undefined,
-              getEmailClient: async () =>
-                await getEmailClient(session.user?.locale ?? undefined),
-              isLegacyGuest: session.legacy && session.user.isGuest,
+              isLegacyGuest: isLegacyGuest ?? false,
             }
           : undefined;
 
@@ -57,7 +59,7 @@ const handler = async (req: NextRequest) => {
 
         return {
           user,
-          locale: user?.locale ?? reqLocale,
+          locale,
           identifier,
         } satisfies TRPCContext;
       },
@@ -81,8 +83,14 @@ const handler = async (req: NextRequest) => {
     event.errorCode = "INTERNAL_SERVER_ERROR";
     event.errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
-    logger.error({ event, error });
     throw error;
+  } finally {
+    event.durationMs = Date.now() - startTime;
+    if (event.statusCode && event.statusCode >= 500) {
+      logger.error(event);
+    } else {
+      logger.info(event);
+    }
   }
 };
 
