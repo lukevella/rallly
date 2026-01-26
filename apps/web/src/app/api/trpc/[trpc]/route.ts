@@ -35,7 +35,7 @@ const handler = async (req: NextRequest) => {
   }
 
   try {
-    return fetchRequestHandler({
+    const response = await fetchRequestHandler({
       endpoint: "/api/trpc",
       req,
       router: appRouter,
@@ -71,6 +71,8 @@ const handler = async (req: NextRequest) => {
         event.errorType = "TRPCError";
       },
     });
+    event.statusCode = response.status;
+    return response;
   } catch (error) {
     event.statusCode = 500;
     event.errorType = "Unhandled Error";
