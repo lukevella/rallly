@@ -1,4 +1,27 @@
 import crypto from "node:crypto";
+import { createLogger } from "@rallly/logger";
+
+const logger = createLogger("api-key");
+
+const scryptAsync = (
+  password: string,
+  salt: string,
+  keylen: number,
+  options: crypto.ScryptOptions,
+): Promise<Buffer> => {
+  return new Promise((resolve, reject) => {
+    crypto.scrypt(password, salt, keylen, options, (err, derivedKey) => {
+      if (err) reject(err);
+      else resolve(derivedKey);
+    });
+  });
+};
+
+// scrypt parameters - these provide strong security while keeping verification under 100ms
+const SCRYPT_COST = 16384; // N: CPU/memory cost (2^14)
+const SCRYPT_BLOCK_SIZE = 8; // r: block size
+const SCRYPT_PARALLELIZATION = 1; // p: parallelization
+const SCRYPT_KEY_LENGTH = 64; // output length in bytes
 
 /**
  * Generate a cryptographically random token
@@ -9,28 +32,39 @@ export const randomToken = (bytes: number): string =>
   crypto.randomBytes(bytes).toString("base64url");
 
 /**
- * Hash a value using SHA-256
- * @param value String to hash
- * @returns Hex-encoded SHA-256 hash
+ * Hash an API key using scrypt
+ * @param rawKey Raw API key to hash
+ * @param salt Salt for hashing
+ * @returns Hex-encoded scrypt hash
  */
-export const sha256Hex = (value: string): string =>
-  crypto.createHash("sha256").update(value).digest("hex");
+export const scryptHash = async (
+  rawKey: string,
+  salt: string,
+): Promise<string> => {
+  const derivedKey = (await scryptAsync(rawKey, salt, SCRYPT_KEY_LENGTH, {
+    N: SCRYPT_COST,
+    r: SCRYPT_BLOCK_SIZE,
+    p: SCRYPT_PARALLELIZATION,
+  })) as Buffer;
+  return derivedKey.toString("hex");
+};
 
 /**
  * Create an API key with the format: sk_{prefix}_{secret}
  * @returns Object containing the full API key and components for storage
  */
-export const createApiKey = (): {
+export const createApiKey = async (): Promise<{
   apiKey: string;
   prefix: string;
   hashedKey: string;
-} => {
+}> => {
   const prefix = randomToken(6);
   const secret = randomToken(24);
   const apiKey = `sk_${prefix}_${secret}`;
 
-  const salt = randomToken(12);
-  const hashedKey = `sha256$${salt}$${sha256Hex(`${salt}:${apiKey}`)}`;
+  const salt = randomToken(16);
+  const hash = await scryptHash(apiKey, salt);
+  const hashedKey = `scrypt$${SCRYPT_COST}$${SCRYPT_BLOCK_SIZE}$${SCRYPT_PARALLELIZATION}$${salt}$${hash}`;
 
   return {
     apiKey,
@@ -54,49 +88,89 @@ export const extractApiKeyPrefix = (rawKey: string): string => {
 };
 
 /**
- * Check if a string is a valid hex SHA-256 hash
- * @param value String to validate
- * @returns True if valid hex SHA-256 (64 characters)
- */
-export const isHexSha256 = (value: string): boolean =>
-  /^[a-f0-9]{64}$/i.test(value);
-
-/**
- * Hash an API key with optional salt (for verification)
- * @param rawKey Raw API key
- * @param salt Optional salt for hashing
- * @returns Hex-encoded SHA-256 hash
- */
-export const hashApiKey = (rawKey: string, salt?: string): string => {
-  const input = salt ? `${salt}:${rawKey}` : rawKey;
-  return sha256Hex(input);
-};
-
-/**
- * Verify a raw API key against a stored hash
- * Supports both legacy (unsalted) and current (salted) hash formats
+ * Verify a raw API key against a stored scrypt hash
  * @param rawKey Raw API key to verify
- * @param storedHash Stored hash from database (format: "sha256$salt$hash" or plain hex)
+ * @param storedHash Stored hash from database (format: scrypt$N$r$p$salt$hash)
  * @returns True if the key matches the hash
  */
-export const verifyApiKey = (rawKey: string, storedHash: string): boolean => {
+export const verifyApiKey = async (
+  rawKey: string,
+  storedHash: string,
+): Promise<boolean> => {
   const trimmed = storedHash.trim();
 
-  // Current format: sha256$salt$hash
-  if (trimmed.startsWith("sha256$")) {
-    const [, salt, hash] = trimmed.split("$");
-    if (!salt || !hash || !isHexSha256(hash)) {
+  // Current format: scrypt$N$r$p$salt$hash
+  if (trimmed.startsWith("scrypt$")) {
+    const parts = trimmed.split("$");
+    if (parts.length !== 6) {
       return false;
     }
-    const computed = hashApiKey(rawKey, salt);
-    return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(hash));
+
+    const [, nStr, rStr, pStr, salt, hash] = parts;
+    if (!nStr || !rStr || !pStr || !salt || !hash) {
+      return false;
+    }
+
+    const N = Number.parseInt(nStr, 10);
+    const r = Number.parseInt(rStr, 10);
+    const p = Number.parseInt(pStr, 10);
+    if (
+      !Number.isSafeInteger(N) ||
+      !Number.isSafeInteger(r) ||
+      !Number.isSafeInteger(p) ||
+      N <= 1 ||
+      r <= 0 ||
+      p <= 0 ||
+      (N & (N - 1)) !== 0
+    ) {
+      return false;
+    }
+
+    let derivedKey: Buffer;
+    try {
+      derivedKey = await scryptAsync(rawKey, salt, SCRYPT_KEY_LENGTH, {
+        N,
+        r,
+        p,
+      });
+    } catch (error) {
+      logger.error({ error }, "scrypt verification failed");
+      return false;
+    }
+    const computed = derivedKey.toString("hex");
+
+    return (
+      computed.length === hash.length &&
+      crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(hash))
+    );
   }
 
-  // Legacy format: plain hex hash (unsalted)
-  if (!isHexSha256(trimmed)) {
+  // ------------------------------------------------------------------
+  // DEPRECATED: Legacy SHA-256 format support (read-only)
+  // TODO: Remove this block once all existing API keys have been regenerated
+  // ------------------------------------------------------------------
+  if (trimmed.startsWith("sha256$")) {
+    return verifyLegacySha256(rawKey, trimmed);
+  }
+
+  return false;
+};
+
+// ------------------------------------------------------------------
+// DEPRECATED: Legacy SHA-256 verification (read-only)
+// TODO: Remove these functions once all existing API keys have been regenerated
+// ------------------------------------------------------------------
+
+const isHexSha256 = (value: string): boolean => /^[a-f0-9]{64}$/i.test(value);
+
+const sha256Hex = (value: string): string =>
+  crypto.createHash("sha256").update(value).digest("hex");
+
+const verifyLegacySha256 = (rawKey: string, storedHash: string): boolean => {
+  const [, salt, hash] = storedHash.split("$");
+  if (!salt || !hash || !isHexSha256(hash)) {
     return false;
   }
-
-  const computed = hashApiKey(rawKey);
-  return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(trimmed));
+  const computed = sha256Hex(`${salt}:${rawKey}`);
+  return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(hash));
 };

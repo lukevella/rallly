@@ -35,8 +35,9 @@ export const spaceApiKeyAuth = bearerAuth({
       },
     });
 
-    // Constant-time search through candidates
-    let validKey = null;
+    let apiKeyId: string | null = null;
+    let spaceId: string | null = null;
+    let spaceOwnerId: string | null = null;
     for (const candidate of candidateKeys) {
       // Timing-safe prefix comparison
       const candidateBuffer = Buffer.from(candidate.prefix);
@@ -45,26 +46,28 @@ export const spaceApiKeyAuth = bearerAuth({
         crypto.timingSafeEqual(prefixBuffer, candidateBuffer)
       ) {
         // Verify the full key hash
-        if (verifyApiKey(rawKey, candidate.hashedKey)) {
-          validKey = candidate;
-          // Continue iterating to maintain constant time
+        const isValid = await verifyApiKey(rawKey, candidate.hashedKey);
+        if (isValid) {
+          apiKeyId = candidate.id;
+          spaceId = candidate.spaceId;
+          spaceOwnerId = candidate.space.ownerId;
         }
       }
     }
 
-    if (!validKey) {
+    if (!apiKeyId || !spaceId || !spaceOwnerId) {
       return false;
     }
 
     c.set("apiAuth", {
-      spaceId: validKey.spaceId,
-      spaceOwnerId: validKey.space.ownerId,
-      apiKeyId: validKey.id,
+      spaceId,
+      spaceOwnerId,
+      apiKeyId,
     });
 
     waitUntil(
       prisma.spaceApiKey.update({
-        where: { id: validKey.id },
+        where: { id: apiKeyId },
         data: { lastUsedAt: new Date() },
       }),
     );
