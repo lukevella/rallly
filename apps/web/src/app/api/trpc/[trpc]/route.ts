@@ -36,41 +36,56 @@ const handler = async (req: NextRequest) => {
     event.isGuest = session.user.isGuest;
   }
 
-  return fetchRequestHandler({
-    endpoint: "/api/trpc",
-    req,
-    router: appRouter,
-    createContext: async () => {
-      const user = session?.user
-        ? {
-            id: session.user.id,
-            isGuest: session.user.isGuest,
-            locale: session.user.locale ?? reqLocale,
-            image: session.user.image ?? undefined,
-            getEmailClient: async () =>
-              await getEmailClient(session.user?.locale ?? undefined),
-            isLegacyGuest: session.legacy && session.user.isGuest,
-          }
-        : undefined;
+  try {
+    return fetchRequestHandler({
+      endpoint: "/api/trpc",
+      req,
+      router: appRouter,
+      createContext: async () => {
+        const user = session?.user
+          ? {
+              id: session.user.id,
+              isGuest: session.user.isGuest,
+              locale: session.user.locale ?? reqLocale,
+              image: session.user.image ?? undefined,
+              getEmailClient: async () =>
+                await getEmailClient(session.user?.locale ?? undefined),
+              isLegacyGuest: session.legacy && session.user.isGuest,
+            }
+          : undefined;
 
-      const identifier = session?.user?.id ?? ja4Digest ?? ip;
+        const identifier = session?.user?.id ?? ja4Digest ?? ip;
 
-      return {
-        user,
-        locale: user?.locale ?? reqLocale,
-        identifier,
-      } satisfies TRPCContext;
-    },
-    onError: ({ error }) => {
-      const statusCode = getHTTPStatusCodeFromError(error);
-      event.statusCode = statusCode;
-      if (statusCode >= 500) {
-        logger.error(event);
-      } else {
-        logger.warn(event);
-      }
-    },
-  });
+        return {
+          user,
+          locale: user?.locale ?? reqLocale,
+          identifier,
+        } satisfies TRPCContext;
+      },
+      onError: ({ error }) => {
+        const statusCode = getHTTPStatusCodeFromError(error);
+        event.statusCode = statusCode;
+        event.errorCode = error.code;
+        event.errorMessage = error.message;
+        event.errorType = "TRPCError";
+
+        if (statusCode >= 500) {
+          logger.error(event);
+        } else {
+          logger.warn(event);
+        }
+      },
+    });
+  } catch (error) {
+    event.statusCode = 500;
+    event.errorType = "Unhandled Error";
+    event.errorCode = "INTERNAL_SERVER_ERROR";
+    event.errorMessage =
+      error instanceof Error ? error.message : "An unexpected error occurred";
+    event.error = error;
+    logger.error(event);
+    throw error;
+  }
 };
 
 export { handler as GET, handler as POST };
