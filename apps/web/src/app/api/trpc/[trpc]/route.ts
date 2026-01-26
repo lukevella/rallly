@@ -69,12 +69,6 @@ const handler = async (req: NextRequest) => {
         event.errorCode = error.code;
         event.errorMessage = error.message;
         event.errorType = "TRPCError";
-
-        if (statusCode >= 500) {
-          logger.error(event);
-        } else {
-          logger.warn(event);
-        }
       },
     });
   } catch (error) {
@@ -88,6 +82,8 @@ const handler = async (req: NextRequest) => {
     event.durationMs = Date.now() - startTime;
     if (event.statusCode && event.statusCode >= 500) {
       logger.error(event);
+    } else if (event.statusCode && event.statusCode >= 400) {
+      logger.warn(event);
     } else {
       logger.info(event);
     }
