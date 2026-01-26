@@ -1,13 +1,11 @@
-import { getPreferredLocale } from "@rallly/languages/get-preferred-locale";
-import { createLogger } from "@rallly/logger";
+import { createWideEvent, logger } from "@rallly/logger";
+
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 
 import { getSession } from "@/lib/auth";
-
-const logger = createLogger("api/trpc");
-
 import { getLocaleFromRequest } from "@/lib/locale/server";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
@@ -19,14 +17,30 @@ const handler = async (req: NextRequest) => {
   const ja4Digest = req.headers.get("x-vercel-ja4-digest");
   const reqLocale = getLocaleFromRequest(req);
 
+  const event = createWideEvent({
+    service: "trpc",
+    requestId:
+      req.headers.get("x-vercel-id") ??
+      req.headers.get("x-request-id") ??
+      undefined,
+  });
+
+  // Request metadata
+  event.method = req.method;
+  event.path = req.nextUrl.pathname;
+  event.ip = ip;
+
+  // User context
+  if (session?.user) {
+    event.userId = session.user.id;
+    event.isGuest = session.user.isGuest;
+  }
+
   return fetchRequestHandler({
     endpoint: "/api/trpc",
     req,
     router: appRouter,
     createContext: async () => {
-      const locale = getPreferredLocale({
-        acceptLanguageHeader: req.headers.get("accept-language") ?? undefined,
-      });
       const user = session?.user
         ? {
             id: session.user.id,
@@ -39,28 +53,21 @@ const handler = async (req: NextRequest) => {
           }
         : undefined;
 
-      const ip =
-        process.env.NODE_ENV === "development" ? "127.0.0.1" : ipAddress(req);
-
       const identifier = session?.user?.id ?? ja4Digest ?? ip;
 
       return {
         user,
-        locale,
+        locale: user?.locale ?? reqLocale,
         identifier,
       } satisfies TRPCContext;
     },
-    onError({ error }) {
-      if (error.code === "TOO_MANY_REQUESTS") {
-        logger.warn(
-          {
-            path: req.nextUrl.pathname,
-            userId: session?.user?.id,
-            ip,
-            ja4Digest,
-          },
-          "Too many requests",
-        );
+    onError: ({ error }) => {
+      const statusCode = getHTTPStatusCodeFromError(error);
+      event.statusCode = statusCode;
+      if (statusCode >= 500) {
+        logger.error(event);
+      } else {
+        logger.warn(event);
       }
     },
   });

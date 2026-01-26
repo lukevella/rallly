@@ -22,3 +22,5 @@ export type Logger = typeof logger;
 export function createLogger(name: string) {
   return logger.child({ name });
 }
+
+export { createWideEvent, type WideEvent } from "./wide-event";
