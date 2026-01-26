@@ -9,11 +9,11 @@ export interface WideEvent {
   /**
    * The unique identifier for the request.
    */
-  requestId: string;
+  requestId?: string;
   /**
    * When the event occurred.
    */
-  timestamp: string;
+  timestamp?: string;
   /**
    * The service that handled the request.
    */
@@ -95,14 +95,10 @@ export interface WideEvent {
  * Creates a new wide event context for a request.
  * Call this at the start of request handling.
  */
-export function createWideEvent(
-  options: Partial<WideEvent> & {
-    service: string;
-  },
-): WideEvent {
+export function createWideEvent(event: WideEvent): WideEvent {
   return {
-    requestId: options?.requestId ?? randomUUID(),
+    requestId: event?.requestId ?? randomUUID(),
     timestamp: new Date().toISOString(),
-    ...options,
+    ...event,
   };
 }
