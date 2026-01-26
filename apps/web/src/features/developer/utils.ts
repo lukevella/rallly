@@ -1,4 +1,7 @@
 import crypto from "node:crypto";
+import { createLogger } from "@rallly/logger";
+
+const logger = createLogger("api-key");
 
 const scryptAsync = (
   password: string,
@@ -103,16 +106,37 @@ export const verifyApiKey = async (
       return false;
     }
 
-    const [, n, r, p, salt, hash] = parts;
-    if (!n || !r || !p || !salt || !hash) {
+    const [, nStr, rStr, pStr, salt, hash] = parts;
+    if (!nStr || !rStr || !pStr || !salt || !hash) {
       return false;
     }
 
-    const derivedKey = await scryptAsync(rawKey, salt, SCRYPT_KEY_LENGTH, {
-      N: Number.parseInt(n, 10),
-      r: Number.parseInt(r, 10),
-      p: Number.parseInt(p, 10),
-    });
+    const N = Number.parseInt(nStr, 10);
+    const r = Number.parseInt(rStr, 10);
+    const p = Number.parseInt(pStr, 10);
+    if (
+      !Number.isSafeInteger(N) ||
+      !Number.isSafeInteger(r) ||
+      !Number.isSafeInteger(p) ||
+      N <= 1 ||
+      r <= 0 ||
+      p <= 0 ||
+      (N & (N - 1)) !== 0
+    ) {
+      return false;
+    }
+
+    let derivedKey: Buffer;
+    try {
+      derivedKey = await scryptAsync(rawKey, salt, SCRYPT_KEY_LENGTH, {
+        N,
+        r,
+        p,
+      });
+    } catch (error) {
+      logger.error({ error }, "scrypt verification failed");
+      return false;
+    }
     const computed = derivedKey.toString("hex");
 
     return (
