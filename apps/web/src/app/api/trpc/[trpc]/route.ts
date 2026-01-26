@@ -14,7 +14,7 @@ import { getEmailClient } from "@/utils/emails";
 const handler = async (req: NextRequest) => {
   const session = await getSession();
   const ip = ipAddress(req);
-  const ja4Digest = req.headers.get("x-vercel-ja4-digest");
+  const ja4Digest = req.headers.get("x-vercel-ja4-digest") ?? undefined;
   const reqLocale = getLocaleFromRequest(req);
 
   const event = createWideEvent({
@@ -23,12 +23,11 @@ const handler = async (req: NextRequest) => {
       req.headers.get("x-vercel-id") ??
       req.headers.get("x-request-id") ??
       undefined,
+    method: req.method,
+    path: req.nextUrl.pathname,
+    ip,
+    ja4Digest,
   });
-
-  // Request metadata
-  event.method = req.method;
-  event.path = req.nextUrl.pathname;
-  event.ip = ip;
 
   // User context
   if (session?.user) {
@@ -82,8 +81,7 @@ const handler = async (req: NextRequest) => {
     event.errorCode = "INTERNAL_SERVER_ERROR";
     event.errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
-    event.error = error;
-    logger.error(event);
+    logger.error({ event, error });
     throw error;
   }
 };

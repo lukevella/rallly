@@ -33,6 +33,14 @@ export interface WideEvent {
    */
   statusCode?: number;
   /**
+   * The IP address of the request.
+   */
+  ip?: string;
+  /**
+   * The JA4 digest of the request.
+   */
+  ja4Digest?: string;
+  /**
    * The duration of the request in milliseconds.
    */
   durationMs?: number;
@@ -87,13 +95,14 @@ export interface WideEvent {
  * Creates a new wide event context for a request.
  * Call this at the start of request handling.
  */
-export function createWideEvent(options: {
-  service: string;
-  requestId?: string;
-}): WideEvent {
+export function createWideEvent(
+  options: Partial<WideEvent> & {
+    service: string;
+  },
+): WideEvent {
   return {
-    requestId: options.requestId ?? randomUUID(),
+    requestId: options?.requestId ?? randomUUID(),
     timestamp: new Date().toISOString(),
-    service: options.service,
+    service: options?.service ?? "unknown",
   };
 }
