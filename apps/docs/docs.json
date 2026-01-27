@@ -19,7 +19,7 @@
           },
           {
             "group": "How it Works",
-            "pages": ["workflow/create", "workflow/invite", "workflow/finalize"]
+            "pages": ["workflow/create", "workflow/invite", "workflow/schedule"]
           },
           {
             "group": "Spaces",
@@ -139,6 +139,10 @@
     {
       "source": "/self-hosting/pricing",
       "destination": "/self-hosting/licensing"
+    },
+    {
+      "source": "/workflow/finalize",
+      "destination": "/workflow/schedule"
     }
   ]
 }
