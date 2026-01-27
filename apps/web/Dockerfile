@@ -92,6 +92,9 @@ ARG SELF_HOSTED
 ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
 ENV HOSTNAME=0.0.0.0
 
+# Set default log level to warning
+ENV LOG_LEVEL=warn
+
 HEALTHCHECK CMD curl --fail http://localhost:${PORT}/api/status || exit 1
 
 CMD ["./docker-start.sh"]
