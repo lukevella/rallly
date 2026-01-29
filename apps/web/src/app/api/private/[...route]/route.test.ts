@@ -394,13 +394,15 @@ describe("Private API - /polls", () => {
           slots: {
             duration: 30,
             timezone: "Europe/London",
-            times: {
-              startDate: "2025-01-20",
-              endDate: "2025-01-22",
-              days: ["mon", "tue", "wed"],
-              startTime: "09:00",
-              endTime: "10:00",
-            },
+            times: [
+              {
+                startDate: "2025-01-20",
+                endDate: "2025-01-22",
+                days: ["mon", "tue", "wed"],
+                startTime: "09:00",
+                endTime: "10:00",
+              },
+            ],
           },
         }),
       });
