@@ -55,7 +55,7 @@ const slotsInputSchema = z
       .min(1)
       .openapi({
         description:
-          "Times to include. Can be a slot generator or an array of ISO datetime strings and/or slot generators.",
+          "Times to include. An array of ISO datetime strings and/or slot generators.",
       }),
   })
   .openapi("SlotsInput");
