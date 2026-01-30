@@ -78,20 +78,6 @@ export const generateTimeSlots = (
   const startDay = dayjs.utc(generator.startDate).startOf("day");
   const endDay = dayjs.utc(generator.endDate).startOf("day");
 
-  const from = parseLocalDateTimeInTimeZone(
-    generator.startDate,
-    generator.fromTime,
-    timeZone,
-  );
-  const to = parseLocalDateTimeInTimeZone(
-    generator.startDate,
-    generator.toTime,
-    timeZone,
-  );
-  if (!to.isAfter(from)) {
-    return [];
-  }
-
   const results: Array<TimeSlot> = [];
 
   for (

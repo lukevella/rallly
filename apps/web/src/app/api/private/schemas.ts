@@ -25,14 +25,6 @@ export const slotGeneratorSchema = z
   })
   .openapi("SlotGenerator");
 
-const timeOptionSchema = z.union([
-  z.iso.datetime().openapi({
-    description: "ISO datetime start time",
-    example: "2025-01-15T09:00:00Z",
-  }),
-  slotGeneratorSchema,
-]);
-
 const slotsInputSchema = z
   .object({
     duration: z.number().int().min(15).max(1440).openapi({
@@ -51,10 +43,19 @@ const slotsInputSchema = z
         example: "Europe/London",
       }),
     times: z
-      .union([slotGeneratorSchema, z.array(timeOptionSchema).min(1)])
+      .array(
+        z.union([
+          z.iso.datetime().openapi({
+            description: "ISO datetime start time",
+            example: "2025-01-15T09:00:00Z",
+          }),
+          slotGeneratorSchema,
+        ]),
+      )
+      .min(1)
       .openapi({
         description:
-          "Times to include. Can be a slot generator or an array of ISO datetime strings and/or slot generators.",
+          "Times to include. An array of ISO datetime strings and/or slot generators.",
       }),
   })
   .openapi("SlotsInput");
