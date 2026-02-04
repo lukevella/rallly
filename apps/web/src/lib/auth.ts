@@ -213,6 +213,9 @@ export const authLib = betterAuth({
     storage: isKvEnabled() ? "secondary-storage" : "memory",
   },
   account: {
+    accountLinking: {
+      enabled: true,
+    },
     fields: {
       providerId: "provider",
       accountId: "providerAccountId",
