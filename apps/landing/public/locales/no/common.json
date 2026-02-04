@@ -23,5 +23,15 @@
   "howItWorks": "Slik fungerer det",
   "status": "Status",
   "when2MeetAlternative": "Alternativ til When2Meet",
-  "signUp": "Registrer deg"
+  "signUp": "Registrer deg",
+  "licensingThankYouTitle": "Takk for kjøpet!",
+  "licensingThankYouSubtitle": "Lisensen din for Rallly på egen infrastruktur er bekreftet. Vi er glade for å ha deg med!",
+  "licensingThankYouLicense": "Neste steg",
+  "licensingThankYouLicenseEmailed": "Lisensnøkkelen din er sendt til e-postadressen du oppga under betalingen. Vennligst sjekk innboksen din.",
+  "licensingThankYouNextStepsInstallation": "Installasjonsveiledning",
+  "licensingThankYouNextStepsApplyLicense": "Hvordan bruke lisensen",
+  "licensingThankYouSupportPrompt": "Trenger du hjelp eller har spørsmål? Se <0>dokumentasjonen</0> eller <1>kontakt oss</1>.",
+  "licensingThankYouGoHomeLink": "Hjem",
+  "openSource": "Vi har åpen kildekode!",
+  "starOnGitHub": "Finn oss på GitHub"
 }
