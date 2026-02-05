@@ -15,6 +15,10 @@ import {
 } from "better-auth/plugins";
 import { headers } from "next/headers";
 import { cache } from "react";
+import {
+  clearLegacyGuestCookie,
+  getLegacyGuestCookie,
+} from "@/auth/helpers/guest-session-cookie";
 import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import {
   linkAnonymousUser,
@@ -257,6 +261,16 @@ export const authLib = betterAuth({
           if (user.isAnonymous) {
             return;
           }
+
+          // Handle legacy guest merge FIRST (user is now guaranteed to exist)
+          // This fixes the timing issue where merge was happening before user creation
+          const legacyGuestId = await getLegacyGuestCookie();
+          if (legacyGuestId) {
+            await mergeGuestsIntoUser(user.id, legacyGuestId);
+            await clearLegacyGuestCookie();
+            await legacySignOut({ redirect: false });
+          }
+
           // check if user exists in prisma
           const existingUser = await prisma.user.findUnique({
             where: {
@@ -313,10 +327,17 @@ export const authLib = betterAuth({
           const legacySession = await legacyAuth();
 
           if (legacySession) {
-            if (legacySession.user?.isGuest) {
+            // Check if we have a pending guest merge (first-time user case)
+            // If so, user.create.after will handle it with the correct user ID
+            const pendingMerge = await getLegacyGuestCookie();
+
+            if (!pendingMerge && legacySession.user?.isGuest) {
+              // This is a RETURNING user who already exists in the database
+              // Merge their guest content now since user.create.after won't fire
               await mergeGuestsIntoUser(session.userId, legacySession.user.id);
             }
-            // Delete legacy session
+
+            // Delete legacy session (whether first-time or returning)
             await legacySignOut({
               redirect: false,
             });

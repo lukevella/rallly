@@ -9,6 +9,8 @@ import { useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/utils/redirect";
 
+import { prepareGuestMerge } from "../actions";
+
 function SSOImage({ provider }: { provider: string }) {
   if (provider === "google") {
     return (
@@ -57,7 +59,8 @@ export function SSOProvider({
         defaultValue: "Continue with {provider}",
       })}
       key={providerId}
-      onClick={() => {
+      onClick={async () => {
+        await prepareGuestMerge();
         authClient.signIn.social({
           provider: providerId,
           callbackURL: validateRedirectUrl(redirectTo) || "/",

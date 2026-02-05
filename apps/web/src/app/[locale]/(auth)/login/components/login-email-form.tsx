@@ -19,6 +19,7 @@ import { z } from "zod";
 
 import {
   getLoginMethodAction,
+  prepareGuestMerge,
   setVerificationEmail,
 } from "@/app/[locale]/(auth)/login/actions";
 import { Trans } from "@/components/trans";
@@ -60,6 +61,9 @@ export function LoginWithEmailForm() {
       <form
         className="space-y-4"
         onSubmit={handleSubmit(async ({ identifier, password }) => {
+          // Capture guest ID before authentication
+          await prepareGuestMerge();
+
           const validatedRedirectTo = validateRedirectUrl(
             searchParams?.get("redirectTo"),
           );

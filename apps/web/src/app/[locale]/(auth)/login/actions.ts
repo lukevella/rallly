@@ -3,10 +3,12 @@
 import { prisma } from "@rallly/database";
 import { cookies } from "next/headers";
 import z from "zod";
+import { setLegacyGuestCookie } from "@/auth/helpers/guest-session-cookie";
 import {
   actionClient,
   createRateLimitMiddleware,
 } from "@/lib/safe-action/server";
+import { auth as legacyAuth } from "@/next-auth";
 
 export async function setVerificationEmail(email: string) {
   const cookieStore = await cookies();
@@ -45,3 +47,10 @@ export const getLoginMethodAction = actionClient
 
     return { method: "email" as const };
   });
+
+export async function prepareGuestMerge() {
+  const legacySession = await legacyAuth();
+  if (legacySession?.user?.isGuest && legacySession.user.id) {
+    await setLegacyGuestCookie(legacySession.user.id);
+  }
+}

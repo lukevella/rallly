@@ -7,11 +7,15 @@ import { Trans } from "@/components/trans";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/utils/redirect";
 
+import { prepareGuestMerge } from "../actions";
+
 export function OIDCAutoSignIn() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo");
 
-  useMount(() => {
+  useMount(async () => {
+    // Capture guest ID before SSO redirect
+    await prepareGuestMerge();
     authClient.signIn.oauth2({
       providerId: "oidc",
       callbackURL: validateRedirectUrl(redirectTo) || "/",
