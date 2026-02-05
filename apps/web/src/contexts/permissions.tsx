@@ -14,9 +14,7 @@ const PermissionsContext = React.createContext<{
   userId: null,
 });
 
-export const PermissionProvider = ({
-  children,
-}: React.PropsWithChildren) => {
+export const PermissionProvider = ({ children }: React.PropsWithChildren) => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
