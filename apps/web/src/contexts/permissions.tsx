@@ -1,10 +1,12 @@
 "use client";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 
 import { useParticipants } from "@/components/participants-provider";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
+import { trpc } from "@/trpc/client";
 
 const PermissionsContext = React.createContext<{
   userId: string | null;
@@ -14,8 +16,17 @@ const PermissionsContext = React.createContext<{
 
 export const PermissionProvider = ({
   children,
-  userId,
-}: React.PropsWithChildren<{ userId: string | null }>) => {
+}: React.PropsWithChildren) => {
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
+  const { data } = trpc.auth.getUserPermission.useQuery(
+    { token: token ?? "" },
+    { enabled: !!token },
+  );
+
+  const userId = data?.userId ?? null;
+
   return (
     <PermissionsContext.Provider value={{ userId }}>
       {children}

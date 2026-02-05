@@ -19,7 +19,7 @@ import { Trans } from "@/components/trans";
 import type { Status } from "@/features/scheduled-event/schema";
 import { loadMembers } from "@/features/space/data";
 import { getTranslation } from "@/i18n/server";
-import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { MemberSelector } from "../../../../../components/member-selector";
 import { EventsInfiniteList } from "./events-infinite-list";
 import { EventsTabbedView } from "./events-tabbed-view";
@@ -34,7 +34,7 @@ async function loadData({
   search?: string;
   member?: string;
 }) {
-  const helpers = await createSSRHelper();
+  const helpers = await createAuthenticatedSSRHelper();
 
   const [members] = await Promise.all([
     loadMembers(),

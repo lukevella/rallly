@@ -1,8 +1,6 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 
-export const runtime = "edge";
-
 const regularFont = fetch(
   new URL("/public/static/fonts/inter-regular.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());

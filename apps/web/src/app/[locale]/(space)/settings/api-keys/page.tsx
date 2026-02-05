@@ -17,7 +17,7 @@ import { requireSpace, requireUser } from "@/auth/data";
 import { Trans } from "@/components/trans";
 import { isApiAccessEnabled } from "@/features/developer/data";
 import { getTranslation } from "@/i18n/server";
-import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { ApiKeysList } from "./components/api-keys-list";
 import { CreateApiKeyButton } from "./components/create-api-key-button";
 
@@ -30,7 +30,7 @@ export default async function ApiKeysSettingsPage() {
     return notFound();
   }
 
-  const helpers = await createSSRHelper();
+  const helpers = await createAuthenticatedSSRHelper();
   await helpers.apiKeys.list.prefetch();
 
   return (

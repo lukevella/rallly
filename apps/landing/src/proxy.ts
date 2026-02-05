@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { i18nMiddleware } from "@/i18n/middleware";
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   return i18nMiddleware(req);
 }
 

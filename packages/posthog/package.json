@@ -14,12 +14,12 @@
     "js-cookie": "^3.0.1",
     "posthog-js": "^1.333.0",
     "posthog-node": "^5.24.1",
-    "react": "^19.1.4"
+    "react": "19.2.4"
   },
   "devDependencies": {
     "@rallly/tsconfig": "workspace:*",
     "@types/js-cookie": "^3.0.1",
     "@types/node": "^24.1.0",
-    "@types/react": "19.1.2"
+    "@types/react": "19.2.13"
   }
 }

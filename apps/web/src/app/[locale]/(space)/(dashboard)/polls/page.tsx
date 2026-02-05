@@ -27,7 +27,7 @@ import { Trans } from "@/components/trans";
 import { PollsInfiniteList } from "@/features/poll/components/polls-infinite-list";
 import { loadMembers } from "@/features/space/data";
 import { getTranslation } from "@/i18n/server";
-import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { searchParamsSchema } from "./schema";
 
 async function loadData({
@@ -39,7 +39,7 @@ async function loadData({
   q?: string;
   member?: string;
 }) {
-  const helpers = await createSSRHelper();
+  const helpers = await createAuthenticatedSSRHelper();
 
   const [members] = await Promise.all([
     loadMembers(),

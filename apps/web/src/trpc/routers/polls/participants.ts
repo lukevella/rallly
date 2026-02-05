@@ -3,6 +3,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
@@ -193,6 +194,8 @@ export const participants = router({
           poll: participant.pollId,
         },
       });
+
+      revalidatePath(`/invite/${participant.pollId}`);
     }),
   add: publicProcedure
     .use(createRateLimitMiddleware("add_participant", 5, "1 m"))
@@ -325,6 +328,8 @@ export const participants = router({
           },
         });
 
+        revalidatePath(`/invite/${pollId}`);
+
         return participant;
       },
     ),
@@ -339,7 +344,7 @@ export const participants = router({
     .mutation(async ({ input: { participantId, newName, token }, ctx }) => {
       const userId = await resolveUserId(token, ctx.user);
 
-      await canModifyParticipant(participantId, userId);
+      const participant = await canModifyParticipant(participantId, userId);
 
       await prisma.participant.update({
         where: {
@@ -350,6 +355,8 @@ export const participants = router({
         },
         select: null,
       });
+
+      revalidatePath(`/invite/${participant.pollId}`);
     }),
   update: publicProcedure
     .input(
@@ -426,6 +433,8 @@ export const participants = router({
           poll: pollId,
         },
       });
+
+      revalidatePath(`/invite/${pollId}`);
 
       return participant;
     }),

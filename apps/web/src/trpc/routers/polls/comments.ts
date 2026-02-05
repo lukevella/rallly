@@ -1,6 +1,7 @@
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
@@ -184,6 +185,8 @@ export const comments = router({
         },
       });
 
+      revalidatePath(`/invite/${pollId}`);
+
       return newComment;
     }),
   delete: publicProcedure
@@ -232,6 +235,8 @@ export const comments = router({
             poll: comment.pollId,
           },
         });
+
+        revalidatePath(`/invite/${comment.pollId}`);
       }
     }),
 });

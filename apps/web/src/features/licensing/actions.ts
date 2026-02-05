@@ -2,7 +2,7 @@
 
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { INSTANCE_LICENSE_TAG } from "@/features/licensing/constants";
 import { validateLicenseKeyInputSchema } from "@/features/licensing/schema";
 import { AppError } from "@/lib/errors";
@@ -18,7 +18,7 @@ export const removeInstanceLicenseAction = adminActionClient
   .action(async () => {
     try {
       await prisma.instanceLicense.deleteMany();
-      revalidateTag(INSTANCE_LICENSE_TAG);
+      updateTag(INSTANCE_LICENSE_TAG);
     } catch (_error) {
       return {
         success: false,
@@ -77,7 +77,7 @@ export const refreshInstanceLicenseAction = adminActionClient
         },
       });
 
-      revalidateTag(INSTANCE_LICENSE_TAG);
+      updateTag(INSTANCE_LICENSE_TAG);
 
       return {
         success: true,
@@ -119,7 +119,7 @@ export const validateLicenseKeyAction = adminActionClient
       },
     });
 
-    revalidateTag(INSTANCE_LICENSE_TAG);
+    updateTag(INSTANCE_LICENSE_TAG);
 
     return {
       valid: true,
