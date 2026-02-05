@@ -365,7 +365,6 @@
   "increaseSeats": "Øk antall brukere",
   "manageSubscription": "Administrer abonnement",
   "seatUsage": "{usedSeats} av {totalSeats} brukerlisenser brukt",
-  "memberCount": "{count, plural, =0 {No members} one {1 member} other {# members}}",
   "noCalendars": "Ingen kalender funnet",
   "noCalendarsDescription": "Ingen kalender funnet",
   "syncCalendar": "Synkroniser kalender",
