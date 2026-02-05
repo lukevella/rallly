@@ -48,6 +48,11 @@ export const getLoginMethodAction = actionClient
     return { method: "email" as const };
   });
 
+/**
+ * Captures the legacy guest session ID before SSO redirect.
+ * This should be called before any authentication redirect to preserve
+ * the guest ID for merging after the user is created in the database.
+ */
 export async function prepareGuestMerge() {
   const legacySession = await legacyAuth();
   if (legacySession?.user?.isGuest && legacySession.user.id) {
