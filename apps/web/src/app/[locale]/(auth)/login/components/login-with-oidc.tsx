@@ -7,6 +7,10 @@ import { validateRedirectUrl } from "@/utils/redirect";
 
 import { prepareGuestMerge } from "../actions";
 
+/**
+ * OIDC login button component that initiates OAuth2 authentication.
+ * Captures any existing guest session before redirecting to the OIDC provider.
+ */
 export function LoginWithOIDC({
   name,
   redirectTo,
