@@ -11,9 +11,6 @@ import { validateRedirectUrl } from "@/utils/redirect";
 
 import { prepareGuestMerge } from "../actions";
 
-/**
- * Renders the appropriate SSO provider icon based on the provider ID.
- */
 function SSOImage({ provider }: { provider: string }) {
   if (provider === "google") {
     return (
@@ -43,10 +40,6 @@ function SSOImage({ provider }: { provider: string }) {
   return null;
 }
 
-/**
- * SSO login button component that initiates social authentication.
- * Captures any existing guest session before redirecting to the SSO provider.
- */
 export function SSOProvider({
   providerId,
   name,
@@ -67,7 +60,7 @@ export function SSOProvider({
       })}
       key={providerId}
       onClick={async () => {
-        await prepareGuestMerge();
+        await prepareGuestMerge().catch(() => null);
         authClient.signIn.social({
           provider: providerId,
           callbackURL: validateRedirectUrl(redirectTo) || "/",

@@ -9,17 +9,13 @@ import { validateRedirectUrl } from "@/utils/redirect";
 
 import { prepareGuestMerge } from "../actions";
 
-/**
- * Auto-redirects the user to OIDC authentication on mount.
- * Captures any existing guest session before redirecting to preserve guest data.
- */
 export function OIDCAutoSignIn() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo");
 
   useMount(async () => {
-    // Capture guest ID before SSO redirect
-    await prepareGuestMerge();
+    // Capture guest ID before SSO redirect (best-effort, don't block login)
+    await prepareGuestMerge().catch(() => null);
     authClient.signIn.oauth2({
       providerId: "oidc",
       callbackURL: validateRedirectUrl(redirectTo) || "/",

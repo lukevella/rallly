@@ -27,9 +27,6 @@ import { authClient } from "@/lib/auth-client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { validateRedirectUrl } from "@/utils/redirect";
 
-/**
- * Hook that returns a Zod schema for email login form validation.
- */
 function useLoginWithEmailSchema() {
   const { t } = useTranslation();
   return React.useMemo(() => {
@@ -40,10 +37,6 @@ function useLoginWithEmailSchema() {
   }, [t]);
 }
 
-/**
- * Email login form component supporting both password and OTP authentication.
- * Captures any existing guest session before authentication to preserve guest data.
- */
 export function LoginWithEmailForm() {
   const router = useRouter();
   const loginWithEmailSchema = useLoginWithEmailSchema();
@@ -68,8 +61,8 @@ export function LoginWithEmailForm() {
       <form
         className="space-y-4"
         onSubmit={handleSubmit(async ({ identifier, password }) => {
-          // Capture guest ID before authentication
-          await prepareGuestMerge();
+          // Capture guest ID before authentication (best-effort, don't block login)
+          await prepareGuestMerge().catch(() => null);
 
           const validatedRedirectTo = validateRedirectUrl(
             searchParams?.get("redirectTo"),

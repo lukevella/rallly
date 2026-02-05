@@ -7,10 +7,6 @@ import { validateRedirectUrl } from "@/utils/redirect";
 
 import { prepareGuestMerge } from "../actions";
 
-/**
- * OIDC login button component that initiates OAuth2 authentication.
- * Captures any existing guest session before redirecting to the OIDC provider.
- */
 export function LoginWithOIDC({
   name,
   redirectTo,
@@ -21,8 +17,8 @@ export function LoginWithOIDC({
   return (
     <Button
       onClick={async () => {
-        // Capture guest ID before SSO redirect
-        await prepareGuestMerge();
+        // Capture guest ID before SSO redirect (best-effort, don't block login)
+        await prepareGuestMerge().catch(() => null);
         authClient.signIn.oauth2({
           providerId: "oidc",
           callbackURL: validateRedirectUrl(redirectTo) || "/",
