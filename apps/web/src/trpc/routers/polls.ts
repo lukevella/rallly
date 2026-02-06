@@ -344,7 +344,6 @@ export const polls = router({
       });
 
       revalidatePath("/", "layout");
-      revalidatePath(`/invite/${poll.id}`);
 
       return { id: poll.id };
     }),
@@ -536,7 +535,6 @@ export const polls = router({
       }
 
       revalidatePath("/", "layout");
-      revalidatePath(`/invite/${pollId}`);
     }),
   delete: possiblyPublicProcedure
     .input(
@@ -562,7 +560,6 @@ export const polls = router({
       });
 
       revalidatePath("/", "layout");
-      revalidatePath(`/invite/${pollId}`);
     }),
   // END LEGACY ROUTES
   getWatchers: publicProcedure
@@ -1080,7 +1077,6 @@ export const polls = router({
         });
 
         revalidatePath("/", "layout");
-        revalidatePath(`/invite/${poll.id}`);
       }
     }),
   reopen: privateProcedure
@@ -1127,7 +1123,6 @@ export const polls = router({
       });
 
       revalidatePath("/", "layout");
-      revalidatePath(`/invite/${input.pollId}`);
     }),
   close: possiblyPublicProcedure
     .input(
@@ -1164,7 +1159,6 @@ export const polls = router({
       });
 
       revalidatePath("/", "layout");
-      revalidatePath(`/invite/${input.pollId}`);
     }),
   duplicate: proProcedure
     .input(
