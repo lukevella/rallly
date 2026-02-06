@@ -48,7 +48,7 @@ export async function generateMetadata(props: {
   });
 
   if (!poll) {
-    return notFound();
+    notFound();
   }
   return {
     title: poll.title,

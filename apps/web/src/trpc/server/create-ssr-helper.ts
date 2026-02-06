@@ -32,7 +32,7 @@ export const createAuthenticatedSSRHelper = async () => {
   const session = await getSession();
 
   if (!session?.user) {
-    return redirect("/login");
+    redirect("/login");
   }
 
   return createServerSideHelpers({

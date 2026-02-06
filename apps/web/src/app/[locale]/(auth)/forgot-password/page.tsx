@@ -21,7 +21,7 @@ export default async function ForgotPasswordPage() {
   }
   const session = await getSession();
   if (session && !session.user?.isGuest) {
-    return redirect("/");
+    redirect("/");
   }
 
   return (

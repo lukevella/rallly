@@ -28,7 +28,7 @@ export default async function CalendarsPage() {
   const isCalendarsEnabled = isFeatureEnabled("calendars");
 
   if (!isCalendarsEnabled) {
-    return notFound();
+    notFound();
   }
 
   const trpc = await createAuthenticatedSSRHelper();

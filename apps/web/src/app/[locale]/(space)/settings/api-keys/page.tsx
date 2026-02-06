@@ -27,7 +27,7 @@ export default async function ApiKeysSettingsPage() {
   const hasAccess = await isApiAccessEnabled(user, space);
 
   if (!hasAccess) {
-    return notFound();
+    notFound();
   }
 
   const helpers = await createAuthenticatedSSRHelper();

@@ -22,7 +22,7 @@ export default async function Register(props: {
   const isRegistrationEnabled = await getRegistrationEnabled();
 
   if (!isRegistrationEnabled) {
-    return notFound();
+    notFound();
   }
 
   return (

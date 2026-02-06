@@ -43,7 +43,7 @@ export default async function LoginPage(props: {
   const searchParams = await props.searchParams;
   const session = await getSession();
   if (session?.user && !session.user.isGuest) {
-    return redirect("/");
+    redirect("/");
   }
   const { isRegistrationEnabled, t } = await loadData();
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
