@@ -51,7 +51,7 @@ services:
       - "8025:8025"
       - "1025:1025"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8025/api/v1/messages"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8025/readyz"]
       interval: 5s
       timeout: 5s
       retries: 5
