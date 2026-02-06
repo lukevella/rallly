@@ -24,7 +24,7 @@ export async function deleteAllMessages(): Promise<void> {
 async function markMessageAsRead(id: string): Promise<void> {
   await fetch(`${MAILPIT_API_URL}/v1/messages`, {
     method: "PUT",
-    body: JSON.stringify({ IDs: [id], Read: true, "Search": "tag:captured" }),
+    body: JSON.stringify({ IDs: [id], Read: true, Search: "tag:captured" }),
   });
 }
 
@@ -39,9 +39,12 @@ export async function captureOne(
     const { messages } = await getMessages();
 
     // Find most recent email to this address
-    const message = messages.reverse().find((msg) =>
-      msg.To.some((recipient) => recipient.Address === to) && !msg.Read,
-    );
+    const message = messages
+      .reverse()
+      .find(
+        (msg) =>
+          msg.To.some((recipient) => recipient.Address === to) && !msg.Read,
+      );
 
     if (message) {
       const fullMessage = await getMessage(message.ID);

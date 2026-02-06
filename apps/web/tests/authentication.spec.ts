@@ -84,8 +84,10 @@ test.describe.serial(() => {
 
       const code = await getCode(testUserEmail);
       const incorrectCode = Number.parseInt(code) + 1;
-      
-      await page.getByPlaceholder("Enter your 6-digit code").fill(incorrectCode.toString());
+
+      await page
+        .getByPlaceholder("Enter your 6-digit code")
+        .fill(incorrectCode.toString());
 
       await expect(
         page.getByText("Your verification code is incorrect or has expired"),
