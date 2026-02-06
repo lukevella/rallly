@@ -5,7 +5,7 @@ import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import * as z from "zod";
 import { getCurrentUserSpace } from "@/auth/data";
 import { moderateContent } from "@/features/moderation";
 import { getPolls } from "@/features/poll/data";

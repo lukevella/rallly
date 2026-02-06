@@ -21,7 +21,7 @@ import {
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod";
 import { Trans } from "@/components/trans";
 import { deleteUserAction } from "@/features/user/actions";
 import { useTranslation } from "@/i18n/client";

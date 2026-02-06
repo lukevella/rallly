@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 export const credentialTypeSchema = z.enum(["oauth"]);
 export type CredentialType = z.infer<typeof credentialTypeSchema>;

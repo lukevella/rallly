@@ -1,5 +1,5 @@
 import type { TimeFormat } from "@rallly/database";
-import z from "zod";
+import * as z from "zod";
 
 export const userRoleSchema = z.enum(["admin", "user"]);
 

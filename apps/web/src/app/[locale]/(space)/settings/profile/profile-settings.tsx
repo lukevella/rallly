@@ -12,7 +12,7 @@ import {
 import { Input } from "@rallly/ui/input";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod";
 
 import { Trans } from "@/components/trans";
 import { trpc } from "@/trpc/client";

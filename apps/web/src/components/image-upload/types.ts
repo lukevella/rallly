@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 export const allowedMimeTypes = z.enum(["image/jpeg", "image/png"]);
 export type AllowedMimeType = z.infer<typeof allowedMimeTypes>;

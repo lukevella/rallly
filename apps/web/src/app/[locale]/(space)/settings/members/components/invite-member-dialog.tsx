@@ -32,7 +32,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { InfoIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod";
 import { Trans } from "@/components/trans";
 import { inviteMemberAction } from "@/features/space/actions";
 import { SpaceRole } from "@/features/space/components/space-role";

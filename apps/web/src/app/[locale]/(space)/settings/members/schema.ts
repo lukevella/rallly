@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 export const searchParamsSchema = z.object({
   page: z.coerce.number().min(1).default(1),

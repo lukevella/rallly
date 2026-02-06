@@ -12,7 +12,7 @@ import {
 } from "@rallly/ui/form";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod";
 
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";

@@ -15,7 +15,7 @@ import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { TRPCClientError } from "@trpc/client";
 import { useForm } from "react-hook-form";
-import z from "zod";
+import * as z from "zod";
 import { usePoll } from "@/contexts/poll";
 import { useTranslation } from "@/i18n/client";
 import { useTimezone } from "@/lib/timezone/client/context";

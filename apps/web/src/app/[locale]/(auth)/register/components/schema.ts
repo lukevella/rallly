@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { usePasswordValidationSchema } from "@/features/password/schema";
 import { useTranslation } from "@/i18n/client";
 import { isValidName } from "@/utils/is-valid-name";

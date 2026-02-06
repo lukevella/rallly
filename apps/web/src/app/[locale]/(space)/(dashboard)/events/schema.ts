@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { statusSchema } from "@/features/scheduled-event/schema";
 
 export const DEFAULT_PAGE_SIZE = 10;

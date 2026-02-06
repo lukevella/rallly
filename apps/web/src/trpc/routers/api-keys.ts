@@ -1,6 +1,6 @@
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import * as z from "zod";
 import { createApiKey } from "@/features/developer/utils";
 import { router, spaceOwnerCloudOnlyProcedure } from "../trpc";
 

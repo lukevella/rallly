@@ -33,7 +33,7 @@ import React from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useMount } from "react-use";
-import { z } from "zod";
+import * as z from "zod";
 
 import {
   useDeleteParticipantMutation,

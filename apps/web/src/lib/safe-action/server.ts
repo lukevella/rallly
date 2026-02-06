@@ -3,7 +3,7 @@ import "server-only";
 import * as Sentry from "@sentry/nextjs";
 import { waitUntil } from "@vercel/functions";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
-import z from "zod";
+import * as z from "zod";
 import { getCurrentUser, getCurrentUserSpace } from "@/auth/data";
 import { PostHogClient } from "@/features/analytics/posthog";
 import { defineAbilityForSpace } from "@/features/space/ability";

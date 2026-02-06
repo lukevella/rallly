@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 export const calendarProviderSchema = z.enum(["google", "microsoft"]);
 export type CalendarProvider = z.infer<typeof calendarProviderSchema>;

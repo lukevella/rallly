@@ -1,4 +1,4 @@
-import z from "zod";
+import * as z from "zod";
 
 export const feedbackSchema = z.object({
   content: z.string().min(10).max(10000),

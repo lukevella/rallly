@@ -2,7 +2,7 @@
 
 import { prisma } from "@rallly/database";
 import { cookies } from "next/headers";
-import z from "zod";
+import * as z from "zod";
 import {
   actionClient,
   createRateLimitMiddleware,

@@ -16,7 +16,7 @@ import {
 } from "@rallly/ui/select";
 import dayjs from "dayjs";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod";
 
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";

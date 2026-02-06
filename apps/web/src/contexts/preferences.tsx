@@ -3,7 +3,7 @@
 import type { TimeFormat } from "@rallly/database";
 import React from "react";
 import { useLocalStorage } from "react-use";
-import { z } from "zod";
+import * as z from "zod";
 
 import { useRequiredContext } from "@/components/use-required-context";
 import { useUser } from "@/components/user-provider";

@@ -1,6 +1,6 @@
 import type { calendar_v3 } from "googleapis";
 import { google } from "googleapis";
-import z from "zod";
+import * as z from "zod";
 import type {
   CalendarInfo,
   CalendarService,
