@@ -1,7 +1,7 @@
-import { ImageResponse } from "next/og";
-import type { NextRequest } from "next/server";
 import fs from "node:fs";
 import path from "node:path";
+import { ImageResponse } from "next/og";
+import type { NextRequest } from "next/server";
 
 const regularFont = fs.readFileSync(
   path.join(process.cwd(), "public/static/fonts/inter-regular.ttf"),
