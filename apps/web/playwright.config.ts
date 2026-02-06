@@ -24,7 +24,7 @@ const config: PlaywrightTestConfig = {
   testDir: "./tests",
   webServer: ci
     ? {
-        command: `NODE_ENV=test next start --port ${port}`,
+        command: `dotenv -e .env.test -- next start --port ${port}`,
         url: baseURL,
         reuseExistingServer: false,
       }
