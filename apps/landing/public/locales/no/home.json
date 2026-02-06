@@ -1,6 +1,8 @@
 {
   "createPageLikeThis": "Lag en side som denne, på sekunder!",
   "noLoginRequired": "Innlogging kreves ikke",
+  "headline": "Finn det beste tidspunktet å møtes",
+  "subheading": "Planlegg gruppemøter uten lange e-posttråder",
   "pcmagQuote": "“Konfigurer en planleggingsavstemning på så lite tid som mulig.”",
   "hubspotQuote": "“Det enkleste valget for tilgjengelighetsavstemning for store grupper.”",
   "goodfirmsQuote": "“Unik i sin enkelhet og krever minimal interaksjonstid.”",
@@ -18,11 +20,16 @@
   "doodleAlternativeMetaTitle": "Det beste gratis Doodle-alternativet | Rallly",
   "doodleAlternativeMetaDescription": "Ser du etter et Doodle-alternativ? Prøv Rallly! Det er gratis, enkelt å bruke og krever ingen innlogging.",
   "createASchedulingPoll": "Opprett en planleggingsavstemning",
+  "freeSchedulingPollMetaTitle": "Lag en gratis planleggingsavstemning | Ingen konto kreves",
   "freeSchedulingPollMetaDescription": "Opprett en gratis planleggingsavstemning på sekunder. Ideelt for å organisere møter, arrangementer, konferanser, idrettslag og mer.",
+  "freeSchedulingPollTitle": "Finn en dato til din neste begivenhet",
   "freeSchedulingPollDescription": "Rallly lar deg opprette fine planleggingsavstemninger som er enkle å bruke, slik at du kan finne frem til det beste tidspunktet for ditt neste arrangement.",
   "new": "Nytt",
+  "metaTitle": "Rallly: Gratis planleggingsverktøy for gruppemøter",
   "metaDescription": "Opprett avstemninger og stem for å finne den beste dagen eller tidspunktet. Et gratis Doodle-alternativ.",
   "when2meetAlternativeMetaTitle": "Det beste alternativet til When2Meet: Rallly",
   "when2meetAlternativeMetaDescription": "Finn en bedre måte å planlegge møter på med Rallly, det beste gratisalternativet til When2Meet. Lettvint å bruke og gratis.",
-  "when2meetAlternative": "Bruker du fremdeles When2Meet?"
+  "when2meetAlternative": "Bruker du fremdeles When2Meet?",
+  "when2meetAlternativeDescription": "Opprett profesjonelle, reklamefrie møteavstemninger gratis med Rallly.",
+  "whiteLabelingBlog": "Merkevaretilpasning for instanser på egen infrastruktur"
 }
