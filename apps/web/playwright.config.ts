@@ -1,6 +1,5 @@
+import { defineConfig, devices } from "@playwright/test";
 import { config } from "dotenv";
-import { devices } from "@playwright/test";
-import { defineConfig } from "@playwright/test";
 
 config({ path: ".env.test" });
 
