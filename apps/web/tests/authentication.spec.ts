@@ -82,7 +82,10 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Login with email" }).click();
 
-      await page.getByPlaceholder("Enter your 6-digit code").fill("000000");
+      const code = await getCode(testUserEmail);
+      const incorrectCode = Number.parseInt(code) + 1;
+      
+      await page.getByPlaceholder("Enter your 6-digit code").fill(incorrectCode.toString());
 
       await expect(
         page.getByText("Your verification code is incorrect or has expired"),
