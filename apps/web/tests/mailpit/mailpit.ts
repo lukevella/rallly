@@ -22,16 +22,17 @@ export async function deleteAllMessages(): Promise<void> {
 
 export async function captureOne(
   to: string,
-  options: { wait?: number } = {},
+  options: { wait?: number; after?: number } = {},
 ): Promise<{ email: MailpitMessage }> {
-  const startTime = Date.now();
+  const startTime = options.after ?? Date.now() - 1000; // 1s buffer for race conditions
   const timeout = options.wait ?? 5000;
+  const deadline = Date.now() + timeout;
 
-  while (Date.now() - startTime < timeout) {
+  while (Date.now() < deadline) {
     const { messages } = await getMessages();
     const message = messages.find(
       (msg) =>
-        new Date(msg.Created) > new Date(startTime) &&
+        new Date(msg.Created).getTime() > startTime &&
         msg.To.some((recipient) => recipient.Address === to),
     );
 
