@@ -83,7 +83,7 @@ test.describe.serial(() => {
       await page.getByRole("button", { name: "Login with email" }).click();
 
       const code = await getCode(testUserEmail);
-      const incorrectCode = Number.parseInt(code) + 1;
+      const incorrectCode = Number.parseInt(code, 10) + 1;
 
       await page
         .getByPlaceholder("Enter your 6-digit code")
