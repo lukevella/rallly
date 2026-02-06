@@ -1,17 +1,17 @@
-import { loadEnvConfig } from "@next/env";
-import type { PlaywrightTestConfig } from "@playwright/test";
+import { config } from "dotenv";
 import { devices } from "@playwright/test";
+import { defineConfig } from "@playwright/test";
+
+config({ path: ".env.test" });
 
 const ci = process.env.CI === "true";
-
-loadEnvConfig(process.cwd());
 
 const port = process.env.PORT || 3002;
 // Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // Reference: https://playwright.dev/docs/test-configuration
-const config: PlaywrightTestConfig = {
+export default defineConfig({
   // Artifacts folder where screenshots, videos, and traces are stored.
   outputDir: "test-results/",
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
@@ -32,5 +32,4 @@ const config: PlaywrightTestConfig = {
     ["html", { open: !ci ? "on-failure" : "never" }],
   ],
   workers: 1,
-};
-export default config;
+});

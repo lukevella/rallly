@@ -30,6 +30,7 @@ import { isKvEnabled, kv } from "@/lib/kv";
 import { auth as legacyAuth, signOut as legacySignOut } from "@/next-auth";
 import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
+import { isRateLimitEnabled } from "@/lib/rate-limit/constants";
 
 const baseURL = absoluteUrl("/api/better-auth");
 
@@ -210,7 +211,7 @@ export const authLib = betterAuth({
       }
     : undefined,
   rateLimit: {
-    enabled: process.env.NODE_ENV !== "test",
+    enabled: isRateLimitEnabled,
     storage: isKvEnabled() ? "secondary-storage" : "memory",
   },
   account: {
