@@ -65,7 +65,7 @@ const testApiKey = "sk_eXzkd84Y_bN24KFwZ_UyiQ0b6zckpNfL2pSdng3r3";
 const mockApiKey = {
   id: "api-key-id",
   name: "Test API Key",
-  prefix: "sk_eXzkd84Y",
+  prefix: "eXzkd84Y",
   spaceId: "test-space-id",
   hashedKey:
     "scrypt$16384$8$1$AvCRsm3--6zUOTmMdmM5Jg$4fe1f6de88b70ed9f78aa89752e632cc6ff628194dd42bd34a8cf8e71b23e19ba23ceb9c6371f6eed9129a8afee81bdad8b5b31351162178e2a8b68381102940",
