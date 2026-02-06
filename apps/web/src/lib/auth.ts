@@ -212,8 +212,8 @@ export const authLib = betterAuth({
   rateLimit:
     process.env.NODE_ENV === "test"
       ? {
-        enabled: false,
-      }
+          enabled: false,
+        }
       : {
           storage: isKvEnabled() ? "secondary-storage" : "memory",
         },
