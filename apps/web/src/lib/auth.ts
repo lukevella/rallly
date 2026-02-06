@@ -209,14 +209,10 @@ export const authLib = betterAuth({
         },
       }
     : undefined,
-  rateLimit:
-    process.env.NODE_ENV === "test"
-      ? {
-          enabled: false,
-        }
-      : {
-          storage: isKvEnabled() ? "secondary-storage" : "memory",
-        },
+  rateLimit: {
+    enabled: process.env.NODE_ENV !== "test",
+    storage: isKvEnabled() ? "secondary-storage" : "memory",
+  },
   account: {
     accountLinking: {
       enabled: true,

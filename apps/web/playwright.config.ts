@@ -8,7 +8,7 @@ loadEnvConfig(process.cwd());
 
 const port = process.env.PORT || 3002;
 // Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
-const baseURL = `http://localhost:${port}`;
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // Reference: https://playwright.dev/docs/test-configuration
 const config: PlaywrightTestConfig = {
@@ -22,17 +22,11 @@ const config: PlaywrightTestConfig = {
     trace: "retain-on-failure",
   },
   testDir: "./tests",
-  webServer: ci
-    ? {
-        command: `dotenv -e .env.test -- next start --port ${port}`,
-        url: baseURL,
-        reuseExistingServer: false,
-      }
-    : {
-        command: `NODE_ENV=test next dev --turbopack --port ${port}`,
-        url: baseURL,
-        reuseExistingServer: true,
-      },
+  webServer: {
+    command: ci ? `next start --port ${port}` : `next dev --port ${port}`,
+    url: baseURL,
+    reuseExistingServer: !ci,
+  },
   reporter: [
     [ci ? "github" : "list"],
     ["html", { open: !ci ? "on-failure" : "never" }],
