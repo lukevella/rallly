@@ -1,17 +1,16 @@
-import { loadEnvConfig } from "@next/env";
-import type { PlaywrightTestConfig } from "@playwright/test";
-import { devices } from "@playwright/test";
+import { defineConfig, devices } from "@playwright/test";
+import { config } from "dotenv";
+
+config({ path: ".env.test" });
 
 const ci = process.env.CI === "true";
-
-loadEnvConfig(process.cwd());
 
 const port = process.env.PORT || 3002;
 // Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
 const baseURL = `http://localhost:${port}`;
 
 // Reference: https://playwright.dev/docs/test-configuration
-const config: PlaywrightTestConfig = {
+export default defineConfig({
   // Artifacts folder where screenshots, videos, and traces are stored.
   outputDir: "test-results/",
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
@@ -22,21 +21,14 @@ const config: PlaywrightTestConfig = {
     trace: "retain-on-failure",
   },
   testDir: "./tests",
-  webServer: ci
-    ? {
-        command: `NODE_ENV=test next start --port ${port}`,
-        url: baseURL,
-        reuseExistingServer: false,
-      }
-    : {
-        command: `NODE_ENV=test next dev --turbopack --port ${port}`,
-        url: baseURL,
-        reuseExistingServer: true,
-      },
+  webServer: {
+    command: ci ? `next start --port ${port}` : `next dev --port ${port}`,
+    url: baseURL,
+    reuseExistingServer: !ci,
+  },
   reporter: [
     [ci ? "github" : "list"],
     ["html", { open: !ci ? "on-failure" : "never" }],
   ],
   workers: 1,
-};
-export default config;
+});

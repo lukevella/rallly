@@ -14,6 +14,7 @@
     "**/*.tsx",
     "**/*.js",
     ".next/types/**/*.ts",
+    "next-env.d.ts",
     "vitest.config.mts"
   ],
   "exclude": ["node_modules", ".next/**/*", "playwright-report", "test-results"]

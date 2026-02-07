@@ -1,22 +1,17 @@
+import fs from "node:fs";
+import path from "node:path";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 
-export const runtime = "edge";
+const regularFont = fs.readFileSync(
+  path.join(process.cwd(), "public/static/fonts/inter-regular.ttf"),
+);
 
-const regularFont = fetch(
-  new URL("/public/static/fonts/inter-regular.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
-
-const boldFont = fetch(
-  new URL("/public/static/fonts/inter-bold.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
+const boldFont = fs.readFileSync(
+  path.join(process.cwd(), "public/static/fonts/inter-bold.ttf"),
+);
 
 export async function GET(req: NextRequest) {
-  const [regularFontData, boldFontData] = await Promise.all([
-    regularFont,
-    boldFont,
-  ]);
-
   const { searchParams } = new URL(req.url);
   const title = searchParams.get("title");
   const excerpt = searchParams.get("excerpt");
@@ -61,12 +56,12 @@ export async function GET(req: NextRequest) {
       fonts: [
         {
           name: "Inter",
-          data: regularFontData,
+          data: regularFont,
           weight: 400,
         },
         {
           name: "Inter",
-          data: boldFontData,
+          data: boldFont,
           weight: 700,
         },
       ],

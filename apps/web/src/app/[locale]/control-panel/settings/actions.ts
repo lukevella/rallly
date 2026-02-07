@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@rallly/database";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { instanceSettingsTag } from "@/features/instance-settings/constants";
 import { instanceSettingsSchema } from "@/features/instance-settings/schema";
 import { adminActionClient } from "@/lib/safe-action/server";
@@ -19,5 +19,5 @@ export const updateInstanceSettingsAction = adminActionClient
       data: parsedInput,
     });
 
-    revalidateTag(instanceSettingsTag);
+    updateTag(instanceSettingsTag);
   });

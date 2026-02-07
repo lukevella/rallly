@@ -81,7 +81,7 @@ export const requireAdmin = cache(async () => {
 
   if (user.role !== "admin") {
     if (isInitialAdmin(user.email)) {
-      return redirect("/admin-setup");
+      redirect("/admin-setup");
     }
 
     notFound();

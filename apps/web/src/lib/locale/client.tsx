@@ -29,7 +29,7 @@ export function LocaleSync({ userLocale }: { userLocale: string }) {
         },
       );
     }
-  }, [locale, userLocale, router.refresh, t]);
+  }, [locale, userLocale, router, t]);
 
   return null;
 }

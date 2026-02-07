@@ -10,8 +10,8 @@
     "@rallly/tsconfig": "workspace:*"
   },
   "dependencies": {
-    "mint": "^4.2.245",
-    "react": "^19.1.4",
-    "react-dom": "^19.1.4"
+    "mint": "^4.2.326",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   }
 }

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { pollStatusSchema } from "@/features/poll/schema";
 
 export const DEFAULT_PAGE_SIZE = 10;

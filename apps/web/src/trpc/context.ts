@@ -1,4 +1,4 @@
-type User = {
+export type User = {
   id: string;
   isGuest: boolean;
   locale?: string;

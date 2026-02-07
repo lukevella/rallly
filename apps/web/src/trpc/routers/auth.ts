@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 import { decryptToken } from "@/utils/session";
 import { publicProcedure, router } from "../trpc";

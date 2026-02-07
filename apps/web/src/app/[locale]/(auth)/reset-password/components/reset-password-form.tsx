@@ -13,7 +13,7 @@ import {
 import { PasswordInput } from "@rallly/ui/password-input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod";
 import { Trans } from "@/components/trans";
 import { PasswordStrengthMeter } from "@/features/password/components/password-strength-meter";
 import { usePasswordValidationSchema } from "@/features/password/schema";

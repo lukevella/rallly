@@ -14,7 +14,7 @@ import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod";
 import {
   ImageUpload,
   ImageUploadControl,

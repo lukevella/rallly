@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock server-only before any imports that might need it
 vi.mock("server-only", () => ({}));
@@ -57,44 +57,27 @@ vi.mock("@/lib/kv", () => ({
 }));
 
 import { prisma } from "@rallly/database";
-import { createApiKey } from "@/features/developer/utils";
 import { app } from "./route";
 
-// Pre-generated test API key and hash (created once, reused across all tests)
-let testApiKey: string;
-let mockApiKey: {
-  id: string;
-  name: string;
-  prefix: string;
-  spaceId: string;
-  hashedKey: string;
-  lastUsedAt: null;
-  expiresAt: null;
-  revokedAt: null;
-  createdAt: Date;
-  updatedAt: Date;
-  space: { ownerId: string };
+// Pre-generated test API key fixture (eliminates non-deterministic scrypt timing issues)
+// Generated once using createApiKey() and saved here for consistent test behavior
+const testApiKey = "sk_eXzkd84Y_bN24KFwZ_UyiQ0b6zckpNfL2pSdng3r3";
+const mockApiKey = {
+  id: "api-key-id",
+  name: "Test API Key",
+  prefix: "eXzkd84Y",
+  spaceId: "test-space-id",
+  hashedKey:
+    "scrypt$16384$8$1$AvCRsm3--6zUOTmMdmM5Jg$4fe1f6de88b70ed9f78aa89752e632cc6ff628194dd42bd34a8cf8e71b23e19ba23ceb9c6371f6eed9129a8afee81bdad8b5b31351162178e2a8b68381102940",
+  lastUsedAt: null,
+  expiresAt: null,
+  revokedAt: null,
+  createdAt: new Date("2025-01-01"),
+  updatedAt: new Date("2025-01-01"),
+  space: {
+    ownerId: "test-user-id",
+  },
 };
-
-beforeAll(async () => {
-  const { apiKey, prefix, hashedKey } = await createApiKey();
-  testApiKey = apiKey;
-  mockApiKey = {
-    id: "api-key-id",
-    name: "Test API Key",
-    prefix,
-    spaceId: "test-space-id",
-    hashedKey,
-    lastUsedAt: null,
-    expiresAt: null,
-    revokedAt: null,
-    createdAt: new Date("2025-01-01"),
-    updatedAt: new Date("2025-01-01"),
-    space: {
-      ownerId: "test-user-id",
-    },
-  };
-});
 
 describe("Private API - /polls", () => {
   beforeEach(() => {

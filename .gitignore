@@ -40,3 +40,6 @@ playwright-report
 test-results
 .kiro
 .vercel
+
+# Next
+next-env.d.ts

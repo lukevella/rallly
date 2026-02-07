@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getLocaleFromRequest, setLocaleCookie } from "@/lib/locale/server";
 
-export const middleware = async (req: NextRequest) => {
+export const proxy = async (req: NextRequest) => {
   const { nextUrl } = req;
   const newUrl = nextUrl.clone();
   const pathname = newUrl.pathname;

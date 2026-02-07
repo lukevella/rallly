@@ -6,7 +6,7 @@ import { generateCodeVerifier, generateState } from "arctic";
 import { Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { handle } from "hono/vercel";
-import { z } from "zod";
+import * as z from "zod";
 import { validateRedirectUrl } from "@/utils/redirect";
 import type { CreateOAuthOptions } from "./types";
 

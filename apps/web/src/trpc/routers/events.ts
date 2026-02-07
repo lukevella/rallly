@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { getEventsChronological } from "@/features/scheduled-event/data";
 import { privateProcedure, router } from "../trpc";
 

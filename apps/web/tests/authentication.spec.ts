@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
-
+import { deleteAllMessages } from "./mailpit/mailpit";
 import { RegisterPage } from "./register-page";
 import { createUserInDb, loginWithEmail } from "./test-utils";
 import { getCode, getPasswordResetLink } from "./utils";
@@ -18,6 +18,10 @@ test.describe.serial(() => {
         },
       },
     });
+  });
+
+  test.beforeEach(async () => {
+    await deleteAllMessages();
   });
 
   test.describe("new user", () => {

@@ -8,7 +8,7 @@ import {
 } from "@rallly/ui/dialog";
 import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod";
 
 import { NewParticipantForm } from "@/components/new-participant-modal";
 import { useParticipants } from "@/components/participants-provider";

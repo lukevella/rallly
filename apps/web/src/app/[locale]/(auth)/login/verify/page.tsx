@@ -20,7 +20,7 @@ export default async function VerifyPage() {
   const { t } = await getTranslation();
   const email = (await cookies()).get("verification-email")?.value;
   if (!email) {
-    return redirect("/login");
+    redirect("/login");
   }
   return (
     <AuthPageContainer>

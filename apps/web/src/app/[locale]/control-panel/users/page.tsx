@@ -3,7 +3,7 @@ import { prisma } from "@rallly/database";
 import { UsersIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import z from "zod";
+import * as z from "zod";
 import {
   SettingsPage,
   SettingsPageContent,

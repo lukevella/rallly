@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 export const instanceSettingsSchema = z.object({
   disableUserRegistration: z.boolean(),

@@ -44,7 +44,7 @@ export const publicProcedure = procedureWithAnalytics;
 
 export const possiblyPublicProcedure = procedureWithAnalytics.use(
   middleware(async ({ ctx, next }) => {
-    // These procedurs are public if Quick Create is enabled
+    // These procedures are public if Quick Create is enabled
     const isGuest = !ctx.user || ctx.user.isGuest;
     if (isGuest && !isQuickCreateEnabled) {
       throw new TRPCError({
@@ -57,8 +57,7 @@ export const possiblyPublicProcedure = procedureWithAnalytics.use(
   }),
 );
 
-// This procedure guarantees that a user will exist in the context by
-// creating a guest user if needed
+// This procedure guarantees that a user will exist in the context
 export const requireUserMiddleware = middleware(async ({ ctx, next }) => {
   if (!ctx.user) {
     throw new TRPCError({
@@ -68,7 +67,7 @@ export const requireUserMiddleware = middleware(async ({ ctx, next }) => {
   }
 
   if (!ctx.user.isGuest) {
-    const user = await prisma.user.findUnique({
+    const dbUser = await prisma.user.findUnique({
       where: {
         id: ctx.user.id,
       },
@@ -77,14 +76,14 @@ export const requireUserMiddleware = middleware(async ({ ctx, next }) => {
       },
     });
 
-    if (!user) {
+    if (!dbUser) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Logged in user does not exist anymore",
       });
     }
 
-    if (user.banned) {
+    if (dbUser.banned) {
       throw new TRPCError({
         code: "FORBIDDEN",
         message: "Your account has been banned",

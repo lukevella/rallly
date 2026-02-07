@@ -1,7 +1,7 @@
 "use server";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
-import { z } from "zod";
+import * as z from "zod";
 import { AppError } from "@/lib/errors";
 import { adminActionClient } from "@/lib/safe-action/server";
 

@@ -27,6 +27,7 @@ import { createSpace } from "@/features/space/mutations";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { isKvEnabled, kv } from "@/lib/kv";
+import { isRateLimitEnabled } from "@/lib/rate-limit/constants";
 import { auth as legacyAuth, signOut as legacySignOut } from "@/next-auth";
 import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
@@ -210,6 +211,7 @@ export const authLib = betterAuth({
       }
     : undefined,
   rateLimit: {
+    enabled: isRateLimitEnabled,
     storage: isKvEnabled() ? "secondary-storage" : "memory",
   },
   account: {

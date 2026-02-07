@@ -3,7 +3,7 @@ node_modules
 .github
 .vscode
 tsconfig.tsbuildinfo
-.env
+.env*
 .sentryclirc
 sentry.properties
 Dockerfile

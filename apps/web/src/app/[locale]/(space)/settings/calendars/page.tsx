@@ -19,7 +19,7 @@ import {
 import { Trans } from "@/components/trans";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { CalendarConnectionList } from "./components/calendar-connection-list";
 import { ConnectCalendarDropdown } from "./components/connect-calendar-dropdown";
 import { DefaultCalendarSelect } from "./components/default-calendar-select";
@@ -28,10 +28,10 @@ export default async function CalendarsPage() {
   const isCalendarsEnabled = isFeatureEnabled("calendars");
 
   if (!isCalendarsEnabled) {
-    return notFound();
+    notFound();
   }
 
-  const trpc = await createSSRHelper();
+  const trpc = await createAuthenticatedSSRHelper();
 
   await Promise.all([
     trpc.calendars.list.prefetch(),

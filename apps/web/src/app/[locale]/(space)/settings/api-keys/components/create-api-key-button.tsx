@@ -27,7 +27,7 @@ import { AlertTriangleIcon, CheckIcon, CopyIcon, PlusIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useCopyToClipboard } from "react-use";
-import { z } from "zod";
+import * as z from "zod";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";

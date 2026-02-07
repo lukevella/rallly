@@ -10,13 +10,9 @@ export function CalendarProviderIcon({
 }) {
   switch (provider) {
     case "google":
-      return (
-        <GoogleCalendarIcon width={size} height={size} alt="Google Calendar" />
-      );
+      return <GoogleCalendarIcon width={size} height={size} />;
     case "microsoft":
-      return (
-        <OutlookIcon width={size} height={size} alt="Microsoft Calendar" />
-      );
+      return <OutlookIcon width={size} height={size} />;
     default:
       return null;
   }

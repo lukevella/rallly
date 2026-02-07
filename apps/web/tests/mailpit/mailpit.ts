@@ -11,6 +11,7 @@ export async function getMessages(): Promise<MailpitListMessagesResponse> {
 export async function getMessage(id: string): Promise<MailpitMessage> {
   const response = await fetch(`${MAILPIT_API_URL}/v1/message/${id}`);
   const data = (await response.json()) as MailpitMessage;
+  await markMessageAsRead(id);
   return data;
 }
 
@@ -20,20 +21,30 @@ export async function deleteAllMessages(): Promise<void> {
   });
 }
 
+async function markMessageAsRead(id: string): Promise<void> {
+  await fetch(`${MAILPIT_API_URL}/v1/messages`, {
+    method: "PUT",
+    body: JSON.stringify({ IDs: [id], Read: true, Search: "tag:captured" }),
+  });
+}
+
 export async function captureOne(
   to: string,
   options: { wait?: number } = {},
 ): Promise<{ email: MailpitMessage }> {
-  const startTime = Date.now();
   const timeout = options.wait ?? 5000;
+  const deadline = Date.now() + timeout;
 
-  while (Date.now() - startTime < timeout) {
+  while (Date.now() < deadline) {
     const { messages } = await getMessages();
-    const message = messages.find(
-      (msg) =>
-        new Date(msg.Created) > new Date(startTime) &&
-        msg.To.some((recipient) => recipient.Address === to),
-    );
+
+    // Find most recent email to this address
+    const message = messages
+      .reverse()
+      .find(
+        (msg) =>
+          msg.To.some((recipient) => recipient.Address === to) && !msg.Read,
+      );
 
     if (message) {
       const fullMessage = await getMessage(message.ID);

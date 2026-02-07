@@ -1,6 +1,6 @@
 "use server";
 
-import { z } from "zod";
+import * as z from "zod";
 import { AppError } from "@/lib/errors";
 import { authActionClient } from "@/lib/safe-action/server";
 import { isStorageEnabled } from "@/lib/storage/constants";

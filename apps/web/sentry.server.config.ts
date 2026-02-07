@@ -14,6 +14,9 @@ Sentry.init({
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
 
+  // Don't send personal identifiable information (PII) to Sentry.
+  sendDefaultPii: false,
+
   // Uncomment the line below to enable Spotlight (https://spotlightjs.com)
   // spotlight: process.env.NODE_ENV === 'development',
 });
