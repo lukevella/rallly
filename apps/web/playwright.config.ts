@@ -7,7 +7,7 @@ const ci = process.env.CI === "true";
 
 const port = process.env.PORT || 3002;
 // Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
-const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+const baseURL = `http://localhost:${port}`;
 
 // Reference: https://playwright.dev/docs/test-configuration
 export default defineConfig({
