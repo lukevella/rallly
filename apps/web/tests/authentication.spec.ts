@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
-
+import { deleteAllMessages } from "./mailpit/mailpit";
 import { RegisterPage } from "./register-page";
 import { createUserInDb, loginWithEmail } from "./test-utils";
 import { getCode, getPasswordResetLink } from "./utils";
@@ -18,6 +18,10 @@ test.describe.serial(() => {
         },
       },
     });
+  });
+
+  test.beforeEach(async () => {
+    await deleteAllMessages();
   });
 
   test.describe("new user", () => {
@@ -82,12 +86,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Login with email" }).click();
 
-      const code = await getCode(testUserEmail);
-      const incorrectCode = Number.parseInt(code, 10) + 1;
-
-      await page
-        .getByPlaceholder("Enter your 6-digit code")
-        .fill(incorrectCode.toString());
+      await page.getByPlaceholder("Enter your 6-digit code").fill("000000");
 
       await expect(
         page.getByText("Your verification code is incorrect or has expired"),

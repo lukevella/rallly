@@ -48,7 +48,6 @@ export async function captureOne(
 
     if (message) {
       const fullMessage = await getMessage(message.ID);
-      // Delete so next capture gets the next email
       return { email: fullMessage };
     }
 
