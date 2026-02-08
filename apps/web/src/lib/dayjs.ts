@@ -14,6 +14,8 @@ import toArray from "dayjs/plugin/toArray";
 import updateLocale from "dayjs/plugin/updateLocale";
 import utc from "dayjs/plugin/utc";
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
 dayjs.extend(calendar);
 dayjs.extend(duration);
@@ -24,9 +26,7 @@ dayjs.extend(localeData);
 dayjs.extend(localizedFormat);
 dayjs.extend(minMax);
 dayjs.extend(relativeTime);
-dayjs.extend(timezone);
 dayjs.extend(toArray);
 dayjs.extend(updateLocale);
-dayjs.extend(utc);
 
 export { dayjs };
