@@ -1,13 +1,8 @@
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
+import "@/lib/dayjs";
 
 import { supportedTimeZones } from "@/utils/supported-time-zones";
 
 import { normalizeTimeZone } from "./date-time-utils";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 describe("Normalize Time Zone", () => {
   it("should return same timezone when given a geographic timezone", () => {

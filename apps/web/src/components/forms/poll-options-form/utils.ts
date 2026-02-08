@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { dayjs } from "@/lib/dayjs";
 
 export const formatDateWithoutTz = (date: Date): string => {
   return dayjs(date).format("YYYY-MM-DDTHH:mm:ss");

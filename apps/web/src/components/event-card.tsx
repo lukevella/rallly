@@ -2,7 +2,6 @@
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { Card, CardContent, CardDescription } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
-import dayjs from "dayjs";
 import { CircleStopIcon, DotIcon, MapPinIcon } from "lucide-react";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import VoteIcon from "@/components/poll/vote-icon";
@@ -11,6 +10,7 @@ import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 import { useTranslation } from "@/i18n/client";
+import { dayjs } from "@/lib/dayjs";
 
 function IconGuide() {
   return (

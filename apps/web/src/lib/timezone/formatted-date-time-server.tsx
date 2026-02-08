@@ -1,7 +1,8 @@
 import { cn } from "@rallly/ui";
 import type { ConfigType } from "dayjs";
-import dayjs from "dayjs";
 import type * as React from "react";
+
+import { dayjs } from "@/lib/dayjs";
 
 interface FormattedDateTimeServerProps
   extends Omit<React.HTMLAttributes<HTMLTimeElement>, "dateTime"> {

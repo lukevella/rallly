@@ -2,7 +2,6 @@
 
 import { Badge } from "@rallly/ui/badge";
 import { Icon } from "@rallly/ui/icon";
-import dayjs from "dayjs";
 import { KeyIcon } from "lucide-react";
 import {
   EmptyState,
@@ -13,6 +12,7 @@ import {
 import { Spinner } from "@/components/spinner";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
+import { dayjs } from "@/lib/dayjs";
 import { trpc } from "@/trpc/client";
 import { RevokeApiKeyButton } from "./revoke-api-key-button";
 

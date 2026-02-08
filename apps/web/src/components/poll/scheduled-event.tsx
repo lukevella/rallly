@@ -7,6 +7,7 @@ import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
 import { Trans } from "@/components/trans";
 import { IfParticipantsVisible } from "@/components/visibility";
 import { usePoll } from "@/contexts/poll";
+import { dayjs } from "@/lib/dayjs";
 import { useDayjs } from "@/utils/dayjs";
 
 function FinalDate({ start }: { start: Date }) {
@@ -36,7 +37,7 @@ function DateIcon({ start }: { start: Date }) {
 
 function FinalTime({ start, duration }: { start: Date; duration: number }) {
   const poll = usePoll();
-  const { adjustTimeZone, dayjs } = useDayjs();
+  const { adjustTimeZone } = useDayjs();
   if (duration === 0) {
     return <Trans i18nKey="allDay" />;
   }

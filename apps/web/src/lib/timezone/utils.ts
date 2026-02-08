@@ -1,10 +1,4 @@
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-
-// Initialize dayjs plugins
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import { dayjs } from "@/lib/dayjs";
 
 /**
  * Get the browser's timezone

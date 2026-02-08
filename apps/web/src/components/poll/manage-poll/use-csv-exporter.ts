@@ -1,7 +1,6 @@
-import dayjs from "dayjs";
-
 import { useOptions, usePoll } from "@/components/poll-context";
 import { useTranslation } from "@/i18n/client";
+import { dayjs } from "@/lib/dayjs";
 
 import { useParticipants } from "../../participants-provider";
 

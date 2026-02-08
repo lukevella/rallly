@@ -1,8 +1,9 @@
 "use client";
 
 import type { ConfigType } from "dayjs";
-import dayjs from "dayjs";
 import * as React from "react";
+
+import { dayjs } from "@/lib/dayjs";
 
 import { useFormattedDateTime } from "@/lib/timezone/hooks/use-formatted-date-time";
 

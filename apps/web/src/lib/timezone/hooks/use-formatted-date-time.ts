@@ -1,6 +1,6 @@
 import type { ConfigType } from "dayjs";
-import dayjs from "dayjs";
 
+import { dayjs } from "@/lib/dayjs";
 import { useTimezone } from "@/lib/timezone/client/context";
 
 interface UseFormattedDateTimeOptions {

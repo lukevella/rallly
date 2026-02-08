@@ -14,14 +14,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
-import dayjs from "dayjs";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
 import { usePreferences } from "@/contexts/preferences";
+import { dayjs } from "@/lib/dayjs";
 import { useDayjs } from "@/utils/dayjs";
 
 const formSchema = z.object({

@@ -1,5 +1,6 @@
-import dayjs from "dayjs";
 import React from "react";
+
+import { dayjs } from "@/lib/dayjs";
 
 interface DayProps {
   date: Date;

@@ -8,7 +8,6 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import { Switch } from "@rallly/ui/switch";
-import dayjs from "dayjs";
 import {
   CalendarIcon,
   CalendarXIcon,
@@ -21,10 +20,10 @@ import {
 } from "lucide-react";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-
 import type { NewEventData } from "@/components/forms";
 import { Trans } from "@/components/trans";
 import { useTranslation } from "@/i18n/client";
+import { dayjs } from "@/lib/dayjs";
 import {
   expectTimeOption,
   getBrowserTimeZone,
