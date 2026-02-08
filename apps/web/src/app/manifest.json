@@ -13,9 +13,18 @@
       "type": "image/png"
     }
   ],
+  "screenshots": [
+    {
+      "src": "screenshots/home.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Home screen"
+    }
+  ],
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#F3F4F6",
-  "theme_color": "#4F46E5"
+  "background_color": "#FFFFFF",
+  "theme_color": "#4f46e5"
 }
