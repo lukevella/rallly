@@ -21,7 +21,13 @@ import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
-import { MoreVerticalIcon, StickerIcon, TrashIcon } from "lucide-react";
+import {
+  CircleStopIcon,
+  MoreVerticalIcon,
+  PlayIcon,
+  StickerIcon,
+  TrashIcon,
+} from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { CopyLinkButton } from "@/components/copy-link-button";
@@ -55,7 +61,8 @@ function PollListItem({
 }) {
   const deletePollDialog = useDialog();
   const deletePoll = trpc.polls.markAsDeleted.useMutation();
-
+  const closePoll = trpc.polls.close.useMutation();
+  const reopenPoll = trpc.polls.reopen.useMutation();
   return (
     <>
       <div className="grid w-full grid-cols-[1fr_auto] gap-2">
@@ -127,11 +134,54 @@ function PollListItem({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              {status === "open" && (
+                <DropdownMenuItem
+                  onSelect={() => {
+                    toast.promise(closePoll.mutateAsync({ pollId: id }), {
+                      loading: (
+                        <Trans
+                          i18nKey="closingPoll"
+                          defaults="Closing poll..."
+                        />
+                      ),
+                      success: (
+                        <Trans i18nKey="pollClosed" defaults="Poll closed" />
+                      ),
+                    });
+                  }}
+                >
+                  <Icon>
+                    <CircleStopIcon />
+                  </Icon>
+                  <Trans i18nKey="closePoll" defaults="Close" />
+                </DropdownMenuItem>
+              )}
+              {status === "closed" && (
+                <DropdownMenuItem
+                  onSelect={() => {
+                    toast.promise(reopenPoll.mutateAsync({ pollId: id }), {
+                      loading: (
+                        <Trans
+                          i18nKey="reopeningPoll"
+                          defaults="Reopening poll..."
+                        />
+                      ),
+                    });
+                  }}
+                >
+                  <Icon>
+                    <PlayIcon />
+                  </Icon>
+                  <Trans i18nKey="reopenPoll" defaults="Reopen" />
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onSelect={() => deletePollDialog.trigger()}>
                 <Icon>
                   <TrashIcon />
                 </Icon>
-                <Trans i18nKey="delete" defaults="Delete" />
+                <span>
+                  <Trans i18nKey="deleteMenuItem" defaults="Delete" />
+                </span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
