@@ -1,6 +1,7 @@
 import { cn } from "@rallly/ui";
 import type { Dayjs } from "dayjs";
-import dayjs from "dayjs";
+
+import { dayjs } from "@/lib/dayjs";
 
 export const DateIconInner = (props: {
   dow?: React.ReactNode;

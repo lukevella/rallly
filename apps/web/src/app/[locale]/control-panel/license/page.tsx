@@ -9,7 +9,6 @@ import {
   DialogTrigger,
 } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
-import dayjs from "dayjs";
 import {
   KeySquareIcon,
   PaletteIcon,
@@ -44,6 +43,7 @@ import { RefreshLicenseButton } from "@/features/licensing/components/refresh-li
 import { RemoveLicenseButton } from "@/features/licensing/components/remove-license-button";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getTranslation } from "@/i18n/server";
+import { dayjs } from "@/lib/dayjs";
 
 async function loadData() {
   const [license] = await Promise.all([loadInstanceLicense(), requireAdmin()]);

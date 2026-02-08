@@ -1,5 +1,4 @@
-import dayjs from "dayjs";
-
+import { dayjs } from "@/lib/dayjs";
 import { supportedTimeZones } from "@/utils/supported-time-zones";
 
 import type {

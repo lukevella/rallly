@@ -19,17 +19,16 @@ import {
   FormLabel,
 } from "@rallly/ui/form";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
-import dayjs from "dayjs";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
 import { DateIconInner } from "@/components/date-icon";
 import { useParticipants } from "@/components/participants-provider";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { Trans } from "@/components/trans";
 import { VoteSummaryProgressBar } from "@/components/vote-summary-progress-bar";
 import { usePoll } from "@/contexts/poll";
+import { dayjs } from "@/lib/dayjs";
 import { trpc } from "@/trpc/client";
 import { useDayjs } from "@/utils/dayjs";
 

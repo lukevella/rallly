@@ -2,23 +2,11 @@
 
 import type { TimeFormat } from "@rallly/database";
 import type { SupportedLocale } from "@rallly/languages";
-import dayjs from "dayjs";
-import advancedFormat from "dayjs/plugin/advancedFormat";
-import duration from "dayjs/plugin/duration";
-import isBetween from "dayjs/plugin/isBetween";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import localeData from "dayjs/plugin/localeData";
-import localizedFormat from "dayjs/plugin/localizedFormat";
-import minMax from "dayjs/plugin/minMax";
-import relativeTime from "dayjs/plugin/relativeTime";
-import timezone from "dayjs/plugin/timezone";
-import updateLocale from "dayjs/plugin/updateLocale";
-import utc from "dayjs/plugin/utc";
 import * as React from "react";
 import { useAsync } from "react-use";
 import { usePreferences } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
+import { dayjs } from "@/lib/dayjs";
 import { getBrowserTimeZone, normalizeTimeZone } from "@/utils/date-time-utils";
 import { useRequiredContext } from "../components/use-required-context";
 
@@ -122,25 +110,11 @@ const dayjsLocales: Record<
   },
 };
 
-dayjs.extend(localizedFormat);
-dayjs.extend(relativeTime);
-dayjs.extend(localeData);
-dayjs.extend(isSameOrBefore);
-dayjs.extend(isBetween);
-dayjs.extend(minMax);
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(duration);
-dayjs.extend(isSameOrAfter);
-dayjs.extend(updateLocale);
-dayjs.extend(advancedFormat);
-
 const DayjsContext = React.createContext<{
   adjustTimeZone: (
     date: dayjs.ConfigType,
     keepLocalTime: boolean,
   ) => dayjs.Dayjs;
-  dayjs: (date?: dayjs.ConfigType) => dayjs.Dayjs;
   locale: {
     weekStart: number;
     timeFormat: TimeFormat;
@@ -224,7 +198,6 @@ export const DayjsProvider: React.FunctionComponent<{
     <DayjsContext.Provider
       value={{
         adjustTimeZone,
-        dayjs,
         locale: localeConfig, // locale defaults
         timeZone: preferredTimeZone,
         timeFormat:

@@ -9,17 +9,16 @@ import {
   DialogTrigger,
 } from "@rallly/ui/dialog";
 import { Label } from "@rallly/ui/label";
-import dayjs from "dayjs";
 import { GlobeIcon } from "lucide-react";
 import React from "react";
 import { useInterval } from "react-use";
 import spacetime from "spacetime";
 import soft from "timezone-soft";
-
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans } from "@/components/trans";
 import { usePreferences } from "@/contexts/preferences";
+import { dayjs } from "@/lib/dayjs";
 import { useDayjs } from "@/utils/dayjs";
 
 export const TimePreferences = () => {

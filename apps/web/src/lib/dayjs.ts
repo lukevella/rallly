@@ -1,0 +1,32 @@
+import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+import calendar from "dayjs/plugin/calendar";
+import duration from "dayjs/plugin/duration";
+import isBetween from "dayjs/plugin/isBetween";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import localeData from "dayjs/plugin/localeData";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import minMax from "dayjs/plugin/minMax";
+import relativeTime from "dayjs/plugin/relativeTime";
+import timezone from "dayjs/plugin/timezone";
+import toArray from "dayjs/plugin/toArray";
+import updateLocale from "dayjs/plugin/updateLocale";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(advancedFormat);
+dayjs.extend(calendar);
+dayjs.extend(duration);
+dayjs.extend(isBetween);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(localeData);
+dayjs.extend(localizedFormat);
+dayjs.extend(minMax);
+dayjs.extend(relativeTime);
+dayjs.extend(timezone);
+dayjs.extend(toArray);
+dayjs.extend(updateLocale);
+dayjs.extend(utc);
+
+export { dayjs };

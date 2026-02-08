@@ -1,15 +1,8 @@
 "use client";
 
-import dayjs from "dayjs";
-import calendar from "dayjs/plugin/calendar";
-import localizedFormat from "dayjs/plugin/localizedFormat";
-import timezone from "dayjs/plugin/timezone";
 import { useTranslation } from "@/i18n/client";
+import { dayjs } from "@/lib/dayjs";
 import { useTimezone } from "@/lib/timezone/client/context";
-
-dayjs.extend(calendar);
-dayjs.extend(localizedFormat);
-dayjs.extend(timezone);
 
 export function CalendarDate({ date }: { date: string }) {
   const { timezone } = useTimezone();

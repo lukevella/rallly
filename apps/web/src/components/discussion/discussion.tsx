@@ -19,7 +19,6 @@ import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
 import { Textarea } from "@rallly/ui/textarea";
-import dayjs from "dayjs";
 import {
   MessageSquareOffIcon,
   MoreHorizontalIcon,
@@ -35,6 +34,7 @@ import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
 import { useTranslation } from "@/i18n/client";
+import { dayjs } from "@/lib/dayjs";
 import { trpc } from "@/trpc/client";
 import { requiredString } from "../../utils/form-validation";
 import TruncatedLinkify from "../poll/truncated-linkify";

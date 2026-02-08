@@ -1,10 +1,9 @@
 import type { Participant, VoteType } from "@rallly/database";
-import dayjs from "dayjs";
 import { keyBy } from "lodash";
 import { TrashIcon } from "lucide-react";
 import React from "react";
-
 import { useTranslation } from "@/i18n/client";
+import { dayjs } from "@/lib/dayjs";
 import type { GetPollApiResponse, Vote } from "@/trpc/client/types";
 import type {
   ParsedDateOption,

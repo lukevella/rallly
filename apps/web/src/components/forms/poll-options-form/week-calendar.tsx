@@ -1,12 +1,12 @@
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./rbc-overrides.css";
 
-import dayjs from "dayjs";
 import { XIcon } from "lucide-react";
 import type React from "react";
 import type { CalendarProps } from "react-big-calendar";
 import { Calendar } from "react-big-calendar";
 import { createBreakpoint } from "react-use";
+import { dayjs } from "@/lib/dayjs";
 
 import { getDuration } from "../../../utils/date-time-utils";
 import DateNavigationToolbar from "./date-navigation-toolbar";

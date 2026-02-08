@@ -1,11 +1,8 @@
 import type { Prisma, ScheduledEventStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import { requireSpace } from "@/auth/data";
+import { dayjs } from "@/lib/dayjs";
 import type { Status } from "./schema";
-
-dayjs.extend(utc);
 
 const mapStatus = {
   upcoming: "confirmed",
