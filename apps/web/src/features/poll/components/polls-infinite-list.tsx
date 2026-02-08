@@ -31,7 +31,6 @@ import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import type { PollStatus } from "@/features/poll/schema";
-import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 interface PollsInfiniteListProps {
@@ -41,35 +40,118 @@ interface PollsInfiniteListProps {
   emptyState: React.ReactNode;
 }
 
-function PollItemDropdownMenu({ pollId }: { pollId: string }) {
+function PollListItem({
+  id,
+  title,
+  status,
+  participants,
+  user,
+}: {
+  id: string;
+  title: string;
+  status: PollStatus;
+  participants: { id: string; name: string }[];
+  user: { name: string; image: string | null } | null;
+}) {
   const deletePollDialog = useDialog();
   const deletePoll = trpc.polls.markAsDeleted.useMutation();
-  const { t } = useTranslation();
+
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <MoreVerticalIcon />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onSelect={() => deletePollDialog.trigger()}>
-            <Icon>
-              <TrashIcon />
-            </Icon>
-            <Trans i18nKey="delete" defaults="Delete" />
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="grid w-full grid-cols-[1fr_auto] gap-2">
+        <div className="relative -m-4 flex min-w-0 flex-1 items-center gap-2 p-4">
+          <PollStatusIcon status={status} showTooltip={false} />
+          <Link
+            className="min-w-0 text-sm hover:underline focus:ring-ring focus-visible:ring-2"
+            href={absoluteUrl(`/poll/${id}`)}
+          >
+            <span className="absolute inset-0" />
+            <span className="block truncate">{title}</span>
+          </Link>
+        </div>
+        <div className="hidden items-center justify-end gap-4 sm:flex">
+          {participants.length > 0 ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="cursor-help text-muted-foreground text-sm">
+                  <Trans
+                    i18nKey="participantCount"
+                    defaults="{count, plural, =0 {No participants} =1 {1 participant} other {# participants}}"
+                    values={{ count: participants.length }}
+                  />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <ul>
+                  {participants.slice(0, 10).map((participant) => (
+                    <li key={participant.id}>{participant.name}</li>
+                  ))}
+                  {participants.length > 10 && (
+                    <li>
+                      <Trans
+                        i18nKey="moreParticipants"
+                        values={{ count: participants.length - 10 }}
+                        defaults="{count} more…"
+                      />
+                    </li>
+                  )}
+                </ul>
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <span className="text-muted-foreground text-sm">
+              <Trans
+                i18nKey="participantCount"
+                defaults="{count, plural, =0 {No participants} =1 {1 participant} other {# participants}}"
+                values={{ count: participants.length }}
+              />
+            </span>
+          )}
+          {user && (
+            <Tooltip>
+              <TooltipTrigger>
+                <OptimizedAvatarImage
+                  size="sm"
+                  name={user.name}
+                  src={user.image ?? undefined}
+                />
+              </TooltipTrigger>
+              <TooltipContent>{user.name}</TooltipContent>
+            </Tooltip>
+          )}
+          <CopyLinkButton href={shortUrl(`/invite/${id}`)} />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreVerticalIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onSelect={() => deletePollDialog.trigger()}>
+                <Icon>
+                  <TrashIcon />
+                </Icon>
+                <Trans i18nKey="delete" defaults="Delete" />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
       <Dialog {...deletePollDialog.dialogProps}>
-        <DialogContent size="sm">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>
               <Trans i18nKey="deletePoll" />
             </DialogTitle>
             <DialogDescription>
-              <Trans i18nKey="deletePollDescription" />
+              <Trans
+                i18nKey="deletePollPrompt"
+                defaults="Are you sure you want to delete <b>{title}</b>?"
+                values={{ title }}
+                components={{
+                  b: <b className="font-bold" />,
+                }}
+              />
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -78,18 +160,23 @@ function PollItemDropdownMenu({ pollId }: { pollId: string }) {
                 <Trans i18nKey="cancel" />
               </Button>
             </DialogClose>
-
             <Button
               variant="destructive"
               onClick={() => {
                 deletePollDialog.dismiss();
-                toast.promise(deletePoll.mutateAsync({ pollId }), {
-                  loading: t("deletingPoll", {
-                    defaultValue: "Deleting poll...",
-                  }),
-                  success: t("pollDeleted", {
-                    defaultValue: "Poll deleted",
-                  }),
+                toast.promise(deletePoll.mutateAsync({ pollId: id }), {
+                  loading: (
+                    <Trans i18nKey="deletingPoll" defaults="Deleting poll..." />
+                  ),
+                  success: (
+                    <Trans i18nKey="pollDeleted" defaults="Poll deleted" />
+                  ),
+                  error: (
+                    <Trans
+                      i18nKey="pollDeleteError"
+                      defaults="Failed to delete poll"
+                    />
+                  ),
                 });
               }}
               loading={deletePoll.isPending}
@@ -180,69 +267,13 @@ export function PollsInfiniteList({
     <StackedList>
       {polls.map(({ id, title, status, participants, user }) => (
         <StackedListItem key={id}>
-          <div className="relative -m-4 flex min-w-0 flex-1 items-center gap-2 p-4">
-            <PollStatusIcon status={status} showTooltip={false} />
-            <Link
-              className="min-w-0 text-sm hover:underline focus:ring-ring focus-visible:ring-2"
-              href={absoluteUrl(`/poll/${id}`)}
-            >
-              <span className="absolute inset-0" />
-              <span className="block truncate">{title}</span>
-            </Link>
-          </div>
-          <div className="hidden items-center justify-end gap-4 sm:flex">
-            {participants.length > 0 ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="cursor-help text-muted-foreground text-sm">
-                    <Trans
-                      i18nKey="participantCount"
-                      defaults="{count, plural, =0 {No participants} =1 {1 participant} other {# participants}}"
-                      values={{ count: participants.length }}
-                    />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <ul>
-                    {participants.slice(0, 10).map((participant) => (
-                      <li key={participant.id}>{participant.name}</li>
-                    ))}
-                    {participants.length > 10 && (
-                      <li>
-                        <Trans
-                          i18nKey="moreParticipants"
-                          values={{ count: participants.length - 10 }}
-                          defaults="{count} more…"
-                        />
-                      </li>
-                    )}
-                  </ul>
-                </TooltipContent>
-              </Tooltip>
-            ) : (
-              <span className="text-muted-foreground text-sm">
-                <Trans
-                  i18nKey="participantCount"
-                  defaults="{count, plural, =0 {No participants} =1 {1 participant} other {# participants}}"
-                  values={{ count: participants.length }}
-                />
-              </span>
-            )}
-            {user && (
-              <Tooltip>
-                <TooltipTrigger>
-                  <OptimizedAvatarImage
-                    size="sm"
-                    name={user.name}
-                    src={user.image ?? undefined}
-                  />
-                </TooltipTrigger>
-                <TooltipContent>{user.name}</TooltipContent>
-              </Tooltip>
-            )}
-            <CopyLinkButton href={shortUrl(`/invite/${id}`)} />
-            <PollItemDropdownMenu pollId={id} />
-          </div>
+          <PollListItem
+            id={id}
+            title={title}
+            status={status}
+            participants={participants}
+            user={user}
+          />
         </StackedListItem>
       ))}
 
