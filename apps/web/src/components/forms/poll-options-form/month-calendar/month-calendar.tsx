@@ -153,7 +153,6 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                             : {
                                 type: "timeSlot",
                                 start: formatDateWithoutTz(selectedDate),
-                                duration,
                                 end: formatDateWithoutTz(
                                   dayjs(selectedDate)
                                     .add(duration, "minutes")
@@ -365,7 +364,6 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                 {
                                   type: "timeSlot",
                                   start: startTime,
-                                  duration,
                                   end: formatDateWithoutTz(
                                     dayjs(new Date(startTime))
                                       .add(duration, "minutes")
@@ -403,7 +401,6 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                         startTime: option.start.substring(
                                           option.start.indexOf("T"),
                                         ),
-                                        duration: option.duration,
                                         endTime: option.end.substring(
                                           option.end.indexOf("T"),
                                         ),
@@ -419,7 +416,6 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                         newOptions.push({
                                           type: "timeSlot",
                                           start: start,
-                                          duration,
                                           end: dayjs(start)
                                             .add(duration, "minutes")
                                             .format("YYYY-MM-DDTHH:mm"),
