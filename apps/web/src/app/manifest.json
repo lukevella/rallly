@@ -20,6 +20,12 @@
       "type": "image/webp",
       "form_factor": "wide",
       "label": "Home screen"
+    },
+    {
+      "src": "screenshots/poll.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "label": "Poll screen"
     }
   ],
   "start_url": "/",
