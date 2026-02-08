@@ -1,9 +1,27 @@
 "use client";
 
+import { Button } from "@rallly/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  useDialog,
+} from "@rallly/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
+import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
-import { StickerIcon } from "lucide-react";
+import { MoreVerticalIcon, StickerIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { CopyLinkButton } from "@/components/copy-link-button";
@@ -13,6 +31,7 @@ import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/components/trans";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import type { PollStatus } from "@/features/poll/schema";
+import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 interface PollsInfiniteListProps {
@@ -20,6 +39,68 @@ interface PollsInfiniteListProps {
   search?: string;
   member?: string;
   emptyState: React.ReactNode;
+}
+
+function PollItemDropdownMenu({ pollId }: { pollId: string }) {
+  const deletePollDialog = useDialog();
+  const deletePoll = trpc.polls.markAsDeleted.useMutation();
+  const { t } = useTranslation();
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon">
+            <MoreVerticalIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onSelect={() => deletePollDialog.trigger()}>
+            <Icon>
+              <TrashIcon />
+            </Icon>
+            <Trans i18nKey="delete" defaults="Delete" />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <Dialog {...deletePollDialog.dialogProps}>
+        <DialogContent size="sm">
+          <DialogHeader>
+            <DialogTitle>
+              <Trans i18nKey="deletePoll" />
+            </DialogTitle>
+            <DialogDescription>
+              <Trans i18nKey="deletePollDescription" />
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button>
+                <Trans i18nKey="cancel" />
+              </Button>
+            </DialogClose>
+
+            <Button
+              variant="destructive"
+              onClick={() => {
+                deletePollDialog.dismiss();
+                toast.promise(deletePoll.mutateAsync({ pollId }), {
+                  loading: t("deletingPoll", {
+                    defaultValue: "Deleting poll...",
+                  }),
+                  success: t("pollDeleted", {
+                    defaultValue: "Poll deleted",
+                  }),
+                });
+              }}
+              loading={deletePoll.isPending}
+            >
+              <Trans i18nKey="delete" />
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 }
 
 export function PollsInfiniteList({
@@ -160,6 +241,7 @@ export function PollsInfiniteList({
               </Tooltip>
             )}
             <CopyLinkButton href={shortUrl(`/invite/${id}`)} />
+            <PollItemDropdownMenu pollId={id} />
           </div>
         </StackedListItem>
       ))}
