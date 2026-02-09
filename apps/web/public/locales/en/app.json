@@ -603,5 +603,10 @@
   "pollStatusCanceled": "Canceled",
   "schedulePoll": "Schedule",
   "schedulePollDescription": "Select a final date for your event.",
-  "featureNameSchedule": "Schedule Poll"
+  "featureNameSchedule": "Schedule Poll",
+  "pollClosed": "Poll closed",
+  "deleteMenuItem": "Delete",
+  "deletePollPrompt": "Are you sure you want to delete <b>{title}</b>?",
+  "pollDeleted": "Poll deleted",
+  "pollDeleteError": "Failed to delete poll"
 }

@@ -138,12 +138,7 @@ function PollListItem({
                 <DropdownMenuItem
                   onSelect={() => {
                     toast.promise(closePoll.mutateAsync({ pollId: id }), {
-                      loading: (
-                        <Trans
-                          i18nKey="closingPoll"
-                          defaults="Closing poll..."
-                        />
-                      ),
+                      loading: <Trans i18nKey="loading" defaults="Loading…" />,
                       success: (
                         <Trans i18nKey="pollClosed" defaults="Poll closed" />
                       ),
@@ -160,10 +155,11 @@ function PollListItem({
                 <DropdownMenuItem
                   onSelect={() => {
                     toast.promise(reopenPoll.mutateAsync({ pollId: id }), {
-                      loading: (
+                      loading: <Trans i18nKey="loading" defaults="Loading…" />,
+                      success: (
                         <Trans
-                          i18nKey="reopeningPoll"
-                          defaults="Reopening poll..."
+                          i18nKey="pollReopened"
+                          defaults="Poll Reopened"
                         />
                       ),
                     });
@@ -215,9 +211,7 @@ function PollListItem({
               onClick={() => {
                 deletePollDialog.dismiss();
                 toast.promise(deletePoll.mutateAsync({ pollId: id }), {
-                  loading: (
-                    <Trans i18nKey="deletingPoll" defaults="Deleting poll..." />
-                  ),
+                  loading: <Trans i18nKey="loading" defaults="Loading…" />,
                   success: (
                     <Trans i18nKey="pollDeleted" defaults="Poll deleted" />
                   ),
