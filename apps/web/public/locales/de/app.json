@@ -571,7 +571,6 @@
   "hideAttribution": "Namensnennung ausblenden",
   "apiKeys": "API-Schlüssel",
   "apiKeysDescription": "Verwalte API-Schlüssel für programmgesteuerten Zugriff auf deine Gruppe",
-  "apiKeysSettings": "API-Schlüssel Einstellungen",
   "apiKeysSettingsDescription": "Erstelle und verwalte API-Schlüssel für programmgesteuerten Zugriff auf deine Gruppe.",
   "noApiKeys": "Keine API-Schlüssel gefunden",
   "noApiKeysDescription": "Erstelle einen API-Schlüssel, um programmgesteuert auf deine Gruppe zuzugreifen",
