@@ -602,5 +602,10 @@
   "pollStatusCanceled": "Abgesagt",
   "schedulePoll": "Planen",
   "schedulePollDescription": "Wähle ein finales Datum für deinen Termin.",
-  "featureNameSchedule": "Umfrage planen"
+  "featureNameSchedule": "Umfrage planen",
+  "pollClosed": "Umfrage geschlossen",
+  "deleteMenuItem": "Löschen",
+  "deletePollPrompt": "Bist du sicher, dass du <b>{title}</b> löschen möchtest?",
+  "pollDeleted": "Umfrage gelöscht",
+  "pollDeleteError": "Fehler beim Löschen der Umfrage"
 }
