@@ -536,6 +536,40 @@ export const polls = router({
 
       revalidatePath("/", "layout");
     }),
+  markAsDeleted: possiblyPublicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+      }),
+    )
+    .use(requireUserMiddleware)
+    .mutation(async ({ input: { pollId }, ctx }) => {
+      const hasAccess = await hasPollAdminAccess(pollId, ctx.user.id);
+
+      if (!hasAccess) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to mark this poll as deleted",
+        });
+      }
+
+      await prisma.poll.update({
+        where: { id: pollId },
+        data: { deleted: true, deletedAt: new Date() },
+      });
+
+      // Track poll deletion analytics
+      ctx.posthog?.capture({
+        event: "poll_delete",
+        distinctId: ctx.user.id,
+        groups: {
+          poll: pollId,
+        },
+      });
+    }),
+  /**
+   * @deprecated Use markAsDeleted instead
+   */
   delete: possiblyPublicProcedure
     .input(
       z.object({
