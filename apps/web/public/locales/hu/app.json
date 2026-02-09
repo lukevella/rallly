@@ -571,7 +571,6 @@
   "hideAttribution": "Készítő megjelölés elrejtése",
   "apiKeys": "API kulcsok",
   "apiKeysDescription": "Kezeld az API kulcsaid a munkaterületed programozott hozzáféréséhez",
-  "apiKeysSettings": "API kulcs beállítások",
   "apiKeysSettingsDescription": "Hozd létre és kezeld az API kulcsaid a munkaterületed programozott hozzáféréséhez.",
   "noApiKeys": "Nem található API kulcs",
   "noApiKeysDescription": "Hozz létre egy API kulcsot, hogy programozottan hozzáférj a munkaterületedhez",
