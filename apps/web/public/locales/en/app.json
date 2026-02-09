@@ -571,7 +571,6 @@
   "hideAttribution": "Hide Attribution",
   "apiKeys": "API Keys",
   "apiKeysDescription": "Manage API keys for programmatic access to your space",
-  "apiKeysSettings": "API Keys Settings",
   "apiKeysSettingsDescription": "Create and manage API keys for programmatic access to your space.",
   "noApiKeys": "No API keys found",
   "noApiKeysDescription": "Create an API key to access your space programmatically",

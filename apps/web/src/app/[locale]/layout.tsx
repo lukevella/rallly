@@ -145,7 +145,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: {
-      template: `%s | ${brandingConfig.appName}`,
+      template: "%s",
       default: brandingConfig.appName,
     },
   };

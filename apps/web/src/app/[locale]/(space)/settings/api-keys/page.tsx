@@ -67,8 +67,8 @@ export default async function ApiKeysSettingsPage() {
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
-    title: t("apiKeysSettings", {
-      defaultValue: "API Keys Settings",
+    title: t("apiKeys", {
+      defaultValue: "API Keys",
     }),
     description: t("apiKeysSettingsDescription", {
       defaultValue:

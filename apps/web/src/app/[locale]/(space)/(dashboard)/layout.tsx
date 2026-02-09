@@ -103,7 +103,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const space = await requireSpace();
   return {
     title: {
-      template: `%s | ${space.name} | Rallly`,
+      template: "%s",
       default: space.name,
     },
   };
