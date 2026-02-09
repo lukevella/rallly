@@ -569,7 +569,6 @@
   "hideAttribution": "Piilota tekijämerkintä",
   "apiKeys": "API-avaimet",
   "apiKeysDescription": "Hallitse API-avaimia tilasi ohjelmallista käyttöä varten",
-  "apiKeysSettings": "API-avainasetukset",
   "apiKeysSettingsDescription": "Luo ja hallitse API-avaimia tilasi ohjelmallista käyttöä varten.",
   "noApiKeys": "Ei API-avaimia",
   "noApiKeysDescription": "Luo API-avain tilasi ohjelmallista pääsyä varten",
