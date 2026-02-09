@@ -571,7 +571,6 @@
   "hideAttribution": "Nascondi attribuzione",
   "apiKeys": "Chiavi API",
   "apiKeysDescription": "Gestisci le chiavi API per l'accesso programmatico al tuo spazio",
-  "apiKeysSettings": "Impostazioni delle chiavi API",
   "apiKeysSettingsDescription": "Crea e gestisci le chiavi API per l'accesso programmatico al tuo spazio.",
   "noApiKeys": "Nessuna chiave API trovata",
   "noApiKeysDescription": "Crea una chiave API per accedere al tuo spazio in modo programmatico",
