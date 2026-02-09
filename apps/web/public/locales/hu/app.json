@@ -602,5 +602,10 @@
   "pollStatusCanceled": "Lemondva",
   "schedulePoll": "Véglegesítés",
   "schedulePollDescription": "Válassz egy végleges dátumot az eseményedhez.",
-  "featureNameSchedule": "Szavazás véglegesítése"
+  "featureNameSchedule": "Szavazás véglegesítése",
+  "pollClosed": "Szavazás lezárult",
+  "deleteMenuItem": "Törlés",
+  "deletePollPrompt": "Biztosan szeretnéd törölni: <b>{title}</b>?",
+  "pollDeleted": "Szavazás törölve",
+  "pollDeleteError": "Nem sikerült törölni a szavazást"
 }
