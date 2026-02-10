@@ -77,12 +77,7 @@ export function AddToCalendarButton({ eventId }: { eventId: string }) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Image
-              src="/static/yahoo.svg"
-              width={16}
-              height={16}
-              alt="Yahoo"
-            />
+            <Image src="/static/yahoo.svg" width={16} height={16} alt="Yahoo" />
             <Trans i18nKey="yahoo" defaults="Yahoo" />
           </a>
         </DropdownMenuItem>
