@@ -27,15 +27,6 @@ async function getScheduledEvent(eventId: string) {
           email: true,
         },
       },
-      invites: {
-        where: {
-          status: { in: ["accepted", "tentative"] },
-        },
-        select: {
-          inviteeName: true,
-          inviteeEmail: true,
-        },
-      },
     },
   });
 }
@@ -55,7 +46,6 @@ function toCalendarEvent(
     duration: duration > 0 ? [duration, "minutes"] : undefined,
     location: event.location ?? undefined,
     organizer: { name: event.user.name, email: event.user.email },
-    guests: event.invites.map((invite) => invite.inviteeEmail),
     busy: true,
   };
 }
@@ -108,10 +98,6 @@ app.get("/:eventId/ics", async (c) => {
     allDay: event.allDay,
     timeZone: event.timeZone ?? undefined,
     organizer: { name: event.user.name, email: event.user.email },
-    attendees: event.invites.map((invite) => ({
-      name: invite.inviteeName,
-      email: invite.inviteeEmail,
-    })),
     method: "publish",
   });
 
