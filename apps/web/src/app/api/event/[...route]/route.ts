@@ -1,7 +1,6 @@
 import { prisma } from "@rallly/database";
 import type { CalendarEvent } from "calendar-link";
 import { google, office365, outlook, yahoo } from "calendar-link";
-import dayjs from "dayjs";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
