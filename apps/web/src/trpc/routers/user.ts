@@ -8,45 +8,9 @@ import {
 } from "@/lib/storage/image-upload";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
-import {
-  createRateLimitMiddleware,
-  privateProcedure,
-  publicProcedure,
-  router,
-} from "../trpc";
+import { createRateLimitMiddleware, privateProcedure, router } from "../trpc";
 
 export const user = router({
-  getByEmail: publicProcedure
-    .input(z.object({ email: z.string() }))
-    .query(async ({ input }) => {
-      return await prisma.user.findUnique({
-        where: {
-          email: input.email,
-        },
-        select: {
-          name: true,
-          email: true,
-          image: true,
-        },
-      });
-    }),
-  /**
-   * @deprecated - Use server actions instead
-   */
-  delete: privateProcedure.mutation(async ({ ctx }) => {
-    if (ctx.user.isGuest) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Guest users cannot be deleted",
-      });
-    }
-
-    await prisma.user.delete({
-      where: {
-        id: ctx.user.id,
-      },
-    });
-  }),
   changeName: privateProcedure
     .input(
       z.object({
