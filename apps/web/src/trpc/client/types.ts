@@ -9,7 +9,6 @@ export type GetPollApiResponse = {
   user: {
     id: string;
     name: string;
-    email: string | null;
     image: string | null;
     banned: boolean;
   } | null;

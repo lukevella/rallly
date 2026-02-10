@@ -710,7 +710,6 @@ export const polls = router({
             select: {
               id: true,
               name: true,
-              email: true,
               image: true,
               banned: true,
             },
@@ -726,6 +725,7 @@ export const polls = router({
           },
           scheduledEvent: {
             select: {
+              id: true,
               start: true,
               end: true,
               allDay: true,
@@ -758,6 +758,7 @@ export const polls = router({
 
       const event = res.scheduledEvent
         ? {
+            id: res.scheduledEvent.id,
             start: res.scheduledEvent.start,
             duration: res.scheduledEvent.allDay
               ? 0

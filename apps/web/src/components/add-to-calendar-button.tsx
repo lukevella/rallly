@@ -9,45 +9,12 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
-import type { CalendarEvent } from "calendar-link";
-import { google, ics, office365, outlook, yahoo } from "calendar-link";
 import { DownloadIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 
 import { Trans } from "@/components/trans";
 
-export function AddToCalendarButton({
-  title,
-  description,
-  location,
-  start,
-  duration,
-  organizer,
-  guests,
-}: {
-  title: string;
-  description?: string;
-  location?: string;
-  start: Date;
-  duration: number;
-  organizer?: {
-    name: string;
-    email: string;
-  };
-  guests?: string[];
-}) {
-  const calendarEvent: CalendarEvent = {
-    title,
-    description,
-    start,
-    allDay: duration === 0,
-    duration: duration > 0 ? [duration, "minutes"] : undefined,
-    location,
-    organizer,
-    guests,
-    busy: true,
-  };
-
+export function AddToCalendarButton({ eventId }: { eventId: string }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -59,78 +26,74 @@ export function AddToCalendarButton({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent forceMount={true} align="start">
-        <DropdownMenuItem
-          onClick={() => {
-            const res = google(calendarEvent);
-            window.open(res, "_blank");
-          }}
-        >
-          <Image
-            src="/static/google-calendar.svg"
-            width={16}
-            height={16}
-            alt="Google Calendar"
-          />
-          Google Calendar
+        <DropdownMenuItem asChild>
+          <a
+            href={`/api/event/${eventId}/google-calendar`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/static/google-calendar.svg"
+              width={16}
+              height={16}
+              alt="Google Calendar"
+            />
+            Google Calendar
+          </a>
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            const res = office365(calendarEvent);
-            window.open(res, "_blank");
-          }}
-        >
-          <Image
-            src="/static/microsoft-365.svg"
-            width={16}
-            height={16}
-            alt="Microsoft 365"
-          />
-          <Trans i18nKey="microsoft365" defaults="Microsoft 365" />
+        <DropdownMenuItem asChild>
+          <a
+            href={`/api/event/${eventId}/office365`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/static/microsoft-365.svg"
+              width={16}
+              height={16}
+              alt="Microsoft 365"
+            />
+            <Trans i18nKey="microsoft365" defaults="Microsoft 365" />
+          </a>
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            const res = outlook(calendarEvent);
-            window.open(res, "_blank");
-          }}
-        >
-          <Image
-            src="/static/outlook.svg"
-            width={16}
-            height={16}
-            alt="Outlook"
-          />
-          <Trans i18nKey="outlook" defaults="Outlook" />
+        <DropdownMenuItem asChild>
+          <a
+            href={`/api/event/${eventId}/outlook`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/static/outlook.svg"
+              width={16}
+              height={16}
+              alt="Outlook"
+            />
+            <Trans i18nKey="outlook" defaults="Outlook" />
+          </a>
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            const res = yahoo(calendarEvent);
-            window.open(res, "_blank");
-          }}
-        >
-          <Image src="/static/yahoo.svg" width={16} height={16} alt="Yahoo" />
-          <Trans i18nKey="yahoo" defaults="Yahoo" />
+        <DropdownMenuItem asChild>
+          <a
+            href={`/api/event/${eventId}/yahoo`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/static/yahoo.svg"
+              width={16}
+              height={16}
+              alt="Yahoo"
+            />
+            <Trans i18nKey="yahoo" defaults="Yahoo" />
+          </a>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => {
-            const data = ics(calendarEvent);
-
-            // download the file
-            const link = document.createElement("a");
-            link.setAttribute("href", data);
-            link.setAttribute(
-              "download",
-              `${title.toLocaleLowerCase().replace(/\s/g, "-")}.ics`,
-            );
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          }}
-        >
-          <Icon>
-            <DownloadIcon />
-          </Icon>
-          <Trans i18nKey="downloadICSFile" defaults="Download ICS File" />
+        <DropdownMenuItem asChild>
+          <a href={`/api/event/${eventId}/ics`} download>
+            <Icon>
+              <DownloadIcon />
+            </Icon>
+            <Trans i18nKey="downloadICSFile" defaults="Download ICS File" />
+          </a>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

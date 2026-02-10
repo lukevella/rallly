@@ -61,8 +61,6 @@ export function ScheduledEvent() {
   const poll = usePoll();
   const { event } = poll;
 
-  const attendees = useAttendees();
-
   if (!event) {
     return null;
   }
@@ -101,21 +99,7 @@ export function ScheduledEvent() {
             <IfParticipantsVisible>
               <Attendees />
             </IfParticipantsVisible>
-            <AddToCalendarButton
-              title={poll.title}
-              description={poll.description ?? undefined}
-              start={event.start}
-              duration={event.duration}
-              location={poll.location ?? undefined}
-              organizer={
-                poll.user
-                  ? { name: poll.user.name, email: poll.user.email }
-                  : undefined
-              }
-              guests={attendees
-                .filter((attendee) => !!attendee.email)
-                .map((attendee) => attendee.email as string)}
-            />
+            <AddToCalendarButton eventId={event.id} />
           </div>
         </div>
       </div>
