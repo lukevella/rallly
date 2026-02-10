@@ -571,7 +571,6 @@
   "hideAttribution": "Namensnennung ausblenden",
   "apiKeys": "API-Schlüssel",
   "apiKeysDescription": "Verwalte API-Schlüssel für programmgesteuerten Zugriff auf deine Gruppe",
-  "apiKeysSettings": "API-Schlüssel Einstellungen",
   "apiKeysSettingsDescription": "Erstelle und verwalte API-Schlüssel für programmgesteuerten Zugriff auf deine Gruppe.",
   "noApiKeys": "Keine API-Schlüssel gefunden",
   "noApiKeysDescription": "Erstelle einen API-Schlüssel, um programmgesteuert auf deine Gruppe zuzugreifen",
@@ -603,5 +602,10 @@
   "pollStatusCanceled": "Abgesagt",
   "schedulePoll": "Planen",
   "schedulePollDescription": "Wähle ein finales Datum für deinen Termin.",
-  "featureNameSchedule": "Umfrage planen"
+  "featureNameSchedule": "Umfrage planen",
+  "pollClosed": "Umfrage geschlossen",
+  "deleteMenuItem": "Löschen",
+  "deletePollPrompt": "Bist du sicher, dass du <b>{title}</b> löschen möchtest?",
+  "pollDeleted": "Umfrage gelöscht",
+  "pollDeleteError": "Fehler beim Löschen der Umfrage"
 }
