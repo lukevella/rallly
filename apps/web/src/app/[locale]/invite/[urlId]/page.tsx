@@ -1,5 +1,4 @@
 import { prisma } from "@rallly/database";
-import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
@@ -9,14 +8,9 @@ import { PermissionProvider } from "@/contexts/permissions";
 import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
 import Providers from "./providers";
 
-const logger = createLogger("invite-page");
-
 export default async function Page(props: {
   params: Promise<{ urlId: string }>;
 }) {
-  logger.debug(
-    `Rendering poll: ${(await props.params).urlId} at ${new Date().toISOString()}`,
-  );
   const params = await props.params;
   const trpc = createSSRHelper();
 
