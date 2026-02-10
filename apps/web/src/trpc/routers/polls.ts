@@ -710,7 +710,6 @@ export const polls = router({
             select: {
               id: true,
               name: true,
-              email: true,
               image: true,
               banned: true,
             },
@@ -726,6 +725,7 @@ export const polls = router({
           },
           scheduledEvent: {
             select: {
+              id: true,
               start: true,
               end: true,
               allDay: true,
@@ -758,6 +758,7 @@ export const polls = router({
 
       const event = res.scheduledEvent
         ? {
+            id: res.scheduledEvent.id,
             start: res.scheduledEvent.start,
             duration: res.scheduledEvent.allDay
               ? 0
@@ -906,13 +907,6 @@ export const polls = router({
         p.votes.some((v) => v.optionId === input.optionId && v.type !== "no"),
       );
 
-      const icsAttendees = attendees
-        .filter((a) => !!a.email) // remove participants without email
-        .map((a) => ({
-          name: a.name,
-          email: a.email as string,
-        }));
-
       const event = createIcsEvent({
         uid,
         sequence: 0,
@@ -930,7 +924,6 @@ export const polls = router({
           name: poll.user.name,
           email: poll.user.email,
         },
-        attendees: icsAttendees,
       });
 
       const scheduledEvent = await prisma.$transaction(async (tx) => {
