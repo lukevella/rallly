@@ -34,16 +34,12 @@ async function getScheduledEvent(eventId: string) {
 function toCalendarEvent(
   event: NonNullable<Awaited<ReturnType<typeof getScheduledEvent>>>,
 ): CalendarEvent {
-  const duration = event.allDay
-    ? 0
-    : dayjs(event.end).diff(dayjs(event.start), "minute");
-
   return {
     title: event.title,
     description: event.description ?? undefined,
     start: event.start,
-    allDay: duration === 0,
-    duration: duration > 0 ? [duration, "minutes"] : undefined,
+    end: event.end,
+    allDay: event.allDay,
     location: event.location ?? undefined,
     organizer: { name: event.user.name, email: event.user.email },
     busy: true,
