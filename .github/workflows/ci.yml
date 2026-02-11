@@ -67,37 +67,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -f apps/web/Dockerfile -t rallly-test --build-arg SELF_HOSTED=true .
-
-      - name: Start Postgres
+      - name: Start services
         run: |
-          docker run -d --name rallly-db \
-            -e POSTGRES_PASSWORD=postgres \
-            -e POSTGRES_DB=rallly \
-            -p 5450:5432 \
-            postgres:14.2
-          until docker exec rallly-db pg_isready -U postgres; do sleep 1; done
+          SECRET_PASSWORD=test-secret \
+          NEXT_PUBLIC_BASE_URL=http://localhost:3000 \
+          docker compose up -d --build --wait --wait-timeout 60
 
-      - name: Start container
-        run: |
-          docker run -d --name rallly-test \
-            -e DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5450/rallly \
-            -e SECRET_PASSWORD=test-secret \
-            -e NEXT_PUBLIC_BASE_URL=http://localhost:3000 \
-            -p 3000:3000 \
-            --add-host=host.docker.internal:host-gateway \
-            rallly-test
-
-      - name: Wait for healthy
-        run: |
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:3000/api/status; then exit 0; fi
-            sleep 2
-          done
-          echo "Container failed to become healthy. Logs:"
-          docker logs rallly-test
-          exit 1
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs
 
   integration-tests:
     name: Integration tests

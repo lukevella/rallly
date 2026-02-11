@@ -30,7 +30,8 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@rallly_db/rallly
     env_file:
-      - .env
+      - path: .env
+        required: false
 
 volumes:
   db-data:
