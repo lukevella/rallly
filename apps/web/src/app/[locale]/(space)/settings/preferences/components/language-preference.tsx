@@ -13,8 +13,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { LanguageSelect } from "@/components/poll/language-selector";
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { setLocaleCookie } from "@/lib/locale/client";
 import { updateLocale } from "../actions";
 

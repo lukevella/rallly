@@ -22,7 +22,6 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { MoreHorizontalIcon, ShieldIcon, UserIcon, XIcon } from "lucide-react";
-import { Trans } from "@/components/trans";
 import {
   changeMemberRoleAction,
   removeMemberAction,
@@ -30,7 +29,7 @@ import {
 import { useSpace } from "@/features/space/client";
 import type { MemberDTO } from "@/features/space/member/types";
 import type { MemberRole } from "@/features/space/schema";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 export function MemberDropdownMenu({ member }: { member: MemberDTO }) {

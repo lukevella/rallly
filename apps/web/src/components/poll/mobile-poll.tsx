@@ -28,9 +28,8 @@ import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { YouAvatar } from "@/components/poll/you-avatar";
 import { useOptions, usePoll } from "@/components/poll-context";
-import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 
 import { useVisibleParticipants } from "../participants-provider";
 import { useUser } from "../user-provider";

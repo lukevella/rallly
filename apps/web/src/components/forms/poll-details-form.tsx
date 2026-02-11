@@ -3,8 +3,7 @@ import { Input } from "@rallly/ui/input";
 import { Textarea } from "@rallly/ui/textarea";
 import { useFormContext } from "react-hook-form";
 
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useFormValidation } from "@/utils/form-validation";
 
 import type { NewEventData } from "./types";

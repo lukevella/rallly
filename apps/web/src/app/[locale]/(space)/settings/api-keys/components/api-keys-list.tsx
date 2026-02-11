@@ -11,7 +11,7 @@ import {
 } from "@/components/empty-state";
 import { Spinner } from "@/components/spinner";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
 import { trpc } from "@/trpc/client";
 import { RevokeApiKeyButton } from "./revoke-api-key-button";

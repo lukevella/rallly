@@ -1,6 +1,6 @@
 "use client";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
 
 export function RelativeDate({ date }: { date: Date }) {

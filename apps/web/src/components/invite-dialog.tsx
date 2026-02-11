@@ -14,7 +14,7 @@ import React from "react";
 import { useCopyToClipboard } from "react-use";
 
 import { useParticipants } from "@/components/participants-provider";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { usePoll } from "@/contexts/poll";
 
 export function CopyInviteLinkButton() {

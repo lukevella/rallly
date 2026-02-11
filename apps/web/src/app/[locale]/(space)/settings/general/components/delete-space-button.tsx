@@ -19,9 +19,8 @@ import { TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-import { Trans } from "@/components/trans";
 import { deleteSpaceAction } from "@/features/space/actions";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 interface DeleteSpaceDialogProps extends DialogProps {

@@ -19,7 +19,7 @@ import {
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
 import { requireAdmin } from "@/auth/data";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { getCustomBrandingConfig } from "@/features/branding/queries";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getTranslation } from "@/i18n/server";

@@ -5,7 +5,7 @@ import { Icon } from "@rallly/ui/icon";
 import { ArrowLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 export function BackButton() {
   const router = useRouter();

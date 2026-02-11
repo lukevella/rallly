@@ -29,7 +29,7 @@ import * as React from "react";
 import { DuplicateDialog } from "@/app/[locale]/(optional-space)/poll/[urlId]/duplicate-dialog";
 import { SchedulePollDialog } from "@/components/poll/manage-poll/schedule-poll-dialog";
 import { ProBadge } from "@/components/pro-badge";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { usePoll } from "@/contexts/poll";
 import { useBilling } from "@/features/billing/client";
 import { useSpace } from "@/features/space/client";

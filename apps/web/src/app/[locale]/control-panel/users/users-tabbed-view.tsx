@@ -4,7 +4,7 @@ import { cn } from "@rallly/ui";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/page-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 export function UsersTabbedView({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();

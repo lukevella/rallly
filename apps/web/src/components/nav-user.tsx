@@ -31,7 +31,7 @@ import Link from "next/link";
 import React from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { useTheme } from "@/features/theme/client";
 import { signOut } from "@/lib/auth-client";
 

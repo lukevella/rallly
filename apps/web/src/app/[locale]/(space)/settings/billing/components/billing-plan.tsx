@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import {
   SpaceTierIcon,
   SpaceTierLabel,

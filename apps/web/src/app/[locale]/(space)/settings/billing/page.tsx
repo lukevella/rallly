@@ -15,7 +15,7 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { getSpaceSubscription } from "@/features/billing/data";
 import { loadMembers } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";

@@ -25,8 +25,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 
 interface LeaveSpaceDialogProps extends DialogProps {
   spaceName: string;

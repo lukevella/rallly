@@ -15,7 +15,7 @@ import { Textarea } from "@rallly/ui/textarea";
 import { CheckCircle2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 import { useSafeAction } from "@/lib/safe-action/client";
 import { isSelfHosted } from "@/utils/constants";

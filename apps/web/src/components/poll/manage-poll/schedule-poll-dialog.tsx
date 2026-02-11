@@ -25,7 +25,7 @@ import * as z from "zod";
 import { DateIconInner } from "@/components/date-icon";
 import { useParticipants } from "@/components/participants-provider";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { VoteSummaryProgressBar } from "@/components/vote-summary-progress-bar";
 import { usePoll } from "@/contexts/poll";
 import { dayjs } from "@/lib/dayjs";

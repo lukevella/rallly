@@ -8,7 +8,7 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/app/components/page-layout";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { DateTimePreferences } from "./components/date-time-preferences";
 import { LanguagePreference } from "./components/language-preference";
 import { ThemePreference } from "./components/theme-preference";

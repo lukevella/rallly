@@ -21,7 +21,7 @@ import {
   getLoginMethodAction,
   setVerificationEmail,
 } from "@/app/[locale]/(auth)/login/actions";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { validateRedirectUrl } from "@/utils/redirect";

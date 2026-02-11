@@ -20,7 +20,7 @@ import {
 } from "@/components/empty-state";
 import { Pagination } from "@/components/pagination";
 import { StackedList } from "@/components/stacked-list";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { UserRow } from "./user-row";
 import { UserSearchInput } from "./user-search-input";

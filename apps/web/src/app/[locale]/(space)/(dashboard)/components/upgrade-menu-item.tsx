@@ -3,7 +3,7 @@
 import { usePostHog } from "@rallly/posthog/client";
 import { SidebarMenuButton, SidebarMenuItem } from "@rallly/ui/sidebar";
 import { SparklesIcon } from "lucide-react";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { useBilling } from "@/features/billing/client";
 
 export function UpgradeMenuItem() {

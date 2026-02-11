@@ -4,7 +4,7 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { RefreshCwIcon } from "lucide-react";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { refreshInstanceLicenseAction } from "../actions";
 

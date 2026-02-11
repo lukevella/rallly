@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { useBranding } from "@/features/branding/client";
 
 export function PollFooter() {

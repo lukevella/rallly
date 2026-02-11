@@ -4,8 +4,7 @@ import { Icon } from "@rallly/ui/icon";
 import { UserIcon } from "lucide-react";
 import Image from "next/image";
 
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/utils/redirect";
 

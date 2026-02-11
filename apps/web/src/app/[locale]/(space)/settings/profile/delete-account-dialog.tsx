@@ -14,8 +14,7 @@ import { Form, FormField, FormItem, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
 
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { deleteCurrentUserAction } from "./actions";
 

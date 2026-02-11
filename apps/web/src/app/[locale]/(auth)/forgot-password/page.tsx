@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { env } from "@/env";
 import { getTranslation } from "@/i18n/server";
 import { getSession } from "@/lib/auth";

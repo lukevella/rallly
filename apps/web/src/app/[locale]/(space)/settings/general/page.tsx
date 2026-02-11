@@ -18,7 +18,7 @@ import {
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
 import { requireSpace, requireUser } from "@/auth/data";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { getTranslation } from "@/i18n/server";
 import { DeleteSpaceButton } from "./components/delete-space-button";

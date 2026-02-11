@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { requireUser } from "@/auth/data";
 import { Logo } from "@/components/logo";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { CreateSpaceForm } from "@/features/setup/components/create-space-form";
 import { userHasSpaces } from "@/features/setup/utils";
 import { getTranslation } from "@/i18n/server";

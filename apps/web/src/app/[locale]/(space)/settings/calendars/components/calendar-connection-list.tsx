@@ -19,9 +19,8 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Spinner } from "@/components/spinner";
-import { Trans } from "@/components/trans";
 import { CalendarProviderIcon } from "@/features/calendars/components/calendar-provider-icon";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 export function CalendarConnectionList() {

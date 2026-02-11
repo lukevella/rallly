@@ -5,7 +5,7 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 export default function NotFound() {
   return (

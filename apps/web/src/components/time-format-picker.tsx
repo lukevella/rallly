@@ -1,7 +1,7 @@
 import type { TimeFormat } from "@rallly/database";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 interface TimeFormatPickerProps {
   value: TimeFormat;

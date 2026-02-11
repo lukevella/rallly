@@ -22,7 +22,7 @@ import {
 import { requireSpace } from "@/auth/data";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
 import { SpaceRole } from "@/features/space/components/space-role";
 import { loadInvites, loadMembers } from "@/features/space/data";

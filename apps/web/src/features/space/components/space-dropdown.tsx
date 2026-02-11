@@ -23,7 +23,7 @@ import {
 import Link from "next/link";
 import React from "react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { setActiveSpaceAction } from "@/features/space/actions";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { useSafeAction } from "@/lib/safe-action/client";

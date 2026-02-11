@@ -18,7 +18,7 @@ import {
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
 import { requireUser } from "@/auth/data";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { getUserHasPassword } from "@/features/user/queries";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";

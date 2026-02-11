@@ -19,7 +19,7 @@ import { MoreHorizontal, TrashIcon, UserPenIcon } from "lucide-react";
 import { useTransition } from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedListItem } from "@/components/stacked-list";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { useUser } from "@/components/user-provider";
 import { changeRoleAction } from "@/features/user/actions";
 import { userRoleSchema } from "@/features/user/schema";

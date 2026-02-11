@@ -20,8 +20,7 @@ import * as React from "react";
 import { useFormContext } from "react-hook-form";
 
 import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import type { NewEventData } from "../types";

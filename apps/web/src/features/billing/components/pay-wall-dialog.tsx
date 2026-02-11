@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import React from "react";
 import { PageIcon } from "@/app/components/page-icons";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { UpgradeButton } from "@/components/upgrade-button";
 import type { SpaceTier } from "@/features/space/schema";
 import { spaceTierSchema } from "@/features/space/schema";

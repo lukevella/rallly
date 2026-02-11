@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTimeoutFn } from "react-use";
 
 import { PageDialog, PageDialogDescription } from "@/components/page-dialog";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 export function Redirect({ href }: { from: string; href: string }) {
   const router = useRouter();

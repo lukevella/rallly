@@ -1,13 +1,15 @@
 "use client";
+
 import type React from "react";
 import {
+  Trans as BaseTrans,
   I18nextProvider,
   useTranslation as useTranslationOrg,
 } from "react-i18next";
 import useAsync from "react-use/lib/useAsync";
-
 import { initI18next } from "./i18n";
 import { defaultNS } from "./settings";
+import type { TxKeyPath } from "./types";
 
 export function useTranslation() {
   return useTranslationOrg("app");
@@ -36,3 +38,10 @@ export function I18nProvider({
     </I18nextProvider>
   );
 }
+
+export const Trans = (
+  props: React.ComponentProps<typeof BaseTrans> & { i18nKey: TxKeyPath },
+) => {
+  const { t } = useTranslation();
+  return <BaseTrans ns="app" t={t} {...props} />;
+};

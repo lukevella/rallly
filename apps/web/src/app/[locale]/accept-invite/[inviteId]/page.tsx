@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { requireUser } from "@/auth/data";
 import { Logo } from "@/components/logo";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { getTranslation } from "@/i18n/server";
 import { AcceptInviteButton } from "./components/accept-invite-button";

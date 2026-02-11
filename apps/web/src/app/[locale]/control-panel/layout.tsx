@@ -3,7 +3,7 @@ import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
 import { GaugeIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { requireAdmin } from "@/auth/data";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { getTranslation } from "@/i18n/server";

@@ -10,7 +10,7 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";
 import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { useUser } from "@/components/user-provider";
 import { usePermissions } from "@/contexts/permissions";
 import type { Vote } from "@/trpc/client/types";

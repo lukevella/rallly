@@ -28,8 +28,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useCopyToClipboard } from "react-use";
 import * as z from "zod";
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 const formSchema = z.object({

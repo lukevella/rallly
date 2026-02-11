@@ -5,7 +5,7 @@ import { StickerIcon } from "lucide-react";
 import React from "react";
 import { Spinner } from "@/components/spinner";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { ScheduledEventListItem } from "@/features/scheduled-event/components/scheduled-event-list";
 import type { Status } from "@/features/scheduled-event/schema";
 import { trpc } from "@/trpc/client";

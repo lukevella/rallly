@@ -9,7 +9,7 @@ import {
 import { useRouter } from "next/navigation";
 import type * as React from "react";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 export const DeletePollDialog: React.FunctionComponent<{

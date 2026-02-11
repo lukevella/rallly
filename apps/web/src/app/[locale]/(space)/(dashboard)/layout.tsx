@@ -20,7 +20,7 @@ import { SpaceSidebarMenu } from "@/app/[locale]/(space)/(dashboard)/components/
 import { UpgradeMenuItem } from "@/app/[locale]/(space)/(dashboard)/components/upgrade-menu-item";
 import { requireSpace, requireUser } from "@/auth/data";
 import { NavUser } from "@/components/nav-user";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";

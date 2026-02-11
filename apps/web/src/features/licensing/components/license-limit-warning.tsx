@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getUserCount } from "@/features/user/queries";

@@ -33,11 +33,10 @@ import { InfoIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Trans } from "@/components/trans";
 import { inviteMemberAction } from "@/features/space/actions";
 import { SpaceRole } from "@/features/space/components/space-role";
 import { memberRoleSchema } from "@/features/space/schema";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 function useInviteMemberFormSchema() {

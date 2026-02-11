@@ -17,7 +17,7 @@ import {
   useEditToken,
   useUpdateParticipantMutation,
 } from "@/components/poll/mutations";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";

@@ -11,7 +11,7 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
 import { MakeMeAdminButton } from "./make-me-admin-button";

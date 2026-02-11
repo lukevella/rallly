@@ -16,7 +16,7 @@ import spacetime from "spacetime";
 import soft from "timezone-soft";
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { usePreferences } from "@/contexts/preferences";
 import { dayjs } from "@/lib/dayjs";
 import { useDayjs } from "@/utils/dayjs";

@@ -14,7 +14,7 @@ import {
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
 import { requireSpace, requireUser } from "@/auth/data";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { isApiAccessEnabled } from "@/features/developer/data";
 import { getTranslation } from "@/i18n/server";
 import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";

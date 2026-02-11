@@ -11,7 +11,7 @@ import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 const formSchema = z.object({
   title: z.string().trim().min(1),

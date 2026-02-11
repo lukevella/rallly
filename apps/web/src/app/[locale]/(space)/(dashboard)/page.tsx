@@ -17,7 +17,7 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { requireSpace, requireUser } from "@/auth/data";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { getUpcomingEventsCount } from "@/features/scheduled-event/data";
 import { loadMembers } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";

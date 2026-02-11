@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { PollPageIcon } from "@/app/components/page-icons";
 import { getCurrentUser } from "@/auth/data";
 import { CreatePoll } from "@/components/create-poll";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { UserDropdown } from "@/components/user-dropdown";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getTranslation } from "@/i18n/server";

@@ -3,7 +3,7 @@ import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import React from "react";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 export const UpgradeButton = ({
   children,

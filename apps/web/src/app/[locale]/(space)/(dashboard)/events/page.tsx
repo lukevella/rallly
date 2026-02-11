@@ -15,7 +15,7 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import type { Status } from "@/features/scheduled-event/schema";
 import { loadMembers } from "@/features/space/data";
 import { getTranslation } from "@/i18n/server";

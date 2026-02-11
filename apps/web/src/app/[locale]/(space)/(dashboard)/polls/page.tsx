@@ -23,7 +23,7 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { MemberSelector } from "@/components/member-selector";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { PollsInfiniteList } from "@/features/poll/components/polls-infinite-list";
 import { loadMembers } from "@/features/space/data";
 import { getTranslation } from "@/i18n/server";

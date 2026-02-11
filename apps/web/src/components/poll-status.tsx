@@ -1,7 +1,7 @@
 import type { PollStatus } from "@rallly/database";
 import { cn } from "@rallly/ui";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 
 const PollStatusLabel = ({ status }: { status: PollStatus }) => {

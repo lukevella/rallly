@@ -11,8 +11,7 @@ import type {
   ImageUploadProps,
 } from "@/components/image-upload/types";
 import { allowedMimeTypes } from "@/components/image-upload/types";
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 import {
   createImagePreviewUrl,

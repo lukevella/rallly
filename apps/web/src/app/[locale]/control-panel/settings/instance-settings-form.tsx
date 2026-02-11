@@ -12,9 +12,8 @@ import {
 import { toast } from "@rallly/ui/sonner";
 import { ContainerIcon } from "lucide-react";
 import React from "react";
-import { Trans } from "@/components/trans";
 import type { InstanceSettings } from "@/features/instance-settings/schema";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { updateInstanceSettingsAction } from "./actions";

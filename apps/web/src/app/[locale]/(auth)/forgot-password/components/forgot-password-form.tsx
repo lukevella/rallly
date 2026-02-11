@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 
 function useForgotPasswordSchema() {

@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useUnmount } from "react-use";
 import { PollSettingsForm } from "@/components/forms/poll-settings";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { useUser } from "@/components/user-provider";
 import { trpc } from "@/trpc/client";
 import type { NewEventData } from "./forms";

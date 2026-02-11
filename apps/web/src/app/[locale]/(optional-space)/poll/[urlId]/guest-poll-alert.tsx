@@ -4,7 +4,7 @@ import { InfoIcon } from "lucide-react";
 
 import { LoginLink } from "@/components/login-link";
 import { RegisterLink } from "@/components/register-link";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { useUser } from "@/components/user-provider";
 
 export const GuestPollAlert = () => {
