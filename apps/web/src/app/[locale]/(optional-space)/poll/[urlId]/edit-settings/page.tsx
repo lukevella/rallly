@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form";
 
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
-import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
+import { Trans } from "@/i18n/client";
 
 const Page = () => {
   const poll = usePoll();

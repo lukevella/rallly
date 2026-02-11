@@ -3,7 +3,7 @@ import { toast } from "@rallly/ui/sonner";
 import Cookies from "js-cookie";
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "@/i18n/client";
 import { LOCALE_COOKIE_NAME } from "@/lib/locale/constants";
 
 export function LocaleSync({ userLocale }: { userLocale: string }) {

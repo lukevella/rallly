@@ -26,9 +26,8 @@ import { toast } from "@rallly/ui/sonner";
 import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Trans } from "@/components/trans";
 import { leaveSpaceAction } from "@/features/space/actions";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 interface LeaveSpaceDialogProps extends DialogProps {

@@ -6,7 +6,7 @@ import { Icon } from "@rallly/ui/icon";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 interface PaginationProps {
   currentPage: number;

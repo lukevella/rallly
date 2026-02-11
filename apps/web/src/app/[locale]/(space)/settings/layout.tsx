@@ -20,9 +20,9 @@ import Link from "next/link";
 import type React from "react";
 import { requireSpace, requireUser } from "@/auth/data";
 import { NavUser } from "@/components/nav-user";
-import { Trans } from "@/components/trans";
 import { BillingProvider } from "@/features/billing/client";
 import { isApiAccessEnabled } from "@/features/developer/data";
+import { Trans } from "@/i18n/client";
 import {
   AccountSidebarMenu,
   DeveloperSidebarMenu,

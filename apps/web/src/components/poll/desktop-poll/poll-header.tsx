@@ -9,7 +9,7 @@ import { ClockIcon } from "lucide-react";
 import type * as React from "react";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { useOptions } from "@/components/poll-context";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 const TimeRange: React.FunctionComponent<{
   start: string;

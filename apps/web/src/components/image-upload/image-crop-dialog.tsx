@@ -12,8 +12,7 @@ import React from "react";
 import type { Crop, PercentCrop } from "react-image-crop";
 import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { getCroppedImg } from "@/lib/image-processing";
 
 export interface ImageCropDialogProps {

@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "@/i18n/client";
 
 export function AuthErrors() {
   const { t } = useTranslation();

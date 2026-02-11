@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { Trans } from "@/components/trans";
 import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getUserCount } from "@/features/user/queries";
+import { Trans } from "@/i18n/client";
 import { isSelfHosted } from "@/utils/constants";
 
 export async function LicenseLimitWarning() {

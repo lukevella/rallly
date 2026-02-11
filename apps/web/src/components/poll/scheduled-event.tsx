@@ -4,9 +4,9 @@ import { Badge } from "@rallly/ui/badge";
 import { CalendarIcon } from "lucide-react";
 import { AddToCalendarButton } from "@/components/add-to-calendar-button";
 import { ParticipantAvatarBar } from "@/components/participant-avatar-bar";
-import { Trans } from "@/components/trans";
 import { IfParticipantsVisible } from "@/components/visibility";
 import { usePoll } from "@/contexts/poll";
+import { Trans } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
 import { useDayjs } from "@/utils/dayjs";
 

@@ -5,10 +5,9 @@ import { useDialog } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { UserPlusIcon } from "lucide-react";
-import { Trans } from "@/components/trans";
 import { useBilling } from "@/features/billing/client";
 import { useSpace } from "@/features/space/client";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { InviteMemberDialog } from "./invite-member-dialog";
 
 export function InviteMemberButton({

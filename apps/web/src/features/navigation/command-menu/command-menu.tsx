@@ -20,8 +20,7 @@ import {
   PreferencesPageIcon,
   ProfilePageIcon,
 } from "@/app/components/page-icons";
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { CommandGlobalShortcut } from "./command-global-shortcut";
 
 function NavigationCommandLabel({ label }: { label: string }) {

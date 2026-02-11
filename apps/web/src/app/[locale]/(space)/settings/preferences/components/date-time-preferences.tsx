@@ -18,8 +18,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
-import { Trans } from "@/components/trans";
 import { usePreferences } from "@/contexts/preferences";
+import { Trans } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
 import { useDayjs } from "@/utils/dayjs";
 

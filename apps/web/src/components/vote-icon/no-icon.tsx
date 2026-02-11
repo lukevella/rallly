@@ -1,4 +1,4 @@
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 export function NoIcon({ className }: { className?: string }) {
   return (

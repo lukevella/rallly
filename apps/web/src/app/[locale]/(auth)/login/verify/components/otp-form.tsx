@@ -14,8 +14,7 @@ import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/utils/redirect";
 import { InputOTP } from "../../../../../../components/input-otp";

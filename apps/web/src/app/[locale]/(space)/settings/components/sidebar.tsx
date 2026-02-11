@@ -22,8 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 
 export function AccountSidebarMenu() {

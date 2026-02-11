@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import useMount from "react-use/lib/useMount";
 import { Spinner } from "@/components/spinner";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/utils/redirect";
 

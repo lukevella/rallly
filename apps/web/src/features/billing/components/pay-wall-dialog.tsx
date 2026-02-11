@@ -28,10 +28,10 @@ import {
 } from "lucide-react";
 import React from "react";
 import { PageIcon } from "@/app/components/page-icons";
-import { Trans } from "@/components/trans";
 import { UpgradeButton } from "@/components/upgrade-button";
 import type { SpaceTier } from "@/features/space/schema";
 import { spaceTierSchema } from "@/features/space/schema";
+import { Trans } from "@/i18n/client";
 import { PLAN_NAMES } from "../constants";
 
 function KeyBenefits({ children }: { children?: React.ReactNode }) {

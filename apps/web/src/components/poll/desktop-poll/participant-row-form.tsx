@@ -15,8 +15,7 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { YouAvatar } from "@/components/poll/you-avatar";
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 
 import { usePoll } from "../../poll-context";
 import { toggleVote, VoteSelector } from "../vote-selector";

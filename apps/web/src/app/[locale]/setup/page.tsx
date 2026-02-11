@@ -3,9 +3,9 @@ import { redirect } from "next/navigation";
 
 import { requireUser } from "@/auth/data";
 import { Logo } from "@/components/logo";
-import { Trans } from "@/components/trans";
 import { CreateSpaceForm } from "@/features/setup/components/create-space-form";
 import { userHasSpaces } from "@/features/setup/utils";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 
 export default async function SetupPage() {

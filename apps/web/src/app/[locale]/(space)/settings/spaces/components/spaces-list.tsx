@@ -20,12 +20,11 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
-import { Trans } from "@/components/trans";
 import { leaveSpaceFromAccountAction } from "@/features/space/actions";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { SpaceRole } from "@/features/space/components/space-role";
 import type { SpaceDTO } from "@/features/space/types";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { LeaveSpaceDialog } from "./leave-space-dialog";
 

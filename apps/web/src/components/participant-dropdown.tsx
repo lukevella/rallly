@@ -39,8 +39,7 @@ import {
   useDeleteParticipantMutation,
   useEditToken,
 } from "@/components/poll/mutations";
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { useFormValidation } from "@/utils/form-validation";
 

@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@rallly/ui";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import type { PasswordQuality } from "../types";
 import { getPasswordQuality } from "../utils";
 

@@ -16,7 +16,7 @@ import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { XIcon } from "lucide-react";
 import { useTransition } from "react";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { removeInstanceLicenseAction } from "../actions";
 

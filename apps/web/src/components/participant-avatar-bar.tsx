@@ -7,7 +7,7 @@ import {
 } from "@rallly/ui/tooltip";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 interface ParticipantAvatarBarProps {
   participants: { name: string; image?: string }[];

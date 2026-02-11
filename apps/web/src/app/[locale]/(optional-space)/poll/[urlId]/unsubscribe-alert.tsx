@@ -4,10 +4,10 @@ import { toast } from "@rallly/ui/sonner";
 import Cookies from "js-cookie";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "@/i18n/client";
 
 export function UnsubscribeAlert() {
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   const urlId = useParams<{ urlId: string }>()?.urlId;
 

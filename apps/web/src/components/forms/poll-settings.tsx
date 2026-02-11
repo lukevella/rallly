@@ -12,11 +12,10 @@ import { Switch } from "@rallly/ui/switch";
 import { AtSignIcon, EyeIcon, MessageCircleIcon, VoteIcon } from "lucide-react";
 import type React from "react";
 import { useFormContext } from "react-hook-form";
-import { Trans } from "react-i18next";
-
 import { ProBadge } from "@/components/pro-badge";
 import { useBilling } from "@/features/billing/client";
 import { useSpace } from "@/features/space/client";
+import { Trans } from "@/i18n/client";
 
 export type PollSettingsFormData = {
   requireParticipantEmail: boolean;

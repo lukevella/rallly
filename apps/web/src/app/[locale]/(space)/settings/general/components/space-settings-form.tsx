@@ -20,7 +20,6 @@ import {
   ImageUploadControl,
   ImageUploadPreview,
 } from "@/components/image-upload";
-import { Trans } from "@/components/trans";
 import {
   removeSpaceImageAction,
   updateSpaceAction,
@@ -28,7 +27,7 @@ import {
 } from "@/features/space/actions";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import type { SpaceDTO } from "@/features/space/types";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 const spaceSettingsSchema = z.object({

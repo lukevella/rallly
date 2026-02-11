@@ -24,10 +24,9 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { useVotingForm } from "@/components/poll/voting-form";
-import { Trans } from "@/components/trans";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 
 import {
   useParticipants,

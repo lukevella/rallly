@@ -1,8 +1,7 @@
 "use client";
 import Link from "next/link";
-
-import { Trans } from "@/components/trans";
 import { useBranding } from "@/features/branding/client";
+import { Trans } from "@/i18n/client";
 
 export function PollFooter() {
   const { hideAttribution } = useBranding();

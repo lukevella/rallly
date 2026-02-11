@@ -17,12 +17,12 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { requireSpace, requireUser } from "@/auth/data";
-import { Trans } from "@/components/trans";
 import { getUpcomingEventsCount } from "@/features/scheduled-event/data";
 import { loadMembers } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { getTotalSeatsForSpace } from "@/features/space/utils";
 import { getUserHasNoAccounts } from "@/features/user/queries";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";

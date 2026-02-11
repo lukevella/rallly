@@ -3,9 +3,8 @@
 import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
 import { useRouter } from "next/navigation";
-import { Trans } from "@/components/trans";
 import { acceptInviteAction } from "@/features/space/actions";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 export const AcceptInviteButton = ({ spaceId }: { spaceId: string }) => {

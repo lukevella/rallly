@@ -12,8 +12,8 @@ import { UsersIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useOptimistic, useTransition } from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Trans } from "@/components/trans";
 import type { MemberDTO } from "@/features/space/member/types";
+import { Trans } from "@/i18n/client";
 
 interface MemberSelectorProps {
   members: MemberDTO[];

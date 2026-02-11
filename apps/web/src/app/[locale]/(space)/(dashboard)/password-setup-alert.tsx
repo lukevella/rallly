@@ -5,7 +5,7 @@ import { Button } from "@rallly/ui/button";
 import { KeyRoundIcon } from "lucide-react";
 import Link from "next/link";
 import { useLocalStorage } from "react-use";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 
 export function PasswordSetupAlert() {
   const [value, setValue] = useLocalStorage<string>("password_setup_dismissed");

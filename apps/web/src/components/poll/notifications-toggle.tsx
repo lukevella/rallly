@@ -4,9 +4,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { BellOffIcon, BellRingIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import type * as React from "react";
-import { Trans } from "@/components/trans";
 import { useUser } from "@/components/user-provider";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { usePoll } from "../poll-context";
 

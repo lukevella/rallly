@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Trans } from "@/components/trans";
 import { env } from "@/env";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import {
   AuthPageContainer,

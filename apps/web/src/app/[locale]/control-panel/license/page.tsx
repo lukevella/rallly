@@ -37,11 +37,11 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { Trans } from "@/components/trans";
 import { LicenseKeyForm } from "@/features/licensing/components/license-key-form";
 import { RefreshLicenseButton } from "@/features/licensing/components/refresh-license-button";
 import { RemoveLicenseButton } from "@/features/licensing/components/remove-license-button";
 import { loadInstanceLicense } from "@/features/licensing/data";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { dayjs } from "@/lib/dayjs";
 

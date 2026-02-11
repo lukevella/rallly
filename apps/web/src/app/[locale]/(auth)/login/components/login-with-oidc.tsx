@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@rallly/ui/button";
 
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/utils/redirect";
 

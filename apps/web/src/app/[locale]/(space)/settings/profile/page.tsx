@@ -20,7 +20,7 @@ import {
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
 import { requireUser } from "@/auth/data";
-import { Trans } from "@/components/trans";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { DeleteAccountDialog } from "./delete-account-dialog";
 import { ProfileEmailAddress } from "./profile-email-address";

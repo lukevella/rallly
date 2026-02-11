@@ -7,9 +7,8 @@ import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import VoteIcon from "@/components/poll/vote-icon";
 import { PollStatusBadge } from "@/components/poll-status";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
-import { Trans } from "@/components/trans";
 import { usePoll } from "@/contexts/poll";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
 
 function IconGuide() {

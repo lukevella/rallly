@@ -13,9 +13,11 @@
 13. Keep the props of a component as minimal as possible. Pass only the bare minimum amount of information needed to it.
 14. All text in the UI should be translatable.
 15. i18n keys are in camelCase.
-16. Use the <Trans> component in client components from @/components/trans. Use the `defaults` prop to provide the default text. Example:
+16. Use the <Trans> component in client components from @/i18n/client. Use the `defaults` prop to provide the default text. Example:
 
 ```tsx
+import { Trans } from "@/i18n/client";
+
 <Trans i18nKey="menu" defaults="Menu" />
 ```
 

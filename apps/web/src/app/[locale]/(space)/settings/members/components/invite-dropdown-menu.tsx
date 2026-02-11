@@ -21,10 +21,9 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { MoreHorizontalIcon, XIcon } from "lucide-react";
-import { Trans } from "@/components/trans";
 import { cancelInviteAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 type SpaceMemberInvite = {

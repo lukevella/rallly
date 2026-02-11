@@ -10,8 +10,7 @@ import {
   SelectValue,
 } from "@rallly/ui/select";
 import { toast } from "@rallly/ui/sonner";
-import { Trans } from "@/components/trans";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 const NONE_VALUE = "none";
