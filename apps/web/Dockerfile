@@ -65,7 +65,7 @@ RUN addgroup --system nodejs \
   && adduser --system --ingroup nodejs --home /app --shell /bin/bash nextjs
 
 # Copy Corepack cache from installer stage to avoid runtime download
-COPY --from=installer /root/.cache/node/corepack/ /app/.cache/node/corepack/
+COPY --chown=nextjs:nodejs --from=installer /root/.cache/node/corepack/ /app/.cache/node/corepack/
 
 # Copy app files
 COPY --from=builder /app/scripts/docker-start.sh ./
