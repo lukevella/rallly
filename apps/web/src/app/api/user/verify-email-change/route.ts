@@ -25,7 +25,10 @@ export const GET = async (request: NextRequest) => {
 
   if (!session?.user || session.user.isGuest) {
     const loginUrl = new URL(absoluteUrl("/login"));
-    loginUrl.searchParams.set("redirectTo", request.url);
+    loginUrl.searchParams.set(
+      "redirectTo",
+      `${request.nextUrl.pathname}${request.nextUrl.search}`,
+    );
     return NextResponse.redirect(loginUrl);
   }
 
