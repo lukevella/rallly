@@ -76,6 +76,18 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: "/p/:participantUrlId",
+        destination: "/api/legacy/p/:participantUrlId",
+      },
+      {
+        source: "/admin/:adminUrlId",
+        destination: "/api/legacy/admin/:adminUrlId",
+      },
+    ];
+  },
   devIndicators: {
     position: "bottom-right",
   },
