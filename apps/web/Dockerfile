@@ -1,14 +1,11 @@
-# Base stage with Node.js 24 and Corepack enabled
 FROM node:24 AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-# Slim base stage with Node.js 24 and Corepack enabled
 FROM node:24-slim AS base-slim
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
 
 # --- Builder Stage ---
 FROM base AS builder
@@ -63,9 +60,6 @@ RUN pnpm add -g prisma@7
 # Don't run production as root
 RUN addgroup --system nodejs \
   && adduser --system --ingroup nodejs --home /app --shell /bin/bash nextjs
-
-# Copy Corepack cache from installer stage to avoid runtime download
-COPY --chown=nextjs:nodejs --from=installer /root/.cache/node/corepack/ /app/.cache/node/corepack/
 
 # Copy app files
 COPY --from=builder /app/scripts/docker-start.sh ./
