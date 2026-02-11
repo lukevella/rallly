@@ -74,17 +74,15 @@ const nextConfig: NextConfig = {
         destination: "/api/better-auth/callback/microsoft",
         permanent: false,
       },
-    ];
-  },
-  async rewrites() {
-    return [
       {
         source: "/p/:participantUrlId",
         destination: "/api/legacy/p/:participantUrlId",
+        permanent: true,
       },
       {
         source: "/admin/:adminUrlId",
         destination: "/api/legacy/admin/:adminUrlId",
+        permanent: true,
       },
     ];
   },
