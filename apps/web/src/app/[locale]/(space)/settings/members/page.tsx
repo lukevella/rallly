@@ -22,11 +22,11 @@ import {
 import { requireSpace } from "@/auth/data";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
-import { Trans } from "@/i18n/client";
 import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
 import { SpaceRole } from "@/features/space/components/space-role";
 import { loadInvites, loadMembers } from "@/features/space/data";
 import { getTotalSeatsForSpace } from "@/features/space/utils";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { InviteDropdownMenu } from "./components/invite-dropdown-menu";
 import { InviteMemberButton } from "./components/invite-member-button";

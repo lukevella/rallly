@@ -10,9 +10,8 @@ import {
   DialogTitle,
 } from "@rallly/ui/dialog";
 import React, { useState } from "react";
-
-import { Trans } from "@/i18n/client";
 import { usePreferences } from "@/contexts/preferences";
+import { Trans } from "@/i18n/client";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { safeLocalStorage } from "@/utils/local-storage";
 

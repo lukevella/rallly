@@ -15,11 +15,11 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { Trans } from "@/i18n/client";
 import { getSpaceSubscription } from "@/features/billing/data";
 import { loadMembers } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { getTotalSeatsForSpace } from "@/features/space/utils";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { BillingPageClient } from "./page-client";

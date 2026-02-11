@@ -13,7 +13,6 @@ import {
   SendIcon,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { Trans } from "@/i18n/client";
 import {
   PageSection,
   PageSectionContent,
@@ -26,6 +25,7 @@ import {
 import { useBilling } from "@/features/billing/client";
 import { SubscriptionStatusLabel } from "@/features/billing/components/subscription-status-label";
 import type { SpaceTier } from "@/features/space/schema";
+import { Trans } from "@/i18n/client";
 import { BillingPlan } from "./components/billing-plan";
 import { ManageSeatsDialog } from "./components/manage-seats-dialog";
 

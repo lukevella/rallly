@@ -14,8 +14,8 @@ import {
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
 import { requireAdmin } from "@/auth/data";
-import { Trans } from "@/i18n/client";
 import { getInstanceSettings } from "@/features/instance-settings/queries";
+import { Trans } from "@/i18n/client";
 import { InstanceSettingsForm } from "./instance-settings-form";
 
 async function loadData() {

@@ -1,7 +1,7 @@
 "use client";
 
-import { Trans } from "@/i18n/client";
 import type { MemberRole } from "@/features/space/schema";
+import { Trans } from "@/i18n/client";
 
 export const SpaceRole = ({ role }: { role: MemberRole }) => {
   switch (role) {

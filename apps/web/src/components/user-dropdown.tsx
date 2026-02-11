@@ -32,8 +32,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Trans } from "@/i18n/client";
 import { useTheme } from "@/features/theme/client";
+import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 
 export const UserDropdown = ({

@@ -2,12 +2,12 @@
 
 import type React from "react";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
-import { Trans } from "@/i18n/client";
 import {
   SpaceTierIcon,
   SpaceTierLabel,
 } from "@/features/space/components/space-tier";
 import type { SpaceTier } from "@/features/space/schema";
+import { Trans } from "@/i18n/client";
 
 export function BillingPlan({
   tier,

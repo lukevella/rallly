@@ -10,8 +10,8 @@ import {
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
 import { requireUser } from "@/auth/data";
-import { Trans } from "@/i18n/client";
 import { loadSpaces } from "@/features/space/data";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { SpacesList } from "./components/spaces-list";
 

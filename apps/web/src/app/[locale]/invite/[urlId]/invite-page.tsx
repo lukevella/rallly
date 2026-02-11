@@ -9,9 +9,9 @@ import { PollViewTracker } from "@/components/poll/poll-view-tracker";
 import { ResponsiveResults } from "@/components/poll/responsive-results";
 import { ScheduledEvent } from "@/components/poll/scheduled-event";
 import { VotingForm } from "@/components/poll/voting-form";
-import { Trans } from "@/i18n/client";
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
+import { Trans } from "@/i18n/client";
 
 const GoToApp = () => {
   const poll = usePoll();

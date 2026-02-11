@@ -17,10 +17,10 @@ import {
   useEditToken,
   useUpdateParticipantMutation,
 } from "@/components/poll/mutations";
-import { Trans } from "@/i18n/client";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
+import { Trans } from "@/i18n/client";
 
 const formSchema = z.object({
   mode: z.enum(["new", "edit", "view"]),

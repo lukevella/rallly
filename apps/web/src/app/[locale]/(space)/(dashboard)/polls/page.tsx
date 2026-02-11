@@ -23,9 +23,9 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { MemberSelector } from "@/components/member-selector";
-import { Trans } from "@/i18n/client";
 import { PollsInfiniteList } from "@/features/poll/components/polls-infinite-list";
 import { loadMembers } from "@/features/space/data";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { searchParamsSchema } from "./schema";

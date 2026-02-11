@@ -16,8 +16,8 @@ import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { useCallback, useState } from "react";
-import { Trans } from "@/i18n/client";
 import { updateSeatsAction } from "@/features/billing/actions";
+import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 interface ManageSeatsButtonProps {

@@ -10,8 +10,8 @@ import { InviteDialog } from "@/components/invite-dialog";
 import ManagePoll from "@/components/poll/manage-poll";
 import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
-import { Trans } from "@/i18n/client";
 import { usePoll } from "@/contexts/poll";
+import { Trans } from "@/i18n/client";
 
 const AdminControls = () => {
   return (

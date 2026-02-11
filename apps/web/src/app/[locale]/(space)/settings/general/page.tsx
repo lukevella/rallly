@@ -18,8 +18,8 @@ import {
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
 import { requireSpace, requireUser } from "@/auth/data";
-import { Trans } from "@/i18n/client";
 import { defineAbilityForMember } from "@/features/space/member/ability";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { DeleteSpaceButton } from "./components/delete-space-button";
 import { LeaveSpaceButton } from "./components/leave-space-button";

@@ -10,8 +10,8 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { ChevronDownIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
-import { Trans } from "@/i18n/client";
 import { connectToCalendar } from "@/features/calendars/client";
+import { Trans } from "@/i18n/client";
 
 export function ConnectCalendarDropdown() {
   return (

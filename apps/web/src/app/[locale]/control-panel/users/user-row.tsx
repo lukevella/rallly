@@ -19,10 +19,10 @@ import { MoreHorizontal, TrashIcon, UserPenIcon } from "lucide-react";
 import { useTransition } from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedListItem } from "@/components/stacked-list";
-import { Trans } from "@/i18n/client";
 import { useUser } from "@/components/user-provider";
 import { changeRoleAction } from "@/features/user/actions";
 import { userRoleSchema } from "@/features/user/schema";
+import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { DeleteUserDialog } from "./dialogs/delete-user-dialog";
 

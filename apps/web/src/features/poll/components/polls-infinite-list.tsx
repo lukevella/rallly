@@ -34,9 +34,9 @@ import { CopyLinkButton } from "@/components/copy-link-button";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Spinner } from "@/components/spinner";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
-import { Trans } from "@/i18n/client";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import type { PollStatus } from "@/features/poll/schema";
+import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 interface PollsInfiniteListProps {
