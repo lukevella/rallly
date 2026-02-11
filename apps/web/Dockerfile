@@ -55,7 +55,7 @@ RUN apt-get update \
 WORKDIR /app
 
 # Install prisma globally needed for runtime operations like migrations
-RUN pnpm add -g prisma@7
+RUN npm add -g prisma@7
 
 # Don't run production as root
 RUN addgroup --system nodejs \
@@ -73,9 +73,6 @@ COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/standalone ./
 COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/static ./apps/web/.next/static
 COPY --chown=nextjs:nodejs --from=installer /app/apps/web/public ./apps/web/public
 
-# Fix ownership of global pnpm dir - Prisma needs write access to its engines
-# and cache directories within the pnpm global store at runtime
-RUN chown -R nextjs:nodejs /pnpm
 ENV HOME=/app
 USER nextjs
 
