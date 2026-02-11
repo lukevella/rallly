@@ -16,9 +16,8 @@ import { CheckCircleIcon, InfoIcon, XIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import * as z from "zod";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 const emailChangeFormData = z.object({
@@ -33,7 +32,7 @@ export const ProfileEmailAddress = ({ email }: { email: string }) => {
     },
     resolver: zodResolver(emailChangeFormData),
   });
-  const { t } = useTranslation("app");
+  const { t } = useTranslation();
 
   const searchParams = useSearchParams();
   const error = searchParams.get("error");

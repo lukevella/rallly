@@ -13,7 +13,7 @@ import {
   SendIcon,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { Trans } from "react-i18next";
+import { Trans } from "@/i18n/client";
 import {
   PageSection,
   PageSectionContent,

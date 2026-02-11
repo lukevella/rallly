@@ -14,14 +14,13 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
 import {
   getLoginMethodAction,
   setVerificationEmail,
 } from "@/app/[locale]/(auth)/login/actions";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { validateRedirectUrl } from "@/utils/redirect";

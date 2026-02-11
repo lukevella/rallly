@@ -12,7 +12,7 @@ import { Switch } from "@rallly/ui/switch";
 import { AtSignIcon, EyeIcon, MessageCircleIcon, VoteIcon } from "lucide-react";
 import type React from "react";
 import { useFormContext } from "react-hook-form";
-import { Trans } from "react-i18next";
+import { Trans } from "@/i18n/client";
 
 import { ProBadge } from "@/components/pro-badge";
 import { useBilling } from "@/features/billing/client";

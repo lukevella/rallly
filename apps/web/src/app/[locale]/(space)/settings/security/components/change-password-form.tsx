@@ -12,9 +12,8 @@ import {
 import { PasswordInput } from "@rallly/ui/password-input";
 import { toast } from "@rallly/ui/sonner";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import * as z from "zod";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { PasswordStrengthMeter } from "@/features/password/components/password-strength-meter";
 import { usePasswordValidationSchema } from "@/features/password/schema";
 import { authClient } from "@/lib/auth-client";
