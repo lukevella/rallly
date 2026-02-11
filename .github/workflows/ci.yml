@@ -61,7 +61,22 @@ jobs:
       - name: Run tests
         run: pnpm test:unit
 
-  # Label of the container job
+  docker-smoke-test:
+    name: Docker smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start services
+        run: |
+          SECRET_PASSWORD=test-secret \
+          NEXT_PUBLIC_BASE_URL=http://localhost:3000 \
+          docker compose up -d --build --wait --wait-timeout 60
+
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs
+
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-latest
