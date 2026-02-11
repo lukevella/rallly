@@ -36,7 +36,7 @@ export function createStripePortalSessionHandler(path = "") {
     } else {
       const userSession = await getSession();
       if (!userSession?.user || userSession.user.email === null) {
-        const url = new URL("/login", request.url);
+        const url = new URL(absoluteUrl("/login"));
         url.searchParams.set("redirectTo", request.nextUrl.pathname);
         return NextResponse.redirect(url, 302);
       }

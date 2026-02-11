@@ -51,10 +51,7 @@ export async function POST(request: NextRequest) {
 
   if (space.tier === "pro") {
     // User already has an active subscription. Take them to customer portal
-    return NextResponse.redirect(
-      new URL("/api/stripe/portal", request.url),
-      303,
-    );
+    return NextResponse.redirect(absoluteUrl("/api/stripe/portal"), 303);
   }
 
   if (res.customerId) {

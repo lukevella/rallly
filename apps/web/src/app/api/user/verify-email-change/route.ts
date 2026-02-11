@@ -1,5 +1,6 @@
 import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
 import { waitUntil } from "@vercel/functions";
 import type { NextRequest } from "next/server";
@@ -23,8 +24,11 @@ export const GET = async (request: NextRequest) => {
   const session = await getSession();
 
   if (!session?.user || session.user.isGuest) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirectTo", request.url);
+    const loginUrl = new URL(absoluteUrl("/login"));
+    loginUrl.searchParams.set(
+      "redirectTo",
+      `${request.nextUrl.pathname}${request.nextUrl.search}`,
+    );
     return NextResponse.redirect(loginUrl);
   }
 
@@ -32,13 +36,13 @@ export const GET = async (request: NextRequest) => {
 
   if (!payload) {
     return NextResponse.redirect(
-      new URL("/settings/profile?error=invalidToken", request.url),
+      absoluteUrl("/settings/profile?error=invalidToken"),
     );
   }
 
   if (payload.userId !== session.user.id) {
     return NextResponse.redirect(
-      new URL("/settings/profile?error=invalidUserId", request.url),
+      absoluteUrl("/settings/profile?error=invalidUserId"),
     );
   }
 
@@ -77,6 +81,6 @@ export const GET = async (request: NextRequest) => {
   }
 
   return NextResponse.redirect(
-    new URL("/settings/profile?emailChanged=true", request.url),
+    absoluteUrl("/settings/profile?emailChanged=true"),
   );
 };
