@@ -54,9 +54,6 @@ RUN apt-get update \
 
 WORKDIR /app
 
-# Install prisma locally for runtime migrations (must be resolvable from /app)
-RUN npm add prisma@7
-
 # Don't run production as root
 RUN addgroup --system nodejs \
   && adduser --system --ingroup nodejs --home /app --shell /bin/bash nextjs
@@ -72,6 +69,9 @@ COPY --from=installer /app/apps/web/package.json .
 COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/standalone ./
 COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/static ./apps/web/.next/static
 COPY --chown=nextjs:nodejs --from=installer /app/apps/web/public ./apps/web/public
+
+# Install prisma locally for runtime migrations (must be resolvable from /app)
+RUN npm add prisma@7
 
 ENV HOME=/app
 USER nextjs
