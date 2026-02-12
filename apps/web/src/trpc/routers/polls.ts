@@ -46,6 +46,29 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 export const polls = router({
   participants,
   comments,
+  getGuestPolls: publicProcedure.query(async ({ ctx }) => {
+    if (!ctx.user?.isGuest) {
+      return [];
+    }
+
+    return prisma.poll.findMany({
+      where: {
+        ...(ctx.user.isLegacyGuest
+          ? { guestId: ctx.user.id }
+          : { userId: ctx.user.id }),
+        deleted: false,
+      },
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 3,
+    });
+  }),
   infiniteChronological: privateProcedure
     .input(
       z.object({

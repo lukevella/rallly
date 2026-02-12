@@ -1,46 +1,37 @@
+"use client";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { CheckIcon, PlusIcon, ZapIcon } from "lucide-react";
 import Link from "next/link";
-import { Trans } from "react-i18next/TransWithoutContext";
-
 import { PollPageIcon } from "@/app/components/page-icons";
-import { getGuestPolls } from "@/features/quick-create/lib/get-guest-polls";
-import { getTranslation } from "@/i18n/server";
-
+import { Spinner } from "@/components/spinner";
+import { Trans } from "@/i18n/client";
+import { trpc } from "@/trpc/client";
 import { RelativeDate } from "./components/relative-date";
 
-export async function QuickCreateWidget() {
-  const polls = await getGuestPolls();
-  const { t } = await getTranslation();
+export function QuickCreateWidget() {
+  const { data: polls = [], isLoading } = trpc.polls.getGuestPolls.useQuery();
+
   return (
     <div className="space-y-8">
       <div className="space-y-6">
         <div className="inline-flex items-center justify-center gap-2 rounded-md font-medium text-primary">
           <ZapIcon className="size-5" />
           <h2>
-            <Trans
-              t={t}
-              ns="app"
-              i18nKey="quickCreate"
-              defaults="Quick Create"
-            />
+            <Trans i18nKey="quickCreate" defaults="Quick Create" />
           </h2>
         </div>
         <p className="text-pretty text-muted-foreground">
           <Trans
-            t={t}
-            ns="app"
             i18nKey="quickActionsDescription"
             defaults="Create a group poll without signing in. Login later to link it to your account."
           />
         </p>
+        {isLoading ? <Spinner /> : null}
         {polls.length > 0 ? (
           <div className="space-y-4">
             <h3 className="font-semibold">
               <Trans
-                t={t}
-                ns="app"
                 i18nKey="quickCreateRecentlyCreated"
                 defaults="Recently Created"
               />
@@ -74,8 +65,6 @@ export async function QuickCreateWidget() {
                 <PlusIcon />
               </Icon>
               <Trans
-                t={t}
-                ns="app"
                 i18nKey="quickCreateGroupPoll"
                 defaults="Create Group Poll"
               />
@@ -87,8 +76,6 @@ export async function QuickCreateWidget() {
         <div className="flex items-center gap-2">
           <h3 className="font-semibold">
             <Trans
-              t={t}
-              ns="app"
               i18nKey="quickCreateWhyCreateAnAccount"
               defaults="Why create an account?"
             />
@@ -98,8 +85,6 @@ export async function QuickCreateWidget() {
           <li className="flex items-center gap-2">
             <CheckIcon className="size-5 text-green-600 dark:text-green-500" />
             <Trans
-              t={t}
-              ns="app"
               i18nKey="quickCreateSecurePolls"
               defaults="Store polls securely in your account"
             />
@@ -107,8 +92,6 @@ export async function QuickCreateWidget() {
           <li className="flex items-center gap-2">
             <CheckIcon className="size-5 text-green-600 dark:text-green-500" />
             <Trans
-              t={t}
-              ns="app"
               i18nKey="quickCreateGetNotifications"
               defaults="Get email notifications"
             />
@@ -116,8 +99,6 @@ export async function QuickCreateWidget() {
           <li className="flex items-center gap-2">
             <CheckIcon className="size-5 text-green-600 dark:text-green-500" />
             <Trans
-              t={t}
-              ns="app"
               i18nKey="quickCreateManagePollsFromAnyDevice"
               defaults="Manage your polls from any device"
             />
