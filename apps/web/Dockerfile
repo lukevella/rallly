@@ -62,8 +62,6 @@ RUN addgroup --system nodejs \
 COPY --from=builder /app/scripts/docker-start.sh ./
 COPY --from=builder /app/packages/database/prisma ./prisma
 COPY --from=builder /app/packages/database/prisma.config.ts ./
-COPY --from=installer /app/apps/web/next.config.ts .
-COPY --from=installer /app/apps/web/package.json .
 
 # Copy Next.js standalone output
 COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/standalone ./
