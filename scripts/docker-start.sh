@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-export DIRECT_DATABASE_URL=$DATABASE_URL
+# Needed by next-auth to verify the origin of the request
 export AUTH_URL=$NEXT_PUBLIC_BASE_URL
 
-pnpm prisma migrate deploy --config=./prisma.config.ts
+npx prisma migrate deploy --config=./prisma.config.ts
 node apps/web/server.js

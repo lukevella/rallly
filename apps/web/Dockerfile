@@ -1,14 +1,11 @@
-# Base stage with Node.js 24 and Corepack enabled
 FROM node:24 AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-# Slim base stage with Node.js 24 and Corepack enabled
 FROM node:24-slim AS base-slim
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
 
 # --- Builder Stage ---
 FROM base AS builder
@@ -57,43 +54,34 @@ RUN apt-get update \
 
 WORKDIR /app
 
-# Install prisma globally needed for runtime operations like migrations
-RUN pnpm add -g prisma@7
-
 # Don't run production as root
 RUN addgroup --system nodejs \
   && adduser --system --ingroup nodejs --home /app --shell /bin/bash nextjs
 
-# Copy Corepack cache from installer stage to avoid runtime download
-COPY --chown=nextjs:nodejs --from=installer /root/.cache/node/corepack/ /app/.cache/node/corepack/
+# Install prisma for runtime migrations (must be resolvable from /app)
+RUN npm add prisma@7
 
-# Copy app files
+# Copy prisma schema and config for migrations
 COPY --from=builder /app/scripts/docker-start.sh ./
 COPY --from=builder /app/packages/database/prisma ./prisma
 COPY --from=builder /app/packages/database/prisma.config.ts ./
-COPY --from=installer /app/apps/web/next.config.ts .
-COPY --from=installer /app/apps/web/package.json .
 
 # Copy Next.js standalone output
 COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/standalone ./
 COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/static ./apps/web/.next/static
 COPY --chown=nextjs:nodejs --from=installer /app/apps/web/public ./apps/web/public
 
-# Fix ownership of global pnpm dir - Prisma needs write access to its engines
-# and cache directories within the pnpm global store at runtime
-RUN chown -R nextjs:nodejs /pnpm
-ENV HOME=/app
 USER nextjs
 
-EXPOSE 3000
+ENV HOME=/app
 ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+ENV LOG_LEVEL=warn
 
 ARG SELF_HOSTED
 ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
-ENV HOSTNAME=0.0.0.0
 
-# Set default log level to warning
-ENV LOG_LEVEL=warn
+EXPOSE 3000
 
 HEALTHCHECK CMD curl --fail http://localhost:${PORT}/api/status || exit 1
 
