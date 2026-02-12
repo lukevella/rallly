@@ -58,7 +58,10 @@ WORKDIR /app
 RUN addgroup --system nodejs \
   && adduser --system --ingroup nodejs --home /app --shell /bin/bash nextjs
 
-# Copy app files
+# Install prisma for runtime migrations (must be resolvable from /app)
+RUN npm add prisma@7
+
+# Copy prisma schema and config for migrations
 COPY --from=builder /app/scripts/docker-start.sh ./
 COPY --from=builder /app/packages/database/prisma ./prisma
 COPY --from=builder /app/packages/database/prisma.config.ts ./
@@ -68,21 +71,17 @@ COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/standalone ./
 COPY --chown=nextjs:nodejs --from=installer /app/apps/web/.next/static ./apps/web/.next/static
 COPY --chown=nextjs:nodejs --from=installer /app/apps/web/public ./apps/web/public
 
-# Install prisma locally for runtime migrations (must be resolvable from /app)
-RUN npm add prisma@7
-
-ENV HOME=/app
 USER nextjs
 
-EXPOSE 3000
+ENV HOME=/app
 ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+ENV LOG_LEVEL=warn
 
 ARG SELF_HOSTED
 ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
-ENV HOSTNAME=0.0.0.0
 
-# Set default log level to warning
-ENV LOG_LEVEL=warn
+EXPOSE 3000
 
 HEALTHCHECK CMD curl --fail http://localhost:${PORT}/api/status || exit 1
 
