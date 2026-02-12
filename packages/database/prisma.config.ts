@@ -1,7 +1,11 @@
 import path from "node:path";
 import { defineConfig } from "prisma/config";
 
-process.loadEnvFile(path.join(__dirname, "../../.env"));
+try {
+  process.loadEnvFile(path.join(__dirname, "../../.env"));
+} catch {
+  console.info("No .env file found, continuing without it");
+}
 
 export default defineConfig({
   schema: path.join(__dirname, "prisma"),

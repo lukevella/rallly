@@ -54,8 +54,8 @@ RUN apt-get update \
 
 WORKDIR /app
 
-# Install prisma globally needed for runtime operations like migrations
-RUN npm add -g prisma@7
+# Install prisma locally for runtime migrations (must be resolvable from /app)
+RUN npm add prisma@7
 
 # Don't run production as root
 RUN addgroup --system nodejs \
