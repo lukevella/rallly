@@ -1,5 +1,4 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
-import { redirect } from "next/navigation";
 import superjson from "superjson";
 
 import { getSession } from "@/lib/auth";
@@ -31,20 +30,18 @@ export const createSSRHelper = () => {
 export const createAuthenticatedSSRHelper = async () => {
   const session = await getSession();
 
-  if (!session?.user) {
-    redirect("/login");
-  }
-
   return createServerSideHelpers({
     router: appRouter,
     ctx: {
-      user: {
-        id: session.user.id,
-        isGuest: session.user.isGuest,
-        locale: session.user.locale ?? undefined,
-        image: session.user.image ?? undefined,
-        isLegacyGuest: session.legacy && session.user.isGuest,
-      },
+      user: session?.user
+        ? {
+            id: session.user.id,
+            isGuest: session.user.isGuest,
+            locale: session.user.locale ?? undefined,
+            image: session.user.image ?? undefined,
+            isLegacyGuest: session.legacy && session.user.isGuest,
+          }
+        : undefined,
     } satisfies TRPCContext,
     transformer: superjson,
   });
