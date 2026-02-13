@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Rallly is a meeting scheduling application built with Next.js that allows users to create polls to find the best meeting times. It supports both self-hosted and cloud-hosted deployments with a freemium model.
 
 **Core Technologies:**
-- Next.js 15 with React 19
+- Next.js 16 with React 19
 - tRPC for API layer
 - Prisma with PostgreSQL
 - NextAuth.js for authentication  
