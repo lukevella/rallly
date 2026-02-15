@@ -27,6 +27,7 @@
     "i18n:scan": "turbo i18n:scan",
     "type-check": "turbo type-check",
     "release": "./scripts/create-release.sh",
+    "screenshots": "pnpm --filter @rallly/screenshots capture",
     "sherif": "pnpx sherif@latest",
     "sherif:fix": "pnpx sherif@latest --fix"
   },

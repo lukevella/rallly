@@ -1,0 +1,14 @@
+{
+  "name": "@rallly/screenshots",
+  "private": true,
+  "scripts": {
+    "capture": "playwright test"
+  },
+  "dependencies": {
+    "@rallly/database": "workspace:*",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0"
+  }
+}

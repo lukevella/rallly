@@ -847,6 +847,19 @@ importers:
         specifier: ^4.0.16
         version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.11)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
 
+  tools/screenshots:
+    dependencies:
+      '@rallly/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.6.1
+    devDependencies:
+      '@playwright/test':
+        specifier: ^1.57.0
+        version: 1.58.1
+
 packages:
 
   '@adobe/css-tools@4.4.4':
