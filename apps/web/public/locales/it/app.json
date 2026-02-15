@@ -602,5 +602,10 @@
   "pollStatusCanceled": "Annullato",
   "schedulePoll": "Pianifica",
   "schedulePollDescription": "Seleziona una data finale per il tuo evento.",
-  "featureNameSchedule": "Pianifica sondaggio"
+  "featureNameSchedule": "Pianifica sondaggio",
+  "pollClosed": "Sondaggio chiuso",
+  "deleteMenuItem": "Elimina",
+  "deletePollPrompt": "Sei sicuro di voler eliminare <b>{title}</b>?",
+  "pollDeleted": "Sondaggio eliminato",
+  "pollDeleteError": "Impossibile eliminare il sondaggio"
 }
