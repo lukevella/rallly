@@ -1,5 +1,7 @@
+import { headers } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { authLib } from "@/lib/auth";
 import { getLocaleFromRequest, setLocaleCookie } from "@/lib/locale/server";
 
 export const proxy = async (req: NextRequest) => {
@@ -8,6 +10,18 @@ export const proxy = async (req: NextRequest) => {
   const pathname = newUrl.pathname;
 
   const locale = getLocaleFromRequest(req);
+
+  const session = await authLib.api.getSession({
+    headers: await headers(),
+  });
+
+  if (
+    session &&
+    (pathname.startsWith("/login") || pathname.startsWith("/register"))
+  ) {
+    const redirectTo = newUrl.searchParams.get("redirectTo") ?? "/";
+    return NextResponse.redirect(new URL(redirectTo, newUrl.origin));
+  }
 
   newUrl.pathname = `/${locale}${pathname}`;
 
