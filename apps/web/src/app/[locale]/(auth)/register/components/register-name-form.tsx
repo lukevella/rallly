@@ -203,6 +203,9 @@ export function RegisterNameForm() {
             <Turnstile
               ref={turnstileRef}
               siteKey={turnstileSiteKey}
+              options={{
+                language: i18n.language,
+              }}
               onSuccess={(token) => {
                 setTurnstileToken(token);
               }}
