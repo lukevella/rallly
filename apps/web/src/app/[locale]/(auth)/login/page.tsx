@@ -22,20 +22,12 @@ import { LoginWithOIDC } from "./components/login-with-oidc";
 import { OrDivider } from "./components/or-divider";
 import { SSOProvider } from "./components/sso-provider";
 
-async function loadData() {
-  const [isRegistrationEnabled] = await Promise.all([getRegistrationEnabled()]);
-
-  return {
-    isRegistrationEnabled,
-  };
-}
-
 export default async function LoginPage(props: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await props.params;
   const { t } = await getTranslation(locale);
-  const { isRegistrationEnabled } = await loadData();
+  const isRegistrationEnabled = await getRegistrationEnabled();
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
 
   const hasGoogleProvider = !!authLib.options.socialProviders.google;

@@ -1,15 +1,18 @@
+"use client";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { CheckIcon, PlusIcon, ZapIcon } from "lucide-react";
 import Link from "next/link";
 import { PollPageIcon } from "@/app/components/page-icons";
-import { getGuestPolls } from "@/features/quick-create/lib/get-guest-polls";
 import { Trans } from "@/i18n/client";
-
+import { trpc } from "@/trpc/client";
 import { RelativeDate } from "./components/relative-date";
 
-export async function QuickCreateWidget() {
-  const polls = await getGuestPolls();
+export function QuickCreateWidget() {
+  const { data: polls = [] } = trpc.polls.getGuestPolls.useQuery(undefined, {
+    staleTime: 1000 * 60,
+  });
+
   return (
     <div className="space-y-8">
       <div className="space-y-6">
