@@ -11,6 +11,7 @@ import { Inter } from "next/font/google";
 import type React from "react";
 import { Suspense } from "react";
 import type { Params } from "@/app/[locale]/types";
+import { Spinner } from "@/components/spinner";
 import { BrandingProvider } from "@/features/branding/client";
 import { getInstanceBrandingConfig } from "@/features/branding/queries";
 import { ThemeProvider } from "@/features/theme/client";
@@ -65,7 +66,13 @@ export default async function Root({
       style={brandingStyles}
     >
       <body>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className="flex h-dvh items-center justify-center">
+              <Spinner />
+            </div>
+          }
+        >
           <ThemeProvider>
             <FeatureFlagsProvider value={featureFlagConfig}>
               <BrandingProvider value={brandingConfig}>

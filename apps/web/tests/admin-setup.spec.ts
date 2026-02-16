@@ -76,7 +76,7 @@ test.describe("Admin Setup Page Access", () => {
     await loginWithEmail(page, { email: SUBSEQUENT_ADMIN_EMAIL });
 
     await page.goto("/control-panel/setup");
-    await expect(page).toHaveURL(/.*\/control-panel/);
+    await expect(page).toHaveURL("/control-panel");
   });
 
   test("should show 'not found' if INITIAL_ADMIN_EMAIL in env is different from user's email", async ({
@@ -107,7 +107,7 @@ test.describe("Admin Setup Page Access", () => {
     await expect(page.getByText("Are you the admin?")).toBeVisible();
     await page.getByRole("button", { name: "Make me an admin" }).click();
 
-    await expect(page).toHaveURL(/.*\/control-panel/, { timeout: 10000 });
+    await expect(page).toHaveURL("/control-panel", { timeout: 10000 });
 
     const user = await prisma.user.findUnique({
       where: { email: INITIAL_ADMIN_TEST_EMAIL },
