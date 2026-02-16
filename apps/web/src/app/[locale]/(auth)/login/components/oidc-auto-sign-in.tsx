@@ -1,23 +1,31 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import useMount from "react-use/lib/useMount";
+import React from "react";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/utils/redirect";
+import { AuthErrors } from "./auth-errors";
 
 export function OIDCAutoSignIn() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo");
+  const error = searchParams.get("error");
 
-  useMount(() => {
-    authClient.signIn.oauth2({
-      providerId: "oidc",
-      callbackURL: validateRedirectUrl(redirectTo) || "/",
-      errorCallbackURL: "/login?error=OAuthSignInFailed",
-    });
-  });
+  React.useEffect(() => {
+    if (!error) {
+      authClient.signIn.oauth2({
+        providerId: "oidc",
+        callbackURL: validateRedirectUrl(redirectTo) || "/",
+        errorCallbackURL: "/login?error=OAuthSignInFailed",
+      });
+    }
+  }, [error, redirectTo]);
+
+  if (error) {
+    return <AuthErrors />;
+  }
 
   return (
     <div className="flex h-dvh items-center justify-center">

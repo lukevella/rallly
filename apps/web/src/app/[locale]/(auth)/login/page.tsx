@@ -33,14 +33,9 @@ async function loadData() {
 
 export default async function LoginPage(props: {
   params: Promise<{ locale: string }>;
-  searchParams?: Promise<{
-    redirectTo?: string;
-    error?: string;
-  }>;
 }) {
   const { locale } = await props.params;
   const { t } = await getTranslation(locale);
-  const searchParams = await props.searchParams;
   const session = await getSession();
   if (session?.user && !session.user.isGuest) {
     redirect("/");
@@ -58,10 +53,8 @@ export default async function LoginPage(props: {
 
   const hasAlternateLoginMethods = hasSocialLogin || hasOidc;
 
-  const hasError = !!searchParams?.error;
-
   const shouldAutoSignIn =
-    hasOidc && !hasError && !isEmailLoginEnabled && !hasSocialLogin;
+    hasOidc && !isEmailLoginEnabled && !hasSocialLogin;
   /**
    * If there is only one login method available, we should automatically redirect to the login page.
    */
@@ -98,24 +91,13 @@ export default async function LoginPage(props: {
         {isEmailLoginEnabled && hasAlternateLoginMethods ? <OrDivider /> : null}
         <div className="grid gap-3">
           {hasOidc ? (
-            <LoginWithOIDC
-              name={env.OIDC_NAME}
-              redirectTo={searchParams?.redirectTo}
-            />
+            <LoginWithOIDC name={env.OIDC_NAME} />
           ) : null}
           {hasGoogleProvider ? (
-            <SSOProvider
-              providerId="google"
-              name="Google"
-              redirectTo={searchParams?.redirectTo}
-            />
+            <SSOProvider providerId="google" name="Google" />
           ) : null}
           {hasMicrosoftProvider ? (
-            <SSOProvider
-              providerId="microsoft"
-              name="Microsoft"
-              redirectTo={searchParams?.redirectTo}
-            />
+            <SSOProvider providerId="microsoft" name="Microsoft" />
           ) : null}
         </div>
       </AuthPageContent>

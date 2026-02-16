@@ -3,6 +3,7 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { UserIcon } from "lucide-react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
@@ -40,13 +41,13 @@ function SSOImage({ provider }: { provider: string }) {
 export function SSOProvider({
   providerId,
   name,
-  redirectTo,
 }: {
   providerId: string;
   name: string;
-  redirectTo?: string;
 }) {
   const { t } = useTranslation();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
   return (
     <Button
       size="lg"

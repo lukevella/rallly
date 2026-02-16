@@ -1,17 +1,14 @@
 "use client";
 import { Button } from "@rallly/ui/button";
+import { useSearchParams } from "next/navigation";
 
 import { Trans } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/utils/redirect";
 
-export function LoginWithOIDC({
-  name,
-  redirectTo,
-}: {
-  name: string;
-  redirectTo?: string;
-}) {
+export function LoginWithOIDC({ name }: { name: string }) {
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
   return (
     <Button
       onClick={() => {
