@@ -588,9 +588,6 @@ importers:
       '@aws-sdk/credential-provider-node':
         specifier: ^3.501.0
         version: 3.972.5
-      '@rallly/logger':
-        specifier: workspace:*
-        version: link:../logger
       '@react-email/components':
         specifier: ^0.0.36
         version: 0.0.36(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
