@@ -1,8 +1,7 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
+import { deleteAllMessages } from "@rallly/test-helpers";
 import { NewPollPage } from "tests/new-poll-page";
-
-import { deleteAllMessages } from "./mailpit/mailpit";
 
 test.describe.serial(() => {
   let page: Page;
@@ -29,7 +28,7 @@ test.describe.serial(() => {
 
     const deletePollDialog = page.getByRole("dialog");
 
-    deletePollDialog.getByRole("button", { name: "delete" }).click();
+    await deletePollDialog.getByRole("button", { name: "delete" }).click();
 
     await expect(page).toHaveURL("/login?redirectTo=%2Fpolls");
   });

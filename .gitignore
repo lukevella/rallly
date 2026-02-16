@@ -38,6 +38,9 @@ tsconfig.tsbuildinfo
 # Playwright
 playwright-report
 test-results
+
+# Screenshots tool output
+packages/screenshots/screenshots
 .kiro
 .vercel
 

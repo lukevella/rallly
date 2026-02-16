@@ -1,10 +1,9 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
+import { captureOne } from "@rallly/test-helpers";
 import { load } from "cheerio";
 import type { PollPage } from "tests/poll-page";
-
-import { captureOne } from "./mailpit/mailpit";
 import { NewPollPage } from "./new-poll-page";
 
 test.describe(() => {

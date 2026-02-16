@@ -1,9 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
+import { deleteAllMessages } from "@rallly/test-helpers";
 import { NewPollPage } from "tests/new-poll-page";
-
 import { LoginPage } from "./login-page";
-import { deleteAllMessages } from "./mailpit/mailpit";
 import { RegisterPage } from "./register-page";
 
 const testUser = {
@@ -57,7 +56,7 @@ test.describe.serial(() => {
     await page.getByRole("link", { name: "Login" }).click();
     await expect(page).toHaveURL(/login/);
 
-    // Step 3: Complete lplogin
+    // Step 3: Complete login
     const loginPage = new LoginPage(page);
     await loginPage.login({
       email: testUser.email,

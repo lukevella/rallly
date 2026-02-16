@@ -99,9 +99,12 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  devIndicators: {
-    position: "bottom-right",
-  },
+  devIndicators:
+    process.env.HIDE_DEV_INDICATOR === "true"
+      ? false
+      : {
+          position: "bottom-right",
+        },
 };
 
 const sentryWebpackPluginOptions = {
