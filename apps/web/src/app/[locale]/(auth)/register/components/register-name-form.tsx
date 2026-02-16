@@ -116,6 +116,11 @@ export function RegisterNameForm() {
               });
             }
             console.error(error);
+          } finally {
+            if (isTurnstileEnabled) {
+              setTurnstileToken(null);
+              turnstileRef.current?.reset();
+            }
           }
         })}
       >
