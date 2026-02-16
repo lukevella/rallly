@@ -1,7 +1,8 @@
 import { test } from "@playwright/test";
 import { prisma } from "@rallly/database";
+import { loginWithEmail } from "@rallly/test-helpers";
 import dayjs from "dayjs";
-import { loginWithEmail, screenshotPath } from "./helpers";
+import { screenshotPath } from "./helpers";
 
 const pollId = "screenshot-poll";
 
@@ -30,15 +31,30 @@ test.beforeAll(async () => {
       options: {
         create: [
           {
-            startTime: dayjs().add(7, "day").hour(9).minute(0).second(0).toDate(),
+            startTime: dayjs()
+              .add(7, "day")
+              .hour(9)
+              .minute(0)
+              .second(0)
+              .toDate(),
             duration: 60,
           },
           {
-            startTime: dayjs().add(8, "day").hour(14).minute(0).second(0).toDate(),
+            startTime: dayjs()
+              .add(8, "day")
+              .hour(14)
+              .minute(0)
+              .second(0)
+              .toDate(),
             duration: 60,
           },
           {
-            startTime: dayjs().add(10, "day").hour(10).minute(0).second(0).toDate(),
+            startTime: dayjs()
+              .add(10, "day")
+              .hour(10)
+              .minute(0)
+              .second(0)
+              .toDate(),
             duration: 60,
           },
         ],
@@ -85,7 +101,7 @@ test.afterAll(async () => {
 });
 
 test("poll admin", async ({ page }) => {
-  await loginWithEmail(page, "dev+pro@rallly.co");
+  await loginWithEmail(page, { email: "dev+pro@rallly.co" });
   await page.goto(`/poll/${pollId}`);
   await page.waitForLoadState("networkidle");
   await page.screenshot({

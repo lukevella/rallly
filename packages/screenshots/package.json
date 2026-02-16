@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@rallly/database": "workspace:*",
+    "@rallly/test-helpers": "workspace:*",
     "dayjs": "^1.11.13",
     "dotenv": "^17.2.4"
   },

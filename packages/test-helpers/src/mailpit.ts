@@ -1,6 +1,52 @@
-import type { MailpitListMessagesResponse, MailpitMessage } from "./types";
+export interface MailpitAttachment {
+  ContentID: string;
+  ContentType: string;
+  FileName: string;
+  PartID: string;
+  Size: number;
+}
 
-const MAILPIT_API_URL = "http://localhost:8025/api";
+export interface MailpitEmailAddress {
+  Address: string;
+  Name: string;
+}
+
+export interface MailpitMessageSummary {
+  Attachments: number;
+  Bcc: MailpitEmailAddress[];
+  Cc: MailpitEmailAddress[];
+  Created: string;
+  From: MailpitEmailAddress;
+  ID: string;
+  MessageID: string;
+  Read: boolean;
+  ReplyTo: MailpitEmailAddress[];
+  Size: number;
+  Snippet: string;
+  Subject: string;
+  Tags: string[];
+  To: MailpitEmailAddress[];
+}
+
+export interface MailpitMessage extends MailpitMessageSummary {
+  HTML: string;
+  Text: string;
+  Inline: MailpitAttachment[];
+  ReturnPath: string;
+  Date: string;
+}
+
+export interface MailpitListMessagesResponse {
+  messages: MailpitMessageSummary[];
+  messages_count: number;
+  start: number;
+  tags: string[];
+  total: number;
+  unread: number;
+}
+
+const MAILPIT_API_URL =
+  process.env.MAILPIT_API_URL ?? "http://localhost:8025/api";
 
 export async function getMessages(): Promise<MailpitListMessagesResponse> {
   const response = await fetch(`${MAILPIT_API_URL}/v1/messages`);
@@ -38,7 +84,6 @@ export async function captureOne(
   while (Date.now() < deadline) {
     const { messages } = await getMessages();
 
-    // Find most recent email to this address
     const message = messages
       .reverse()
       .find(
@@ -51,7 +96,6 @@ export async function captureOne(
       return { email: fullMessage };
     }
 
-    // Wait a bit before trying again
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
 

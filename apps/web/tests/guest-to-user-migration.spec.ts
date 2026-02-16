@@ -1,9 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
+import { deleteAllMessages } from "@rallly/test-helpers";
 import { NewPollPage } from "tests/new-poll-page";
-
 import { LoginPage } from "./login-page";
-import { deleteAllMessages } from "./mailpit/mailpit";
 import { RegisterPage } from "./register-page";
 
 const testUser = {

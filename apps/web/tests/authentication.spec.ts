@@ -1,9 +1,12 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
-import { deleteAllMessages } from "./mailpit/mailpit";
+import {
+  deleteAllMessages,
+  getCode,
+  getPasswordResetLink,
+} from "@rallly/test-helpers";
 import { RegisterPage } from "./register-page";
 import { createUserInDb, loginWithEmail } from "./test-utils";
-import { getCode, getPasswordResetLink } from "./utils";
 
 const testUserEmail = "test@example.com";
 const testExistingUserEmail = "existing-user-for-disabled-test@example.com";
