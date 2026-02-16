@@ -2,7 +2,6 @@ import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { UsersIcon } from "lucide-react";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import * as z from "zod";
 import {
   SettingsPage,
@@ -11,7 +10,7 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
-import { requireUser } from "@/auth/data";
+import { requireAdmin } from "@/auth/data";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -37,11 +36,7 @@ async function loadData({
   q?: string;
   role?: "admin" | "user";
 }) {
-  const user = await requireUser();
-
-  if (user.role !== "admin") {
-    notFound();
-  }
+  const user = await requireAdmin();
 
   const where: Prisma.UserWhereInput = {
     isAnonymous: false,
