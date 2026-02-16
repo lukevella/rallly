@@ -3,7 +3,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { InvitePage } from "@/app/[locale]/invite/[urlId]/invite-page";
+import { InvitePage } from "@/app/[locale]/(app)/invite/[urlId]/invite-page";
 import { PermissionProvider } from "@/contexts/permissions";
 import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
 import Providers from "./providers";

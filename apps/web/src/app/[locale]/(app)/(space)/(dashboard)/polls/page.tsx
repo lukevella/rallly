@@ -5,7 +5,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { InboxIcon, PlusIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PollsTabbedView } from "@/app/[locale]/(space)/(dashboard)/polls/polls-tabbed-view";
+import { PollsTabbedView } from "@/app/[locale]/(app)/(space)/(dashboard)/polls/polls-tabbed-view";
 import {
   PageContainer,
   PageContent,

@@ -15,12 +15,12 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { MemberSelector } from "@/components/member-selector";
 import type { Status } from "@/features/scheduled-event/schema";
 import { loadMembers } from "@/features/space/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";
-import { MemberSelector } from "../../../../../components/member-selector";
 import { EventsInfiniteList } from "./events-infinite-list";
 import { EventsTabbedView } from "./events-tabbed-view";
 import { eventsSearchParamsSchema } from "./schema";
