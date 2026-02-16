@@ -196,8 +196,13 @@ export default async function Page() {
   );
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getTranslation();
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const { t } = await getTranslation(locale);
   return {
     title: t("home", {
       defaultValue: "Home",

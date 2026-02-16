@@ -52,8 +52,14 @@ async function loadData({
   };
 }
 
-async function ScheduledEventEmptyState({ status }: { status: Status }) {
-  const { t } = await getTranslation();
+async function ScheduledEventEmptyState({
+  status,
+  locale,
+}: {
+  status: Status;
+  locale: string;
+}) {
+  const { t } = await getTranslation(locale);
   const contentByStatus = {
     upcoming: {
       title: t("upcomingEventsEmptyStateTitle", {
@@ -141,7 +147,10 @@ export default async function Page(props: {
               search={q}
               member={member}
               emptyState={
-                <ScheduledEventEmptyState status={status || "upcoming"} />
+                <ScheduledEventEmptyState
+                  status={status || "upcoming"}
+                  locale={params.locale}
+                />
               }
             />
           </EventsTabbedView>
@@ -151,8 +160,13 @@ export default async function Page(props: {
   );
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getTranslation();
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const { t } = await getTranslation(locale);
   return {
     title: t("events", {
       defaultValue: "Events",

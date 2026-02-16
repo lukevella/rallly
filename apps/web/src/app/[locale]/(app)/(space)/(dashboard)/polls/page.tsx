@@ -56,8 +56,13 @@ async function loadData({
   };
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getTranslation();
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const { t } = await getTranslation(locale);
   return {
     title: t("polls", {
       defaultValue: "Polls",
@@ -92,9 +97,11 @@ function PollsEmptyState() {
 }
 
 export default async function Page(props: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { t } = await getTranslation();
+  const { locale } = await props.params;
+  const { t } = await getTranslation(locale);
 
   const searchParams = await props.searchParams;
   const { status, q, member } = searchParamsSchema.parse(searchParams);
