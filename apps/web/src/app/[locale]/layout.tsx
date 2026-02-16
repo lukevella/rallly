@@ -1,6 +1,5 @@
 import "./globals.css";
 
-import { languages } from "@rallly/languages";
 import { PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/sonner";
 import { TooltipProvider } from "@rallly/ui/tooltip";
@@ -30,10 +29,6 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-};
-
-export const generateStaticParams = async () => {
-  return Object.keys(languages).map((locale) => ({ locale }));
 };
 
 export default async function Root({
