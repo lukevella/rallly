@@ -11,17 +11,14 @@ export const proxy = async (req: NextRequest) => {
 
   const locale = getLocaleFromRequest(req);
 
-  const session = await authLib.api.getSession({
-    headers: await headers(),
-  });
-
-  if (
-    session?.user &&
-    !session.user.isAnonymous &&
-    (pathname.startsWith("/login") || pathname.startsWith("/register"))
-  ) {
-    const redirectTo = newUrl.searchParams.get("redirectTo") ?? "/";
-    return NextResponse.redirect(new URL(redirectTo, newUrl.origin));
+  if (pathname.startsWith("/login") || pathname.startsWith("/register")) {
+    const session = await authLib.api.getSession({
+      headers: await headers(),
+    });
+    if (session?.user && !session.user.isAnonymous) {
+      const redirectTo = newUrl.searchParams.get("redirectTo") ?? "/";
+      return NextResponse.redirect(new URL(redirectTo, newUrl.origin));
+    }
   }
 
   newUrl.pathname = `/${locale}${pathname}`;
