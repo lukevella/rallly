@@ -16,7 +16,8 @@ export const proxy = async (req: NextRequest) => {
   });
 
   if (
-    session &&
+    session?.user &&
+    !session.user.isAnonymous &&
     (pathname.startsWith("/login") || pathname.startsWith("/register"))
   ) {
     const redirectTo = newUrl.searchParams.get("redirectTo") ?? "/";
