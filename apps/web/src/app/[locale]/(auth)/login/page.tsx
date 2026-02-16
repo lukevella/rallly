@@ -1,11 +1,10 @@
 "use cache";
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { OIDCAutoSignIn } from "@/app/[locale]/(auth)/login/components/oidc-auto-sign-in";
 import { env } from "@/env";
 import { getTranslation } from "@/i18n/server";
-import { authLib, getSession } from "@/lib/auth";
+import { authLib } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import {
@@ -36,10 +35,6 @@ export default async function LoginPage(props: {
 }) {
   const { locale } = await props.params;
   const { t } = await getTranslation(locale);
-  const session = await getSession();
-  if (session?.user && !session.user.isGuest) {
-    redirect("/");
-  }
   const { isRegistrationEnabled } = await loadData();
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
 
@@ -53,8 +48,7 @@ export default async function LoginPage(props: {
 
   const hasAlternateLoginMethods = hasSocialLogin || hasOidc;
 
-  const shouldAutoSignIn =
-    hasOidc && !isEmailLoginEnabled && !hasSocialLogin;
+  const shouldAutoSignIn = hasOidc && !isEmailLoginEnabled && !hasSocialLogin;
   /**
    * If there is only one login method available, we should automatically redirect to the login page.
    */
@@ -90,9 +84,7 @@ export default async function LoginPage(props: {
         {isEmailLoginEnabled && <LoginWithEmailForm />}
         {isEmailLoginEnabled && hasAlternateLoginMethods ? <OrDivider /> : null}
         <div className="grid gap-3">
-          {hasOidc ? (
-            <LoginWithOIDC name={env.OIDC_NAME} />
-          ) : null}
+          {hasOidc ? <LoginWithOIDC name={env.OIDC_NAME} /> : null}
           {hasGoogleProvider ? (
             <SSOProvider providerId="google" name="Google" />
           ) : null}

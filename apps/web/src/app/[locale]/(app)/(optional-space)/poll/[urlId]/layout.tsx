@@ -41,6 +41,7 @@ export default async function Layout(
 export async function generateMetadata(props: {
   params: Promise<{ locale: string; urlId: string }>;
 }): Promise<Metadata> {
+  "use cache";
   const params = await props.params;
   const poll = await prisma.poll.findUnique({
     where: { id: params.urlId },

@@ -56,6 +56,7 @@ export default async function ForgotPasswordPage() {
 export async function generateMetadata(props: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
+  "use cache";
   const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {

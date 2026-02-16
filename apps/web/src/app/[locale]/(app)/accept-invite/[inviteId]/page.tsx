@@ -111,6 +111,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; inviteId: string }>;
 }): Promise<Metadata> {
+  "use cache";
   const { locale, inviteId } = await params;
   const { t } = await getTranslation(locale);
   const invite = await prisma.spaceMemberInvite.findUnique({

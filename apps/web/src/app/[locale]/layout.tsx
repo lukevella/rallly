@@ -89,6 +89,7 @@ export default async function Root({
 }
 
 export async function generateMetadata(): Promise<Metadata> {
+  "use cache";
   const brandingConfig = await getInstanceBrandingConfig();
 
   return {
