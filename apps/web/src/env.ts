@@ -135,6 +135,11 @@ export const env = createEnv({
     KV_REST_API_URL: z.url().optional(),
     KV_REST_API_TOKEN: z.string().optional(),
     KV_URL: z.url().optional(),
+    /**
+     * Cloudflare Turnstile secret key for bot protection on registration.
+     * If not set, Turnstile verification is disabled.
+     */
+    TURNSTILE_SECRET_KEY: z.string().optional(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -146,6 +151,11 @@ export const env = createEnv({
     NEXT_PUBLIC_POSTHOG_API_KEY: z.string().optional(),
     NEXT_PUBLIC_POSTHOG_API_HOST: z.url().optional(),
     NEXT_PUBLIC_SELF_HOSTED: z.enum(["true", "false"]).optional(),
+    /**
+     * Cloudflare Turnstile site key for bot protection on registration.
+     * If not set, the Turnstile widget is not rendered.
+     */
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -213,6 +223,8 @@ export const env = createEnv({
     KV_REST_API_URL: process.env.KV_REST_API_URL,
     KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     KV_URL: process.env.KV_URL,
+    TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });

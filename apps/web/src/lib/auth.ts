@@ -8,6 +8,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import {
   admin,
   anonymous,
+  captcha,
   createAuthMiddleware,
   emailOTP,
   genericOAuth,
@@ -37,6 +38,16 @@ const baseURL = absoluteUrl("/api/better-auth");
 const logger = createLogger("auth");
 
 const plugins: BetterAuthPlugin[] = [];
+
+if (env.TURNSTILE_SECRET_KEY) {
+  plugins.push(
+    captcha({
+      provider: "cloudflare-turnstile",
+      secretKey: env.TURNSTILE_SECRET_KEY,
+      endpoints: ["/sign-up/email"],
+    }),
+  );
+}
 
 if (env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET && env.OIDC_DISCOVERY_URL) {
   if (env.OIDC_ISSUER_URL) {

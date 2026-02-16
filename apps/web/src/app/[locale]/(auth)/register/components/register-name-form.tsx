@@ -1,5 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { TurnstileInstance } from "@marsidev/react-turnstile";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -13,8 +15,10 @@ import { Input } from "@rallly/ui/input";
 import { PasswordInput } from "@rallly/ui/password-input";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { useRouter, useSearchParams } from "next/navigation";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
+import { env } from "@/env";
 import { PasswordStrengthMeter } from "@/features/password/components/password-strength-meter";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
@@ -22,11 +26,18 @@ import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { validateRedirectUrl } from "@/utils/redirect";
 import { useRegisterNameFormSchema } from "./schema";
 
+const turnstileSiteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+const isTurnstileEnabled = !!turnstileSiteKey;
+
 export function RegisterNameForm() {
   const schema = useRegisterNameFormSchema();
   const { t, i18n } = useTranslation();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const turnstileRef = React.useRef<TurnstileInstance>(null);
+  const [turnstileToken, setTurnstileToken] = React.useState<string | null>(
+    null,
+  );
   const form = useForm({
     defaultValues: {
       name: "",
@@ -60,6 +71,13 @@ export function RegisterNameForm() {
               timeZone: getBrowserTimeZone(),
               locale: i18n.language,
               callbackURL: verifyURL,
+              fetchOptions: turnstileToken
+                ? {
+                    headers: {
+                      "x-captcha-response": turnstileToken,
+                    },
+                  }
+                : undefined,
             });
 
             if (res.error) {
@@ -98,6 +116,11 @@ export function RegisterNameForm() {
               });
             }
             console.error(error);
+          } finally {
+            if (isTurnstileEnabled) {
+              setTurnstileToken(null);
+              turnstileRef.current?.reset();
+            }
           }
         })}
       >
@@ -175,9 +198,31 @@ export function RegisterNameForm() {
         {form.formState.errors.root?.message ? (
           <FormMessage>{form.formState.errors.root.message}</FormMessage>
         ) : null}
+        {turnstileSiteKey ? (
+          <div className="mt-6">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={turnstileSiteKey}
+              options={{
+                language: i18n.language,
+              }}
+              onSuccess={(token) => {
+                setTurnstileToken(token);
+              }}
+              onError={() => {
+                setTurnstileToken(null);
+              }}
+              onExpire={() => {
+                setTurnstileToken(null);
+                turnstileRef.current?.reset();
+              }}
+            />
+          </div>
+        ) : null}
         <div className="mt-6">
           <Button
             loading={form.formState.isSubmitting}
+            disabled={isTurnstileEnabled && !turnstileToken}
             className="w-full"
             variant="primary"
             type="submit"
