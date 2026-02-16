@@ -18,6 +18,7 @@ import Link from "next/link";
 import { FeedbackMenuItem } from "@/app/[locale]/(space)/(dashboard)/components/feedback-menu-item";
 import { SpaceSidebarMenu } from "@/app/[locale]/(space)/(dashboard)/components/space-sidebar-menu";
 import { UpgradeMenuItem } from "@/app/[locale]/(space)/(dashboard)/components/upgrade-menu-item";
+import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { requireSpace, requireUser } from "@/auth/data";
 import { NavUser } from "@/components/nav-user";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
@@ -41,6 +42,7 @@ export default async function Layout({
 
   return (
     <SpaceSidebarProvider>
+      <TimeZoneChangeDetector />
       <CommandMenu />
       <Sidebar>
         <SidebarHeader>

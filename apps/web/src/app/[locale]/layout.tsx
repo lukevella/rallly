@@ -7,7 +7,6 @@ import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import type React from "react";
-import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import type { Params } from "@/app/[locale]/types";
 import { requireUser } from "@/auth/data";
 import { UserProvider } from "@/components/user-provider";
@@ -122,7 +121,6 @@ export default async function Root({
                             <TimezoneProvider initialTimezone={user?.timeZone}>
                               <ConnectedDayjsProvider>
                                 {children}
-                                <TimeZoneChangeDetector />
                               </ConnectedDayjsProvider>
                             </TimezoneProvider>
                           </PreferencesProvider>
