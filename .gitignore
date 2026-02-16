@@ -40,7 +40,7 @@ playwright-report
 test-results
 
 # Screenshots tool output
-tools/screenshots/screenshots
+packages/screenshots/screenshots
 .kiro
 .vercel
 
