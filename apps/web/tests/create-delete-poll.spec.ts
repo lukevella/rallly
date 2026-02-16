@@ -28,7 +28,7 @@ test.describe.serial(() => {
 
     const deletePollDialog = page.getByRole("dialog");
 
-    deletePollDialog.getByRole("button", { name: "delete" }).click();
+    await deletePollDialog.getByRole("button", { name: "delete" }).click();
 
     await expect(page).toHaveURL("/login?redirectTo=%2Fpolls");
   });

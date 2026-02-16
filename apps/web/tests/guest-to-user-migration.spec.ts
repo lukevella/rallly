@@ -56,7 +56,7 @@ test.describe.serial(() => {
     await page.getByRole("link", { name: "Login" }).click();
     await expect(page).toHaveURL(/login/);
 
-    // Step 3: Complete lplogin
+    // Step 3: Complete login
     const loginPage = new LoginPage(page);
     await loginPage.login({
       email: testUser.email,

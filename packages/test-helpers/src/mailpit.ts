@@ -70,7 +70,7 @@ export async function deleteAllMessages(): Promise<void> {
 async function markMessageAsRead(id: string): Promise<void> {
   await fetch(`${MAILPIT_API_URL}/v1/messages`, {
     method: "PUT",
-    body: JSON.stringify({ IDs: [id], Read: true, Search: "tag:captured" }),
+    body: JSON.stringify({ IDs: [id], Read: true }),
   });
 }
 
