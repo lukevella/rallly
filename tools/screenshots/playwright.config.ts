@@ -15,7 +15,7 @@ export default defineConfig({
     baseURL,
   },
   webServer: {
-    command: `pnpm --filter @rallly/web exec next dev --port ${port}`,
+    command: `HIDE_DEV_INDICATOR=true pnpm --filter @rallly/web next dev --port ${port}`,
     url: baseURL,
     reuseExistingServer: true,
     timeout: 30000,

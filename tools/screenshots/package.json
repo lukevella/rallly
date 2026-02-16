@@ -6,7 +6,8 @@
   },
   "dependencies": {
     "@rallly/database": "workspace:*",
-    "dotenv": "^16.4.7"
+    "dayjs": "^1.11.13",
+    "dotenv": "^17.2.4"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0"

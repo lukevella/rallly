@@ -585,6 +585,9 @@ importers:
       '@aws-sdk/credential-provider-node':
         specifier: ^3.501.0
         version: 3.972.5
+      '@rallly/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@react-email/components':
         specifier: ^0.0.36
         version: 0.0.36(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -852,9 +855,12 @@ importers:
       '@rallly/database':
         specifier: workspace:*
         version: link:../../packages/database
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.19
       dotenv:
-        specifier: ^16.4.7
-        version: 16.6.1
+        specifier: ^17.2.4
+        version: 17.2.4
     devDependencies:
       '@playwright/test':
         specifier: ^1.57.0
