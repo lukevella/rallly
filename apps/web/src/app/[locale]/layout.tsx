@@ -1,5 +1,6 @@
 import "./globals.css";
 
+import { languages } from "@rallly/languages";
 import { PostHogProvider } from "@rallly/posthog/client";
 import { Toaster } from "@rallly/ui/sonner";
 import { TooltipProvider } from "@rallly/ui/tooltip";
@@ -7,6 +8,7 @@ import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import type React from "react";
+import { Suspense } from "react";
 import type { Params } from "@/app/[locale]/types";
 import { BrandingProvider } from "@/features/branding/client";
 import { getInstanceBrandingConfig } from "@/features/branding/queries";
@@ -27,6 +29,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+};
+
+export const generateStaticParams = async () => {
+  return Object.keys(languages).map((locale) => ({ locale }));
 };
 
 export default async function Root({
@@ -58,23 +64,25 @@ export default async function Root({
       style={brandingStyles}
     >
       <body>
-        <ThemeProvider>
-          <FeatureFlagsProvider value={featureFlagConfig}>
-            <BrandingProvider value={brandingConfig}>
-              <Toaster />
-              <I18nProvider locale={locale}>
-                <TRPCProvider>
-                  <LazyMotion features={domAnimation}>
-                    <PostHogProvider>
-                      <PostHogPageView />
-                      <TooltipProvider>{children}</TooltipProvider>
-                    </PostHogProvider>
-                  </LazyMotion>
-                </TRPCProvider>
-              </I18nProvider>
-            </BrandingProvider>
-          </FeatureFlagsProvider>
-        </ThemeProvider>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ThemeProvider>
+            <FeatureFlagsProvider value={featureFlagConfig}>
+              <BrandingProvider value={brandingConfig}>
+                <Toaster />
+                <I18nProvider locale={locale}>
+                  <TRPCProvider>
+                    <LazyMotion features={domAnimation}>
+                      <PostHogProvider>
+                        <PostHogPageView />
+                        <TooltipProvider>{children}</TooltipProvider>
+                      </PostHogProvider>
+                    </LazyMotion>
+                  </TRPCProvider>
+                </I18nProvider>
+              </BrandingProvider>
+            </FeatureFlagsProvider>
+          </ThemeProvider>
+        </Suspense>
       </body>
     </html>
   );

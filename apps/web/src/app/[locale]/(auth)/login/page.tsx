@@ -23,29 +23,28 @@ import { OrDivider } from "./components/or-divider";
 import { SSOProvider } from "./components/sso-provider";
 
 async function loadData() {
-  const [isRegistrationEnabled, { t }] = await Promise.all([
-    getRegistrationEnabled(),
-    getTranslation(),
-  ]);
+  const [isRegistrationEnabled] = await Promise.all([getRegistrationEnabled()]);
 
   return {
     isRegistrationEnabled,
-    t,
   };
 }
 
 export default async function LoginPage(props: {
+  params: Promise<{ locale: string }>;
   searchParams?: Promise<{
     redirectTo?: string;
     error?: string;
   }>;
 }) {
+  const { locale } = await props.params;
+  const { t } = await getTranslation(locale);
   const searchParams = await props.searchParams;
   const session = await getSession();
   if (session?.user && !session.user.isGuest) {
     redirect("/");
   }
-  const { isRegistrationEnabled, t } = await loadData();
+  const { isRegistrationEnabled } = await loadData();
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
 
   const hasGoogleProvider = !!authLib.options.socialProviders.google;
@@ -139,8 +138,9 @@ export default async function LoginPage(props: {
 export async function generateMetadata(props: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const params = await props.params;
-  const { t } = await getTranslation(params.locale);
+  "use cache";
+  const { locale } = await props.params;
+  const { t } = await getTranslation(locale);
   return {
     title: t("login"),
   };

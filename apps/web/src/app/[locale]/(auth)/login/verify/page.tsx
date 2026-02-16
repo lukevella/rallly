@@ -16,8 +16,13 @@ import {
 } from "../../components/auth-page";
 import { OTPForm } from "./components/otp-form";
 
-export default async function VerifyPage() {
-  const { t } = await getTranslation();
+export default async function VerifyPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const { t } = await getTranslation(locale);
   const email = (await cookies()).get("verification-email")?.value;
   if (!email) {
     redirect("/login");

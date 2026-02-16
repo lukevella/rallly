@@ -11,12 +11,17 @@ import {
 } from "@/features/quick-create";
 import { getTranslation } from "@/i18n/server";
 
-export default async function QuickCreatePage() {
+export default async function QuickCreatePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   if (!isQuickCreateEnabled) {
     notFound();
   }
 
-  const { t } = await getTranslation();
+  const { t } = await getTranslation(locale);
   return (
     <div className="flex h-dvh p-2">
       <Card className="flex flex-1 flex-col gap-6 p-6">
@@ -42,8 +47,13 @@ export default async function QuickCreatePage() {
   );
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getTranslation();
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const { t } = await getTranslation(locale);
   return {
     title: t("quickCreate"),
   };

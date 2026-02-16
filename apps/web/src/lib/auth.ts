@@ -118,7 +118,8 @@ export const authLib = betterAuth({
     anonymous({
       emailDomainName: "rallly.co",
       generateName: async () => {
-        const { t } = await getTranslation();
+        const locale = await getLocale();
+        const { t } = await getTranslation(locale);
         return t("guest");
       },
       onLinkAccount: async ({ anonymousUser, newUser }) => {

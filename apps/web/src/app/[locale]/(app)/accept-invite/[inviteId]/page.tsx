@@ -1,5 +1,6 @@
 import { prisma } from "@rallly/database";
 import { Card } from "@rallly/ui/card";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/auth/data";
 import { Logo } from "@/components/logo";
@@ -108,10 +109,10 @@ export default async function JoinPage({
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ inviteId: string }>;
-}) {
-  const { inviteId } = await params;
-  const { t } = await getTranslation();
+  params: Promise<{ locale: string; inviteId: string }>;
+}): Promise<Metadata> {
+  const { locale, inviteId } = await params;
+  const { t } = await getTranslation(locale);
   const invite = await prisma.spaceMemberInvite.findUnique({
     where: {
       id: inviteId,
