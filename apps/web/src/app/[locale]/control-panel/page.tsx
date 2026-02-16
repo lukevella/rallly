@@ -145,7 +145,6 @@ export default async function AdminPage() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  "use cache";
   return {
     title: "Control Panel",
   };

@@ -1,4 +1,3 @@
-"use cache";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";

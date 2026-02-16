@@ -41,7 +41,6 @@ export async function generateMetadata(props: {
     locale: string;
   }>;
 }): Promise<Metadata> {
-  "use cache";
   const params = await props.params;
 
   const { urlId } = params;

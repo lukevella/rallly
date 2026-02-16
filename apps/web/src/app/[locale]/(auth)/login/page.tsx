@@ -1,4 +1,3 @@
-"use cache";
 import type { Metadata } from "next";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { OIDCAutoSignIn } from "@/app/[locale]/(auth)/login/components/oidc-auto-sign-in";

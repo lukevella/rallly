@@ -45,7 +45,6 @@ export default async function Page() {
 export async function generateMetadata(props: {
   params: Promise<Params>;
 }): Promise<Metadata> {
-  "use cache";
   const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {

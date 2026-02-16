@@ -1,4 +1,3 @@
-"use cache";
 import "./globals.css";
 
 import { languages } from "@rallly/languages";
