@@ -1,3 +1,4 @@
+"use cache";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
@@ -138,7 +139,6 @@ export default async function LoginPage(props: {
 export async function generateMetadata(props: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  "use cache";
   const { locale } = await props.params;
   const { t } = await getTranslation(locale);
   return {
