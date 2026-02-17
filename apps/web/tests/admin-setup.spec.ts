@@ -29,7 +29,7 @@ test.describe("Admin Setup Page Access", () => {
   test("should redirect unauthenticated user to login page", async ({
     page,
   }) => {
-    await page.goto("/admin-setup");
+    await page.goto("/control-panel/setup");
     await expect(page).toHaveURL(/.*\/login/);
   });
 
@@ -43,8 +43,8 @@ test.describe("Admin Setup Page Access", () => {
     });
     await loginWithEmail(page, { email: INITIAL_ADMIN_TEST_EMAIL });
 
-    await page.goto("/admin-setup");
-    await expect(page).toHaveURL(/.*\/admin-setup/);
+    await page.goto("/control-panel");
+    await expect(page).toHaveURL(/.*\/control-panel\/setup/);
     await expect(page.getByText("Are you the admin?")).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Make me an admin" }),
@@ -61,7 +61,7 @@ test.describe("Admin Setup Page Access", () => {
     });
     await loginWithEmail(page, { email: REGULAR_USER_EMAIL });
 
-    await page.goto("/admin-setup");
+    await page.goto("/control-panel/setup");
     await expect(page.getByText("404 not found")).toBeVisible();
   });
 
@@ -75,8 +75,8 @@ test.describe("Admin Setup Page Access", () => {
     });
     await loginWithEmail(page, { email: SUBSEQUENT_ADMIN_EMAIL });
 
-    await page.goto("/admin-setup");
-    await expect(page).toHaveURL(/.*\/control-panel/);
+    await page.goto("/control-panel/setup");
+    await expect(page).toHaveURL("/control-panel");
   });
 
   test("should show 'not found' if INITIAL_ADMIN_EMAIL in env is different from user's email", async ({
@@ -89,7 +89,7 @@ test.describe("Admin Setup Page Access", () => {
     });
     await loginWithEmail(page, { email: OTHER_USER_EMAIL });
 
-    await page.goto("/admin-setup");
+    await page.goto("/control-panel/setup");
     await expect(page.getByText("404 not found")).toBeVisible();
   });
 
@@ -103,11 +103,11 @@ test.describe("Admin Setup Page Access", () => {
     });
     await loginWithEmail(page, { email: INITIAL_ADMIN_TEST_EMAIL });
 
-    await page.goto("/admin-setup");
+    await page.goto("/control-panel/setup");
     await expect(page.getByText("Are you the admin?")).toBeVisible();
     await page.getByRole("button", { name: "Make me an admin" }).click();
 
-    await expect(page).toHaveURL(/.*\/control-panel/, { timeout: 10000 });
+    await expect(page).toHaveURL("/control-panel", { timeout: 10000 });
 
     const user = await prisma.user.findUnique({
       where: { email: INITIAL_ADMIN_TEST_EMAIL },
