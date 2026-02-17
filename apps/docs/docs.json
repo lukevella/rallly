@@ -32,7 +32,7 @@
           },
           {
             "group": "Guides",
-            "pages": ["guide/participant-guide"]
+            "pages": ["guide/participant-guide", "guide/content-moderation"]
           },
           {
             "group": "Contact",

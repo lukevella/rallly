@@ -108,7 +108,11 @@ const Page = () => {
                 optionsToAdd,
               },
               {
-                onSuccess: redirectBackToPoll,
+                onSuccess: (res) => {
+                  if (res.ok) {
+                    redirectBackToPoll();
+                  }
+                },
               },
             );
           };

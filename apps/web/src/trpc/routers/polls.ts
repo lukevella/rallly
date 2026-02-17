@@ -165,7 +165,379 @@ export const polls = router({
       };
     }),
 
+  make: possiblyPublicProcedure
+    .input(
+      z.object({
+        title: z.string().trim().min(1),
+        timeZone: z.string().optional(),
+        location: z.string().trim().optional(),
+        description: z.string().trim().optional(),
+        hideParticipants: z.boolean().optional(),
+        hideScores: z.boolean().optional(),
+        disableComments: z.boolean().optional(),
+        requireParticipantEmail: z.boolean().optional(),
+        options: z
+          .object({
+            startDate: z.string(),
+            endDate: z.string().optional(),
+          })
+          .array(),
+      }),
+    )
+    .use(requireUserMiddleware)
+    .use(createRateLimitMiddleware("create_poll", 20, "1 h"))
+    .mutation(async ({ ctx, input }) => {
+      const isFlaggedContent = await moderateContent({
+        userId: ctx.user.id,
+        content: [input.title, input.description, input.location],
+      });
+
+      if (isFlaggedContent) {
+        ctx.posthog?.capture({
+          distinctId: ctx.user.id,
+          event: "flagged_content",
+          properties: {
+            action: "create_poll",
+          },
+        });
+        return {
+          ok: false as const,
+          error: { code: "INAPPROPRIATE_CONTENT" as const },
+        };
+      }
+
+      const title = input.title;
+      const location = input.location || undefined;
+      const description = input.description || undefined;
+      const adminToken = nanoid();
+      const participantUrlId = nanoid();
+      const pollId = nanoid();
+      let spaceId: string | undefined;
+
+      if (!ctx.user.isGuest) {
+        const data = await getCurrentUserSpace();
+        if (!data) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Space not found",
+          });
+        }
+        spaceId = data.space.id;
+      }
+
+      const poll = await prisma.poll.create({
+        include: {
+          options: {
+            select: {
+              id: true,
+            },
+          },
+        },
+        data: {
+          id: pollId,
+          title,
+          timeZone: input.timeZone,
+          location,
+          description,
+          adminUrlId: adminToken,
+          participantUrlId,
+          ...(ctx.user.isLegacyGuest
+            ? { guestId: ctx.user.id }
+            : { userId: ctx.user.id }),
+          watchers: !ctx.user.isGuest
+            ? {
+                create: {
+                  userId: ctx.user.id,
+                },
+              }
+            : undefined,
+          options: {
+            createMany: {
+              data: input.options.map((option) => ({
+                startTime: input.timeZone
+                  ? dayjs(option.startDate).tz(input.timeZone, true).toDate()
+                  : dayjs(option.startDate).utc(true).toDate(),
+                duration: option.endDate
+                  ? dayjs(option.endDate).diff(
+                      dayjs(option.startDate),
+                      "minute",
+                    )
+                  : 0,
+              })),
+            },
+          },
+          hideParticipants: input.hideParticipants,
+          disableComments: input.disableComments,
+          hideScores: input.hideScores,
+          requireParticipantEmail: input.requireParticipantEmail,
+          spaceId,
+        },
+      });
+
+      const pollLink = absoluteUrl(`/poll/${pollId}`);
+
+      const participantLink = shortUrl(`/invite/${pollId}`);
+
+      if (ctx.user.isGuest === false) {
+        const user = await prisma.user.findUnique({
+          select: { email: true, name: true },
+          where: { id: ctx.user.id },
+        });
+
+        if (user) {
+          const emailClient = await getEmailClient(
+            ctx.user.locale ?? undefined,
+          );
+          emailClient.queueTemplate("NewPollEmail", {
+            to: user.email,
+            props: {
+              title: poll.title,
+              name: user.name,
+              adminLink: pollLink,
+              participantLink,
+            },
+          });
+        }
+      }
+
+      ctx.posthog?.groupIdentify({
+        groupType: "poll",
+        groupKey: poll.id,
+        properties: {
+          name: poll.title,
+          status: poll.status,
+          is_guest: ctx.user.isGuest,
+          created_at: poll.createdAt,
+          participant_count: 0,
+          comment_count: 0,
+          option_count: poll.options.length,
+          has_location: !!location,
+          has_description: !!description,
+          timezone: input.timeZone,
+        },
+      });
+
+      ctx.posthog?.capture({
+        event: "poll_create",
+        distinctId: ctx.user.id,
+        properties: {
+          title: poll.title,
+          optionCount: poll.options.length,
+          hasLocation: !!location,
+          hasDescription: !!description,
+          timezone: input.timeZone,
+          disableCommnets: poll.disableComments,
+          hideParticipants: poll.hideParticipants,
+          hideScores: poll.hideScores,
+          requireParticipantEmail: poll.requireParticipantEmail,
+          isGuest: ctx.user.isGuest,
+        },
+        groups: {
+          poll: poll.id,
+          ...(poll.spaceId ? { space: poll.spaceId } : {}),
+        },
+      });
+
+      revalidatePath("/", "layout");
+
+      return { ok: true as const, data: { id: poll.id } };
+    }),
+  modify: possiblyPublicProcedure
+    .input(
+      z.object({
+        urlId: z.string(),
+        title: z.string().trim().optional(),
+        timeZone: z.string().optional(),
+        location: z.string().trim().optional(),
+        description: z.string().trim().optional(),
+        optionsToDelete: z.string().array().optional(),
+        optionsToAdd: z.string().array().optional(),
+        hideParticipants: z.boolean().optional(),
+        disableComments: z.boolean().optional(),
+        hideScores: z.boolean().optional(),
+        requireParticipantEmail: z.boolean().optional(),
+      }),
+    )
+    .use(requireUserMiddleware)
+    .use(createRateLimitMiddleware("update_poll", 10, "1 m"))
+    .mutation(async ({ input, ctx }) => {
+      const isFlaggedContent = await moderateContent({
+        userId: ctx.user.id,
+        content: [input.title, input.description, input.location],
+      });
+
+      if (isFlaggedContent) {
+        ctx.posthog?.capture({
+          distinctId: ctx.user.id,
+          event: "flagged_content",
+          properties: {
+            action: "update_poll",
+          },
+        });
+        return {
+          ok: false as const,
+          error: { code: "INAPPROPRIATE_CONTENT" as const },
+        };
+      }
+
+      const pollId = await getPollIdFromAdminUrlId(input.urlId);
+
+      if (!(await hasPollAdminAccess(pollId, ctx.user.id))) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have permission to update this poll",
+        });
+      }
+
+      if (input.optionsToDelete && input.optionsToDelete.length > 0) {
+        await prisma.option.deleteMany({
+          where: {
+            pollId,
+            id: {
+              in: input.optionsToDelete,
+            },
+          },
+        });
+      }
+
+      if (input.optionsToAdd && input.optionsToAdd.length > 0) {
+        await prisma.option.createMany({
+          data: input.optionsToAdd.map((optionValue) => {
+            const [start, end] = optionValue.split("/");
+
+            if (end) {
+              return {
+                startTime: input.timeZone
+                  ? dayjs(start).tz(input.timeZone, true).toDate()
+                  : dayjs(start).utc(true).toDate(),
+                duration: dayjs(end).diff(dayjs(start), "minute"),
+                pollId,
+              };
+            } else {
+              return {
+                startTime: dayjs(start).utc(true).toDate(),
+                pollId,
+              };
+            }
+          }),
+        });
+      }
+
+      await prisma.poll.update({
+        select: { id: true },
+        where: {
+          id: pollId,
+        },
+        data: {
+          title: input.title,
+          location: input.location,
+          description: input.description,
+          timeZone: input.timeZone,
+          hideScores: input.hideScores,
+          hideParticipants: input.hideParticipants,
+          disableComments: input.disableComments,
+          requireParticipantEmail: input.requireParticipantEmail,
+        },
+      });
+
+      // Get updated poll data for group update
+      const updatedPoll = await prisma.poll.findUnique({
+        where: { id: pollId },
+        select: {
+          title: true,
+          status: true,
+          createdAt: true,
+          location: true,
+          description: true,
+          disableComments: true,
+          requireParticipantEmail: true,
+          hideParticipants: true,
+          hideScores: true,
+          timeZone: true,
+          _count: {
+            select: {
+              participants: {
+                where: { deleted: false },
+              },
+              comments: true,
+              options: true,
+            },
+          },
+        },
+      });
+
+      if (!updatedPoll) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      // Track specific poll update events based on what was changed
+      const hasDetailsUpdate =
+        input.title !== undefined ||
+        input.location !== undefined ||
+        input.description !== undefined;
+      const hasOptionsUpdate =
+        (input.optionsToDelete && input.optionsToDelete.length > 0) ||
+        (input.optionsToAdd && input.optionsToAdd.length > 0);
+      const hasSettingsUpdate =
+        input.timeZone !== undefined ||
+        input.hideParticipants !== undefined ||
+        input.disableComments !== undefined ||
+        input.hideScores !== undefined ||
+        input.requireParticipantEmail !== undefined;
+
+      if (hasDetailsUpdate) {
+        ctx.posthog?.capture({
+          event: "poll_update_details",
+          distinctId: ctx.user.id,
+          properties: {
+            title: updatedPoll.title,
+            has_location: !!updatedPoll.location,
+            has_description: !!updatedPoll.description,
+            is_guest: ctx.user.isGuest,
+          },
+          groups: {
+            poll: pollId,
+          },
+        });
+      }
+
+      if (hasOptionsUpdate) {
+        ctx.posthog?.capture({
+          event: "poll_update_options",
+          distinctId: ctx.user.id,
+          properties: {
+            option_count: updatedPoll._count.options,
+          },
+          groups: {
+            poll: pollId,
+          },
+        });
+      }
+
+      if (hasSettingsUpdate) {
+        ctx.posthog?.capture({
+          event: "poll_update_settings",
+          distinctId: ctx.user.id,
+          properties: {
+            disable_comments: !!updatedPoll.disableComments,
+            hide_participants: !!updatedPoll.hideParticipants,
+            hide_scores: !!updatedPoll.hideScores,
+            require_participant_email: !!updatedPoll.requireParticipantEmail,
+          },
+          groups: {
+            poll: pollId,
+          },
+        });
+      }
+
+      revalidatePath("/", "layout");
+
+      return { ok: true as const };
+    }),
   // START LEGACY ROUTES
+  /** @deprecated Use make instead */
   create: possiblyPublicProcedure
     .input(
       z.object({
@@ -188,11 +560,10 @@ export const polls = router({
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("create_poll", 20, "1 h"))
     .use(async ({ ctx, input, next }) => {
-      const isFlaggedContent = await moderateContent([
-        input.title,
-        input.description,
-        input.location,
-      ]);
+      const isFlaggedContent = await moderateContent({
+        userId: ctx.user.id,
+        content: [input.title, input.description, input.location],
+      });
 
       if (isFlaggedContent) {
         ctx.posthog?.capture({
@@ -347,6 +718,7 @@ export const polls = router({
 
       return { id: poll.id };
     }),
+  /** @deprecated Use modify instead */
   update: possiblyPublicProcedure
     .input(
       z.object({
@@ -366,11 +738,10 @@ export const polls = router({
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("update_poll", 10, "1 m"))
     .use(async ({ ctx, input, next }) => {
-      const isFlaggedContent = await moderateContent([
-        input.title,
-        input.description,
-        input.location,
-      ]);
+      const isFlaggedContent = await moderateContent({
+        userId: ctx.user.id,
+        content: [input.title, input.description, input.location],
+      });
 
       if (isFlaggedContent) {
         ctx.posthog?.capture({

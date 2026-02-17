@@ -66,7 +66,6 @@
   "sendFeedback": "Send Feedback",
   "specifyTimes": "Specify times",
   "specifyTimesDescription": "Include start and end times for each option",
-  "stepSummary": "Step {current} of {total}",
   "submit": "Submit",
   "timeFormat": "Time format",
   "timeZone": "Time zone",
@@ -254,10 +253,6 @@
   "sendFeedbackSuccess": "Thank you for your feedback!",
   "searchEventsPlaceholder": "Search events by title...",
   "canceled": "Canceled",
-  "tomorrow": "Tomorrow",
-  "yesterday": "Yesterday",
-  "lastWeek": "Last Week",
-  "unconfirmed": "Unconfirmed",
   "upcomingEventsEmptyStateTitle": "No Upcoming Events",
   "upcomingEventsEmptyStateDescription": "When you schedule events, they will appear here.",
   "pastEventsEmptyStateTitle": "No Past Events",
@@ -607,5 +602,7 @@
   "deleteMenuItem": "Delete",
   "deletePollPrompt": "Are you sure you want to delete <b>{title}</b>?",
   "pollDeleted": "Poll deleted",
-  "pollDeleteError": "Failed to delete poll"
+  "pollDeleteError": "Failed to delete poll",
+  "inappropriateContent": "Inappropriate content",
+  "pollReopened": "Poll Reopened"
 }

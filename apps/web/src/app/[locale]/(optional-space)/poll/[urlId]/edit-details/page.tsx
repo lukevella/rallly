@@ -46,7 +46,13 @@ const Page = () => {
           //submit
           updatePollMutation(
             { urlId, ...data },
-            { onSuccess: redirectBackToPoll },
+            {
+              onSuccess: (res) => {
+                if (res.ok) {
+                  redirectBackToPoll();
+                }
+              },
+            },
           );
         })}
       >

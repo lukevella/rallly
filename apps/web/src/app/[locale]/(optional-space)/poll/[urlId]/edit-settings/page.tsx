@@ -38,12 +38,13 @@ const Page = () => {
       <form
         onSubmit={form.handleSubmit(async (data) => {
           //submit
-          await update.mutateAsync(
-            { urlId: poll.adminUrlId, ...data },
-            {
-              onSuccess: redirectBackToPoll,
-            },
-          );
+          const res = await update.mutateAsync({
+            urlId: poll.adminUrlId,
+            ...data,
+          });
+          if (res.ok) {
+            redirectBackToPoll();
+          }
         })}
       >
         <PollSettingsForm>

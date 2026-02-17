@@ -16,7 +16,7 @@ import useFormPersist from "react-hook-form-persist";
 import { useUnmount } from "react-use";
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { useUser } from "@/components/user-provider";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import type { NewEventData } from "./forms";
 import { PollDetailsForm, PollOptionsForm } from "./forms";
@@ -38,6 +38,7 @@ export interface CreatePollPageProps {
 
 export const CreatePoll: React.FunctionComponent = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const { createGuestIfNeeded } = useUser();
   const form = useForm<NewEventData>({
     defaultValues: {
@@ -60,14 +61,7 @@ export const CreatePoll: React.FunctionComponent = () => {
 
   useUnmount(clear);
 
-  const createPoll = trpc.polls.create.useMutation({
-    networkMode: "always",
-    onError: (error) => {
-      if (error.data?.code === "BAD_REQUEST") {
-        toast.error(error.message);
-      }
-    },
-  });
+  const makePoll = trpc.polls.make.useMutation();
 
   return (
     <Form {...form}>
@@ -75,27 +69,41 @@ export const CreatePoll: React.FunctionComponent = () => {
         onSubmit={form.handleSubmit(async (formData) => {
           const title = required(formData?.title.trim());
           await createGuestIfNeeded();
-          await createPoll.mutateAsync(
-            {
-              title: title,
-              location: formData?.location?.trim(),
-              description: formData?.description?.trim(),
-              timeZone: formData?.timeZone,
-              hideParticipants: formData?.hideParticipants,
-              disableComments: formData?.disableComments,
-              hideScores: formData?.hideScores,
-              requireParticipantEmail: formData?.requireParticipantEmail,
-              options: required(formData?.options).map((option) => ({
-                startDate: option.type === "date" ? option.date : option.start,
-                endDate: option.type === "timeSlot" ? option.end : undefined,
-              })),
-            },
-            {
-              onSuccess: (res) => {
-                router.push(`/poll/${res.id}`);
+          const res = await makePoll.mutateAsync({
+            title: title,
+            location: formData?.location?.trim(),
+            description: formData?.description?.trim(),
+            timeZone: formData?.timeZone,
+            hideParticipants: formData?.hideParticipants,
+            disableComments: formData?.disableComments,
+            hideScores: formData?.hideScores,
+            requireParticipantEmail: formData?.requireParticipantEmail,
+            options: required(formData?.options).map((option) => ({
+              startDate: option.type === "date" ? option.date : option.start,
+              endDate: option.type === "timeSlot" ? option.end : undefined,
+            })),
+          });
+
+          if (res.ok) {
+            router.push(`/poll/${res.data.id}`);
+          } else {
+            toast.error(
+              t("inappropriateContent", {
+                defaultValue: "Inappropriate content",
+              }),
+              {
+                action: {
+                  label: t("learnMore", { defaultValue: "Learn more" }),
+                  onClick: () => {
+                    window.open(
+                      "https://support.rallly.co/guide/content-moderation",
+                      "_blank",
+                    );
+                  },
+                },
               },
-            },
-          );
+            );
+          }
         })}
       >
         <div className="space-y-4">
@@ -121,7 +129,7 @@ export const CreatePoll: React.FunctionComponent = () => {
           <PollSettingsForm />
           <hr />
           <Button
-            loading={form.formState.isSubmitting || createPoll.isSuccess}
+            loading={form.formState.isSubmitting}
             size="lg"
             type="submit"
             className="w-full"
