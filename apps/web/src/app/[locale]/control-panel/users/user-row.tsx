@@ -19,7 +19,6 @@ import { MoreHorizontal, TrashIcon, UserPenIcon } from "lucide-react";
 import { useTransition } from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedListItem } from "@/components/stacked-list";
-import { useUser } from "@/components/user-provider";
 import { changeRoleAction } from "@/features/user/actions";
 import { userRoleSchema } from "@/features/user/schema";
 import { Trans } from "@/i18n/client";
@@ -32,20 +31,22 @@ export function UserRow({
   userId,
   image,
   role,
+  canChangeRole,
+  canDelete,
 }: {
   name: string;
   email: string;
   userId: string;
   image?: string;
   role: "admin" | "user";
+  canChangeRole: boolean;
+  canDelete: boolean;
 }) {
   const changeRole = useSafeAction(changeRoleAction);
 
   const [isPending, startTransition] = useTransition();
-  const { user } = useUser();
   const deleteDialog = useDialog();
 
-  const isYou = userId === user?.id;
   return (
     <>
       <StackedListItem
@@ -72,7 +73,7 @@ export function UserRow({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuSub>
-                <DropdownMenuSubTrigger disabled={isYou}>
+                <DropdownMenuSubTrigger disabled={!canChangeRole}>
                   <Icon>
                     <UserPenIcon />
                   </Icon>
@@ -105,7 +106,7 @@ export function UserRow({
                 onClick={async () => {
                   deleteDialog.trigger();
                 }}
-                disabled={isYou}
+                disabled={!canDelete}
               >
                 <TrashIcon className="size-4" />
                 <Trans i18nKey="delete" defaults="Delete" />
