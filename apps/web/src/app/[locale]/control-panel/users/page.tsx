@@ -1,3 +1,4 @@
+import { subject } from "@casl/ability";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { UsersIcon } from "lucide-react";
@@ -19,6 +20,7 @@ import {
 } from "@/components/empty-state";
 import { Pagination } from "@/components/pagination";
 import { StackedList } from "@/components/stacked-list";
+import { defineAbilityFor } from "@/features/user/ability";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { UserRow } from "./user-row";
@@ -83,11 +85,15 @@ async function loadData({
     where,
   });
 
+  const ability = defineAbilityFor({ role: user.role, id: user.id });
+
   return {
     adminUser: user,
-    allUsers: allUsers.map((user) => ({
-      ...user,
-      image: user.image ?? undefined,
+    allUsers: allUsers.map((u) => ({
+      ...u,
+      image: u.image ?? undefined,
+      canChangeRole: ability.can("update", subject("User", u), "role"),
+      canDelete: ability.can("delete", subject("User", u)),
     })),
     totalUsers,
   };
@@ -143,6 +149,8 @@ export default async function AdminPage(props: {
                       userId={user.id}
                       image={user.image}
                       role={user.role}
+                      canChangeRole={user.canChangeRole}
+                      canDelete={user.canDelete}
                     />
                   ))}
                 </StackedList>

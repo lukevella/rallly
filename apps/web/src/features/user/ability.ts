@@ -2,12 +2,15 @@ import type { PureAbility } from "@casl/ability";
 import { AbilityBuilder } from "@casl/ability";
 import type { PrismaQuery, Subjects } from "@casl/prisma";
 import { createPrismaAbility } from "@casl/prisma";
-import type { Space, User } from "@rallly/database";
+import type { Space } from "@rallly/database";
 import type { UserRole } from "@/features/user/schema";
 
 type Action = "read" | "update" | "delete";
 type Subject = Subjects<{
-  User: User;
+  User: {
+    id: string;
+    role: UserRole;
+  };
   Space: Space;
 }>;
 
@@ -83,4 +86,6 @@ function defineAbilityForAdmin(
   cannot("update", "User", ["role"], { id: user.id });
   // Can delete any user
   can("delete", "User");
+  // Cannot delete their own account
+  cannot("delete", "User", { id: user.id });
 }
