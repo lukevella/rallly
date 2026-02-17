@@ -1,10 +1,12 @@
 import { prisma } from "@rallly/database";
+import type { PostHog } from "@rallly/posthog/server";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import * as z from "zod";
 import { hasPollAdminAccess } from "@/features/poll/query";
+import { verifyTurnstileToken } from "@/lib/turnstile";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 import {
@@ -17,6 +19,146 @@ import type { DisableNotificationsPayload } from "../../types";
 import { createParticipantEditToken, resolveUserId } from "./utils";
 
 const MAX_PARTICIPANTS = 1000;
+
+const addParticipantInput = z.object({
+  pollId: z.string(),
+  name: z.string().trim().min(1, "Participant name is required").max(100),
+  email: z.string().optional(),
+  timeZone: z.string().optional(),
+  votes: z
+    .object({
+      optionId: z.string(),
+      type: z.enum(["yes", "no", "ifNeedBe"]),
+    })
+    .array(),
+});
+
+async function addParticipantHandler({
+  ctx,
+  input: { pollId, votes, name, email, timeZone },
+}: {
+  ctx: {
+    user: {
+      id: string;
+      isGuest: boolean;
+      isLegacyGuest: boolean;
+      locale?: string;
+    };
+    posthog?: PostHog | null;
+  };
+  input: z.infer<typeof addParticipantInput>;
+}) {
+  const participantCount = await prisma.participant.count({
+    where: {
+      pollId,
+      deleted: false,
+    },
+  });
+
+  if (participantCount >= MAX_PARTICIPANTS) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: `This poll has reached its maximum limit of ${MAX_PARTICIPANTS} participants`,
+    });
+  }
+
+  const options = await prisma.option.findMany({
+    where: {
+      pollId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  const existingOptionIds = new Set(options.map((option) => option.id));
+
+  const validVotes = votes.filter(({ optionId }) =>
+    existingOptionIds.has(optionId),
+  );
+
+  const participant = await prisma.participant.create({
+    data: {
+      pollId: pollId,
+      name: name,
+      email,
+      timeZone,
+      ...(ctx.user.isLegacyGuest
+        ? { guestId: ctx.user.id }
+        : { userId: ctx.user.id }),
+      locale: ctx.user.locale ?? undefined,
+      votes: {
+        createMany: {
+          data: validVotes.map(({ optionId, type }) => ({
+            pollId,
+            optionId,
+            type,
+          })),
+        },
+      },
+    },
+    include: {
+      poll: {
+        select: {
+          id: true,
+          title: true,
+          userId: true,
+          guestId: true,
+        },
+      },
+    },
+  });
+
+  const totalResponses = participantCount + 1;
+
+  if (email) {
+    const token = await createParticipantEditToken(ctx.user.id);
+
+    const emailClient = await getEmailClient(ctx.user.locale ?? undefined);
+
+    emailClient.queueTemplate("NewParticipantConfirmationEmail", {
+      to: email,
+      props: {
+        title: participant.poll.title,
+        editSubmissionUrl: absoluteUrl(
+          `/invite/${participant.poll.id}?token=${token}`,
+        ),
+      },
+    });
+  }
+
+  waitUntil(
+    sendNewParticipantNotifcationEmail({
+      pollId,
+      pollTitle: participant.poll.title,
+      participantName: participant.name,
+    }),
+  );
+
+  ctx.posthog?.groupIdentify({
+    groupType: "poll",
+    groupKey: pollId,
+    properties: {
+      participant_count: totalResponses,
+    },
+  });
+
+  ctx.posthog?.capture({
+    distinctId: ctx.user.id,
+    event: "poll_response_submit",
+    properties: {
+      participant_id: participant.id,
+      participant_name: participant.name,
+      has_email: !!email,
+      total_responses: totalResponses,
+    },
+    groups: {
+      poll: pollId,
+    },
+  });
+
+  return participant;
+}
 
 async function canModifyParticipant(participantId: string, userId: string) {
   const participant = await prisma.participant.findUnique({
@@ -194,140 +336,31 @@ export const participants = router({
         },
       });
     }),
+  /** @deprecated Use `create` instead — this will be removed once old clients are gone */
   add: publicProcedure
     .use(createRateLimitMiddleware("add_participant", 10, "1 h"))
     .use(requireUserMiddleware)
+    .input(addParticipantInput)
+    .mutation(async (opts) => addParticipantHandler(opts)),
+  create: publicProcedure
+    .use(createRateLimitMiddleware("add_participant", 10, "1 h"))
+    .use(requireUserMiddleware)
     .input(
-      z.object({
-        pollId: z.string(),
-        name: z.string().trim().min(1, "Participant name is required").max(100),
-        email: z.string().optional(),
-        timeZone: z.string().optional(),
-        votes: z
-          .object({
-            optionId: z.string(),
-            type: z.enum(["yes", "no", "ifNeedBe"]),
-          })
-          .array(),
+      addParticipantInput.extend({
+        turnstileToken: z.string().optional(),
       }),
     )
-    .mutation(
-      async ({ ctx, input: { pollId, votes, name, email, timeZone } }) => {
-        const participantCount = await prisma.participant.count({
-          where: {
-            pollId,
-            deleted: false,
-          },
+    .mutation(async ({ ctx, input }) => {
+      const { turnstileToken, ...rest } = input;
+      const isTurnstileValid = await verifyTurnstileToken(turnstileToken);
+      if (!isTurnstileValid) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Failed to verify that you are human",
         });
-
-        if (participantCount >= MAX_PARTICIPANTS) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: `This poll has reached its maximum limit of ${MAX_PARTICIPANTS} participants`,
-          });
-        }
-
-        const options = await prisma.option.findMany({
-          where: {
-            pollId,
-          },
-          select: {
-            id: true,
-          },
-        });
-
-        const existingOptionIds = new Set(options.map((option) => option.id));
-
-        const validVotes = votes.filter(({ optionId }) =>
-          existingOptionIds.has(optionId),
-        );
-
-        const participant = await prisma.participant.create({
-          data: {
-            pollId: pollId,
-            name: name,
-            email,
-            timeZone,
-            ...(ctx.user.isLegacyGuest
-              ? { guestId: ctx.user.id }
-              : { userId: ctx.user.id }),
-            locale: ctx.user.locale ?? undefined,
-            votes: {
-              createMany: {
-                data: validVotes.map(({ optionId, type }) => ({
-                  pollId,
-                  optionId,
-                  type,
-                })),
-              },
-            },
-          },
-          include: {
-            poll: {
-              select: {
-                id: true,
-                title: true,
-                userId: true,
-                guestId: true,
-              },
-            },
-          },
-        });
-
-        const totalResponses = participantCount + 1;
-
-        if (email) {
-          const token = await createParticipantEditToken(ctx.user.id);
-
-          const emailClient = await getEmailClient(
-            ctx.user.locale ?? undefined,
-          );
-
-          emailClient.queueTemplate("NewParticipantConfirmationEmail", {
-            to: email,
-            props: {
-              title: participant.poll.title,
-              editSubmissionUrl: absoluteUrl(
-                `/invite/${participant.poll.id}?token=${token}`,
-              ),
-            },
-          });
-        }
-
-        waitUntil(
-          sendNewParticipantNotifcationEmail({
-            pollId,
-            pollTitle: participant.poll.title,
-            participantName: participant.name,
-          }),
-        );
-
-        ctx.posthog?.groupIdentify({
-          groupType: "poll",
-          groupKey: pollId,
-          properties: {
-            participant_count: totalResponses,
-          },
-        });
-
-        // Track participant addition analytics
-        ctx.posthog?.capture({
-          distinctId: ctx.user.id,
-          event: "poll_response_submit",
-          properties: {
-            participant_id: participant.id,
-            participant_name: participant.name,
-            has_email: !!email,
-            total_responses: totalResponses,
-          },
-          groups: {
-            poll: pollId,
-          },
-        });
-
-        return participant;
-      },
-    ),
+      }
+      return addParticipantHandler({ ctx, input: rest });
+    }),
   rename: publicProcedure
     .input(
       z.object({

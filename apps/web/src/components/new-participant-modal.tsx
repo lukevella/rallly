@@ -1,4 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { TurnstileInstance } from "@marsidev/react-turnstile";
+import { Turnstile } from "@marsidev/react-turnstile";
 import type { VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
@@ -14,14 +16,19 @@ import {
 import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { TRPCClientError } from "@trpc/client";
+import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { usePoll } from "@/contexts/poll";
+import { env } from "@/env";
 import { useTranslation } from "@/i18n/client";
 import { useTimezone } from "@/lib/timezone/client/context";
 import { useAddParticipantMutation } from "./poll/mutations";
 import VoteIcon from "./poll/vote-icon";
 import { useUser } from "./user-provider";
+
+const turnstileSiteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+const isTurnstileEnabled = !!turnstileSiteKey;
 
 const requiredEmailSchema = z.object({
   requireEmail: z.literal(true),
@@ -94,6 +101,10 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const { timezone } = useTimezone();
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = user && !user.isGuest;
+  const turnstileRef = React.useRef<TurnstileInstance>(null);
+  const [turnstileToken, setTurnstileToken] = React.useState<string | null>(
+    null,
+  );
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -122,6 +133,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
               email: data.email,
               pollId: poll.id,
               timeZone: timezone,
+              turnstileToken: turnstileToken ?? undefined,
             });
             props.onSubmit?.(newParticipant);
           } catch (error) {
@@ -130,6 +142,9 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                 message: error.message,
               });
             }
+          } finally {
+            setTurnstileToken(null);
+            turnstileRef.current?.reset();
           }
         })}
         className="space-y-4"
@@ -181,6 +196,25 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
           <VoteSummary votes={props.votes} />
         </div>
 
+        {turnstileSiteKey ? (
+          <Turnstile
+            ref={turnstileRef}
+            siteKey={turnstileSiteKey}
+            options={{
+              size: "invisible",
+            }}
+            onSuccess={(token) => {
+              setTurnstileToken(token);
+            }}
+            onError={() => {
+              setTurnstileToken(null);
+            }}
+            onExpire={() => {
+              setTurnstileToken(null);
+              turnstileRef.current?.reset();
+            }}
+          />
+        ) : null}
         {formState.errors.root?.message ? (
           <FormMessage>{formState.errors.root.message}</FormMessage>
         ) : null}
@@ -190,6 +224,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             type="submit"
             variant="primary"
             loading={formState.isSubmitting}
+            disabled={isTurnstileEnabled && !turnstileToken}
           >
             {t("submit")}
           </Button>

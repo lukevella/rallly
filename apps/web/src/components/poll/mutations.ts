@@ -20,7 +20,7 @@ export const useEditToken = () => {
 };
 
 export const useAddParticipantMutation = () => {
-  return trpc.polls.participants.add.useMutation();
+  return trpc.polls.participants.create.useMutation();
 };
 
 export const useUpdateParticipantMutation = () => {
