@@ -205,6 +205,7 @@ export function RegisterNameForm() {
               siteKey={turnstileSiteKey}
               options={{
                 language: i18n.language,
+                size: "flexible",
               }}
               onSuccess={(token) => {
                 setTurnstileToken(token);
