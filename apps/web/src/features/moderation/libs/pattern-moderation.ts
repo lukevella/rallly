@@ -11,7 +11,8 @@ export function containsSuspiciousPatterns(text: string) {
   const allCapsPattern = /[A-Z]{5,}/;
   const excessiveSpecialCharsPattern =
     /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]{4,}/;
-  const suspiciousUrlPattern = /(bit\.ly|tinyurl|goo\.gl|t\.co|is\.gd)/i;
+  const suspiciousUrlPattern =
+    /(bit\.ly|tinyurl|goo\.gl|t\.co|is\.gd|telegra\.ph)/i;
 
   // Email address pattern
   const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/i;
@@ -27,6 +28,13 @@ export function containsSuspiciousPatterns(text: string) {
   // Simple leet speak pattern that detects number-letter-number patterns
   const leetSpeakPattern = /[a-z0-9]*[0-9][a-z][0-9][a-z0-9]*/i;
 
+  // Crypto/financial scam patterns
+  const cryptoScamPattern =
+    /(\d+\.\d+\s*BTC|cloud mining|your balance|was mined|unclaimed funds)/i;
+
+  // Raw HTTP(S) URLs — legitimate scheduling polls rarely contain these
+  const rawUrlPattern = /https?:\/\/[^\s]+/i;
+
   return (
     // Simple pattern checks (least intensive)
     allCapsPattern.test(text) ||
@@ -36,6 +44,8 @@ export function containsSuspiciousPatterns(text: string) {
     suspiciousUrlPattern.test(text) ||
     emailPattern.test(text) ||
     leetSpeakPattern.test(text) ||
+    cryptoScamPattern.test(text) ||
+    rawUrlPattern.test(text) ||
     // More complex patterns
     phoneNumberPattern.test(text) ||
     // Most intensive pattern (Unicode handling)

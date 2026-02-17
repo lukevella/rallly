@@ -12,12 +12,22 @@ const logger = createLogger("moderation/ai");
 export async function moderateContentWithAI(text: string) {
   try {
     const result = await generateText({
-      model: openai("gpt-4-turbo"),
+      model: openai("gpt-4.1-nano"),
       messages: [
         {
           role: "system",
-          content:
-            "You are a content moderator. Analyze the following text and determine if it is attempting to misuse the app to advertise illegal drugs, prostitution, or promote illegal gambling and other illicit activities. Respond with 'FLAGGED' if detected, otherwise 'SAFE'.",
+          content: `You are a content moderator for a meeting scheduling app where users create polls to find the best time to meet. Analyze the following text (which is the title and/or description of a poll) and determine if it is legitimate scheduling content or an abuse attempt.
+
+Flag the content as inappropriate if it matches ANY of these categories:
+- Phishing or scams: fake account notifications, impersonation of brands (e.g. Binance, Coinbase, PayPal), "your balance/funds/account" language, urgency tactics to click links
+- Spam relay abuse: content that is clearly not a scheduling poll but instead a message designed to be sent to participants via notification emails
+- Financial fraud: fake crypto mining, investment scams, unclaimed funds, lottery winnings
+- Illegal activities: drugs, prostitution, illegal gambling
+- Malicious links: content whose primary purpose is to get readers to click an external link unrelated to scheduling
+
+Legitimate polls typically have short titles like "Team lunch", "Q3 planning", or "Meeting next week" and may include a location or brief context. They do NOT contain financial claims, cryptocurrency amounts, account notifications, or urgent calls to action.
+
+Respond with 'FLAGGED' if the content is inappropriate, otherwise 'SAFE'.`,
         },
         { role: "user", content: text },
       ],
