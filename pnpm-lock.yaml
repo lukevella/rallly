@@ -83,7 +83,7 @@ importers:
         version: 8.1.0(typescript@5.9.3)
       '@vercel/analytics':
         specifier: ^1.5.0
-        version: 1.6.1(next@16.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+        version: 1.6.1(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       dayjs:
         specifier: ^1.11.13
         version: 1.11.19
@@ -122,7 +122,7 @@ importers:
         version: 6.0.0(@types/react@19.2.13)(react@19.2.4)
       next-seo:
         specifier: ^6.1.0
-        version: 6.8.0(next@16.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 6.8.0(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       pg:
         specifier: ^8.17.1
         version: 8.18.0
@@ -176,8 +176,8 @@ importers:
   apps/web:
     dependencies:
       '@ai-sdk/openai':
-        specifier: ^2.0.28
-        version: 2.0.89(zod@4.3.6)
+        specifier: ^3.0.29
+        version: 3.0.29(zod@4.3.6)
       '@auth/prisma-adapter':
         specifier: ^2.7.4
         version: 2.11.1(@prisma/client@7.3.0(prisma@7.3.0(@types/react@19.2.13)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))
@@ -308,8 +308,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ai:
-        specifier: ^5.0.41
-        version: 5.0.128(zod@4.3.6)
+        specifier: ^6.0.87
+        version: 6.0.87(zod@4.3.6)
       arctic:
         specifier: ^3.7.0
         version: 3.7.0
@@ -890,26 +890,26 @@ packages:
   '@adobe/css-tools@4.4.4':
     resolution: {integrity: sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==}
 
-  '@ai-sdk/gateway@2.0.34':
-    resolution: {integrity: sha512-+MZ/sY1i3MH/pB2W8DHZy9WOmlDdlR/FOJ/GwCVittVnbBCkMLIocIuR0sHuHawwFpTkFZziRW7Y98s/v+XMGA==}
+  '@ai-sdk/gateway@3.0.47':
+    resolution: {integrity: sha512-gGsUF42TKjnnKpyHNpk/J6Hw1HCg0XqfRS9QSeZ2nn+ccy+CUXIbnuIpeBMrGCHUOAiZCy5Ei/H9BW9VgV+vKg==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
 
-  '@ai-sdk/openai@2.0.89':
-    resolution: {integrity: sha512-4+qWkBCbL9HPKbgrUO/F2uXZ8GqrYxHa8SWEYIzxEJ9zvWw3ISr3t1/27O1i8MGSym+PzEyHBT48EV4LAwWaEw==}
+  '@ai-sdk/openai@3.0.29':
+    resolution: {integrity: sha512-ugVTIVpuSLKTjzSPe1F1DWiblJT/lwrrHx0OZEKjpMk/EYP6j6VD/F7SJqM1dsqOJryeBCJWFbUzLNqc99PrMA==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
 
-  '@ai-sdk/provider-utils@3.0.20':
-    resolution: {integrity: sha512-iXHVe0apM2zUEzauqJwqmpC37A5rihrStAih5Ks+JE32iTe4LZ58y17UGBjpQQTCRw9YxMeo2UFLxLpBluyvLQ==}
+  '@ai-sdk/provider-utils@4.0.15':
+    resolution: {integrity: sha512-8XiKWbemmCbvNN0CLR9u3PQiet4gtEVIrX4zzLxnCj06AwsEDJwJVBbKrEI4t6qE8XRSIvU2irka0dcpziKW6w==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
 
-  '@ai-sdk/provider@2.0.1':
-    resolution: {integrity: sha512-KCUwswvsC5VsW2PWFqF8eJgSCu5Ysj7m1TxiHTVA6g7k360bk0RNQENT8KTMAYEs+8fWPD3Uu4dEmzGHc+jGng==}
+  '@ai-sdk/provider@3.0.8':
+    resolution: {integrity: sha512-oGMAgGoQdBXbZqNG0Ze56CHjDZ1IDYOwGYxYjO5KLSlz5HiNQ9udIXsPZ61VWaHGZ5XW/jyjmr6t2xz2jGVwbQ==}
     engines: {node: '>=18'}
 
   '@alcalzone/ansi-tokenize@0.2.4':
@@ -5456,8 +5456,8 @@ packages:
     resolution: {integrity: sha512-0poP0T7el6Vq3rstR8Mn4V/IQrpBLO6POkUSrN7RhyY+GF/InCFShQzsQ39T25gkHhLgSLByyAz+Kjb+c2L98w==}
     engines: {node: '>=12'}
 
-  ai@5.0.128:
-    resolution: {integrity: sha512-861sVBlBBx4ZNHnSfSjtWFQFz2KbJ/uXxdYOkaLSRf3tkvCLrNo1hrFsgGFMMTzPT/X/iXW26OoFQiO3aSvoog==}
+  ai@6.0.87:
+    resolution: {integrity: sha512-EHq2y9s1OGgN705mPJIII8qaL43Ko7rMUjMHiCWIpG8esnjBNvymlrcFLnwzPRnMD6OAC6PrRZyiD5nZwX3qFw==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -10685,27 +10685,27 @@ snapshots:
 
   '@adobe/css-tools@4.4.4': {}
 
-  '@ai-sdk/gateway@2.0.34(zod@4.3.6)':
+  '@ai-sdk/gateway@3.0.47(zod@4.3.6)':
     dependencies:
-      '@ai-sdk/provider': 2.0.1
-      '@ai-sdk/provider-utils': 3.0.20(zod@4.3.6)
+      '@ai-sdk/provider': 3.0.8
+      '@ai-sdk/provider-utils': 4.0.15(zod@4.3.6)
       '@vercel/oidc': 3.1.0
       zod: 4.3.6
 
-  '@ai-sdk/openai@2.0.89(zod@4.3.6)':
+  '@ai-sdk/openai@3.0.29(zod@4.3.6)':
     dependencies:
-      '@ai-sdk/provider': 2.0.1
-      '@ai-sdk/provider-utils': 3.0.20(zod@4.3.6)
+      '@ai-sdk/provider': 3.0.8
+      '@ai-sdk/provider-utils': 4.0.15(zod@4.3.6)
       zod: 4.3.6
 
-  '@ai-sdk/provider-utils@3.0.20(zod@4.3.6)':
+  '@ai-sdk/provider-utils@4.0.15(zod@4.3.6)':
     dependencies:
-      '@ai-sdk/provider': 2.0.1
+      '@ai-sdk/provider': 3.0.8
       '@standard-schema/spec': 1.1.0
       eventsource-parser: 3.0.6
       zod: 4.3.6
 
-  '@ai-sdk/provider@2.0.1':
+  '@ai-sdk/provider@3.0.8':
     dependencies:
       json-schema: 0.4.0
 
@@ -16010,7 +16010,7 @@ snapshots:
     dependencies:
       uncrypto: 0.1.3
 
-  '@vercel/analytics@1.6.1(next@16.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)':
+  '@vercel/analytics@1.6.1(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)':
     optionalDependencies:
       next: 16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react: 19.2.4
@@ -16236,11 +16236,11 @@ snapshots:
       clean-stack: 4.2.0
       indent-string: 5.0.0
 
-  ai@5.0.128(zod@4.3.6):
+  ai@6.0.87(zod@4.3.6):
     dependencies:
-      '@ai-sdk/gateway': 2.0.34(zod@4.3.6)
-      '@ai-sdk/provider': 2.0.1
-      '@ai-sdk/provider-utils': 3.0.20(zod@4.3.6)
+      '@ai-sdk/gateway': 3.0.47(zod@4.3.6)
+      '@ai-sdk/provider': 3.0.8
+      '@ai-sdk/provider-utils': 4.0.15(zod@4.3.6)
       '@opentelemetry/api': 1.9.0
       zod: 4.3.6
 
@@ -19742,7 +19742,7 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
-  next-seo@6.8.0(next@16.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  next-seo@6.8.0(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
       next: 16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react: 19.2.4

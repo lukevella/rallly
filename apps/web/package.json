@@ -17,7 +17,7 @@
     "better-auth:generate": "pnpx @better-auth/cli@latest generate --config ./src/lib/auth.ts --output ../../packages/database/prisma/models/user.prisma"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^2.0.28",
+    "@ai-sdk/openai": "^3.0.29",
     "@auth/prisma-adapter": "^2.7.4",
     "@aws-sdk/client-s3": "^3.645.0",
     "@aws-sdk/s3-request-presigner": "^3.645.0",
@@ -61,7 +61,7 @@
     "@upstash/ratelimit": "^1.2.1",
     "@vercel/functions": "^3.3.6",
     "@vercel/kv": "^3.0.0",
-    "ai": "^5.0.41",
+    "ai": "^6.0.87",
     "arctic": "^3.7.0",
     "better-auth": "^1.4.7",
     "calendar-link": "^2.6.0",
