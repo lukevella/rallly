@@ -397,6 +397,13 @@ export const getSession = cache(async () => {
   try {
     const legacySession = await legacyAuth();
     if (legacySession) {
+      logger.warn(
+        {
+          userId: legacySession.user?.id,
+          isGuest: legacySession.user?.isGuest,
+        },
+        "Detected legacy session. This will be removed in the future.",
+      );
       return {
         ...legacySession,
         legacy: true,
