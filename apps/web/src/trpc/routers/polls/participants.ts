@@ -195,7 +195,7 @@ export const participants = router({
       });
     }),
   add: publicProcedure
-    .use(createRateLimitMiddleware("add_participant", 5, "1 m"))
+    .use(createRateLimitMiddleware("add_participant", 10, "1 h"))
     .use(requireUserMiddleware)
     .input(
       z.object({
