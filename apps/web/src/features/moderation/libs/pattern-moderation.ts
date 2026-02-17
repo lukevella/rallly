@@ -32,8 +32,12 @@ export function containsSuspiciousPatterns(text: string) {
   const cryptoScamPattern =
     /(\d+\.\d+\s*BTC|cloud mining|your balance|was mined|unclaimed funds)/i;
 
-  // Raw HTTP(S) URLs — legitimate scheduling polls rarely contain these
+  // Raw HTTP(S) URLs — but exclude common meeting/location domains
   const rawUrlPattern = /https?:\/\/[^\s]+/i;
+  const safeUrlPattern =
+    /https?:\/\/([\w-]+\.)?(zoom\.us|meet\.google\.com|teams\.microsoft\.com|maps\.(google|apple)\.com|calendar\.google\.com|docs\.google\.com|whereby\.com|cal\.com|calendly\.com)[^\s]*/i;
+
+  const hasUnsafeUrl = rawUrlPattern.test(text) && !safeUrlPattern.test(text);
 
   return (
     // Simple pattern checks (least intensive)
@@ -45,7 +49,7 @@ export function containsSuspiciousPatterns(text: string) {
     emailPattern.test(text) ||
     leetSpeakPattern.test(text) ||
     cryptoScamPattern.test(text) ||
-    rawUrlPattern.test(text) ||
+    hasUnsafeUrl ||
     // More complex patterns
     phoneNumberPattern.test(text) ||
     // Most intensive pattern (Unicode handling)
