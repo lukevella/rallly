@@ -391,6 +391,13 @@ export const polls = router({
     .mutation(async ({ input, ctx }) => {
       const pollId = await getPollIdFromAdminUrlId(input.urlId);
 
+      if (!(await hasPollAdminAccess(pollId, ctx.user.id))) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have permission to update this poll",
+        });
+      }
+
       if (input.optionsToDelete && input.optionsToDelete.length > 0) {
         await prisma.option.deleteMany({
           where: {
@@ -579,6 +586,14 @@ export const polls = router({
     .use(requireUserMiddleware)
     .mutation(async ({ input: { urlId }, ctx }) => {
       const pollId = await getPollIdFromAdminUrlId(urlId);
+
+      if (!(await hasPollAdminAccess(pollId, ctx.user.id))) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have permission to delete this poll",
+        });
+      }
+
       await prisma.poll.update({
         where: { id: pollId },
         data: { deleted: true, deletedAt: new Date() },
