@@ -224,6 +224,16 @@ export const authLib = betterAuth({
   rateLimit: {
     enabled: isRateLimitEnabled,
     storage: isKvEnabled() ? "secondary-storage" : "memory",
+    customRules: {
+      "/sign-up/email": {
+        window: 60 * 60, // 1 hour
+        max: 5,
+      },
+      "/email-otp/send-verification-otp": {
+        window: 60 * 60, // 1 hour
+        max: 10,
+      },
+    },
   },
   account: {
     accountLinking: {
