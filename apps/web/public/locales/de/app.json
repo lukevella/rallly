@@ -602,5 +602,7 @@
   "deleteMenuItem": "Löschen",
   "deletePollPrompt": "Bist du sicher, dass du <b>{title}</b> löschen möchtest?",
   "pollDeleted": "Umfrage gelöscht",
-  "pollDeleteError": "Fehler beim Löschen der Umfrage"
+  "pollDeleteError": "Fehler beim Löschen der Umfrage",
+  "inappropriateContent": "Unangemessene Inhalte",
+  "pollReopened": "Umfrage erneut geöffnet"
 }
