@@ -602,5 +602,7 @@
   "deleteMenuItem": "Elimina",
   "deletePollPrompt": "Sei sicuro di voler eliminare <b>{title}</b>?",
   "pollDeleted": "Sondaggio eliminato",
-  "pollDeleteError": "Impossibile eliminare il sondaggio"
+  "pollDeleteError": "Impossibile eliminare il sondaggio",
+  "inappropriateContent": "Contenuto inappropriato",
+  "pollReopened": "Sondaggio riaperto"
 }
