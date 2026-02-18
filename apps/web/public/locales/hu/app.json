@@ -602,5 +602,7 @@
   "deleteMenuItem": "Törlés",
   "deletePollPrompt": "Biztosan szeretnéd törölni: <b>{title}</b>?",
   "pollDeleted": "Szavazás törölve",
-  "pollDeleteError": "Nem sikerült törölni a szavazást"
+  "pollDeleteError": "Nem sikerült törölni a szavazást",
+  "inappropriateContent": "Nem megfelelő tartalom",
+  "pollReopened": "Szavazás újranyitva"
 }
