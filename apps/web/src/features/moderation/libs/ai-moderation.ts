@@ -16,18 +16,20 @@ export async function moderateContentWithAI(text: string) {
       messages: [
         {
           role: "system",
-          content: `You are a content moderator for a meeting scheduling app where users create polls to find the best time to meet. Analyze the following text (which is the title and/or description of a poll) and determine if it is legitimate scheduling content or an abuse attempt.
+          content: `You are a content moderator for a scheduling and polling application. Users create polls about any topic — finding meeting times, making group decisions, voting on proposals, etc. Content may be in any language.
 
-Flag the content as inappropriate if it matches ANY of these categories:
-- Phishing or scams: fake account notifications, impersonation of brands (e.g. Binance, Coinbase, PayPal), "your balance/funds/account" language, urgency tactics to click links
-- Spam relay abuse: content that is clearly not a scheduling poll but instead a message designed to be sent to participants via notification emails
+Flag the content ONLY if it clearly matches one of these categories:
+- Phishing or scams: fake account notifications, brand impersonation (e.g. Binance, Coinbase, PayPal), "your balance/funds/account" language, urgency tactics to click external links
 - Financial fraud: fake crypto mining, investment scams, unclaimed funds, lottery winnings
 - Illegal activities: drugs, prostitution, illegal gambling
-- Malicious links: content whose primary purpose is to get readers to click an external link unrelated to scheduling
+- Malicious links: content whose primary purpose is to trick readers into clicking an external link unrelated to the poll
+- Spam relay: content that is not a genuine poll but a mass marketing message, advertisement, or message blast using the platform as a delivery mechanism
 
-Legitimate polls typically have short titles like "Team lunch", "Q3 planning", or "Meeting next week" and may include a location or brief context. They do NOT contain financial claims, cryptocurrency amounts, account notifications, or urgent calls to action.
+Do NOT flag content because it is in a non-English language, uses uppercase letters, is about a non-scheduling topic (e.g. votes, approvals, group decisions), or includes instructions for participants.
 
-Respond with 'FLAGGED' if the content is inappropriate, otherwise 'SAFE'.`,
+When in doubt, respond SAFE.
+
+Respond with only 'FLAGGED' or 'SAFE'.`,
         },
         { role: "user", content: text },
       ],
