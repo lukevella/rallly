@@ -361,6 +361,15 @@ export const polls = router({
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("update_poll", 10, "1 m"))
     .mutation(async ({ input, ctx }) => {
+      const pollId = await getPollIdFromAdminUrlId(input.urlId);
+
+      if (!(await hasPollAdminAccess(pollId, ctx.user.id))) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have permission to update this poll",
+        });
+      }
+
       const isFlaggedContent = await moderateContent({
         userId: ctx.user.id,
         content: [input.title, input.description, input.location],
@@ -378,15 +387,6 @@ export const polls = router({
           ok: false as const,
           error: { code: "INAPPROPRIATE_CONTENT" as const },
         };
-      }
-
-      const pollId = await getPollIdFromAdminUrlId(input.urlId);
-
-      if (!(await hasPollAdminAccess(pollId, ctx.user.id))) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You do not have permission to update this poll",
-        });
       }
 
       if (input.optionsToDelete && input.optionsToDelete.length > 0) {
