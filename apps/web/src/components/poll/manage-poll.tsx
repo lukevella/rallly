@@ -234,7 +234,7 @@ const ManagePoll: React.FunctionComponent<{
         </DropdownMenuContent>
       </DropdownMenu>
       <DeletePollDialog
-        urlId={poll.adminUrlId}
+        urlId={poll.id}
         open={showDeletePollDialog}
         onOpenChange={setShowDeletePollDialog}
       />
