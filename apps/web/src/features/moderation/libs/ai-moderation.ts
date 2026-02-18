@@ -32,7 +32,6 @@ Respond with one of three verdicts:
   - Phishing or scams: fake account notifications, brand impersonation (e.g. Binance, Coinbase, PayPal), "your balance/funds/account" language, urgency tactics to click external links
   - Financial fraud: fake crypto mining, investment scams, unclaimed funds, lottery winnings
   - Illegal activities: drugs, prostitution, illegal gambling
-  - Malicious links: content whose primary purpose is to trick readers into clicking an external link unrelated to the poll
   - Spam relay: content that is not a genuine poll but a mass marketing message, advertisement, or message blast using the platform as a delivery mechanism
 
 - SUSPICIOUS: Content shows some indicators of harmful intent (e.g. partial scam language, obfuscated links) but not enough to conclusively block. Use this for borderline cases that warrant human review.
