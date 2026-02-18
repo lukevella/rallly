@@ -18,7 +18,7 @@ export const DeletePollDialog: React.FunctionComponent<{
   urlId: string;
 }> = ({ open, onOpenChange, urlId }) => {
   const router = useRouter();
-  const deletePoll = trpc.polls.delete.useMutation({
+  const deletePoll = trpc.polls.markAsDeleted.useMutation({
     onSuccess: () => {
       onOpenChange(false);
       router.replace("/polls");
@@ -47,7 +47,7 @@ export const DeletePollDialog: React.FunctionComponent<{
           <Button
             variant="destructive"
             onClick={() => {
-              deletePoll.mutate({ urlId });
+              deletePoll.mutate({ pollId: urlId });
             }}
             loading={deletePoll.isPending}
           >
