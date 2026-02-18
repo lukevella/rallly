@@ -2,13 +2,18 @@ import { createLogger } from "@rallly/logger";
 import { waitUntil } from "@vercel/functions";
 import { env } from "@/env";
 import { getEmailClient } from "@/utils/emails";
-import type { ModerationVerdict } from "./libs/ai-moderation";
+import type { ModerationResult, ModerationVerdict } from "./libs/ai-moderation";
 import { moderateContentWithAI } from "./libs/ai-moderation";
 import { containsSuspiciousPatterns } from "./libs/pattern-moderation";
 
 const logger = createLogger("moderation");
 
-export type { ModerationVerdict };
+export type { ModerationResult, ModerationVerdict };
+
+const safeResult: ModerationResult = {
+  verdict: "safe",
+  reason: "",
+};
 
 /**
  * Moderates content to detect spam, inappropriate content, or abuse
@@ -16,18 +21,18 @@ export type { ModerationVerdict };
  * 1. Pattern-based detection for common spam patterns
  * 2. AI-based moderation for more sophisticated content analysis
  *
- * @returns "flagged" (block), "suspicious" (allow but notify), or "safe" (allow)
+ * @returns Moderation result with verdict and explanation
  */
 export async function moderateContent({
   userId,
   content,
 }: {
   userId: string;
-  content: Array<string | undefined>;
-}): Promise<ModerationVerdict> {
+  content: Record<string, string>;
+}): Promise<ModerationResult> {
   // Skip moderation if the feature is disabled in environment
   if (env.MODERATION_ENABLED !== "true") {
-    return "safe";
+    return safeResult;
   }
 
   // Check if OpenAI API key is available
@@ -35,10 +40,13 @@ export async function moderateContent({
     logger.warn(
       "Content moderation is enabled but OPENAI_API_KEY is not set. AI-based moderation will be skipped.",
     );
-    return "safe";
+    return safeResult;
   }
 
-  const textToModerate = content.filter(Boolean).join("\n");
+  const textToModerate = Object.entries(content)
+    .filter(([_, value]) => value.trim() !== "")
+    .map(([key, value]) => `${key}:\n${value}`)
+    .join("\n\n");
 
   // First check for suspicious patterns (faster)
   const hasSuspiciousPatterns = containsSuspiciousPatterns(textToModerate);
@@ -47,18 +55,22 @@ export async function moderateContent({
   if (hasSuspiciousPatterns) {
     logger.info("Suspicious patterns detected, performing AI moderation check");
     try {
-      const verdict = await moderateContentWithAI(textToModerate);
+      const result = await moderateContentWithAI(textToModerate);
 
-      if (verdict === "flagged" || verdict === "suspicious") {
-        logger.warn({ userId, verdict }, `Content ${verdict} by AI moderation`);
+      if (result.verdict === "flagged" || result.verdict === "suspicious") {
+        logger.warn(
+          { userId, verdict: result.verdict, reason: result.reason },
+          `Content ${result.verdict} by AI moderation`,
+        );
         const emailClient = await getEmailClient();
         waitUntil(
           emailClient.sendEmail({
             to: env.SUPPORT_EMAIL,
-            subject: `Content ${verdict} by moderation`,
+            subject: `Content ${result.verdict} by moderation`,
             text: [
               `User ID: ${userId}`,
-              `Verdict: ${verdict}`,
+              `Verdict: ${result.verdict}`,
+              `Reason: ${result.reason}`,
               "Content:",
               textToModerate,
             ].join("\n\n"),
@@ -66,14 +78,14 @@ export async function moderateContent({
         );
       }
 
-      return verdict;
+      return result;
     } catch (error) {
       logger.error({ error }, "Error during AI content moderation");
-      return "safe";
+      return safeResult;
     }
   }
 
-  return "safe";
+  return safeResult;
 }
 
 /**

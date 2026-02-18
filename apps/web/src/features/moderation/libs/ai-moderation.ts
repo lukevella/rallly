@@ -6,14 +6,19 @@ const logger = createLogger("moderation/ai");
 
 export type ModerationVerdict = "flagged" | "suspicious" | "safe";
 
+export type ModerationResult = {
+  verdict: ModerationVerdict;
+  reason: string;
+};
+
 /**
  * Moderates content using AI to detect inappropriate content
  * @param text The text to moderate
- * @returns The moderation verdict: "flagged", "suspicious", or "safe"
+ * @returns The moderation result with verdict and explanation
  */
 export async function moderateContentWithAI(
   text: string,
-): Promise<ModerationVerdict> {
+): Promise<ModerationResult> {
   try {
     const result = await generateText({
       model: openai("gpt-4.1-mini"),
@@ -30,34 +35,42 @@ Respond with one of three verdicts:
   - Malicious links: content whose primary purpose is to trick readers into clicking an external link unrelated to the poll
   - Spam relay: content that is not a genuine poll but a mass marketing message, advertisement, or message blast using the platform as a delivery mechanism
 
-- SUSPICIOUS: Content is ambiguous — it could be legitimate but has characteristics that warrant human review. Use this when content doesn't clearly fit the FLAGGED categories but seems unusual for a polling app.
+- SUSPICIOUS: Content shows some indicators of harmful intent (e.g. partial scam language, obfuscated links) but not enough to conclusively block. Use this for borderline cases that warrant human review.
 
-- SAFE: Content is clearly legitimate.
+- SAFE: Content is not harmful.
 
-Do NOT flag or mark as suspicious content because it is in a non-English language, uses uppercase letters, is about a non-scheduling topic (e.g. votes, approvals, group decisions), or includes instructions for participants.
+Do NOT flag or mark as suspicious content because:
+- It is in a non-English language
+- It is short, brief, or lacks detail
 
 When in doubt between FLAGGED and SUSPICIOUS, choose SUSPICIOUS.
 When in doubt between SUSPICIOUS and SAFE, choose SAFE.
 
-Respond with only 'FLAGGED', 'SUSPICIOUS', or 'SAFE'.`,
+Respond in exactly this format:
+VERDICT
+Brief explanation of why this verdict was chosen.`,
         },
         { role: "user", content: text },
       ],
     });
 
-    const response = result.text.trim().toUpperCase();
+    const lines = result.text.trim().split("\n");
+    const verdictLine = (lines[0] ?? "").trim().toUpperCase();
+    const reason = lines.slice(1).join("\n").trim() || "No reason provided";
 
-    if (response.includes("FLAGGED")) {
-      return "flagged";
+    let verdict: ModerationVerdict = "safe";
+    if (verdictLine.includes("FLAGGED")) {
+      verdict = "flagged";
+    } else if (verdictLine.includes("SUSPICIOUS")) {
+      verdict = "suspicious";
     }
 
-    if (response.includes("SUSPICIOUS")) {
-      return "suspicious";
-    }
-
-    return "safe";
+    return { verdict, reason };
   } catch (err) {
     logger.error({ error: err }, "AI moderation failed");
-    return "safe";
+    return {
+      verdict: "safe",
+      reason: "AI moderation failed, defaulting to safe",
+    };
   }
 }
