@@ -187,12 +187,12 @@ export const polls = router({
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("create_poll", 20, "1 h"))
     .mutation(async ({ ctx, input }) => {
-      const isFlaggedContent = await moderateContent({
+      const moderationVerdict = await moderateContent({
         userId: ctx.user.id,
         content: [input.title, input.description, input.location],
       });
 
-      if (isFlaggedContent) {
+      if (moderationVerdict === "flagged") {
         ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
@@ -370,12 +370,12 @@ export const polls = router({
         });
       }
 
-      const isFlaggedContent = await moderateContent({
+      const moderationVerdict = await moderateContent({
         userId: ctx.user.id,
         content: [input.title, input.description, input.location],
       });
 
-      if (isFlaggedContent) {
+      if (moderationVerdict === "flagged") {
         ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
@@ -562,12 +562,12 @@ export const polls = router({
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("create_poll", 20, "1 h"))
     .use(async ({ ctx, input, next }) => {
-      const isFlaggedContent = await moderateContent({
+      const moderationVerdict = await moderateContent({
         userId: ctx.user.id,
         content: [input.title, input.description, input.location],
       });
 
-      if (isFlaggedContent) {
+      if (moderationVerdict === "flagged") {
         ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
@@ -740,12 +740,12 @@ export const polls = router({
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("update_poll", 10, "1 m"))
     .use(async ({ ctx, input, next }) => {
-      const isFlaggedContent = await moderateContent({
+      const moderationVerdict = await moderateContent({
         userId: ctx.user.id,
         content: [input.title, input.description, input.location],
       });
 
-      if (isFlaggedContent) {
+      if (moderationVerdict === "flagged") {
         ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
