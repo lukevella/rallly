@@ -1,6 +1,7 @@
 import { toast } from "@rallly/ui/sonner";
 import { useSearchParams } from "next/navigation";
 import { usePoll } from "@/components/poll-context";
+import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import type { ParticipantForm } from "./types";
 
@@ -63,10 +64,24 @@ export const useDeleteParticipantMutation = () => {
 };
 
 export const useUpdatePollMutation = () => {
-  return trpc.polls.update.useMutation({
-    onError: (error) => {
-      if (error.data?.code === "BAD_REQUEST") {
-        toast.error(error.message);
+  const { t } = useTranslation();
+  return trpc.polls.modify.useMutation({
+    onSuccess: (data) => {
+      if (!data.ok) {
+        toast.error(
+          t("inappropriateContent", { defaultValue: "Inappropriate content" }),
+          {
+            action: {
+              label: t("learnMore", { defaultValue: "Learn more" }),
+              onClick: () => {
+                window.open(
+                  "https://support.rallly.co/guide/content-moderation",
+                  "_blank",
+                );
+              },
+            },
+          },
+        );
       }
     },
   });

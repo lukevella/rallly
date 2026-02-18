@@ -1,6 +1,7 @@
 import { createLogger } from "@rallly/logger";
+import { waitUntil } from "@vercel/functions";
 import { env } from "@/env";
-
+import { getEmailClient } from "@/utils/emails";
 import { moderateContentWithAI } from "./libs/ai-moderation";
 import { containsSuspiciousPatterns } from "./libs/pattern-moderation";
 
@@ -15,7 +16,13 @@ const logger = createLogger("moderation");
  * @param content Array of strings to moderate (can include undefined values which will be filtered out)
  * @returns True if the content is flagged as inappropriate, false otherwise
  */
-export async function moderateContent(content: Array<string | undefined>) {
+export async function moderateContent({
+  userId,
+  content,
+}: {
+  userId: string;
+  content: Array<string | undefined>;
+}) {
   // Skip moderation if the feature is disabled in environment
   if (env.MODERATION_ENABLED !== "true") {
     return false;
@@ -40,7 +47,19 @@ export async function moderateContent(content: Array<string | undefined>) {
     try {
       const isFlagged = await moderateContentWithAI(textToModerate);
       if (isFlagged) {
-        logger.warn("Content flagged by AI moderation");
+        logger.warn({ userId }, "Content flagged by AI moderation");
+        const emailClient = await getEmailClient();
+        waitUntil(
+          emailClient.sendEmail({
+            to: env.SUPPORT_EMAIL,
+            subject: "Content flagged by moderation",
+            text: [
+              `User ID: ${userId}`,
+              "Flagged content:",
+              textToModerate,
+            ].join("\n\n"),
+          }),
+        );
       }
       return isFlagged;
     } catch (error) {
