@@ -187,19 +187,28 @@ export const polls = router({
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("create_poll", 20, "1 h"))
     .mutation(async ({ ctx, input }) => {
-      const moderationVerdict = await moderateContent({
+      const moderation = await moderateContent({
         userId: ctx.user.id,
-        content: [input.title, input.description, input.location],
+        content: {
+          Title: input.title,
+          Description: input.description || "",
+          Location: input.location || "",
+        },
       });
 
-      if (moderationVerdict === "flagged") {
+      if (moderation.verdict !== "safe") {
         ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
           properties: {
             action: "create_poll",
+            verdict: moderation.verdict,
+            reason: moderation.reason,
           },
         });
+      }
+
+      if (moderation.verdict === "flagged") {
         return {
           ok: false as const,
           error: { code: "INAPPROPRIATE_CONTENT" as const },
@@ -370,19 +379,28 @@ export const polls = router({
         });
       }
 
-      const moderationVerdict = await moderateContent({
+      const moderation = await moderateContent({
         userId: ctx.user.id,
-        content: [input.title, input.description, input.location],
+        content: {
+          Title: input.title || "",
+          Description: input.description || "",
+          Location: input.location || "",
+        },
       });
 
-      if (moderationVerdict === "flagged") {
+      if (moderation.verdict !== "safe") {
         ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
           properties: {
             action: "update_poll",
+            verdict: moderation.verdict,
+            reason: moderation.reason,
           },
         });
+      }
+
+      if (moderation.verdict === "flagged") {
         return {
           ok: false as const,
           error: { code: "INAPPROPRIATE_CONTENT" as const },
@@ -562,19 +580,28 @@ export const polls = router({
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("create_poll", 20, "1 h"))
     .use(async ({ ctx, input, next }) => {
-      const moderationVerdict = await moderateContent({
+      const moderation = await moderateContent({
         userId: ctx.user.id,
-        content: [input.title, input.description, input.location],
+        content: {
+          Title: input.title || "",
+          Description: input.description || "",
+          Location: input.location || "",
+        },
       });
 
-      if (moderationVerdict === "flagged") {
+      if (moderation.verdict !== "safe") {
         ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
           properties: {
             action: "create_poll",
+            verdict: moderation.verdict,
+            reason: moderation.reason,
           },
         });
+      }
+
+      if (moderation.verdict === "flagged") {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Inappropriate content",
@@ -740,19 +767,28 @@ export const polls = router({
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("update_poll", 10, "1 m"))
     .use(async ({ ctx, input, next }) => {
-      const moderationVerdict = await moderateContent({
+      const moderation = await moderateContent({
         userId: ctx.user.id,
-        content: [input.title, input.description, input.location],
+        content: {
+          Title: input.title || "",
+          Description: input.description || "",
+          Location: input.location || "",
+        },
       });
 
-      if (moderationVerdict === "flagged") {
+      if (moderation.verdict !== "safe") {
         ctx.posthog?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
           properties: {
             action: "update_poll",
+            verdict: moderation.verdict,
+            reason: moderation.reason,
           },
         });
+      }
+
+      if (moderation.verdict === "flagged") {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Inappropriate content",
