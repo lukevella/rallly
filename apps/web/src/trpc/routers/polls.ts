@@ -389,39 +389,41 @@ export const polls = router({
         };
       }
 
-      if (input.optionsToDelete && input.optionsToDelete.length > 0) {
-        await prisma.option.deleteMany({
-          where: {
-            pollId,
-            id: {
-              in: input.optionsToDelete,
+      await prisma.$transaction(async (tx) => {
+        if (input.optionsToDelete && input.optionsToDelete.length > 0) {
+          await tx.option.deleteMany({
+            where: {
+              pollId,
+              id: {
+                in: input.optionsToDelete,
+              },
             },
-          },
-        });
-      }
+          });
+        }
 
-      if (input.optionsToAdd && input.optionsToAdd.length > 0) {
-        await prisma.option.createMany({
-          data: input.optionsToAdd.map((optionValue) => {
-            const [start, end] = optionValue.split("/");
+        if (input.optionsToAdd && input.optionsToAdd.length > 0) {
+          await tx.option.createMany({
+            data: input.optionsToAdd.map((optionValue) => {
+              const [start, end] = optionValue.split("/");
 
-            if (end) {
-              return {
-                startTime: input.timeZone
-                  ? dayjs(start).tz(input.timeZone, true).toDate()
-                  : dayjs(start).utc(true).toDate(),
-                duration: dayjs(end).diff(dayjs(start), "minute"),
-                pollId,
-              };
-            } else {
-              return {
-                startTime: dayjs(start).utc(true).toDate(),
-                pollId,
-              };
-            }
-          }),
-        });
-      }
+              if (end) {
+                return {
+                  startTime: input.timeZone
+                    ? dayjs(start).tz(input.timeZone, true).toDate()
+                    : dayjs(start).utc(true).toDate(),
+                  duration: dayjs(end).diff(dayjs(start), "minute"),
+                  pollId,
+                };
+              } else {
+                return {
+                  startTime: dayjs(start).utc(true).toDate(),
+                  pollId,
+                };
+              }
+            }),
+          });
+        }
+      });
 
       await prisma.poll.update({
         select: { id: true },
