@@ -18,12 +18,12 @@ export async function setVerificationEmail(email: string) {
   });
 }
 
+const ratelimit = createRatelimit(10, "1 m");
+
 export const getLoginMethodAction = actionClient
   .metadata({ actionName: "get_login_method" })
   .inputSchema(z.object({ email: z.email() }))
   .action(async ({ parsedInput: { email } }) => {
-    const ratelimit = createRatelimit(10, "1 m");
-
     if (ratelimit) {
       const headersList = await headers();
       const ipAddress = headersList.get("x-forwarded-for");
