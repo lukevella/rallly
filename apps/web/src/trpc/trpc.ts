@@ -1,8 +1,6 @@
 import { prisma } from "@rallly/database";
 import { initTRPC, TRPCError } from "@trpc/server";
-import { Ratelimit } from "@upstash/ratelimit";
 import { waitUntil } from "@vercel/functions";
-import { kv } from "@vercel/kv";
 import superjson from "superjson";
 import { getCurrentUserSpace } from "@/auth/data";
 import { PostHogClient } from "@/features/analytics/posthog";
@@ -10,6 +8,8 @@ import { isApiAccessEnabled } from "@/features/developer/data";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { getUser } from "@/features/user/data";
+import { createRatelimit } from "@/lib/rate-limit";
+import { isRateLimitEnabled } from "@/lib/rate-limit/constants";
 import { isSelfHosted } from "@/utils/constants";
 import type { TRPCContext } from "./context";
 
@@ -187,7 +187,7 @@ export const createRateLimitMiddleware = (
   duration: "1 m" | "1 h",
 ) => {
   return middleware(async ({ ctx, next }) => {
-    if (!process.env.KV_REST_API_URL) {
+    if (!isRateLimitEnabled) {
       return next();
     }
 
@@ -198,14 +198,15 @@ export const createRateLimitMiddleware = (
       });
     }
 
-    const ratelimit = new Ratelimit({
-      redis: kv,
-      limiter: Ratelimit.slidingWindow(requests, duration),
-    });
+    const ratelimit = createRatelimit(requests, duration);
 
-    const res = await ratelimit.limit(`${name}:${ctx.identifier}`);
+    if (!ratelimit) {
+      return next();
+    }
 
-    if (!res.success) {
+    const { success } = await ratelimit.limit(`${name}:${ctx.identifier}`);
+
+    if (!success) {
       throw new TRPCError({
         code: "TOO_MANY_REQUESTS",
         message: "Too many requests",

@@ -3,10 +3,7 @@
 import { prisma } from "@rallly/database";
 import { cookies } from "next/headers";
 import * as z from "zod";
-import {
-  actionClient,
-  createRateLimitMiddleware,
-} from "@/lib/safe-action/server";
+import { actionClient } from "@/lib/safe-action/server";
 
 export async function setVerificationEmail(email: string) {
   const cookieStore = await cookies();
@@ -22,7 +19,6 @@ export async function setVerificationEmail(email: string) {
 export const getLoginMethodAction = actionClient
   .metadata({ actionName: "get_login_method" })
   .inputSchema(z.object({ email: z.email() }))
-  .use(createRateLimitMiddleware(100, "1m"))
   .action(async ({ parsedInput: { email } }) => {
     const user = await prisma.user.findUnique({
       where: { email },

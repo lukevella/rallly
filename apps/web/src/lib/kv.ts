@@ -1,6 +1,13 @@
-import { kv } from "@vercel/kv";
-import { env } from "@/env";
+import { Redis } from "@upstash/redis";
 
-const isKvEnabled = () => !!env.KV_REST_API_URL;
+function createRedis() {
+  try {
+    return Redis.fromEnv();
+  } catch {
+    return null;
+  }
+}
 
-export { kv, isKvEnabled };
+const redis = createRedis();
+
+export { redis };

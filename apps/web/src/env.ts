@@ -132,9 +132,11 @@ export const env = createEnv({
     /**
      *
      */
-    KV_REST_API_URL: z.url().optional(),
-    KV_REST_API_TOKEN: z.string().optional(),
-    KV_URL: z.url().optional(),
+    /**
+     * Enable or disable rate limiting globally.
+     * @default "true"
+     */
+    RATE_LIMIT_ENABLED: z.enum(["true", "false"]).default("true"),
     /**
      * Cloudflare Turnstile secret key for bot protection on registration.
      * If not set, Turnstile verification is disabled.
@@ -220,9 +222,7 @@ export const env = createEnv({
     LOGO_ICON_URL: process.env.LOGO_ICON_URL,
     APP_NAME: process.env.APP_NAME,
     HIDE_ATTRIBUTION: process.env.HIDE_ATTRIBUTION,
-    KV_REST_API_URL: process.env.KV_REST_API_URL,
-    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
-    KV_URL: process.env.KV_URL,
+    RATE_LIMIT_ENABLED: process.env.RATE_LIMIT_ENABLED,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   },

@@ -52,8 +52,7 @@ vi.mock("@vercel/functions", () => ({
 }));
 
 vi.mock("@/lib/kv", () => ({
-  isKvEnabled: () => false,
-  kv: null,
+  redis: null,
 }));
 
 import { prisma } from "@rallly/database";
