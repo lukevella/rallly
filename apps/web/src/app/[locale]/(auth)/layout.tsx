@@ -10,7 +10,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex h-dvh flex-col items-center justify-center bg-background">
+    <div className="relative flex min-h-dvh flex-col items-center justify-center bg-background">
       <div className="z-10 flex w-full flex-1 lg:p-4">
         <div className="flex flex-1 flex-col gap-4 p-6">
           <div className="my-auto">
