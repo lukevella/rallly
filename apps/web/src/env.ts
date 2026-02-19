@@ -130,9 +130,6 @@ export const env = createEnv({
      */
     HIDE_ATTRIBUTION: z.enum(["true", "false"]).default("false"),
     /**
-     *
-     */
-    /**
      * Enable or disable rate limiting globally.
      * @default "true"
      */
