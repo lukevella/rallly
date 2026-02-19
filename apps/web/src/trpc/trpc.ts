@@ -185,9 +185,9 @@ export const createRateLimitMiddleware = (
   requests: number,
   duration: "1 m" | "1 h",
 ) => {
-  return middleware(async ({ ctx, next }) => {
-    const ratelimit = createRatelimit(requests, duration);
+  const ratelimit = createRatelimit(requests, duration);
 
+  return middleware(async ({ ctx, next }) => {
     ctx.event.rateLimiter = ratelimit?.name ?? "none";
 
     if (!ratelimit) {
