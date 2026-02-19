@@ -1,8 +1,7 @@
+import { createWideEvent } from "@rallly/logger";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import superjson from "superjson";
-
 import { getSession } from "@/lib/auth";
-
 import type { TRPCContext } from "../context";
 import { appRouter } from "../routers";
 
@@ -16,7 +15,7 @@ import { appRouter } from "../routers";
 export const createSSRHelper = () => {
   return createServerSideHelpers({
     router: appRouter,
-    ctx: {} satisfies TRPCContext,
+    ctx: { event: createWideEvent({ service: "trpc" }) } satisfies TRPCContext,
     transformer: superjson,
   });
 };
@@ -29,6 +28,9 @@ export const createSSRHelper = () => {
  */
 export const createAuthenticatedSSRHelper = async () => {
   const session = await getSession();
+  const event = createWideEvent({
+    service: "trpc",
+  });
 
   return createServerSideHelpers({
     router: appRouter,
@@ -42,6 +44,7 @@ export const createAuthenticatedSSRHelper = async () => {
             isLegacyGuest: session.legacy && session.user.isGuest,
           }
         : undefined,
+      event,
     } satisfies TRPCContext,
     transformer: superjson,
   });
