@@ -9,7 +9,6 @@ import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { getUser } from "@/features/user/data";
 import { createRatelimit } from "@/lib/rate-limit";
-import { isRateLimitEnabled } from "@/lib/rate-limit/constants";
 import { isSelfHosted } from "@/utils/constants";
 import type { TRPCContext } from "./context";
 
@@ -187,7 +186,11 @@ export const createRateLimitMiddleware = (
   duration: "1 m" | "1 h",
 ) => {
   return middleware(async ({ ctx, next }) => {
-    if (!isRateLimitEnabled) {
+    const ratelimit = createRatelimit(requests, duration);
+
+    ctx.event.rateLimiter = ratelimit?.name ?? "none";
+
+    if (!ratelimit) {
       return next();
     }
 
@@ -198,13 +201,11 @@ export const createRateLimitMiddleware = (
       });
     }
 
-    const ratelimit = createRatelimit(requests, duration);
+    const { success, remainingPoints } = await ratelimit.limit(
+      `${name}:${ctx.identifier}`,
+    );
 
-    if (!ratelimit) {
-      return next();
-    }
-
-    const { success } = await ratelimit.limit(`${name}:${ctx.identifier}`);
+    ctx.event.rateLimiterRemainingPoints = remainingPoints;
 
     if (!success) {
       throw new TRPCError({

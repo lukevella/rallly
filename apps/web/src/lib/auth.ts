@@ -32,6 +32,8 @@ import { auth as legacyAuth, signOut as legacySignOut } from "@/next-auth";
 import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
 
+const kv = redis;
+
 const baseURL = absoluteUrl("/api/better-auth");
 
 const logger = createLogger("auth");
@@ -201,23 +203,21 @@ export const authLib = betterAuth({
       },
     },
   },
-  secondaryStorage: {
-    set: async (key: string, value: string, ttl?: number) => {
-      if (ttl) {
-        await redis?.set(key, value, {
-          ex: ttl,
-        });
-      } else {
-        await redis?.set(key, value);
+  secondaryStorage: kv
+    ? {
+        set: async (key: string, value: string, ttl?: number) => {
+          if (ttl) {
+            await kv.set(key, value, { ex: ttl });
+          } else {
+            await kv.set(key, value);
+          }
+        },
+        get: async (key: string) => kv.get(key),
+        delete: async (key: string) => {
+          await kv.del(key);
+        },
       }
-    },
-    get: async (key: string) => {
-      return await redis?.get(key);
-    },
-    delete: async (key: string) => {
-      await redis?.del(key);
-    },
-  },
+    : undefined,
   rateLimit: {
     enabled: env.RATE_LIMIT_ENABLED !== "false",
     storage: redis ? "secondary-storage" : "memory",

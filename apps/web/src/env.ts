@@ -137,6 +137,14 @@ export const env = createEnv({
      * @default "true"
      */
     RATE_LIMIT_ENABLED: z.enum(["true", "false"]).default("true"),
+
+    /**
+     * Upstash Redis URL and token for rate limiting and auth session storage.
+     * If not set, in-memory rate limiting and db session storage is used.
+     */
+    KV_REST_API_URL: z.url().optional(),
+    KV_REST_API_TOKEN: z.string().optional(),
+
     /**
      * Cloudflare Turnstile secret key for bot protection on registration.
      * If not set, Turnstile verification is disabled.
@@ -208,6 +216,8 @@ export const env = createEnv({
     NOREPLY_EMAIL_NAME: process.env.NOREPLY_EMAIL_NAME,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     MODERATION_ENABLED: process.env.MODERATION_ENABLED,
+    KV_REST_API_URL: process.env.KV_REST_API_URL,
+    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     LICENSE_API_URL: process.env.LICENSE_API_URL,
     LICENSE_API_AUTH_TOKEN: process.env.LICENSE_API_AUTH_TOKEN,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
