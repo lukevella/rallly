@@ -9,6 +9,10 @@
     {
       "path": "/api/house-keeping/remove-deleted-polls",
       "schedule": "30 6 * * *"
+    },
+    {
+      "path": "/api/house-keeping/delete-expired-verifications",
+      "schedule": "0 7 * * *"
     }
   ]
 }

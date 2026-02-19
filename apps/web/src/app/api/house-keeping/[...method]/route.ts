@@ -119,4 +119,30 @@ app.get("/remove-deleted-polls", async (c) => {
   });
 });
 
+/**
+ * Deletes expired verification tokens and verifications.
+ * These are single-use records that are normally deleted on consumption.
+ * Any remaining expired records are abandoned and safe to remove.
+ */
+app.get("/delete-expired-verifications", async (c) => {
+  const now = new Date();
+
+  const [tokens, verifications] = await Promise.all([
+    prisma.verificationToken.deleteMany({
+      where: { expires: { lt: now } },
+    }),
+    prisma.verification.deleteMany({
+      where: { expiresAt: { lt: now } },
+    }),
+  ]);
+
+  return c.json({
+    success: true,
+    summary: {
+      deletedTokens: tokens.count,
+      deletedVerifications: verifications.count,
+    },
+  });
+});
+
 export const GET = handle(app);
