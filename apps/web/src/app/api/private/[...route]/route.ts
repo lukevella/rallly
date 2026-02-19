@@ -13,7 +13,7 @@ import {
 import { rateLimiter } from "hono-rate-limiter";
 import { getPollParticipants, getPollResults } from "@/features/poll/data";
 import { createPoll, deletePoll } from "@/features/poll/mutations";
-import { isKvEnabled, kv } from "@/lib/kv";
+import { redis } from "@/lib/kv";
 import { isSupportedTimeZone } from "@/utils/supported-time-zones";
 import {
   createPollInputSchema,
@@ -86,7 +86,7 @@ app.post(
       const { apiKeyId } = c.get("apiAuth");
       return `private-api:polls-create:${apiKeyId}`;
     },
-    store: isKvEnabled() ? new RedisStore({ client: kv }) : undefined,
+    store: redis ? new RedisStore({ client: redis }) : undefined,
   }),
   describeRoute({
     tags: ["Polls"],
@@ -329,7 +329,7 @@ app.get(
       const { apiKeyId } = c.get("apiAuth");
       return `private-api:polls-get:${apiKeyId}`;
     },
-    store: isKvEnabled() ? new RedisStore({ client: kv }) : undefined,
+    store: redis ? new RedisStore({ client: redis }) : undefined,
   }),
   describeRoute({
     tags: ["Polls"],
@@ -440,7 +440,7 @@ app.get(
       const { apiKeyId } = c.get("apiAuth");
       return `private-api:polls-results:${apiKeyId}`;
     },
-    store: isKvEnabled() ? new RedisStore({ client: kv }) : undefined,
+    store: redis ? new RedisStore({ client: redis }) : undefined,
   }),
   describeRoute({
     tags: ["Polls"],
@@ -499,7 +499,7 @@ app.get(
       const { apiKeyId } = c.get("apiAuth");
       return `private-api:polls-participants:${apiKeyId}`;
     },
-    store: isKvEnabled() ? new RedisStore({ client: kv }) : undefined,
+    store: redis ? new RedisStore({ client: redis }) : undefined,
   }),
   describeRoute({
     tags: ["Polls"],
@@ -558,7 +558,7 @@ app.delete(
       const { apiKeyId } = c.get("apiAuth");
       return `private-api:polls-delete:${apiKeyId}`;
     },
-    store: isKvEnabled() ? new RedisStore({ client: kv }) : undefined,
+    store: redis ? new RedisStore({ client: redis }) : undefined,
   }),
   describeRoute({
     tags: ["Polls"],

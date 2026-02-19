@@ -160,7 +160,7 @@ Key variables for development:
 - `SECRET_PASSWORD` - NextAuth secret
 - `GOOGLE_CLIENT_ID/SECRET` - OAuth provider
 - `NEXT_PUBLIC_SELF_HOSTED` - Deployment mode toggle
-- `KV_REST_API_URL` - Redis for rate limiting (optional)
+- `KV_REST_API_URL` / `KV_REST_API_TOKEN` - Redis for rate limiting and auth session storage (optional)
 
 See `.env.development` for complete development defaults.
 

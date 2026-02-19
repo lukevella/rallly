@@ -130,11 +130,18 @@ export const env = createEnv({
      */
     HIDE_ATTRIBUTION: z.enum(["true", "false"]).default("false"),
     /**
-     *
+     * Enable or disable rate limiting globally.
+     * @default "true"
+     */
+    RATE_LIMIT_ENABLED: z.enum(["true", "false"]).default("true"),
+
+    /**
+     * Upstash Redis URL and token for rate limiting and auth session storage.
+     * If not set, in-memory rate limiting and db session storage is used.
      */
     KV_REST_API_URL: z.url().optional(),
     KV_REST_API_TOKEN: z.string().optional(),
-    KV_URL: z.url().optional(),
+
     /**
      * Cloudflare Turnstile secret key for bot protection on registration.
      * If not set, Turnstile verification is disabled.
@@ -206,6 +213,8 @@ export const env = createEnv({
     NOREPLY_EMAIL_NAME: process.env.NOREPLY_EMAIL_NAME,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     MODERATION_ENABLED: process.env.MODERATION_ENABLED,
+    KV_REST_API_URL: process.env.KV_REST_API_URL,
+    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     LICENSE_API_URL: process.env.LICENSE_API_URL,
     LICENSE_API_AUTH_TOKEN: process.env.LICENSE_API_AUTH_TOKEN,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
@@ -220,9 +229,7 @@ export const env = createEnv({
     LOGO_ICON_URL: process.env.LOGO_ICON_URL,
     APP_NAME: process.env.APP_NAME,
     HIDE_ATTRIBUTION: process.env.HIDE_ATTRIBUTION,
-    KV_REST_API_URL: process.env.KV_REST_API_URL,
-    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
-    KV_URL: process.env.KV_URL,
+    RATE_LIMIT_ENABLED: process.env.RATE_LIMIT_ENABLED,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   },

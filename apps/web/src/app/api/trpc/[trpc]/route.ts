@@ -61,6 +61,7 @@ const handler = async (req: NextRequest) => {
           user,
           locale,
           identifier,
+          event,
         } satisfies TRPCContext;
       },
       onError: ({ error }) => {

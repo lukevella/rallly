@@ -87,6 +87,11 @@ export interface WideEvent {
   dbQueryCount?: number;
   dbQueryDurationMs?: number;
 
+  // Rate limiting
+  rateLimiter?: string;
+  rateLimiterRemainingPoints?: number;
+  rateLimiterConsumedPoints?: number;
+
   // Allow additional fields
   [key: string]: unknown;
 }

@@ -11,7 +11,7 @@ import { defineAbilityForMember } from "@/features/space/member/ability";
 import { defineAbilityFor } from "@/features/user/ability";
 import { AppError } from "@/lib/errors";
 import type { Duration } from "@/lib/rate-limit";
-import { rateLimit } from "@/lib/rate-limit";
+import { createRatelimit } from "@/lib/rate-limit";
 
 export const posthogMiddleware = createMiddleware().define(async ({ next }) => {
   const posthog = PostHogClient();
@@ -37,12 +37,19 @@ export const createRateLimitMiddleware = (
     metadata: {
       actionName: string;
     };
-  }>().define<{
     ctx: { user: { id: string } };
-  }>(async ({ next, metadata }) => {
-    const res = await rateLimit(metadata.actionName, requests, duration);
+  }>().define(async ({ next, metadata, ctx }) => {
+    const ratelimit = createRatelimit(requests, duration);
 
-    if (!res.success) {
+    if (!ratelimit) {
+      return next();
+    }
+
+    const { success } = await ratelimit.limit(
+      `${metadata.actionName}:${ctx.user.id}`,
+    );
+
+    if (!success) {
       throw new AppError({
         code: "TOO_MANY_REQUESTS",
         message: "You are making too many requests.",

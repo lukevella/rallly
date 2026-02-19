@@ -2,12 +2,12 @@ import { zValidator } from "@hono/zod-validator";
 import { RedisStore } from "@hono-rate-limiter/redis";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
-import { kv } from "@vercel/kv";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
 import { rateLimiter } from "hono-rate-limiter";
 import { env } from "@/env";
+import { redis } from "@/lib/kv";
 
 const logger = createLogger("api/licensing");
 
@@ -21,9 +21,6 @@ import {
   validateLicenseKeyInputSchema,
 } from "@/features/licensing/schema";
 import { isSelfHosted } from "@/utils/constants";
-
-const isKvAvailable =
-  process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN;
 
 const app = new Hono().basePath("/api/licensing/v1");
 
@@ -40,9 +37,9 @@ if (env.LICENSE_API_AUTH_TOKEN) {
     rateLimiter({
       windowMs: 60 * 60 * 1000,
       limit: 10,
-      store: isKvAvailable
+      store: redis
         ? new RedisStore({
-            client: kv,
+            client: redis,
           })
         : undefined,
     }),
@@ -85,9 +82,9 @@ app.post(
     },
     windowMs: 60 * 1000,
     limit: 100,
-    store: isKvAvailable
+    store: redis
       ? new RedisStore({
-          client: kv,
+          client: redis,
         })
       : undefined,
   }),

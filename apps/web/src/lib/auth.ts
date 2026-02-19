@@ -27,11 +27,12 @@ import { PostHogClient } from "@/features/analytics/posthog";
 import { createSpace } from "@/features/space/mutations";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
-import { isKvEnabled, kv } from "@/lib/kv";
-import { isRateLimitEnabled } from "@/lib/rate-limit/constants";
+import { redis } from "@/lib/kv";
 import { auth as legacyAuth, signOut as legacySignOut } from "@/next-auth";
 import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
+
+const kv = redis;
 
 const baseURL = absoluteUrl("/api/better-auth");
 
@@ -202,36 +203,32 @@ export const authLib = betterAuth({
       },
     },
   },
-  secondaryStorage: isKvEnabled()
+  secondaryStorage: kv
     ? {
         set: async (key: string, value: string, ttl?: number) => {
           if (ttl) {
-            await kv.set(key, value, {
-              ex: ttl,
-            });
+            await kv.set(key, value, { ex: ttl });
           } else {
             await kv.set(key, value);
           }
         },
-        get: async (key: string) => {
-          return await kv.get(key);
-        },
+        get: async (key: string) => kv.get(key),
         delete: async (key: string) => {
           await kv.del(key);
         },
       }
     : undefined,
   rateLimit: {
-    enabled: isRateLimitEnabled,
-    storage: isKvEnabled() ? "secondary-storage" : "memory",
+    enabled: env.RATE_LIMIT_ENABLED !== "false",
+    storage: redis ? "secondary-storage" : "memory",
     customRules: {
       "/sign-up/email": {
         window: 60 * 60, // 1 hour
-        max: 5,
+        max: 50,
       },
       "/email-otp/send-verification-otp": {
         window: 60 * 60, // 1 hour
-        max: 10,
+        max: 100,
       },
     },
   },
