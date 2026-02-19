@@ -8,7 +8,7 @@ export function containsSuspiciousPatterns(text: string) {
 
   // Define all patterns
   const repetitiveCharsPattern = /(.)\1{4,}/;
-  const allCapsPattern = /[A-Z]{5,}/;
+  const allCapsPattern = /[A-Z]{10,}/;
   const excessiveSpecialCharsPattern =
     /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]{4,}/;
   const suspiciousUrlPattern =
@@ -35,7 +35,7 @@ export function containsSuspiciousPatterns(text: string) {
   // Raw HTTP(S) URLs — but exclude common meeting/location domains
   const rawUrlPattern = /https?:\/\/[^\s]+/i;
   const safeUrlPattern =
-    /https?:\/\/([\w-]+\.)?(zoom\.us|meet\.google\.com|teams\.microsoft\.com|maps\.(google|apple)\.com|calendar\.google\.com|docs\.google\.com|whereby\.com|cal\.com|calendly\.com)[^\s]*/i;
+    /https?:\/\/([\w-]+\.)?(zoom\.us|meet\.google\.com|teams\.microsoft\.com|maps\.(google|apple)\.com|chat\.whatsapp\.com|wa\.me|t\.me|discord\.(gg|com))[^\s]*/i;
 
   const hasUnsafeUrl = rawUrlPattern.test(text) && !safeUrlPattern.test(text);
 
