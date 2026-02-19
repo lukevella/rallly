@@ -57,7 +57,7 @@ export async function moderateContent({
     try {
       const result = await moderateContentWithAI(textToModerate);
 
-      if (result.verdict === "flagged" || result.verdict === "suspicious") {
+      if (result.verdict === "flagged") {
         logger.warn(
           { userId, verdict: result.verdict, reason: result.reason },
           `Content ${result.verdict} by AI moderation`,
@@ -71,7 +71,7 @@ export async function moderateContent({
               `User ID: ${userId}`,
               `Verdict: ${result.verdict}`,
               `Reason: ${result.reason}`,
-              "Content:",
+              "--------------------------------",
               textToModerate,
             ].join("\n\n"),
           }),
