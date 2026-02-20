@@ -5,6 +5,7 @@ export type User = {
   isGuest: boolean;
   locale?: string;
   image?: string;
+  timeZone?: string;
   isLegacyGuest: boolean;
 };
 

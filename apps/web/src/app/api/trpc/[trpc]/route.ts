@@ -51,6 +51,7 @@ const handler = async (req: NextRequest) => {
               isGuest: session.user.isGuest,
               locale,
               image: session.user.image ?? undefined,
+              timeZone: session.user.timeZone ?? undefined,
               isLegacyGuest: isLegacyGuest ?? false,
             }
           : undefined;

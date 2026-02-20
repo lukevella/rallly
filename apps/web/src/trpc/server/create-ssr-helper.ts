@@ -41,6 +41,7 @@ export const createAuthenticatedSSRHelper = async () => {
             isGuest: session.user.isGuest,
             locale: session.user.locale ?? undefined,
             image: session.user.image ?? undefined,
+            timeZone: session.user.timeZone ?? undefined,
             isLegacyGuest: session.legacy && session.user.isGuest,
           }
         : undefined,
