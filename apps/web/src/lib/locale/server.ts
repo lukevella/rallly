@@ -5,21 +5,19 @@ import { LOCALE_COOKIE_NAME } from "@/lib/locale/constants";
 
 export function getLocaleFromRequest(req: NextRequest) {
   const localeCookie = req.cookies.get(LOCALE_COOKIE_NAME);
-  if (localeCookie) {
-    if (supportedLngs.includes(localeCookie.value)) {
-      return localeCookie.value;
-    }
+  if (localeCookie && supportedLngs.includes(localeCookie.value)) {
+    return localeCookie.value;
   }
 
   const acceptLanguageHeader = req.headers.get("accept-language");
 
-  if (!acceptLanguageHeader) {
-    return defaultLocale;
+  if (acceptLanguageHeader) {
+    return getPreferredLocaleFromHeaders({
+      acceptLanguageHeader,
+    });
   }
 
-  return getPreferredLocaleFromHeaders({
-    acceptLanguageHeader,
-  });
+  return defaultLocale;
 }
 
 export function setLocaleCookie(
