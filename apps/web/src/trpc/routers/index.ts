@@ -7,6 +7,7 @@ import { calendars } from "./calendars";
 import { dashboard } from "./dashboard";
 import { events } from "./events";
 import { polls } from "./polls";
+import { space } from "./space";
 import { user } from "./user";
 
 export const appRouter = mergeRouters(
@@ -16,6 +17,7 @@ export const appRouter = mergeRouters(
     dashboard,
     events,
     polls,
+    space,
     user,
     calendars,
   }),
