@@ -1,5 +1,5 @@
-import { AdminPage } from "./admin-page";
+import { AdminPageLoader } from "./admin-page-loader";
 
 export default function Page() {
-  return <AdminPage />;
+  return <AdminPageLoader />;
 }
