@@ -3,7 +3,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { InvitePage } from "@/app/[locale]/invite/[urlId]/invite-page";
+import { InvitePageLoader } from "@/app/[locale]/invite/[urlId]/invite-page-loader";
 import { PermissionProvider } from "@/contexts/permissions";
 import { createSSRHelper } from "@/trpc/server/create-ssr-helper";
 import Providers from "./providers";
@@ -12,23 +12,29 @@ export default async function Page(props: {
   params: Promise<{ urlId: string }>;
 }) {
   const params = await props.params;
-  const trpc = createSSRHelper();
 
-  const [poll] = await Promise.all([
-    trpc.polls.get.fetch({ urlId: params.urlId }),
-    trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
-    trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
-  ]);
+  const poll = await prisma.poll.findUnique({
+    where: { id: params.urlId },
+    select: { deleted: true, user: { select: { banned: true } } },
+  });
 
   if (!poll || poll.deleted || poll.user?.banned) {
     notFound();
   }
 
+  const trpc = createSSRHelper();
+
+  await Promise.all([
+    trpc.polls.get.prefetch({ urlId: params.urlId }),
+    trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
+    trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
+  ]);
+
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
       <Providers>
         <PermissionProvider>
-          <InvitePage />
+          <InvitePageLoader />
         </PermissionProvider>
       </Providers>
     </HydrationBoundary>
