@@ -20,7 +20,6 @@ import {
   UserIcon,
   UsersIcon,
 } from "lucide-react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
@@ -71,10 +70,13 @@ export function AccountSidebarMenu() {
       {menuItems.map((item) => (
         <SidebarMenuItem key={item.id}>
           <SidebarMenuButton asChild isActive={pathname.startsWith(item.href)}>
-            <Link href={item.href} className="flex items-center gap-x-2">
+            <HoverPrefetchLink
+              href={item.href}
+              className="flex items-center gap-x-2"
+            >
               <Icon>{item.icon}</Icon>
               {item.label}
-            </Link>
+            </HoverPrefetchLink>
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}
@@ -116,10 +118,13 @@ export function SpaceSidebarMenu() {
       {menuItems.map((item) => (
         <SidebarMenuItem key={item.id}>
           <SidebarMenuButton asChild isActive={pathname.startsWith(item.href)}>
-            <Link href={item.href} className="flex items-center gap-x-2">
+            <HoverPrefetchLink
+              href={item.href}
+              className="flex items-center gap-x-2"
+            >
               <Icon>{item.icon}</Icon>
               {item.label}
-            </Link>
+            </HoverPrefetchLink>
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}
@@ -153,10 +158,13 @@ export function DeveloperSidebarMenu() {
                 asChild
                 isActive={pathname.startsWith(item.href)}
               >
-                <Link href={item.href} className="flex items-center gap-x-2">
+                <HoverPrefetchLink
+                  href={item.href}
+                  className="flex items-center gap-x-2"
+                >
                   <Icon>{item.icon}</Icon>
                   {item.label}
-                </Link>
+                </HoverPrefetchLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}

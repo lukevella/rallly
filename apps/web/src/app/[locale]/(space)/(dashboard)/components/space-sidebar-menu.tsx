@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@rallly/ui/sidebar";
-import Link from "next/link";
+import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import { useSpaceMenu } from "@/features/navigation/config";
 
 export function SpaceSidebarMenu() {
@@ -28,12 +28,12 @@ export function SpaceSidebarMenu() {
                   return (
                     <SidebarMenuItem key={item.id}>
                       <SidebarMenuButton asChild isActive={item.isActive}>
-                        <Link href={item.href}>
+                        <HoverPrefetchLink href={item.href}>
                           <Icon>
                             <item.icon />
                           </Icon>
                           {item.label}
-                        </Link>
+                        </HoverPrefetchLink>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );
