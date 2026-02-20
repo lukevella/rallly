@@ -1,3 +1,9 @@
+---
+name: logging
+description: Wide events logging pattern and conventions for this project. Use when writing logging code, adding observability, or implementing request tracing.
+user-invocable: false
+---
+
 # Logging Guidelines
 
 This project follows the **Wide Events** pattern. Logs are optimized for querying, not writing.
@@ -107,13 +113,7 @@ When implementing log sampling, make decisions **after** request completion:
 
 ## High-Cardinality Data
 
-Include high-cardinality fields (userId, pollId, requestId). Modern observability tools handle this efficiently. High-cardinality data enables queries like:
-
-> "Show me all poll creation failures for pro users in the last hour where the quick-create feature flag was enabled, grouped by error code"
-
-## Field Guidelines
-
-Aim for 50+ fields per event. More context means faster debugging. Include:
+Include high-cardinality fields (userId, pollId, requestId). Modern observability tools handle this efficiently. Aim for 50+ fields per event. Include:
 
 - All IDs involved in the request
 - All feature flags evaluated
