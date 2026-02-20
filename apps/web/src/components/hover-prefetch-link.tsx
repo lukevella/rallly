@@ -2,13 +2,13 @@
 
 import type { LinkProps } from "next/link";
 import Link from "next/link";
-import { useState } from "react";
+import React from "react";
 
 export function HoverPrefetchLink({
   children,
   ...props
 }: LinkProps & { children?: React.ReactNode; className?: string }) {
-  const [active, setActive] = useState(false);
+  const [active, setActive] = React.useState(false);
 
   return (
     <Link
