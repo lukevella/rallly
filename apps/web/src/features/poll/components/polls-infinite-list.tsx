@@ -240,25 +240,19 @@ export function PollsInfiniteList({
   member,
   emptyState,
 }: PollsInfiniteListProps) {
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status: queryStatus,
-  } = trpc.polls.infiniteChronological.useInfiniteQuery(
-    {
-      status,
-      search,
-      member,
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    },
-  );
+  const [data, { fetchNextPage, hasNextPage, isFetchingNextPage }] =
+    trpc.polls.infiniteChronological.useSuspenseInfiniteQuery(
+      {
+        status,
+        search,
+        member,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      },
+    );
 
-  const polls = data?.pages?.flatMap((page) => page.polls) ?? [];
+  const polls = data.pages.flatMap((page) => page.polls);
 
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
@@ -290,18 +284,6 @@ export function PollsInfiniteList({
       observer.unobserve(loadMoreElement);
     };
   }, [handleLoadMore]);
-
-  if (queryStatus === "pending") {
-    return <Spinner />;
-  }
-
-  if (queryStatus === "error") {
-    return (
-      <div className="py-8 text-center text-red-600">
-        Error loading polls: {error?.message}
-      </div>
-    );
-  }
 
   if (polls.length === 0) {
     return <>{emptyState}</>;
