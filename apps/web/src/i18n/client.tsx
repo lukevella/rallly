@@ -1,14 +1,17 @@
 "use client";
 
+import type { Resource } from "i18next";
+import { createInstance } from "i18next";
+import ICU from "i18next-icu";
 import type React from "react";
+import { useMemo } from "react";
 import {
   Trans as BaseTrans,
   I18nextProvider,
   useTranslation as useTranslationOrg,
 } from "react-i18next";
-import useAsync from "react-use/lib/useAsync";
-import { initI18next } from "./i18n";
-import { defaultNS } from "./settings";
+import { initReactI18next } from "react-i18next/initReactI18next";
+import { defaultNS, getOptions } from "./settings";
 import type { TxKeyPath } from "./types";
 
 export function useTranslation() {
@@ -18,22 +21,23 @@ export function useTranslation() {
 export function I18nProvider({
   children,
   locale,
+  resources,
 }: {
   children: React.ReactNode;
   locale: string;
+  resources: Resource;
 }) {
-  const res = useAsync(async () => {
-    return await initI18next({
-      lng: locale,
+  const i18n = useMemo(() => {
+    const instance = createInstance().use(initReactI18next).use(ICU);
+    instance.init({
+      ...getOptions(locale),
+      resources,
     });
-  });
-
-  if (!res.value) {
-    return null;
-  }
+    return instance;
+  }, [locale, resources]);
 
   return (
-    <I18nextProvider i18n={res.value.i18n} defaultNS={defaultNS}>
+    <I18nextProvider i18n={i18n} defaultNS={defaultNS}>
       {children}
     </I18nextProvider>
   );

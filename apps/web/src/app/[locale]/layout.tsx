@@ -17,6 +17,7 @@ import { getInstanceBrandingConfig } from "@/features/branding/queries";
 import { ThemeProvider } from "@/features/theme/client";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
+import { initI18next } from "@/i18n/i18n";
 import { getSession } from "@/lib/auth";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
 import { featureFlagConfig } from "@/lib/feature-flags/config";
@@ -37,11 +38,14 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-async function loadData() {
-  const [session, brandingConfig] = await Promise.all([
+async function loadData(locale: string) {
+  const [session, brandingConfig, { i18n }] = await Promise.all([
     getSession(),
     getInstanceBrandingConfig(),
+    initI18next({ lng: locale }),
   ]);
+
+  const resources = i18n.store.data;
 
   const user = session?.user
     ? !session.user.isGuest
@@ -60,6 +64,7 @@ async function loadData() {
     : null;
 
   return {
+    resources,
     session,
     user,
     brandingConfig,
@@ -74,7 +79,7 @@ export default async function Root({
   params: Promise<Params>;
 }) {
   const { locale } = await params;
-  const { user, brandingConfig } = await loadData();
+  const { user, brandingConfig, resources } = await loadData(locale);
 
   const brandingStyles = {
     "--primary-light": brandingConfig.primaryColor.light,
@@ -99,7 +104,7 @@ export default async function Root({
           <FeatureFlagsProvider value={featureFlagConfig}>
             <BrandingProvider value={brandingConfig}>
               <Toaster />
-              <I18nProvider locale={locale}>
+              <I18nProvider locale={locale} resources={resources}>
                 <TRPCProvider>
                   <LazyMotion features={domAnimation}>
                     <PostHogProvider>
