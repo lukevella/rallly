@@ -20,7 +20,7 @@ export default async function Layout({
   const { user, space } = await loadData();
 
   return (
-    <SpaceProvider key={space.id} data={space} userId={user.id}>
+    <SpaceProvider key={space.id} data={space}>
       <BillingProvider>
         <TimezoneProvider initialTimezone={user.timeZone}>
           {children}

@@ -22,7 +22,7 @@ import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { MoreHorizontalIcon, XIcon } from "lucide-react";
 import { cancelInviteAction } from "@/features/space/actions";
-import { useSpace } from "@/features/space/client";
+import { useMemberAbility } from "@/features/space/hooks";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
@@ -33,14 +33,15 @@ type SpaceMemberInvite = {
 };
 
 export function InviteDropdownMenu({ invite }: { invite: SpaceMemberInvite }) {
-  const space = useSpace();
+  const memberAbility = useMemberAbility();
   const cancelInviteDialog = useDialog();
   const cancelInvite = useSafeAction(cancelInviteAction);
   const { t } = useTranslation();
 
-  const canCancelInvite = space
-    .getMemberAbility()
-    .can("delete", subject("SpaceMemberInvite", invite));
+  const canCancelInvite = memberAbility.can(
+    "delete",
+    subject("SpaceMemberInvite", invite),
+  );
 
   return (
     <>

@@ -13,7 +13,7 @@ export default async function Layout({
   if (session?.user && !session.user.isGuest) {
     const space = await requireSpace();
     return (
-      <SpaceProvider data={space} userId={session.user.id}>
+      <SpaceProvider data={space}>
         <BillingProvider>{children}</BillingProvider>
       </SpaceProvider>
     );

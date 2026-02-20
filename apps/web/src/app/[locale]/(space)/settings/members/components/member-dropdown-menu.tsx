@@ -26,26 +26,28 @@ import {
   changeMemberRoleAction,
   removeMemberAction,
 } from "@/features/space/actions";
-import { useSpace } from "@/features/space/client";
+import { useMemberAbility } from "@/features/space/hooks";
 import type { MemberDTO } from "@/features/space/member/types";
 import type { MemberRole } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
-  const space = useSpace();
+  const memberAbility = useMemberAbility();
   const removeMemberDialog = useDialog();
   const removeMember = useSafeAction(removeMemberAction);
   const changeMemberRole = useSafeAction(changeMemberRoleAction);
   const { t } = useTranslation();
 
-  const canUpdateMember = space
-    .getMemberAbility()
-    .can("update", subject("SpaceMember", member));
+  const canUpdateMember = memberAbility.can(
+    "update",
+    subject("SpaceMember", member),
+  );
 
-  const canDeleteMember = space
-    .getMemberAbility()
-    .can("delete", subject("SpaceMember", member));
+  const canDeleteMember = memberAbility.can(
+    "delete",
+    subject("SpaceMember", member),
+  );
 
   const handleRoleChange = (newRole: MemberRole) => {
     toast.promise(
