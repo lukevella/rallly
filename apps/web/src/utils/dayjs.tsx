@@ -2,8 +2,25 @@
 
 import type { TimeFormat } from "@rallly/database";
 import type { SupportedLocale } from "@rallly/languages";
+import dayjsLocaleCs from "dayjs/locale/cs";
+import dayjsLocaleDa from "dayjs/locale/da";
+import dayjsLocaleDe from "dayjs/locale/de";
+import dayjsLocaleEn from "dayjs/locale/en";
+import dayjsLocaleEnGb from "dayjs/locale/en-gb";
+import dayjsLocaleEs from "dayjs/locale/es";
+import dayjsLocaleFi from "dayjs/locale/fi";
+import dayjsLocaleFr from "dayjs/locale/fr";
+import dayjsLocaleHu from "dayjs/locale/hu";
+import dayjsLocaleIt from "dayjs/locale/it";
+import dayjsLocaleNb from "dayjs/locale/nb";
+import dayjsLocaleNl from "dayjs/locale/nl";
+import dayjsLocalePl from "dayjs/locale/pl";
+import dayjsLocalePt from "dayjs/locale/pt";
+import dayjsLocalePtBr from "dayjs/locale/pt-br";
+import dayjsLocaleRu from "dayjs/locale/ru";
+import dayjsLocaleSv from "dayjs/locale/sv";
+import dayjsLocaleZh from "dayjs/locale/zh";
 import * as React from "react";
-import { useAsync } from "react-use";
 import { usePreferences } from "@/contexts/preferences";
 import { useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
@@ -15,98 +32,98 @@ const dayjsLocales: Record<
   {
     weekStart: number;
     timeFormat: TimeFormat;
-    import: () => Promise<ILocale>;
+    locale: ILocale;
   }
 > = {
   en: {
     weekStart: 1,
     timeFormat: "hours12",
-    import: () => import("dayjs/locale/en"),
+    locale: dayjsLocaleEn,
   },
   "en-GB": {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/en-gb"),
+    locale: dayjsLocaleEnGb,
   },
   es: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/es"),
+    locale: dayjsLocaleEs,
   },
   da: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/da"),
+    locale: dayjsLocaleDa,
   },
   de: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/de"),
+    locale: dayjsLocaleDe,
   },
   fi: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/fi"),
+    locale: dayjsLocaleFi,
   },
   fr: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/fr"),
+    locale: dayjsLocaleFr,
   },
   it: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/it"),
+    locale: dayjsLocaleIt,
   },
   sv: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/sv"),
+    locale: dayjsLocaleSv,
   },
   cs: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/cs"),
+    locale: dayjsLocaleCs,
   },
   pl: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/pl"),
+    locale: dayjsLocalePl,
   },
   pt: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/pt"),
+    locale: dayjsLocalePt,
   },
   "pt-BR": {
     weekStart: 0,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/pt-br"),
+    locale: dayjsLocalePtBr,
   },
   ru: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/ru"),
+    locale: dayjsLocaleRu,
   },
   nl: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/nl"),
+    locale: dayjsLocaleNl,
   },
   no: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/nb"), // Bokmål
+    locale: dayjsLocaleNb, // Bokmål
   },
   hu: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/hu"),
+    locale: dayjsLocaleHu,
   },
   zh: {
     weekStart: 1,
     timeFormat: "hours24",
-    import: () => import("dayjs/locale/zh"),
+    locale: dayjsLocaleZh,
   },
 };
 
@@ -142,9 +159,8 @@ export const DayjsProvider: React.FunctionComponent<{
   };
 }> = ({ config, children }) => {
   const locale = config?.locale ?? "en";
-  const state = useAsync(async () => {
-    return await dayjsLocales[locale].import();
-  }, [locale]);
+  const localeConfig = dayjsLocales[locale];
+  const dayjsLocale = localeConfig.locale;
 
   const preferredTimeZone = React.useMemo(
     () =>
@@ -165,13 +181,6 @@ export const DayjsProvider: React.FunctionComponent<{
     [preferredTimeZone],
   );
 
-  if (!state.value) {
-    // wait for locale to load before rendering
-    return null;
-  }
-
-  const dayjsLocale = state.value;
-  const localeConfig = dayjsLocales[locale];
   const localeTimeFormat = localeConfig.timeFormat;
 
   if (config?.localeOverrides) {
