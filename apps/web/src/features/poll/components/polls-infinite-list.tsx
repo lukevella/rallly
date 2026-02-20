@@ -28,9 +28,9 @@ import {
   StickerIcon,
   TrashIcon,
 } from "lucide-react";
-import Link from "next/link";
 import React from "react";
 import { CopyLinkButton } from "@/components/copy-link-button";
+import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Spinner } from "@/components/spinner";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
@@ -68,13 +68,13 @@ function PollListItem({
       <div className="grid w-full grid-cols-[1fr_auto] gap-2">
         <div className="relative -m-4 flex min-w-0 flex-1 items-center gap-2 p-4">
           <PollStatusIcon status={status} showTooltip={false} />
-          <Link
+          <HoverPrefetchLink
             className="min-w-0 text-sm hover:underline focus:ring-ring focus-visible:ring-2"
             href={absoluteUrl(`/poll/${id}`)}
           >
             <span className="absolute inset-0" />
             <span className="block truncate">{title}</span>
-          </Link>
+          </HoverPrefetchLink>
         </div>
         <div className="hidden items-center justify-end gap-4 sm:flex">
           {participants.length > 0 ? (

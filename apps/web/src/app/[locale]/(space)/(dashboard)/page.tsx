@@ -1,7 +1,6 @@
 import { prisma } from "@rallly/database";
 import { Tile, TileDescription, TileGrid, TileTitle } from "@rallly/ui/tile";
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   BillingPageIcon,
   CreatePageIcon,
@@ -17,6 +16,7 @@ import {
   PageTitle,
 } from "@/app/components/page-layout";
 import { requireSpace, requireUser } from "@/auth/data";
+import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import { getUpcomingEventsCount } from "@/features/scheduled-event/data";
 import { loadMembers } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
@@ -93,12 +93,12 @@ export default async function Page() {
           </h2>
           <TileGrid>
             <Tile asChild>
-              <Link href="/new">
+              <HoverPrefetchLink href="/new">
                 <CreatePageIcon />
                 <TileTitle>
                   <Trans i18nKey="create" defaults="Create" />
                 </TileTitle>
-              </Link>
+              </HoverPrefetchLink>
             </Tile>
           </TileGrid>
         </div>
@@ -108,7 +108,7 @@ export default async function Page() {
           </h2>
           <TileGrid>
             <Tile asChild>
-              <Link href="/polls">
+              <HoverPrefetchLink href="/polls">
                 <PollPageIcon />
                 <TileTitle>
                   <Trans i18nKey="polls" defaults="Polls" />
@@ -120,11 +120,11 @@ export default async function Page() {
                     values={{ count: openPollCount }}
                   />
                 </TileDescription>
-              </Link>
+              </HoverPrefetchLink>
             </Tile>
 
             <Tile asChild>
-              <Link href="/events">
+              <HoverPrefetchLink href="/events">
                 <EventPageIcon />
                 <TileTitle>
                   <Trans i18nKey="events" defaults="Events" />
@@ -136,7 +136,7 @@ export default async function Page() {
                     values={{ count: upcomingEventCount }}
                   />
                 </TileDescription>
-              </Link>
+              </HoverPrefetchLink>
             </Tile>
           </TileGrid>
         </div>
@@ -146,16 +146,16 @@ export default async function Page() {
           </h2>
           <TileGrid>
             <Tile asChild>
-              <Link href="/settings/general">
+              <HoverPrefetchLink href="/settings/general">
                 <SettingsPageIcon />
                 <TileTitle>
                   <Trans i18nKey="settings" defaults="Settings" />
                 </TileTitle>
-              </Link>
+              </HoverPrefetchLink>
             </Tile>
 
             <Tile asChild>
-              <Link href="/settings/members">
+              <HoverPrefetchLink href="/settings/members">
                 <MembersPageIcon />
                 <TileTitle>
                   <Trans i18nKey="members" defaults="Members" />
@@ -167,13 +167,13 @@ export default async function Page() {
                     values={{ count: memberCount }}
                   />
                 </TileDescription>
-              </Link>
+              </HoverPrefetchLink>
             </Tile>
 
             <IfFeatureEnabled feature="billing">
               {canManageBilling && (
                 <Tile asChild>
-                  <Link href="/settings/billing">
+                  <HoverPrefetchLink href="/settings/billing">
                     <BillingPageIcon />
                     <TileTitle>
                       <Trans i18nKey="billing" defaults="Billing" />
@@ -185,7 +185,7 @@ export default async function Page() {
                         values={{ count: seatCount }}
                       />
                     </TileDescription>
-                  </Link>
+                  </HoverPrefetchLink>
                 </Tile>
               )}
             </IfFeatureEnabled>

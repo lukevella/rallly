@@ -19,6 +19,7 @@ export function PollFooter() {
         components={{
           a: (
             <Link
+              prefetch={false}
               className="rounded-none border-b border-b-gray-500 font-semibold hover:text-primary"
               href="https://rallly.co"
             />
