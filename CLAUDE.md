@@ -10,9 +10,10 @@ Rallly is a meeting scheduling application built with Next.js that allows users 
 - Next.js 16 with React 19
 - tRPC for API layer
 - Prisma with PostgreSQL
-- NextAuth.js for authentication  
+- Better-Auth for authentication (legacy NextAuth.js is still supported)
 - TailwindCSS for styling
 - TypeScript throughout
+- dayjs for date handling
 
 ## Development Commands
 
@@ -121,8 +122,10 @@ pnpm sherif               # Check package dependencies
 
 ### Styling
 - TailwindCSS with custom design system
+- Use `cn()` from `@rallly/ui` to compose classes
 - Biome for code formatting (indent: 2 spaces, double quotes)
-- Custom UI components in `packages/ui/src/`
+- Custom UI components in `packages/ui/src/` (shadcn-ui components go here)
+- Icon size and colour should be set by wrapping with the `<Icon>` component from `@rallly/ui/icon`
 
 ### State Management
 - tRPC with TanStack Query for server state
@@ -133,6 +136,9 @@ pnpm sherif               # Check package dependencies
 - Prefer inline prop types over named interfaces for simple component props
 - Example: `function Component({ prop }: { prop: string })` instead of defining a separate interface
 - Only create named interfaces when they're reused or complex
+- Create separate import statements for types (use `import type`)
+- Prefer `React.useState`, `React.useEffect`, etc. over standalone imports (`useState`, `useEffect`)
+- Prefer implicit over explicit return types
 
 ### Dialog Management
 - **IMPORTANT**: Always use the `useDialog` hook from `@rallly/ui/dialog` for managing dialog state instead of manual `useState` for open/close state
@@ -148,21 +154,16 @@ pnpm sherif               # Check package dependencies
   <MyDialog {...dialog.dialogProps} />
   ```
 
+### Component Conventions
+- Prefer composable components in the style of shadcn UI over large monolithic components
+- Keep component props minimal — pass only the bare minimum information needed
+- Add `"use client"` directive to the top of any `.tsx` file that requires client-side JavaScript
+
 ### File Organization
 - Features organized in `apps/web/src/features/[feature]/`
 - Shared components in `apps/web/src/components/`
 - Route handlers follow Next.js App Router conventions
-
-## Environment Variables
-
-Key variables for development:
-- `DATABASE_URL` - PostgreSQL connection string
-- `SECRET_PASSWORD` - NextAuth secret
-- `GOOGLE_CLIENT_ID/SECRET` - OAuth provider
-- `NEXT_PUBLIC_SELF_HOSTED` - Deployment mode toggle
-- `KV_REST_API_URL` / `KV_REST_API_TOKEN` - Redis for rate limiting and auth session storage (optional)
-
-See `.env.development` for complete development defaults.
+- Always use kebab-case for file names
 
 ## i18n & Localization
 
@@ -171,4 +172,17 @@ See `.env.development` for complete development defaults.
 - Crowdin integration for translation management
 - Use `pnpm i18n:scan` to extract new translation keys
 - **IMPORTANT**: When TypeScript errors occur for missing i18n keys, run `pnpm i18n:scan` instead of manually adding keys. This command automatically scans the codebase for `Trans` components and generates the necessary translation entries.
+- **IMPORTANT**: Never manually add translations to `.json` files. This is handled by tooling.
 - **Pluralization**: Always use ICU message format for plurals. Example: `{count, plural, =0 {No items} one {1 item} other {# items}}` instead of separate singular/plural translation keys.
+- i18n keys are in camelCase and should describe the message (e.g. `"lastUpdated": "Last Updated"`)
+- If an i18n key is not intended to be reused, prefix it with the component name in camelCase
+- In client components, use the `<Trans>` component from `@/i18n/client` with the `defaults` prop:
+  ```tsx
+  import { Trans } from "@/i18n/client";
+  <Trans i18nKey="menu" defaults="Menu" />
+  ```
+- On the server, use `getTranslations` from `@/i18n/server`:
+  ```ts
+  const { t } = await getTranslations();
+  t("menu", { defaultValue: "Menu" });
+  ```
