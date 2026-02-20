@@ -16,7 +16,10 @@ export const dashboard = router({
     }
 
     const now = new Date();
-    const todayStart = dayjs().startOf("day").utc().toDate();
+    const todayStart = dayjs()
+      .tz(ctx.user.timeZone ?? "UTC")
+      .startOf("day")
+      .toDate();
 
     const upcomingEventsWhere: Prisma.ScheduledEventWhereInput = {
       spaceId: space.id,

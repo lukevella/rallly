@@ -389,6 +389,7 @@ export const getSession = cache(async () => {
           name: session.user.name,
           isGuest: !!session.user.isAnonymous,
           image: session.user.image,
+          timeZone: session.user.timeZone ?? undefined,
         },
         expires: session.session.expiresAt.toISOString(),
         legacy: false,
