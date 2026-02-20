@@ -1,4 +1,5 @@
 "use client";
+import { usePostHog } from "@rallly/posthog/client";
 import { useRouter } from "next/navigation";
 import React from "react";
 import type { UserAbility } from "@/features/user/ability";
@@ -36,6 +37,17 @@ export const UserProvider = ({
   children?: React.ReactNode;
   user?: UserDTO;
 }) => {
+  const posthog = usePostHog();
+
+  const userId = user?.id;
+  const isGuest = user?.isGuest;
+
+  React.useEffect(() => {
+    if (userId && !isGuest) {
+      posthog.identify(userId);
+    }
+  }, [userId, isGuest, posthog]);
+
   const router = useRouter();
   const value = React.useMemo<UserContextValue>(() => {
     return {

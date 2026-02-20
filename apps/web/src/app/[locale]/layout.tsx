@@ -26,7 +26,6 @@ import { TRPCProvider } from "@/trpc/client/provider";
 import { getForegroundColor } from "@/utils/color";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 import { PostHogPageView } from "../posthog-page-view";
-import { PostHogIdentify } from "./posthog-identify";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -105,9 +104,6 @@ export default async function Root({
                 <TRPCProvider>
                   <LazyMotion features={domAnimation}>
                     <PostHogProvider>
-                      <PostHogIdentify
-                        distinctId={user && !user.isGuest ? user.id : undefined}
-                      />
                       <PostHogPageView />
                       <TooltipProvider>
                         <UserProvider user={user ?? undefined}>
