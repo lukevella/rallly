@@ -17,7 +17,7 @@ import { getInstanceBrandingConfig } from "@/features/branding/queries";
 import { ThemeProvider } from "@/features/theme/client";
 import type { UserDTO } from "@/features/user/schema";
 import { I18nProvider } from "@/i18n/client";
-import { getResources } from "@/i18n/server/get-resources";
+import { initI18next } from "@/i18n/i18n";
 import { getSession } from "@/lib/auth";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
 import { featureFlagConfig } from "@/lib/feature-flags/config";
@@ -41,11 +41,13 @@ export const viewport: Viewport = {
 };
 
 async function loadData(locale: string) {
-  const [session, brandingConfig, resources] = await Promise.all([
+  const [session, brandingConfig, { i18n }] = await Promise.all([
     getSession(),
     getInstanceBrandingConfig(),
-    getResources(locale),
+    initI18next({ lng: locale }),
   ]);
+
+  const resources = i18n.store.data;
 
   const user = session?.user
     ? !session.user.isGuest
