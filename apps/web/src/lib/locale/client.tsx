@@ -6,14 +6,14 @@ import React from "react";
 import { useTranslation } from "@/i18n/client";
 import { LOCALE_COOKIE_NAME } from "@/lib/locale/constants";
 
-export function LocaleSync({ userLocale }: { userLocale: string }) {
-  const { locale } = useParams();
+export function LocaleSync({ userLocale }: { userLocale?: string }) {
+  const { locale } = useLocale();
   const router = useRouter();
   const { t } = useTranslation();
 
   React.useEffect(() => {
     // update the cookie with the user locale if it's different from the current locale
-    if (locale !== userLocale) {
+    if (userLocale && locale !== userLocale) {
       setLocaleCookie(userLocale);
       toast.info(
         t("localeSyncToast", {
@@ -36,4 +36,17 @@ export function LocaleSync({ userLocale }: { userLocale: string }) {
 
 export function setLocaleCookie(locale: string) {
   Cookies.set(LOCALE_COOKIE_NAME, locale, { path: "/" });
+}
+
+export function useLocale() {
+  const { locale } = useParams();
+  const router = useRouter();
+
+  return {
+    locale: locale as string,
+    changeLocale: (locale: string) => {
+      setLocaleCookie(locale);
+      router.refresh();
+    },
+  };
 }
