@@ -22,8 +22,8 @@ import dayjsLocaleSv from "dayjs/locale/sv";
 import dayjsLocaleZh from "dayjs/locale/zh";
 import * as React from "react";
 import { usePreferences } from "@/contexts/preferences";
-import { useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
+import { useLocale } from "@/lib/locale/client";
 import { getBrowserTimeZone, normalizeTimeZone } from "@/utils/date-time-utils";
 import { useRequiredContext } from "../components/use-required-context";
 
@@ -223,11 +223,11 @@ export const ConnectedDayjsProvider = ({
   children,
 }: React.PropsWithChildren) => {
   const { preferences } = usePreferences();
-  const { i18n } = useTranslation();
+  const { locale } = useLocale();
   return (
     <DayjsProvider
       config={{
-        locale: i18n.language as SupportedLocale,
+        locale: locale as SupportedLocale,
         timeZone: preferences.timeZone ?? undefined,
         localeOverrides: {
           weekStart: preferences.weekStart ?? undefined,
