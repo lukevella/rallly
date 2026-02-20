@@ -4,7 +4,10 @@ import type { LinkProps } from "next/link";
 import Link from "next/link";
 import { useState } from "react";
 
-export function HoverPrefetchLink(props: LinkProps) {
+export function HoverPrefetchLink({
+  children,
+  ...props
+}: LinkProps & { children?: React.ReactNode; className?: string }) {
   const [active, setActive] = useState(false);
 
   return (
@@ -15,6 +18,8 @@ export function HoverPrefetchLink(props: LinkProps) {
         setActive(true);
         props.onMouseEnter?.(e);
       }}
-    />
+    >
+      {children}
+    </Link>
   );
 }
