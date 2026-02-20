@@ -5,14 +5,12 @@ import { Icon } from "@rallly/ui/icon";
 import { InboxIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import React from "react";
 import {
   PageContainer,
   PageContent,
   PageHeader,
   PageHeaderActions,
   PageHeaderContent,
-  PageSkeleton,
   PageTitle,
 } from "@/app/components/page-layout";
 import { SearchInput } from "@/app/components/search-input";
@@ -56,7 +54,7 @@ function PollsEmptyState() {
   );
 }
 
-function PollsPageContent() {
+export function PollsPage() {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
   const [members] = trpc.space.members.useSuspenseQuery();
@@ -103,13 +101,5 @@ function PollsPageContent() {
         </PollsTabbedView>
       </PageContent>
     </PageContainer>
-  );
-}
-
-export function PollsPage() {
-  return (
-    <React.Suspense fallback={<PageSkeleton />}>
-      <PollsPageContent />
-    </React.Suspense>
   );
 }

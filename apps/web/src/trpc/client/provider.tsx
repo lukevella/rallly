@@ -1,6 +1,7 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
 import { toast } from "@rallly/ui/sonner";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import {
   MutationCache,
   QueryClient,
@@ -67,7 +68,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: "/api/trpc",
+          url: absoluteUrl("/api/trpc"),
           transformer: superjson,
         }),
       ],
