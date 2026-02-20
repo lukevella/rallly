@@ -20,7 +20,6 @@ import { I18nProvider } from "@/i18n/client";
 import { getSession } from "@/lib/auth";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
 import { featureFlagConfig } from "@/lib/feature-flags/config";
-import { LocaleSync } from "@/lib/locale/client";
 import { TimezoneProvider } from "@/lib/timezone/client/context";
 import { TRPCProvider } from "@/trpc/client/provider";
 import { getForegroundColor } from "@/utils/color";
@@ -107,7 +106,6 @@ export default async function Root({
                       <PostHogPageView />
                       <TooltipProvider>
                         <UserProvider user={user ?? undefined}>
-                          <LocaleSync userLocale={user?.locale ?? locale} />
                           <PreferencesProvider
                             initialValue={{
                               timeFormat: user?.timeFormat,
