@@ -87,7 +87,7 @@ export function LoginWithEmailForm() {
               return;
             }
 
-            router.push(validatedRedirectTo ?? "/");
+            window.location.href = validatedRedirectTo ?? "/";
 
             return;
           } else {
