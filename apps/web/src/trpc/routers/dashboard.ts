@@ -1,5 +1,6 @@
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { TRPCError } from "@trpc/server";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import type { MemberAbilityContext } from "@/features/space/member/ability";
 import { defineAbilityForMember } from "@/features/space/member/ability";
@@ -12,7 +13,7 @@ export const dashboard = router({
     const space = await getActiveSpaceForUser(ctx.user.id);
 
     if (!space) {
-      return null;
+      throw new TRPCError({ code: "NOT_FOUND", message: "Space not found" });
     }
 
     const now = new Date();

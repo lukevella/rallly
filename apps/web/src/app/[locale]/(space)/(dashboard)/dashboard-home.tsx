@@ -13,7 +13,6 @@ import {
   PageContainer,
   PageContent,
   PageHeader,
-  PageSkeleton,
   PageTitle,
 } from "@/app/components/page-layout";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
@@ -23,12 +22,8 @@ import { trpc } from "@/trpc/client";
 import { PasswordSetupAlert } from "./password-setup-alert";
 
 export function DashboardHome() {
-  const { data: stats } = trpc.dashboard.stats.useQuery();
+  const [stats] = trpc.dashboard.stats.useSuspenseQuery();
   const isEmailLoginEnabled = useFeatureFlag("emailLogin");
-
-  if (!stats) {
-    return <PageSkeleton />;
-  }
 
   return (
     <PageContainer>
