@@ -12,7 +12,10 @@ export default async function AppLayout({
 }) {
   const helpers = await createAuthenticatedSSRHelper();
 
-  await helpers.user.getMe.prefetch();
+  await Promise.all([
+    helpers.user.getMe.prefetch(),
+    helpers.space.getCurrent.prefetch(),
+  ]);
 
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>

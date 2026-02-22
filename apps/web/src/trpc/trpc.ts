@@ -8,14 +8,22 @@ import { isApiAccessEnabled } from "@/features/developer/data";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { getUser } from "@/features/user/data";
+import { AppError } from "@/lib/errors";
 import { createRatelimit } from "@/lib/rate-limit";
 import { isSelfHosted } from "@/utils/constants";
 import type { TRPCContext } from "./context";
 
 const t = initTRPC.context<TRPCContext>().create({
   transformer: superjson,
-  errorFormatter({ shape }) {
-    return shape;
+  errorFormatter({ shape, error }) {
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        appError:
+          error.cause instanceof AppError ? error.cause.code : undefined,
+      },
+    };
   },
 });
 

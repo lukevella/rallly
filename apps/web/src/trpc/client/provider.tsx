@@ -4,6 +4,7 @@ import { toast } from "@rallly/ui/sonner";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import {
   MutationCache,
+  QueryCache,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
@@ -13,6 +14,11 @@ import superjson from "superjson";
 import { useTranslation } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 import { trpc } from "../client";
+import type { AppRouter } from "../routers";
+
+function isTRPCClientError(error: Error): error is TRPCClientError<AppRouter> {
+  return error instanceof TRPCClientError;
+}
 
 export function TRPCProvider(props: { children: React.ReactNode }) {
   const posthog = usePostHog();
@@ -26,15 +32,24 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
             staleTime: 1000 * 60,
           },
         },
+        queryCache: new QueryCache({
+          onError(error) {
+            if (isTRPCClientError(error)) {
+              if (error.data?.appError === "SETUP_REQUIRED") {
+                window.location.href = "/setup";
+              }
+            }
+          },
+        }),
         mutationCache: new MutationCache({
           onError(error) {
-            if (error instanceof TRPCClientError) {
+            if (isTRPCClientError(error)) {
               posthog.capture("failed api request", {
-                path: error.data.path,
-                code: error.data.code,
+                path: error.data?.path,
+                code: error.data?.code,
                 message: error.message,
               });
-              switch (error.data.code) {
+              switch (error.data?.code) {
                 case "UNAUTHORIZED":
                   window.location.href = "/login";
                   break;
