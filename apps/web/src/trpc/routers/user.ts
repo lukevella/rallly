@@ -2,15 +2,28 @@ import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { getUser } from "@/features/user/data";
 import {
   deleteImageFromS3,
   getImageUploadUrl,
 } from "@/lib/storage/image-upload";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
-import { createRateLimitMiddleware, privateProcedure, router } from "../trpc";
+import {
+  createRateLimitMiddleware,
+  privateProcedure,
+  publicProcedure,
+  router,
+} from "../trpc";
 
 export const user = router({
+  getMe: publicProcedure.query(async ({ ctx }) => {
+    if (!ctx.user) {
+      return null;
+    }
+
+    return await getUser(ctx.user.id);
+  }),
   changeName: privateProcedure
     .input(
       z.object({

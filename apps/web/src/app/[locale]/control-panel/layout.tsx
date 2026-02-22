@@ -3,7 +3,6 @@ import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
 import { GaugeIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { requireUser } from "@/auth/data";
-import { UserProvider } from "@/components/user-provider";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { Trans } from "@/i18n/client";
@@ -18,37 +17,35 @@ export default async function AdminLayout({
 }) {
   const user = await requireUser();
   return (
-    <UserProvider user={user}>
-      <ControlPanelSidebarProvider>
-        <CommandMenu />
-        <ControlPanelSidebar
-          user={{
-            name: user.name,
-            image: user.image,
-            email: user.email,
-          }}
-        />
-        <SidebarInset>
-          <LicenseLimitWarning />
-          <div className="flex flex-1 flex-col">
-            <header className="sticky top-0 z-10 border-b bg-background/90 p-3 backdrop-blur-xs md:hidden">
-              <div className="flex items-center gap-4">
-                <SidebarTrigger />
-                <div className="flex items-center gap-2">
-                  <Icon>
-                    <GaugeIcon />
-                  </Icon>
-                  <span className="font-medium text-sm">
-                    <Trans i18nKey="controlPanel" defaults="Control Panel" />
-                  </span>
-                </div>
+    <ControlPanelSidebarProvider>
+      <CommandMenu />
+      <ControlPanelSidebar
+        user={{
+          name: user.name,
+          image: user.image,
+          email: user.email,
+        }}
+      />
+      <SidebarInset>
+        <LicenseLimitWarning />
+        <div className="flex flex-1 flex-col">
+          <header className="sticky top-0 z-10 border-b bg-background/90 p-3 backdrop-blur-xs md:hidden">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger />
+              <div className="flex items-center gap-2">
+                <Icon>
+                  <GaugeIcon />
+                </Icon>
+                <span className="font-medium text-sm">
+                  <Trans i18nKey="controlPanel" defaults="Control Panel" />
+                </span>
               </div>
-            </header>
-            <main className="flex-1 p-4 lg:py-12">{children}</main>
-          </div>
-        </SidebarInset>
-      </ControlPanelSidebarProvider>
-    </UserProvider>
+            </div>
+          </header>
+          <main className="flex-1 p-4 lg:py-12">{children}</main>
+        </div>
+      </SidebarInset>
+    </ControlPanelSidebarProvider>
   );
 }
 
