@@ -15,6 +15,15 @@ export default async function Layout(
 
   const trpc = await createAuthenticatedSSRHelper();
 
+  const p = await prisma.poll.findUnique({
+    where: { id: params.urlId },
+    select: { title: true },
+  });
+
+  if (!p) {
+    notFound();
+  }
+
   // Prefetch all queries used in PollLayout
   const [poll] = await Promise.all([
     trpc.polls.get.fetch({ urlId: params.urlId }),
@@ -22,10 +31,6 @@ export default async function Layout(
     trpc.polls.getWatchers.prefetch({ pollId: params.urlId }),
     trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
   ]);
-
-  if (!poll) {
-    notFound();
-  }
 
   if (!poll.adminUrlId) {
     redirect(`/invite/${params.urlId}`);
