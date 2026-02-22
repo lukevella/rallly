@@ -15,9 +15,9 @@ import {
 import { GaugeIcon, Settings2Icon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FeedbackMenuItem } from "@/app/[locale]/(space)/(dashboard)/components/feedback-menu-item";
-import { SpaceSidebarMenu } from "@/app/[locale]/(space)/(dashboard)/components/space-sidebar-menu";
-import { UpgradeMenuItem } from "@/app/[locale]/(space)/(dashboard)/components/upgrade-menu-item";
+import { FeedbackMenuItem } from "@/app/[locale]/(app)/(space)/(dashboard)/components/feedback-menu-item";
+import { SpaceSidebarMenu } from "@/app/[locale]/(app)/(space)/(dashboard)/components/space-sidebar-menu";
+import { UpgradeMenuItem } from "@/app/[locale]/(app)/(space)/(dashboard)/components/upgrade-menu-item";
 import { requireSpace, requireUser } from "@/auth/data";
 import { NavUser } from "@/components/nav-user";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";

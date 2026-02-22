@@ -12,7 +12,7 @@ import {
 } from "@rallly/ui/dialog";
 import { useRouter } from "next/navigation";
 
-import { DuplicateForm } from "@/app/[locale]/(optional-space)/poll/[urlId]/duplicate-form";
+import { DuplicateForm } from "@/app/[locale]/(app)/(optional-space)/poll/[urlId]/duplicate-form";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
