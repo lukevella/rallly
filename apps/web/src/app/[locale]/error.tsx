@@ -57,9 +57,7 @@ export default function LocaleErrorBoundary({
       <ErrorPageLinkItem
         href="/new"
         icon={<PlusIcon className="size-4 text-muted-foreground" />}
-        title={
-          <Trans i18nKey="errorLinkCreatePoll" defaults="Create a Poll" />
-        }
+        title={<Trans i18nKey="errorLinkCreatePoll" defaults="Create a Poll" />}
         description={
           <Trans
             i18nKey="errorLinkCreatePollDescription"
