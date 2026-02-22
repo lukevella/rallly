@@ -604,5 +604,18 @@
   "pollDeleted": "Poll deleted",
   "pollDeleteError": "Failed to delete poll",
   "inappropriateContent": "Inappropriate content",
-  "pollReopened": "Poll Reopened"
+  "pollReopened": "Poll Reopened",
+  "errorLabel": "Error",
+  "errorTitle": "Something went wrong",
+  "errorDescription": "An unexpected error occurred. Please try again or visit one of the pages below.",
+  "errorTryAgain": "Try again",
+  "errorBackToHome": "Back to home",
+  "errorLinkHome": "Home",
+  "errorLinkHomeDescription": "Go back to your dashboard.",
+  "errorLinkCreatePoll": "Create a Poll",
+  "errorLinkCreatePollDescription": "Start scheduling a new meeting.",
+  "errorLinkSupport": "Support",
+  "errorLinkSupportDescription": "Browse our help articles and FAQs.",
+  "errorLinkGithub": "GitHub",
+  "errorLinkGithubDescription": "Report an issue or check for updates."
 }
