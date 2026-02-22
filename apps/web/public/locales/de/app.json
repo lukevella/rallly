@@ -602,5 +602,21 @@
   "pollDeleted": "Umfrage gelöscht",
   "pollDeleteError": "Fehler beim Löschen der Umfrage",
   "inappropriateContent": "Unangemessene Inhalte",
-  "pollReopened": "Umfrage erneut geöffnet"
+  "pollReopened": "Umfrage erneut geöffnet",
+  "errorLabel": "Fehler",
+  "errorTitle": "Etwas ist schiefgelaufen",
+  "errorDescription": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut oder besuche eine der folgenden Seiten.",
+  "errorTryAgain": "Erneut versuchen",
+  "errorBackToHome": "Zur Startseite",
+  "errorLinkHome": "Startseite",
+  "errorLinkHomeDescription": "Zurück zu deinem Dashboard.",
+  "errorLinkCreatePoll": "Umfrage erstellen",
+  "errorLinkCreatePollDescription": "Beginne, ein neues Treffen zu planen.",
+  "errorLinkSupport": "Support",
+  "errorLinkSupportDescription": "Durchsuche unsere Hilfeartikel und häufig gestellten Fragen.",
+  "errorLinkGithub": "GitHub",
+  "errorLinkGithubDescription": "Ein Problem melden oder nach Updates suchen.",
+  "notFoundLabel": "404",
+  "notFoundTitle": "Seite nicht gefunden",
+  "notFoundDescription": "Leider konnten wir die gesuchte Seite nicht finden. Hier sind stattdessen einige hilfreiche Links."
 }
