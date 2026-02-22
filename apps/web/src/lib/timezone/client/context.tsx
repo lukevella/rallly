@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-
+import { useUser } from "@/components/user-provider";
 import { dayjs } from "@/lib/dayjs";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
 
@@ -14,18 +14,15 @@ const TimezoneContext = React.createContext<TimezoneContextProps | null>(null);
 
 interface TimezoneProviderProps {
   children: React.ReactNode;
-  initialTimezone?: string;
 }
 
-export const TimezoneProvider = ({
-  children,
-  initialTimezone,
-}: TimezoneProviderProps) => {
+export const TimezoneProvider = ({ children }: TimezoneProviderProps) => {
+  const { user } = useUser();
   const [timezone, setTimezone] = React.useState(() => {
-    if (initialTimezone) {
+    if (user?.timeZone) {
       try {
-        dayjs().tz(initialTimezone);
-        return initialTimezone;
+        dayjs().tz(user.timeZone);
+        return user.timeZone;
       } catch (error) {
         console.warn(error);
       }
