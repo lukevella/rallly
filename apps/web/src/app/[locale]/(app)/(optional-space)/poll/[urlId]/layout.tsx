@@ -2,9 +2,17 @@ import { prisma } from "@rallly/database";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
+import { cache } from "react";
 
 import { PollLayout } from "@/components/layouts/poll-layout";
 import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";
+
+const getPoll = cache((urlId: string) =>
+  prisma.poll.findUnique({
+    where: { id: urlId },
+    select: { title: true },
+  }),
+);
 
 export default async function Layout(
   props: React.PropsWithChildren<{ params: Promise<{ urlId: string }> }>,
@@ -15,10 +23,7 @@ export default async function Layout(
 
   const trpc = await createAuthenticatedSSRHelper();
 
-  const p = await prisma.poll.findUnique({
-    where: { id: params.urlId },
-    select: { title: true },
-  });
+  const p = await getPoll(params.urlId);
 
   if (!p) {
     notFound();
@@ -47,10 +52,7 @@ export async function generateMetadata(props: {
   params: Promise<{ locale: string; urlId: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const poll = await prisma.poll.findUnique({
-    where: { id: params.urlId },
-    select: { title: true },
-  });
+  const poll = await getPoll(params.urlId);
 
   if (!poll) {
     notFound();
