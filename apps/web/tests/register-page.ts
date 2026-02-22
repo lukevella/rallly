@@ -8,7 +8,9 @@ export class RegisterPage {
 
   async goto() {
     await this.page.goto("/register");
-    await this.page.getByText("Create Your Account").waitFor();
+    await this.page
+      .getByRole("heading", { name: "Create Your Account" })
+      .waitFor();
   }
 
   async register({
@@ -31,7 +33,9 @@ export class RegisterPage {
 
     // Handle verification code
     const code = await getCode(email);
-    await this.page.getByText("Finish Logging In").waitFor();
+    await this.page
+      .getByRole("heading", { name: "Finish Logging In" })
+      .waitFor();
     await this.page.getByPlaceholder("Enter your 6-digit code").fill(code);
 
     // Verify successful registration
