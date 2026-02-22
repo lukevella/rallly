@@ -37,7 +37,7 @@ test.describe
 
       await page.goto("/control-panel");
 
-      await expect(page.getByText("404 not found")).toBeVisible();
+      await expect(page.getByText("Page not found")).toBeVisible();
     });
 
     test("should allow an admin user to access the control panel", async ({

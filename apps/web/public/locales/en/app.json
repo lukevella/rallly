@@ -83,10 +83,8 @@
   "you": "You",
   "yourName": "Your name…",
   "common_language": "Language",
-  "common_support": "Support",
   "errors_notFoundTitle": "404 not found",
   "errors_notFoundDescription": "We couldn't find the page you're looking for.",
-  "errors_goToHome": "Go to home",
   "optionCount": "{count, plural, one {# option} other {# options}}",
   "addComment": "Add Comment",
   "profile": "Profile",
@@ -617,5 +615,8 @@
   "errorLinkSupport": "Support",
   "errorLinkSupportDescription": "Browse our help articles and FAQs.",
   "errorLinkGithub": "GitHub",
-  "errorLinkGithubDescription": "Report an issue or check for updates."
+  "errorLinkGithubDescription": "Report an issue or check for updates.",
+  "notFoundLabel": "404",
+  "notFoundTitle": "Page not found",
+  "notFoundDescription": "Sorry, we couldn't find the page you're looking for. Here are some helpful links instead."
 }
