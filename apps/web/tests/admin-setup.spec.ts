@@ -62,7 +62,7 @@ test.describe("Admin Setup Page Access", () => {
     await loginWithEmail(page, { email: REGULAR_USER_EMAIL });
 
     await page.goto("/control-panel/setup");
-    await expect(page.getByText("404 not found")).toBeVisible();
+    await expect(page.getByText("Page not found")).toBeVisible();
   });
 
   test("should redirect an existing admin user to control-panel", async ({
@@ -90,7 +90,7 @@ test.describe("Admin Setup Page Access", () => {
     await loginWithEmail(page, { email: OTHER_USER_EMAIL });
 
     await page.goto("/control-panel/setup");
-    await expect(page.getByText("404 not found")).toBeVisible();
+    await expect(page.getByText("Page not found")).toBeVisible();
   });
 
   test("initial admin can make themselves admin using the button", async ({
