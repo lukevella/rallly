@@ -12,7 +12,6 @@ import type {
 import { getDuration } from "@/utils/date-time-utils";
 import { useDayjs } from "@/utils/dayjs";
 
-import ErrorPage from "./error-page";
 import { useParticipants } from "./participants-provider";
 import { useRequiredContext } from "./use-required-context";
 
@@ -134,11 +133,15 @@ export const PollContextProvider: React.FunctionComponent<{
 
   if (poll.deleted) {
     return (
-      <ErrorPage
-        icon={TrashIcon}
-        title={t("deletedPoll")}
-        description={t("deletedPollInfo")}
-      />
+      <div className="flex h-[calc(100vh-100px)] w-full items-center justify-center">
+        <div className="space-y-4 text-center">
+          <TrashIcon className="mb-4 inline-block size-24 text-muted-foreground" />
+          <div className="mb-2 font-bold text-3xl text-foreground">
+            {t("deletedPoll")}
+          </div>
+          <p className="text-muted-foreground">{t("deletedPollInfo")}</p>
+        </div>
+      </div>
     );
   }
   return (
