@@ -34,15 +34,17 @@ const PreferencesContext = React.createContext<PreferencesContextValue | null>(
 
 export const PreferencesProvider = ({
   children,
-  initialValue,
 }: {
   children?: React.ReactNode;
-  initialValue: Partial<Preferences>;
 }) => {
   const { user } = useUser();
   const [preferences = {}, setPreferences] = useLocalStorage(
     "rallly.preferences",
-    initialValue,
+    {
+      timeZone: user?.timeZone,
+      timeFormat: user?.timeFormat,
+      weekStart: user?.weekStart,
+    },
     {
       raw: false,
       serializer: JSON.stringify,

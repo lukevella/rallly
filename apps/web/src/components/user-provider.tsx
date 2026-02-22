@@ -4,41 +4,15 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import type { UserAbility } from "@/features/user/ability";
 import { defineAbilityFor } from "@/features/user/ability";
-import type { UserDTO } from "@/features/user/schema";
 import { authClient } from "@/lib/auth-client";
 import { LocaleSync } from "@/lib/locale/client";
+import { trpc } from "@/trpc/client";
 import { isOwner } from "@/utils/permissions";
-import { useRequiredContext } from "./use-required-context";
 
-type GuestUser = {
-  id: string;
-  isGuest: true;
-};
-
-type UserContextValue = {
-  user?: UserDTO | GuestUser;
-  createGuestIfNeeded: () => Promise<void>;
-  getAbility: () => UserAbility;
-  ownsObject: (obj: {
-    userId?: string | null;
-    guestId?: string | null;
-  }) => boolean;
-};
-
-export const UserContext = React.createContext<UserContextValue | null>(null);
-
-export const useUser = () => {
-  return useRequiredContext(UserContext, "UserContext");
-};
-
-export const UserProvider = ({
-  children,
-  user,
-}: {
-  children?: React.ReactNode;
-  user?: UserDTO;
-}) => {
+export function useUser() {
+  const [user] = trpc.user.getMe.useSuspenseQuery();
   const posthog = usePostHog();
+  const router = useRouter();
 
   const userId = user?.id;
   const isGuest = user?.isGuest;
@@ -49,10 +23,9 @@ export const UserProvider = ({
     }
   }, [userId, isGuest, posthog]);
 
-  const router = useRouter();
-  const value = React.useMemo<UserContextValue>(() => {
+  return React.useMemo(() => {
     return {
-      user,
+      user: user ?? undefined,
       createGuestIfNeeded: async () => {
         const isLegacyGuest = user?.id.startsWith("user-");
         if (!user || isLegacyGuest) {
@@ -60,16 +33,18 @@ export const UserProvider = ({
           router.refresh();
         }
       },
-      getAbility: () => defineAbilityFor(user),
-      ownsObject: (resource) => {
+      getAbility: (): UserAbility => defineAbilityFor(user ?? undefined),
+      ownsObject: (resource: {
+        userId?: string | null;
+        guestId?: string | null;
+      }) => {
         return user ? isOwner(resource, { id: user.id }) : false;
       },
     };
   }, [user, router]);
-  return (
-    <UserContext.Provider value={value}>
-      <LocaleSync userLocale={user?.locale} />
-      {children}
-    </UserContext.Provider>
-  );
-};
+}
+
+export function UserSync() {
+  const { user } = useUser();
+  return <LocaleSync userLocale={user?.locale} />;
+}
