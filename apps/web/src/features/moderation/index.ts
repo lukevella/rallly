@@ -26,9 +26,11 @@ const safeResult: ModerationResult = {
 export async function moderateContent({
   userId,
   content,
+  trusted = false,
 }: {
   userId: string;
   content: Record<string, string>;
+  trusted?: boolean;
 }): Promise<ModerationResult> {
   // Skip moderation if the feature is disabled in environment
   if (env.MODERATION_ENABLED !== "true") {
@@ -69,6 +71,7 @@ export async function moderateContent({
             subject: `Content ${result.verdict} by moderation`,
             text: [
               `User ID: ${userId}`,
+              `Trusted: ${trusted ? "Yes" : "No"}`,
               `Verdict: ${result.verdict}`,
               `Reason: ${result.reason}`,
               "--------------------------------",
@@ -76,6 +79,14 @@ export async function moderateContent({
             ].join("\n\n"),
           }),
         );
+
+        if (trusted) {
+          logger.info(
+            { userId },
+            "Content flagged but user is trusted, allowing through",
+          );
+          return safeResult;
+        }
       }
 
       return result;

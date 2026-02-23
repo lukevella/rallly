@@ -11,6 +11,7 @@ import { getPolls } from "@/features/poll/data";
 import { canUserManagePoll } from "@/features/poll/helpers";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
+import { getActiveSpaceForUser } from "@/features/space/data";
 import { dayjs } from "@/lib/dayjs";
 import { getEmailClient } from "@/utils/emails";
 import { createIcsEvent } from "@/utils/ics";
@@ -187,6 +188,11 @@ export const polls = router({
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("create_poll", 20, "1 h"))
     .mutation(async ({ ctx, input }) => {
+      const activeSpace = ctx.user.isGuest
+        ? null
+        : await getActiveSpaceForUser(ctx.user.id);
+      const isPro = activeSpace?.tier === "pro";
+
       const moderation = await moderateContent({
         userId: ctx.user.id,
         content: {
@@ -194,6 +200,7 @@ export const polls = router({
           Description: input.description || "",
           Location: input.location || "",
         },
+        trusted: isPro,
       });
 
       if (moderation.verdict !== "safe") {
@@ -379,6 +386,11 @@ export const polls = router({
         });
       }
 
+      const activeSpace = ctx.user.isGuest
+        ? null
+        : await getActiveSpaceForUser(ctx.user.id);
+      const isPro = activeSpace?.tier === "pro";
+
       const moderation = await moderateContent({
         userId: ctx.user.id,
         content: {
@@ -386,6 +398,7 @@ export const polls = router({
           Description: input.description || "",
           Location: input.location || "",
         },
+        trusted: isPro,
       });
 
       if (moderation.verdict !== "safe") {
