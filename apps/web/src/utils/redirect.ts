@@ -31,12 +31,15 @@ export function validateRedirectUrl(
  * Reads x-pathname from headers, validates it, and redirects to the given
  * destination with a safe `redirectTo` query parameter.
  */
-export async function redirectWithSafeReturnUrl(destination: string): Promise<never> {
+export async function redirectWithSafeReturnUrl(
+  destination: string,
+): Promise<never> {
   const headersList = await headers();
   const pathname = validateRedirectUrl(headersList.get("x-pathname"));
   const searchParams = new URLSearchParams();
   if (pathname) {
     searchParams.set("redirectTo", pathname);
   }
-  redirect(`${destination}?${searchParams.toString()}`);
+  const qs = searchParams.toString();
+  redirect(qs ? `${destination}?${qs}` : destination);
 }
