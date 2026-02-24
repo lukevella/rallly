@@ -1,7 +1,6 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
-import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { createSpaceDTO } from "@/features/space/data";
@@ -9,6 +8,7 @@ import { getUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
+import { redirectWithSafeReturnUrl } from "@/utils/redirect";
 
 /**
  * Gets the current user if they are logged in, otherwise null.
@@ -92,13 +92,9 @@ export const requireAdmin = cache(async () => {
 
 export const requireUser = cache(async () => {
   const session = await getSession();
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname") ?? "/";
 
   if (!session?.user || session.user.isGuest) {
-    const searchParams = new URLSearchParams();
-    searchParams.set("redirectTo", pathname);
-    redirect(`/login?${searchParams.toString()}`);
+    return await redirectWithSafeReturnUrl("/login");
   }
 
   const user = await getUser(session.user.id);
