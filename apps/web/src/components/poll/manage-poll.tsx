@@ -31,7 +31,6 @@ import { SchedulePollDialog } from "@/components/poll/manage-poll/schedule-poll-
 import { ProBadge } from "@/components/pro-badge";
 import { usePoll } from "@/contexts/poll";
 import { useBilling } from "@/features/billing/client";
-import { useSpace } from "@/features/space/client";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
@@ -122,12 +121,11 @@ const ManagePoll: React.FunctionComponent<{
   disabled?: boolean;
 }> = ({ disabled }) => {
   const poll = usePoll();
-  const space = useSpace();
 
   const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
   const duplicateDialog = useDialog();
   const scheduleDialog = useDialog();
-  const { showPayWall } = useBilling();
+  const { showPayWall, isFree } = useBilling();
   const posthog = usePostHog();
   const { exportToCsv } = useCsvExporter();
 
@@ -175,7 +173,7 @@ const ManagePoll: React.FunctionComponent<{
               <DropdownMenuItem
                 disabled={!!poll.event}
                 onClick={() => {
-                  if (space.data.tier !== "pro") {
+                  if (isFree) {
                     showPayWall();
                     posthog?.capture("trigger paywall", {
                       poll_id: poll.id,
@@ -191,7 +189,7 @@ const ManagePoll: React.FunctionComponent<{
                   <CalendarCheck2Icon />
                 </Icon>
                 <Trans i18nKey="schedulePoll" defaults="Schedule" />
-                {space.data.tier !== "pro" ? <ProBadge /> : null}
+                {isFree ? <ProBadge /> : null}
               </DropdownMenuItem>
               <OpenCloseToggle />
             </>
@@ -204,7 +202,7 @@ const ManagePoll: React.FunctionComponent<{
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              if (space.data.tier !== "pro") {
+              if (isFree) {
                 showPayWall();
                 posthog?.capture("trigger paywall", {
                   poll_id: poll.id,
@@ -218,7 +216,7 @@ const ManagePoll: React.FunctionComponent<{
           >
             <DropdownMenuItemIconLabel icon={CopyIcon}>
               <Trans i18nKey="duplicate" defaults="Duplicate" />
-              {space.data.tier !== "pro" ? <ProBadge /> : null}
+              {isFree ? <ProBadge /> : null}
             </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
           <DropdownMenuSeparator />

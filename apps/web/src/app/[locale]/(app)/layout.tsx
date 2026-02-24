@@ -15,6 +15,7 @@ export default async function AppLayout({
   await Promise.all([
     helpers.user.getMe.prefetch(),
     helpers.space.getCurrent.prefetch(),
+    helpers.billing.getTier.prefetch(),
   ]);
 
   return (
