@@ -1,8 +1,10 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { redirect } from "next/navigation";
 import { BillingProvider } from "@/features/billing/client";
 import { SpaceProvider } from "@/features/space/client";
+import { getPathname } from "@/lib/pathname";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
-import { redirectWithSafeReturnUrl } from "@/utils/redirect";
+import { buildSafeRedirectUrl } from "@/utils/redirect";
 
 export default async function Layout({
   children,
@@ -14,7 +16,10 @@ export default async function Layout({
   const space = await helpers.space.getCurrent.fetch();
 
   if (!space) {
-    return await redirectWithSafeReturnUrl("/setup");
+    const pathname = await getPathname();
+    redirect(
+      buildSafeRedirectUrl({ destination: "/setup", returnUrl: pathname }),
+    );
   }
 
   return (

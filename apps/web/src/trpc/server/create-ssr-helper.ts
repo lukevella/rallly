@@ -1,8 +1,10 @@
 import { createWideEvent } from "@rallly/logger";
 import { createServerSideHelpers } from "@trpc/react-query/server";
+import { redirect } from "next/navigation";
 import superjson from "superjson";
 import { getSession } from "@/lib/auth";
-import { redirectWithSafeReturnUrl } from "@/utils/redirect";
+import { getPathname } from "@/lib/pathname";
+import { buildSafeRedirectUrl } from "@/utils/redirect";
 import type { TRPCContext } from "../context";
 import { appRouter } from "../routers";
 
@@ -47,7 +49,10 @@ export const createPrivateSSRHelper = async () => {
   const session = await getSession();
 
   if (!session?.user || session.user.isGuest) {
-    return await redirectWithSafeReturnUrl("/login");
+    const pathname = await getPathname();
+    redirect(
+      buildSafeRedirectUrl({ destination: "/login", returnUrl: pathname }),
+    );
   }
 
   const event = createWideEvent({

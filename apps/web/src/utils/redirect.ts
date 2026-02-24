@@ -1,6 +1,3 @@
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-
 /**
  * Validates a redirect URL to prevent open redirect attacks.
  * Only allows relative URLs starting with "/" but not "//" (protocol-relative).
@@ -28,18 +25,20 @@ export function validateRedirectUrl(
 }
 
 /**
- * Reads x-pathname from headers, validates it, and redirects to the given
- * destination with a safe `redirectTo` query parameter.
+ * Builds a destination URL with a validated `redirectTo` query parameter.
  */
-export async function redirectWithSafeReturnUrl(
-  destination: string,
-): Promise<never> {
-  const headersList = await headers();
-  const pathname = validateRedirectUrl(headersList.get("x-pathname"));
-  const searchParams = new URLSearchParams();
-  if (pathname) {
-    searchParams.set("redirectTo", pathname);
+export function buildSafeRedirectUrl({
+  destination,
+  returnUrl,
+}: {
+  destination: string;
+  returnUrl?: string | null;
+}) {
+  const validated = validateRedirectUrl(returnUrl);
+  if (!validated) {
+    return destination;
   }
-  const qs = searchParams.toString();
-  redirect(qs ? `${destination}?${qs}` : destination);
+  const searchParams = new URLSearchParams();
+  searchParams.set("redirectTo", validated);
+  return `${destination}?${searchParams.toString()}`;
 }
