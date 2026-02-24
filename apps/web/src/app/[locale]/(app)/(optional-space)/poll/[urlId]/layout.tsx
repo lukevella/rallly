@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
 import { PollLayout } from "@/components/layouts/poll-layout";
-import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
 
 export default async function Layout(
   props: React.PropsWithChildren<{ params: Promise<{ urlId: string }> }>,
@@ -14,7 +14,7 @@ export default async function Layout(
 
   const { children } = props;
 
-  const trpc = await createAuthenticatedSSRHelper();
+  const trpc = await createPublicSSRHelper();
 
   const [poll] = await Promise.all([
     trpc.polls.get.fetch({ urlId: params.urlId }).catch((e) => {

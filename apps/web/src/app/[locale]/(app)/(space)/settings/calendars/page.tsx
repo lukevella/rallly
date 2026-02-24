@@ -19,7 +19,7 @@ import {
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { CalendarConnectionList } from "./components/calendar-connection-list";
 import { ConnectCalendarDropdown } from "./components/connect-calendar-dropdown";
 import { DefaultCalendarSelect } from "./components/default-calendar-select";
@@ -31,7 +31,7 @@ export default async function CalendarsPage() {
     notFound();
   }
 
-  const trpc = await createAuthenticatedSSRHelper();
+  const trpc = await createPrivateSSRHelper();
 
   await Promise.all([
     trpc.calendars.list.prefetch(),
