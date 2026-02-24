@@ -18,9 +18,7 @@ const defaultSpace: SpaceDTO = {
 
 export const useSpace = () => {
   const { user } = useUser();
-  const { data: space } = trpc.space.getCurrent.useQuery(undefined, {
-    enabled: !!user && !user.isGuest,
-  });
+  const { data: space } = trpc.space.getCurrent.useSuspenseQuery();
 
   const data = space ?? defaultSpace;
   const userId = user?.id;
