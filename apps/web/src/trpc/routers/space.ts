@@ -1,25 +1,10 @@
 import { prisma } from "@rallly/database";
-import { TRPCError } from "@trpc/server";
 import { getActiveSpaceForUser } from "@/features/space/data";
-import { AppError } from "@/lib/errors";
 import { privateProcedure, router } from "../trpc";
 
 export const space = router({
   getCurrent: privateProcedure.query(async ({ ctx }) => {
-    const space = await getActiveSpaceForUser(ctx.user.id);
-
-    if (!space) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "No active space found",
-        cause: new AppError({
-          code: "SETUP_REQUIRED",
-          message: "User has no space configured",
-        }),
-      });
-    }
-
-    return space;
+    return await getActiveSpaceForUser(ctx.user.id);
   }),
   members: privateProcedure.query(async ({ ctx }) => {
     const activeSpace = await getActiveSpaceForUser(ctx.user.id);

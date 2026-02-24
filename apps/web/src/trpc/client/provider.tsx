@@ -38,9 +38,6 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
               if (error.data?.code === "UNAUTHORIZED") {
                 window.location.href = "/login";
               }
-              if (error.data?.appError === "SETUP_REQUIRED") {
-                window.location.href = "/setup";
-              }
             }
           },
         }),
