@@ -3,6 +3,7 @@
 import { usePostHog } from "@rallly/posthog/client";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { useUser } from "@/components/user-provider";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { trpc } from "@/trpc/client";
@@ -10,14 +11,7 @@ import { defineAbilityForSpace } from "./ability";
 
 export const useSpace = () => {
   const { user } = useUser();
-  const router = useRouter();
   const [data] = trpc.space.getCurrent.useSuspenseQuery();
-
-  React.useEffect(() => {
-    if (!data) {
-      router.replace("/setup");
-    }
-  }, [data, router]);
 
   if (!data) {
     throw new Error("No active space found");
@@ -48,17 +42,28 @@ export const useSpace = () => {
 };
 
 export function SpaceProvider({ children }: { children: React.ReactNode }) {
-  const { data: space } = useSpace();
+  const router = useRouter();
+  const { data: space, isLoading } = trpc.space.getCurrent.useQuery();
   const posthog = usePostHog();
 
   React.useEffect(() => {
-    if (space.id) {
+    if (!isLoading && !space) {
+      router.replace("/setup");
+    }
+  }, [isLoading, space, router]);
+
+  React.useEffect(() => {
+    if (space?.id) {
       posthog?.group("space", space.id, {
         name: space.name,
         tier: space.tier,
       });
     }
-  }, [posthog, space.id, space.name, space.tier]);
+  }, [posthog, space?.id, space?.name, space?.tier]);
 
-  return children;
+  if (!space) {
+    return <RouterLoadingIndicator />;
+  }
+
+  return <>{children}</>;
 }
