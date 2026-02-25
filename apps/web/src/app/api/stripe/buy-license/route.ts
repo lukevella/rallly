@@ -72,10 +72,14 @@ export async function GET(request: NextRequest) {
       mode: "payment",
       success_url: "https://rallly.co/licensing/thank-you",
       allow_promotion_codes: true,
+      billing_address_collection: "required",
       tax_id_collection: {
         enabled: true,
       },
       automatic_tax: {
+        enabled: true,
+      },
+      invoice_creation: {
         enabled: true,
       },
       metadata: {
