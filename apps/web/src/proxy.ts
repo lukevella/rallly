@@ -17,7 +17,8 @@ export const proxy = async (req: NextRequest) => {
   setLocaleCookie(req, res, locale);
 
   res.headers.set("x-locale", locale);
-  setPathname(res.headers, pathname);
+
+  setPathname(req, res);
 
   return res;
 };

@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import type { NextRequest, NextResponse } from "next/server";
 
 const HEADER_NAME = "x-pathname";
 
@@ -7,6 +8,7 @@ export async function getPathname() {
   return headersList.get(HEADER_NAME);
 }
 
-export function setPathname(responseHeaders: Headers, pathname: string) {
-  responseHeaders.set(HEADER_NAME, pathname);
+export function setPathname(req: NextRequest, res: NextResponse) {
+  const pathname = req.nextUrl.pathname;
+  res.headers.set(HEADER_NAME, pathname);
 }
