@@ -1,21 +1,14 @@
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { TRPCError } from "@trpc/server";
-import { getActiveSpaceForUser } from "@/features/space/data";
 import type { MemberAbilityContext } from "@/features/space/member/ability";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { getTotalSeatsForSpace } from "@/features/space/utils";
 import { dayjs } from "@/lib/dayjs";
-import { privateProcedure, router } from "../trpc";
+import { router, spaceProcedure } from "../trpc";
 
 export const dashboard = router({
-  stats: privateProcedure.query(async ({ ctx }) => {
-    const space = await getActiveSpaceForUser(ctx.user.id);
-
-    if (!space) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Space not found" });
-    }
-
+  stats: spaceProcedure.query(async ({ ctx }) => {
+    const { space } = ctx;
     const now = new Date();
     const todayStart = dayjs()
       .tz(ctx.user.timeZone ?? "UTC")

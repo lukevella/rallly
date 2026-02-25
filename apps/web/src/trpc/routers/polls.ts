@@ -5,7 +5,6 @@ import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import { revalidatePath } from "next/cache";
 import * as z from "zod";
-import { getCurrentUserSpace } from "@/auth/data";
 import { moderateContent } from "@/features/moderation";
 import { getPolls } from "@/features/poll/data";
 import { canUserManagePoll } from "@/features/poll/helpers";
@@ -128,6 +127,14 @@ export const polls = router({
       const activeSpace = ctx.user.isGuest
         ? null
         : await getActiveSpaceForUser(ctx.user.id);
+
+      if (!ctx.user.isGuest && !activeSpace) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You must be a member of a space to create a poll",
+        });
+      }
+
       const isPro = activeSpace?.tier === "pro";
 
       const moderation = await moderateContent({
@@ -165,18 +172,7 @@ export const polls = router({
       const adminToken = nanoid();
       const participantUrlId = nanoid();
       const pollId = nanoid();
-      let spaceId: string | undefined;
-
-      if (!ctx.user.isGuest) {
-        const data = await getCurrentUserSpace();
-        if (!data) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Space not found",
-          });
-        }
-        spaceId = data.space.id;
-      }
+      const spaceId = activeSpace?.id;
 
       const poll = await prisma.poll.create({
         include: {
