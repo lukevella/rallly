@@ -4,13 +4,13 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import * as z from "zod";
-import { requireSpace, requireUser } from "@/auth/data";
+import { requireUser } from "@/auth/data";
 import type { CustomerMetadata } from "@/features/billing/schema";
+import { getActiveSpaceForUser } from "@/features/space/data";
 import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
 } from "@/features/subscription/schema";
-import { AppError } from "@/lib/errors";
 
 const inputSchema = z.object({
   period: z.enum(["monthly", "yearly"]).optional(),
@@ -19,13 +19,14 @@ const inputSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const [user, space] = await Promise.all([requireUser(), requireSpace()]);
+  const user = await requireUser();
+  const space = await getActiveSpaceForUser(user.id);
 
-  if (space.ownerId !== user.id) {
-    throw new AppError({
-      code: "FORBIDDEN",
-      message: "You need to be the owner of this space to upgrade it",
-    });
+  if (!space || space.ownerId !== user.id) {
+    return NextResponse.json(
+      { error: "You need to be the owner of this space to upgrade it" },
+      { status: 403 },
+    );
   }
 
   const spaceId = space.id;
