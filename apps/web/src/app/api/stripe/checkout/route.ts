@@ -4,13 +4,14 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import * as z from "zod";
-import { requireUser } from "@/auth/data";
 import type { CustomerMetadata } from "@/features/billing/schema";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
 } from "@/features/subscription/schema";
+import { getUser } from "@/features/user/data";
+import { getSession } from "@/lib/auth";
 
 const inputSchema = z.object({
   period: z.enum(["monthly", "yearly"]).optional(),
@@ -19,7 +20,21 @@ const inputSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const user = await requireUser();
+  const session = await getSession();
+
+  if (!session?.user) {
+    return NextResponse.json(
+      { error: "You need to be logged in to upgrade your space" },
+      { status: 401 },
+    );
+  }
+
+  const user = await getUser(session.user.id);
+
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
   const space = await getActiveSpaceForUser(user.id);
 
   if (!space || space.ownerId !== user.id) {
