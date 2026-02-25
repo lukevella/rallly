@@ -2,7 +2,6 @@ import { prisma } from "@rallly/database";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import superjson from "superjson";
-import { getCurrentUserSpace } from "@/auth/data";
 import { PostHogClient } from "@/features/analytics/posthog";
 import { isApiAccessEnabled } from "@/features/developer/data";
 import { isQuickCreateEnabled } from "@/features/quick-create";
@@ -131,25 +130,6 @@ export const privateProcedure = procedureWithAnalytics.use(
   },
 );
 
-export const proProcedure = privateProcedure.use(async ({ next }) => {
-  if (isSelfHosted) {
-    // Self-hosted instances don't have paid subscriptions
-    return next();
-  }
-
-  const data = await getCurrentUserSpace();
-
-  if (!data || data.space.tier !== "pro") {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message:
-        "You must have an active paid subscription to perform this action",
-    });
-  }
-
-  return next();
-});
-
 export const spaceProcedure = privateProcedure.use(async ({ ctx, next }) => {
   const space = await getActiveSpaceForUser(ctx.user.id);
 
@@ -165,6 +145,18 @@ export const spaceProcedure = privateProcedure.use(async ({ ctx, next }) => {
       space,
     },
   });
+});
+
+export const proProcedure = spaceProcedure.use(async ({ ctx, next }) => {
+  if (!isSelfHosted && ctx.space.tier !== "pro") {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message:
+        "You must have an active paid subscription to perform this action",
+    });
+  }
+
+  return next();
 });
 
 export const spaceOwnerCloudOnlyProcedure = spaceProcedure.use(
