@@ -18,10 +18,9 @@ import {
 import { ArrowLeftIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { requireSpace, requireUser } from "@/auth/data";
+import { requireUser } from "@/auth/data";
 import { NavUser } from "@/components/nav-user";
 import { BillingProvider } from "@/features/billing/client";
-import { isApiAccessEnabled } from "@/features/developer/data";
 import { Trans } from "@/i18n/client";
 import {
   AccountSidebarMenu,
@@ -34,8 +33,7 @@ export default async function Layout({
 }: {
   children?: React.ReactNode;
 }) {
-  const [user, space] = await Promise.all([requireUser(), requireSpace()]);
-  const canAccessDeveloperTools = await isApiAccessEnabled(user, space);
+  const user = await requireUser();
 
   return (
     <BillingProvider>
@@ -79,7 +77,7 @@ export default async function Layout({
                 <SpaceSidebarMenu />
               </SidebarGroupContent>
             </SidebarGroup>
-            {canAccessDeveloperTools ? <DeveloperSidebarMenu /> : null}
+            <DeveloperSidebarMenu />
           </SidebarContent>
           <SidebarFooter>
             <NavUser

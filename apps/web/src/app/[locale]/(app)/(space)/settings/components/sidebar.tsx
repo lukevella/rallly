@@ -1,5 +1,6 @@
 "use client";
 
+import { useFeatureFlagEnabled } from "@rallly/posthog/client";
 import { Icon } from "@rallly/ui/icon";
 import {
   SidebarGroup,
@@ -22,6 +23,8 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
+import { useUser } from "@/components/user-provider";
+import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 
@@ -134,17 +137,15 @@ export function SpaceSidebarMenu() {
 }
 
 export function DeveloperSidebarMenu() {
-  const { t } = useTranslation();
+  const { data: space } = useSpace();
+  const { user } = useUser();
+  const isSpaceOwner = space.ownerId === user?.id;
   const pathname = usePathname();
+  const isDeveloperToolsEnabled = useFeatureFlagEnabled("developer-tools");
 
-  const menuItems = [
-    {
-      id: "apiKeys",
-      label: t("apiKeys", { defaultValue: "API Keys" }),
-      icon: <KeyIcon />,
-      href: "/settings/api-keys",
-    },
-  ];
+  if (!isSpaceOwner || !isDeveloperToolsEnabled) {
+    return null;
+  }
 
   return (
     <SidebarGroup>
@@ -153,22 +154,22 @@ export function DeveloperSidebarMenu() {
       </SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {menuItems.map((item) => (
-            <SidebarMenuItem key={item.id}>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname.startsWith(item.href)}
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              isActive={pathname.startsWith("/settings/api-keys")}
+            >
+              <HoverPrefetchLink
+                href="/settings/api-keys"
+                className="flex items-center gap-x-2"
               >
-                <HoverPrefetchLink
-                  href={item.href}
-                  className="flex items-center gap-x-2"
-                >
-                  <Icon>{item.icon}</Icon>
-                  {item.label}
-                </HoverPrefetchLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+                <Icon>
+                  <KeyIcon />
+                </Icon>
+                <Trans i18nKey="apiKeys" defaults="API Keys" />
+              </HoverPrefetchLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

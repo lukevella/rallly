@@ -167,27 +167,9 @@ export const spaceProcedure = privateProcedure.use(async ({ ctx, next }) => {
   });
 });
 
-export const spaceOwnerCloudOnlyProcedure = privateProcedure.use(
+export const spaceOwnerCloudOnlyProcedure = spaceProcedure.use(
   async ({ ctx, next }) => {
-    const space = await getActiveSpaceForUser(ctx.user.id);
-
-    if (!space) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "No active space found",
-      });
-    }
-
-    const user = await getUser(ctx.user.id);
-
-    if (!user) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "User does not exist",
-      });
-    }
-
-    const hasAccess = await isApiAccessEnabled(user, space);
+    const hasAccess = await isApiAccessEnabled(ctx.user, ctx.space);
 
     if (!hasAccess) {
       throw new TRPCError({
@@ -196,12 +178,7 @@ export const spaceOwnerCloudOnlyProcedure = privateProcedure.use(
       });
     }
 
-    return next({
-      ctx: {
-        space,
-        user: ctx.user,
-      },
-    });
+    return next();
   },
 );
 

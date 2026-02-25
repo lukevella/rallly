@@ -1,21 +1,11 @@
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
-import { isApiAccessEnabled } from "@/features/developer/data";
 import { createApiKey } from "@/features/developer/utils";
 import { router, spaceOwnerCloudOnlyProcedure } from "../trpc";
 
 export const apiKeys = router({
   list: spaceOwnerCloudOnlyProcedure.query(async ({ ctx }) => {
-    const hasAccess = await isApiAccessEnabled(ctx.user, ctx.space);
-
-    if (!hasAccess) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "You do not have permission to access API keys",
-      });
-    }
-
     const keys = await prisma.spaceApiKey.findMany({
       where: {
         spaceId: ctx.space.id,

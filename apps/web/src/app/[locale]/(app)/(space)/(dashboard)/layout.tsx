@@ -13,12 +13,11 @@ import {
   SidebarSeparator,
 } from "@rallly/ui/sidebar";
 import { GaugeIcon, Settings2Icon } from "lucide-react";
-import type { Metadata } from "next";
 import Link from "next/link";
 import { FeedbackMenuItem } from "@/app/[locale]/(app)/(space)/(dashboard)/components/feedback-menu-item";
 import { SpaceSidebarMenu } from "@/app/[locale]/(app)/(space)/(dashboard)/components/space-sidebar-menu";
 import { UpgradeMenuItem } from "@/app/[locale]/(app)/(space)/(dashboard)/components/upgrade-menu-item";
-import { requireSpace, requireUser } from "@/auth/data";
+import { requireUser } from "@/auth/data";
 import { NavUser } from "@/components/nav-user";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
@@ -93,14 +92,4 @@ export default async function Layout({
       </SidebarInset>
     </SpaceSidebarProvider>
   );
-}
-
-export async function generateMetadata(): Promise<Metadata> {
-  const space = await requireSpace();
-  return {
-    title: {
-      template: "%s",
-      default: space.name,
-    },
-  };
 }
