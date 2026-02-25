@@ -1,9 +1,9 @@
 import * as z from "zod";
 import { getEventsChronological } from "@/features/scheduled-event/data";
-import { privateProcedure, router } from "../trpc";
+import { router, spaceProcedure } from "../trpc";
 
 export const events = router({
-  infiniteList: privateProcedure
+  infiniteList: spaceProcedure
     .input(
       z.object({
         status: z
@@ -15,7 +15,7 @@ export const events = router({
         limit: z.number().max(100).optional().default(20),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ ctx, input }) => {
       const { cursor: page, limit: pageSize, status, search, member } = input;
 
       const result = await getEventsChronological({
@@ -24,6 +24,7 @@ export const events = router({
         member,
         page,
         pageSize,
+        spaceId: ctx.space.id,
       });
 
       let nextCursor: number | undefined;
