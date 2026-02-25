@@ -1,7 +1,6 @@
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { shortUrl } from "@rallly/utils/absolute-url";
-import { requireSpace } from "@/auth/data";
 
 export async function getPollResults({
   pollId,
