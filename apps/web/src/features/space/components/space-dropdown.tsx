@@ -24,6 +24,7 @@ import Link from "next/link";
 import React from "react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { setActiveSpaceAction } from "@/features/space/actions";
+import { useSpace } from "@/features/space/client";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -32,7 +33,6 @@ import { SpaceIcon } from "./space-icon";
 
 export function SpaceDropdown({
   spaces,
-  initialSpaceId,
 }: {
   spaces: {
     id: string;
@@ -40,9 +40,9 @@ export function SpaceDropdown({
     tier: "hobby" | "pro";
     image?: string;
   }[];
-  initialSpaceId: string;
 }) {
-  const [selectedSpaceId, setSelectedSpaceId] = React.useState(initialSpaceId);
+  const { data: space } = useSpace();
+  const [selectedSpaceId, setSelectedSpaceId] = React.useState(space.id);
   const [isPending, startTransition] = React.useTransition();
 
   const setActiveSpace = useSafeAction(setActiveSpaceAction);

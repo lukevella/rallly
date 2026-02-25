@@ -33,18 +33,14 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const [user, activeSpace, spaces] = await Promise.all([
-    requireUser(),
-    requireSpace(),
-    loadSpaces(),
-  ]);
+  const [user, spaces] = await Promise.all([requireUser(), loadSpaces()]);
 
   return (
     <SpaceSidebarProvider>
       <CommandMenu />
       <Sidebar>
         <SidebarHeader>
-          <SpaceDropdown spaces={spaces} initialSpaceId={activeSpace.id} />
+          <SpaceDropdown spaces={spaces} />
         </SidebarHeader>
         <SidebarContent>
           <SpaceSidebarMenu />
@@ -53,7 +49,7 @@ export default async function Layout({
           <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu>
-                {activeSpace.tier === "hobby" ? <UpgradeMenuItem /> : null}
+                <UpgradeMenuItem />
                 <IfFeatureEnabled feature="feedback">
                   <FeedbackMenuItem />
                 </IfFeatureEnabled>
