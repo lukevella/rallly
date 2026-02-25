@@ -4,42 +4,11 @@ import {
   getSpaceSeatCount,
 } from "@/features/space/data";
 import { fromDBRole, getTotalSeatsForSpace } from "@/features/space/utils";
-import { privateProcedure, router, spaceProcedure } from "../trpc";
+import { router, spaceProcedure } from "../trpc";
 
 export const space = router({
-  getCurrent: privateProcedure.query(async ({ ctx }) => {
+  getCurrent: spaceProcedure.query(async ({ ctx }) => {
     return await getActiveSpaceForUser(ctx.user.id);
-  }),
-  members: privateProcedure.query(async ({ ctx }) => {
-    const activeSpace = await getActiveSpaceForUser(ctx.user.id);
-
-    if (!activeSpace) {
-      return [];
-    }
-
-    const members = await prisma.spaceMember.findMany({
-      where: {
-        spaceId: activeSpace.id,
-      },
-      select: {
-        userId: true,
-        user: {
-          select: {
-            name: true,
-            image: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
-
-    return members.map((member) => ({
-      userId: member.userId,
-      name: member.user.name,
-      image: member.user.image ?? undefined,
-    }));
   }),
   listMembers: spaceProcedure.query(async ({ ctx }) => {
     const [members, totalCount] = await Promise.all([

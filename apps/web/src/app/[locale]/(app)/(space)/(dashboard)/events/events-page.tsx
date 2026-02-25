@@ -102,7 +102,7 @@ function EventsEmptyState({ status }: { status: Status }) {
 function EventsPageContent() {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
-  const [members] = trpc.space.members.useSuspenseQuery();
+  const [{ data: members }] = trpc.space.listMembers.useSuspenseQuery();
 
   const { status, q, member } = eventsSearchParamsSchema.parse(
     Object.fromEntries(searchParams.entries()),
