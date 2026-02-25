@@ -23,6 +23,7 @@ import {
   publicProcedure,
   requireUserMiddleware,
   router,
+  spaceProcedure,
 } from "../trpc";
 import { comments } from "./polls/comments";
 import { participants } from "./polls/participants";
@@ -47,7 +48,7 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 export const polls = router({
   participants,
   comments,
-  infiniteChronological: privateProcedure
+  infiniteChronological: spaceProcedure
     .input(
       z.object({
         status: z.enum(["open", "closed", "scheduled", "canceled"]).optional(),
@@ -57,7 +58,7 @@ export const polls = router({
         limit: z.number().default(20),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ ctx, input }) => {
       const { cursor: page, limit: pageSize, status, search, member } = input;
 
       const result = await getPolls({
@@ -66,6 +67,7 @@ export const polls = router({
         member,
         page,
         pageSize,
+        spaceId: ctx.space.id,
       });
 
       let nextCursor: number | undefined;

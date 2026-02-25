@@ -150,24 +150,22 @@ export const proProcedure = privateProcedure.use(async ({ next }) => {
   return next();
 });
 
-export const spaceProcedure = privateProcedure.use(
-  async ({ ctx, next }) => {
-    const space = await getActiveSpaceForUser(ctx.user.id);
+export const spaceProcedure = privateProcedure.use(async ({ ctx, next }) => {
+  const space = await getActiveSpaceForUser(ctx.user.id);
 
-    if (!space) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "No active space found",
-      });
-    }
-
-    return next({
-      ctx: {
-        space,
-      },
+  if (!space) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "No active space found",
     });
-  },
-);
+  }
+
+  return next({
+    ctx: {
+      space,
+    },
+  });
+});
 
 export const spaceOwnerCloudOnlyProcedure = privateProcedure.use(
   async ({ ctx, next }) => {

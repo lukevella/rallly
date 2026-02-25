@@ -155,6 +155,7 @@ type PollFilters = {
   pageSize?: number;
   q?: string;
   member?: string;
+  spaceId: string;
 };
 
 export const getPolls = async ({
@@ -163,12 +164,11 @@ export const getPolls = async ({
   member,
   page = 1,
   pageSize = 20,
+  spaceId,
 }: PollFilters) => {
-  const space = await requireSpace();
-
   // Build the where clause based on filters
   const where: Prisma.PollWhereInput = {
-    spaceId: space.id,
+    spaceId,
     deletedAt: null,
     ...(status && { status }),
     ...(q && { title: { contains: q, mode: "insensitive" } }),
