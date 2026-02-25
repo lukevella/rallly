@@ -6,7 +6,7 @@ import type {
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import { cache } from "react";
-import { requireSpace, requireUser } from "@/auth/data";
+import { requireUser } from "@/auth/data";
 
 const logger = createLogger("space/data");
 
@@ -126,60 +126,6 @@ export const loadSpace = cache(async ({ id }: { id: string }) => {
   return space;
 });
 
-export const loadPaymentMethods = cache(async () => {
-  const user = await requireUser();
-  const paymentMethods = await prisma.paymentMethod.findMany({
-    where: {
-      userId: user.id,
-    },
-    select: {
-      id: true,
-      type: true,
-      data: true,
-    },
-  });
-
-  return paymentMethods;
-});
-
-export const loadMembers = cache(async () => {
-  const space = await requireSpace();
-
-  const [members, totalCount] = await Promise.all([
-    prisma.spaceMember.findMany({
-      where: {
-        spaceId: space.id,
-      },
-      select: {
-        id: true,
-        userId: true,
-        role: true,
-        spaceId: true,
-        user: {
-          select: {
-            name: true,
-            email: true,
-            image: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    }),
-    prisma.spaceMember.count({
-      where: {
-        spaceId: space.id,
-      },
-    }),
-  ]);
-
-  return {
-    total: totalCount,
-    data: members.map((member) => createMemberDTO({ ...member, space })),
-  };
-});
-
 export const getMember = async (id: string) => {
   const member = await prisma.spaceMember.findUnique({
     where: {
@@ -211,33 +157,6 @@ export const getMember = async (id: string) => {
 
   return createMemberDTO(member);
 };
-
-export const loadInvites = cache(async () => {
-  const space = await requireSpace();
-
-  const invites = await prisma.spaceMemberInvite.findMany({
-    where: {
-      spaceId: space.id,
-    },
-    include: {
-      invitedBy: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  return invites.map((invite) => ({
-    ...invite,
-    role: fromDBRole(invite.role),
-  }));
-});
 
 export const getActiveSpaceForUser = async (userId: string) => {
   const spaceMember = await prisma.spaceMember.findFirst({
