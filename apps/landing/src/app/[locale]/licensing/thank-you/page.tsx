@@ -69,8 +69,8 @@ export default async function LicensingThankYouPage(props: {
               >
                 <Trans
                   t={t}
-                  i18nKey="licensingThankYouNextStepsApplyLicense"
-                  defaults="How to Apply Your License"
+                  i18nKey="licensingThankYouNextStepsActivateLicense"
+                  defaults="How to Activate Your License"
                 />
               </a>
             </li>
