@@ -37,7 +37,11 @@ export async function POST(request: NextRequest) {
 
   const space = await getActiveSpaceForUser(user.id);
 
-  if (!space || space.ownerId !== user.id) {
+  if (!space) {
+    return NextResponse.json({ error: "Space not found" }, { status: 404 });
+  }
+
+  if (space.ownerId !== user.id) {
     return NextResponse.json(
       { error: "You need to be the owner of this space to upgrade it" },
       { status: 403 },
