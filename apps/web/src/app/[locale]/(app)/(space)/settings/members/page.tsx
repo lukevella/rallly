@@ -1,9 +1,23 @@
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { getTranslation } from "@/i18n/server";
+import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { MembersSettingsPageClient } from "./page-client";
 
-export default function MembersSettingsPage() {
-  return <MembersSettingsPageClient />;
+export default async function MembersSettingsPage() {
+  const helpers = await createPrivateSSRHelper();
+
+  await Promise.all([
+    helpers.space.listMembers.prefetch(),
+    helpers.space.listInvites.prefetch(),
+    helpers.space.seats.prefetch(),
+  ]);
+
+  return (
+    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
+      <MembersSettingsPageClient />
+    </HydrationBoundary>
+  );
 }
 
 export async function generateMetadata(): Promise<Metadata> {
