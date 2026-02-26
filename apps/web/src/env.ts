@@ -84,6 +84,10 @@ export const env = createEnv({
      */
     MODERATION_ENABLED: z.enum(["true", "false"]).default("false"),
     /**
+     * Comma-separated list of domains that trigger an automatic user ban
+     */
+    BANNED_DOMAINS: z.string().optional(),
+    /**
      * Licensing API Configuration
      */
     LICENSE_API_URL: z.string().optional(),
@@ -213,6 +217,7 @@ export const env = createEnv({
     NOREPLY_EMAIL_NAME: process.env.NOREPLY_EMAIL_NAME,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     MODERATION_ENABLED: process.env.MODERATION_ENABLED,
+    BANNED_DOMAINS: process.env.BANNED_DOMAINS,
     KV_REST_API_URL: process.env.KV_REST_API_URL,
     KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     LICENSE_API_URL: process.env.LICENSE_API_URL,

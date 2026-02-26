@@ -1,3 +1,4 @@
+import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import { waitUntil } from "@vercel/functions";
 import { env } from "@/env";
@@ -7,6 +8,22 @@ import { moderateContentWithAI } from "./libs/ai-moderation";
 import { containsSuspiciousPatterns } from "./libs/pattern-moderation";
 
 const logger = createLogger("moderation");
+
+function getBannedDomains(): string[] {
+  const csv = env.BANNED_DOMAINS;
+  if (!csv) return [];
+  return csv
+    .split(",")
+    .map((d) => d.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function containsBannedDomain(text: string): boolean {
+  const domains = getBannedDomains();
+  if (domains.length === 0) return false;
+  const lower = text.toLowerCase();
+  return domains.some((domain) => lower.includes(domain));
+}
 
 export type { ModerationResult, ModerationVerdict };
 
@@ -49,6 +66,25 @@ export async function moderateContent({
     .filter(([_, value]) => value.trim() !== "")
     .map(([key, value]) => `${key}:\n${value}`)
     .join("\n\n");
+
+  // Check for banned domains — auto-ban the user immediately
+  if (containsBannedDomain(textToModerate)) {
+    logger.warn({ userId }, "Banned domain detected, banning user");
+    waitUntil(
+      prisma.user.update({
+        where: { id: userId },
+        data: {
+          banned: true,
+          bannedAt: new Date(),
+          banReason: "Automatic ban: banned domain detected in content",
+        },
+      }),
+    );
+    return {
+      verdict: "flagged",
+      reason: "Content contains a banned domain",
+    };
+  }
 
   // First check for suspicious patterns (faster)
   const hasSuspiciousPatterns = containsSuspiciousPatterns(textToModerate);
