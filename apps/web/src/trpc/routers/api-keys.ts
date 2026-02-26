@@ -5,20 +5,18 @@ import { isApiAccessEnabled } from "@/features/developer/data";
 import { createApiKey } from "@/features/developer/utils";
 import { router, spaceOwnerProcedure } from "../trpc";
 
-const apiAccessProcedure = spaceOwnerProcedure.use(
-  async ({ ctx, next }) => {
-    const hasAccess = await isApiAccessEnabled(ctx.user, ctx.space);
+const apiAccessProcedure = spaceOwnerProcedure.use(async ({ ctx, next }) => {
+  const hasAccess = await isApiAccessEnabled(ctx.user, ctx.space);
 
-    if (!hasAccess) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "API access is not enabled for this user or space",
-      });
-    }
+  if (!hasAccess) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "API access is not enabled for this user or space",
+    });
+  }
 
-    return next();
-  },
-);
+  return next();
+});
 
 export const apiKeys = router({
   list: apiAccessProcedure.query(async ({ ctx }) => {

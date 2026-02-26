@@ -169,7 +169,6 @@ export const spaceOwnerProcedure = spaceProcedure.use(async ({ ctx, next }) => {
   return next();
 });
 
-
 export const createRateLimitMiddleware = (
   name: string,
   requests: number,
