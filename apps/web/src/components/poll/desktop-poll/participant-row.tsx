@@ -23,7 +23,6 @@ export interface ParticipantRowProps {
     id: string;
     name: string;
     userId?: string;
-    guestId?: string;
     email?: string;
     votes: Vote[];
   };

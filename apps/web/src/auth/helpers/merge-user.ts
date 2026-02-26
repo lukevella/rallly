@@ -22,61 +22,6 @@ const getActiveSpaceForUser = async ({ userId }: { userId: string }) => {
   return spaceMember?.spaceId;
 };
 
-export const mergeGuestsIntoUser = async (userId: string, guestId: string) => {
-  const spaceId = await getActiveSpaceForUser({ userId });
-
-  try {
-    await prisma.$transaction(async (tx) => {
-      await Promise.all([
-        tx.poll.updateMany({
-          where: {
-            guestId,
-          },
-          data: {
-            guestId: null,
-            userId: userId,
-            spaceId,
-          },
-        }),
-
-        tx.participant.updateMany({
-          where: {
-            guestId,
-          },
-          data: {
-            guestId: null,
-            userId: userId,
-          },
-        }),
-
-        tx.comment.updateMany({
-          where: {
-            guestId,
-          },
-          data: {
-            guestId: null,
-            userId: userId,
-          },
-        }),
-      ]);
-    });
-
-    const posthog = PostHogClient();
-
-    posthog?.capture({
-      distinctId: userId,
-      event: "$merge_dangerously",
-      properties: { alias: guestId },
-    });
-
-    if (posthog) {
-      waitUntil(posthog.shutdown());
-    }
-  } catch (error) {
-    Sentry.captureException(error);
-  }
-};
-
 export const linkAnonymousUser = async (
   authenticatedUserId: string,
   anonymousUserId: string,

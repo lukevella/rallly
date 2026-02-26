@@ -190,9 +190,7 @@ export const polls = router({
           description,
           adminUrlId: adminToken,
           participantUrlId,
-          ...(ctx.user.isLegacyGuest
-            ? { guestId: ctx.user.id }
-            : { userId: ctx.user.id }),
+          userId: ctx.user.id,
           watchers: !ctx.user.isGuest
             ? {
                 create: {
@@ -653,7 +651,6 @@ export const polls = router({
             },
           },
           userId: true,
-          guestId: true,
           deleted: true,
           spaceId: true,
           watchers: {

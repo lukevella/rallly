@@ -27,17 +27,13 @@ export function useUser() {
     return {
       user: user ?? undefined,
       createGuestIfNeeded: async () => {
-        const isLegacyGuest = user?.id.startsWith("user-");
-        if (!user || isLegacyGuest) {
+        if (!user) {
           await authClient.signIn.anonymous();
           router.refresh();
         }
       },
       getAbility: (): UserAbility => defineAbilityFor(user ?? undefined),
-      ownsObject: (resource: {
-        userId?: string | null;
-        guestId?: string | null;
-      }) => {
+      ownsObject: (resource: { userId?: string | null }) => {
         return user ? isOwner(resource, { id: user.id }) : false;
       },
     };

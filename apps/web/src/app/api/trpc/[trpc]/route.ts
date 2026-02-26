@@ -41,9 +41,6 @@ const handler = async (req: NextRequest) => {
       router: appRouter,
       createContext: async () => {
         const locale = session?.user?.locale ?? reqLocale;
-        const isLegacyGuest = session?.legacy && session?.user?.isGuest;
-
-        event.isLegacyGuest = isLegacyGuest;
 
         const user = session?.user
           ? {
@@ -52,7 +49,6 @@ const handler = async (req: NextRequest) => {
               locale,
               image: session.user.image ?? undefined,
               timeZone: session.user.timeZone ?? undefined,
-              isLegacyGuest: isLegacyGuest ?? false,
             }
           : undefined;
 

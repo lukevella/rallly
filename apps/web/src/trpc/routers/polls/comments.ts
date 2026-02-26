@@ -29,14 +29,11 @@ export const comments = router({
         },
         select: {
           userId: true,
-          guestId: true,
           hideParticipants: true,
         },
       });
 
-      const isOwner = ctx.user?.isLegacyGuest
-        ? poll?.guestId === ctx.user.id
-        : poll?.userId === ctx.user?.id;
+      const isOwner = poll?.userId === ctx.user?.id;
 
       const hideParticipants = poll?.hideParticipants && !isOwner;
 
@@ -50,9 +47,7 @@ export const comments = router({
           return await prisma.comment.findMany({
             where: {
               pollId,
-              ...(ctx.user.isLegacyGuest
-                ? { guestId: ctx.user.id }
-                : { userId: ctx.user.id }),
+              userId: ctx.user.id,
             },
             orderBy: [
               {
@@ -112,9 +107,7 @@ export const comments = router({
           content,
           pollId,
           authorName,
-          ...(ctx.user.isLegacyGuest
-            ? { guestId: ctx.user.id }
-            : { userId: ctx.user.id }),
+          userId: ctx.user.id,
         },
         select: {
           id: true,
@@ -198,7 +191,7 @@ export const comments = router({
 
       const comment = await prisma.comment.findUnique({
         where: { id: commentId },
-        select: { pollId: true, userId: true, guestId: true },
+        select: { pollId: true, userId: true },
       });
 
       if (!comment) {
@@ -208,7 +201,7 @@ export const comments = router({
         });
       }
 
-      const isAuthor = comment.userId === userId || comment.guestId === userId;
+      const isAuthor = comment.userId === userId;
 
       if (!isAuthor && !(await hasPollAdminAccess(comment.pollId, userId))) {
         throw new TRPCError({

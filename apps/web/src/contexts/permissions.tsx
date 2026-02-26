@@ -61,9 +61,7 @@ export const usePermissions = () => {
 
       if (
         ownsObject(participant) ||
-        (context.userId &&
-          (participant.userId === context.userId ||
-            participant.guestId === context.userId))
+        (context.userId && participant.userId === context.userId)
       ) {
         return true;
       }

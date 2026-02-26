@@ -21,7 +21,7 @@ const MAX_PARTICIPANTS = 1000;
 async function canModifyParticipant(participantId: string, userId: string) {
   const participant = await prisma.participant.findUnique({
     where: { id: participantId },
-    select: { id: true, pollId: true, userId: true, guestId: true },
+    select: { id: true, pollId: true, userId: true },
   });
 
   if (!participant) {
@@ -31,8 +31,7 @@ async function canModifyParticipant(participantId: string, userId: string) {
     });
   }
 
-  const isOwner =
-    participant.userId === userId || participant.guestId === userId;
+  const isOwner = participant.userId === userId;
 
   if (!isOwner && !(await hasPollAdminAccess(participant.pollId, userId))) {
     throw new TRPCError({
@@ -248,9 +247,7 @@ export const participants = router({
             name: name,
             email,
             timeZone,
-            ...(ctx.user.isLegacyGuest
-              ? { guestId: ctx.user.id }
-              : { userId: ctx.user.id }),
+            userId: ctx.user.id,
             locale: ctx.user.locale ?? undefined,
             votes: {
               createMany: {
@@ -268,7 +265,6 @@ export const participants = router({
                 id: true,
                 title: true,
                 userId: true,
-                guestId: true,
               },
             },
           },
