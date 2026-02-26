@@ -15,7 +15,6 @@ import { getSession } from "@/lib/auth";
 
 const inputSchema = z.object({
   period: z.enum(["monthly", "yearly"]).optional(),
-  success_path: z.string().optional(),
   return_path: z.string().optional(),
 });
 
