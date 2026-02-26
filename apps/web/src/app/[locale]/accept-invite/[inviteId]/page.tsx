@@ -17,11 +17,8 @@ export default async function JoinPage({
 }) {
   const { inviteId } = await params;
   const helpers = await createPrivateSSRHelper();
-  const user = await helpers.user.getMe.fetch();
+  const user = await helpers.user.getAuthed.fetch();
 
-  if (!user) {
-    return null;
-  }
   const invite = await prisma.spaceMemberInvite.findUnique({
     where: {
       id: inviteId,

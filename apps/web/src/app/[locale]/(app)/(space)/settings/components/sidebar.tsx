@@ -23,10 +23,10 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
-import { useUser } from "@/components/user-provider";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
+import { trpc } from "@/trpc/client";
 
 export function AccountSidebarMenu() {
   const { t } = useTranslation();
@@ -138,8 +138,8 @@ export function SpaceSidebarMenu() {
 
 export function DeveloperSidebarMenu() {
   const { data: space } = useSpace();
-  const { user } = useUser();
-  const isSpaceOwner = space.ownerId === user?.id;
+  const [user] = trpc.user.getAuthed.useSuspenseQuery();
+  const isSpaceOwner = space.ownerId === user.id;
   const pathname = usePathname();
   const isDeveloperToolsEnabled = useFeatureFlagEnabled("developer-tools");
 

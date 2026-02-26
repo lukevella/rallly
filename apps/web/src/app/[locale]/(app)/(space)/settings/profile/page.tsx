@@ -1,102 +1,19 @@
-import { Button } from "@rallly/ui/button";
-import { DialogTrigger } from "@rallly/ui/dialog";
-import { TrashIcon } from "lucide-react";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 
 import type { Params } from "@/app/[locale]/types";
-import {
-  PageSection,
-  PageSectionContent,
-  PageSectionDescription,
-  PageSectionGroup,
-  PageSectionHeader,
-  PageSectionTitle,
-} from "@/app/components/page-layout";
-import {
-  SettingsPage,
-  SettingsPageContent,
-  SettingsPageDescription,
-  SettingsPageHeader,
-  SettingsPageTitle,
-} from "@/app/components/settings-layout";
-import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
-import { DeleteAccountDialog } from "./delete-account-dialog";
-import { ProfileEmailAddress } from "./profile-email-address";
-import { ProfileSettings } from "./profile-settings";
+import { ProfilePage } from "./profile-page";
 
 export default async function Page() {
   const helpers = await createPrivateSSRHelper();
-  const user = await helpers.user.getMe.fetch();
+  await helpers.user.getAuthed.prefetch();
 
-  if (!user) {
-    return null;
-  }
   return (
-    <SettingsPage>
-      <SettingsPageHeader>
-        <SettingsPageTitle>
-          <Trans i18nKey="profile" defaults="Profile" />
-        </SettingsPageTitle>
-        <SettingsPageDescription>
-          <Trans
-            i18nKey="profileDescription"
-            defaults="Set your public profile information"
-          />
-        </SettingsPageDescription>
-      </SettingsPageHeader>
-      <SettingsPageContent>
-        <PageSectionGroup>
-          <PageSection variant="card">
-            <PageSectionContent>
-              <ProfileSettings name={user.name} image={user.image} />
-            </PageSectionContent>
-          </PageSection>
-
-          <PageSection variant="card">
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans i18nKey="profileEmailAddress" defaults="Email Address" />
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  i18nKey="profileEmailAddressDescription"
-                  defaults="Your email address is used to log in to your account"
-                />
-              </PageSectionDescription>
-            </PageSectionHeader>
-            <PageSectionContent>
-              <ProfileEmailAddress email={user.email} />
-            </PageSectionContent>
-          </PageSection>
-
-          <PageSection variant="card">
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans i18nKey="dangerZone" defaults="Danger Zone" />
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  i18nKey="dangerZoneAccount"
-                  defaults="Delete your account permanently. This action cannot be undone."
-                />
-              </PageSectionDescription>
-            </PageSectionHeader>
-            <PageSectionContent>
-              <DeleteAccountDialog email={user.email}>
-                <DialogTrigger asChild>
-                  <Button variant="destructive">
-                    <TrashIcon className="size-4" />
-                    <Trans i18nKey="deleteAccount" defaults="Delete Account" />
-                  </Button>
-                </DialogTrigger>
-              </DeleteAccountDialog>
-            </PageSectionContent>
-          </PageSection>
-        </PageSectionGroup>
-      </SettingsPageContent>
-    </SettingsPage>
+    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
+      <ProfilePage />
+    </HydrationBoundary>
   );
 }
 

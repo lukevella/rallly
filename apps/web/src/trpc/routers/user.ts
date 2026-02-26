@@ -24,6 +24,18 @@ export const user = router({
 
     return await getUser(ctx.user.id);
   }),
+  getAuthed: privateProcedure.query(async ({ ctx }) => {
+    const user = await getUser(ctx.user.id);
+
+    if (!user) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
+
+    return user;
+  }),
   changeName: privateProcedure
     .input(
       z.object({

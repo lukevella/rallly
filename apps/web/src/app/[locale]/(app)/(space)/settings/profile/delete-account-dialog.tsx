@@ -16,15 +16,11 @@ import { useForm } from "react-hook-form";
 
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 import { deleteCurrentUserAction } from "./actions";
 
-export function DeleteAccountDialog({
-  email,
-  children,
-  ...rest
-}: DialogProps & {
-  email: string;
-}) {
+export function DeleteAccountDialog({ children, ...rest }: DialogProps & {}) {
+  const [user] = trpc.user.getAuthed.useSuspenseQuery();
   const form = useForm<{ email: string }>({
     defaultValues: {
       email: "",
@@ -72,7 +68,7 @@ export function DeleteAccountDialog({
                 name="email"
                 rules={{
                   validate: (value) => {
-                    if (value !== email) {
+                    if (value !== user.email) {
                       return t("emailMismatch", {
                         defaultValue: "Email does not match the account email",
                       });
@@ -85,7 +81,7 @@ export function DeleteAccountDialog({
                     <Input
                       autoComplete="off"
                       data-1p-ignore
-                      placeholder={email}
+                      placeholder={user.email}
                       {...field}
                     />
                     <FormMessage />

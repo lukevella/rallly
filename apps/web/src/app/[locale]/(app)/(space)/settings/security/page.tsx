@@ -32,11 +32,8 @@ export default async function SecurityPage({
 }) {
   const { setupPassword } = await searchParams;
   const helpers = await createPrivateSSRHelper();
-  const user = await helpers.user.getMe.fetch();
+  const user = await helpers.user.getAuthed.fetch();
 
-  if (!user) {
-    return null;
-  }
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
   const hasPassword = isEmailLoginEnabled
     ? await getUserHasPassword(user.id)

@@ -35,13 +35,9 @@ export default async function Layout({
 }) {
   const helpers = await createPrivateSSRHelper();
   const [user] = await Promise.all([
-    helpers.user.getMe.fetch(),
+    helpers.user.getAuthed.fetch(),
     helpers.spaces.list.prefetch(),
   ]);
-
-  if (!user) {
-    return null;
-  }
 
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>

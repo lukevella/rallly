@@ -18,11 +18,7 @@ import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {
   const helpers = await createPrivateSSRHelper();
-  const user = await helpers.user.getMe.fetch();
-
-  if (!user) {
-    return null;
-  }
+  const user = await helpers.user.getAuthed.fetch();
 
   if (user.role === "admin") {
     redirect("/control-panel");

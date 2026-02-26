@@ -17,13 +17,9 @@ import { SpacesList } from "./components/spaces-list";
 export default async function Page() {
   const helpers = await createPrivateSSRHelper();
   const [user, spaces] = await Promise.all([
-    helpers.user.getMe.fetch(),
+    helpers.user.getAuthed.fetch(),
     helpers.spaces.list.fetch(),
   ]);
-
-  if (!user) {
-    return null;
-  }
 
   return (
     <SettingsPage>

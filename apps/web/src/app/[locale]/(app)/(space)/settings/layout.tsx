@@ -35,7 +35,7 @@ export default async function Layout({
   children?: React.ReactNode;
 }) {
   const helpers = await createPrivateSSRHelper();
-  await helpers.user.getMe.prefetch();
+  await helpers.user.getAuthed.prefetch();
 
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>

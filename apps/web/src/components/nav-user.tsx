@@ -37,14 +37,10 @@ import { signOut } from "@/lib/auth-client";
 import { trpc } from "@/trpc/client";
 
 export function NavUser() {
-  const { data: user } = trpc.user.getMe.useQuery();
+  const [user] = trpc.user.getAuthed.useSuspenseQuery();
   const [isPending, setIsPending] = React.useState(false);
   const posthog = usePostHog();
   const { theme, setTheme } = useTheme();
-
-  if (!user) {
-    return null;
-  }
 
   return (
     <>

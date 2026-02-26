@@ -4,40 +4,33 @@ import { usePostHog } from "@rallly/posthog/client";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
-import { useUser } from "@/components/user-provider";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { trpc } from "@/trpc/client";
 import { defineAbilityForSpace } from "./ability";
 
 export const useSpace = () => {
-  const { user } = useUser();
+  const [user] = trpc.user.getAuthed.useSuspenseQuery();
   const [data] = trpc.space.getCurrent.useSuspenseQuery();
 
   if (!data) {
     throw new Error("No active space found");
   }
 
-  const userId = user?.id;
-
   return React.useMemo(
     () => ({
       data,
       getAbility: () => defineAbilityForSpace(data),
       getMemberAbility: () =>
-        defineAbilityForMember(
-          userId
-            ? {
-                user: { id: userId },
-                space: {
-                  id: data.id,
-                  ownerId: data.ownerId,
-                  role: data.role,
-                },
-              }
-            : undefined,
-        ),
+        defineAbilityForMember({
+          user: { id: user.id },
+          space: {
+            id: data.id,
+            ownerId: data.ownerId,
+            role: data.role,
+          },
+        }),
     }),
-    [data, userId],
+    [data, user.id],
   );
 };
 

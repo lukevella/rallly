@@ -78,11 +78,7 @@ export const getCurrentUserSpace = async () => {
 
 export const requireAdmin = cache(async () => {
   const helpers = await createPrivateSSRHelper();
-  const user = await helpers.user.getMe.fetch();
-
-  if (!user) {
-    redirect("/api/auth/invalid-session");
-  }
+  const user = await helpers.user.getAuthed.fetch();
 
   if (user.role !== "admin") {
     if (isInitialAdmin(user.email)) {

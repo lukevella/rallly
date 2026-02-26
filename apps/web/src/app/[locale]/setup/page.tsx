@@ -9,11 +9,7 @@ import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 
 export default async function SetupPage() {
   const helpers = await createPrivateSSRHelper();
-  const user = await helpers.user.getMe.fetch();
-
-  if (!user) {
-    return null;
-  }
+  const user = await helpers.user.getAuthed.fetch();
 
   if (await userHasSpaces(user.id)) {
     redirect("/");
