@@ -29,7 +29,6 @@ export const comments = router({
         },
         select: {
           userId: true,
-          guestId: true,
           hideParticipants: true,
         },
       });
@@ -192,7 +191,7 @@ export const comments = router({
 
       const comment = await prisma.comment.findUnique({
         where: { id: commentId },
-        select: { pollId: true, userId: true, guestId: true },
+        select: { pollId: true, userId: true },
       });
 
       if (!comment) {
@@ -202,7 +201,7 @@ export const comments = router({
         });
       }
 
-      const isAuthor = comment.userId === userId || comment.guestId === userId;
+      const isAuthor = comment.userId === userId;
 
       if (!isAuthor && !(await hasPollAdminAccess(comment.pollId, userId))) {
         throw new TRPCError({

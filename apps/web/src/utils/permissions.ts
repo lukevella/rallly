@@ -1,6 +1,6 @@
 export function isOwner(
-  resource: { userId?: string | null; guestId?: string | null },
+  resource: { userId?: string | null },
   user: { id: string },
 ) {
-  return resource.userId === user.id || resource.guestId === user.id;
+  return resource.userId === user.id;
 }

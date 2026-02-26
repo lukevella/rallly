@@ -33,10 +33,7 @@ export function useUser() {
         }
       },
       getAbility: (): UserAbility => defineAbilityFor(user ?? undefined),
-      ownsObject: (resource: {
-        userId?: string | null;
-        guestId?: string | null;
-      }) => {
+      ownsObject: (resource: { userId?: string | null }) => {
         return user ? isOwner(resource, { id: user.id }) : false;
       },
     };

@@ -651,7 +651,6 @@ export const polls = router({
             },
           },
           userId: true,
-          guestId: true,
           deleted: true,
           spaceId: true,
           watchers: {
