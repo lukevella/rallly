@@ -602,5 +602,17 @@
   "pollDeleted": "Sondaggio eliminato",
   "pollDeleteError": "Impossibile eliminare il sondaggio",
   "inappropriateContent": "Contenuto inappropriato",
-  "pollReopened": "Sondaggio riaperto"
+  "pollReopened": "Sondaggio riaperto",
+  "errorLabel": "Errore",
+  "errorTitle": "Qualcosa è andato storto",
+  "errorTryAgain": "Prova di nuovo",
+  "errorLinkCreatePoll": "Crea un sondaggio",
+  "errorLinkCreatePollDescription": "Inizia a pianificare una nuova riunione.",
+  "errorLinkSupport": "Supporto",
+  "errorLinkSupportDescription": "Sfoglia i nostri articoli di aiuto e le FAQ.",
+  "errorLinkGithub": "GitHub",
+  "errorLinkGithubDescription": "Segnala un problema o verifica gli aggiornamenti.",
+  "notFoundLabel": "404",
+  "notFoundTitle": "Pagina non trovata",
+  "notFoundDescription": "Spiacenti, non siamo riusciti a trovare la pagina che stai cercando. Ecco alcuni link utili."
 }
