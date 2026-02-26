@@ -27,6 +27,8 @@ import {
 import { comments } from "./polls/comments";
 import { participants } from "./polls/participants";
 
+const collapseNewlines = (s: string) => s.replace(/\n{3,}/g, "\n\n");
+
 const getPollIdFromAdminUrlId = async (urlId: string) => {
   const res = await prisma.poll.findUnique({
     select: {
@@ -108,7 +110,7 @@ export const polls = router({
         title: z.string().trim().min(1),
         timeZone: z.string().optional(),
         location: z.string().trim().optional(),
-        description: z.string().trim().optional(),
+        description: z.string().trim().transform(collapseNewlines).optional(),
         hideParticipants: z.boolean().optional(),
         hideScores: z.boolean().optional(),
         disableComments: z.boolean().optional(),
@@ -296,7 +298,7 @@ export const polls = router({
         title: z.string().trim().optional(),
         timeZone: z.string().optional(),
         location: z.string().trim().optional(),
-        description: z.string().trim().optional(),
+        description: z.string().trim().transform(collapseNewlines).optional(),
         optionsToDelete: z.string().array().optional(),
         optionsToAdd: z.string().array().optional(),
         hideParticipants: z.boolean().optional(),
