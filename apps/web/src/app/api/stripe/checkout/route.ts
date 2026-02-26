@@ -1,6 +1,7 @@
 import { getProPricing, stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { redirect } from "next/navigation";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import * as z from "zod";
@@ -22,11 +23,8 @@ const inputSchema = z.object({
 export async function POST(request: NextRequest) {
   const session = await getSession();
 
-  if (!session?.user) {
-    return NextResponse.json(
-      { error: "You need to be logged in to upgrade your space" },
-      { status: 401 },
-    );
+  if (!session?.user || session.user.isGuest) {
+    redirect("/login");
   }
 
   const user = await getUser(session.user.id);
