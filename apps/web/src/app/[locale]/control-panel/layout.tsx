@@ -2,7 +2,6 @@ import { Icon } from "@rallly/ui/icon";
 import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
 import { GaugeIcon } from "lucide-react";
 import type { Metadata } from "next";
-import { requireUser } from "@/auth/data";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { Trans } from "@/i18n/client";
@@ -15,17 +14,10 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await requireUser();
   return (
     <ControlPanelSidebarProvider>
       <CommandMenu />
-      <ControlPanelSidebar
-        user={{
-          name: user.name,
-          image: user.image,
-          email: user.email,
-        }}
-      />
+      <ControlPanelSidebar />
       <SidebarInset>
         <LicenseLimitWarning />
         <div className="flex flex-1 flex-col">

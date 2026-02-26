@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-
-import { requireUser } from "@/auth/data";
 import { Logo } from "@/components/logo";
 import { CreateSpaceForm } from "@/features/setup/components/create-space-form";
 import { userHasSpaces } from "@/features/setup/utils";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 
 export default async function SetupPage() {
-  const user = await requireUser();
+  const helpers = await createPrivateSSRHelper();
+  const user = await helpers.user.getMe.fetch();
+
+  if (!user) {
+    return null;
+  }
 
   if (await userHasSpaces(user.id)) {
     redirect("/");

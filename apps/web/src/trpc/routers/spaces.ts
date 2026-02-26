@@ -1,0 +1,39 @@
+import { prisma } from "@rallly/database";
+import { createSpaceDTO } from "@/features/space/data";
+import type { SpaceDTO } from "@/features/space/types";
+import { getUser } from "@/features/user/data";
+import { privateProcedure, router } from "../trpc";
+
+export const spaces = router({
+  list: privateProcedure.query(async ({ ctx }) => {
+    const user = await getUser(ctx.user.id);
+
+    if (!user) {
+      return [];
+    }
+
+    const result = await prisma.spaceMember.findMany({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        role: true,
+        space: {
+          select: {
+            id: true,
+            name: true,
+            ownerId: true,
+            tier: true,
+          },
+        },
+      },
+    });
+
+    return result.map<SpaceDTO>((spaceMember) =>
+      createSpaceDTO({
+        ...spaceMember.space,
+        role: spaceMember.role,
+      }),
+    );
+  }),
+});

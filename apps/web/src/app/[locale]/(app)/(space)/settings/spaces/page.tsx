@@ -9,14 +9,21 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
-import { requireUser } from "@/auth/data";
-import { loadSpaces } from "@/features/space/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { SpacesList } from "./components/spaces-list";
 
 export default async function Page() {
-  const [spaces, user] = await Promise.all([loadSpaces(), requireUser()]);
+  const helpers = await createPrivateSSRHelper();
+  const [user, spaces] = await Promise.all([
+    helpers.user.getMe.fetch(),
+    helpers.spaces.list.fetch(),
+  ]);
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <SettingsPage>

@@ -40,7 +40,7 @@ export function useUser() {
   }, [user, router]);
 }
 
-export function UserSync() {
+export function UserLocaleSync() {
   const { user } = useUser();
   return <LocaleSync userLocale={user?.locale} />;
 }

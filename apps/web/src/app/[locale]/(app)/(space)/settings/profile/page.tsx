@@ -19,15 +19,20 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
-import { requireUser } from "@/auth/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { DeleteAccountDialog } from "./delete-account-dialog";
 import { ProfileEmailAddress } from "./profile-email-address";
 import { ProfileSettings } from "./profile-settings";
 
 export default async function Page() {
-  const user = await requireUser();
+  const helpers = await createPrivateSSRHelper();
+  const user = await helpers.user.getMe.fetch();
+
+  if (!user) {
+    return null;
+  }
   return (
     <SettingsPage>
       <SettingsPageHeader>

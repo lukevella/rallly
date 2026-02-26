@@ -17,11 +17,11 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
-import { requireUser } from "@/auth/data";
 import { getUserHasPassword } from "@/features/user/queries";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
+import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { ChangePasswordForm } from "./components/change-password-form";
 import { SetupPasswordForm } from "./components/setup-password-form";
 
@@ -31,7 +31,12 @@ export default async function SecurityPage({
   searchParams: Promise<{ setupPassword?: string }>;
 }) {
   const { setupPassword } = await searchParams;
-  const user = await requireUser();
+  const helpers = await createPrivateSSRHelper();
+  const user = await helpers.user.getMe.fetch();
+
+  if (!user) {
+    return null;
+  }
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
   const hasPassword = isEmailLoginEnabled
     ? await getUserHasPassword(user.id)

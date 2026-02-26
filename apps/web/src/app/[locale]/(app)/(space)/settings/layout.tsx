@@ -15,13 +15,14 @@ import {
   SidebarSeparator,
   SidebarTrigger,
 } from "@rallly/ui/sidebar";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { ArrowLeftIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { requireUser } from "@/auth/data";
 import { NavUser } from "@/components/nav-user";
 import { BillingProvider } from "@/features/billing/client";
 import { Trans } from "@/i18n/client";
+import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import {
   AccountSidebarMenu,
   DeveloperSidebarMenu,
@@ -33,79 +34,78 @@ export default async function Layout({
 }: {
   children?: React.ReactNode;
 }) {
-  const user = await requireUser();
+  const helpers = await createPrivateSSRHelper();
+  await helpers.user.getMe.prefetch();
 
   return (
-    <BillingProvider>
-      <SidebarProvider>
-        <Sidebar>
-          <SidebarHeader>
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem className="flex items-center gap-3">
-                    <Button variant="ghost" size="icon" asChild>
-                      <Link href="/">
-                        <Icon>
-                          <ArrowLeftIcon />
-                        </Icon>
-                      </Link>
-                    </Button>
+    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
+      <BillingProvider>
+        <SidebarProvider>
+          <Sidebar>
+            <SidebarHeader>
+              <SidebarGroup>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem className="flex items-center gap-3">
+                      <Button variant="ghost" size="icon" asChild>
+                        <Link href="/">
+                          <Icon>
+                            <ArrowLeftIcon />
+                          </Icon>
+                        </Link>
+                      </Button>
+                      <span className="font-medium text-sm">
+                        <Trans i18nKey="settings" defaults="Settings" />
+                      </span>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarHeader>
+            <SidebarSeparator />
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupLabel>
+                  <Trans i18nKey="account" defaults="Account" />
+                </SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <AccountSidebarMenu />
+                </SidebarGroupContent>
+              </SidebarGroup>
+              <SidebarGroup>
+                <SidebarGroupLabel>
+                  <Trans i18nKey="space" defaults="Space" />
+                </SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SpaceSidebarMenu />
+                </SidebarGroupContent>
+              </SidebarGroup>
+              <DeveloperSidebarMenu />
+            </SidebarContent>
+            <SidebarFooter>
+              <NavUser />
+            </SidebarFooter>
+          </Sidebar>
+          <SidebarInset>
+            <div className="flex flex-1 flex-col">
+              <header className="sticky top-0 z-10 border-b bg-background/90 p-3 backdrop-blur-xs md:hidden">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger />
+                  <div className="flex items-center gap-2">
+                    <Icon>
+                      <SettingsIcon />
+                    </Icon>
                     <span className="font-medium text-sm">
                       <Trans i18nKey="settings" defaults="Settings" />
                     </span>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarHeader>
-          <SidebarSeparator />
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>
-                <Trans i18nKey="account" defaults="Account" />
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <AccountSidebarMenu />
-              </SidebarGroupContent>
-            </SidebarGroup>
-            <SidebarGroup>
-              <SidebarGroupLabel>
-                <Trans i18nKey="space" defaults="Space" />
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SpaceSidebarMenu />
-              </SidebarGroupContent>
-            </SidebarGroup>
-            <DeveloperSidebarMenu />
-          </SidebarContent>
-          <SidebarFooter>
-            <NavUser
-              name={user.name}
-              image={user.image ?? undefined}
-              email={user.email}
-            />
-          </SidebarFooter>
-        </Sidebar>
-        <SidebarInset>
-          <div className="flex flex-1 flex-col">
-            <header className="sticky top-0 z-10 border-b bg-background/90 p-3 backdrop-blur-xs md:hidden">
-              <div className="flex items-center gap-4">
-                <SidebarTrigger />
-                <div className="flex items-center gap-2">
-                  <Icon>
-                    <SettingsIcon />
-                  </Icon>
-                  <span className="font-medium text-sm">
-                    <Trans i18nKey="settings" defaults="Settings" />
-                  </span>
+                  </div>
                 </div>
-              </div>
-            </header>
-            <main className="flex-1 p-4 lg:py-12">{children}</main>
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
-    </BillingProvider>
+              </header>
+              <main className="flex-1 p-4 lg:py-12">{children}</main>
+            </div>
+          </SidebarInset>
+        </SidebarProvider>
+      </BillingProvider>
+    </HydrationBoundary>
   );
 }

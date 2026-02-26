@@ -34,30 +34,29 @@ import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { useTheme } from "@/features/theme/client";
 import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
+import { trpc } from "@/trpc/client";
 
-export function NavUser({
-  name,
-  image,
-  email,
-}: {
-  name: string;
-  image?: string;
-  email: string;
-}) {
+export function NavUser() {
+  const { data: user } = trpc.user.getMe.useQuery();
   const [isPending, setIsPending] = React.useState(false);
   const posthog = usePostHog();
   const { theme, setTheme } = useTheme();
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <>
       {isPending && <RouterLoadingIndicator />}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button className="flex h-auto w-full gap-2 p-2" variant="ghost">
-            <OptimizedAvatarImage size="md" src={image} name={name} />
+            <OptimizedAvatarImage size="md" src={user.image} name={user.name} />
             <div className="flex-1 truncate text-left">
-              <div className="font-medium">{name}</div>
+              <div className="font-medium">{user.name}</div>
               <div className="mt-0.5 truncate font-normal text-muted-foreground text-xs">
-                {email}
+                {user.email}
               </div>
             </div>
             <Icon>
