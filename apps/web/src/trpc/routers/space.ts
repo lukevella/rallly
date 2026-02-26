@@ -1,14 +1,11 @@
 import { prisma } from "@rallly/database";
-import {
-  getActiveSpaceForUser,
-  getSpaceSeatCount,
-} from "@/features/space/data";
+import { getSpaceSeatCount } from "@/features/space/data";
 import { fromDBRole, getTotalSeatsForSpace } from "@/features/space/utils";
 import { router, spaceProcedure } from "../trpc";
 
 export const space = router({
   getCurrent: spaceProcedure.query(async ({ ctx }) => {
-    return await getActiveSpaceForUser(ctx.user.id);
+    return ctx.space;
   }),
   listMembers: spaceProcedure.query(async ({ ctx }) => {
     const [members, totalCount] = await Promise.all([
