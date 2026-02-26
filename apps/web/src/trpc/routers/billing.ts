@@ -1,7 +1,7 @@
 import { getSpaceSubscription } from "@/features/billing/data";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { isSelfHosted } from "@/utils/constants";
-import { publicProcedure, router, spaceProcedure } from "../trpc";
+import { publicProcedure, router, spaceOwnerProcedure } from "../trpc";
 
 export const billing = router({
   getTier: publicProcedure.query(async ({ ctx }) => {
@@ -17,7 +17,7 @@ export const billing = router({
 
     return space?.tier ?? ("hobby" as const);
   }),
-  getSubscription: spaceProcedure.query(async ({ ctx }) => {
+  getSubscription: spaceOwnerProcedure.query(async ({ ctx }) => {
     return await getSpaceSubscription(ctx.space.id);
   }),
 });

@@ -3,7 +3,6 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import superjson from "superjson";
 import { PostHogClient } from "@/features/analytics/posthog";
-import { isApiAccessEnabled } from "@/features/developer/data";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { getUser } from "@/features/user/data";
@@ -159,20 +158,17 @@ export const proProcedure = spaceProcedure.use(async ({ ctx, next }) => {
   return next();
 });
 
-export const spaceOwnerCloudOnlyProcedure = spaceProcedure.use(
-  async ({ ctx, next }) => {
-    const hasAccess = await isApiAccessEnabled(ctx.user, ctx.space);
+export const spaceOwnerProcedure = spaceProcedure.use(async ({ ctx, next }) => {
+  if (ctx.space.ownerId !== ctx.user.id) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Only the space owner can perform this action",
+    });
+  }
 
-    if (!hasAccess) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "API access is not enabled for this user or space",
-      });
-    }
+  return next();
+});
 
-    return next();
-  },
-);
 
 export const createRateLimitMiddleware = (
   name: string,
