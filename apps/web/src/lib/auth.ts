@@ -17,10 +17,7 @@ import {
 import { headers } from "next/headers";
 import { cache } from "react";
 import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
-import {
-  linkAnonymousUser,
-  mergeGuestsIntoUser,
-} from "@/auth/helpers/merge-user";
+import { linkAnonymousUser } from "@/auth/helpers/merge-user";
 import { isTemporaryEmail } from "@/auth/helpers/temp-email-domains";
 import { env } from "@/env";
 import { PostHogClient } from "@/features/analytics/posthog";
@@ -28,7 +25,6 @@ import { createSpace } from "@/features/space/mutations";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { redis } from "@/lib/kv";
-import { auth as legacyAuth, signOut as legacySignOut } from "@/next-auth";
 import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
 
@@ -329,19 +325,6 @@ export const authLib = betterAuth({
     session: {
       create: {
         after: async (session) => {
-          // Merge legacy guest users into new user
-          const legacySession = await legacyAuth();
-
-          if (legacySession) {
-            if (legacySession.user?.isGuest) {
-              await mergeGuestsIntoUser(session.userId, legacySession.user.id);
-            }
-            // Delete legacy session
-            await legacySignOut({
-              redirect: false,
-            });
-          }
-
           const user = await prisma.user.findUnique({
             where: { id: session.userId },
             select: { isAnonymous: true, lastLoginMethod: true },
@@ -389,10 +372,10 @@ export const getSession = cache(async () => {
           name: session.user.name,
           isGuest: !!session.user.isAnonymous,
           image: session.user.image,
+          locale: session.user.locale ?? undefined,
           timeZone: session.user.timeZone ?? undefined,
         },
         expires: session.session.expiresAt.toISOString(),
-        legacy: false,
       };
     }
   } catch (e) {
@@ -400,40 +383,13 @@ export const getSession = cache(async () => {
     return null;
   }
 
-  // Fallback to legacy auth
-  // TODO: Remove this once we have fully migrated to better-auth and there are no active legacy sessions left
-  try {
-    const legacySession = await legacyAuth();
-    if (legacySession) {
-      logger.warn(
-        {
-          userId: legacySession.user?.id,
-          isGuest: legacySession.user?.isGuest,
-        },
-        "Detected legacy session. This will be removed in the future.",
-      );
-      return {
-        ...legacySession,
-        legacy: true,
-      };
-    }
-  } catch (e) {
-    logger.error({ error: e }, "Failed to get legacy session");
-    return null;
-  }
-
   return null;
 });
 
 export const signOut = async () => {
-  await Promise.all([
-    authLib.api.signOut({
-      headers: await headers(),
-    }),
-    legacySignOut({
-      redirect: false,
-    }),
-  ]);
+  await authLib.api.signOut({
+    headers: await headers(),
+  });
 };
 
 export const getUserIdIfLoggedIn = async () => {

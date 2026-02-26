@@ -11,8 +11,7 @@ export async function getGuestPolls() {
 
   const recentlyCreatedPolls = await prisma.poll.findMany({
     where: {
-      guestId: session.legacy ? session.user.id : undefined,
-      userId: session.legacy ? undefined : session.user.id,
+      userId: session.user.id,
       deleted: false,
     },
     select: {

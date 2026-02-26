@@ -27,8 +27,7 @@ export function useUser() {
     return {
       user: user ?? undefined,
       createGuestIfNeeded: async () => {
-        const isLegacyGuest = user?.id.startsWith("user-");
-        if (!user || isLegacyGuest) {
+        if (!user) {
           await authClient.signIn.anonymous();
           router.refresh();
         }

@@ -5,19 +5,12 @@ export async function canUserManagePoll(
   user: {
     id: string;
     isGuest: boolean;
-    isLegacyGuest: boolean;
   },
   poll: {
     userId?: string | null;
-    guestId?: string | null;
     spaceId?: string | null;
   },
 ) {
-  if (user.isLegacyGuest) {
-    // guest user is owner
-    return poll.guestId === user.id;
-  }
-
   if (poll.userId && poll.userId === user.id) {
     // user is owner
     return true;

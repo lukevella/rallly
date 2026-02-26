@@ -31,7 +31,6 @@ export const createPublicSSRHelper = async () => {
             locale: session.user.locale ?? undefined,
             image: session.user.image ?? undefined,
             timeZone: session.user.timeZone ?? undefined,
-            isLegacyGuest: session.legacy && session.user.isGuest,
           }
         : undefined,
       event,
@@ -68,7 +67,6 @@ export const createPrivateSSRHelper = async () => {
         locale: session.user.locale ?? undefined,
         image: session.user.image ?? undefined,
         timeZone: session.user.timeZone ?? undefined,
-        isLegacyGuest: false,
       },
       event,
     } satisfies TRPCContext,

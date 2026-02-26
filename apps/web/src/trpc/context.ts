@@ -6,7 +6,6 @@ export type User = {
   locale?: string;
   image?: string;
   timeZone?: string;
-  isLegacyGuest: boolean;
 };
 
 export type TRPCContext = {

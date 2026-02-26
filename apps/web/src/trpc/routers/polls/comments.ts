@@ -34,9 +34,7 @@ export const comments = router({
         },
       });
 
-      const isOwner = ctx.user?.isLegacyGuest
-        ? poll?.guestId === ctx.user.id
-        : poll?.userId === ctx.user?.id;
+      const isOwner = poll?.userId === ctx.user?.id;
 
       const hideParticipants = poll?.hideParticipants && !isOwner;
 
@@ -50,9 +48,7 @@ export const comments = router({
           return await prisma.comment.findMany({
             where: {
               pollId,
-              ...(ctx.user.isLegacyGuest
-                ? { guestId: ctx.user.id }
-                : { userId: ctx.user.id }),
+              userId: ctx.user.id,
             },
             orderBy: [
               {
@@ -112,9 +108,7 @@ export const comments = router({
           content,
           pollId,
           authorName,
-          ...(ctx.user.isLegacyGuest
-            ? { guestId: ctx.user.id }
-            : { userId: ctx.user.id }),
+          userId: ctx.user.id,
         },
         select: {
           id: true,

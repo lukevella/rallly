@@ -7,7 +7,6 @@ import {
   lastLoginMethodClient,
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
-import { signOut as nextAuthSignOut } from "next-auth/react";
 import type { Auth } from "@/lib/auth";
 
 export const authClient = createAuthClient({
@@ -22,9 +21,6 @@ export const authClient = createAuthClient({
 });
 
 export async function signOut() {
-  await Promise.all([
-    authClient.signOut(),
-    nextAuthSignOut({ redirect: false }),
-  ]);
+  await authClient.signOut();
   window.location.href = "/login";
 }

@@ -248,9 +248,7 @@ export const participants = router({
             name: name,
             email,
             timeZone,
-            ...(ctx.user.isLegacyGuest
-              ? { guestId: ctx.user.id }
-              : { userId: ctx.user.id }),
+            userId: ctx.user.id,
             locale: ctx.user.locale ?? undefined,
             votes: {
               createMany: {
