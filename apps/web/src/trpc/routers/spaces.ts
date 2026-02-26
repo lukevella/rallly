@@ -22,6 +22,7 @@ export const spaces = router({
           select: {
             id: true,
             name: true,
+            image: true,
             ownerId: true,
             tier: true,
           },
