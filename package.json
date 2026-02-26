@@ -29,17 +29,23 @@
     "release": "./scripts/create-release.sh",
     "screenshots": "pnpm --filter @rallly/screenshots capture",
     "sherif": "pnpx sherif@latest",
-    "sherif:fix": "pnpx sherif@latest --fix"
+    "sherif:fix": "pnpx sherif@latest --fix",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
     "@playwright/test": "^1.57.0",
     "dotenv-cli": "^8.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.5.3",
     "prisma": "^7.3.0",
     "turbo": "^2.6.3",
     "typescript": "^5.8.2",
     "vitest": "^4.0.16"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,json,css}": "biome check --write --no-errors-on-unmatched"
   },
   "engines": {
     "node": "24"
