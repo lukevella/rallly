@@ -23,3 +23,22 @@ export function validateRedirectUrl(
   // Return undefined for invalid redirects, let caller decide the default
   return undefined;
 }
+
+/**
+ * Builds a destination URL with a validated `redirectTo` query parameter.
+ */
+export function buildSafeRedirectUrl({
+  destination,
+  returnUrl,
+}: {
+  destination: string;
+  returnUrl?: string | null;
+}) {
+  const validated = validateRedirectUrl(returnUrl);
+  if (!validated) {
+    return destination;
+  }
+  const searchParams = new URLSearchParams();
+  searchParams.set("redirectTo", validated);
+  return `${destination}?${searchParams.toString()}`;
+}

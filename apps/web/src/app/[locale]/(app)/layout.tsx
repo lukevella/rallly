@@ -2,7 +2,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { UserSync } from "@/components/user-provider";
 import { PreferencesProvider } from "@/contexts/preferences";
-import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 
 export default async function AppLayout({
@@ -10,9 +10,12 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const helpers = await createAuthenticatedSSRHelper();
+  const helpers = await createPublicSSRHelper();
 
-  await helpers.user.getMe.prefetch();
+  await Promise.all([
+    helpers.user.getMe.prefetch(),
+    helpers.billing.getTier.prefetch(),
+  ]);
 
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>

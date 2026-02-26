@@ -14,7 +14,6 @@ import type React from "react";
 import { useFormContext } from "react-hook-form";
 import { ProBadge } from "@/components/pro-badge";
 import { useBilling } from "@/features/billing/client";
-import { useSpace } from "@/features/space/client";
 import { Trans } from "@/i18n/client";
 
 export type PollSettingsFormData = {
@@ -64,10 +63,7 @@ const Setting = ({ children }: React.PropsWithChildren) => {
 export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
   const form = useFormContext<PollSettingsFormData>();
   const posthog = usePostHog();
-  const { showPayWall } = useBilling();
-
-  const space = useSpace();
-  const isFree = space.data.tier === "hobby";
+  const { showPayWall, isFree } = useBilling();
 
   return (
     <Card>

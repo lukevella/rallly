@@ -1,37 +1,86 @@
 import { prisma } from "@rallly/database";
-import { getActiveSpaceForUser } from "@/features/space/data";
-import { privateProcedure, router } from "../trpc";
+import { getSpaceSeatCount } from "@/features/space/data";
+import { fromDBRole, getTotalSeatsForSpace } from "@/features/space/utils";
+import { router, spaceProcedure } from "../trpc";
 
 export const space = router({
-  members: privateProcedure.query(async ({ ctx }) => {
-    const activeSpace = await getActiveSpaceForUser(ctx.user.id);
+  getCurrent: spaceProcedure.query(async ({ ctx }) => {
+    return ctx.space;
+  }),
+  listMembers: spaceProcedure.query(async ({ ctx }) => {
+    const [members, totalCount] = await Promise.all([
+      prisma.spaceMember.findMany({
+        where: {
+          spaceId: ctx.space.id,
+        },
+        select: {
+          id: true,
+          userId: true,
+          role: true,
+          spaceId: true,
+          user: {
+            select: {
+              name: true,
+              email: true,
+              image: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      }),
+      prisma.spaceMember.count({
+        where: {
+          spaceId: ctx.space.id,
+        },
+      }),
+    ]);
 
-    if (!activeSpace) {
-      return [];
-    }
-
-    const members = await prisma.spaceMember.findMany({
+    return {
+      total: totalCount,
+      data: members.map((member) => ({
+        id: member.id,
+        userId: member.userId,
+        spaceId: member.spaceId,
+        name: member.user.name,
+        email: member.user.email,
+        image: member.user.image ?? undefined,
+        role: fromDBRole(member.role),
+        isOwner: member.userId === ctx.space.ownerId,
+      })),
+    };
+  }),
+  listInvites: spaceProcedure.query(async ({ ctx }) => {
+    const invites = await prisma.spaceMemberInvite.findMany({
       where: {
-        spaceId: activeSpace.id,
+        spaceId: ctx.space.id,
       },
-      select: {
-        userId: true,
-        user: {
+      include: {
+        invitedBy: {
           select: {
+            id: true,
             name: true,
-            image: true,
+            email: true,
           },
         },
       },
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
 
-    return members.map((member) => ({
-      userId: member.userId,
-      name: member.user.name,
-      image: member.user.image ?? undefined,
+    return invites.map((invite) => ({
+      ...invite,
+      role: fromDBRole(invite.role),
     }));
+  }),
+  seats: spaceProcedure.query(async ({ ctx }) => {
+    const [total, used] = await Promise.all([
+      getTotalSeatsForSpace(ctx.space.id),
+      getSpaceSeatCount(ctx.space.id),
+    ]);
+
+    return { total, used };
   }),
 });

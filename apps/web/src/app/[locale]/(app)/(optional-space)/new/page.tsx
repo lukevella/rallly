@@ -1,27 +1,23 @@
-import { Button } from "@rallly/ui/button";
 import type { Metadata } from "next";
-import Link from "next/link";
 
-import { redirect } from "next/navigation";
 import { PollPageIcon } from "@/app/components/page-icons";
-import { getCurrentUser } from "@/auth/data";
 import { CreatePoll } from "@/components/create-poll";
 import { UserDropdown } from "@/components/user-dropdown";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
+import {
+  createPrivateSSRHelper,
+  createPublicSSRHelper,
+} from "@/trpc/server/create-ssr-helper";
 import { BackButton } from "./back-button";
 
 export default async function Page() {
-  const [user, isRegistrationEnabled] = await Promise.all([
-    getCurrentUser(),
-    getRegistrationEnabled(),
-  ]);
+  const helpers = isQuickCreateEnabled
+    ? await createPublicSSRHelper()
+    : await createPrivateSSRHelper();
 
-  if (!user && !isQuickCreateEnabled) {
-    redirect(`/login?redirectTo=${encodeURIComponent("/new")}`);
-  }
+  await helpers.user.getMe.prefetch();
 
   return (
     <div className="absolute inset-0 h-dvh overflow-auto bg-gray-100 dark:bg-gray-900">
@@ -41,32 +37,7 @@ export default async function Page() {
             </div>
           </div>
           <div className="flex flex-1 justify-end">
-            {user ? (
-              <UserDropdown
-                name={user.name}
-                image={user.image ?? undefined}
-                email={user.email ?? undefined}
-              />
-            ) : (
-              <div className="flex items-center gap-x-2">
-                <Button variant="ghost" asChild>
-                  <Link
-                    href={`/login?redirectTo=${encodeURIComponent("/new")}`}
-                  >
-                    <Trans i18nKey="login" defaults="Login" />
-                  </Link>
-                </Button>
-                {isRegistrationEnabled ? (
-                  <Button variant="primary" asChild>
-                    <Link
-                      href={`/register?redirectTo=${encodeURIComponent("/new")}`}
-                    >
-                      <Trans i18nKey="signUp" defaults="Sign up" />
-                    </Link>
-                  </Button>
-                ) : null}
-              </div>
-            )}
+            <UserDropdown />
           </div>
         </div>
       </div>

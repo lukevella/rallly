@@ -6,6 +6,7 @@ export type AppErrorCode =
   | "PAYMENT_REQUIRED"
   | "PAYLOAD_TOO_LARGE"
   | "SERVICE_UNAVAILABLE"
+  | "SETUP_REQUIRED"
   | "TOO_MANY_REQUESTS";
 
 export class AppError extends Error {

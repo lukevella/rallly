@@ -1,11 +1,25 @@
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { isApiAccessEnabled } from "@/features/developer/data";
 import { createApiKey } from "@/features/developer/utils";
-import { router, spaceOwnerCloudOnlyProcedure } from "../trpc";
+import { router, spaceOwnerProcedure } from "../trpc";
+
+const apiAccessProcedure = spaceOwnerProcedure.use(async ({ ctx, next }) => {
+  const hasAccess = await isApiAccessEnabled(ctx.user, ctx.space);
+
+  if (!hasAccess) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "API access is not enabled for this user or space",
+    });
+  }
+
+  return next();
+});
 
 export const apiKeys = router({
-  list: spaceOwnerCloudOnlyProcedure.query(async ({ ctx }) => {
+  list: apiAccessProcedure.query(async ({ ctx }) => {
     const keys = await prisma.spaceApiKey.findMany({
       where: {
         spaceId: ctx.space.id,
@@ -26,7 +40,7 @@ export const apiKeys = router({
 
     return keys;
   }),
-  create: spaceOwnerCloudOnlyProcedure
+  create: apiAccessProcedure
     .input(
       z.object({
         name: z.string().min(1).max(100),
@@ -46,7 +60,7 @@ export const apiKeys = router({
 
       return { apiKey };
     }),
-  revoke: spaceOwnerCloudOnlyProcedure
+  revoke: apiAccessProcedure
     .input(
       z.object({
         id: z.string(),

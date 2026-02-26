@@ -4,13 +4,14 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import * as z from "zod";
-import { requireSpace, requireUser } from "@/auth/data";
 import type { CustomerMetadata } from "@/features/billing/schema";
+import { getActiveSpaceForUser } from "@/features/space/data";
 import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
 } from "@/features/subscription/schema";
-import { AppError } from "@/lib/errors";
+import { getUser } from "@/features/user/data";
+import { getSession } from "@/lib/auth";
 
 const inputSchema = z.object({
   period: z.enum(["monthly", "yearly"]).optional(),
@@ -19,13 +20,29 @@ const inputSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const [user, space] = await Promise.all([requireUser(), requireSpace()]);
+  const session = await getSession();
+
+  if (!session?.user || session.user.isGuest) {
+    return NextResponse.redirect(absoluteUrl("/login"), 303);
+  }
+
+  const user = await getUser(session.user.id);
+
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
+  const space = await getActiveSpaceForUser(user.id);
+
+  if (!space) {
+    return NextResponse.json({ error: "Space not found" }, { status: 404 });
+  }
 
   if (space.ownerId !== user.id) {
-    throw new AppError({
-      code: "FORBIDDEN",
-      message: "You need to be the owner of this space to upgrade it",
-    });
+    return NextResponse.json(
+      { error: "You need to be the owner of this space to upgrade it" },
+      { status: 403 },
+    );
   }
 
   const spaceId = space.id;

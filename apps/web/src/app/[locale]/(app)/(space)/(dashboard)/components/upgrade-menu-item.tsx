@@ -7,8 +7,12 @@ import { useBilling } from "@/features/billing/client";
 import { Trans } from "@/i18n/client";
 
 export function UpgradeMenuItem() {
-  const { showPayWall } = useBilling();
+  const { showPayWall, isFree } = useBilling();
   const posthog = usePostHog();
+
+  if (!isFree) {
+    return null;
+  }
 
   return (
     <SidebarMenuItem>

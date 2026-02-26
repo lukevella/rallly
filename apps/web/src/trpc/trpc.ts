@@ -2,20 +2,26 @@ import { prisma } from "@rallly/database";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import superjson from "superjson";
-import { getCurrentUserSpace } from "@/auth/data";
 import { PostHogClient } from "@/features/analytics/posthog";
-import { isApiAccessEnabled } from "@/features/developer/data";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { getUser } from "@/features/user/data";
+import { AppError } from "@/lib/errors";
 import { createRatelimit } from "@/lib/rate-limit";
 import { isSelfHosted } from "@/utils/constants";
 import type { TRPCContext } from "./context";
 
 const t = initTRPC.context<TRPCContext>().create({
   transformer: superjson,
-  errorFormatter({ shape }) {
-    return shape;
+  errorFormatter({ shape, error }) {
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        appError:
+          error.cause instanceof AppError ? error.cause.code : undefined,
+      },
+    };
   },
 });
 
@@ -123,15 +129,25 @@ export const privateProcedure = procedureWithAnalytics.use(
   },
 );
 
-export const proProcedure = privateProcedure.use(async ({ next }) => {
-  if (isSelfHosted) {
-    // Self-hosted instances don't have paid subscriptions
-    return next();
+export const spaceProcedure = privateProcedure.use(async ({ ctx, next }) => {
+  const space = await getActiveSpaceForUser(ctx.user.id);
+
+  if (!space) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "No active space found",
+    });
   }
 
-  const data = await getCurrentUserSpace();
+  return next({
+    ctx: {
+      space,
+    },
+  });
+});
 
-  if (!data || data.space.tier !== "pro") {
+export const proProcedure = spaceProcedure.use(async ({ ctx, next }) => {
+  if (!isSelfHosted && ctx.space.tier !== "pro") {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message:
@@ -142,43 +158,16 @@ export const proProcedure = privateProcedure.use(async ({ next }) => {
   return next();
 });
 
-export const spaceOwnerCloudOnlyProcedure = privateProcedure.use(
-  async ({ ctx, next }) => {
-    const space = await getActiveSpaceForUser(ctx.user.id);
-
-    if (!space) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "No active space found",
-      });
-    }
-
-    const user = await getUser(ctx.user.id);
-
-    if (!user) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "User does not exist",
-      });
-    }
-
-    const hasAccess = await isApiAccessEnabled(user, space);
-
-    if (!hasAccess) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "API access is not enabled for this user or space",
-      });
-    }
-
-    return next({
-      ctx: {
-        space,
-        user: ctx.user,
-      },
+export const spaceOwnerProcedure = spaceProcedure.use(async ({ ctx, next }) => {
+  if (ctx.space.ownerId !== ctx.user.id) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Only the space owner can perform this action",
     });
-  },
-);
+  }
+
+  return next();
+});
 
 export const createRateLimitMiddleware = (
   name: string,

@@ -1,14 +1,22 @@
+import { redirect } from "next/navigation";
 import {
   isQuickCreateEnabled,
   QuickCreateButton,
   QuickCreateWidget,
 } from "@/features/quick-create";
+import { getSession } from "@/lib/auth";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getSession();
+
+  if (session?.user && !session.user.isGuest) {
+    redirect("/");
+  }
+
   return (
     <div className="relative flex min-h-dvh flex-col items-center justify-center bg-background">
       <div className="z-10 flex w-full flex-1 lg:p-4">

@@ -1,71 +1,69 @@
 "use client";
 
 import { usePostHog } from "@rallly/posthog/client";
+import { useRouter } from "next/navigation";
 import React from "react";
-import type { MemberAbility } from "@/features/space/member/ability";
+import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
+import { useUser } from "@/components/user-provider";
 import { defineAbilityForMember } from "@/features/space/member/ability";
-import type { SpaceDTO } from "@/features/space/types";
-import type { SpaceAbility } from "./ability";
+import { trpc } from "@/trpc/client";
 import { defineAbilityForSpace } from "./ability";
 
-const SpaceContext = React.createContext<{
-  data: SpaceDTO;
-  getAbility: () => SpaceAbility;
-  getMemberAbility: () => MemberAbility;
-}>({
-  data: {
-    id: "",
-    name: "",
-    ownerId: "system",
-    role: "member",
-    tier: "hobby",
-  },
-  getAbility: () => defineAbilityForSpace(),
-  getMemberAbility: () => defineAbilityForMember(),
-});
-
 export const useSpace = () => {
-  return React.useContext(SpaceContext);
-};
+  const { user } = useUser();
+  const [data] = trpc.space.getCurrent.useSuspenseQuery();
 
-export const SpaceProvider = ({
-  data,
-  userId,
-  children,
-}: {
-  data: SpaceDTO;
-  userId: string;
-  children: React.ReactNode;
-}) => {
-  const value = React.useMemo(
+  if (!data) {
+    throw new Error("No active space found");
+  }
+
+  const userId = user?.id;
+
+  return React.useMemo(
     () => ({
       data,
       getAbility: () => defineAbilityForSpace(data),
       getMemberAbility: () =>
-        defineAbilityForMember({
-          user: {
-            id: userId,
-          },
-          space: {
-            id: data.id,
-            ownerId: data.ownerId,
-            role: data.role,
-          },
-        }),
+        defineAbilityForMember(
+          userId
+            ? {
+                user: { id: userId },
+                space: {
+                  id: data.id,
+                  ownerId: data.ownerId,
+                  role: data.role,
+                },
+              }
+            : undefined,
+        ),
     }),
     [data, userId],
   );
+};
 
+export function SpaceProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const { data: space, isLoading } = trpc.space.getCurrent.useQuery();
   const posthog = usePostHog();
 
   React.useEffect(() => {
-    posthog?.group("space", data.id, {
-      name: data.name,
-      tier: data.tier,
-    });
-  }, [posthog, data.id, data.name, data.tier]);
+    if (!isLoading && !space) {
+      router.replace("/setup");
+    }
+  }, [isLoading, space, router]);
 
-  return (
-    <SpaceContext.Provider value={value}>{children}</SpaceContext.Provider>
-  );
-};
+  React.useEffect(() => {
+    if (space?.id) {
+      posthog?.group("space", space.id, {
+        name: space.name,
+        tier: space.tier,
+      });
+    }
+  }, [posthog, space?.id, space?.name, space?.tier]);
+
+  if (!space) {
+    return <RouterLoadingIndicator />;
+  }
+
+  return <>{children}</>;
+}

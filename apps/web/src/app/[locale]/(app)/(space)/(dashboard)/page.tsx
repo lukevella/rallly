@@ -1,11 +1,11 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { getTranslation } from "@/i18n/server";
-import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { DashboardHome } from "./dashboard-home";
 
 export default async function Page() {
-  const helpers = await createAuthenticatedSSRHelper();
+  const helpers = await createPrivateSSRHelper();
 
   await helpers.dashboard.stats.prefetch();
 

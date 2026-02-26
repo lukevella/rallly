@@ -1,14 +1,15 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
-import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { createSpaceDTO } from "@/features/space/data";
 import { getUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
+import { getPathname } from "@/lib/pathname";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
+import { buildSafeRedirectUrl } from "@/utils/redirect";
 
 /**
  * Gets the current user if they are logged in, otherwise null.
@@ -92,13 +93,12 @@ export const requireAdmin = cache(async () => {
 
 export const requireUser = cache(async () => {
   const session = await getSession();
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname") ?? "/";
 
   if (!session?.user || session.user.isGuest) {
-    const searchParams = new URLSearchParams();
-    searchParams.set("redirectTo", pathname);
-    redirect(`/login?${searchParams.toString()}`);
+    const pathname = await getPathname();
+    redirect(
+      buildSafeRedirectUrl({ destination: "/login", returnUrl: pathname }),
+    );
   }
 
   const user = await getUser(session.user.id);
@@ -108,41 +108,4 @@ export const requireUser = cache(async () => {
   }
 
   return user;
-});
-
-export const requireSpace = cache(async () => {
-  const user = await requireUser();
-
-  const spaceMember = await prisma.spaceMember.findFirst({
-    where: {
-      userId: user.id,
-    },
-    orderBy: {
-      lastSelectedAt: "desc",
-    },
-    include: {
-      space: {
-        select: {
-          id: true,
-          ownerId: true,
-          name: true,
-          tier: true,
-          image: true,
-        },
-      },
-    },
-  });
-
-  if (!spaceMember) {
-    redirect("/setup");
-  }
-
-  return createSpaceDTO({
-    id: spaceMember.space.id,
-    ownerId: spaceMember.space.ownerId,
-    name: spaceMember.space.name,
-    tier: spaceMember.space.tier,
-    role: spaceMember.role,
-    image: spaceMember.space.image,
-  });
 });

@@ -5,7 +5,6 @@ import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import { revalidatePath } from "next/cache";
 import * as z from "zod";
-import { getCurrentUserSpace } from "@/auth/data";
 import { moderateContent } from "@/features/moderation";
 import { getPolls } from "@/features/poll/data";
 import { canUserManagePoll } from "@/features/poll/helpers";
@@ -23,6 +22,7 @@ import {
   publicProcedure,
   requireUserMiddleware,
   router,
+  spaceProcedure,
 } from "../trpc";
 import { comments } from "./polls/comments";
 import { participants } from "./polls/participants";
@@ -47,7 +47,7 @@ const getPollIdFromAdminUrlId = async (urlId: string) => {
 export const polls = router({
   participants,
   comments,
-  infiniteChronological: privateProcedure
+  infiniteChronological: spaceProcedure
     .input(
       z.object({
         status: z.enum(["open", "closed", "scheduled", "canceled"]).optional(),
@@ -57,7 +57,7 @@ export const polls = router({
         limit: z.number().default(20),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ ctx, input }) => {
       const { cursor: page, limit: pageSize, status, search, member } = input;
 
       const result = await getPolls({
@@ -66,6 +66,7 @@ export const polls = router({
         member,
         page,
         pageSize,
+        spaceId: ctx.space.id,
       });
 
       let nextCursor: number | undefined;
@@ -100,71 +101,6 @@ export const polls = router({
       {} as Record<PollStatus, number>,
     );
   }),
-  /** @deprecated */
-  infiniteList: privateProcedure
-    .input(
-      z.object({
-        status: z.enum(["all", "open", "closed", "scheduled", "canceled"]),
-        cursor: z.string().optional(),
-        limit: z.number(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const { cursor, limit, status } = input;
-      const polls = await prisma.poll.findMany({
-        where: {
-          ...(ctx.user.isLegacyGuest
-            ? { guestId: ctx.user.id }
-            : { userId: ctx.user.id }),
-          deletedAt: null,
-          status: status === "all" ? undefined : status,
-        },
-        orderBy: [
-          {
-            createdAt: "desc",
-          },
-          {
-            title: "asc",
-          },
-        ],
-        cursor: cursor ? { id: cursor } : undefined,
-        take: limit + 1,
-        select: {
-          id: true,
-          title: true,
-          location: true,
-          timeZone: true,
-          createdAt: true,
-          status: true,
-          guestId: true,
-          user: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          participants: {
-            where: {
-              deletedAt: null,
-            },
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      });
-
-      let nextCursor: typeof cursor | undefined;
-      if (polls.length > input.limit) {
-        const nextItem = polls.pop();
-        nextCursor = nextItem?.id;
-      }
-      return {
-        polls,
-        nextCursor,
-      };
-    }),
 
   make: possiblyPublicProcedure
     .input(
@@ -191,6 +127,14 @@ export const polls = router({
       const activeSpace = ctx.user.isGuest
         ? null
         : await getActiveSpaceForUser(ctx.user.id);
+
+      if (!ctx.user.isGuest && !activeSpace) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You must be a member of a space to create a poll",
+        });
+      }
+
       const isPro = activeSpace?.tier === "pro";
 
       const moderation = await moderateContent({
@@ -228,18 +172,7 @@ export const polls = router({
       const adminToken = nanoid();
       const participantUrlId = nanoid();
       const pollId = nanoid();
-      let spaceId: string | undefined;
-
-      if (!ctx.user.isGuest) {
-        const data = await getCurrentUserSpace();
-        if (!data) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Space not found",
-          });
-        }
-        spaceId = data.space.id;
-      }
+      const spaceId = activeSpace?.id;
 
       const poll = await prisma.poll.create({
         include: {

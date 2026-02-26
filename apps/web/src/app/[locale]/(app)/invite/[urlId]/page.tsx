@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { InvitePageLoader } from "@/app/[locale]/(app)/invite/[urlId]/invite-page-loader";
 import { PermissionProvider } from "@/contexts/permissions";
-import { createAuthenticatedSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
 
 import Providers from "./providers";
 
@@ -23,7 +23,7 @@ export default async function Page(props: {
     notFound();
   }
 
-  const trpc = await createAuthenticatedSSRHelper();
+  const trpc = await createPublicSSRHelper();
 
   await Promise.all([
     trpc.polls.get.prefetch({ urlId: params.urlId }),

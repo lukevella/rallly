@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getLocaleFromRequest, setLocaleCookie } from "@/lib/locale/server";
+import { setPathname } from "@/lib/pathname";
 
 export const proxy = async (req: NextRequest) => {
   const { nextUrl } = req;
@@ -16,7 +17,8 @@ export const proxy = async (req: NextRequest) => {
   setLocaleCookie(req, res, locale);
 
   res.headers.set("x-locale", locale);
-  res.headers.set("x-pathname", pathname);
+
+  setPathname(req, res);
 
   return res;
 };

@@ -32,23 +32,39 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { useUser } from "@/components/user-provider";
 import { useTheme } from "@/features/theme/client";
 import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 
-export const UserDropdown = ({
-  name,
-  image,
-  email,
-  className,
-}: {
-  name: string;
-  image?: string;
-  email?: string;
-  className?: string;
-}) => {
+export const UserDropdown = ({ className }: { className?: string }) => {
+  const { user } = useUser();
   const posthog = usePostHog();
   const { theme, setTheme } = useTheme();
+
+  const isRegistrationEnabled = useFeatureFlag("registration");
+
+  if (!user) {
+    return (
+      <div className="flex items-center gap-x-2">
+        <Button variant="ghost" asChild>
+          <Link href={`/login?redirectTo=${encodeURIComponent("/new")}`}>
+            <Trans i18nKey="login" defaults="Login" />
+          </Link>
+        </Button>
+        {isRegistrationEnabled ? (
+          <Button variant="primary" asChild>
+            <Link href={`/register?redirectTo=${encodeURIComponent("/new")}`}>
+              <Trans i18nKey="signUp" defaults="Sign up" />
+            </Link>
+          </Button>
+        ) : null}
+      </div>
+    );
+  }
+
+  const { image, name, email } = user;
 
   return (
     <DropdownMenu modal={false}>

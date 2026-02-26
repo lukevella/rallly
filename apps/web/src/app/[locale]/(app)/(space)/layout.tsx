@@ -1,26 +1,32 @@
-import { requireSpace, requireUser } from "@/auth/data";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { redirect } from "next/navigation";
 import { BillingProvider } from "@/features/billing/client";
 import { SpaceProvider } from "@/features/space/client";
-
-async function loadData() {
-  const [user, space] = await Promise.all([requireUser(), requireSpace()]);
-
-  return {
-    user,
-    space,
-  };
-}
+import { getPathname } from "@/lib/pathname";
+import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { buildSafeRedirectUrl } from "@/utils/redirect";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user, space } = await loadData();
+  const helpers = await createPrivateSSRHelper();
+
+  const space = await helpers.space.getCurrent.fetch();
+
+  if (!space) {
+    const pathname = await getPathname();
+    redirect(
+      buildSafeRedirectUrl({ destination: "/setup", returnUrl: pathname }),
+    );
+  }
 
   return (
-    <SpaceProvider key={space.id} data={space} userId={user.id}>
-      <BillingProvider>{children}</BillingProvider>
-    </SpaceProvider>
+    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
+      <SpaceProvider>
+        <BillingProvider>{children}</BillingProvider>
+      </SpaceProvider>
+    </HydrationBoundary>
   );
 }
