@@ -51,7 +51,7 @@ export const createPrivateSSRHelper = cache(async () => {
 
   const user = await getUser(session.user.id);
 
-  if (!user) {
+  if (!user || user.banned) {
     throw new InvalidSessionError();
   }
 
@@ -85,7 +85,7 @@ export const createAdminSSRHelper = cache(async () => {
 
   const user = await getUser(session.user.id);
 
-  if (!user) {
+  if (!user || user.banned) {
     throw new InvalidSessionError();
   }
 
