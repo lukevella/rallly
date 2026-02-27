@@ -2,8 +2,7 @@ import { createServerSideHelpers } from "@trpc/react-query/server";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import superjson from "superjson";
-import { getUser } from "@/features/user/data";
-import { getSession } from "@/lib/auth";
+import { getUserSession } from "@/features/user/data";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { getPathname } from "@/lib/pathname";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
@@ -19,11 +18,7 @@ import { appRouter } from "../routers";
  * @see https://trpc.io/docs/client/nextjs/server-side-helpers#1-internal-router
  */
 export const createPublicSSRHelper = cache(async () => {
-  const session = await getSession();
-
-  const user = session?.user
-    ? ((await getUser(session.user.id)) ?? undefined)
-    : undefined;
+  const { user } = await getUserSession();
 
   return createServerSideHelpers({
     router: appRouter,
@@ -40,18 +35,16 @@ export const createPublicSSRHelper = cache(async () => {
  * Redirects to /login if the user is not authenticated or is a guest.
  */
 export const createPrivateSSRHelper = cache(async () => {
-  const session = await getSession();
+  const { user } = await getUserSession();
 
-  if (!session?.user || session.user.isGuest) {
+  if (!user || user.isGuest) {
     const pathname = await getPathname();
     redirect(
       buildSafeRedirectUrl({ destination: "/login", returnUrl: pathname }),
     );
   }
 
-  const user = await getUser(session.user.id);
-
-  if (!user || user.banned) {
+  if (user.banned) {
     throw new InvalidSessionError();
   }
 
@@ -72,9 +65,9 @@ export const createPrivateSSRHelper = cache(async () => {
  * is not an admin.
  */
 export const createAdminSSRHelper = cache(async () => {
-  const session = await getSession();
+  const { user } = await getUserSession();
 
-  if (!session?.user || session.user.isGuest) {
+  if (!user || user.isGuest) {
     redirect(
       buildSafeRedirectUrl({
         destination: "/login",
@@ -83,9 +76,7 @@ export const createAdminSSRHelper = cache(async () => {
     );
   }
 
-  const user = await getUser(session.user.id);
-
-  if (!user || user.banned) {
+  if (user.banned) {
     throw new InvalidSessionError();
   }
 

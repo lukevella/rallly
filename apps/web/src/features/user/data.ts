@@ -1,6 +1,8 @@
 import type { User } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { cache } from "react";
 import type { UserDTO } from "@/features/user/schema";
+import { getSession } from "@/lib/auth";
 
 export const createUserDTO = (user: User): UserDTO => ({
   id: user.id,
@@ -17,6 +19,25 @@ export const createUserDTO = (user: User): UserDTO => ({
   isGuest: user.isAnonymous,
 });
 
+const createGuestDTO = (session: {
+  id: string;
+  name: string;
+  email: string;
+  image?: string | null;
+  locale?: string;
+  timeZone?: string;
+}): UserDTO => ({
+  id: session.id,
+  name: session.name,
+  email: session.email,
+  image: session.image ?? undefined,
+  role: "user",
+  banned: false,
+  isGuest: true,
+  locale: session.locale,
+  timeZone: session.timeZone,
+});
+
 export const getUser = async (id: string) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -30,3 +51,17 @@ export const getUser = async (id: string) => {
 
   return createUserDTO(user);
 };
+
+export const getUserSession = cache(async () => {
+  const session = await getSession();
+
+  if (!session?.user) {
+    return { session: null, user: undefined };
+  }
+
+  const user = session.user.isGuest
+    ? createGuestDTO(session.user)
+    : ((await getUser(session.user.id)) ?? undefined);
+
+  return { session, user };
+});
