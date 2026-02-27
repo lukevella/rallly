@@ -79,9 +79,9 @@ export const createPrivateSSRHelper = async () => {
 /**
  * Admin Server-Side Helper
  * @description Use for prefetching data that requires an admin user.
- * Redirects to /login if not authenticated, to /control-panel/setup if
- * the user is the initial admin but not yet promoted, or returns 404 if
- * the user is not an admin.
+ * Redirects to /login if not authenticated, to /admin-setup if the user
+ * is the initial admin but not yet promoted, or returns 404 if the user
+ * is not an admin.
  */
 export const createAdminSSRHelper = async () => {
   const session = await getSession();
@@ -103,7 +103,7 @@ export const createAdminSSRHelper = async () => {
 
   if (user.role !== "admin") {
     if (isInitialAdmin(user.email)) {
-      redirect("/control-panel/setup");
+      redirect("/admin-setup");
     }
 
     notFound();
