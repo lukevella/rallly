@@ -3,7 +3,6 @@ import { CrownIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { requireUser } from "@/auth/data";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -13,11 +12,13 @@ import {
 } from "@/components/empty-state";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
 import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {
-  const user = await requireUser();
+  const helpers = await createPrivateSSRHelper();
+  const user = await helpers.user.getAuthed.fetch();
 
   if (user.role === "admin") {
     redirect("/control-panel");

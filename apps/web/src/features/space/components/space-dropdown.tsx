@@ -28,19 +28,12 @@ import { useSpace } from "@/features/space/client";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 import { CreateSpaceDialog } from "./create-space-dialog";
 import { SpaceIcon } from "./space-icon";
 
-export function SpaceDropdown({
-  spaces,
-}: {
-  spaces: {
-    id: string;
-    name: string;
-    tier: "hobby" | "pro";
-    image?: string;
-  }[];
-}) {
+export function SpaceDropdown() {
+  const { data: spaces = [] } = trpc.spaces.list.useQuery();
   const { data: space } = useSpace();
   const [selectedSpaceId, setSelectedSpaceId] = React.useState(space.id);
   const [isPending, startTransition] = React.useTransition();

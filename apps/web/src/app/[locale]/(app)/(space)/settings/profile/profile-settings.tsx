@@ -23,18 +23,14 @@ const profileSettingsFormData = z.object({
   name: z.string().min(1).max(100),
 });
 
-export const ProfileSettings = ({
-  name,
-  image,
-}: {
-  name: string;
-  image?: string;
-}) => {
+export const ProfileSettings = () => {
+  const [user] = trpc.user.getAuthed.useSuspenseQuery();
+
   const changeName = trpc.user.changeName.useMutation();
   const router = useRouter();
   const form = useForm({
     defaultValues: {
-      name,
+      name: user.name,
     },
     resolver: zodResolver(profileSettingsFormData),
   });
@@ -45,7 +41,7 @@ export const ProfileSettings = ({
       <Form {...form}>
         <form
           onSubmit={handleSubmit(async (data) => {
-            if (data.name !== name) {
+            if (data.name !== user.name) {
               await changeName.mutateAsync({ name: data.name });
             }
             reset(data);
@@ -53,7 +49,7 @@ export const ProfileSettings = ({
           })}
         >
           <div className="flex flex-col gap-y-4">
-            <ProfilePicture name={name} image={image} />
+            <ProfilePicture name={user.name} image={user.image} />
             <FormField
               control={control}
               name="name"

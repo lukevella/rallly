@@ -34,6 +34,10 @@ export function buildSafeRedirectUrl({
   destination: string;
   returnUrl?: string | null;
 }) {
+  if (returnUrl === "/") {
+    return destination;
+  }
+
   const validated = validateRedirectUrl(returnUrl);
   if (!validated) {
     return destination;

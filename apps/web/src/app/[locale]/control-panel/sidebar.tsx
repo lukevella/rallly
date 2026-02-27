@@ -22,16 +22,9 @@ import { Trans } from "@/i18n/client";
 
 import { NavItem } from "./nav-item";
 
-export async function ControlPanelSidebar({
-  user,
-  ...props
-}: React.ComponentProps<typeof Sidebar> & {
-  user: {
-    name: string;
-    image?: string | null;
-    email: string;
-  };
-}) {
+export async function ControlPanelSidebar(
+  props: React.ComponentProps<typeof Sidebar>,
+) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -72,11 +65,7 @@ export async function ControlPanelSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser
-          name={user.name}
-          image={user.image ?? undefined}
-          email={user.email}
-        />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

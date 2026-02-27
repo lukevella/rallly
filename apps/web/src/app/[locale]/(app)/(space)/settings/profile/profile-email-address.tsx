@@ -24,11 +24,12 @@ const emailChangeFormData = z.object({
   email: z.email(),
 });
 
-export const ProfileEmailAddress = ({ email }: { email: string }) => {
+export const ProfileEmailAddress = () => {
+  const [user] = trpc.user.getAuthed.useSuspenseQuery();
   const requestEmailChange = trpc.user.requestEmailChange.useMutation();
   const form = useForm({
     defaultValues: {
-      email,
+      email: user.email,
     },
     resolver: zodResolver(emailChangeFormData),
   });
@@ -48,7 +49,7 @@ export const ProfileEmailAddress = ({ email }: { email: string }) => {
       <Form {...form}>
         <form
           onSubmit={handleSubmit(async (data) => {
-            if (data.email !== email) {
+            if (data.email !== user.email) {
               const res = await requestEmailChange.mutateAsync({
                 email: data.email,
               });

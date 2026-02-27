@@ -1,12 +1,12 @@
 import { prisma } from "@rallly/database";
 import { Card } from "@rallly/ui/card";
 import { notFound } from "next/navigation";
-import { requireUser } from "@/auth/data";
 import { Logo } from "@/components/logo";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { AcceptInviteButton } from "./components/accept-invite-button";
 import { SignOutButton } from "./components/sign-out-button";
 
@@ -16,7 +16,9 @@ export default async function JoinPage({
   params: Promise<{ inviteId: string }>;
 }) {
   const { inviteId } = await params;
-  const user = await requireUser();
+  const helpers = await createPrivateSSRHelper();
+  const user = await helpers.user.getAuthed.fetch();
+
   const invite = await prisma.spaceMemberInvite.findUnique({
     where: {
       id: inviteId,

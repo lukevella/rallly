@@ -78,26 +78,14 @@ export const getCurrentUserSpace = async () => {
 };
 
 export const requireAdmin = cache(async () => {
-  const user = await requireUser();
-
-  if (user.role !== "admin") {
-    if (isInitialAdmin(user.email)) {
-      redirect("/control-panel/setup");
-    }
-
-    notFound();
-  }
-
-  return user;
-});
-
-export const requireUser = cache(async () => {
   const session = await getSession();
 
   if (!session?.user || session.user.isGuest) {
-    const pathname = await getPathname();
     redirect(
-      buildSafeRedirectUrl({ destination: "/login", returnUrl: pathname }),
+      buildSafeRedirectUrl({
+        destination: "/login",
+        returnUrl: await getPathname(),
+      }),
     );
   }
 
@@ -105,6 +93,14 @@ export const requireUser = cache(async () => {
 
   if (!user) {
     redirect("/api/auth/invalid-session");
+  }
+
+  if (user.role !== "admin") {
+    if (isInitialAdmin(user.email)) {
+      redirect("/control-panel/setup");
+    }
+
+    notFound();
   }
 
   return user;

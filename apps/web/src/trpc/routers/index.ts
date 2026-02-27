@@ -9,6 +9,7 @@ import { dashboard } from "./dashboard";
 import { events } from "./events";
 import { polls } from "./polls";
 import { space } from "./space";
+import { spaces } from "./spaces";
 import { user } from "./user";
 
 export const appRouter = mergeRouters(
@@ -20,6 +21,7 @@ export const appRouter = mergeRouters(
     events,
     polls,
     space,
+    spaces,
     user,
     calendars,
   }),

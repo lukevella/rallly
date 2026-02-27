@@ -1,19 +1,12 @@
-import { accessibleBy } from "@casl/prisma";
 import type {
   SpaceMemberRole as DBSpaceMemberRole,
   SpaceTier as DBSpaceTier,
 } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { createLogger } from "@rallly/logger";
-import { cache } from "react";
-import { requireUser } from "@/auth/data";
-
-const logger = createLogger("space/data");
 
 import type { MemberDTO } from "@/features/space/member/types";
 import type { SpaceDTO } from "@/features/space/types";
 import { fromDBRole } from "@/features/space/utils";
-import { defineAbilityFor } from "@/features/user/ability";
 import { isSelfHosted } from "@/utils/constants";
 
 function createMemberDTO(member: {
@@ -67,64 +60,6 @@ export function createSpaceDTO(space: {
     image: space.image ?? undefined,
   } satisfies SpaceDTO;
 }
-
-export const loadSpaces = cache(async () => {
-  const user = await requireUser();
-  const ability = defineAbilityFor(user);
-  const spaces = await prisma.space.findMany({
-    where: accessibleBy(ability).Space,
-    select: {
-      id: true,
-      name: true,
-      ownerId: true,
-      image: true,
-      tier: true,
-      members: {
-        where: {
-          userId: user.id,
-        },
-        select: {
-          role: true,
-        },
-      },
-    },
-  });
-
-  return spaces
-    .map((space) => {
-      const role = space.members[0]?.role;
-
-      if (!role) {
-        logger.warn(
-          { userId: user.id, spaceId: space.id },
-          "User does not have access to space",
-        );
-        return null;
-      }
-
-      return {
-        id: space.id,
-        name: space.name,
-        ownerId: space.ownerId,
-        tier: isSelfHosted ? "pro" : space.tier,
-        role: fromDBRole(role),
-        image: space.image ?? undefined,
-      } satisfies SpaceDTO;
-    })
-    .filter(Boolean) as SpaceDTO[];
-});
-
-export const loadSpace = cache(async ({ id }: { id: string }) => {
-  const spaces = await loadSpaces();
-  const space = spaces.find((space) => space.id === id);
-
-  if (!space) {
-    const user = await requireUser();
-    throw new Error(`User ${user.id} does not have access to space ${id}`);
-  }
-
-  return space;
-});
 
 export const getMember = async (id: string) => {
   const member = await prisma.spaceMember.findUnique({
