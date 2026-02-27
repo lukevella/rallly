@@ -20,6 +20,11 @@ import { appRouter } from "../routers";
  */
 export const createPublicSSRHelper = cache(async () => {
   const session = await getSession();
+
+  const user = session?.user
+    ? ((await getUser(session.user.id)) ?? undefined)
+    : undefined;
+
   const event = createWideEvent({
     service: "trpc",
   });
@@ -27,15 +32,7 @@ export const createPublicSSRHelper = cache(async () => {
   return createServerSideHelpers({
     router: appRouter,
     ctx: {
-      user: session?.user
-        ? {
-            id: session.user.id,
-            isGuest: session.user.isGuest,
-            locale: session.user.locale ?? undefined,
-            image: session.user.image ?? undefined,
-            timeZone: session.user.timeZone ?? undefined,
-          }
-        : undefined,
+      user,
       event,
     } satisfies TRPCContext,
     transformer: superjson,
@@ -57,6 +54,12 @@ export const createPrivateSSRHelper = cache(async () => {
     );
   }
 
+  const user = await getUser(session.user.id);
+
+  if (!user) {
+    redirect("/api/auth/invalid-session");
+  }
+
   const event = createWideEvent({
     service: "trpc",
   });
@@ -64,13 +67,7 @@ export const createPrivateSSRHelper = cache(async () => {
   return createServerSideHelpers({
     router: appRouter,
     ctx: {
-      user: {
-        id: session.user.id,
-        isGuest: false,
-        locale: session.user.locale ?? undefined,
-        image: session.user.image ?? undefined,
-        timeZone: session.user.timeZone ?? undefined,
-      },
+      user,
       event,
     } satisfies TRPCContext,
     transformer: superjson,
@@ -117,13 +114,7 @@ export const createAdminSSRHelper = cache(async () => {
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
-      user: {
-        id: session.user.id,
-        isGuest: false,
-        locale: session.user.locale ?? undefined,
-        image: session.user.image ?? undefined,
-        timeZone: session.user.timeZone ?? undefined,
-      },
+      user,
       event,
     } satisfies TRPCContext,
     transformer: superjson,

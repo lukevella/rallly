@@ -1,6 +1,5 @@
 import type { User } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { cache } from "react";
 import type { UserDTO } from "@/features/user/schema";
 
 export const createUserDTO = (user: User): UserDTO => ({
@@ -9,6 +8,7 @@ export const createUserDTO = (user: User): UserDTO => ({
   image: user.image ?? undefined,
   email: user.email,
   role: user.role,
+  banned: user.banned,
   timeZone: user.timeZone ?? undefined,
   timeFormat: user.timeFormat ?? undefined,
   locale: user.locale ?? undefined,
@@ -17,7 +17,7 @@ export const createUserDTO = (user: User): UserDTO => ({
   isGuest: user.isAnonymous,
 });
 
-export const getUser = cache(async (id: string) => {
+export const getUser = async (id: string) => {
   const user = await prisma.user.findUnique({
     where: {
       id,
@@ -29,4 +29,4 @@ export const getUser = cache(async (id: string) => {
   }
 
   return createUserDTO(user);
-});
+};

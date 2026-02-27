@@ -5,6 +5,7 @@ import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 
+import { getUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
 import { getLocaleFromRequest } from "@/lib/locale/server";
 import type { TRPCContext } from "@/trpc/context";
@@ -43,13 +44,7 @@ const handler = async (req: NextRequest) => {
         const locale = session?.user?.locale ?? reqLocale;
 
         const user = session?.user
-          ? {
-              id: session.user.id,
-              isGuest: session.user.isGuest,
-              locale,
-              image: session.user.image ?? undefined,
-              timeZone: session.user.timeZone ?? undefined,
-            }
+          ? ((await getUser(session.user.id)) ?? undefined)
           : undefined;
 
         const identifier = session?.user?.id ?? ja4Digest ?? ip;

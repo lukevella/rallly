@@ -11,6 +11,7 @@ export type UserDTO = {
   image?: string;
   email: string;
   role: UserRole;
+  banned: boolean;
   isGuest: boolean;
   timeZone?: string;
   timeFormat?: TimeFormat;

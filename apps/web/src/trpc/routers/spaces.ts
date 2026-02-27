@@ -1,12 +1,11 @@
 import { prisma } from "@rallly/database";
 import { createSpaceDTO } from "@/features/space/data";
 import type { SpaceDTO } from "@/features/space/types";
-import { getUser } from "@/features/user/data";
 import { privateProcedure, router } from "../trpc";
 
 export const spaces = router({
   list: privateProcedure.query(async ({ ctx }) => {
-    const user = await getUser(ctx.user.id);
+    const { user } = ctx;
 
     if (!user) {
       return [];
