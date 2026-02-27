@@ -159,7 +159,9 @@ export const createRateLimitMiddleware = (
   const ratelimit = createRatelimit(requests, duration);
 
   return middleware(async ({ ctx, next }) => {
-    ctx.event.rateLimiter = ratelimit?.name ?? "none";
+    if (ctx.event) {
+      ctx.event.rateLimiter = ratelimit?.name ?? "none";
+    }
 
     if (!ratelimit) {
       return next();
@@ -176,7 +178,9 @@ export const createRateLimitMiddleware = (
       `${name}:${ctx.identifier}`,
     );
 
-    ctx.event.rateLimiterRemainingPoints = remainingPoints;
+    if (ctx.event) {
+      ctx.event.rateLimiterRemainingPoints = remainingPoints;
+    }
 
     if (!success) {
       throw new TRPCError({

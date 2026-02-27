@@ -5,5 +5,5 @@ export type TRPCContext = {
   user?: UserDTO;
   locale?: string;
   identifier?: string;
-  event: WideEvent;
+  event?: WideEvent;
 };

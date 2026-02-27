@@ -1,4 +1,3 @@
-import { createWideEvent } from "@rallly/logger";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
@@ -25,15 +24,10 @@ export const createPublicSSRHelper = cache(async () => {
     ? ((await getUser(session.user.id)) ?? undefined)
     : undefined;
 
-  const event = createWideEvent({
-    service: "trpc",
-  });
-
   return createServerSideHelpers({
     router: appRouter,
     ctx: {
       user,
-      event,
     } satisfies TRPCContext,
     transformer: superjson,
   });
@@ -60,15 +54,10 @@ export const createPrivateSSRHelper = cache(async () => {
     redirect("/api/auth/invalid-session");
   }
 
-  const event = createWideEvent({
-    service: "trpc",
-  });
-
   return createServerSideHelpers({
     router: appRouter,
     ctx: {
       user,
-      event,
     } satisfies TRPCContext,
     transformer: superjson,
   });
@@ -107,15 +96,10 @@ export const createAdminSSRHelper = cache(async () => {
     notFound();
   }
 
-  const event = createWideEvent({
-    service: "trpc",
-  });
-
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
       user,
-      event,
     } satisfies TRPCContext,
     transformer: superjson,
   });
