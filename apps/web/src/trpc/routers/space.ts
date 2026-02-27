@@ -3,6 +3,10 @@ import { getSpaceSeatCount } from "@/features/space/data";
 import { fromDBRole, getTotalSeatsForSpace } from "@/features/space/utils";
 import { router, spaceProcedure } from "../trpc";
 
+/**
+ * @deprecated Use `spaces` router instead. This router is kept for backward
+ * compatibility during the transition and will be removed in a future release.
+ */
 export const space = router({
   getCurrent: spaceProcedure.query(async ({ ctx }) => {
     return ctx.space;

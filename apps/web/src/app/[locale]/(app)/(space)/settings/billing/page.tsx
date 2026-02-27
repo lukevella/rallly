@@ -15,7 +15,7 @@ export default async function BillingSettingsPage() {
 
   await Promise.all([
     helpers.billing.getSubscription.prefetch(),
-    helpers.space.seats.prefetch(),
+    helpers.spaces.seats.prefetch(),
   ]);
 
   return (
