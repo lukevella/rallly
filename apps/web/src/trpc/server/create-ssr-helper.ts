@@ -4,6 +4,7 @@ import { cache } from "react";
 import superjson from "superjson";
 import { getUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
+import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { getPathname } from "@/lib/pathname";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
 import { buildSafeRedirectUrl } from "@/utils/redirect";
@@ -51,7 +52,7 @@ export const createPrivateSSRHelper = cache(async () => {
   const user = await getUser(session.user.id);
 
   if (!user) {
-    redirect("/api/auth/invalid-session");
+    throw new InvalidSessionError();
   }
 
   return createServerSideHelpers({
@@ -85,7 +86,7 @@ export const createAdminSSRHelper = cache(async () => {
   const user = await getUser(session.user.id);
 
   if (!user) {
-    redirect("/api/auth/invalid-session");
+    throw new InvalidSessionError();
   }
 
   if (user.role !== "admin") {

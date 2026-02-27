@@ -4,10 +4,13 @@ import { Button } from "@rallly/ui/button";
 import * as Sentry from "@sentry/nextjs";
 import { GithubIcon, HomeIcon, LifeBuoyIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
-
 import { ErrorPage, ErrorPageLinkItem } from "@/components/error-page";
+import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/i18n/client";
+import { authClient } from "@/lib/auth-client";
+import { INVALID_SESSION_DIGEST } from "@/lib/errors/invalid-session-error";
 
 export default function LocaleErrorBoundary({
   error,
@@ -16,9 +19,25 @@ export default function LocaleErrorBoundary({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const router = useRouter();
+
   React.useEffect(() => {
+    if (error.digest === INVALID_SESSION_DIGEST) {
+      authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            router.push("/login");
+          },
+        },
+      });
+    }
+
     Sentry.captureException(error);
-  }, [error]);
+  }, [error, router]);
+
+  if (error.digest === INVALID_SESSION_DIGEST) {
+    return <RouterLoadingIndicator />;
+  }
 
   return (
     <ErrorPage
