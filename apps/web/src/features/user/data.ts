@@ -1,6 +1,5 @@
 import type { User } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { cache } from "react";
 import type { UserDTO } from "@/features/user/schema";
 import { getSession } from "@/lib/auth";
 
@@ -52,7 +51,7 @@ export const getUser = async (id: string) => {
   return createUserDTO(user);
 };
 
-export const getUserSession = cache(async () => {
+export const getUserSession = async () => {
   const session = await getSession();
 
   if (!session?.user) {
@@ -64,4 +63,4 @@ export const getUserSession = cache(async () => {
     : ((await getUser(session.user.id)) ?? undefined);
 
   return { session, user };
-});
+};
