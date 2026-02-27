@@ -24,10 +24,11 @@ import { getUserCount } from "@/features/user/queries";
 import { Trans } from "@/i18n/client";
 
 async function loadData() {
+  await requireAdmin();
+
   const [userCount, license] = await Promise.all([
     getUserCount(),
     loadInstanceLicense(),
-    requireAdmin(),
   ]);
 
   return {

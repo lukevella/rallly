@@ -13,8 +13,9 @@ import {
   SidebarSeparator,
 } from "@rallly/ui/sidebar";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { GaugeIcon, Settings2Icon } from "lucide-react";
+import { Settings2Icon } from "lucide-react";
 import Link from "next/link";
+import { ControlPanelMenuItem } from "@/app/[locale]/(app)/(space)/(dashboard)/components/control-panel-menu-item";
 import { FeedbackMenuItem } from "@/app/[locale]/(app)/(space)/(dashboard)/components/feedback-menu-item";
 import { SpaceSidebarMenu } from "@/app/[locale]/(app)/(space)/(dashboard)/components/space-sidebar-menu";
 import { UpgradeMenuItem } from "@/app/[locale]/(app)/(space)/(dashboard)/components/upgrade-menu-item";
@@ -34,8 +35,9 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const helpers = await createPrivateSSRHelper();
-  const [user] = await Promise.all([
-    helpers.user.getAuthed.fetch(),
+
+  await Promise.all([
+    helpers.user.getAuthed.prefetch(),
     helpers.spaces.list.prefetch(),
   ]);
 
@@ -59,21 +61,7 @@ export default async function Layout({
                   <IfFeatureEnabled feature="feedback">
                     <FeedbackMenuItem />
                   </IfFeatureEnabled>
-                  {user.role === "admin" ? (
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/control-panel">
-                          <Icon>
-                            <GaugeIcon />
-                          </Icon>
-                          <Trans
-                            i18nKey="controlPanel"
-                            defaults="Control Panel"
-                          />
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ) : null}
+                  <ControlPanelMenuItem />
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
                       <Link href="/settings/preferences">
