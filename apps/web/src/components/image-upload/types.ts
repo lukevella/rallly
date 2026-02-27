@@ -4,7 +4,10 @@ export const allowedMimeTypes = z.enum(["image/jpeg", "image/png"]);
 export type AllowedMimeType = z.infer<typeof allowedMimeTypes>;
 
 export interface ImageUploadControlProps {
-  keyPrefix: "avatars" | "spaces";
+  getUploadUrl: (input: {
+    fileType: AllowedMimeType;
+    fileSize: number;
+  }) => Promise<{ url: string; fields: { key: string } }>;
   onUploadSuccess: (imageKey: string) => Promise<void> | void;
   onRemoveSuccess: () => Promise<void> | void;
   hasCurrentImage?: boolean;

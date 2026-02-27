@@ -43,6 +43,7 @@ export function SpaceSettingsForm({
   const { t } = useTranslation();
 
   const updateSpace = trpc.spaces.update.useMutation();
+  const getImageUploadUrl = trpc.spaces.getImageUploadUrl.useMutation();
   const updateImage = trpc.spaces.updateImage.useMutation();
   const removeImage = trpc.spaces.removeImage.useMutation();
 
@@ -95,7 +96,7 @@ export function SpaceSettingsForm({
               <SpaceIcon name={space.name} src={space.image} size="xl" />
             </ImageUploadPreview>
             <ImageUploadControl
-              keyPrefix="spaces"
+              getUploadUrl={(input) => getImageUploadUrl.mutateAsync(input)}
               onUploadSuccess={handleImageUploadSuccess}
               onRemoveSuccess={handleImageRemoveSuccess}
               hasCurrentImage={!!space.image}

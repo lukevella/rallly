@@ -17,8 +17,6 @@ import {
   createImagePreviewUrl,
   validateImageFile,
 } from "@/lib/image-processing";
-import { useSafeAction } from "@/lib/safe-action/client";
-import { getImageUploadUrlAction } from "@/lib/storage/actions";
 import { uploadImage } from "@/lib/storage/upload-client";
 
 export function ImageUpload({ className, children }: ImageUploadProps) {
@@ -28,7 +26,7 @@ export function ImageUpload({ className, children }: ImageUploadProps) {
 }
 
 export function ImageUploadControl({
-  keyPrefix,
+  getUploadUrl,
   onUploadSuccess,
   onRemoveSuccess,
   hasCurrentImage = false,
@@ -38,7 +36,6 @@ export function ImageUploadControl({
   const { t } = useTranslation();
   const [isRemoving, startRemoving] = React.useTransition();
   const [isUploading, startUploading] = React.useTransition();
-  const getUploadUrl = useSafeAction(getImageUploadUrlAction);
 
   // Cropping state
   const [showCropDialog, setShowCropDialog] = React.useState(false);
@@ -112,17 +109,10 @@ export function ImageUploadControl({
 
     startUploading(async () => {
       try {
-        const result = await getUploadUrl.executeAsync({
-          keyPrefix,
+        const { url, fields } = await getUploadUrl({
           fileType: parsedFileType,
           fileSize: croppedFile.size,
         });
-
-        if (!result.data) {
-          throw new Error("Failed to get upload URL");
-        }
-
-        const { url, fields } = result.data;
 
         await uploadImage({
           file: croppedFile,
