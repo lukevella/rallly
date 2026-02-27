@@ -406,10 +406,10 @@ export const spaces = router({
         if (invite) {
           await prisma.spaceMemberInvite.delete({ where: { id: invite.id } });
         }
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to send invitation",
-        });
+        return {
+          ok: false as const,
+          code: "INVITE_FAILED" as const,
+        };
       }
 
       ctx.posthog?.capture({
