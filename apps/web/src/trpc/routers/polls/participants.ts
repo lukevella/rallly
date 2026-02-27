@@ -1,6 +1,5 @@
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import * as Sentry from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import * as z from "zod";
@@ -91,7 +90,7 @@ async function sendNewParticipantNotifcationEmail({
           },
         });
       } catch (err) {
-        Sentry.captureException(err);
+        console.error(err);
       }
     }),
   );
