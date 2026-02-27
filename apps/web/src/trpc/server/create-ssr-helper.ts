@@ -1,9 +1,11 @@
 import { createWideEvent } from "@rallly/logger";
 import { createServerSideHelpers } from "@trpc/react-query/server";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import superjson from "superjson";
+import { getUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
 import { getPathname } from "@/lib/pathname";
+import { isInitialAdmin } from "@/utils/is-initial-admin";
 import { buildSafeRedirectUrl } from "@/utils/redirect";
 import type { TRPCContext } from "../context";
 import { appRouter } from "../routers";
@@ -72,4 +74,59 @@ export const createPrivateSSRHelper = async () => {
     } satisfies TRPCContext,
     transformer: superjson,
   });
+};
+
+/**
+ * Admin Server-Side Helper
+ * @description Use for prefetching data that requires an admin user.
+ * Redirects to /login if not authenticated, to /control-panel/setup if
+ * the user is the initial admin but not yet promoted, or returns 404 if
+ * the user is not an admin.
+ */
+export const createAdminSSRHelper = async () => {
+  const session = await getSession();
+
+  if (!session?.user || session.user.isGuest) {
+    redirect(
+      buildSafeRedirectUrl({
+        destination: "/login",
+        returnUrl: await getPathname(),
+      }),
+    );
+  }
+
+  const user = await getUser(session.user.id);
+
+  if (!user) {
+    redirect("/api/auth/invalid-session");
+  }
+
+  if (user.role !== "admin") {
+    if (isInitialAdmin(user.email)) {
+      redirect("/control-panel/setup");
+    }
+
+    notFound();
+  }
+
+  const event = createWideEvent({
+    service: "trpc",
+  });
+
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: {
+      user: {
+        id: session.user.id,
+        isGuest: false,
+        locale: session.user.locale ?? undefined,
+        image: session.user.image ?? undefined,
+        timeZone: session.user.timeZone ?? undefined,
+      },
+      event,
+    } satisfies TRPCContext,
+    transformer: superjson,
+  });
+
+  return { helpers, user };
 };

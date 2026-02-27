@@ -5,6 +5,7 @@ import superjson from "superjson";
 import { PostHogClient } from "@/features/analytics/posthog";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import { getUser } from "@/features/user/data";
 import { AppError } from "@/lib/errors";
 import { createRatelimit } from "@/lib/rate-limit";
 import { isSelfHosted } from "@/utils/constants";
@@ -118,6 +119,30 @@ export const privateProcedure = procedureWithAnalytics.use(
     });
   },
 );
+
+export const adminProcedure = privateProcedure.use(async ({ ctx, next }) => {
+  const user = await getUser(ctx.user.id);
+
+  if (!user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "User not found",
+    });
+  }
+
+  if (user.role !== "admin") {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Admin access required",
+    });
+  }
+
+  return next({
+    ctx: {
+      user,
+    },
+  });
+});
 
 export const spaceProcedure = privateProcedure.use(async ({ ctx, next }) => {
   const space = await getActiveSpaceForUser(ctx.user.id);

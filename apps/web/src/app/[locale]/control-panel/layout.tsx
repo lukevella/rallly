@@ -7,7 +7,7 @@ import { LicenseLimitWarning } from "@/features/licensing/components/license-lim
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createAdminSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { ControlPanelSidebarProvider } from "./control-panel-sidebar-provider";
 import { ControlPanelSidebar } from "./sidebar";
 
@@ -16,7 +16,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const helpers = await createPrivateSSRHelper();
+  const { helpers } = await createAdminSSRHelper();
   await helpers.user.getAuthed.prefetch();
 
   return (

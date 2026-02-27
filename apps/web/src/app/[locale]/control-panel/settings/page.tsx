@@ -13,16 +13,12 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
-import { requireAdmin } from "@/auth/data";
 import { getInstanceSettings } from "@/features/instance-settings/queries";
 import { Trans } from "@/i18n/client";
 import { InstanceSettingsForm } from "./instance-settings-form";
 
 async function loadData() {
-  const [instanceSettings] = await Promise.all([
-    getInstanceSettings(),
-    requireAdmin(),
-  ]);
+  const instanceSettings = await getInstanceSettings();
 
   return {
     instanceSettings,
