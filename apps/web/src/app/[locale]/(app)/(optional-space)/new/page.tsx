@@ -6,10 +6,7 @@ import { UserDropdown } from "@/components/user-dropdown";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import {
-  createPrivateSSRHelper,
-  createPublicSSRHelper,
-} from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper, createPublicSSRHelper } from "@/trpc/next/ssr";
 import { BackButton } from "./back-button";
 
 export default async function Page() {

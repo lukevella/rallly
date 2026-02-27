@@ -12,7 +12,7 @@ import {
 } from "@/components/empty-state";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper } from "@/trpc/next/ssr";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
 import { MakeMeAdminButton } from "./make-me-admin-button";
 

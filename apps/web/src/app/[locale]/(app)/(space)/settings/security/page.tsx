@@ -21,7 +21,7 @@ import { getUserHasPassword } from "@/features/user/queries";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper } from "@/trpc/next/ssr";
 import { ChangePasswordForm } from "./components/change-password-form";
 import { SetupPasswordForm } from "./components/setup-password-form";
 

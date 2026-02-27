@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { InvitePageLoader } from "@/app/[locale]/(app)/invite/[urlId]/invite-page-loader";
 import { PermissionProvider } from "@/contexts/permissions";
-import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPublicSSRHelper } from "@/trpc/next/ssr";
 
 import Providers from "./providers";
 

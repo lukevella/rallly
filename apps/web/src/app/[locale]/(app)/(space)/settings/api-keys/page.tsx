@@ -15,7 +15,7 @@ import {
 } from "@/app/components/settings-layout";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper } from "@/trpc/next/ssr";
 import { ApiKeysList } from "./components/api-keys-list";
 import { CreateApiKeyButton } from "./components/create-api-key-button";
 

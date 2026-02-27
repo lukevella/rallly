@@ -26,7 +26,7 @@ import { CommandMenu } from "@/features/navigation/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper } from "@/trpc/next/ssr";
 import { SpaceSidebarProvider } from "./components/space-sidebar-provider";
 
 export default async function Layout({

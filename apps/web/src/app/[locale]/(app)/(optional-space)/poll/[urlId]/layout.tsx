@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
 import { PollLayout } from "@/components/layouts/poll-layout";
-import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPublicSSRHelper } from "@/trpc/next/ssr";
 
 export default async function Layout(
   props: React.PropsWithChildren<{ params: Promise<{ urlId: string }> }>,

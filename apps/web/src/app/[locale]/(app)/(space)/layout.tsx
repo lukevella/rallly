@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { BillingProvider } from "@/features/billing/client";
 import { SpaceProvider } from "@/features/space/client";
 import { getPathname } from "@/lib/pathname";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper } from "@/trpc/next/ssr";
 import { buildSafeRedirectUrl } from "@/utils/redirect";
 
 export default async function Layout({

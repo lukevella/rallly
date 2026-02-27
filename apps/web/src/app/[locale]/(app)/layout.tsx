@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { PreferencesProvider } from "@/contexts/preferences";
-import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPublicSSRHelper } from "@/trpc/next/ssr";
 import { ConnectedDayjsProvider } from "@/utils/dayjs";
 
 export default async function AppLayout({

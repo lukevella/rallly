@@ -5,7 +5,7 @@ import { CreateSpaceForm } from "@/features/setup/components/create-space-form";
 import { userHasSpaces } from "@/features/setup/utils";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper } from "@/trpc/next/ssr";
 
 export default async function SetupPage() {
   const helpers = await createPrivateSSRHelper();

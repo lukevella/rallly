@@ -1,9 +1,6 @@
 import { BillingProvider } from "@/features/billing/client";
 import { isQuickCreateEnabled } from "@/features/quick-create";
-import {
-  createPrivateSSRHelper,
-  createPublicSSRHelper,
-} from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper, createPublicSSRHelper } from "@/trpc/next/ssr";
 
 export default async function Layout({
   children,

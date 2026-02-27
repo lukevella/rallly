@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 import type { Params } from "@/app/[locale]/types";
 import { getTranslation } from "@/i18n/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper } from "@/trpc/next/ssr";
 import { ProfilePage } from "./profile-page";
 
 export default async function Page() {

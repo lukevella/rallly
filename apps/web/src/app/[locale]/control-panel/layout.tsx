@@ -7,7 +7,7 @@ import { LicenseLimitWarning } from "@/features/licensing/components/license-lim
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { createAdminSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createAdminSSRHelper } from "@/trpc/next/ssr";
 import { ControlPanelSidebarProvider } from "./control-panel-sidebar-provider";
 import { ControlPanelSidebar } from "./sidebar";
 

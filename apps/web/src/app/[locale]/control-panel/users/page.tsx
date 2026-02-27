@@ -22,7 +22,7 @@ import { StackedList } from "@/components/stacked-list";
 import { defineAbilityFor } from "@/features/user/ability";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { createAdminSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createAdminSSRHelper } from "@/trpc/next/ssr";
 import { UserRow } from "./user-row";
 import { UserSearchInput } from "./user-search-input";
 import { UsersTabbedView } from "./users-tabbed-view";

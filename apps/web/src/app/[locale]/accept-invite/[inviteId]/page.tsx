@@ -6,7 +6,7 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper } from "@/trpc/next/ssr";
 import { AcceptInviteButton } from "./components/accept-invite-button";
 import { SignOutButton } from "./components/sign-out-button";
 

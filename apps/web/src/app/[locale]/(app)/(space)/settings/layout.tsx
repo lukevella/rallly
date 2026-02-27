@@ -22,7 +22,7 @@ import type React from "react";
 import { NavUser } from "@/components/nav-user";
 import { BillingProvider } from "@/features/billing/client";
 import { Trans } from "@/i18n/client";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { createPrivateSSRHelper } from "@/trpc/next/ssr";
 import {
   AccountSidebarMenu,
   DeveloperSidebarMenu,
