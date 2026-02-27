@@ -1,6 +1,7 @@
 import { createWideEvent } from "@rallly/logger";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { notFound, redirect } from "next/navigation";
+import { cache } from "react";
 import superjson from "superjson";
 import { getUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
@@ -17,7 +18,7 @@ import { appRouter } from "../routers";
  * Note: Using this makes the page dynamic (not cached).
  * @see https://trpc.io/docs/client/nextjs/server-side-helpers#1-internal-router
  */
-export const createPublicSSRHelper = async () => {
+export const createPublicSSRHelper = cache(async () => {
   const session = await getSession();
   const event = createWideEvent({
     service: "trpc",
@@ -39,14 +40,14 @@ export const createPublicSSRHelper = async () => {
     } satisfies TRPCContext,
     transformer: superjson,
   });
-};
+});
 
 /**
  * Private Server-Side Helper
  * @description Use for prefetching data that requires a logged-in (non-guest) user.
  * Redirects to /login if the user is not authenticated or is a guest.
  */
-export const createPrivateSSRHelper = async () => {
+export const createPrivateSSRHelper = cache(async () => {
   const session = await getSession();
 
   if (!session?.user || session.user.isGuest) {
@@ -74,7 +75,7 @@ export const createPrivateSSRHelper = async () => {
     } satisfies TRPCContext,
     transformer: superjson,
   });
-};
+});
 
 /**
  * Admin Server-Side Helper
@@ -83,7 +84,7 @@ export const createPrivateSSRHelper = async () => {
  * is the initial admin but not yet promoted, or returns 404 if the user
  * is not an admin.
  */
-export const createAdminSSRHelper = async () => {
+export const createAdminSSRHelper = cache(async () => {
   const session = await getSession();
 
   if (!session?.user || session.user.isGuest) {
@@ -129,4 +130,4 @@ export const createAdminSSRHelper = async () => {
   });
 
   return { helpers, user };
-};
+});
