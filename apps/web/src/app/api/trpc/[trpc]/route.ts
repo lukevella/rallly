@@ -5,13 +5,13 @@ import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 
-import { getSession } from "@/lib/auth";
+import { getUserSession } from "@/features/user/data";
 import { getLocaleFromRequest } from "@/lib/locale/server";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
 
 const handler = async (req: NextRequest) => {
-  const session = await getSession();
+  const { user } = await getUserSession();
   const ip = ipAddress(req);
   const ja4Digest = req.headers.get("x-vercel-ja4-digest") ?? undefined;
   const reqLocale = getLocaleFromRequest(req);
@@ -29,9 +29,9 @@ const handler = async (req: NextRequest) => {
   });
 
   // User context
-  if (session?.user) {
-    event.userId = session.user.id;
-    event.isGuest = session.user.isGuest;
+  if (user) {
+    event.userId = user.id;
+    event.isGuest = user.isGuest;
   }
 
   try {
@@ -40,19 +40,9 @@ const handler = async (req: NextRequest) => {
       req,
       router: appRouter,
       createContext: async () => {
-        const locale = session?.user?.locale ?? reqLocale;
+        const locale = user?.locale ?? reqLocale;
 
-        const user = session?.user
-          ? {
-              id: session.user.id,
-              isGuest: session.user.isGuest,
-              locale,
-              image: session.user.image ?? undefined,
-              timeZone: session.user.timeZone ?? undefined,
-            }
-          : undefined;
-
-        const identifier = session?.user?.id ?? ja4Digest ?? ip;
+        const identifier = user?.id ?? ja4Digest ?? ip;
 
         return {
           user,

@@ -1,16 +1,9 @@
 import type { WideEvent } from "@rallly/logger";
-
-export type User = {
-  id: string;
-  isGuest: boolean;
-  locale?: string;
-  image?: string;
-  timeZone?: string;
-};
+import type { UserDTO } from "@/features/user/schema";
 
 export type TRPCContext = {
-  user?: User;
+  user?: UserDTO;
   locale?: string;
   identifier?: string;
-  event: WideEvent;
+  event?: WideEvent;
 };

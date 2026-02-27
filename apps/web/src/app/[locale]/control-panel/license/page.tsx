@@ -24,7 +24,6 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
-import { requireAdmin } from "@/auth/data";
 import {
   DescriptionList,
   DescriptionListTitle,
@@ -46,7 +45,7 @@ import { getTranslation } from "@/i18n/server";
 import { dayjs } from "@/lib/dayjs";
 
 async function loadData() {
-  const [license] = await Promise.all([loadInstanceLicense(), requireAdmin()]);
+  const license = await loadInstanceLicense();
   return { license };
 }
 

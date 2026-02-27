@@ -1,4 +1,3 @@
-import { prisma } from "@rallly/database";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import superjson from "superjson";
@@ -70,29 +69,11 @@ export const requireUserMiddleware = middleware(async ({ ctx, next }) => {
     });
   }
 
-  if (!ctx.user.isGuest) {
-    const dbUser = await prisma.user.findUnique({
-      where: {
-        id: ctx.user.id,
-      },
-      select: {
-        banned: true,
-      },
+  if (ctx.user.banned) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Your account has been banned",
     });
-
-    if (!dbUser) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Logged in user does not exist anymore",
-      });
-    }
-
-    if (dbUser.banned) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "Your account has been banned",
-      });
-    }
   }
 
   return next({
@@ -118,6 +99,17 @@ export const privateProcedure = procedureWithAnalytics.use(
     });
   },
 );
+
+export const adminProcedure = privateProcedure.use(async ({ ctx, next }) => {
+  if (ctx.user.role !== "admin") {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Admin access required",
+    });
+  }
+
+  return next();
+});
 
 export const spaceProcedure = privateProcedure.use(async ({ ctx, next }) => {
   const space = await getActiveSpaceForUser(ctx.user.id);
@@ -167,7 +159,9 @@ export const createRateLimitMiddleware = (
   const ratelimit = createRatelimit(requests, duration);
 
   return middleware(async ({ ctx, next }) => {
-    ctx.event.rateLimiter = ratelimit?.name ?? "none";
+    if (ctx.event) {
+      ctx.event.rateLimiter = ratelimit?.name ?? "none";
+    }
 
     if (!ratelimit) {
       return next();
@@ -184,7 +178,9 @@ export const createRateLimitMiddleware = (
       `${name}:${ctx.identifier}`,
     );
 
-    ctx.event.rateLimiterRemainingPoints = remainingPoints;
+    if (ctx.event) {
+      ctx.event.rateLimiterRemainingPoints = remainingPoints;
+    }
 
     if (!success) {
       throw new TRPCError({

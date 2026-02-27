@@ -2,7 +2,6 @@ import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
-import { getUser } from "@/features/user/data";
 import {
   deleteImageFromS3,
   getImageUploadUrl,
@@ -22,19 +21,10 @@ export const user = router({
       return null;
     }
 
-    return await getUser(ctx.user.id);
+    return ctx.user;
   }),
   getAuthed: privateProcedure.query(async ({ ctx }) => {
-    const user = await getUser(ctx.user.id);
-
-    if (!user) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found",
-      });
-    }
-
-    return user;
+    return ctx.user;
   }),
   changeName: privateProcedure
     .input(

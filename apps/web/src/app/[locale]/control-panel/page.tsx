@@ -17,15 +17,12 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
-import { requireAdmin } from "@/auth/data";
 import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getUserCount } from "@/features/user/queries";
 import { Trans } from "@/i18n/client";
 
 async function loadData() {
-  await requireAdmin();
-
   const [userCount, license] = await Promise.all([
     getUserCount(),
     loadInstanceLicense(),

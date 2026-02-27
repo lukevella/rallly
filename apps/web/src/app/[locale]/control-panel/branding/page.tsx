@@ -18,7 +18,6 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
-import { requireAdmin } from "@/auth/data";
 import { getCustomBrandingConfig } from "@/features/branding/queries";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { Trans } from "@/i18n/client";
@@ -28,7 +27,6 @@ async function loadData() {
   const [license, brandingConfig] = await Promise.all([
     loadInstanceLicense(),
     getCustomBrandingConfig(),
-    requireAdmin(),
   ]);
 
   return {
