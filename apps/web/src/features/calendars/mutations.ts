@@ -188,23 +188,11 @@ export const setCalendarSelection = async (params: {
   const { userId, calendarId, isSelected } = params;
 
   const calendar = await prisma.providerCalendar.findFirst({
-    where: { id: calendarId },
-    select: {
-      calendarConnection: {
-        select: { userId: true },
-      },
-    },
+    where: { id: calendarId, calendarConnection: { userId } },
   });
 
   if (!calendar) {
     return { success: false, error: "Calendar not found" as const };
-  }
-
-  if (calendar.calendarConnection.userId !== userId) {
-    return {
-      success: false,
-      error: "Calendar does not belong to user" as const,
-    };
   }
 
   await prisma.providerCalendar.update({
