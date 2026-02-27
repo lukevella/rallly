@@ -14,7 +14,7 @@ export default async function Page(props: {
   const helpers = await createPrivateSSRHelper();
 
   await Promise.all([
-    helpers.space.listMembers.prefetch(),
+    helpers.spaces.listMembers.prefetch(),
     helpers.polls.infiniteChronological.prefetchInfinite({
       status,
       search: q,

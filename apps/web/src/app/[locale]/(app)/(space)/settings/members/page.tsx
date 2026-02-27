@@ -8,9 +8,9 @@ export default async function MembersSettingsPage() {
   const helpers = await createPrivateSSRHelper();
 
   await Promise.all([
-    helpers.space.listMembers.prefetch(),
-    helpers.space.listInvites.prefetch(),
-    helpers.space.seats.prefetch(),
+    helpers.spaces.listMembers.prefetch(),
+    helpers.spaces.listInvites.prefetch(),
+    helpers.spaces.getSeats.prefetch(),
   ]);
 
   return (

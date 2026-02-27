@@ -57,7 +57,7 @@ function PollsEmptyState() {
 export function PollsPage() {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
-  const [{ data: members }] = trpc.space.listMembers.useSuspenseQuery();
+  const [{ data: members }] = trpc.spaces.listMembers.useSuspenseQuery();
 
   const { status, q, member } = searchParamsSchema.parse(
     Object.fromEntries(searchParams.entries()),

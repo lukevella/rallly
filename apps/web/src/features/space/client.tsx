@@ -10,7 +10,7 @@ import { defineAbilityForSpace } from "./ability";
 
 export const useSpace = () => {
   const [user] = trpc.user.getAuthed.useSuspenseQuery();
-  const [data] = trpc.space.getCurrent.useSuspenseQuery();
+  const [data] = trpc.spaces.getCurrent.useSuspenseQuery();
 
   if (!data) {
     throw new Error("No active space found");
@@ -36,7 +36,7 @@ export const useSpace = () => {
 
 export function SpaceProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { data: space, isLoading } = trpc.space.getCurrent.useQuery();
+  const { data: space, isLoading } = trpc.spaces.getCurrent.useQuery();
   const posthog = usePostHog();
 
   React.useEffect(() => {

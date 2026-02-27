@@ -31,9 +31,9 @@ import { InviteMemberButton } from "./components/invite-member-button";
 import { MemberDropdownMenu } from "./components/member-dropdown-menu";
 
 export function MembersSettingsPageClient() {
-  const [members] = trpc.space.listMembers.useSuspenseQuery();
-  const [invites] = trpc.space.listInvites.useSuspenseQuery();
-  const [seats] = trpc.space.seats.useSuspenseQuery();
+  const [members] = trpc.spaces.listMembers.useSuspenseQuery();
+  const [invites] = trpc.spaces.listInvites.useSuspenseQuery();
+  const [seats] = trpc.spaces.getSeats.useSuspenseQuery();
 
   return (
     <SettingsPage>

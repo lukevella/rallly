@@ -13,7 +13,7 @@ export default async function Layout({
 }) {
   const helpers = await createPrivateSSRHelper();
 
-  const space = await helpers.space.getCurrent.fetch();
+  const space = await helpers.spaces.getCurrent.fetch();
 
   if (!space) {
     const pathname = await getPathname();
