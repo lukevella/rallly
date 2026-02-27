@@ -10,7 +10,7 @@ import { ErrorPage, ErrorPageLinkItem } from "@/components/error-page";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
-import { INVALID_SESSION_DIGEST } from "@/lib/errors/invalid-session-error";
+import { INVALID_SESSION } from "@/lib/errors/invalid-session-error";
 
 export default function LocaleErrorBoundary({
   error,
@@ -20,9 +20,10 @@ export default function LocaleErrorBoundary({
   reset: () => void;
 }) {
   const router = useRouter();
+  const isInvalidSession = error.digest === INVALID_SESSION;
 
   React.useEffect(() => {
-    if (error.digest === INVALID_SESSION_DIGEST) {
+    if (isInvalidSession) {
       authClient.signOut({
         fetchOptions: {
           onSuccess: () => {
@@ -30,12 +31,13 @@ export default function LocaleErrorBoundary({
           },
         },
       });
+      return;
     }
 
     Sentry.captureException(error);
-  }, [error, router]);
+  }, [error, router, isInvalidSession]);
 
-  if (error.digest === INVALID_SESSION_DIGEST) {
+  if (isInvalidSession) {
     return <RouterLoadingIndicator />;
   }
 
