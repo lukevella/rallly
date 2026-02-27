@@ -7,8 +7,9 @@ import { createSpaceDTO } from "@/features/space/data";
 import { getUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { getPathname } from "@/lib/pathname";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
+import { buildSafeRedirectUrl } from "@/utils/redirect";
 
 /**
  * Gets the current user if they are logged in, otherwise null.
@@ -77,8 +78,22 @@ export const getCurrentUserSpace = async () => {
 };
 
 export const requireAdmin = cache(async () => {
-  const helpers = await createPrivateSSRHelper();
-  const user = await helpers.user.getAuthed.fetch();
+  const session = await getSession();
+
+  if (!session?.user || session.user.isGuest) {
+    redirect(
+      buildSafeRedirectUrl({
+        destination: "/login",
+        returnUrl: await getPathname(),
+      }),
+    );
+  }
+
+  const user = await getUser(session.user.id);
+
+  if (!user) {
+    redirect("/api/auth/invalid-session");
+  }
 
   if (user.role !== "admin") {
     if (isInitialAdmin(user.email)) {
