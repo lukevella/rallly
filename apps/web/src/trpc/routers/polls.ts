@@ -3,7 +3,6 @@ import { prisma } from "@rallly/database";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
-import { revalidatePath } from "next/cache";
 import * as z from "zod";
 import { moderateContent } from "@/features/moderation";
 import { getPolls } from "@/features/poll/data";
@@ -287,8 +286,6 @@ export const polls = router({
         },
       });
 
-      revalidatePath("/", "layout");
-
       return { ok: true as const, data: { id: poll.id } };
     }),
   modify: possiblyPublicProcedure
@@ -497,8 +494,6 @@ export const polls = router({
           },
         });
       }
-
-      revalidatePath("/", "layout");
 
       return { ok: true as const };
     }),
@@ -1043,8 +1038,6 @@ export const polls = router({
             poll: poll.id,
           },
         });
-
-        revalidatePath("/", "layout");
       }
     }),
   reopen: privateProcedure
@@ -1089,8 +1082,6 @@ export const polls = router({
           poll: input.pollId,
         },
       });
-
-      revalidatePath("/", "layout");
     }),
   close: possiblyPublicProcedure
     .input(
@@ -1125,8 +1116,6 @@ export const polls = router({
           poll: input.pollId,
         },
       });
-
-      revalidatePath("/", "layout");
     }),
   duplicate: proProcedure
     .input(
