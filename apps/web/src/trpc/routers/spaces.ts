@@ -378,20 +378,20 @@ export const spaces = router({
         });
       }
 
+      const invite = await prisma.spaceMemberInvite.create({
+        data: {
+          spaceId: ctx.space.id,
+          email: input.email,
+          role: toDBRole(input.role),
+          inviterId: ctx.user.id,
+        },
+      });
+
+      const emailClient = await getEmailClient(
+        existingUser?.locale ?? ctx.user.locale,
+      );
+
       try {
-        const invite = await prisma.spaceMemberInvite.create({
-          data: {
-            spaceId: ctx.space.id,
-            email: input.email,
-            role: toDBRole(input.role),
-            inviterId: ctx.user.id,
-          },
-        });
-
-        const emailClient = await getEmailClient(
-          existingUser?.locale ?? ctx.user.locale,
-        );
-
         await emailClient.sendTemplate("SpaceInviteEmail", {
           to: input.email,
           props: {
@@ -401,29 +401,32 @@ export const spaces = router({
             inviteUrl: absoluteUrl(`/accept-invite/${invite.id}`),
           },
         });
-
-        ctx.posthog?.capture({
-          distinctId: ctx.user.id,
-          event: "space_member_invite",
-          properties: {
-            role: input.role,
-          },
-          groups: {
-            space: ctx.space.id,
-          },
+      } catch {
+        // cleanup invite
+        if (invite) {
+          await prisma.spaceMemberInvite.delete({ where: { id: invite.id } });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to send invitation",
         });
-
-        return {
-          ok: true as const,
-          code: "INVITE_SENT" as const,
-        };
-      } catch (error) {
-        logger.error({ error }, "Failed to send invitation");
-        return {
-          ok: false as const,
-          code: "INVITE_FAILED" as const,
-        };
       }
+
+      ctx.posthog?.capture({
+        distinctId: ctx.user.id,
+        event: "space_member_invite",
+        properties: {
+          role: input.role,
+        },
+        groups: {
+          space: ctx.space.id,
+        },
+      });
+
+      return {
+        ok: true as const,
+        code: "INVITE_SENT" as const,
+      };
     }),
 
   acceptInvite: privateProcedure
