@@ -21,8 +21,6 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 import Link from "next/link";
-import React from "react";
-import { useSpace } from "@/features/space/client";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
@@ -31,20 +29,17 @@ import { SpaceIcon } from "./space-icon";
 
 export function SpaceDropdown() {
   const { data: spaces = [] } = trpc.spaces.list.useQuery();
-  const { data: space } = useSpace();
-  const [selectedSpaceId, setSelectedSpaceId] = React.useState(space.id);
+  const { data: activeSpace } = trpc.spaces.getCurrent.useQuery();
 
-  const setActiveSpace = trpc.spaces.setActive.useMutation({
-    onError: () => {
-      setSelectedSpaceId(space.id);
-    },
-  });
+  const setActiveSpace = trpc.spaces.setActive.useMutation();
   const newSpaceDialog = useDialog();
-  const activeSpace = spaces.find((space) => space.id === selectedSpaceId);
 
   if (!activeSpace) {
+    // This should never happen
     return null;
   }
+
+  const selectedSpaceId = activeSpace?.id;
 
   return (
     <>
@@ -81,7 +76,6 @@ export function SpaceDropdown() {
             value={selectedSpaceId}
             onValueChange={(value) => {
               if (value === selectedSpaceId) return;
-              setSelectedSpaceId(value);
               setActiveSpace.mutate({ spaceId: value });
             }}
           >

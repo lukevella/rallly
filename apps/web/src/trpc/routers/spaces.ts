@@ -187,7 +187,7 @@ export const spaces = router({
     }),
 
   create: privateProcedure
-    .use(createRateLimitMiddleware("space_create", 5, "1 h"))
+    .use(createRateLimitMiddleware("space_create", 5, "1 m"))
     .input(z.object({ name: z.string().min(1).max(100) }))
     .mutation(async ({ ctx, input }) => {
       const space = await createSpace({
