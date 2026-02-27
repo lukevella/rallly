@@ -1,5 +1,6 @@
 import type { SpaceTier } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { createSpaceDTO } from "@/features/space/data";
 import { isSelfHosted } from "@/utils/constants";
 
 export async function createSpace({
@@ -26,5 +27,5 @@ export async function createSpace({
     },
   });
 
-  return space;
+  return createSpaceDTO({ ...space, role: "ADMIN" });
 }
