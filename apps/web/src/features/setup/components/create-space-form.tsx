@@ -14,10 +14,8 @@ import { Input } from "@rallly/ui/input";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
-import { createSpaceAction } from "@/features/space/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 
 const createSpaceFormSchema = z.object({
   name: z.string().min(1).max(100),
@@ -34,13 +32,9 @@ export function CreateSpaceForm() {
     },
   });
 
-  const createSpace = useSafeAction(createSpaceAction, {
+  const createSpace = trpc.spaces.create.useMutation({
     onSuccess: () => {
-      // Redirect to the main dashboard after successful space creation
       router.push("/");
-    },
-    onError: (error) => {
-      console.error("Failed to create space:", error);
     },
   });
 
@@ -48,7 +42,7 @@ export function CreateSpaceForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(({ name }) => {
-          createSpace.execute({ name });
+          createSpace.mutate({ name });
         })}
         className="space-y-4"
       >
@@ -74,14 +68,10 @@ export function CreateSpaceForm() {
           )}
         />
 
-        {createSpace.result?.serverError && (
-          <FormMessage>{createSpace.result.serverError}</FormMessage>
-        )}
-
         <Button
           type="submit"
           variant="primary"
-          loading={createSpace.isExecuting}
+          loading={createSpace.isPending}
           className="w-full"
         >
           <Trans i18nKey="createSpace" defaults="Create Space" />

@@ -21,10 +21,9 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { MoreHorizontalIcon, XIcon } from "lucide-react";
-import { cancelInviteAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 
 type SpaceMemberInvite = {
   id: string;
@@ -35,7 +34,7 @@ type SpaceMemberInvite = {
 export function InviteDropdownMenu({ invite }: { invite: SpaceMemberInvite }) {
   const space = useSpace();
   const cancelInviteDialog = useDialog();
-  const cancelInvite = useSafeAction(cancelInviteAction);
+  const cancelInvite = trpc.spaces.cancelInvite.useMutation();
   const { t } = useTranslation();
 
   const canCancelInvite = space
@@ -84,7 +83,7 @@ export function InviteDropdownMenu({ invite }: { invite: SpaceMemberInvite }) {
               variant="destructive"
               onClick={() => {
                 toast.promise(
-                  cancelInvite.executeAsync({
+                  cancelInvite.mutateAsync({
                     inviteId: invite.id,
                   }),
                   {

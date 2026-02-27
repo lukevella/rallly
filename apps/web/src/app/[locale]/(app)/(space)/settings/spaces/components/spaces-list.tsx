@@ -20,12 +20,11 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
-import { leaveSpaceFromAccountAction } from "@/features/space/actions";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { SpaceRole } from "@/features/space/components/space-role";
 import type { SpaceDTO } from "@/features/space/types";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 import { LeaveSpaceDialog } from "./leave-space-dialog";
 
 interface SpacesListProps {
@@ -38,7 +37,7 @@ export function SpacesList({ spaces, currentUserId }: SpacesListProps) {
   const leaveSpaceDialog = useDialog();
   const [selectedSpace, setSelectedSpace] = useState<SpaceDTO | null>(null);
 
-  const leaveSpace = useSafeAction(leaveSpaceFromAccountAction, {
+  const leaveSpace = trpc.spaces.leaveFromAccount.useMutation({
     onSuccess: () => {
       toast.success(
         t("leftSpaceSuccess", {
@@ -124,7 +123,7 @@ export function SpacesList({ spaces, currentUserId }: SpacesListProps) {
           {...leaveSpaceDialog.dialogProps}
           spaceName={selectedSpace.name}
           onConfirm={async () => {
-            await leaveSpace.executeAsync({ spaceId: selectedSpace.id });
+            await leaveSpace.mutateAsync({ spaceId: selectedSpace.id });
           }}
         />
       )}

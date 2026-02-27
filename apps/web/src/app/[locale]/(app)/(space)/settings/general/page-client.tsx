@@ -96,7 +96,7 @@ export function GeneralSettingsPageClient() {
                 </PageSectionDescription>
               </PageSectionHeader>
               <PageSectionContent>
-                <DeleteSpaceButton spaceName={space.name} spaceId={space.id} />
+                <DeleteSpaceButton spaceName={space.name} />
               </PageSectionContent>
             </PageSection>
           ) : null}

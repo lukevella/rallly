@@ -22,21 +22,17 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { MoreHorizontalIcon, ShieldIcon, UserIcon, XIcon } from "lucide-react";
-import {
-  changeMemberRoleAction,
-  removeMemberAction,
-} from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
 import type { MemberDTO } from "@/features/space/member/types";
 import type { MemberRole } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 
 export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
   const space = useSpace();
   const removeMemberDialog = useDialog();
-  const removeMember = useSafeAction(removeMemberAction);
-  const changeMemberRole = useSafeAction(changeMemberRoleAction);
+  const removeMember = trpc.spaces.removeMember.useMutation();
+  const changeMemberRole = trpc.spaces.changeMemberRole.useMutation();
   const { t } = useTranslation();
 
   const canUpdateMember = space
@@ -49,7 +45,7 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
 
   const handleRoleChange = (newRole: MemberRole) => {
     toast.promise(
-      changeMemberRole.executeAsync({
+      changeMemberRole.mutateAsync({
         memberId: member.id,
         role: newRole,
       }),
@@ -130,7 +126,7 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
               variant="destructive"
               onClick={() => {
                 toast.promise(
-                  removeMember.executeAsync({
+                  removeMember.mutateAsync({
                     memberId: member.id,
                   }),
                   {
