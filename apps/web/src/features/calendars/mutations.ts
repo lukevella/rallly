@@ -185,10 +185,10 @@ export const setCalendarSelection = async (params: {
   calendarId: string;
   isSelected: boolean;
 }) => {
-  const { calendarId, isSelected } = params;
+  const { userId, calendarId, isSelected } = params;
 
   const calendar = await prisma.providerCalendar.findFirst({
-    where: { id: calendarId },
+    where: { id: calendarId, calendarConnection: { userId } },
   });
 
   if (!calendar) {
