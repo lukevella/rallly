@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { useSpace } from "@/features/space/client";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { Trans } from "@/i18n/client";
@@ -34,9 +33,12 @@ export function SpaceDropdown() {
   const { data: spaces = [] } = trpc.spaces.list.useQuery();
   const { data: space } = useSpace();
   const [selectedSpaceId, setSelectedSpaceId] = React.useState(space.id);
-  const [isPending, startTransition] = React.useTransition();
 
-  const setActiveSpace = trpc.spaces.setActive.useMutation();
+  const setActiveSpace = trpc.spaces.setActive.useMutation({
+    onError: () => {
+      setSelectedSpaceId(space.id);
+    },
+  });
   const newSpaceDialog = useDialog();
   const activeSpace = spaces.find((space) => space.id === selectedSpaceId);
 
@@ -50,8 +52,7 @@ export function SpaceDropdown() {
         <DropdownMenuTrigger asChild={true}>
           <Button
             className={cn("flex h-auto w-full gap-2.5 p-2", {
-              "pointer-events-none animate-pulse":
-                setActiveSpace.isPending || isPending,
+              "pointer-events-none animate-pulse": setActiveSpace.isPending,
             })}
             variant="ghost"
           >
@@ -81,9 +82,7 @@ export function SpaceDropdown() {
             onValueChange={(value) => {
               if (value === selectedSpaceId) return;
               setSelectedSpaceId(value);
-              startTransition(() => {
-                setActiveSpace.mutate({ spaceId: value });
-              });
+              setActiveSpace.mutate({ spaceId: value });
             }}
           >
             {spaces.map((space) => (
@@ -122,7 +121,6 @@ export function SpaceDropdown() {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isPending ? <RouterLoadingIndicator /> : null}
       <CreateSpaceDialog {...newSpaceDialog.dialogProps} />
     </>
   );
