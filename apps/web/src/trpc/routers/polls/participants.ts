@@ -1,9 +1,10 @@
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import * as Sentry from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import * as z from "zod";
+
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
@@ -15,6 +16,8 @@ import {
 } from "../../trpc";
 import type { DisableNotificationsPayload } from "../../types";
 import { createParticipantEditToken, resolveUserId } from "./utils";
+
+const logger = createLogger("participants");
 
 const MAX_PARTICIPANTS = 1000;
 
@@ -91,7 +94,10 @@ async function sendNewParticipantNotifcationEmail({
           },
         });
       } catch (err) {
-        Sentry.captureException(err);
+        logger.error(
+          { error: err, pollId },
+          "Failed to send watcher notification email",
+        );
       }
     }),
   );
