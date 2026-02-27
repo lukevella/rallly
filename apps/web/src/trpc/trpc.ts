@@ -5,7 +5,6 @@ import superjson from "superjson";
 import { PostHogClient } from "@/features/analytics/posthog";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getActiveSpaceForUser } from "@/features/space/data";
-import { getUser } from "@/features/user/data";
 import { AppError } from "@/lib/errors";
 import { createRatelimit } from "@/lib/rate-limit";
 import { isSelfHosted } from "@/utils/constants";
@@ -109,15 +108,6 @@ export const privateProcedure = procedureWithAnalytics.use(
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Login is required",
-      });
-    }
-
-    const user = await getUser(ctx.user.id);
-
-    if (!user) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "User does not exist",
       });
     }
 
