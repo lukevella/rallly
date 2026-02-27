@@ -33,7 +33,7 @@ import { MemberDropdownMenu } from "./components/member-dropdown-menu";
 export function MembersSettingsPageClient() {
   const [members] = trpc.spaces.listMembers.useSuspenseQuery();
   const [invites] = trpc.spaces.listInvites.useSuspenseQuery();
-  const [seats] = trpc.spaces.seats.useSuspenseQuery();
+  const [seats] = trpc.spaces.getSeats.useSuspenseQuery();
 
   return (
     <SettingsPage>

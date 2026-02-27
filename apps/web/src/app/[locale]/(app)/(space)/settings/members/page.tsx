@@ -10,7 +10,7 @@ export default async function MembersSettingsPage() {
   await Promise.all([
     helpers.spaces.listMembers.prefetch(),
     helpers.spaces.listInvites.prefetch(),
-    helpers.spaces.seats.prefetch(),
+    helpers.spaces.getSeats.prefetch(),
   ]);
 
   return (

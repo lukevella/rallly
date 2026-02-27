@@ -108,7 +108,7 @@ export const spaces = router({
       role: fromDBRole(invite.role),
     }));
   }),
-  seats: spaceProcedure.query(async ({ ctx }) => {
+  getSeats: spaceProcedure.query(async ({ ctx }) => {
     const [total, used] = await Promise.all([
       getTotalSeatsForSpace(ctx.space.id),
       getSpaceSeatCount(ctx.space.id),

@@ -77,7 +77,7 @@ function BillingPageContent({ tier }: { tier: SpaceTier }) {
   const { showPayWall } = useBilling();
 
   const [subscription] = trpc.billing.getSubscription.useSuspenseQuery();
-  const [seats] = trpc.spaces.seats.useSuspenseQuery();
+  const [seats] = trpc.spaces.getSeats.useSuspenseQuery();
 
   const didUpdateSeats = searchParams.has("seats_updated");
 
