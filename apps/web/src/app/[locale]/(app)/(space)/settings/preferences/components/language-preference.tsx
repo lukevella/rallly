@@ -9,7 +9,6 @@ import {
 } from "@rallly/ui/form";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { LanguageSelect } from "@/components/poll/language-selector";
@@ -23,11 +22,9 @@ const formSchema = z.object({
 
 export const LanguagePreference = () => {
   const { locale, changeLocale } = useLocale();
-  const router = useRouter();
   const updateLocale = trpc.user.updateLocale.useMutation({
     onSuccess: (_data, variables) => {
       changeLocale(variables.locale);
-      router.refresh();
     },
   });
   const form = useForm({
