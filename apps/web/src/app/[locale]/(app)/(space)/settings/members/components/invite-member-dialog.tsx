@@ -33,11 +33,10 @@ import { InfoIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { inviteMemberAction } from "@/features/space/actions";
 import { SpaceRole } from "@/features/space/components/space-role";
 import { memberRoleSchema } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 
 function useInviteMemberFormSchema() {
   const { t } = useTranslation();
@@ -66,10 +65,9 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
     resolver: zodResolver(formSchema),
   });
 
-  const inviteMember = useSafeAction(inviteMemberAction, {
-    onSuccess: (result) => {
-      const data = result.data;
-      if (data.success) {
+  const inviteMember = trpc.spaces.inviteMember.useMutation({
+    onSuccess: (data) => {
+      if (data.ok) {
         switch (data.code) {
           case "INVITE_SENT":
             toast.success(
@@ -122,7 +120,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
   });
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => inviteMember.execute(data))}>
+      <form onSubmit={form.handleSubmit((data) => inviteMember.mutate(data))}>
         <fieldset className="space-y-4">
           <FormField
             control={form.control}
@@ -212,7 +210,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
         <div className="mt-4 flex">
           <Button
             variant="primary"
-            loading={inviteMember.isExecuting}
+            loading={inviteMember.isPending}
             type="submit"
           >
             <Trans i18nKey="inviteMember" defaults="Send invite" />

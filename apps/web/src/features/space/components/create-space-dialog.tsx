@@ -22,9 +22,8 @@ import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { createSpaceAction } from "@/features/space/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 
 const createSpaceFormSchema = z.object({
   name: z.string().min(1).max(100),
@@ -40,7 +39,7 @@ export function CreateSpaceDialog(props: DialogProps) {
     },
   });
 
-  const createSpace = useSafeAction(createSpaceAction, {
+  const createSpace = trpc.spaces.create.useMutation({
     onSuccess: () => {
       form.reset();
     },
@@ -65,7 +64,7 @@ export function CreateSpaceDialog(props: DialogProps) {
             onSubmit={form.handleSubmit(({ name }) => {
               props.onOpenChange?.(false);
               toast.promise(
-                createSpace.executeAsync({
+                createSpace.mutateAsync({
                   name,
                 }),
                 {

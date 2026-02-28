@@ -26,9 +26,8 @@ import { toast } from "@rallly/ui/sonner";
 import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { leaveSpaceAction } from "@/features/space/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 
 interface LeaveSpaceDialogProps extends DialogProps {
   spaceName: string;
@@ -49,7 +48,7 @@ function LeaveSpaceDialog({
     },
   });
 
-  const leaveSpace = useSafeAction(leaveSpaceAction, {
+  const leaveSpace = trpc.spaces.leave.useMutation({
     onSuccess: () => {
       toast.success(
         t("leftSpaceSuccess", {
@@ -83,7 +82,7 @@ function LeaveSpaceDialog({
           <form
             id={formName}
             onSubmit={form.handleSubmit(() => {
-              leaveSpace.execute();
+              leaveSpace.mutate();
             })}
           >
             <FormField
@@ -129,7 +128,7 @@ function LeaveSpaceDialog({
             <Button
               form={formName}
               type="submit"
-              loading={leaveSpace.isExecuting}
+              loading={leaveSpace.isPending}
               variant="destructive"
             >
               <Trans i18nKey="leaveSpace" defaults="Leave Space" />

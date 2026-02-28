@@ -63,7 +63,7 @@ export async function getImageUploadUrl({
 export async function deleteImageFromS3(imageKey: string) {
   const s3Client = getS3Client();
 
-  s3Client?.send(
+  await s3Client?.send(
     new DeleteObjectCommand({
       Bucket: env.S3_BUCKET_NAME,
       Key: imageKey,

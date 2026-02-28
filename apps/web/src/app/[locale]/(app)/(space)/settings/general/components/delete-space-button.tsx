@@ -19,18 +19,15 @@ import { TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-import { deleteSpaceAction } from "@/features/space/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 
 interface DeleteSpaceDialogProps extends DialogProps {
   spaceName: string;
-  spaceId: string;
 }
 
 function DeleteSpaceDialog({
   spaceName,
-  spaceId,
   children,
   ...rest
 }: DeleteSpaceDialogProps) {
@@ -40,7 +37,7 @@ function DeleteSpaceDialog({
     },
   });
 
-  const deleteSpace = useSafeAction(deleteSpaceAction, {
+  const deleteSpace = trpc.spaces.delete.useMutation({
     onSuccess: () => {
       toast.success(
         t("deletedSpaceSuccess", {
@@ -61,7 +58,7 @@ function DeleteSpaceDialog({
         <DialogContent>
           <form
             onSubmit={form.handleSubmit(() => {
-              deleteSpace.execute({ spaceId });
+              deleteSpace.mutate();
             })}
           >
             <DialogHeader>
@@ -120,7 +117,7 @@ function DeleteSpaceDialog({
               </DialogClose>
               <Button
                 type="submit"
-                loading={deleteSpace.isExecuting}
+                loading={deleteSpace.isPending}
                 variant="destructive"
               >
                 <Trans
@@ -138,15 +135,11 @@ function DeleteSpaceDialog({
 
 interface DeleteSpaceButtonProps {
   spaceName: string;
-  spaceId: string;
 }
 
-export function DeleteSpaceButton({
-  spaceName,
-  spaceId,
-}: DeleteSpaceButtonProps) {
+export function DeleteSpaceButton({ spaceName }: DeleteSpaceButtonProps) {
   return (
-    <DeleteSpaceDialog spaceName={spaceName} spaceId={spaceId}>
+    <DeleteSpaceDialog spaceName={spaceName}>
       <DialogTrigger asChild>
         <Button variant="destructive">
           <TrashIcon className="size-4" />

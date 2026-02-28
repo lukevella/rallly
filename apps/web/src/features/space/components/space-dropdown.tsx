@@ -21,30 +21,25 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 import Link from "next/link";
-import React from "react";
-import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
-import { setActiveSpaceAction } from "@/features/space/actions";
-import { useSpace } from "@/features/space/client";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
 import { CreateSpaceDialog } from "./create-space-dialog";
 import { SpaceIcon } from "./space-icon";
 
 export function SpaceDropdown() {
   const { data: spaces = [] } = trpc.spaces.list.useQuery();
-  const { data: space } = useSpace();
-  const [selectedSpaceId, setSelectedSpaceId] = React.useState(space.id);
-  const [isPending, startTransition] = React.useTransition();
+  const { data: activeSpace } = trpc.spaces.getCurrent.useQuery();
 
-  const setActiveSpace = useSafeAction(setActiveSpaceAction);
+  const setActiveSpace = trpc.spaces.setActive.useMutation();
   const newSpaceDialog = useDialog();
-  const activeSpace = spaces.find((space) => space.id === selectedSpaceId);
 
   if (!activeSpace) {
+    // This should never happen
     return null;
   }
+
+  const selectedSpaceId = activeSpace?.id;
 
   return (
     <>
@@ -52,8 +47,7 @@ export function SpaceDropdown() {
         <DropdownMenuTrigger asChild={true}>
           <Button
             className={cn("flex h-auto w-full gap-2.5 p-2", {
-              "pointer-events-none animate-pulse":
-                setActiveSpace.isPending || isPending,
+              "pointer-events-none animate-pulse": setActiveSpace.isPending,
             })}
             variant="ghost"
           >
@@ -82,10 +76,7 @@ export function SpaceDropdown() {
             value={selectedSpaceId}
             onValueChange={(value) => {
               if (value === selectedSpaceId) return;
-              setSelectedSpaceId(value);
-              startTransition(() => {
-                setActiveSpace.execute({ spaceId: value });
-              });
+              setActiveSpace.mutate({ spaceId: value });
             }}
           >
             {spaces.map((space) => (
@@ -124,7 +115,6 @@ export function SpaceDropdown() {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isPending ? <RouterLoadingIndicator /> : null}
       <CreateSpaceDialog {...newSpaceDialog.dialogProps} />
     </>
   );

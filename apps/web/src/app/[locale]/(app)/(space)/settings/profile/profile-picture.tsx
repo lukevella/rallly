@@ -21,6 +21,7 @@ function ProfilePictureUpload({
   const router = useRouter();
   const posthog = usePostHog();
 
+  const getAvatarUploadUrl = trpc.user.getAvatarUploadUrl.useMutation();
   const updateAvatar = trpc.user.updateAvatar.useMutation();
   const removeAvatar = trpc.user.removeAvatar.useMutation();
 
@@ -42,7 +43,7 @@ function ProfilePictureUpload({
         <OptimizedAvatarImage src={image} name={name} size="xl" />
       </ImageUploadPreview>
       <ImageUploadControl
-        keyPrefix="avatars"
+        getUploadUrl={(input) => getAvatarUploadUrl.mutateAsync(input)}
         onUploadSuccess={handleUploadSuccess}
         onRemoveSuccess={handleRemoveSuccess}
         hasCurrentImage={!!image}

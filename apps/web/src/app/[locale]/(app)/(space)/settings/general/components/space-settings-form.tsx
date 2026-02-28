@@ -12,7 +12,6 @@ import {
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
@@ -20,15 +19,10 @@ import {
   ImageUploadControl,
   ImageUploadPreview,
 } from "@/components/image-upload";
-import {
-  removeSpaceImageAction,
-  updateSpaceAction,
-  updateSpaceImageAction,
-} from "@/features/space/actions";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import type { SpaceDTO } from "@/features/space/types";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 
 const spaceSettingsSchema = z.object({
   name: z
@@ -47,11 +41,11 @@ export function SpaceSettingsForm({
   disabled = false,
 }: SpaceSettingsFormProps) {
   const { t } = useTranslation();
-  const router = useRouter();
 
-  const updateSpace = useSafeAction(updateSpaceAction);
-  const updateImage = useSafeAction(updateSpaceImageAction);
-  const removeImage = useSafeAction(removeSpaceImageAction);
+  const updateSpace = trpc.spaces.update.useMutation();
+  const getImageUploadUrl = trpc.spaces.getImageUploadUrl.useMutation();
+  const updateImage = trpc.spaces.updateImage.useMutation();
+  const removeImage = trpc.spaces.removeImage.useMutation();
 
   const form = useForm({
     resolver: zodResolver(spaceSettingsSchema),
@@ -61,13 +55,11 @@ export function SpaceSettingsForm({
   });
 
   const handleImageUploadSuccess = async (imageKey: string) => {
-    await updateImage.executeAsync({ imageKey });
-    router.refresh();
+    await updateImage.mutateAsync({ imageKey });
   };
 
   const handleImageRemoveSuccess = async () => {
-    await removeImage.executeAsync();
-    router.refresh();
+    await removeImage.mutateAsync();
   };
 
   return (
@@ -75,7 +67,7 @@ export function SpaceSettingsForm({
       <form
         onSubmit={form.handleSubmit(async (data) => {
           toast.promise(
-            updateSpace.executeAsync({
+            updateSpace.mutateAsync({
               name: data.name,
             }),
             {
@@ -104,7 +96,7 @@ export function SpaceSettingsForm({
               <SpaceIcon name={space.name} src={space.image} size="xl" />
             </ImageUploadPreview>
             <ImageUploadControl
-              keyPrefix="spaces"
+              getUploadUrl={(input) => getImageUploadUrl.mutateAsync(input)}
               onUploadSuccess={handleImageUploadSuccess}
               onRemoveSuccess={handleImageRemoveSuccess}
               hasCurrentImage={!!space.image}
@@ -137,9 +129,7 @@ export function SpaceSettingsForm({
           <Button
             type="submit"
             disabled={
-              disabled ||
-              updateSpace.status === "executing" ||
-              !form.formState.isDirty
+              disabled || updateSpace.isPending || !form.formState.isDirty
             }
           >
             <Trans i18nKey="save" defaults="Save" />

@@ -50,7 +50,7 @@ export function createSpaceDTO(space: {
   role: DBSpaceMemberRole;
   image?: string | null;
   tier: DBSpaceTier;
-}) {
+}): SpaceDTO {
   return {
     id: space.id,
     name: space.name,
@@ -58,7 +58,7 @@ export function createSpaceDTO(space: {
     tier: isSelfHosted ? "pro" : space.tier,
     role: fromDBRole(space.role),
     image: space.image ?? undefined,
-  } satisfies SpaceDTO;
+  };
 }
 
 export const getMember = async (id: string) => {
