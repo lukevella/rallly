@@ -13,8 +13,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { LanguageSelect } from "@/components/poll/language-selector";
-import { Trans, useTranslation } from "@/i18n/client";
-import { setLocaleCookie } from "@/lib/locale/client";
+import { Trans } from "@/i18n/client";
+import { useLocale } from "@/lib/locale/client";
 import { trpc } from "@/trpc/client";
 
 const formSchema = z.object({
@@ -22,12 +22,17 @@ const formSchema = z.object({
 });
 
 export const LanguagePreference = () => {
-  const { i18n } = useTranslation();
+  const { locale, changeLocale } = useLocale();
   const router = useRouter();
-  const updateLocale = trpc.user.updateLocale.useMutation();
+  const updateLocale = trpc.user.updateLocale.useMutation({
+    onSuccess: (_data, variables) => {
+      changeLocale(variables.locale);
+      router.refresh();
+    },
+  });
   const form = useForm({
     defaultValues: {
-      language: i18n.language,
+      language: locale,
     },
     resolver: zodResolver(formSchema),
   });
@@ -36,9 +41,7 @@ export const LanguagePreference = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
-          await updateLocale.mutateAsync({ locale: data.language });
-          setLocaleCookie(data.language);
-          router.refresh();
+          updateLocale.mutate({ locale: data.language });
         })}
       >
         <FormField
