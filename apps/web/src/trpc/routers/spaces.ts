@@ -798,6 +798,14 @@ export const spaces = router({
         });
       }
 
+      const expectedPrefix = `spaces/${ctx.space.id}-`;
+      if (!input.imageKey.startsWith(expectedPrefix)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid image key",
+        });
+      }
+
       const oldImageKey = ctx.space.image;
 
       await prisma.space.update({

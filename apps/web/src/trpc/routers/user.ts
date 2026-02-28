@@ -151,6 +151,15 @@ export const user = router({
     .input(z.object({ imageKey: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.user.id;
+
+      const expectedPrefix = `avatars/${userId}-`;
+      if (!input.imageKey.startsWith(expectedPrefix)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid image key",
+        });
+      }
+
       const oldImageKey = ctx.user.image;
 
       await prisma.user.update({
