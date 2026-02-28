@@ -1,7 +1,10 @@
+import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { feedbackSchema } from "@/features/feedback/schema";
+import { defineAbilityFor } from "@/features/user/ability";
 import {
   deleteImageFromS3,
   getImageUploadUrl,
@@ -192,4 +195,69 @@ export const user = router({
 
     return { success: true };
   }),
+  deleteMe: privateProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.user.id;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        subscriptions: {
+          select: {
+            active: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
+
+    const ability = defineAbilityFor(ctx.user);
+
+    if (ability.cannot("delete", subject("User", user))) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You are not authorized to delete this user",
+      });
+    }
+
+    if (user.subscriptions.some((subscription) => subscription.active)) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "User has active subscriptions",
+      });
+    }
+
+    await prisma.user.delete({
+      where: { id: userId },
+    });
+  }),
+  updateLocale: privateProcedure
+    .input(z.object({ locale: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      await prisma.user.update({
+        where: { id: ctx.user.id },
+        data: { locale: input.locale },
+      });
+    }),
+  submitFeedback: privateProcedure
+    .use(createRateLimitMiddleware("submit_feedback", 5, "1 h"))
+    .input(feedbackSchema)
+    .mutation(async ({ input, ctx }) => {
+      const emailClient = await getEmailClient();
+      emailClient.sendEmail({
+        to: "feedback@rallly.co",
+        subject: "Feedback",
+        text: `User: ${ctx.user.name} (${ctx.user.email})\n\n${input.content}`,
+      });
+
+      ctx.posthog?.capture({
+        event: "feedback_send",
+        distinctId: ctx.user.id,
+      });
+    }),
 });

@@ -15,7 +15,7 @@ import * as z from "zod";
 import { LanguageSelect } from "@/components/poll/language-selector";
 import { Trans, useTranslation } from "@/i18n/client";
 import { setLocaleCookie } from "@/lib/locale/client";
-import { updateLocale } from "../actions";
+import { trpc } from "@/trpc/client";
 
 const formSchema = z.object({
   language: z.string(),
@@ -24,6 +24,7 @@ const formSchema = z.object({
 export const LanguagePreference = () => {
   const { i18n } = useTranslation();
   const router = useRouter();
+  const updateLocale = trpc.user.updateLocale.useMutation();
   const form = useForm({
     defaultValues: {
       language: i18n.language,
@@ -35,7 +36,7 @@ export const LanguagePreference = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
-          await updateLocale(data.language);
+          await updateLocale.mutateAsync({ locale: data.language });
           setLocaleCookie(data.language);
           router.refresh();
         })}
