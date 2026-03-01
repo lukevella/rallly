@@ -66,6 +66,10 @@ function defineSpaceMemberRules(
 ) {
   const { can } = builder;
 
+  can("read", "ScheduledEvent", {
+    spaceId: space.id,
+  });
+
   can("cancel", "ScheduledEvent", {
     spaceId: space.id,
     userId: user.id,
