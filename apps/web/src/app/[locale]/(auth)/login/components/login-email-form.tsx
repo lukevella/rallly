@@ -16,13 +16,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import {
-  getLoginMethodAction,
-  setVerificationEmail,
-} from "@/app/[locale]/(auth)/login/actions";
+import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 import { validateRedirectUrl } from "@/utils/redirect";
 
 function useLoginWithEmailSchema() {
@@ -50,7 +47,7 @@ export function LoginWithEmailForm() {
   const { handleSubmit, formState } = form;
   const { t } = useTranslation();
 
-  const { executeAsync: getLoginMethod } = useSafeAction(getLoginMethodAction);
+  const getLoginMethod = trpc.auth.getLoginMethod.useMutation();
 
   const isPasswordLogin = showPasswordField && !!form.watch("password");
 
@@ -92,11 +89,11 @@ export function LoginWithEmailForm() {
             return;
           } else {
             if (!showPasswordField) {
-              const res = await getLoginMethod({
+              const res = await getLoginMethod.mutateAsync({
                 email: identifier,
               });
 
-              if (res.data?.method === "credential") {
+              if (res.method === "credential") {
                 // show password field
                 setShowPasswordField(true);
                 return;
