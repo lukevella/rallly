@@ -22,9 +22,8 @@ import {
 import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { deleteUserAction } from "@/features/user/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 
 const useSchema = (email: string) => {
   const { t } = useTranslation();
@@ -58,7 +57,7 @@ export function DeleteUserDialog({
     },
   });
 
-  const deleteUser = useSafeAction(deleteUserAction, {
+  const deleteUser = trpc.admin.deleteUser.useMutation({
     onSuccess: () => {
       onOpenChange(false);
     },
@@ -81,7 +80,7 @@ export function DeleteUserDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(async () => {
-              await deleteUser.executeAsync({ userId });
+              await deleteUser.mutateAsync({ userId });
             })}
           >
             <FormField
@@ -117,7 +116,7 @@ export function DeleteUserDialog({
               </DialogClose>
               <Button
                 variant="destructive"
-                loading={deleteUser.isExecuting}
+                loading={deleteUser.isPending}
                 type="submit"
               >
                 <Trans i18nKey="delete" defaults="Delete" />

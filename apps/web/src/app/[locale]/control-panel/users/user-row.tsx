@@ -16,13 +16,12 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import { MoreHorizontal, TrashIcon, UserPenIcon } from "lucide-react";
-import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedListItem } from "@/components/stacked-list";
-import { changeRoleAction } from "@/features/user/actions";
 import { userRoleSchema } from "@/features/user/schema";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 import { DeleteUserDialog } from "./dialogs/delete-user-dialog";
 
 export function UserRow({
@@ -42,16 +41,20 @@ export function UserRow({
   canChangeRole: boolean;
   canDelete: boolean;
 }) {
-  const changeRole = useSafeAction(changeRoleAction);
+  const router = useRouter();
+  const changeRole = trpc.admin.changeRole.useMutation({
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
 
-  const [isPending, startTransition] = useTransition();
   const deleteDialog = useDialog();
 
   return (
     <>
       <StackedListItem
         className={cn({
-          "opacity-50": isPending,
+          "opacity-50": changeRole.isPending,
         })}
       >
         <div>
@@ -83,11 +86,9 @@ export function UserRow({
                   <DropdownMenuRadioGroup
                     value={role}
                     onValueChange={async (value) => {
-                      startTransition(async () => {
-                        await changeRole.executeAsync({
-                          role: userRoleSchema.parse(value),
-                          userId,
-                        });
+                      await changeRole.mutateAsync({
+                        role: userRoleSchema.parse(value),
+                        userId,
                       });
                     }}
                   >

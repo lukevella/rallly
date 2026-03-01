@@ -1,18 +1,23 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
+import { useRouter } from "next/navigation";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
-import { makeMeAdminAction } from "./actions";
+import { trpc } from "@/trpc/client";
 
 export function MakeMeAdminButton() {
-  const makeMeAdmin = useSafeAction(makeMeAdminAction);
+  const router = useRouter();
+  const makeMeAdmin = trpc.admin.makeMeAdmin.useMutation({
+    onSuccess: () => {
+      router.push("/control-panel");
+    },
+  });
   return (
     <Button
       onClick={async () => {
-        await makeMeAdmin.executeAsync();
+        await makeMeAdmin.mutateAsync();
       }}
-      loading={makeMeAdmin.isExecuting}
+      loading={makeMeAdmin.isPending}
       variant="primary"
     >
       <Trans i18nKey="adminSetupCta" defaults="Make me an admin" />

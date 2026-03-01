@@ -15,8 +15,7 @@ import React from "react";
 import type { InstanceSettings } from "@/features/instance-settings/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
-import { useSafeAction } from "@/lib/safe-action/client";
-import { updateInstanceSettingsAction } from "./actions";
+import { trpc } from "@/trpc/client";
 
 export function InstanceSettingsForm({
   defaultValue,
@@ -28,14 +27,15 @@ export function InstanceSettingsForm({
     !isRegistrationEnabled || Boolean(defaultValue.disableUserRegistration),
   );
 
-  const updateInstanceSettings = useSafeAction(updateInstanceSettingsAction);
+  const updateInstanceSettings =
+    trpc.admin.updateInstanceSettings.useMutation();
   const { t } = useTranslation();
 
   const handleChange = (value: string) => {
     const disabled = value === "disabled";
     setDisableUserRegistration(disabled);
     toast.promise(
-      updateInstanceSettings.executeAsync({
+      updateInstanceSettings.mutateAsync({
         disableUserRegistration: disabled,
       }),
       {
