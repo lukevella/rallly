@@ -20,7 +20,11 @@ export const auth = router({
   getLoginMethod: publicProcedure
     .input(z.object({ email: z.email() }))
     .use(createRateLimitMiddleware("get_login_method", 10, "1 m"))
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
+      /**
+       * This should probably be a query instead of a mutation, but we need to
+       * keep it as a mutation for now to avoid breaking changes.
+       */
       const user = await prisma.user.findUnique({
         where: { email: input.email },
         select: {

@@ -47,8 +47,7 @@ export function LoginWithEmailForm() {
   const { handleSubmit, formState } = form;
   const { t } = useTranslation();
 
-  const utils = trpc.useUtils();
-
+  const getLoginMethod = trpc.auth.getLoginMethod.useMutation();
   const isPasswordLogin = showPasswordField && !!form.watch("password");
 
   return (
@@ -89,7 +88,7 @@ export function LoginWithEmailForm() {
             return;
           } else {
             if (!showPasswordField) {
-              const res = await utils.auth.getLoginMethod.fetch({
+              const res = await getLoginMethod.mutateAsync({
                 email: identifier,
               });
 
