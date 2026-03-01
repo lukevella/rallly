@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { authLib } from "@/lib/auth";
 import { getLocaleFromRequest, setLocaleCookie } from "@/lib/locale/server";
 import { setPathname } from "@/lib/pathname";
+import { buildSafeRedirectUrl } from "@/utils/redirect";
 
 const authRoutes = ["/login", "/register", "/forgot-password"];
 
@@ -22,8 +23,12 @@ export const proxy = async (req: NextRequest) => {
     }
 
     if (session?.user && !session.user.isAnonymous) {
-      newUrl.pathname = "/";
-      return NextResponse.redirect(new URL("/", req.url));
+      return NextResponse.redirect(
+        buildSafeRedirectUrl({
+          destination: "/",
+          returnUrl: pathname,
+        }),
+      );
     }
   }
 
