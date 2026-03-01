@@ -14,9 +14,8 @@ import { Input } from "@rallly/ui/input";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { validateLicenseKeyAction } from "@/features/licensing/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 import { checkLicenseKey } from "../helpers/check-license-key";
 
 const formSchema = z.object({
@@ -35,7 +34,7 @@ export function LicenseKeyForm() {
     resolver: zodResolver(formSchema),
   });
 
-  const validateLicenseKey = useSafeAction(validateLicenseKeyAction);
+  const validateLicenseKey = trpc.licensing.validate.useMutation();
 
   return (
     <Form {...form}>
@@ -43,17 +42,9 @@ export function LicenseKeyForm() {
         className="space-y-4"
         onSubmit={form.handleSubmit(async (data) => {
           try {
-            const result = await validateLicenseKey.executeAsync({
+            await validateLicenseKey.mutateAsync({
               key: data.licenseKey,
             });
-
-            if (!result.data) {
-              form.setError("licenseKey", {
-                message: t("licenseKeyErrorInvalidLicenseKey", {
-                  defaultValue: "Invalid license key",
-                }),
-              });
-            }
           } catch (_error) {
             form.setError("licenseKey", {
               message: t("licenseKeyGenericError", {

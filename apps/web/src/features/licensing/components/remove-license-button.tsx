@@ -15,15 +15,18 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { XIcon } from "lucide-react";
-import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
-import { removeInstanceLicenseAction } from "../actions";
+import { trpc } from "@/trpc/client";
 
 export function RemoveLicenseButton() {
-  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const dialog = useDialog();
-  const removeInstanceLicense = useSafeAction(removeInstanceLicenseAction);
+  const removeInstanceLicense = trpc.licensing.remove.useMutation({
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
   return (
     <Dialog {...dialog.dialogProps}>
       <Tooltip>
@@ -62,14 +65,12 @@ export function RemoveLicenseButton() {
             </Button>
           </DialogClose>
           <Button
-            loading={isPending}
+            loading={removeInstanceLicense.isPending}
             variant="destructive"
-            onClick={() =>
-              startTransition(async () => {
-                await removeInstanceLicense.executeAsync();
-                dialog.dismiss();
-              })
-            }
+            onClick={async () => {
+              await removeInstanceLicense.mutateAsync();
+              dialog.dismiss();
+            }}
           >
             <Trans i18nKey="removeLicense" defaults="Remove License" />
           </Button>

@@ -4,20 +4,25 @@ import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { RefreshCwIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
-import { refreshInstanceLicenseAction } from "../actions";
+import { trpc } from "@/trpc/client";
 
 export function RefreshLicenseButton() {
-  const refreshInstanceLicense = useSafeAction(refreshInstanceLicenseAction);
+  const router = useRouter();
+  const refreshInstanceLicense = trpc.licensing.refresh.useMutation({
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
           variant="ghost"
-          loading={refreshInstanceLicense.isExecuting}
-          onClick={async () => await refreshInstanceLicense.executeAsync()}
+          loading={refreshInstanceLicense.isPending}
+          onClick={async () => await refreshInstanceLicense.mutateAsync()}
         >
           <Icon>
             <RefreshCwIcon />
