@@ -16,9 +16,8 @@ import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { useCallback, useState } from "react";
-import { updateSeatsAction } from "@/features/billing/actions";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 
 interface ManageSeatsButtonProps {
   currentSeats: number;
@@ -135,10 +134,11 @@ export function ManageSeatsDialog({
   const canRemoveSeats = newSeatCount >= usedSeats;
   const hasChanges = seatDelta !== 0;
 
-  const { execute: updateSeats, isPending } = useSafeAction(updateSeatsAction);
+  const updateSeats = trpc.billing.updateSeats.useMutation();
 
   const handleUpdate = async () => {
-    updateSeats({ seatDelta });
+    const { url } = await updateSeats.mutateAsync({ seatDelta });
+    window.location.href = url;
   };
 
   return (
@@ -187,7 +187,7 @@ export function ManageSeatsDialog({
             variant="primary"
             onClick={handleUpdate}
             disabled={!canRemoveSeats || !hasChanges}
-            loading={isPending}
+            loading={updateSeats.isPending}
           >
             {isAdding ? (
               <Trans
