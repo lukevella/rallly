@@ -104,7 +104,7 @@ export function UserRow({
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive"
-                onClick={async () => {
+                onClick={() => {
                   deleteDialog.trigger();
                 }}
                 disabled={!canDelete}

@@ -8,7 +8,9 @@ import {
 import { isSelfHosted } from "@/utils/constants";
 
 export function getInstanceLicense() {
-  return prisma.instanceLicense.findFirst();
+  return prisma.instanceLicense.findFirst({
+    orderBy: { id: "asc" },
+  });
 }
 
 export const cached_getInstanceLicense = unstable_cache(
