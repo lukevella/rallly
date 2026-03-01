@@ -13,9 +13,14 @@ export const proxy = async (req: NextRequest) => {
   const pathname = newUrl.pathname;
 
   if (authRoutes.some((route) => pathname.startsWith(route))) {
-    const session = await authLib.api.getSession({
-      headers: await headers(),
-    });
+    let session = null;
+    try {
+      session = await authLib.api.getSession({
+        headers: await headers(),
+      });
+    } catch {
+      session = null;
+    }
 
     if (session?.user && !session.user.isAnonymous) {
       newUrl.pathname = "/";
