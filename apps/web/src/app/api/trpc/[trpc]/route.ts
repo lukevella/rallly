@@ -1,5 +1,5 @@
 import { createWideEvent, logger } from "@rallly/logger";
-
+import * as Sentry from "@sentry/nextjs";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import { ipAddress } from "@vercel/functions";
@@ -57,6 +57,10 @@ const handler = async (req: NextRequest) => {
         event.errorCode = error.code;
         event.errorMessage = error.message;
         event.errorType = "TRPCError";
+
+        if (statusCode >= 500) {
+          Sentry.captureException(error);
+        }
       },
     });
     event.statusCode = response.status;
