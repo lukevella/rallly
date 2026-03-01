@@ -15,6 +15,7 @@ import {
   lastLoginMethod,
 } from "better-auth/plugins";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { cache } from "react";
 import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { linkAnonymousUser } from "@/auth/helpers/merge-user";
@@ -399,6 +400,13 @@ export const signOut = async () => {
 export const getUserIdIfLoggedIn = async () => {
   const session = await getSession();
   return session?.user?.isGuest ? undefined : session?.user?.id;
+};
+
+export const redirectIfLoggedIn = async () => {
+  const session = await getSession();
+  if (session?.user && !session.user.isGuest) {
+    redirect("/");
+  }
 };
 
 export default authLib;

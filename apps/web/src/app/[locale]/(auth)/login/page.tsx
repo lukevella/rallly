@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { OIDCAutoSignIn } from "@/app/[locale]/(auth)/login/components/oidc-auto-sign-in";
 import { env } from "@/env";
 import { getTranslation } from "@/i18n/server";
-import { authLib, getSession } from "@/lib/auth";
+import { authLib, redirectIfLoggedIn } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import {
@@ -41,10 +40,9 @@ export default async function LoginPage(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const session = await getSession();
-  if (session?.user && !session.user.isGuest) {
-    redirect("/");
-  }
+
+  await redirectIfLoggedIn();
+
   const { isRegistrationEnabled, t } = await loadData();
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
 
