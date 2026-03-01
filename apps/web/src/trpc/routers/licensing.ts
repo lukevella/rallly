@@ -15,11 +15,7 @@ export const licensing = router({
     updateTag(INSTANCE_LICENSE_TAG);
   }),
   refresh: adminProcedure.mutation(async () => {
-    const instanceLicense = await prisma.instanceLicense.findFirst({
-      orderBy: {
-        id: "asc",
-      },
-    });
+    const instanceLicense = await prisma.instanceLicense.findFirst();
 
     if (!instanceLicense) {
       throw new TRPCError({
@@ -80,28 +76,21 @@ export const licensing = router({
         });
       }
 
-      await prisma.instanceLicense.upsert({
-        where: { licenseKey: data.key },
-        create: {
-          licenseKey: data.key,
-          licenseeName: data.licenseeName,
-          licenseeEmail: data.licenseeEmail,
-          issuedAt: data.issuedAt,
-          expiresAt: data.expiresAt,
-          seats: data.seats,
-          type: data.type,
-          whiteLabelAddon: data.whiteLabelAddon,
-        },
-        update: {
-          licenseeName: data.licenseeName,
-          licenseeEmail: data.licenseeEmail,
-          issuedAt: data.issuedAt,
-          expiresAt: data.expiresAt,
-          seats: data.seats,
-          type: data.type,
-          whiteLabelAddon: data.whiteLabelAddon,
-        },
-      });
+      await prisma.$transaction([
+        prisma.instanceLicense.deleteMany(),
+        prisma.instanceLicense.create({
+          data: {
+            licenseKey: data.key,
+            licenseeName: data.licenseeName,
+            licenseeEmail: data.licenseeEmail,
+            issuedAt: data.issuedAt,
+            expiresAt: data.expiresAt,
+            seats: data.seats,
+            type: data.type,
+            whiteLabelAddon: data.whiteLabelAddon,
+          },
+        }),
+      ]);
 
       updateTag(INSTANCE_LICENSE_TAG);
     }),
