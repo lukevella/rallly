@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { authLib } from "@/lib/auth";
@@ -16,7 +15,7 @@ export const proxy = async (req: NextRequest) => {
     let session = null;
     try {
       session = await authLib.api.getSession({
-        headers: await headers(),
+        headers: req.headers,
       });
     } catch {
       session = null;
