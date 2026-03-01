@@ -87,7 +87,6 @@
     "motion": "^12.6.2",
     "nanoid": "^5.0.9",
     "next": "16.1.6",
-    "next-safe-action": "^8.0.7",
     "pg": "^8.17.1",
     "php-serialize": "^4.1.1",
     "postcss": "^8.5.6",
