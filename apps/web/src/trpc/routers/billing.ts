@@ -34,7 +34,7 @@ export const billing = router({
 
       if (!subscription || !subscription.active) {
         throw new TRPCError({
-          code: "PRECONDITION_FAILED",
+          code: "PAYMENT_REQUIRED",
           message: "No active subscription found for this space",
         });
       }
