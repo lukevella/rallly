@@ -73,12 +73,25 @@ export const events = router({
         });
       }
 
-      const updatedEvent = await prisma.scheduledEvent.update({
-        where: { id: input.eventId },
+      // Atomically update only if not already canceled to ensure idempotency
+      const { count } = await prisma.scheduledEvent.updateMany({
+        where: {
+          id: input.eventId,
+          status: { not: "canceled" },
+        },
         data: {
           status: "canceled",
           sequence: { increment: 1 },
         },
+      });
+
+      // Already canceled — skip notifications
+      if (count === 0) {
+        return;
+      }
+
+      const updatedEvent = await prisma.scheduledEvent.findUniqueOrThrow({
+        where: { id: input.eventId },
         include: { invites: true },
       });
 
