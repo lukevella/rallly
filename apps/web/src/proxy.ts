@@ -23,7 +23,7 @@ export const proxy = async (req: NextRequest) => {
 
     if (session?.user && !session.user.isAnonymous) {
       newUrl.pathname = "/";
-      return NextResponse.rewrite(newUrl);
+      return NextResponse.redirect(new URL("/", req.url));
     }
   }
 
