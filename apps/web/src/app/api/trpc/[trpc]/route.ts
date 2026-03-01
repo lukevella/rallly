@@ -12,7 +12,7 @@ import { appRouter } from "@/trpc/routers";
 
 const handler = async (req: NextRequest) => {
   const { user } = await getUserSession();
-  const ip = ipAddress(req);
+  const ip = ipAddress(req) ?? "127.0.0.1";
   const ja4Digest = req.headers.get("x-vercel-ja4-digest") ?? undefined;
   const reqLocale = getLocaleFromRequest(req);
   const startTime = Date.now();
