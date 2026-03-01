@@ -1,5 +1,4 @@
 import { subject } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
@@ -57,7 +56,7 @@ export const events = router({
       });
 
       const event = await prisma.scheduledEvent.findFirst({
-        where: accessibleBy(memberAbility).ScheduledEvent,
+        where: { id: input.eventId, spaceId: ctx.space.id },
       });
 
       if (!event) {
