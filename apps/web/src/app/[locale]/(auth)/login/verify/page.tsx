@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { getTranslation } from "@/i18n/server";
-
+import { redirectIfLoggedIn } from "@/lib/auth";
 import {
   AuthPageContainer,
   AuthPageContent,
@@ -17,6 +17,7 @@ import {
 import { OTPForm } from "./components/otp-form";
 
 export default async function VerifyPage() {
+  await redirectIfLoggedIn();
   const { t } = await getTranslation();
   const email = (await cookies()).get("verification-email")?.value;
   if (!email) {

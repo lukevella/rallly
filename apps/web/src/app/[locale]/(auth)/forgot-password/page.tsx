@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { env } from "@/env";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { getSession } from "@/lib/auth";
+import { redirectIfLoggedIn } from "@/lib/auth";
 import {
   AuthPageContainer,
   AuthPageContent,
@@ -19,10 +19,7 @@ export default async function ForgotPasswordPage() {
   if (env.EMAIL_LOGIN_ENABLED === "false") {
     notFound();
   }
-  const session = await getSession();
-  if (session && !session.user?.isGuest) {
-    redirect("/");
-  }
+  await redirectIfLoggedIn();
 
   return (
     <AuthPageContainer>
