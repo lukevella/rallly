@@ -38,7 +38,7 @@ export const LanguagePreference = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
-          updateLocale.mutate({ locale: data.language });
+          await updateLocale.mutateAsync({ locale: data.language });
         })}
       >
         <FormField
