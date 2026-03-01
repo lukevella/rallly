@@ -118,31 +118,21 @@ export const events = router({
         });
       }
 
-      const attendees = await prisma.scheduledEventInvite.findMany({
-        where: { scheduledEventId: input.eventId },
-        select: {
-          inviteeEmail: true,
-          inviteeName: true,
-          inviteeTimeZone: true,
-          status: true,
-        },
-      });
-
-      for (const attendee of attendees) {
-        if (attendee.status !== "declined") {
+      for (const invite of updatedEvent.invites) {
+        if (invite.status !== "declined") {
           const { day, dow, date, time } = formatEventDateTime({
-            start: event.start,
-            end: event.end,
-            allDay: event.allDay,
-            timeZone: event.timeZone,
-            inviteeTimeZone: attendee.inviteeTimeZone,
+            start: updatedEvent.start,
+            end: updatedEvent.end,
+            allDay: updatedEvent.allDay,
+            timeZone: updatedEvent.timeZone,
+            inviteeTimeZone: invite.inviteeTimeZone,
           });
 
           const emailClient = await getEmailClient();
           emailClient.queueTemplate("EventCanceledEmail", {
-            to: attendee.inviteeEmail,
+            to: invite.inviteeEmail,
             props: {
-              title: event.title,
+              title: updatedEvent.title,
               hostName: ctx.user.name,
               day,
               dow,
