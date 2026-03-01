@@ -15,9 +15,7 @@ import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
 
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
-import { deleteCurrentUserAction } from "./actions";
 
 export function DeleteAccountDialog({ children, ...rest }: DialogProps & {}) {
   const [user] = trpc.user.getAuthed.useSuspenseQuery();
@@ -27,7 +25,7 @@ export function DeleteAccountDialog({ children, ...rest }: DialogProps & {}) {
     },
   });
 
-  const deleteUser = useSafeAction(deleteCurrentUserAction);
+  const deleteUser = trpc.user.deleteMe.useMutation();
   const { t } = useTranslation();
 
   return (
@@ -39,7 +37,7 @@ export function DeleteAccountDialog({ children, ...rest }: DialogProps & {}) {
             method="POST"
             action="/auth/logout"
             onSubmit={form.handleSubmit(async () => {
-              await deleteUser.executeAsync();
+              await deleteUser.mutateAsync();
             })}
           >
             <DialogHeader>
@@ -97,7 +95,7 @@ export function DeleteAccountDialog({ children, ...rest }: DialogProps & {}) {
               </DialogClose>
               <Button
                 type="submit"
-                loading={deleteUser.isExecuting}
+                loading={deleteUser.isPending}
                 variant="destructive"
               >
                 <Trans i18nKey="deleteAccount" defaults="Delete Account" />

@@ -16,14 +16,12 @@ import { CheckCircle2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import { Trans } from "@/i18n/client";
-
-import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 import { isSelfHosted } from "@/utils/constants";
-import { submitFeedbackAction } from "../actions";
 import { feedbackSchema } from "../schema";
 
 export function FeedbackDialog(props: DialogProps) {
-  const submitFeedback = useSafeAction(submitFeedbackAction);
+  const submitFeedback = trpc.user.submitFeedback.useMutation();
   const form = useForm({
     resolver: zodResolver(feedbackSchema),
   });
@@ -50,7 +48,11 @@ export function FeedbackDialog(props: DialogProps) {
             </DialogHeader>
 
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(submitFeedback.executeAsync)}>
+              <form
+                onSubmit={form.handleSubmit((data) =>
+                  submitFeedback.mutateAsync(data),
+                )}
+              >
                 <FormField
                   control={form.control}
                   name="content"

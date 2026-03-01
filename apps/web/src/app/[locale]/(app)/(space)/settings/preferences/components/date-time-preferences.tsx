@@ -29,7 +29,7 @@ const formSchema = z.object({
   weekStart: z.number().min(0).max(6),
 });
 
-const DateTimePreferencesForm = () => {
+export const DateTimePreferences = () => {
   const { timeFormat, weekStart, timeZone } = useDayjs();
   const { updatePreferences } = usePreferences();
 
@@ -133,8 +133,4 @@ const DateTimePreferencesForm = () => {
       </form>
     </Form>
   );
-};
-
-export const DateTimePreferences = () => {
-  return <DateTimePreferencesForm />;
 };

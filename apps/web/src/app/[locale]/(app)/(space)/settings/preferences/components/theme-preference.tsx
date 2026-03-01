@@ -2,15 +2,8 @@
 
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
-import React from "react";
 import { useTheme } from "@/features/theme/client";
 import { Trans } from "@/i18n/client";
-
-const themes = [
-  { value: "system", icon: MonitorIcon },
-  { value: "light", icon: SunIcon },
-  { value: "dark", icon: MoonIcon },
-] as const;
 
 function ThemeOption({
   value,
@@ -37,24 +30,6 @@ function ThemeOptionLabel({ children }: { children: React.ReactNode }) {
 
 export function ThemePreference() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <div className="flex gap-2">
-        {themes.map(({ value }) => (
-          <div
-            key={value}
-            className="h-20 w-24 animate-pulse rounded-lg bg-card"
-          />
-        ))}
-      </div>
-    );
-  }
 
   return (
     <RadioGroup
