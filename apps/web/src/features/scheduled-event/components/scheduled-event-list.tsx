@@ -26,9 +26,8 @@ import { MoreHorizontalIcon } from "lucide-react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList } from "@/components/stacked-list";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { FormattedDateTime } from "@/lib/timezone/client/formatted-date-time";
-import { cancelEventAction } from "../actions";
+import { trpc } from "@/trpc/client";
 
 export const ScheduledEventList = StackedList;
 
@@ -54,7 +53,7 @@ export function ScheduledEventListItem({
   createdBy: { name: string; image?: string };
 }) {
   const dialog = useDialog();
-  const cancelEvent = useSafeAction(cancelEventAction, {
+  const cancelEvent = trpc.events.cancel.useMutation({
     onSuccess: () => {
       dialog.dismiss();
     },
@@ -201,9 +200,9 @@ export function ScheduledEventListItem({
             </DialogClose>
             <Button
               variant="destructive"
-              loading={cancelEvent.isExecuting}
+              loading={cancelEvent.isPending}
               onClick={() =>
-                cancelEvent.executeAsync({
+                cancelEvent.mutate({
                   eventId,
                 })
               }
