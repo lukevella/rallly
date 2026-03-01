@@ -45,6 +45,7 @@ export function LicenseKeyForm() {
             await validateLicenseKey.mutateAsync({
               key: data.licenseKey,
             });
+            router.refresh();
           } catch (_error) {
             form.setError("licenseKey", {
               message: t("licenseKeyGenericError", {
@@ -53,7 +54,6 @@ export function LicenseKeyForm() {
               }),
             });
           }
-          router.refresh();
         })}
       >
         <FormField

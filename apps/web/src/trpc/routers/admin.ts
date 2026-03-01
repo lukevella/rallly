@@ -86,9 +86,10 @@ export const admin = router({
   updateInstanceSettings: adminProcedure
     .input(instanceSettingsSchema)
     .mutation(async ({ input }) => {
-      await prisma.instanceSettings.update({
+      await prisma.instanceSettings.upsert({
         where: { id: 1 },
-        data: input,
+        create: { id: 1, ...input },
+        update: input,
       });
 
       updateTag(instanceSettingsTag);

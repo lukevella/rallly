@@ -57,10 +57,14 @@ export const licensing = router({
 
       updateTag(INSTANCE_LICENSE_TAG);
     } catch (error) {
+      if (error instanceof TRPCError) {
+        throw error;
+      }
       logger.error({ error }, "Failed to refresh license");
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to validate license",
+        cause: error,
       });
     }
   }),
@@ -76,9 +80,19 @@ export const licensing = router({
         });
       }
 
-      await prisma.instanceLicense.create({
-        data: {
+      await prisma.instanceLicense.upsert({
+        where: { licenseKey: data.key },
+        create: {
           licenseKey: data.key,
+          licenseeName: data.licenseeName,
+          licenseeEmail: data.licenseeEmail,
+          issuedAt: data.issuedAt,
+          expiresAt: data.expiresAt,
+          seats: data.seats,
+          type: data.type,
+          whiteLabelAddon: data.whiteLabelAddon,
+        },
+        update: {
           licenseeName: data.licenseeName,
           licenseeEmail: data.licenseeEmail,
           issuedAt: data.issuedAt,

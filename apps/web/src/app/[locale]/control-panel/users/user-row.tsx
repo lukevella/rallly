@@ -85,8 +85,8 @@ export function UserRow({
                 <DropdownMenuSubContent>
                   <DropdownMenuRadioGroup
                     value={role}
-                    onValueChange={async (value) => {
-                      await changeRole.mutateAsync({
+                    onValueChange={(value) => {
+                      changeRole.mutate({
                         role: userRoleSchema.parse(value),
                         userId,
                       });
