@@ -1,5 +1,6 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { supportedLngs } from "@rallly/languages";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
@@ -17,6 +18,8 @@ import {
   publicProcedure,
   router,
 } from "../trpc";
+
+const localeSchema = z.enum(supportedLngs);
 
 export const user = router({
   getMe: publicProcedure.query(async ({ ctx }) => {
@@ -48,7 +51,7 @@ export const user = router({
   updatePreferences: privateProcedure
     .input(
       z.object({
-        locale: z.string().optional(),
+        locale: localeSchema.optional(),
         timeZone: z.string().optional(),
         weekStart: z.number().min(0).max(6).optional(),
         timeFormat: z.enum(["hours12", "hours24"]).optional(),
@@ -237,7 +240,7 @@ export const user = router({
     });
   }),
   updateLocale: privateProcedure
-    .input(z.object({ locale: z.string() }))
+    .input(z.object({ locale: localeSchema }))
     .mutation(async ({ input, ctx }) => {
       await prisma.user.update({
         where: { id: ctx.user.id },
