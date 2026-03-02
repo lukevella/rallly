@@ -50,10 +50,12 @@ async function sendNewParticipantNotifcationEmail({
   pollId,
   pollTitle,
   participantName,
+  participantEmail,
 }: {
   pollId: string;
   pollTitle: string;
   participantName: string;
+  participantEmail?: string;
 }) {
   const watchers = await prisma.watcher.findMany({
     where: {
@@ -84,6 +86,7 @@ async function sendNewParticipantNotifcationEmail({
         const emailClient = await getEmailClient(watcherLocale);
         await emailClient.sendTemplate("NewParticipantEmail", {
           to: email,
+          replyTo: participantEmail,
           props: {
             participantName,
             pollUrl: absoluteUrl(`/poll/${pollId}`),
@@ -271,6 +274,11 @@ export const participants = router({
                 id: true,
                 title: true,
                 userId: true,
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
               },
             },
           },
@@ -287,6 +295,7 @@ export const participants = router({
 
           emailClient.queueTemplate("NewParticipantConfirmationEmail", {
             to: email,
+            replyTo: participant.poll.user?.email,
             props: {
               title: participant.poll.title,
               editSubmissionUrl: absoluteUrl(
@@ -301,6 +310,7 @@ export const participants = router({
             pollId,
             pollTitle: participant.poll.title,
             participantName: participant.name,
+            participantEmail: email,
           }),
         );
 

@@ -16,6 +16,7 @@ type SendEmailOptions<T extends TemplateName> = {
     name: string;
     address: string;
   };
+  replyTo?: string;
   props: TemplateProps<T>;
   attachments?: Mail.Options["attachments"];
   icalEvent?: Mail.Options["icalEvent"];
@@ -116,6 +117,7 @@ export class EmailClient {
       await this.sendEmail({
         from: options.from || this.config.mail.from,
         to: options.to,
+        replyTo: options.replyTo,
         subject,
         html,
         text,
