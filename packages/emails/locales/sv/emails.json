@@ -22,7 +22,7 @@
   "newParticipantConfirmation_preview": "För att redigera ditt svar använd länken nedan",
   "newParticipantConfirmation_heading": "Bekräftelse på förfrågan",
   "newParticipantConfirmation_subject": "Tack för att du svarade på {title}",
-  "newParticipant_content": "<b>{name}</b> har svarat på <b>{title}</b>.",
+  "newParticipant_content": "<b>{name}</b><email /> har svarat på <b>{title}</b>.",
   "newParticipant_content2": "Gå till din förfrågan för att se det senaste svaret.",
   "newParticipant_preview": "Gå till din förfrågan för att se det senaste svaret.",
   "newParticipant_heading": "Nytt svar",

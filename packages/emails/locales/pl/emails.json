@@ -22,7 +22,7 @@
   "newParticipantConfirmation_preview": "Aby edytować swoją odpowiedź, użyj linku poniżej",
   "newParticipantConfirmation_heading": "Potwierdzenie odpowiedzi w ankiecie",
   "newParticipantConfirmation_subject": "Dziękujemy za odpowiedź na {title}",
-  "newParticipant_content": "<b>{name}</b> odpowiedział na <b>{title}</b>.",
+  "newParticipant_content": "<b>{name}</b><email /> odpowiedział na <b>{title}</b>.",
   "newParticipant_content2": "Przejdź do swojej ankiety, aby zobaczyć nową odpowiedź.",
   "newParticipant_preview": "Przejdź do swojej ankiety, aby zobaczyć nową odpowiedź.",
   "newParticipant_heading": "Nowa odpowiedź",

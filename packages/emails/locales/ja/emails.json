@@ -28,7 +28,7 @@
   "newParticipantConfirmation_preview": "回答を編集するには、以下のリンクを使用してください",
   "newParticipantConfirmation_heading": "アンケート回答の確認",
   "newParticipantConfirmation_subject": "{title} への回答ありがとうございます",
-  "newParticipant_content": "<b>{name}</b> が <b>{title}</b> に回答しました。",
+  "newParticipant_content": "<b>{name}</b><email /> が <b>{title}</b> に回答しました。",
   "newParticipant_content2": "新しい回答を表示するには、アンケートにアクセスしてください。",
   "newParticipant_preview": "新しい回答を表示するには、アンケートにアクセスしてください。",
   "newParticipant_heading": "新しい回答",

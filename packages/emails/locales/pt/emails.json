@@ -28,7 +28,7 @@
   "newParticipantConfirmation_preview": "Para editar a sua resposta, use a hiperligação abaixo",
   "newParticipantConfirmation_heading": "Confirmação de Resposta da Votação",
   "newParticipantConfirmation_subject": "Obrigado por responder a {title}",
-  "newParticipant_content": "<b>{name}</b> respondeu a <b>{title}</b>.",
+  "newParticipant_content": "<b>{name}</b><email /> respondeu a <b>{title}</b>.",
   "newParticipant_content2": "Vá para a sua votação para ver a nova resposta.",
   "newParticipant_preview": "Vá para a sua votação para ver a nova resposta.",
   "newParticipant_heading": "Nova Resposta",

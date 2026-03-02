@@ -28,7 +28,7 @@
   "newParticipantConfirmation_preview": "Per editar la teva resposta, utilitza l'enllaç a continuació",
   "newParticipantConfirmation_heading": "Confirmació de Resposta de l'Enquesta",
   "newParticipantConfirmation_subject": "Gràcies per respondre a {title}",
-  "newParticipant_content": "<b>{name}</b> ha respost a <b>{title}</b>.",
+  "newParticipant_content": "<b>{name}</b><email /> ha respost a <b>{title}</b>.",
   "newParticipant_content2": "Ves a la teva enquesta per veure la nova resposta.",
   "newParticipant_preview": "Ves a la teva enquesta per veure la nova resposta.",
   "newParticipant_heading": "Nova Resposta",

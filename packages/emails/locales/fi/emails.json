@@ -22,7 +22,7 @@
   "newParticipantConfirmation_preview": "Käytä alla olevaa linkkiä muokataksesi vastaustasi",
   "newParticipantConfirmation_heading": "Kyselyn vastausvahvistus",
   "newParticipantConfirmation_subject": "Kiitos vastauksestasi kyselyyn {title}",
-  "newParticipant_content": "<b>{name}</b> on vastannut <b>{title}</b>.",
+  "newParticipant_content": "<b>{name}</b><email /> on vastannut <b>{title}</b>.",
   "newParticipant_content2": "Siirry kyselyysi nähdäksesi uusi vastaus.",
   "newParticipant_preview": "Siirry kyselyysi nähdäksesi uusi vastaus.",
   "newParticipant_heading": "Uusi vastaus",

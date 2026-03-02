@@ -28,7 +28,7 @@
   "newParticipantConfirmation_preview": "Yanıtınızı düzenlemek için aşağıdaki bağlantıyı kullanın",
   "newParticipantConfirmation_heading": "Anket Yanıtı Onayı",
   "newParticipantConfirmation_subject": "{title} için yanıt verdiğiniz için teşekkürler",
-  "newParticipant_content": "<b>{name}</b>, <b>{title}</b> üzerine yanıt verdi.",
+  "newParticipant_content": "<b>{name}</b><email />, <b>{title}</b> üzerine yanıt verdi.",
   "newParticipant_content2": "Yeni yanıtı görmek için anketinize gidin.",
   "newParticipant_preview": "Yeni yanıtı görmek için anketinize gidin.",
   "newParticipant_heading": "Yeni Yanıt",

@@ -22,7 +22,7 @@
   "newParticipantConfirmation_preview": "Чтобы изменить свой ответ, используйте ссылку ниже",
   "newParticipantConfirmation_heading": "Подтверждение ответа на опрос",
   "newParticipantConfirmation_subject": "Спасибо за ответ на {title}",
-  "newParticipant_content": "<b>{name}</b> ответил на <b>{title}</b>.",
+  "newParticipant_content": "<b>{name}</b><email /> ответил на <b>{title}</b>.",
   "newParticipant_content2": "Перейдите к своему опросу, чтобы увидеть новый ответ.",
   "newParticipant_preview": "Перейдите к своему опросу, чтобы увидеть новый ответ.",
   "newParticipant_heading": "Новый ответ",

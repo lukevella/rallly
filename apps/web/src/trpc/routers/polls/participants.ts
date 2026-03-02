@@ -50,10 +50,12 @@ async function sendNewParticipantNotifcationEmail({
   pollId,
   pollTitle,
   participantName,
+  participantEmail,
 }: {
   pollId: string;
   pollTitle: string;
   participantName: string;
+  participantEmail?: string;
 }) {
   const watchers = await prisma.watcher.findMany({
     where: {
@@ -86,6 +88,7 @@ async function sendNewParticipantNotifcationEmail({
           to: email,
           props: {
             participantName,
+            participantEmail,
             pollUrl: absoluteUrl(`/poll/${pollId}`),
             disableNotificationsUrl: absoluteUrl(
               `/api/notifications/unsubscribe?token=${token}`,
@@ -301,6 +304,7 @@ export const participants = router({
             pollId,
             pollTitle: participant.poll.title,
             participantName: participant.name,
+            participantEmail: email,
           }),
         );
 

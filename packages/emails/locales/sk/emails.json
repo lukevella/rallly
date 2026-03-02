@@ -28,7 +28,7 @@
   "newParticipantConfirmation_preview": "Na úpravu svojej odpovede použite odkaz nižšie",
   "newParticipantConfirmation_heading": "Potvrdenie o odpovedi na anketu",
   "newParticipantConfirmation_subject": "Ďakujeme za odpoveď na {title}",
-  "newParticipant_content": "<b>{name}</b> odpovedal na <b>{title}</b>.",
+  "newParticipant_content": "<b>{name}</b><email /> odpovedal na <b>{title}</b>.",
   "newParticipant_content2": "Choďte na svoju anketu, aby ste videli novú odpoveď.",
   "newParticipant_preview": "Choďte na svoju anketu, aby ste videli novú odpoveď.",
   "newParticipant_heading": "Nová odpoveď",

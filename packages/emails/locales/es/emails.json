@@ -22,7 +22,7 @@
   "newParticipantConfirmation_preview": "Para editar tu respuesta utiliza el siguiente enlace",
   "newParticipantConfirmation_heading": "Confirmación de respuesta a encuesta",
   "newParticipantConfirmation_subject": "Gracias por responder a {title}",
-  "newParticipant_content": "<b>{name}</b> ha respondido a <b>{title}</b>.",
+  "newParticipant_content": "<b>{name}</b><email /> ha respondido a <b>{title}</b>.",
   "newParticipant_content2": "Ve a tu encuesta para ver la nueva respuesta.",
   "newParticipant_preview": "Ve a tu encuesta para ver la nueva respuesta.",
   "newParticipant_heading": "Nueva respuesta",
