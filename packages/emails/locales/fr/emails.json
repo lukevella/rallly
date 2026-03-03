@@ -22,7 +22,7 @@
   "newParticipantConfirmation_preview": "Pour modifier votre réponse, utilisez le lien ci-dessous",
   "newParticipantConfirmation_heading": "Confirmation de réponse au sondage",
   "newParticipantConfirmation_subject": "Merci d'avoir répondu à {title}",
-  "newParticipant_content": "<b>{name}</b> a répondu à <b>{title}</b>.",
+  "newParticipant_content": "<b>{name}</b><email /> a répondu à <b>{title}</b>.",
   "newParticipant_content2": "Allez à votre sondage pour voir la nouvelle réponse.",
   "newParticipant_preview": "Allez à votre sondage pour voir la nouvelle réponse.",
   "newParticipant_heading": "Nouvelle réponse",

@@ -28,7 +28,7 @@
   "newParticipantConfirmation_preview": "Za uređivanje svog odgovora upotrijebite vezu u nastavku",
   "newParticipantConfirmation_heading": "Potvrda odgovora na anketu",
   "newParticipantConfirmation_subject": "Hvala na odgovaranju na {title}",
-  "newParticipant_content": "<b>{name}</b> je odgovorio na <b>{title}</b>.",
+  "newParticipant_content": "<b>{name}</b><email /> je odgovorio na <b>{title}</b>.",
   "newParticipant_content2": "Idite na svoju anketu i pogledajte novi odgovor.",
   "newParticipant_preview": "Idite na svoju anketu i pogledajte novi odgovor.",
   "newParticipant_heading": "Novi odgovor",

@@ -22,7 +22,7 @@
   "newParticipantConfirmation_preview": "要编辑您的回复，请使用以下链接",
   "newParticipantConfirmation_heading": "投票回复确认",
   "newParticipantConfirmation_subject": "感谢您回复{title}",
-  "newParticipant_content": "<b>{name}</b> 已经对<b>{title}</b>进行了回复。",
+  "newParticipant_content": "<b>{name}</b><email /> 已经对<b>{title}</b>进行了回复。",
   "newParticipant_content2": "前往您的投票以查看新回复。",
   "newParticipant_preview": "前往您的投票以查看新回复。",
   "newParticipant_heading": "新回复",

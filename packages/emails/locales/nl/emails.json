@@ -22,7 +22,7 @@
   "newParticipantConfirmation_preview": "Gebruik de onderstaande link om je reactie te bewerken",
   "newParticipantConfirmation_heading": "Bevestiging van reactie op poll",
   "newParticipantConfirmation_subject": "Bedankt voor je reactie op {title}",
-  "newParticipant_content": "<b>{name}</b> heeft gereageerd op <b>{title}</b>.",
+  "newParticipant_content": "<b>{name}</b><email /> heeft gereageerd op <b>{title}</b>.",
   "newParticipant_content2": "Ga naar je poll om de nieuwe reactie te bekijken.",
   "newParticipant_preview": "Ga naar je poll om de nieuwe reactie te bekijken.",
   "newParticipant_heading": "Nieuwe reactie",

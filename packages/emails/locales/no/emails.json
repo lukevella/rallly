@@ -22,7 +22,7 @@
   "newParticipantConfirmation_preview": "For å redigere svaret ditt, bruk lenken under",
   "newParticipantConfirmation_heading": "Bekreftelse av avstemningsrespons",
   "newParticipantConfirmation_subject": "Takk for at du svarte på {title}",
-  "newParticipant_content": "<b>{name}</b> har besvart <b>{title}</b>.",
+  "newParticipant_content": "<b>{name}</b><email /> har besvart <b>{title}</b>.",
   "newParticipant_content2": "Gå til avstemningen din for å se det nye svaret.",
   "newParticipant_preview": "Gå til avstemningen din for å se det nye svaret.",
   "newParticipant_heading": "Ny respons",

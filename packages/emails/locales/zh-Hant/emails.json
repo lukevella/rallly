@@ -28,7 +28,7 @@
   "newParticipantConfirmation_preview": "要編輯您的回覆，請使用以下鏈接",
   "newParticipantConfirmation_heading": "投票回覆確認",
   "newParticipantConfirmation_subject": "感謝您對 {title} 做出回覆",
-  "newParticipant_content": "<b>{name}</b> 已對 <b>{title}</b> 做出回覆。",
+  "newParticipant_content": "<b>{name}</b><email /> 已對 <b>{title}</b> 做出回覆。",
   "newParticipant_content2": "前往您的投票以查看新的回覆。",
   "newParticipant_preview": "前往您的投票以查看新的回覆。",
   "newParticipant_heading": "新回覆",

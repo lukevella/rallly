@@ -28,7 +28,7 @@
   "newParticipantConfirmation_preview": "Zure erantzuna editatzeko, erabili beheko esteka",
   "newParticipantConfirmation_heading": "Inkestaren erantzunaren berrespena",
   "newParticipantConfirmation_subject": "Eskerrik asko {title}-ri erantzuteagatik",
-  "newParticipant_content": "<b>{name}</b>-k erantzun dio <b>{title}</b>ri.",
+  "newParticipant_content": "<b>{name}</b><email />-k erantzun dio <b>{title}</b>ri.",
   "newParticipant_content2": "Joan zure inkestara erantzun berria ikusteko.",
   "newParticipant_preview": "Joan zure inkestara erantzun berria ikusteko.",
   "newParticipant_heading": "Erantzun berria",

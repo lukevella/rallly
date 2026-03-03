@@ -1,5 +1,5 @@
+import { Link } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
-
 import type { NotificationBaseProps } from "../components/notification-email";
 import NotificationEmail from "../components/notification-email";
 import { Heading, Text } from "../components/styled-components";
@@ -7,11 +7,13 @@ import type { EmailContext } from "../types";
 
 export interface NewParticipantEmailProps extends NotificationBaseProps {
   participantName: string;
+  participantEmail?: string;
 }
 
 const NewParticipantEmail = ({
   title,
   participantName,
+  participantEmail,
   pollUrl,
   disableNotificationsUrl,
   ctx,
@@ -39,9 +41,21 @@ const NewParticipantEmail = ({
           t={ctx.t}
           i18nKey="newParticipant_content"
           ns="emails"
-          defaults="<b>{name}</b> has responded to <b>{title}</b>."
+          defaults="<b>{name}</b><email /> has responded to <b>{title}</b>."
           components={{
             b: <strong />,
+            email: participantEmail ? (
+              <span>
+                &nbsp;(
+                <Link href={`mailto:${participantEmail}`}>
+                  {participantEmail}
+                </Link>
+                )
+              </span>
+            ) : (
+              // biome-ignore lint/complexity/noUselessFragments: <explanation>
+              <></>
+            ),
           }}
           values={{ name: participantName, title }}
         />
