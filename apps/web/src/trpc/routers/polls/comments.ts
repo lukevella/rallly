@@ -1,18 +1,20 @@
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { getNotificationRecipient } from "@/features/notifications/queries";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
-import { createToken } from "@/utils/session";
 import {
   createRateLimitMiddleware,
   publicProcedure,
   requireUserMiddleware,
   router,
 } from "../../trpc";
-import type { DisableNotificationsPayload } from "../../types";
 import { resolveUserId } from "./utils";
+
+const logger = createLogger("comments");
 
 export const comments = router({
   list: publicProcedure
@@ -123,46 +125,34 @@ export const comments = router({
         },
       });
 
-      const watchers = await prisma.watcher.findMany({
-        where: {
-          pollId,
-        },
-        select: {
-          id: true,
-          userId: true,
-          user: {
-            select: {
-              email: true,
-              name: true,
-              locale: true,
-            },
-          },
-        },
-      });
-
       const poll = newComment.poll;
 
-      for (const watcher of watchers) {
-        const email = watcher.user.email;
-        const token = await createToken<DisableNotificationsPayload>(
-          { watcherId: watcher.id, pollId },
-          { ttl: 0 },
-        );
-
-        const emailClient = await getEmailClient(
-          watcher.user.locale ?? undefined,
-        );
-        emailClient.queueTemplate("NewCommentEmail", {
-          to: email,
-          props: {
-            authorName,
-            pollUrl: absoluteUrl(`/poll/${poll.id}`),
-            disableNotificationsUrl: absoluteUrl(
-              `/api/notifications/unsubscribe?token=${token}`,
-            ),
-            title: poll.title,
-          },
+      try {
+        const recipient = await getNotificationRecipient({
+          pollId,
+          type: "poll.comment.added",
+          excludeUserId: ctx.user.id,
         });
+
+        if (recipient) {
+          const emailClient = await getEmailClient(
+            recipient.locale ?? undefined,
+          );
+          emailClient.queueTemplate("NewCommentEmail", {
+            to: recipient.email,
+            props: {
+              authorName,
+              pollUrl: absoluteUrl(`/poll/${poll.id}`),
+              disableNotificationsUrl: absoluteUrl("/settings/notifications"),
+              title: poll.title,
+            },
+          });
+        }
+      } catch (err) {
+        logger.error(
+          { error: err, pollId },
+          "Failed to send new comment notification email",
+        );
       }
 
       // Track comment addition analytics

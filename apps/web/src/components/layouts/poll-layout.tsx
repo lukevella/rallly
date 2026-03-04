@@ -8,7 +8,6 @@ import type React from "react";
 
 import { InviteDialog } from "@/components/invite-dialog";
 import ManagePoll from "@/components/poll/manage-poll";
-import NotificationsToggle from "@/components/poll/notifications-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { usePoll } from "@/contexts/poll";
 import { Trans } from "@/i18n/client";
@@ -16,7 +15,6 @@ import { Trans } from "@/i18n/client";
 const AdminControls = () => {
   return (
     <div className="flex items-center gap-x-2">
-      <NotificationsToggle />
       <ManagePoll />
       <InviteDialog />
     </div>

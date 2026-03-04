@@ -6,11 +6,6 @@ export type RegistrationTokenPayload = {
   code: string;
 };
 
-export type DisableNotificationsPayload = {
-  pollId: string;
-  watcherId: number;
-};
-
 export type RegisteredUserSession = {
   isGuest: false;
   id: string;

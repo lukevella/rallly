@@ -4,17 +4,15 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import * as z from "zod";
-
+import { getNotificationRecipient } from "@/features/notifications/queries";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
-import { createToken } from "@/utils/session";
 import {
   createRateLimitMiddleware,
   publicProcedure,
   requireUserMiddleware,
   router,
 } from "../../trpc";
-import type { DisableNotificationsPayload } from "../../types";
 import { createParticipantEditToken, resolveUserId } from "./utils";
 
 const logger = createLogger("participants");
@@ -46,61 +44,44 @@ async function canModifyParticipant(participantId: string, userId: string) {
   return participant;
 }
 
-async function sendNewParticipantNotifcationEmail({
+async function sendNewResponseNotificationEmail({
   pollId,
   pollTitle,
   participantName,
+  excludeUserId,
 }: {
   pollId: string;
   pollTitle: string;
   participantName: string;
+  excludeUserId: string;
 }) {
-  const watchers = await prisma.watcher.findMany({
-    where: {
+  try {
+    const recipient = await getNotificationRecipient({
       pollId,
-    },
-    select: {
-      id: true,
-      userId: true,
-      user: {
-        select: {
-          email: true,
-          name: true,
-          locale: true,
-        },
-      },
-    },
-  });
+      type: "poll.response.submitted",
+      excludeUserId,
+    });
 
-  await Promise.all(
-    watchers.map(async (watcher) => {
-      try {
-        const email = watcher.user.email;
-        const watcherLocale = watcher.user.locale ?? undefined;
-        const token = await createToken<DisableNotificationsPayload>(
-          { watcherId: watcher.id, pollId },
-          { ttl: 0 },
-        );
-        const emailClient = await getEmailClient(watcherLocale);
-        await emailClient.sendTemplate("NewParticipantEmail", {
-          to: email,
-          props: {
-            participantName,
-            pollUrl: absoluteUrl(`/poll/${pollId}`),
-            disableNotificationsUrl: absoluteUrl(
-              `/api/notifications/unsubscribe?token=${token}`,
-            ),
-            title: pollTitle,
-          },
-        });
-      } catch (err) {
-        logger.error(
-          { error: err, pollId },
-          "Failed to send watcher notification email",
-        );
-      }
-    }),
-  );
+    if (!recipient) {
+      return;
+    }
+
+    const emailClient = await getEmailClient(recipient.locale ?? undefined);
+    await emailClient.sendTemplate("NewParticipantEmail", {
+      to: recipient.email,
+      props: {
+        participantName,
+        pollUrl: absoluteUrl(`/poll/${pollId}`),
+        disableNotificationsUrl: absoluteUrl("/settings/notifications"),
+        title: pollTitle,
+      },
+    });
+  } catch (err) {
+    logger.error(
+      { error: err, pollId },
+      "Failed to send new response notification email",
+    );
+  }
 }
 
 export const participants = router({
@@ -297,10 +278,11 @@ export const participants = router({
         }
 
         waitUntil(
-          sendNewParticipantNotifcationEmail({
+          sendNewResponseNotificationEmail({
             pollId,
             pollTitle: participant.poll.title,
             participantName: participant.name,
+            excludeUserId: ctx.user.id,
           }),
         );
 

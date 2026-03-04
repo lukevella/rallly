@@ -529,6 +529,7 @@ export const polls = router({
       });
     }),
   // END LEGACY ROUTES
+  // @deprecated — replaced by global notification preferences in /settings/notifications
   getWatchers: publicProcedure
     .input(
       z.object({
@@ -545,6 +546,7 @@ export const polls = router({
         },
       });
     }),
+  // @deprecated — replaced by global notification preferences in /settings/notifications
   watch: privateProcedure
     .input(z.object({ pollId: z.string() }))
     .mutation(async ({ input, ctx }) => {
@@ -576,6 +578,7 @@ export const polls = router({
         },
       });
     }),
+  // @deprecated — replaced by global notification preferences in /settings/notifications
   unwatch: privateProcedure
     .input(z.object({ pollId: z.string() }))
     .mutation(async ({ input, ctx }) => {

@@ -42,7 +42,7 @@ export const NotificationEmail = ({
           t={ctx.t}
           i18nKey="common_disableNotifications"
           ns="emails"
-          defaults="If you would like to stop receiving updates you can <a>turn notifications off</a>."
+          defaults="You can <a>manage your notification settings</a> to stop receiving these emails."
           components={{
             a: (
               <Link

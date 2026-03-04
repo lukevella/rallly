@@ -59,9 +59,15 @@ const nextConfig: NextConfig = {
         destination: "/settings/profile",
         permanent: true,
       },
+      // Old email unsubscribe links pointed to these routes — redirect to the new settings page
       {
         source: "/auth/disable-notifications",
-        destination: "/api/notifications/unsubscribe",
+        destination: "/settings/notifications",
+        permanent: true,
+      },
+      {
+        source: "/api/notifications/unsubscribe",
+        destination: "/settings/notifications",
         permanent: true,
       },
       {

@@ -9,7 +9,6 @@ import { VotingForm } from "@/components/poll/voting-form";
 import { usePoll } from "@/contexts/poll";
 
 import { GuestPollAlert } from "./guest-poll-alert";
-import { UnsubscribeAlert } from "./unsubscribe-alert";
 
 export function AdminPage() {
   // Get the poll ID from the context
@@ -19,7 +18,6 @@ export function AdminPage() {
     <div className="space-y-3 lg:space-y-4">
       {/* Track poll views */}
       <PollViewTracker pollId={poll.id} />
-      <UnsubscribeAlert />
       <GuestPollAlert />
       <EventCard />
       <ScheduledEvent />
