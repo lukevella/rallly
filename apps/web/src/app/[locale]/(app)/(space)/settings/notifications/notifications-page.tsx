@@ -65,17 +65,9 @@ export function NotificationsPage() {
         <PageSectionContent>
           <div className="grid gap-4">
             <div className="flex items-center justify-between gap-4">
-              <div className="grid gap-0.5">
-                <span className="font-medium text-sm">
-                  <Trans i18nKey="notifyNewResponse" defaults="New responses" />
-                </span>
-                <span className="text-muted-foreground text-xs">
-                  <Trans
-                    i18nKey="notifyNewResponseDescription"
-                    defaults="When someone responds to a poll"
-                  />
-                </span>
-              </div>
+              <span className="font-medium text-sm">
+                <Trans i18nKey="notifyNewResponse" defaults="New response" />
+              </span>
               <NotificationScopeTabs
                 value={preferences["poll.response.submitted"]}
                 onValueChange={(scope) => {
@@ -86,17 +78,9 @@ export function NotificationsPage() {
               />
             </div>
             <div className="flex items-center justify-between gap-4">
-              <div className="grid gap-0.5">
-                <span className="font-medium text-sm">
-                  <Trans i18nKey="notifyNewComment" defaults="New comments" />
-                </span>
-                <span className="text-muted-foreground text-xs">
-                  <Trans
-                    i18nKey="notifyNewCommentDescription"
-                    defaults="When someone comments on a poll"
-                  />
-                </span>
-              </div>
+              <span className="font-medium text-sm">
+                <Trans i18nKey="notifyNewComment" defaults="New comment" />
+              </span>
               <NotificationScopeTabs
                 value={preferences["poll.comment.added"]}
                 onValueChange={(scope) => {

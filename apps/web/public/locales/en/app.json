@@ -616,9 +616,9 @@
   "notificationScopeMine": "Mine",
   "notificationScopeAll": "All",
   "pollNotificationsDescription": "Get notified by email when there is activity on your polls",
-  "notifyNewResponse": "New responses",
+  "notifyNewResponse": "New response",
   "notifyNewResponseDescription": "When someone responds to a poll",
-  "notifyNewComment": "New comments",
+  "notifyNewComment": "New comment",
   "notifyNewCommentDescription": "When someone comments on a poll",
   "notificationsDescription": "Choose which email notifications you receive"
 }
