@@ -1,6 +1,5 @@
 {
   "common_poweredBy": "由 <a>{domain}</a> 提供支持",
-  "common_disableNotifications": "如果您想停止接收更新，您可以 <a>关闭通知</a>。",
   "finalizeHost_content": "<b>{title}</b> 已被预订时间：",
   "finalizeHost_preview": "最终日期已预订！我们已通知参与者并发送了日历邀请。",
   "finalizeHost_heading": "最终日期已预订！",
