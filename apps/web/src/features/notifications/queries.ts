@@ -1,11 +1,7 @@
 import { prisma } from "@rallly/database";
 
 import { defaultNotificationPreferences } from "./constants";
-import type {
-  ActivityEventType,
-  NotificationPreferences,
-  NotificationScope,
-} from "./schema";
+import type { ActivityEventType, NotificationPreferences } from "./schema";
 import { notificationPreferencesSchema } from "./schema";
 
 function parsePrefs(prefs: unknown): NotificationPreferences {
@@ -34,13 +30,11 @@ type NotificationRecipient = {
 };
 
 /**
- * Get the list of users who should receive a notification for a poll event.
- *
- * @param pollId - The poll that triggered the event
- * @param type - The notification event type (determines which preference to check)
- * @param excludeUserId - The user who triggered the event (excluded from recipients)
+ * Get the poll creator if they should receive a notification for this event.
+ * Returns null if the creator has notifications disabled or is the one who
+ * triggered the event.
  */
-export async function getNotificationRecipients({
+export async function getNotificationRecipient({
   pollId,
   type,
   excludeUserId,
@@ -48,87 +42,41 @@ export async function getNotificationRecipients({
   pollId: string;
   type: ActivityEventType;
   excludeUserId: string;
-}): Promise<NotificationRecipient[]> {
+}): Promise<NotificationRecipient | null> {
   const poll = await prisma.poll.findUnique({
     where: { id: pollId },
+    select: { userId: true },
+  });
+
+  if (!poll?.userId || poll.userId === excludeUserId) {
+    return null;
+  }
+
+  const creator = await prisma.user.findUnique({
+    where: { id: poll.userId },
     select: {
-      userId: true,
-      spaceId: true,
+      id: true,
+      email: true,
+      locale: true,
+      notificationPreferences: {
+        select: { prefs: true },
+      },
     },
   });
 
-  if (!poll) {
-    return [];
+  if (!creator) {
+    return null;
   }
 
-  const recipients = new Map<string, NotificationRecipient>();
+  const prefs = parsePrefs(creator.notificationPreferences?.prefs);
 
-  // Check if poll creator should be notified
-  if (poll.userId && poll.userId !== excludeUserId) {
-    const creator = await prisma.user.findUnique({
-      where: { id: poll.userId },
-      select: {
-        id: true,
-        email: true,
-        locale: true,
-        notificationPreferences: {
-          select: { prefs: true },
-        },
-      },
-    });
-
-    if (creator) {
-      const prefs = parsePrefs(creator.notificationPreferences?.prefs);
-      const scope: NotificationScope = prefs[type];
-
-      if (scope !== "off") {
-        recipients.set(creator.id, {
-          id: creator.id,
-          email: creator.email,
-          locale: creator.locale,
-        });
-      }
-    }
+  if (!prefs[type]) {
+    return null;
   }
 
-  // For "all" scope: find space members who opted into all poll notifications
-  if (poll.spaceId) {
-    const spaceMembers = await prisma.spaceMember.findMany({
-      where: {
-        spaceId: poll.spaceId,
-        userId: { not: excludeUserId },
-      },
-      select: {
-        user: {
-          select: {
-            id: true,
-            email: true,
-            locale: true,
-            notificationPreferences: {
-              select: { prefs: true },
-            },
-          },
-        },
-      },
-    });
-
-    for (const member of spaceMembers) {
-      if (recipients.has(member.user.id)) {
-        continue;
-      }
-
-      const prefs = parsePrefs(member.user.notificationPreferences?.prefs);
-      const scope: NotificationScope = prefs[type];
-
-      if (scope === "all") {
-        recipients.set(member.user.id, {
-          id: member.user.id,
-          email: member.user.email,
-          locale: member.user.locale,
-        });
-      }
-    }
-  }
-
-  return Array.from(recipients.values());
+  return {
+    id: creator.id,
+    email: creator.email,
+    locale: creator.locale,
+  };
 }

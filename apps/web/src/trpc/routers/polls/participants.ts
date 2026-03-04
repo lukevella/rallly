@@ -4,7 +4,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import * as z from "zod";
-import { getNotificationRecipients } from "@/features/notifications/queries";
+import { getNotificationRecipient } from "@/features/notifications/queries";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
 import {
@@ -44,7 +44,7 @@ async function canModifyParticipant(participantId: string, userId: string) {
   return participant;
 }
 
-async function sendNewResponseNotificationEmails({
+async function sendNewResponseNotificationEmail({
   pollId,
   pollTitle,
   participantName,
@@ -55,33 +55,33 @@ async function sendNewResponseNotificationEmails({
   participantName: string;
   excludeUserId: string;
 }) {
-  const recipients = await getNotificationRecipients({
+  const recipient = await getNotificationRecipient({
     pollId,
     type: "poll.response.submitted",
     excludeUserId,
   });
 
-  await Promise.all(
-    recipients.map(async (recipient) => {
-      try {
-        const emailClient = await getEmailClient(recipient.locale ?? undefined);
-        await emailClient.sendTemplate("NewParticipantEmail", {
-          to: recipient.email,
-          props: {
-            participantName,
-            pollUrl: absoluteUrl(`/poll/${pollId}`),
-            disableNotificationsUrl: absoluteUrl("/settings/notifications"),
-            title: pollTitle,
-          },
-        });
-      } catch (err) {
-        logger.error(
-          { error: err, pollId },
-          "Failed to send new response notification email",
-        );
-      }
-    }),
-  );
+  if (!recipient) {
+    return;
+  }
+
+  try {
+    const emailClient = await getEmailClient(recipient.locale ?? undefined);
+    await emailClient.sendTemplate("NewParticipantEmail", {
+      to: recipient.email,
+      props: {
+        participantName,
+        pollUrl: absoluteUrl(`/poll/${pollId}`),
+        disableNotificationsUrl: absoluteUrl("/settings/notifications"),
+        title: pollTitle,
+      },
+    });
+  } catch (err) {
+    logger.error(
+      { error: err, pollId },
+      "Failed to send new response notification email",
+    );
+  }
 }
 
 export const participants = router({
@@ -278,7 +278,7 @@ export const participants = router({
         }
 
         waitUntil(
-          sendNewResponseNotificationEmails({
+          sendNewResponseNotificationEmail({
             pollId,
             pollTitle: participant.poll.title,
             participantName: participant.name,

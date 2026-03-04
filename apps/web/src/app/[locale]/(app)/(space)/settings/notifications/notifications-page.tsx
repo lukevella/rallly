@@ -1,6 +1,6 @@
 "use client";
 
-import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/tabs";
+import { Switch } from "@rallly/ui/switch";
 import {
   PageSection,
   PageSectionContent,
@@ -9,44 +9,12 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/app/components/page-layout";
-import type { NotificationScope } from "@/features/notifications/schema";
-import { notificationScopeSchema } from "@/features/notifications/schema";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
-function NotificationScopeTabs({
-  value,
-  onValueChange,
-  disabled,
-}: {
-  value: NotificationScope;
-  onValueChange: (value: NotificationScope) => void;
-  disabled?: boolean;
-}) {
-  return (
-    <Tabs
-      value={value}
-      onValueChange={(v) => onValueChange(notificationScopeSchema.parse(v))}
-    >
-      <TabsList>
-        <TabsTrigger value="off" disabled={disabled}>
-          <Trans i18nKey="notificationScopeOff" defaults="Off" />
-        </TabsTrigger>
-        <TabsTrigger value="mine" disabled={disabled}>
-          <Trans i18nKey="notificationScopeMine" defaults="Mine" />
-        </TabsTrigger>
-        <TabsTrigger value="all" disabled={disabled}>
-          <Trans i18nKey="notificationScopeAll" defaults="All" />
-        </TabsTrigger>
-      </TabsList>
-    </Tabs>
-  );
-}
-
 export function NotificationsPage() {
   const [preferences] = trpc.user.getNotificationPreferences.useSuspenseQuery();
-  const updatePreferences =
-    trpc.user.updateNotificationPreferences.useMutation();
+  const updatePreference = trpc.user.updateNotificationPreference.useMutation();
 
   return (
     <PageSectionGroup>
@@ -68,12 +36,13 @@ export function NotificationsPage() {
               <span className="font-medium text-sm">
                 <Trans i18nKey="notifyNewResponse" defaults="New response" />
               </span>
-              <NotificationScopeTabs
-                value={preferences["poll.response.submitted"]}
-                onValueChange={(scope) => {
-                  updatePreferences.mutate([
-                    { eventType: "poll.response.submitted", scope },
-                  ]);
+              <Switch
+                checked={preferences["poll.response.submitted"]}
+                onCheckedChange={(enabled) => {
+                  updatePreference.mutate({
+                    eventType: "poll.response.submitted",
+                    enabled,
+                  });
                 }}
               />
             </div>
@@ -81,12 +50,13 @@ export function NotificationsPage() {
               <span className="font-medium text-sm">
                 <Trans i18nKey="notifyNewComment" defaults="New comment" />
               </span>
-              <NotificationScopeTabs
-                value={preferences["poll.comment.added"]}
-                onValueChange={(scope) => {
-                  updatePreferences.mutate([
-                    { eventType: "poll.comment.added", scope },
-                  ]);
+              <Switch
+                checked={preferences["poll.comment.added"]}
+                onCheckedChange={(enabled) => {
+                  updatePreference.mutate({
+                    eventType: "poll.comment.added",
+                    enabled,
+                  });
                 }}
               />
             </div>

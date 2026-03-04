@@ -2,7 +2,7 @@ import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
-import { getNotificationRecipients } from "@/features/notifications/queries";
+import { getNotificationRecipient } from "@/features/notifications/queries";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
 import {
@@ -124,13 +124,13 @@ export const comments = router({
 
       const poll = newComment.poll;
 
-      const recipients = await getNotificationRecipients({
+      const recipient = await getNotificationRecipient({
         pollId,
         type: "poll.comment.added",
         excludeUserId: ctx.user.id,
       });
 
-      for (const recipient of recipients) {
+      if (recipient) {
         const emailClient = await getEmailClient(recipient.locale ?? undefined);
         emailClient.queueTemplate("NewCommentEmail", {
           to: recipient.email,

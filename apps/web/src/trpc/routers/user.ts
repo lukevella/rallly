@@ -6,10 +6,7 @@ import * as z from "zod";
 import { feedbackSchema } from "@/features/feedback/schema";
 import { defaultNotificationPreferences } from "@/features/notifications/constants";
 import { getNotificationPreferences } from "@/features/notifications/queries";
-import {
-  activityEventTypes,
-  notificationScopeSchema,
-} from "@/features/notifications/schema";
+import { activityEventTypes } from "@/features/notifications/schema";
 import { defineAbilityFor } from "@/features/user/ability";
 import {
   deleteImageFromS3,
@@ -245,14 +242,12 @@ export const user = router({
   getNotificationPreferences: privateProcedure.query(async ({ ctx }) => {
     return getNotificationPreferences(ctx.user.id);
   }),
-  updateNotificationPreferences: privateProcedure
+  updateNotificationPreference: privateProcedure
     .input(
-      z.array(
-        z.object({
-          eventType: z.enum(activityEventTypes),
-          scope: notificationScopeSchema,
-        }),
-      ),
+      z.object({
+        eventType: z.enum(activityEventTypes),
+        enabled: z.boolean(),
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const existing = await prisma.userNotificationPreferences.findUnique({
@@ -260,14 +255,10 @@ export const user = router({
         select: { prefs: true },
       });
 
-      const currentPrefs = existing?.prefs ?? {};
-      const inputPrefs = Object.fromEntries(
-        input.map(({ eventType, scope }) => [eventType, scope]),
-      );
       const updatedPrefs = {
         ...defaultNotificationPreferences,
-        ...(currentPrefs as object),
-        ...inputPrefs,
+        ...(existing?.prefs as object),
+        [input.eventType]: input.enabled,
       };
 
       await prisma.userNotificationPreferences.upsert({
