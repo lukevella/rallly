@@ -610,5 +610,15 @@
   "errorLinkGithubDescription": "Jelezz egy hibát vagy tekintsd meg a frissítéseket.",
   "notFoundLabel": "404",
   "notFoundTitle": "Az oldal nem található",
-  "notFoundDescription": "Sajnáljuk, nem tudtuk megtalálni a keresett oldalt. Itt van néhány hasznos link helyette."
+  "notFoundDescription": "Sajnáljuk, nem tudtuk megtalálni a keresett oldalt. Itt van néhány hasznos link helyette.",
+  "notifications": "Értesítések",
+  "notificationScopeOff": "Ki",
+  "notificationScopeMine": "Saját",
+  "notificationScopeAll": "Összes",
+  "pollNotificationsDescription": "Értesítést kapsz emailben, amikor valami esemény történik a szavazásaidnál",
+  "notifyNewResponse": "Új szavazat",
+  "notifyNewResponseDescription": "Amikor valaki kitölti a szavazást",
+  "notifyNewComment": "Új hozzászólás",
+  "notifyNewCommentDescription": "Amikor valaki hozzászól a szavazáshoz",
+  "notificationsDescription": "Válassz, mely email értesítéseket szeretnéd megkapni"
 }
