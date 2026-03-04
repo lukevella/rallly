@@ -13,8 +13,26 @@ import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 export function NotificationsPage() {
+  const utils = trpc.useUtils();
   const [preferences] = trpc.user.getNotificationPreferences.useSuspenseQuery();
-  const updatePreference = trpc.user.updateNotificationPreference.useMutation();
+  const updatePreference = trpc.user.updateNotificationPreference.useMutation({
+    onMutate: async ({ eventType, enabled }) => {
+      await utils.user.getNotificationPreferences.cancel();
+      const previous = utils.user.getNotificationPreferences.getData();
+      utils.user.getNotificationPreferences.setData(undefined, (old) =>
+        old ? { ...old, [eventType]: enabled } : old,
+      );
+      return { previous };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previous) {
+        utils.user.getNotificationPreferences.setData(
+          undefined,
+          context.previous,
+        );
+      }
+    },
+  });
 
   return (
     <PageSectionGroup>
