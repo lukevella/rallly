@@ -4,6 +4,12 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 import { feedbackSchema } from "@/features/feedback/schema";
+import { defaultNotificationPreferences } from "@/features/notifications/constants";
+import { getNotificationPreferences } from "@/features/notifications/queries";
+import {
+  activityEventTypes,
+  notificationScopeSchema,
+} from "@/features/notifications/schema";
 import { defineAbilityFor } from "@/features/user/ability";
 import {
   deleteImageFromS3,
@@ -236,6 +242,45 @@ export const user = router({
       where: { id: userId },
     });
   }),
+  getNotificationPreferences: privateProcedure.query(async ({ ctx }) => {
+    return getNotificationPreferences(ctx.user.id);
+  }),
+  updateNotificationPreferences: privateProcedure
+    .input(
+      z.array(
+        z.object({
+          eventType: z.enum(activityEventTypes),
+          scope: notificationScopeSchema,
+        }),
+      ),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const existing = await prisma.userNotificationPreferences.findUnique({
+        where: { userId: ctx.user.id },
+        select: { prefs: true },
+      });
+
+      const currentPrefs = existing?.prefs ?? {};
+      const inputPrefs = Object.fromEntries(
+        input.map(({ eventType, scope }) => [eventType, scope]),
+      );
+      const updatedPrefs = {
+        ...defaultNotificationPreferences,
+        ...(currentPrefs as object),
+        ...inputPrefs,
+      };
+
+      await prisma.userNotificationPreferences.upsert({
+        where: { userId: ctx.user.id },
+        create: {
+          userId: ctx.user.id,
+          prefs: updatedPrefs,
+        },
+        update: {
+          prefs: updatedPrefs,
+        },
+      });
+    }),
   updateLocale: privateProcedure
     .input(z.object({ locale: z.string() }))
     .mutation(async ({ input, ctx }) => {

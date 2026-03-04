@@ -11,6 +11,7 @@ import {
   SidebarMenuItem,
 } from "@rallly/ui/sidebar";
 import {
+  BellIcon,
   BoltIcon,
   CalendarIcon,
   CreditCardIcon,
@@ -49,6 +50,12 @@ export function AccountSidebarMenu() {
       label: t("preferences", { defaultValue: "Preferences" }),
       icon: <Settings2Icon />,
       href: "/settings/preferences",
+    },
+    {
+      id: "notifications",
+      label: t("notifications", { defaultValue: "Notifications" }),
+      icon: <BellIcon />,
+      href: "/settings/notifications",
     },
     {
       id: "spaces",

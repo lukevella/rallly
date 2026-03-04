@@ -24,7 +24,6 @@ export default async function Layout(
       throw e;
     }),
     trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
-    trpc.polls.getWatchers.prefetch({ pollId: params.urlId }),
     trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
   ]);
 

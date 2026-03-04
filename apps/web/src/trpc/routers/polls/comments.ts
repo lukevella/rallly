@@ -2,16 +2,15 @@ import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { getNotificationRecipients } from "@/features/notifications/queries";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
-import { createToken } from "@/utils/session";
 import {
   createRateLimitMiddleware,
   publicProcedure,
   requireUserMiddleware,
   router,
 } from "../../trpc";
-import type { DisableNotificationsPayload } from "../../types";
 import { resolveUserId } from "./utils";
 
 export const comments = router({
@@ -123,43 +122,22 @@ export const comments = router({
         },
       });
 
-      const watchers = await prisma.watcher.findMany({
-        where: {
-          pollId,
-        },
-        select: {
-          id: true,
-          userId: true,
-          user: {
-            select: {
-              email: true,
-              name: true,
-              locale: true,
-            },
-          },
-        },
-      });
-
       const poll = newComment.poll;
 
-      for (const watcher of watchers) {
-        const email = watcher.user.email;
-        const token = await createToken<DisableNotificationsPayload>(
-          { watcherId: watcher.id, pollId },
-          { ttl: 0 },
-        );
+      const recipients = await getNotificationRecipients({
+        pollId,
+        type: "poll.comment.added",
+        excludeUserId: ctx.user.id,
+      });
 
-        const emailClient = await getEmailClient(
-          watcher.user.locale ?? undefined,
-        );
+      for (const recipient of recipients) {
+        const emailClient = await getEmailClient(recipient.locale ?? undefined);
         emailClient.queueTemplate("NewCommentEmail", {
-          to: email,
+          to: recipient.email,
           props: {
             authorName,
             pollUrl: absoluteUrl(`/poll/${poll.id}`),
-            disableNotificationsUrl: absoluteUrl(
-              `/api/notifications/unsubscribe?token=${token}`,
-            ),
+            disableNotificationsUrl: absoluteUrl("/settings/notifications"),
             title: poll.title,
           },
         });

@@ -11,4 +11,5 @@ export const trpc = createTRPCReact<AppRouter>({
       },
     },
   },
+  abortOnUnmount: true,
 });
