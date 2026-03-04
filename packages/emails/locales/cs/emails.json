@@ -1,6 +1,5 @@
 {
   "common_poweredBy": "Běží na <a>{domain}</a>",
-  "common_disableNotifications": "Pokud chcete přestat dostávat aktualizace, můžete <a>vypnout oznámení</a>.",
   "finalizeHost_content": "<b>{title}</b> bylo rezervováno na:",
   "finalizeHost_preview": "Konečný termín rezervován! Informovali jsme účastníky a poslali jim pozvánky do kalendáře.",
   "finalizeHost_heading": "Konečný termín rezervován!",
