@@ -271,6 +271,15 @@ export const user = router({
           prefs: updatedPrefs,
         },
       });
+
+      ctx.posthog?.capture({
+        event: "notification_preference_update",
+        distinctId: ctx.user.id,
+        properties: {
+          eventType: input.eventType,
+          enabled: input.enabled,
+        },
+      });
     }),
   updateLocale: privateProcedure
     .input(z.object({ locale: z.string() }))
