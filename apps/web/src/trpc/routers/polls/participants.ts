@@ -55,17 +55,17 @@ async function sendNewResponseNotificationEmail({
   participantName: string;
   excludeUserId: string;
 }) {
-  const recipient = await getNotificationRecipient({
-    pollId,
-    type: "poll.response.submitted",
-    excludeUserId,
-  });
-
-  if (!recipient) {
-    return;
-  }
-
   try {
+    const recipient = await getNotificationRecipient({
+      pollId,
+      type: "poll.response.submitted",
+      excludeUserId,
+    });
+
+    if (!recipient) {
+      return;
+    }
+
     const emailClient = await getEmailClient(recipient.locale ?? undefined);
     await emailClient.sendTemplate("NewParticipantEmail", {
       to: recipient.email,

@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
@@ -12,6 +13,8 @@ import {
   router,
 } from "../../trpc";
 import { resolveUserId } from "./utils";
+
+const logger = createLogger("comments");
 
 export const comments = router({
   list: publicProcedure
@@ -124,23 +127,32 @@ export const comments = router({
 
       const poll = newComment.poll;
 
-      const recipient = await getNotificationRecipient({
-        pollId,
-        type: "poll.comment.added",
-        excludeUserId: ctx.user.id,
-      });
-
-      if (recipient) {
-        const emailClient = await getEmailClient(recipient.locale ?? undefined);
-        emailClient.queueTemplate("NewCommentEmail", {
-          to: recipient.email,
-          props: {
-            authorName,
-            pollUrl: absoluteUrl(`/poll/${poll.id}`),
-            disableNotificationsUrl: absoluteUrl("/settings/notifications"),
-            title: poll.title,
-          },
+      try {
+        const recipient = await getNotificationRecipient({
+          pollId,
+          type: "poll.comment.added",
+          excludeUserId: ctx.user.id,
         });
+
+        if (recipient) {
+          const emailClient = await getEmailClient(
+            recipient.locale ?? undefined,
+          );
+          emailClient.queueTemplate("NewCommentEmail", {
+            to: recipient.email,
+            props: {
+              authorName,
+              pollUrl: absoluteUrl(`/poll/${poll.id}`),
+              disableNotificationsUrl: absoluteUrl("/settings/notifications"),
+              title: poll.title,
+            },
+          });
+        }
+      } catch (err) {
+        logger.error(
+          { error: err, pollId },
+          "Failed to send new comment notification email",
+        );
       }
 
       // Track comment addition analytics
