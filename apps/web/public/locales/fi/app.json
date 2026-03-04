@@ -594,5 +594,9 @@
   "pollDeleted": "Kysely poistettu",
   "pollDeleteError": "Kyselyn poistaminen epäonnistui",
   "inappropriateContent": "Sopimaton sisältö",
-  "pollReopened": "Kysely avattu uudelleen"
+  "pollReopened": "Kysely avattu uudelleen",
+  "notifications": "Ilmoitukset",
+  "notificationScopeOff": "Pois päältä",
+  "notificationScopeMine": "Omat",
+  "notificationScopeAll": "Kaikki"
 }
