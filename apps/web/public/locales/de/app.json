@@ -610,5 +610,15 @@
   "errorLinkGithubDescription": "Ein Problem melden oder nach Updates suchen.",
   "notFoundLabel": "404",
   "notFoundTitle": "Seite nicht gefunden",
-  "notFoundDescription": "Leider konnten wir die gesuchte Seite nicht finden. Hier sind stattdessen einige hilfreiche Links."
+  "notFoundDescription": "Leider konnten wir die gesuchte Seite nicht finden. Hier sind stattdessen einige hilfreiche Links.",
+  "notifications": "Benachrichtigungen",
+  "notificationScopeOff": "Aus",
+  "notificationScopeMine": "Gehört mir",
+  "notificationScopeAll": "Alle",
+  "pollNotificationsDescription": "Erhalte eine E-Mail-Benachrichtigung, wenn es Aktivitäten in deinen Umfragen gibt",
+  "notifyNewResponse": "Neue Antwort",
+  "notifyNewResponseDescription": "Wenn jemand auf eine Umfrage antwortet",
+  "notifyNewComment": "Neuer Kommentar",
+  "notifyNewCommentDescription": "Wenn jemand unter einer Umfrage kommentiert",
+  "notificationsDescription": "Wähle aus, welche E-Mail-Benachrichtigungen du erhältst"
 }
