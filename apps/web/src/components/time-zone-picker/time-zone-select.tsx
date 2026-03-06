@@ -6,8 +6,10 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
+  useComboboxAnchor,
 } from "@rallly/ui/combobox";
 import { InputGroupAddon } from "@rallly/ui/input-group";
+import dayjs from "dayjs";
 import { GlobeIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "@/i18n/client";
@@ -35,6 +37,7 @@ export function TimeZoneSelect({
 }) {
   const { t } = useTranslation();
 
+  const anchorRef = useComboboxAnchor();
   const allEntries = React.useMemo(() => getTimezoneEntriesWithOffset(), []);
   const curatedList = React.useMemo(
     () => allEntries.filter((e) => e.curated),
@@ -67,18 +70,20 @@ export function TimeZoneSelect({
       filter={filterTimezone}
       autoHighlight={true}
     >
-      <ComboboxInput
-        className={cn("min-w-64", className)}
-        disabled={disabled}
-        placeholder={t("timezoneInputPlaceholder", {
-          defaultValue: "Search timezone…",
-        })}
-      >
-        <InputGroupAddon>
-          <GlobeIcon />
-        </InputGroupAddon>
-      </ComboboxInput>
-      <ComboboxContent alignOffset={-24} className="w-64">
+      <div ref={anchorRef}>
+        <ComboboxInput
+          className={cn("min-w-64", className)}
+          disabled={disabled}
+          placeholder={t("timezoneInputPlaceholder", {
+            defaultValue: "Search timezone…",
+          })}
+        >
+          <InputGroupAddon>
+            <GlobeIcon />
+          </InputGroupAddon>
+        </ComboboxInput>
+      </div>
+      <ComboboxContent anchor={anchorRef.current}>
         <ComboboxEmpty>
           {t("timeZoneSelect__noOption", {
             defaultValue: "No timezone found",
@@ -87,10 +92,10 @@ export function TimeZoneSelect({
         <ComboboxList>
           {(entry) => (
             <ComboboxItem key={entry.id} value={entry} index={entry.index}>
-              <span className="rounded-full px-1 py-0.5 text-center font-mono text-muted-foreground text-xs">
-                {entry.offsetLabel}
-              </span>
               <span className="min-w-0 flex-1 truncate">{entry.city}</span>
+              <span className="rounded-full px-1 py-0.5 text-center font-mono text-muted-foreground text-xs">
+                {dayjs().tz(entry.id).format("LT")}
+              </span>
             </ComboboxItem>
           )}
         </ComboboxList>
