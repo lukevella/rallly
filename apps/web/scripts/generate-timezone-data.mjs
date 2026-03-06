@@ -241,7 +241,6 @@ function buildEntry(iana) {
     city,
     standardAbbr: softData?.standard?.abbr ?? "",
     daylightAbbr: softData?.daylight?.abbr ?? "",
-    longDescription: softData?.long ?? "",
     standardName: softData?.standard?.name ?? "",
   });
 

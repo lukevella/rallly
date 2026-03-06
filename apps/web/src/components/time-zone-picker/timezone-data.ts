@@ -12,615 +12,546 @@ export const timezoneEntries: TimezoneEntry[] = [
   {
     id: "Africa/Abidjan",
     city: "Abidjan",
-    keywords:
-      "abidjan africa/abidjan gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "abidjan africa/abidjan gmt greenwich mean standard time",
     curated: true,
   },
   {
     id: "Africa/Accra",
     city: "Accra",
-    keywords:
-      "accra africa/accra gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "accra africa/accra gmt greenwich mean standard time",
     curated: true,
   },
   {
     id: "America/Adak",
     city: "Adak",
-    keywords:
-      "adak america/adak hst hdt (utc+-10:00) aleutian standard time aleutian standard standard time",
+    keywords: "adak america/adak hst hdt aleutian standard standard time",
     curated: false,
   },
   {
     id: "Africa/Addis_Ababa",
     city: "Addis Ababa",
-    keywords:
-      "addis ababa africa/addis_ababa eat (utc+03:00) nairobi east africa standard time",
+    keywords: "addis ababa africa/addis_ababa eat east africa standard time",
     curated: true,
   },
   {
     id: "Australia/Adelaide",
     city: "Adelaide",
     keywords:
-      "adelaide australia/adelaide acst acdt (utc+09:30) adelaide central australia standard time",
+      "adelaide australia/adelaide acst acdt central australia standard time",
     curated: true,
   },
   {
     id: "Asia/Aden",
     city: "Aden",
-    keywords:
-      "aden asia/aden ast (utc+03:00) kuwait, riyadh arabian standard time",
+    keywords: "aden asia/aden ast arabian standard time",
     curated: false,
   },
   {
     id: "Africa/Algiers",
     city: "Algiers",
-    keywords:
-      "algiers africa/algiers cet (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "algiers africa/algiers cet central european standard time",
     curated: true,
   },
   {
     id: "Asia/Almaty",
     city: "Almaty",
-    keywords:
-      "almaty asia/almaty almt (utc+06:00) astana east kazakhstan standard time",
+    keywords: "almaty asia/almaty almt east kazakhstan standard time",
     curated: true,
   },
   {
     id: "Asia/Amman",
     city: "Amman",
-    keywords:
-      "amman asia/amman eet eest (utc+2:00) eastern european time eastern european standard time",
+    keywords: "amman asia/amman eet eest eastern european standard time",
     curated: false,
   },
   {
     id: "Europe/Amsterdam",
     city: "Amsterdam",
     keywords:
-      "amsterdam europe/amsterdam cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "amsterdam europe/amsterdam cet cest central european standard time",
     curated: true,
   },
   {
     id: "Asia/Anadyr",
     city: "Anadyr",
-    keywords:
-      "anadyr asia/anadyr anat (utc+12:00) anadyr, petropavlovsk-kamchatsky anadyr standard time",
+    keywords: "anadyr asia/anadyr anat anadyr standard time",
     curated: false,
   },
   {
     id: "America/Anchorage",
     city: "Anchorage",
-    keywords:
-      "anchorage america/anchorage akst akdt (utc-09:00) alaska alaska standard time",
+    keywords: "anchorage america/anchorage akst akdt alaska standard time",
     curated: true,
   },
   {
     id: "Europe/Andorra",
     city: "Andorra",
-    keywords:
-      "andorra europe/andorra cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "andorra europe/andorra cet cest central european standard time",
     curated: false,
   },
   {
     id: "America/Anguilla",
     city: "Anguilla",
-    keywords:
-      "anguilla america/anguilla ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "anguilla america/anguilla ast atlantic standard time",
     curated: false,
   },
   {
     id: "Indian/Antananarivo",
     city: "Antananarivo",
-    keywords:
-      "antananarivo indian/antananarivo eat (utc+03:00) nairobi east africa standard time",
+    keywords: "antananarivo indian/antananarivo eat east africa standard time",
     curated: false,
   },
   {
     id: "America/Antigua",
     city: "Antigua",
-    keywords:
-      "antigua america/antigua ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "antigua america/antigua ast atlantic standard time",
     curated: false,
   },
   {
     id: "Pacific/Apia",
     city: "Apia",
-    keywords:
-      "apia pacific/apia wst (utc+13:00) west samoa time west samoa standard time",
+    keywords: "apia pacific/apia wst west samoa standard time",
     curated: true,
   },
   {
     id: "Asia/Aqtau",
     city: "Aqtau",
-    keywords:
-      "aqtau asia/aqtau almt (utc+05:00) ashgabat, tashkent west kazakhstan standard time",
+    keywords: "aqtau asia/aqtau almt west kazakhstan standard time",
     curated: false,
   },
   {
     id: "Asia/Aqtobe",
     city: "Aqtobe",
-    keywords:
-      "aqtobe asia/aqtobe almt (utc+05:00) ashgabat, tashkent west kazakhstan standard time",
+    keywords: "aqtobe asia/aqtobe almt west kazakhstan standard time",
     curated: false,
   },
   {
     id: "America/Araguaina",
     city: "Araguaina",
-    keywords:
-      "araguaina america/araguaina brt (utc-03:00) brasilia brasilia standard time",
+    keywords: "araguaina america/araguaina brt brasilia standard time",
     curated: false,
   },
   {
     id: "America/Aruba",
     city: "Aruba",
-    keywords:
-      "aruba america/aruba ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "aruba america/aruba ast atlantic standard time",
     curated: false,
   },
   {
     id: "Asia/Ashgabat",
     city: "Ashgabat",
-    keywords:
-      "ashgabat asia/ashgabat tmt (utc+5:00) turkmenistan time turkmenistan standard time",
+    keywords: "ashgabat asia/ashgabat tmt turkmenistan standard time",
     curated: false,
   },
   {
     id: "Africa/Asmera",
     city: "Asmera",
-    keywords:
-      "asmera africa/asmera eat (utc+03:00) nairobi east africa standard time",
+    keywords: "asmera africa/asmera eat east africa standard time",
     curated: false,
   },
   {
     id: "Europe/Astrakhan",
     city: "Astrakhan",
-    keywords:
-      "astrakhan europe/astrakhan msk (utc+03:00) moscow, st. petersburg moscow standard time",
+    keywords: "astrakhan europe/astrakhan msk moscow standard time",
     curated: false,
   },
   {
     id: "America/Asuncion",
     city: "Asuncion",
-    keywords:
-      "asuncion america/asuncion pyt pyst (utc-04:00) asuncion paraguay standard time",
+    keywords: "asuncion america/asuncion pyt pyst paraguay standard time",
     curated: true,
   },
   {
     id: "Europe/Athens",
     city: "Athens",
-    keywords:
-      "athens europe/athens eet eest (utc+2:00) eastern european time eastern european standard time",
+    keywords: "athens europe/athens eet eest eastern european standard time",
     curated: true,
   },
   {
     id: "Asia/Atyrau",
     city: "Atyrau",
-    keywords:
-      "atyrau asia/atyrau almt (utc+05:00) ashgabat, tashkent west kazakhstan standard time",
+    keywords: "atyrau asia/atyrau almt west kazakhstan standard time",
     curated: false,
   },
   {
     id: "Pacific/Auckland",
     city: "Auckland",
-    keywords:
-      "auckland pacific/auckland nzst nzdt (utc+12:00) auckland, wellington new zealand standard time",
+    keywords: "auckland pacific/auckland nzst nzdt new zealand standard time",
     curated: true,
   },
   {
     id: "Atlantic/Azores",
     city: "Azores",
-    keywords:
-      "azores atlantic/azores azot azost (utc-01:00) azores azores standard time",
+    keywords: "azores atlantic/azores azot azost azores standard time",
     curated: true,
   },
   {
     id: "Asia/Baghdad",
     city: "Baghdad",
-    keywords:
-      "baghdad asia/baghdad ast (utc+03:00) kuwait, riyadh arabian standard time",
+    keywords: "baghdad asia/baghdad ast arabian standard time",
     curated: true,
   },
   {
     id: "America/Bahia",
     city: "Bahia",
-    keywords:
-      "bahia america/bahia brt (utc-03:00) brasilia brasilia standard time",
+    keywords: "bahia america/bahia brt brasilia standard time",
     curated: false,
   },
   {
     id: "America/Bahia_Banderas",
     city: "Bahia Banderas",
     keywords:
-      "bahia banderas america/bahia_banderas cst cdt (utc-06:00) guadalajara, mexico city, monterrey central mexico standard time",
+      "bahia banderas america/bahia_banderas cst cdt central mexico standard time",
     curated: false,
   },
   {
     id: "Asia/Bahrain",
     city: "Bahrain",
-    keywords:
-      "bahrain asia/bahrain ast (utc+03:00) kuwait, riyadh arabian standard time",
+    keywords: "bahrain asia/bahrain ast arabian standard time",
     curated: false,
   },
   {
     id: "Asia/Baku",
     city: "Baku",
-    keywords: "baku asia/baku azt (utc+04:00) baku azerbaijan standard time",
+    keywords: "baku asia/baku azt azerbaijan standard time",
     curated: true,
   },
   {
     id: "Africa/Bamako",
     city: "Bamako",
-    keywords:
-      "bamako africa/bamako gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "bamako africa/bamako gmt greenwich mean standard time",
     curated: false,
   },
   {
     id: "Asia/Bangkok",
     city: "Bangkok",
-    keywords:
-      "bangkok asia/bangkok ict (utc+07:00) bangkok, hanoi, jakarta indochina standard time",
+    keywords: "bangkok asia/bangkok ict indochina standard time",
     curated: true,
   },
   {
     id: "Africa/Bangui",
     city: "Bangui",
-    keywords:
-      "bangui africa/bangui wat (utc+01:00) west central africa west africa standard time",
+    keywords: "bangui africa/bangui wat west africa standard time",
     curated: false,
   },
   {
     id: "Africa/Banjul",
     city: "Banjul",
-    keywords:
-      "banjul africa/banjul gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "banjul africa/banjul gmt greenwich mean standard time",
     curated: false,
   },
   {
     id: "America/Barbados",
     city: "Barbados",
-    keywords:
-      "barbados america/barbados ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "barbados america/barbados ast atlantic standard time",
     curated: true,
   },
   {
     id: "Asia/Barnaul",
     city: "Barnaul",
-    keywords:
-      "barnaul asia/barnaul krat (utc+07:00) krasnoyarsk krasnoyarsk standard time",
+    keywords: "barnaul asia/barnaul krat krasnoyarsk standard time",
     curated: false,
   },
   {
     id: "Asia/Beirut",
     city: "Beirut",
-    keywords:
-      "beirut asia/beirut eet eest (utc+2:00) eastern european time eastern european standard time",
+    keywords: "beirut asia/beirut eet eest eastern european standard time",
     curated: true,
   },
   {
     id: "America/Belem",
     city: "Belem",
-    keywords:
-      "belem america/belem brt (utc-03:00) brasilia brasilia standard time",
+    keywords: "belem america/belem brt brasilia standard time",
     curated: false,
   },
   {
     id: "Europe/Belgrade",
     city: "Belgrade",
     keywords:
-      "belgrade europe/belgrade cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "belgrade europe/belgrade cet cest central european standard time",
     curated: true,
   },
   {
     id: "America/Belize",
     city: "Belize",
-    keywords:
-      "belize america/belize cst (utc-06:00) central time (us & canada) central standard time",
+    keywords: "belize america/belize cst central standard time",
     curated: false,
   },
   {
     id: "Europe/Berlin",
     city: "Berlin",
-    keywords:
-      "berlin europe/berlin cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "berlin europe/berlin cet cest central european standard time",
     curated: true,
   },
   {
     id: "Atlantic/Bermuda",
     city: "Bermuda",
-    keywords:
-      "bermuda atlantic/bermuda ast adt (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "bermuda atlantic/bermuda ast adt atlantic standard time",
     curated: false,
   },
   {
     id: "America/North_Dakota/Beulah",
     city: "Beulah",
     keywords:
-      "beulah america/north_dakota/beulah cst cdt (utc-06:00) central time (us & canada) central standard time",
+      "beulah america/north_dakota/beulah cst cdt central standard time",
     curated: false,
   },
   {
     id: "Asia/Bishkek",
     city: "Bishkek",
-    keywords:
-      "bishkek asia/bishkek kgt (utc+6:00) kyrgyzstan time kyrgyzstan standard time",
+    keywords: "bishkek asia/bishkek kgt kyrgyzstan standard time",
     curated: false,
   },
   {
     id: "Africa/Bissau",
     city: "Bissau",
-    keywords:
-      "bissau africa/bissau gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "bissau africa/bissau gmt greenwich mean standard time",
     curated: false,
   },
   {
     id: "America/Blanc-Sablon",
     city: "Blanc-Sablon",
-    keywords:
-      "blanc-sablon america/blanc-sablon ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "blanc-sablon america/blanc-sablon ast atlantic standard time",
     curated: false,
   },
   {
     id: "Africa/Blantyre",
     city: "Blantyre",
-    keywords:
-      "blantyre africa/blantyre cat (utc+02:00) windhoek central africa standard time",
+    keywords: "blantyre africa/blantyre cat central africa standard time",
     curated: false,
   },
   {
     id: "America/Boa_Vista",
     city: "Boa Vista",
-    keywords:
-      "boa vista america/boa_vista amt (utc-04:00) cuiaba amazon standard time",
+    keywords: "boa vista america/boa_vista amt amazon standard time",
     curated: false,
   },
   {
     id: "America/Bogota",
     city: "Bogota",
-    keywords:
-      "bogota america/bogota cot (utc+-5:00) colombia time colombia standard time",
+    keywords: "bogota america/bogota cot colombia standard time",
     curated: true,
   },
   {
     id: "America/Boise",
     city: "Boise",
-    keywords:
-      "boise america/boise mst mdt (utc-07:00) mountain time (us & canada) mountain standard time",
+    keywords: "boise america/boise mst mdt mountain standard time",
     curated: false,
   },
   {
     id: "Pacific/Bougainville",
     city: "Bougainville",
     keywords:
-      "bougainville pacific/bougainville pgt (utc+11:00) papua new guinea time papua new guinea standard time",
+      "bougainville pacific/bougainville pgt papua new guinea standard time",
     curated: false,
   },
   {
     id: "Europe/Bratislava",
     city: "Bratislava",
     keywords:
-      "bratislava europe/bratislava cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "bratislava europe/bratislava cet cest central european standard time",
     curated: false,
   },
   {
     id: "Africa/Brazzaville",
     city: "Brazzaville",
-    keywords:
-      "brazzaville africa/brazzaville wat (utc+01:00) west central africa west africa standard time",
+    keywords: "brazzaville africa/brazzaville wat west africa standard time",
     curated: false,
   },
   {
     id: "Australia/Brisbane",
     city: "Brisbane",
-    keywords:
-      "brisbane australia/brisbane aest (utc+10:00) brisbane time brisbane standard time",
+    keywords: "brisbane australia/brisbane aest brisbane standard time",
     curated: true,
   },
   {
     id: "Australia/Broken_Hill",
     city: "Broken Hill",
     keywords:
-      "broken hill australia/broken_hill acst acdt (utc+09:30) adelaide central australia standard time",
+      "broken hill australia/broken_hill acst acdt central australia standard time",
     curated: false,
   },
   {
     id: "Asia/Brunei",
     city: "Brunei",
-    keywords:
-      "brunei asia/brunei bnt (utc+8:00) brunei darussalam time brunei darussalam standard time",
+    keywords: "brunei asia/brunei bnt brunei darussalam standard time",
     curated: false,
   },
   {
     id: "Europe/Brussels",
     city: "Brussels",
     keywords:
-      "brussels europe/brussels cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "brussels europe/brussels cet cest central european standard time",
     curated: true,
   },
   {
     id: "Europe/Bucharest",
     city: "Bucharest",
     keywords:
-      "bucharest europe/bucharest eet eest (utc+2:00) eastern european time eastern european standard time",
+      "bucharest europe/bucharest eet eest eastern european standard time",
     curated: true,
   },
   {
     id: "Europe/Budapest",
     city: "Budapest",
     keywords:
-      "budapest europe/budapest cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "budapest europe/budapest cet cest central european standard time",
     curated: true,
   },
   {
     id: "America/Buenos_Aires",
     city: "Buenos Aires",
-    keywords:
-      "buenos aires america/buenos_aires art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "buenos aires america/buenos_aires art argentina standard time",
     curated: false,
   },
   {
     id: "Africa/Bujumbura",
     city: "Bujumbura",
-    keywords:
-      "bujumbura africa/bujumbura cat (utc+02:00) windhoek central africa standard time",
+    keywords: "bujumbura africa/bujumbura cat central africa standard time",
     curated: false,
   },
   {
     id: "Europe/Busingen",
     city: "Busingen",
     keywords:
-      "busingen europe/busingen cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "busingen europe/busingen cet cest central european standard time",
     curated: false,
   },
   {
     id: "Africa/Cairo",
     city: "Cairo",
-    keywords:
-      "cairo africa/cairo eet (utc+2:00) eastern european time eastern european standard time",
+    keywords: "cairo africa/cairo eet eastern european standard time",
     curated: true,
   },
   {
     id: "Asia/Calcutta",
     city: "Calcutta",
-    keywords:
-      "calcutta asia/calcutta ist (utc+05:30) chennai, kolkata, mumbai, new delhi india standard time",
+    keywords: "calcutta asia/calcutta ist india standard time",
     curated: false,
   },
   {
     id: "America/Cambridge_Bay",
     city: "Cambridge Bay",
     keywords:
-      "cambridge bay america/cambridge_bay mst mdt (utc-07:00) mountain time (us & canada) mountain standard time",
+      "cambridge bay america/cambridge_bay mst mdt mountain standard time",
     curated: false,
   },
   {
     id: "America/Campo_Grande",
     city: "Campo Grande",
-    keywords:
-      "campo grande america/campo_grande amt (utc-04:00) cuiaba amazon standard time",
+    keywords: "campo grande america/campo_grande amt amazon standard time",
     curated: false,
   },
   {
     id: "Atlantic/Canary",
     city: "Canary",
-    keywords:
-      "canary atlantic/canary wet west (utc+0:00) western european time western european standard time",
+    keywords: "canary atlantic/canary wet west western european standard time",
     curated: false,
   },
   {
     id: "America/Cancun",
     city: "Cancun",
-    keywords:
-      "cancun america/cancun est (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "cancun america/cancun est eastern standard time",
     curated: true,
   },
   {
     id: "Atlantic/Cape_Verde",
     city: "Cape Verde",
-    keywords:
-      "cape verde atlantic/cape_verde cvt (utc-01:00) cabo verde is. cape verde standard time",
+    keywords: "cape verde atlantic/cape_verde cvt cape verde standard time",
     curated: true,
   },
   {
     id: "America/Caracas",
     city: "Caracas",
-    keywords:
-      "caracas america/caracas vet (utc-04:00) caracas venezuela standard time",
+    keywords: "caracas america/caracas vet venezuela standard time",
     curated: true,
   },
   {
     id: "Africa/Casablanca",
     city: "Casablanca",
     keywords:
-      "casablanca africa/casablanca wet west (utc+00:00) casablanca morocco standard standard time",
+      "casablanca africa/casablanca wet west morocco standard standard time",
     curated: true,
   },
   {
     id: "Antarctica/Casey",
     city: "Casey",
-    keywords:
-      "casey antarctica/casey cast cast (utc+11:00) casey time casey standard time",
+    keywords: "casey antarctica/casey cast cast casey standard time",
     curated: false,
   },
   {
     id: "America/Catamarca",
     city: "Catamarca",
-    keywords:
-      "catamarca america/catamarca art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "catamarca america/catamarca art argentina standard time",
     curated: false,
   },
   {
     id: "America/Cayenne",
     city: "Cayenne",
-    keywords:
-      "cayenne america/cayenne gft (utc+-3:00) french guiana time french guiana standard time",
+    keywords: "cayenne america/cayenne gft french guiana standard time",
     curated: false,
   },
   {
     id: "America/Cayman",
     city: "Cayman",
-    keywords:
-      "cayman america/cayman est (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "cayman america/cayman est eastern standard time",
     curated: false,
   },
   {
     id: "America/North_Dakota/Center",
     city: "Center",
     keywords:
-      "center america/north_dakota/center cst cdt (utc-06:00) central time (us & canada) central standard time",
+      "center america/north_dakota/center cst cdt central standard time",
     curated: false,
   },
   {
     id: "Africa/Ceuta",
     city: "Ceuta",
-    keywords:
-      "ceuta africa/ceuta cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "ceuta africa/ceuta cet cest central european standard time",
     curated: false,
   },
   {
     id: "Indian/Chagos",
     city: "Chagos",
-    keywords:
-      "chagos indian/chagos iot (utc+6:00) indian ocean time indian ocean standard time",
+    keywords: "chagos indian/chagos iot indian ocean standard time",
     curated: false,
   },
   {
     id: "Pacific/Chatham",
     city: "Chatham",
-    keywords:
-      "chatham pacific/chatham chast chadt (utc+12:45) chatham islands chatham standard time",
+    keywords: "chatham pacific/chatham chast chadt chatham standard time",
     curated: false,
   },
   {
     id: "America/Chicago",
     city: "Chicago",
-    keywords:
-      "chicago america/chicago cst cdt (utc-06:00) central time (us & canada) central standard time",
+    keywords: "chicago america/chicago cst cdt central standard time",
     curated: true,
   },
   {
     id: "America/Chihuahua",
     city: "Chihuahua",
     keywords:
-      "chihuahua america/chihuahua hnpmx hepmx (utc-07:00) chihuahua, la paz, mazatlan mexican pacific standard time",
+      "chihuahua america/chihuahua hnpmx hepmx mexican pacific standard time",
     curated: false,
   },
   {
     id: "Europe/Chisinau",
     city: "Chisinau",
     keywords:
-      "chisinau europe/chisinau eet eest (utc+2:00) eastern european time eastern european standard time",
+      "chisinau europe/chisinau eet eest eastern european standard time",
     curated: false,
   },
   {
     id: "Asia/Chita",
     city: "Chita",
-    keywords: "chita asia/chita yakt (utc+09:00) yakutsk yakutsk standard time",
+    keywords: "chita asia/chita yakt yakutsk standard time",
     curated: false,
   },
   {
     id: "Indian/Christmas",
     city: "Christmas",
-    keywords:
-      "christmas indian/christmas cxt (utc+7:00) christmas island time christmas island standard time",
+    keywords: "christmas indian/christmas cxt christmas island standard time",
     curated: false,
   },
   {
@@ -632,57 +563,50 @@ export const timezoneEntries: TimezoneEntry[] = [
   {
     id: "Indian/Cocos",
     city: "Cocos",
-    keywords:
-      "cocos indian/cocos cct (utc+6.5:00) cocos islands time cocos islands standard time",
+    keywords: "cocos indian/cocos cct cocos islands standard time",
     curated: false,
   },
   {
     id: "Asia/Colombo",
     city: "Colombo",
-    keywords:
-      "colombo asia/colombo ist (utc+05:30) chennai, kolkata, mumbai, new delhi india standard time",
+    keywords: "colombo asia/colombo ist india standard time",
     curated: true,
   },
   {
     id: "Indian/Comoro",
     city: "Comoro",
-    keywords:
-      "comoro indian/comoro eat (utc+03:00) nairobi east africa standard time",
+    keywords: "comoro indian/comoro eat east africa standard time",
     curated: false,
   },
   {
     id: "Africa/Conakry",
     city: "Conakry",
-    keywords:
-      "conakry africa/conakry gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "conakry africa/conakry gmt greenwich mean standard time",
     curated: false,
   },
   {
     id: "Europe/Copenhagen",
     city: "Copenhagen",
     keywords:
-      "copenhagen europe/copenhagen cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "copenhagen europe/copenhagen cet cest central european standard time",
     curated: true,
   },
   {
     id: "America/Coral_Harbour",
     city: "Coral Harbour",
-    keywords:
-      "coral harbour america/coral_harbour est (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "coral harbour america/coral_harbour est eastern standard time",
     curated: false,
   },
   {
     id: "America/Cordoba",
     city: "Cordoba",
-    keywords:
-      "cordoba america/cordoba art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "cordoba america/cordoba art argentina standard time",
     curated: false,
   },
   {
     id: "America/Costa_Rica",
     city: "Costa Rica",
-    keywords:
-      "costa rica america/costa_rica cst (utc-06:00) central time (us & canada) central standard time",
+    keywords: "costa rica america/costa_rica cst central standard time",
     curated: false,
   },
   {
@@ -694,2258 +618,1990 @@ export const timezoneEntries: TimezoneEntry[] = [
   {
     id: "America/Creston",
     city: "Creston",
-    keywords:
-      "creston america/creston mst (utc-07:00) mountain time (us & canada) mountain standard time",
+    keywords: "creston america/creston mst mountain standard time",
     curated: false,
   },
   {
     id: "America/Cuiaba",
     city: "Cuiaba",
-    keywords:
-      "cuiaba america/cuiaba amt (utc-04:00) cuiaba amazon standard time",
+    keywords: "cuiaba america/cuiaba amt amazon standard time",
     curated: false,
   },
   {
     id: "America/Curacao",
     city: "Curacao",
-    keywords:
-      "curacao america/curacao ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "curacao america/curacao ast atlantic standard time",
     curated: false,
   },
   {
     id: "Africa/Dakar",
     city: "Dakar",
-    keywords:
-      "dakar africa/dakar gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "dakar africa/dakar gmt greenwich mean standard time",
     curated: false,
   },
   {
     id: "Asia/Damascus",
     city: "Damascus",
-    keywords:
-      "damascus asia/damascus eet eest (utc+2:00) eastern european time eastern european standard time",
+    keywords: "damascus asia/damascus eet eest eastern european standard time",
     curated: false,
   },
   {
     id: "America/Danmarkshavn",
     city: "Danmarkshavn",
     keywords:
-      "danmarkshavn america/danmarkshavn gmt (utc) coordinated universal time greenwich mean standard time",
+      "danmarkshavn america/danmarkshavn gmt greenwich mean standard time",
     curated: false,
   },
   {
     id: "Africa/Dar_es_Salaam",
     city: "Dar es Salaam",
     keywords:
-      "dar es salaam africa/dar_es_salaam eat (utc+03:00) nairobi east africa standard time",
+      "dar es salaam africa/dar_es_salaam eat east africa standard time",
     curated: false,
   },
   {
     id: "Australia/Darwin",
     city: "Darwin",
-    keywords:
-      "darwin australia/darwin acst (utc+9.5:00) australian central time australian central standard time",
+    keywords: "darwin australia/darwin acst australian central standard time",
     curated: true,
   },
   {
     id: "Antarctica/Davis",
     city: "Davis",
-    keywords:
-      "davis antarctica/davis davt (utc+7:00) davis time davis standard time",
+    keywords: "davis antarctica/davis davt davis standard time",
     curated: false,
   },
   {
     id: "America/Dawson",
     city: "Dawson",
-    keywords:
-      "dawson america/dawson mst (utc-07:00) mountain time (us & canada) mountain standard time",
+    keywords: "dawson america/dawson mst mountain standard time",
     curated: false,
   },
   {
     id: "America/Dawson_Creek",
     city: "Dawson Creek",
-    keywords:
-      "dawson creek america/dawson_creek mst (utc-07:00) mountain time (us & canada) mountain standard time",
+    keywords: "dawson creek america/dawson_creek mst mountain standard time",
     curated: false,
   },
   {
     id: "America/Denver",
     city: "Denver",
-    keywords:
-      "denver america/denver mst mdt (utc-07:00) mountain time (us & canada) mountain standard time",
+    keywords: "denver america/denver mst mdt mountain standard time",
     curated: true,
   },
   {
     id: "America/Detroit",
     city: "Detroit",
-    keywords:
-      "detroit america/detroit est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "detroit america/detroit est edt eastern standard time",
     curated: false,
   },
   {
     id: "Asia/Dhaka",
     city: "Dhaka",
-    keywords: "dhaka asia/dhaka bst (utc+06:00) dhaka bangladesh standard time",
+    keywords: "dhaka asia/dhaka bst bangladesh standard time",
     curated: true,
   },
   {
     id: "Asia/Dili",
     city: "Dili",
-    keywords:
-      "dili asia/dili tlt (utc+9:00) east timor time east timor standard time",
+    keywords: "dili asia/dili tlt east timor standard time",
     curated: false,
   },
   {
     id: "Africa/Djibouti",
     city: "Djibouti",
-    keywords:
-      "djibouti africa/djibouti eat (utc+03:00) nairobi east africa standard time",
+    keywords: "djibouti africa/djibouti eat east africa standard time",
     curated: false,
   },
   {
     id: "America/Dominica",
     city: "Dominica",
-    keywords:
-      "dominica america/dominica ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "dominica america/dominica ast atlantic standard time",
     curated: false,
   },
   {
     id: "Africa/Douala",
     city: "Douala",
-    keywords:
-      "douala africa/douala wat (utc+01:00) west central africa west africa standard time",
+    keywords: "douala africa/douala wat west africa standard time",
     curated: false,
   },
   {
     id: "Asia/Dubai",
     city: "Dubai",
-    keywords:
-      "dubai asia/dubai gst (utc+04:00) abu dhabi, muscat gulf standard time",
+    keywords: "dubai asia/dubai gst gulf standard time",
     curated: true,
   },
   {
     id: "Europe/Dublin",
     city: "Dublin",
-    keywords:
-      "dublin europe/dublin gmt ist (utc+0:00) irish time irish standard time",
+    keywords: "dublin europe/dublin gmt ist irish standard time",
     curated: true,
   },
   {
     id: "Antarctica/DumontDUrville",
     city: "DumontDUrville",
     keywords:
-      "dumontdurville antarctica/dumontdurville pgt (utc+11:00) papua new guinea time papua new guinea standard time",
+      "dumontdurville antarctica/dumontdurville pgt papua new guinea standard time",
     curated: false,
   },
   {
     id: "Asia/Dushanbe",
     city: "Dushanbe",
-    keywords:
-      "dushanbe asia/dushanbe tjt (utc+5:00) tajikistan time tajikistan standard time",
+    keywords: "dushanbe asia/dushanbe tjt tajikistan standard time",
     curated: false,
   },
   {
     id: "Pacific/Easter",
     city: "Easter",
-    keywords:
-      "easter pacific/easter east easst (utc-06:00) easter island easter island standard time",
+    keywords: "easter pacific/easter east easst easter island standard time",
     curated: false,
   },
   {
     id: "America/Edmonton",
     city: "Edmonton",
-    keywords:
-      "edmonton america/edmonton mst mdt (utc-07:00) mountain time (us & canada) mountain standard time",
+    keywords: "edmonton america/edmonton mst mdt mountain standard time",
     curated: true,
   },
   {
     id: "Pacific/Efate",
     city: "Efate",
-    keywords:
-      "efate pacific/efate vut (utc+11:00) vanuatu time vanuatu standard time",
+    keywords: "efate pacific/efate vut vanuatu standard time",
     curated: false,
   },
   {
     id: "America/Eirunepe",
     city: "Eirunepe",
-    keywords:
-      "eirunepe america/eirunepe act (utc+-5:00) acre time acre standard time",
+    keywords: "eirunepe america/eirunepe act acre standard time",
     curated: false,
   },
   {
     id: "Africa/El_Aaiun",
     city: "El Aaiun",
     keywords:
-      "el aaiun africa/el_aaiun wet west (utc+00:00) casablanca morocco standard standard time",
+      "el aaiun africa/el_aaiun wet west morocco standard standard time",
     curated: false,
   },
   {
     id: "America/El_Salvador",
     city: "El Salvador",
-    keywords:
-      "el salvador america/el_salvador cst (utc-06:00) central time (us & canada) central standard time",
+    keywords: "el salvador america/el_salvador cst central standard time",
     curated: false,
   },
   {
     id: "Pacific/Enderbury",
     city: "Enderbury",
-    keywords:
-      "enderbury pacific/enderbury phot (utc+13:00) phoenix islands time phoenix islands standard time",
+    keywords: "enderbury pacific/enderbury phot phoenix islands standard time",
     curated: false,
   },
   {
     id: "Australia/Eucla",
     city: "Eucla",
     keywords:
-      "eucla australia/eucla acwst (utc+08:45) eucla australian central western standard time",
+      "eucla australia/eucla acwst australian central western standard time",
     curated: false,
   },
   {
     id: "Atlantic/Faeroe",
     city: "Faeroe",
-    keywords:
-      "faeroe atlantic/faeroe wet west (utc+0:00) western european time western european standard time",
+    keywords: "faeroe atlantic/faeroe wet west western european standard time",
     curated: false,
   },
   {
     id: "Pacific/Fakaofo",
     city: "Fakaofo",
-    keywords:
-      "fakaofo pacific/fakaofo tkt (utc+13:00) tokelau time tokelau standard time",
+    keywords: "fakaofo pacific/fakaofo tkt tokelau standard time",
     curated: false,
   },
   {
     id: "Asia/Famagusta",
     city: "Famagusta",
     keywords:
-      "famagusta asia/famagusta eet eest (utc+2:00) eastern european time eastern european standard time",
+      "famagusta asia/famagusta eet eest eastern european standard time",
     curated: false,
   },
   {
     id: "Pacific/Fiji",
     city: "Fiji",
-    keywords: "fiji pacific/fiji fjt fjt (utc+12:00) fiji fiji standard time",
+    keywords: "fiji pacific/fiji fjt fjt fiji standard time",
     curated: true,
   },
   {
     id: "America/Fort_Nelson",
     city: "Fort Nelson",
-    keywords:
-      "fort nelson america/fort_nelson mst (utc-07:00) mountain time (us & canada) mountain standard time",
+    keywords: "fort nelson america/fort_nelson mst mountain standard time",
     curated: false,
   },
   {
     id: "America/Fortaleza",
     city: "Fortaleza",
-    keywords:
-      "fortaleza america/fortaleza brt (utc-03:00) brasilia brasilia standard time",
+    keywords: "fortaleza america/fortaleza brt brasilia standard time",
     curated: false,
   },
   {
     id: "Africa/Freetown",
     city: "Freetown",
-    keywords:
-      "freetown africa/freetown gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "freetown africa/freetown gmt greenwich mean standard time",
     curated: false,
   },
   {
     id: "Pacific/Funafuti",
     city: "Funafuti",
-    keywords:
-      "funafuti pacific/funafuti tvt (utc+12:00) tuvalu time tuvalu standard time",
+    keywords: "funafuti pacific/funafuti tvt tuvalu standard time",
     curated: false,
   },
   {
     id: "Africa/Gaborone",
     city: "Gaborone",
-    keywords:
-      "gaborone africa/gaborone cat (utc+02:00) windhoek central africa standard time",
+    keywords: "gaborone africa/gaborone cat central africa standard time",
     curated: false,
   },
   {
     id: "Pacific/Galapagos",
     city: "Galapagos",
-    keywords:
-      "galapagos pacific/galapagos cot (utc+-5:00) colombia time colombia standard time",
+    keywords: "galapagos pacific/galapagos cot colombia standard time",
     curated: false,
   },
   {
     id: "Pacific/Gambier",
     city: "Gambier",
-    keywords:
-      "gambier pacific/gambier gamt (utc-09:00) coordinated universal time-09 gambier standard time",
+    keywords: "gambier pacific/gambier gamt gambier standard time",
     curated: false,
   },
   {
     id: "Asia/Gaza",
     city: "Gaza",
-    keywords:
-      "gaza asia/gaza eet eest (utc+2:00) eastern european time eastern european standard time",
+    keywords: "gaza asia/gaza eet eest eastern european standard time",
     curated: false,
   },
   {
     id: "Europe/Gibraltar",
     city: "Gibraltar",
     keywords:
-      "gibraltar europe/gibraltar cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "gibraltar europe/gibraltar cet cest central european standard time",
     curated: false,
   },
   {
     id: "America/Glace_Bay",
     city: "Glace Bay",
-    keywords:
-      "glace bay america/glace_bay ast adt (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "glace bay america/glace_bay ast adt atlantic standard time",
     curated: false,
   },
   {
     id: "America/Godthab",
     city: "Godthab",
-    keywords:
-      "godthab america/godthab wgt wgst (utc-03:00) greenland west greenland standard time",
+    keywords: "godthab america/godthab wgt wgst west greenland standard time",
     curated: false,
   },
   {
     id: "America/Goose_Bay",
     city: "Goose Bay",
-    keywords:
-      "goose bay america/goose_bay ast adt (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "goose bay america/goose_bay ast adt atlantic standard time",
     curated: false,
   },
   {
     id: "America/Grand_Turk",
     city: "Grand Turk",
-    keywords:
-      "grand turk america/grand_turk est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "grand turk america/grand_turk est edt eastern standard time",
     curated: false,
   },
   {
     id: "America/Grenada",
     city: "Grenada",
-    keywords:
-      "grenada america/grenada ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "grenada america/grenada ast atlantic standard time",
     curated: false,
   },
   {
     id: "Pacific/Guadalcanal",
     city: "Guadalcanal",
     keywords:
-      "guadalcanal pacific/guadalcanal sbt (utc+11:00) solomon islands time solomon islands standard time",
+      "guadalcanal pacific/guadalcanal sbt solomon islands standard time",
     curated: true,
   },
   {
     id: "America/Guadeloupe",
     city: "Guadeloupe",
-    keywords:
-      "guadeloupe america/guadeloupe ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "guadeloupe america/guadeloupe ast atlantic standard time",
     curated: false,
   },
   {
     id: "Pacific/Guam",
     city: "Guam",
-    keywords:
-      "guam pacific/guam chst (utc+10:00) guam, port moresby chamorro standard time",
+    keywords: "guam pacific/guam chst chamorro standard time",
     curated: true,
   },
   {
     id: "America/Guatemala",
     city: "Guatemala",
-    keywords:
-      "guatemala america/guatemala cst (utc-06:00) central time (us & canada) central standard time",
+    keywords: "guatemala america/guatemala cst central standard time",
     curated: true,
   },
   {
     id: "America/Guayaquil",
     city: "Guayaquil",
-    keywords:
-      "guayaquil america/guayaquil ect (utc+-5:00) ecuador time ecuador standard time",
+    keywords: "guayaquil america/guayaquil ect ecuador standard time",
     curated: false,
   },
   {
     id: "Europe/Guernsey",
     city: "Guernsey",
-    keywords:
-      "guernsey europe/guernsey gmt bst (utc+00:00) dublin, edinburgh, lisbon, london british standard time",
+    keywords: "guernsey europe/guernsey gmt bst british standard time",
     curated: false,
   },
   {
     id: "America/Guyana",
     city: "Guyana",
-    keywords:
-      "guyana america/guyana gyt (utc+-4:00) guyana time guyana standard time",
+    keywords: "guyana america/guyana gyt guyana standard time",
     curated: false,
   },
   {
     id: "America/Halifax",
     city: "Halifax",
-    keywords:
-      "halifax america/halifax ast adt (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "halifax america/halifax ast adt atlantic standard time",
     curated: true,
   },
   {
     id: "Africa/Harare",
     city: "Harare",
-    keywords:
-      "harare africa/harare cat (utc+02:00) windhoek central africa standard time",
+    keywords: "harare africa/harare cat central africa standard time",
     curated: false,
   },
   {
     id: "America/Havana",
     city: "Havana",
-    keywords:
-      "havana america/havana hncu hecu (utc-05:00) havana cuba standard time",
+    keywords: "havana america/havana hncu hecu cuba standard time",
     curated: true,
   },
   {
     id: "Asia/Hebron",
     city: "Hebron",
-    keywords:
-      "hebron asia/hebron eet eest (utc+2:00) eastern european time eastern european standard time",
+    keywords: "hebron asia/hebron eet eest eastern european standard time",
     curated: false,
   },
   {
     id: "Europe/Helsinki",
     city: "Helsinki",
     keywords:
-      "helsinki europe/helsinki eet eest (utc+2:00) eastern european time eastern european standard time",
+      "helsinki europe/helsinki eet eest eastern european standard time",
     curated: true,
   },
   {
     id: "America/Hermosillo",
     city: "Hermosillo",
     keywords:
-      "hermosillo america/hermosillo hnpmx (utc-07:00) chihuahua, la paz, mazatlan mexican pacific standard time",
+      "hermosillo america/hermosillo hnpmx mexican pacific standard time",
     curated: false,
   },
   {
     id: "Australia/Hobart",
     city: "Hobart",
     keywords:
-      "hobart australia/hobart aest aedt (utc+10:00) canberra, melbourne, sydney eastern australia standard time",
+      "hobart australia/hobart aest aedt eastern australia standard time",
     curated: false,
   },
   {
     id: "Asia/Hong_Kong",
     city: "Hong Kong",
-    keywords:
-      "hong kong asia/hong_kong hkt (utc+8:00) hong kong time hong kong standard time",
+    keywords: "hong kong asia/hong_kong hkt hong kong standard time",
     curated: true,
   },
   {
     id: "Pacific/Honolulu",
     city: "Honolulu",
-    keywords:
-      "honolulu pacific/honolulu hast (utc-09:00) aleutian islands hawaii-aleutian standard time",
+    keywords: "honolulu pacific/honolulu hast hawaii-aleutian standard time",
     curated: true,
   },
   {
     id: "Asia/Hovd",
     city: "Hovd",
-    keywords: "hovd asia/hovd hovt (utc+07:00) hovd hovd standard time",
+    keywords: "hovd asia/hovd hovt hovd standard time",
     curated: false,
   },
   {
     id: "America/Indianapolis",
     city: "Indianapolis",
-    keywords:
-      "indianapolis america/indianapolis est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "indianapolis america/indianapolis est edt eastern standard time",
     curated: true,
   },
   {
     id: "America/Indiana/Indianapolis",
     city: "Indianapolis",
     keywords:
-      "indianapolis america/indiana/indianapolis est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+      "indianapolis america/indiana/indianapolis est edt eastern standard time",
     curated: false,
   },
   {
     id: "America/Inuvik",
     city: "Inuvik",
-    keywords:
-      "inuvik america/inuvik mst mdt (utc-07:00) mountain time (us & canada) mountain standard time",
+    keywords: "inuvik america/inuvik mst mdt mountain standard time",
     curated: false,
   },
   {
     id: "America/Iqaluit",
     city: "Iqaluit",
-    keywords:
-      "iqaluit america/iqaluit est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "iqaluit america/iqaluit est edt eastern standard time",
     curated: false,
   },
   {
     id: "Asia/Irkutsk",
     city: "Irkutsk",
-    keywords:
-      "irkutsk asia/irkutsk irkt (utc+08:00) irkutsk irkutsk standard time",
+    keywords: "irkutsk asia/irkutsk irkt irkutsk standard time",
     curated: false,
   },
   {
     id: "Europe/Isle_of_Man",
     city: "Isle of Man",
-    keywords:
-      "isle of man europe/isle_of_man gmt bst (utc+00:00) dublin, edinburgh, lisbon, london british standard time",
+    keywords: "isle of man europe/isle_of_man gmt bst british standard time",
     curated: false,
   },
   {
     id: "Europe/Istanbul",
     city: "Istanbul",
-    keywords:
-      "istanbul europe/istanbul trt (utc+03:00) istanbul turkey standard time",
+    keywords: "istanbul europe/istanbul trt turkey standard time",
     curated: true,
   },
   {
     id: "Asia/Jakarta",
     city: "Jakarta",
-    keywords:
-      "jakarta asia/jakarta wib (utc+7:00) western indonesia time western indonesia standard time",
+    keywords: "jakarta asia/jakarta wib western indonesia standard time",
     curated: true,
   },
   {
     id: "America/Jamaica",
     city: "Jamaica",
-    keywords:
-      "jamaica america/jamaica est (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "jamaica america/jamaica est eastern standard time",
     curated: true,
   },
   {
     id: "Asia/Jayapura",
     city: "Jayapura",
-    keywords:
-      "jayapura asia/jayapura wit (utc+9:00) eastern indonesia time eastern indonesia standard time",
+    keywords: "jayapura asia/jayapura wit eastern indonesia standard time",
     curated: false,
   },
   {
     id: "Europe/Jersey",
     city: "Jersey",
-    keywords:
-      "jersey europe/jersey gmt bst (utc+00:00) dublin, edinburgh, lisbon, london british standard time",
+    keywords: "jersey europe/jersey gmt bst british standard time",
     curated: false,
   },
   {
     id: "Asia/Jerusalem",
     city: "Jerusalem",
-    keywords:
-      "jerusalem asia/jerusalem ist idt (utc+02:00) jerusalem israel standard time",
+    keywords: "jerusalem asia/jerusalem ist idt israel standard time",
     curated: true,
   },
   {
     id: "Africa/Johannesburg",
     city: "Johannesburg",
     keywords:
-      "johannesburg africa/johannesburg sast (utc+02:00) harare, pretoria south africa standard time",
+      "johannesburg africa/johannesburg sast south africa standard time",
     curated: true,
   },
   {
     id: "Pacific/Johnston",
     city: "Johnston",
-    keywords:
-      "johnston pacific/johnston hast (utc-09:00) aleutian islands hawaii-aleutian standard time",
+    keywords: "johnston pacific/johnston hast hawaii-aleutian standard time",
     curated: false,
   },
   {
     id: "Africa/Juba",
     city: "Juba",
-    keywords:
-      "juba africa/juba cat (utc+02:00) windhoek central africa standard time",
+    keywords: "juba africa/juba cat central africa standard time",
     curated: false,
   },
   {
     id: "America/Jujuy",
     city: "Jujuy",
-    keywords:
-      "jujuy america/jujuy art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "jujuy america/jujuy art argentina standard time",
     curated: false,
   },
   {
     id: "America/Juneau",
     city: "Juneau",
-    keywords:
-      "juneau america/juneau akst akdt (utc-09:00) alaska alaska standard time",
+    keywords: "juneau america/juneau akst akdt alaska standard time",
     curated: false,
   },
   {
     id: "Asia/Kabul",
     city: "Kabul",
-    keywords:
-      "kabul asia/kabul aft (utc+04:30) kabul afghanistan standard time",
+    keywords: "kabul asia/kabul aft afghanistan standard time",
     curated: true,
   },
   {
     id: "Europe/Kaliningrad",
     city: "Kaliningrad",
     keywords:
-      "kaliningrad europe/kaliningrad eet (utc+2:00) eastern european time eastern european standard time",
+      "kaliningrad europe/kaliningrad eet eastern european standard time",
     curated: false,
   },
   {
     id: "Asia/Kamchatka",
     city: "Kamchatka",
     keywords:
-      "kamchatka asia/kamchatka pett (utc+12:00) anadyr, petropavlovsk-kamchatsky petropavlovsk-kamchatski standard time",
+      "kamchatka asia/kamchatka pett petropavlovsk-kamchatski standard time",
     curated: true,
   },
   {
     id: "Africa/Kampala",
     city: "Kampala",
-    keywords:
-      "kampala africa/kampala eat (utc+03:00) nairobi east africa standard time",
+    keywords: "kampala africa/kampala eat east africa standard time",
     curated: false,
   },
   {
     id: "Asia/Karachi",
     city: "Karachi",
-    keywords:
-      "karachi asia/karachi pkt (utc+05:00) islamabad, karachi pakistan standard time",
+    keywords: "karachi asia/karachi pkt pakistan standard time",
     curated: true,
   },
   {
     id: "Asia/Katmandu",
     city: "Katmandu",
-    keywords:
-      "katmandu asia/katmandu npt (utc+05:45) kathmandu nepal standard time",
+    keywords: "katmandu asia/katmandu npt nepal standard time",
     curated: false,
   },
   {
     id: "Indian/Kerguelen",
     city: "Kerguelen",
     keywords:
-      "kerguelen indian/kerguelen tft (utc+5:00) french southern & antarctic time french southern & antarctic standard time",
+      "kerguelen indian/kerguelen tft french southern & antarctic standard time",
     curated: false,
   },
   {
     id: "Asia/Khandyga",
     city: "Khandyga",
-    keywords:
-      "khandyga asia/khandyga yakt (utc+09:00) yakutsk yakutsk standard time",
+    keywords: "khandyga asia/khandyga yakt yakutsk standard time",
     curated: false,
   },
   {
     id: "Africa/Khartoum",
     city: "Khartoum",
-    keywords:
-      "khartoum africa/khartoum cat (utc+02:00) windhoek central africa standard time",
+    keywords: "khartoum africa/khartoum cat central africa standard time",
     curated: false,
   },
   {
     id: "Europe/Kiev",
     city: "Kiev",
-    keywords:
-      "kiev europe/kiev eet eest (utc+2:00) eastern european time eastern european standard time",
+    keywords: "kiev europe/kiev eet eest eastern european standard time",
     curated: false,
   },
   {
     id: "Africa/Kigali",
     city: "Kigali",
-    keywords:
-      "kigali africa/kigali cat (utc+02:00) windhoek central africa standard time",
+    keywords: "kigali africa/kigali cat central africa standard time",
     curated: false,
   },
   {
     id: "Africa/Kinshasa",
     city: "Kinshasa",
-    keywords:
-      "kinshasa africa/kinshasa wat (utc+01:00) west central africa west africa standard time",
+    keywords: "kinshasa africa/kinshasa wat west africa standard time",
     curated: false,
   },
   {
     id: "Pacific/Kiritimati",
     city: "Kiritimati",
-    keywords:
-      "kiritimati pacific/kiritimati lint (utc+14:00) kiritimati island line islands standard time",
+    keywords: "kiritimati pacific/kiritimati lint line islands standard time",
     curated: false,
   },
   {
     id: "Europe/Kirov",
     city: "Kirov",
-    keywords:
-      "kirov europe/kirov msk (utc+03:00) moscow, st. petersburg moscow standard time",
+    keywords: "kirov europe/kirov msk moscow standard time",
     curated: false,
   },
   {
     id: "America/Indiana/Knox",
     city: "Knox",
-    keywords:
-      "knox america/indiana/knox cst cdt (utc-06:00) central time (us & canada) central standard time",
+    keywords: "knox america/indiana/knox cst cdt central standard time",
     curated: false,
   },
   {
     id: "Pacific/Kosrae",
     city: "Kosrae",
-    keywords:
-      "kosrae pacific/kosrae kost (utc+11:00) kosrae time kosrae standard time",
+    keywords: "kosrae pacific/kosrae kost kosrae standard time",
     curated: false,
   },
   {
     id: "America/Kralendijk",
     city: "Kralendijk",
-    keywords:
-      "kralendijk america/kralendijk ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "kralendijk america/kralendijk ast atlantic standard time",
     curated: false,
   },
   {
     id: "Asia/Krasnoyarsk",
     city: "Krasnoyarsk",
-    keywords:
-      "krasnoyarsk asia/krasnoyarsk krat (utc+07:00) krasnoyarsk krasnoyarsk standard time",
+    keywords: "krasnoyarsk asia/krasnoyarsk krat krasnoyarsk standard time",
     curated: true,
   },
   {
     id: "Asia/Kuala_Lumpur",
     city: "Kuala Lumpur",
-    keywords:
-      "kuala lumpur asia/kuala_lumpur myt (utc+8:00) malaysia time malaysia standard time",
+    keywords: "kuala lumpur asia/kuala_lumpur myt malaysia standard time",
     curated: true,
   },
   {
     id: "Asia/Kuching",
     city: "Kuching",
-    keywords:
-      "kuching asia/kuching myt (utc+8:00) malaysia time malaysia standard time",
+    keywords: "kuching asia/kuching myt malaysia standard time",
     curated: false,
   },
   {
     id: "Asia/Kuwait",
     city: "Kuwait",
-    keywords:
-      "kuwait asia/kuwait ast (utc+03:00) kuwait, riyadh arabian standard time",
+    keywords: "kuwait asia/kuwait ast arabian standard time",
     curated: true,
   },
   {
     id: "Pacific/Kwajalein",
     city: "Kwajalein",
-    keywords:
-      "kwajalein pacific/kwajalein mht (utc+12:00) marshall islands time marshall islands standard time",
+    keywords: "kwajalein pacific/kwajalein mht marshall islands standard time",
     curated: false,
   },
   {
     id: "America/La_Paz",
     city: "La Paz",
-    keywords:
-      "la paz america/la_paz bot (utc+-4:00) bolivia time bolivia standard time",
+    keywords: "la paz america/la_paz bot bolivia standard time",
     curated: true,
   },
   {
     id: "America/Argentina/La_Rioja",
     city: "La Rioja",
-    keywords:
-      "la rioja america/argentina/la_rioja art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "la rioja america/argentina/la_rioja art argentina standard time",
     curated: false,
   },
   {
     id: "Africa/Lagos",
     city: "Lagos",
-    keywords:
-      "lagos africa/lagos wat (utc+01:00) west central africa west africa standard time",
+    keywords: "lagos africa/lagos wat west africa standard time",
     curated: true,
   },
   {
     id: "Africa/Libreville",
     city: "Libreville",
-    keywords:
-      "libreville africa/libreville wat (utc+01:00) west central africa west africa standard time",
+    keywords: "libreville africa/libreville wat west africa standard time",
     curated: false,
   },
   {
     id: "America/Lima",
     city: "Lima",
-    keywords: "lima america/lima pet (utc+-5:00) peru time peru standard time",
+    keywords: "lima america/lima pet peru standard time",
     curated: true,
   },
   {
     id: "Australia/Lindeman",
     city: "Lindeman",
-    keywords:
-      "lindeman australia/lindeman aest (utc+10:00) brisbane time brisbane standard time",
+    keywords: "lindeman australia/lindeman aest brisbane standard time",
     curated: false,
   },
   {
     id: "Europe/Lisbon",
     city: "Lisbon",
-    keywords:
-      "lisbon europe/lisbon wet west (utc+0:00) western european time western european standard time",
+    keywords: "lisbon europe/lisbon wet west western european standard time",
     curated: true,
   },
   {
     id: "Europe/Ljubljana",
     city: "Ljubljana",
     keywords:
-      "ljubljana europe/ljubljana cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "ljubljana europe/ljubljana cet cest central european standard time",
     curated: false,
   },
   {
     id: "Africa/Lome",
     city: "Lome",
-    keywords:
-      "lome africa/lome gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "lome africa/lome gmt greenwich mean standard time",
     curated: false,
   },
   {
     id: "Europe/London",
     city: "London",
-    keywords:
-      "london europe/london gmt bst (utc+00:00) dublin, edinburgh, lisbon, london british standard time",
+    keywords: "london europe/london gmt bst british standard time",
     curated: true,
   },
   {
     id: "Arctic/Longyearbyen",
     city: "Longyearbyen",
     keywords:
-      "longyearbyen arctic/longyearbyen cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "longyearbyen arctic/longyearbyen cet cest central european standard time",
     curated: false,
   },
   {
     id: "Australia/Lord_Howe",
     city: "Lord Howe",
-    keywords:
-      "lord howe australia/lord_howe lhst lhdt (utc+10:30) lord howe island lord howe standard time",
+    keywords: "lord howe australia/lord_howe lhst lhdt lord howe standard time",
     curated: false,
   },
   {
     id: "America/Los_Angeles",
     city: "Los Angeles",
-    keywords:
-      "los angeles america/los_angeles pst pdt (utc-08:00) pacific time (us & canada) pacific standard time",
+    keywords: "los angeles america/los_angeles pst pdt pacific standard time",
     curated: true,
   },
   {
     id: "America/Louisville",
     city: "Louisville",
-    keywords:
-      "louisville america/louisville est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "louisville america/louisville est edt eastern standard time",
     curated: false,
   },
   {
     id: "America/Lower_Princes",
     city: "Lower Princes",
-    keywords:
-      "lower princes america/lower_princes ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "lower princes america/lower_princes ast atlantic standard time",
     curated: false,
   },
   {
     id: "Africa/Luanda",
     city: "Luanda",
-    keywords:
-      "luanda africa/luanda wat (utc+01:00) west central africa west africa standard time",
+    keywords: "luanda africa/luanda wat west africa standard time",
     curated: false,
   },
   {
     id: "Africa/Lubumbashi",
     city: "Lubumbashi",
-    keywords:
-      "lubumbashi africa/lubumbashi cat (utc+02:00) windhoek central africa standard time",
+    keywords: "lubumbashi africa/lubumbashi cat central africa standard time",
     curated: false,
   },
   {
     id: "Africa/Lusaka",
     city: "Lusaka",
-    keywords:
-      "lusaka africa/lusaka cat (utc+02:00) windhoek central africa standard time",
+    keywords: "lusaka africa/lusaka cat central africa standard time",
     curated: false,
   },
   {
     id: "Europe/Luxembourg",
     city: "Luxembourg",
     keywords:
-      "luxembourg europe/luxembourg cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "luxembourg europe/luxembourg cet cest central european standard time",
     curated: false,
   },
   {
     id: "Asia/Macau",
     city: "Macau",
-    keywords:
-      "macau asia/macau cst (utc+08:00) beijing, chongqing, hong kong, urumqi china standard time",
+    keywords: "macau asia/macau cst china standard time",
     curated: true,
   },
   {
     id: "America/Maceio",
     city: "Maceio",
-    keywords:
-      "maceio america/maceio brt (utc-03:00) brasilia brasilia standard time",
+    keywords: "maceio america/maceio brt brasilia standard time",
     curated: false,
   },
   {
     id: "Antarctica/Macquarie",
     city: "Macquarie",
     keywords:
-      "macquarie antarctica/macquarie aest aedt (utc+10:00) canberra, melbourne, sydney eastern australia standard time",
+      "macquarie antarctica/macquarie aest aedt eastern australia standard time",
     curated: false,
   },
   {
     id: "Atlantic/Madeira",
     city: "Madeira",
     keywords:
-      "madeira atlantic/madeira wet west (utc+0:00) western european time western european standard time",
+      "madeira atlantic/madeira wet west western european standard time",
     curated: false,
   },
   {
     id: "Europe/Madrid",
     city: "Madrid",
-    keywords:
-      "madrid europe/madrid cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "madrid europe/madrid cet cest central european standard time",
     curated: true,
   },
   {
     id: "Asia/Magadan",
     city: "Magadan",
-    keywords:
-      "magadan asia/magadan magt (utc+11:00) magadan magadan standard time",
+    keywords: "magadan asia/magadan magt magadan standard time",
     curated: true,
   },
   {
     id: "Indian/Mahe",
     city: "Mahe",
-    keywords:
-      "mahe indian/mahe sct (utc+4:00) seychelles time seychelles standard time",
+    keywords: "mahe indian/mahe sct seychelles standard time",
     curated: false,
   },
   {
     id: "Pacific/Majuro",
     city: "Majuro",
-    keywords:
-      "majuro pacific/majuro mht (utc+12:00) marshall islands time marshall islands standard time",
+    keywords: "majuro pacific/majuro mht marshall islands standard time",
     curated: false,
   },
   {
     id: "Asia/Makassar",
     city: "Makassar",
-    keywords:
-      "makassar asia/makassar wita (utc+8:00) central indonesia time central indonesia standard time",
+    keywords: "makassar asia/makassar wita central indonesia standard time",
     curated: false,
   },
   {
     id: "Africa/Malabo",
     city: "Malabo",
-    keywords:
-      "malabo africa/malabo wat (utc+01:00) west central africa west africa standard time",
+    keywords: "malabo africa/malabo wat west africa standard time",
     curated: false,
   },
   {
     id: "Indian/Maldives",
     city: "Maldives",
-    keywords:
-      "maldives indian/maldives mvt (utc+5:00) maldives time maldives standard time",
+    keywords: "maldives indian/maldives mvt maldives standard time",
     curated: false,
   },
   {
     id: "Europe/Malta",
     city: "Malta",
-    keywords:
-      "malta europe/malta cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "malta europe/malta cet cest central european standard time",
     curated: false,
   },
   {
     id: "America/Managua",
     city: "Managua",
-    keywords:
-      "managua america/managua cst (utc-06:00) central time (us & canada) central standard time",
+    keywords: "managua america/managua cst central standard time",
     curated: false,
   },
   {
     id: "America/Manaus",
     city: "Manaus",
-    keywords:
-      "manaus america/manaus amt (utc-04:00) cuiaba amazon standard time",
+    keywords: "manaus america/manaus amt amazon standard time",
     curated: false,
   },
   {
     id: "Asia/Manila",
     city: "Manila",
-    keywords:
-      "manila asia/manila phst (utc+8:00) philippine time philippine standard time",
+    keywords: "manila asia/manila phst philippine standard time",
     curated: true,
   },
   {
     id: "Africa/Maputo",
     city: "Maputo",
-    keywords:
-      "maputo africa/maputo cat (utc+02:00) windhoek central africa standard time",
+    keywords: "maputo africa/maputo cat central africa standard time",
     curated: false,
   },
   {
     id: "America/Indiana/Marengo",
     city: "Marengo",
-    keywords:
-      "marengo america/indiana/marengo est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "marengo america/indiana/marengo est edt eastern standard time",
     curated: false,
   },
   {
     id: "Europe/Mariehamn",
     city: "Mariehamn",
     keywords:
-      "mariehamn europe/mariehamn eet eest (utc+2:00) eastern european time eastern european standard time",
+      "mariehamn europe/mariehamn eet eest eastern european standard time",
     curated: false,
   },
   {
     id: "America/Marigot",
     city: "Marigot",
-    keywords:
-      "marigot america/marigot ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "marigot america/marigot ast atlantic standard time",
     curated: false,
   },
   {
     id: "Pacific/Marquesas",
     city: "Marquesas",
-    keywords:
-      "marquesas pacific/marquesas mart (utc-09:30) marquesas islands marquesas standard time",
+    keywords: "marquesas pacific/marquesas mart marquesas standard time",
     curated: false,
   },
   {
     id: "America/Martinique",
     city: "Martinique",
-    keywords:
-      "martinique america/martinique ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "martinique america/martinique ast atlantic standard time",
     curated: false,
   },
   {
     id: "Africa/Maseru",
     city: "Maseru",
-    keywords:
-      "maseru africa/maseru sast (utc+02:00) harare, pretoria south africa standard time",
+    keywords: "maseru africa/maseru sast south africa standard time",
     curated: false,
   },
   {
     id: "America/Matamoros",
     city: "Matamoros",
-    keywords:
-      "matamoros america/matamoros cst cdt (utc-06:00) central time (us & canada) central standard time",
+    keywords: "matamoros america/matamoros cst cdt central standard time",
     curated: false,
   },
   {
     id: "Indian/Mauritius",
     city: "Mauritius",
-    keywords:
-      "mauritius indian/mauritius mut (utc+04:00) port louis mauritius standard time",
+    keywords: "mauritius indian/mauritius mut mauritius standard time",
     curated: true,
   },
   {
     id: "Antarctica/Mawson",
     city: "Mawson",
-    keywords:
-      "mawson antarctica/mawson mawt (utc+5:00) mawson time mawson standard time",
+    keywords: "mawson antarctica/mawson mawt mawson standard time",
     curated: false,
   },
   {
     id: "Indian/Mayotte",
     city: "Mayotte",
-    keywords:
-      "mayotte indian/mayotte eat (utc+03:00) nairobi east africa standard time",
+    keywords: "mayotte indian/mayotte eat east africa standard time",
     curated: false,
   },
   {
     id: "America/Mazatlan",
     city: "Mazatlan",
     keywords:
-      "mazatlan america/mazatlan hnpmx hepmx (utc-07:00) chihuahua, la paz, mazatlan mexican pacific standard time",
+      "mazatlan america/mazatlan hnpmx hepmx mexican pacific standard time",
     curated: false,
   },
   {
     id: "Africa/Mbabane",
     city: "Mbabane",
-    keywords:
-      "mbabane africa/mbabane sast (utc+02:00) harare, pretoria south africa standard time",
+    keywords: "mbabane africa/mbabane sast south africa standard time",
     curated: false,
   },
   {
     id: "Antarctica/McMurdo",
     city: "McMurdo",
-    keywords:
-      "mcmurdo antarctica/mcmurdo nzst nzdt (utc+12:00) auckland, wellington new zealand standard time",
+    keywords: "mcmurdo antarctica/mcmurdo nzst nzdt new zealand standard time",
     curated: false,
   },
   {
     id: "Australia/Melbourne",
     city: "Melbourne",
     keywords:
-      "melbourne australia/melbourne aest aedt (utc+10:00) canberra, melbourne, sydney eastern australia standard time",
+      "melbourne australia/melbourne aest aedt eastern australia standard time",
     curated: true,
   },
   {
     id: "America/Mendoza",
     city: "Mendoza",
-    keywords:
-      "mendoza america/mendoza art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "mendoza america/mendoza art argentina standard time",
     curated: false,
   },
   {
     id: "America/Menominee",
     city: "Menominee",
-    keywords:
-      "menominee america/menominee cst cdt (utc-06:00) central time (us & canada) central standard time",
+    keywords: "menominee america/menominee cst cdt central standard time",
     curated: false,
   },
   {
     id: "America/Merida",
     city: "Merida",
-    keywords:
-      "merida america/merida cst cdt (utc-06:00) guadalajara, mexico city, monterrey central mexico standard time",
+    keywords: "merida america/merida cst cdt central mexico standard time",
     curated: false,
   },
   {
     id: "America/Metlakatla",
     city: "Metlakatla",
-    keywords:
-      "metlakatla america/metlakatla akst akdt (utc-09:00) alaska alaska standard time",
+    keywords: "metlakatla america/metlakatla akst akdt alaska standard time",
     curated: false,
   },
   {
     id: "America/Mexico_City",
     city: "Mexico City",
     keywords:
-      "mexico city america/mexico_city cst cdt (utc-06:00) guadalajara, mexico city, monterrey central mexico standard time",
+      "mexico city america/mexico_city cst cdt central mexico standard time",
     curated: true,
   },
   {
     id: "Pacific/Midway",
     city: "Midway",
-    keywords: "midway pacific/midway sst (utc+13:00) samoa samoa standard time",
+    keywords: "midway pacific/midway sst samoa standard time",
     curated: false,
   },
   {
     id: "Europe/Minsk",
     city: "Minsk",
-    keywords:
-      "minsk europe/minsk msk (utc+03:00) moscow, st. petersburg moscow standard time",
+    keywords: "minsk europe/minsk msk moscow standard time",
     curated: true,
   },
   {
     id: "America/Miquelon",
     city: "Miquelon",
     keywords:
-      "miquelon america/miquelon hnpm hepm (utc-03:00) saint pierre and miquelon st. pierre & miquelon standard time",
+      "miquelon america/miquelon hnpm hepm st. pierre & miquelon standard time",
     curated: false,
   },
   {
     id: "Africa/Mogadishu",
     city: "Mogadishu",
-    keywords:
-      "mogadishu africa/mogadishu eat (utc+03:00) nairobi east africa standard time",
+    keywords: "mogadishu africa/mogadishu eat east africa standard time",
     curated: false,
   },
   {
     id: "Europe/Monaco",
     city: "Monaco",
-    keywords:
-      "monaco europe/monaco cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "monaco europe/monaco cet cest central european standard time",
     curated: false,
   },
   {
     id: "America/Moncton",
     city: "Moncton",
-    keywords:
-      "moncton america/moncton ast adt (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "moncton america/moncton ast adt atlantic standard time",
     curated: false,
   },
   {
     id: "Africa/Monrovia",
     city: "Monrovia",
-    keywords:
-      "monrovia africa/monrovia gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "monrovia africa/monrovia gmt greenwich mean standard time",
     curated: true,
   },
   {
     id: "America/Monterrey",
     city: "Monterrey",
     keywords:
-      "monterrey america/monterrey cst cdt (utc-06:00) guadalajara, mexico city, monterrey central mexico standard time",
+      "monterrey america/monterrey cst cdt central mexico standard time",
     curated: false,
   },
   {
     id: "America/Montevideo",
     city: "Montevideo",
-    keywords:
-      "montevideo america/montevideo uyt (utc-03:00) montevideo uruguay standard time",
+    keywords: "montevideo america/montevideo uyt uruguay standard time",
     curated: true,
   },
   {
     id: "America/Kentucky/Monticello",
     city: "Monticello",
     keywords:
-      "monticello america/kentucky/monticello est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+      "monticello america/kentucky/monticello est edt eastern standard time",
     curated: false,
   },
   {
     id: "America/Montreal",
     city: "Montreal",
-    keywords:
-      "montreal america/montreal est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "montreal america/montreal est edt eastern standard time",
     curated: false,
   },
   {
     id: "America/Montserrat",
     city: "Montserrat",
-    keywords:
-      "montserrat america/montserrat ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "montserrat america/montserrat ast atlantic standard time",
     curated: false,
   },
   {
     id: "Europe/Moscow",
     city: "Moscow",
-    keywords:
-      "moscow europe/moscow msk (utc+03:00) moscow, st. petersburg moscow standard time",
+    keywords: "moscow europe/moscow msk moscow standard time",
     curated: true,
   },
   {
     id: "Asia/Muscat",
     city: "Muscat",
-    keywords:
-      "muscat asia/muscat gst (utc+04:00) abu dhabi, muscat gulf standard time",
+    keywords: "muscat asia/muscat gst gulf standard time",
     curated: false,
   },
   {
     id: "Africa/Nairobi",
     city: "Nairobi",
-    keywords:
-      "nairobi africa/nairobi eat (utc+03:00) nairobi east africa standard time",
+    keywords: "nairobi africa/nairobi eat east africa standard time",
     curated: true,
   },
   {
     id: "America/Nassau",
     city: "Nassau",
-    keywords:
-      "nassau america/nassau est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "nassau america/nassau est edt eastern standard time",
     curated: false,
   },
   {
     id: "Pacific/Nauru",
     city: "Nauru",
-    keywords:
-      "nauru pacific/nauru nrt (utc+12:00) nauru time nauru standard time",
+    keywords: "nauru pacific/nauru nrt nauru standard time",
     curated: false,
   },
   {
     id: "Africa/Ndjamena",
     city: "Ndjamena",
-    keywords:
-      "ndjamena africa/ndjamena wat (utc+01:00) west central africa west africa standard time",
+    keywords: "ndjamena africa/ndjamena wat west africa standard time",
     curated: false,
   },
   {
     id: "America/North_Dakota/New_Salem",
     city: "New Salem",
     keywords:
-      "new salem america/north_dakota/new_salem cst cdt (utc-06:00) central time (us & canada) central standard time",
+      "new salem america/north_dakota/new_salem cst cdt central standard time",
     curated: false,
   },
   {
     id: "America/New_York",
     city: "New York",
-    keywords:
-      "new york america/new_york est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "new york america/new_york est edt eastern standard time",
     curated: true,
   },
   {
     id: "Africa/Niamey",
     city: "Niamey",
-    keywords:
-      "niamey africa/niamey wat (utc+01:00) west central africa west africa standard time",
+    keywords: "niamey africa/niamey wat west africa standard time",
     curated: false,
   },
   {
     id: "Asia/Nicosia",
     city: "Nicosia",
-    keywords:
-      "nicosia asia/nicosia eet eest (utc+2:00) eastern european time eastern european standard time",
+    keywords: "nicosia asia/nicosia eet eest eastern european standard time",
     curated: false,
   },
   {
     id: "Pacific/Niue",
     city: "Niue",
-    keywords: "niue pacific/niue nut (utc+-11:00) niue time niue standard time",
+    keywords: "niue pacific/niue nut niue standard time",
     curated: false,
   },
   {
     id: "America/Nome",
     city: "Nome",
-    keywords:
-      "nome america/nome akst akdt (utc-09:00) alaska alaska standard time",
+    keywords: "nome america/nome akst akdt alaska standard time",
     curated: false,
   },
   {
     id: "Pacific/Norfolk",
     city: "Norfolk",
-    keywords:
-      "norfolk pacific/norfolk nft nfdt (utc+11:00) norfolk island norfolk island standard time",
+    keywords: "norfolk pacific/norfolk nft nfdt norfolk island standard time",
     curated: false,
   },
   {
     id: "America/Noronha",
     city: "Noronha",
-    keywords:
-      "noronha america/noronha fnt (utc+-2:00) fernando de noronha time fernando de noronha standard time",
+    keywords: "noronha america/noronha fnt fernando de noronha standard time",
     curated: true,
   },
   {
     id: "Africa/Nouakchott",
     city: "Nouakchott",
-    keywords:
-      "nouakchott africa/nouakchott gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "nouakchott africa/nouakchott gmt greenwich mean standard time",
     curated: false,
   },
   {
     id: "Pacific/Noumea",
     city: "Noumea",
-    keywords:
-      "noumea pacific/noumea nct (utc+11:00) new caledonia time new caledonia standard time",
+    keywords: "noumea pacific/noumea nct new caledonia standard time",
     curated: true,
   },
   {
     id: "Asia/Novokuznetsk",
     city: "Novokuznetsk",
-    keywords:
-      "novokuznetsk asia/novokuznetsk krat (utc+07:00) krasnoyarsk krasnoyarsk standard time",
+    keywords: "novokuznetsk asia/novokuznetsk krat krasnoyarsk standard time",
     curated: false,
   },
   {
     id: "Asia/Novosibirsk",
     city: "Novosibirsk",
-    keywords:
-      "novosibirsk asia/novosibirsk novt (utc+07:00) novosibirsk novosibirsk standard time",
+    keywords: "novosibirsk asia/novosibirsk novt novosibirsk standard time",
     curated: false,
   },
   {
     id: "America/Ojinaga",
     city: "Ojinaga",
-    keywords:
-      "ojinaga america/ojinaga mst mdt (utc-07:00) mountain time (us & canada) mountain standard time",
+    keywords: "ojinaga america/ojinaga mst mdt mountain standard time",
     curated: false,
   },
   {
     id: "Asia/Omsk",
     city: "Omsk",
-    keywords: "omsk asia/omsk omst (utc+06:00) omsk omsk standard time",
+    keywords: "omsk asia/omsk omst omsk standard time",
     curated: true,
   },
   {
     id: "Asia/Oral",
     city: "Oral",
-    keywords:
-      "oral asia/oral almt (utc+05:00) ashgabat, tashkent west kazakhstan standard time",
+    keywords: "oral asia/oral almt west kazakhstan standard time",
     curated: false,
   },
   {
     id: "Europe/Oslo",
     city: "Oslo",
-    keywords:
-      "oslo europe/oslo cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "oslo europe/oslo cet cest central european standard time",
     curated: true,
   },
   {
     id: "Africa/Ouagadougou",
     city: "Ouagadougou",
-    keywords:
-      "ouagadougou africa/ouagadougou gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "ouagadougou africa/ouagadougou gmt greenwich mean standard time",
     curated: false,
   },
   {
     id: "Pacific/Pago_Pago",
     city: "Pago Pago",
-    keywords:
-      "pago pago pacific/pago_pago sst (utc+13:00) samoa samoa standard time",
+    keywords: "pago pago pacific/pago_pago sst samoa standard time",
     curated: true,
   },
   {
     id: "Pacific/Palau",
     city: "Palau",
-    keywords:
-      "palau pacific/palau pwt (utc+9:00) palau time palau standard time",
+    keywords: "palau pacific/palau pwt palau standard time",
     curated: false,
   },
   {
     id: "Antarctica/Palmer",
     city: "Palmer",
-    keywords:
-      "palmer antarctica/palmer art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "palmer antarctica/palmer art argentina standard time",
     curated: false,
   },
   {
     id: "America/Panama",
     city: "Panama",
-    keywords:
-      "panama america/panama est (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "panama america/panama est eastern standard time",
     curated: true,
   },
   {
     id: "America/Paramaribo",
     city: "Paramaribo",
-    keywords:
-      "paramaribo america/paramaribo srt (utc+-3:00) suriname time suriname standard time",
+    keywords: "paramaribo america/paramaribo srt suriname standard time",
     curated: false,
   },
   {
     id: "Europe/Paris",
     city: "Paris",
-    keywords:
-      "paris europe/paris cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "paris europe/paris cet cest central european standard time",
     curated: true,
   },
   {
     id: "Australia/Perth",
     city: "Perth",
-    keywords:
-      "perth australia/perth awst (utc+08:00) perth western australia standard time",
+    keywords: "perth australia/perth awst western australia standard time",
     curated: true,
   },
   {
     id: "America/Indiana/Petersburg",
     city: "Petersburg",
     keywords:
-      "petersburg america/indiana/petersburg est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+      "petersburg america/indiana/petersburg est edt eastern standard time",
     curated: false,
   },
   {
     id: "Asia/Phnom_Penh",
     city: "Phnom Penh",
-    keywords:
-      "phnom penh asia/phnom_penh ict (utc+07:00) bangkok, hanoi, jakarta indochina standard time",
+    keywords: "phnom penh asia/phnom_penh ict indochina standard time",
     curated: false,
   },
   {
     id: "America/Phoenix",
     city: "Phoenix",
-    keywords:
-      "phoenix america/phoenix mst (utc-07:00) mountain time (us & canada) mountain standard time",
+    keywords: "phoenix america/phoenix mst mountain standard time",
     curated: true,
   },
   {
     id: "Pacific/Pitcairn",
     city: "Pitcairn",
-    keywords:
-      "pitcairn pacific/pitcairn pst (utc-08:00) coordinated universal time-08 pitcairn standard time",
+    keywords: "pitcairn pacific/pitcairn pst pitcairn standard time",
     curated: false,
   },
   {
     id: "Europe/Podgorica",
     city: "Podgorica",
     keywords:
-      "podgorica europe/podgorica cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "podgorica europe/podgorica cet cest central european standard time",
     curated: false,
   },
   {
     id: "Pacific/Ponape",
     city: "Ponape",
-    keywords:
-      "ponape pacific/ponape pont (utc+11:00) ponape time ponape standard time",
+    keywords: "ponape pacific/ponape pont ponape standard time",
     curated: false,
   },
   {
     id: "Asia/Pontianak",
     city: "Pontianak",
-    keywords:
-      "pontianak asia/pontianak wib (utc+7:00) western indonesia time western indonesia standard time",
+    keywords: "pontianak asia/pontianak wib western indonesia standard time",
     curated: false,
   },
   {
     id: "Pacific/Port_Moresby",
     city: "Port Moresby",
     keywords:
-      "port moresby pacific/port_moresby pgt (utc+11:00) papua new guinea time papua new guinea standard time",
+      "port moresby pacific/port_moresby pgt papua new guinea standard time",
     curated: true,
   },
   {
     id: "America/Port_of_Spain",
     city: "Port of Spain",
-    keywords:
-      "port of spain america/port_of_spain ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "port of spain america/port_of_spain ast atlantic standard time",
     curated: false,
   },
   {
     id: "America/Port-au-Prince",
     city: "Port-au-Prince",
     keywords:
-      "port-au-prince america/port-au-prince est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+      "port-au-prince america/port-au-prince est edt eastern standard time",
     curated: false,
   },
   {
     id: "America/Porto_Velho",
     city: "Porto Velho",
-    keywords:
-      "porto velho america/porto_velho amt (utc-04:00) cuiaba amazon standard time",
+    keywords: "porto velho america/porto_velho amt amazon standard time",
     curated: false,
   },
   {
     id: "Africa/Porto-Novo",
     city: "Porto-Novo",
-    keywords:
-      "porto-novo africa/porto-novo wat (utc+01:00) west central africa west africa standard time",
+    keywords: "porto-novo africa/porto-novo wat west africa standard time",
     curated: false,
   },
   {
     id: "Europe/Prague",
     city: "Prague",
-    keywords:
-      "prague europe/prague cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "prague europe/prague cet cest central european standard time",
     curated: true,
   },
   {
     id: "America/Puerto_Rico",
     city: "Puerto Rico",
-    keywords:
-      "puerto rico america/puerto_rico ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "puerto rico america/puerto_rico ast atlantic standard time",
     curated: true,
   },
   {
     id: "America/Punta_Arenas",
     city: "Punta Arenas",
-    keywords:
-      "punta arenas america/punta_arenas clt (utc+-3:00) chile time chile standard time",
+    keywords: "punta arenas america/punta_arenas clt chile standard time",
     curated: false,
   },
   {
     id: "Asia/Pyongyang",
     city: "Pyongyang",
-    keywords:
-      "pyongyang asia/pyongyang kst (utc+09:00) seoul korean standard time",
+    keywords: "pyongyang asia/pyongyang kst korean standard time",
     curated: false,
   },
   {
     id: "Asia/Qatar",
     city: "Qatar",
-    keywords:
-      "qatar asia/qatar ast (utc+03:00) kuwait, riyadh arabian standard time",
+    keywords: "qatar asia/qatar ast arabian standard time",
     curated: true,
   },
   {
     id: "Asia/Qostanay",
     city: "Qostanay",
-    keywords:
-      "qostanay asia/qostanay almt (utc+06:00) astana east kazakhstan standard time",
+    keywords: "qostanay asia/qostanay almt east kazakhstan standard time",
     curated: false,
   },
   {
     id: "Asia/Qyzylorda",
     city: "Qyzylorda",
-    keywords:
-      "qyzylorda asia/qyzylorda almt (utc+05:00) ashgabat, tashkent west kazakhstan standard time",
+    keywords: "qyzylorda asia/qyzylorda almt west kazakhstan standard time",
     curated: false,
   },
   {
     id: "Asia/Rangoon",
     city: "Rangoon",
-    keywords:
-      "rangoon asia/rangoon mmt (utc+06:30) yangon (rangoon) myanmar standard time",
+    keywords: "rangoon asia/rangoon mmt myanmar standard time",
     curated: false,
   },
   {
     id: "America/Rankin_Inlet",
     city: "Rankin Inlet",
-    keywords:
-      "rankin inlet america/rankin_inlet cst cdt (utc-06:00) central time (us & canada) central standard time",
+    keywords: "rankin inlet america/rankin_inlet cst cdt central standard time",
     curated: false,
   },
   {
     id: "Pacific/Rarotonga",
     city: "Rarotonga",
-    keywords:
-      "rarotonga pacific/rarotonga ckt (utc+-10:00) cook islands time cook islands standard time",
+    keywords: "rarotonga pacific/rarotonga ckt cook islands standard time",
     curated: false,
   },
   {
     id: "America/Recife",
     city: "Recife",
-    keywords:
-      "recife america/recife brt (utc-03:00) brasilia brasilia standard time",
+    keywords: "recife america/recife brt brasilia standard time",
     curated: false,
   },
   {
     id: "America/Regina",
     city: "Regina",
-    keywords:
-      "regina america/regina cst (utc-06:00) central time (us & canada) central standard time",
+    keywords: "regina america/regina cst central standard time",
     curated: false,
   },
   {
     id: "America/Resolute",
     city: "Resolute",
-    keywords:
-      "resolute america/resolute cst cdt (utc-06:00) central time (us & canada) central standard time",
+    keywords: "resolute america/resolute cst cdt central standard time",
     curated: false,
   },
   {
     id: "Indian/Reunion",
     city: "Reunion",
-    keywords:
-      "reunion indian/reunion ret (utc+4:00) réunion time réunion standard time",
+    keywords: "reunion indian/reunion ret réunion standard time",
     curated: false,
   },
   {
     id: "Atlantic/Reykjavik",
     city: "Reykjavik",
-    keywords:
-      "reykjavik atlantic/reykjavik gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "reykjavik atlantic/reykjavik gmt greenwich mean standard time",
     curated: true,
   },
   {
     id: "Europe/Riga",
     city: "Riga",
-    keywords:
-      "riga europe/riga eet eest (utc+2:00) eastern european time eastern european standard time",
+    keywords: "riga europe/riga eet eest eastern european standard time",
     curated: true,
   },
   {
     id: "America/Rio_Branco",
     city: "Rio Branco",
-    keywords:
-      "rio branco america/rio_branco act (utc+-5:00) acre time acre standard time",
+    keywords: "rio branco america/rio_branco act acre standard time",
     curated: false,
   },
   {
     id: "America/Argentina/Rio_Gallegos",
     city: "Rio Gallegos",
     keywords:
-      "rio gallegos america/argentina/rio_gallegos art (utc-03:00) city of buenos aires argentina standard time",
+      "rio gallegos america/argentina/rio_gallegos art argentina standard time",
     curated: false,
   },
   {
     id: "Asia/Riyadh",
     city: "Riyadh",
-    keywords:
-      "riyadh asia/riyadh ast (utc+03:00) kuwait, riyadh arabian standard time",
+    keywords: "riyadh asia/riyadh ast arabian standard time",
     curated: true,
   },
   {
     id: "Europe/Rome",
     city: "Rome",
-    keywords:
-      "rome europe/rome cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "rome europe/rome cet cest central european standard time",
     curated: true,
   },
   {
     id: "Antarctica/Rothera",
     city: "Rothera",
-    keywords:
-      "rothera antarctica/rothera art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "rothera antarctica/rothera art argentina standard time",
     curated: false,
   },
   {
     id: "Asia/Saigon",
     city: "Saigon",
-    keywords:
-      "saigon asia/saigon ict (utc+07:00) bangkok, hanoi, jakarta indochina standard time",
+    keywords: "saigon asia/saigon ict indochina standard time",
     curated: false,
   },
   {
     id: "Pacific/Saipan",
     city: "Saipan",
-    keywords:
-      "saipan pacific/saipan chst (utc+10:00) guam, port moresby chamorro standard time",
+    keywords: "saipan pacific/saipan chst chamorro standard time",
     curated: false,
   },
   {
     id: "Asia/Sakhalin",
     city: "Sakhalin",
-    keywords:
-      "sakhalin asia/sakhalin sakt (utc+11:00) sakhalin sakhalin standard time",
+    keywords: "sakhalin asia/sakhalin sakt sakhalin standard time",
     curated: false,
   },
   {
     id: "America/Argentina/Salta",
     city: "Salta",
-    keywords:
-      "salta america/argentina/salta art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "salta america/argentina/salta art argentina standard time",
     curated: false,
   },
   {
     id: "Europe/Samara",
     city: "Samara",
-    keywords:
-      "samara europe/samara samt (utc+04:00) izhevsk, samara samara standard time",
+    keywords: "samara europe/samara samt samara standard time",
     curated: false,
   },
   {
     id: "Asia/Samarkand",
     city: "Samarkand",
-    keywords:
-      "samarkand asia/samarkand uzt (utc+5:00) uzbekistan time uzbekistan standard time",
+    keywords: "samarkand asia/samarkand uzt uzbekistan standard time",
     curated: false,
   },
   {
     id: "America/Argentina/San_Juan",
     city: "San Juan",
-    keywords:
-      "san juan america/argentina/san_juan art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "san juan america/argentina/san_juan art argentina standard time",
     curated: false,
   },
   {
     id: "America/Argentina/San_Luis",
     city: "San Luis",
-    keywords:
-      "san luis america/argentina/san_luis art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "san luis america/argentina/san_luis art argentina standard time",
     curated: false,
   },
   {
     id: "Europe/San_Marino",
     city: "San Marino",
     keywords:
-      "san marino europe/san_marino cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "san marino europe/san_marino cet cest central european standard time",
     curated: false,
   },
   {
     id: "America/Santa_Isabel",
     city: "Santa Isabel",
-    keywords:
-      "santa isabel america/santa_isabel pst pdt (utc-08:00) pacific time (us & canada) pacific standard time",
+    keywords: "santa isabel america/santa_isabel pst pdt pacific standard time",
     curated: false,
   },
   {
     id: "America/Santarem",
     city: "Santarem",
-    keywords:
-      "santarem america/santarem brt (utc-03:00) brasilia brasilia standard time",
+    keywords: "santarem america/santarem brt brasilia standard time",
     curated: false,
   },
   {
     id: "America/Santiago",
     city: "Santiago",
-    keywords:
-      "santiago america/santiago clt clst (utc+-3:00) chile time chile standard time",
+    keywords: "santiago america/santiago clt clst chile standard time",
     curated: true,
   },
   {
     id: "America/Santo_Domingo",
     city: "Santo Domingo",
-    keywords:
-      "santo domingo america/santo_domingo ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "santo domingo america/santo_domingo ast atlantic standard time",
     curated: true,
   },
   {
     id: "America/Sao_Paulo",
     city: "Sao Paulo",
-    keywords:
-      "sao paulo america/sao_paulo brt (utc-03:00) brasilia brasilia standard time",
+    keywords: "sao paulo america/sao_paulo brt brasilia standard time",
     curated: true,
   },
   {
     id: "Africa/Sao_Tome",
     city: "Sao Tome",
-    keywords:
-      "sao tome africa/sao_tome gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "sao tome africa/sao_tome gmt greenwich mean standard time",
     curated: false,
   },
   {
     id: "Europe/Sarajevo",
     city: "Sarajevo",
     keywords:
-      "sarajevo europe/sarajevo cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "sarajevo europe/sarajevo cet cest central european standard time",
     curated: false,
   },
   {
     id: "Europe/Saratov",
     city: "Saratov",
-    keywords:
-      "saratov europe/saratov samt (utc+04:00) izhevsk, samara samara standard time",
+    keywords: "saratov europe/saratov samt samara standard time",
     curated: false,
   },
   {
     id: "America/Scoresbysund",
     city: "Scoresbysund",
     keywords:
-      "scoresbysund america/scoresbysund hneg heeg (utc+0:00) east greenland time east greenland standard time",
+      "scoresbysund america/scoresbysund hneg heeg east greenland standard time",
     curated: false,
   },
   {
     id: "Asia/Seoul",
     city: "Seoul",
-    keywords: "seoul asia/seoul kst (utc+09:00) seoul korean standard time",
+    keywords: "seoul asia/seoul kst korean standard time",
     curated: true,
   },
   {
     id: "Asia/Shanghai",
     city: "Shanghai",
-    keywords:
-      "shanghai asia/shanghai cst (utc+08:00) beijing, chongqing, hong kong, urumqi china standard time",
+    keywords: "shanghai asia/shanghai cst china standard time",
     curated: true,
   },
   {
     id: "Europe/Simferopol",
     city: "Simferopol",
     keywords:
-      "simferopol europe/simferopol eet eest (utc+2:00) eastern european time eastern european standard time",
+      "simferopol europe/simferopol eet eest eastern european standard time",
     curated: false,
   },
   {
     id: "Asia/Singapore",
     city: "Singapore",
-    keywords:
-      "singapore asia/singapore sgt (utc+08:00) kuala lumpur, singapore singapore standard time",
+    keywords: "singapore asia/singapore sgt singapore standard time",
     curated: true,
   },
   {
     id: "America/Sitka",
     city: "Sitka",
-    keywords:
-      "sitka america/sitka akst akdt (utc-09:00) alaska alaska standard time",
+    keywords: "sitka america/sitka akst akdt alaska standard time",
     curated: false,
   },
   {
     id: "Europe/Skopje",
     city: "Skopje",
-    keywords:
-      "skopje europe/skopje cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "skopje europe/skopje cet cest central european standard time",
     curated: false,
   },
   {
     id: "Europe/Sofia",
     city: "Sofia",
-    keywords:
-      "sofia europe/sofia eet eest (utc+2:00) eastern european time eastern european standard time",
+    keywords: "sofia europe/sofia eet eest eastern european standard time",
     curated: true,
   },
   {
     id: "Atlantic/South_Georgia",
     city: "South Georgia",
     keywords:
-      "south georgia atlantic/south_georgia gst (utc+-2:00) south georgia time south georgia standard time",
+      "south georgia atlantic/south_georgia gst south georgia standard time",
     curated: true,
   },
   {
     id: "Asia/Srednekolymsk",
     city: "Srednekolymsk",
     keywords:
-      "srednekolymsk asia/srednekolymsk sret (utc+11:00) chokurdakh srednekolymsk standard time",
+      "srednekolymsk asia/srednekolymsk sret srednekolymsk standard time",
     curated: false,
   },
   {
     id: "America/St_Barthelemy",
     city: "St Barthelemy",
-    keywords:
-      "st barthelemy america/st_barthelemy ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "st barthelemy america/st_barthelemy ast atlantic standard time",
     curated: false,
   },
   {
     id: "Atlantic/St_Helena",
     city: "St Helena",
-    keywords:
-      "st helena atlantic/st_helena gmt (utc) coordinated universal time greenwich mean standard time",
+    keywords: "st helena atlantic/st_helena gmt greenwich mean standard time",
     curated: false,
   },
   {
     id: "America/St_Johns",
     city: "St Johns",
-    keywords:
-      "st johns america/st_johns hntn hetn (utc-03:30) newfoundland newfoundland standard time",
+    keywords: "st johns america/st_johns hntn hetn newfoundland standard time",
     curated: true,
   },
   {
     id: "America/St_Kitts",
     city: "St Kitts",
-    keywords:
-      "st kitts america/st_kitts ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "st kitts america/st_kitts ast atlantic standard time",
     curated: false,
   },
   {
     id: "America/St_Lucia",
     city: "St Lucia",
-    keywords:
-      "st lucia america/st_lucia ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "st lucia america/st_lucia ast atlantic standard time",
     curated: false,
   },
   {
     id: "America/St_Thomas",
     city: "St Thomas",
-    keywords:
-      "st thomas america/st_thomas ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "st thomas america/st_thomas ast atlantic standard time",
     curated: false,
   },
   {
     id: "America/St_Vincent",
     city: "St Vincent",
-    keywords:
-      "st vincent america/st_vincent ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "st vincent america/st_vincent ast atlantic standard time",
     curated: false,
   },
   {
     id: "Atlantic/Stanley",
     city: "Stanley",
-    keywords:
-      "stanley atlantic/stanley fkst (utc+-3:00) falkland islands time falkland islands standard time",
+    keywords: "stanley atlantic/stanley fkst falkland islands standard time",
     curated: false,
   },
   {
     id: "Europe/Stockholm",
     city: "Stockholm",
     keywords:
-      "stockholm europe/stockholm cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+      "stockholm europe/stockholm cet cest central european standard time",
     curated: true,
   },
   {
     id: "America/Swift_Current",
     city: "Swift Current",
-    keywords:
-      "swift current america/swift_current cst (utc-06:00) central time (us & canada) central standard time",
+    keywords: "swift current america/swift_current cst central standard time",
     curated: false,
   },
   {
     id: "Australia/Sydney",
     city: "Sydney",
     keywords:
-      "sydney australia/sydney aest aedt (utc+10:00) canberra, melbourne, sydney eastern australia standard time",
+      "sydney australia/sydney aest aedt eastern australia standard time",
     curated: true,
   },
   {
     id: "Antarctica/Syowa",
     city: "Syowa",
-    keywords:
-      "syowa antarctica/syowa ast (utc+03:00) kuwait, riyadh arabian standard time",
+    keywords: "syowa antarctica/syowa ast arabian standard time",
     curated: false,
   },
   {
     id: "Pacific/Tahiti",
     city: "Tahiti",
-    keywords:
-      "tahiti pacific/tahiti taht (utc+-10:00) tahiti time tahiti standard time",
+    keywords: "tahiti pacific/tahiti taht tahiti standard time",
     curated: false,
   },
   {
     id: "Asia/Taipei",
     city: "Taipei",
-    keywords: "taipei asia/taipei cst (utc+08:00) taipei taipei standard time",
+    keywords: "taipei asia/taipei cst taipei standard time",
     curated: true,
   },
   {
     id: "Europe/Tallinn",
     city: "Tallinn",
-    keywords:
-      "tallinn europe/tallinn eet eest (utc+2:00) eastern european time eastern european standard time",
+    keywords: "tallinn europe/tallinn eet eest eastern european standard time",
     curated: true,
   },
   {
     id: "Pacific/Tarawa",
     city: "Tarawa",
-    keywords:
-      "tarawa pacific/tarawa gilt (utc+12:00) gilbert islands time gilbert islands standard time",
+    keywords: "tarawa pacific/tarawa gilt gilbert islands standard time",
     curated: false,
   },
   {
     id: "Asia/Tashkent",
     city: "Tashkent",
-    keywords:
-      "tashkent asia/tashkent uzt (utc+5:00) uzbekistan time uzbekistan standard time",
+    keywords: "tashkent asia/tashkent uzt uzbekistan standard time",
     curated: true,
   },
   {
     id: "Asia/Tbilisi",
     city: "Tbilisi",
-    keywords:
-      "tbilisi asia/tbilisi get (utc+04:00) tbilisi georgia standard time",
+    keywords: "tbilisi asia/tbilisi get georgia standard time",
     curated: true,
   },
   {
     id: "America/Tegucigalpa",
     city: "Tegucigalpa",
-    keywords:
-      "tegucigalpa america/tegucigalpa cst (utc-06:00) central time (us & canada) central standard time",
+    keywords: "tegucigalpa america/tegucigalpa cst central standard time",
     curated: false,
   },
   {
     id: "Asia/Tehran",
     city: "Tehran",
-    keywords: "tehran asia/tehran irst (utc+03:30) tehran iran standard time",
+    keywords: "tehran asia/tehran irst iran standard time",
     curated: true,
   },
   {
     id: "America/Indiana/Tell_City",
     city: "Tell City",
     keywords:
-      "tell city america/indiana/tell_city cst cdt (utc-06:00) central time (us & canada) central standard time",
+      "tell city america/indiana/tell_city cst cdt central standard time",
     curated: false,
   },
   {
     id: "Asia/Thimphu",
     city: "Thimphu",
-    keywords:
-      "thimphu asia/thimphu bt (utc+6:00) bhutan time bhutan standard time",
+    keywords: "thimphu asia/thimphu bt bhutan standard time",
     curated: false,
   },
   {
     id: "America/Thule",
     city: "Thule",
-    keywords:
-      "thule america/thule ast adt (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "thule america/thule ast adt atlantic standard time",
     curated: false,
   },
   {
     id: "America/Tijuana",
     city: "Tijuana",
-    keywords:
-      "tijuana america/tijuana pst pdt (utc-08:00) pacific time (us & canada) pacific standard time",
+    keywords: "tijuana america/tijuana pst pdt pacific standard time",
     curated: true,
   },
   {
     id: "Europe/Tirane",
     city: "Tirane",
-    keywords:
-      "tirane europe/tirane cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "tirane europe/tirane cet cest central european standard time",
     curated: false,
   },
   {
     id: "Asia/Tokyo",
     city: "Tokyo",
-    keywords:
-      "tokyo asia/tokyo jst (utc+09:00) osaka, sapporo, tokyo japan standard time",
+    keywords: "tokyo asia/tokyo jst japan standard time",
     curated: true,
   },
   {
     id: "Asia/Tomsk",
     city: "Tomsk",
-    keywords: "tomsk asia/tomsk omst (utc+06:00) omsk omsk standard time",
+    keywords: "tomsk asia/tomsk omst omsk standard time",
     curated: false,
   },
   {
     id: "Pacific/Tongatapu",
     city: "Tongatapu",
-    keywords:
-      "tongatapu pacific/tongatapu tot (utc+13:00) nuku'alofa tonga standard time",
+    keywords: "tongatapu pacific/tongatapu tot tonga standard time",
     curated: true,
   },
   {
     id: "America/Toronto",
     city: "Toronto",
-    keywords:
-      "toronto america/toronto est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "toronto america/toronto est edt eastern standard time",
     curated: true,
   },
   {
     id: "America/Tortola",
     city: "Tortola",
-    keywords:
-      "tortola america/tortola ast (utc-04:00) atlantic time (canada) atlantic standard time",
+    keywords: "tortola america/tortola ast atlantic standard time",
     curated: false,
   },
   {
     id: "Africa/Tripoli",
     city: "Tripoli",
-    keywords:
-      "tripoli africa/tripoli eet (utc+2:00) eastern european time eastern european standard time",
+    keywords: "tripoli africa/tripoli eet eastern european standard time",
     curated: false,
   },
   {
     id: "Antarctica/Troll",
     city: "Troll",
-    keywords:
-      "troll antarctica/troll gmt (utc+0:00) troll time troll standard time",
+    keywords: "troll antarctica/troll gmt troll standard time",
     curated: false,
   },
   {
     id: "Pacific/Truk",
     city: "Truk",
-    keywords:
-      "truk pacific/truk chut (utc+10:00) chuuk time chuuk standard time",
+    keywords: "truk pacific/truk chut chuuk standard time",
     curated: false,
   },
   {
     id: "America/Argentina/Tucuman",
     city: "Tucuman",
-    keywords:
-      "tucuman america/argentina/tucuman art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "tucuman america/argentina/tucuman art argentina standard time",
     curated: false,
   },
   {
     id: "Africa/Tunis",
     city: "Tunis",
-    keywords:
-      "tunis africa/tunis cet (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "tunis africa/tunis cet central european standard time",
     curated: true,
   },
   {
     id: "Asia/Ulaanbaatar",
     city: "Ulaanbaatar",
-    keywords:
-      "ulaanbaatar asia/ulaanbaatar ulat (utc+08:00) ulaanbaatar ulaanbaatar standard time",
+    keywords: "ulaanbaatar asia/ulaanbaatar ulat ulaanbaatar standard time",
     curated: false,
   },
   {
     id: "Europe/Ulyanovsk",
     city: "Ulyanovsk",
-    keywords:
-      "ulyanovsk europe/ulyanovsk msk (utc+03:00) moscow, st. petersburg moscow standard time",
+    keywords: "ulyanovsk europe/ulyanovsk msk moscow standard time",
     curated: false,
   },
   {
     id: "Asia/Urumqi",
     city: "Urumqi",
-    keywords:
-      "urumqi asia/urumqi cst (utc+08:00) beijing, chongqing, hong kong, urumqi china standard time",
+    keywords: "urumqi asia/urumqi cst china standard time",
     curated: false,
   },
   {
     id: "America/Argentina/Ushuaia",
     city: "Ushuaia",
-    keywords:
-      "ushuaia america/argentina/ushuaia art (utc-03:00) city of buenos aires argentina standard time",
+    keywords: "ushuaia america/argentina/ushuaia art argentina standard time",
     curated: false,
   },
   {
     id: "Asia/Ust-Nera",
     city: "Ust-Nera",
-    keywords:
-      "ust-nera asia/ust-nera vlat (utc+10:00) vladivostok vladivostok standard time",
+    keywords: "ust-nera asia/ust-nera vlat vladivostok standard time",
     curated: false,
   },
   {
     id: "Europe/Vaduz",
     city: "Vaduz",
-    keywords:
-      "vaduz europe/vaduz cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "vaduz europe/vaduz cet cest central european standard time",
     curated: false,
   },
   {
     id: "America/Vancouver",
     city: "Vancouver",
-    keywords:
-      "vancouver america/vancouver pst pdt (utc-08:00) pacific time (us & canada) pacific standard time",
+    keywords: "vancouver america/vancouver pst pdt pacific standard time",
     curated: true,
   },
   {
     id: "Europe/Vatican",
     city: "Vatican",
-    keywords:
-      "vatican europe/vatican cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "vatican europe/vatican cet cest central european standard time",
     curated: false,
   },
   {
     id: "America/Indiana/Vevay",
     city: "Vevay",
-    keywords:
-      "vevay america/indiana/vevay est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "vevay america/indiana/vevay est edt eastern standard time",
     curated: false,
   },
   {
     id: "Europe/Vienna",
     city: "Vienna",
-    keywords:
-      "vienna europe/vienna cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "vienna europe/vienna cet cest central european standard time",
     curated: true,
   },
   {
     id: "Asia/Vientiane",
     city: "Vientiane",
-    keywords:
-      "vientiane asia/vientiane ict (utc+07:00) bangkok, hanoi, jakarta indochina standard time",
+    keywords: "vientiane asia/vientiane ict indochina standard time",
     curated: false,
   },
   {
     id: "Europe/Vilnius",
     city: "Vilnius",
-    keywords:
-      "vilnius europe/vilnius eet eest (utc+2:00) eastern european time eastern european standard time",
+    keywords: "vilnius europe/vilnius eet eest eastern european standard time",
     curated: true,
   },
   {
     id: "America/Indiana/Vincennes",
     city: "Vincennes",
     keywords:
-      "vincennes america/indiana/vincennes est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+      "vincennes america/indiana/vincennes est edt eastern standard time",
     curated: false,
   },
   {
     id: "Asia/Vladivostok",
     city: "Vladivostok",
-    keywords:
-      "vladivostok asia/vladivostok vlat (utc+10:00) vladivostok vladivostok standard time",
+    keywords: "vladivostok asia/vladivostok vlat vladivostok standard time",
     curated: false,
   },
   {
     id: "Europe/Volgograd",
     city: "Volgograd",
-    keywords:
-      "volgograd europe/volgograd msk (utc+03:00) moscow, st. petersburg moscow standard time",
+    keywords: "volgograd europe/volgograd msk moscow standard time",
     curated: false,
   },
   {
     id: "Antarctica/Vostok",
     city: "Vostok",
-    keywords:
-      "vostok antarctica/vostok msk+4 (utc+6:00) vostok time vostok standard time",
+    keywords: "vostok antarctica/vostok msk+4 vostok standard time",
     curated: false,
   },
   {
     id: "Pacific/Wake",
     city: "Wake",
-    keywords:
-      "wake pacific/wake wakt (utc+12:00) wake island time wake island standard time",
+    keywords: "wake pacific/wake wakt wake island standard time",
     curated: false,
   },
   {
     id: "Pacific/Wallis",
     city: "Wallis",
-    keywords:
-      "wallis pacific/wallis wft (utc+12:00) wallis & futuna time wallis & futuna standard time",
+    keywords: "wallis pacific/wallis wft wallis & futuna standard time",
     curated: false,
   },
   {
     id: "Europe/Warsaw",
     city: "Warsaw",
-    keywords:
-      "warsaw europe/warsaw cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "warsaw europe/warsaw cet cest central european standard time",
     curated: true,
   },
   {
     id: "America/Whitehorse",
     city: "Whitehorse",
-    keywords:
-      "whitehorse america/whitehorse mst (utc-07:00) mountain time (us & canada) mountain standard time",
+    keywords: "whitehorse america/whitehorse mst mountain standard time",
     curated: false,
   },
   {
     id: "America/Indiana/Winamac",
     city: "Winamac",
-    keywords:
-      "winamac america/indiana/winamac est edt (utc-05:00) eastern time (us & canada) eastern standard time",
+    keywords: "winamac america/indiana/winamac est edt eastern standard time",
     curated: false,
   },
   {
     id: "Africa/Windhoek",
     city: "Windhoek",
-    keywords:
-      "windhoek africa/windhoek cat (utc+02:00) windhoek central africa standard time",
+    keywords: "windhoek africa/windhoek cat central africa standard time",
     curated: false,
   },
   {
     id: "America/Winnipeg",
     city: "Winnipeg",
-    keywords:
-      "winnipeg america/winnipeg cst cdt (utc-06:00) central time (us & canada) central standard time",
+    keywords: "winnipeg america/winnipeg cst cdt central standard time",
     curated: true,
   },
   {
     id: "America/Yakutat",
     city: "Yakutat",
-    keywords:
-      "yakutat america/yakutat akst akdt (utc-09:00) alaska alaska standard time",
+    keywords: "yakutat america/yakutat akst akdt alaska standard time",
     curated: false,
   },
   {
     id: "Asia/Yakutsk",
     city: "Yakutsk",
-    keywords:
-      "yakutsk asia/yakutsk yakt (utc+09:00) yakutsk yakutsk standard time",
+    keywords: "yakutsk asia/yakutsk yakt yakutsk standard time",
     curated: true,
   },
   {
     id: "Asia/Yekaterinburg",
     city: "Yekaterinburg",
     keywords:
-      "yekaterinburg asia/yekaterinburg yekt (utc+05:00) ekaterinburg yekaterinburg standard time",
+      "yekaterinburg asia/yekaterinburg yekt yekaterinburg standard time",
     curated: true,
   },
   {
     id: "Asia/Yerevan",
     city: "Yerevan",
-    keywords:
-      "yerevan asia/yerevan amt (utc+04:00) yerevan armenia standard time",
+    keywords: "yerevan asia/yerevan amt armenia standard time",
     curated: true,
   },
   {
     id: "Europe/Zagreb",
     city: "Zagreb",
-    keywords:
-      "zagreb europe/zagreb cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "zagreb europe/zagreb cet cest central european standard time",
     curated: false,
   },
   {
     id: "Europe/Zurich",
     city: "Zurich",
-    keywords:
-      "zurich europe/zurich cet cest (utc+01:00) brussels, copenhagen, madrid, paris central european standard time",
+    keywords: "zurich europe/zurich cet cest central european standard time",
     curated: true,
   },
 ];
