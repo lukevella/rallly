@@ -21,6 +21,7 @@ import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { usePreferences } from "@/contexts/preferences";
 import { Trans } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
+import { useTimezone } from "@/lib/timezone/client/context";
 import { useDayjs } from "@/utils/dayjs";
 
 const formSchema = z.object({
@@ -30,7 +31,8 @@ const formSchema = z.object({
 });
 
 export const DateTimePreferences = () => {
-  const { timeFormat, weekStart, timeZone } = useDayjs();
+  const { timezone } = useTimezone();
+  const { timeFormat, weekStart } = useDayjs();
   const { updatePreferences } = usePreferences();
 
   const form = useForm({
@@ -38,7 +40,7 @@ export const DateTimePreferences = () => {
     defaultValues: {
       timeFormat,
       weekStart,
-      timeZone,
+      timeZone: timezone,
     },
   });
 
