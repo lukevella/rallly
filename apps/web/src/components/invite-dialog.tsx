@@ -1,4 +1,4 @@
-import { Button } from "@rallly/ui/button";
+import { Button, buttonVariants } from "@rallly/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -86,11 +86,13 @@ export const InviteDialog = () => {
           <div className="flex gap-2">
             <CopyInviteLinkButton />
             <div className="shrink-0">
-              <Button asChild>
-                <Link target="_blank" href={`/invite/${poll.id}`}>
-                  <ArrowUpRightIcon className="size-4" />
-                </Link>
-              </Button>
+              <Link
+                target="_blank"
+                href={`/invite/${poll.id}`}
+                className={buttonVariants()}
+              >
+                <ArrowUpRightIcon className="size-4" />
+              </Link>
             </div>
           </div>
         </div>

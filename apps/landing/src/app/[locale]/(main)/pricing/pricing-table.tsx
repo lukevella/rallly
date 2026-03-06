@@ -12,7 +12,7 @@ import {
   BillingPlanPrice,
   BillingPlanTitle,
 } from "@rallly/ui/billing-plan";
-import { Button } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/tabs";
 import Link from "next/link";
 import React from "react";
@@ -71,16 +71,17 @@ export function PriceTables() {
             </BillingPlanPeriod>
           </div>
           <hr />
-          <Button asChild className="w-full">
-            <Link href={linkToApp("/")}>
-              <Trans
-                t={t}
-                ns="common"
-                i18nKey="getStarted"
-                defaults="Get started"
-              />
-            </Link>
-          </Button>
+          <Link
+            href={linkToApp("/")}
+            className={buttonVariants({ className: "w-full" })}
+          >
+            <Trans
+              t={t}
+              ns="common"
+              i18nKey="getStarted"
+              defaults="Get started"
+            />
+          </Link>
           <BillingPlanPerks>
             <BillingPlanPerk>
               <Trans
@@ -152,16 +153,20 @@ export function PriceTables() {
             </BillingPlanPeriod>
           </TabsContent>
           <hr />
-          <Button asChild variant="primary" className="w-full">
-            <Link href={linkToApp("/settings/billing")}>
-              <Trans
-                t={t}
-                ns="pricing"
-                i18nKey="upgrade"
-                defaults="Go to billing"
-              />
-            </Link>
-          </Button>
+          <Link
+            href={linkToApp("/settings/billing")}
+            className={buttonVariants({
+              variant: "primary",
+              className: "w-full",
+            })}
+          >
+            <Trans
+              t={t}
+              ns="pricing"
+              i18nKey="upgrade"
+              defaults="Go to billing"
+            />
+          </Link>
           <BillingPlanPerks>
             <BillingPlanPerk pro={true}>
               <Trans

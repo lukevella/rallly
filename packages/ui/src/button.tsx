@@ -1,9 +1,9 @@
 "use client";
-import { Slot } from "@radix-ui/react-slot";
+import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { Loader2Icon } from "lucide-react";
-import * as React from "react";
+import type * as React from "react";
 
 import { cn } from "./lib/utils";
 
@@ -32,6 +32,10 @@ const buttonVariants = cva(
         lg: "h-12 gap-x-3 rounded-lg px-4 text-base",
         icon: "size-7 gap-x-1.5 rounded-lg text-sm",
         "icon-lg": "size-8 rounded-full",
+        "icon-xs":
+          "size-6 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),10px)] [&_svg:not([class*='size-'])]:size-3",
+        "icon-sm":
+          "size-7 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),12px)]",
       },
     },
     defaultVariants: {
@@ -44,48 +48,39 @@ const buttonVariants = cva(
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
   loading?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      loading,
-      children,
-      variant,
-      type = "button",
-      size,
-      asChild = false,
-      ...props
-    },
-    ref,
-  ) => {
-    const Comp = asChild ? Slot : "button";
-    return (
-      <Comp
-        className={cn(
-          "group",
-          buttonVariants({ variant, size }),
-          {
-            "pointer-events-none": loading,
-          },
-          className,
-        )}
-        ref={ref}
-        type={type}
-        {...props}
-      >
-        {loading ? (
-          <Loader2Icon className="size-4 animate-spin opacity-75" />
-        ) : (
-          children
-        )}
-      </Comp>
-    );
-  },
-);
+const Button = ({
+  className,
+  loading,
+  children,
+  variant,
+  size,
+  ...props
+}: ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants> & { loading?: boolean }) => {
+  return (
+    <ButtonPrimitive
+      className={cn(
+        "group",
+        buttonVariants({ variant, size }),
+        {
+          "pointer-events-none": loading,
+        },
+        className,
+      )}
+      {...props}
+    >
+      {loading ? (
+        <Loader2Icon className="size-4 animate-spin opacity-75" />
+      ) : (
+        children
+      )}
+    </ButtonPrimitive>
+  );
+};
+
 Button.displayName = "Button";
 
 export { Button, buttonVariants };

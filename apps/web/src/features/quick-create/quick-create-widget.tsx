@@ -1,4 +1,4 @@
-import { Button } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { CheckIcon, PlusIcon, ZapIcon } from "lucide-react";
 import Link from "next/link";
@@ -68,19 +68,20 @@ export async function QuickCreateWidget() {
           </div>
         ) : null}
         <div>
-          <Button asChild size="lg" className="w-full">
-            <Link href="/new">
-              <Icon size="lg">
-                <PlusIcon />
-              </Icon>
-              <Trans
-                t={t}
-                ns="app"
-                i18nKey="quickCreateGroupPoll"
-                defaults="Create Group Poll"
-              />
-            </Link>
-          </Button>
+          <Link
+            href="/new"
+            className={buttonVariants({ size: "lg", className: "w-full" })}
+          >
+            <Icon size="lg">
+              <PlusIcon />
+            </Icon>
+            <Trans
+              t={t}
+              ns="app"
+              i18nKey="quickCreateGroupPoll"
+              defaults="Create Group Poll"
+            />
+          </Link>
         </div>
       </div>
       <div className="space-y-4">

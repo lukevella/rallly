@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
@@ -31,27 +31,29 @@ const Layout = ({ children }: React.PropsWithChildren) => {
         <div className="mx-auto flex max-w-4xl justify-between">
           <div className="flex min-w-0 items-center gap-x-2.5">
             {pathname === pollLink ? (
-              <Button variant="ghost" asChild>
-                <Link href="/polls">
-                  <Icon>
-                    <ArrowLeftIcon />
-                  </Icon>
-                  <span>
-                    <Trans i18nKey="back" defaults="Back" />
-                  </span>
-                </Link>
-              </Button>
+              <Link
+                href="/polls"
+                className={buttonVariants({ variant: "ghost" })}
+              >
+                <Icon>
+                  <ArrowLeftIcon />
+                </Icon>
+                <span>
+                  <Trans i18nKey="back" defaults="Back" />
+                </span>
+              </Link>
             ) : (
-              <Button variant="ghost" asChild>
-                <Link href={pollLink}>
-                  <Icon>
-                    <ArrowLeftIcon />
-                  </Icon>
-                  <span>
-                    <Trans i18nKey="back" defaults="Back" />
-                  </span>
-                </Link>
-              </Button>
+              <Link
+                href={pollLink}
+                className={buttonVariants({ variant: "ghost" })}
+              >
+                <Icon>
+                  <ArrowLeftIcon />
+                </Icon>
+                <span>
+                  <Trans i18nKey="back" defaults="Back" />
+                </span>
+              </Link>
             )}
           </div>
           <div>

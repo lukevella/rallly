@@ -33,6 +33,7 @@
       "cache": false
     },
     "type-check": {
+      "dependsOn": ["^type-check"],
       "outputs": []
     },
     "dev": {

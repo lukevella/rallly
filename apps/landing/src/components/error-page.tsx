@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui/button";
 import { FileSearchIcon } from "lucide-react";
 import type * as React from "react";
 import { LinkBase } from "@/i18n/client/link";
@@ -29,12 +29,12 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
           <p className="text-gray-600">{description}</p>
         </div>
         <div className="flex justify-center space-x-3">
-          <Button variant="primary" asChild>
-            <LinkBase href="/">{t("goToHome")}</LinkBase>
-          </Button>
-          <Button asChild>
-            <a href="https://support.rallly.co">{t("support")}</a>
-          </Button>
+          <LinkBase href="/" className={buttonVariants({ variant: "primary" })}>
+            {t("goToHome")}
+          </LinkBase>
+          <a href="https://support.rallly.co" className={buttonVariants()}>
+            {t("support")}
+          </a>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 import { usePostHog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
-import { Button } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui/button";
 import { ChevronRightIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import Image from "next/image";
@@ -114,17 +114,20 @@ export const MarketingHero = ({
           {description}
         </h2>
         <div className="mt-8 flex flex-col items-center justify-center gap-4">
-          <Button
-            size="lg"
-            className="transition-all hover:shadow-md active:translate-y-1 active:shadow-none"
-            variant="primary"
+          <Link
+            href={linkToApp("/new")}
+            className={buttonVariants({
+              size: "lg",
+              variant: "primary",
+              className:
+                "transition-all hover:shadow-md active:translate-y-1 active:shadow-none",
+            })}
             onClick={() => {
               posthog.capture("landing:hero_button_click");
             }}
-            asChild
           >
-            <Link href={linkToApp("/new")}>{callToAction}</Link>
-          </Button>
+            {callToAction}
+          </Link>
           <p
             className={cn(
               "whitespace-nowrap text-center text-gray-600 text-xs",
