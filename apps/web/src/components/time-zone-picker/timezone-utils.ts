@@ -1,12 +1,11 @@
 import type { TimezoneEntry } from "./timezone-data";
-import { timezoneEntries } from "./timezone-data";
 
 export interface TimezoneEntryWithOffset extends TimezoneEntry {
   offsetMinutes: number;
   offsetLabel: string;
 }
 
-function getOffsetMinutes(iana: string): number {
+export function getOffsetMinutes(iana: string): number {
   const now = new Date();
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: iana,
@@ -35,26 +34,7 @@ function formatOffset(offsetMinutes: number): string {
   return `${sign}${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 }
 
-let cached: TimezoneEntryWithOffset[] | null = null;
-let cachedAt = 0;
-const CACHE_TTL = 60 * 60 * 1000; // 1 hour
-
-export function getTimezoneEntriesWithOffset(): TimezoneEntryWithOffset[] {
-  const now = Date.now();
-  if (cached && now - cachedAt < CACHE_TTL) return cached;
-
-  const entries = timezoneEntries.map((entry) => {
-    const offsetMinutes = getOffsetMinutes(entry.id);
-    return {
-      ...entry,
-      offsetMinutes,
-      offsetLabel: formatOffset(offsetMinutes),
-    };
-  });
-
-  entries.sort((a, b) => a.offsetMinutes - b.offsetMinutes);
-
-  cached = entries;
-  cachedAt = now;
-  return entries;
+export function getOffsetLabel(iana: string): string {
+  const offsetMinutes = getOffsetMinutes(iana);
+  return formatOffset(offsetMinutes);
 }

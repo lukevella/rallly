@@ -12,15 +12,18 @@ import { InputGroupAddon } from "@rallly/ui/input-group";
 import dayjs from "dayjs";
 import { GlobeIcon } from "lucide-react";
 import React from "react";
+import type { TimezoneEntry } from "@/components/time-zone-picker/timezone-data";
+import {
+  curatedTimezoneEntries,
+  otherTimezoneEntries,
+} from "@/components/time-zone-picker/timezone-data";
+import { getOffsetLabel } from "@/components/time-zone-picker/timezone-utils";
 import { useTranslation } from "@/i18n/client";
-import type { TimezoneEntryWithOffset } from "./timezone-utils";
-import { getTimezoneEntriesWithOffset } from "./timezone-utils";
 
-function filterTimezone(
-  entry: TimezoneEntryWithOffset,
-  query: string,
-): boolean {
-  if (!query) return entry.curated;
+const allTimezoneEntries = [...curatedTimezoneEntries, ...otherTimezoneEntries];
+
+function filterTimezone(entry: TimezoneEntry, query: string): boolean {
+  if (!query) return true;
   return entry.keywords.includes(query.toLowerCase());
 }
 
@@ -38,21 +41,17 @@ export function TimeZoneSelect({
   const { t } = useTranslation();
 
   const anchorRef = useComboboxAnchor();
-  const allEntries = React.useMemo(() => getTimezoneEntriesWithOffset(), []);
-  const curatedList = React.useMemo(
-    () => allEntries.filter((e) => e.curated),
-    [allEntries],
-  );
 
   const [isSearching, setIsSearching] = React.useState(false);
+
   const selectedEntry = React.useMemo(
-    () => allEntries.find((e) => e.id === value),
-    [allEntries, value],
+    () => allTimezoneEntries.find((e) => e.id === value),
+    [value],
   );
 
   return (
-    <Combobox<TimezoneEntryWithOffset>
-      items={isSearching ? allEntries : curatedList}
+    <Combobox<TimezoneEntry>
+      items={isSearching ? allTimezoneEntries : curatedTimezoneEntries}
       value={selectedEntry ?? null}
       onValueChange={(entry) => {
         if (entry) {
@@ -70,9 +69,8 @@ export function TimeZoneSelect({
       filter={filterTimezone}
       autoHighlight={true}
     >
-      <div ref={anchorRef}>
+      <div ref={anchorRef} className={cn("min-w-64", className)}>
         <ComboboxInput
-          className={cn("min-w-64", className)}
           disabled={disabled}
           placeholder={t("timezoneInputPlaceholder", {
             defaultValue: "Search timezone…",
@@ -83,7 +81,7 @@ export function TimeZoneSelect({
           </InputGroupAddon>
         </ComboboxInput>
       </div>
-      <ComboboxContent anchor={anchorRef.current}>
+      <ComboboxContent align="end" anchor={anchorRef.current}>
         <ComboboxEmpty>
           {t("timeZoneSelect__noOption", {
             defaultValue: "No timezone found",
@@ -93,7 +91,7 @@ export function TimeZoneSelect({
           {(entry) => (
             <ComboboxItem key={entry.id} value={entry} index={entry.index}>
               <span className="rounded-full bg-muted px-1.5 py-0.5 text-muted-foreground text-xs tabular-nums">
-                {entry.offsetLabel}
+                {getOffsetLabel(entry.id)}
               </span>
               <span className="min-w-0 flex-1 truncate">{entry.city}</span>
               <span className="rounded-full px-1 py-0.5 text-center text-muted-foreground text-xs tabular-nums">
