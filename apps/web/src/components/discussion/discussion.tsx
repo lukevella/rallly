@@ -255,7 +255,7 @@ function DiscussionInner() {
           ) : (
             <button
               type="button"
-              className="flex w-full rounded-lg border border-input-border bg-input px-2 py-2 text-left text-muted-foreground text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-1"
+              className="flex w-full rounded-lg border border-input bg-transparent px-2 py-2 text-left text-muted-foreground text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-1"
               onClick={() => setIsWriting(true)}
             >
               <Trans
