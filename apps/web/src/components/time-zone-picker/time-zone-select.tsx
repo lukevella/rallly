@@ -70,7 +70,7 @@ export function TimeZoneSelect({
       <ComboboxInput
         className={cn("min-w-64", className)}
         disabled={disabled}
-        placeholder={t("timeZoneSelect__inputPlaceholder", {
+        placeholder={t("timezoneInputPlaceholder", {
           defaultValue: "Search timezone…",
         })}
       >
