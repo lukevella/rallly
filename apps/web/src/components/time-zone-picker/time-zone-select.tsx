@@ -11,15 +11,16 @@ import { InputGroupAddon } from "@rallly/ui/input-group";
 import { GlobeIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "@/i18n/client";
-import type { TimezoneEntry } from "./timezone-data";
-import { timezoneEntries } from "./timezone-data";
+import type { TimezoneEntryWithOffset } from "./timezone-utils";
+import { getTimezoneEntriesWithOffset } from "./timezone-utils";
 
-function filterTimezone(entry: TimezoneEntry, query: string): boolean {
+function filterTimezone(
+  entry: TimezoneEntryWithOffset,
+  query: string,
+): boolean {
   if (!query) return entry.curated;
   return entry.keywords.includes(query.toLowerCase());
 }
-
-const curatedList = timezoneEntries.filter((e) => e.curated);
 
 export function TimeZoneSelect({
   value,
@@ -34,15 +35,21 @@ export function TimeZoneSelect({
 }) {
   const { t } = useTranslation();
 
+  const allEntries = React.useMemo(() => getTimezoneEntriesWithOffset(), []);
+  const curatedList = React.useMemo(
+    () => allEntries.filter((e) => e.curated),
+    [allEntries],
+  );
+
   const [isSearching, setIsSearching] = React.useState(false);
   const selectedEntry = React.useMemo(
-    () => timezoneEntries.find((e) => e.id === value),
-    [value],
+    () => allEntries.find((e) => e.id === value),
+    [allEntries, value],
   );
 
   return (
-    <Combobox<TimezoneEntry>
-      items={isSearching ? timezoneEntries : curatedList}
+    <Combobox<TimezoneEntryWithOffset>
+      items={isSearching ? allEntries : curatedList}
       value={selectedEntry ?? null}
       onValueChange={(entry) => {
         if (entry) {
