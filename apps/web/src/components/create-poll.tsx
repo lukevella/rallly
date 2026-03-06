@@ -130,7 +130,7 @@ export const CreatePoll: React.FunctionComponent = () => {
           <hr />
           <Button
             loading={form.formState.isSubmitting}
-            size="lg"
+            size="xl"
             type="submit"
             className="w-full"
             variant="primary"

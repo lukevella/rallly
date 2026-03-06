@@ -1,7 +1,6 @@
 "use client";
 
 import { buttonVariants } from "@rallly/ui";
-import { Icon } from "@rallly/ui/icon";
 import { InboxIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -71,9 +70,7 @@ export function PollsPage() {
         </PageHeaderContent>
         <PageHeaderActions>
           <Link href="/new" className={buttonVariants({ variant: "primary" })}>
-            <Icon>
-              <PlusIcon />
-            </Icon>
+            <PlusIcon data-icon="inline-start" />
             <Trans i18nKey="newPoll" defaults="New Poll" />
           </Link>
         </PageHeaderActions>

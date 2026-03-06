@@ -199,7 +199,7 @@ export function LoginWithEmailForm() {
         ) : null}
         <div>
           <Button
-            size="lg"
+            size="xl"
             loading={form.formState.isSubmitting}
             type="submit"
             className="w-full"

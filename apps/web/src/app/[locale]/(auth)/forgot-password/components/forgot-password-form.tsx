@@ -102,7 +102,7 @@ export function ForgotPasswordForm() {
         />
         <div>
           <Button
-            size="lg"
+            size="xl"
             loading={form.formState.isSubmitting}
             type="submit"
             className="w-full"

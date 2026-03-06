@@ -79,7 +79,7 @@ export function ProfilePage() {
               <DeleteAccountDialog>
                 <DialogTrigger asChild>
                   <Button variant="destructive">
-                    <TrashIcon className="size-4" />
+                    <TrashIcon data-icon="inline-start" />
                     <Trans i18nKey="deleteAccount" defaults="Delete Account" />
                   </Button>
                 </DialogTrigger>

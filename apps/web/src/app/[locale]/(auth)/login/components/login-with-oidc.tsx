@@ -22,7 +22,7 @@ export function LoginWithOIDC({
         });
       }}
       className="w-full"
-      size="lg"
+      size="xl"
     >
       <Trans
         i18nKey="continueWithProvider"

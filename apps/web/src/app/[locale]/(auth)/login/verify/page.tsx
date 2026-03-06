@@ -52,7 +52,7 @@ export default async function VerifyPage() {
         <Link
           href="/login"
           className={buttonVariants({
-            size: "lg",
+            size: "xl",
             variant: "link",
             className: "w-full",
           })}

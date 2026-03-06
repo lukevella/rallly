@@ -227,7 +227,7 @@ export function RegisterNameForm() {
             className="w-full"
             variant="primary"
             type="submit"
-            size="lg"
+            size="xl"
           >
             <Trans i18nKey="continue" />
           </Button>

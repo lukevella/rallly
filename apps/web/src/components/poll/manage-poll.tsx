@@ -134,15 +134,11 @@ const ManagePoll: React.FunctionComponent<{
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild={true}>
           <Button variant="ghost" disabled={disabled}>
-            <Icon>
-              <SettingsIcon />
-            </Icon>
+            <SettingsIcon data-icon="inline-start" />
             <span className="hidden sm:block">
               <Trans i18nKey="manage" />
             </span>
-            <Icon>
-              <ChevronDownIcon />
-            </Icon>
+            <ChevronDownIcon data-icon="inline-end" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

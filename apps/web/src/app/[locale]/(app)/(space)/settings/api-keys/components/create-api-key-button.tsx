@@ -20,7 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
-import { Icon } from "@rallly/ui/icon";
+
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
 import { AlertTriangleIcon, CheckIcon, CopyIcon, PlusIcon } from "lucide-react";
@@ -73,9 +73,7 @@ export function CreateApiKeyButton() {
   return (
     <>
       <Button onClick={() => dialog.trigger()}>
-        <Icon>
-          <PlusIcon />
-        </Icon>
+        <PlusIcon data-icon="inline-start" />
         <Trans i18nKey="createApiKey" defaults="Create API key" />
       </Button>
       <Dialog {...dialog.dialogProps} onOpenChange={handleClose}>
@@ -123,7 +121,7 @@ export function CreateApiKeyButton() {
                       onClick={handleCopy}
                       type="button"
                     >
-                      <Icon>{didCopy ? <CheckIcon /> : <CopyIcon />}</Icon>
+                      {didCopy ? <CheckIcon /> : <CopyIcon />}
                     </Button>
                   </div>
                 </div>

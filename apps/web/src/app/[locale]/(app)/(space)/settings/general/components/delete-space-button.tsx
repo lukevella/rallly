@@ -142,7 +142,7 @@ export function DeleteSpaceButton({ spaceName }: DeleteSpaceButtonProps) {
     <DeleteSpaceDialog spaceName={spaceName}>
       <DialogTrigger asChild>
         <Button variant="destructive">
-          <TrashIcon className="size-4" />
+          <TrashIcon data-icon="inline-start" />
           <Trans i18nKey="deleteSpace" defaults="Delete Space" />
         </Button>
       </DialogTrigger>

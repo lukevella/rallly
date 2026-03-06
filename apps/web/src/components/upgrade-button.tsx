@@ -29,7 +29,7 @@ export const UpgradeButton = ({
         value={window.location.pathname}
       />
       <Button
-        size="lg"
+        size="xl"
         className={className}
         variant="primary"
         onClick={(e) => {

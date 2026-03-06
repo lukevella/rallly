@@ -78,9 +78,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         <Button variant="ghost">
           <OptimizedAvatarImage src={image} name={name} size="sm" />
           <span className="truncate">{name}</span>
-          <Icon>
-            <ChevronDownIcon />
-          </Icon>
+          <ChevronDownIcon data-icon="inline-end" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

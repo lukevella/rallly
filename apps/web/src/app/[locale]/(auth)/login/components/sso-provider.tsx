@@ -49,7 +49,7 @@ export function SSOProvider({
   const { t } = useTranslation();
   return (
     <Button
-      size="lg"
+      size="xl"
       aria-label={t("continueWithProvider", {
         provider: name,
         ns: "app",
