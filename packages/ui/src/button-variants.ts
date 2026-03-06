@@ -12,7 +12,7 @@ export const buttonVariants = cva(
         primary: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
           "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90",
-        default: "border border-input bg-background shadow-xs hover:bg-accent",
+        default: "border border-input bg-transparent shadow-xs hover:bg-accent",
         ghost:
           "border-transparent bg-transparent text-foreground hover:bg-accent data-[state=open]:bg-accent",
         actionBar:
