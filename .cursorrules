@@ -1,19 +1,18 @@
-1. Use pnpm for package management
-2. Use dayjs for date handling
-3. Use tailwindcss for styling
-4. Use react-query for data fetching
-5. Use react-hook-form for form handling
-6. Prefer implicit return values over explicit return values
-7. Use zod for form validation
-8. Create separate import statements for types
-9. All text in the UI should be translated using either the Trans component or the useTranslation hook
-10. Prefer composable components in the style of shadcn UI over large monolithic components
-11. DropdownMenuItem is a flex container with a preset gap so there is no need to add margins to the children
-12. The size and colour of an icon should be set by wrapping it with the <Icon> component from @rallly/ui/icon which will give it the correct colour and size.
-13. Keep the props of a component as minimal as possible. Pass only the bare minimum amount of information needed to it.
-14. All text in the UI should be translatable.
-15. i18n keys are in camelCase.
-16. Use the <Trans> component in client components from @/i18n/client. Use the `defaults` prop to provide the default text. Example:
+- Use pnpm for package management
+- Use dayjs for date handling
+- Use tailwindcss for styling
+- Use react-query for data fetching
+- Use react-hook-form for form handling
+- Prefer implicit return values over explicit return values
+- Use zod for form validation
+- Create separate import statements for types
+- All text in the UI should be translated using either the Trans component or the useTranslation hook
+- Prefer composable components in the style of shadcn UI over large monolithic components
+- DropdownMenuItem is a flex container with a preset gap so there is no need to add margins to the children
+- Keep the props of a component as minimal as possible. Pass only the bare minimum amount of information needed to it.
+- All text in the UI should be translatable.
+- i18n keys are in camelCase.
+- Use the <Trans> component in client components from @/i18n/client. Use the `defaults` prop to provide the default text. Example:
 
 ```tsx
 import { Trans } from "@/i18n/client";
@@ -21,7 +20,7 @@ import { Trans } from "@/i18n/client";
 <Trans i18nKey="menu" defaults="Menu" />
 ```
 
-17. On the server use the `getTranslations` function from @/i18n/server to get the translations. Example:
+- On the server use the `getTranslations` function from @/i18n/server to get the translations. Example:
 
 ```ts
 const { t } = await getTranslations();
@@ -29,15 +28,15 @@ const { t } = await getTranslations();
 t("menu", { defaultValue: "Menu" });
 ```
 
-18. shadcn-ui components should be added to packages/ui
-19. Always use a composable patterns when building components
-20. Use `cn()` from @rallly/ui to compose classes
-21. Prefer using the React module APIs (e.g. React.useState) instead of standalone hooks (e.g. useState)
-22. Do not attempt to fix typescript issues related to missing translations. This will be handled by our tooling.
-23. Never manually add translations to .json files. This will be handled by our tooling.
-24. Add the "use client" directive to the top of any .tsx file that requires client-side javascript
-25. i18nKeys should describe the message in camelCase. Ex. "lastUpdated": "Last Updated"
-26. If the i18nKey is not intended to be reused, prefix it with the component name in camelCase
-27. Always use kebab-case for file names
-28. Prefer double quotes for strings over single quotes
-29. Only add comments when it is necessary to explain code that isn't self-explanatory
+- shadcn-ui components should be added to packages/ui
+- Always use a composable patterns when building components
+- Use `cn()` from @rallly/ui to compose classes
+- Prefer using the React module APIs (e.g. React.useState) instead of standalone hooks (e.g. useState)
+- Do not attempt to fix typescript issues related to missing translations. This will be handled by our tooling.
+- Never manually add translations to .json files. This will be handled by our tooling.
+- Add the "use client" directive to the top of any .tsx file that requires client-side javascript
+- i18nKeys should describe the message in camelCase. Ex. "lastUpdated": "Last Updated"
+- If the i18nKey is not intended to be reused, prefix it with the component name in camelCase
+- Always use kebab-case for file names
+- Prefer double quotes for strings over single quotes
+- Only add comments when it is necessary to explain code that isn't self-explanatory

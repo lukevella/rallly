@@ -125,7 +125,6 @@ pnpm sherif               # Check package dependencies
 - Use `cn()` from `@rallly/ui` to compose classes
 - Biome for code formatting (indent: 2 spaces, double quotes)
 - Custom UI components in `packages/ui/src/` (shadcn-ui components go here)
-- Icon size and colour should be set by wrapping with the `<Icon>` component from `@rallly/ui/icon`
 
 ### State Management
 - tRPC with TanStack Query for server state
