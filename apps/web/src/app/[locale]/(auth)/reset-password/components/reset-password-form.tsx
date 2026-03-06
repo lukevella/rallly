@@ -94,7 +94,7 @@ export function ResetPasswordForm() {
                 <FormControl>
                   <PasswordInput
                     {...field}
-                    size="lg"
+                    large
                     disabled={formState.isSubmitting}
                     autoFocus={true}
                     placeholder="••••••••"

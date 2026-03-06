@@ -142,7 +142,7 @@ export function LoginWithEmailForm() {
               <FormControl>
                 <Input
                   {...field}
-                  size="lg"
+                  large
                   type="text"
                   disabled={formState.isSubmitting}
                   autoFocus={true}
@@ -182,7 +182,7 @@ export function LoginWithEmailForm() {
                 <FormControl>
                   <Input
                     autoFocus={true}
-                    size="lg"
+                    large
                     type="password"
                     disabled={form.formState.isSubmitting}
                     placeholder="••••••••"

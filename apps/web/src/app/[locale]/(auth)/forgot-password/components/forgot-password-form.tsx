@@ -89,7 +89,7 @@ export function ForgotPasswordForm() {
               <FormControl>
                 <Input
                   {...field}
-                  size="lg"
+                  large
                   type="email"
                   disabled={formState.isSubmitting}
                   autoFocus={true}
