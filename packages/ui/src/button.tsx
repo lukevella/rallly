@@ -37,10 +37,12 @@ const Button = ({
       {...props}
     >
       {loading ? (
-        <Loader2Icon className="size-4 animate-spin opacity-75" />
-      ) : (
-        children
-      )}
+        <Loader2Icon
+          data-icon="inline-start"
+          className="size-4 animate-spin opacity-75"
+        />
+      ) : null}
+      {children}
     </ButtonPrimitive>
   );
 };

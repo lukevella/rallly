@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
+
 import { ChevronDownIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import { connectToCalendar } from "@/features/calendars/client";
@@ -18,13 +18,9 @@ export function ConnectCalendarDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button>
-          <Icon>
-            <PlusIcon />
-          </Icon>
+          <PlusIcon data-icon="inline-start" />
           <Trans i18nKey="connectCalendar" defaults="Connect Calendar" />
-          <Icon>
-            <ChevronDownIcon />
-          </Icon>
+          <ChevronDownIcon data-icon="inline-end" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

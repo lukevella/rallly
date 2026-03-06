@@ -94,18 +94,22 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         <div>
           <div className="flex w-full flex-col">
             <div className="mb-3 flex items-center justify-center space-x-4">
-              <Button title={t("previousMonth")} onClick={datepicker.prev}>
-                <Icon>
-                  <ChevronLeftIcon />
-                </Icon>
+              <Button
+                title={t("previousMonth")}
+                size="icon"
+                onClick={datepicker.prev}
+              >
+                <ChevronLeftIcon />
               </Button>
               <div className="grow text-center font-semibold tracking-tight">
                 {datepicker.label}
               </div>
-              <Button title={t("nextMonth")} onClick={datepicker.next}>
-                <Icon>
-                  <ChevronRightIcon />
-                </Icon>
+              <Button
+                title={t("nextMonth")}
+                size="icon"
+                onClick={datepicker.next}
+              >
+                <ChevronRightIcon />
               </Button>
             </div>
             <div className="grid grid-cols-7">
@@ -335,9 +339,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                   ]);
                                 }}
                               >
-                                <Icon>
-                                  <XIcon />
-                                </Icon>
+                                <XIcon data-icon="inline-start" />
                               </Button>
                             </div>
                           );
@@ -372,17 +374,13 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                               ]);
                             }}
                           >
-                            <Icon>
-                              <PlusIcon />
-                            </Icon>
+                            <PlusIcon data-icon="inline-start" />
                             {t("addTimeOption")}
                           </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild={true}>
                               <Button variant="ghost" size="sm">
-                                <Icon>
-                                  <MoreHorizontalIcon />
-                                </Icon>
+                                <MoreHorizontalIcon data-icon="inline-start" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">

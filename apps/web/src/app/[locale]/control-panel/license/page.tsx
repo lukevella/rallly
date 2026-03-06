@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@rallly/ui/dialog";
-import { Icon } from "@rallly/ui/icon";
+
 import {
   KeySquareIcon,
   PaletteIcon,
@@ -190,17 +190,13 @@ export default async function LicensePage() {
                 href="https://support.rallly.co/self-hosting/licensing"
                 className={buttonVariants()}
               >
-                <Icon>
-                  <ShoppingBagIcon />
-                </Icon>
+                <ShoppingBagIcon data-icon="inline-start" />
                 <Trans i18nKey="purchaseLicense" defaults="Purchase license" />
               </a>
               <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="primary">
-                    <Icon>
-                      <PlusIcon />
-                    </Icon>
+                    <PlusIcon data-icon="inline-start" />
                     <Trans i18nKey="addLicenseKey" defaults="Add license key" />
                   </Button>
                 </DialogTrigger>

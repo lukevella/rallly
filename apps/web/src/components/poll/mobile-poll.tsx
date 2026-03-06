@@ -157,21 +157,18 @@ const MobilePoll: React.FunctionComponent = () => {
                 votingForm.setEditingParticipantId(selectedParticipant.id);
               }}
             >
-              <Button>
-                <Icon>
-                  <MoreHorizontalIcon />
-                </Icon>
+              <Button size="icon">
+                <MoreHorizontalIcon />
               </Button>
             </ParticipantDropdown>
           ) : canAddNewParticipant ? (
             <Button
+              size="icon"
               onClick={() => {
                 votingForm.newParticipant();
               }}
             >
-              <Icon>
-                <PlusIcon />
-              </Icon>
+              <PlusIcon />
             </Button>
           ) : null}
         </div>
@@ -214,7 +211,7 @@ const MobilePoll: React.FunctionComponent = () => {
                 className="w-full"
                 type="submit"
                 variant="primary"
-                size="md"
+                size="lg"
                 loading={formState.isSubmitting}
               >
                 {selectedParticipantId ? t("save") : t("continue")}
