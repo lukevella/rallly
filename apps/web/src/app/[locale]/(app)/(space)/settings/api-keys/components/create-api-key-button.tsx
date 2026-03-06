@@ -121,7 +121,7 @@ export function CreateApiKeyButton() {
                       onClick={handleCopy}
                       type="button"
                     >
-                      <Icon>{didCopy ? <CheckIcon /> : <CopyIcon />}</Icon>
+                      {didCopy ? <CheckIcon /> : <CopyIcon />}
                     </Button>
                   </div>
                 </div>
