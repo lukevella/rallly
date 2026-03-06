@@ -92,6 +92,9 @@ export function TimeZoneSelect({
         <ComboboxList>
           {(entry) => (
             <ComboboxItem key={entry.id} value={entry} index={entry.index}>
+              <span className="rounded-full bg-muted px-1.5 py-0.5 font-mono text-muted-foreground text-xs">
+                {entry.offsetLabel}
+              </span>
               <span className="min-w-0 flex-1 truncate">{entry.city}</span>
               <span className="rounded-full px-1 py-0.5 text-center font-mono text-muted-foreground text-xs">
                 {dayjs().tz(entry.id).format("LT")}
