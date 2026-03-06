@@ -24,7 +24,7 @@ import * as React from "react";
 import { usePreferences } from "@/contexts/preferences";
 import { dayjs } from "@/lib/dayjs";
 import { useLocale } from "@/lib/locale/client";
-import { getBrowserTimeZone, normalizeTimeZone } from "@/utils/date-time-utils";
+import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { useRequiredContext } from "../components/use-required-context";
 
 const dayjsLocales: Record<
@@ -163,10 +163,7 @@ export const DayjsProvider: React.FunctionComponent<{
   const dayjsLocale = localeConfig.locale;
 
   const preferredTimeZone = React.useMemo(
-    () =>
-      config?.timeZone
-        ? normalizeTimeZone(config?.timeZone)
-        : getBrowserTimeZone(),
+    () => config?.timeZone ?? getBrowserTimeZone(),
     [config?.timeZone],
   );
 

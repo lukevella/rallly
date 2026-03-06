@@ -14,6 +14,7 @@ import {
 } from "@/lib/storage/image-upload";
 import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
+import { timezoneSchema } from "@/utils/timezone-schema";
 import {
   createRateLimitMiddleware,
   privateProcedure,
@@ -52,7 +53,7 @@ export const user = router({
     .input(
       z.object({
         locale: z.string().optional(),
-        timeZone: z.string().optional(),
+        timeZone: timezoneSchema.optional(),
         weekStart: z.number().min(0).max(6).optional(),
         timeFormat: z.enum(["hours12", "hours24"]).optional(),
       }),

@@ -1,106 +1,93 @@
-"use client";
-
-import type { SelectProps } from "@radix-ui/react-select";
 import { cn } from "@rallly/ui";
-import { Badge } from "@rallly/ui/badge";
-import { Button } from "@rallly/ui/button";
 import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@rallly/ui/command";
-import { useDialog } from "@rallly/ui/dialog";
-import { Icon } from "@rallly/ui/icon";
-import { CheckIcon, GlobeIcon } from "lucide-react";
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@rallly/ui/combobox";
+import { InputGroupAddon } from "@rallly/ui/input-group";
+import { GlobeIcon } from "lucide-react";
 import React from "react";
-import { Trans, useTranslation } from "@/i18n/client";
-import { dayjs } from "@/lib/dayjs";
-import { groupedTimeZones } from "@/utils/grouped-time-zone";
+import { useTranslation } from "@/i18n/client";
+import type { TimezoneEntry } from "./timezone-data";
+import { timezoneEntries } from "./timezone-data";
 
-interface TimeZoneCommandProps {
-  value?: string;
-  onSelect?: (value: string) => void;
+function filterTimezone(entry: TimezoneEntry, query: string): boolean {
+  if (!query) return entry.curated;
+  return entry.keywords.includes(query.toLowerCase());
 }
 
-export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
+const curatedList = timezoneEntries.filter((e) => e.curated);
+
+export function TimeZoneSelect({
+  value,
+  onValueChange,
+  className,
+  disabled,
+}: {
+  value?: string;
+  onValueChange?: (value: string) => void;
+  className?: string;
+  disabled?: boolean;
+}) {
   const { t } = useTranslation();
-  return (
-    <Command>
-      <CommandInput
-        placeholder={t("timeZoneSelect__inputPlaceholder", {
-          defaultValue: "Search…",
-        })}
-      />
-      <CommandList className="max-h-[300px] w-(--radix-popover-trigger-width) max-w-(--radix-popover-content-available-width) overflow-y-auto">
-        <CommandEmpty>
-          <Trans
-            i18nKey="timeZoneSelect__noOption"
-            defaults="No option found"
-          />
-        </CommandEmpty>
-        {Object.entries(groupedTimeZones).map(([region, timeZones]) => (
-          <CommandGroup heading={region} key={region}>
-            {timeZones.map(({ timezone, city }) => {
-              return (
-                <CommandItem
-                  key={timezone}
-                  onSelect={() => onSelect?.(timezone)}
-                  className="flex min-w-0 gap-x-2.5"
-                >
-                  <div className="w-6 shrink-0">
-                    {value === timezone ? (
-                      <Icon>
-                        <CheckIcon />
-                      </Icon>
-                    ) : null}
-                  </div>
-                  <span className="min-w-0 grow truncate">{city}</span>
-                  <Badge>{dayjs().tz(timezone).format("z")}</Badge>
-                </CommandItem>
-              );
-            })}
-          </CommandGroup>
-        ))}
-      </CommandList>
-    </Command>
-  );
-};
 
-export const TimeZoneSelect = React.forwardRef<
-  HTMLButtonElement,
-  SelectProps & { className?: string }
->(({ value, onValueChange, className, disabled }, ref) => {
-  const dialog = useDialog();
+  const [isSearching, setIsSearching] = React.useState(false);
+  const selectedEntry = React.useMemo(
+    () => timezoneEntries.find((e) => e.id === value),
+    [value],
+  );
+
   return (
-    <>
-      <CommandDialog {...dialog.dialogProps}>
-        <TimeZoneCommand
-          value={value}
-          onSelect={(newValue) => {
-            onValueChange?.(newValue);
-            dialog.dismiss();
-          }}
-        />
-      </CommandDialog>
-      <Button
-        ref={ref}
+    <Combobox<TimezoneEntry>
+      items={isSearching ? timezoneEntries : curatedList}
+      value={selectedEntry ?? null}
+      onValueChange={(entry) => {
+        if (entry) {
+          onValueChange?.(entry.id);
+        }
+      }}
+      onInputValueChange={(inputValue, { reason }) => {
+        if (reason === "input-change") {
+          setIsSearching(inputValue.trim().length > 0);
+        } else {
+          setIsSearching(false);
+        }
+      }}
+      itemToStringLabel={(entry) => entry.city}
+      filter={filterTimezone}
+      autoHighlight={true}
+    >
+      <ComboboxInput
+        className={cn("min-w-64", className)}
         disabled={disabled}
-        className={cn("justify-start text-left", className)}
-        onClick={() => {
-          dialog.trigger();
-        }}
+        placeholder={t("timeZoneSelect__inputPlaceholder", {
+          defaultValue: "Search timezone…",
+        })}
       >
-        <Icon>
+        <InputGroupAddon>
           <GlobeIcon />
-        </Icon>
-        <span className="flex-1">{value}</span>
-      </Button>
-    </>
+        </InputGroupAddon>
+      </ComboboxInput>
+      <ComboboxContent alignOffset={-24} className="w-64">
+        <ComboboxEmpty>
+          {t("timeZoneSelect__noOption", {
+            defaultValue: "No timezone found",
+          })}
+        </ComboboxEmpty>
+        <ComboboxList>
+          {(entry) => (
+            <ComboboxItem key={entry.id} value={entry} index={entry.index}>
+              <span className="rounded-full px-1 py-0.5 text-center font-mono text-muted-foreground text-xs">
+                {entry.offsetLabel}
+              </span>
+              <span className="min-w-0 flex-1 truncate">{entry.city}</span>
+            </ComboboxItem>
+          )}
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
   );
-});
-
-TimeZoneSelect.displayName = "TimeZoneSelect";
+}

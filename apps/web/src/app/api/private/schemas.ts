@@ -1,5 +1,5 @@
 import { z } from "@hono/zod-openapi";
-import { isSupportedTimeZone } from "@/utils/supported-time-zones";
+import { timezoneSchema } from "@/utils/timezone-schema";
 
 export const dateSchema = z.iso.date().openapi({
   description: "Date in YYYY-MM-DD format",
@@ -31,17 +31,11 @@ const slotsInputSchema = z
       description: "Duration in minutes for each time slot",
       example: 30,
     }),
-    timezone: z
-      .string()
-      .refine(isSupportedTimeZone, {
-        message: "Timezone must be a valid IANA timezone",
-      })
-      .optional()
-      .openapi({
-        description:
-          "IANA timezone. If not provided, times will be stored as UTC and no timezone will be set on the poll (indicating floating times).",
-        example: "Europe/London",
-      }),
+    timezone: timezoneSchema.optional().openapi({
+      description:
+        "IANA timezone. If not provided, times will be stored as UTC and no timezone will be set on the poll (indicating floating times).",
+      example: "Europe/London",
+    }),
     times: z
       .array(
         z.union([
