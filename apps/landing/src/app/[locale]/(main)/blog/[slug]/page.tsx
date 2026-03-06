@@ -1,4 +1,4 @@
-import { Button } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
@@ -24,11 +24,9 @@ export default async function Page(props: {
   return (
     <div>
       <nav className="mb-4">
-        <Button asChild variant="ghost">
-          <Link href="/blog">
-            <ArrowLeftIcon className="size-4" /> All Posts
-          </Link>
-        </Button>
+        <Link href="/blog" className={buttonVariants({ variant: "ghost" })}>
+          <ArrowLeftIcon className="size-4" /> All Posts
+        </Link>
       </nav>
       <article className="space-y-4">
         <PostHeader title={post.title} date={post.date} />

@@ -1,6 +1,7 @@
 "use client";
 
 import { usePostHog } from "@rallly/posthog/client";
+import { buttonVariants } from "@rallly/ui";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
@@ -127,24 +128,23 @@ function BillingPageContent({ tier }: { tier: SpaceTier }) {
               <div>
                 {subscription ? (
                   <div className="flex justify-between gap-2">
-                    <Button
+                    <a
+                      href="/api/stripe/portal"
+                      className={buttonVariants()}
                       onClick={() => {
                         posthog?.capture(
                           "space_billing:billing_portal_button_click",
                         );
                       }}
-                      asChild
                     >
-                      <a href="/api/stripe/portal">
-                        <Icon>
-                          <CreditCardIcon />
-                        </Icon>
-                        <Trans
-                          i18nKey="manageSubscription"
-                          defaults="Manage Subscription"
-                        />
-                      </a>
-                    </Button>
+                      <Icon>
+                        <CreditCardIcon />
+                      </Icon>
+                      <Trans
+                        i18nKey="manageSubscription"
+                        defaults="Manage Subscription"
+                      />
+                    </a>
                     <ManageSeatsDialog
                       usedSeats={seats.used}
                       currentSeats={seats.total}
@@ -213,19 +213,18 @@ function BillingPageContent({ tier }: { tier: SpaceTier }) {
               </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
-              <Button
+              <a
+                href="mailto:support@rallly.co"
+                className={buttonVariants()}
                 onClick={() => {
                   posthog?.capture("space_billing:support_button_click");
                 }}
-                asChild
               >
-                <a href="mailto:support@rallly.co">
-                  <Icon>
-                    <SendIcon />
-                  </Icon>
-                  <Trans i18nKey="contactSupport" defaults="Contact Support" />
-                </a>
-              </Button>
+                <Icon>
+                  <SendIcon />
+                </Icon>
+                <Trans i18nKey="contactSupport" defaults="Contact Support" />
+              </a>
             </PageSectionContent>
           </PageSection>
         </PageSectionGroup>

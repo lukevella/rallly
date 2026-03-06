@@ -4,7 +4,7 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import * as React from "react";
 
-import { buttonVariants } from "./button";
+import { buttonVariants } from "./button-variants";
 import { Icon } from "./icon";
 import { cn } from "./lib/utils";
 

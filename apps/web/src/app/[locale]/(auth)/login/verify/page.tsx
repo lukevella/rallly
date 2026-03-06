@@ -1,4 +1,4 @@
-import { Button } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -49,11 +49,16 @@ export default async function VerifyPage() {
       </AuthPageHeader>
       <AuthPageContent>
         <OTPForm email={email} />
-        <Button size="lg" variant="link" className="w-full" asChild>
-          <Link href="/login">
-            <Trans t={t} ns="app" i18nKey="back" defaults="Back" />
-          </Link>
-        </Button>
+        <Link
+          href="/login"
+          className={buttonVariants({
+            size: "lg",
+            variant: "link",
+            className: "w-full",
+          })}
+        >
+          <Trans t={t} ns="app" i18nKey="back" defaults="Back" />
+        </Link>
       </AuthPageContent>
     </AuthPageContainer>
   );

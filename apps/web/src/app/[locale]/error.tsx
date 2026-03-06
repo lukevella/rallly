@@ -1,5 +1,6 @@
 "use client";
 
+import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import * as Sentry from "@sentry/nextjs";
 import { GithubIcon, HomeIcon, LifeBuoyIcon, PlusIcon } from "lucide-react";
@@ -56,11 +57,9 @@ export default function LocaleErrorBoundary({
           <Button variant="primary" onClick={() => reset()}>
             <Trans i18nKey="errorTryAgain" defaults="Try again" />
           </Button>
-          <Button asChild>
-            <Link href="/">
-              <Trans i18nKey="errorBackToHome" defaults="Back to home" />
-            </Link>
-          </Button>
+          <Link href="/" className={buttonVariants()}>
+            <Trans i18nKey="errorBackToHome" defaults="Back to home" />
+          </Link>
         </>
       }
     >

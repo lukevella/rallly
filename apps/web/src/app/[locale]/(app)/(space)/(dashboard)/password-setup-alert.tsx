@@ -1,5 +1,6 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
+import { buttonVariants } from "@rallly/ui";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import { KeyRoundIcon } from "lucide-react";
@@ -46,22 +47,20 @@ function PasswordSetupAlertInner() {
                 />
               </p>
               <div className="mt-4 flex items-center gap-2">
-                <Button
-                  variant="primary"
+                <Link
+                  href="/settings/security"
+                  className={buttonVariants({ variant: "primary" })}
                   onClick={() => {
                     posthog.capture(
                       "space_dashboard:password_setup_button_click",
                     );
                   }}
-                  asChild
                 >
-                  <Link href="/settings/security">
-                    <Trans
-                      i18nKey="setupPasswordButton"
-                      defaults="Set up password"
-                    />
-                  </Link>
-                </Button>
+                  <Trans
+                    i18nKey="setupPasswordButton"
+                    defaults="Set up password"
+                  />
+                </Link>
                 <Button
                   variant="ghost"
                   onClick={() => {

@@ -1,4 +1,5 @@
 "use client";
+import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { CardFooter } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
@@ -49,11 +50,9 @@ const Page = () => {
       >
         <PollSettingsForm>
           <CardFooter className="justify-between">
-            <Button asChild>
-              <Link href={pollLink}>
-                <Trans i18nKey="cancel" />
-              </Link>
-            </Button>
+            <Link href={pollLink} className={buttonVariants()}>
+              <Trans i18nKey="cancel" />
+            </Link>
             <Button type="submit" variant="primary">
               <Trans i18nKey="save" />
             </Button>

@@ -1,4 +1,4 @@
-import { Button } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
 import {
   Sidebar,
@@ -47,13 +47,17 @@ export default async function Layout({
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <SidebarMenuItem className="flex items-center gap-3">
-                      <Button variant="ghost" size="icon" asChild>
-                        <Link href="/">
-                          <Icon>
-                            <ArrowLeftIcon />
-                          </Icon>
-                        </Link>
-                      </Button>
+                      <Link
+                        href="/"
+                        className={buttonVariants({
+                          variant: "ghost",
+                          size: "icon",
+                        })}
+                      >
+                        <Icon>
+                          <ArrowLeftIcon />
+                        </Icon>
+                      </Link>
                       <span className="font-medium text-sm">
                         <Trans i18nKey="settings" defaults="Settings" />
                       </span>

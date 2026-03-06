@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
 import { InboxIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
@@ -44,11 +44,9 @@ function PollsEmptyState() {
         />
       </EmptyStateDescription>
       <EmptyStateFooter>
-        <Button asChild>
-          <Link href="/new">
-            <Trans i18nKey="createPoll" defaults="Create Poll" />
-          </Link>
-        </Button>
+        <Link href="/new" className={buttonVariants()}>
+          <Trans i18nKey="createPoll" defaults="Create Poll" />
+        </Link>
       </EmptyStateFooter>
     </EmptyState>
   );
@@ -72,14 +70,12 @@ export function PollsPage() {
           </PageTitle>
         </PageHeaderContent>
         <PageHeaderActions>
-          <Button variant="primary" asChild>
-            <Link href="/new">
-              <Icon>
-                <PlusIcon />
-              </Icon>
-              <Trans i18nKey="newPoll" defaults="New Poll" />
-            </Link>
-          </Button>
+          <Link href="/new" className={buttonVariants({ variant: "primary" })}>
+            <Icon>
+              <PlusIcon />
+            </Icon>
+            <Trans i18nKey="newPoll" defaults="New Poll" />
+          </Link>
         </PageHeaderActions>
       </PageHeader>
       <PageContent>

@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -67,15 +68,14 @@ export const LanguagePreference = () => {
           >
             <Trans i18nKey="save" />
           </Button>
-          <Button asChild variant="ghost">
-            <Link
-              target="_blank"
-              href="https://support.rallly.co/contribute/translations"
-            >
-              <Trans i18nKey="becomeATranslator" defaults="Help translate" />
-              <ArrowUpRight className="size-4" />
-            </Link>
-          </Button>
+          <Link
+            target="_blank"
+            href="https://support.rallly.co/contribute/translations"
+            className={buttonVariants({ variant: "ghost" })}
+          >
+            <Trans i18nKey="becomeATranslator" defaults="Help translate" />
+            <ArrowUpRight className="size-4" />
+          </Link>
         </div>
       </form>
     </Form>

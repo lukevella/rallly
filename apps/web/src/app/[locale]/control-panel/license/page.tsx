@@ -1,3 +1,4 @@
+import { buttonVariants } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@rallly/ui/card";
@@ -183,21 +184,17 @@ export default async function LicensePage() {
               />
             </EmptyStateDescription>
             <EmptyStateFooter className="flex gap-2">
-              <Button asChild>
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href="https://support.rallly.co/self-hosting/licensing"
-                >
-                  <Icon>
-                    <ShoppingBagIcon />
-                  </Icon>
-                  <Trans
-                    i18nKey="purchaseLicense"
-                    defaults="Purchase license"
-                  />
-                </a>
-              </Button>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href="https://support.rallly.co/self-hosting/licensing"
+                className={buttonVariants()}
+              >
+                <Icon>
+                  <ShoppingBagIcon />
+                </Icon>
+                <Trans i18nKey="purchaseLicense" defaults="Purchase license" />
+              </a>
               <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="primary">

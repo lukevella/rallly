@@ -1,4 +1,4 @@
-import { Button } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
 import { GithubIcon, HomeIcon, LifeBuoyIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -19,11 +19,9 @@ export default async function NotFoundPage() {
           "Sorry, we couldn't find the page you're looking for. Here are some helpful links instead.",
       })}
       actions={
-        <Button variant="primary" asChild>
-          <Link href="/">
-            {t("errorBackToHome", { defaultValue: "Back to home" })}
-          </Link>
-        </Button>
+        <Link href="/" className={buttonVariants({ variant: "primary" })}>
+          {t("errorBackToHome", { defaultValue: "Back to home" })}
+        </Link>
       }
     >
       <ErrorPageLinkItem

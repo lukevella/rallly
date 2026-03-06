@@ -1,4 +1,5 @@
 import languages from "@rallly/languages";
+import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -99,16 +100,24 @@ export default async function Root(props: {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel className="space-y-2">
-                  <Button variant="default" className="w-full" asChild>
-                    <LinkBase href={linkToApp("/login")}>
-                      <Trans t={t} i18nKey="login" defaults="Login" />
-                    </LinkBase>
-                  </Button>
-                  <Button variant="primary" className="w-full" asChild>
-                    <LinkBase href={linkToApp("/register")}>
-                      <Trans t={t} i18nKey="signUp" defaults="Sign up" />
-                    </LinkBase>
-                  </Button>
+                  <LinkBase
+                    href={linkToApp("/login")}
+                    className={buttonVariants({
+                      variant: "default",
+                      className: "w-full",
+                    })}
+                  >
+                    <Trans t={t} i18nKey="login" defaults="Login" />
+                  </LinkBase>
+                  <LinkBase
+                    href={linkToApp("/register")}
+                    className={buttonVariants({
+                      variant: "primary",
+                      className: "w-full",
+                    })}
+                  >
+                    <Trans t={t} i18nKey="signUp" defaults="Sign up" />
+                  </LinkBase>
                 </DropdownMenuLabel>
               </DropdownMenuContent>
             </DropdownMenu>
