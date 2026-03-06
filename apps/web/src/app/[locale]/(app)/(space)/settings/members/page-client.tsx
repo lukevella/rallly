@@ -59,7 +59,7 @@ export function MembersSettingsPageClient() {
                       <OptimizedAvatarImage
                         src={member.image ?? undefined}
                         name={member.name}
-                        size="lg"
+                        size="xl"
                       />
                       <div>
                         <div className="flex items-center gap-x-2">

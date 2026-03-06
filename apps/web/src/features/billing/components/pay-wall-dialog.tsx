@@ -236,7 +236,7 @@ export function PayWallDialog({
                     </UpgradeButton>
                   </TabsContent>
                 ) : (
-                  <Button disabled={true} size="lg" className="w-full">
+                  <Button disabled={true} size="xl" className="w-full">
                     <Trans i18nKey="currentPlan" defaults="Current Plan" />
                   </Button>
                 )}

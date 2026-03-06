@@ -116,7 +116,7 @@ export const MarketingHero = ({
           <Link
             href={linkToApp("/new")}
             className={buttonVariants({
-              size: "lg",
+              size: "xl",
               variant: "primary",
               className:
                 "transition-all hover:shadow-md active:translate-y-1 active:shadow-none",

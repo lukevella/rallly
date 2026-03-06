@@ -55,7 +55,7 @@ export default async function JoinPage({
           <SpaceIcon
             src={invite.space.image ?? undefined}
             name={invite.space.name}
-            size="lg"
+            size="xl"
           />
         </div>
         <h1 className="font-bold text-base">

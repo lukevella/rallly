@@ -92,7 +92,7 @@ export function OTPForm({ email }: { email: string }) {
         <Button
           className="w-full"
           variant="primary"
-          size="lg"
+          size="xl"
           type="submit"
           loading={
             form.formState.isSubmitting || form.formState.isSubmitSuccessful

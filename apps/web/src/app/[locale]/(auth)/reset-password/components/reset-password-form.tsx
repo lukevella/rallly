@@ -114,7 +114,7 @@ export function ResetPasswordForm() {
         </div>
         <div className="mt-6">
           <Button
-            size="lg"
+            size="xl"
             loading={form.formState.isSubmitting}
             type="submit"
             className="w-full"
