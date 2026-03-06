@@ -1,38 +1,31 @@
-import "@/lib/dayjs";
+import { timezoneSchema } from "./timezone-schema";
 
-import { supportedTimeZones } from "@/utils/supported-time-zones";
-
-import { normalizeTimeZone } from "./date-time-utils";
-
-describe("Normalize Time Zone", () => {
-  it("should return same timezone when given a geographic timezone", () => {
-    const browserTimeZone = normalizeTimeZone("Europe/London");
-
-    // Assert that the browser time zone is one of the supported time zones
-    expect(browserTimeZone).toBe("Europe/London");
-  });
-  it("should return a supported timezone when given a fixed offset timezone", () => {
-    const browserTimeZone = normalizeTimeZone("Etc/GMT-1");
-
-    // Assert that the browser time zone is one of the supported time zones
-    expect(supportedTimeZones.includes(browserTimeZone)).toBe(true);
-  });
-  it("should return a supported timezone when given GMT", () => {
-    const browserTimeZone = normalizeTimeZone("GMT");
-
-    // Assert that the browser time zone is one of the supported time zones
-    expect(supportedTimeZones.includes(browserTimeZone)).toBe(true);
-  });
-  it("should return a supported timezone when given UTC", () => {
-    const browserTimeZone = normalizeTimeZone("UTC");
-
-    // Assert that the browser time zone is one of the supported time zones
-    expect(supportedTimeZones.includes(browserTimeZone)).toBe(true);
+describe("timezoneSchema", () => {
+  it("should accept a geographic timezone", () => {
+    expect(timezoneSchema.safeParse("Europe/London").success).toBe(true);
   });
 
-  it("should return a valid timezone in the same continent when not recognized", () => {
-    const browserTimeZone = normalizeTimeZone("Asia/Kolkata");
+  it("should canonicalize a legacy alias", () => {
+    const result = timezoneSchema.safeParse("America/Montreal");
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data).toBe("America/Toronto");
+    }
+  });
 
-    expect(browserTimeZone).toBe("Asia/Calcutta");
+  it("should reject Etc/ timezones", () => {
+    expect(timezoneSchema.safeParse("Etc/GMT-1").success).toBe(false);
+  });
+
+  it("should reject GMT", () => {
+    expect(timezoneSchema.safeParse("GMT").success).toBe(false);
+  });
+
+  it("should reject UTC", () => {
+    expect(timezoneSchema.safeParse("UTC").success).toBe(false);
+  });
+
+  it("should reject an invalid timezone", () => {
+    expect(timezoneSchema.safeParse("Not/A_Timezone").success).toBe(false);
   });
 });

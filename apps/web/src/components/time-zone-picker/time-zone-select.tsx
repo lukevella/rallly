@@ -1,106 +1,106 @@
-"use client";
-
-import type { SelectProps } from "@radix-ui/react-select";
 import { cn } from "@rallly/ui";
-import { Badge } from "@rallly/ui/badge";
-import { Button } from "@rallly/ui/button";
 import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@rallly/ui/command";
-import { useDialog } from "@rallly/ui/dialog";
-import { Icon } from "@rallly/ui/icon";
-import { CheckIcon, GlobeIcon } from "lucide-react";
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+  useComboboxAnchor,
+} from "@rallly/ui/combobox";
+import { InputGroupAddon } from "@rallly/ui/input-group";
+import dayjs from "dayjs";
+import { GlobeIcon } from "lucide-react";
 import React from "react";
-import { Trans, useTranslation } from "@/i18n/client";
-import { dayjs } from "@/lib/dayjs";
-import { groupedTimeZones } from "@/utils/grouped-time-zone";
+import type { TimezoneEntry } from "@/components/time-zone-picker/timezone-data";
+import {
+  curatedTimezoneEntries,
+  otherTimezoneEntries,
+} from "@/components/time-zone-picker/timezone-data";
+import { getOffsetLabel } from "@/components/time-zone-picker/timezone-utils";
+import { useTranslation } from "@/i18n/client";
 
-interface TimeZoneCommandProps {
-  value?: string;
-  onSelect?: (value: string) => void;
+const allTimezoneEntries = [...curatedTimezoneEntries, ...otherTimezoneEntries];
+
+function filterTimezone(entry: TimezoneEntry, query: string): boolean {
+  if (!query) return true;
+  return entry.keywords.includes(query.toLowerCase());
 }
 
-export const TimeZoneCommand = ({ onSelect, value }: TimeZoneCommandProps) => {
+export function TimeZoneSelect({
+  value,
+  onValueChange,
+  className,
+  disabled,
+}: {
+  value?: string;
+  onValueChange?: (value: string) => void;
+  className?: string;
+  disabled?: boolean;
+}) {
   const { t } = useTranslation();
-  return (
-    <Command>
-      <CommandInput
-        placeholder={t("timeZoneSelect__inputPlaceholder", {
-          defaultValue: "Search…",
-        })}
-      />
-      <CommandList className="max-h-[300px] w-(--radix-popover-trigger-width) max-w-(--radix-popover-content-available-width) overflow-y-auto">
-        <CommandEmpty>
-          <Trans
-            i18nKey="timeZoneSelect__noOption"
-            defaults="No option found"
-          />
-        </CommandEmpty>
-        {Object.entries(groupedTimeZones).map(([region, timeZones]) => (
-          <CommandGroup heading={region} key={region}>
-            {timeZones.map(({ timezone, city }) => {
-              return (
-                <CommandItem
-                  key={timezone}
-                  onSelect={() => onSelect?.(timezone)}
-                  className="flex min-w-0 gap-x-2.5"
-                >
-                  <div className="w-6 shrink-0">
-                    {value === timezone ? (
-                      <Icon>
-                        <CheckIcon />
-                      </Icon>
-                    ) : null}
-                  </div>
-                  <span className="min-w-0 grow truncate">{city}</span>
-                  <Badge>{dayjs().tz(timezone).format("z")}</Badge>
-                </CommandItem>
-              );
-            })}
-          </CommandGroup>
-        ))}
-      </CommandList>
-    </Command>
-  );
-};
 
-export const TimeZoneSelect = React.forwardRef<
-  HTMLButtonElement,
-  SelectProps & { className?: string }
->(({ value, onValueChange, className, disabled }, ref) => {
-  const dialog = useDialog();
-  return (
-    <>
-      <CommandDialog {...dialog.dialogProps}>
-        <TimeZoneCommand
-          value={value}
-          onSelect={(newValue) => {
-            onValueChange?.(newValue);
-            dialog.dismiss();
-          }}
-        />
-      </CommandDialog>
-      <Button
-        ref={ref}
-        disabled={disabled}
-        className={cn("justify-start text-left", className)}
-        onClick={() => {
-          dialog.trigger();
-        }}
-      >
-        <Icon>
-          <GlobeIcon />
-        </Icon>
-        <span className="flex-1">{value}</span>
-      </Button>
-    </>
-  );
-});
+  const anchorRef = useComboboxAnchor();
 
-TimeZoneSelect.displayName = "TimeZoneSelect";
+  const [isSearching, setIsSearching] = React.useState(false);
+
+  const selectedEntry = React.useMemo(
+    () => allTimezoneEntries.find((e) => e.id === value),
+    [value],
+  );
+
+  return (
+    <Combobox<TimezoneEntry>
+      items={isSearching ? allTimezoneEntries : curatedTimezoneEntries}
+      value={selectedEntry ?? null}
+      onValueChange={(entry) => {
+        if (entry) {
+          onValueChange?.(entry.id);
+        }
+      }}
+      onInputValueChange={(inputValue, { reason }) => {
+        if (reason === "input-change") {
+          setIsSearching(inputValue.trim().length > 0);
+        } else {
+          setIsSearching(false);
+        }
+      }}
+      itemToStringLabel={(entry) => entry.city}
+      filter={filterTimezone}
+      autoHighlight={true}
+    >
+      <div ref={anchorRef} className={cn("min-w-64", className)}>
+        <ComboboxInput
+          disabled={disabled}
+          placeholder={t("timezoneInputPlaceholder", {
+            defaultValue: "Search timezone…",
+          })}
+        >
+          <InputGroupAddon>
+            <GlobeIcon />
+          </InputGroupAddon>
+        </ComboboxInput>
+      </div>
+      <ComboboxContent align="end" anchor={anchorRef.current}>
+        <ComboboxEmpty>
+          {t("timeZoneSelect__noOption", {
+            defaultValue: "No timezone found",
+          })}
+        </ComboboxEmpty>
+        <ComboboxList>
+          {(entry) => (
+            <ComboboxItem key={entry.id} value={entry} index={entry.index}>
+              <span className="rounded-full bg-muted px-1.5 py-0.5 text-muted-foreground text-xs tabular-nums">
+                {getOffsetLabel(entry.id)}
+              </span>
+              <span className="min-w-0 flex-1 truncate">{entry.city}</span>
+              <span className="rounded-full px-1 py-0.5 text-center text-muted-foreground text-xs tabular-nums">
+                {dayjs().tz(entry.id).format("LT")}
+              </span>
+            </ComboboxItem>
+          )}
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
+  );
+}

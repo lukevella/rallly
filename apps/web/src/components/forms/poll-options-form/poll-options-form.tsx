@@ -1,7 +1,6 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@rallly/ui/card";
-import { CommandDialog } from "@rallly/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -15,11 +14,11 @@ import { Label } from "@rallly/ui/label";
 import { Switch } from "@rallly/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import { CalendarIcon, GlobeIcon, InfoIcon, TableIcon } from "lucide-react";
+import { CalendarIcon, InfoIcon, TableIcon } from "lucide-react";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
 
-import { TimeZoneCommand } from "@/components/time-zone-picker/time-zone-select";
+import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { Trans, useTranslation } from "@/i18n/client";
 
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
@@ -43,8 +42,6 @@ const PollOptionsForm = ({
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();
 
-  const [isTimeZoneCommandModalOpen, showTimeZoneCommandModal] =
-    React.useState(false);
   const { watch, setValue, getValues, formState } = form;
 
   const views = React.useMemo(() => {
@@ -252,30 +249,11 @@ const PollOptionsForm = ({
                 </Tooltip>
               </div>
               {field.value ? (
-                <div>
-                  <Button
-                    disabled={disableTimeZoneChange}
-                    onClick={() => {
-                      showTimeZoneCommandModal(true);
-                    }}
-                    variant="ghost"
-                  >
-                    <GlobeIcon className="size-4 text-muted-foreground" />
-                    {field.value}
-                  </Button>
-                  <CommandDialog
-                    open={isTimeZoneCommandModalOpen}
-                    onOpenChange={showTimeZoneCommandModal}
-                  >
-                    <TimeZoneCommand
-                      value={field.value}
-                      onSelect={(newValue) => {
-                        field.onChange(newValue);
-                        showTimeZoneCommandModal(false);
-                      }}
-                    />
-                  </CommandDialog>
-                </div>
+                <TimeZoneSelect
+                  disabled={disableTimeZoneChange}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                />
               ) : null}
             </div>
           )}

@@ -1,85 +1,12 @@
 import { dayjs } from "@/lib/dayjs";
-import { supportedTimeZones } from "@/utils/supported-time-zones";
 
 import type {
   DateTimeOption,
   TimeOption,
 } from "../components/forms/poll-options-form";
 
-export function parseIanaTimezone(timezone: string): {
-  region: string;
-  city: string;
-} {
-  const firstSlash = timezone.indexOf("/");
-  const region = timezone.substring(0, firstSlash);
-  const city = timezone.substring(firstSlash + 1).replaceAll("_", " ");
-
-  return { region, city };
-}
-
 export function getBrowserTimeZone() {
-  const timeZone = dayjs.tz.guess();
-  return normalizeTimeZone(timeZone);
-}
-
-function getTimeZoneOffset(timeZone: string) {
-  try {
-    return dayjs().tz(timeZone).utcOffset();
-  } catch {
-    console.error({ timeZone }, "Failed to resolve timezone");
-    return 0;
-  }
-}
-
-function isFixedOffsetTimeZone(timeZone: string) {
-  return (
-    timeZone.toLowerCase().startsWith("etc") ||
-    timeZone.toLowerCase().startsWith("gmt") ||
-    timeZone.toLowerCase().startsWith("utc")
-  );
-}
-
-/**
- * Given a timezone, this function returns a normalized timezone
- * that is supported by the application. If the timezone is not
- * recognized, it will return a timezone in the same continent
- * with the same offset.
- * @param timeZone
- * @returns
- */
-export function normalizeTimeZone(timeZone: string) {
-  let tz = supportedTimeZones.find((tz) => tz === timeZone);
-
-  if (tz) {
-    return tz;
-  }
-
-  const timeZoneOffset = getTimeZoneOffset(timeZone);
-
-  if (!isFixedOffsetTimeZone(timeZone)) {
-    // Find a timezone in the same continent with the same offset
-    const [continent] = timeZone.split("/");
-    const sameContinentTimeZones = supportedTimeZones.filter((tz) =>
-      tz.startsWith(continent),
-    );
-    tz = sameContinentTimeZones.find((tz) => {
-      return dayjs().tz(tz, true).utcOffset() === timeZoneOffset;
-    });
-  }
-
-  if (!tz) {
-    tz = supportedTimeZones.find((tz) => {
-      return getTimeZoneOffset(tz) === timeZoneOffset;
-    });
-  }
-
-  if (!tz) {
-    // In theory this shouldn't happen
-    tz = "America/New_York";
-    console.error({ timeZone }, "Unable to resolve timezone");
-  }
-
-  return tz;
+  return dayjs.tz.guess();
 }
 
 export const encodeDateOption = (option: DateTimeOption) => {

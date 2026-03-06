@@ -9,6 +9,7 @@
 @source "../../packages/ui/src/**/*.{ts,tsx}";
 
 :root {
+  --radius: 0.625rem;
   --primary: var(--primary-light, var(--color-indigo-600));
   --primary-foreground: var(--primary-light-foreground, var(--color-white));
 

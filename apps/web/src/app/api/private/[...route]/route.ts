@@ -14,7 +14,6 @@ import { rateLimiter } from "hono-rate-limiter";
 import { getPollParticipants, getPollResults } from "@/features/poll/data";
 import { createPoll, deletePoll } from "@/features/poll/mutations";
 import { redis } from "@/lib/kv";
-import { isSupportedTimeZone } from "@/utils/supported-time-zones";
 import {
   createPollInputSchema,
   createPollSuccessResponseSchema,
@@ -227,16 +226,6 @@ app.post(
 
     const slots = input.slots;
     const timeZone = slots.timezone;
-
-    if (timeZone && !isSupportedTimeZone(timeZone)) {
-      return c.json(
-        apiError(
-          "INVALID_TIMEZONE",
-          `Invalid timezone: ${timeZone}. Please provide a valid IANA timezone.`,
-        ),
-        400,
-      );
-    }
 
     const duration = slots.duration;
     const times = Array.isArray(slots.times) ? slots.times : [slots.times];
