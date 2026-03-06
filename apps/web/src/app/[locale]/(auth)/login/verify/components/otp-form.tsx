@@ -68,7 +68,7 @@ export function OTPForm({ email }: { email: string }) {
               <FormItem>
                 <FormControl>
                   <InputOTP
-                    size="lg"
+                    large
                     placeholder={t("verificationCodePlaceholder")}
                     disabled={
                       form.formState.isSubmitting ||

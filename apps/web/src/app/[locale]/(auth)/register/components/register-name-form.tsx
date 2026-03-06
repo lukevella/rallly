@@ -137,7 +137,7 @@ export function RegisterNameForm() {
                   <FormControl>
                     <Input
                       {...field}
-                      size="lg"
+                      large
                       data-1p-ignore
                       placeholder={t("namePlaceholder")}
                       disabled={form.formState.isSubmitting}
@@ -159,7 +159,7 @@ export function RegisterNameForm() {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    size="lg"
+                    large
                     placeholder={t("emailPlaceholder")}
                     disabled={form.formState.isSubmitting}
                     {...field}
@@ -179,7 +179,7 @@ export function RegisterNameForm() {
                 </FormLabel>
                 <FormControl>
                   <PasswordInput
-                    size="lg"
+                    large
                     placeholder="••••••••"
                     disabled={form.formState.isSubmitting}
                     {...field}
