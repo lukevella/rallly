@@ -1,6 +1,7 @@
 "use client";
 
 import { PLAN_NAMES, pricingData } from "@rallly/billing";
+import { buttonVariants } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import {
   BillingPlan,
@@ -12,7 +13,6 @@ import {
   BillingPlanPrice,
   BillingPlanTitle,
 } from "@rallly/ui/billing-plan";
-import { buttonVariants } from "@rallly/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/tabs";
 import Link from "next/link";
 import React from "react";

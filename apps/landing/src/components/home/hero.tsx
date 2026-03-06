@@ -1,8 +1,7 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
-import { cn } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
-import { buttonVariants } from "@rallly/ui/button";
 import { ChevronRightIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import Image from "next/image";

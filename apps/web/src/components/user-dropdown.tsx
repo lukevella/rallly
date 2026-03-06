@@ -1,7 +1,7 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
-import { cn } from "@rallly/ui";
-import { Button, buttonVariants } from "@rallly/ui/button";
+import { buttonVariants, cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,

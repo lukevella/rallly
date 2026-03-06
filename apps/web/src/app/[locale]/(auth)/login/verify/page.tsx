@@ -1,4 +1,4 @@
-import { buttonVariants } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";

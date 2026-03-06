@@ -1,5 +1,6 @@
+import { buttonVariants } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
-import { Button, buttonVariants } from "@rallly/ui/button";
+import { Button } from "@rallly/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@rallly/ui/card";
 import {
   Dialog,

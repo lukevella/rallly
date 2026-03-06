@@ -1,8 +1,9 @@
 "use client";
 
 import { usePostHog } from "@rallly/posthog/client";
+import { buttonVariants } from "@rallly/ui";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
-import { Button, buttonVariants } from "@rallly/ui/button";
+import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import {

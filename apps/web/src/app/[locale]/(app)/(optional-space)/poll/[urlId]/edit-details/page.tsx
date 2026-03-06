@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import {
   Card,
   CardContent,

@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, buttonVariants } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import {
   Form,
   FormControl,

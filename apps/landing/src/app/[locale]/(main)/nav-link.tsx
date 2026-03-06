@@ -1,7 +1,6 @@
 "use client";
 
-import { cn } from "@rallly/ui";
-import { buttonVariants } from "@rallly/ui/button";
+import { buttonVariants, cn } from "@rallly/ui";
 import { usePathname } from "next/navigation";
 import { LinkBase } from "@/i18n/client/link";
 

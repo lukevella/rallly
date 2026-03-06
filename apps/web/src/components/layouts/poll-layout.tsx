@@ -1,5 +1,5 @@
 "use client";
-import { buttonVariants } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";

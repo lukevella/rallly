@@ -1,5 +1,6 @@
 import languages from "@rallly/languages";
-import { Button, buttonVariants } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,

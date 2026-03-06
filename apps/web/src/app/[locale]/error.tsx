@@ -1,6 +1,7 @@
 "use client";
 
-import { Button, buttonVariants } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import * as Sentry from "@sentry/nextjs";
 import { GithubIcon, HomeIcon, LifeBuoyIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";

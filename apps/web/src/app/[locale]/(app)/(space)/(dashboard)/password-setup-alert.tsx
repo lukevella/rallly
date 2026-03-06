@@ -1,7 +1,8 @@
 "use client";
 import { usePostHog } from "@rallly/posthog/client";
+import { buttonVariants } from "@rallly/ui";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
-import { Button, buttonVariants } from "@rallly/ui/button";
+import { Button } from "@rallly/ui/button";
 import { KeyRoundIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";

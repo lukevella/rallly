@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
 import { FileSearchIcon } from "lucide-react";
 import type * as React from "react";
 import { LinkBase } from "@/i18n/client/link";

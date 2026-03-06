@@ -1,4 +1,4 @@
-import { buttonVariants } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
 import { CrownIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";

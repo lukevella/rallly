@@ -1,7 +1,7 @@
 "use client";
 
 import { usePostHog } from "@rallly/posthog/client";
-import { buttonVariants } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
 import Link from "next/link";
 import { Trans } from "@/i18n/client/trans";
 import { linkToApp } from "@/lib/linkToApp";

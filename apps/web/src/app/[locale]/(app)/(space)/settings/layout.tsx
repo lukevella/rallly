@@ -1,4 +1,4 @@
-import { buttonVariants } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
 import {
   Sidebar,

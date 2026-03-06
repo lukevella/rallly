@@ -1,4 +1,4 @@
-import { buttonVariants } from "@rallly/ui/button";
+import { buttonVariants } from "@rallly/ui";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
