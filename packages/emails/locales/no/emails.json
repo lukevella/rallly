@@ -1,6 +1,5 @@
 {
   "common_poweredBy": "Drevet av <a>{domain}</a>",
-  "common_disableNotifications": "Hvis du vil slutte å motta oppdateringer kan du <a>skru av varsler</a>.",
   "finalizeHost_content": "<b>{title}</b> er bestilt for:",
   "finalizeHost_preview": "Sluttdato bestilt! Vi har varslet deltakerne og sendt dem kalenderinvitasjoner.",
   "finalizeHost_heading": "Sluttdato bestilt!",

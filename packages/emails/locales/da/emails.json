@@ -1,6 +1,6 @@
 {
   "common_poweredBy": "Drevet af <a>{domain}</a>",
-  "common_disableNotifications": "Hvis du ønsker at stoppe med at modtage opdateringer, kan du <a>slå notifikationer fra</a>.",
+  "common_disableNotifications": "Du kan <a>administrere dine underretningindstillinger</a> for at stoppe med at modtage disse e-mails.",
   "finalizeHost_content": "<b>{title}</b> er blevet booket til:",
   "finalizeHost_preview": "Endelig dato booket! Vi har underrettet deltagerne og sendt dem kalenderinvitationer.",
   "finalizeHost_heading": "Endelig dato booket!",
