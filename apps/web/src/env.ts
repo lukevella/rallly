@@ -31,7 +31,7 @@ export const env = createEnv({
      * Choose which service provider to use for sending emails.
      * Make sure to configure the corresponding environment variables.
      */
-    EMAIL_PROVIDER: z.enum(["smtp", "ses"]).default("smtp"),
+    EMAIL_PROVIDER: z.enum(["smtp", "ses", "mailgun"]).default("smtp"),
     /**
      * SMTP Configuration
      */
@@ -49,6 +49,11 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: z.string().optional(),
     AWS_SECRET_ACCESS_KEY: z.string().optional(),
     AWS_REGION: z.string().optional(),
+    /**
+     * Mailgun Configuration
+     */
+    MAILGUN_API_KEY: z.string().optional(),
+    MAILGUN_DOMAIN: z.string().optional(),
     /**
      * Comma separated list of email addresses that are allowed to register and login.
      * If not set, all emails are allowed. Wildcard characters are supported.
@@ -201,6 +206,8 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_REGION: process.env.AWS_REGION,
+    MAILGUN_API_KEY: process.env.MAILGUN_API_KEY,
+    MAILGUN_DOMAIN: process.env.MAILGUN_DOMAIN,
     S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
     S3_ENDPOINT: process.env.S3_ENDPOINT,
     S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,

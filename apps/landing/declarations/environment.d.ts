@@ -67,7 +67,7 @@ declare global {
       /**
        * Determines what email provider to use. "smtp" or "ses"
        */
-      EMAIL_PROVIDER?: "smtp" | "ses";
+      EMAIL_PROVIDER?: "smtp" | "ses" | "mailgun";
       /**
        * Name of the oidc provider
        */
