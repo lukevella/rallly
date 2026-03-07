@@ -23,6 +23,7 @@
     "i18next-scanner": "^4.2.0",
     "i18next-scanner-typescript": "^1.1.1",
     "nodemailer": "^6.9.9",
+    "nodemailer-mailgun-transport": "^2.1.5",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-i18next": "^15.5.1"
