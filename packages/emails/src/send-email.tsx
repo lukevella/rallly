@@ -4,6 +4,7 @@ import { render } from "@react-email/render";
 import { waitUntil } from "@vercel/functions";
 import type { Transporter } from "nodemailer";
 import { createTransport } from "nodemailer";
+import mailgunTransport from "nodemailer-mailgun-transport";
 import type Mail from "nodemailer/lib/mailer";
 
 import { i18nDefaultConfig, i18nInstance } from "./i18n";
@@ -28,6 +29,10 @@ type EmailProviderConfig =
     }
   | {
       name: "smtp";
+      // config defined through env vars
+    }
+  | {
+      name: "mailgun";
       // config defined through env vars
     };
 
@@ -219,6 +224,16 @@ export class EmailClient {
             rejectUnauthorized,
           },
         });
+        break;
+      }
+      case "mailgun": {
+        const auth = {
+          api_key: process.env.MAILGUN_API_KEY as string,
+          domain: process.env.MAILGUN_DOMAIN as string,
+        };
+        this.cachedTransport = createTransport(
+          mailgunTransport({ auth })
+        );
         break;
       }
     }
