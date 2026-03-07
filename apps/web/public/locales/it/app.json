@@ -610,5 +610,15 @@
   "errorLinkGithubDescription": "Segnala un problema o verifica gli aggiornamenti.",
   "notFoundLabel": "404",
   "notFoundTitle": "Pagina non trovata",
-  "notFoundDescription": "Spiacenti, non siamo riusciti a trovare la pagina che stai cercando. Ecco alcuni link utili."
+  "notFoundDescription": "Spiacenti, non siamo riusciti a trovare la pagina che stai cercando. Ecco alcuni link utili.",
+  "notifications": "Notifiche",
+  "notificationScopeOff": "Disattivato",
+  "notificationScopeMine": "Mio",
+  "notificationScopeAll": "Tutte",
+  "pollNotificationsDescription": "Ricevi una notifica via email quando c'è attività sui tuoi sondaggi",
+  "notifyNewResponse": "Nuova risposta",
+  "notifyNewResponseDescription": "Quando qualcuno risponde ad un sondaggio",
+  "notifyNewComment": "Nuovo commento",
+  "notifyNewCommentDescription": "Quando qualcuno commenta un sondaggio",
+  "notificationsDescription": "Scegli quali notifiche email ricevere"
 }
