@@ -90,7 +90,6 @@
   "profile": "Profilo",
   "polls": "Sondaggi",
   "timeZoneSelect__noOption": "Nessuna opzione trovata",
-  "timeZoneSelect__inputPlaceholder": "Ricerca…",
   "poweredByRallly": "Powered by <a>{{name}}</a>",
   "participants": "Partecipanti",
   "language": "Lingua",
@@ -612,13 +611,8 @@
   "notFoundTitle": "Pagina non trovata",
   "notFoundDescription": "Spiacenti, non siamo riusciti a trovare la pagina che stai cercando. Ecco alcuni link utili.",
   "notifications": "Notifiche",
-  "notificationScopeOff": "Disattivato",
-  "notificationScopeMine": "Mio",
-  "notificationScopeAll": "Tutte",
   "pollNotificationsDescription": "Ricevi una notifica via email quando c'è attività sui tuoi sondaggi",
   "notifyNewResponse": "Nuova risposta",
-  "notifyNewResponseDescription": "Quando qualcuno risponde ad un sondaggio",
   "notifyNewComment": "Nuovo commento",
-  "notifyNewCommentDescription": "Quando qualcuno commenta un sondaggio",
   "notificationsDescription": "Scegli quali notifiche email ricevere"
 }
