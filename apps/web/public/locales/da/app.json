@@ -614,5 +614,6 @@
   "pollNotificationsDescription": "Få besked via e-mail, når der er aktivitet på dine afstemninger",
   "notifyNewResponse": "Ny besvarelse",
   "notifyNewComment": "Ny kommentar",
-  "notificationsDescription": "Vælg hvilke e-mail-notifikationer du modtager"
+  "notificationsDescription": "Vælg hvilke e-mail-notifikationer du modtager",
+  "timezoneInputPlaceholder": "Søg tidszone…"
 }
