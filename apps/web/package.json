@@ -14,8 +14,7 @@
     "test:unit": "vitest run",
     "test:codegen": "playwright codegen http://localhost:3000",
     "docker:start": "./scripts/docker-start.sh",
-    "better-auth:generate": "pnpx @better-auth/cli@latest generate --config ./src/lib/auth.ts --output ../../packages/database/prisma/models/user.prisma",
-    "tz:generate": "node scripts/generate-timezone-data.mjs"
+    "better-auth:generate": "pnpx @better-auth/cli@latest generate --config ./src/lib/auth.ts --output ../../packages/database/prisma/models/user.prisma"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.29",
@@ -104,7 +103,7 @@
     "spacetime": "^7.4.7",
     "superjson": "^2.0.0",
     "tailwindcss": "^4.1.18",
-    "timezone-soft": "^1.5.1",
+    "timezone-soft": "^1.5.2",
     "zod": "^4.3.6",
     "zxcvbn": "^4.4.2"
   },

@@ -16,7 +16,7 @@ import spacetime from "spacetime";
 import soft from "timezone-soft";
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
-import { allTimezoneEntries } from "@/components/time-zone-picker/timezone-data";
+import { getCityFromTimezoneId } from "@/components/time-zone-picker/timezone-data";
 import { usePreferences } from "@/contexts/preferences";
 import { Trans } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
@@ -77,10 +77,6 @@ export const Clock = ({ className }: { className?: string }) => {
 
 export const TimesShownIn = () => {
   const { timezone } = useTimezone();
-  const selectedEntry = React.useMemo(
-    () => allTimezoneEntries.find((e) => e.id === timezone),
-    [timezone],
-  );
   return (
     <ClockPreferences>
       <button
@@ -89,9 +85,9 @@ export const TimesShownIn = () => {
       >
         <GlobeIcon className="size-4" />
         <Trans
-          i18nKey="timeShownIn"
-          defaults="Times shown in {timeZone}"
-          values={{ timeZone: selectedEntry?.city }}
+          i18nKey="cityTime"
+          defaults="{city} Time"
+          values={{ city: getCityFromTimezoneId(timezone) }}
         />
       </button>
     </ClockPreferences>

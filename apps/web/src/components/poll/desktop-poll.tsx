@@ -140,6 +140,12 @@ const DesktopPoll: React.FunctionComponent = () => {
   function TableControls() {
     return (
       <div className="flex items-center gap-4">
+        {poll.options[0]?.duration !== 0 && poll.timeZone ? (
+          <>
+            <TimesShownIn />
+            <span className="h-4 w-px bg-border" />
+          </>
+        ) : null}
         <div className="text-muted-foreground text-sm">
           <Trans
             i18nKey="optionCount"
@@ -287,11 +293,6 @@ const DesktopPoll: React.FunctionComponent = () => {
               </div>
               <TableControls />
             </CardHeader>
-            {poll.options[0]?.duration !== 0 && poll.timeZone ? (
-              <div className="border-b px-4 py-3">
-                <TimesShownIn />
-              </div>
-            ) : null}
             <div className="flex min-h-0 flex-1 flex-col">
               {participants.length > 0 || mode !== "view" ? (
                 <div className="relative flex min-h-0 flex-1 flex-col">

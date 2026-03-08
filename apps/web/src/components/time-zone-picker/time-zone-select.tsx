@@ -12,17 +12,22 @@ import { InputGroupAddon } from "@rallly/ui/input-group";
 import dayjs from "dayjs";
 import { GlobeIcon } from "lucide-react";
 import React from "react";
-import type { TimezoneEntry } from "@/components/time-zone-picker/timezone-data";
 import {
-  allTimezoneEntries,
-  curatedTimezoneEntries,
+  curatedTimezoneIds,
+  getAllTimezoneIds,
+  getCityFromTimezoneId,
 } from "@/components/time-zone-picker/timezone-data";
-import { getOffsetLabel } from "@/components/time-zone-picker/timezone-utils";
 import { useTranslation } from "@/i18n/client";
 
-function filterTimezone(entry: TimezoneEntry, query: string): boolean {
+const allIds = getAllTimezoneIds().sort((a, b) =>
+  getCityFromTimezoneId(a).localeCompare(getCityFromTimezoneId(b)),
+);
+
+const curatedIds = allIds.filter((id) => curatedTimezoneIds.has(id));
+
+function filterTimezone(id: string, query: string): boolean {
   if (!query) return true;
-  return entry.keywords.includes(query.toLowerCase());
+  return getCityFromTimezoneId(id).toLowerCase().includes(query.toLowerCase());
 }
 
 export function TimeZoneSelect({
@@ -42,18 +47,13 @@ export function TimeZoneSelect({
 
   const [isSearching, setIsSearching] = React.useState(false);
 
-  const selectedEntry = React.useMemo(
-    () => allTimezoneEntries.find((e) => e.id === value),
-    [value],
-  );
-
   return (
-    <Combobox<TimezoneEntry>
-      items={isSearching ? allTimezoneEntries : curatedTimezoneEntries}
-      value={selectedEntry ?? null}
-      onValueChange={(entry) => {
-        if (entry) {
-          onValueChange?.(entry.id);
+    <Combobox
+      items={isSearching ? allIds : curatedIds}
+      value={value ?? null}
+      onValueChange={(id) => {
+        if (id) {
+          onValueChange?.(id);
         }
       }}
       onInputValueChange={(inputValue, { reason }) => {
@@ -63,7 +63,7 @@ export function TimeZoneSelect({
           setIsSearching(false);
         }
       }}
-      itemToStringLabel={(entry) => entry.city}
+      itemToStringLabel={getCityFromTimezoneId}
       filter={filterTimezone}
       autoHighlight={true}
     >
@@ -86,14 +86,13 @@ export function TimeZoneSelect({
           })}
         </ComboboxEmpty>
         <ComboboxList>
-          {(entry) => (
-            <ComboboxItem key={entry.id} value={entry} index={entry.index}>
-              <span className="rounded-full bg-muted px-1.5 py-0.5 text-muted-foreground text-xs tabular-nums">
-                {getOffsetLabel(entry.id)}
+          {(entry, index) => (
+            <ComboboxItem key={entry} value={entry} index={index}>
+              <span className="min-w-0 flex-1 truncate">
+                {getCityFromTimezoneId(entry)}
               </span>
-              <span className="min-w-0 flex-1 truncate">{entry.city}</span>
               <span className="rounded-full px-1 py-0.5 text-center text-muted-foreground text-xs tabular-nums">
-                {dayjs().tz(entry.id).format("LT")}
+                {dayjs().tz(entry).format("LT")}
               </span>
             </ComboboxItem>
           )}
