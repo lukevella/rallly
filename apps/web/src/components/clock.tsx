@@ -16,7 +16,7 @@ import spacetime from "spacetime";
 import soft from "timezone-soft";
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
-import { timezoneEntries } from "@/components/time-zone-picker/timezone-data";
+import { allTimezoneEntries } from "@/components/time-zone-picker/timezone-data";
 import { usePreferences } from "@/contexts/preferences";
 import { Trans } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
@@ -78,7 +78,7 @@ export const Clock = ({ className }: { className?: string }) => {
 export const TimesShownIn = () => {
   const { timezone } = useTimezone();
   const selectedEntry = React.useMemo(
-    () => timezoneEntries.find((e) => e.id === timezone),
+    () => allTimezoneEntries.find((e) => e.id === timezone),
     [timezone],
   );
   return (

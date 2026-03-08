@@ -659,11 +659,32 @@ export const curatedTimezoneEntries: TimezoneEntry[] = [
   },
 ];
 
-export const otherTimezoneEntries: TimezoneEntry[] = [
+export const allTimezoneEntries: TimezoneEntry[] = [
+  {
+    id: "Africa/Abidjan",
+    city: "Abidjan",
+    keywords: "abidjan africa/abidjan gmt greenwich mean standard time",
+  },
+  {
+    id: "Africa/Accra",
+    city: "Accra",
+    keywords: "accra africa/accra gmt greenwich mean standard time",
+  },
   {
     id: "America/Adak",
     city: "Adak",
     keywords: "adak america/adak hst hdt aleutian standard standard time",
+  },
+  {
+    id: "Africa/Addis_Ababa",
+    city: "Addis Ababa",
+    keywords: "addis ababa africa/addis_ababa eat east africa standard time",
+  },
+  {
+    id: "Australia/Adelaide",
+    city: "Adelaide",
+    keywords:
+      "adelaide australia/adelaide acst acdt central australia standard time",
   },
   {
     id: "Asia/Aden",
@@ -671,14 +692,35 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "aden asia/aden ast arabian standard time",
   },
   {
+    id: "Africa/Algiers",
+    city: "Algiers",
+    keywords: "algiers africa/algiers cet central european standard time",
+  },
+  {
+    id: "Asia/Almaty",
+    city: "Almaty",
+    keywords: "almaty asia/almaty almt east kazakhstan standard time",
+  },
+  {
     id: "Asia/Amman",
     city: "Amman",
     keywords: "amman asia/amman eet eest eastern european standard time",
   },
   {
+    id: "Europe/Amsterdam",
+    city: "Amsterdam",
+    keywords:
+      "amsterdam europe/amsterdam cet cest central european standard time",
+  },
+  {
     id: "Asia/Anadyr",
     city: "Anadyr",
     keywords: "anadyr asia/anadyr anat anadyr standard time",
+  },
+  {
+    id: "America/Anchorage",
+    city: "Anchorage",
+    keywords: "anchorage america/anchorage akst akdt alaska standard time",
   },
   {
     id: "Europe/Andorra",
@@ -699,6 +741,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "America/Antigua",
     city: "Antigua",
     keywords: "antigua america/antigua ast atlantic standard time",
+  },
+  {
+    id: "Pacific/Apia",
+    city: "Apia",
+    keywords: "apia pacific/apia wst west samoa standard time",
   },
   {
     id: "Asia/Aqtau",
@@ -736,9 +783,34 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "astrakhan europe/astrakhan msk moscow standard time",
   },
   {
+    id: "America/Asuncion",
+    city: "Asuncion",
+    keywords: "asuncion america/asuncion pyt pyst paraguay standard time",
+  },
+  {
+    id: "Europe/Athens",
+    city: "Athens",
+    keywords: "athens europe/athens eet eest eastern european standard time",
+  },
+  {
     id: "Asia/Atyrau",
     city: "Atyrau",
     keywords: "atyrau asia/atyrau almt west kazakhstan standard time",
+  },
+  {
+    id: "Pacific/Auckland",
+    city: "Auckland",
+    keywords: "auckland pacific/auckland nzst nzdt new zealand standard time",
+  },
+  {
+    id: "Atlantic/Azores",
+    city: "Azores",
+    keywords: "azores atlantic/azores azot azost azores standard time",
+  },
+  {
+    id: "Asia/Baghdad",
+    city: "Baghdad",
+    keywords: "baghdad asia/baghdad ast arabian standard time",
   },
   {
     id: "America/Bahia",
@@ -757,9 +829,19 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "bahrain asia/bahrain ast arabian standard time",
   },
   {
+    id: "Asia/Baku",
+    city: "Baku",
+    keywords: "baku asia/baku azt azerbaijan standard time",
+  },
+  {
     id: "Africa/Bamako",
     city: "Bamako",
     keywords: "bamako africa/bamako gmt greenwich mean standard time",
+  },
+  {
+    id: "Asia/Bangkok",
+    city: "Bangkok",
+    keywords: "bangkok asia/bangkok ict indochina standard time",
   },
   {
     id: "Africa/Bangui",
@@ -772,9 +854,19 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "banjul africa/banjul gmt greenwich mean standard time",
   },
   {
+    id: "America/Barbados",
+    city: "Barbados",
+    keywords: "barbados america/barbados ast atlantic standard time",
+  },
+  {
     id: "Asia/Barnaul",
     city: "Barnaul",
     keywords: "barnaul asia/barnaul krat krasnoyarsk standard time",
+  },
+  {
+    id: "Asia/Beirut",
+    city: "Beirut",
+    keywords: "beirut asia/beirut eet eest eastern european standard time",
   },
   {
     id: "America/Belem",
@@ -782,9 +874,20 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "belem america/belem brt brasilia standard time",
   },
   {
+    id: "Europe/Belgrade",
+    city: "Belgrade",
+    keywords:
+      "belgrade europe/belgrade cet cest central european standard time",
+  },
+  {
     id: "America/Belize",
     city: "Belize",
     keywords: "belize america/belize cst central standard time",
+  },
+  {
+    id: "Europe/Berlin",
+    city: "Berlin",
+    keywords: "berlin europe/berlin cet cest central european standard time",
   },
   {
     id: "Atlantic/Bermuda",
@@ -823,6 +926,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "boa vista america/boa_vista amt amazon standard time",
   },
   {
+    id: "America/Bogota",
+    city: "Bogota",
+    keywords: "bogota america/bogota cot colombia standard time",
+  },
+  {
     id: "America/Boise",
     city: "Boise",
     keywords: "boise america/boise mst mdt mountain standard time",
@@ -845,6 +953,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "brazzaville africa/brazzaville wat west africa standard time",
   },
   {
+    id: "Australia/Brisbane",
+    city: "Brisbane",
+    keywords: "brisbane australia/brisbane aest brisbane standard time",
+  },
+  {
     id: "Australia/Broken_Hill",
     city: "Broken Hill",
     keywords:
@@ -854,6 +967,24 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "Asia/Brunei",
     city: "Brunei",
     keywords: "brunei asia/brunei bnt brunei darussalam standard time",
+  },
+  {
+    id: "Europe/Brussels",
+    city: "Brussels",
+    keywords:
+      "brussels europe/brussels cet cest central european standard time",
+  },
+  {
+    id: "Europe/Bucharest",
+    city: "Bucharest",
+    keywords:
+      "bucharest europe/bucharest eet eest eastern european standard time",
+  },
+  {
+    id: "Europe/Budapest",
+    city: "Budapest",
+    keywords:
+      "budapest europe/budapest cet cest central european standard time",
   },
   {
     id: "America/Buenos_Aires",
@@ -870,6 +1001,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     city: "Busingen",
     keywords:
       "busingen europe/busingen cet cest central european standard time",
+  },
+  {
+    id: "Africa/Cairo",
+    city: "Cairo",
+    keywords: "cairo africa/cairo eet eastern european standard time",
   },
   {
     id: "Asia/Calcutta",
@@ -891,6 +1027,27 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "Atlantic/Canary",
     city: "Canary",
     keywords: "canary atlantic/canary wet west western european standard time",
+  },
+  {
+    id: "America/Cancun",
+    city: "Cancun",
+    keywords: "cancun america/cancun est eastern standard time",
+  },
+  {
+    id: "Atlantic/Cape_Verde",
+    city: "Cape Verde",
+    keywords: "cape verde atlantic/cape_verde cvt cape verde standard time",
+  },
+  {
+    id: "America/Caracas",
+    city: "Caracas",
+    keywords: "caracas america/caracas vet venezuela standard time",
+  },
+  {
+    id: "Africa/Casablanca",
+    city: "Casablanca",
+    keywords:
+      "casablanca africa/casablanca wet west morocco standard standard time",
   },
   {
     id: "Antarctica/Casey",
@@ -934,6 +1091,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "chatham pacific/chatham chast chadt chatham standard time",
   },
   {
+    id: "America/Chicago",
+    city: "Chicago",
+    keywords: "chicago america/chicago cst cdt central standard time",
+  },
+  {
     id: "America/Chihuahua",
     city: "Chihuahua",
     keywords:
@@ -966,6 +1128,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "cocos indian/cocos cct cocos islands standard time",
   },
   {
+    id: "Asia/Colombo",
+    city: "Colombo",
+    keywords: "colombo asia/colombo ist india standard time",
+  },
+  {
     id: "Indian/Comoro",
     city: "Comoro",
     keywords: "comoro indian/comoro eat east africa standard time",
@@ -974,6 +1141,12 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "Africa/Conakry",
     city: "Conakry",
     keywords: "conakry africa/conakry gmt greenwich mean standard time",
+  },
+  {
+    id: "Europe/Copenhagen",
+    city: "Copenhagen",
+    keywords:
+      "copenhagen europe/copenhagen cet cest central european standard time",
   },
   {
     id: "America/Coral_Harbour",
@@ -1033,6 +1206,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
       "dar es salaam africa/dar_es_salaam eat east africa standard time",
   },
   {
+    id: "Australia/Darwin",
+    city: "Darwin",
+    keywords: "darwin australia/darwin acst australian central standard time",
+  },
+  {
     id: "Antarctica/Davis",
     city: "Davis",
     keywords: "davis antarctica/davis davt davis standard time",
@@ -1048,9 +1226,19 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "dawson creek america/dawson_creek mst mountain standard time",
   },
   {
+    id: "America/Denver",
+    city: "Denver",
+    keywords: "denver america/denver mst mdt mountain standard time",
+  },
+  {
     id: "America/Detroit",
     city: "Detroit",
     keywords: "detroit america/detroit est edt eastern standard time",
+  },
+  {
+    id: "Asia/Dhaka",
+    city: "Dhaka",
+    keywords: "dhaka asia/dhaka bst bangladesh standard time",
   },
   {
     id: "Asia/Dili",
@@ -1073,6 +1261,16 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "douala africa/douala wat west africa standard time",
   },
   {
+    id: "Asia/Dubai",
+    city: "Dubai",
+    keywords: "dubai asia/dubai gst gulf standard time",
+  },
+  {
+    id: "Europe/Dublin",
+    city: "Dublin",
+    keywords: "dublin europe/dublin gmt ist irish standard time",
+  },
+  {
     id: "Antarctica/DumontDUrville",
     city: "DumontDUrville",
     keywords:
@@ -1087,6 +1285,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "Pacific/Easter",
     city: "Easter",
     keywords: "easter pacific/easter east easst easter island standard time",
+  },
+  {
+    id: "America/Edmonton",
+    city: "Edmonton",
+    keywords: "edmonton america/edmonton mst mdt mountain standard time",
   },
   {
     id: "Pacific/Efate",
@@ -1135,6 +1338,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     city: "Famagusta",
     keywords:
       "famagusta asia/famagusta eet eest eastern european standard time",
+  },
+  {
+    id: "Pacific/Fiji",
+    city: "Fiji",
+    keywords: "fiji pacific/fiji fjt fjt fiji standard time",
   },
   {
     id: "America/Fort_Nelson",
@@ -1208,9 +1416,25 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "grenada america/grenada ast atlantic standard time",
   },
   {
+    id: "Pacific/Guadalcanal",
+    city: "Guadalcanal",
+    keywords:
+      "guadalcanal pacific/guadalcanal sbt solomon islands standard time",
+  },
+  {
     id: "America/Guadeloupe",
     city: "Guadeloupe",
     keywords: "guadeloupe america/guadeloupe ast atlantic standard time",
+  },
+  {
+    id: "Pacific/Guam",
+    city: "Guam",
+    keywords: "guam pacific/guam chst chamorro standard time",
+  },
+  {
+    id: "America/Guatemala",
+    city: "Guatemala",
+    keywords: "guatemala america/guatemala cst central standard time",
   },
   {
     id: "America/Guayaquil",
@@ -1228,14 +1452,30 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "guyana america/guyana gyt guyana standard time",
   },
   {
+    id: "America/Halifax",
+    city: "Halifax",
+    keywords: "halifax america/halifax ast adt atlantic standard time",
+  },
+  {
     id: "Africa/Harare",
     city: "Harare",
     keywords: "harare africa/harare cat central africa standard time",
   },
   {
+    id: "America/Havana",
+    city: "Havana",
+    keywords: "havana america/havana hncu hecu cuba standard time",
+  },
+  {
     id: "Asia/Hebron",
     city: "Hebron",
     keywords: "hebron asia/hebron eet eest eastern european standard time",
+  },
+  {
+    id: "Europe/Helsinki",
+    city: "Helsinki",
+    keywords:
+      "helsinki europe/helsinki eet eest eastern european standard time",
   },
   {
     id: "America/Hermosillo",
@@ -1250,9 +1490,24 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
       "hobart australia/hobart aest aedt eastern australia standard time",
   },
   {
+    id: "Asia/Hong_Kong",
+    city: "Hong Kong",
+    keywords: "hong kong asia/hong_kong hkt hong kong standard time",
+  },
+  {
+    id: "Pacific/Honolulu",
+    city: "Honolulu",
+    keywords: "honolulu pacific/honolulu hast hawaii-aleutian standard time",
+  },
+  {
     id: "Asia/Hovd",
     city: "Hovd",
     keywords: "hovd asia/hovd hovt hovd standard time",
+  },
+  {
+    id: "America/Indianapolis",
+    city: "Indianapolis",
+    keywords: "indianapolis america/indianapolis est edt eastern standard time",
   },
   {
     id: "America/Indiana/Indianapolis",
@@ -1281,6 +1536,21 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "isle of man europe/isle_of_man gmt bst british standard time",
   },
   {
+    id: "Europe/Istanbul",
+    city: "Istanbul",
+    keywords: "istanbul europe/istanbul trt turkey standard time",
+  },
+  {
+    id: "Asia/Jakarta",
+    city: "Jakarta",
+    keywords: "jakarta asia/jakarta wib western indonesia standard time",
+  },
+  {
+    id: "America/Jamaica",
+    city: "Jamaica",
+    keywords: "jamaica america/jamaica est eastern standard time",
+  },
+  {
     id: "Asia/Jayapura",
     city: "Jayapura",
     keywords: "jayapura asia/jayapura wit eastern indonesia standard time",
@@ -1289,6 +1559,17 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "Europe/Jersey",
     city: "Jersey",
     keywords: "jersey europe/jersey gmt bst british standard time",
+  },
+  {
+    id: "Asia/Jerusalem",
+    city: "Jerusalem",
+    keywords: "jerusalem asia/jerusalem ist idt israel standard time",
+  },
+  {
+    id: "Africa/Johannesburg",
+    city: "Johannesburg",
+    keywords:
+      "johannesburg africa/johannesburg sast south africa standard time",
   },
   {
     id: "Pacific/Johnston",
@@ -1311,15 +1592,31 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "juneau america/juneau akst akdt alaska standard time",
   },
   {
+    id: "Asia/Kabul",
+    city: "Kabul",
+    keywords: "kabul asia/kabul aft afghanistan standard time",
+  },
+  {
     id: "Europe/Kaliningrad",
     city: "Kaliningrad",
     keywords:
       "kaliningrad europe/kaliningrad eet eastern european standard time",
   },
   {
+    id: "Asia/Kamchatka",
+    city: "Kamchatka",
+    keywords:
+      "kamchatka asia/kamchatka pett petropavlovsk-kamchatski standard time",
+  },
+  {
     id: "Africa/Kampala",
     city: "Kampala",
     keywords: "kampala africa/kampala eat east africa standard time",
+  },
+  {
+    id: "Asia/Karachi",
+    city: "Karachi",
+    keywords: "karachi asia/karachi pkt pakistan standard time",
   },
   {
     id: "Asia/Katmandu",
@@ -1383,9 +1680,24 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "kralendijk america/kralendijk ast atlantic standard time",
   },
   {
+    id: "Asia/Krasnoyarsk",
+    city: "Krasnoyarsk",
+    keywords: "krasnoyarsk asia/krasnoyarsk krat krasnoyarsk standard time",
+  },
+  {
+    id: "Asia/Kuala_Lumpur",
+    city: "Kuala Lumpur",
+    keywords: "kuala lumpur asia/kuala_lumpur myt malaysia standard time",
+  },
+  {
     id: "Asia/Kuching",
     city: "Kuching",
     keywords: "kuching asia/kuching myt malaysia standard time",
+  },
+  {
+    id: "Asia/Kuwait",
+    city: "Kuwait",
+    keywords: "kuwait asia/kuwait ast arabian standard time",
   },
   {
     id: "Pacific/Kwajalein",
@@ -1393,9 +1705,19 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "kwajalein pacific/kwajalein mht marshall islands standard time",
   },
   {
+    id: "America/La_Paz",
+    city: "La Paz",
+    keywords: "la paz america/la_paz bot bolivia standard time",
+  },
+  {
     id: "America/Argentina/La_Rioja",
     city: "La Rioja",
     keywords: "la rioja america/argentina/la_rioja art argentina standard time",
+  },
+  {
+    id: "Africa/Lagos",
+    city: "Lagos",
+    keywords: "lagos africa/lagos wat west africa standard time",
   },
   {
     id: "Africa/Libreville",
@@ -1403,9 +1725,19 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "libreville africa/libreville wat west africa standard time",
   },
   {
+    id: "America/Lima",
+    city: "Lima",
+    keywords: "lima america/lima pet peru standard time",
+  },
+  {
     id: "Australia/Lindeman",
     city: "Lindeman",
     keywords: "lindeman australia/lindeman aest brisbane standard time",
+  },
+  {
+    id: "Europe/Lisbon",
+    city: "Lisbon",
+    keywords: "lisbon europe/lisbon wet west western european standard time",
   },
   {
     id: "Europe/Ljubljana",
@@ -1419,6 +1751,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "lome africa/lome gmt greenwich mean standard time",
   },
   {
+    id: "Europe/London",
+    city: "London",
+    keywords: "london europe/london gmt bst british standard time",
+  },
+  {
     id: "Arctic/Longyearbyen",
     city: "Longyearbyen",
     keywords:
@@ -1428,6 +1765,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "Australia/Lord_Howe",
     city: "Lord Howe",
     keywords: "lord howe australia/lord_howe lhst lhdt lord howe standard time",
+  },
+  {
+    id: "America/Los_Angeles",
+    city: "Los Angeles",
+    keywords: "los angeles america/los_angeles pst pdt pacific standard time",
   },
   {
     id: "America/Louisville",
@@ -1461,6 +1803,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
       "luxembourg europe/luxembourg cet cest central european standard time",
   },
   {
+    id: "Asia/Macau",
+    city: "Macau",
+    keywords: "macau asia/macau cst china standard time",
+  },
+  {
     id: "America/Maceio",
     city: "Maceio",
     keywords: "maceio america/maceio brt brasilia standard time",
@@ -1476,6 +1823,16 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     city: "Madeira",
     keywords:
       "madeira atlantic/madeira wet west western european standard time",
+  },
+  {
+    id: "Europe/Madrid",
+    city: "Madrid",
+    keywords: "madrid europe/madrid cet cest central european standard time",
+  },
+  {
+    id: "Asia/Magadan",
+    city: "Magadan",
+    keywords: "magadan asia/magadan magt magadan standard time",
   },
   {
     id: "Indian/Mahe",
@@ -1516,6 +1873,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "America/Manaus",
     city: "Manaus",
     keywords: "manaus america/manaus amt amazon standard time",
+  },
+  {
+    id: "Asia/Manila",
+    city: "Manila",
+    keywords: "manila asia/manila phst philippine standard time",
   },
   {
     id: "Africa/Maputo",
@@ -1559,6 +1921,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "matamoros america/matamoros cst cdt central standard time",
   },
   {
+    id: "Indian/Mauritius",
+    city: "Mauritius",
+    keywords: "mauritius indian/mauritius mut mauritius standard time",
+  },
+  {
     id: "Antarctica/Mawson",
     city: "Mawson",
     keywords: "mawson antarctica/mawson mawt mawson standard time",
@@ -1585,6 +1952,12 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "mcmurdo antarctica/mcmurdo nzst nzdt new zealand standard time",
   },
   {
+    id: "Australia/Melbourne",
+    city: "Melbourne",
+    keywords:
+      "melbourne australia/melbourne aest aedt eastern australia standard time",
+  },
+  {
     id: "America/Mendoza",
     city: "Mendoza",
     keywords: "mendoza america/mendoza art argentina standard time",
@@ -1605,9 +1978,20 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "metlakatla america/metlakatla akst akdt alaska standard time",
   },
   {
+    id: "America/Mexico_City",
+    city: "Mexico City",
+    keywords:
+      "mexico city america/mexico_city cst cdt central mexico standard time",
+  },
+  {
     id: "Pacific/Midway",
     city: "Midway",
     keywords: "midway pacific/midway sst samoa standard time",
+  },
+  {
+    id: "Europe/Minsk",
+    city: "Minsk",
+    keywords: "minsk europe/minsk msk moscow standard time",
   },
   {
     id: "America/Miquelon",
@@ -1631,10 +2015,20 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "moncton america/moncton ast adt atlantic standard time",
   },
   {
+    id: "Africa/Monrovia",
+    city: "Monrovia",
+    keywords: "monrovia africa/monrovia gmt greenwich mean standard time",
+  },
+  {
     id: "America/Monterrey",
     city: "Monterrey",
     keywords:
       "monterrey america/monterrey cst cdt central mexico standard time",
+  },
+  {
+    id: "America/Montevideo",
+    city: "Montevideo",
+    keywords: "montevideo america/montevideo uyt uruguay standard time",
   },
   {
     id: "America/Kentucky/Monticello",
@@ -1653,9 +2047,19 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "montserrat america/montserrat ast atlantic standard time",
   },
   {
+    id: "Europe/Moscow",
+    city: "Moscow",
+    keywords: "moscow europe/moscow msk moscow standard time",
+  },
+  {
     id: "Asia/Muscat",
     city: "Muscat",
     keywords: "muscat asia/muscat gst gulf standard time",
+  },
+  {
+    id: "Africa/Nairobi",
+    city: "Nairobi",
+    keywords: "nairobi africa/nairobi eat east africa standard time",
   },
   {
     id: "America/Nassau",
@@ -1677,6 +2081,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     city: "New Salem",
     keywords:
       "new salem america/north_dakota/new_salem cst cdt central standard time",
+  },
+  {
+    id: "America/New_York",
+    city: "New York",
+    keywords: "new york america/new_york est edt eastern standard time",
   },
   {
     id: "Africa/Niamey",
@@ -1704,9 +2113,19 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "norfolk pacific/norfolk nft nfdt norfolk island standard time",
   },
   {
+    id: "America/Noronha",
+    city: "Noronha",
+    keywords: "noronha america/noronha fnt fernando de noronha standard time",
+  },
+  {
     id: "Africa/Nouakchott",
     city: "Nouakchott",
     keywords: "nouakchott africa/nouakchott gmt greenwich mean standard time",
+  },
+  {
+    id: "Pacific/Noumea",
+    city: "Noumea",
+    keywords: "noumea pacific/noumea nct new caledonia standard time",
   },
   {
     id: "Asia/Novokuznetsk",
@@ -1724,14 +2143,29 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "ojinaga america/ojinaga mst mdt mountain standard time",
   },
   {
+    id: "Asia/Omsk",
+    city: "Omsk",
+    keywords: "omsk asia/omsk omst omsk standard time",
+  },
+  {
     id: "Asia/Oral",
     city: "Oral",
     keywords: "oral asia/oral almt west kazakhstan standard time",
   },
   {
+    id: "Europe/Oslo",
+    city: "Oslo",
+    keywords: "oslo europe/oslo cet cest central european standard time",
+  },
+  {
     id: "Africa/Ouagadougou",
     city: "Ouagadougou",
     keywords: "ouagadougou africa/ouagadougou gmt greenwich mean standard time",
+  },
+  {
+    id: "Pacific/Pago_Pago",
+    city: "Pago Pago",
+    keywords: "pago pago pacific/pago_pago sst samoa standard time",
   },
   {
     id: "Pacific/Palau",
@@ -1744,9 +2178,24 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "palmer antarctica/palmer art argentina standard time",
   },
   {
+    id: "America/Panama",
+    city: "Panama",
+    keywords: "panama america/panama est eastern standard time",
+  },
+  {
     id: "America/Paramaribo",
     city: "Paramaribo",
     keywords: "paramaribo america/paramaribo srt suriname standard time",
+  },
+  {
+    id: "Europe/Paris",
+    city: "Paris",
+    keywords: "paris europe/paris cet cest central european standard time",
+  },
+  {
+    id: "Australia/Perth",
+    city: "Perth",
+    keywords: "perth australia/perth awst western australia standard time",
   },
   {
     id: "America/Indiana/Petersburg",
@@ -1758,6 +2207,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "Asia/Phnom_Penh",
     city: "Phnom Penh",
     keywords: "phnom penh asia/phnom_penh ict indochina standard time",
+  },
+  {
+    id: "America/Phoenix",
+    city: "Phoenix",
+    keywords: "phoenix america/phoenix mst mountain standard time",
   },
   {
     id: "Pacific/Pitcairn",
@@ -1781,6 +2235,12 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "pontianak asia/pontianak wib western indonesia standard time",
   },
   {
+    id: "Pacific/Port_Moresby",
+    city: "Port Moresby",
+    keywords:
+      "port moresby pacific/port_moresby pgt papua new guinea standard time",
+  },
+  {
     id: "America/Port_of_Spain",
     city: "Port of Spain",
     keywords: "port of spain america/port_of_spain ast atlantic standard time",
@@ -1802,6 +2262,16 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "porto-novo africa/porto-novo wat west africa standard time",
   },
   {
+    id: "Europe/Prague",
+    city: "Prague",
+    keywords: "prague europe/prague cet cest central european standard time",
+  },
+  {
+    id: "America/Puerto_Rico",
+    city: "Puerto Rico",
+    keywords: "puerto rico america/puerto_rico ast atlantic standard time",
+  },
+  {
     id: "America/Punta_Arenas",
     city: "Punta Arenas",
     keywords: "punta arenas america/punta_arenas clt chile standard time",
@@ -1810,6 +2280,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "Asia/Pyongyang",
     city: "Pyongyang",
     keywords: "pyongyang asia/pyongyang kst korean standard time",
+  },
+  {
+    id: "Asia/Qatar",
+    city: "Qatar",
+    keywords: "qatar asia/qatar ast arabian standard time",
   },
   {
     id: "Asia/Qostanay",
@@ -1857,6 +2332,16 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "reunion indian/reunion ret réunion standard time",
   },
   {
+    id: "Atlantic/Reykjavik",
+    city: "Reykjavik",
+    keywords: "reykjavik atlantic/reykjavik gmt greenwich mean standard time",
+  },
+  {
+    id: "Europe/Riga",
+    city: "Riga",
+    keywords: "riga europe/riga eet eest eastern european standard time",
+  },
+  {
     id: "America/Rio_Branco",
     city: "Rio Branco",
     keywords: "rio branco america/rio_branco act acre standard time",
@@ -1866,6 +2351,16 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     city: "Rio Gallegos",
     keywords:
       "rio gallegos america/argentina/rio_gallegos art argentina standard time",
+  },
+  {
+    id: "Asia/Riyadh",
+    city: "Riyadh",
+    keywords: "riyadh asia/riyadh ast arabian standard time",
+  },
+  {
+    id: "Europe/Rome",
+    city: "Rome",
+    keywords: "rome europe/rome cet cest central european standard time",
   },
   {
     id: "Antarctica/Rothera",
@@ -1929,6 +2424,21 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "santarem america/santarem brt brasilia standard time",
   },
   {
+    id: "America/Santiago",
+    city: "Santiago",
+    keywords: "santiago america/santiago clt clst chile standard time",
+  },
+  {
+    id: "America/Santo_Domingo",
+    city: "Santo Domingo",
+    keywords: "santo domingo america/santo_domingo ast atlantic standard time",
+  },
+  {
+    id: "America/Sao_Paulo",
+    city: "Sao Paulo",
+    keywords: "sao paulo america/sao_paulo brt brasilia standard time",
+  },
+  {
     id: "Africa/Sao_Tome",
     city: "Sao Tome",
     keywords: "sao tome africa/sao_tome gmt greenwich mean standard time",
@@ -1951,10 +2461,25 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
       "scoresbysund america/scoresbysund hneg heeg east greenland standard time",
   },
   {
+    id: "Asia/Seoul",
+    city: "Seoul",
+    keywords: "seoul asia/seoul kst korean standard time",
+  },
+  {
+    id: "Asia/Shanghai",
+    city: "Shanghai",
+    keywords: "shanghai asia/shanghai cst china standard time",
+  },
+  {
     id: "Europe/Simferopol",
     city: "Simferopol",
     keywords:
       "simferopol europe/simferopol eet eest eastern european standard time",
+  },
+  {
+    id: "Asia/Singapore",
+    city: "Singapore",
+    keywords: "singapore asia/singapore sgt singapore standard time",
   },
   {
     id: "America/Sitka",
@@ -1965,6 +2490,17 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "Europe/Skopje",
     city: "Skopje",
     keywords: "skopje europe/skopje cet cest central european standard time",
+  },
+  {
+    id: "Europe/Sofia",
+    city: "Sofia",
+    keywords: "sofia europe/sofia eet eest eastern european standard time",
+  },
+  {
+    id: "Atlantic/South_Georgia",
+    city: "South Georgia",
+    keywords:
+      "south georgia atlantic/south_georgia gst south georgia standard time",
   },
   {
     id: "Asia/Srednekolymsk",
@@ -1981,6 +2517,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "Atlantic/St_Helena",
     city: "St Helena",
     keywords: "st helena atlantic/st_helena gmt greenwich mean standard time",
+  },
+  {
+    id: "America/St_Johns",
+    city: "St Johns",
+    keywords: "st johns america/st_johns hntn hetn newfoundland standard time",
   },
   {
     id: "America/St_Kitts",
@@ -2008,9 +2549,21 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "stanley atlantic/stanley fkst falkland islands standard time",
   },
   {
+    id: "Europe/Stockholm",
+    city: "Stockholm",
+    keywords:
+      "stockholm europe/stockholm cet cest central european standard time",
+  },
+  {
     id: "America/Swift_Current",
     city: "Swift Current",
     keywords: "swift current america/swift_current cst central standard time",
+  },
+  {
+    id: "Australia/Sydney",
+    city: "Sydney",
+    keywords:
+      "sydney australia/sydney aest aedt eastern australia standard time",
   },
   {
     id: "Antarctica/Syowa",
@@ -2023,14 +2576,39 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "tahiti pacific/tahiti taht tahiti standard time",
   },
   {
+    id: "Asia/Taipei",
+    city: "Taipei",
+    keywords: "taipei asia/taipei cst taipei standard time",
+  },
+  {
+    id: "Europe/Tallinn",
+    city: "Tallinn",
+    keywords: "tallinn europe/tallinn eet eest eastern european standard time",
+  },
+  {
     id: "Pacific/Tarawa",
     city: "Tarawa",
     keywords: "tarawa pacific/tarawa gilt gilbert islands standard time",
   },
   {
+    id: "Asia/Tashkent",
+    city: "Tashkent",
+    keywords: "tashkent asia/tashkent uzt uzbekistan standard time",
+  },
+  {
+    id: "Asia/Tbilisi",
+    city: "Tbilisi",
+    keywords: "tbilisi asia/tbilisi get georgia standard time",
+  },
+  {
     id: "America/Tegucigalpa",
     city: "Tegucigalpa",
     keywords: "tegucigalpa america/tegucigalpa cst central standard time",
+  },
+  {
+    id: "Asia/Tehran",
+    city: "Tehran",
+    keywords: "tehran asia/tehran irst iran standard time",
   },
   {
     id: "America/Indiana/Tell_City",
@@ -2049,14 +2627,34 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "thule america/thule ast adt atlantic standard time",
   },
   {
+    id: "America/Tijuana",
+    city: "Tijuana",
+    keywords: "tijuana america/tijuana pst pdt pacific standard time",
+  },
+  {
     id: "Europe/Tirane",
     city: "Tirane",
     keywords: "tirane europe/tirane cet cest central european standard time",
   },
   {
+    id: "Asia/Tokyo",
+    city: "Tokyo",
+    keywords: "tokyo asia/tokyo jst japan standard time",
+  },
+  {
     id: "Asia/Tomsk",
     city: "Tomsk",
     keywords: "tomsk asia/tomsk omst omsk standard time",
+  },
+  {
+    id: "Pacific/Tongatapu",
+    city: "Tongatapu",
+    keywords: "tongatapu pacific/tongatapu tot tonga standard time",
+  },
+  {
+    id: "America/Toronto",
+    city: "Toronto",
+    keywords: "toronto america/toronto est edt eastern standard time",
   },
   {
     id: "America/Tortola",
@@ -2082,6 +2680,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     id: "America/Argentina/Tucuman",
     city: "Tucuman",
     keywords: "tucuman america/argentina/tucuman art argentina standard time",
+  },
+  {
+    id: "Africa/Tunis",
+    city: "Tunis",
+    keywords: "tunis africa/tunis cet central european standard time",
   },
   {
     id: "Asia/Ulaanbaatar",
@@ -2114,6 +2717,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "vaduz europe/vaduz cet cest central european standard time",
   },
   {
+    id: "America/Vancouver",
+    city: "Vancouver",
+    keywords: "vancouver america/vancouver pst pdt pacific standard time",
+  },
+  {
     id: "Europe/Vatican",
     city: "Vatican",
     keywords: "vatican europe/vatican cet cest central european standard time",
@@ -2124,9 +2732,19 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "vevay america/indiana/vevay est edt eastern standard time",
   },
   {
+    id: "Europe/Vienna",
+    city: "Vienna",
+    keywords: "vienna europe/vienna cet cest central european standard time",
+  },
+  {
     id: "Asia/Vientiane",
     city: "Vientiane",
     keywords: "vientiane asia/vientiane ict indochina standard time",
+  },
+  {
+    id: "Europe/Vilnius",
+    city: "Vilnius",
+    keywords: "vilnius europe/vilnius eet eest eastern european standard time",
   },
   {
     id: "America/Indiana/Vincennes",
@@ -2160,6 +2778,11 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "wallis pacific/wallis wft wallis & futuna standard time",
   },
   {
+    id: "Europe/Warsaw",
+    city: "Warsaw",
+    keywords: "warsaw europe/warsaw cet cest central european standard time",
+  },
+  {
     id: "America/Whitehorse",
     city: "Whitehorse",
     keywords: "whitehorse america/whitehorse mst mountain standard time",
@@ -2175,13 +2798,39 @@ export const otherTimezoneEntries: TimezoneEntry[] = [
     keywords: "windhoek africa/windhoek cat central africa standard time",
   },
   {
+    id: "America/Winnipeg",
+    city: "Winnipeg",
+    keywords: "winnipeg america/winnipeg cst cdt central standard time",
+  },
+  {
     id: "America/Yakutat",
     city: "Yakutat",
     keywords: "yakutat america/yakutat akst akdt alaska standard time",
   },
   {
+    id: "Asia/Yakutsk",
+    city: "Yakutsk",
+    keywords: "yakutsk asia/yakutsk yakt yakutsk standard time",
+  },
+  {
+    id: "Asia/Yekaterinburg",
+    city: "Yekaterinburg",
+    keywords:
+      "yekaterinburg asia/yekaterinburg yekt yekaterinburg standard time",
+  },
+  {
+    id: "Asia/Yerevan",
+    city: "Yerevan",
+    keywords: "yerevan asia/yerevan amt armenia standard time",
+  },
+  {
     id: "Europe/Zagreb",
     city: "Zagreb",
     keywords: "zagreb europe/zagreb cet cest central european standard time",
+  },
+  {
+    id: "Europe/Zurich",
+    city: "Zurich",
+    keywords: "zurich europe/zurich cet cest central european standard time",
   },
 ];

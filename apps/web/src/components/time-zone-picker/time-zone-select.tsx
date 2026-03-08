@@ -14,13 +14,11 @@ import { GlobeIcon } from "lucide-react";
 import React from "react";
 import type { TimezoneEntry } from "@/components/time-zone-picker/timezone-data";
 import {
+  allTimezoneEntries,
   curatedTimezoneEntries,
-  otherTimezoneEntries,
 } from "@/components/time-zone-picker/timezone-data";
 import { getOffsetLabel } from "@/components/time-zone-picker/timezone-utils";
 import { useTranslation } from "@/i18n/client";
-
-const allTimezoneEntries = [...curatedTimezoneEntries, ...otherTimezoneEntries];
 
 function filterTimezone(entry: TimezoneEntry, query: string): boolean {
   if (!query) return true;
