@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom/vitest";
+import "@/lib/dayjs";
 import { vi } from "vitest";
 
 // Mock next-themes to avoid SSR issues
