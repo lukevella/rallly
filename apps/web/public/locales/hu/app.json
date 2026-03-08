@@ -90,7 +90,6 @@
   "profile": "Profil",
   "polls": "Szavazások",
   "timeZoneSelect__noOption": "Nem található lehetőség",
-  "timeZoneSelect__inputPlaceholder": "Keresés…",
   "poweredByRallly": "Működteti a <a>{name}</a>",
   "participants": "Résztvevők",
   "language": "Nyelv",
@@ -612,13 +611,8 @@
   "notFoundTitle": "Az oldal nem található",
   "notFoundDescription": "Sajnáljuk, nem tudtuk megtalálni a keresett oldalt. Itt van néhány hasznos link helyette.",
   "notifications": "Értesítések",
-  "notificationScopeOff": "Ki",
-  "notificationScopeMine": "Saját",
-  "notificationScopeAll": "Összes",
   "pollNotificationsDescription": "Értesítést kapsz emailben, amikor valami esemény történik a szavazásaidnál",
   "notifyNewResponse": "Új szavazat",
-  "notifyNewResponseDescription": "Amikor valaki kitölti a szavazást",
   "notifyNewComment": "Új hozzászólás",
-  "notifyNewCommentDescription": "Amikor valaki hozzászól a szavazáshoz",
   "notificationsDescription": "Válassz, mely email értesítéseket szeretnéd megkapni"
 }
