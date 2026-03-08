@@ -90,7 +90,6 @@
   "profile": "Profil",
   "polls": "Abstimmungen",
   "timeZoneSelect__noOption": "Keine Option gefunden",
-  "timeZoneSelect__inputPlaceholder": "Suchen…",
   "poweredByRallly": "Powered by <a>{name}</a>",
   "participants": "Teilnehmer",
   "language": "Sprache",
@@ -612,13 +611,8 @@
   "notFoundTitle": "Seite nicht gefunden",
   "notFoundDescription": "Leider konnten wir die gesuchte Seite nicht finden. Hier sind stattdessen einige hilfreiche Links.",
   "notifications": "Benachrichtigungen",
-  "notificationScopeOff": "Aus",
-  "notificationScopeMine": "Gehört mir",
-  "notificationScopeAll": "Alle",
   "pollNotificationsDescription": "Erhalte eine E-Mail-Benachrichtigung, wenn es Aktivitäten in deinen Umfragen gibt",
   "notifyNewResponse": "Neue Antwort",
-  "notifyNewResponseDescription": "Wenn jemand auf eine Umfrage antwortet",
   "notifyNewComment": "Neuer Kommentar",
-  "notifyNewCommentDescription": "Wenn jemand unter einer Umfrage kommentiert",
   "notificationsDescription": "Wähle aus, welche E-Mail-Benachrichtigungen du erhältst"
 }
