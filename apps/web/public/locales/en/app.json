@@ -90,7 +90,6 @@
   "profile": "Profile",
   "polls": "Polls",
   "timeZoneSelect__noOption": "No option found",
-  "timeZoneSelect__inputPlaceholder": "Search…",
   "poweredByRallly": "Powered by <a>{name}</a>",
   "participants": "Participants",
   "language": "Language",
@@ -612,13 +611,9 @@
   "notFoundTitle": "Page not found",
   "notFoundDescription": "Sorry, we couldn't find the page you're looking for. Here are some helpful links instead.",
   "notifications": "Notifications",
-  "notificationScopeOff": "Off",
-  "notificationScopeMine": "Mine",
-  "notificationScopeAll": "All",
   "pollNotificationsDescription": "Get notified by email when there is activity on your polls",
   "notifyNewResponse": "New response",
-  "notifyNewResponseDescription": "When someone responds to a poll",
   "notifyNewComment": "New comment",
-  "notifyNewCommentDescription": "When someone comments on a poll",
-  "notificationsDescription": "Choose which email notifications you receive"
+  "notificationsDescription": "Choose which email notifications you receive",
+  "timezoneInputPlaceholder": "Search timezone…"
 }
