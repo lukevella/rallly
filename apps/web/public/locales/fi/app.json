@@ -90,7 +90,6 @@
   "profile": "Profiili",
   "polls": "Kyselyt",
   "timeZoneSelect__noOption": "Vaihtoehtoja ei löytynyt",
-  "timeZoneSelect__inputPlaceholder": "Hae…",
   "poweredByRallly": "Palvelun tarjoaa <a>{name}</a>",
   "participants": "Osallistujat",
   "language": "Kieli",
@@ -595,8 +594,5 @@
   "pollDeleteError": "Kyselyn poistaminen epäonnistui",
   "inappropriateContent": "Sopimaton sisältö",
   "pollReopened": "Kysely avattu uudelleen",
-  "notifications": "Ilmoitukset",
-  "notificationScopeOff": "Pois päältä",
-  "notificationScopeMine": "Omat",
-  "notificationScopeAll": "Kaikki"
+  "notifications": "Ilmoitukset"
 }
