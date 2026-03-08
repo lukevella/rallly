@@ -90,7 +90,6 @@
   "profile": "Profil",
   "polls": "Afstemninger",
   "timeZoneSelect__noOption": "Ingen valgmulighed fundet",
-  "timeZoneSelect__inputPlaceholder": "Søg…",
   "poweredByRallly": "Drevet af <a>{name}</a>",
   "participants": "Deltagere",
   "language": "Sprog",
@@ -612,13 +611,8 @@
   "notFoundTitle": "Siden blev ikke fundet",
   "notFoundDescription": "Beklager, vi kunne ikke finde den side, du leder efter. Her er nogle nyttige links i stedet.",
   "notifications": "Notifikationer",
-  "notificationScopeOff": "Fra",
-  "notificationScopeMine": "Mine",
-  "notificationScopeAll": "Alle",
   "pollNotificationsDescription": "Få besked via e-mail, når der er aktivitet på dine afstemninger",
   "notifyNewResponse": "Ny besvarelse",
-  "notifyNewResponseDescription": "Når nogen svarer på en afstemning",
   "notifyNewComment": "Ny kommentar",
-  "notifyNewCommentDescription": "Når nogen kommenterer på en afstemning",
   "notificationsDescription": "Vælg hvilke e-mail-notifikationer du modtager"
 }
