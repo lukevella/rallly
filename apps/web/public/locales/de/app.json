@@ -614,5 +614,6 @@
   "pollNotificationsDescription": "Erhalte eine E-Mail-Benachrichtigung, wenn es Aktivitäten in deinen Umfragen gibt",
   "notifyNewResponse": "Neue Antwort",
   "notifyNewComment": "Neuer Kommentar",
-  "notificationsDescription": "Wähle aus, welche E-Mail-Benachrichtigungen du erhältst"
+  "notificationsDescription": "Wähle aus, welche E-Mail-Benachrichtigungen du erhältst",
+  "timezoneInputPlaceholder": "Zeitzone suchen…"
 }
