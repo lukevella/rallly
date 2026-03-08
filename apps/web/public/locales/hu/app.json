@@ -614,5 +614,6 @@
   "pollNotificationsDescription": "Értesítést kapsz emailben, amikor valami esemény történik a szavazásaidnál",
   "notifyNewResponse": "Új szavazat",
   "notifyNewComment": "Új hozzászólás",
-  "notificationsDescription": "Válassz, mely email értesítéseket szeretnéd megkapni"
+  "notificationsDescription": "Válassz, mely email értesítéseket szeretnéd megkapni",
+  "timezoneInputPlaceholder": "Időzóna keresése…"
 }
