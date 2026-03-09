@@ -1,7 +1,5 @@
 import { initTRPC, TRPCError } from "@trpc/server";
-import { waitUntil } from "@vercel/functions";
 import superjson from "superjson";
-import { PostHogClient } from "@/features/analytics/posthog";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { AppError } from "@/lib/errors";
@@ -27,25 +25,9 @@ export const router = t.router;
 
 export const middleware = t.middleware;
 
-export const procedureWithAnalytics = t.procedure.use(async ({ next }) => {
-  const posthog = PostHogClient();
+export const publicProcedure = t.procedure;
 
-  const res = await next({
-    ctx: {
-      posthog,
-    },
-  });
-
-  if (posthog) {
-    waitUntil(posthog.shutdown());
-  }
-
-  return res;
-});
-
-export const publicProcedure = procedureWithAnalytics;
-
-export const possiblyPublicProcedure = procedureWithAnalytics.use(
+export const possiblyPublicProcedure = publicProcedure.use(
   middleware(async ({ ctx, next }) => {
     // These procedures are public if Quick Create is enabled
     const isGuest = !ctx.user || ctx.user.isGuest;
@@ -83,22 +65,20 @@ export const requireUserMiddleware = middleware(async ({ ctx, next }) => {
   });
 });
 
-export const privateProcedure = procedureWithAnalytics.use(
-  async ({ ctx, next }) => {
-    if (!ctx.user || ctx.user.isGuest !== false) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Login is required",
-      });
-    }
-
-    return next({
-      ctx: {
-        user: ctx.user,
-      },
+export const privateProcedure = publicProcedure.use(async ({ ctx, next }) => {
+  if (!ctx.user || ctx.user.isGuest !== false) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Login is required",
     });
-  },
-);
+  }
+
+  return next({
+    ctx: {
+      user: ctx.user,
+    },
+  });
+});
 
 export const adminProcedure = privateProcedure.use(async ({ ctx, next }) => {
   if (ctx.user.role !== "admin") {

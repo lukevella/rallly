@@ -77,7 +77,7 @@ export const GET = async (request: NextRequest) => {
   });
 
   if (posthog) {
-    waitUntil(posthog.shutdown());
+    waitUntil(posthog.flush());
   }
 
   return NextResponse.redirect(

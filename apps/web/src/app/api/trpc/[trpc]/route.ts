@@ -2,9 +2,9 @@ import { createWideEvent, logger } from "@rallly/logger";
 import * as Sentry from "@sentry/nextjs";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
-import { ipAddress } from "@vercel/functions";
+import { ipAddress, waitUntil } from "@vercel/functions";
 import type { NextRequest } from "next/server";
-
+import { PostHogClient } from "@/features/analytics/posthog";
 import { getUserSession } from "@/features/user/data";
 import { getLocaleFromRequest } from "@/lib/locale/server";
 import type { TRPCContext } from "@/trpc/context";
@@ -34,6 +34,8 @@ const handler = async (req: NextRequest) => {
     event.isGuest = user.isGuest;
   }
 
+  const posthog = PostHogClient();
+
   try {
     const response = await fetchRequestHandler({
       endpoint: "/api/trpc",
@@ -49,6 +51,7 @@ const handler = async (req: NextRequest) => {
           locale,
           identifier,
           event,
+          posthog: posthog ?? undefined,
         } satisfies TRPCContext;
       },
       onError: ({ error }) => {
@@ -63,7 +66,13 @@ const handler = async (req: NextRequest) => {
         }
       },
     });
+
     event.statusCode = response.status;
+
+    if (posthog) {
+      waitUntil(posthog.flush());
+    }
+
     return response;
   } catch (error) {
     event.statusCode = 500;

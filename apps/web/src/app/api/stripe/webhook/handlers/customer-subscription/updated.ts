@@ -1,8 +1,7 @@
 import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
-import { waitUntil } from "@vercel/functions";
-import { PostHogClient } from "@/features/analytics/posthog";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
+import type { WebhookContext } from "../index";
 import {
   getExpandedSubscription,
   getSubscriptionDetails,
@@ -10,7 +9,10 @@ import {
   toDate,
 } from "../utils";
 
-export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
+export async function onCustomerSubscriptionUpdated(
+  event: Stripe.Event,
+  ctx: WebhookContext,
+) {
   if (event.type !== "customer.subscription.updated") {
     return;
   }
@@ -89,9 +91,7 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     });
   });
 
-  const posthog = PostHogClient();
-
-  posthog?.groupIdentify({
+  ctx.posthog?.groupIdentify({
     groupType: "space",
     groupKey: spaceId,
     properties: {
@@ -100,7 +100,7 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     },
   });
 
-  posthog?.capture({
+  ctx.posthog?.capture({
     distinctId: userId,
     uuid: event.id,
     event: "subscription_update",
@@ -115,8 +115,4 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
       space: spaceId,
     },
   });
-
-  if (posthog) {
-    waitUntil(posthog.shutdown());
-  }
 }

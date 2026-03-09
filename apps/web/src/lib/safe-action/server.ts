@@ -23,7 +23,7 @@ export const posthogMiddleware = createMiddleware().define(async ({ next }) => {
   });
 
   if (posthog) {
-    waitUntil(posthog.shutdown());
+    waitUntil(posthog.flush());
   }
 
   return result;

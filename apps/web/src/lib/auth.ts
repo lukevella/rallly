@@ -104,14 +104,10 @@ export const authLib = betterAuth({
       });
     },
     onPasswordReset: async ({ user }) => {
-      const posthog = PostHogClient();
-      posthog?.capture({
+      PostHogClient()?.capture({
         distinctId: user.id,
         event: "password_reset",
       });
-      if (posthog) {
-        waitUntil(posthog.shutdown());
-      }
     },
   },
   emailVerification: {
@@ -316,10 +312,6 @@ export const authLib = betterAuth({
               },
             },
           });
-
-          if (posthog) {
-            waitUntil(posthog.shutdown());
-          }
         },
       },
     },
@@ -334,17 +326,11 @@ export const authLib = betterAuth({
           // Only track login events for non-anonymous users
           // Anonymous users shouldn't trigger login events or create person profiles
           if (user && !user.isAnonymous) {
-            const posthog = PostHogClient();
-
-            posthog?.capture({
+            PostHogClient()?.capture({
               distinctId: session.userId,
               event: "login",
               properties: { method: user.lastLoginMethod },
             });
-
-            if (posthog) {
-              waitUntil(posthog.shutdown());
-            }
           }
         },
       },

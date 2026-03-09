@@ -1,11 +1,13 @@
 import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
-import { waitUntil } from "@vercel/functions";
-import { PostHogClient } from "@/features/analytics/posthog";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
+import type { WebhookContext } from "../index";
 
-export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
+export async function onCustomerSubscriptionDeleted(
+  event: Stripe.Event,
+  ctx: WebhookContext,
+) {
   const subscription = await stripe.subscriptions.retrieve(
     (event.data.object as Stripe.Subscription).id,
   );
@@ -49,9 +51,7 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     });
   });
 
-  const posthog = PostHogClient();
-
-  posthog?.groupIdentify({
+  ctx.posthog?.groupIdentify({
     groupType: "space",
     groupKey: spaceId,
     properties: {
@@ -59,7 +59,7 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     },
   });
 
-  posthog?.capture({
+  ctx.posthog?.capture({
     distinctId: userId,
     event: "subscription_cancel",
     properties: {
@@ -71,8 +71,4 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
       space: spaceId,
     },
   });
-
-  if (posthog) {
-    waitUntil(posthog.shutdown());
-  }
 }
