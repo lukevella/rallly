@@ -20,8 +20,9 @@ export function getAllTimezoneIds(): string[] {
 }
 
 export function getCityFromTimezoneId(id: string): string {
-  const lastSlash = id.lastIndexOf("/");
-  return id.substring(lastSlash + 1).replaceAll("_", " ");
+  const resolved = resolveTimezoneId(id);
+  const lastSlash = resolved.lastIndexOf("/");
+  return resolved.substring(lastSlash + 1).replaceAll("_", " ");
 }
 
 // Curated set of major cities/timezones
