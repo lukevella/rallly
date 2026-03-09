@@ -59,7 +59,6 @@ model User {
 
   comments           Comment[]
   polls              Poll[]
-  watcher            Watcher[]
   notificationPreferences UserNotificationPreferences?
   accounts           Account[]
   participants       Participant[]

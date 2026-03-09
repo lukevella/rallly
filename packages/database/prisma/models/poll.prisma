@@ -43,7 +43,6 @@ model Poll {
   scheduledEvent ScheduledEvent? @relation(fields: [scheduledEventId], references: [id], onDelete: SetNull)
   options        Option[]
   participants   Participant[]
-  watchers       Watcher[]
   comments       Comment[]
   votes          Vote[]
   views          PollView[]
@@ -54,19 +53,6 @@ model Poll {
   @@index([spaceId], type: Hash)
   @@index([userId], type: Hash)
   @@map("polls")
-}
-
-model Watcher {
-  id        Int      @id @default(autoincrement())
-  userId    String   @map("user_id")
-  pollId    String   @map("poll_id")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([pollId], type: Hash)
-  @@map("watchers")
 }
 
 model Participant {
