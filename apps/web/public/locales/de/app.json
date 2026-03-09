@@ -614,5 +614,6 @@
   "notifyNewResponse": "Neue Antwort",
   "notifyNewComment": "Neuer Kommentar",
   "notificationsDescription": "Wähle aus, welche E-Mail-Benachrichtigungen du erhältst",
-  "timezoneInputPlaceholder": "Zeitzone suchen…"
+  "timezoneInputPlaceholder": "Zeitzone suchen…",
+  "cityTime": "{city} Zeit"
 }
