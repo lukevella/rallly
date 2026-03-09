@@ -53,7 +53,7 @@ export async function getNotificationRecipient({
   }
 
   const creator = await prisma.user.findUnique({
-    where: { id: poll.userId },
+    where: { id: poll.userId, isAnonymous: false },
     select: {
       id: true,
       email: true,
