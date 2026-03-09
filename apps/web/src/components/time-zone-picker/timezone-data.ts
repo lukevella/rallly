@@ -1,19 +1,11 @@
-import { resolveTimezoneId } from "@/utils/iana-renames";
+import { normalizeLegacyIanaId } from "@/utils/timezone-schema";
 
 export function getAllTimezoneIds(): string[] {
-  const seen = new Set<string>();
-  const ids: string[] = [];
-  for (const raw of Intl.supportedValuesOf("timeZone")) {
-    const id = resolveTimezoneId(raw);
-    if (seen.has(id)) continue;
-    seen.add(id);
-    ids.push(id);
-  }
-  return ids;
+  return Intl.supportedValuesOf("timeZone");
 }
 
 export function getCityFromTimezoneId(id: string): string {
-  const resolved = resolveTimezoneId(id);
+  const resolved = normalizeLegacyIanaId(id);
   const lastSlash = resolved.lastIndexOf("/");
   return resolved.substring(lastSlash + 1).replaceAll("_", " ");
 }

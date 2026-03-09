@@ -1,6 +1,14 @@
 import { z } from "zod";
 
-import { resolveTimezoneId } from "@/utils/iana-renames";
+// Normalize legacy IANA IDs to their modern canonical equivalents.
+// Runtimes may still resolve to deprecated IDs (e.g. "Europe/Kiev").
+const ianaRenames: Record<string, string> = {
+  "Europe/Kiev": "Europe/Kyiv",
+};
+
+export function normalizeLegacyIanaId(id: string): string {
+  return ianaRenames[id] ?? id;
+}
 
 const fixedOffsetPrefixes = ["etc/", "gmt", "utc"];
 
@@ -14,20 +22,15 @@ function resolveTimezone(tz: string): string | null {
     const resolved = Intl.DateTimeFormat(undefined, {
       timeZone: tz,
     }).resolvedOptions().timeZone;
-    return resolved;
+    return normalizeLegacyIanaId(resolved);
   } catch {
     return null;
   }
 }
 
-export const timezoneSchema = z.string().transform((tz, ctx) => {
-  const resolved = resolveTimezone(tz);
-  if (!resolved || !isGeographic(resolved)) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Must be a valid IANA geographic timezone",
-    });
-    return z.NEVER;
-  }
-  return resolveTimezoneId(resolved);
-});
+export const timezoneSchema = z
+  .string()
+  .transform(resolveTimezone)
+  .refine((tz) => tz && isGeographic(tz), {
+    message: "Must be a valid IANA geographic timezone",
+  });
