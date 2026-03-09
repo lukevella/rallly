@@ -152,7 +152,6 @@
   "commentsDisabled": "Hozzászólások kikapcsolva",
   "allParticipants": "Összes résztvevő",
   "noParticipantsDescription": "Kattints a <b>Megosztás</b>ra a résztvevők meghívásához",
-  "timeShownIn": "Megjelenítési időzóna: {timeZone}",
   "eventHostDescription": "Te vagy a létrehozója ennek a szavazásnak",
   "deleteAccount": "Fiók törlése",
   "deleteAccountDialogTitle": "Fiók törlése",
@@ -615,5 +614,6 @@
   "notifyNewResponse": "Új szavazat",
   "notifyNewComment": "Új hozzászólás",
   "notificationsDescription": "Válassz, mely email értesítéseket szeretnéd megkapni",
-  "timezoneInputPlaceholder": "Időzóna keresése…"
+  "timezoneInputPlaceholder": "Időzóna keresése…",
+  "cityTime": "{city} idő"
 }
