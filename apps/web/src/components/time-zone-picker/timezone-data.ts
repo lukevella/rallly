@@ -25,8 +25,8 @@ export function getCityFromTimezoneId(id: string): string {
   return resolved.substring(lastSlash + 1).replaceAll("_", " ");
 }
 
-// Curated set of major cities/timezones
-// Covers all UTC offsets with the most recognizable city per region
+// Curated set of major cities/timezones covering most common UTC offsets.
+// Some rare offsets (e.g. UTC-9:30, UTC+8:45, UTC+12:45) are omitted intentionally.
 export const curatedTimezoneIds = new Set([
   // UTC-11 to UTC-10
   "Pacific/Pago_Pago",
