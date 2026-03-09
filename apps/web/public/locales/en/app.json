@@ -152,7 +152,6 @@
   "commentsDisabled": "Comments have been disabled",
   "allParticipants": "All Participants",
   "noParticipantsDescription": "Click <b>Share</b> to invite participants",
-  "timeShownIn": "Times shown in {timeZone}",
   "eventHostDescription": "You are the creator of this poll",
   "deleteAccount": "Delete Account",
   "deleteAccountDialogTitle": "Delete Account",
@@ -615,5 +614,6 @@
   "notifyNewResponse": "New response",
   "notifyNewComment": "New comment",
   "notificationsDescription": "Choose which email notifications you receive",
-  "timezoneInputPlaceholder": "Search timezone…"
+  "timezoneInputPlaceholder": "Search timezone…",
+  "cityTime": "{city} Time"
 }
