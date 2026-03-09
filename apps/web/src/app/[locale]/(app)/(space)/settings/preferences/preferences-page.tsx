@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import {
   PageSection,
   PageSectionContent,
@@ -13,7 +14,12 @@ import { DateTimePreferences } from "./components/date-time-preferences";
 import { LanguagePreference } from "./components/language-preference";
 import { ThemePreference } from "./components/theme-preference";
 
-export function PreferencesPage() {
+export const PreferencesPage = dynamic(
+  () => Promise.resolve({ default: PreferencesPageInner }),
+  { ssr: false },
+);
+
+function PreferencesPageInner() {
   return (
     <PageSectionGroup>
       <PageSection variant="card">
