@@ -615,5 +615,7 @@
   "notifyNewComment": "Neuer Kommentar",
   "notificationsDescription": "Wähle aus, welche E-Mail-Benachrichtigungen du erhältst",
   "timezoneInputPlaceholder": "Zeitzone suchen…",
-  "cityTime": "{city} Zeit"
+  "cityTime": "{city} Zeit",
+  "unmuteNotifications": "Benachrichtigungen wieder aktivieren",
+  "muteNotifications": "Benachrichtigungen stummschalten"
 }
