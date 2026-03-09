@@ -150,7 +150,6 @@
   "commentsDisabled": "Комментарии отключены",
   "allParticipants": "Все участники",
   "noParticipantsDescription": "Нажмите <b>Поделиться</b>, чтобы пригласить участников",
-  "timeShownIn": "Показано время в {timeZone}",
   "eventHostDescription": "Вы создатель этого опроса",
   "deleteAccount": "Удалить аккаунт",
   "deleteAccountDialogTitle": "Удалить аккаунт",
