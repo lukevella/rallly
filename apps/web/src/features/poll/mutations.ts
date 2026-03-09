@@ -48,7 +48,6 @@ export const createPoll = async ({
       adminUrlId: nanoid(),
       participantUrlId: nanoid(),
       userId,
-      watchers: { create: { userId } },
       spaceId,
       options: { createMany: { data: options } },
     },

@@ -615,5 +615,7 @@
   "notifyNewComment": "New comment",
   "notificationsDescription": "Choose which email notifications you receive",
   "timezoneInputPlaceholder": "Search timezone…",
-  "cityTime": "{city} Time"
+  "cityTime": "{city} Time",
+  "unmuteNotifications": "Unmute notifications",
+  "muteNotifications": "Mute notifications"
 }

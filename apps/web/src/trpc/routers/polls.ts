@@ -192,13 +192,6 @@ export const polls = router({
           adminUrlId: adminToken,
           participantUrlId,
           userId: ctx.user.id,
-          watchers: !ctx.user.isGuest
-            ? {
-                create: {
-                  userId: ctx.user.id,
-                },
-              }
-            : undefined,
           options: {
             createMany: {
               data: input.options.map((option) => ({
@@ -529,85 +522,25 @@ export const polls = router({
       });
     }),
   // END LEGACY ROUTES
-  // @deprecated — replaced by global notification preferences in /settings/notifications
-  getWatchers: publicProcedure
-    .input(
-      z.object({
-        pollId: z.string(),
-      }),
-    )
-    .query(async ({ input: { pollId } }) => {
-      return await prisma.watcher.findMany({
-        where: {
-          pollId,
-        },
-        select: {
-          userId: true,
-        },
-      });
-    }),
-  // @deprecated — replaced by global notification preferences in /settings/notifications
-  watch: privateProcedure
-    .input(z.object({ pollId: z.string() }))
+  toggleMuted: privateProcedure
+    .input(z.object({ pollId: z.string(), muted: z.boolean() }))
     .mutation(async ({ input, ctx }) => {
-      const hasAccess = await hasPollAdminAccess(input.pollId, ctx.user.id);
+      const poll = await prisma.poll.findUnique({
+        where: { id: input.pollId },
+        select: { userId: true },
+      });
 
-      if (!hasAccess) {
+      if (!poll || poll.userId !== ctx.user.id) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "You are not allowed to watch this poll",
+          message: "Only the poll owner can mute notifications",
         });
       }
 
-      await prisma.watcher.create({
-        data: {
-          pollId: input.pollId,
-          userId: ctx.user.id,
-        },
+      await prisma.poll.update({
+        where: { id: input.pollId },
+        data: { muted: input.muted },
       });
-
-      // Track poll watch analytics
-      ctx.posthog?.capture({
-        event: "poll_watch",
-        distinctId: ctx.user.id,
-        properties: {
-          is_guest: ctx.user.isGuest,
-        },
-        groups: {
-          poll: input.pollId,
-        },
-      });
-    }),
-  // @deprecated — replaced by global notification preferences in /settings/notifications
-  unwatch: privateProcedure
-    .input(z.object({ pollId: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      const watcher = await prisma.watcher.findFirst({
-        where: {
-          pollId: input.pollId,
-          userId: ctx.user.id,
-        },
-        select: {
-          id: true,
-        },
-      });
-
-      if (watcher) {
-        await prisma.watcher.delete({
-          where: {
-            id: watcher.id,
-          },
-        });
-
-        // Track poll unwatch analytics
-        ctx.posthog?.capture({
-          event: "poll_unwatch",
-          distinctId: ctx.user.id,
-          groups: {
-            poll: input.pollId,
-          },
-        });
-      }
     }),
   get: publicProcedure
     .input(
@@ -653,11 +586,7 @@ export const polls = router({
           userId: true,
           deleted: true,
           spaceId: true,
-          watchers: {
-            select: {
-              userId: true,
-            },
-          },
+          muted: true,
           scheduledEvent: {
             select: {
               id: true,
@@ -1181,11 +1110,6 @@ export const polls = router({
           disableComments: poll.disableComments,
           adminUrlId: nanoid(),
           participantUrlId: nanoid(),
-          watchers: {
-            create: {
-              userId: ctx.user.id,
-            },
-          },
           options: {
             create: poll.options,
           },
