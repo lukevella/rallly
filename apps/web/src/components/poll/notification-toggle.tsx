@@ -11,12 +11,13 @@ import { BellIcon, BellOffIcon } from "lucide-react";
 
 import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 export function NotificationToggle() {
   const poll = usePoll();
   const { user, ownsObject } = useUser();
+  const { t } = useTranslation();
   const queryClient = trpc.useUtils();
   const toggleMuted = trpc.polls.toggleMuted.useMutation({
     onSuccess: (_data, vars) => {
@@ -39,11 +40,26 @@ export function NotificationToggle() {
       <TooltipTrigger asChild>
         <Button
           variant="ghost"
+          aria-pressed={poll.muted}
+          aria-label={
+            poll.muted
+              ? t("unmuteNotifications", {
+                  defaultValue: "Unmute notifications",
+                })
+              : t("muteNotifications", { defaultValue: "Mute notifications" })
+          }
           onClick={() => {
             toggleMuted.mutate({ pollId: poll.id, muted: !poll.muted });
           }}
         >
           {poll.muted ? <BellOffIcon /> : <BellIcon />}
+          <span className="sr-only">
+            {poll.muted
+              ? t("unmuteNotifications", {
+                  defaultValue: "Unmute notifications",
+                })
+              : t("muteNotifications", { defaultValue: "Mute notifications" })}
+          </span>
         </Button>
       </TooltipTrigger>
       <TooltipPortal>
