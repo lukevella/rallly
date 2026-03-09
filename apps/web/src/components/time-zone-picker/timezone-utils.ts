@@ -1,10 +1,3 @@
-import type { TimezoneEntry } from "./timezone-data";
-
-export interface TimezoneEntryWithOffset extends TimezoneEntry {
-  offsetMinutes: number;
-  offsetLabel: string;
-}
-
 export function getOffsetMinutes(iana: string): number {
   const now = new Date();
   const parts = new Intl.DateTimeFormat("en-US", {

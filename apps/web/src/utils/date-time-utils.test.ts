@@ -25,6 +25,14 @@ describe("timezoneSchema", () => {
     expect(timezoneSchema.safeParse("UTC").success).toBe(false);
   });
 
+  it("should canonicalize Europe/Kiev to Europe/Kyiv", () => {
+    const result = timezoneSchema.safeParse("Europe/Kyiv");
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data).toBe("Europe/Kyiv");
+    }
+  });
+
   it("should reject an invalid timezone", () => {
     expect(timezoneSchema.safeParse("Not/A_Timezone").success).toBe(false);
   });
