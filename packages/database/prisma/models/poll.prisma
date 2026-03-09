@@ -38,7 +38,7 @@ model Poll {
   hideScores              Boolean    @default(false) @map("hide_scores")
   disableComments         Boolean    @default(false) @map("disable_comments")
   requireParticipantEmail Boolean    @default(false) @map("require_participant_email")
-  muted                  Boolean    @default(false)
+  muted                   Boolean    @default(false)
 
   user           User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   scheduledEvent ScheduledEvent? @relation(fields: [scheduledEventId], references: [id], onDelete: SetNull)

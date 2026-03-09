@@ -57,13 +57,13 @@ model User {
   lastLoginMethod String?     @map("last_login_method")
   isAnonymous     Boolean     @default(false) @map("anonymous")
 
-  comments           Comment[]
-  polls              Poll[]
+  comments                Comment[]
+  polls                   Poll[]
   notificationPreferences UserNotificationPreferences?
-  accounts           Account[]
-  participants       Participant[]
-  paymentMethods     PaymentMethod[]
-  spaceMemberInvites SpaceMemberInvite[]
+  accounts                Account[]
+  participants            Participant[]
+  paymentMethods          PaymentMethod[]
+  spaceMemberInvites      SpaceMemberInvite[]
 
   subscriptions Subscription[] @relation("UserToSubscription")
   spaces        Space[]        @relation("UserSpaces")
