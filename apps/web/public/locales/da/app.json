@@ -225,7 +225,7 @@
   "priceFree": "Gratis",
   "signUp": "Tilmeld dig",
   "upgradeToPro": "Opgrader til Pro",
-  "moreParticipants": "{count, plural, other {# more…}}",
+  "moreParticipants": "{count, plural, other {# mere…}}",
   "commandMenuNoResults": "Ingen resultater",
   "commandMenu": "Kommandomenu",
   "commandMenuDescription": "Vælg en kommando",
