@@ -18,6 +18,7 @@
     "db:reset": "pnpm --filter @rallly/database exec prisma migrate reset",
     "db:seed": "pnpm --filter @rallly/database exec prisma db seed",
     "db:push": "pnpm --filter @rallly/database exec prisma db push",
+    "db:format": "pnpm --filter @rallly/database exec prisma format",
     "docker:up": "docker compose -f docker-compose.dev.yml up -d --wait",
     "docker:down": "docker compose -f docker-compose.dev.yml down --volumes --remove-orphans",
     "test:integration": "turbo test:integration",
