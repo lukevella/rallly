@@ -17,20 +17,23 @@ function isGeographic(timeZone: string) {
   return !fixedOffsetPrefixes.some((prefix) => lower.startsWith(prefix));
 }
 
-function resolveTimezone(tz: string): string | null {
+function validateTimezone(tz: string): boolean {
   try {
-    const resolved = Intl.DateTimeFormat(undefined, {
+    Intl.DateTimeFormat(undefined, {
       timeZone: tz,
     }).resolvedOptions().timeZone;
-    return normalizeLegacyIanaId(resolved);
+    return true;
   } catch {
-    return null;
+    return false;
   }
 }
 
 export const timezoneSchema = z
   .string()
-  .transform(resolveTimezone)
-  .refine((tz) => tz && isGeographic(tz), {
-    message: "Must be a valid IANA geographic timezone",
-  });
+  .refine(validateTimezone, {
+    message: "Must be a valid IANA timezone",
+  })
+  .refine(isGeographic, {
+    message: "Must be a geographic timezone",
+  })
+  .transform(normalizeLegacyIanaId);
