@@ -5,6 +5,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import * as z from "zod";
+import { posthog } from "@/features/analytics/posthog";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import {
   createSpaceDTO,
@@ -174,7 +175,7 @@ export const spaces = router({
         spaceId: input.spaceId,
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         distinctId: ctx.user.id,
         event: "space_set_active",
         properties: {
@@ -195,7 +196,7 @@ export const spaces = router({
         ownerId: ctx.user.id,
       });
 
-      ctx.posthog?.groupIdentify({
+      posthog()?.groupIdentify({
         groupType: "space",
         groupKey: space.id,
         properties: {
@@ -206,7 +207,7 @@ export const spaces = router({
         },
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         distinctId: ctx.user.id,
         event: "space_create",
         properties: {
@@ -249,7 +250,7 @@ export const spaces = router({
       where: { id: ctx.space.id },
     });
 
-    ctx.posthog?.capture({
+    posthog()?.capture({
       distinctId: ctx.user.id,
       event: "space_delete",
       properties: {
@@ -281,7 +282,7 @@ export const spaces = router({
         data: { name: input.name },
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         distinctId: ctx.user.id,
         event: "space_update",
         properties: {
@@ -412,7 +413,7 @@ export const spaces = router({
         };
       }
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         distinctId: ctx.user.id,
         event: "space_member_invite",
         properties: {
@@ -486,7 +487,7 @@ export const spaces = router({
         logger.warn({ error }, "Failed to update user's active space");
       }
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         distinctId: ctx.user.id,
         event: "space_member_join",
         properties: {
@@ -530,7 +531,7 @@ export const spaces = router({
         where: { spaceId: member.spaceId },
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         distinctId: ctx.user.id,
         event: "space_member_remove",
         properties: {
@@ -664,7 +665,7 @@ export const spaces = router({
       where: { spaceId: ctx.space.id },
     });
 
-    ctx.posthog?.capture({
+    posthog()?.capture({
       distinctId: ctx.user.id,
       event: "space_member_leave",
       properties: {
@@ -743,7 +744,7 @@ export const spaces = router({
         where: { spaceId: input.spaceId },
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         distinctId: ctx.user.id,
         event: "space_member_leave",
         properties: {

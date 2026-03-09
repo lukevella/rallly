@@ -21,7 +21,7 @@ import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { linkAnonymousUser } from "@/auth/helpers/merge-user";
 import { isTemporaryEmail } from "@/auth/helpers/temp-email-domains";
 import { env } from "@/env";
-import { PostHogClient } from "@/features/analytics/posthog";
+import { posthog } from "@/features/analytics/posthog";
 import { createSpace } from "@/features/space/mutations";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -104,7 +104,7 @@ export const authLib = betterAuth({
       });
     },
     onPasswordReset: async ({ user }) => {
-      PostHogClient()?.capture({
+      posthog()?.capture({
         distinctId: user.id,
         event: "password_reset",
       });
@@ -277,8 +277,6 @@ export const authLib = betterAuth({
             },
           });
 
-          const posthog = PostHogClient();
-
           if (existingUser) {
             // create a space for the user
             const space = await createSpace({
@@ -286,7 +284,7 @@ export const authLib = betterAuth({
               ownerId: user.id,
             });
 
-            posthog?.groupIdentify({
+            posthog()?.groupIdentify({
               groupType: "space",
               groupKey: space.id,
               properties: {
@@ -298,7 +296,7 @@ export const authLib = betterAuth({
             });
           }
 
-          posthog?.capture({
+          posthog()?.capture({
             distinctId: user.id,
             event: "register",
             properties: {
@@ -326,7 +324,7 @@ export const authLib = betterAuth({
           // Only track login events for non-anonymous users
           // Anonymous users shouldn't trigger login events or create person profiles
           if (user && !user.isAnonymous) {
-            PostHogClient()?.capture({
+            posthog()?.capture({
               distinctId: session.userId,
               event: "login",
               properties: { method: user.lastLoginMethod },

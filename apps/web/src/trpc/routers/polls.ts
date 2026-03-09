@@ -4,6 +4,7 @@ import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { posthog } from "@/features/analytics/posthog";
 import { moderateContent } from "@/features/moderation";
 import { getPolls } from "@/features/poll/data";
 import { canUserManagePoll } from "@/features/poll/helpers";
@@ -149,7 +150,7 @@ export const polls = router({
       });
 
       if (moderation.verdict !== "safe") {
-        ctx.posthog?.capture({
+        posthog()?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
           properties: {
@@ -241,7 +242,7 @@ export const polls = router({
         }
       }
 
-      ctx.posthog?.groupIdentify({
+      posthog()?.groupIdentify({
         groupType: "poll",
         groupKey: poll.id,
         properties: {
@@ -259,7 +260,7 @@ export const polls = router({
         },
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         event: "poll_create",
         distinctId: ctx.user.id,
         properties: {
@@ -326,7 +327,7 @@ export const polls = router({
       });
 
       if (moderation.verdict !== "safe") {
-        ctx.posthog?.capture({
+        posthog()?.capture({
           distinctId: ctx.user.id,
           event: "flagged_content",
           properties: {
@@ -445,7 +446,7 @@ export const polls = router({
         input.requireParticipantEmail !== undefined;
 
       if (hasDetailsUpdate) {
-        ctx.posthog?.capture({
+        posthog()?.capture({
           event: "poll_update_details",
           distinctId: ctx.user.id,
           properties: {
@@ -461,7 +462,7 @@ export const polls = router({
       }
 
       if (hasOptionsUpdate) {
-        ctx.posthog?.capture({
+        posthog()?.capture({
           event: "poll_update_options",
           distinctId: ctx.user.id,
           properties: {
@@ -474,7 +475,7 @@ export const polls = router({
       }
 
       if (hasSettingsUpdate) {
-        ctx.posthog?.capture({
+        posthog()?.capture({
           event: "poll_update_settings",
           distinctId: ctx.user.id,
           properties: {
@@ -514,7 +515,7 @@ export const polls = router({
       });
 
       // Track poll deletion analytics
-      ctx.posthog?.capture({
+      posthog()?.capture({
         event: "poll_delete",
         distinctId: ctx.user.id,
         groups: {
@@ -543,7 +544,7 @@ export const polls = router({
         data: { muted: input.muted },
       });
 
-      ctx.posthog?.groupIdentify({
+      posthog()?.groupIdentify({
         groupType: "poll",
         groupKey: input.pollId,
         properties: {
@@ -551,7 +552,7 @@ export const polls = router({
         },
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         event: "poll_notification_toggle",
         distinctId: ctx.user.id,
         properties: {
@@ -978,7 +979,7 @@ export const polls = router({
           });
         }
 
-        ctx.posthog?.capture({
+        posthog()?.capture({
           event: "poll_schedule",
           distinctId: ctx.user.id,
           properties: {
@@ -1027,7 +1028,7 @@ export const polls = router({
         }
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         event: "poll_reopen",
         distinctId: ctx.user.id,
         groups: {
@@ -1061,7 +1062,7 @@ export const polls = router({
         },
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         event: "poll_close",
         distinctId: ctx.user.id,
         groups: {

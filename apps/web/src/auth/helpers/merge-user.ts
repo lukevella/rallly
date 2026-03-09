@@ -1,7 +1,7 @@
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import * as Sentry from "@sentry/nextjs";
-import { PostHogClient } from "@/features/analytics/posthog";
+import { posthog } from "@/features/analytics/posthog";
 
 const logger = createLogger("auth/merge-user");
 
@@ -70,7 +70,7 @@ export const linkAnonymousUser = async (
     });
 
     // Merge user identities in PostHog
-    PostHogClient()?.capture({
+    posthog()?.capture({
       distinctId: authenticatedUserId,
       event: "$merge_dangerously",
       properties: { alias: anonymousUserId },

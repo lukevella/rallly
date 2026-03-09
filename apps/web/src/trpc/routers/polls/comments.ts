@@ -3,6 +3,7 @@ import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { posthog } from "@/features/analytics/posthog";
 import { getNotificationRecipient } from "@/features/notifications/queries";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
@@ -156,7 +157,7 @@ export const comments = router({
       }
 
       // Track comment addition analytics
-      ctx.posthog?.capture({
+      posthog()?.capture({
         distinctId: ctx.user.id,
         event: "poll_comment_add",
         properties: {
@@ -208,7 +209,7 @@ export const comments = router({
 
       // Track comment deletion analytics
       if (comment) {
-        ctx.posthog?.capture({
+        posthog()?.capture({
           distinctId: userId,
           event: "poll_comment_delete",
           groups: {

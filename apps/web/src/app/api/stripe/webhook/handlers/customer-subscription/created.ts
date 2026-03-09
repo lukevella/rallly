@@ -1,7 +1,7 @@
 import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
+import { posthog } from "@/features/analytics/posthog";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
-import type { WebhookContext } from "../index";
 import {
   getExpandedSubscription,
   getSubscriptionDetails,
@@ -9,10 +9,7 @@ import {
   toDate,
 } from "../utils";
 
-export async function onCustomerSubscriptionCreated(
-  event: Stripe.Event,
-  ctx: WebhookContext,
-) {
+export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
   const subscription = await getExpandedSubscription(
     (event.data.object as Stripe.Subscription).id,
   );
@@ -93,7 +90,7 @@ export async function onCustomerSubscriptionCreated(
     });
   });
 
-  ctx.posthog?.groupIdentify({
+  posthog()?.groupIdentify({
     groupType: "space",
     groupKey: spaceId,
     properties: {
@@ -102,7 +99,7 @@ export async function onCustomerSubscriptionCreated(
     },
   });
 
-  ctx.posthog?.capture({
+  posthog()?.capture({
     distinctId: userId,
     uuid: event.id,
     event: "subscription_create",

@@ -2,11 +2,11 @@ import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import * as Sentry from "@sentry/nextjs";
-import { waitUntil } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { PostHogClient } from "@/features/analytics/posthog";
+import { posthog } from "@/features/analytics/posthog";
 import { getSession } from "@/lib/auth";
+import { withPostHog } from "@/utils/posthog";
 import { decryptToken } from "@/utils/session";
 
 type EmailChangePayload = {
@@ -14,7 +14,7 @@ type EmailChangePayload = {
   toEmail: string;
 };
 
-export const GET = async (request: NextRequest) => {
+const handler = async (request: NextRequest) => {
   const token = request.nextUrl.searchParams.get("token");
 
   if (!token) {
@@ -64,9 +64,7 @@ export const GET = async (request: NextRequest) => {
     Sentry.captureException(error);
   }
 
-  const posthog = PostHogClient();
-
-  posthog?.capture({
+  posthog()?.capture({
     event: "account_email_change_complete",
     distinctId: session.user.id,
     properties: {
@@ -76,11 +74,9 @@ export const GET = async (request: NextRequest) => {
     },
   });
 
-  if (posthog) {
-    waitUntil(posthog.flush());
-  }
-
   return NextResponse.redirect(
     absoluteUrl("/settings/profile?emailChanged=true"),
   );
 };
+
+export const GET = withPostHog(handler);

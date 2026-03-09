@@ -1,13 +1,12 @@
 import type { Stripe } from "@rallly/billing";
 import { env } from "@/env";
+import { posthog } from "@/features/analytics/posthog";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
 import { licenseManager } from "@/features/licensing/server";
 import { getEmailClient } from "@/utils/emails";
-import type { WebhookContext } from "../index";
 
 async function handleSelfHostedCheckoutSessionCompleted(
   checkoutSession: Stripe.Checkout.Session,
-  ctx: WebhookContext,
 ) {
   const { success, data } = licenseCheckoutMetadataSchema.safeParse(
     checkoutSession.metadata,
@@ -45,7 +44,7 @@ async function handleSelfHostedCheckoutSessionCompleted(
     seats,
   });
 
-  ctx.posthog?.capture({
+  posthog()?.capture({
     distinctId: email,
     event: "license_purchase",
     properties: {
@@ -80,13 +79,10 @@ async function handleSelfHostedCheckoutSessionCompleted(
   });
 }
 
-export async function onCheckoutSessionCompleted(
-  event: Stripe.Event,
-  ctx: WebhookContext,
-) {
+export async function onCheckoutSessionCompleted(event: Stripe.Event) {
   const checkoutSession = event.data.object as Stripe.Checkout.Session;
 
   if (checkoutSession.subscription === null) {
-    await handleSelfHostedCheckoutSessionCompleted(checkoutSession, ctx);
+    await handleSelfHostedCheckoutSessionCompleted(checkoutSession);
   }
 }

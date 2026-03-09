@@ -1,13 +1,10 @@
 import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
+import { posthog } from "@/features/analytics/posthog";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
-import type { WebhookContext } from "../index";
 
-export async function onCustomerSubscriptionDeleted(
-  event: Stripe.Event,
-  ctx: WebhookContext,
-) {
+export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
   const subscription = await stripe.subscriptions.retrieve(
     (event.data.object as Stripe.Subscription).id,
   );
@@ -51,7 +48,7 @@ export async function onCustomerSubscriptionDeleted(
     });
   });
 
-  ctx.posthog?.groupIdentify({
+  posthog()?.groupIdentify({
     groupType: "space",
     groupKey: spaceId,
     properties: {
@@ -59,7 +56,7 @@ export async function onCustomerSubscriptionDeleted(
     },
   });
 
-  ctx.posthog?.capture({
+  posthog()?.capture({
     distinctId: userId,
     event: "subscription_cancel",
     properties: {

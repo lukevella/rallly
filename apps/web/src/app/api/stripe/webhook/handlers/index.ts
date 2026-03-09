@@ -1,5 +1,4 @@
 import type { Stripe } from "@rallly/billing";
-import type { PostHog } from "@rallly/posthog/server";
 
 import { onCheckoutSessionCompleted } from "./checkout/completed";
 import { onCheckoutSessionExpired } from "./checkout/expired";
@@ -13,14 +12,7 @@ import {
   onPaymentMethodUpdated,
 } from "./payment-method";
 
-export type WebhookContext = {
-  posthog?: PostHog;
-};
-
-type WebhookHandler = (
-  event: Stripe.Event,
-  ctx: WebhookContext,
-) => Promise<void>;
+type WebhookHandler = (event: Stripe.Event) => Promise<void>;
 
 export function getEventHandler(
   eventType: Stripe.Event["type"],
