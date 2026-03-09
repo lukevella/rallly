@@ -1,11 +1,4 @@
-// Normalize legacy IANA IDs to their modern canonical equivalents
-const ianaRenames: Record<string, string> = {
-  "Europe/Kiev": "Europe/Kyiv",
-};
-
-function resolveTimezoneId(id: string): string {
-  return ianaRenames[id] ?? id;
-}
+import { resolveTimezoneId } from "@/utils/iana-renames";
 
 export function getAllTimezoneIds(): string[] {
   const seen = new Set<string>();

@@ -1,12 +1,8 @@
 import { z } from "zod";
 
-const fixedOffsetPrefixes = ["etc/", "gmt", "utc"];
+import { resolveTimezoneId } from "@/utils/iana-renames";
 
-// Runtimes may still resolve to legacy IANA IDs that have been renamed.
-// Map them to their modern canonical equivalents.
-const ianaRenames: Record<string, string> = {
-  "Europe/Kiev": "Europe/Kyiv",
-};
+const fixedOffsetPrefixes = ["etc/", "gmt", "utc"];
 
 function isGeographic(timeZone: string) {
   const lower = timeZone.toLowerCase();
@@ -33,5 +29,5 @@ export const timezoneSchema = z.string().transform((tz, ctx) => {
     });
     return z.NEVER;
   }
-  return ianaRenames[resolved] ?? resolved;
+  return resolveTimezoneId(resolved);
 });
