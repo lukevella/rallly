@@ -255,6 +255,7 @@ export const polls = router({
           has_location: !!location,
           has_description: !!description,
           timezone: input.timeZone,
+          muted: poll.muted,
         },
       });
 
@@ -540,6 +541,14 @@ export const polls = router({
       await prisma.poll.update({
         where: { id: input.pollId },
         data: { muted: input.muted },
+      });
+
+      ctx.posthog?.groupIdentify({
+        groupType: "poll",
+        groupKey: input.pollId,
+        properties: {
+          muted: input.muted,
+        },
       });
 
       ctx.posthog?.capture({
