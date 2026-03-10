@@ -47,8 +47,8 @@ vi.mock("@rallly/utils/nanoid", () => ({
   nanoid: () => "test-poll-id",
 }));
 
-vi.mock("@vercel/functions", () => ({
-  waitUntil: vi.fn(),
+vi.mock("next/server", () => ({
+  after: vi.fn(),
 }));
 
 vi.mock("@/lib/kv", () => ({

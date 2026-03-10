@@ -1,5 +1,5 @@
-import { waitUntil } from "@vercel/functions";
 import type { NextRequest } from "next/server";
+import { after } from "next/server";
 import { posthog } from "@/features/analytics/posthog";
 
 export function withPostHog(
@@ -11,7 +11,7 @@ export function withPostHog(
     } finally {
       const ph = posthog();
       if (ph) {
-        waitUntil(ph.flush());
+        after(() => ph.flush());
       }
     }
   };

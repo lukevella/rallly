@@ -2,7 +2,7 @@ import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
-import { waitUntil } from "@vercel/functions";
+import { after } from "next/server";
 import * as z from "zod";
 import { posthog } from "@/features/analytics/posthog";
 import { getNotificationRecipient } from "@/features/notifications/queries";
@@ -267,18 +267,20 @@ export const participants = router({
             ctx.user.locale ?? undefined,
           );
 
-          emailClient.queueTemplate("NewParticipantConfirmationEmail", {
-            to: email,
-            props: {
-              title: participant.poll.title,
-              editSubmissionUrl: absoluteUrl(
-                `/invite/${participant.poll.id}?token=${token}`,
-              ),
-            },
-          });
+          after(() =>
+            emailClient.sendTemplate("NewParticipantConfirmationEmail", {
+              to: email,
+              props: {
+                title: participant.poll.title,
+                editSubmissionUrl: absoluteUrl(
+                  `/invite/${participant.poll.id}?token=${token}`,
+                ),
+              },
+            }),
+          );
         }
 
-        waitUntil(
+        after(() =>
           sendNewResponseNotificationEmail({
             pollId,
             pollTitle: participant.poll.title,

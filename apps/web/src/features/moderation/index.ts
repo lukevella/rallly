@@ -1,6 +1,6 @@
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
-import { waitUntil } from "@vercel/functions";
+import { after } from "next/server";
 import { env } from "@/env";
 import { getEmailClient } from "@/utils/emails";
 import type { ModerationResult, ModerationVerdict } from "./libs/ai-moderation";
@@ -70,7 +70,7 @@ export async function moderateContent({
   // Check for banned domains — auto-ban the user immediately
   if (containsBannedDomain(textToModerate)) {
     logger.warn({ userId }, "Banned domain detected, banning user");
-    waitUntil(
+    after(() =>
       prisma.user.update({
         where: { id: userId },
         data: {
@@ -101,7 +101,7 @@ export async function moderateContent({
           `Content ${result.verdict} by AI moderation`,
         );
         const emailClient = await getEmailClient();
-        waitUntil(
+        after(() =>
           emailClient.sendEmail({
             to: env.SUPPORT_EMAIL,
             subject: `Content ${result.verdict} by moderation`,

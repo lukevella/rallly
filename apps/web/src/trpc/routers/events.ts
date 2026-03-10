@@ -1,6 +1,7 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
+import { after } from "next/server";
 import * as z from "zod";
 import { getEventsChronological } from "@/features/scheduled-event/data";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
@@ -142,22 +143,24 @@ export const events = router({
           });
 
           const emailClient = await getEmailClient();
-          emailClient.queueTemplate("EventCanceledEmail", {
-            to: invite.inviteeEmail,
-            props: {
-              title: updatedEvent.title,
-              hostName: ctx.user.name,
-              day,
-              dow,
-              date,
-              time,
-            },
-            icalEvent: {
-              filename: "cancel.ics",
-              method: "cancel",
-              content: cancelEvent.value,
-            },
-          });
+          after(() =>
+            emailClient.sendTemplate("EventCanceledEmail", {
+              to: invite.inviteeEmail,
+              props: {
+                title: updatedEvent.title,
+                hostName: ctx.user.name,
+                day,
+                dow,
+                date,
+                time,
+              },
+              icalEvent: {
+                filename: "cancel.ics",
+                method: "cancel",
+                content: cancelEvent.value,
+              },
+            }),
+          );
         }
       }
     }),

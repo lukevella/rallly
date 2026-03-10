@@ -1,7 +1,6 @@
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import { waitUntil } from "@vercel/functions";
 import type { BetterAuthPlugin } from "better-auth";
 import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
@@ -16,6 +15,7 @@ import {
 } from "better-auth/plugins";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { cache } from "react";
 import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { linkAnonymousUser } from "@/auth/helpers/merge-user";
@@ -144,7 +144,7 @@ export const authLib = betterAuth({
           // We're not actually using the sign-in type anymore since we just we have `autoSignInAfterVerification` enabled.
           // This lets us keep things a bit simpler since we share the same verification flow for both login and registration.
           case "sign-in":
-            waitUntil(
+            after(() =>
               emailClient.sendTemplate("RegisterEmail", {
                 to: email,
                 props: {
@@ -154,7 +154,7 @@ export const authLib = betterAuth({
             );
             break;
           case "email-verification":
-            waitUntil(
+            after(() =>
               emailClient.sendTemplate("RegisterEmail", {
                 to: email,
                 props: { code: otp },

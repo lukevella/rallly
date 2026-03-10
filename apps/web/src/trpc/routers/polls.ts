@@ -3,6 +3,7 @@ import { prisma } from "@rallly/database";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
+import { after } from "next/server";
 import * as z from "zod";
 import { posthog } from "@/features/analytics/posthog";
 import { moderateContent } from "@/features/moderation";
@@ -230,15 +231,17 @@ export const polls = router({
           const emailClient = await getEmailClient(
             ctx.user.locale ?? undefined,
           );
-          emailClient.queueTemplate("NewPollEmail", {
-            to: user.email,
-            props: {
-              title: poll.title,
-              name: user.name,
-              adminLink: pollLink,
-              participantLink,
-            },
-          });
+          after(() =>
+            emailClient.sendTemplate("NewPollEmail", {
+              to: user.email,
+              props: {
+                title: poll.title,
+                name: user.name,
+                adminLink: pollLink,
+                participantLink,
+              },
+            }),
+          );
         }
       }
 
@@ -924,48 +927,24 @@ export const polls = router({
           timeZone: scheduledEvent.timeZone,
         });
 
+        const hostEmail = poll.user.email;
+        const hostName = poll.user.name;
         const emailClient = await getEmailClient(poll.user.locale ?? undefined);
-        emailClient.queueTemplate("FinalizeHostEmail", {
-          to: poll.user.email,
-          props: {
-            name: poll.user.name,
-            pollUrl: absoluteUrl(`/poll/${poll.id}`),
-            location: poll.location,
-            title: poll.title,
-            attendees: poll.participants
-              .filter((p) =>
-                p.votes.some(
-                  (v) => v.optionId === input.optionId && v.type !== "no",
-                ),
-              )
-              .map((p) => p.name),
-            date,
-            day,
-            dow,
-            time,
-          },
-          icalEvent: {
-            filename: "invite.ics",
-            method: "request",
-            content: event.value,
-          },
-        });
-
-        for (const p of participantsToEmail) {
-          const { date, day, dow, time } = formatEventDateTime({
-            start: scheduledEvent.start,
-            end: scheduledEvent.end,
-            allDay: scheduledEvent.allDay,
-            timeZone: scheduledEvent.timeZone,
-            inviteeTimeZone: p.timeZone,
-          });
-          const emailClient = await getEmailClient(p.locale ?? undefined);
-          emailClient.queueTemplate("FinalizeParticipantEmail", {
-            to: p.email,
+        after(() =>
+          emailClient.sendTemplate("FinalizeHostEmail", {
+            to: hostEmail,
             props: {
-              pollUrl: absoluteUrl(`/invite/${poll.id}`),
+              name: hostName,
+              pollUrl: absoluteUrl(`/poll/${poll.id}`),
+              location: poll.location,
               title: poll.title,
-              hostName: poll.user?.name ?? "",
+              attendees: poll.participants
+                .filter((p) =>
+                  p.votes.some(
+                    (v) => v.optionId === input.optionId && v.type !== "no",
+                  ),
+                )
+                .map((p) => p.name),
               date,
               day,
               dow,
@@ -976,7 +955,37 @@ export const polls = router({
               method: "request",
               content: event.value,
             },
+          }),
+        );
+
+        for (const p of participantsToEmail) {
+          const { date, day, dow, time } = formatEventDateTime({
+            start: scheduledEvent.start,
+            end: scheduledEvent.end,
+            allDay: scheduledEvent.allDay,
+            timeZone: scheduledEvent.timeZone,
+            inviteeTimeZone: p.timeZone,
           });
+          const emailClient = await getEmailClient(p.locale ?? undefined);
+          after(() =>
+            emailClient.sendTemplate("FinalizeParticipantEmail", {
+              to: p.email,
+              props: {
+                pollUrl: absoluteUrl(`/invite/${poll.id}`),
+                title: poll.title,
+                hostName: poll.user?.name ?? "",
+                date,
+                day,
+                dow,
+                time,
+              },
+              icalEvent: {
+                filename: "invite.ics",
+                method: "request",
+                content: event.value,
+              },
+            }),
+          );
         }
 
         posthog()?.capture({
