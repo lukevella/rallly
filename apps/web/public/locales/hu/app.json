@@ -615,5 +615,7 @@
   "notifyNewComment": "Új hozzászólás",
   "notificationsDescription": "Válassz, mely email értesítéseket szeretnéd megkapni",
   "timezoneInputPlaceholder": "Időzóna keresése…",
-  "cityTime": "{city} idő"
+  "cityTime": "{city} idő",
+  "unmuteNotifications": "Értesítések némításának feloldása",
+  "muteNotifications": "Értesítések némítása"
 }
