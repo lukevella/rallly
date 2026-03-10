@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import { prisma } from "@rallly/database";
-import { waitUntil } from "@vercel/functions";
 import { bearerAuth } from "hono/bearer-auth";
+import { after } from "next/server";
 import { extractApiKeyPrefix, verifyApiKey } from "@/features/developer/utils";
 
 export const spaceApiKeyAuth = bearerAuth({
@@ -65,7 +65,7 @@ export const spaceApiKeyAuth = bearerAuth({
       apiKeyId,
     });
 
-    waitUntil(
+    after(() =>
       prisma.spaceApiKey.update({
         where: { id: apiKeyId },
         data: { lastUsedAt: new Date() },

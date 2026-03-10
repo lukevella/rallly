@@ -2,6 +2,7 @@ import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
+import { after } from "next/server";
 import * as z from "zod";
 import { posthog } from "@/features/analytics/posthog";
 import { getNotificationRecipient } from "@/features/notifications/queries";
@@ -139,15 +140,17 @@ export const comments = router({
           const emailClient = await getEmailClient(
             recipient.locale ?? undefined,
           );
-          emailClient.queueTemplate("NewCommentEmail", {
-            to: recipient.email,
-            props: {
-              authorName,
-              pollUrl: absoluteUrl(`/poll/${poll.id}`),
-              disableNotificationsUrl: absoluteUrl("/settings/notifications"),
-              title: poll.title,
-            },
-          });
+          after(() =>
+            emailClient.sendTemplate("NewCommentEmail", {
+              to: recipient.email,
+              props: {
+                authorName,
+                pollUrl: absoluteUrl(`/poll/${poll.id}`),
+                disableNotificationsUrl: absoluteUrl("/settings/notifications"),
+                title: poll.title,
+              },
+            }),
+          );
         }
       } catch (err) {
         logger.error(

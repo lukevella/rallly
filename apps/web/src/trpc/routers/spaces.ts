@@ -3,7 +3,7 @@ import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
-import { waitUntil } from "@vercel/functions";
+import { after } from "next/server";
 import * as z from "zod";
 import { posthog } from "@/features/analytics/posthog";
 import { defineAbilityForSpace } from "@/features/space/ability";
@@ -815,7 +815,7 @@ export const spaces = router({
       });
 
       if (oldImageKey) {
-        waitUntil(deleteImageFromS3(oldImageKey));
+        after(() => deleteImageFromS3(oldImageKey));
       }
     }),
 

@@ -1,7 +1,6 @@
 import * as aws from "@aws-sdk/client-ses";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { render } from "@react-email/render";
-import { waitUntil } from "@vercel/functions";
 import type { Transporter } from "nodemailer";
 import { createTransport } from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
@@ -70,14 +69,6 @@ export class EmailClient {
 
   constructor(config: EmailClientConfig) {
     this.config = config;
-  }
-
-  queueTemplate<T extends TemplateName>(
-    templateName: T,
-    options: SendEmailOptions<T>,
-  ) {
-    const promise = this.sendTemplate(templateName, options);
-    waitUntil(promise);
   }
 
   async sendTemplate<T extends TemplateName>(
