@@ -719,6 +719,7 @@ export const polls = router({
             },
           },
           participants: {
+            where: { deleted: false },
             select: {
               id: true,
               name: true,
