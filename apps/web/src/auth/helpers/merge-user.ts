@@ -1,8 +1,7 @@
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import * as Sentry from "@sentry/nextjs";
-import { waitUntil } from "@vercel/functions";
-import { PostHogClient } from "@/features/analytics/posthog";
+import { posthog } from "@/features/analytics/posthog";
 
 const logger = createLogger("auth/merge-user");
 
@@ -70,17 +69,12 @@ export const linkAnonymousUser = async (
       ]);
     });
 
-    const posthog = PostHogClient();
     // Merge user identities in PostHog
-    posthog?.capture({
+    posthog()?.capture({
       distinctId: authenticatedUserId,
       event: "$merge_dangerously",
       properties: { alias: anonymousUserId },
     });
-
-    if (posthog) {
-      waitUntil(posthog.shutdown());
-    }
   } catch (error) {
     Sentry.captureException(error);
   }

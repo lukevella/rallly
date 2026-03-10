@@ -4,6 +4,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import * as z from "zod";
+import { posthog } from "@/features/analytics/posthog";
 import { getNotificationRecipient } from "@/features/notifications/queries";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
@@ -169,7 +170,7 @@ export const participants = router({
         },
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         distinctId: userId,
         event: "poll_response_delete",
         properties: {
@@ -286,7 +287,7 @@ export const participants = router({
           }),
         );
 
-        ctx.posthog?.groupIdentify({
+        posthog()?.groupIdentify({
           groupType: "poll",
           groupKey: pollId,
           properties: {
@@ -295,7 +296,7 @@ export const participants = router({
         });
 
         // Track participant addition analytics
-        ctx.posthog?.capture({
+        posthog()?.capture({
           distinctId: ctx.user.id,
           event: "poll_response_submit",
           properties: {
@@ -403,7 +404,7 @@ export const participants = router({
         });
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         distinctId: userId,
         event: "poll_response_update",
         groups: {

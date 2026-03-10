@@ -4,11 +4,11 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
-
 import { getUserSession } from "@/features/user/data";
 import { getLocaleFromRequest } from "@/lib/locale/server";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
+import { withPostHog } from "@/utils/posthog";
 
 const handler = async (req: NextRequest) => {
   const { user } = await getUserSession();
@@ -63,7 +63,9 @@ const handler = async (req: NextRequest) => {
         }
       },
     });
+
     event.statusCode = response.status;
+
     return response;
   } catch (error) {
     event.statusCode = 500;
@@ -84,4 +86,6 @@ const handler = async (req: NextRequest) => {
   }
 };
 
-export { handler as GET, handler as POST };
+const handlerWithPostHog = withPostHog(handler);
+
+export { handlerWithPostHog as GET, handlerWithPostHog as POST };

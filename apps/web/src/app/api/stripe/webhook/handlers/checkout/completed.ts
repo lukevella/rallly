@@ -1,7 +1,6 @@
 import type { Stripe } from "@rallly/billing";
-import { waitUntil } from "@vercel/functions";
 import { env } from "@/env";
-import { PostHogClient } from "@/features/analytics/posthog";
+import { posthog } from "@/features/analytics/posthog";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
 import { licenseManager } from "@/features/licensing/server";
 import { getEmailClient } from "@/utils/emails";
@@ -45,9 +44,7 @@ async function handleSelfHostedCheckoutSessionCompleted(
     seats,
   });
 
-  const posthog = PostHogClient();
-
-  posthog?.capture({
+  posthog()?.capture({
     distinctId: email,
     event: "license_purchase",
     properties: {
@@ -59,10 +56,6 @@ async function handleSelfHostedCheckoutSessionCompleted(
       },
     },
   });
-
-  if (posthog) {
-    waitUntil(posthog.shutdown());
-  }
 
   if (!license || !license.data) {
     throw new Error(

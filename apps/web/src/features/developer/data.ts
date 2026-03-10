@@ -1,4 +1,4 @@
-import { PostHogClient } from "@/features/analytics/posthog";
+import { posthog } from "@/features/analytics/posthog";
 import type { SpaceTier } from "@/features/space/schema";
 import { isSelfHosted } from "@/utils/constants";
 
@@ -33,8 +33,7 @@ export async function isApiAccessEnabled(
   }
 
   // Check PostHog feature flag
-  const posthog = PostHogClient();
-  const isFeatureFlagEnabled = await posthog?.isFeatureEnabled(
+  const isFeatureFlagEnabled = await posthog()?.isFeatureEnabled(
     "developer-tools",
     user.id,
   );

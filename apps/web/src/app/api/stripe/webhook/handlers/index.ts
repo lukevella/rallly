@@ -12,7 +12,11 @@ import {
   onPaymentMethodUpdated,
 } from "./payment-method";
 
-export function getEventHandler(eventType: Stripe.Event["type"]) {
+type WebhookHandler = (event: Stripe.Event) => Promise<void>;
+
+export function getEventHandler(
+  eventType: Stripe.Event["type"],
+): WebhookHandler | null {
   switch (eventType) {
     case "checkout.session.completed":
       return onCheckoutSessionCompleted;

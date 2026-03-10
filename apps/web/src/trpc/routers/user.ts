@@ -3,6 +3,7 @@ import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { posthog } from "@/features/analytics/posthog";
 import { feedbackSchema } from "@/features/feedback/schema";
 import { defaultNotificationPreferences } from "@/features/notifications/constants";
 import { getNotificationPreferences } from "@/features/notifications/queries";
@@ -127,7 +128,7 @@ export const user = router({
         },
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         event: "account_email_change_request",
         distinctId: ctx.user.id,
         properties: {
@@ -273,7 +274,7 @@ export const user = router({
         },
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         event: "notification_preference_update",
         distinctId: ctx.user.id,
         properties: {
@@ -301,7 +302,7 @@ export const user = router({
         text: `User: ${ctx.user.name} (${ctx.user.email})\n\n${input.content}`,
       });
 
-      ctx.posthog?.capture({
+      posthog()?.capture({
         event: "feedback_send",
         distinctId: ctx.user.id,
       });

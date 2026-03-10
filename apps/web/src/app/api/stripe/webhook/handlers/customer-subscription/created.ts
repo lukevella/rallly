@@ -1,7 +1,6 @@
 import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
-import { waitUntil } from "@vercel/functions";
-import { PostHogClient } from "@/features/analytics/posthog";
+import { posthog } from "@/features/analytics/posthog";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
 import {
   getExpandedSubscription,
@@ -91,9 +90,7 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
     });
   });
 
-  const posthog = PostHogClient();
-
-  posthog?.groupIdentify({
+  posthog()?.groupIdentify({
     groupType: "space",
     groupKey: spaceId,
     properties: {
@@ -102,7 +99,7 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
     },
   });
 
-  posthog?.capture({
+  posthog()?.capture({
     distinctId: userId,
     uuid: event.id,
     event: "subscription_create",
@@ -116,8 +113,4 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
       space: spaceId,
     },
   });
-
-  if (posthog) {
-    waitUntil(posthog.shutdown());
-  }
 }
