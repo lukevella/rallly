@@ -101,7 +101,6 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
 
   posthog()?.capture({
     distinctId: userId,
-    uuid: event.id,
     event: "subscription_create",
     properties: {
       interval,

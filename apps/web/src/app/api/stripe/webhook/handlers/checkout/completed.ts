@@ -67,14 +67,13 @@ export async function onCheckoutSessionCompleted(event: Stripe.Event) {
     });
 
     posthog()?.capture({
-      uuid: event.id,
       distinctId: email,
       event: "license_purchase",
       properties: {
         licenseType,
         seats,
         version,
-        eventId: event.id,
+        stripeEventId: event.id,
         $set: {
           tier: licenseType,
         },
