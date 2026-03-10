@@ -1,28 +1,13 @@
 import "server-only";
 
 import * as Sentry from "@sentry/nextjs";
-import { waitUntil } from "@vercel/functions";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import * as z from "zod";
-import { getCurrentUser, getCurrentUserSpace } from "@/auth/data";
-import { posthog } from "@/features/analytics/posthog";
-import { defineAbilityForSpace } from "@/features/space/ability";
-import { defineAbilityForMember } from "@/features/space/member/ability";
+import { getCurrentUser } from "@/auth/data";
 import { defineAbilityFor } from "@/features/user/ability";
 import { AppError } from "@/lib/errors";
 import type { Duration } from "@/lib/rate-limit";
 import { createRatelimit } from "@/lib/rate-limit";
-
-export const posthogMiddleware = createMiddleware().define(async ({ next }) => {
-  const result = await next();
-
-  const ph = posthog();
-  if (ph) {
-    waitUntil(ph.flush());
-  }
-
-  return result;
-});
 
 export const createRateLimitMiddleware = (
   requests: number,
@@ -75,7 +60,7 @@ export const actionClient = createSafeActionClient({
 
     return "INTERNAL_SERVER_ERROR" as const;
   },
-}).use(posthogMiddleware);
+});
 
 export const authActionClient = actionClient.use(async ({ next }) => {
   const user = await getCurrentUser();
@@ -104,34 +89,3 @@ export const adminActionClient = authActionClient.use(async ({ ctx, next }) => {
 
   return next();
 });
-
-export const spaceActionClient = actionClient
-  .use(async ({ next }) => {
-    const data = await getCurrentUserSpace();
-
-    if (!data) {
-      throw new AppError({
-        code: "UNAUTHORIZED",
-        message: "You are not authenticated.",
-      });
-    }
-
-    const { user, space } = data;
-    const getUserAbility = () => defineAbilityFor(user);
-    const getMemberAbility = () =>
-      defineAbilityForMember({
-        user,
-        space,
-      });
-    const getSpaceAbility = () => defineAbilityForSpace(space);
-    return next({
-      ctx: {
-        user,
-        space,
-        getUserAbility,
-        getMemberAbility,
-        getSpaceAbility,
-      },
-    });
-  })
-  .use(posthogMiddleware);
