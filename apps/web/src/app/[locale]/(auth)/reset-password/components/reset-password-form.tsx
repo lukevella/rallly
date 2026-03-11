@@ -18,6 +18,7 @@ import { PasswordStrengthMeter } from "@/features/password/components/password-s
 import { usePasswordValidationSchema } from "@/features/password/schema";
 import { Trans } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
+import { validateRedirectUrl } from "@/utils/redirect";
 
 function useResetPasswordSchema() {
   const passwordValidation = usePasswordValidationSchema();
@@ -71,15 +72,11 @@ export function ResetPasswordForm() {
             return;
           }
 
-          // Check if this came from password setup (redirectTo contains settings)
-          const redirectTo = searchParams?.get("redirectTo");
-          if (redirectTo?.includes("/settings/security")) {
-            // For password setup, redirect back to settings
-            router.push(redirectTo);
-          } else {
-            // For password reset, redirect to login
-            router.push("/login");
-          }
+          const redirectTo = validateRedirectUrl(
+            searchParams?.get("redirectTo"),
+          );
+
+          router.push(redirectTo ?? "/login");
         })}
       >
         <div className="space-y-4">
