@@ -70,7 +70,7 @@ The following instructions are for running the project locally for development.
    Next run the following command to setup the database:
 
    ```bash
-   pnpm db:reset
+   pnpm db:reset && pnpm db:seed
    ```
 
    This will:
