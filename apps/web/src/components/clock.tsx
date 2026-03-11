@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -79,17 +80,14 @@ export const TimesShownIn = () => {
   const { timezone } = useTimezone();
   return (
     <ClockPreferences>
-      <button
-        type="button"
-        className="inline-flex items-center gap-x-2.5 text-sm hover:underline"
-      >
-        <GlobeIcon className="size-4" />
+      <Button type="button" variant="ghost">
+        <GlobeIcon data-icon="inline-start" />
         <Trans
           i18nKey="cityTime"
           defaults="{city} Time"
           values={{ city: getCityFromTimezoneId(timezone) }}
         />
-      </button>
+      </Button>
     </ClockPreferences>
   );
 };
