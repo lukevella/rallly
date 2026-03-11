@@ -184,7 +184,7 @@ const MobilePoll: React.FunctionComponent = () => {
         editable={isEditing}
         group={(option) => {
           if (option.type === "timeSlot") {
-            return `${option.dow} ${option.day} ${option.month}`;
+            return `${option.dow} ${option.day} ${option.month} ${option.year}`;
           }
           return `${option.month} ${option.year}`;
         }}

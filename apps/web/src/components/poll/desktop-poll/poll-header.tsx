@@ -68,7 +68,9 @@ const PollHeader: React.FunctionComponent = () => {
       <TimelineRow top={0}>
         {options.map((option, i) => {
           const firstOfMonth =
-            i === 0 || options[i - 1]?.month !== option.month;
+            i === 0 ||
+            options[i - 1]?.month !== option.month ||
+            options[i - 1]?.year !== option.year;
 
           return (
             <th
@@ -101,10 +103,14 @@ const PollHeader: React.FunctionComponent = () => {
           const firstOfDay =
             i === 0 ||
             options[i - 1]?.day !== option.day ||
-            options[i - 1]?.month !== option.month;
+            options[i - 1]?.month !== option.month ||
+            options[i - 1]?.year !== option.year;
 
           const lastOfDay =
-            i === options.length - 1 || options[i + 1]?.day !== option.day;
+            i === options.length - 1 ||
+            options[i + 1]?.day !== option.day ||
+            options[i + 1]?.month !== option.month ||
+            options[i + 1]?.year !== option.year;
           return (
             <th
               key={option.optionId}
