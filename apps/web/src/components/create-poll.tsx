@@ -17,9 +17,10 @@ import {
   DialogTitle,
 } from "@rallly/ui/dialog";
 import { Form } from "@rallly/ui/form";
+import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
 import { shortUrl } from "@rallly/utils/absolute-url";
-import { CheckIcon, CopyIcon } from "lucide-react";
+import { ArrowUpRightIcon, CheckIcon, CopyIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -158,30 +159,44 @@ export const CreatePoll: React.FunctionComponent = () => {
         </div>
       </form>
       <Dialog open={!!createdPollId}>
-        <DialogContent className="p-8" showCloseButton={false}>
-          <DialogHeader className="text-center">
-            <div className="mx-auto mb-4 inline-flex size-10 items-center justify-center rounded-full bg-green-500/10">
-              <CheckIcon className="mx-auto size-6 text-green-500" />
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="p-2">
+                <div className="inline-flex size-10 items-center justify-center rounded-full bg-green-500/10">
+                  <CheckIcon className="size-4 text-green-500" />
+                </div>
+              </div>
+              <div>
+                <DialogTitle>
+                  <Trans
+                    i18nKey="createPollPollCreated"
+                    defaults="Poll created"
+                  />
+                </DialogTitle>
+                <DialogDescription>
+                  <Trans
+                    i18nKey="inviteParticipantsDescription"
+                    defaults="Copy and share the invite link to start gathering responses from your participants."
+                  />
+                </DialogDescription>
+              </div>
             </div>
-            <DialogTitle>
-              <Trans i18nKey="createPollPollCreated" defaults="Poll created" />
-            </DialogTitle>
-            <DialogDescription>
-              <Trans
-                i18nKey="inviteParticipantsDescription"
-                defaults="Copy and share the invite link to start gathering responses from your participants."
-              />
-            </DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col items-center gap-2 py-2">
-            <p
-              className="w-full select-all break-all rounded-md bg-muted p-2 text-center font-mono text-muted-foreground text-sm"
-              dir="ltr"
+          <Input
+            className="w-full text-center"
+            value={shortUrl(`/invite/${createdPollId}`)}
+            readOnly
+          />
+          <DialogFooter className="grid gap-2 sm:grid-cols-2">
+            <Link
+              target="_blank"
+              href={`/invite/${createdPollId}`}
+              className={buttonVariants()}
             >
-              {shortUrl(`/invite/${createdPollId}`)}
-            </p>
-          </div>
-          <DialogFooter className="grid grid-cols-2 gap-2">
+              <Trans i18nKey="viewPoll" defaults="View poll" />
+              <ArrowUpRightIcon data-icon="inline-end" />
+            </Link>
             <Button
               disabled={didCopy}
               onClick={() => {
@@ -189,7 +204,6 @@ export const CreatePoll: React.FunctionComponent = () => {
                 setDidCopy(true);
                 setTimeout(() => setDidCopy(false), 2000);
               }}
-              type="button"
             >
               {didCopy ? (
                 <>
@@ -203,9 +217,6 @@ export const CreatePoll: React.FunctionComponent = () => {
                 </>
               )}
             </Button>
-            <Link href={`/poll/${createdPollId}`} className={buttonVariants()}>
-              <Trans i18nKey="manage" defaults="Manage" />
-            </Link>
           </DialogFooter>
         </DialogContent>
       </Dialog>
