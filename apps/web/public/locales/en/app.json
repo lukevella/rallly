@@ -617,5 +617,7 @@
   "timezoneInputPlaceholder": "Search timezone…",
   "cityTime": "{city} Time",
   "unmuteNotifications": "Unmute notifications",
-  "muteNotifications": "Mute notifications"
+  "muteNotifications": "Mute notifications",
+  "creatingPoll": "Creating poll...",
+  "createPollPollCreated": "Poll created"
 }
