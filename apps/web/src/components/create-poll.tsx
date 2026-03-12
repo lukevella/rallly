@@ -17,7 +17,12 @@ import {
   DialogTitle,
 } from "@rallly/ui/dialog";
 import { Form } from "@rallly/ui/form";
-import { Input } from "@rallly/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { ArrowUpRightIcon, CheckIcon, CopyIcon } from "lucide-react";
@@ -183,12 +188,40 @@ export const CreatePoll: React.FunctionComponent = () => {
               </div>
             </div>
           </DialogHeader>
-          <Input
-            className="w-full text-center"
-            value={shortUrl(`/invite/${createdPollId}`)}
-            readOnly
-          />
-          <DialogFooter className="grid gap-2 sm:grid-cols-2">
+          <InputGroup className="w-full">
+            <InputGroupInput
+              className="text-center"
+              value={shortUrl(`/invite/${createdPollId}`)}
+              readOnly
+            />
+            <InputGroupAddon align="inline-end">
+              <InputGroupButton
+                variant="ghost"
+                size="icon-xs"
+                disabled={didCopy}
+                aria-label={
+                  didCopy
+                    ? t("copied", { defaultValue: "Copied" })
+                    : t("copyLink", { defaultValue: "Copy link" })
+                }
+                onClick={() => {
+                  copy(shortUrl(`/invite/${createdPollId}`));
+                  setDidCopy(true);
+                  setTimeout(() => setDidCopy(false), 2000);
+                }}
+              >
+                {didCopy ? <CheckIcon /> : <CopyIcon />}
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
+          <DialogFooter className="grid grid-cols-2 gap-2">
+            <Link
+              href={`/poll/${createdPollId}`}
+              className={buttonVariants({ variant: "primary" })}
+            >
+              <Trans i18nKey="manage" defaults="Manage" />
+            </Link>
+
             <Link
               target="_blank"
               href={`/invite/${createdPollId}`}
@@ -197,26 +230,6 @@ export const CreatePoll: React.FunctionComponent = () => {
               <Trans i18nKey="viewPoll" defaults="View poll" />
               <ArrowUpRightIcon data-icon="inline-end" />
             </Link>
-            <Button
-              disabled={didCopy}
-              onClick={() => {
-                copy(shortUrl(`/invite/${createdPollId}`));
-                setDidCopy(true);
-                setTimeout(() => setDidCopy(false), 2000);
-              }}
-            >
-              {didCopy ? (
-                <>
-                  <CheckIcon data-icon="inline-start" />
-                  <Trans i18nKey="copied" defaults="Copied" />
-                </>
-              ) : (
-                <>
-                  <CopyIcon data-icon="inline-start" />
-                  <Trans i18nKey="copyLink" defaults="Copy link" />
-                </>
-              )}
-            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
