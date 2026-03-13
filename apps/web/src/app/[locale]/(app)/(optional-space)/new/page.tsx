@@ -1,6 +1,13 @@
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@rallly/ui/breadcrumb";
+import { BarChart2Icon } from "lucide-react";
 import type { Metadata } from "next";
-
-import { PollPageIcon } from "@/app/components/page-icons";
 import { CreatePoll } from "@/components/create-poll";
 import { UserDropdown } from "@/components/user-dropdown";
 import { isQuickCreateEnabled } from "@/features/quick-create";
@@ -10,7 +17,6 @@ import {
   createPrivateSSRHelper,
   createPublicSSRHelper,
 } from "@/trpc/server/create-ssr-helper";
-import { BackButton } from "./back-button";
 
 export default async function Page() {
   const helpers = isQuickCreateEnabled
@@ -23,18 +29,26 @@ export default async function Page() {
     <div className="absolute inset-0 h-dvh overflow-auto bg-gray-100 dark:bg-gray-900">
       <div className="sticky top-0 z-20 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:grid-cols-3 dark:bg-gray-900/90">
         <div className="mx-auto flex items-center justify-between gap-x-2">
-          <div className="flex items-center gap-x-4 sm:flex-1">
-            <BackButton />
-          </div>
-          <div className="flex flex-1 sm:justify-center">
-            <div className="flex items-center gap-x-2">
-              <PollPageIcon size="xs" />
-              <div className="flex items-baseline gap-x-8">
-                <h1 className="font-semibold">
-                  <Trans i18nKey="poll" defaults="Poll" />
-                </h1>
-              </div>
-            </div>
+          <div className="sm:flex-1">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink
+                    href="/polls"
+                    className="flex items-center gap-x-2"
+                  >
+                    <BarChart2Icon className="size-4" />
+                    <Trans i18nKey="polls" defaults="Polls" />
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>
+                    <Trans i18nKey="newPoll" defaults="New Poll" />
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
           <div className="flex flex-1 justify-end">
             <UserDropdown />
