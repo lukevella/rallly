@@ -1,5 +1,19 @@
-import type { Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 import { PollPage } from "tests/poll-page";
+
+export class CreatePollSuccessDialog {
+  constructor(private readonly page: Page) {}
+
+  get dialog(): Locator {
+    return this.page.getByRole("dialog");
+  }
+
+  async goToPollPage() {
+    await this.page.getByRole("link", { name: "Manage" }).click();
+    await this.page.waitForURL(/\/poll\/[^/]+/);
+    return new PollPage(this.page);
+  }
+}
 
 export class NewPollPage {
   constructor(public readonly page: Page) {}
@@ -8,34 +22,26 @@ export class NewPollPage {
     await this.page.goto("/new");
   }
 
-  async createPollAndCloseDialog({ name }: { name: string }) {
-    await this.goto();
-    const pollPage = await this.createPoll({ name });
-    await pollPage.closeDialog();
-    return pollPage;
-  }
-  async createPoll({ name }: { name: string }) {
+  async create({ name }: { name: string }): Promise<CreatePollSuccessDialog> {
     const page = this.page;
 
-    await page.fill('[placeholder="Monthly Meetup"]', name);
-    // click on label to focus on input
-    await page.click('text="Location"');
-    await page.keyboard.type("Online");
+    await page.getByLabel(/title|event/i).fill(name);
+    await page.getByLabel("Location").fill("Online");
+    await page
+      .getByLabel("Description")
+      .fill("Hey everyone, what time can you meet?");
 
-    await page.click('text="Description"');
+    await page.getByTitle("Next month").click();
 
-    await page.keyboard.type("Hey everyone, what time can you meet?");
+    await page.getByText("5", { exact: true }).first().click();
+    await page.getByText("7", { exact: true }).first().click();
+    await page.getByText("10", { exact: true }).first().click();
+    await page.getByText("15", { exact: true }).first().click();
 
-    await page.click('[title="Next month"]');
+    await page.getByRole("button", { name: /create poll/i }).click();
 
-    // Select a few days
-    await page.click("text=/^5$/");
-    await page.click("text=/^7$/");
-    await page.click("text=/^10$/");
-    await page.click("text=/^15$/");
-
-    await page.click('text="Create Poll"');
-
-    return new PollPage(page);
+    const successDialog = new CreatePollSuccessDialog(page);
+    await successDialog.dialog.waitFor({ state: "visible" });
+    return successDialog;
   }
 }

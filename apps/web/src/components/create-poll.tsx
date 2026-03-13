@@ -1,4 +1,6 @@
 "use client";
+import { usePostHog } from "@rallly/posthog/client";
+import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   Card,
@@ -7,13 +9,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@rallly/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@rallly/ui/dialog";
 import { Form } from "@rallly/ui/form";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
-import { useRouter } from "next/navigation";
-import type React from "react";
+import { shortUrl } from "@rallly/utils/absolute-url";
+import { CheckIcon, CopyIcon } from "lucide-react";
+import Link from "next/link";
+import React from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
-import { useUnmount } from "react-use";
+import { useCopyToClipboard, useUnmount } from "react-use";
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { useUser } from "@/components/user-provider";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -37,9 +55,13 @@ export interface CreatePollPageProps {
 }
 
 export const CreatePoll: React.FunctionComponent = () => {
-  const router = useRouter();
   const { t } = useTranslation();
+  const posthog = usePostHog();
   const { createGuestIfNeeded } = useUser();
+  const [createdPollId, setCreatedPollId] = React.useState<string | null>(null);
+  const [, copy] = useCopyToClipboard();
+  const [didCopy, setDidCopy] = React.useState(false);
+
   const form = useForm<NewEventData>({
     defaultValues: {
       title: "",
@@ -85,7 +107,7 @@ export const CreatePoll: React.FunctionComponent = () => {
           });
 
           if (res.ok) {
-            router.push(`/poll/${res.data.id}`);
+            setCreatedPollId(res.data.id);
           } else {
             toast.error(
               t("inappropriateContent", {
@@ -135,10 +157,89 @@ export const CreatePoll: React.FunctionComponent = () => {
             className="w-full"
             variant="primary"
           >
-            <Trans i18nKey="createPoll" defaults="Create poll" />
+            {form.formState.isSubmitting ? (
+              <Trans i18nKey="creatingPoll" defaults="Creating poll..." />
+            ) : (
+              <Trans i18nKey="createPoll" defaults="Create poll" />
+            )}
           </Button>
         </div>
       </form>
+      <Dialog open={!!createdPollId}>
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="p-2">
+                <div className="inline-flex size-10 items-center justify-center rounded-full bg-green-500/10">
+                  <CheckIcon className="size-4 text-green-500" />
+                </div>
+              </div>
+              <div>
+                <DialogTitle>
+                  <Trans
+                    i18nKey="createPollPollCreated"
+                    defaults="Poll created"
+                  />
+                </DialogTitle>
+                <DialogDescription>
+                  <Trans
+                    i18nKey="inviteParticipantsDescription"
+                    defaults="Copy and share the invite link to start gathering responses from your participants."
+                  />
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+          <InputGroup className="w-full">
+            <InputGroupInput
+              className="text-center"
+              value={shortUrl(`/invite/${createdPollId}`)}
+              readOnly
+            />
+            <InputGroupAddon align="inline-end">
+              <InputGroupButton
+                variant="ghost"
+                size="icon-xs"
+                disabled={didCopy}
+                aria-label={
+                  didCopy
+                    ? t("copied", { defaultValue: "Copied" })
+                    : t("copyLink", { defaultValue: "Copy link" })
+                }
+                onClick={() => {
+                  copy(shortUrl(`/invite/${createdPollId}`));
+                  setDidCopy(true);
+                  setTimeout(() => setDidCopy(false), 2000);
+                  posthog?.capture("poll_creation:invite_link_copy");
+                }}
+              >
+                {didCopy ? <CheckIcon /> : <CopyIcon />}
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
+          <DialogFooter className="grid grid-cols-2 gap-2">
+            <Link
+              href={`/poll/${createdPollId}`}
+              className={buttonVariants({ variant: "primary" })}
+              onClick={() => {
+                posthog?.capture("poll_creation:manage_button_click");
+              }}
+            >
+              <Trans i18nKey="manage" defaults="Manage" />
+            </Link>
+
+            <Link
+              href={`/invite/${createdPollId}`}
+              className={buttonVariants()}
+              onClick={() => {
+                posthog?.capture("poll_creation:view_button_click");
+              }}
+            >
+              <Trans i18nKey="viewPoll" defaults="View poll" />
+            </Link>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Form>
   );
 };

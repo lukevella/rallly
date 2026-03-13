@@ -30,7 +30,9 @@ test.describe.serial(() => {
   }) => {
     // Step 1: Create a poll as guest
     const newPollPage = new NewPollPage(page);
-    await newPollPage.createPollAndCloseDialog({ name: "Monthly Meetup" });
+    await newPollPage.goto();
+    const dialog = await newPollPage.create({ name: "Monthly Meetup" });
+    await dialog.goToPollPage();
     await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
 
     // Step 2: Navigate to registration
@@ -49,7 +51,9 @@ test.describe.serial(() => {
   }) => {
     // Step 1: Create a poll as guest
     const newPollPage = new NewPollPage(page);
-    await newPollPage.createPollAndCloseDialog({ name: "Board Meeting" });
+    await newPollPage.goto();
+    const dialog = await newPollPage.create({ name: "Board Meeting" });
+    await dialog.goToPollPage();
     await expect(page.getByTestId("poll-title")).toHaveText("Board Meeting");
 
     // Step 2: Navigate to registration
