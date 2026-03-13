@@ -68,7 +68,7 @@ export async function createTestPoll({
   title,
   userId,
   spaceId,
-  touchedAt,
+  updatedAt,
   hasRecentViews = false,
   hasFutureOptions = false,
 }: {
@@ -76,7 +76,7 @@ export async function createTestPoll({
   title: string;
   userId?: string;
   spaceId?: string;
-  touchedAt: Date;
+  updatedAt: Date;
   hasRecentViews?: boolean;
   hasFutureOptions?: boolean;
 }) {
@@ -87,7 +87,7 @@ export async function createTestPoll({
     adminUrlId: `${id}-admin`,
     userId,
     spaceId,
-    touchedAt,
+    updatedAt,
     ...(hasRecentViews && {
       views: {
         create: {

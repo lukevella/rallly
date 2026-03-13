@@ -82,14 +82,14 @@ test.describe("House-keeping API", () => {
       id: "old-poll-free-user",
       title: "Old Poll from Free User",
       userId: freeUser.id,
-      touchedAt: dayjs().subtract(35, "day").toDate(),
+      updatedAt: dayjs().subtract(35, "day").toDate(),
     });
     createdPollIds.push(oldPollFromFreeUser.id);
 
     const oldPollNoUser = await createTestPoll({
       id: "old-poll-no-user",
       title: "Old Poll with No User",
-      touchedAt: dayjs().subtract(35, "day").toDate(),
+      updatedAt: dayjs().subtract(35, "day").toDate(),
     });
     createdPollIds.push(oldPollNoUser.id);
 
@@ -99,7 +99,7 @@ test.describe("House-keeping API", () => {
       title: "Old Poll in Paid Space",
       userId: spaceOwner.id,
       spaceId: paidSpace.id,
-      touchedAt: dayjs().subtract(35, "day").toDate(),
+      updatedAt: dayjs().subtract(35, "day").toDate(),
     });
     createdPollIds.push(oldPollInPaidSpace.id);
 
@@ -107,7 +107,7 @@ test.describe("House-keeping API", () => {
       id: "recent-poll-free-user",
       title: "Recent Poll from Free User",
       userId: freeUser.id,
-      touchedAt: dayjs().subtract(15, "day").toDate(),
+      updatedAt: dayjs().subtract(15, "day").toDate(),
     });
     createdPollIds.push(recentPollFromFreeUser.id);
 
@@ -115,7 +115,7 @@ test.describe("House-keeping API", () => {
       id: "old-poll-future-options",
       title: "Old Poll with Future Options",
       userId: freeUser.id,
-      touchedAt: dayjs().subtract(35, "day").toDate(),
+      updatedAt: dayjs().subtract(35, "day").toDate(),
       hasFutureOptions: true,
     });
     createdPollIds.push(oldPollWithFutureOptions.id);
@@ -124,7 +124,7 @@ test.describe("House-keeping API", () => {
       id: "old-poll-recent-views",
       title: "Old Poll with Recent Views",
       userId: freeUser.id,
-      touchedAt: dayjs().subtract(35, "day").toDate(),
+      updatedAt: dayjs().subtract(35, "day").toDate(),
       hasRecentViews: true,
     });
     createdPollIds.push(oldPollWithRecentViews.id);
