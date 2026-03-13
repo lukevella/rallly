@@ -22,7 +22,7 @@ app.use("*", async (c, next) => {
 
 /**
  * Marks inactive polls as deleted. Polls are inactive if they have not been
- * touched in the last 30 days and all dates are in the past.
+ * updated in the last 30 days and all dates are in the past.
  * Only marks polls as deleted if they belong to users without an active subscription
  * or if they don't have a user associated with them.
  */
@@ -51,8 +51,8 @@ app.get("/delete-inactive-polls", async (c) => {
           },
         },
       ],
-      // Poll is inactive (not touched AND not viewed in the last 30 days)
-      touchedAt: { lt: thirtyDaysAgo },
+      // Poll is inactive (not updated AND not viewed in the last 30 days)
+      updatedAt: { lt: thirtyDaysAgo },
       views: {
         none: {
           viewedAt: { gte: thirtyDaysAgo },
