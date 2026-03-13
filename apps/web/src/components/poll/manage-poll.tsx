@@ -19,7 +19,6 @@ import {
   PencilIcon,
   PlayIcon,
   Settings2Icon,
-  SettingsIcon,
   TableIcon,
   TrashIcon,
 } from "lucide-react";
@@ -134,8 +133,7 @@ const ManagePoll: React.FunctionComponent<{
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild={true}>
           <Button variant="ghost" disabled={disabled}>
-            <SettingsIcon data-icon="inline-start" />
-            <span className="hidden sm:block">
+            <span>
               <Trans i18nKey="manage" />
             </span>
             <ChevronDownIcon data-icon="inline-end" />

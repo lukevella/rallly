@@ -8,6 +8,7 @@ import {
 } from "@rallly/ui/breadcrumb";
 import { BarChart2Icon } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { CreatePoll } from "@/components/create-poll";
 import { UserDropdown } from "@/components/user-dropdown";
 import { isQuickCreateEnabled } from "@/features/quick-create";
@@ -34,7 +35,7 @@ export default async function Page() {
               <BreadcrumbList>
                 <BreadcrumbItem>
                   <BreadcrumbLink
-                    href="/polls"
+                    render={<Link href="/polls" />}
                     className="flex items-center gap-x-2"
                   >
                     <BarChart2Icon className="size-4" />

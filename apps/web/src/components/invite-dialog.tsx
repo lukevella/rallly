@@ -58,7 +58,9 @@ export const InviteDialog = () => {
       <DialogTrigger asChild={true}>
         <Button variant="primary">
           <Share2Icon data-icon="inline-start" />
-          <Trans i18nKey="share" defaults="Share" />
+          <span className="sr-only sm:not-sr-only">
+            <Trans i18nKey="share" defaults="Share" />
+          </span>
         </Button>
       </DialogTrigger>
       <DialogContent data-testid="invite-participant-dialog">

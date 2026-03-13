@@ -3,7 +3,7 @@ import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
-import { MoreHorizontalIcon } from "lucide-react";
+import { MoreVerticalIcon } from "lucide-react";
 import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
@@ -144,9 +144,9 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
             align="start"
             onEdit={() => onChangeEditMode?.(true)}
           >
-            <Button size="icon" variant="ghost">
+            <Button size="icon-xs" variant="ghost">
               <Icon>
-                <MoreHorizontalIcon />
+                <MoreVerticalIcon />
               </Icon>
             </Button>
           </ParticipantDropdown>
