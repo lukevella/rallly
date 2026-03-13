@@ -164,6 +164,14 @@ pnpm sherif               # Check package dependencies
 - Route handlers follow Next.js App Router conventions
 - Always use kebab-case for file names
 
+### PostHog Event Naming
+- Use the `category:object_action` pattern
+- Lowercase only, snake_case, present-tense verbs
+  - **category** — the context/flow (e.g. `poll_creation`, `account_settings`)
+  - **object** — the component/element (e.g. `invite_link`, `manage_button`)
+  - **action** — what happened (e.g. `click`, `copy`, `submit`)
+- Example: `posthog?.capture("poll_creation:manage_button_click")`
+
 ## i18n & Localization
 
 - i18next for internationalization
