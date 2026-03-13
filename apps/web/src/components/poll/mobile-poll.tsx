@@ -110,6 +110,7 @@ const MobilePoll: React.FunctionComponent = () => {
                       <OptimizedAvatarImage
                         name={participant.name}
                         email={participant.email ?? undefined}
+                        src={participant.image ?? undefined}
                         size="sm"
                       />
                       <ParticipantName>{participant.name}</ParticipantName>

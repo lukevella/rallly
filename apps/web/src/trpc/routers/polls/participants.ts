@@ -104,7 +104,7 @@ export const participants = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
       }
 
-      const participants = await prisma.participant.findMany({
+      const rawParticipants = await prisma.participant.findMany({
         where: {
           pollId,
           deleted: false,
@@ -116,6 +116,11 @@ export const participants = router({
               type: true,
             },
           },
+          user: {
+            select: {
+              image: true,
+            },
+          },
         },
         orderBy: [
           {
@@ -124,6 +129,11 @@ export const participants = router({
           { name: "desc" },
         ],
       });
+
+      const participants = rawParticipants.map(({ user, ...rest }) => ({
+        ...rest,
+        image: user?.image ?? null,
+      }));
 
       // Hide participants if the poll has hideParticipants enabled
       // and the current user is not an admin
@@ -141,6 +151,7 @@ export const participants = router({
               ...participant,
               name: "Anonymous",
               email: null,
+              image: null,
             };
           });
         }

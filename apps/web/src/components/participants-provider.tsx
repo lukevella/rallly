@@ -9,7 +9,7 @@ import type { Vote } from "@/trpc/client/types";
 import { useRequiredContext } from "./use-required-context";
 
 const ParticipantsContext = React.createContext<{
-  participants: Array<Participant & { votes: Vote[] }>;
+  participants: Array<Participant & { votes: Vote[]; image: string | null }>;
   getParticipants: (optionId: string, voteType: VoteType) => Participant[];
 } | null>(null);
 
