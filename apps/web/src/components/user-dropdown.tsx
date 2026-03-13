@@ -45,7 +45,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
 
   const isRegistrationEnabled = useFeatureFlag("registration");
 
-  if (!user) {
+  if (!user || user.isGuest) {
     return (
       <div className="flex items-center gap-x-2">
         <Link
