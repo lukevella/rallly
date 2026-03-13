@@ -1,10 +1,10 @@
 import type { VoteType } from "@rallly/database";
 import type * as React from "react";
 import { Controller } from "react-hook-form";
+import { useParticipants } from "@/components/participants-provider";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { usePoll } from "@/components/poll-context";
 import type { ParsedDateTimeOpton } from "@/utils/date-time-utils";
-
 import DateOption from "./date-option";
 import TimeSlotOption from "./time-slot-option";
 
@@ -20,21 +20,17 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
   selectedParticipantId,
 }) => {
   const { control } = useVotingForm();
-  const {
-    getParticipantsWhoVotedForOption,
-    getParticipantById,
-    getScore,
-    getVote,
-    optionIds,
-  } = usePoll();
+  const { getScore, getVote, optionIds } = usePoll();
+  const { participants: allParticipants } = useParticipants();
   const selectedParticipant = selectedParticipantId
-    ? getParticipantById(selectedParticipantId)
+    ? allParticipants.find(
+        (participant) => participant.id === selectedParticipantId,
+      )
     : undefined;
 
   return (
     <div className="divide-y">
       {options.map((option) => {
-        const participants = getParticipantsWhoVotedForOption(option.optionId);
         const score = getScore(option.optionId);
         const index = optionIds.indexOf(option.optionId);
         return (
@@ -65,7 +61,6 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                       optionId={option.optionId}
                       yesScore={score.yes}
                       ifNeedBeScore={score.ifNeedBe}
-                      participants={participants}
                       vote={vote}
                       startTime={option.startTime}
                       endTime={option.endTime}
@@ -81,7 +76,6 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                       optionId={option.optionId}
                       yesScore={score.yes}
                       ifNeedBeScore={score.ifNeedBe}
-                      participants={participants}
                       vote={vote}
                       dow={option.dow}
                       day={option.day}

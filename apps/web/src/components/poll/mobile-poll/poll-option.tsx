@@ -2,7 +2,7 @@
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: fix later */
 /** biome-ignore-all lint/a11y/useFocusableInteractive: fix later */
 "use client";
-import type { Participant, VoteType } from "@rallly/database";
+import type { VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
@@ -11,7 +11,10 @@ import * as React from "react";
 import { useToggle } from "react-use";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { useParticipants } from "@/components/participants-provider";
+import {
+  filterParticipantsByVote,
+  useParticipants,
+} from "@/components/participants-provider";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
 import { useTranslation } from "@/i18n/client";
@@ -27,7 +30,6 @@ export interface PollOptionProps {
   editable?: boolean;
   vote?: VoteType;
   onChange: (vote: VoteType) => void;
-  participants: Participant[];
   selectedParticipantId?: string;
   optionId: string;
 }
@@ -36,10 +38,22 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
   optionId,
 }) => {
   const { t } = useTranslation();
-  const { getParticipants } = useParticipants();
-  const participantsWhoVotedYes = getParticipants(optionId, "yes");
-  const participantsWhoVotedIfNeedBe = getParticipants(optionId, "ifNeedBe");
-  const participantsWhoVotedNo = getParticipants(optionId, "no");
+  const { participants } = useParticipants();
+  const participantsWhoVotedYes = filterParticipantsByVote(
+    participants,
+    optionId,
+    "yes",
+  );
+  const participantsWhoVotedIfNeedBe = filterParticipantsByVote(
+    participants,
+    optionId,
+    "ifNeedBe",
+  );
+  const participantsWhoVotedNo = filterParticipantsByVote(
+    participants,
+    optionId,
+    "no",
+  );
   const noVotes =
     participantsWhoVotedYes.length + participantsWhoVotedIfNeedBe.length === 0;
   return (
@@ -51,7 +65,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
       ) : (
         <div className="grid grid-cols-2 gap-2">
           <div className="col-span-1 space-y-2.5">
-            {participantsWhoVotedYes.map(({ name, email }, i) => (
+            {participantsWhoVotedYes.map(({ name, email, image }, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
@@ -59,6 +73,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                     size="sm"
                     name={name}
                     email={email ?? undefined}
+                    src={image ?? undefined}
                   />
                   <VoteIcon
                     type="yes"
@@ -69,7 +84,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                 <div className="truncate text-sm">{name}</div>
               </div>
             ))}
-            {participantsWhoVotedIfNeedBe.map(({ name, email }, i) => (
+            {participantsWhoVotedIfNeedBe.map(({ name, email, image }, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
@@ -77,6 +92,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                     size="sm"
                     name={name}
                     email={email ?? undefined}
+                    src={image ?? undefined}
                   />
                   <VoteIcon
                     type="ifNeedBe"
@@ -89,7 +105,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
             ))}
           </div>
           <div className="col-span-1 space-y-2.5">
-            {participantsWhoVotedNo.map(({ name, email }, i) => (
+            {participantsWhoVotedNo.map(({ name, email, image }, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-5 items-center justify-center">
@@ -97,6 +113,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                     size="sm"
                     name={name}
                     email={email ?? undefined}
+                    src={image ?? undefined}
                   />
                   <VoteIcon
                     type="no"

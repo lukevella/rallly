@@ -1,5 +1,4 @@
 import ModalProvider from "@/components/modal/modal-provider";
-import { ParticipantsProvider } from "@/components/participants-provider";
 import {
   OptionsProvider,
   PollContextProvider,
@@ -14,12 +13,10 @@ export const LegacyPollContextProvider = (props: React.PropsWithChildren) => {
   }
 
   return (
-    <ParticipantsProvider pollId={poll.id}>
-      <PollContextProvider poll={poll} urlId={poll.id} admin={false}>
-        <ModalProvider>
-          <OptionsProvider>{props.children}</OptionsProvider>
-        </ModalProvider>
-      </PollContextProvider>
-    </ParticipantsProvider>
+    <PollContextProvider poll={poll} urlId={poll.id} admin={false}>
+      <ModalProvider>
+        <OptionsProvider>{props.children}</OptionsProvider>
+      </ModalProvider>
+    </PollContextProvider>
   );
 };

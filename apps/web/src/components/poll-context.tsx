@@ -1,10 +1,9 @@
-import type { Participant, VoteType } from "@rallly/database";
-import { keyBy } from "lodash";
+import type { VoteType } from "@rallly/database";
 import { TrashIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
-import type { GetPollApiResponse, Vote } from "@/trpc/client/types";
+import type { GetPollApiResponse } from "@/trpc/client/types";
 import type {
   ParsedDateOption,
   ParsedTimeSlotOption,
@@ -21,17 +20,12 @@ type PollContextValue = {
   admin: boolean;
   highScore: number;
   optionIds: string[];
-  // TODO (Luke Vella) [2022-05-18]: Move this stuff to participants provider
-  getParticipantsWhoVotedForOption: (optionId: string) => Participant[]; // maybe just attach votes to parsed options
   getScore: (optionId: string) => {
     yes: number;
     ifNeedBe: number;
     no: number;
     skip: number;
   };
-  getParticipantById: (
-    participantId: string,
-  ) => (Participant & { votes: Vote[] }) | undefined;
   getVote: (participantId: string, optionId: string) => VoteType | undefined;
 };
 
@@ -86,45 +80,18 @@ export const PollContextProvider: React.FunctionComponent<{
       return score > acc ? score : acc;
     }, 1);
 
-    const getParticipantById = (participantId: string) => {
-      // TODO (Luke Vella) [2022-04-16]: Build an index instead
-      const participant = participants?.find(({ id }) => id === participantId);
-
-      return participant;
-    };
-
     const optionIds = poll.options.map(({ id }) => id);
-
-    const participantById = keyBy(
-      participants,
-      (participant) => participant.id,
-    );
-
-    const participantsByOptionId: Record<string, Participant[]> = {};
-    poll.options.forEach((option) => {
-      participantsByOptionId[option.id] = (participants ?? []).filter(
-        (participant) =>
-          participant.votes.some(
-            ({ type, optionId }) => optionId === option.id && type === "yes",
-          ),
-      );
-    });
 
     return {
       optionIds,
       poll,
       urlId,
       admin,
-      getParticipantById: (participantId) => {
-        return participantById[participantId];
-      },
       highScore,
-      getParticipantsWhoVotedForOption: (optionId: string) =>
-        participantsByOptionId[optionId],
       getVote: (participantId, optionId) => {
-        const vote = getParticipantById(participantId)?.votes.find(
-          (vote) => vote.optionId === optionId,
-        );
+        const vote = participants
+          .find((participant) => participant.id === participantId)
+          ?.votes.find((vote) => vote.optionId === optionId);
         return vote?.type;
       },
       getScore,

@@ -1,3 +1,4 @@
+import type { Participant, VoteType } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
@@ -19,6 +20,19 @@ import { createParticipantEditToken, resolveUserId } from "./utils";
 const logger = createLogger("participants");
 
 const MAX_PARTICIPANTS = 1000;
+
+function createParticipantFullDTO(
+  participant: Participant & { user: { image: string | null } | null } & {
+    votes: { optionId: string; type: VoteType }[];
+  },
+) {
+  const { votes, user, ...rest } = participant;
+  return {
+    ...rest,
+    image: user?.image ?? null,
+    votes,
+  };
+}
 
 async function canModifyParticipant(participantId: string, userId: string) {
   const participant = await prisma.participant.findUnique({
@@ -104,7 +118,7 @@ export const participants = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
       }
 
-      const participants = await prisma.participant.findMany({
+      const rawParticipants = await prisma.participant.findMany({
         where: {
           pollId,
           deleted: false,
@@ -116,6 +130,11 @@ export const participants = router({
               type: true,
             },
           },
+          user: {
+            select: {
+              image: true,
+            },
+          },
         },
         orderBy: [
           {
@@ -124,6 +143,8 @@ export const participants = router({
           { name: "desc" },
         ],
       });
+
+      const participants = rawParticipants.map(createParticipantFullDTO);
 
       // Hide participants if the poll has hideParticipants enabled
       // and the current user is not an admin
@@ -141,6 +162,7 @@ export const participants = router({
               ...participant,
               name: "Anonymous",
               email: null,
+              image: null,
             };
           });
         }
@@ -248,11 +270,21 @@ export const participants = router({
             },
           },
           include: {
+            votes: {
+              select: {
+                optionId: true,
+                type: true,
+              },
+            },
+            user: {
+              select: {
+                image: true,
+              },
+            },
             poll: {
               select: {
                 id: true,
                 title: true,
-                userId: true,
               },
             },
           },
@@ -312,7 +344,7 @@ export const participants = router({
           },
         });
 
-        return participant;
+        return createParticipantFullDTO(participant);
       },
     ),
   rename: publicProcedure
@@ -401,7 +433,17 @@ export const participants = router({
             id: participantId,
           },
           include: {
-            votes: true,
+            votes: {
+              select: {
+                optionId: true,
+                type: true,
+              },
+            },
+            user: {
+              select: {
+                image: true,
+              },
+            },
           },
         });
       });
@@ -414,6 +456,6 @@ export const participants = router({
         },
       });
 
-      return participant;
+      return createParticipantFullDTO(participant);
     }),
 });

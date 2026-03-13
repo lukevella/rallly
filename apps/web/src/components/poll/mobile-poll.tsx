@@ -42,7 +42,7 @@ if (typeof window !== "undefined") {
 const MobilePoll: React.FunctionComponent = () => {
   const pollContext = usePoll();
 
-  const { poll, getParticipantById } = pollContext;
+  const { poll } = pollContext;
 
   const { options } = useOptions();
 
@@ -55,7 +55,9 @@ const MobilePoll: React.FunctionComponent = () => {
 
   const visibleParticipants = useVisibleParticipants();
   const selectedParticipant = selectedParticipantId
-    ? getParticipantById(selectedParticipantId)
+    ? visibleParticipants.find(
+        (participant) => participant.id === selectedParticipantId,
+      )
     : undefined;
 
   const { canEditParticipant, canAddNewParticipant } = usePermissions();
@@ -110,6 +112,7 @@ const MobilePoll: React.FunctionComponent = () => {
                       <OptimizedAvatarImage
                         name={participant.name}
                         email={participant.email ?? undefined}
+                        src={participant.image ?? undefined}
                         size="sm"
                       />
                       <ParticipantName>{participant.name}</ParticipantName>
