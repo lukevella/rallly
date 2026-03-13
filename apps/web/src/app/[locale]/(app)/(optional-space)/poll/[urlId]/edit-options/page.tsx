@@ -8,6 +8,10 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import PollOptionsForm from "@/components/forms/poll-options-form";
 import { useModalContext } from "@/components/modal/modal-provider";
+import {
+  filterParticipantsByVote,
+  useParticipants,
+} from "@/components/participants-provider";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { usePoll } from "@/components/poll-context";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -32,7 +36,8 @@ const convertOptionToString = (
 };
 
 const Page = () => {
-  const { poll, getParticipantsWhoVotedForOption } = usePoll();
+  const { poll } = usePoll();
+  const { participants } = useParticipants();
   const { mutate: updatePollMutation, isPending: isUpdating } =
     useUpdatePollMutation();
   const { t } = useTranslation();
@@ -119,7 +124,9 @@ const Page = () => {
           };
 
           const optionsToDeleteThatHaveVotes = optionsToDelete.filter(
-            (option) => getParticipantsWhoVotedForOption(option.id).length > 0,
+            (option) =>
+              filterParticipantsByVote(participants, option.id, "yes").length >
+              0,
           );
 
           if (optionsToDeleteThatHaveVotes.length > 0) {

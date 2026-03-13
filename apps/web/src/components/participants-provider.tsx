@@ -1,52 +1,27 @@
-import type { Participant, VoteType } from "@rallly/database";
+import type { VoteType } from "@rallly/database";
+import { useParams } from "next/navigation";
 import * as React from "react";
-
 import { useVisibility } from "@/components/visibility";
 import { usePermissions } from "@/contexts/permissions";
 import { trpc } from "@/trpc/client";
-import type { Vote } from "@/trpc/client/types";
 
-import { useRequiredContext } from "./use-required-context";
-
-const ParticipantsContext = React.createContext<{
-  participants: Array<Participant & { votes: Vote[]; image: string | null }>;
-  getParticipants: (optionId: string, voteType: VoteType) => Participant[];
-} | null>(null);
+export function filterParticipantsByVote<
+  T extends { votes: { optionId: string; type: VoteType }[] },
+>(participants: T[], optionId: string, voteType: VoteType): T[] {
+  return participants.filter((participant) => {
+    return participant.votes.some((vote) => {
+      return vote.optionId === optionId && vote.type === voteType;
+    });
+  });
+}
 
 export const useParticipants = () => {
-  return useRequiredContext(ParticipantsContext);
-};
-
-export const ParticipantsProvider: React.FunctionComponent<{
-  children?: React.ReactNode;
-  pollId: string;
-}> = ({ children, pollId }) => {
-  const { data: participants } = trpc.polls.participants.list.useQuery({
-    pollId,
+  const urlId = useParams<{ urlId: string }>().urlId;
+  const [participants] = trpc.polls.participants.list.useSuspenseQuery({
+    pollId: urlId,
   });
 
-  const getParticipants = (
-    optionId: string,
-    voteType: VoteType,
-  ): Participant[] => {
-    if (!participants) {
-      return [];
-    }
-    return participants.filter((participant) => {
-      return participant.votes.some((vote) => {
-        return vote.optionId === optionId && vote.type === voteType;
-      });
-    });
-  };
-  if (!participants) {
-    return null;
-  }
-
-  return (
-    <ParticipantsContext.Provider value={{ participants, getParticipants }}>
-      {children}
-    </ParticipantsContext.Provider>
-  );
+  return { participants };
 };
 
 export const useVisibleParticipants = () => {
