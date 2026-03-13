@@ -1,4 +1,5 @@
 "use client";
+import { usePostHog } from "@rallly/posthog/client";
 import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
@@ -25,7 +26,7 @@ import {
 } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
 import { shortUrl } from "@rallly/utils/absolute-url";
-import { ArrowUpRightIcon, CheckIcon, CopyIcon } from "lucide-react";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -55,6 +56,7 @@ export interface CreatePollPageProps {
 
 export const CreatePoll: React.FunctionComponent = () => {
   const { t } = useTranslation();
+  const posthog = usePostHog();
   const { createGuestIfNeeded } = useUser();
   const [createdPollId, setCreatedPollId] = React.useState<string | null>(null);
   const [, copy] = useCopyToClipboard();
@@ -208,6 +210,7 @@ export const CreatePoll: React.FunctionComponent = () => {
                   copy(shortUrl(`/invite/${createdPollId}`));
                   setDidCopy(true);
                   setTimeout(() => setDidCopy(false), 2000);
+                  posthog?.capture("poll_creation:invite_link_copy");
                 }}
               >
                 {didCopy ? <CheckIcon /> : <CopyIcon />}
@@ -218,17 +221,21 @@ export const CreatePoll: React.FunctionComponent = () => {
             <Link
               href={`/poll/${createdPollId}`}
               className={buttonVariants({ variant: "primary" })}
+              onClick={() => {
+                posthog?.capture("poll_creation:manage_button_click");
+              }}
             >
               <Trans i18nKey="manage" defaults="Manage" />
             </Link>
 
             <Link
-              target="_blank"
               href={`/invite/${createdPollId}`}
               className={buttonVariants()}
+              onClick={() => {
+                posthog?.capture("poll_creation:view_button_click");
+              }}
             >
               <Trans i18nKey="viewPoll" defaults="View poll" />
-              <ArrowUpRightIcon data-icon="inline-end" />
             </Link>
           </DialogFooter>
         </DialogContent>
