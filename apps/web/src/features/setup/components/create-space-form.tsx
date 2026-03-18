@@ -34,7 +34,7 @@ export function CreateSpaceForm() {
 
   const createSpace = trpc.spaces.create.useMutation({
     onSuccess: () => {
-      router.push("/");
+      router.refresh();
     },
   });
 

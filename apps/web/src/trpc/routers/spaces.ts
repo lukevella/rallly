@@ -9,6 +9,7 @@ import { posthog } from "@/features/analytics/posthog";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import {
   createSpaceDTO,
+  getActiveSpaceForUser,
   getMember,
   getSpaceSeatCount,
 } from "@/features/space/data";
@@ -70,8 +71,8 @@ export const spaces = router({
       }),
     );
   }),
-  getCurrent: spaceProcedure.query(async ({ ctx }) => {
-    return ctx.space;
+  getCurrent: privateProcedure.query(async ({ ctx }) => {
+    return await getActiveSpaceForUser(ctx.user.id);
   }),
   listMembers: spaceProcedure.query(async ({ ctx }) => {
     const [members, totalCount] = await Promise.all([
