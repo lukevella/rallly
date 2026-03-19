@@ -21,7 +21,6 @@ import { getCityFromTimezoneId } from "@/components/time-zone-picker/timezone-da
 import { usePreferences } from "@/contexts/preferences";
 import { Trans } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
-import { useTimezone } from "@/lib/timezone/client/context";
 import { useDayjs } from "@/utils/dayjs";
 
 export const TimePreferences = () => {
@@ -77,7 +76,7 @@ export const Clock = ({ className }: { className?: string }) => {
 };
 
 export const TimesShownIn = () => {
-  const { timezone } = useTimezone();
+  const { timeZone } = useDayjs();
   return (
     <ClockPreferences>
       <Button type="button" variant="ghost">
@@ -85,7 +84,7 @@ export const TimesShownIn = () => {
         <Trans
           i18nKey="cityTime"
           defaults="{city} Time"
-          values={{ city: getCityFromTimezoneId(timezone) }}
+          values={{ city: getCityFromTimezoneId(timeZone) }}
         />
       </Button>
     </ClockPreferences>
