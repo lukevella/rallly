@@ -208,6 +208,7 @@ export class EmailClient {
             : undefined,
           tls: {
             rejectUnauthorized,
+            servername: process.env.SMTP_HOST,
           },
         });
         break;
