@@ -1,16 +1,10 @@
 import path from "node:path";
 import { defineConfig } from "prisma/config";
 
-for (const envFile of [
-  path.join(__dirname, ".env"),
-  path.join(__dirname, "../../.env"),
-]) {
-  try {
-    process.loadEnvFile(envFile);
-    break;
-  } catch {
-    // continue
-  }
+try {
+  process.loadEnvFile(path.join(__dirname, ".env"));
+} catch {
+  console.info("No .env file found, continuing without it");
 }
 
 export default defineConfig({
