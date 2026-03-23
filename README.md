@@ -43,13 +43,14 @@ The following instructions are for running the project locally for development.
 
 3. Setup environment variables
 
-   Create a `.env` file by copying `.env.development`. This will be were you can set your [configuration options](https://support.rallly.co/self-hosting/configuration-options).
+   Copy the sample environment file and fill in the required values:
 
    ```bash
-   cp .env.development .env
+   cp apps/web/.env.sample apps/web/.env
+   cp packages/database/.env.sample packages/database/.env
    ```
 
-   **Note:** `.env.development` is preconfigured with default values for development. You can leave these as is for local development.
+   See [configuration options](https://support.rallly.co/self-hosting/configuration-options) for a full list of available options.
 
 4. Generate Prisma client
 

@@ -23,7 +23,8 @@ Rallly is a meeting scheduling application built with Next.js that allows users 
 pnpm install
 
 # Setup environment
-cp .env.development .env
+cp apps/web/.env.sample apps/web/.env
+cp packages/database/.env.sample packages/database/.env
 
 # Generate Prisma client
 pnpm db:generate
