@@ -249,7 +249,6 @@ const DesktopPoll: React.FunctionComponent = () => {
     );
   }
 
-  console.log({ x });
   return (
     <Card>
       <div ref={measureRef} style={{ height: expanded ? height : undefined }}>
