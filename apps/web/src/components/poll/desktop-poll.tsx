@@ -202,53 +202,54 @@ const DesktopPoll: React.FunctionComponent = () => {
                   <Trans i18nKey="scrollRight" defaults="Scroll Right" />
                 </TooltipContent>
               </Tooltip>
+              {expanded ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        collapse();
+                      }}
+                    >
+                      <Icon>
+                        <ShrinkIcon />
+                      </Icon>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <Trans i18nKey="shrink" defaults="Shrink" />
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        expand();
+                      }}
+                    >
+                      <Icon>
+                        <ExpandIcon />
+                      </Icon>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <Trans i18nKey="expand" defaults="Expand" />
+                  </TooltipContent>
+                </Tooltip>
+              )}
+              {expanded ? <EscapeListener onEscape={collapse} /> : null}
             </>
           ) : null}
-          {expanded ? (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => {
-                    collapse();
-                  }}
-                >
-                  <Icon>
-                    <ShrinkIcon />
-                  </Icon>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <Trans i18nKey="shrink" defaults="Shrink" />
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <Tooltip delayDuration={0}>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => {
-                    expand();
-                  }}
-                >
-                  <Icon>
-                    <ExpandIcon />
-                  </Icon>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <Trans i18nKey="expand" defaults="Expand" />
-              </TooltipContent>
-            </Tooltip>
-          )}
-          {expanded ? <EscapeListener onEscape={collapse} /> : null}
         </div>
       </div>
     );
   }
 
+  console.log({ x });
   return (
     <Card>
       <div ref={measureRef} style={{ height: expanded ? height : undefined }}>
