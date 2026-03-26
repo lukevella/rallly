@@ -13,6 +13,7 @@ function createAppUrl(subpath: string) {
 }
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ["landing.rallly.localhost"],
   productionBrowserSourceMaps: true,
   transpilePackages: [
     "@rallly/ui",
@@ -30,6 +31,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
+    qualities: [100, 75],
     remotePatterns: [
       {
         protocol: "https",

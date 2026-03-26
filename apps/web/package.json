@@ -109,7 +109,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
-    "@next/bundle-analyzer": "16.1.6",
+    "@next/bundle-analyzer": "16.2.1",
     "@playwright/test": "^1.57.0",
     "@rallly/test-helpers": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
