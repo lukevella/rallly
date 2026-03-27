@@ -157,7 +157,8 @@ export const DayjsProvider: React.FunctionComponent<{
   };
 }> = ({ config, children }) => {
   const locale = config?.locale ?? "en";
-  const localeConfig = dayjsLocales[locale as SupportedLocale];
+  const localeKey = (locale in dayjsLocales ? locale : "en") as SupportedLocale;
+  const localeConfig = dayjsLocales[localeKey];
   const dayjsLocale = localeConfig.locale;
 
   const preferredTimeZone = React.useMemo(
