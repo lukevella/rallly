@@ -15,7 +15,6 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Settings2Icon } from "lucide-react";
 import Link from "next/link";
 import { NavUser } from "@/components/nav-user";
-import { UserLocaleSync } from "@/components/user-provider";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
@@ -42,7 +41,6 @@ export default async function Layout({
 
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
-      <UserLocaleSync />
       <SpaceSidebarProvider>
         <CommandMenu />
         <Sidebar>

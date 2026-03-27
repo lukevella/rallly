@@ -5,7 +5,6 @@ import React from "react";
 import type { UserAbility } from "@/features/user/ability";
 import { defineAbilityFor } from "@/features/user/ability";
 import { authClient } from "@/lib/auth-client";
-import { LocaleSync } from "@/lib/locale/client";
 import { trpc } from "@/trpc/client";
 import { isOwner } from "@/utils/permissions";
 
@@ -38,9 +37,4 @@ export function useUser() {
       },
     };
   }, [user, router]);
-}
-
-export function UserLocaleSync() {
-  const { user } = useUser();
-  return <LocaleSync userLocale={user?.locale} />;
 }

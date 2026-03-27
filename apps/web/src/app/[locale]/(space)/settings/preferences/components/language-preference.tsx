@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { LanguageSelect } from "@/components/poll/language-selector";
+import { useUser } from "@/components/user-provider";
 import { Trans } from "@/i18n/client";
 import { useLocale } from "@/lib/locale/client";
 import { trpc } from "@/trpc/client";
@@ -22,6 +23,7 @@ const formSchema = z.object({
 });
 
 export const LanguagePreference = () => {
+  const { user } = useUser();
   const { locale, changeLocale } = useLocale();
   const updateLocale = trpc.user.updateLocale.useMutation({
     onSuccess: (_data, variables) => {
@@ -30,7 +32,7 @@ export const LanguagePreference = () => {
   });
   const form = useForm({
     defaultValues: {
-      language: locale,
+      language: user?.locale ?? locale,
     },
     resolver: zodResolver(formSchema),
   });
