@@ -27,7 +27,6 @@ import { useVotingForm } from "@/components/poll/voting-form";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 import { Trans, useTranslation } from "@/i18n/client";
-
 import {
   useParticipants,
   useVisibleParticipants,

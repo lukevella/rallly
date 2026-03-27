@@ -1,3 +1,5 @@
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { PreferencesProvider } from "@/contexts/preferences";
 import { BillingProvider } from "@/features/billing/client";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import {
@@ -14,7 +16,16 @@ export default async function Layout({
     ? await createPublicSSRHelper()
     : await createPrivateSSRHelper();
 
-  await helpers.billing.getTier.prefetch();
+  await Promise.all([
+    helpers.billing.getTier.prefetch(),
+    helpers.user.getMe.prefetch(),
+  ]);
 
-  return <BillingProvider>{children}</BillingProvider>;
+  return (
+    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
+      <PreferencesProvider>
+        <BillingProvider>{children}</BillingProvider>
+      </PreferencesProvider>
+    </HydrationBoundary>
+  );
 }

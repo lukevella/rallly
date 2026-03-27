@@ -1,5 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
+import { PreferencesProvider } from "@/contexts/preferences";
 import { BillingProvider } from "@/features/billing/client";
 import { SpaceProvider } from "@/features/space/client";
 import { getPathname } from "@/lib/pathname";
@@ -13,6 +14,8 @@ export default async function Layout({
 }) {
   const helpers = await createPrivateSSRHelper();
 
+  await Promise.all([helpers.user.getMe.prefetch()]);
+
   const space = await helpers.spaces.getCurrent.fetch();
 
   if (!space) {
@@ -24,9 +27,11 @@ export default async function Layout({
 
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
-      <SpaceProvider>
-        <BillingProvider>{children}</BillingProvider>
-      </SpaceProvider>
+      <PreferencesProvider>
+        <SpaceProvider>
+          <BillingProvider>{children}</BillingProvider>
+        </SpaceProvider>
+      </PreferencesProvider>
     </HydrationBoundary>
   );
 }

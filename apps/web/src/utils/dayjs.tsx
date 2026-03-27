@@ -21,9 +21,7 @@ import dayjsLocaleRu from "dayjs/locale/ru";
 import dayjsLocaleSv from "dayjs/locale/sv";
 import dayjsLocaleZh from "dayjs/locale/zh";
 import * as React from "react";
-import { usePreferences } from "@/contexts/preferences";
 import { dayjs } from "@/lib/dayjs";
-import { useLocale } from "@/lib/locale/client";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { useRequiredContext } from "../components/use-required-context";
 
@@ -150,7 +148,7 @@ export const useDayjs = () => {
 export const DayjsProvider: React.FunctionComponent<{
   children?: React.ReactNode;
   config?: {
-    locale?: SupportedLocale;
+    locale?: string;
     timeZone?: string;
     localeOverrides?: {
       weekStart?: number;
@@ -159,7 +157,7 @@ export const DayjsProvider: React.FunctionComponent<{
   };
 }> = ({ config, children }) => {
   const locale = config?.locale ?? "en";
-  const localeConfig = dayjsLocales[locale];
+  const localeConfig = dayjsLocales[locale as SupportedLocale];
   const dayjsLocale = localeConfig.locale;
 
   const preferredTimeZone = React.useMemo(
@@ -213,26 +211,5 @@ export const DayjsProvider: React.FunctionComponent<{
     >
       {children}
     </DayjsContext.Provider>
-  );
-};
-
-export const ConnectedDayjsProvider = ({
-  children,
-}: React.PropsWithChildren) => {
-  const { preferences } = usePreferences();
-  const { locale } = useLocale();
-  return (
-    <DayjsProvider
-      config={{
-        locale: locale as SupportedLocale,
-        timeZone: preferences.timeZone ?? undefined,
-        localeOverrides: {
-          weekStart: preferences.weekStart ?? undefined,
-          timeFormat: preferences.timeFormat ?? undefined,
-        },
-      }}
-    >
-      {children}
-    </DayjsProvider>
   );
 };

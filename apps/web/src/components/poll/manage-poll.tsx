@@ -24,7 +24,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
-
 import { DuplicateDialog } from "@/app/[locale]/(app)/(optional-space)/poll/[urlId]/duplicate-dialog";
 import { SchedulePollDialog } from "@/components/poll/manage-poll/schedule-poll-dialog";
 import { ProBadge } from "@/components/pro-badge";

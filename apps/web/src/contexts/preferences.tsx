@@ -4,10 +4,11 @@ import type { TimeFormat } from "@rallly/database";
 import React from "react";
 import { useLocalStorage } from "react-use";
 import * as z from "zod";
-
+import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { useRequiredContext } from "@/components/use-required-context";
-import { useUser } from "@/components/user-provider";
+import { useLocale } from "@/lib/locale/client";
 import { trpc } from "@/trpc/client";
+import { DayjsProvider } from "@/utils/dayjs";
 
 type Preferences = {
   timeZone?: string;
@@ -37,7 +38,8 @@ export const PreferencesProvider = ({
 }: {
   children?: React.ReactNode;
 }) => {
-  const { user } = useUser();
+  const { data: user } = trpc.user.getMe.useQuery();
+  const { locale } = useLocale();
   const [preferences = {}, setPreferences] = useLocalStorage(
     "rallly.preferences",
     {
@@ -58,29 +60,48 @@ export const PreferencesProvider = ({
     },
   );
 
-  const updatePreferences = trpc.user.updatePreferences.useMutation();
+  const updatePreferencesMutation = trpc.user.updatePreferences.useMutation();
+
+  const updatePreferences = async (newPreferences: Partial<Preferences>) => {
+    setPreferences({
+      ...preferences,
+      ...newPreferences,
+    });
+
+    if (user && !user.isGuest) {
+      await updatePreferencesMutation.mutateAsync({
+        timeZone: newPreferences.timeZone ?? undefined,
+        timeFormat: newPreferences.timeFormat ?? undefined,
+        weekStart: newPreferences.weekStart ?? undefined,
+      });
+    }
+  };
 
   return (
     <PreferencesContext.Provider
       value={{
         preferences,
-        updatePreferences: async (newPreferences) => {
-          setPreferences((prev) => ({
-            ...prev,
-            ...newPreferences,
-          }));
-
-          if (user && !user.isGuest) {
-            await updatePreferences.mutateAsync({
-              timeZone: newPreferences.timeZone ?? undefined,
-              timeFormat: newPreferences.timeFormat ?? undefined,
-              weekStart: newPreferences.weekStart ?? undefined,
-            });
-          }
-        },
+        updatePreferences,
       }}
     >
-      {children}
+      <DayjsProvider
+        config={{
+          locale,
+          timeZone: preferences.timeZone ?? undefined,
+          localeOverrides: {
+            weekStart: preferences.weekStart ?? undefined,
+            timeFormat: preferences.timeFormat ?? undefined,
+          },
+        }}
+      >
+        {children}
+        <TimeZoneChangeDetector
+          initialTimeZone={preferences.timeZone}
+          onTimeZoneChange={(timeZone) => {
+            updatePreferences({ timeZone });
+          }}
+        />
+      </DayjsProvider>
     </PreferencesContext.Provider>
   );
 };

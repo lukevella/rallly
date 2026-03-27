@@ -3,10 +3,10 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { InvitePageLoader } from "@/app/[locale]/(app)/invite/[urlId]/invite-page-loader";
 import { PermissionProvider } from "@/contexts/permissions";
+import { PreferencesProvider } from "@/contexts/preferences";
 import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
-
+import { InvitePageLoader } from "./invite-page-loader";
 import Providers from "./providers";
 
 export default async function Page(props: {
@@ -26,6 +26,7 @@ export default async function Page(props: {
   const trpc = await createPublicSSRHelper();
 
   await Promise.all([
+    trpc.user.getMe.prefetch(),
     trpc.polls.get.prefetch({ urlId: params.urlId }),
     trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
     trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
@@ -33,11 +34,13 @@ export default async function Page(props: {
 
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
-      <Providers>
-        <PermissionProvider>
-          <InvitePageLoader />
-        </PermissionProvider>
-      </Providers>
+      <PreferencesProvider>
+        <Providers>
+          <PermissionProvider>
+            <InvitePageLoader />
+          </PermissionProvider>
+        </Providers>
+      </PreferencesProvider>
     </HydrationBoundary>
   );
 }

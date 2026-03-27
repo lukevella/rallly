@@ -14,10 +14,6 @@ import {
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Settings2Icon } from "lucide-react";
 import Link from "next/link";
-import { ControlPanelMenuItem } from "@/app/[locale]/(app)/(space)/(dashboard)/components/control-panel-menu-item";
-import { FeedbackMenuItem } from "@/app/[locale]/(app)/(space)/(dashboard)/components/feedback-menu-item";
-import { SpaceSidebarMenu } from "@/app/[locale]/(app)/(space)/(dashboard)/components/space-sidebar-menu";
-import { UpgradeMenuItem } from "@/app/[locale]/(app)/(space)/(dashboard)/components/upgrade-menu-item";
 import { NavUser } from "@/components/nav-user";
 import { UserLocaleSync } from "@/components/user-provider";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
@@ -26,7 +22,11 @@ import { SpaceDropdown } from "@/features/space/components/space-dropdown";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { ControlPanelMenuItem } from "./components/control-panel-menu-item";
+import { FeedbackMenuItem } from "./components/feedback-menu-item";
+import { SpaceSidebarMenu } from "./components/space-sidebar-menu";
 import { SpaceSidebarProvider } from "./components/space-sidebar-provider";
+import { UpgradeMenuItem } from "./components/upgrade-menu-item";
 
 export default async function Layout({
   children,
