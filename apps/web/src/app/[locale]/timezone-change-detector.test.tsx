@@ -4,15 +4,6 @@ import { render, screen } from "@/test/test-utils";
 
 import { TimeZoneChangeDetector } from "./timezone-change-detector";
 
-const mockUpdatePreferences = vi.fn();
-
-vi.mock("@/contexts/preferences", () => ({
-  usePreferences: () => ({
-    preferences: { timeZone: "America/New_York" },
-    updatePreferences: mockUpdatePreferences,
-  }),
-}));
-
 let mockTimeZone = "America/New_York";
 vi.mock("@/utils/date-time-utils", () => ({
   getBrowserTimeZone: () => mockTimeZone,
@@ -26,7 +17,6 @@ describe("TimeZoneChangeDetector", () => {
   beforeEach(() => {
     localStorage.clear();
     mockTimeZone = "America/New_York";
-    mockUpdatePreferences.mockReset();
   });
 
   afterEach(() => {
@@ -46,27 +36,27 @@ describe("TimeZoneChangeDetector", () => {
     expect(screen.getByText("Timezone Change Detected")).toBeInTheDocument();
   });
 
-  it("accepting timezone change updates preferences and localStorage", async () => {
+  it("accepting timezone change calls onTimeZoneChange and updates localStorage", async () => {
     const user = userEvent.setup();
+    const mockOnTimeZoneChange = vi.fn();
     localStorage.setItem("previousTimeZone", "Fake/Timezone");
 
-    render(<TimeZoneChangeDetector />);
+    render(<TimeZoneChangeDetector onTimeZoneChange={mockOnTimeZoneChange} />);
     await user.click(screen.getByText("Yes, update my timezone"));
 
-    expect(mockUpdatePreferences).toHaveBeenCalledWith({
-      timeZone: "America/New_York",
-    });
+    expect(mockOnTimeZoneChange).toHaveBeenCalledWith("America/New_York");
     expect(localStorage.getItem("previousTimeZone")).toBe("America/New_York");
   });
 
-  it("declining timezone change updates localStorage without changing preferences", async () => {
+  it("declining timezone change updates localStorage without calling onTimeZoneChange", async () => {
     const user = userEvent.setup();
+    const mockOnTimeZoneChange = vi.fn();
     localStorage.setItem("previousTimeZone", "Fake/Timezone");
 
-    render(<TimeZoneChangeDetector />);
+    render(<TimeZoneChangeDetector onTimeZoneChange={mockOnTimeZoneChange} />);
     await user.click(screen.getByText("No, keep the current timezone"));
 
-    expect(mockUpdatePreferences).not.toHaveBeenCalled();
+    expect(mockOnTimeZoneChange).not.toHaveBeenCalled();
     expect(localStorage.getItem("previousTimeZone")).toBe("America/New_York");
   });
 
