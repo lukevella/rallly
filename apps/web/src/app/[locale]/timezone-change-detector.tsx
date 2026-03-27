@@ -71,7 +71,7 @@ export function TimeZoneChangeDetector({
           <Button
             variant="primary"
             onClick={() => {
-              localStorage.setItem("previousTimeZone", currentTimeZone);
+              safeLocalStorage.setItem("previousTimeZone", currentTimeZone);
               onTimeZoneChange?.(currentTimeZone);
               setOpen(false);
               posthog?.capture("timezone change accepted", {
@@ -88,7 +88,7 @@ export function TimeZoneChangeDetector({
           <Button
             onClick={() => {
               setPreviousTimeZone(currentTimeZone);
-              localStorage.setItem("previousTimeZone", currentTimeZone);
+              safeLocalStorage.setItem("previousTimeZone", currentTimeZone);
               setOpen(false);
               posthog?.capture("timezone change rejected", {
                 previousTimeZone,
