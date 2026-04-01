@@ -55,6 +55,7 @@ export function ScrollContainer({
 }) {
   const controls = useDragControls();
   const [isDragging, setIsDragging] = React.useState(false);
+  const [isPointerDown, setIsPointerDown] = React.useState(false);
   const animation = React.useRef<{ stop: () => void } | null>(null);
   const isOverflowing = useIsOverflowing(ref);
 
@@ -78,12 +79,17 @@ export function ScrollContainer({
         )
           return;
         controls.start(e);
+        setIsPointerDown(true);
+      }}
+      onPointerUp={() => {
+        setIsPointerDown(false);
       }}
       className={cn(
-        "select-none scroll-auto",
+        "scroll-auto",
         {
-          "cursor-grab": isOverflowing && !isDragging,
-          "cursor-grabbing": isOverflowing && isDragging,
+          "cursor-grab": isOverflowing && !isPointerDown,
+          "cursor-grabbing": isOverflowing && isPointerDown,
+          "select-none": isOverflowing && isDragging,
         },
         className,
       )}
