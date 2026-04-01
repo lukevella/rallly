@@ -160,6 +160,7 @@ export const participants = router({
 
             return {
               ...participant,
+              userId: null,
               name: "Anonymous",
               email: null,
               image: null,
