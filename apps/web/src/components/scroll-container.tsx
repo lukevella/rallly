@@ -89,10 +89,10 @@ export function ScrollContainer({
       )}
     >
       <motion.div
-        drag="x"
+        drag
         dragControls={controls}
         dragListener={false}
-        dragConstraints={{ left: 0, right: 0 }}
+        dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
         dragElastic={0}
         dragMomentum={false}
         onDragStart={() => {
@@ -102,25 +102,35 @@ export function ScrollContainer({
         onDrag={(_, info) => {
           if (ref.current) {
             ref.current.scrollLeft -= info.delta.x;
+            ref.current.scrollTop -= info.delta.y;
           }
         }}
         onDragEnd={(_, info) => {
           setIsDragging(false);
           if (!ref.current) return;
-          const v = info.velocity.x;
-          if (Math.abs(v) < 50) return;
 
           const el = ref.current;
-          const from = el.scrollLeft;
-          const maxScroll = el.scrollWidth - el.clientWidth;
-          const to = Math.max(0, Math.min(from - v * 0.2, maxScroll));
+          const vx = info.velocity.x;
+          const vy = info.velocity.y;
 
-          animation.current = animate(from, to, {
+          if (Math.abs(vx) < 50 && Math.abs(vy) < 50) return;
+
+          const fromX = el.scrollLeft;
+          const fromY = el.scrollTop;
+          const maxScrollX = el.scrollWidth - el.clientWidth;
+          const maxScrollY = el.scrollHeight - el.clientHeight;
+          const toX = Math.max(0, Math.min(fromX - vx * 0.2, maxScrollX));
+          const toY = Math.max(0, Math.min(fromY - vy * 0.2, maxScrollY));
+
+          animation.current = animate(0, 1, {
             type: "spring",
             bounce: 0,
             duration: 0.6,
-            onUpdate: (latest) => {
-              if (ref.current) ref.current.scrollLeft = latest;
+            onUpdate: (p) => {
+              if (ref.current) {
+                ref.current.scrollLeft = fromX + (toX - fromX) * p;
+                ref.current.scrollTop = fromY + (toY - fromY) * p;
+              }
             },
           });
         }}
