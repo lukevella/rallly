@@ -402,7 +402,7 @@ export const participants = router({
           },
         });
 
-        const options = await prisma.option.findMany({
+        const options = await tx.option.findMany({
           where: {
             pollId,
           },
