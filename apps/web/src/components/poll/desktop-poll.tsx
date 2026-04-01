@@ -24,6 +24,7 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { useVotingForm } from "@/components/poll/voting-form";
+import { ScrollContainer } from "@/components/scroll-container";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -53,38 +54,6 @@ function EscapeListener({ onEscape }: { onEscape: () => void }) {
   return null;
 }
 
-const useIsOverflowing = <E extends Element | null>(
-  ref: React.RefObject<E>,
-) => {
-  const [isOverflowing, setIsOverflowing] = React.useState(false);
-
-  React.useEffect(() => {
-    const checkOverflow = () => {
-      if (ref.current) {
-        const element = ref.current;
-        const overflowX = element.scrollWidth > element.clientWidth;
-        const overflowY = element.scrollHeight > element.clientHeight;
-
-        setIsOverflowing(overflowX || overflowY);
-      }
-    };
-
-    if (ref.current) {
-      const resizeObserver = new ResizeObserver(checkOverflow);
-      resizeObserver.observe(ref.current);
-
-      // Initial check
-      checkOverflow();
-
-      return () => {
-        resizeObserver.disconnect();
-      };
-    }
-  }, [ref]);
-
-  return isOverflowing;
-};
-
 const DesktopPoll: React.FunctionComponent = () => {
   const poll = usePoll();
 
@@ -95,7 +64,10 @@ const DesktopPoll: React.FunctionComponent = () => {
   const goToNextPage = () => {
     setDidScroll(true);
     if (scrollRef.current) {
-      scrollRef.current.scrollLeft += 235;
+      scrollRef.current.scrollTo({
+        left: scrollRef.current.scrollLeft + 235,
+        behavior: "smooth",
+      });
     }
   };
 
@@ -114,7 +86,10 @@ const DesktopPoll: React.FunctionComponent = () => {
 
   const goToPreviousPage = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollLeft -= 235;
+      scrollRef.current.scrollTo({
+        left: scrollRef.current.scrollLeft - 235,
+        behavior: "smooth",
+      });
     }
   };
   const { t } = useTranslation();
@@ -126,7 +101,7 @@ const DesktopPoll: React.FunctionComponent = () => {
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
-  const isOverflowing = useIsOverflowing(scrollRef);
+  const [isOverflowing, setIsOverflowing] = React.useState(false);
 
   const { x } = useScroll(scrollRef as React.RefObject<HTMLElement>);
 
@@ -301,15 +276,18 @@ const DesktopPoll: React.FunctionComponent = () => {
                       x > 0 ? "opacity-100" : "opacity-0",
                     )}
                   />
-                  <div
+                  <ScrollContainer
                     onScroll={() => {
                       if (!didScroll) {
                         setDidScroll(true);
                       }
                     }}
+                    onOverflowChange={(isOverflowing) => {
+                      setIsOverflowing(isOverflowing);
+                    }}
                     ref={scrollRef}
                     className={cn(
-                      "scrollbar-thin dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800 hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 h-full min-h-0 grow overflow-auto overscroll-x-none scroll-smooth",
+                      "scrollbar-thin dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800 hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500 scrollbar-thumb-gray-300 scrollbar-track-gray-100 relative z-10 h-full min-h-0 grow overflow-auto overscroll-x-none",
                     )}
                   >
                     <table className="w-full table-auto border-separate border-spacing-0 bg-muted/50">
@@ -356,7 +334,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                           : null}
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollContainer>
                 </div>
               ) : (
                 <EmptyState className="p-16">
