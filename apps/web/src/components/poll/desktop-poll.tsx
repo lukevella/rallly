@@ -57,11 +57,11 @@ function EscapeListener({ onEscape }: { onEscape: () => void }) {
 function TableControls({
   optionCount,
   showTimeZone,
-  x,
-  isOverflowing,
-  didScroll,
+  showScrollControls,
+  canScrollPrev,
+  canScrollNext,
+  showScrollIndicator,
   expanded,
-  scrollRef,
   onExpand,
   onCollapse,
   onGoToPreviousPage,
@@ -69,11 +69,11 @@ function TableControls({
 }: {
   optionCount: number;
   showTimeZone: boolean;
-  x: number;
-  isOverflowing: boolean;
-  didScroll: boolean;
+  showScrollControls: boolean;
+  canScrollPrev: boolean;
+  canScrollNext: boolean;
+  showScrollIndicator: boolean;
   expanded: boolean;
-  scrollRef: React.RefObject<HTMLDivElement | null>;
   onExpand: () => void;
   onCollapse: () => void;
   onGoToPreviousPage: () => void;
@@ -91,14 +91,14 @@ function TableControls({
         <Trans i18nKey="optionCount" values={{ count: optionCount }} />
       </div>
       <div className="flex gap-x-1">
-        {isOverflowing ? (
+        {showScrollControls ? (
           <>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
-                  disabled={x === 0}
+                  disabled={!canScrollPrev}
                   onClick={onGoToPreviousPage}
                 >
                   <Icon>
@@ -116,17 +116,13 @@ function TableControls({
                   className="relative"
                   variant="ghost"
                   size="icon"
-                  disabled={Boolean(
-                    scrollRef.current &&
-                      x + scrollRef.current.offsetWidth >=
-                        scrollRef.current.scrollWidth,
-                  )}
+                  disabled={!canScrollNext}
                   onClick={onGoToNextPage}
                 >
                   <Icon>
                     <ArrowRightIcon />
                   </Icon>
-                  {!didScroll ? (
+                  {showScrollIndicator ? (
                     <span className="absolute -top-0.5 -right-0.5 flex size-2">
                       <span className="absolute top-0 right-0 inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
                       <span className="relative inline-flex size-2 rounded-full bg-rose-500" />
@@ -277,11 +273,15 @@ const DesktopPoll: React.FunctionComponent = () => {
                 showTimeZone={
                   poll.options[0]?.duration !== 0 && !!poll.timeZone
                 }
-                x={x}
-                isOverflowing={isOverflowing}
-                didScroll={didScroll}
+                showScrollControls={isOverflowing}
+                canScrollPrev={x > 0}
+                canScrollNext={
+                  !scrollRef.current ||
+                  x + scrollRef.current.offsetWidth <
+                    scrollRef.current.scrollWidth
+                }
+                showScrollIndicator={!didScroll}
                 expanded={expanded}
-                scrollRef={scrollRef}
                 onExpand={expand}
                 onCollapse={collapse}
                 onGoToPreviousPage={goToPreviousPage}
