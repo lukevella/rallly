@@ -23,6 +23,7 @@ export interface ParticipantRowFormProps {
   name?: string;
   className?: string;
   email?: string;
+  image?: string;
   isYou?: boolean;
   isNew?: boolean;
   onCancel?: () => void;
@@ -30,6 +31,7 @@ export interface ParticipantRowFormProps {
 
 const ParticipantRowForm = ({
   name,
+  image,
   email,
   isNew,
   className,
@@ -66,6 +68,7 @@ const ParticipantRowForm = ({
                 name={participantName}
                 size="md"
                 email={email}
+                src={image ?? undefined}
               />
             ) : (
               <YouAvatar />

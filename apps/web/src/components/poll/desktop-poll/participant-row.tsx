@@ -119,6 +119,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
         className={className}
         name={participant.name}
         email={participant.email}
+        image={participant.image ?? undefined}
         isYou={isYou}
         onCancel={() => onChangeEditMode?.(false)}
       />
