@@ -180,6 +180,7 @@ const DesktopPoll: React.FunctionComponent = () => {
   const [expanded, setExpanded] = React.useState(false);
 
   const expand = React.useCallback(() => {
+    document.body.style.overflow = "hidden";
     setExpanded(true);
   }, []);
 
