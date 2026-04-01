@@ -21,12 +21,18 @@ const useIsOverflowing = <E extends Element | null>(
     if (ref.current) {
       const resizeObserver = new ResizeObserver(checkOverflow);
       resizeObserver.observe(ref.current);
+      if (ref.current.firstElementChild) {
+        resizeObserver.observe(ref.current.firstElementChild);
+      }
 
-      // Initial check
+      const mutationObserver = new MutationObserver(checkOverflow);
+      mutationObserver.observe(ref.current, { childList: true, subtree: true });
+
       checkOverflow();
 
       return () => {
         resizeObserver.disconnect();
+        mutationObserver.disconnect();
       };
     }
   }, [ref]);
@@ -62,7 +68,17 @@ export function ScrollContainer({
     <div
       ref={ref}
       onScroll={onScroll}
-      onPointerDown={(e) => controls.start(e)}
+      onPointerDown={(e) => {
+        if (e.defaultPrevented) return;
+        const target = e.target as HTMLElement;
+        if (
+          target.closest(
+            'button, a, input, textarea, select, [role="button"], [contenteditable]',
+          )
+        )
+          return;
+        controls.start(e);
+      }}
       className={cn(
         "select-none scroll-auto",
         {
