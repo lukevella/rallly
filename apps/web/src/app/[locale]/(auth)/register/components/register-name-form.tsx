@@ -18,7 +18,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
-import { env } from "@/env";
 import { PasswordStrengthMeter } from "@/features/password/components/password-strength-meter";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
@@ -26,7 +25,7 @@ import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { validateRedirectUrl } from "@/utils/redirect";
 import { useRegisterNameFormSchema } from "./schema";
 
-const turnstileSiteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 const isTurnstileEnabled = !!turnstileSiteKey;
 
 export function RegisterNameForm() {
