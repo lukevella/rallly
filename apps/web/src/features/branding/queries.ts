@@ -38,9 +38,7 @@ export function getCustomBrandingConfig() {
       light: vars.light,
       lightForeground: vars.lightForeground,
       dark,
-      darkForeground: env.PRIMARY_COLOR_DARK
-        ? getForegroundColor(env.PRIMARY_COLOR_DARK)
-        : vars.darkForeground,
+      darkForeground: dark ? getForegroundColor(dark) : vars.darkForeground,
     },
     logo: {
       light: env.LOGO_URL ?? DEFAULT_LOGO_URL,
