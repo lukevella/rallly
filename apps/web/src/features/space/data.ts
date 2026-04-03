@@ -50,6 +50,8 @@ export function createSpaceDTO(space: {
   role: DBSpaceMemberRole;
   image?: string | null;
   tier: DBSpaceTier;
+  primaryColor?: string | null;
+  showBranding: boolean;
 }): SpaceDTO {
   return {
     id: space.id,
@@ -58,6 +60,8 @@ export function createSpaceDTO(space: {
     tier: isSelfHosted ? "pro" : space.tier,
     role: fromDBRole(space.role),
     image: space.image ?? undefined,
+    primaryColor: space.primaryColor ?? undefined,
+    showBranding: space.showBranding,
   };
 }
 

@@ -48,6 +48,8 @@ export const getCurrentUserSpace = async () => {
           name: true,
           ownerId: true,
           tier: true,
+          showBranding: true,
+          primaryColor: true,
         },
       },
     },
@@ -68,6 +70,8 @@ export const getCurrentUserSpace = async () => {
       name: spaceMember.space.name,
       tier: spaceMember.space.tier,
       role: spaceMember.role,
+      showBranding: spaceMember.space.showBranding,
+      primaryColor: spaceMember.space.primaryColor,
     }),
   };
 };

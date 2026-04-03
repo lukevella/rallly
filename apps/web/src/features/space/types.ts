@@ -7,4 +7,6 @@ export type SpaceDTO = {
   tier: "hobby" | "pro";
   role: MemberRole;
   image?: string;
+  primaryColor?: string;
+  showBranding: boolean;
 };

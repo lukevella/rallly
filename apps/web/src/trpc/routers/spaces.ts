@@ -59,6 +59,8 @@ export const spaces = router({
             image: true,
             ownerId: true,
             tier: true,
+            primaryColor: true,
+            showBranding: true,
           },
         },
       },
@@ -292,6 +294,55 @@ export const spaces = router({
         groups: {
           space: ctx.space.id,
         },
+      });
+    }),
+
+  updatePrimaryColor: spaceProcedure
+    .input(z.object({ primaryColor: z.string().nullable() }))
+    .mutation(async ({ ctx, input }) => {
+      const memberAbility = defineAbilityForMember({
+        user: ctx.user,
+        space: ctx.space,
+      });
+
+      if (memberAbility.cannot("update", subject("Space", ctx.space))) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have permission to update this space",
+        });
+      }
+
+      await prisma.space.update({
+        where: { id: ctx.space.id },
+        data: { primaryColor: input.primaryColor },
+      });
+    }),
+
+  updateShowBranding: spaceProcedure
+    .input(z.object({ showBranding: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const memberAbility = defineAbilityForMember({
+        user: ctx.user,
+        space: ctx.space,
+      });
+
+      if (memberAbility.cannot("update", subject("Space", ctx.space))) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have permission to update this space",
+        });
+      }
+
+      if (input.showBranding && ctx.space.tier !== "pro") {
+        throw new TRPCError({
+          code: "PAYMENT_REQUIRED",
+          message: "You need a Pro subscription to enable custom branding",
+        });
+      }
+
+      await prisma.space.update({
+        where: { id: ctx.space.id },
+        data: { showBranding: input.showBranding },
       });
     }),
 
