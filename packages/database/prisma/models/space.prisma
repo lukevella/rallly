@@ -1,11 +1,13 @@
 model Space {
-  id        String    @id @default(uuid())
-  name      String
-  image     String?
-  ownerId   String    @map("owner_id")
-  tier      SpaceTier @default(hobby)
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
+  id           String    @id @default(uuid())
+  name         String
+  image        String?
+  ownerId      String    @map("owner_id")
+  tier         SpaceTier @default(hobby)
+  primaryColor String?   @map("primary_color")
+  showBranding Boolean   @default(false) @map("show_branding")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
 
   owner           User             @relation("UserSpaces", fields: [ownerId], references: [id], onDelete: Cascade)
   polls           Poll[]
