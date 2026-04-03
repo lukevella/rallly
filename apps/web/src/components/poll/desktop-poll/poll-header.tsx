@@ -78,6 +78,33 @@ const PollHeader = () => {
     }
   }
 
+  const dayGroups: {
+    day: string;
+    dow: string;
+    month: string;
+    year: string;
+    count: number;
+  }[] = [];
+
+  for (const option of options) {
+    const last = dayGroups[dayGroups.length - 1];
+    if (
+      last?.day === option.day &&
+      last?.month === option.month &&
+      last?.year === option.year
+    ) {
+      last.count++;
+    } else {
+      dayGroups.push({
+        day: option.day,
+        dow: option.dow,
+        month: option.month,
+        year: option.year,
+        count: 1,
+      });
+    }
+  }
+
   return (
     <>
       <TimelineRow top={0} rowSpan={3}>
@@ -98,46 +125,24 @@ const PollHeader = () => {
         ))}
       </TimelineRow>
       <TimelineRow top={monthRowHeight}>
-        {options.map((option, i) => {
-          const firstOfDay =
-            i === 0 ||
-            options[i - 1]?.day !== option.day ||
-            options[i - 1]?.month !== option.month ||
-            options[i - 1]?.year !== option.year;
-
-          const lastOfDay =
-            i === options.length - 1 ||
-            options[i + 1]?.day !== option.day ||
-            options[i + 1]?.month !== option.month ||
-            options[i + 1]?.year !== option.year;
-          return (
-            <th
-              key={option.optionId}
-              style={{
-                minWidth: 80,
-                height: dayRowHeight,
-                left: firstOfDay && !lastOfDay ? 235 : 0,
-                top: monthRowHeight,
-              }}
-              className={cn(
-                "sticky space-y-2 bg-background",
-                firstOfDay ? "z-20" : "z-10",
-                {
-                  "border-l": firstOfDay,
-                },
-              )}
+        {dayGroups.map((group) => (
+          <th
+            key={`${group.year}-${group.month}-${group.day}`}
+            colSpan={group.count}
+            style={{ height: dayRowHeight, top: monthRowHeight }}
+            className="border-l bg-background"
+          >
+            <div
+              style={{ width: `calc(100% / ${group.count})` }}
+              className="sticky left-[236px] z-20 mt-1 px-2 text-center"
             >
-              {firstOfDay ? (
-                <div className="mt-1 flex flex-col gap-1">
-                  <div className="font-normal text-muted-foreground text-xs">
-                    {option.dow}
-                  </div>
-                  <div className="font-medium text-sm">{option.day}</div>
-                </div>
-              ) : null}
-            </th>
-          );
-        })}
+              <div className="font-normal text-muted-foreground text-xs">
+                {group.dow}
+              </div>
+              <div className="font-medium text-sm">{group.day}</div>
+            </div>
+          </th>
+        ))}
       </TimelineRow>
       <TimelineRow top={scoreRowTop}>
         {options.map((option) => {
