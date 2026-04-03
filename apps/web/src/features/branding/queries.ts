@@ -3,29 +3,21 @@ import "server-only";
 import { cache } from "react";
 import { env } from "@/env";
 import { loadInstanceLicense } from "@/features/licensing/data";
-import { adjustColorForContrast } from "@/utils/color";
+import { getForegroundColor } from "@/utils/color";
 import { isSelfHosted } from "@/utils/constants";
 import type { BrandingConfig } from "./client";
+import { getPrimaryColorVars } from "./color";
 import {
-  DARK_MODE_BACKGROUND,
   DEFAULT_APP_NAME,
   DEFAULT_LOGO_ICON_URL,
   DEFAULT_LOGO_URL,
   DEFAULT_LOGO_URL_DARK,
   DEFAULT_PRIMARY_COLOR,
-  LIGHT_MODE_BACKGROUND,
 } from "./constants";
 
 function getDefaultBrandingConfig(): BrandingConfig {
-  const baseColor = DEFAULT_PRIMARY_COLOR;
-  const light = adjustColorForContrast(baseColor, LIGHT_MODE_BACKGROUND);
-  const dark = adjustColorForContrast(baseColor, DARK_MODE_BACKGROUND);
-
   return {
-    primaryColor: {
-      light,
-      dark,
-    },
+    primaryColor: getPrimaryColorVars(DEFAULT_PRIMARY_COLOR),
     logo: {
       light: DEFAULT_LOGO_URL,
       dark: DEFAULT_LOGO_URL_DARK,
@@ -38,15 +30,17 @@ function getDefaultBrandingConfig(): BrandingConfig {
 
 export function getCustomBrandingConfig() {
   const baseColor = env.PRIMARY_COLOR ?? DEFAULT_PRIMARY_COLOR;
-  const light = adjustColorForContrast(baseColor, LIGHT_MODE_BACKGROUND);
-  const dark =
-    env.PRIMARY_COLOR_DARK ??
-    adjustColorForContrast(baseColor, DARK_MODE_BACKGROUND);
+  const vars = getPrimaryColorVars(baseColor);
+  const dark = env.PRIMARY_COLOR_DARK ?? vars.dark;
 
   return {
     primaryColor: {
-      light,
+      light: vars.light,
+      lightForeground: vars.lightForeground,
       dark,
+      darkForeground: env.PRIMARY_COLOR_DARK
+        ? getForegroundColor(env.PRIMARY_COLOR_DARK)
+        : vars.darkForeground,
     },
     logo: {
       light: env.LOGO_URL ?? DEFAULT_LOGO_URL,

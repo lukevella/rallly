@@ -18,7 +18,6 @@ import { initI18next } from "@/i18n/i18n";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
 import { featureFlagConfig } from "@/lib/feature-flags/config";
 import { TRPCProvider } from "@/trpc/client/provider";
-import { getForegroundColor } from "@/utils/color";
 import { PostHogPageView } from "../posthog-page-view";
 
 const inter = Inter({
@@ -61,13 +60,9 @@ export default async function Root({
 
   const brandingStyles = {
     "--primary-light": brandingConfig.primaryColor.light,
-    "--primary-light-foreground": getForegroundColor(
-      brandingConfig.primaryColor.light,
-    ),
+    "--primary-light-foreground": brandingConfig.primaryColor.lightForeground,
     "--primary-dark": brandingConfig.primaryColor.dark,
-    "--primary-dark-foreground": getForegroundColor(
-      brandingConfig.primaryColor.dark,
-    ),
+    "--primary-dark-foreground": brandingConfig.primaryColor.darkForeground,
   } as React.CSSProperties;
 
   return (

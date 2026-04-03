@@ -4,6 +4,7 @@ import { usePostHog } from "@rallly/posthog/client";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
+import { getPrimaryColorVars } from "@/features/branding/color";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { trpc } from "@/trpc/client";
 import { defineAbilityForSpace } from "./ability";
@@ -58,5 +59,25 @@ export function SpaceProvider({ children }: { children: React.ReactNode }) {
     return <RouterLoadingIndicator />;
   }
 
-  return <>{children}</>;
+  const primaryColorVars = space.primaryColor
+    ? getPrimaryColorVars(space.primaryColor)
+    : null;
+
+  return (
+    <>
+      {primaryColorVars ? (
+        <style>{`
+          .light {
+            --primary: ${primaryColorVars.light};
+            --primary-foreground: ${primaryColorVars.lightForeground};
+          }
+          .dark {
+            --primary: ${primaryColorVars.dark};
+            --primary-foreground: ${primaryColorVars.darkForeground};
+          }
+        `}</style>
+      ) : null}
+      {children}
+    </>
+  );
 }

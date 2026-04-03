@@ -5,7 +5,9 @@ import React from "react";
 export interface BrandingConfig {
   primaryColor: {
     light: string;
+    lightForeground: string;
     dark: string;
+    darkForeground: string;
   };
   logo: {
     light: string;
