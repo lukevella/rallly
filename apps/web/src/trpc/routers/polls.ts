@@ -610,6 +610,15 @@ export const polls = router({
           userId: true,
           deleted: true,
           spaceId: true,
+          space: {
+            select: {
+              name: true,
+              image: true,
+              tier: true,
+              showBranding: true,
+              primaryColor: true,
+            },
+          },
           muted: true,
           scheduledEvent: {
             select: {
