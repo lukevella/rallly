@@ -298,7 +298,14 @@ export const spaces = router({
     }),
 
   updatePrimaryColor: spaceProcedure
-    .input(z.object({ primaryColor: z.string().nullable() }))
+    .input(
+      z.object({
+        primaryColor: z
+          .string()
+          .regex(/^#[0-9a-fA-F]{6}$/, "Invalid hex color")
+          .nullable(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const memberAbility = defineAbilityForMember({
         user: ctx.user,
