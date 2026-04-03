@@ -84,6 +84,7 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
       },
       data: {
         tier,
+        ...(tier === "hobby" ? { showBranding: false } : {}),
       },
     });
   });

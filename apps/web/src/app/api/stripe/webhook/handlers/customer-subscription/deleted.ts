@@ -44,6 +44,7 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
       },
       data: {
         tier: "hobby",
+        showBranding: false,
       },
     });
   });
