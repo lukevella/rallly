@@ -21,7 +21,6 @@ import { Trans } from "@/i18n/client";
 
 const Page = () => {
   const { poll } = usePoll();
-  const urlId = poll.adminUrlId;
   const { mutate: updatePollMutation, isPending: isUpdating } =
     useUpdatePollMutation();
   const router = useRouter();
@@ -46,7 +45,7 @@ const Page = () => {
         onSubmit={form.handleSubmit((data) => {
           //submit
           updatePollMutation(
-            { urlId, ...data },
+            { pollId: poll.id, ...data },
             {
               onSuccess: (res) => {
                 if (res.ok) {

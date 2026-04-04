@@ -13,7 +13,7 @@ export type GetPollApiResponse = {
     banned: boolean;
   } | null;
   timeZone: string | null;
-  adminUrlId: string;
+  canManage: boolean;
   status: PollStatus;
   participantUrlId: string;
   createdAt: Date;

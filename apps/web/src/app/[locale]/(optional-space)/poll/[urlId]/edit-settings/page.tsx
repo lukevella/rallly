@@ -40,7 +40,7 @@ const Page = () => {
         onSubmit={form.handleSubmit(async (data) => {
           //submit
           const res = await update.mutateAsync({
-            urlId: poll.adminUrlId,
+            pollId: poll.id,
             ...data,
           });
           if (res.ok) {

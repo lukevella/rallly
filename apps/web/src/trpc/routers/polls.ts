@@ -30,23 +30,6 @@ import { participants } from "./polls/participants";
 
 const collapseNewlines = (s: string) => s.replace(/\n{3,}/g, "\n\n");
 
-const getPollIdFromAdminUrlId = async (urlId: string) => {
-  const res = await prisma.poll.findUnique({
-    select: {
-      id: true,
-    },
-    where: { adminUrlId: urlId },
-  });
-
-  if (!res) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: "Poll not found",
-    });
-  }
-  return res.id;
-};
-
 export const polls = router({
   participants,
   comments,
@@ -289,7 +272,7 @@ export const polls = router({
   modify: possiblyPublicProcedure
     .input(
       z.object({
-        urlId: z.string(),
+        pollId: z.string(),
         title: z.string().trim().optional(),
         timeZone: z.string().optional(),
         location: z.string().trim().optional(),
@@ -305,7 +288,7 @@ export const polls = router({
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("update_poll", 10, "1 m"))
     .mutation(async ({ input, ctx }) => {
-      const pollId = await getPollIdFromAdminUrlId(input.urlId);
+      const pollId = input.pollId;
 
       if (!(await hasPollAdminAccess(pollId, ctx.user.id))) {
         throw new TRPCError({
@@ -570,7 +553,6 @@ export const polls = router({
     .input(
       z.object({
         urlId: z.string(),
-        adminToken: z.string().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
@@ -582,7 +564,6 @@ export const polls = router({
           location: true,
           description: true,
           createdAt: true,
-          adminUrlId: true,
           participantUrlId: true,
           status: true,
           hideParticipants: true,
@@ -652,7 +633,7 @@ export const polls = router({
       }
       const inviteLink = shortUrl(`/invite/${res.id}`);
 
-      const canManagePoll = ctx.user
+      const canManage = ctx.user
         ? await canUserManagePoll(ctx.user, res)
         : false;
 
@@ -680,15 +661,12 @@ export const polls = router({
           }
         : null;
 
-      if (canManagePoll || res.adminUrlId === input.adminToken) {
-        return {
-          ...res,
-          inviteLink,
-          event,
-        };
-      } else {
-        return { ...res, adminUrlId: "", inviteLink, event };
-      }
+      return {
+        ...res,
+        canManage,
+        inviteLink,
+        event,
+      };
     }),
   book: proProcedure
     .input(

@@ -108,7 +108,7 @@ const Page = () => {
           const onOk = () => {
             updatePollMutation(
               {
-                urlId: poll.adminUrlId,
+                pollId: poll.id,
                 timeZone: data.timeZone,
                 optionsToDelete: optionsToDelete.map(({ id }) => id),
                 optionsToAdd,

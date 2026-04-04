@@ -27,7 +27,7 @@ export default async function Layout(
     trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
   ]);
 
-  if (!poll.adminUrlId) {
+  if (!poll.canManage) {
     redirect(`/invite/${params.urlId}`);
   }
 
