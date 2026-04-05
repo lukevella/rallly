@@ -102,7 +102,7 @@
   --popover-accent: var(--color-gray-700);
 
   --card: color-mix(in srgb, var(--color-gray-800) 25%, transparent);
-  --card-border: var(--color-gray-700);
+  --card-border:  color-mix(in srgb, var(--color-gray-600) 50%, transparent);
   --card-foreground: var(--color-gray-300);
   --card-accent: rgba(255, 255, 255, 0.02);
 }

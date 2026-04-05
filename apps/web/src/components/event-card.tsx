@@ -16,10 +16,7 @@ import { Trans } from "@/i18n/client";
 
 function IconDescriptionList({ children }: { children: React.ReactNode }) {
   return (
-    <dl
-      aria-label="Response Options"
-      className="flex flex-col gap-x-2 gap-y-1 whitespace-nowrap text-muted-foreground text-xs"
-    >
+    <dl className="flex flex-col gap-x-2 gap-y-1 whitespace-nowrap text-muted-foreground text-xs">
       {children}
     </dl>
   );
@@ -45,7 +42,7 @@ export function EventCard() {
   return (
     <Card>
       <RandomGradientBar />
-      <CardContent className="flex flex-col gap-4 md:flex-row">
+      <CardContent className="flex flex-col gap-x-8 gap-y-4 md:flex-row">
         <div className="flex-1">
           {poll.space?.showBranding && poll.space.image ? (
             <div className="mb-2">
@@ -88,7 +85,7 @@ export function EventCard() {
           <h2 className="mb-2 font-medium text-sm">
             <Trans i18nKey="responseOptions" defaults="Response Options" />
           </h2>
-          <IconDescriptionList>
+          <IconDescriptionList aria-label="Response Options">
             <IconDescription
               icon={<VoteIcon type="yes" />}
               label={<Trans i18nKey="yes" />}

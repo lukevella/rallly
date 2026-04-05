@@ -13,7 +13,6 @@
   "continue": "Continue",
   "configuredByEnvironmentVariable": "This setting has been configured by environment variable.",
   "copied": "Copied",
-  "createdBy": "by <b>{name}</b>",
   "delete": "Delete",
   "deleteDate": "Delete date",
   "deletedPoll": "Deleted poll",
@@ -236,7 +235,6 @@
   "paginationPage": "Page {currentPage, number} of {totalPages, number}",
   "paginationNext": "Next",
   "searchPollsPlaceholder": "Search polls by title...",
-  "poll": "Poll",
   "sendFeedbackDesc": "Share your feedback with us.",
   "sendFeedbackSuccess": "Thank you for your feedback!",
   "searchEventsPlaceholder": "Search events by title...",
@@ -580,7 +578,6 @@
   "openPollCount": "{count, plural, other {# open}}",
   "pollStatusClosed": "Closed",
   "pollStatusScheduled": "Scheduled",
-  "pollStatusClosedDescription": "Votes cannot be submitted or edited at this time",
   "closePoll": "Close",
   "pollStatusCanceled": "Canceled",
   "schedulePoll": "Schedule",
@@ -619,5 +616,9 @@
   "unmuteNotifications": "Unmute notifications",
   "muteNotifications": "Mute notifications",
   "creatingPoll": "Creating poll...",
-  "createPollPollCreated": "Poll created"
+  "createPollPollCreated": "Poll created",
+  "viewPoll": "View poll",
+  "responseOptions": "Response Options",
+  "viewResults": "View results",
+  "pollClosedDescription": "No more responses are being accepted."
 }
