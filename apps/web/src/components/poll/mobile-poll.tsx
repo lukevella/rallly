@@ -68,15 +68,6 @@ const MobilePoll: React.FunctionComponent = () => {
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex items-center gap-x-2.5">
-          <CardTitle>
-            <Trans i18nKey="participants" />
-          </CardTitle>
-          <Badge>{visibleParticipants.length}</Badge>
-        </div>
-      </CardHeader>
-
       <div className="flex flex-col space-y-2 border-b p-2">
         <div className="flex gap-x-2.5">
           {selectedParticipantId || !isEditing ? (

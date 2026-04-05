@@ -10,7 +10,7 @@ export function EventMetaTitle({
   children: React.ReactNode;
 }) {
   return (
-    <h1 className={cn(className, "font-semibold text-xl tracking-tight")}>
+    <h1 className={cn("font-semibold text-xl tracking-tight", className)}>
       {children}
     </h1>
   );
@@ -27,7 +27,7 @@ export function EventMetaDescription({
     <p
       className={cn(
         className,
-        "mt-2 min-w-0 whitespace-pre-wrap text-pretty text-sm leading-relaxed",
+        "mt-2 min-w-0 whitespace-pre-wrap text-pretty text-muted-foreground text-sm leading-relaxed",
       )}
     >
       <TruncatedLinkify>{children}</TruncatedLinkify>
@@ -42,7 +42,7 @@ export function EventMetaList({
   className?: string;
   children: React.ReactNode;
 }) {
-  return <ul className={cn(className, "mt-4 space-y-2")}>{children}</ul>;
+  return <ul className={cn(className, "space-y-2")}>{children}</ul>;
 }
 
 export function EventMetaItem({
@@ -56,7 +56,7 @@ export function EventMetaItem({
     <li
       className={cn(
         className,
-        "flex items-center gap-1.5 text-muted-foreground text-sm",
+        "flex items-center gap-1.5 text-sm [&_svg]:size-4",
       )}
     >
       {children}
@@ -71,7 +71,9 @@ export function EventMetaHost({
   className?: string;
   children: React.ReactNode;
 }) {
-  return <div className={cn(className, "mb-2")}>{children}</div>;
+  return (
+    <div className={cn(className, "flex items-center gap-2")}>{children}</div>
+  );
 }
 
 export const EventMetaHostAvatar = OptimizedAvatarImage;
@@ -83,9 +85,5 @@ export function EventMetaHostName({
   className?: string;
   children: React.ReactNode;
 }) {
-  return (
-    <p className={cn(className, "mt-2 font-medium text-gray-500 text-sm")}>
-      {children}
-    </p>
-  );
+  return <p className={cn(className, "text-gray-500 text-sm")}>{children}</p>;
 }

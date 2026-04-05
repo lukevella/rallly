@@ -72,7 +72,7 @@ export const ParticipantRowView: React.FunctionComponent<{
           </Participant>
           <div className="flex items-center gap-x-2">
             {isYou ? (
-              <Badge className="shrink-0">
+              <Badge variant="secondary" className="shrink-0">
                 <Trans i18nKey="you" />
               </Badge>
             ) : null}

@@ -5,7 +5,6 @@ import { PollBranding } from "@/components/poll/poll-branding";
 import { PollFooter } from "@/components/poll/poll-footer";
 import { PollViewTracker } from "@/components/poll/poll-view-tracker";
 import { ResponsiveResults } from "@/components/poll/responsive-results";
-import { ScheduledEvent } from "@/components/poll/scheduled-event";
 import { VotingForm } from "@/components/poll/voting-form";
 import { usePoll } from "@/contexts/poll";
 import { GuestPollAlert } from "./guest-poll-alert";
@@ -23,7 +22,6 @@ export function AdminPage() {
       <PollViewTracker pollId={poll.id} />
       <GuestPollAlert />
       <EventCard />
-      <ScheduledEvent />
       <VotingForm>
         <ResponsiveResults />
       </VotingForm>

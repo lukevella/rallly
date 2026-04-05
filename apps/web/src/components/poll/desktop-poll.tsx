@@ -248,7 +248,7 @@ const DesktopPoll: React.FunctionComponent = () => {
             )}
             ref={containerRef}
           >
-            <CardHeader className="flex items-center justify-between gap-4">
+            <CardHeader className="flex items-center justify-between gap-4 border-b">
               <div className="flex items-center gap-x-2.5">
                 <CardTitle>
                   <Trans i18nKey="participants" />

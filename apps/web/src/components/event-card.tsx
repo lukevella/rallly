@@ -1,111 +1,109 @@
 "use client";
-import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
-import { Card, CardContent, CardDescription } from "@rallly/ui/card";
-import { Icon } from "@rallly/ui/icon";
-import { CircleStopIcon, DotIcon, MapPinIcon } from "lucide-react";
+import { Card, CardContent } from "@rallly/ui/card";
+import { MapPinIcon, User2Icon } from "lucide-react";
+import {
+  EventMetaDescription,
+  EventMetaItem,
+  EventMetaList,
+  EventMetaTitle,
+} from "@/components/event-meta";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import VoteIcon from "@/components/poll/vote-icon";
-import { PollStatusBadge } from "@/components/poll-status";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { usePoll } from "@/contexts/poll";
-import { Trans, useTranslation } from "@/i18n/client";
-import { dayjs } from "@/lib/dayjs";
+import { SpaceIcon } from "@/features/space/components/space-icon";
+import { Trans } from "@/i18n/client";
 
-function IconGuide() {
+function IconDescriptionList({ children }: { children: React.ReactNode }) {
   return (
-    <ul className="flex items-center gap-x-3 whitespace-nowrap text-sm">
-      <li className="flex items-center gap-1.5">
-        <VoteIcon type="yes" />
-        <Trans i18nKey="yes" />
-      </li>
-      <li className="flex items-center gap-1.5">
-        <VoteIcon type="ifNeedBe" />
-        <Trans i18nKey="ifNeedBe" />
-      </li>
-      <li className="flex items-center gap-1.5">
-        <VoteIcon type="no" />
-        <Trans i18nKey="no" />
-      </li>
-    </ul>
+    <dl
+      aria-label="Response Options"
+      className="flex flex-col gap-x-2 gap-y-1 whitespace-nowrap text-muted-foreground text-xs"
+    >
+      {children}
+    </dl>
+  );
+}
+
+function IconDescription({
+  icon,
+  label,
+}: {
+  icon: React.ReactNode;
+  label: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center gap-1">
+      <dt>{icon}</dt>
+      <dd>{label}</dd>
+    </div>
   );
 }
 
 export function EventCard() {
   const poll = usePoll();
-  const { t } = useTranslation();
   return (
-    <>
-      <Card>
-        <RandomGradientBar />
-        <CardContent className="space-y-4 sm:space-y-6">
-          <div className="flex flex-col items-start gap-4 lg:flex-row lg:justify-between">
-            <div>
-              <h1 data-testid="poll-title" className="font-semibold text-lg">
-                {poll.title}
-              </h1>
-              <CardDescription>
-                <span className="flex items-center gap-0.5 whitespace-nowrap text-muted-foreground text-sm">
-                  <span>
-                    <Trans
-                      i18nKey="createdBy"
-                      values={{
-                        name: poll.user?.name ?? t("guest"),
-                      }}
-                      components={{
-                        b: <span />,
-                      }}
-                    />
-                  </span>
-                  <Icon>
-                    <DotIcon />
-                  </Icon>
-                  <span className="whitespace-nowrap">
-                    <Trans
-                      i18nKey="createdTime"
-                      values={{ relativeTime: dayjs(poll.createdAt).fromNow() }}
-                    />
-                  </span>
-                </span>
-              </CardDescription>
+    <Card>
+      <RandomGradientBar />
+      <CardContent className="flex flex-col gap-4 md:flex-row">
+        <div className="flex-1">
+          {poll.space?.showBranding && poll.space.image ? (
+            <div className="mb-2">
+              <SpaceIcon
+                name={poll.space.name}
+                src={poll.space.image}
+                size="lg"
+              />
+              <p className="mt-2 font-medium text-muted-foreground text-sm">
+                {poll.space.name}
+              </p>
             </div>
-            {poll.status !== "open" ? (
-              <PollStatusBadge status={poll.status} />
-            ) : null}
+          ) : null}
+          <div className="flex items-start justify-between gap-2">
+            <EventMetaTitle data-testid="poll-title">
+              {poll.title}
+            </EventMetaTitle>
           </div>
           {poll.description ? (
-            <p className="min-w-0 whitespace-pre-wrap text-pretty text-sm leading-relaxed">
-              <TruncatedLinkify>{poll.description}</TruncatedLinkify>
-            </p>
+            <EventMetaDescription data-testid="poll-description">
+              {poll.description}
+            </EventMetaDescription>
           ) : null}
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:flex-wrap sm:items-center">
-            <IconGuide />
-            {poll.location ? (
-              <p className="truncate whitespace-nowrap text-muted-foreground text-sm">
-                <Icon>
-                  <MapPinIcon className="-mt-0.5 mr-1.5 inline-block" />
-                </Icon>
-                <TruncatedLinkify>{poll.location}</TruncatedLinkify>
-              </p>
+          <EventMetaList className="mt-4">
+            {poll.user ? (
+              <EventMetaItem>
+                <User2Icon />
+                {poll.user.name}
+              </EventMetaItem>
             ) : null}
-          </div>
-        </CardContent>
-      </Card>
-      {poll.status === "closed" ? (
-        <Alert>
-          <CircleStopIcon />
-          <AlertTitle>
-            <Trans i18nKey="pollStatusClosed" defaults="Closed" />
-          </AlertTitle>
-          <AlertDescription>
-            <p>
-              <Trans
-                i18nKey="pollStatusClosedDescription"
-                defaults="Votes cannot be submitted or edited at this time"
-              />
-            </p>
-          </AlertDescription>
-        </Alert>
-      ) : null}
-    </>
+            {poll.location ? (
+              <EventMetaItem>
+                <MapPinIcon />
+                <TruncatedLinkify>{poll.location}</TruncatedLinkify>
+              </EventMetaItem>
+            ) : null}
+          </EventMetaList>
+        </div>
+        <div className="w-1/3">
+          <h2 className="mb-2 font-medium text-sm">
+            <Trans i18nKey="responseOptions" defaults="Response Options" />
+          </h2>
+          <IconDescriptionList>
+            <IconDescription
+              icon={<VoteIcon type="yes" />}
+              label={<Trans i18nKey="yes" />}
+            />
+            <IconDescription
+              icon={<VoteIcon type="ifNeedBe" />}
+              label={<Trans i18nKey="ifNeedBe" />}
+            />
+            <IconDescription
+              icon={<VoteIcon type="no" />}
+              label={<Trans i18nKey="no" />}
+            />
+          </IconDescriptionList>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
