@@ -35,6 +35,7 @@ export default async function Layout({
   const helpers = await createPrivateSSRHelper();
 
   await Promise.all([
+    helpers.billing.getTier.prefetch(),
     helpers.user.getAuthed.prefetch(),
     helpers.spaces.list.prefetch(),
   ]);
