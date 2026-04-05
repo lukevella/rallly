@@ -11,14 +11,14 @@ const alertVariants = cva(
       variant: {
         primary:
           "border-transparent bg-primary *:data-[slot=alert-description]:text-primary-foreground/90 [&>svg]:text-primary-foreground",
-        info: "border-blue-200 bg-blue-50 text-blue-700 *:data-[slot=alert-description]:text-blue-700/90 dark:border-blue-900 dark:bg-blue-950 dark:text-blue-100 dark:*:data-[slot=alert-description]:text-blue-100/90 [&>svg]:text-blue-700/90 dark:[&>svg]:text-blue-100/90",
+        info: "border-blue-500/20 bg-blue-500/10 text-blue-900 *:data-[slot=alert-description]:text-blue-900/90 dark:text-blue-100 dark:*:data-[slot=alert-description]:text-blue-100/90 [&>svg]:text-blue-900/75 dark:[&>svg]:text-blue-100/75",
         warning:
-          "border-yellow-200 bg-yellow-50 text-yellow-700 *:data-[slot=alert-description]:text-yellow-700/90 dark:border-yellow-900 dark:bg-yellow-950 dark:text-yellow-100 dark:*:data-[slot=alert-description]:text-yellow-100/90 [&>svg]:text-yellow-700/90 dark:[&>svg]:text-yellow-100/90",
+          "border-yellow-500/20 bg-yellow-500/10 text-yellow-900 *:data-[slot=alert-description]:text-yellow-900/90 dark:text-yellow-100 dark:*:data-[slot=alert-description]:text-yellow-100/90 [&>svg]:text-yellow-900/75 dark:[&>svg]:text-yellow-100/75",
         success:
-          "border-green-200 bg-green-50 text-green-700 *:data-[slot=alert-description]:text-green-700/90 dark:border-green-900 dark:bg-green-950 dark:text-green-100 dark:*:data-[slot=alert-description]:text-green-100/90 [&>svg]:text-green-700/90 dark:[&>svg]:text-green-100/90",
+          "border-green-500/20 bg-green-500/10 text-green-900 *:data-[slot=alert-description]:text-green-900/90 dark:text-green-100 dark:*:data-[slot=alert-description]:text-green-100/90 [&>svg]:text-green-900/75 dark:[&>svg]:text-green-100/75",
         note: "border-muted-border bg-muted *:data-[slot=alert-description]:text-muted-foreground/75 [&>svg]:text-muted-foreground/90",
         error:
-          "border-rose-200 bg-rose-50 text-rose-700 *:data-[slot=alert-description]:text-rose-700/90 dark:border-rose-900 dark:bg-rose-950 dark:text-rose-100 dark:*:data-[slot=alert-description]:text-rose-100/90 [&>svg]:text-rose-700/90 dark:[&>svg]:text-rose-100/90",
+          "border-rose-500/20 bg-rose-500/10 text-rose-900 *:data-[slot=alert-description]:text-rose-900/90 dark:text-rose-100 dark:*:data-[slot=alert-description]:text-rose-100/90 [&>svg]:text-rose-900/75 dark:[&>svg]:text-rose-100/75",
       },
     },
     defaultVariants: {
