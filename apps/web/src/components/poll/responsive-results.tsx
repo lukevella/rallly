@@ -1,5 +1,6 @@
 import { createBreakpoint } from "react-use";
 
+import { ClosedPoll } from "@/components/poll/closed-poll";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
 
@@ -9,5 +10,9 @@ export function ResponsiveResults() {
   const breakpoint = useBreakpoint();
   const PollComponent = breakpoint === "table" ? DesktopPoll : MobilePoll;
 
-  return <PollComponent />;
+  return (
+    <ClosedPoll>
+      <PollComponent />
+    </ClosedPoll>
+  );
 }
