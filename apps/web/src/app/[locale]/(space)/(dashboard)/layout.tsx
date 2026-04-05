@@ -12,7 +12,7 @@ import {
   SidebarSeparator,
 } from "@rallly/ui/sidebar";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { Settings2Icon } from "lucide-react";
+import { SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { NavUser } from "@/components/nav-user";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
@@ -61,9 +61,9 @@ export default async function Layout({
                   <ControlPanelMenuItem />
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/settings/preferences">
-                        <Settings2Icon />
-                        <Trans i18nKey="preferences" defaults="Preferences" />
+                      <Link href="/settings/profile">
+                        <SettingsIcon />
+                        <Trans i18nKey="settings" defaults="Settings" />
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
