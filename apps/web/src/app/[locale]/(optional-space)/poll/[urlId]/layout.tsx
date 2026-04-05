@@ -16,20 +16,23 @@ export default async function Layout(
 
   const trpc = await createPublicSSRHelper();
 
-  const [poll] = await Promise.all([
-    trpc.polls.get.fetch({ urlId: params.urlId }).catch((e) => {
+  const poll = await trpc.polls.get
+    .fetch({ urlId: params.urlId })
+    .catch((e) => {
       if (e instanceof TRPCError && e.code === "NOT_FOUND") {
         notFound();
       }
       throw e;
-    }),
-    trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
-    trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
-  ]);
+    });
 
   if (!poll.canManage) {
     redirect(`/invite/${params.urlId}`);
   }
+
+  await Promise.all([
+    trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
+    trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
+  ]);
 
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
