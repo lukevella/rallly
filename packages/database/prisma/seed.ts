@@ -34,7 +34,7 @@ async function main() {
   // 4. Scheduled events + invites
   let inviteCount = 0;
   for (const evt of scheduledEvents) {
-    const eventId = nextId();
+    const eventId = evt.id ?? nextId();
     const uid = crypto.randomUUID();
 
     await prisma.scheduledEvent.create({
@@ -97,6 +97,7 @@ async function main() {
         spaceId: poll.spaceId,
         adminUrlId,
         participantUrlId,
+        scheduledEventId: poll.scheduledEventId,
         hideParticipants: poll.hideParticipants,
         hideScores: poll.hideScores,
         disableComments: poll.disableComments,

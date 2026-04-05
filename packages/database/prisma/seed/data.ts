@@ -7,6 +7,15 @@ import type {
   VoteType,
 } from "../../generated/prisma/client";
 
+// Returns an ISO string N days from midnight UTC today, with optional hour/minute.
+function d(offsetDays: number, hour = 0, minute = 0): string {
+  const base = new Date();
+  base.setUTCHours(0, 0, 0, 0);
+  base.setUTCDate(base.getUTCDate() + offsetDays);
+  base.setUTCHours(hour, minute, 0, 0);
+  return base.toISOString();
+}
+
 // ─── Users ───────────────────────────────────────────────────────────────────
 
 export const users = [
@@ -81,6 +90,7 @@ export type PollDef = {
   deadline?: string;
   userId: string;
   spaceId: string;
+  scheduledEventId?: string;
   hideParticipants?: boolean;
   hideScores?: boolean;
   disableComments?: boolean;
@@ -106,14 +116,15 @@ const personalPolls: PollDef[] = [
     title: "Coffee chat with Alex",
     description:
       "Quick catch-up over coffee. Any of these times work for the café on 5th.",
+    location: "Café on 5th Ave",
     status: "open",
     timeZone: "America/New_York",
     userId: "user-1",
     spaceId: "space-1",
     options: [
-      { startTime: "2026-03-10T10:00:00Z", duration: 60 },
-      { startTime: "2026-03-11T14:00:00Z", duration: 60 },
-      { startTime: "2026-03-12T10:00:00Z", duration: 60 },
+      { startTime: d(7, 10), duration: 60 },
+      { startTime: d(8, 14), duration: 60 },
+      { startTime: d(9, 10), duration: 60 },
     ],
     participants: [
       {
@@ -135,10 +146,10 @@ const personalPolls: PollDef[] = [
     userId: "user-1",
     spaceId: "space-1",
     options: [
-      { startTime: "2026-03-17T00:00:00Z", duration: 0 },
-      { startTime: "2026-03-18T00:00:00Z", duration: 0 },
-      { startTime: "2026-03-19T00:00:00Z", duration: 0 },
-      { startTime: "2026-03-20T00:00:00Z", duration: 0 },
+      { startTime: d(14), duration: 0 },
+      { startTime: d(15), duration: 0 },
+      { startTime: d(16), duration: 0 },
+      { startTime: d(17), duration: 0 },
     ],
     participants: [
       {
@@ -152,14 +163,15 @@ const personalPolls: PollDef[] = [
     title: "Weekend hike",
     description:
       "Planning a group hike at Bear Mountain. Bring water and sunscreen!",
+    location: "Bear Mountain State Park, NY",
     status: "open",
     userId: "user-1",
     spaceId: "space-1",
     options: [
-      { startTime: "2026-03-14T00:00:00Z", duration: 0 },
-      { startTime: "2026-03-15T00:00:00Z", duration: 0 },
-      { startTime: "2026-03-21T00:00:00Z", duration: 0 },
-      { startTime: "2026-03-22T00:00:00Z", duration: 0 },
+      { startTime: d(11), duration: 0 },
+      { startTime: d(12), duration: 0 },
+      { startTime: d(18), duration: 0 },
+      { startTime: d(19), duration: 0 },
     ],
     participants: [
       {
@@ -207,9 +219,9 @@ const personalPolls: PollDef[] = [
     userId: "user-1",
     spaceId: "space-1",
     options: [
-      { startTime: "2026-03-13T19:00:00Z", duration: 120 },
-      { startTime: "2026-03-14T18:00:00Z", duration: 120 },
-      { startTime: "2026-03-20T19:00:00Z", duration: 120 },
+      { startTime: d(-21, 19), duration: 120 },
+      { startTime: d(-20, 18), duration: 120 },
+      { startTime: d(-14, 19), duration: 120 },
     ],
     participants: [
       {
@@ -233,16 +245,17 @@ const personalPolls: PollDef[] = [
     title: "Book club meeting",
     description:
       "Discussing 'Project Hail Mary' by Andy Weir. Chapter 15 onwards.",
+    location: "Public Library, Room 2B",
     status: "open",
     timeZone: "America/New_York",
-    deadline: "2026-03-15T00:00:00Z",
+    deadline: d(6),
     userId: "user-1",
     spaceId: "space-1",
     options: [
-      { startTime: "2026-03-18T19:00:00Z", duration: 90 },
-      { startTime: "2026-03-19T19:00:00Z", duration: 90 },
-      { startTime: "2026-03-20T19:00:00Z", duration: 90 },
-      { startTime: "2026-03-25T19:00:00Z", duration: 90 },
+      { startTime: d(8, 19), duration: 90 },
+      { startTime: d(9, 19), duration: 90 },
+      { startTime: d(10, 19), duration: 90 },
+      { startTime: d(15, 19), duration: 90 },
     ],
     participants: [
       {
@@ -296,10 +309,11 @@ const personalPolls: PollDef[] = [
     timeZone: "America/New_York",
     userId: "user-1",
     spaceId: "space-1",
+    scheduledEventId: "event-car-service",
     options: [
-      { startTime: "2026-03-09T09:00:00Z", duration: 60 },
-      { startTime: "2026-03-10T09:00:00Z", duration: 60 },
-      { startTime: "2026-03-11T09:00:00Z", duration: 60 },
+      { startTime: d(-24, 9), duration: 60 },
+      { startTime: d(-23, 9), duration: 60 },
+      { startTime: d(-22, 9), duration: 60 },
     ],
     participants: [
       {
@@ -313,13 +327,14 @@ const personalPolls: PollDef[] = [
     title: "Photography class",
     description:
       "Beginner landscape photography workshop at the community center.",
+    location: "Riverside Community Center, Studio 3",
     status: "open",
     userId: "user-1",
     spaceId: "space-1",
     options: [
-      { startTime: "2026-03-21T00:00:00Z", duration: 0 },
-      { startTime: "2026-03-22T00:00:00Z", duration: 0 },
-      { startTime: "2026-03-28T00:00:00Z", duration: 0 },
+      { startTime: d(18), duration: 0 },
+      { startTime: d(19), duration: 0 },
+      { startTime: d(25), duration: 0 },
     ],
     participants: [
       {
@@ -347,10 +362,10 @@ const personalPolls: PollDef[] = [
     userId: "user-1",
     spaceId: "space-1",
     options: [
-      { startTime: "2026-04-04T00:00:00Z", duration: 0 },
-      { startTime: "2026-04-05T00:00:00Z", duration: 0 },
-      { startTime: "2026-04-11T00:00:00Z", duration: 0 },
-      { startTime: "2026-04-12T00:00:00Z", duration: 0 },
+      { startTime: d(8), duration: 0 },
+      { startTime: d(9), duration: 0 },
+      { startTime: d(15), duration: 0 },
+      { startTime: d(16), duration: 0 },
     ],
     participants: [
       {
@@ -418,15 +433,16 @@ const acmePolls: PollDef[] = [
     title: "Q2 Kickoff Meeting",
     description:
       "All-hands to review Q1 results and set Q2 objectives. Mandatory for all team leads.",
+    location: "Main Conference Room",
     status: "open",
     timeZone: "America/New_York",
     userId: "user-1",
     spaceId: "space-2",
     options: [
-      { startTime: "2026-03-31T13:00:00Z", duration: 120 },
-      { startTime: "2026-04-01T13:00:00Z", duration: 120 },
-      { startTime: "2026-04-02T13:00:00Z", duration: 120 },
-      { startTime: "2026-04-03T13:00:00Z", duration: 120 },
+      { startTime: d(4, 13), duration: 120 },
+      { startTime: d(5, 13), duration: 120 },
+      { startTime: d(6, 13), duration: 120 },
+      { startTime: d(7, 13), duration: 120 },
     ],
     participants: [
       {
@@ -476,9 +492,9 @@ const acmePolls: PollDef[] = [
     userId: "user-2",
     spaceId: "space-2",
     options: [
-      { startTime: "2026-03-12T14:00:00Z", duration: 60 },
-      { startTime: "2026-03-13T14:00:00Z", duration: 60 },
-      { startTime: "2026-03-14T10:00:00Z", duration: 60 },
+      { startTime: d(5, 14), duration: 60 },
+      { startTime: d(6, 14), duration: 60 },
+      { startTime: d(7, 10), duration: 60 },
     ],
     participants: [
       {
@@ -508,14 +524,15 @@ const acmePolls: PollDef[] = [
   {
     title: "Sprint Retrospective",
     description: "Reflecting on Sprint 14. What went well, what didn't.",
+    location: "Zoom",
     status: "closed",
     timeZone: "America/New_York",
     userId: "user-3",
     spaceId: "space-2",
     options: [
-      { startTime: "2026-03-06T15:00:00Z", duration: 60 },
-      { startTime: "2026-03-06T16:00:00Z", duration: 60 },
-      { startTime: "2026-03-09T15:00:00Z", duration: 60 },
+      { startTime: d(-28, 15), duration: 60 },
+      { startTime: d(-28, 16), duration: 60 },
+      { startTime: d(-25, 15), duration: 60 },
     ],
     participants: [
       {
@@ -553,16 +570,17 @@ const acmePolls: PollDef[] = [
     title: "Client Presentation Prep",
     description:
       "Final run-through before the Globex Corp pitch. Bring your slides.",
+    location: "Zoom",
     status: "open",
     timeZone: "America/New_York",
     userId: "user-1",
     spaceId: "space-2",
     options: [
-      { startTime: "2026-03-17T10:00:00Z", duration: 60 },
-      { startTime: "2026-03-17T14:00:00Z", duration: 60 },
-      { startTime: "2026-03-18T10:00:00Z", duration: 60 },
-      { startTime: "2026-03-18T14:00:00Z", duration: 60 },
-      { startTime: "2026-03-19T10:00:00Z", duration: 60 },
+      { startTime: d(3, 10), duration: 60 },
+      { startTime: d(3, 14), duration: 60 },
+      { startTime: d(4, 10), duration: 60 },
+      { startTime: d(4, 14), duration: 60 },
+      { startTime: d(5, 10), duration: 60 },
     ],
     participants: [
       {
@@ -598,10 +616,10 @@ const acmePolls: PollDef[] = [
     userId: "user-1",
     spaceId: "space-2",
     options: [
-      { startTime: "2026-04-14T00:00:00Z", duration: 0 },
-      { startTime: "2026-04-15T00:00:00Z", duration: 0 },
-      { startTime: "2026-04-21T00:00:00Z", duration: 0 },
-      { startTime: "2026-04-22T00:00:00Z", duration: 0 },
+      { startTime: d(11), duration: 0 },
+      { startTime: d(12), duration: 0 },
+      { startTime: d(18), duration: 0 },
+      { startTime: d(19), duration: 0 },
     ],
     participants: [
       {
@@ -660,9 +678,9 @@ const acmePolls: PollDef[] = [
     userId: "user-1",
     spaceId: "space-2",
     options: [
-      { startTime: "2026-03-11T15:00:00Z", duration: 30 },
-      { startTime: "2026-03-12T15:00:00Z", duration: 30 },
-      { startTime: "2026-03-13T15:00:00Z", duration: 30 },
+      { startTime: d(5, 15), duration: 30 },
+      { startTime: d(6, 15), duration: 30 },
+      { startTime: d(7, 15), duration: 30 },
     ],
     participants: [
       {
@@ -687,10 +705,10 @@ const acmePolls: PollDef[] = [
     userId: "user-3",
     spaceId: "space-2",
     options: [
-      { startTime: "2026-03-10T13:00:00Z", duration: 15 },
-      { startTime: "2026-03-10T13:30:00Z", duration: 15 },
-      { startTime: "2026-03-10T14:00:00Z", duration: 15 },
-      { startTime: "2026-03-10T14:30:00Z", duration: 15 },
+      { startTime: d(-24, 13), duration: 15 },
+      { startTime: d(-24, 13, 30), duration: 15 },
+      { startTime: d(-24, 14), duration: 15 },
+      { startTime: d(-24, 14, 30), duration: 15 },
     ],
     participants: [
       {
@@ -732,9 +750,9 @@ const acmePolls: PollDef[] = [
     userId: "user-2",
     spaceId: "space-2",
     options: [
-      { startTime: "2026-03-19T13:00:00Z", duration: 180 },
-      { startTime: "2026-03-20T13:00:00Z", duration: 180 },
-      { startTime: "2026-03-21T13:00:00Z", duration: 180 },
+      { startTime: d(9, 13), duration: 180 },
+      { startTime: d(10, 13), duration: 180 },
+      { startTime: d(11, 13), duration: 180 },
     ],
     participants: [
       {
@@ -776,11 +794,12 @@ const acmePolls: PollDef[] = [
     timeZone: "America/New_York",
     userId: "user-1",
     spaceId: "space-2",
+    scheduledEventId: "event-qbr",
     options: [
-      { startTime: "2026-03-28T14:00:00Z", duration: 120 },
-      { startTime: "2026-03-31T14:00:00Z", duration: 120 },
-      { startTime: "2026-04-01T14:00:00Z", duration: 120 },
-      { startTime: "2026-04-02T14:00:00Z", duration: 120 },
+      { startTime: d(10, 14), duration: 120 },
+      { startTime: d(14, 14), duration: 120 },
+      { startTime: d(17, 14), duration: 120 },
+      { startTime: d(18, 14), duration: 120 },
     ],
     participants: [
       {
@@ -822,9 +841,9 @@ const acmePolls: PollDef[] = [
     userId: "user-5",
     spaceId: "space-2",
     options: [
-      { startTime: "2026-03-13T12:00:00Z", duration: 60 },
-      { startTime: "2026-03-14T12:00:00Z", duration: 60 },
-      { startTime: "2026-03-20T12:00:00Z", duration: 60 },
+      { startTime: d(5, 12), duration: 60 },
+      { startTime: d(6, 12), duration: 60 },
+      { startTime: d(12, 12), duration: 60 },
     ],
     participants: [
       {
@@ -879,16 +898,17 @@ const acmePolls: PollDef[] = [
     title: "Interview Panel: Senior Designer",
     description:
       "We have 3 candidates next week. Need at least 3 panelists per slot.",
+    location: "Conference Room B",
     status: "open",
     timeZone: "America/New_York",
     requireParticipantEmail: true,
     userId: "user-2",
     spaceId: "space-2",
     options: [
-      { startTime: "2026-03-18T14:00:00Z", duration: 90 },
-      { startTime: "2026-03-19T14:00:00Z", duration: 90 },
-      { startTime: "2026-03-20T14:00:00Z", duration: 90 },
-      { startTime: "2026-03-21T14:00:00Z", duration: 90 },
+      { startTime: d(15, 14), duration: 90 },
+      { startTime: d(16, 14), duration: 90 },
+      { startTime: d(17, 14), duration: 90 },
+      { startTime: d(18, 14), duration: 90 },
     ],
     participants: [
       {
@@ -924,10 +944,10 @@ const acmePolls: PollDef[] = [
     userId: "user-4",
     spaceId: "space-2",
     options: [
-      { startTime: "2026-12-12T00:00:00Z", duration: 0 },
-      { startTime: "2026-12-13T00:00:00Z", duration: 0 },
-      { startTime: "2026-12-19T00:00:00Z", duration: 0 },
-      { startTime: "2026-12-20T00:00:00Z", duration: 0 },
+      { startTime: d(253), duration: 0 },
+      { startTime: d(254), duration: 0 },
+      { startTime: d(260), duration: 0 },
+      { startTime: d(261), duration: 0 },
     ],
     participants: [
       {
@@ -986,6 +1006,7 @@ export const polls: PollDef[] = [...personalPolls, ...acmePolls];
 // ─── Scheduled Events ────────────────────────────────────────────────────────
 
 export type ScheduledEventDef = {
+  id?: string;
   title: string;
   description?: string;
   location?: string;
@@ -1012,8 +1033,8 @@ export const scheduledEvents: ScheduledEventDef[] = [
     location: "Dr. Lee's Office, 45 Oak St",
     status: "confirmed",
     timeZone: "America/New_York",
-    start: "2026-03-09T14:00:00Z",
-    end: "2026-03-09T15:00:00Z",
+    start: d(-25, 14),
+    end: d(-25, 15),
     allDay: false,
     userId: "user-1",
     spaceId: "space-1",
@@ -1023,8 +1044,8 @@ export const scheduledEvents: ScheduledEventDef[] = [
     location: "Olive Garden, Paramus",
     status: "confirmed",
     timeZone: "America/New_York",
-    start: "2026-03-14T18:00:00Z",
-    end: "2026-03-14T20:00:00Z",
+    start: d(-20, 18),
+    end: d(-20, 20),
     allDay: false,
     userId: "user-1",
     spaceId: "space-1",
@@ -1034,8 +1055,8 @@ export const scheduledEvents: ScheduledEventDef[] = [
     description: "Bear Mountain — meet at the trailhead parking lot at 8am.",
     status: "confirmed",
     timeZone: "America/New_York",
-    start: "2026-03-15T00:00:00Z",
-    end: "2026-03-16T00:00:00Z",
+    start: d(-19),
+    end: d(-18),
     allDay: true,
     userId: "user-1",
     spaceId: "space-1",
@@ -1063,8 +1084,8 @@ export const scheduledEvents: ScheduledEventDef[] = [
     location: "Public Library, Room 2B",
     status: "confirmed",
     timeZone: "America/New_York",
-    start: "2026-03-18T19:00:00Z",
-    end: "2026-03-18T20:30:00Z",
+    start: d(-16, 19),
+    end: d(-16, 20, 30),
     allDay: false,
     userId: "user-1",
     spaceId: "space-1",
@@ -1092,15 +1113,34 @@ export const scheduledEvents: ScheduledEventDef[] = [
     ],
   },
   {
+    id: "event-car-service",
     title: "Car Service",
     location: "Mike's Auto Shop, 234 Elm St",
     status: "confirmed",
     timeZone: "America/New_York",
-    start: "2026-03-10T09:00:00Z",
-    end: "2026-03-10T10:00:00Z",
+    start: d(-24, 9),
+    end: d(-24, 10),
     allDay: false,
     userId: "user-1",
     spaceId: "space-1",
+  },
+  {
+    title: "Coffee with Alex",
+    location: "Café on 5th",
+    status: "confirmed",
+    timeZone: "America/New_York",
+    start: d(7, 10),
+    end: d(7, 11),
+    allDay: false,
+    userId: "user-1",
+    spaceId: "space-1",
+    invites: [
+      {
+        inviteeName: "Alex Rivera",
+        inviteeEmail: "alex.rivera@gmail.com",
+        status: "accepted",
+      },
+    ],
   },
 
   // ── Acme Inc events ────────────────────────────────────────────────────────
@@ -1110,8 +1150,8 @@ export const scheduledEvents: ScheduledEventDef[] = [
     location: "Zoom",
     status: "confirmed",
     timeZone: "America/New_York",
-    start: "2026-03-06T15:00:00Z",
-    end: "2026-03-06T16:00:00Z",
+    start: d(-28, 15),
+    end: d(-28, 16),
     allDay: false,
     userId: "user-3",
     spaceId: "space-2",
@@ -1152,8 +1192,8 @@ export const scheduledEvents: ScheduledEventDef[] = [
     location: "Conference Room A",
     status: "confirmed",
     timeZone: "America/New_York",
-    start: "2026-03-12T14:00:00Z",
-    end: "2026-03-12T15:00:00Z",
+    start: d(-22, 14),
+    end: d(-22, 15),
     allDay: false,
     userId: "user-2",
     spaceId: "space-2",
@@ -1180,8 +1220,8 @@ export const scheduledEvents: ScheduledEventDef[] = [
     location: "Globex HQ, 100 Innovation Blvd",
     status: "confirmed",
     timeZone: "America/New_York",
-    start: "2026-03-20T10:00:00Z",
-    end: "2026-03-20T11:30:00Z",
+    start: d(-14, 10),
+    end: d(-14, 11, 30),
     allDay: false,
     userId: "user-1",
     spaceId: "space-2",
@@ -1210,26 +1250,20 @@ export const scheduledEvents: ScheduledEventDef[] = [
     ],
   },
   {
-    title: "Team Offsite",
-    description: "Spring team-building day at the Catskills ropes course.",
-    status: "confirmed",
+    title: "Engineering All-Hands",
+    description: "Monthly engineering department sync.",
+    status: "canceled",
     timeZone: "America/New_York",
-    start: "2026-04-15T00:00:00Z",
-    end: "2026-04-16T00:00:00Z",
-    allDay: true,
-    userId: "user-1",
+    start: d(-27, 17),
+    end: d(-27, 18),
+    allDay: false,
+    userId: "user-3",
     spaceId: "space-2",
     invites: [
       {
-        inviteeName: "Sarah Chen",
-        inviteeEmail: "sarah@rallly.co",
-        inviteeId: "user-2",
-        status: "accepted",
-      },
-      {
-        inviteeName: "Michael Torres",
-        inviteeEmail: "michael@rallly.co",
-        inviteeId: "user-3",
+        inviteeName: "Dev User",
+        inviteeEmail: "dev@rallly.co",
+        inviteeId: "user-1",
         status: "accepted",
       },
       {
@@ -1237,12 +1271,6 @@ export const scheduledEvents: ScheduledEventDef[] = [
         inviteeEmail: "emily@rallly.co",
         inviteeId: "user-4",
         status: "accepted",
-      },
-      {
-        inviteeName: "James Okonkwo",
-        inviteeEmail: "james@rallly.co",
-        inviteeId: "user-5",
-        status: "pending",
       },
     ],
   },
@@ -1252,8 +1280,8 @@ export const scheduledEvents: ScheduledEventDef[] = [
     location: "Conference Room B",
     status: "confirmed",
     timeZone: "America/New_York",
-    start: "2026-03-13T12:00:00Z",
-    end: "2026-03-13T13:00:00Z",
+    start: d(-21, 12),
+    end: d(-21, 13),
     allDay: false,
     userId: "user-5",
     spaceId: "space-2",
@@ -1290,8 +1318,8 @@ export const scheduledEvents: ScheduledEventDef[] = [
     location: "Main Conference Room",
     status: "confirmed",
     timeZone: "America/New_York",
-    start: "2026-04-01T13:00:00Z",
-    end: "2026-04-01T15:00:00Z",
+    start: d(7, 13),
+    end: d(7, 15),
     allDay: false,
     userId: "user-1",
     spaceId: "space-2",
@@ -1323,39 +1351,14 @@ export const scheduledEvents: ScheduledEventDef[] = [
     ],
   },
   {
-    title: "Engineering All-Hands",
-    description: "Monthly engineering department sync.",
-    status: "canceled",
-    timeZone: "America/New_York",
-    start: "2026-03-07T17:00:00Z",
-    end: "2026-03-07T18:00:00Z",
-    allDay: false,
-    userId: "user-3",
-    spaceId: "space-2",
-    invites: [
-      {
-        inviteeName: "Dev User",
-        inviteeEmail: "dev@rallly.co",
-        inviteeId: "user-1",
-        status: "accepted",
-      },
-      {
-        inviteeName: "Emily Nakamura",
-        inviteeEmail: "emily@rallly.co",
-        inviteeId: "user-4",
-        status: "accepted",
-      },
-    ],
-  },
-  {
     title: "Product Roadmap Workshop",
     description:
       "Half-day session to align on H2 priorities using RICE framework.",
     location: "Conference Room A",
     status: "confirmed",
     timeZone: "America/New_York",
-    start: "2026-03-19T13:00:00Z",
-    end: "2026-03-19T16:00:00Z",
+    start: d(9, 13),
+    end: d(9, 16),
     allDay: false,
     userId: "user-2",
     spaceId: "space-2",
@@ -1383,6 +1386,82 @@ export const scheduledEvents: ScheduledEventDef[] = [
         inviteeEmail: "james@rallly.co",
         inviteeId: "user-5",
         status: "tentative",
+      },
+    ],
+  },
+  {
+    title: "Team Offsite",
+    description: "Spring team-building day at the Catskills ropes course.",
+    status: "confirmed",
+    timeZone: "America/New_York",
+    start: d(12),
+    end: d(13),
+    allDay: true,
+    userId: "user-1",
+    spaceId: "space-2",
+    invites: [
+      {
+        inviteeName: "Sarah Chen",
+        inviteeEmail: "sarah@rallly.co",
+        inviteeId: "user-2",
+        status: "accepted",
+      },
+      {
+        inviteeName: "Michael Torres",
+        inviteeEmail: "michael@rallly.co",
+        inviteeId: "user-3",
+        status: "accepted",
+      },
+      {
+        inviteeName: "Emily Nakamura",
+        inviteeEmail: "emily@rallly.co",
+        inviteeId: "user-4",
+        status: "accepted",
+      },
+      {
+        inviteeName: "James Okonkwo",
+        inviteeEmail: "james@rallly.co",
+        inviteeId: "user-5",
+        status: "pending",
+      },
+    ],
+  },
+  {
+    id: "event-qbr",
+    title: "Quarterly Business Review",
+    description:
+      "Presenting Q1 numbers to leadership. Finance team please prepare slides by Thursday.",
+    status: "confirmed",
+    timeZone: "America/New_York",
+    start: d(14, 14),
+    end: d(14, 16),
+    allDay: false,
+    userId: "user-1",
+    spaceId: "space-2",
+    invites: [
+      {
+        inviteeName: "Sarah Chen",
+        inviteeEmail: "sarah@rallly.co",
+        inviteeId: "user-2",
+        inviteeTimeZone: "America/Los_Angeles",
+        status: "accepted",
+      },
+      {
+        inviteeName: "Michael Torres",
+        inviteeEmail: "michael@rallly.co",
+        inviteeId: "user-3",
+        inviteeTimeZone: "Europe/London",
+        status: "accepted",
+      },
+      {
+        inviteeName: "Carla Mendez",
+        inviteeEmail: "carla.m@acme.co",
+        status: "accepted",
+      },
+      {
+        inviteeName: "Owen Bradley",
+        inviteeEmail: "owen.b@acme.co",
+        status: "accepted",
       },
     ],
   },
