@@ -1,6 +1,5 @@
 {
   "common_poweredBy": "Con tecnología de <a>{domain}</a>",
-  "common_disableNotifications": "Si deseas dejar de recibir actualizaciones, puedes <a>desactivar las notificaciones</a>.",
   "finalizeHost_content": "<b>{title}</b> ha sido programado para:",
   "finalizeHost_preview": "¡Fecha final programada! Hemos notificado a los participantes y les hemos enviado invitaciones de calendario.",
   "finalizeHost_heading": "¡Fecha final programada!",
