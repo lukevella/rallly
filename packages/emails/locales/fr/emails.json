@@ -1,6 +1,6 @@
 {
   "common_poweredBy": "Propulsé par <a>{domain}</a>",
-  "common_disableNotifications": "Si vous souhaitez cesser de recevoir des mises à jour, vous pouvez <a>désactiver les notifications</a>.",
+  "common_disableNotifications": "Vous pouvez <a>gérer vos paramètres de notification</a> pour arrêter de recevoir ces e-mails.",
   "finalizeHost_content": "<b>{title}</b> a été réservé pour :",
   "finalizeHost_preview": "Date de fin de réservation ! Nous avons notifié les participants et leur avons envoyé des invitations de calendrier.",
   "finalizeHost_heading": "Date finale réservée !",
