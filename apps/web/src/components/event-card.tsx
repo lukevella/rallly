@@ -57,14 +57,10 @@ export function EventCard() {
             </div>
           ) : null}
           <div className="flex items-start justify-between gap-2">
-            <EventMetaTitle data-testid="poll-title">
-              {poll.title}
-            </EventMetaTitle>
+            <EventMetaTitle>{poll.title}</EventMetaTitle>
           </div>
           {poll.description ? (
-            <EventMetaDescription data-testid="poll-description">
-              {poll.description}
-            </EventMetaDescription>
+            <EventMetaDescription>{poll.description}</EventMetaDescription>
           ) : null}
           <EventMetaList className="mt-4">
             {poll.user ? (

@@ -17,7 +17,9 @@ test.describe.serial(() => {
     const dialog = await newPollPage.create({ name: "Monthly Meetup" });
     await dialog.goToPollPage();
 
-    await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
+    await expect(
+      page.getByRole("heading", { name: "Monthly Meetup" }),
+    ).toBeVisible();
   });
 
   // delete the poll we just created

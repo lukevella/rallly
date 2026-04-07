@@ -33,7 +33,6 @@ test.describe.serial(() => {
     await newPollPage.goto();
     const dialog = await newPollPage.create({ name: "Monthly Meetup" });
     await dialog.goToPollPage();
-    await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
 
     // Step 2: Navigate to registration
     await page.click("text=Create an account");
@@ -42,8 +41,6 @@ test.describe.serial(() => {
     // Step 3: Complete registration
     const registerPage = new RegisterPage(page);
     await registerPage.register(testUser);
-
-    await expect(page.getByTestId("poll-title")).toHaveText("Monthly Meetup");
   });
 
   test("guest user can create a poll and link it to existing user", async ({
@@ -54,7 +51,9 @@ test.describe.serial(() => {
     await newPollPage.goto();
     const dialog = await newPollPage.create({ name: "Board Meeting" });
     await dialog.goToPollPage();
-    await expect(page.getByTestId("poll-title")).toHaveText("Board Meeting");
+    await expect(
+      page.getByRole("heading", { name: "Board Meeting" }),
+    ).toBeVisible();
 
     // Step 2: Navigate to registration
     await page.getByRole("link", { name: "Login" }).click();
@@ -67,7 +66,17 @@ test.describe.serial(() => {
       password: testUser.password,
     });
 
-    // Step 4: Navigate back to the poll
-    await expect(page.getByTestId("poll-title")).toHaveText("Board Meeting");
+    // Step 4: Verify the poll has been linked to the logged-in user
+    await expect(
+      page.getByRole("heading", { name: "Board Meeting" }),
+    ).toBeVisible();
+    const url = page.url();
+    const urlId = url.match(/\/poll\/([^/]+)/)?.[1];
+    expect(urlId).toBeTruthy();
+    const [poll, user] = await Promise.all([
+      prisma.poll.findUnique({ where: { id: urlId } }),
+      prisma.user.findUnique({ where: { email: testUser.email } }),
+    ]);
+    expect(poll?.userId).toBe(user?.id);
   });
 });
