@@ -12,7 +12,6 @@
   "comments": "Reacties",
   "continue": "Doorgaan",
   "copied": "Gekopieerd",
-  "createdBy": "door <b>{name}</b>",
   "delete": "Verwijderen",
   "deleteDate": "Datum verwijderen",
   "deletedPoll": "Verwijderde poll",
@@ -233,7 +232,6 @@
   "paginationPage": "Pagina {currentPage, number} van {totalPages, number}",
   "paginationNext": "Volgende",
   "searchPollsPlaceholder": "Doorzoek polls op titel...",
-  "poll": "Poll",
   "sendFeedbackDesc": "Deel je feedback met ons.",
   "sendFeedbackSuccess": "Bedankt voor je feedback!",
   "searchEventsPlaceholder": "Doorzoek evenementen op titel...",
@@ -402,5 +400,14 @@
   "confirmSpaceName": "Voer de naam van de ruimte in ter bevestiging:",
   "addSeats": "{count, plural, one {Add # Seat} other {Add # Seats}}",
   "removeSeats": "{count, plural, one {Remove # Seat} other {Remove # Seats}}",
-  "memberCount": "{count, plural, =0 {No members} one {1 member} other {# members}}"
+  "memberCount": "{count, plural, =0 {No members} one {1 member} other {# members}}",
+  "notifications": "Meldingen",
+  "pollNotificationsDescription": "Ontvang een melding via e-mail wanneer er activiteit is op je polls",
+  "notifyNewResponse": "Nieuw antwoord",
+  "notifyNewComment": "Nieuwe reactie",
+  "notificationsDescription": "Kies welke e-mailmeldingen je ontvangt",
+  "timezoneInputPlaceholder": "Zoek tijdzone…",
+  "cityTime": "{city}",
+  "unmuteNotifications": "Meldingen inschakelen",
+  "muteNotifications": "Meldingen dempen"
 }
