@@ -1,6 +1,5 @@
 {
   "common_poweredBy": "Drivs av <a>{domain}</a>",
-  "common_disableNotifications": "Om du vill sluta ta emot uppdateringar kan du <a>stänga av aviseringar</a>.",
   "finalizeHost_content": "<b>{title}</b> har bokats för:",
   "finalizeHost_preview": "Slutdatum bokat! Vi har meddelat deltagarna och skickat kalenderinbjudningar.",
   "finalizeHost_heading": "Slutdatum bokat!",
