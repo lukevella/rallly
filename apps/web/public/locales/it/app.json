@@ -13,7 +13,6 @@
   "continue": "Continua",
   "configuredByEnvironmentVariable": "Questa impostazione è stata configurata tramite variabile d'ambiente.",
   "copied": "Copiato",
-  "createdBy": "da <b>{name}</b>",
   "delete": "Elimina",
   "deleteDate": "Elimina data",
   "deletedPoll": "Elimina sondaggio",
@@ -236,7 +235,6 @@
   "paginationPage": "Pagina {currentPage, number} di {totalPages, number}",
   "paginationNext": "Prossimo",
   "searchPollsPlaceholder": "Cerca sondaggi per titolo...",
-  "poll": "Sondaggio",
   "sendFeedbackDesc": "Condividi il tuo feedback con noi.",
   "sendFeedbackSuccess": "Grazie per il tuo feedback!",
   "searchEventsPlaceholder": "Cerca eventi per titolo...",
@@ -580,7 +578,6 @@
   "openPollCount": "{count, plural, other {# aperti}}",
   "pollStatusClosed": "Chiuso",
   "pollStatusScheduled": "Pianificato",
-  "pollStatusClosedDescription": "Al momento non è possibile inviare o modificare i voti",
   "closePoll": "Chiudi",
   "pollStatusCanceled": "Annullato",
   "schedulePoll": "Pianifica",
@@ -613,5 +610,9 @@
   "pollNotificationsDescription": "Ricevi una notifica via email quando c'è attività sui tuoi sondaggi",
   "notifyNewResponse": "Nuova risposta",
   "notifyNewComment": "Nuovo commento",
-  "notificationsDescription": "Scegli quali notifiche email ricevere"
+  "notificationsDescription": "Scegli quali notifiche email ricevere",
+  "timezoneInputPlaceholder": "Cerca fuso orario…",
+  "cityTime": "Orario {city}",
+  "unmuteNotifications": "Riattiva le notifiche",
+  "muteNotifications": "Silenzia notifiche"
 }
