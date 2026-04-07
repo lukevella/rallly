@@ -342,6 +342,7 @@ export const authLib = betterAuth({
       maxAge: 5 * 60, // 5 minutes
     },
   },
+  trustedOrigins: [absoluteUrl()],
   baseURL,
 });
 
