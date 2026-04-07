@@ -1,6 +1,6 @@
 {
   "common_poweredBy": "Mogelijk gemaakt door <a>{domain}</a>",
-  "common_disableNotifications": "Als je geen updates meer wilt ontvangen, kun je de <a>meldingen uitschakelen</a>.",
+  "common_disableNotifications": "Pas je <a>meldingsinstellingen</a> aan om deze e-mails niet meer te ontvangen.",
   "finalizeHost_content": "<b>{title}</b> werd vastgelegd voor:",
   "finalizeHost_preview": "Definitieve datum vastgelegd! We hebben de deelnemers op de hoogte gesteld en agenda-uitnodigingen rondgestuurd.",
   "finalizeHost_heading": "Definitieve datum vastgelegd!",
