@@ -1,6 +1,6 @@
 {
   "common_poweredBy": "Alimentato da <a>{domain}</a>",
-  "common_disableNotifications": "Se desideri smettere di ricevere aggiornamenti puoi <a>disattivare le notifiche</a>.",
+  "common_disableNotifications": "È possibile <a>gestire le impostazioni di notifica</a> per interrompere la ricezione di queste email.",
   "finalizeHost_content": "<b>{title}</b> è stato prenotato per:",
   "finalizeHost_preview": "Data finale prenotata! Abbiamo notificato i partecipanti e inviato loro inviti in calendario.",
   "finalizeHost_heading": "Data finale prenotata!",
