@@ -1,6 +1,5 @@
 {
   "common_poweredBy": "Obsługiwane przez <a>{domain}</a>",
-  "common_disableNotifications": "Jeśli chcesz przestać otrzymywać aktualizacje, możesz <a>wyłączyć powiadomienia</a>.",
   "finalizeHost_content": "<b>{title}</b> zostało zarezerwowane na:",
   "finalizeHost_preview": "Ostateczna data zarezerwowana! Powiadomiliśmy uczestników i wysłaliśmy im zaproszenia kalendarzowe.",
   "finalizeHost_heading": "Ostateczna data zarezerwowana!",
