@@ -1,6 +1,6 @@
 {
   "common_poweredBy": "Működteti a <a>{domain}</a>",
-  "common_disableNotifications": "Ha nem szeretnél további frissítéseket kapni, akkor <a>kapcsold ki az értesítéseket</a>.",
+  "common_disableNotifications": "Tudod <a>módosításani az értesítés beállításaidat</a>, hogy ne kapj több ilyen emailt.",
   "finalizeHost_content": "<b>{title}</b> véglegesítve lett:",
   "finalizeHost_preview": "A dátum véglegesítve lett! Értesítettük a résztvevőket és küldtük nekik naptár meghívókat.",
   "finalizeHost_heading": "Végleges dátum rögzítve!",
