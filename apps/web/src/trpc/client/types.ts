@@ -18,6 +18,13 @@ export type GetPollApiResponse = {
   participantUrlId: string;
   createdAt: Date;
   deleted: boolean;
+  event: {
+    id: string;
+    start: Date;
+    duration: number;
+    attendees: Array<{ name: string; email: string; status: string }>;
+    status: string;
+  } | null;
 };
 
 export type Vote = {
