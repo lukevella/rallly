@@ -614,5 +614,11 @@
   "timezoneInputPlaceholder": "Zeitzone suchen…",
   "cityTime": "{city} Zeit",
   "unmuteNotifications": "Benachrichtigungen wieder aktivieren",
-  "muteNotifications": "Benachrichtigungen stummschalten"
+  "muteNotifications": "Benachrichtigungen stummschalten",
+  "creatingPoll": "Umfrage wird erstellt...",
+  "createPollPollCreated": "Umfrage erstellt",
+  "viewPoll": "Umfrage ansehen",
+  "responseOptions": "Antwortoptionen",
+  "viewResults": "Ergebnisse ansehen",
+  "pollClosedDescription": "Es werden keine Antworten mehr akzeptiert."
 }
