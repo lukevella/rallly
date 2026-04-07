@@ -24,5 +24,14 @@
   "status": "Stav",
   "when2MeetAlternative": "When2Meet alternativa",
   "signUp": "Registrovat se",
-  "openSource": "Máme otevřený zdrojový kód!"
+  "licensingThankYouTitle": "Děkujeme za nákup!",
+  "licensingThankYouSubtitle": "Licence pro vlastní hostovanou instanci Rallly byla potvrzena. Jsme rádi, že jste se k nám přidali!",
+  "licensingThankYouLicense": "Další kroky",
+  "licensingThankYouLicenseEmailed": "Váš licenční klíč byl odeslán na e-mailovou adresu, kterou jste zadali při placení. Zkontrolujte prosím svou doručenou poštu.",
+  "licensingThankYouNextStepsInstallation": "Průvodce instalací",
+  "licensingThankYouNextStepsActivateLicense": "Jak aktivovat licenci",
+  "licensingThankYouSupportPrompt": "Potřebujete pomoc nebo máte dotazy? Navštivte naši <0>dokumentaci pro vlastní instanci</0> nebo <1>nás kontaktujte</1>.",
+  "licensingThankYouGoHomeLink": "Zpět na hlavní stránku",
+  "openSource": "Máme otevřený zdrojový kód!",
+  "starOnGitHub": "Ohodnoťte nás na Githubu"
 }
