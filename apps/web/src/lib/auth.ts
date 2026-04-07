@@ -4,11 +4,11 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { BetterAuthPlugin } from "better-auth";
 import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { createAuthMiddleware } from "better-auth/api";
 import {
   admin,
   anonymous,
   captcha,
-  createAuthMiddleware,
   emailOTP,
   genericOAuth,
   lastLoginMethod,
@@ -35,56 +35,61 @@ const baseURL = absoluteUrl("/api/better-auth");
 
 const logger = createLogger("auth");
 
-const plugins: BetterAuthPlugin[] = [];
-
-if (env.TURNSTILE_SECRET_KEY) {
-  plugins.push(
-    captcha({
-      provider: "cloudflare-turnstile",
-      secretKey: env.TURNSTILE_SECRET_KEY,
-      endpoints: ["/sign-up/email"],
-    }),
+if (env.OIDC_ISSUER_URL) {
+  logger.info(
+    "OIDC_ISSUER_URL is no longer used. You can remove it from your environment variables.",
   );
 }
 
-if (env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET && env.OIDC_DISCOVERY_URL) {
-  if (env.OIDC_ISSUER_URL) {
-    logger.info(
-      "OIDC_ISSUER_URL is no longer used. You can remove it from your environment variables.",
-    );
-  }
-  plugins.push(
-    genericOAuth({
-      config: [
-        {
-          providerId: "oidc",
-          discoveryUrl: env.OIDC_DISCOVERY_URL,
-          clientId: env.OIDC_CLIENT_ID,
-          clientSecret: env.OIDC_CLIENT_SECRET,
-          scopes: ["openid", "profile", "email"],
-          redirectURI: absoluteUrl("/api/auth/callback/oidc"),
-          pkce: true,
-          mapProfileToUser(profile) {
-            return {
-              name: getValueByPath(profile, env.OIDC_NAME_CLAIM_PATH) as string,
-              email: getValueByPath(
-                profile,
-                env.OIDC_EMAIL_CLAIM_PATH,
-              ) as string,
-              image: getValueByPath(
-                profile,
-                env.OIDC_PICTURE_CLAIM_PATH,
-              ) as string,
-            };
-          },
-        },
-      ],
-    }),
-  );
-}
+// Conditional plugins are typed as BetterAuthPlugin[] — they don't add user
+// fields so losing their specific types doesn't affect session type inference.
+const conditionalPlugins: BetterAuthPlugin[] = [
+  ...(env.TURNSTILE_SECRET_KEY
+    ? [
+        captcha({
+          provider: "cloudflare-turnstile",
+          secretKey: env.TURNSTILE_SECRET_KEY,
+          endpoints: ["/sign-up/email"],
+        }),
+      ]
+    : []),
+  ...(env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET && env.OIDC_DISCOVERY_URL
+    ? [
+        genericOAuth({
+          config: [
+            {
+              providerId: "oidc",
+              discoveryUrl: env.OIDC_DISCOVERY_URL,
+              clientId: env.OIDC_CLIENT_ID,
+              clientSecret: env.OIDC_CLIENT_SECRET,
+              scopes: ["openid", "profile", "email"],
+              redirectURI: absoluteUrl("/api/auth/callback/oidc"),
+              pkce: true,
+              mapProfileToUser(profile) {
+                return {
+                  name: getValueByPath(
+                    profile,
+                    env.OIDC_NAME_CLAIM_PATH,
+                  ) as string,
+                  email: getValueByPath(
+                    profile,
+                    env.OIDC_EMAIL_CLAIM_PATH,
+                  ) as string,
+                  image: getValueByPath(
+                    profile,
+                    env.OIDC_PICTURE_CLAIM_PATH,
+                  ) as string,
+                };
+              },
+            },
+          ],
+        }),
+      ]
+    : []),
+];
 
 export const authLib = betterAuth({
-  appName: "Rallly",
+  appName: env.APP_NAME,
   secret: env.SECRET_PASSWORD,
   experimental: {
     joins: true,
@@ -92,6 +97,12 @@ export const authLib = betterAuth({
   emailAndPassword: {
     enabled: env.EMAIL_LOGIN_ENABLED !== "false",
     requireEmailVerification: true,
+    onExistingUserSignUp: async ({ user }, request) => {
+      await authLib.api.sendVerificationOTP({
+        body: { email: user.email, type: "email-verification" },
+        request,
+      });
+    },
     sendResetPassword: async ({ user, url }) => {
       const locale =
         "locale" in user ? (user.locale as string) : await getLocale();
@@ -118,7 +129,6 @@ export const authLib = betterAuth({
     transaction: false, // when set to true, there is an issue where the after() hook is called before the user is actually created in the database
   }),
   plugins: [
-    ...plugins,
     admin(),
     anonymous({
       emailDomainName: "rallly.co",
@@ -164,6 +174,7 @@ export const authLib = betterAuth({
         }
       },
     }),
+    ...conditionalPlugins,
   ],
   socialProviders: {
     google:
