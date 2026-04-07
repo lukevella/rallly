@@ -1,6 +1,5 @@
 {
   "common_poweredBy": "Palvelun tarjoaa <a>{domain}</a>",
-  "common_disableNotifications": "Jos et halua saada päivityksiä, voit kytkeä <a>ilmoitukset pois päältä</a>.",
   "finalizeHost_content": "<b>{title}</b> on varattu seuraavasti:",
   "finalizeHost_preview": "Lopullinen päivä varattu! Olemme ilmoittaneet osallistujille ja lähettäneet heille kalenterikutsut.",
   "finalizeHost_heading": "Lopullinen päivä varattu!",
