@@ -13,7 +13,6 @@
   "continue": "Fortsæt",
   "configuredByEnvironmentVariable": "Denne indstilling er blevet konfigureret af miljøvariabel.",
   "copied": "Kopieret",
-  "createdBy": "af <b>{name}</b>",
   "delete": "Slet",
   "deleteDate": "Slet dato",
   "deletedPoll": "Slettet afstemning",
@@ -236,7 +235,6 @@
   "paginationPage": "Side {currentPage, number} af {totalPages, number}",
   "paginationNext": "Næste",
   "searchPollsPlaceholder": "Søg afstemninger efter titel...",
-  "poll": "Afstemninger",
   "sendFeedbackDesc": "Del dit feedback med os.",
   "sendFeedbackSuccess": "Tak for din feedback!",
   "searchEventsPlaceholder": "Søg afstemninger efter titel...",
@@ -580,7 +578,6 @@
   "openPollCount": "{count, plural, one {# åben} other {# åbne}}",
   "pollStatusClosed": "Lukket",
   "pollStatusScheduled": "Planlagt",
-  "pollStatusClosedDescription": "Stemmer kan ikke indsendes eller redigeres på dette tidspunkt",
   "closePoll": "Luk",
   "pollStatusCanceled": "Annulleret",
   "schedulePoll": "Planlæg",
@@ -614,5 +611,8 @@
   "notifyNewResponse": "Ny besvarelse",
   "notifyNewComment": "Ny kommentar",
   "notificationsDescription": "Vælg hvilke e-mail-notifikationer du modtager",
-  "timezoneInputPlaceholder": "Søg tidszone…"
+  "timezoneInputPlaceholder": "Søg tidszone…",
+  "cityTime": "{city} Tid",
+  "unmuteNotifications": "Vis notifikationer igen",
+  "muteNotifications": "Slå notifikationer fra"
 }
