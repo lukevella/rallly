@@ -97,6 +97,12 @@ export const authLib = betterAuth({
   emailAndPassword: {
     enabled: env.EMAIL_LOGIN_ENABLED !== "false",
     requireEmailVerification: true,
+    onExistingUserSignUp: async ({ user }, request) => {
+      await authLib.api.sendVerificationOTP({
+        body: { email: user.email, type: "email-verification" },
+        request,
+      });
+    },
     sendResetPassword: async ({ user, url }) => {
       const locale =
         "locale" in user ? (user.locale as string) : await getLocale();

@@ -40,7 +40,9 @@ test.describe.serial(() => {
   });
 
   test.describe("Existing User", () => {
-    test("can't register with the same email", async ({ page }) => {
+    test("sends OTP to existing user when registering with existing email", async ({
+      page,
+    }) => {
       await page.goto("/register");
 
       await page.getByText("Create Your Account").waitFor();
@@ -53,9 +55,15 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue", exact: true }).click();
 
-      await expect(
-        page.getByText("A user with that email already exists"),
-      ).toBeVisible();
+      // Should show the verification code prompt (not an error) to prevent email enumeration
+      await page.getByRole("heading", { name: "Finish Logging In" }).waitFor();
+
+      // The existing user should have received a sign-in OTP
+      const code = await getCode(testUserEmail);
+      await page.getByPlaceholder("Enter your 6-digit code").fill(code);
+
+      // Existing user should be signed in
+      await expect(page.getByText("Test User")).toBeVisible();
     });
 
     test("can login with password", async ({ page }) => {
