@@ -9,7 +9,11 @@ import { getInstanceBrandingConfig } from "@/features/branding/queries";
 
 const logger = createLogger("emails");
 
-export const getEmailClient = async (locale?: string) => {
+export const getEmailClient = async (options?: {
+  locale?: string;
+  primaryColor?: string;
+  logoUrl?: string;
+}) => {
   const brandingConfig = await getInstanceBrandingConfig();
 
   return new EmailClient({
@@ -23,15 +27,15 @@ export const getEmailClient = async (locale?: string) => {
       },
     },
     config: {
-      logoUrl: brandingConfig.logoIcon,
+      logoUrl: options?.logoUrl ?? brandingConfig.logoIcon,
       baseUrl: absoluteUrl(),
       domain: absoluteUrl().replace(/(^\w+:|^)\/\//, ""),
       supportEmail: env.SUPPORT_EMAIL,
-      primaryColor: brandingConfig.primaryColor.light,
+      primaryColor: options?.primaryColor ?? brandingConfig.primaryColor.light,
       appName: brandingConfig.appName,
       hideAttribution: brandingConfig.hideAttribution,
     },
-    locale,
+    locale: options?.locale,
     onError: (e) => {
       logger.error({ error: e }, "Email client error");
       Sentry.captureException(e);

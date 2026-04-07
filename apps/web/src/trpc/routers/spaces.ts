@@ -447,9 +447,9 @@ export const spaces = router({
         },
       });
 
-      const emailClient = await getEmailClient(
-        existingUser?.locale ?? ctx.user.locale,
-      );
+      const emailClient = await getEmailClient({
+        locale: existingUser?.locale ?? ctx.user.locale,
+      });
 
       try {
         await emailClient.sendTemplate("SpaceInviteEmail", {

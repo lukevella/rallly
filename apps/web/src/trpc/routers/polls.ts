@@ -211,9 +211,9 @@ export const polls = router({
         });
 
         if (user) {
-          const emailClient = await getEmailClient(
-            ctx.user.locale ?? undefined,
-          );
+          const emailClient = await getEmailClient({
+            locale: ctx.user.locale ?? undefined,
+          });
           after(() =>
             emailClient.sendTemplate("NewPollEmail", {
               to: user.email,
@@ -917,7 +917,9 @@ export const polls = router({
 
         const hostEmail = poll.user.email;
         const hostName = poll.user.name;
-        const emailClient = await getEmailClient(poll.user.locale ?? undefined);
+        const emailClient = await getEmailClient({
+          locale: poll.user.locale ?? undefined,
+        });
         after(() =>
           emailClient.sendTemplate("FinalizeHostEmail", {
             to: hostEmail,
@@ -954,7 +956,9 @@ export const polls = router({
             timeZone: scheduledEvent.timeZone,
             inviteeTimeZone: p.timeZone,
           });
-          const emailClient = await getEmailClient(p.locale ?? undefined);
+          const emailClient = await getEmailClient({
+            locale: p.locale ?? undefined,
+          });
           after(() =>
             emailClient.sendTemplate("FinalizeParticipantEmail", {
               to: p.email,

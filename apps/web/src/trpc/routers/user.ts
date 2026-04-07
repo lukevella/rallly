@@ -115,7 +115,9 @@ export const user = router({
         },
       );
 
-      const emailClient = await getEmailClient(currentUser.locale ?? undefined);
+      const emailClient = await getEmailClient({
+        locale: currentUser.locale ?? undefined,
+      });
 
       emailClient.sendTemplate("ChangeEmailRequest", {
         to: input.email,

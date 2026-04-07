@@ -137,9 +137,9 @@ export const comments = router({
         });
 
         if (recipient) {
-          const emailClient = await getEmailClient(
-            recipient.locale ?? undefined,
-          );
+          const emailClient = await getEmailClient({
+            locale: recipient.locale ?? undefined,
+          });
           after(() =>
             emailClient.sendTemplate("NewCommentEmail", {
               to: recipient.email,

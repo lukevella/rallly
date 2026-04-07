@@ -54,7 +54,7 @@ export const Button = (
       className={props.className}
       style={{
         backgroundColor: props.color ?? "#4F46E5",
-        borderRadius: "4px",
+        borderRadius: "6px",
         padding: "14px",
         fontFamily,
         boxSizing: "border-box",
@@ -148,7 +148,7 @@ export const Card = (props: SectionProps) => {
     <Section
       {...props}
       style={{
-        borderRadius: "4px",
+        borderRadius: "6px",
         backgroundColor: "#F9FAFB",
         paddingRight: "16px",
         paddingLeft: "16px",

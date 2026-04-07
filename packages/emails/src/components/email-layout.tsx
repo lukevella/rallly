@@ -46,6 +46,7 @@ export const EmailLayout = ({
             height="42"
             style={{
               marginBottom: 32,
+              borderRadius: 6,
             }}
             alt={ctx.appName}
           />

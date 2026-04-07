@@ -81,7 +81,9 @@ async function sendNewResponseNotificationEmail({
       return;
     }
 
-    const emailClient = await getEmailClient(recipient.locale ?? undefined);
+    const emailClient = await getEmailClient({
+      locale: recipient.locale ?? undefined,
+    });
     await emailClient.sendTemplate("NewParticipantEmail", {
       to: recipient.email,
       props: {
@@ -286,6 +288,13 @@ export const participants = router({
               select: {
                 id: true,
                 title: true,
+                space: {
+                  select: {
+                    showBranding: true,
+                    primaryColor: true,
+                    image: true,
+                  },
+                },
               },
             },
           },
@@ -296,9 +305,18 @@ export const participants = router({
         if (email) {
           const token = await createParticipantEditToken(ctx.user.id);
 
-          const emailClient = await getEmailClient(
-            ctx.user.locale ?? undefined,
-          );
+          const space = participant.poll.space;
+          const emailClient = await getEmailClient({
+            locale: ctx.user.locale ?? undefined,
+            ...(space?.showBranding
+              ? {
+                  primaryColor: space.primaryColor ?? undefined,
+                  logoUrl: space.image
+                    ? absoluteUrl(`/api/storage/${space.image}`)
+                    : undefined,
+                }
+              : {}),
+          });
 
           after(() =>
             emailClient.sendTemplate("NewParticipantConfirmationEmail", {
