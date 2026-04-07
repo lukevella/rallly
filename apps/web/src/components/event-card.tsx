@@ -14,9 +14,15 @@ import { usePoll } from "@/contexts/poll";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 
-function IconDescriptionList({ children }: { children: React.ReactNode }) {
+function IconDescriptionList({
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDListElement>) {
   return (
-    <dl className="flex flex-col gap-x-2 gap-y-1 whitespace-nowrap text-muted-foreground text-xs">
+    <dl
+      className="flex flex-col gap-x-2 gap-y-1 text-muted-foreground text-xs"
+      {...props}
+    >
       {children}
     </dl>
   );
@@ -77,22 +83,22 @@ export function EventCard() {
             ) : null}
           </EventMetaList>
         </div>
-        <div className="w-1/3">
+        <div className="w-full md:w-1/3">
           <h2 className="mb-2 font-medium text-sm">
             <Trans i18nKey="responseOptions" defaults="Response Options" />
           </h2>
           <IconDescriptionList aria-label="Response Options">
             <IconDescription
               icon={<VoteIcon type="yes" />}
-              label={<Trans i18nKey="yes" />}
+              label={<Trans i18nKey="yes" defaults="Yes" />}
             />
             <IconDescription
               icon={<VoteIcon type="ifNeedBe" />}
-              label={<Trans i18nKey="ifNeedBe" />}
+              label={<Trans i18nKey="ifNeedBe" defaults="If need be" />}
             />
             <IconDescription
               icon={<VoteIcon type="no" />}
-              label={<Trans i18nKey="no" />}
+              label={<Trans i18nKey="no" defaults="No" />}
             />
           </IconDescriptionList>
         </div>
