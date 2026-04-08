@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslation } from "@/i18n/server";
 import { GeneralSettingsPageClient } from "./page-client";
 
-export default function GeneralSettingsPage() {
+export default async function GeneralSettingsPage() {
   return <GeneralSettingsPageClient />;
 }
 

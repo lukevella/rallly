@@ -57,7 +57,14 @@ export function InvitePage() {
       <PollViewTracker pollId={poll.id} />
       <div className="mx-auto w-full max-w-4xl space-y-3">
         <GoToApp />
-        <EventCard />
+        <EventCard
+          name={poll.space?.name ?? ""}
+          logoUrl={
+            poll.space?.showBranding
+              ? (poll.space?.image ?? undefined)
+              : undefined
+          }
+        />
         <VotingForm>
           <ResponsiveResults />
         </VotingForm>

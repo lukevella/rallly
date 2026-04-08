@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
-import { ColorPicker } from "@rallly/ui/color-picker";
 import {
   Field,
   FieldError,
@@ -19,7 +18,6 @@ import {
   ImageUploadControl,
   ImageUploadPreview,
 } from "@/components/image-upload";
-import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import type { SpaceDTO } from "@/features/space/types";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -30,8 +28,6 @@ const spaceSettingsSchema = z.object({
     .string()
     .min(1, "Space name is required")
     .max(100, "Space name must be less than 100 characters"),
-  primaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Invalid hex color"),
-  showBranding: z.boolean(),
 });
 
 interface SpaceSettingsFormProps {
@@ -54,8 +50,6 @@ export function SpaceSettingsForm({
     resolver: zodResolver(spaceSettingsSchema),
     defaultValues: {
       name: space.name,
-      primaryColor: space.primaryColor ?? DEFAULT_PRIMARY_COLOR,
-      showBranding: space.showBranding,
     },
   });
 
@@ -89,77 +83,63 @@ export function SpaceSettingsForm({
 
         form.reset(data);
       })}
-      className="space-y-6"
     >
-      <FieldSet>
-        <FieldGroup>
-          <Field>
-            <FieldLabel>
-              <Trans i18nKey="logo" defaults="Logo" />
-            </FieldLabel>
-            <ImageUpload>
-              <ImageUploadPreview>
-                <SpaceIcon name={space.name} src={space.image} size="xl" />
-              </ImageUploadPreview>
-              <ImageUploadControl
-                getUploadUrl={(input) => getImageUploadUrl.mutateAsync(input)}
-                onUploadSuccess={handleImageUploadSuccess}
-                onRemoveSuccess={handleImageRemoveSuccess}
-                hasCurrentImage={!!space.image}
-              />
-            </ImageUpload>
-          </Field>
-          <Controller
-            control={form.control}
-            name="name"
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel>
-                  <Trans i18nKey="name" defaults="Name" />
-                </FieldLabel>
-                <Input
-                  {...field}
-                  disabled={disabled}
-                  className="w-48"
-                  placeholder={t("spaceNamePlaceholder", {
-                    defaultValue: "My Team",
-                  })}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
+      <FieldGroup>
+        <FieldSet>
+          <FieldGroup>
+            <Field>
+              <FieldLabel>
+                <Trans i18nKey="logo" defaults="Logo" />
+              </FieldLabel>
+              <ImageUpload>
+                <ImageUploadPreview>
+                  <SpaceIcon name={space.name} src={space.image} size="xl" />
+                </ImageUploadPreview>
+                <ImageUploadControl
+                  getUploadUrl={(input) => getImageUploadUrl.mutateAsync(input)}
+                  onUploadSuccess={handleImageUploadSuccess}
+                  onRemoveSuccess={handleImageRemoveSuccess}
+                  hasCurrentImage={!!space.image}
                 />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            control={form.control}
-            name="primaryColor"
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel>
-                  <Trans i18nKey="primaryColor" defaults="Primary Color" />
-                </FieldLabel>
-                <ColorPicker value={field.value} onChange={field.onChange} />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-        </FieldGroup>
-      </FieldSet>
-      <Field orientation="horizontal">
-        <Button
-          type="submit"
-          disabled={
-            disabled || updateSpace.isPending || !form.formState.isDirty
-          }
-        >
-          <Trans i18nKey="save" defaults="Save" />
-        </Button>
-      </Field>
+              </ImageUpload>
+            </Field>
+            <Controller
+              control={form.control}
+              name="name"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel>
+                    <Trans i18nKey="name" defaults="Name" />
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    disabled={disabled}
+                    className="w-48"
+                    placeholder={t("spaceNamePlaceholder", {
+                      defaultValue: "My Team",
+                    })}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </FieldSet>
+        <Field orientation="horizontal">
+          <Button
+            type="submit"
+            disabled={
+              disabled || updateSpace.isPending || !form.formState.isDirty
+            }
+          >
+            <Trans i18nKey="save" defaults="Save" />
+          </Button>
+        </Field>
+      </FieldGroup>
     </form>
   );
 }

@@ -16,14 +16,14 @@ export function SpaceBrandingForm({ space }: { space: SpaceDTO }) {
   const hexColor = color.toString("hex");
   const isDirty = hexColor !== currentColor;
 
-  const updatePrimaryColor = trpc.spaces.updatePrimaryColor.useMutation();
+  const updateSpace = trpc.spaces.update.useMutation();
   const utils = trpc.useUtils();
 
   const handleSave = async () => {
     const value = hexColor === DEFAULT_PRIMARY_COLOR ? null : hexColor;
     toast.promise(
-      updatePrimaryColor
-        .mutateAsync({ primaryColor: value })
+      updateSpace
+        .mutateAsync({ name: space.name, primaryColor: value })
         .then(() => utils.spaces.getCurrent.invalidate()),
       {
         loading: t("savingBranding", { defaultValue: "Saving..." }),
@@ -46,7 +46,7 @@ export function SpaceBrandingForm({ space }: { space: SpaceDTO }) {
         <Button
           onClick={handleSave}
           disabled={!space.showBranding || !isDirty}
-          loading={updatePrimaryColor.isPending}
+          loading={updateSpace.isPending}
         >
           <Trans i18nKey="save" defaults="Save" />
         </Button>

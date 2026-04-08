@@ -7,6 +7,7 @@ import { PollViewTracker } from "@/components/poll/poll-view-tracker";
 import { ResponsiveResults } from "@/components/poll/responsive-results";
 import { VotingForm } from "@/components/poll/voting-form";
 import { usePoll } from "@/contexts/poll";
+import { CustomBrandingAlert } from "./custom-branding-alert";
 import { GuestPollAlert } from "./guest-poll-alert";
 
 export function AdminPage() {
@@ -15,13 +16,21 @@ export function AdminPage() {
 
   return (
     <div className="space-y-3 lg:space-y-4">
-      {poll.space?.showBranding && poll.space.primaryColor ? (
+      {poll.space?.showBranding && poll.space?.primaryColor ? (
         <PollBranding primaryColor={poll.space.primaryColor} />
       ) : null}
       {/* Track poll views */}
       <PollViewTracker pollId={poll.id} />
       <GuestPollAlert />
-      <EventCard />
+      <CustomBrandingAlert />
+      <EventCard
+        name={poll.space?.name ?? ""}
+        logoUrl={
+          poll.space?.showBranding
+            ? (poll.space?.image ?? undefined)
+            : undefined
+        }
+      />
       <VotingForm>
         <ResponsiveResults />
       </VotingForm>

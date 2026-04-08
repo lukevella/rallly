@@ -1,36 +1,101 @@
 "use client";
 
-import { Field, FieldDescription, FieldLabel } from "@rallly/ui/field";
-import { SparklesIcon } from "lucide-react";
+import { Button } from "@rallly/ui/button";
+import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
+import { Field, FieldGroup, FieldLabel } from "@rallly/ui/field";
+import { toast } from "@rallly/ui/sonner";
+import React from "react";
+import {
+  PageSection,
+  PageSectionContent,
+  PageSectionDescription,
+  PageSectionHeader,
+  PageSectionTitle,
+} from "@/app/components/page-layout";
 import { ProBadge } from "@/components/pro-badge";
+import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
 import { useSpace } from "@/features/space/client";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
+import { trpc } from "@/trpc/client";
 import { CustomBrandingSwitch } from "./custom-branding-switch";
 
 export function CustomBrandingSection() {
   const { data: space } = useSpace();
+  const { t } = useTranslation();
+  const currentColor = space.primaryColor ?? DEFAULT_PRIMARY_COLOR;
+  const [color, setColor] = React.useState(() => parseColor(currentColor));
+  const hexColor = color.toString("hex");
+  const isDirty = hexColor !== currentColor;
+
+  const updateSpace = trpc.spaces.update.useMutation();
+  const utils = trpc.useUtils();
+
+  const handleSave = async () => {
+    const value = hexColor === DEFAULT_PRIMARY_COLOR ? null : hexColor;
+    toast.promise(
+      updateSpace
+        .mutateAsync({ name: space.name, primaryColor: value })
+        .then(() => utils.spaces.getCurrent.invalidate()),
+      {
+        loading: t("savingBranding", { defaultValue: "Saving..." }),
+        success: t("brandingSaved", { defaultValue: "Branding saved" }),
+        error: t("brandingSaveError", {
+          defaultValue: "Failed to save branding",
+        }),
+      },
+    );
+  };
 
   return (
-    <div className="relative space-y-2 overflow-hidden rounded-2xl border border-card-border bg-gray-50 p-4 dark:bg-gray-800">
-      <SparklesIcon className="absolute -top-4 right-30 size-20 text-gray-200/50 dark:text-gray-700/50" />
-      <div className="space-y-1">
-        <Field orientation="horizontal">
-          <FieldLabel className="relative z-10 font-medium text-base">
-            <Trans
-              i18nKey="useCustomBranding"
-              defaults="Enable Custom Branding"
-            />
-          </FieldLabel>
-          <ProBadge />
-          <CustomBrandingSwitch checked={space.showBranding} />
-        </Field>
-        <FieldDescription className="relative z-10">
+    <PageSection variant="card">
+      <PageSectionHeader>
+        <PageSectionTitle>
+          <Trans i18nKey="branding" defaults="Branding" />
+        </PageSectionTitle>
+        <PageSectionDescription>
           <Trans
             i18nKey="showBrandingDescription"
-            defaults="Use your brand identity on your public pages"
+            defaults="Show your brand identity on your public pages and emails"
           />
-        </FieldDescription>
-      </div>
-    </div>
+        </PageSectionDescription>
+      </PageSectionHeader>
+      <PageSectionContent>
+        <FieldGroup>
+          <Field orientation="horizontal">
+            <CustomBrandingSwitch checked={space.showBranding} />
+            <FieldLabel>
+              <Trans
+                i18nKey="useCustomBranding"
+                defaults="Enable Custom Branding"
+              />
+              {space.tier !== "pro" && <ProBadge />}
+            </FieldLabel>
+          </Field>
+          <div
+            className={
+              !space.showBranding ? "pointer-events-none opacity-50" : undefined
+            }
+          >
+            <FieldGroup>
+              <Field>
+                <FieldLabel>
+                  <Trans i18nKey="primaryColor" defaults="Primary Color" />
+                </FieldLabel>
+                <ColorPicker value={color} onChange={setColor} />
+              </Field>
+              <Field orientation="horizontal">
+                <Button
+                  onClick={handleSave}
+                  disabled={!isDirty}
+                  loading={updateSpace.isPending}
+                >
+                  <Trans i18nKey="save" defaults="Save" />
+                </Button>
+              </Field>
+            </FieldGroup>
+          </div>
+        </FieldGroup>
+      </PageSectionContent>
+    </PageSection>
   );
 }

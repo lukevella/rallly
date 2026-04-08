@@ -21,6 +21,7 @@ import {
   ClockIcon,
   CopyIcon,
   LifeBuoyIcon,
+  PaletteIcon,
   SettingsIcon,
   SparklesIcon,
   TimerResetIcon,
@@ -304,6 +305,21 @@ export function PayWallDialog({
                     <Trans i18nKey="keyBenefits" defaults="Key Benefits" />
                   </SubHeading>
                   <KeyBenefits>
+                    <KeyBenefitsItem
+                      icon={<PaletteIcon />}
+                      title={
+                        <Trans
+                          i18nKey="customBranding"
+                          defaults="Custom Branding"
+                        />
+                      }
+                      description={
+                        <Trans
+                          i18nKey="customBrandingDescription"
+                          defaults="Show your logo and brand colors to your participants"
+                        />
+                      }
+                    />
                     <KeyBenefitsItem
                       icon={<CalendarCheckIcon />}
                       title={

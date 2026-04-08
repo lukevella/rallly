@@ -43,22 +43,24 @@ function IconDescription({
   );
 }
 
-export function EventCard() {
+export function EventCard({
+  name,
+  logoUrl,
+}: {
+  logoUrl?: string;
+  name: string;
+}) {
   const poll = usePoll();
   return (
     <Card>
       <RandomGradientBar />
       <CardContent className="flex flex-col gap-x-8 gap-y-4 md:flex-row">
         <div className="flex-1">
-          {poll.space?.showBranding && poll.space.image ? (
+          {logoUrl ? (
             <div className="mb-2">
-              <SpaceIcon
-                name={poll.space.name}
-                src={poll.space.image}
-                size="lg"
-              />
+              <SpaceIcon name={name} src={logoUrl} size="lg" />
               <p className="mt-2 font-medium text-muted-foreground text-sm">
-                {poll.space.name}
+                {name}
               </p>
             </div>
           ) : null}
