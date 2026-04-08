@@ -614,5 +614,11 @@
   "timezoneInputPlaceholder": "Időzóna keresése…",
   "cityTime": "{city} idő",
   "unmuteNotifications": "Értesítések némításának feloldása",
-  "muteNotifications": "Értesítések némítása"
+  "muteNotifications": "Értesítések némítása",
+  "creatingPoll": "Szavazás létrehozása...",
+  "createPollPollCreated": "Szavazás létrehozva",
+  "viewPoll": "Szavazás megtekintése",
+  "responseOptions": "Válaszlehetőségek",
+  "viewResults": "Eredmények megjelenítése",
+  "pollClosedDescription": "További kitöltéseket nem lehet beküldeni."
 }
