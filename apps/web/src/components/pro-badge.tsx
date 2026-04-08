@@ -4,7 +4,7 @@ import { PLAN_NAMES } from "@/features/billing/constants";
 
 export const ProBadge = ({ className }: { className?: string }) => {
   return (
-    <Badge variant="secondary" className={className}>
+    <Badge size="sm" variant="secondary" className={className}>
       {PLAN_NAMES.PRO}
     </Badge>
   );
