@@ -55,7 +55,7 @@ export function CustomBrandingSection({
 
   const handleToggle = (newChecked: boolean) => {
     if (isFree) {
-      posthog?.capture("branding_settings:custom_branding_paywall_shown");
+      posthog?.capture("branding_settings:paywall_trigger");
       showPayWall();
       return;
     }
