@@ -3,16 +3,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@rallly/ui/form";
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from "@rallly/ui/field";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 import {
   ImageUpload,
@@ -63,69 +62,76 @@ export function SpaceSettingsForm({
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(async (data) => {
-          toast.promise(
-            updateSpace.mutateAsync({
+    <form
+      onSubmit={form.handleSubmit(async (data) => {
+        toast.promise(
+          updateSpace
+            .mutateAsync({
               name: data.name,
+            })
+            .then(() => {
+              form.reset(data);
             }),
-            {
-              loading: t("updatingSpace", {
-                defaultValue: "Updating space...",
-              }),
-              success: t("spaceUpdatedSuccess", {
-                defaultValue: "Space updated successfully",
-              }),
-              error: t("spaceUpdatedError", {
-                defaultValue: "Failed to update space",
-              }),
-            },
-          );
-
-          form.reset(data);
-        })}
-        className="space-y-6"
-      >
-        <div>
-          <FormLabel>
-            <Trans i18nKey="image" defaults="Image" />
-          </FormLabel>
-          <ImageUpload className="mt-2">
-            <ImageUploadPreview>
-              <SpaceIcon name={space.name} src={space.image} size="xl" />
-            </ImageUploadPreview>
-            <ImageUploadControl
-              getUploadUrl={(input) => getImageUploadUrl.mutateAsync(input)}
-              onUploadSuccess={handleImageUploadSuccess}
-              onRemoveSuccess={handleImageRemoveSuccess}
-              hasCurrentImage={!!space.image}
-            />
-          </ImageUpload>
-        </div>
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                <Trans i18nKey="name" defaults="Name" />
-              </FormLabel>
-              <FormControl>
-                <Input
-                  className="w-72"
-                  placeholder={t("spaceNamePlaceholder", {
-                    defaultValue: "My Team",
-                  })}
-                  disabled={disabled}
-                  {...field}
+          {
+            loading: t("updatingSpace", {
+              defaultValue: "Updating space...",
+            }),
+            success: t("spaceUpdatedSuccess", {
+              defaultValue: "Space updated successfully",
+            }),
+            error: t("spaceUpdatedError", {
+              defaultValue: "Failed to update space",
+            }),
+          },
+        );
+      })}
+    >
+      <FieldGroup>
+        <FieldSet>
+          <FieldGroup>
+            <Field>
+              <FieldLabel>
+                <Trans i18nKey="logo" defaults="Logo" />
+              </FieldLabel>
+              <ImageUpload>
+                <ImageUploadPreview>
+                  <SpaceIcon name={space.name} src={space.image} size="xl" />
+                </ImageUploadPreview>
+                <ImageUploadControl
+                  getUploadUrl={(input) => getImageUploadUrl.mutateAsync(input)}
+                  onUploadSuccess={handleImageUploadSuccess}
+                  onRemoveSuccess={handleImageRemoveSuccess}
+                  hasCurrentImage={!!space.image}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div>
+              </ImageUpload>
+            </Field>
+            <Controller
+              control={form.control}
+              name="name"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel>
+                    <Trans i18nKey="name" defaults="Name" />
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    disabled={disabled}
+                    className="w-48"
+                    placeholder={t("spaceNamePlaceholder", {
+                      defaultValue: "My Team",
+                    })}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </FieldSet>
+        <Field orientation="horizontal">
           <Button
             type="submit"
             disabled={
@@ -134,8 +140,8 @@ export function SpaceSettingsForm({
           >
             <Trans i18nKey="save" defaults="Save" />
           </Button>
-        </div>
-      </form>
-    </Form>
+        </Field>
+      </FieldGroup>
+    </form>
   );
 }

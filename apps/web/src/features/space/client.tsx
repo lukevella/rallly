@@ -59,9 +59,10 @@ export function SpaceProvider({ children }: { children: React.ReactNode }) {
     return <RouterLoadingIndicator />;
   }
 
-  const primaryColorVars = space.primaryColor
-    ? getPrimaryColorVars(space.primaryColor)
-    : null;
+  const primaryColorVars =
+    space.showBranding && space.primaryColor
+      ? getPrimaryColorVars(space.primaryColor)
+      : null;
 
   return (
     <>

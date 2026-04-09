@@ -266,44 +266,14 @@ export const spaces = router({
   }),
 
   update: spaceProcedure
-    .input(z.object({ name: z.string().min(1).max(100) }))
-    .mutation(async ({ ctx, input }) => {
-      const memberAbility = defineAbilityForMember({
-        user: ctx.user,
-        space: ctx.space,
-      });
-
-      if (memberAbility.cannot("update", subject("Space", ctx.space))) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You do not have permission to update this space",
-        });
-      }
-
-      await prisma.space.update({
-        where: { id: ctx.space.id },
-        data: { name: input.name },
-      });
-
-      posthog()?.capture({
-        distinctId: ctx.user.id,
-        event: "space_update",
-        properties: {
-          space_name: input.name,
-        },
-        groups: {
-          space: ctx.space.id,
-        },
-      });
-    }),
-
-  updatePrimaryColor: spaceProcedure
     .input(
       z.object({
+        name: z.string().min(1).max(100),
         primaryColor: z
           .string()
           .regex(/^#[0-9a-fA-F]{6}$/, "Invalid hex color")
-          .nullable(),
+          .nullable()
+          .optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -321,7 +291,23 @@ export const spaces = router({
 
       await prisma.space.update({
         where: { id: ctx.space.id },
-        data: { primaryColor: input.primaryColor },
+        data: {
+          name: input.name,
+          ...(input.primaryColor !== undefined && {
+            primaryColor: input.primaryColor,
+          }),
+        },
+      });
+
+      posthog()?.capture({
+        distinctId: ctx.user.id,
+        event: "space_update",
+        properties: {
+          space_name: input.name,
+        },
+        groups: {
+          space: ctx.space.id,
+        },
       });
     }),
 

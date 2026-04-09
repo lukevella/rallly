@@ -21,6 +21,7 @@ import {
 import { useSpace } from "@/features/space/client";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
+import { CustomBrandingSection } from "./components/custom-branding-section";
 import { DeleteSpaceButton } from "./components/delete-space-button";
 import { LeaveSpaceButton } from "./components/leave-space-button";
 import { SpaceSettingsForm } from "./components/space-settings-form";
@@ -64,6 +65,7 @@ export function GeneralSettingsPageClient() {
               <SpaceSettingsForm space={space} disabled={!isAdmin} />
             </PageSectionContent>
           </PageSection>
+          <CustomBrandingSection disabled={!isAdmin} />
           {!isOwner ? (
             <PageSection variant="card">
               <PageSectionHeader>
