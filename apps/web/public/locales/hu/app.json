@@ -622,9 +622,6 @@
   "pollClosedDescription": "További kitöltéseket nem lehet beküldeni.",
   "showBrandingDescription": "Jelenítsd meg az arculatod a nyilvános oldalakon és emailekben",
   "useCustomBranding": "Egyedi arculat engedélyezése",
-  "savingBranding": "Mentés...",
-  "brandingSaved": "Arculat elmentve",
-  "brandingSaveError": "Arculat mentése sikertelen",
   "customBranding": "Egyedi arculat",
   "customBrandingDescription": "Mutasd meg a logód és arculatod színeit a résztvevőidnek"
 }
