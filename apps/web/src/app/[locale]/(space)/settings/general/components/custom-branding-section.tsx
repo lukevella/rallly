@@ -64,9 +64,7 @@ export function CustomBrandingSection({
 
   const handleSave = async () => {
     const value = hexColor === DEFAULT_PRIMARY_COLOR ? null : hexColor;
-    toastProgress(
-      updateSpace.mutateAsync({ name: space.name, primaryColor: value }),
-    );
+    toastProgress(updateSpace.mutateAsync({ primaryColor: value }));
   };
 
   return (

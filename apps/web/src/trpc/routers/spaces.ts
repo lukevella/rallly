@@ -268,7 +268,7 @@ export const spaces = router({
   update: spaceProcedure
     .input(
       z.object({
-        name: z.string().min(1).max(100),
+        name: z.string().min(1).max(100).optional(),
         primaryColor: z
           .string()
           .regex(/^#[0-9a-fA-F]{6}$/, "Invalid hex color")
@@ -292,7 +292,7 @@ export const spaces = router({
       await prisma.space.update({
         where: { id: ctx.space.id },
         data: {
-          name: input.name,
+          ...(input.name !== undefined && { name: input.name }),
           ...(input.primaryColor !== undefined && {
             primaryColor: input.primaryColor,
           }),
