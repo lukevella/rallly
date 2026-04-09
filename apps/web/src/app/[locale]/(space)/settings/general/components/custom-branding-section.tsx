@@ -1,5 +1,6 @@
 "use client";
 
+import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
 import { Field, FieldGroup, FieldLabel } from "@rallly/ui/field";
@@ -29,6 +30,7 @@ export function CustomBrandingSection({
   const { isFree, showPayWall } = useBilling();
   const toastProgress = useToastProgress();
   const utils = trpc.useUtils();
+  const posthog = usePostHog();
 
   const currentColor = space.primaryColor ?? DEFAULT_PRIMARY_COLOR;
   const [color, setColor] = React.useState(() => parseColor(currentColor));
@@ -53,6 +55,7 @@ export function CustomBrandingSection({
 
   const handleToggle = (newChecked: boolean) => {
     if (isFree) {
+      posthog?.capture("branding_settings:custom_branding_paywall_shown");
       showPayWall();
       return;
     }

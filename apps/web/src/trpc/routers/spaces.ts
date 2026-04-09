@@ -337,6 +337,14 @@ export const spaces = router({
         where: { id: ctx.space.id },
         data: { showBranding: input.showBranding },
       });
+
+      posthog()?.groupIdentify({
+        groupType: "space",
+        groupKey: ctx.space.id,
+        properties: {
+          custom_branding_enabled: input.showBranding,
+        },
+      });
     }),
 
   inviteMember: spaceProcedure
