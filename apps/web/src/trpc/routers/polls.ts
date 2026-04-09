@@ -15,6 +15,7 @@ import { getActiveSpaceForUser } from "@/features/space/data";
 import { dayjs } from "@/lib/dayjs";
 import { getEmailClient } from "@/utils/emails";
 import { createIcsEvent } from "@/utils/ics";
+import { resolveStorageUrl } from "@/utils/storage";
 import {
   createRateLimitMiddleware,
   possiblyPublicProcedure,
@@ -698,6 +699,13 @@ export const polls = router({
           location: true,
           description: true,
           spaceId: true,
+          space: {
+            select: {
+              showBranding: true,
+              primaryColor: true,
+              image: true,
+            },
+          },
           user: {
             select: {
               name: true,
@@ -917,6 +925,13 @@ export const polls = router({
 
         const hostEmail = poll.user.email;
         const hostName = poll.user.name;
+        const space = poll.space;
+        const participantBrandingOptions = space?.showBranding
+          ? {
+              primaryColor: space.primaryColor ?? undefined,
+              logoUrl: space.image ? resolveStorageUrl(space.image) : undefined,
+            }
+          : {};
         const emailClient = await getEmailClient({
           locale: poll.user.locale ?? undefined,
         });
@@ -958,6 +973,7 @@ export const polls = router({
           });
           const emailClient = await getEmailClient({
             locale: p.locale ?? undefined,
+            ...participantBrandingOptions,
           });
           after(() =>
             emailClient.sendTemplate("FinalizeParticipantEmail", {
