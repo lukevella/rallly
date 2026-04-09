@@ -365,7 +365,6 @@
   "uploadImage": "Upload",
   "removeImage": "Remove",
   "imageUploadDescription": "Up to 2MB, JPG or PNG",
-  "image": "Image",
   "billingPlanTitle": "Plan",
   "billingSettings": "Billing Settings",
   "billingSettingsDescription": "View and manage your space's subscription and billing information.",
@@ -620,5 +619,12 @@
   "viewPoll": "View poll",
   "responseOptions": "Response Options",
   "viewResults": "View results",
-  "pollClosedDescription": "No more responses are being accepted."
+  "pollClosedDescription": "No more responses are being accepted.",
+  "showBrandingDescription": "Show your brand identity on your public pages and emails",
+  "useCustomBranding": "Enable Custom Branding",
+  "savingBranding": "Saving...",
+  "brandingSaved": "Branding saved",
+  "brandingSaveError": "Failed to save branding",
+  "customBranding": "Custom Branding",
+  "customBrandingDescription": "Show your logo and brand colors to your participants"
 }
