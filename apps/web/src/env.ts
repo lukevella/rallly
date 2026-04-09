@@ -167,6 +167,13 @@ export const env = createEnv({
      * If not set, the Turnstile widget is not rendered.
      */
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
+    /**
+     * Public CDN base URL for serving stored assets directly (e.g. a CloudFront distribution or
+     * a public MinIO bucket URL). When set, image URLs are constructed as
+     * `${NEXT_PUBLIC_CDN_BASE_URL}/${key}` instead of routing through the `/api/storage/` proxy.
+     * If not set, assets are proxied through Next.js (current behaviour).
+     */
+    NEXT_PUBLIC_CDN_BASE_URL: z.url().optional(),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -237,6 +244,7 @@ export const env = createEnv({
     RATE_LIMIT_ENABLED: process.env.RATE_LIMIT_ENABLED,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+    NEXT_PUBLIC_CDN_BASE_URL: process.env.NEXT_PUBLIC_CDN_BASE_URL,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });

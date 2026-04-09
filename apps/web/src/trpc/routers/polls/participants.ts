@@ -9,6 +9,7 @@ import { posthog } from "@/features/analytics/posthog";
 import { getNotificationRecipient } from "@/features/notifications/queries";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { getEmailClient } from "@/utils/emails";
+import { resolveStorageUrl } from "@/utils/storage";
 import {
   createRateLimitMiddleware,
   publicProcedure,
@@ -312,7 +313,7 @@ export const participants = router({
               ? {
                   primaryColor: space.primaryColor ?? undefined,
                   logoUrl: space.image
-                    ? absoluteUrl(`/api/storage/${space.image}`)
+                    ? resolveStorageUrl(space.image)
                     : undefined,
                 }
               : {}),

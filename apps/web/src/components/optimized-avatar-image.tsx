@@ -3,8 +3,8 @@ import { cn } from "@rallly/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import { Icon } from "@rallly/ui/icon";
 import { UserIcon } from "lucide-react";
-import Image from "next/image";
 import React from "react";
+import { resolveStorageUrl } from "@/utils/storage";
 
 async function getGravatarUrl(email: string): Promise<string | null> {
   if (typeof crypto === "undefined" || !crypto.subtle) {
@@ -35,7 +35,6 @@ export function OptimizedAvatarImage({
   className?: string;
   email?: string;
 }) {
-  const [isLoaded, setLoaded] = React.useState(false);
   const [gravatarUrl, setGravatarUrl] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -62,32 +61,17 @@ export function OptimizedAvatarImage({
   return (
     <Avatar className={cn("rounded-full", className)} size={size}>
       {imageSrc ? (
-        imageSrc.startsWith("https") || imageSrc.startsWith("data:") ? (
-          <AvatarImage src={imageSrc} alt={name} />
+        <AvatarImage src={resolveStorageUrl(imageSrc)} alt={name} />
+      ) : null}
+      <AvatarFallback seed={name} className={cn("shrink-0")}>
+        {/^\p{L}+$/u.test(initials) ? (
+          initials
         ) : (
-          <Image
-            src={`/api/storage/${imageSrc}`}
-            width={128}
-            height={128}
-            alt={name}
-            style={{ objectFit: "cover" }}
-            onLoad={() => {
-              setLoaded(true);
-            }}
-          />
-        )
-      ) : null}
-      {!imageSrc || !isLoaded ? (
-        <AvatarFallback seed={name} className={cn("shrink-0")}>
-          {/^\p{L}+$/u.test(initials) ? (
-            initials
-          ) : (
-            <Icon>
-              <UserIcon />
-            </Icon>
-          )}
-        </AvatarFallback>
-      ) : null}
+          <Icon>
+            <UserIcon />
+          </Icon>
+        )}
+      </AvatarFallback>
     </Avatar>
   );
 }
