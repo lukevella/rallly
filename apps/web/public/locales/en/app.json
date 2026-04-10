@@ -623,5 +623,10 @@
   "showBrandingDescription": "Show your brand identity on your public pages and emails",
   "useCustomBranding": "Enable Custom Branding",
   "customBranding": "Custom Branding",
-  "customBrandingDescription": "Show your logo and brand colors to your participants"
+  "customBrandingDescription": "Show your logo and brand colors to your participants",
+  "customBrandingPromptTitle": "Custom Branding",
+  "customBrandingPromptDescription": "You're on the Pro plan. Add your brand colors to polls and emails.",
+  "customBrandingPromptCta": "Set Up Now",
+  "dismiss": "Dismiss",
+  "new": "New"
 }
