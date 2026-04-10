@@ -365,7 +365,6 @@
   "uploadImage": "Feltöltés",
   "removeImage": "Eltávolítás",
   "imageUploadDescription": "Max. 2 MB, JPG vagy PNG",
-  "image": "Kép",
   "billingPlanTitle": "Csomag",
   "billingSettings": "Számlázási beállítások",
   "billingSettingsDescription": "Megtekintheted és kezelheted a munkaterületed előfizetését és számlázási információit.",
@@ -620,5 +619,9 @@
   "viewPoll": "Szavazás megtekintése",
   "responseOptions": "Válaszlehetőségek",
   "viewResults": "Eredmények megjelenítése",
-  "pollClosedDescription": "További kitöltéseket nem lehet beküldeni."
+  "pollClosedDescription": "További kitöltéseket nem lehet beküldeni.",
+  "showBrandingDescription": "Jelenítsd meg az arculatod a nyilvános oldalakon és emailekben",
+  "useCustomBranding": "Egyedi arculat engedélyezése",
+  "customBranding": "Egyedi arculat",
+  "customBrandingDescription": "Mutasd meg a logód és arculatod színeit a résztvevőidnek"
 }
