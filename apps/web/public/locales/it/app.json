@@ -613,5 +613,20 @@
   "timezoneInputPlaceholder": "Cerca fuso orario…",
   "cityTime": "Orario {city}",
   "unmuteNotifications": "Riattiva le notifiche",
-  "muteNotifications": "Silenzia notifiche"
+  "muteNotifications": "Silenzia notifiche",
+  "creatingPoll": "Creazione del sondaggio...",
+  "createPollPollCreated": "Sondaggio creato",
+  "viewPoll": "Visualizza sondaggio",
+  "responseOptions": "Opzioni di risposta",
+  "viewResults": "Visualizza risultati",
+  "pollClosedDescription": "Non vengono accettate ulteriori risposte.",
+  "showBrandingDescription": "Mostra l'identità del tuo marchio sulle tue pagine pubbliche e nelle tue email",
+  "useCustomBranding": "Abilita marchio personalizzato",
+  "customBranding": "Marchio personalizzato",
+  "customBrandingDescription": "Mostra il tuo logo e i colori del tuo marchio ai tuoi partecipanti",
+  "customBrandingPromptTitle": "Marchio personalizzato",
+  "customBrandingPromptDescription": "Sei nel piano Pro. Aggiungi i colori del tuo marchio ai sondaggi e alle email.",
+  "customBrandingPromptCta": "Imposta Ora",
+  "dismiss": "Scarta",
+  "new": "Nuovo"
 }
