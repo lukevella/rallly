@@ -619,5 +619,8 @@
   "viewPoll": "Umfrage ansehen",
   "responseOptions": "Antwortoptionen",
   "viewResults": "Ergebnisse ansehen",
-  "pollClosedDescription": "Es werden keine Antworten mehr akzeptiert."
+  "pollClosedDescription": "Es werden keine Antworten mehr akzeptiert.",
+  "showBrandingDescription": "Dein Marken-Branding auf öffentlichen Seiten und in E-Mails anzeigen",
+  "useCustomBranding": "Eigenes Branding aktivieren",
+  "customBranding": "Eigenes Branding"
 }
