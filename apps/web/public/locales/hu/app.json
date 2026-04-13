@@ -625,7 +625,6 @@
   "customBranding": "Egyedi arculat",
   "customBrandingDescription": "Mutasd meg a logód és arculatod színeit a résztvevőidnek",
   "customBrandingPromptTitle": "Egyedi arculat",
-  "customBrandingPromptDescription": "Pro csomagban vagy. Add meg az arculatod színeit a szavazásokhoz és emailekhez.",
   "customBrandingPromptCta": "Állítsd be most",
   "dismiss": "Elvetés",
   "new": "Új"
