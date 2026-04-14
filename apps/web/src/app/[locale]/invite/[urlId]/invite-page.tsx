@@ -6,7 +6,6 @@ import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import { PollBranding } from "@/components/poll/poll-branding";
 import { PollFooter } from "@/components/poll/poll-footer";
-import { PollViewTracker } from "@/components/poll/poll-view-tracker";
 import { ResponsiveResults } from "@/components/poll/responsive-results";
 import { VotingForm } from "@/components/poll/voting-form";
 import { useUser } from "@/components/user-provider";
@@ -54,7 +53,6 @@ export function InvitePage() {
       {poll.space?.showBranding && poll.space.primaryColor ? (
         <PollBranding primaryColor={poll.space.primaryColor} />
       ) : null}
-      <PollViewTracker pollId={poll.id} />
       <div className="mx-auto w-full max-w-4xl space-y-3">
         <GoToApp />
         <EventCard />

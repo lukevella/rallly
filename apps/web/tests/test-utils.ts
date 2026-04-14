@@ -69,16 +69,16 @@ export async function createTestPoll({
   userId,
   spaceId,
   updatedAt,
-  hasRecentViews = false,
   hasFutureOptions = false,
+  hasRecentPastOptions = false,
 }: {
   id: string;
   title: string;
   userId?: string;
   spaceId?: string;
-  updatedAt: Date;
-  hasRecentViews?: boolean;
+  updatedAt?: Date;
   hasFutureOptions?: boolean;
+  hasRecentPastOptions?: boolean;
 }) {
   const pollData = {
     id,
@@ -88,17 +88,18 @@ export async function createTestPoll({
     userId,
     spaceId,
     updatedAt,
-    ...(hasRecentViews && {
-      views: {
-        create: {
-          viewedAt: dayjs().subtract(15, "day").toDate(),
-        },
-      },
-    }),
     ...(hasFutureOptions && {
       options: {
         create: {
           startTime: dayjs().add(10, "day").toDate(),
+          duration: 60,
+        },
+      },
+    }),
+    ...(hasRecentPastOptions && {
+      options: {
+        create: {
+          startTime: dayjs().subtract(15, "day").toDate(),
           duration: 60,
         },
       },

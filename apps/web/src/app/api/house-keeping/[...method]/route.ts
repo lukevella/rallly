@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import dayjs from "dayjs";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
@@ -21,23 +22,19 @@ app.use("*", async (c, next) => {
 });
 
 /**
- * Marks inactive polls as deleted. Polls are inactive if they have not been
- * updated in the last 30 days and all dates are in the past.
- * Only marks polls as deleted if they belong to users without an active subscription
- * or if they don't have a user associated with them.
+ * Marks polls as deleted when all date options are more than 30 days in the past.
+ * Only marks polls as deleted if they don't belong to a space with an active subscription.
  */
 app.get("/delete-inactive-polls", async (c) => {
-  // Define the 30-day threshold once
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const thirtyDaysAgo = dayjs().subtract(30, "days").toDate();
 
-  // Mark inactive polls as deleted in a single query
   const { count: markedDeleted } = await prisma.poll.updateMany({
     where: {
       deleted: false,
-      // All poll dates are in the past
+      // All poll dates are more than 30 days in the past
       options: {
         none: {
-          startTime: { gt: new Date() },
+          startTime: { gte: thirtyDaysAgo },
         },
       },
       // We don't delete polls that belong to a space with an active subscription
@@ -51,13 +48,6 @@ app.get("/delete-inactive-polls", async (c) => {
           },
         },
       ],
-      // Poll is inactive (not updated AND not viewed in the last 30 days)
-      updatedAt: { lt: thirtyDaysAgo },
-      views: {
-        none: {
-          viewedAt: { gte: thirtyDaysAgo },
-        },
-      },
     },
     data: {
       deleted: true,

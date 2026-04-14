@@ -53,7 +53,7 @@ test.describe("House-keeping API", () => {
     }
   }
 
-  test("should mark inactive polls as deleted except for polls in spaces with active subscriptions", async ({
+  test("should mark polls as deleted when all dates are more than 30 days in the past, except for polls in spaces with active subscriptions", async ({
     request,
     baseURL,
   }) => {
@@ -77,19 +77,17 @@ test.describe("House-keeping API", () => {
       tier: "pro",
     });
 
-    // Create test polls - These should be marked as deleted (free space, old, no future dates)
+    // These should be marked as deleted (all dates more than 30 days in the past)
     const oldPollFromFreeUser = await createTestPoll({
       id: "old-poll-free-user",
       title: "Old Poll from Free User",
       userId: freeUser.id,
-      updatedAt: dayjs().subtract(35, "day").toDate(),
     });
     createdPollIds.push(oldPollFromFreeUser.id);
 
     const oldPollNoUser = await createTestPoll({
       id: "old-poll-no-user",
       title: "Old Poll with No User",
-      updatedAt: dayjs().subtract(35, "day").toDate(),
     });
     createdPollIds.push(oldPollNoUser.id);
 
@@ -99,35 +97,24 @@ test.describe("House-keeping API", () => {
       title: "Old Poll in Paid Space",
       userId: spaceOwner.id,
       spaceId: paidSpace.id,
-      updatedAt: dayjs().subtract(35, "day").toDate(),
     });
     createdPollIds.push(oldPollInPaidSpace.id);
 
-    const recentPollFromFreeUser = await createTestPoll({
-      id: "recent-poll-free-user",
-      title: "Recent Poll from Free User",
+    const pollWithRecentDates = await createTestPoll({
+      id: "poll-with-recent-dates",
+      title: "Poll with Recent Dates",
       userId: freeUser.id,
-      updatedAt: dayjs().subtract(15, "day").toDate(),
+      hasRecentPastOptions: true,
     });
-    createdPollIds.push(recentPollFromFreeUser.id);
+    createdPollIds.push(pollWithRecentDates.id);
 
-    const oldPollWithFutureOptions = await createTestPoll({
-      id: "old-poll-future-options",
-      title: "Old Poll with Future Options",
+    const pollWithFutureOptions = await createTestPoll({
+      id: "poll-with-future-options",
+      title: "Poll with Future Options",
       userId: freeUser.id,
-      updatedAt: dayjs().subtract(35, "day").toDate(),
       hasFutureOptions: true,
     });
-    createdPollIds.push(oldPollWithFutureOptions.id);
-
-    const oldPollWithRecentViews = await createTestPoll({
-      id: "old-poll-recent-views",
-      title: "Old Poll with Recent Views",
-      userId: freeUser.id,
-      updatedAt: dayjs().subtract(35, "day").toDate(),
-      hasRecentViews: true,
-    });
-    createdPollIds.push(oldPollWithRecentViews.id);
+    createdPollIds.push(pollWithFutureOptions.id);
 
     // Call the delete-inactive-polls endpoint
     const response = await request.get(
@@ -144,8 +131,8 @@ test.describe("House-keeping API", () => {
     expect(responseData.success).toBeTruthy();
 
     // We expect 2 polls to be marked as deleted:
-    // - Old poll from free user (not in a paid space)
-    // - Old poll without a user
+    // - Old poll from free user (no options, not in a paid space)
+    // - Old poll without a user (no options)
     expect(responseData.summary.markedDeleted).toBe(2);
 
     // Verify polls that should be marked as deleted
@@ -168,23 +155,17 @@ test.describe("House-keeping API", () => {
     expect(protectedPollInPaidSpace?.deleted).toBe(false);
     expect(protectedPollInPaidSpace?.deletedAt).toBeNull();
 
-    const protectedRecentPoll = await prisma.poll.findUnique({
-      where: { id: recentPollFromFreeUser.id },
+    const protectedPollWithRecentDates = await prisma.poll.findUnique({
+      where: { id: pollWithRecentDates.id },
     });
-    expect(protectedRecentPoll?.deleted).toBe(false);
-    expect(protectedRecentPoll?.deletedAt).toBeNull();
+    expect(protectedPollWithRecentDates?.deleted).toBe(false);
+    expect(protectedPollWithRecentDates?.deletedAt).toBeNull();
 
     const protectedPollWithFutureOptions = await prisma.poll.findUnique({
-      where: { id: oldPollWithFutureOptions.id },
+      where: { id: pollWithFutureOptions.id },
     });
     expect(protectedPollWithFutureOptions?.deleted).toBe(false);
     expect(protectedPollWithFutureOptions?.deletedAt).toBeNull();
-
-    const protectedPollWithRecentViews = await prisma.poll.findUnique({
-      where: { id: oldPollWithRecentViews.id },
-    });
-    expect(protectedPollWithRecentViews?.deleted).toBe(false);
-    expect(protectedPollWithRecentViews?.deletedAt).toBeNull();
   });
 
   test("should permanently remove polls that have been marked as deleted for more than 7 days", async ({

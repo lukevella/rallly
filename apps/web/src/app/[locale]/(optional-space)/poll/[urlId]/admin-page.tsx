@@ -3,7 +3,6 @@ import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import { PollBranding } from "@/components/poll/poll-branding";
 import { PollFooter } from "@/components/poll/poll-footer";
-import { PollViewTracker } from "@/components/poll/poll-view-tracker";
 import { ResponsiveResults } from "@/components/poll/responsive-results";
 import { VotingForm } from "@/components/poll/voting-form";
 import { usePoll } from "@/contexts/poll";
@@ -18,8 +17,6 @@ export function AdminPage() {
       {poll.space?.showBranding && poll.space.primaryColor ? (
         <PollBranding primaryColor={poll.space.primaryColor} />
       ) : null}
-      {/* Track poll views */}
-      <PollViewTracker pollId={poll.id} />
       <GuestPollAlert />
       <EventCard />
       <VotingForm>
