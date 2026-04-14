@@ -625,6 +625,7 @@
   "customBranding": "Egyedi arculat",
   "customBrandingDescription": "Mutasd meg a logód és arculatod színeit a résztvevőidnek",
   "customBrandingPromptTitle": "Egyedi arculat",
+  "customBrandingPromptDescription": "Készíts profi időpontkereső szavazásokat saját logóddal és színeiddel.",
   "customBrandingPromptCta": "Állítsd be most",
   "dismiss": "Elvetés",
   "new": "Új"
