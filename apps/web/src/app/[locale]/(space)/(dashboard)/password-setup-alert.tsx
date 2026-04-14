@@ -1,5 +1,4 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
 import { buttonVariants } from "@rallly/ui";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
@@ -20,7 +19,6 @@ function PasswordSetupAlertInner() {
   const [dismissed, setDismissed] = useLocalStorage<string>(
     "password_setup_dismissed",
   );
-  const posthog = usePostHog();
 
   return (
     <AnimatePresence initial={true}>
@@ -50,11 +48,6 @@ function PasswordSetupAlertInner() {
                 <Link
                   href="/settings/security"
                   className={buttonVariants({ variant: "primary" })}
-                  onClick={() => {
-                    posthog.capture(
-                      "space_dashboard:password_setup_button_click",
-                    );
-                  }}
                 >
                   <Trans
                     i18nKey="setupPasswordButton"
@@ -65,7 +58,6 @@ function PasswordSetupAlertInner() {
                   variant="ghost"
                   onClick={() => {
                     setDismissed("1");
-                    posthog.capture("space_dashboard:password_setup_dismissed");
                   }}
                 >
                   <Trans

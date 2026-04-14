@@ -1,6 +1,5 @@
 "use client";
 
-import { usePostHog } from "@rallly/posthog/client";
 import { useRouter } from "next/navigation";
 import {
   ImageUpload,
@@ -19,7 +18,6 @@ function ProfilePictureUpload({
   name: string;
 }) {
   const router = useRouter();
-  const posthog = usePostHog();
 
   const getAvatarUploadUrl = trpc.user.getAvatarUploadUrl.useMutation();
   const updateAvatar = trpc.user.updateAvatar.useMutation();
@@ -28,13 +26,11 @@ function ProfilePictureUpload({
   const handleUploadSuccess = async (imageKey: string) => {
     await updateAvatar.mutateAsync({ imageKey });
     router.refresh();
-    posthog?.capture("upload profile picture");
   };
 
   const handleRemoveSuccess = async () => {
     await removeAvatar.mutateAsync();
     router.refresh();
-    posthog?.capture("remove profile picture");
   };
 
   return (

@@ -1,5 +1,4 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { ChevronRightIcon } from "lucide-react";
@@ -81,7 +80,6 @@ export const MarketingHero = ({
   description: string;
   callToAction: React.ReactNode;
 }) => {
-  const posthog = usePostHog();
   return (
     <article className="max-w-full space-y-12 text-center">
       <header className="sm:p-8">
@@ -121,9 +119,6 @@ export const MarketingHero = ({
               className:
                 "transition-all hover:shadow-md active:translate-y-1 active:shadow-none",
             })}
-            onClick={() => {
-              posthog.capture("landing:hero_button_click");
-            }}
           >
             {callToAction}
           </Link>

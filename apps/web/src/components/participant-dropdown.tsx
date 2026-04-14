@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -194,17 +193,8 @@ const ChangeNameModal = (props: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) => {
-  const posthog = usePostHog();
   const token = useEditToken();
-  const changeName = trpc.polls.participants.rename.useMutation({
-    onSuccess: (_, { participantId, newName }) => {
-      posthog?.capture("changed name", {
-        participantId,
-        oldName: props.oldName,
-        newName,
-      });
-    },
-  });
+  const changeName = trpc.polls.participants.rename.useMutation();
   const form = useForm({
     defaultValues: {
       name: props.oldName,

@@ -1,5 +1,4 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import React from "react";
 
@@ -13,7 +12,6 @@ export const UpgradeButton = ({
   annual?: boolean;
   className?: string;
 }>) => {
-  const posthog = usePostHog();
   const formRef = React.useRef<HTMLFormElement>(null);
 
   return (
@@ -39,7 +37,6 @@ export const UpgradeButton = ({
           // TODO: Fix this by making sure we never have nested forms.
           e.preventDefault();
           formRef.current?.submit();
-          posthog?.capture("click upgrade button");
         }}
       >
         {children || <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />}

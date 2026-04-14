@@ -1,4 +1,3 @@
-import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -36,17 +35,11 @@ export function TimeZoneChangeDetector({
     return timeZone;
   });
 
-  const posthog = usePostHog();
-
   React.useEffect(() => {
     if (previousTimeZone !== currentTimeZone) {
-      posthog?.capture("timezone change detected", {
-        previousTimeZone,
-        currentTimeZone,
-      });
       setOpen(true);
     }
-  }, [previousTimeZone, currentTimeZone, posthog]);
+  }, [previousTimeZone, currentTimeZone]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -74,10 +67,6 @@ export function TimeZoneChangeDetector({
               safeLocalStorage.setItem("previousTimeZone", currentTimeZone);
               onTimeZoneChange?.(currentTimeZone);
               setOpen(false);
-              posthog?.capture("timezone change accepted", {
-                previousTimeZone,
-                currentTimeZone,
-              });
             }}
           >
             <Trans
@@ -90,10 +79,6 @@ export function TimeZoneChangeDetector({
               setPreviousTimeZone(currentTimeZone);
               safeLocalStorage.setItem("previousTimeZone", currentTimeZone);
               setOpen(false);
-              posthog?.capture("timezone change rejected", {
-                previousTimeZone,
-                currentTimeZone,
-              });
             }}
           >
             <Trans

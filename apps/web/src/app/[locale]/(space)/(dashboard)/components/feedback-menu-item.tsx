@@ -1,6 +1,5 @@
 "use client";
 
-import { usePostHog } from "@rallly/posthog/client";
 import { useDialog } from "@rallly/ui/dialog";
 import { SidebarMenuButton, SidebarMenuItem } from "@rallly/ui/sidebar";
 import { MegaphoneIcon } from "lucide-react";
@@ -9,14 +8,12 @@ import { Trans } from "@/i18n/client";
 
 export function FeedbackMenuItem() {
   const dialog = useDialog();
-  const posthog = usePostHog();
   return (
     <>
       <SidebarMenuItem>
         <SidebarMenuButton
           {...dialog.triggerProps}
           onClick={() => {
-            posthog?.capture("space_sidebar:feedback_menu_item_click");
             dialog.trigger();
           }}
         >
