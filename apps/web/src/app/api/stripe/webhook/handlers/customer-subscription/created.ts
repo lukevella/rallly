@@ -1,7 +1,10 @@
 import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
+import { after } from "next/server";
+import { env } from "@/env";
 import { posthog } from "@/features/analytics/posthog";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
+import { getEmailClient } from "@/utils/emails";
 import {
   getExpandedSubscription,
   getSubscriptionDetails,
@@ -112,4 +115,32 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
       space: spaceId,
     },
   });
+
+  if (isActive) {
+    after(async () => {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { email: true, name: true },
+      });
+
+      if (user) {
+        const emailClient = await getEmailClient();
+        await emailClient.sendEmail({
+          to: user.email,
+          from: {
+            name: "Luke from Rallly",
+            address: env.SUPPORT_EMAIL,
+          },
+          subject: "Thanks for subscribing to Rallly Pro",
+          text: [
+            "Hey there,",
+            "Thanks so much for subscribing to Rallly Pro! I really appreciate your support.",
+            "I'd love to learn more about how you're using Rallly. What kind of events are you scheduling? Are there any features you wish Rallly had?",
+            "Just hit reply and let me know. I read every response and it helps shape what we build next.",
+            "Luke\nFounder, Rallly",
+          ].join("\n\n"),
+        });
+      }
+    });
+  }
 }
