@@ -1,5 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
+import { PollBrandingFromContext } from "@/components/poll/poll-branding";
 
 const InvitePage = dynamic(
   () => import("./invite-page").then((mod) => mod.InvitePage),
@@ -7,5 +8,10 @@ const InvitePage = dynamic(
 );
 
 export function InvitePageLoader() {
-  return <InvitePage />;
+  return (
+    <>
+      <PollBrandingFromContext />
+      <InvitePage />
+    </>
+  );
 }
