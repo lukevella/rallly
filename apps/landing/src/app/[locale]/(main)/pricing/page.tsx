@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { getTranslation } from "@/i18n/server";
+import { getProPricingCached } from "@/lib/data";
 import { linkToApp } from "@/lib/linkToApp";
 
 import { PriceTables } from "./pricing-table";
@@ -126,7 +127,10 @@ export default async function Page(props: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await props.params;
-  const { t } = await getTranslation(locale, "pricing");
+  const [{ t }, pricing] = await Promise.all([
+    getTranslation(locale, "pricing"),
+    getProPricingCached(),
+  ]);
   return (
     <article className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-2 sm:p-6 sm:text-center">
@@ -148,7 +152,7 @@ export default async function Page(props: {
         </p>
       </header>
       <section>
-        <PriceTables />
+        <PriceTables pricing={pricing} />
       </section>
       <section>
         <div className="relative flex flex-col gap-4 overflow-hidden rounded-xl bg-blue-400/10 p-4 pr-36 text-blue-800 ring ring-black/5 ring-inset sm:flex-row sm:gap-6">

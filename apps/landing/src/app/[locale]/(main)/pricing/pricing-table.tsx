@@ -1,6 +1,7 @@
 "use client";
 
-import { PLAN_NAMES, pricingData } from "@rallly/billing";
+import type { PricingData } from "@rallly/billing";
+import { PLAN_NAMES } from "@rallly/billing";
 import { buttonVariants } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import {
@@ -21,7 +22,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { useTranslation } from "@/i18n/client/use-translation";
 import { linkToApp } from "@/lib/linkToApp";
 
-export function PriceTables() {
+export function PriceTables({ pricing }: { pricing: PricingData }) {
   const { t } = useTranslation("pricing");
   const [tab, setTab] = React.useState("yearly");
   return (
@@ -116,7 +117,7 @@ export function PriceTables() {
           <TabsContent value="yearly">
             <div className="flex items-center gap-x-2">
               <BillingPlanPrice>
-                ${pricingData.yearly.amount / 100}
+                ${pricing.yearly.amount / 100}
               </BillingPlanPrice>
               <Badge variant="green" className="inline-flex gap-2">
                 <Trans
@@ -140,9 +141,7 @@ export function PriceTables() {
             </BillingPlanPeriod>
           </TabsContent>
           <TabsContent value="monthly">
-            <BillingPlanPrice>
-              ${pricingData.monthly.amount / 100}
-            </BillingPlanPrice>
+            <BillingPlanPrice>${pricing.monthly.amount / 100}</BillingPlanPrice>
             <BillingPlanPeriod>
               <Trans
                 t={t}
