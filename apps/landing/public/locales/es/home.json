@@ -8,7 +8,7 @@
   "goodfirmsQuote": "Único en su simplicidad y requiere un mínimo de tiempo de interacción",
   "popsciQuote": "La elección perfecta si quieres mantener tus confirmaciones de asistencia simples",
   "ericQuote": "Si tu flujo de programación de horarios vive en correos electrónicos, te recomiendo ampliamente que pruebes Rallly y permitas que te ayude a simplificar tus tareas de programación para tener un día de trabajo más organizado y menos estresante",
-  "viaTrustpilot": "mediante Trustpilot",
+  "viaTrustpilot": "con Trustpilot",
   "ericJobTitle": "Asistente Ejecutivo en el MIT",
   "statsUsersRegistered": "{count, number, ::compact-short}+ usuarios registrados",
   "statsPollsCreated": "{count, number, ::compact-short}+ encuestas creadas",
@@ -17,7 +17,7 @@
   "doodleAlternative": "La mejor alternativa gratuita a Doodle",
   "doodleAlternativeDescription": "Rallly es la alternativa a Doodle que todo el mundo está buscando. Miles de usuarios ya han hecho el cambio y ahora disfrutan de encuestas profesionales sin anuncios en una interfaz intuitiva y fácil de usar.        ",
   "createAPoll": "Crear una encuesta de reunión",
-  "doodleAlternativeMetaTitle": "Mejor alternativa de doodle alternativo | Rallly",
+  "doodleAlternativeMetaTitle": "Mejor alternativa a Doodle | Rallly",
   "doodleAlternativeMetaDescription": "¿Buscas una alternativa a Doodle? ¡Prueba Rallly! Es gratis, fácil de usar y no requiere una cuenta.",
   "createASchedulingPoll": "Crear una encuesta de reunión",
   "freeSchedulingPollMetaTitle": "Crea una encuesta de programación gratis al instante | No se necesita una cuenta",
@@ -30,5 +30,6 @@
   "when2meetAlternativeMetaTitle": "Mejor alternativa a When2Meet: Rallly",
   "when2meetAlternativeMetaDescription": "Encuentra una mejor manera de programar reuniones con Rallly, la mejor alternativa gratuita a When2Meet. Fácil de usar y gratis.",
   "when2meetAlternative": "¿Aún estás usando When2Meet?",
-  "when2meetAlternativeDescription": "Crea encuestas profesionales y sin anuncios con Rallly."
+  "when2meetAlternativeDescription": "Crea encuestas profesionales y sin anuncios con Rallly.",
+  "customBrandingBlog": "Introducción de la marca personalizada"
 }
