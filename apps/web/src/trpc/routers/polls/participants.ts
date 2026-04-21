@@ -262,7 +262,7 @@ export const participants = router({
             email,
             timeZone,
             userId: ctx.user.id,
-            locale: ctx.user.locale ?? undefined,
+            locale: ctx.locale,
             votes: {
               createMany: {
                 data: validVotes.map(({ optionId, type }) => ({
