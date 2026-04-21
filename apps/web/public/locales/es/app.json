@@ -513,5 +513,10 @@
   "emailChangeInvalidUserId": "Por favor, inicia sesión con la misma dirección de correo electrónico que utilizaste para solicitar el cambio.",
   "ssoAuthenticationOnly": "La autenticación se gestiona a través de la autenticación única (SSO). La gestión de contraseñas no está disponible.",
   "oidcAutoSignInDescription": "Se te está redirigiendo a la página de inicio de sesión...",
-  "loginVerifyCheckEmail": "Si existe una cuenta con este correo electrónico, recibirás un código de verificación en <b>{email}</b>"
+  "loginVerifyCheckEmail": "Si existe una cuenta con este correo electrónico, recibirás un código de verificación en <b>{email}</b>",
+  "branding": "Marca personal",
+  "neverUsed": "Nunca usado",
+  "createApiKey": "Crear API key",
+  "apiKeySecurityWarning": "Guarda esta clave de forma segura. No se volverá a mostrar.",
+  "createApiKeyDescription": "Crea una nueva clave API para el acceso programático a tu espacio"
 }
