@@ -34,17 +34,28 @@ services:
       SRH_MODE: env
       SRH_TOKEN: dev_fake_token_123456789abcdefghijklmnop
       SRH_CONNECTION_STRING: "redis://redis:6379"
-  minio:
-    image: minio/minio
-    command: server /data --console-address ":9001"
+  garage:
+    image: dxflrs/garage:v2.3.0
+    restart: always
     ports:
-      - "9000:9000"
-      - "9001:9001"
-    environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: minio123
+      - "3900:3900"
+      - "3903:3903"
     volumes:
-      - s3-data:/data
+      - ./docker/garage.toml:/etc/garage.toml:ro
+      - garage-meta:/var/lib/garage/meta
+      - garage-data:/var/lib/garage/data
+    environment:
+      - GARAGE_DEFAULT_ACCESS_KEY=rallly-access-key
+      - GARAGE_DEFAULT_SECRET_KEY=rallly-secret-key
+      - GARAGE_DEFAULT_BUCKET=rallly
+    command: /garage server --single-node --default-bucket
+    healthcheck:
+      test: ["CMD", "/garage", "stats", "-a"]
+      interval: 1h
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      start_interval: 5s
   mailpit:
     image: axllent/mailpit
     ports:
@@ -57,24 +68,26 @@ services:
       retries: 5
 
 
-  # This service just make sure a bucket with the right policies is created
-  createbuckets:
-    image: minio/mc
+  garage_init:
+    image: amazon/aws-cli
     depends_on:
-      - minio
-    entrypoint: >
-      /bin/sh -c "
-      sleep 10;
-      /usr/bin/mc alias set minio http://minio:9000 minio minio123;
-      /usr/bin/mc mb minio/rallly;
-      /usr/bin/mc anonymous set public minio/rallly/public;
-      exit 0;
-      "
+      garage:
+        condition: service_healthy
+    environment:
+      - AWS_ACCESS_KEY_ID=rallly-access-key
+      - AWS_SECRET_ACCESS_KEY=rallly-secret-key
+      - AWS_DEFAULT_REGION=garage
+    volumes:
+      - ./docker/cors.json:/cors.json:ro
+    entrypoint: ["sh", "-c", "aws --endpoint-url http://garage:3900 s3api put-bucket-cors --bucket rallly --cors-configuration file:///cors.json"]
+    restart: "no"
 
 volumes:
   db-data:
     driver: local
   redis-data:
     driver: local
-  s3-data:
+  garage-meta:
+    driver: local
+  garage-data:
     driver: local

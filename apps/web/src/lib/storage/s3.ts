@@ -20,6 +20,8 @@ export function getS3Client() {
     },
     // S3 compatible storage requires path style
     forcePathStyle: true,
+    // Disable default CRC32 checksums for S3-compatible stores
+    requestChecksumCalculation: "WHEN_REQUIRED",
   });
 
   return s3Client;
