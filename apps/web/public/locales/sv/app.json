@@ -148,7 +148,6 @@
   "or": "Eller",
   "autoTimeZone": "Automatisk tidszonsomvandling",
   "autoTimeZoneHelp": "Aktivera den här inställningen för att automatiskt anpassa evenemangstider till varje deltagares lokala tidszon.",
-  "commentsDisabled": "Kommentarer har inaktiverats",
   "allParticipants": "Alla deltagare",
   "noParticipantsDescription": "Klicka på <b>Dela</b> för att bjuda in deltagare",
   "eventHostDescription": "Du är skaparen av denna enkät",
