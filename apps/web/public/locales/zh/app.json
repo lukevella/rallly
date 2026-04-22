@@ -148,7 +148,6 @@
   "or": "或",
   "autoTimeZone": "自动转换时区",
   "autoTimeZoneHelp": "启用此设置，以自动调整事件时间为每个参与者的当地时区。",
-  "commentsDisabled": "评论已被禁用",
   "allParticipants": "所有参与者",
   "noParticipantsDescription": "点击 <b>分享</b> 来邀请参与者",
   "eventHostDescription": "您是本次投票的创建者",
