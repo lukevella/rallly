@@ -47,11 +47,11 @@ An SMTP server is required to send magic-link sign-in emails and notifications.
 <ParamField path="SMTP_HOST" required>The host address of your SMTP server</ParamField>
 
 <ParamField path="SMTP_PORT" default="587">
-  Common values: 587 (STARTTLS), 465 (SSL), 25 (plain).
+  Common values: 587 (STARTTLS), 465 (implicit TLS), 25 (plain). Ports 587 and 25 use STARTTLS and require `SMTP_SECURE=false`; port 465 uses implicit TLS and requires `SMTP_SECURE=true`.
 </ParamField>
 
-<ParamField path="SMTP_SECURE" default="true">
-  Set to `true` if SSL is enabled for your SMTP connection (typically port 465).
+<ParamField path="SMTP_SECURE" default="false">
+  Set to `true` for implicit TLS (typically port 465). Leave as `false` for STARTTLS (typically port 587), which upgrades a plain connection to TLS after the initial handshake.
 </ParamField>
 
 <ParamField path="SMTP_USER">
