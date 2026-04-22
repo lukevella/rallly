@@ -148,7 +148,6 @@
   "or": "Eller",
   "autoTimeZone": "Automatisk tidssonekonvertering",
   "autoTimeZoneHelp": "Aktiver denne innstillingen for å justere hendelsestider til hver deltakers lokale tidssone automatisk.",
-  "commentsDisabled": "Kommentarer har blitt deaktivert",
   "allParticipants": "Alle deltakere",
   "noParticipantsDescription": "Klikk <b>Del</b> for å invitere deltakere",
   "eventHostDescription": "Du er oppretteren av denne avstemningen",
