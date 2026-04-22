@@ -14,7 +14,7 @@ The `rallly.sh` script bundled with the [self-hosted stack](https://github.com/l
 ./rallly.sh restart        # Restart all services
 ./rallly.sh status         # Show service status
 ./rallly.sh logs           # Stream logs for all services
-./rallly.sh logs rallly    # Stream logs for a specific service
+./rallly.sh logs web       # Stream logs for a specific service
 ./rallly.sh update         # Pull latest images and recreate containers
 ./rallly.sh backup         # Back up the database to ./backups/
 ```
@@ -57,10 +57,21 @@ Database backups are written to `./backups/` as timestamped `.sql.gz` files. Cop
 
 ### Restore
 
-Restore a backup into a running stack:
+Stop the app first so it releases its database connections, drop and recreate an empty `rallly` database, stream in the dump, then restart:
 
 ```sh
-gunzip < backups/rallly_20260101_120000.sql.gz | docker compose exec -T db psql -U postgres rallly
+# Stop the app (leave the db service running)
+docker compose stop web
+
+# Drop and recreate the database — connect to the "postgres" db so we can drop "rallly"
+docker compose exec -T db psql -U postgres -d postgres -c "DROP DATABASE IF EXISTS rallly;"
+docker compose exec -T db psql -U postgres -d postgres -c "CREATE DATABASE rallly;"
+
+# Restore — ON_ERROR_STOP=1 fails fast on the first error instead of continuing silently
+gunzip < backups/rallly_20260101_120000.sql.gz | docker compose exec -T db psql -v ON_ERROR_STOP=1 -U postgres rallly
+
+# Bring the app back up
+./rallly.sh start
 ```
 
 ## Logs
@@ -71,10 +82,10 @@ Stream all services:
 ./rallly.sh logs
 ```
 
-Or a single service (`rallly`, `db`, `redis`, `garage`, `traefik`, `serverless-redis-http`):
+Or a single service (`web`, `db`, `redis`, `garage`, `traefik`, `serverless-redis-http`):
 
 ```sh
-./rallly.sh logs rallly
+./rallly.sh logs web
 ./rallly.sh logs traefik
 ```
 
@@ -97,7 +108,7 @@ Another service (nginx, apache, another Docker stack) is bound to the port. Stop
 Check the failing service's logs:
 
 ```sh
-./rallly.sh logs rallly
+./rallly.sh logs web
 ./rallly.sh logs db
 ```
 

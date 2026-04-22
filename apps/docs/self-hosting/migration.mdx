@@ -101,18 +101,21 @@ Wait for the database to finish initialising (about 10 seconds). Check with:
 Once you see `database system is ready to accept connections`, restore your backup:
 
 ```sh
-# Drop the freshly-migrated empty database and recreate it
-docker compose exec -T db psql -U postgres -c "DROP DATABASE rallly;"
-docker compose exec -T db psql -U postgres -c "CREATE DATABASE rallly;"
+# Stop the app so it releases its connections to the rallly database
+docker compose stop web
 
-# Restore
-gunzip < /path/to/rallly-backup.sql.gz | docker compose exec -T db psql -U postgres rallly
+# Drop the freshly-migrated empty database and recreate it — connect to "postgres" to drop "rallly"
+docker compose exec -T db psql -U postgres -d postgres -c "DROP DATABASE IF EXISTS rallly;"
+docker compose exec -T db psql -U postgres -d postgres -c "CREATE DATABASE rallly;"
+
+# Restore — ON_ERROR_STOP=1 fails fast on the first error instead of continuing silently
+gunzip < /path/to/rallly-backup.sql.gz | docker compose exec -T db psql -v ON_ERROR_STOP=1 -U postgres rallly
 ```
 
-Restart the app so it picks up the restored schema:
+Start the app so it picks up the restored schema:
 
 ```sh
-./rallly.sh restart
+./rallly.sh start
 ```
 
 ## Step 6 — Verify
@@ -139,7 +142,7 @@ docker volume rm <old-volume-name>
 ```
 
 <Warning>
-  Double-check volume names before removing. The new stack's volumes live under `rallly_` (e.g. `rallly_db-data`, `rallly_garage-data`) — do not delete those.
+  Double-check volume names before removing. The new stack's volumes are prefixed with its Docker Compose project name, so confirm the prefix before deleting anything. The project name comes from `COMPOSE_PROJECT_NAME`, an explicit `name:` in `docker-compose.yml`, or the directory the compose file lives in. From inside the new stack's directory, run `docker compose config --format json | jq -r .name` to print it, or `docker compose ls` to list running projects and their volumes.
 </Warning>
 
 ## What doesn't carry over
