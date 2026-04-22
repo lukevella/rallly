@@ -146,7 +146,6 @@
   "or": "Of",
   "autoTimeZone": "Automatische conversie van tijdzone",
   "autoTimeZoneHelp": "Schakel deze instelling in om de tijden van de evenementen automatisch aan te passen aan de tijdzone van de deelnemer.",
-  "commentsDisabled": "Reacties zijn uitgeschakeld",
   "allParticipants": "Alle deelnemers",
   "noParticipantsDescription": "Klik op <b>Delen</b> om deelnemers uit te nodigen",
   "eventHostDescription": "Je bent de maker van deze poll",
