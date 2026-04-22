@@ -148,7 +148,6 @@
   "or": "Or",
   "autoTimeZone": "Automatic Time Zone Conversion",
   "autoTimeZoneHelp": "Enable this setting to automatically adjust event times to each participant's local time zone.",
-  "commentsDisabled": "Comments have been disabled",
   "allParticipants": "All Participants",
   "noParticipantsDescription": "Click <b>Share</b> to invite participants",
   "eventHostDescription": "You are the creator of this poll",
