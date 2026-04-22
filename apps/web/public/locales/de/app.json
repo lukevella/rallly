@@ -148,7 +148,6 @@
   "or": "Oder",
   "autoTimeZone": "Automatische Zeitzonen-Konvertierung",
   "autoTimeZoneHelp": "Aktiviere diese Einstellung, um die Terminzeiten automatisch an die lokale Zeitzone jedes Teilnehmers anzupassen.",
-  "commentsDisabled": "Kommentare wurden deaktiviert",
   "allParticipants": "Alle Teilnehmer",
   "noParticipantsDescription": "Klicke auf <b>Teilen</b>, um Teilnehmer einzuladen",
   "eventHostDescription": "Sie sind Ersteller*in dieser Abstimmung",
