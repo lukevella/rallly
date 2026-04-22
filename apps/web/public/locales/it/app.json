@@ -148,7 +148,6 @@
   "or": "Oppure",
   "autoTimeZone": "Conversione Automatica Fuso Orario",
   "autoTimeZoneHelp": "Abilita questa impostazione per impostare automaticamente gli orari dell'evento con il fuso orario dei partecipanti.",
-  "commentsDisabled": "I commenti sono stati disabilitati",
   "allParticipants": "Tutti i Partecipanti",
   "noParticipantsDescription": "Clicca <b>Condividi</b> per invitare i partecipanti",
   "eventHostDescription": "Sei il creatore di questo sondaggio",
