@@ -148,7 +148,6 @@
   "or": "O",
   "autoTimeZone": "Conversión automática de zona horaria",
   "autoTimeZoneHelp": "Activa esta opción para ajustar automáticamente la hora del evento a la zona horaria local de cada participante.",
-  "commentsDisabled": "Los comentarios han sido deshabilitados",
   "allParticipants": "Todos los participantes",
   "noParticipantsDescription": "Haz clic en <b>compartir</b> para invitar participantes",
   "eventHostDescription": "Eres el creador de esta encuesta",
