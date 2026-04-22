@@ -148,7 +148,6 @@
   "or": "Ou",
   "autoTimeZone": "Conversão Automática de Fuso Horário",
   "autoTimeZoneHelp": "Ative esta configuração para ajustar automaticamente os horários dos eventos de cada participante ao fuso horário local.",
-  "commentsDisabled": "Os comentários foram desabilitados",
   "allParticipants": "Todos os participantes",
   "noParticipantsDescription": "Clique em <b>Compartilhar</b> para convidar participantes",
   "eventHostDescription": "Você é o criador desta enquete",
