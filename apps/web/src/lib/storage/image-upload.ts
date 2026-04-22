@@ -2,24 +2,40 @@ import "server-only";
 import crypto from "node:crypto";
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-
 import { env } from "@/env";
 import { AppError } from "@/lib/errors";
 import { isSelfHosted } from "@/utils/constants";
 import { getS3Client } from "./s3";
 
-export function signUploadKey(key: string) {
+const UPLOAD_TOKEN_TTL_SECONDS = 3600;
+
+function computeSignature(payload: string) {
   return crypto
     .createHmac("sha256", env.SECRET_PASSWORD)
-    .update(key)
+    .update(payload)
     .digest("hex");
 }
 
+export function signUploadKey(key: string) {
+  const expiry = Math.floor(Date.now() / 1000) + UPLOAD_TOKEN_TTL_SECONDS;
+  const signature = computeSignature(`${key}:${expiry}`);
+  return `${expiry}.${signature}`;
+}
+
 export function verifyUploadToken(key: string, token: string) {
-  const expected = signUploadKey(key);
+  const parts = token.split(".");
+  if (parts.length !== 2) return false;
+  const [expiryStr, signature] = parts;
+  const expiry = Number(expiryStr);
+  if (!Number.isInteger(expiry)) return false;
+  if (expiry <= Math.floor(Date.now() / 1000)) return false;
+
+  const expected = computeSignature(`${key}:${expiry}`);
   const expectedBuf = Buffer.from(expected, "hex");
-  const tokenBuf = Buffer.from(token, "hex");
-  if (expectedBuf.length !== tokenBuf.length) return false;
+  const tokenBuf = Buffer.from(signature, "hex");
+  if (expectedBuf.length === 0 || expectedBuf.length !== tokenBuf.length) {
+    return false;
+  }
   return crypto.timingSafeEqual(expectedBuf, tokenBuf);
 }
 

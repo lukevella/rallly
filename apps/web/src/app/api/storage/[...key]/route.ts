@@ -116,6 +116,10 @@ export async function PUT(
     return new NextResponse("Payload too large", { status: 413 });
   }
 
+  if (arrayBuffer.byteLength !== contentLength) {
+    return new NextResponse("Content length mismatch", { status: 400 });
+  }
+
   try {
     await s3Client.send(
       new PutObjectCommand({
