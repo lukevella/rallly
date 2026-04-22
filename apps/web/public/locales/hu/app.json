@@ -148,7 +148,6 @@
   "or": "Vagy",
   "autoTimeZone": "Automatikus időzóna",
   "autoTimeZoneHelp": "Bekapcsolt állapotban az időpontok automatikusan minden egyes résztvevő helyi időzónájához igazodnak.",
-  "commentsDisabled": "Hozzászólások kikapcsolva",
   "allParticipants": "Összes résztvevő",
   "noParticipantsDescription": "Kattints a <b>Megosztás</b>ra a résztvevők meghívásához",
   "eventHostDescription": "Te vagy a létrehozója ennek a szavazásnak",
