@@ -148,7 +148,6 @@
   "or": "Ou",
   "autoTimeZone": "Conversion automatique du fuseau horaire",
   "autoTimeZoneHelp": "Activer ce paramètre pour ajuster automatiquement les heures de chaque participant au fuseau horaire local.",
-  "commentsDisabled": "Les commentaires ont été désactivés",
   "allParticipants": "Tous les participants",
   "noParticipantsDescription": "Cliquez sur <b>Partager</b> pour inviter les participants",
   "eventHostDescription": "Vous êtes le créateur de ce sondage",
