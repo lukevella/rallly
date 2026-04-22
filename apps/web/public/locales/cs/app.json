@@ -148,7 +148,6 @@
   "or": "nebo",
   "autoTimeZone": "Automatická konverze časového pásma",
   "autoTimeZoneHelp": "Aktivujte toto nastavení, aby se automaticky přizpůsobily časy události místnímu časovému pásmu každého účastníka.",
-  "commentsDisabled": "Komentáře byly zakázány",
   "allParticipants": "Všichni účastníci",
   "noParticipantsDescription": "Klikněte na <b>Sdílet</b> a pozvěte účastníky",
   "eventHostDescription": "Jste tvůrcem tohoto hlasování",
