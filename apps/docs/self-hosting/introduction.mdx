@@ -1,32 +1,41 @@
 ---
 icon: "house"
 title: "Introduction"
-description: "Learn how to set up and manage your own instance of Rallly."
+description: "Self-host Rallly on your own infrastructure."
 ---
 
-Self-hosting Rallly gives you complete control over your instance and your data. You can customize it to your needs, integrate it within your own infrastructure, and manage user access directly.
+Self-hosting Rallly gives you full control over your instance and your data. The self-hosted distribution is designed to be easy to install and maintain on a single server — everything you need is bundled into one Docker Compose stack.
 
-## The Official Docker Image
+## Rallly Cloud vs Rallly Self-Hosted
 
-The primary and **officially supported method** for self-hosting Rallly is by using our **official Docker image**. This image contains a build specifically optimized for self-hosting, with features like billing automatically disabled and no feature-gating.
+Rallly comes in two flavours built from the same codebase.
 
-These guides will walk you through using the Docker image:
+**[Rallly Cloud](https://rallly.co)** is the hosted service we run. It is designed to scale horizontally across distributed infrastructure and serve a large number of users. It is the fastest way to get started and is maintained by us.
 
-*   **[Installation](/self-hosting/installation/docker):** Setting up Rallly using Docker.
-*   **[Configuration](/self-hosting/configuration):** Customizing your instance with environment variables.
-*   **[Licensing](/self-hosting/licensing):** Understanding when a license is needed and how to manage it.
-*   **[Control Panel](/self-hosting/control-panel):** Managing your instance, users, and settings.
+**Rallly Self-Hosted** is optimised for simplicity of deployment. The application, database, cache, object storage, and TLS termination all run on a single machine via Docker Compose. You own the data, you own the server, and updates are a single command. It is not designed to scale horizontally.
 
 <Note>
-  While Rallly's source code is publicly available, self-hosting directly from the source code is not officially supported. For a stable and optimized experience, please use the provided Docker image.
+  Some Cloud features (billing, metered quotas) are compiled out of the self-hosted image. Licensing for multi-user self-hosted instances is covered on the [Licensing page](/self-hosting/licensing).
 </Note>
 
-## Licensing
+## What's included
 
-Rallly is free to self-host for **personal, single-user setups**. For instances with **multiple users**, we ask that you purchase a license. This helps support the ongoing development and maintenance of Rallly. You can find more details about the different tiers and how to purchase a license on our [Licensing page](/self-hosting/licensing).
+A self-hosted install is a batteries-included stack. You do not need to provision these services separately.
 
-## Before You Begin
+- **Traefik** — reverse proxy with automatic HTTPS via Let's Encrypt
+- **Rallly** — the web application
+- **PostgreSQL** — primary database
+- **Redis** — rate limiting and session storage
+- **Garage** — S3-compatible object storage for file uploads
 
-Ensure you have a basic understanding of Docker and server management. While we aim to make the process straightforward, some technical knowledge is beneficial.
+Only Traefik binds to host ports (80 and 443). Everything else is isolated on the internal Docker network.
 
-If you're not ready to self-host or prefer a managed solution, you can always use the official Rallly service at [rallly.co](https://rallly.co).
+## Next steps
+
+- **[Installation](/self-hosting/installation/docker)** — set up Rallly on your server.
+- **[Configuration](/self-hosting/configuration)** — environment variables reference.
+- **[Management](/self-hosting/management)** — update, back up, and operate your instance.
+- **[Control Panel](/self-hosting/control-panel)** — manage users and instance settings.
+- **[Licensing](/self-hosting/licensing)** — when a license is needed and how to apply one.
+
+If you would rather not run a server, use [Rallly Cloud](https://rallly.co).

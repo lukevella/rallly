@@ -1,0 +1,111 @@
+---
+icon: terminal
+title: Management
+description: Operate a self-hosted Rallly instance with the rallly.sh CLI.
+---
+
+The `rallly.sh` script bundled with the [self-hosted stack](https://github.com/lukevella/rallly-selfhosted) is the single entry point for day-to-day operations. Run it from the stack directory (e.g. `/opt/rallly` for installer-based setups).
+
+## Commands
+
+```sh
+./rallly.sh start          # Start all services
+./rallly.sh stop           # Stop all services
+./rallly.sh restart        # Restart all services
+./rallly.sh status         # Show service status
+./rallly.sh logs           # Stream logs for all services
+./rallly.sh logs rallly    # Stream logs for a specific service
+./rallly.sh update         # Pull latest images and recreate containers
+./rallly.sh backup         # Back up the database to ./backups/
+```
+
+## Applying configuration changes
+
+After editing `.env`, apply changes with:
+
+```sh
+./rallly.sh restart
+```
+
+## Updating
+
+```sh
+./rallly.sh update
+```
+
+This pulls the latest Docker images and recreates containers. Your data and configuration are preserved.
+
+By default the stack tracks the `lukevella/rallly:4` tag, so `update` will bring you the latest compatible `4.x` release. To pin to a specific version or follow a different major, set `RALLLY_IMAGE` in `.env` (see [Configuration](/self-hosting/configuration#advanced)).
+
+<Warning>
+  Do not edit `docker-compose.yml` or other stack files. `./rallly.sh update` expects these files unchanged and will overwrite local edits. Only `.env` is safe to modify.
+</Warning>
+
+## Backup and restore
+
+### Backup
+
+```sh
+./rallly.sh backup
+```
+
+Database backups are written to `./backups/` as timestamped `.sql.gz` files. Copy these off the server regularly — they are your main recovery artifact.
+
+<Note>
+  The backup captures the PostgreSQL database. Uploaded files (avatars, etc.) are stored in the `garage-data` Docker volume; back that up separately if you rely on uploads.
+</Note>
+
+### Restore
+
+Restore a backup into a running stack:
+
+```sh
+gunzip < backups/rallly_20260101_120000.sql.gz | docker compose exec -T db psql -U postgres rallly
+```
+
+## Logs
+
+Stream all services:
+
+```sh
+./rallly.sh logs
+```
+
+Or a single service (`rallly`, `db`, `redis`, `garage`, `traefik`, `serverless-redis-http`):
+
+```sh
+./rallly.sh logs rallly
+./rallly.sh logs traefik
+```
+
+## Troubleshooting
+
+### SSL certificate is not being issued
+
+Let's Encrypt can take up to a minute on first start. Check:
+
+- The domain's DNS `A` record resolves to the server's public IP.
+- Ports 80 and 443 are open in the server's firewall.
+- `./rallly.sh logs traefik` for ACME errors.
+
+### Port 80 or 443 already in use
+
+Another service (nginx, apache, another Docker stack) is bound to the port. Stop it or reconfigure it to leave 80/443 free — Traefik needs both.
+
+### Containers keep restarting
+
+Check the failing service's logs:
+
+```sh
+./rallly.sh logs rallly
+./rallly.sh logs db
+```
+
+Common causes:
+
+- Missing or invalid `.env` values (e.g. empty `SECRET_PASSWORD`, unreachable SMTP).
+- Database is still initialising on first boot — usually resolves within a few retries.
+
+### Database connection errors on first boot
+
+PostgreSQL takes a few seconds to initialise. The app retries automatically. If errors persist, inspect `./rallly.sh logs db`.

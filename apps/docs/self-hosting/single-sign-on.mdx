@@ -1,72 +1,113 @@
 ---
 icon: cloud
-title: Single Sign On (SSO)
-description: How to use your own identity provider
+title: Single Sign-On (SSO)
+description: Sign in with Google, Microsoft, or any OpenID Connect provider.
 ---
 
 <Info>Available in v3.4.0 and later.</Info>
 
+Rallly supports three SSO options: Google, Microsoft (Entra ID), and any provider that speaks OpenID Connect (OIDC). You can enable more than one at a time.
+
 <Warning>
-  Accounts using the same email are linked together. This assumes that you are
-  using a trusted identity provider that uses verified email addresses.
+  Accounts using the same email address are linked together. This assumes your identity provider only issues verified email addresses.
 </Warning>
+
+## Google
+
+<Accordion title="Setup">
+1. Open the Google Cloud Credentials tab: https://console.developers.google.com/apis/credentials
+
+2. Create an OAuth client ID. This gives you a `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
+
+3. Set **Authorized redirect URIs** to include your full domain and the callback path:
+
+```
+https://<YOUR_DOMAIN>/api/auth/callback/google
+```
+</Accordion>
+
+<ParamField path="GOOGLE_CLIENT_ID">
+  The client ID of your Google application.
+</ParamField>
+
+<ParamField path="GOOGLE_CLIENT_SECRET">
+  The client secret of your Google application.
+</ParamField>
+
+## Microsoft
+
+<Accordion title="Setup">
+Follow the [Microsoft Entra ID quickstart](https://docs.microsoft.com/en-us/entra/identity-platform/quickstart-register-app) to register an application.
+
+After creating the application, set the redirect URI to:
+
+```
+https://<YOUR_DOMAIN>/api/auth/callback/microsoft-entra-id
+```
+</Accordion>
+
+<ParamField path="MICROSOFT_TENANT_ID">
+  The tenant ID of your Microsoft application.
+</ParamField>
+
+<ParamField path="MICROSOFT_CLIENT_ID">
+  The client ID of your Microsoft application.
+</ParamField>
+
+<ParamField path="MICROSOFT_CLIENT_SECRET">
+  The client secret of your Microsoft application.
+</ParamField>
 
 ## OpenID Connect (OIDC)
 
-If your identity provider supports OAuth 2.0 based authentication with OpenID Connect (OIDC), you can use it to authenticate users on your Rallly instance.
+If your identity provider supports OAuth 2.0 with OpenID Connect, you can use it to authenticate users on your Rallly instance.
 
-### Required Scopes
+### Required scopes
 
-Your OAuth 2.0 application needs to be configured with the following scopes:
+Your OAuth 2.0 application needs these scopes:
 
-- `openid`: Essential for OIDC to function, used to perform authentication.
-- `profile`: Access to the user's personal information such as name and picture.
-- `email`: Access to the user's email address.
+- `openid` — perform authentication (required).
+- `profile` — access name and picture.
+- `email` — access the user's email address.
 
-### Callback URL / Redirect URI
+### Callback URL
 
-Your identity provider should redirect the user back to the following URL:
+Your identity provider should redirect the user back to:
 
 ```
-{BASE_URL}/api/auth/callback/oidc
+https://<YOUR_DOMAIN>/api/auth/callback/oidc
 ```
-
-<Info>
-  Replace `{BASE_URL}` with the base URL of your Rallly instance and add it to
-  the list of allowed redirect URIs.
-</Info>
 
 ### Configuration
 
-The following configuration options are available for OIDC.
 All required fields must be set for OIDC to be enabled.
 
 <ParamField path="OIDC_NAME" default="OpenID Connect">
-  The display name of your provider as it will be shown on the login page
+  Display name of your provider as shown on the login page.
 </ParamField>
 
 <ParamField path="OIDC_DISCOVERY_URL" required>
-  URL of the `.well-known/openid-configuration` endpoint for your OIDC provider
+  URL of the `.well-known/openid-configuration` endpoint for your OIDC provider.
 </ParamField>
 
 <ParamField path="OIDC_CLIENT_ID" required>
-  The client ID of your OIDC application
+  The client ID of your OIDC application.
 </ParamField>
 
 <ParamField path="OIDC_CLIENT_SECRET" required>
-  The client secret of your OIDC application
+  The client secret of your OIDC application.
 </ParamField>
 
 <ParamField path="OIDC_NAME_CLAIM_PATH" default="name">
-  The path to the claim that contains the user's name
+  Path to the claim that contains the user's name.
 </ParamField>
 
 <ParamField path="OIDC_EMAIL_CLAIM_PATH" default="email">
-  The path to the claim that contains the user's email address
+  Path to the claim that contains the user's email address.
 </ParamField>
 
 <ParamField path="OIDC_PICTURE_CLAIM_PATH" default="picture">
-  The path to the claim that contains the user's profile picture
+  Path to the claim that contains the user's profile picture.
 </ParamField>
 
 <Info>Use dot notation in `_CLAIM_PATH` fields to access nested objects.</Info>
