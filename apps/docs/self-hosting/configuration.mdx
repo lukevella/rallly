@@ -7,7 +7,7 @@ description: Environment variables for a self-hosted Rallly instance.
 All configuration lives in the `.env` file at the root of your self-hosted stack. The [installer](/self-hosting/installation/docker) writes a starter `.env` for you; edit it directly to change any value. After edits, apply them with `./rallly.sh restart`.
 
 <Note>
-  Internal wiring (database URL, S3 endpoint, Redis, `NEXT_PUBLIC_BASE_URL`) is handled by the Compose stack and derived from the values below. You do not need to set them yourself.
+  Internal wiring (database URL, S3 endpoint, `NEXT_PUBLIC_BASE_URL`) is handled by the Compose stack and derived from the values below. You do not need to set them yourself.
 </Note>
 
 ## General
