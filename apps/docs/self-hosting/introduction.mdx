@@ -12,7 +12,7 @@ Rallly comes in two flavours built from the same codebase.
 
 **[Rallly Cloud](https://rallly.co)** is the hosted service we run. It is designed to scale horizontally across distributed infrastructure and serve a large number of users. It is the fastest way to get started and is maintained by us.
 
-**Rallly Self-Hosted** is optimised for simplicity of deployment. The application, database, cache, object storage, and TLS termination all run on a single machine via Docker Compose. You own the data, you own the server, and updates are a single command. It is not designed to scale horizontally.
+**Rallly Self-Hosted** is optimised for simplicity of deployment. Out of the box, the application, database, object storage, and TLS termination all run on a single machine via Docker Compose — you own the data, you own the server, and updates are a single command. If you already run a managed Postgres or S3-compatible service, you can point Rallly at those instead and the bundled containers are skipped automatically.
 
 <Note>
   Some Cloud features (billing, metered quotas) are compiled out of the self-hosted image. Licensing for multi-user self-hosted instances is covered on the [Licensing page](/self-hosting/licensing).

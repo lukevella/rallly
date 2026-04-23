@@ -1,10 +1,10 @@
 ---
 icon: server
 title: Installation
-description: Install Rallly with Docker Compose.
+description: Install Rallly on your own server.
 ---
 
-This guide installs Rallly using the Docker Compose stack published in the [rallly-selfhosted](https://github.com/lukevella/rallly-selfhosted) repository. The stack includes the app, database, cache, object storage, and an HTTPS reverse proxy.
+This guide installs Rallly using the Docker Compose stack published in the [rallly-selfhosted](https://github.com/lukevella/rallly-selfhosted) repository. The stack includes the app, a bundled PostgreSQL database, bundled S3-compatible object storage, and an HTTPS reverse proxy — everything runs on one machine with no extra setup. If you'd rather use a managed database or object store, see [External services](#external-services).
 
 <Note>
   Already running Rallly from a hand-edited `docker-compose.yml` or `config.env`? Follow the [upgrade guide](/self-hosting/migration) to move onto the new stack without losing data.
@@ -60,6 +60,32 @@ cd rallly-selfhosted
 ## Claim the admin account
 
 After the stack is running, the first user whose email matches `INITIAL_ADMIN_EMAIL` can navigate to `/control-panel` and claim the admin role. See the [Control Panel guide](/self-hosting/control-panel) for details.
+
+## External services
+
+The bundled Postgres and object storage containers are the default, but you can swap either one for an external provider (RDS, Supabase, Neon, AWS S3, Cloudflare R2, MinIO, etc.) by setting the relevant variables in `.env`. The installer uses Docker Compose profiles to skip any bundled service that has an external endpoint configured, so no stack edits are needed.
+
+### External database
+
+Set `DATABASE_URL` in `.env` to your Postgres connection string. When this variable is set, the bundled `db` container is not started.
+
+```env
+DATABASE_URL=postgres://user:password@db.example.com:5432/rallly
+```
+
+### External object storage
+
+Set the S3 variables in `.env` to point at your bucket. When `S3_ENDPOINT` is set to anything other than the bundled Garage endpoint, the bundled `garage` container is not started.
+
+```env
+S3_ENDPOINT=https://s3.us-east-1.amazonaws.com
+S3_BUCKET_NAME=my-rallly-bucket
+S3_REGION=us-east-1
+S3_ACCESS_KEY_ID=...
+S3_SECRET_ACCESS_KEY=...
+```
+
+Apply changes with `./rallly.sh restart`.
 
 ## Next steps
 
