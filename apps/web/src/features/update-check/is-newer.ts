@@ -3,7 +3,9 @@ export function isNewer(latest: string, current: string) {
     v
       .replace(/^v/, "")
       .split(".")
-      .map((part) => Number.parseInt(part, 10));
+      .map((part) =>
+        /^\d+$/.test(part) ? Number.parseInt(part, 10) : Number.NaN,
+      );
   const a = parse(latest);
   const b = parse(current);
   const length = Math.max(a.length, b.length);

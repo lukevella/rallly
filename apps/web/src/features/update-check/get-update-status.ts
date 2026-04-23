@@ -1,6 +1,7 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
+import * as z from "zod";
 import { env } from "@/env";
 import { appVersion, isSelfHosted } from "@/utils/constants";
 import { isNewer } from "./is-newer";
@@ -14,11 +15,10 @@ type CachedResponse = {
   fetchedAt: number;
 };
 
-type UpstreamResponse = {
-  latest: string;
-  url: string;
-  publishedAt: string;
-};
+const upstreamResponseSchema = z.object({
+  latest: z.string().min(1),
+  url: z.string().min(1),
+});
 
 export type UpdateStatus =
   | { checkDisabled: true }
@@ -52,8 +52,13 @@ async function refreshCache() {
   try {
     const res = await fetch(url, { signal: controller.signal });
     if (!res.ok) return;
-    const data = (await res.json()) as UpstreamResponse;
-    cache = { latest: data.latest, url: data.url, fetchedAt: Date.now() };
+    const parsed = upstreamResponseSchema.safeParse(await res.json());
+    if (!parsed.success) return;
+    cache = {
+      latest: parsed.data.latest,
+      url: parsed.data.url,
+      fetchedAt: Date.now(),
+    };
   } catch {
     // Swallow: receiver unreachable, timeout, malformed response.
     // Leave `cache` as-is so the next trigger retries.
