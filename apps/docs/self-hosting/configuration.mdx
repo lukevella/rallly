@@ -138,6 +138,18 @@ Customise the look of your instance. See [White Labeling](/self-hosting/white-la
   Override the Rallly Docker image. Pin a major version (e.g. `lukevella/rallly:4`) to avoid pulling in breaking changes. See the [releases](https://github.com/lukevella/rallly/releases) for available versions.
 </ParamField>
 
+### External reverse proxy
+
+The stack bundles Traefik for TLS termination. To put Rallly behind your own reverse proxy (Nginx, Caddy, Cloudflare Tunnel, etc.), set `PROXY_MODE=external` — the bundled `traefik` container is skipped and the `web` container is published on a host port your proxy can route to. See [External reverse proxy](/self-hosting/installation/docker#external-reverse-proxy) in the installation guide for the full setup.
+
+<ParamField path="PROXY_MODE" default="bundled">
+  Set to `external` to disable the bundled Traefik reverse proxy and publish the `web` container on a host port instead. Your external proxy is responsible for TLS termination.
+</ParamField>
+
+<ParamField path="WEB_PORT" default="127.0.0.1:3000">
+  Host port binding for the `web` container when `PROXY_MODE=external`. Format is `<host>:<port>`. Use `0.0.0.0:3000` to expose on all interfaces, or pick a different port if 3000 is in use.
+</ParamField>
+
 ### External database
 
 The stack bundles a PostgreSQL container that works out of the box. Set `DATABASE_URL` in `.env` to point at an external Postgres instead (RDS, Supabase, Neon, etc.) — the bundled `db` container is skipped automatically when this variable is set.

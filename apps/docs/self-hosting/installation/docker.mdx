@@ -14,7 +14,7 @@ This guide installs Rallly using the Docker Compose stack published in the [rall
 
 - A server with at least **2 GB RAM**
 - **Docker 19.03+** with **Compose v2**
-- Ports **80** and **443** open on the server
+- Ports **80** and **443** open on the server (bundled proxy only — see [External reverse proxy](#external-reverse-proxy) if you're bringing your own)
 - A domain name with a DNS `A` record pointing to the server's IP
 - An **SMTP server** for sending emails (e.g. [Resend](https://resend.com), [Mailgun](https://www.mailgun.com), [Amazon SES](https://aws.amazon.com/ses/))
 
@@ -63,7 +63,20 @@ After the stack is running, the first user whose email matches `INITIAL_ADMIN_EM
 
 ## External services
 
-The bundled Postgres and object storage containers are the default, but you can swap either one for an external provider (RDS, Supabase, Neon, AWS S3, Cloudflare R2, MinIO, etc.) by setting the relevant variables in `.env`. The installer uses Docker Compose profiles to skip any bundled service that has an external endpoint configured, so no stack edits are needed.
+The bundled reverse proxy, Postgres database, and object storage containers are the default. You can swap any of them for external providers (your own Nginx/Caddy/Cloudflare Tunnel, managed Postgres, AWS S3, Cloudflare R2, MinIO, etc.) by setting the relevant variables in `.env`. The installer uses Docker Compose profiles to skip any bundled service that has an external endpoint configured, so no stack edits are needed.
+
+### External reverse proxy
+
+Set `PROXY_MODE=external` to disable the bundled Traefik. The `web` container is then published on a host port that your reverse proxy can route to. `WEB_PORT` controls the bind — defaults to `127.0.0.1:3000` (loopback only).
+
+```env
+PROXY_MODE=external
+WEB_PORT=127.0.0.1:3000
+```
+
+Your reverse proxy is responsible for terminating TLS and forwarding to `WEB_PORT`. Set `WEB_PORT=0.0.0.0:3000` to expose on all interfaces, or pick a different port if 3000 is in use.
+
+The installer prompts for this during `./rallly.sh setup` — pick option 2 ("external") at the reverse proxy step.
 
 ### External database
 
