@@ -16,7 +16,7 @@ This guide installs Rallly using the Docker Compose stack published in the [rall
 - **Docker 19.03+** with **Compose v2**
 - Ports **80** and **443** open on the server (bundled proxy only — see [External reverse proxy](#external-reverse-proxy) if you're bringing your own)
 - A domain name with a DNS `A` record pointing to the server's IP
-- An **SMTP server** for sending emails (e.g. [Resend](https://resend.com), [Mailgun](https://www.mailgun.com), [Amazon SES](https://aws.amazon.com/ses/))
+- An **SMTP server** for sending emails (e.g. [Resend](https://resend.com), [Postmark](https://postmarkapp.com), [Mailgun](https://www.mailgun.com), [Brevo](https://www.brevo.com))
 
 <Note>
   Use a transactional email provider. We don't recommend running your own SMTP server — deliverability depends on IP reputation, SPF/DKIM/DMARC, and reverse DNS, which are hard to get right. Consumer inboxes like Gmail or Proton Mail are also a poor fit: they rate-limit automated senders and will eventually block sign-in emails.
