@@ -3,6 +3,9 @@ model InstanceSettings {
   // Authentication & Security
   disableUserRegistration Boolean @default(false) @map("disable_user_registration")
 
+  // Anonymous identifier used when the instance checks for updates
+  instanceId String @unique @default(dbgenerated("gen_random_uuid()")) @map("instance_id") @db.Uuid
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
