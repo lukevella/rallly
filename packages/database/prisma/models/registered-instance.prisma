@@ -1,0 +1,9 @@
+model RegisteredInstance {
+  id          String   @id @default(cuid())
+  instanceId  String   @unique @map("instance_id")
+  version     String
+  firstSeenAt DateTime @default(now()) @map("first_seen_at")
+  lastSeenAt  DateTime @default(now()) @updatedAt @map("last_seen_at")
+
+  @@map("registered_instances")
+}

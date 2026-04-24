@@ -150,6 +150,13 @@ export const env = createEnv({
      * If not set, Turnstile verification is disabled.
      */
     TURNSTILE_SECRET_KEY: z.string().optional(),
+    /**
+     * Base URL of the Rallly cloud API (e.g. https://api.rallly.co).
+     * Set by the self-hosted Docker image so the instance can phone home for
+     * update checks. Unset elsewhere — the features that depend on it no-op
+     * when it's missing.
+     */
+    API_BASE_URL: z.url().optional(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -241,6 +248,7 @@ export const env = createEnv({
     HIDE_ATTRIBUTION: process.env.HIDE_ATTRIBUTION,
     RATE_LIMIT_ENABLED: process.env.RATE_LIMIT_ENABLED,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
+    API_BASE_URL: process.env.API_BASE_URL,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
     NEXT_PUBLIC_CDN_BASE_URL: process.env.NEXT_PUBLIC_CDN_BASE_URL,
   },

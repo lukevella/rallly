@@ -48,6 +48,17 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  async rewrites() {
+    if (!process.env.API_BASE_URL) return [];
+    const host = new URL(process.env.API_BASE_URL).host;
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: host }],
+        destination: "/api/:path*",
+      },
+    ];
+  },
   async redirects() {
     return [
       {
