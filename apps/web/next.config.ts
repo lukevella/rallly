@@ -76,6 +76,11 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
+        source: "/api/auth/callback/repsuite",
+        destination: "/api/better-auth/oauth2/callback/repsuite",
+        permanent: false,
+      },
+      {
         source: "/api/auth/callback/google",
         destination: "/api/better-auth/callback/google",
         permanent: false,
