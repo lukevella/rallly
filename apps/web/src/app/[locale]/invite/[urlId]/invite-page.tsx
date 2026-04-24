@@ -8,14 +8,15 @@ import { PollFooter } from "@/components/poll/poll-footer";
 import { PollViewTracker } from "@/components/poll/poll-view-tracker";
 import { ResponsiveResults } from "@/components/poll/responsive-results";
 import { VotingForm } from "@/components/poll/voting-form";
-import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { Trans } from "@/i18n/client";
+import { authClient } from "@/lib/auth-client";
 
 const GoToApp = () => {
   const poll = usePoll();
-  const { ownsObject } = useUser();
-  if (!ownsObject(poll)) {
+  const { data: session } = authClient.useSession();
+
+  if (!session || session.user.id !== poll.userId) {
     return null;
   }
 

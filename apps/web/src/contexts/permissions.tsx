@@ -1,32 +1,26 @@
 "use client";
-import { useSearchParams } from "next/navigation";
 import React from "react";
 
 import { useParticipants } from "@/components/participants-provider";
-import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
-import { trpc } from "@/trpc/client";
+import { authClient } from "@/lib/auth-client";
 
 const PermissionsContext = React.createContext<{
-  userId: string | null;
+  impersonatedUserId: string | null;
 }>({
-  userId: null,
+  impersonatedUserId: null,
 });
 
-export const PermissionProvider = ({ children }: React.PropsWithChildren) => {
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-
-  const { data } = trpc.auth.getUserPermission.useQuery(
-    { token: token ?? "" },
-    { enabled: !!token },
-  );
-
-  const userId = data?.userId ?? null;
-
+export const PermissionProvider = ({
+  children,
+  impersonatedUserId,
+}: {
+  children: React.ReactNode;
+  impersonatedUserId: string | null;
+}) => {
   return (
-    <PermissionsContext.Provider value={{ userId }}>
+    <PermissionsContext.Provider value={{ impersonatedUserId }}>
       {children}
     </PermissionsContext.Provider>
   );
@@ -35,12 +29,12 @@ export const PermissionProvider = ({ children }: React.PropsWithChildren) => {
 export const usePermissions = () => {
   const poll = usePoll();
   const context = React.useContext(PermissionsContext);
-  const { user, ownsObject } = useUser();
+  const { data: session } = authClient.useSession();
   const role = useRole();
   const { participants } = useParticipants();
   return {
     isUser: (userId: string) =>
-      userId === user?.id || userId === context.userId,
+      userId === session?.user?.id || userId === context.impersonatedUserId,
     canAddNewParticipant: poll.status === "open",
     canEditParticipant: (participantId: string) => {
       if (poll.status !== "open") {
@@ -60,8 +54,9 @@ export const usePermissions = () => {
       }
 
       if (
-        ownsObject(participant) ||
-        (context.userId && participant.userId === context.userId)
+        participant.userId === session?.user?.id ||
+        (context.impersonatedUserId &&
+          participant.userId === context.impersonatedUserId)
       ) {
         return true;
       }
