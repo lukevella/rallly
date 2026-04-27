@@ -26,6 +26,11 @@ const latestReleaseCache = createCache<UpdatesPayload>({
   ttl: "1 h",
 });
 
+const seenInstanceCache = createCache<string>({
+  namespace: "updates:seen-instance",
+  ttl: "1 d",
+});
+
 const ratelimit = createRatelimit(60, "1 h");
 
 async function fetchLatestRelease(): Promise<UpdatesPayload | null> {
@@ -71,6 +76,7 @@ export async function GET(request: NextRequest) {
   }
 
   const payload = await getLatestRelease();
+
   if (!payload) {
     return NextResponse.json(
       { error: "upstream_unavailable" },
@@ -86,16 +92,21 @@ export async function GET(request: NextRequest) {
     .regex(/^v?\d+(\.\d+){0,2}([-+][0-9A-Za-z.-]+)?$/)
     .safeParse(version);
   const parsedInstanceId = z.uuid().safeParse(instanceId);
+
   if (parsedVersion.success && parsedInstanceId.success) {
     const validVersion = parsedVersion.data;
     const validInstanceId = parsedInstanceId.data;
     after(async () => {
       try {
+        const cachedVersion = await seenInstanceCache.get(validInstanceId);
+        if (cachedVersion === validVersion) return;
+
         await prisma.registeredInstance.upsert({
           where: { instanceId: validInstanceId },
           create: { instanceId: validInstanceId, version: validVersion },
           update: { version: validVersion, lastSeenAt: new Date() },
         });
+        await seenInstanceCache.set(validInstanceId, validVersion);
       } catch (error) {
         console.error("Failed to upsert RegisteredInstance", error);
       }
