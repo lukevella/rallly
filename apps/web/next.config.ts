@@ -18,8 +18,7 @@ const nextConfig: NextConfig = {
       dynamic: 60,
     },
   },
-  output:
-    process.env.NEXT_PUBLIC_SELF_HOSTED === "true" ? "standalone" : undefined,
+  output: process.env.BUILD_STANDALONE === "true" ? "standalone" : undefined,
   productionBrowserSourceMaps: true,
   transpilePackages: [
     "@rallly/database",
