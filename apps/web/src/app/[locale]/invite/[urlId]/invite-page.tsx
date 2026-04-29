@@ -10,13 +10,13 @@ import { ResponsiveResults } from "@/components/poll/responsive-results";
 import { VotingForm } from "@/components/poll/voting-form";
 import { usePoll } from "@/contexts/poll";
 import { Trans } from "@/i18n/client";
-import { authClient } from "@/lib/auth-client";
+import { trpc } from "@/trpc/client";
 
 const GoToApp = () => {
   const poll = usePoll();
-  const { data: session } = authClient.useSession();
+  const { data: user } = trpc.user.getMe.useQuery();
 
-  if (!session || session.user.id !== poll.userId) {
+  if (!user || user.id !== poll.userId) {
     return null;
   }
 
