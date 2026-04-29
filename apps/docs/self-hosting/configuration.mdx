@@ -7,7 +7,7 @@ description: Environment variables for a self-hosted Rallly instance.
 All configuration lives in the `.env` file at the root of your self-hosted stack. The [installer](/self-hosting/installation/docker) writes a starter `.env` for you; edit it directly to change any value. After edits, apply them with `./rallly.sh restart`.
 
 <Note>
-  Internal wiring (database URL, S3 endpoint, `NEXT_PUBLIC_BASE_URL`) is handled by the Compose stack and derived from the values below. You do not need to set them yourself.
+  When using the Rallly CLI, internal wiring (database URL, S3 endpoint, `NEXT_PUBLIC_BASE_URL`) is handled by the Compose stack and derived from the values below — you do not need to set them yourself. If you're running the Rallly Docker image without the CLI, see [Running the image directly](#running-the-image-directly).
 </Note>
 
 ## General
@@ -181,3 +181,18 @@ The stack bundles [Garage](https://garagehq.deuxfleurs.fr/) for file uploads, wh
 <ParamField path="S3_SECRET_ACCESS_KEY">
   Secret key for the bucket.
 </ParamField>
+
+## Running the image directly
+
+If you're running the Rallly Docker image without the [Rallly CLI](/self-hosting/installation/docker), a few variables that the CLI normally supplies or derives become your responsibility.
+
+<ParamField path="NEXT_PUBLIC_BASE_URL" required>
+  Fully qualified public URL of your instance, including scheme. Example: `https://rallly.example.com`. The CLI generates this from `DOMAIN`; without the CLI, you must set it explicitly.
+</ParamField>
+
+The variables documented under [External database](#external-database) and [External object storage](#external-object-storage) also become required, since there are no bundled services to fall back to:
+
+- `DATABASE_URL` — Postgres connection string
+- `S3_ENDPOINT`, `S3_BUCKET_NAME`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` — S3-compatible object storage credentials
+
+`DOMAIN` and `ACME_EMAIL` are only used by the bundled Traefik reverse proxy and can be left unset in this mode. TLS termination is your reverse proxy's responsibility.
