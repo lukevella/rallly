@@ -617,5 +617,13 @@
   "viewResults": "Voir les résultats",
   "pollClosedDescription": "Les réponses ne sont plus acceptées.",
   "showBrandingDescription": "Affiche votre image de marque sur les pages publiques et les emails",
-  "useCustomBranding": "Activer la personnalisation de l'image de marque"
+  "useCustomBranding": "Activer la personnalisation de l'image de marque",
+  "customBranding": "Image de marque personnalisée",
+  "customBrandingDescription": "Affiche votre logo et vos couleurs de marque à vos participants",
+  "customBrandingPromptTitle": "Image de marque personnalisée",
+  "customBrandingPromptDescription": "Obtenez des sondages de planification professionnels avec votre propre logo et couleurs.",
+  "customBrandingPromptCta": "Configurer maintenant",
+  "dismiss": "Ignorer",
+  "new": "Nouveau",
+  "updateAvailable": "Mise à jour disponible"
 }
