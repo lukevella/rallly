@@ -3,7 +3,7 @@ title: Migrate to the new Docker stack
 description: Move an existing self-hosted instance onto the new Docker stack.
 ---
 
-Starting with **v4.10**, Rallly Self-Hosted ships as a managed Docker Compose stack with an installer, `rallly.sh` CLI, bundled reverse proxy (Traefik), and bundled object storage (Garage). If you set up Rallly before v4.10 — with a hand-edited `docker-compose.yml`, your own reverse proxy, or a `config.env` file — this guide walks you through the upgrade.
+Starting with **v4.10**, Rallly Self-Hosted ships as a managed Docker Compose stack with an installer, the **Rallly CLI** (`rallly.sh`), bundled reverse proxy (Traefik), and bundled object storage (Garage). If you set up Rallly before v4.10 — with a hand-edited `docker-compose.yml`, your own reverse proxy, or a `config.env` file — this guide walks you through the upgrade.
 
 <Warning>
   This guide assumes you will tear down the old stack and run the new stack on the same server. Read every step before starting. A database backup is mandatory.

@@ -4,7 +4,7 @@ title: Installation
 description: Install Rallly on your own server.
 ---
 
-This guide installs Rallly using the Docker Compose stack published in the [rallly-selfhosted](https://github.com/lukevella/rallly-selfhosted) repository. The stack includes the app, a bundled PostgreSQL database, bundled S3-compatible object storage, and an HTTPS reverse proxy — everything runs on one machine with no extra setup. If you'd rather use a managed database or object store, see [External services](#external-services).
+This guide installs Rallly using the **Rallly CLI**. It bundles the app, a PostgreSQL database, S3-compatible object storage, and an HTTPS reverse proxy — everything runs on one machine with no extra setup. If you'd rather use a managed database or object store, see [External services](#external-services).
 
 <Note>
   Already running Rallly from a hand-edited `docker-compose.yml` or `config.env`? Follow the [upgrade guide](/self-hosting/migration) to move onto the new stack without losing data.
@@ -39,23 +39,6 @@ The installer will:
 5. Start the stack.
 
 On first boot, Traefik will request a Let's Encrypt certificate for your domain. This can take up to a minute. Once it's ready, your instance is available at `https://<your-domain>`.
-
-## Manual install
-
-If you prefer to review the stack before starting it:
-
-```sh
-git clone https://github.com/lukevella/rallly-selfhosted.git
-cd rallly-selfhosted
-./rallly.sh setup
-./rallly.sh start
-```
-
-`./rallly.sh setup` runs the same interactive configuration as the quick installer and writes a `.env` file. You can also copy `.env.example` to `.env` and fill it in by hand.
-
-<Note>
-  Only edit `.env` when configuring your instance. Modifying `docker-compose.yml`, `rallly.sh`, or other stack files may cause conflicts when you run `./rallly.sh update`.
-</Note>
 
 ## Claim the admin account
 
