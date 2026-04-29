@@ -50,16 +50,20 @@
               "self-hosting/introduction",
               "self-hosting/installation/docker",
               "self-hosting/configuration",
-              "self-hosting/single-sign-on",
+              "self-hosting/single-sign-on"
+            ]
+          },
+          {
+            "group": "Advanced",
+            "pages": [
               "self-hosting/management",
-              "self-hosting/migration",
               "self-hosting/licensing",
               "self-hosting/white-labeling"
             ]
           },
           {
             "group": "Guides",
-            "pages": ["self-hosting/control-panel"]
+            "pages": ["self-hosting/control-panel", "self-hosting/migration"]
           },
           {
             "group": "Misc",
