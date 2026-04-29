@@ -15,7 +15,7 @@ body {
     @apply mb-4 mt-8;
   }
   h2 {
-    @apply text-2xl font-bold;
+    @apply text-2xl font-semibold tracking-tight;
   }
   h3 {
     @apply text-xl font-semibold;
@@ -55,9 +55,12 @@ body {
     @apply my-6 border-l-4 border-gray-300 pl-4 italic text-gray-700;
   }
   pre {
-    @apply my-6 overflow-x-auto rounded-lg bg-gray-100 p-4;
+    @apply my-6 overflow-x-auto rounded-lg border bg-gray-50 p-4;
   }
   code {
-    @apply rounded bg-gray-100 px-1 py-0.5 text-sm;
+    @apply rounded px-1 py-0.5;
+  }
+  strong {
+    @apply font-medium;
   }
 }
