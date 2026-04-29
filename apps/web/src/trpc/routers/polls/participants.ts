@@ -308,7 +308,7 @@ export const participants = router({
 
           const space = participant.poll.space;
           const emailClient = await getEmailClient({
-            locale: ctx.user.locale ?? undefined,
+            locale: ctx.locale,
             ...(space?.showBranding
               ? {
                   primaryColor: space.primaryColor ?? undefined,
