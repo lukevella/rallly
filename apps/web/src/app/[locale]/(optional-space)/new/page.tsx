@@ -11,21 +11,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CreatePoll } from "@/components/create-poll";
 import { UserDropdown } from "@/components/user-dropdown";
-import { isQuickCreateEnabled } from "@/features/quick-create";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import {
-  createPrivateSSRHelper,
-  createPublicSSRHelper,
-} from "@/trpc/server/create-ssr-helper";
 
 export default async function Page() {
-  const helpers = isQuickCreateEnabled
-    ? await createPublicSSRHelper()
-    : await createPrivateSSRHelper();
-
-  await helpers.user.getMe.prefetch();
-
   return (
     <div className="page-bg-gray-100 absolute inset-0 h-dvh overflow-auto dark:bg-gray-900">
       <div className="sticky top-0 z-20 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:grid-cols-3 dark:bg-gray-900/90">

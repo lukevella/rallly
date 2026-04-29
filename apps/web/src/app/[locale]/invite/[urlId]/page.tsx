@@ -44,6 +44,7 @@ export default async function Page(props: {
   const trpc = await createPublicSSRHelper();
 
   await Promise.all([
+    trpc.user.getMe.prefetch(),
     trpc.polls.get.prefetch({ urlId: params.urlId }),
     trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
     trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
