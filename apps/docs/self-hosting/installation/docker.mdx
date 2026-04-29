@@ -1,125 +1,107 @@
 ---
-icon: docker
-title: Docker
-description: How to Self-Host Rallly using Docker
+icon: server
+title: Installation
+description: Install Rallly on your own server.
 ---
 
-This page will guide you through the process of setting up a self-hosted instance of Rallly using the Docker Compose configuration published in the [rallly-selfhosted](https://github.com/lukevella/rallly-selfhosted) repository on Github.
+This guide installs Rallly using the Docker Compose stack published in the [rallly-selfhosted](https://github.com/lukevella/rallly-selfhosted) repository. The stack includes the app, a bundled PostgreSQL database, bundled S3-compatible object storage, and an HTTPS reverse proxy — everything runs on one machine with no extra setup. If you'd rather use a managed database or object store, see [External services](#external-services).
+
+<Note>
+  Already running Rallly from a hand-edited `docker-compose.yml` or `config.env`? Follow the [upgrade guide](/self-hosting/migration) to move onto the new stack without losing data.
+</Note>
 
 ## Requirements
 
-Before you get started you will need to have a server that has the following:
+- A server with at least **2 GB RAM**
+- **Docker 19.03+** with **Compose v2**
+- Ports **80** and **443** open on the server (bundled proxy only — see [External reverse proxy](#external-reverse-proxy) if you're bringing your own)
+- A domain name with a DNS `A` record pointing to the server's IP
+- An **SMTP server** for sending emails (e.g. [Resend](https://resend.com), [Postmark](https://postmarkapp.com), [Mailgun](https://www.mailgun.com), [Brevo](https://www.brevo.com))
 
-- Docker
+<Note>
+  Use a transactional email provider. We don't recommend running your own SMTP server — deliverability depends on IP reputation, SPF/DKIM/DMARC, and reverse DNS, which are hard to get right. Consumer inboxes like Gmail or Proton Mail are also a poor fit: they rate-limit automated senders and will eventually block sign-in emails.
+</Note>
 
-_You will also need to have access to an SMTP server to send emails._
+## Quick install
 
-## Setup Instructions
+Run the installer on your server:
 
-### 1. Clone the repository
+```sh
+curl -fsSL https://get.rallly.co | bash
+```
+
+The installer will:
+
+1. Check that Docker and the required ports are available.
+2. Download the stack to `/opt/rallly`.
+3. Walk you through configuration (domain, support email, SMTP).
+4. Generate secure secrets automatically.
+5. Start the stack.
+
+On first boot, Traefik will request a Let's Encrypt certificate for your domain. This can take up to a minute. Once it's ready, your instance is available at `https://<your-domain>`.
+
+## Manual install
+
+If you prefer to review the stack before starting it:
 
 ```sh
 git clone https://github.com/lukevella/rallly-selfhosted.git
 cd rallly-selfhosted
+./rallly.sh setup
+./rallly.sh start
 ```
 
-If you don't have `git` installed you can download the repo using `curl`
+`./rallly.sh setup` runs the same interactive configuration as the quick installer and writes a `.env` file. You can also copy `.env.example` to `.env` and fill it in by hand.
 
-```sh
-curl -L https://github.com/lukevella/rallly-selfhosted/archive/master.tar.gz | tar -xz
-cd rallly-selfhosted-main
+<Note>
+  Only edit `.env` when configuring your instance. Modifying `docker-compose.yml`, `rallly.sh`, or other stack files may cause conflicts when you run `./rallly.sh update`.
+</Note>
+
+## Claim the admin account
+
+After the stack is running, the first user whose email matches `INITIAL_ADMIN_EMAIL` can navigate to `/control-panel` and claim the admin role. See the [Control Panel guide](/self-hosting/control-panel) for details.
+
+## External services
+
+The bundled reverse proxy, Postgres database, and object storage containers are the default. You can swap any of them for external providers (your own Nginx/Caddy/Cloudflare Tunnel, managed Postgres, AWS S3, Cloudflare R2, MinIO, etc.) by setting the relevant variables in `.env`. The installer uses Docker Compose profiles to skip any bundled service that has an external endpoint configured, so no stack edits are needed.
+
+### External reverse proxy
+
+Set `PROXY_MODE=external` to disable the bundled Traefik. The `web` container is then published on a host port that your reverse proxy can route to. `WEB_PORT` controls the bind — defaults to `127.0.0.1:3000` (loopback only).
+
+```env
+PROXY_MODE=external
+WEB_PORT=127.0.0.1:3000
 ```
 
-### 2. Add required config
+Your reverse proxy is responsible for terminating TLS and forwarding to `WEB_PORT`. Set `WEB_PORT=0.0.0.0:3000` to expose on all interfaces, or pick a different port if 3000 is in use.
 
-In the root of this project you will find a file called `config.env`.
-This is where you can set your environment variables to configure your instance.
-This guide will go through the basics but, you can check out the full list of [configuration options](/self-hosting/configuration-options) in the [self-hosting docs](https://support.rallly.co/self-hosting).
+The installer prompts for this during `./rallly.sh setup` — pick option 2 ("external") at the reverse proxy step.
 
-Start by generating a secret key. **Must be at least 32-characters long**.
+### External database
 
-```sh
-openssl rand -base64 32
+Set `DATABASE_URL` in `.env` to your Postgres connection string. When this variable is set, the bundled `db` container is not started.
+
+```env
+DATABASE_URL=postgres://user:password@db.example.com:5432/rallly
 ```
 
-Open `config.env` and set `SECRET_PASSWORD` to your secret key.
+### External object storage
 
-Next, set `NEXT_PUBLIC_BASE_URL`. It should be the base url where this instance is accessible, including the scheme (eg. `http://` or `https://`), the domain name, and optionally a port. **Do not use trailing slashes or URLs with paths/subfolders.**.
+Set the S3 variables in `.env` to point at your bucket. When `S3_ENDPOINT` is set to anything other than the bundled Garage endpoint, the bundled `garage` container is not started.
 
-### 3. Configure your SMTP Server
-
-First, set `SUPPORT_EMAIL`. Your users will see this as the contact email for any support issues and it will also appear as the sender of all emails.
-
-Next, use the following environment variables to configure your SMTP server:
-
-- `SMTP_HOST` - The host address of your SMTP server
-- `SMTP_PORT` - The port of your SMTP server
-- `SMTP_SECURE` - Set to "true" if SSL is enabled for your SMTP connection
-- `SMTP_USER` - The username (if auth is enabled)
-- `SMTP_PWD` - The password (if auth is enabled)
-
-### 4. Secure your instance
-
-By default, anyone can register and login on your instance.
-You can restrict users by setting `ALLOWED_EMAILS`.
-
-If only you are planning on using this instance you can set `ALLOWED_EMAILS` to your email address.
-
-```
-ALLOWED_EMAILS="john.doe@example.com"
+```env
+S3_ENDPOINT=https://s3.us-east-1.amazonaws.com
+S3_BUCKET_NAME=my-rallly-bucket
+S3_REGION=us-east-1
+S3_ACCESS_KEY_ID=...
+S3_SECRET_ACCESS_KEY=...
 ```
 
-If you would like to allow multiple users, you separate each email address with a comma.
+Apply changes with `./rallly.sh restart`.
 
-```
-ALLOWED_EMAILS="john.doe@example.com,jane.doe@example.com"
-```
+## Next steps
 
-You can also use wildcards to allow all emails from a domain.
-
-```
-ALLOWED_EMAILS="*@example.com"
-```
-
-### 6. Start the server
-
-You can start the server by running:
-
-```
-docker compose up -d
-```
-
-This command will:
-
-- Create a postgres database
-- Run migrations to set up the database schema
-- Start the Next.js server on port 3000
-
-## Using a Reverse Proxy
-
-By default the app will run unencrypted on port 3000. If you want to serve the app over HTTPS you will need to use a reverse proxy.
-
-After setting up a reverse proxy be sure to change this line `- 3000:3000` to - `127.0.0.1:3000:3000` in `docker-compose.yml` and restart the container for it to apply the changes. This prevents Rallly from being accessed remotely using HTTP on port 3000 which is a security concern.
-
-## Version Management
-
-Rallly uses semantic versioning and releases are published as tags on [Docker Hub](https://hub.docker.com/r/lukevella/rallly).
-You can use `latest` to get the most recent release but it is recommended that you pin the image to a major version to avoid accidentally pulling in breaking changes.
-You can set the version in `docker-compose.yml` by changing the following line:
-
-```
-- image: lukevella/rallly:<version>
-```
-
-Check the [releases](https://github.com/lukevella/rallly/releases) to see what versions are available.
-We follow semver versioning so you may want to set your version to a major release (e.g. `lukevella/rallly:3`) to avoid pulling in breaking changes.
-
-## Update Instructions
-
-Rallly is constantly being updated but you will need to manually pull these updates and restart the server to run the latest version. You can do this by running the following commands from within the same directory as your `docker-compose.yml`:
-
-```sh
-docker compose down
-docker compose pull
-docker compose up -d
-```
+- **[Configuration](/self-hosting/configuration)** — full environment variable reference.
+- **[Management](/self-hosting/management)** — updating, backups, and day-to-day operations.
+- **[Single Sign-On](/self-hosting/single-sign-on)** — enable Google, Microsoft, or OIDC login.

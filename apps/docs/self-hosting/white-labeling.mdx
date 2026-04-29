@@ -27,23 +27,17 @@ All white labeling options are configured via environment variables. See the [Co
 
 ## Example
 
-Here's an example of a complete white labeling configuration in your `docker-compose.yml`:
+Add your white labeling values to the `.env` file at the root of your self-hosted stack, then apply them with `./rallly.sh restart`:
 
-```yaml
-services:
-  rallly:
-    image: lukevella/rallly:4
-    environment:
-      # ... other required environment variables ...
-
-      # White labeling
-      APP_NAME: "Acme Scheduler"
-      PRIMARY_COLOR: "#0066cc"
-      PRIMARY_COLOR_DARK: "#3399ff"
-      LOGO_URL: "https://example.com/logo.svg"
-      LOGO_URL_DARK: "https://example.com/logo-dark.svg"
-      LOGO_ICON_URL: "https://example.com/icon.png"
-      HIDE_ATTRIBUTION: "true"
+```sh
+# White labeling
+APP_NAME="Acme Scheduler"
+PRIMARY_COLOR="#0066cc"
+PRIMARY_COLOR_DARK="#3399ff"
+LOGO_URL="https://example.com/logo.svg"
+LOGO_URL_DARK="https://example.com/logo-dark.svg"
+LOGO_ICON_URL="https://example.com/icon.png"
+HIDE_ATTRIBUTION="true"
 ```
 
 ## Viewing Current Settings

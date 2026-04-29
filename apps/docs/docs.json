@@ -48,14 +48,13 @@
             "group": "Get Started",
             "pages": [
               "self-hosting/introduction",
-              {
-                "group": "Installation",
-                "icon": "server",
-                "pages": ["self-hosting/installation/docker"]
-              },
+              "self-hosting/installation/docker",
+              "self-hosting/configuration",
+              "self-hosting/single-sign-on",
+              "self-hosting/management",
+              "self-hosting/migration",
               "self-hosting/licensing",
-              "self-hosting/white-labeling",
-              "self-hosting/configuration"
+              "self-hosting/white-labeling"
             ]
           },
           {

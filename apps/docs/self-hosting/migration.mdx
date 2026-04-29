@@ -1,0 +1,156 @@
+---
+icon: arrow-right-arrow-left
+title: Upgrading from the legacy stack
+description: Move an existing self-hosted instance onto the new Docker stack.
+---
+
+Starting with **v4.10**, Rallly Self-Hosted ships as a managed Docker Compose stack with an installer, `rallly.sh` CLI, bundled reverse proxy (Traefik), and bundled object storage (Garage). If you set up Rallly before v4.10 — with a hand-edited `docker-compose.yml`, your own reverse proxy, or a `config.env` file — this guide walks you through the upgrade.
+
+<Warning>
+  This guide assumes you will tear down the old stack and run the new stack on the same server. Read every step before starting. A database backup is mandatory.
+</Warning>
+
+## Before you begin
+
+- You have **root (or sudo) access** to the server.
+- You have a **recent, tested database backup** stored off the server.
+- Your DNS `A` record for the domain points at this server's IP. Traefik will request a fresh Let's Encrypt certificate on first boot.
+
+## Step 1 — Save your secrets
+
+Open your existing `.env` or `config.env`. Copy these values somewhere safe — you'll paste them into the new stack's `.env`:
+
+| Value | Notes |
+|---|---|
+| `SECRET_PASSWORD` | **Critical.** Must carry over. Encrypts sessions; if it changes, all existing sessions are invalidated. |
+| `SUPPORT_EMAIL` | |
+| `NOREPLY_EMAIL` | If set. |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PWD` | All SMTP config. |
+| `ALLOWED_EMAILS` | If set. |
+| `INITIAL_ADMIN_EMAIL` | If set. |
+| `OIDC_*`, `GOOGLE_*`, `MICROSOFT_*` | Any SSO credentials you use. |
+
+Your domain (previously in `NEXT_PUBLIC_BASE_URL`) becomes `DOMAIN` in the new stack — **without the scheme or trailing slash**. For example `https://rallly.example.com` → `rallly.example.com`.
+
+## Step 2 — Back up the database
+
+From your existing stack directory, with the old stack running:
+
+```sh
+docker compose exec -T rallly_db pg_dump -U postgres rallly | gzip > rallly-backup.sql.gz
+```
+
+Copy `rallly-backup.sql.gz` off the server (e.g. `scp` to your laptop). Do not skip this.
+
+<Note>
+  `rallly_db` is the Postgres service name in the official legacy `docker-compose.yml`. If you renamed it or authored your own compose file, replace it with whatever yours is called (run `docker compose ps` to check).
+</Note>
+
+## Step 3 — Stop the old stack
+
+From the old stack directory:
+
+```sh
+docker compose down
+```
+
+If you were running an external reverse proxy (Nginx, Caddy, Apache) in front of Rallly, **stop and disable it now** — Traefik needs ports 80 and 443.
+
+```sh
+# Examples, adjust to your setup
+sudo systemctl stop nginx && sudo systemctl disable nginx
+sudo systemctl stop caddy && sudo systemctl disable caddy
+```
+
+Verify the ports are free:
+
+```sh
+sudo ss -tlnp | grep -E ':(80|443)\b'
+```
+
+Should return nothing.
+
+## Step 4 — Install the new stack
+
+```sh
+curl -fsSL https://get.rallly.co | bash
+```
+
+When prompted, **use the same `DOMAIN` as before**. For `SUPPORT_EMAIL`, SMTP settings, etc., paste in the values you saved in Step 1.
+
+After setup completes, **do not start the stack yet**. Edit `/opt/rallly/.env` and:
+
+1. Replace the freshly-generated `SECRET_PASSWORD` with the value from your old `.env`.
+2. Add any SSO variables (`OIDC_*`, `GOOGLE_*`, `MICROSOFT_*`) that the interactive setup didn't cover.
+
+See the full [configuration reference](/self-hosting/configuration).
+
+## Step 5 — Start the stack and restore the database
+
+```sh
+cd /opt/rallly
+./rallly.sh start
+```
+
+Wait for the database to finish initialising (about 10 seconds). Check with:
+
+```sh
+./rallly.sh logs db
+```
+
+Once you see `database system is ready to accept connections`, restore your backup:
+
+```sh
+# Stop the app so it releases its connections to the rallly database
+docker compose stop web
+
+# Drop the freshly-migrated empty database and recreate it — connect to "postgres" to drop "rallly"
+docker compose exec -T db psql -U postgres -d postgres -c "DROP DATABASE IF EXISTS rallly;"
+docker compose exec -T db psql -U postgres -d postgres -c "CREATE DATABASE rallly;"
+
+# Restore — ON_ERROR_STOP=1 fails fast on the first error instead of continuing silently
+gunzip < /path/to/rallly-backup.sql.gz | docker compose exec -T db psql -v ON_ERROR_STOP=1 -U postgres rallly
+```
+
+Start the app so it picks up the restored schema:
+
+```sh
+./rallly.sh start
+```
+
+## Step 6 — Verify
+
+1. Visit `https://<your-domain>`. You should see the sign-in page served over HTTPS (Traefik's Let's Encrypt certificate will be issued within a minute of first boot).
+2. Sign in with an existing account. If `SECRET_PASSWORD` was preserved correctly, your previous session may even still be valid.
+3. Open an existing poll and confirm votes are intact.
+4. Send a test sign-in email to confirm SMTP works.
+5. If you use SSO, sign in through each configured provider.
+
+If anything is missing or broken, **do not delete the old stack's volumes yet**. You can roll back by stopping the new stack and restarting the old one.
+
+## Step 7 — Clean up
+
+Once you're satisfied the new stack is working:
+
+```sh
+# Remove the old stack directory
+rm -rf /path/to/old/rallly-selfhosted
+
+# Remove orphaned Docker volumes from the old stack
+docker volume ls
+docker volume rm <old-volume-name>
+```
+
+<Warning>
+  Double-check volume names before removing. The new stack's volumes are prefixed with its Docker Compose project name, so confirm the prefix before deleting anything. The project name comes from `COMPOSE_PROJECT_NAME`, an explicit `name:` in `docker-compose.yml`, or the directory the compose file lives in. From inside the new stack's directory, run `docker compose config --format json | jq -r .name` to print it, or `docker compose ls` to list running projects and their volumes.
+</Warning>
+
+## What doesn't carry over
+
+- **TLS certificates.** Traefik issues fresh certificates via Let's Encrypt on first start. Any existing certs (from certbot or your old proxy) are not imported.
+- **Custom `docker-compose.yml` changes.** The new stack is managed; edits will conflict with `./rallly.sh update`. Configure via `.env` only.
+- **Uploaded files from an external S3 bucket.** The new stack ships with [Garage](https://garagehq.deuxfleurs.fr/) for uploads. If you were previously using external S3, either keep pointing at it (advanced, see [External object storage](/self-hosting/configuration#external-object-storage)) or accept that previously uploaded files will not appear in the new Garage instance.
+
+## Moving to a different server
+
+If you're migrating to a new server rather than upgrading in place, the flow is the same, with one change: complete Step 4 (install new stack) on the new server, then update your DNS `A` record to point at it before Step 5. Keep the old server running until Step 6 verification passes, which gives you a rollback path.
