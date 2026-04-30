@@ -4,7 +4,7 @@ import React from "react";
 import { useParticipants } from "@/components/participants-provider";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
-import { authClient } from "@/lib/auth-client";
+import { trpc } from "@/trpc/client";
 
 const PermissionsContext = React.createContext<{
   impersonatedUserId: string | null;
@@ -29,12 +29,12 @@ export const PermissionProvider = ({
 export const usePermissions = () => {
   const poll = usePoll();
   const context = React.useContext(PermissionsContext);
-  const { data: session } = authClient.useSession();
+  const { data: user } = trpc.user.getMe.useQuery();
   const role = useRole();
   const { participants } = useParticipants();
   return {
     isUser: (userId: string) =>
-      userId === session?.user?.id || userId === context.impersonatedUserId,
+      userId === user?.id || userId === context.impersonatedUserId,
     canAddNewParticipant: poll.status === "open",
     canEditParticipant: (participantId: string) => {
       if (poll.status !== "open") {
@@ -54,7 +54,7 @@ export const usePermissions = () => {
       }
 
       if (
-        participant.userId === session?.user?.id ||
+        participant.userId === user?.id ||
         (context.impersonatedUserId &&
           participant.userId === context.impersonatedUserId)
       ) {
