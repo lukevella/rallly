@@ -24,8 +24,8 @@ importers:
         specifier: ^16.2.7
         version: 16.2.7
       portless:
-        specifier: ^0.7.2
-        version: 0.7.2
+        specifier: ^0.12.0
+        version: 0.12.0
       prettier:
         specifier: ^3.5.3
         version: 3.8.1
@@ -9458,8 +9458,8 @@ packages:
     resolution: {integrity: sha512-PxkIc/2ZpLiEzQXu5YRDOUgBlfGYBY8156HY5ZcRAwwonMk5W/MrJP2LLkG/hF7GEQzaHo2aS7ho6ZLCOvf+6g==}
     engines: {node: '>=12.0.0'}
 
-  portless@0.7.2:
-    resolution: {integrity: sha512-bwtBBTqCe4K2FL3MMTCMFw3ZEBsv5lJeu9VgVdDqFPhb04jgAaWu3ibXP/dZ6y7OfqV/Vphj0e7Z6bQxcr8uFg==}
+  portless@0.12.0:
+    resolution: {integrity: sha512-zE8EYJ5xIEtKEBu1wnD+FavOE90/GNxRixF4Mu2hxMvDuVx1ftUbA6VbjbxI9sP9LUt0L26l6OiENGo4EFtLfw==}
     engines: {node: '>=20'}
     os: [darwin, linux, win32]
     hasBin: true
@@ -22017,9 +22017,7 @@ snapshots:
 
   pony-cause@1.1.1: {}
 
-  portless@0.7.2:
-    dependencies:
-      chalk: 5.6.2
+  portless@0.12.0: {}
 
   possible-typed-array-names@1.1.0: {}
 
