@@ -41,7 +41,7 @@ export interface OAuthClient {
 }
 
 export interface CreateOAuthOptions<T extends string> {
-  baseUrl: string;
+  basePath: string;
   getIntegration: ({
     integrationId,
     callbackUrl,

@@ -2,6 +2,7 @@ import "server-only";
 
 import { zValidator } from "@hono/zod-validator";
 import { createLogger } from "@rallly/logger";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { generateCodeVerifier, generateState } from "arctic";
 import { Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
@@ -16,7 +17,7 @@ export function OAuthIntegration<T extends string>(
   options: CreateOAuthOptions<T>,
 ) {
   const {
-    baseUrl,
+    basePath,
     getIntegration,
     cookieConfig = {
       prefix: "oauth.",
@@ -31,7 +32,7 @@ export function OAuthIntegration<T extends string>(
   const REDIRECT_TO = `${prefix}redirect-to`;
   const STATE = `${prefix}state`;
 
-  const app = new Hono().basePath(baseUrl);
+  const app = new Hono().basePath(basePath);
 
   // Create schema with available provider names
   const validateParams = zValidator(
@@ -46,11 +47,9 @@ export function OAuthIntegration<T extends string>(
     try {
       const { id } = c.req.valid("param");
 
-      const callbackUrl = new URL(`${baseUrl}/callback/${id}`, c.req.url);
-
       const integration = getIntegration({
         integrationId: id as T,
-        callbackUrl: callbackUrl.toString(),
+        callbackUrl: absoluteUrl(`${basePath}/callback/${id}`),
       });
 
       if (!integration) {
@@ -104,11 +103,9 @@ export function OAuthIntegration<T extends string>(
     try {
       const { id } = c.req.valid("param");
 
-      const callbackUrl = new URL(`${baseUrl}/callback/${id}`, c.req.url);
-
       const integration = getIntegration({
         integrationId: id as T,
-        callbackUrl: callbackUrl.toString(),
+        callbackUrl: absoluteUrl(`${basePath}/callback/${id}`),
       });
 
       if (!integration) {
@@ -131,7 +128,7 @@ export function OAuthIntegration<T extends string>(
         state !== storedState ||
         !codeVerifier
       ) {
-        const errorUrl = new URL(redirectTo, c.req.url);
+        const errorUrl = new URL(redirectTo, absoluteUrl());
         errorUrl.searchParams.set("error", "invalid_request");
         return c.redirect(errorUrl.toString());
       }
@@ -149,7 +146,7 @@ export function OAuthIntegration<T extends string>(
       });
 
       // Redirect with success
-      const successUrl = new URL(redirectTo, c.req.url);
+      const successUrl = new URL(redirectTo, absoluteUrl());
       successUrl.searchParams.set("connected", "true");
       successUrl.searchParams.set("integration", id);
 
@@ -158,7 +155,7 @@ export function OAuthIntegration<T extends string>(
       logger.error({ error }, "OAuth connection failed");
 
       const redirectTo = getCookie(c, REDIRECT_TO) || "/";
-      const errorUrl = new URL(redirectTo, c.req.url);
+      const errorUrl = new URL(redirectTo, absoluteUrl());
       errorUrl.searchParams.set("error", "connection_failed");
       return c.redirect(errorUrl.toString());
     }

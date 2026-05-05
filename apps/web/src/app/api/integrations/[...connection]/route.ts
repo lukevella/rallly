@@ -11,7 +11,7 @@ import { OAuthIntegration } from "@/lib/oauth/server";
 type Integration = "google-calendar" | "outlook-calendar";
 
 const { handler } = OAuthIntegration<Integration>({
-  baseUrl: "/api/integrations",
+  basePath: "/api/integrations",
   getIntegration: ({ integrationId, callbackUrl }) => {
     switch (integrationId) {
       case "google-calendar": {
