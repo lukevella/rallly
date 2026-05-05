@@ -1,10 +1,16 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import { BarChart2Icon, CalendarIcon, HomeIcon } from "lucide-react";
+import {
+  BarChart2Icon,
+  CalendarDaysIcon,
+  CalendarIcon,
+  HomeIcon,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { useTranslation } from "@/i18n/client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 
 export interface NavigationItem {
   id: string;
@@ -30,6 +36,7 @@ export interface NavigationConfig {
 export const useSpaceMenu = () => {
   const { t } = useTranslation();
   const pathname = usePathname();
+  const isCalendarsEnabled = useFeatureFlag("calendars");
   const config = React.useMemo<NavigationConfig>(
     () => ({
       sections: [
@@ -63,11 +70,22 @@ export const useSpaceMenu = () => {
               icon: CalendarIcon,
               isActive: pathname === "/events",
             },
+            ...(isCalendarsEnabled
+              ? [
+                  {
+                    id: "calendar",
+                    label: t("calendar", { defaultValue: "Calendar" }),
+                    href: "/calendar",
+                    icon: CalendarDaysIcon,
+                    isActive: pathname === "/calendar",
+                  },
+                ]
+              : []),
           ],
         },
       ],
     }),
-    [pathname, t],
+    [pathname, t, isCalendarsEnabled],
   );
 
   return React.useMemo(
