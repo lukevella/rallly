@@ -167,6 +167,7 @@ export const env = createEnv({
     NEXT_PUBLIC_BASE_URL: z.url(),
     NEXT_PUBLIC_POSTHOG_API_KEY: z.string().optional(),
     NEXT_PUBLIC_POSTHOG_API_HOST: z.url().optional(),
+    NEXT_PUBLIC_POSTHOG_UI_HOST: z.url().optional(),
     NEXT_PUBLIC_SELF_HOSTED: z.enum(["true", "false"]).optional(),
     /**
      * Cloudflare Turnstile site key for bot protection on registration.
@@ -223,6 +224,7 @@ export const env = createEnv({
       (vercelUrl ? `https://${vercelUrl}` : undefined),
     NEXT_PUBLIC_POSTHOG_API_KEY: process.env.NEXT_PUBLIC_POSTHOG_API_KEY,
     NEXT_PUBLIC_POSTHOG_API_HOST: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+    NEXT_PUBLIC_POSTHOG_UI_HOST: process.env.NEXT_PUBLIC_POSTHOG_UI_HOST,
     NEXT_PUBLIC_SELF_HOSTED: process.env.NEXT_PUBLIC_SELF_HOSTED,
     SUPPORT_EMAIL: process.env.SUPPORT_EMAIL,
     NOREPLY_EMAIL: process.env.NOREPLY_EMAIL,

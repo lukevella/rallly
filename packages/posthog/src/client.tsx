@@ -11,6 +11,7 @@ if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
     debug: false,
     api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+    ui_host: process.env.NEXT_PUBLIC_POSTHOG_UI_HOST,
     capture_pageview: false,
     capture_pageleave: true,
     disable_session_recording: true,
