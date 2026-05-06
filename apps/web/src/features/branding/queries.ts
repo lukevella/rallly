@@ -1,6 +1,5 @@
 import "server-only";
 
-import { cache } from "react";
 import { env } from "@/env";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getForegroundColor } from "@/utils/color";
@@ -55,7 +54,7 @@ export function getCustomBrandingConfig() {
  * Automatically checks if the white label addon is enabled and returns
  * the appropriate config (custom or default).
  */
-export const getInstanceBrandingConfig = cache(async () => {
+export const getInstanceBrandingConfig = async () => {
   if (!isSelfHosted) {
     return getCustomBrandingConfig();
   }
@@ -64,4 +63,4 @@ export const getInstanceBrandingConfig = cache(async () => {
   return hasWhiteLabelAddon
     ? getCustomBrandingConfig()
     : getDefaultBrandingConfig();
-});
+};

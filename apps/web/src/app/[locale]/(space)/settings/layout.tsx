@@ -19,6 +19,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { ArrowLeftIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
+import { Suspense } from "react";
 import { NavUser } from "@/components/nav-user";
 import { BillingProvider } from "@/features/billing/client";
 import { Trans } from "@/i18n/client";
@@ -29,7 +30,7 @@ import {
   SpaceSidebarMenu,
 } from "./components/sidebar";
 
-export default async function Layout({
+async function SettingsLayoutContent({
   children,
 }: {
   children?: React.ReactNode;
@@ -111,5 +112,13 @@ export default async function Layout({
         </SidebarProvider>
       </BillingProvider>
     </HydrationBoundary>
+  );
+}
+
+export default function Layout({ children }: { children?: React.ReactNode }) {
+  return (
+    <Suspense>
+      <SettingsLayoutContent>{children}</SettingsLayoutContent>
+    </Suspense>
   );
 }

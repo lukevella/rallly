@@ -9,6 +9,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import type React from "react";
+import { Suspense } from "react";
 import type { Params } from "@/app/[locale]/types";
 import { BrandingProvider } from "@/features/branding/client";
 import { getInstanceBrandingConfig } from "@/features/branding/queries";
@@ -32,6 +33,7 @@ export const viewport: Viewport = {
 };
 
 async function loadData(locale: string) {
+  "use cache";
   const [brandingConfig, { i18n }] = await Promise.all([
     getInstanceBrandingConfig(),
     initI18next({ lng: locale }),
@@ -81,7 +83,9 @@ export default async function Root({
                 <TRPCProvider>
                   <LazyMotion features={domAnimation}>
                     <PostHogProvider>
-                      <PostHogPageView />
+                      <Suspense fallback={null}>
+                        <PostHogPageView />
+                      </Suspense>
                       <TooltipProvider>{children}</TooltipProvider>
                     </PostHogProvider>
                   </LazyMotion>
@@ -104,4 +108,8 @@ export async function generateMetadata(): Promise<Metadata> {
       default: brandingConfig.appName,
     },
   };
+}
+
+export function generateStaticParams() {
+  return supportedLngs.map((locale) => ({ locale }));
 }

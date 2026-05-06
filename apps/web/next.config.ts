@@ -12,6 +12,7 @@ const withBundleAnalyzer = createBundleAnalyzer({
 });
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
   allowedDevOrigins: ["web.rallly.co"],
   experimental: {
     staleTimes: {

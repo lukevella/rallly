@@ -3,6 +3,7 @@ import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { GaugeIcon } from "lucide-react";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { Trans } from "@/i18n/client";
@@ -11,7 +12,7 @@ import { createAdminSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { ControlPanelSidebarProvider } from "./control-panel-sidebar-provider";
 import { ControlPanelSidebar } from "./sidebar";
 
-export default async function AdminLayout({
+async function ControlPanelContent({
   children,
 }: {
   children: React.ReactNode;
@@ -45,6 +46,18 @@ export default async function AdminLayout({
         </SidebarInset>
       </ControlPanelSidebarProvider>
     </HydrationBoundary>
+  );
+}
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense>
+      <ControlPanelContent>{children}</ControlPanelContent>
+    </Suspense>
   );
 }
 

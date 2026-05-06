@@ -21,6 +21,7 @@ import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getUserCount } from "@/features/user/queries";
 import { Trans } from "@/i18n/client";
+import { createAdminSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { VersionTile } from "./version-tile";
 
 async function loadData() {
@@ -36,6 +37,7 @@ async function loadData() {
 }
 
 export default async function AdminPage() {
+  await createAdminSSRHelper();
   const { userCount, license } = await loadData();
 
   const userLimit = license?.seats ?? DEFAULT_SEAT_LIMIT;

@@ -1,5 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { BillingProvider } from "@/features/billing/client";
 import { SpaceProvider } from "@/features/space/client";
@@ -7,11 +8,7 @@ import { getPathname } from "@/lib/pathname";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { buildSafeRedirectUrl } from "@/utils/redirect";
 
-export default async function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+async function PrivateSpaceGate({ children }: { children: React.ReactNode }) {
   const helpers = await createPrivateSSRHelper();
 
   await Promise.all([helpers.user.getMe.prefetch()]);
@@ -33,5 +30,13 @@ export default async function Layout({
         </SpaceProvider>
       </PreferencesProvider>
     </HydrationBoundary>
+  );
+}
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense>
+      <PrivateSpaceGate>{children}</PrivateSpaceGate>
+    </Suspense>
   );
 }

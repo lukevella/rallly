@@ -1,4 +1,5 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { Suspense } from "react";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { BillingProvider } from "@/features/billing/client";
 import { isQuickCreateEnabled } from "@/features/quick-create";
@@ -7,7 +8,7 @@ import {
   createPublicSSRHelper,
 } from "@/trpc/server/create-ssr-helper";
 
-export default async function Layout({
+async function OptionalSpaceContent({
   children,
 }: {
   children: React.ReactNode;
@@ -27,5 +28,13 @@ export default async function Layout({
         <BillingProvider>{children}</BillingProvider>
       </PreferencesProvider>
     </HydrationBoundary>
+  );
+}
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense>
+      <OptionalSpaceContent>{children}</OptionalSpaceContent>
+    </Suspense>
   );
 }
