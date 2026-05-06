@@ -11,6 +11,7 @@ export class CreatePollSuccessDialog {
   async goToPollPage() {
     await this.page.getByRole("link", { name: "Manage" }).click();
     await this.page.waitForURL(/\/poll\/[^/]+/);
+    await this.dialog.waitFor({ state: "detached" });
     return new PollPage(this.page);
   }
 }
