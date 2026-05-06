@@ -66,20 +66,20 @@ export function SpaceProvider({ children }: { children: React.ReactNode }) {
       : null;
 
   return (
-    <>
+    <div data-space-branding style={{ display: "contents" }}>
       {primaryColorVars ? (
         <style>{`
-          .light {
+          html.light [data-space-branding] {
             --primary: ${primaryColorVars.light};
             --primary-foreground: ${primaryColorVars.lightForeground};
           }
-          .dark {
+          html.dark [data-space-branding] {
             --primary: ${primaryColorVars.dark};
             --primary-foreground: ${primaryColorVars.darkForeground};
           }
         `}</style>
       ) : null}
       {children}
-    </>
+    </div>
   );
 }
