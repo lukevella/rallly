@@ -1,5 +1,5 @@
 import { prisma } from "@rallly/database";
-import { unstable_cache } from "next/cache";
+import { cacheTag } from "next/cache";
 import { cache } from "react";
 import {
   DEFAULT_SEAT_LIMIT,
@@ -7,7 +7,9 @@ import {
 } from "@/features/licensing/constants";
 import { isSelfHosted } from "@/utils/constants";
 
-export function getInstanceLicense() {
+export async function getInstanceLicense() {
+  "use cache";
+  cacheTag(INSTANCE_LICENSE_TAG);
   return prisma.instanceLicense.findFirst({
     orderBy: {
       id: "asc",
@@ -15,20 +17,12 @@ export function getInstanceLicense() {
   });
 }
 
-export const cached_getInstanceLicense = unstable_cache(
-  getInstanceLicense,
-  [],
-  {
-    tags: [INSTANCE_LICENSE_TAG],
-  },
-);
-
 export const loadInstanceLicense = cache(async () => {
   if (!isSelfHosted) {
     return null;
   }
 
-  const license = await cached_getInstanceLicense();
+  const license = await getInstanceLicense();
 
   if (!license) {
     return null;
