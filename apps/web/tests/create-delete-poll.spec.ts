@@ -24,7 +24,7 @@ test.describe.serial(() => {
 
   // delete the poll we just created
   test("delete existing poll", async () => {
-    const manageButton = page.getByText("Manage");
+    const manageButton = page.getByRole("button", { name: "Manage" });
     await manageButton.waitFor();
     await manageButton.click();
     await page.click("text=Delete");

@@ -166,7 +166,7 @@ test.describe.serial(() => {
         ).toBeVisible();
 
         // Verify email is pre-filled as a UX improvement
-        const emailInput = page.getByPlaceholder("jessie.smith@example.com");
+        const emailInput = page.getByRole("textbox", { name: "Email" });
         await expect(emailInput).toHaveValue(testUserEmail);
       });
 

@@ -60,8 +60,6 @@ export default async function Page(props: {
   );
 }
 
-export const dynamicParams = false;
-
 export async function generateStaticParams() {
   const posts = getAllPosts(["slug"]);
   return posts.map((post) => ({
