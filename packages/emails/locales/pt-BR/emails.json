@@ -1,5 +1,6 @@
 {
   "common_poweredBy": "Tecnologias de <a>{domain}</a>",
+  "common_disableNotifications": "Você pode <a>gerenciar suas configurações de notificação</a> para parar de receber esses e-mails.",
   "finalizeHost_content": "<b>{title}</b> foi agendado para:",
   "finalizeHost_preview": "Data final agendada! Notificamos os participantes e enviamos convites de calendário.",
   "finalizeHost_heading": "Data final agendada!",

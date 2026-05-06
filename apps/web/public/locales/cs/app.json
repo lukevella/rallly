@@ -1,6 +1,6 @@
 {
-  "12h": "12hodinový",
-  "24h": "24hodinový",
+  "12h": "12 hodinový",
+  "24h": "24 hodinový",
   "addTimeOption": "Vybrat konkrétní čas",
   "applyToAllDates": "Použít pro všechny termíny",
   "areYouSure": "Jste si jisti?",
@@ -43,7 +43,7 @@
   "mixedOptionsDescription": "Nemůžete mít ve stejné anketě souběžně datum i čas. Kterou volbu chcete zachovat?",
   "mixedOptionsKeepDates": "Zachovat datum",
   "mixedOptionsKeepTimes": "Zachovat čas",
-  "mixedOptionsTitle": "Vydržte chvilku…🤔",
+  "mixedOptionsTitle": "Tohle nesedí… 🤔",
   "monthView": "Měsíční pohled",
   "name": "Jméno",
   "namePlaceholder": "Karel Novák",
@@ -627,5 +627,6 @@
   "customBrandingPromptDescription": "Získejte profesionální plánovací ankety se svým vlastním logem a barvami.",
   "customBrandingPromptCta": "Nastavit nyní",
   "dismiss": "Zrušit",
-  "new": "Nová"
+  "new": "Nová",
+  "updateAvailable": "Aktualizace k dispozici"
 }
