@@ -63,21 +63,21 @@ export default async function Root({
       <body>
         <ThemeProvider>
           <FeatureFlagsProvider value={featureFlagConfig}>
-            <Suspense>
-              <InstanceBrandingProvider>
-                <Toaster />
-                <I18nProvider locale={locale} resources={resources}>
-                  <TRPCProvider>
-                    <LazyMotion features={domAnimation}>
+            <I18nProvider locale={locale} resources={resources}>
+              <Toaster />
+              <TRPCProvider>
+                <LazyMotion features={domAnimation}>
+                  <Suspense>
+                    <InstanceBrandingProvider>
                       <PostHogProvider>
                         <PostHogPageView />
                         <TooltipProvider>{children}</TooltipProvider>
                       </PostHogProvider>
-                    </LazyMotion>
-                  </TRPCProvider>
-                </I18nProvider>
-              </InstanceBrandingProvider>
-            </Suspense>
+                    </InstanceBrandingProvider>
+                  </Suspense>
+                </LazyMotion>
+              </TRPCProvider>
+            </I18nProvider>
           </FeatureFlagsProvider>
         </ThemeProvider>
       </body>
