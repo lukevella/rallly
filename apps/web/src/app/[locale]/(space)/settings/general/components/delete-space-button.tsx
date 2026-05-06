@@ -36,6 +36,9 @@ function DeleteSpaceDialog({
     },
   });
 
+  const router = useRouter();
+  const { t } = useTranslation();
+
   const deleteSpace = trpc.spaces.delete.useMutation({
     onSuccess: () => {
       toast.success(
@@ -43,12 +46,9 @@ function DeleteSpaceDialog({
           defaultValue: "Space has been permanently deleted",
         }),
       );
-      router.refresh();
+      router.push("/");
     },
   });
-
-  const router = useRouter();
-  const { t } = useTranslation();
 
   return (
     <Form {...form}>
