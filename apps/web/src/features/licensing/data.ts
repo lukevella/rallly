@@ -1,6 +1,5 @@
 import { prisma } from "@rallly/database";
 import { cacheTag } from "next/cache";
-import { PHASE_PRODUCTION_BUILD } from "next/constants";
 import { cache } from "react";
 import {
   DEFAULT_SEAT_LIMIT,
@@ -20,10 +19,6 @@ export async function getInstanceLicense() {
 
 export const loadInstanceLicense = cache(async () => {
   if (!isSelfHosted) {
-    return null;
-  }
-
-  if (process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD) {
     return null;
   }
 

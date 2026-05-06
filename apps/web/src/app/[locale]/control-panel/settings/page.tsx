@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import {
   PageSection,
   PageSectionContent,
@@ -26,6 +27,7 @@ async function loadData() {
 }
 
 export default async function InstanceSettingsPage() {
+  await connection();
   const { instanceSettings } = await loadData();
 
   return (

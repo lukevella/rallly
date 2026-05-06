@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { getTranslation } from "@/i18n/server";
 import { redirectIfLoggedIn } from "@/lib/auth";
@@ -18,6 +19,7 @@ import { RegisterNameForm } from "./components/register-name-form";
 export default async function Register(props: {
   params: Promise<{ locale: string }>;
 }) {
+  await connection();
   await redirectIfLoggedIn();
   const params = await props.params;
   const { t } = await getTranslation(params.locale);

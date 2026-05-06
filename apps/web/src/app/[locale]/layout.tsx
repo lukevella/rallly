@@ -11,7 +11,7 @@ import { notFound } from "next/navigation";
 import type React from "react";
 import { Suspense } from "react";
 import type { Params } from "@/app/[locale]/types";
-import { BrandingProvider } from "@/features/branding/client";
+import { InstanceBrandingProvider } from "@/features/branding/components/instance-branding-provider";
 import { getInstanceBrandingConfig } from "@/features/branding/queries";
 import { ThemeProvider } from "@/features/theme/client";
 import { I18nProvider } from "@/i18n/client";
@@ -32,18 +32,12 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-async function loadData(locale: string) {
+const getResources = async (lng: string) => {
   "use cache";
-  const [brandingConfig, { i18n }] = await Promise.all([
-    getInstanceBrandingConfig(),
-    initI18next({ lng: locale }),
-  ]);
+  const { i18n } = await initI18next({ lng });
 
-  return {
-    resources: i18n.store.data,
-    brandingConfig,
-  };
-}
+  return i18n.store.data;
+};
 
 export default async function Root({
   children,
@@ -58,40 +52,32 @@ export default async function Root({
     notFound();
   }
 
-  const { brandingConfig, resources } = await loadData(locale);
-
-  const brandingStyles = {
-    "--primary-light": brandingConfig.primaryColor.light,
-    "--primary-light-foreground": brandingConfig.primaryColor.lightForeground,
-    "--primary-dark": brandingConfig.primaryColor.dark,
-    "--primary-dark-foreground": brandingConfig.primaryColor.darkForeground,
-  } as React.CSSProperties;
+  const resources = await getResources(locale);
 
   return (
     <html
       lang={locale}
       className={inter.className}
       suppressHydrationWarning={true}
-      style={brandingStyles}
     >
       <body>
         <ThemeProvider>
           <FeatureFlagsProvider value={featureFlagConfig}>
-            <BrandingProvider value={brandingConfig}>
-              <Toaster />
-              <I18nProvider locale={locale} resources={resources}>
-                <TRPCProvider>
-                  <LazyMotion features={domAnimation}>
-                    <PostHogProvider>
-                      <Suspense fallback={null}>
+            <Suspense>
+              <InstanceBrandingProvider>
+                <Toaster />
+                <I18nProvider locale={locale} resources={resources}>
+                  <TRPCProvider>
+                    <LazyMotion features={domAnimation}>
+                      <PostHogProvider>
                         <PostHogPageView />
-                      </Suspense>
-                      <TooltipProvider>{children}</TooltipProvider>
-                    </PostHogProvider>
-                  </LazyMotion>
-                </TRPCProvider>
-              </I18nProvider>
-            </BrandingProvider>
+                        <TooltipProvider>{children}</TooltipProvider>
+                      </PostHogProvider>
+                    </LazyMotion>
+                  </TRPCProvider>
+                </I18nProvider>
+              </InstanceBrandingProvider>
+            </Suspense>
           </FeatureFlagsProvider>
         </ThemeProvider>
       </body>
