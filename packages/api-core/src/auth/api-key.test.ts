@@ -4,7 +4,7 @@ import {
   extractApiKeyPrefix,
   randomToken,
   verifyApiKey,
-} from "./utils";
+} from "./api-key";
 
 describe("randomToken", () => {
   it("should generate tokens of correct length", () => {

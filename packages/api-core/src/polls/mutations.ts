@@ -1,5 +1,4 @@
 import { prisma } from "@rallly/database";
-import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 
 export type PollOption = {
@@ -78,11 +77,7 @@ export const createPoll = async ({
     },
   });
 
-  return {
-    ...poll,
-    adminUrl: absoluteUrl(`/poll/${poll.id}`),
-    inviteUrl: shortUrl(`/invite/${poll.id}`),
-  };
+  return poll;
 };
 
 export const deletePoll = async (pollId: string, spaceId: string) => {
