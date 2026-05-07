@@ -241,6 +241,9 @@ importers:
       '@radix-ui/react-switch':
         specifier: ^1.0.2
         version: 1.2.6(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@rallly/api-core':
+        specifier: workspace:*
+        version: link:../../packages/api-core
       '@rallly/billing':
         specifier: workspace:*
         version: link:../../packages/billing
@@ -524,6 +527,28 @@ importers:
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.11)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+
+  packages/api-core:
+    dependencies:
+      '@rallly/database':
+        specifier: workspace:*
+        version: link:../database
+      '@rallly/logger':
+        specifier: workspace:*
+        version: link:../logger
+      '@rallly/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@rallly/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: ^24.1.0
+        version: 24.10.11
       vitest:
         specifier: ^4.0.16
         version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.11)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
