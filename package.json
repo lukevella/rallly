@@ -22,6 +22,7 @@
     "proxy:start": "portless proxy start --tld co",
     "proxy:stop": "portless proxy stop",
     "docker:up": "docker compose -f docker-compose.dev.yml up -d --wait",
+    "docker:pull": "docker compose -f docker-compose.dev.yml pull",
     "docker:down": "docker compose -f docker-compose.dev.yml down --volumes --remove-orphans",
     "test:integration": "turbo test:integration",
     "test:unit": "turbo test:unit",
