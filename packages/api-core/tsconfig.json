@@ -2,7 +2,7 @@
   "extends": "@rallly/tsconfig/node.json",
   "compilerOptions": {
     "types": ["vitest/globals", "node"],
-    "lib": ["es2020", "dom"]
+    "lib": ["es2020"]
   },
   "include": ["**/*.ts"]
 }
