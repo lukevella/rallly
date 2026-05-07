@@ -12,7 +12,7 @@ const withBundleAnalyzer = createBundleAnalyzer({
 });
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["web.rallly.co"],
+  allowedDevOrigins: ["web.local.rallly.co"],
   experimental: {
     staleTimes: {
       dynamic: 60,

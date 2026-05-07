@@ -80,7 +80,17 @@ The following instructions are for running the project locally for development.
    - run migrations to create a new database schema
    - seed the database with test users and random data
 
-6. Start the Next.js server
+6. Start the portless proxy
+
+   The dev scripts route the apps through [portless](https://portless.sh), which exposes them at stable HTTPS URLs (e.g. `https://web.local.rallly.co`) instead of `localhost:<port>`.
+
+   Start the proxy:
+
+   ```bash
+   pnpm proxy:start
+   ```
+
+7. Start the Next.js server
 
    ```bash
    pnpm dev
