@@ -1,17 +1,18 @@
 import { createLogger } from "@rallly/logger";
 import { Redis } from "@upstash/redis";
+import { env } from "../env";
 
 const logger = createLogger("api/lib/redis");
 
 function createRedis() {
-  if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+  if (!env.KV_REST_API_URL || !env.KV_REST_API_TOKEN) {
     return null;
   }
 
   try {
     return new Redis({
-      url: process.env.KV_REST_API_URL,
-      token: process.env.KV_REST_API_TOKEN,
+      url: env.KV_REST_API_URL,
+      token: env.KV_REST_API_TOKEN,
     });
   } catch (error) {
     logger.error(
