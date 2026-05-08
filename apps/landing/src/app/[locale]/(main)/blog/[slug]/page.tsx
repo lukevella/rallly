@@ -4,6 +4,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import PostHeader from "@/components/blog/post-header";
 import { getAllPosts, getPostBySlug } from "@/lib/api";
@@ -20,6 +21,10 @@ export default async function Page(props: {
     "excerpt",
     "content",
   ]);
+
+  if (!post) {
+    notFound();
+  }
 
   return (
     <div>
@@ -78,6 +83,10 @@ export async function generateMetadata(props: {
     "author",
     "excerpt",
   ]);
+
+  if (!post) {
+    notFound();
+  }
 
   return {
     title: post.title,
