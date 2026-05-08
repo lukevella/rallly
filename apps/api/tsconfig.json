@@ -1,0 +1,11 @@
+{
+  "extends": "@rallly/tsconfig/node.json",
+  "compilerOptions": {
+    "lib": ["es2023"],
+    "target": "es2023",
+    "types": ["node"],
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"]
+}

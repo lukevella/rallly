@@ -1,0 +1,32 @@
+{
+  "name": "@rallly/api",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "portless api.local.rallly tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hono-rate-limiter/redis": "^0.1.4",
+    "@hono/node-server": "^1.19.9",
+    "@hono/zod-openapi": "^1.2.0",
+    "@rallly/api-core": "workspace:*",
+    "@rallly/database": "workspace:*",
+    "@rallly/logger": "workspace:*",
+    "@rallly/utils": "workspace:*",
+    "@scalar/hono-api-reference": "^0.9.30",
+    "@upstash/redis": "^1.36.2",
+    "hono": "^4.11.1",
+    "hono-openapi": "^1.1.2",
+    "hono-rate-limiter": "^0.2.1"
+  },
+  "devDependencies": {
+    "@rallly/tsconfig": "workspace:*",
+    "@types/node": "^24.1.0",
+    "tsx": "^4.6.2",
+    "typescript": "^5.8.2"
+  }
+}
