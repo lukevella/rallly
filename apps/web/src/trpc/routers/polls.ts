@@ -164,7 +164,16 @@ export const polls = router({
       const pollId = nanoid();
       const spaceId = activeSpace?.id;
 
-      const kind = input.options.some((option) => !!option.endDate)
+      const optionsData = input.options.map((option) => ({
+        startTime: input.timeZone
+          ? dayjs(option.startDate).tz(input.timeZone, true).toDate()
+          : dayjs(option.startDate).utc(true).toDate(),
+        duration: option.endDate
+          ? dayjs(option.endDate).diff(dayjs(option.startDate), "minute")
+          : 0,
+      }));
+
+      const kind = optionsData.some((option) => option.duration > 0)
         ? "time"
         : "date";
 
@@ -188,17 +197,7 @@ export const polls = router({
           kind,
           options: {
             createMany: {
-              data: input.options.map((option) => ({
-                startTime: input.timeZone
-                  ? dayjs(option.startDate).tz(input.timeZone, true).toDate()
-                  : dayjs(option.startDate).utc(true).toDate(),
-                duration: option.endDate
-                  ? dayjs(option.endDate).diff(
-                      dayjs(option.startDate),
-                      "minute",
-                    )
-                  : 0,
-              })),
+              data: optionsData,
             },
           },
           hideParticipants: input.hideParticipants,
