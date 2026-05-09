@@ -164,6 +164,10 @@ export const polls = router({
       const pollId = nanoid();
       const spaceId = activeSpace?.id;
 
+      const kind = input.options.some((option) => !!option.endDate)
+        ? "time"
+        : "date";
+
       const poll = await prisma.poll.create({
         include: {
           options: {
@@ -181,6 +185,7 @@ export const polls = router({
           adminUrlId: adminToken,
           participantUrlId,
           userId: ctx.user.id,
+          kind,
           options: {
             createMany: {
               data: input.options.map((option) => ({
@@ -369,23 +374,30 @@ export const polls = router({
             }),
           });
         }
-      });
 
-      await prisma.poll.update({
-        select: { id: true },
-        where: {
-          id: pollId,
-        },
-        data: {
-          title: input.title,
-          location: input.location,
-          description: input.description,
-          timeZone: input.timeZone,
-          hideScores: input.hideScores,
-          hideParticipants: input.hideParticipants,
-          disableComments: input.disableComments,
-          requireParticipantEmail: input.requireParticipantEmail,
-        },
+        const maxDuration = await tx.option.aggregate({
+          where: { pollId },
+          _max: { duration: true },
+        });
+        const kind = (maxDuration._max.duration ?? 0) > 0 ? "time" : "date";
+
+        await tx.poll.update({
+          select: { id: true },
+          where: {
+            id: pollId,
+          },
+          data: {
+            title: input.title,
+            location: input.location,
+            description: input.description,
+            timeZone: input.timeZone,
+            hideScores: input.hideScores,
+            hideParticipants: input.hideParticipants,
+            disableComments: input.disableComments,
+            requireParticipantEmail: input.requireParticipantEmail,
+            kind,
+          },
+        });
       });
 
       // Get updated poll data for group update
@@ -1120,6 +1132,7 @@ export const polls = router({
           requireParticipantEmail: true,
           disableComments: true,
           spaceId: true,
+          kind: true,
           options: {
             select: {
               startTime: true,
@@ -1151,6 +1164,7 @@ export const polls = router({
           disableComments: poll.disableComments,
           adminUrlId: nanoid(),
           participantUrlId: nanoid(),
+          kind: poll.kind,
           options: {
             create: poll.options,
           },
