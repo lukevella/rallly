@@ -164,7 +164,7 @@ app.post(
           title: poll.title,
           description: poll.description,
           location: poll.location,
-          timeZone: poll.timeZone,
+          timezone: poll.timeZone,
           status: poll.status,
           createdAt: poll.createdAt.toISOString(),
           user: poll.user
