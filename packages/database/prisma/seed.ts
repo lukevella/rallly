@@ -84,6 +84,8 @@ async function main() {
     const adminUrlId = nextId();
     const participantUrlId = nextId();
 
+    const kind = poll.options.some((opt) => opt.duration > 0) ? "time" : "date";
+
     await prisma.poll.create({
       data: {
         id: pollId,
@@ -102,6 +104,7 @@ async function main() {
         hideScores: poll.hideScores,
         disableComments: poll.disableComments,
         requireParticipantEmail: poll.requireParticipantEmail,
+        kind,
       },
     });
 

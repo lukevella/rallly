@@ -96,6 +96,7 @@ export async function createTestPoll({
       },
     }),
     ...(hasFutureOptions && {
+      kind: "time" as const,
       options: {
         create: {
           startTime: dayjs().add(10, "day").toDate(),

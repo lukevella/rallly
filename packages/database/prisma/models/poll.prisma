@@ -15,6 +15,13 @@ enum PollStatus {
   @@map("poll_status")
 }
 
+enum PollKind {
+  date
+  time
+
+  @@map("poll_kind")
+}
+
 model Poll {
   id                      String     @id @unique @map("id")
   createdAt               DateTime   @default(now()) @map("created_at")
@@ -27,6 +34,7 @@ model Poll {
   guestId                 String?    @map("guest_id") // @deprecated - legacy NextAuth field, no longer used
   timeZone                String?    @map("time_zone")
   status                  PollStatus @default(open)
+  kind                    PollKind   @default(date)
   deleted                 Boolean    @default(false)
   deletedAt               DateTime?  @map("deleted_at")
   participantUrlId        String     @unique @map("participant_url_id")

@@ -33,6 +33,8 @@ export const createPoll = async ({
   options,
   spaceId,
 }: CreatePollParams) => {
+  const kind = options.some((o) => o.duration > 0) ? "time" : "date";
+
   const poll = await prisma.poll.create({
     data: {
       id: nanoid(),
@@ -48,6 +50,7 @@ export const createPoll = async ({
       participantUrlId: nanoid(),
       userId,
       spaceId,
+      kind,
       options: { createMany: { data: options } },
     },
     select: {
