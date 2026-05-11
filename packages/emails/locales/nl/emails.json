@@ -76,5 +76,11 @@
   "spaceInvite_preview": "Je bent uitgenodigd om deel te nemen aan {spaceName}",
   "spaceInvite_heading": "Je bent uitgenodigd!",
   "spaceInvite_button": "Uitnodiging accepteren",
-  "spaceInvite_subject": "Je bent uitgenodigd om deel te nemen aan {spaceName}"
+  "spaceInvite_subject": "Je bent uitgenodigd om deel te nemen aan {spaceName}",
+  "resetPassword_button": "Wachtwoord opnieuw instellen",
+  "resetPassword_content2": "Als je geen verzoek hebt gedaan om je wachtwoord opnieuw in te stellen, kun je deze e-mail negeren. Je wachtwoord verandert niet tenzij je een nieuw wachtwoord aanmaakt. Als dit verzoek verdacht lijkt, neem dan contact op met <a>{supportEmail}</a>.",
+  "resetPassword_preview": "Gebruik deze link om je wachtwoord opnieuw in te stellen.",
+  "resetPassword_heading": "Stel je wachtwoord opnieuw in",
+  "resetPassword_content": "We hebben een verzoek ontvangen om je wachtwoord opnieuw in te stellen. Klik op de knop hieronder om een nieuw wachtwoord aan te maken.",
+  "resetPassword_subject": "Wachtwoord opnieuw instellen"
 }
