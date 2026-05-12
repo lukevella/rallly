@@ -533,7 +533,7 @@
   "whiteLabelAddonDescription": "Met deze add-on kun je Rallly branden met je eigen logo en kleuren.",
   "refreshLicense": "Licentie vernieuwen",
   "setEnvironmentVariable": "Deze waarde kan worden gewijzigd door de omgevingsvariabele <env /> in te stellen.",
-  "branding": "Huisstijl},{",
+  "branding": "Merkidentiteit",
   "brandingDescription": "Bekijk de brandingconfiguratie van je instantie",
   "customBrandingAlertDescription": "Aangepaste branding is beschikbaar voor Enterprise-licentiehouders als betaalde add-on.",
   "colors": "Kleuren",
