@@ -20,6 +20,7 @@ import { cache } from "react";
 import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { linkAnonymousUser } from "@/auth/helpers/merge-user";
 import { isTemporaryEmail } from "@/auth/helpers/temp-email-domains";
+import { hostOnlyCookieCleanup } from "@/auth/plugins/host-only-cookie-cleanup";
 import { env } from "@/env";
 import { posthog } from "@/features/analytics/posthog";
 import { createSpace } from "@/features/space/mutations";
@@ -178,6 +179,7 @@ export const authLib = betterAuth({
       },
     }),
     ...conditionalPlugins,
+    hostOnlyCookieCleanup,
   ],
   socialProviders: {
     google:
@@ -356,6 +358,14 @@ export const authLib = betterAuth({
       maxAge: 5 * 60, // 5 minutes
     },
   },
+  advanced: env.NEXT_PUBLIC_COOKIE_DOMAIN
+    ? {
+        crossSubDomainCookies: {
+          enabled: true,
+          domain: env.NEXT_PUBLIC_COOKIE_DOMAIN,
+        },
+      }
+    : undefined,
   trustedOrigins: [absoluteUrl()],
   baseURL,
 });

@@ -3,6 +3,11 @@ import { getPreferredLocaleFromHeaders } from "@rallly/languages/get-preferred-l
 import type { NextRequest, NextResponse } from "next/server";
 import { LOCALE_COOKIE_NAME } from "@/lib/locale/constants";
 
+// Read via process.env to keep `@/env` out of the middleware bundle —
+// t3-env validates eagerly on import and would crash server boot on any
+// misconfigured server var. Shape is still validated in `@/env`.
+const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
+
 export function getLocaleFromRequest(req: NextRequest) {
   const localeCookie = req.cookies.get(LOCALE_COOKIE_NAME);
   if (localeCookie && supportedLngs.includes(localeCookie.value)) {
@@ -21,15 +26,12 @@ export function getLocaleFromRequest(req: NextRequest) {
 }
 
 export function setLocaleCookie(
-  req: NextRequest,
+  _req: NextRequest,
   res: NextResponse,
   locale: string,
 ) {
-  if (req.cookies.get(LOCALE_COOKIE_NAME)) {
-    return;
-  }
-
   res.cookies.set(LOCALE_COOKIE_NAME, locale, {
     path: "/",
+    domain: cookieDomain,
   });
 }
