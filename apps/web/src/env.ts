@@ -181,6 +181,19 @@ export const env = createEnv({
      * If not set, assets are proxied through Next.js (current behaviour).
      */
     NEXT_PUBLIC_CDN_BASE_URL: z.url().optional(),
+    /**
+     * Domain to attach to server-set cookies (auth session, locale).
+     * Set to a parent domain prefixed with a leading dot (e.g. `.rallly.co`)
+     * to make these cookies readable across subdomains. When unset, cookies
+     * stay scoped to the apex host of the request.
+     */
+    NEXT_PUBLIC_COOKIE_DOMAIN: z
+      .string()
+      .regex(/^\.?[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*$/, {
+        message:
+          "must be a hostname or optional leading-dot domain (no protocol/port/path)",
+      })
+      .optional(),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -253,6 +266,7 @@ export const env = createEnv({
     API_BASE_URL: process.env.API_BASE_URL,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
     NEXT_PUBLIC_CDN_BASE_URL: process.env.NEXT_PUBLIC_CDN_BASE_URL,
+    NEXT_PUBLIC_COOKIE_DOMAIN: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });
