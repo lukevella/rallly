@@ -1,4 +1,4 @@
-import type { EventType } from "@rallly/database";
+import type { EventType, User } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import type { EventTypeDTO } from "@/features/event-types/types";
@@ -7,7 +7,9 @@ import { locationSchema } from "@/lib/location";
 
 const logger = createLogger("event-types/data");
 
-export function createEventTypeDTO(eventType: EventType): EventTypeDTO {
+export function createEventTypeDTO(
+  eventType: EventType & { host: Pick<User, "id" | "name" | "image"> },
+): EventTypeDTO {
   let location: Location | null = null;
   if (eventType.location !== null) {
     try {
@@ -27,6 +29,11 @@ export function createEventTypeDTO(eventType: EventType): EventTypeDTO {
     description: eventType.description,
     location,
     hostId: eventType.hostId,
+    host: {
+      id: eventType.host.id,
+      name: eventType.host.name,
+      image: eventType.host.image,
+    },
     spaceId: eventType.spaceId,
     createdAt: eventType.createdAt,
     updatedAt: eventType.updatedAt,
@@ -40,6 +47,11 @@ export async function getEventTypes(spaceId: string): Promise<EventTypeDTO[]> {
       deleted: false,
     },
     orderBy: { updatedAt: "desc" },
+    include: {
+      host: {
+        select: { id: true, name: true, image: true },
+      },
+    },
   });
 
   return rows.map(createEventTypeDTO);

@@ -40,6 +40,11 @@ export const eventTypes = router({
           description: input.description,
           location: input.location,
         },
+        include: {
+          host: {
+            select: { id: true, name: true, image: true },
+          },
+        },
       });
       return createEventTypeDTO(created);
     }),
@@ -59,6 +64,11 @@ export const eventTypes = router({
           capacity: input.capacity,
           description: input.description,
           location: input.location,
+        },
+        include: {
+          host: {
+            select: { id: true, name: true, image: true },
+          },
         },
       });
 
