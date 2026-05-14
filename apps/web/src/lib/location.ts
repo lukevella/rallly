@@ -8,7 +8,7 @@ const inPersonLocationSchema = z.object({
 
 const customLinkLocationSchema = z.object({
   type: z.literal("custom_link"),
-  url: z.string().url(),
+  url: z.url(),
   text: z.string().optional(),
 });
 
