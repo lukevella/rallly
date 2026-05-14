@@ -1,4 +1,5 @@
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { isEventTypesEnabled } from "@/features/event-types/constants";
@@ -8,6 +9,8 @@ import {
   updateEventTypeInputSchema,
 } from "@/features/event-types/schema";
 import { middleware, router, spaceProcedure } from "../trpc";
+
+const logger = createLogger("trpc/routers/event-types");
 
 const requireEventTypesEnabled = middleware(async ({ next }) => {
   if (!isEventTypesEnabled) {
@@ -47,54 +50,61 @@ export const eventTypes = router({
   update: eventTypeProcedure
     .input(updateEventTypeInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const existing = await prisma.eventType.findFirst({
-        where: {
-          id: input.id,
-          spaceId: ctx.space.id,
-          deleted: false,
-        },
-        select: { id: true },
-      });
-
-      if (!existing) {
+      try {
+        const updated = await prisma.eventType.update({
+          where: {
+            id: input.id,
+            spaceId: ctx.space.id,
+            deleted: false,
+          },
+          data: {
+            name: input.name,
+            duration: input.duration,
+            capacity: input.capacity,
+            description: input.description,
+            location: input.location,
+          },
+        });
+        return createEventTypeDTO(updated);
+      } catch (error) {
+        logger.error(
+          { error, eventTypeId: input.id },
+          "Failed to update event type",
+        );
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Event type not found",
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update event type",
+          cause: error,
         });
       }
-
-      const updated = await prisma.eventType.update({
-        where: { id: existing.id },
-        data: {
-          name: input.name,
-          duration: input.duration,
-          capacity: input.capacity,
-          description: input.description,
-          location: input.location,
-        },
-      });
-      return createEventTypeDTO(updated);
     }),
 
   softDelete: eventTypeProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const { count } = await prisma.eventType.updateMany({
-        where: {
-          id: input.id,
-          spaceId: ctx.space.id,
-          deleted: false,
-        },
-        data: {
-          deleted: true,
-          deletedAt: new Date(),
-        },
-      });
+      try {
+        await prisma.eventType.update({
+          where: {
+            id: input.id,
+            spaceId: ctx.space.id,
+            deleted: false,
+          },
+          data: {
+            deleted: true,
+            deletedAt: new Date(),
+          },
+        });
 
-      if (count === 0) {
+        return { success: true };
+      } catch (error) {
+        logger.error(
+          { error, eventTypeId: input.id },
+          "Failed to delete event type",
+        );
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Event type not found",
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to delete event type",
+          cause: error,
         });
       }
     }),
