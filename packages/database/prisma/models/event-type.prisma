@@ -16,7 +16,7 @@ model EventType {
   space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   host  User  @relation(fields: [hostId], references: [id], onDelete: Cascade)
 
-  @@index([spaceId], type: Hash)
-  @@index([hostId], type: Hash)
+  @@index([spaceId])
+  @@index([hostId])
   @@map("event_types")
 }

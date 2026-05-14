@@ -17,10 +17,10 @@ CREATE TABLE "event_types" (
 );
 
 -- CreateIndex
-CREATE INDEX "event_types_space_id_idx" ON "event_types" USING HASH ("space_id");
+CREATE INDEX "event_types_space_id_idx" ON "event_types"("space_id");
 
 -- CreateIndex
-CREATE INDEX "event_types_host_id_idx" ON "event_types" USING HASH ("host_id");
+CREATE INDEX "event_types_host_id_idx" ON "event_types"("host_id");
 
 -- AddForeignKey
 ALTER TABLE "event_types" ADD CONSTRAINT "event_types_space_id_fkey" FOREIGN KEY ("space_id") REFERENCES "spaces"("id") ON DELETE CASCADE ON UPDATE CASCADE;
