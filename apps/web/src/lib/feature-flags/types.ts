@@ -5,6 +5,7 @@ export interface FeatureFlagConfig {
   emailLogin: boolean;
   registration: boolean;
   calendars: boolean;
+  eventTypes: boolean;
 }
 
 export type Feature = keyof FeatureFlagConfig;
