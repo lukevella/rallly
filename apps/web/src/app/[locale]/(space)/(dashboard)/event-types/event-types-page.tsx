@@ -8,7 +8,6 @@ import {
   MapPinIcon,
   UserIcon,
 } from "lucide-react";
-import Link from "next/link";
 import {
   PageContainer,
   PageContent,
@@ -78,52 +77,47 @@ function LocationSummary({ location }: { location: Location | null }) {
 
 function EventTypeRow({ eventType }: { eventType: EventTypeDTO }) {
   return (
-    <Link
-      href={`/event-types/${eventType.id}/edit`}
-      className="flex w-full flex-col gap-2"
-    >
-      <div className="flex items-center justify-between gap-4">
-        <div className="min-w-0 flex-1">
-          <div className="truncate font-medium text-sm">{eventType.name}</div>
-          <div className="mt-1 flex items-center gap-2 text-muted-foreground text-xs">
-            <OptimizedAvatarImage
-              size="sm"
-              src={eventType.host.image ?? undefined}
-              name={eventType.host.name}
-            />
-            <span className="truncate">{eventType.host.name}</span>
-          </div>
-        </div>
-        <div className="hidden shrink-0 flex-wrap items-center justify-end gap-x-4 gap-y-1 text-muted-foreground text-xs sm:flex">
-          <span className="inline-flex items-center gap-1">
-            <Icon>
-              <ClockIcon />
-            </Icon>
-            <span>
-              {dayjs.duration(eventType.duration, "minutes").humanize()}
-            </span>
-          </span>
-          {eventType.capacity !== null ? (
-            <span className="inline-flex items-center gap-1">
-              <Icon>
-                <UserIcon />
-              </Icon>
-              <span>{eventType.capacity}</span>
-            </span>
-          ) : null}
-          {eventType.location ? (
-            <LocationSummary location={eventType.location} />
-          ) : null}
-          <span className="whitespace-nowrap">
-            <Trans
-              i18nKey="eventTypeUpdatedRelative"
-              defaults="Updated {relativeTime}"
-              values={{ relativeTime: dayjs(eventType.updatedAt).fromNow() }}
-            />
-          </span>
+    <div className="flex items-center justify-between gap-4">
+      <div className="min-w-0 flex-1">
+        <div className="truncate font-medium text-sm">{eventType.name}</div>
+        <div className="mt-1 flex items-center gap-2 text-muted-foreground text-xs">
+          <OptimizedAvatarImage
+            size="sm"
+            src={eventType.host.image ?? undefined}
+            name={eventType.host.name}
+          />
+          <span className="truncate">{eventType.host.name}</span>
         </div>
       </div>
-    </Link>
+      <div className="hidden shrink-0 flex-wrap items-center justify-end gap-x-4 gap-y-1 text-muted-foreground text-xs sm:flex">
+        <span className="inline-flex items-center gap-1">
+          <Icon>
+            <ClockIcon />
+          </Icon>
+          <span>
+            {dayjs.duration(eventType.duration, "minutes").humanize()}
+          </span>
+        </span>
+        {eventType.capacity !== null ? (
+          <span className="inline-flex items-center gap-1">
+            <Icon>
+              <UserIcon />
+            </Icon>
+            <span>{eventType.capacity}</span>
+          </span>
+        ) : null}
+        {eventType.location ? (
+          <LocationSummary location={eventType.location} />
+        ) : null}
+        <span className="whitespace-nowrap">
+          <Trans
+            i18nKey="eventTypeUpdatedRelative"
+            defaults="Updated {relativeTime}"
+            values={{ relativeTime: dayjs(eventType.updatedAt).fromNow() }}
+          />
+        </span>
+      </div>
+    </div>
   );
 }
 
