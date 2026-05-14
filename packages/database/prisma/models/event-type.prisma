@@ -1,0 +1,22 @@
+model EventType {
+  id          String  @id @default(cuid())
+  spaceId     String  @map("space_id")
+  hostId      String  @map("host_id")
+  name        String
+  duration    Int     @map("duration_minutes")
+  capacity    Int?
+  description String?
+  location    Json?
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deleted   Boolean   @default(false)
+  deletedAt DateTime? @map("deleted_at")
+
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  host  User  @relation(fields: [hostId], references: [id], onDelete: Cascade)
+
+  @@index([spaceId], type: Hash)
+  @@index([hostId], type: Hash)
+  @@map("event_types")
+}

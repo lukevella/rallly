@@ -72,6 +72,7 @@ model User {
   pollViews             PollView[]
   scheduledEvents       ScheduledEvent[]
   scheduledEventInvites ScheduledEventInvite[]
+  hostedEventTypes      EventType[]
 
   calendarConnections CalendarConnection[]
   credentials         Credential[]
