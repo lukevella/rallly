@@ -21,7 +21,7 @@ model Space {
 
   apiKeys SpaceApiKey[]
 
-  @@index([ownerId], type: Hash)
+  @@index([ownerId])
   @@map("spaces")
 }
 
@@ -50,8 +50,7 @@ model SpaceMember {
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([spaceId, userId])
-  @@index([spaceId], type: Hash, map: "space_members_space_id_idx")
-  @@index([userId], type: Hash, map: "space_members_user_id_idx")
+  @@index([userId])
   @@map("space_members")
 }
 
@@ -68,7 +67,6 @@ model SpaceMemberInvite {
   space     Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
 
   @@unique([spaceId, email])
-  @@index([spaceId], type: Hash, map: "space_member_invites_space_id_idx")
   @@map("space_member_invites")
 }
 
