@@ -631,10 +631,6 @@
   "updateAvailable": "Update available",
   "eventTypesEmptyTitle": "No event types yet",
   "eventTypesEmptyDescription": "Create reusable event types that people can book with you.",
-  "eventTypeDurationMinutes": "{count, plural, one {# minute} other {# minutes}}",
-  "eventTypeCapacityUnlimited": "Unlimited",
-  "eventTypeCapacityCount": "{count, plural, one {# person} other {# people}}",
   "eventTypeUpdatedRelative": "Updated {relativeTime}",
-  "eventTypes": "Event Types",
-  "eventTypesNew": "New Event Type"
+  "eventTypes": "Event Types"
 }

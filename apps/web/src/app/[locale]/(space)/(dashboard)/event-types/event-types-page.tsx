@@ -1,21 +1,18 @@
 "use client";
 
-import { buttonVariants } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
 import {
   CalendarRangeIcon,
   ClockIcon,
   LinkIcon,
   MapPinIcon,
-  PlusIcon,
-  UsersIcon,
+  UserIcon,
 } from "lucide-react";
 import Link from "next/link";
 import {
   PageContainer,
   PageContent,
   PageHeader,
-  PageHeaderActions,
   PageHeaderContent,
   PageTitle,
 } from "@/app/components/page-layout";
@@ -102,29 +99,18 @@ function EventTypeRow({ eventType }: { eventType: EventTypeDTO }) {
             <Icon>
               <ClockIcon />
             </Icon>
-            <Trans
-              i18nKey="eventTypeDurationMinutes"
-              defaults="{count, plural, one {# minute} other {# minutes}}"
-              values={{ count: eventType.duration }}
-            />
+            <span>
+              {dayjs.duration(eventType.duration, "minutes").humanize()}
+            </span>
           </span>
-          <span className="inline-flex items-center gap-1">
-            <Icon>
-              <UsersIcon />
-            </Icon>
-            {eventType.capacity === null ? (
-              <Trans
-                i18nKey="eventTypeCapacityUnlimited"
-                defaults="Unlimited"
-              />
-            ) : (
-              <Trans
-                i18nKey="eventTypeCapacityCount"
-                defaults="{count, plural, one {# person} other {# people}}"
-                values={{ count: eventType.capacity }}
-              />
-            )}
-          </span>
+          {eventType.capacity !== null ? (
+            <span className="inline-flex items-center gap-1">
+              <Icon>
+                <UserIcon />
+              </Icon>
+              <span>{eventType.capacity}</span>
+            </span>
+          ) : null}
           {eventType.location ? (
             <LocationSummary location={eventType.location} />
           ) : null}
@@ -152,15 +138,6 @@ export function EventTypesPage() {
             <Trans i18nKey="eventTypes" defaults="Event Types" />
           </PageTitle>
         </PageHeaderContent>
-        <PageHeaderActions>
-          <Link
-            href="/event-types/create"
-            className={buttonVariants({ variant: "primary" })}
-          >
-            <PlusIcon data-icon="inline-start" />
-            <Trans i18nKey="eventTypesNew" defaults="New Event Type" />
-          </Link>
-        </PageHeaderActions>
       </PageHeader>
       <PageContent>
         {eventTypes.length === 0 ? (
