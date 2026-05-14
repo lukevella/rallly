@@ -1,6 +1,7 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
 import {
+  eventTypes,
   polls,
   scheduledEvents,
   spaceMembers,
@@ -168,6 +169,23 @@ async function main() {
   console.info(
     `✓ ${polls.length} polls, ${optionCount} options, ${participantCount} participants, ${voteCount} votes, ${commentCount} comments`,
   );
+
+  // 6. Event types
+  const now = Date.now();
+  await prisma.eventType.createMany({
+    data: eventTypes.map((et, i) => ({
+      id: et.id,
+      spaceId: et.spaceId,
+      hostId: et.hostId,
+      name: et.name,
+      duration: et.duration,
+      capacity: et.capacity,
+      description: et.description,
+      location: et.location ?? undefined,
+      updatedAt: new Date(now - i * 60_000),
+    })),
+  });
+  console.info(`✓ ${eventTypes.length} event types`);
 }
 
 main()

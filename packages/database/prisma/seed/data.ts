@@ -1003,6 +1003,106 @@ const acmePolls: PollDef[] = [
 
 export const polls: PollDef[] = [...personalPolls, ...acmePolls];
 
+// ─── Event Types ─────────────────────────────────────────────────────────────
+
+type EventTypeLocation =
+  | { type: "in_person"; address: string; placeId?: string }
+  | { type: "custom_link"; url: string; text?: string };
+
+export type EventTypeDef = {
+  id: string;
+  spaceId: string;
+  hostId: string;
+  name: string;
+  duration: number;
+  capacity: number | null;
+  description: string | null;
+  location: EventTypeLocation | null;
+};
+
+export const eventTypes: EventTypeDef[] = [
+  // ── Personal space (space-1) ─────────────────────────────────────────────
+  {
+    id: "et-1",
+    spaceId: "space-1",
+    hostId: "user-1",
+    name: "30 Minute Meeting",
+    duration: 30,
+    capacity: null,
+    description: "Quick catch-up or intro.",
+    location: {
+      type: "custom_link",
+      url: "https://zoom.us/j/1234567890",
+      text: "Zoom",
+    },
+  },
+  {
+    id: "et-2",
+    spaceId: "space-1",
+    hostId: "user-1",
+    name: "Coffee Chat",
+    duration: 45,
+    capacity: 1,
+    description: null,
+    location: {
+      type: "in_person",
+      address: "Café on 5th Ave, New York",
+    },
+  },
+
+  // ── Acme Inc (space-2) ───────────────────────────────────────────────────
+  {
+    id: "et-3",
+    spaceId: "space-2",
+    hostId: "user-1",
+    name: "Intro Call",
+    duration: 15,
+    capacity: null,
+    description: "Brief intro to see if we're a fit.",
+    location: {
+      type: "custom_link",
+      url: "https://meet.google.com/abc-defg-hij",
+      text: "Google Meet",
+    },
+  },
+  {
+    id: "et-4",
+    spaceId: "space-2",
+    hostId: "user-2",
+    name: "Product Demo",
+    duration: 45,
+    capacity: null,
+    description: "Live walkthrough of the product.",
+    location: {
+      type: "custom_link",
+      url: "https://zoom.us/j/9876543210",
+    },
+  },
+  {
+    id: "et-5",
+    spaceId: "space-2",
+    hostId: "user-3",
+    name: "Office Hours",
+    duration: 60,
+    capacity: 5,
+    description: "Drop-in time for engineering questions.",
+    location: {
+      type: "in_person",
+      address: "Acme HQ, Conference Room B",
+    },
+  },
+  {
+    id: "et-6",
+    spaceId: "space-2",
+    hostId: "user-1",
+    name: "Team Workshop",
+    duration: 90,
+    capacity: null,
+    description: "Hands-on working session.",
+    location: null,
+  },
+];
+
 // ─── Scheduled Events ────────────────────────────────────────────────────────
 
 export type ScheduledEventDef = {
