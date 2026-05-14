@@ -12,6 +12,7 @@ model Space {
   owner           User             @relation("UserSpaces", fields: [ownerId], references: [id], onDelete: Cascade)
   polls           Poll[]
   scheduledEvents ScheduledEvent[]
+  eventTypes      EventType[]
   subscriptions   Subscription[]   @relation("SpaceToSubscription")
 
   members SpaceMember[]
