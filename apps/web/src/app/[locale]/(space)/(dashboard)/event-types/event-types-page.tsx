@@ -1,13 +1,13 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@rallly/ui/card";
-import { Icon } from "@rallly/ui/icon";
+import { Badge } from "@rallly/ui/badge";
+import { CardTitle } from "@rallly/ui/card";
 import {
+  ArmchairIcon,
   CalendarRangeIcon,
   ClockIcon,
-  LinkIcon,
+  Link2Icon,
   MapPinIcon,
-  UserIcon,
 } from "lucide-react";
 import {
   PageContainer,
@@ -24,10 +24,9 @@ import {
 } from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
-import type { EventTypeDTO } from "@/features/event-types/types";
 import { Trans } from "@/i18n/client";
 import { useLocale } from "@/lib/locale/client";
-import type { Location } from "@/lib/location";
+import type { LocationType } from "@/lib/location";
 import { trpc } from "@/trpc/client";
 import { formatDuration } from "@/utils/date-time-utils";
 
@@ -50,69 +49,59 @@ function EventTypesEmptyState() {
   );
 }
 
-function LocationSummary({ location }: { location: Location | null }) {
-  if (!location) {
-    return null;
-  }
-
-  if (location.type === "in_person") {
-    return (
-      <span className="inline-flex items-center gap-2 truncate">
-        <Icon>
-          <MapPinIcon />
-        </Icon>
-        <span className="truncate">{location.address}</span>
-      </span>
-    );
-  }
-
-  const label = location.text ?? location.url;
-  return (
-    <span className="inline-flex items-center gap-2 truncate">
-      <Icon>
-        <LinkIcon />
-      </Icon>
-      <span className="truncate">{label}</span>
-    </span>
-  );
-}
-
-function EventTypeCard({ eventType }: { eventType: EventTypeDTO }) {
+function EventTypeCard({
+  name,
+  duration,
+  capacity,
+  hostName,
+  hostImage,
+  locationType,
+  locationLabel,
+}: {
+  name: string;
+  duration: number;
+  capacity: number | null;
+  hostName: string;
+  hostImage?: string;
+  locationType: LocationType | null;
+  locationLabel: string | null;
+}) {
   const { locale } = useLocale();
   return (
-    <Card className="flex h-full flex-col">
+    <div className="flex flex-col overflow-hidden rounded-2xl border border-card-border bg-card">
       <RandomGradientBar />
-      <CardHeader>
-        <OptimizedAvatarImage
-          size="lg"
-          src={eventType.host.image ?? undefined}
-          name={eventType.host.name}
-        />
+      <div className="p-3">
+        <OptimizedAvatarImage size="lg" src={hostImage} name={hostName} />
         <p className="mt-2 font-medium text-muted-foreground text-sm">
-          {eventType.host.name}
+          {hostName}
         </p>
-        <CardTitle className="mt-2 truncate">{eventType.name}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-1 flex-col gap-2 pt-0 text-muted-foreground text-sm">
-        <div className="flex items-center gap-2">
-          <Icon>
-            <ClockIcon />
-          </Icon>
-          <span>{formatDuration(eventType.duration, locale)}</span>
+        <CardTitle className="mt-2 truncate">{name}</CardTitle>
+      </div>
+      <div className="mt-auto p-3">
+        <div className="flex flex-wrap gap-1">
+          <Badge>
+            <ClockIcon className="mr-1 -ml-0.5 size-4" />
+            <span>{formatDuration(duration, locale)}</span>
+          </Badge>
+          {capacity !== null ? (
+            <Badge>
+              <ArmchairIcon className="mr-1 -ml-0.5 size-4" />
+              <span>{capacity}</span>
+            </Badge>
+          ) : null}
+          {locationType && locationLabel ? (
+            <Badge>
+              {locationType === "in_person" ? (
+                <MapPinIcon className="mr-1 -ml-0.5 size-4" />
+              ) : (
+                <Link2Icon className="mr-1 -ml-0.5 size-4" />
+              )}
+              <span className="truncate">{locationLabel}</span>
+            </Badge>
+          ) : null}
         </div>
-        {eventType.capacity !== null ? (
-          <div className="flex items-center gap-2">
-            <Icon>
-              <UserIcon />
-            </Icon>
-            <span>{eventType.capacity}</span>
-          </div>
-        ) : null}
-        {eventType.location ? (
-          <LocationSummary location={eventType.location} />
-        ) : null}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
@@ -135,7 +124,22 @@ export function EventTypesPage() {
           <div className="@container">
             <div className="grid @4xl:grid-cols-3 @md:grid-cols-2 grid-cols-1 gap-4">
               {eventTypes.map((eventType) => (
-                <EventTypeCard key={eventType.id} eventType={eventType} />
+                <EventTypeCard
+                  key={eventType.id}
+                  name={eventType.name}
+                  duration={eventType.duration}
+                  capacity={eventType.capacity}
+                  hostName={eventType.host.name}
+                  hostImage={eventType.host.image ?? undefined}
+                  locationType={eventType.location?.type ?? null}
+                  locationLabel={
+                    eventType.location
+                      ? eventType.location.type === "in_person"
+                        ? eventType.location.address
+                        : (eventType.location.text ?? eventType.location.url)
+                      : null
+                  }
+                />
               ))}
             </div>
           </div>

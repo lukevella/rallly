@@ -5,12 +5,12 @@ import type * as React from "react";
 import { cn } from "./lib/utils";
 
 const badgeVariants = cva(
-  "group inline-flex items-center justify-center whitespace-nowrap rounded-full transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "group inline-flex items-center justify-center whitespace-nowrap rounded-lg transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
         primary: "bg-primary text-primary-foreground",
-        default: "bg-muted",
+        default: "border border-card-border bg-card text-muted-foreground",
         destructive:
           "bg-rose-600/10 text-rose-600 dark:bg-rose-500/10 dark:text-rose-500",
         outline: "text-foreground",
