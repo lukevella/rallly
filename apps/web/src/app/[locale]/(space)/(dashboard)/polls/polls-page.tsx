@@ -29,7 +29,7 @@ import { searchParamsSchema } from "./schema";
 
 function PollsEmptyState() {
   return (
-    <EmptyState className="p-8">
+    <EmptyState className="h-96">
       <EmptyStateIcon>
         <InboxIcon />
       </EmptyStateIcon>
