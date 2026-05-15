@@ -1,5 +1,6 @@
 "use client";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import {
   CalendarRangeIcon,
@@ -22,12 +23,13 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { StackedList, StackedListItem } from "@/components/stacked-list";
+import { RandomGradientBar } from "@/components/random-gradient-bar";
 import type { EventTypeDTO } from "@/features/event-types/types";
 import { Trans } from "@/i18n/client";
-import { dayjs } from "@/lib/dayjs";
+import { useLocale } from "@/lib/locale/client";
 import type { Location } from "@/lib/location";
 import { trpc } from "@/trpc/client";
+import { formatDuration } from "@/utils/date-time-utils";
 
 function EventTypesEmptyState() {
   return (
@@ -55,7 +57,7 @@ function LocationSummary({ location }: { location: Location | null }) {
 
   if (location.type === "in_person") {
     return (
-      <span className="inline-flex items-center gap-1 truncate">
+      <span className="inline-flex items-center gap-2 truncate">
         <Icon>
           <MapPinIcon />
         </Icon>
@@ -66,7 +68,7 @@ function LocationSummary({ location }: { location: Location | null }) {
 
   const label = location.text ?? location.url;
   return (
-    <span className="inline-flex items-center gap-1 truncate">
+    <span className="inline-flex items-center gap-2 truncate">
       <Icon>
         <LinkIcon />
       </Icon>
@@ -75,49 +77,42 @@ function LocationSummary({ location }: { location: Location | null }) {
   );
 }
 
-function EventTypeRow({ eventType }: { eventType: EventTypeDTO }) {
+function EventTypeCard({ eventType }: { eventType: EventTypeDTO }) {
+  const { locale } = useLocale();
   return (
-    <div className="flex items-center justify-between gap-4">
-      <div className="min-w-0 flex-1">
-        <div className="truncate font-medium text-sm">{eventType.name}</div>
-        <div className="mt-1 flex items-center gap-2 text-muted-foreground text-xs">
-          <OptimizedAvatarImage
-            size="sm"
-            src={eventType.host.image ?? undefined}
-            name={eventType.host.name}
-          />
-          <span className="truncate">{eventType.host.name}</span>
-        </div>
-      </div>
-      <div className="hidden shrink-0 flex-wrap items-center justify-end gap-x-4 gap-y-1 text-muted-foreground text-xs sm:flex">
-        <span className="inline-flex items-center gap-1">
+    <Card className="flex h-full flex-col">
+      <RandomGradientBar />
+      <CardHeader>
+        <OptimizedAvatarImage
+          size="lg"
+          src={eventType.host.image ?? undefined}
+          name={eventType.host.name}
+        />
+        <p className="mt-2 font-medium text-muted-foreground text-sm">
+          {eventType.host.name}
+        </p>
+        <CardTitle className="mt-2 truncate">{eventType.name}</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-1 flex-col gap-2 pt-0 text-muted-foreground text-sm">
+        <div className="flex items-center gap-2">
           <Icon>
             <ClockIcon />
           </Icon>
-          <span>
-            {dayjs.duration(eventType.duration, "minutes").humanize()}
-          </span>
-        </span>
+          <span>{formatDuration(eventType.duration, locale)}</span>
+        </div>
         {eventType.capacity !== null ? (
-          <span className="inline-flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <Icon>
               <UserIcon />
             </Icon>
             <span>{eventType.capacity}</span>
-          </span>
+          </div>
         ) : null}
         {eventType.location ? (
           <LocationSummary location={eventType.location} />
         ) : null}
-        <span className="whitespace-nowrap">
-          <Trans
-            i18nKey="eventTypeUpdatedRelative"
-            defaults="Updated {relativeTime}"
-            values={{ relativeTime: dayjs(eventType.updatedAt).fromNow() }}
-          />
-        </span>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -137,13 +132,13 @@ export function EventTypesPage() {
         {eventTypes.length === 0 ? (
           <EventTypesEmptyState />
         ) : (
-          <StackedList>
-            {eventTypes.map((eventType) => (
-              <StackedListItem key={eventType.id}>
-                <EventTypeRow eventType={eventType} />
-              </StackedListItem>
-            ))}
-          </StackedList>
+          <div className="@container">
+            <div className="grid @4xl:grid-cols-3 @md:grid-cols-2 grid-cols-1 gap-4">
+              {eventTypes.map((eventType) => (
+                <EventTypeCard key={eventType.id} eventType={eventType} />
+              ))}
+            </div>
+          </div>
         )}
       </PageContent>
     </PageContainer>
