@@ -1,4 +1,4 @@
-import { prisma } from "@rallly/database";
+import { Prisma, prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { isEventTypesEnabled } from "@/features/event-types/constants";
@@ -38,7 +38,7 @@ export const eventTypes = router({
           duration: input.duration,
           capacity: input.capacity,
           description: input.description,
-          location: input.location,
+          location: input.location ?? Prisma.JsonNull,
         },
         include: {
           host: {
@@ -63,7 +63,7 @@ export const eventTypes = router({
           duration: input.duration,
           capacity: input.capacity,
           description: input.description,
-          location: input.location,
+          location: input.location ?? Prisma.JsonNull,
         },
         include: {
           host: {
