@@ -38,20 +38,33 @@ export interface ParsedTimeSlotOption {
 
 export type ParsedDateTimeOpton = ParsedDateOption | ParsedTimeSlotOption;
 
-export const getDuration = (startTime: dayjs.Dayjs, endTime: dayjs.Dayjs) => {
-  const hours = Math.floor(endTime.diff(startTime, "hours"));
-  const minutes = Math.floor(endTime.diff(startTime, "minute") - hours * 60);
-  let res = "";
+type DurationFormatCtor = new (
+  locale: string | undefined,
+  options: { style: "narrow" },
+) => { format(duration: { hours?: number; minutes?: number }): string };
+
+export const formatDuration = (minutes: number, locale?: string) => {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const DurationFormat = (Intl as { DurationFormat?: DurationFormatCtor })
+    .DurationFormat;
+  if (DurationFormat) {
+    return new DurationFormat(locale, { style: "narrow" }).format({
+      hours,
+      minutes: mins,
+    });
+  }
+  if (hours && mins) {
+    return `${hours}h ${mins}m`;
+  }
   if (hours) {
-    res += `${hours}h`;
+    return `${hours}h`;
   }
-  if (hours && minutes) {
-    res += " ";
-  }
-  if (minutes) {
-    res += `${minutes}m`;
-  }
-  return res;
+  return `${mins}m`;
+};
+
+export const getDuration = (startTime: dayjs.Dayjs, endTime: dayjs.Dayjs) => {
+  return formatDuration(endTime.diff(startTime, "minute"));
 };
 
 export const removeAllOptionsForDay = (

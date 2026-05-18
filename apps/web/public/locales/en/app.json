@@ -628,5 +628,9 @@
   "customBrandingPromptCta": "Set Up Now",
   "dismiss": "Dismiss",
   "new": "New",
-  "updateAvailable": "Update available"
+  "updateAvailable": "Update available",
+  "eventTypesEmptyTitle": "No event types yet",
+  "eventTypesEmptyDescription": "Create reusable event types that people can book with you.",
+  "eventTypeUpdatedRelative": "Updated {relativeTime}",
+  "eventTypes": "Event Types"
 }
