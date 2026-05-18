@@ -55,7 +55,8 @@ export function buildEventTypeFormSchema(
           });
         }
       } else if (data.locationType === "custom_link") {
-        if (!data.locationUrl?.trim()) {
+        const trimmedUrl = data.locationUrl?.trim();
+        if (!trimmedUrl) {
           ctx.addIssue({
             path: ["locationUrl"],
             code: "custom",
@@ -63,7 +64,7 @@ export function buildEventTypeFormSchema(
           });
         } else {
           try {
-            new URL(data.locationUrl);
+            new URL(trimmedUrl);
           } catch {
             ctx.addIssue({
               path: ["locationUrl"],
@@ -113,16 +114,16 @@ type EventTypeInput = {
   name: string;
   duration: number;
   capacity: number | null;
-  description: string | undefined;
-  location: Location | undefined;
+  description: string | null;
+  location: Location | null;
 };
 
 export function eventTypeValuesToInput(
   values: EventTypeFormValues,
 ): EventTypeInput {
   const capacity = values.maxAttendees ? Number(values.maxAttendees) : null;
-  const description = values.description?.trim() || undefined;
-  const location: Location | undefined =
+  const description = values.description?.trim() || null;
+  const location: Location | null =
     values.locationType === "in_person" && values.locationAddress
       ? { type: "in_person", address: values.locationAddress.trim() }
       : values.locationType === "custom_link" && values.locationUrl
@@ -131,7 +132,7 @@ export function eventTypeValuesToInput(
             url: values.locationUrl.trim(),
             text: values.locationText?.trim() || undefined,
           }
-        : undefined;
+        : null;
   return {
     name: values.name.trim(),
     duration: values.duration,
@@ -183,6 +184,7 @@ export function EventTypeFormFields({
               <FormControl>
                 <Input
                   {...field}
+                  name="eventTypeName"
                   autoFocus
                   placeholder={t("eventTypeNamePlaceholder", {
                     defaultValue: "Discovery call",
@@ -230,9 +232,22 @@ export function EventTypeFormFields({
         name="locationType"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>
-              <Trans i18nKey="location" defaults="Location" />
-            </FormLabel>
+            <div className="flex items-center justify-between">
+              <FormLabel>
+                <Trans i18nKey="location" defaults="Location" />
+              </FormLabel>
+              {field.value !== "" ? (
+                <RemoveOptionalButton
+                  onClick={() => {
+                    form.setValue("locationType", "");
+                    form.setValue("locationAddress", "");
+                    form.setValue("locationUrl", "");
+                    form.setValue("locationText", "");
+                    form.clearErrors(["locationAddress", "locationUrl"]);
+                  }}
+                />
+              ) : null}
+            </div>
             <FormControl>
               <RadioGroup
                 value={field.value}
@@ -425,15 +440,13 @@ function RadioCardOption({
   return (
     <label
       htmlFor={id}
-      className="group flex cursor-pointer items-center gap-2.5 rounded-lg border border-input bg-card px-3 py-2.5 text-sm transition-colors hover:bg-accent has-data-[state=checked]:border-primary has-data-[state=checked]:bg-primary/5"
+      className="group flex cursor-pointer items-center gap-2 rounded-lg border border-input bg-card px-3 py-2.5 text-sm transition-colors hover:bg-accent has-data-[state=checked]:border-primary has-data-[state=checked]:bg-primary/5"
     >
-      <RadioGroupItem id={id} value={value} />
-      <span className="flex items-center gap-1.5 font-medium text-foreground">
-        <span className="text-muted-foreground group-has-data-[state=checked]:text-primary">
-          {icon}
-        </span>
-        {label}
+      <span className="text-muted-foreground group-has-data-[state=checked]:text-primary">
+        {icon}
       </span>
+      <span className="flex-1 font-normal">{label}</span>
+      <RadioGroupItem className="hidden" id={id} value={value} />
     </label>
   );
 }
