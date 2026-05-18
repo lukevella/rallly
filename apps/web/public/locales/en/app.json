@@ -653,5 +653,12 @@
   "maxAttendeesInvalid": "Must be a positive integer",
   "requiredField": "Required",
   "urlInvalid": "Must be a valid URL",
-  "locationDisplayTextPlaceholder": "Meeting link"
+  "locationDisplayTextPlaceholder": "Meeting link",
+  "eventTypeActionsLabel": "Event type actions",
+  "deleteEventTypeTitle": "Delete event type?",
+  "deleteEventTypeDescription": "Existing bookings for <b>{name}</b> will not be affected, but no new bookings can be made.",
+  "deleteEventTypeError": "Failed to delete event type",
+  "edit": "Edit",
+  "editEventTypeTitle": "Edit Event Type",
+  "updateEventTypeError": "Failed to update event type"
 }
