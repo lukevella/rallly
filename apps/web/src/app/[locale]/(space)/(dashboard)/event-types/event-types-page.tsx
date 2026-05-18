@@ -1,36 +1,42 @@
 "use client";
 
 import { Badge } from "@rallly/ui/badge";
+import { Button } from "@rallly/ui/button";
 import { CardTitle } from "@rallly/ui/card";
+import { useDialog } from "@rallly/ui/dialog";
 import {
   ArmchairIcon,
   CalendarRangeIcon,
   ClockIcon,
   Link2Icon,
   MapPinIcon,
+  PlusIcon,
 } from "lucide-react";
 import {
   PageContainer,
   PageContent,
   PageHeader,
+  PageHeaderActions,
   PageHeaderContent,
   PageTitle,
 } from "@/app/components/page-layout";
 import {
   EmptyState,
   EmptyStateDescription,
+  EmptyStateFooter,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
+import { CreateEventTypeDialog } from "@/features/event-types/components/create-event-type-dialog";
 import { Trans } from "@/i18n/client";
 import { useLocale } from "@/lib/locale/client";
 import type { LocationType } from "@/lib/location";
 import { trpc } from "@/trpc/client";
 import { formatDuration } from "@/utils/date-time-utils";
 
-function EventTypesEmptyState() {
+function EventTypesEmptyState({ onCreate }: { onCreate: () => void }) {
   return (
     <EmptyState className="p-8">
       <EmptyStateIcon>
@@ -45,6 +51,12 @@ function EventTypesEmptyState() {
           defaults="Create reusable event types that people can book with you."
         />
       </EmptyStateDescription>
+      <EmptyStateFooter>
+        <Button variant="primary" onClick={onCreate}>
+          <PlusIcon data-icon="inline-start" />
+          <Trans i18nKey="newEventType" defaults="New Event Type" />
+        </Button>
+      </EmptyStateFooter>
     </EmptyState>
   );
 }
@@ -107,6 +119,7 @@ function EventTypeCard({
 
 export function EventTypesPage() {
   const [{ eventTypes }] = trpc.eventTypes.list.useSuspenseQuery();
+  const dialog = useDialog();
 
   return (
     <PageContainer>
@@ -116,10 +129,16 @@ export function EventTypesPage() {
             <Trans i18nKey="eventTypes" defaults="Event Types" />
           </PageTitle>
         </PageHeaderContent>
+        <PageHeaderActions>
+          <Button variant="primary" onClick={() => dialog.trigger()}>
+            <PlusIcon data-icon="inline-start" />
+            <Trans i18nKey="newEventType" defaults="New Event Type" />
+          </Button>
+        </PageHeaderActions>
       </PageHeader>
       <PageContent>
         {eventTypes.length === 0 ? (
-          <EventTypesEmptyState />
+          <EventTypesEmptyState onCreate={() => dialog.trigger()} />
         ) : (
           <div className="@container">
             <div className="grid @4xl:grid-cols-3 @md:grid-cols-2 grid-cols-1 gap-4">
@@ -145,6 +164,7 @@ export function EventTypesPage() {
           </div>
         )}
       </PageContent>
+      <CreateEventTypeDialog {...dialog.dialogProps} />
     </PageContainer>
   );
 }
