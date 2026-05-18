@@ -57,15 +57,19 @@ async function main() {
 
     if (evt.invites?.length) {
       await prisma.scheduledEventInvite.createMany({
-        data: evt.invites.map((inv) => ({
-          id: nextId(),
-          scheduledEventId: eventId,
-          inviteeName: inv.inviteeName,
-          inviteeEmail: inv.inviteeEmail,
-          inviteeTimeZone: inv.inviteeTimeZone,
-          inviteeId: inv.inviteeId,
-          status: inv.status,
-        })),
+        data: evt.invites.map((inv) => {
+          const inviteId = nextId();
+          return {
+            id: inviteId,
+            uid: inviteId,
+            scheduledEventId: eventId,
+            inviteeName: inv.inviteeName,
+            inviteeEmail: inv.inviteeEmail,
+            inviteeTimeZone: inv.inviteeTimeZone,
+            inviteeId: inv.inviteeId,
+            status: inv.status,
+          };
+        }),
       });
       inviteCount += evt.invites.length;
     }

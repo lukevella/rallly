@@ -13,8 +13,10 @@ model EventType {
   deleted   Boolean   @default(false)
   deletedAt DateTime? @map("deleted_at")
 
-  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-  host  User  @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  space           Space            @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  host            User             @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  slots           SheetSlot[]
+  scheduledEvents ScheduledEvent[]
 
   @@index([spaceId])
   @@index([hostId])

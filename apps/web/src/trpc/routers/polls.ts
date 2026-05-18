@@ -851,6 +851,7 @@ export const polls = router({
                 data: poll.participants
                   .filter((p) => !!p.email)
                   .map((p) => ({
+                    uid: nanoid(),
                     inviteeName: p.name,
                     inviteeEmail: p.email as string,
                     inviteeTimeZone:
