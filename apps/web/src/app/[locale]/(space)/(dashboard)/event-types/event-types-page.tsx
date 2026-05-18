@@ -18,6 +18,7 @@ import {
   Link2Icon,
   MapPinIcon,
   MoreVerticalIcon,
+  PencilIcon,
   PlusIcon,
   Trash2Icon,
 } from "lucide-react";
@@ -41,6 +42,8 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { CreateEventTypeDialog } from "@/features/event-types/components/create-event-type-dialog";
 import { DeleteEventTypeDialog } from "@/features/event-types/components/delete-event-type-dialog";
+import { EditEventTypeDialog } from "@/features/event-types/components/edit-event-type-dialog";
+import type { EventTypeDTO } from "@/features/event-types/types";
 import { Trans } from "@/i18n/client";
 import { useLocale } from "@/lib/locale/client";
 import type { LocationType } from "@/lib/location";
@@ -80,6 +83,7 @@ function EventTypeCard({
   hostImage,
   locationType,
   locationLabel,
+  onEdit,
   onDelete,
 }: {
   name: string;
@@ -89,6 +93,7 @@ function EventTypeCard({
   hostImage?: string;
   locationType: LocationType | null;
   locationLabel: string | null;
+  onEdit: () => void;
   onDelete: () => void;
 }) {
   const { locale } = useLocale();
@@ -113,6 +118,10 @@ function EventTypeCard({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={onEdit}>
+                <PencilIcon className="size-4" />
+                <Trans i18nKey="edit" defaults="Edit" />
+              </DropdownMenuItem>
               <DropdownMenuItem variant="destructive" onClick={onDelete}>
                 <Trash2Icon className="size-4" />
                 <Trans i18nKey="delete" defaults="Delete" />
@@ -156,11 +165,10 @@ function EventTypeCard({
 export function EventTypesPage() {
   const [{ eventTypes }] = trpc.eventTypes.list.useSuspenseQuery();
   const createDialog = useDialog();
+  const editDialog = useDialog();
   const deleteDialog = useDialog();
-  const [selectedEventType, setSelectedEventType] = React.useState<{
-    id: string;
-    name: string;
-  } | null>(null);
+  const [selectedEventType, setSelectedEventType] =
+    React.useState<EventTypeDTO | null>(null);
 
   return (
     <PageContainer>
@@ -199,11 +207,12 @@ export function EventTypesPage() {
                         : (eventType.location.text ?? eventType.location.url)
                       : null
                   }
+                  onEdit={() => {
+                    setSelectedEventType(eventType);
+                    editDialog.trigger();
+                  }}
                   onDelete={() => {
-                    setSelectedEventType({
-                      id: eventType.id,
-                      name: eventType.name,
-                    });
+                    setSelectedEventType(eventType);
                     deleteDialog.trigger();
                   }}
                 />
@@ -214,11 +223,17 @@ export function EventTypesPage() {
       </PageContent>
       <CreateEventTypeDialog {...createDialog.dialogProps} />
       {selectedEventType ? (
-        <DeleteEventTypeDialog
-          {...deleteDialog.dialogProps}
-          eventTypeId={selectedEventType.id}
-          eventTypeName={selectedEventType.name}
-        />
+        <>
+          <EditEventTypeDialog
+            {...editDialog.dialogProps}
+            eventType={selectedEventType}
+          />
+          <DeleteEventTypeDialog
+            {...deleteDialog.dialogProps}
+            eventTypeId={selectedEventType.id}
+            eventTypeName={selectedEventType.name}
+          />
+        </>
       ) : null}
     </PageContainer>
   );
