@@ -66,7 +66,7 @@ export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
       duration_minutes: input.duration,
       location_type: input.location?.type ?? "none",
       has_max_attendees: input.capacity !== null,
-      has_description: input.description !== undefined,
+      has_description: input.description !== null,
     });
     handleOpenChange(false);
   });

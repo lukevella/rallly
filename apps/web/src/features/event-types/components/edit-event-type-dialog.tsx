@@ -65,6 +65,8 @@ export function EditEventTypeDialog({
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen) {
       form.reset(initialValues);
+      setShowMaxAttendees(eventType.capacity !== null);
+      setShowDescription(eventType.description !== null);
     }
     onOpenChange?.(nextOpen);
   };
@@ -87,7 +89,7 @@ export function EditEventTypeDialog({
       duration_minutes: input.duration,
       location_type: input.location?.type ?? "none",
       has_max_attendees: input.capacity !== null,
-      has_description: input.description !== undefined,
+      has_description: input.description !== null,
     });
     handleOpenChange(false);
   });
