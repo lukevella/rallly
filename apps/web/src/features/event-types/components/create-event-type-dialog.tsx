@@ -160,7 +160,12 @@ export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
       );
       return;
     }
-    posthog?.capture("event_type_creation:submit");
+    posthog?.capture("event_type_creation:form_submit", {
+      duration_minutes: values.duration,
+      location_type: location?.type ?? "none",
+      has_max_attendees: capacity !== null,
+      has_description: description !== undefined,
+    });
     handleOpenChange(false);
   });
 
