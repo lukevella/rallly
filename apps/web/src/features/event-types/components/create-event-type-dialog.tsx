@@ -412,8 +412,8 @@ export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
                   >
                     <PlusIcon data-icon="inline-start" />
                     <Trans
-                      i18nKey="addMaxAttendees"
-                      defaults="Add max attendees"
+                      i18nKey="setMaxAttendees"
+                      defaults="Set max attendees"
                     />
                   </Button>
                 ) : null}

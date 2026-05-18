@@ -649,5 +649,5 @@
   "addDescription": "Add description",
   "remove": "Remove",
   "maxAttendees": "Max attendees",
-  "addMaxAttendees": "Add max attendees"
+  "setMaxAttendees": "Set max attendees"
 }
