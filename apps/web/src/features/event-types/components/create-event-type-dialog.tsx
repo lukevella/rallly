@@ -362,15 +362,7 @@ export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
                       />
                     </div>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min={1}
-                        step={1}
-                        {...field}
-                        placeholder={t("maxAttendeesPlaceholder", {
-                          defaultValue: "No limit",
-                        })}
-                      />
+                      <Input type="number" min={1} step={1} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -412,7 +404,10 @@ export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowMaxAttendees(true)}
+                    onClick={() => {
+                      setShowMaxAttendees(true);
+                      form.setValue("maxAttendees", "1");
+                    }}
                     className="text-muted-foreground"
                   >
                     <PlusIcon data-icon="inline-start" />
