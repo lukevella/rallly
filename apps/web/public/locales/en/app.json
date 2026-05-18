@@ -649,5 +649,9 @@
   "addDescription": "Add description",
   "remove": "Remove",
   "maxAttendees": "Max attendees",
-  "setMaxAttendees": "Set max attendees"
+  "setMaxAttendees": "Set max attendees",
+  "maxAttendeesInvalid": "Must be a positive integer",
+  "requiredField": "Required",
+  "urlInvalid": "Must be a valid URL",
+  "locationDisplayTextPlaceholder": "Meeting link"
 }

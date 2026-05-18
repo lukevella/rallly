@@ -32,56 +32,64 @@ import { z } from "zod";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
-const formSchema = z
-  .object({
-    name: z.string().min(1).max(255),
-    duration: z.number().int().positive(),
-    maxAttendees: z.string().optional(),
-    description: z.string().max(2000).optional(),
-    locationType: z.enum(["", "in_person", "custom_link"]),
-    locationAddress: z.string().optional(),
-    locationUrl: z.string().optional(),
-    locationText: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.maxAttendees) {
-      const parsed = Number(data.maxAttendees);
-      if (!Number.isInteger(parsed) || parsed <= 0) {
-        ctx.addIssue({
-          path: ["maxAttendees"],
-          code: "custom",
-          message: "Must be a positive integer",
-        });
-      }
-    }
-    if (data.locationType === "in_person") {
-      if (!data.locationAddress?.trim()) {
-        ctx.addIssue({
-          path: ["locationAddress"],
-          code: "custom",
-          message: "Required",
-        });
-      }
-    } else if (data.locationType === "custom_link") {
-      if (!data.locationUrl?.trim()) {
-        ctx.addIssue({
-          path: ["locationUrl"],
-          code: "custom",
-          message: "Required",
-        });
-      } else {
-        try {
-          new URL(data.locationUrl);
-        } catch {
+function buildFormSchema(
+  t: (key: string, opts: { defaultValue: string }) => string,
+) {
+  return z
+    .object({
+      name: z.string().min(1).max(255),
+      duration: z.number().int().positive(),
+      maxAttendees: z.string().optional(),
+      description: z.string().max(2000).optional(),
+      locationType: z.enum(["", "in_person", "custom_link"]),
+      locationAddress: z.string().optional(),
+      locationUrl: z.string().optional(),
+      locationText: z.string().optional(),
+    })
+    .superRefine((data, ctx) => {
+      if (data.maxAttendees) {
+        const parsed = Number(data.maxAttendees);
+        if (!Number.isInteger(parsed) || parsed <= 0) {
           ctx.addIssue({
-            path: ["locationUrl"],
+            path: ["maxAttendees"],
             code: "custom",
-            message: "Must be a valid URL",
+            message: t("maxAttendeesInvalid", {
+              defaultValue: "Must be a positive integer",
+            }),
           });
         }
       }
-    }
-  });
+      if (data.locationType === "in_person") {
+        if (!data.locationAddress?.trim()) {
+          ctx.addIssue({
+            path: ["locationAddress"],
+            code: "custom",
+            message: t("requiredField", { defaultValue: "Required" }),
+          });
+        }
+      } else if (data.locationType === "custom_link") {
+        if (!data.locationUrl?.trim()) {
+          ctx.addIssue({
+            path: ["locationUrl"],
+            code: "custom",
+            message: t("requiredField", { defaultValue: "Required" }),
+          });
+        } else {
+          try {
+            new URL(data.locationUrl);
+          } catch {
+            ctx.addIssue({
+              path: ["locationUrl"],
+              code: "custom",
+              message: t("urlInvalid", {
+                defaultValue: "Must be a valid URL",
+              }),
+            });
+          }
+        }
+      }
+    });
+}
 
 const defaultValues = {
   name: "",
@@ -97,10 +105,11 @@ const defaultValues = {
 export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
   const { t } = useTranslation();
   const posthog = usePostHog();
-  const utils = trpc.useUtils();
   const createEventType = trpc.eventTypes.create.useMutation();
   const [showMaxAttendees, setShowMaxAttendees] = React.useState(false);
   const [showDescription, setShowDescription] = React.useState(false);
+
+  const formSchema = React.useMemo(() => buildFormSchema(t), [t]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -143,16 +152,16 @@ export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
         description,
         location,
       });
-      posthog?.capture("event_type_create");
-      await utils.eventTypes.list.invalidate();
-      handleOpenChange(false);
     } catch {
       toast.error(
         t("createEventTypeError", {
           defaultValue: "Failed to create event type",
         }),
       );
+      return;
     }
+    posthog?.capture("event_type_creation:submit");
+    handleOpenChange(false);
   });
 
   const handleRemoveMaxAttendees = () => {
@@ -335,7 +344,12 @@ export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
                         </span>
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="Meeting link" />
+                        <Input
+                          {...field}
+                          placeholder={t("locationDisplayTextPlaceholder", {
+                            defaultValue: "Meeting link",
+                          })}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
