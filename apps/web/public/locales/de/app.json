@@ -628,5 +628,9 @@
   "customBrandingPromptCta": "Jetzt einrichten",
   "dismiss": "Verwerfen",
   "new": "Neu",
-  "updateAvailable": "Update verfügbar"
+  "updateAvailable": "Update verfügbar",
+  "eventTypesEmptyTitle": "Noch keine Termintypen",
+  "eventTypesEmptyDescription": "Erstelle wiederverwendbare Termintypen, die die Leute bei dir buchen können.",
+  "eventTypeUpdatedRelative": "{relativeTime} geändert",
+  "eventTypes": "Termintypen"
 }
