@@ -653,5 +653,9 @@
   "maxAttendeesInvalid": "Must be a positive integer",
   "requiredField": "Required",
   "urlInvalid": "Must be a valid URL",
-  "locationDisplayTextPlaceholder": "Meeting link"
+  "locationDisplayTextPlaceholder": "Meeting link",
+  "eventTypeActionsLabel": "Event type actions",
+  "deleteEventTypeTitle": "Delete event type?",
+  "deleteEventTypeDescription": "<b>{name}</b> will be hidden from creation pickers. This cannot be undone.",
+  "deleteEventTypeError": "Failed to delete event type"
 }

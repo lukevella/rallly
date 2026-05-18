@@ -5,13 +5,23 @@ import { Button } from "@rallly/ui/button";
 import { CardTitle } from "@rallly/ui/card";
 import { useDialog } from "@rallly/ui/dialog";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
+import { Icon } from "@rallly/ui/icon";
+import {
   ArmchairIcon,
   CalendarRangeIcon,
   ClockIcon,
   Link2Icon,
   MapPinIcon,
+  MoreVerticalIcon,
   PlusIcon,
+  Trash2Icon,
 } from "lucide-react";
+import React from "react";
 import {
   PageContainer,
   PageContent,
@@ -30,6 +40,7 @@ import {
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { CreateEventTypeDialog } from "@/features/event-types/components/create-event-type-dialog";
+import { DeleteEventTypeDialog } from "@/features/event-types/components/delete-event-type-dialog";
 import { Trans } from "@/i18n/client";
 import { useLocale } from "@/lib/locale/client";
 import type { LocationType } from "@/lib/location";
@@ -69,6 +80,7 @@ function EventTypeCard({
   hostImage,
   locationType,
   locationLabel,
+  onDelete,
 }: {
   name: string;
   duration: number;
@@ -77,13 +89,37 @@ function EventTypeCard({
   hostImage?: string;
   locationType: LocationType | null;
   locationLabel: string | null;
+  onDelete: () => void;
 }) {
   const { locale } = useLocale();
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-card-border bg-card">
       <RandomGradientBar />
       <div className="p-3">
-        <OptimizedAvatarImage size="lg" src={hostImage} name={hostName} />
+        <div className="flex items-start justify-between gap-2">
+          <OptimizedAvatarImage size="lg" src={hostImage} name={hostName} />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Icon>
+                  <MoreVerticalIcon />
+                </Icon>
+                <span className="sr-only">
+                  <Trans
+                    i18nKey="eventTypeActionsLabel"
+                    defaults="Event type actions"
+                  />
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem variant="destructive" onClick={onDelete}>
+                <Trash2Icon className="size-4" />
+                <Trans i18nKey="delete" defaults="Delete" />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <p className="mt-2 font-medium text-muted-foreground text-sm">
           {hostName}
         </p>
@@ -119,7 +155,12 @@ function EventTypeCard({
 
 export function EventTypesPage() {
   const [{ eventTypes }] = trpc.eventTypes.list.useSuspenseQuery();
-  const dialog = useDialog();
+  const createDialog = useDialog();
+  const deleteDialog = useDialog();
+  const [selectedEventType, setSelectedEventType] = React.useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   return (
     <PageContainer>
@@ -130,7 +171,7 @@ export function EventTypesPage() {
           </PageTitle>
         </PageHeaderContent>
         <PageHeaderActions>
-          <Button variant="primary" onClick={() => dialog.trigger()}>
+          <Button variant="primary" onClick={() => createDialog.trigger()}>
             <PlusIcon data-icon="inline-start" />
             <Trans i18nKey="newEventType" defaults="New Event Type" />
           </Button>
@@ -138,7 +179,7 @@ export function EventTypesPage() {
       </PageHeader>
       <PageContent>
         {eventTypes.length === 0 ? (
-          <EventTypesEmptyState onCreate={() => dialog.trigger()} />
+          <EventTypesEmptyState onCreate={() => createDialog.trigger()} />
         ) : (
           <div className="@container">
             <div className="grid @4xl:grid-cols-3 @md:grid-cols-2 grid-cols-1 gap-4">
@@ -158,13 +199,27 @@ export function EventTypesPage() {
                         : (eventType.location.text ?? eventType.location.url)
                       : null
                   }
+                  onDelete={() => {
+                    setSelectedEventType({
+                      id: eventType.id,
+                      name: eventType.name,
+                    });
+                    deleteDialog.trigger();
+                  }}
                 />
               ))}
             </div>
           </div>
         )}
       </PageContent>
-      <CreateEventTypeDialog {...dialog.dialogProps} />
+      <CreateEventTypeDialog {...createDialog.dialogProps} />
+      {selectedEventType ? (
+        <DeleteEventTypeDialog
+          {...deleteDialog.dialogProps}
+          eventTypeId={selectedEventType.id}
+          eventTypeName={selectedEventType.name}
+        />
+      ) : null}
     </PageContainer>
   );
 }
