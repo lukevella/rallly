@@ -713,6 +713,7 @@ export const polls = router({
           location: true,
           description: true,
           spaceId: true,
+          hideParticipants: true,
           space: {
             select: {
               showBranding: true,
@@ -846,6 +847,7 @@ export const polls = router({
             spaceId,
             allDay: option.duration === 0,
             status: "confirmed",
+            hideAttendees: poll.hideParticipants,
             invites: {
               createMany: {
                 data: poll.participants
