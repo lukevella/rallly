@@ -1020,6 +1020,61 @@ export type EventTypeDef = {
   location: EventTypeLocation | null;
 };
 
+export type SheetDef = {
+  id: string;
+  spaceId: string;
+  hostId: string;
+  title: string;
+  description: string | null;
+  urlId: string;
+};
+
+export const sheets: SheetDef[] = [
+  // ── Personal space (space-1) ─────────────────────────────────────────────
+  {
+    id: "sheet-1",
+    spaceId: "space-1",
+    hostId: "user-1",
+    title: "Coffee chat sign-ups",
+    description: "Pick a slot for a 30 minute coffee chat next week.",
+    urlId: "personal-coffee-chats",
+  },
+  {
+    id: "sheet-2",
+    spaceId: "space-1",
+    hostId: "user-1",
+    title: "Mentorship office hours",
+    description: null,
+    urlId: "personal-mentorship",
+  },
+
+  // ── Acme Inc (space-2) ───────────────────────────────────────────────────
+  {
+    id: "sheet-3",
+    spaceId: "space-2",
+    hostId: "user-3",
+    title: "Engineering office hours",
+    description: "Drop in for help with code reviews or architecture.",
+    urlId: "acme-eng-office-hours",
+  },
+  {
+    id: "sheet-4",
+    spaceId: "space-2",
+    hostId: "user-2",
+    title: "Design critique slots",
+    description: "30 minute critiques of in-progress designs.",
+    urlId: "acme-design-critiques",
+  },
+  {
+    id: "sheet-5",
+    spaceId: "space-2",
+    hostId: "user-1",
+    title: "New hire intro chats",
+    description: "Welcome chat with our newest team members.",
+    urlId: "acme-new-hire-intros",
+  },
+];
+
 export const eventTypes: EventTypeDef[] = [
   // ── Personal space (space-1) ─────────────────────────────────────────────
   {
