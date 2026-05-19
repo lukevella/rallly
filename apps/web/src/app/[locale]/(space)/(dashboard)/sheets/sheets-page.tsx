@@ -33,11 +33,14 @@ function SheetsEmptyState() {
         <ClipboardListIcon />
       </EmptyStateIcon>
       <EmptyStateTitle>
-        <Trans i18nKey="sheetsEmptyTitle" defaults="No sheets yet" />
+        <Trans
+          i18nKey="signupSheetsEmptyTitle"
+          defaults="No sign-up sheets yet"
+        />
       </EmptyStateTitle>
       <EmptyStateDescription>
         <Trans
-          i18nKey="sheetsEmptyDescription"
+          i18nKey="signupSheetsEmptyDescription"
           defaults="Create a sign-up sheet so people can book the time slots you offer."
         />
       </EmptyStateDescription>
@@ -47,7 +50,7 @@ function SheetsEmptyState() {
           className={buttonVariants({ variant: "primary" })}
         >
           <PlusIcon data-icon="inline-start" />
-          <Trans i18nKey="newSheet" defaults="New Sheet" />
+          <Trans i18nKey="newSignupSheet" defaults="New Sign-up Sheet" />
         </Link>
       </EmptyStateFooter>
     </EmptyState>
@@ -98,7 +101,7 @@ export function SheetsPage() {
       <PageHeader>
         <PageHeaderContent>
           <PageTitle>
-            <Trans i18nKey="sheets" defaults="Sheets" />
+            <Trans i18nKey="signupSheets" defaults="Sign-up Sheets" />
           </PageTitle>
         </PageHeaderContent>
         <PageHeaderActions>
@@ -107,7 +110,7 @@ export function SheetsPage() {
             className={buttonVariants({ variant: "primary" })}
           >
             <PlusIcon data-icon="inline-start" />
-            <Trans i18nKey="newSheet" defaults="New Sheet" />
+            <Trans i18nKey="newSignupSheet" defaults="New Sign-up Sheet" />
           </Link>
         </PageHeaderActions>
       </PageHeader>

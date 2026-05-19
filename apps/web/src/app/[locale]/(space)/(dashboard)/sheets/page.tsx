@@ -24,8 +24,8 @@ export default async function Page() {
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
-    title: t("sheets", {
-      defaultValue: "Sheets",
+    title: t("signupSheets", {
+      defaultValue: "Sign-up Sheets",
     }),
   };
 }

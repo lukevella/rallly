@@ -102,7 +102,9 @@ export const useSpaceMenu = () => {
               ? [
                   {
                     id: "sheets",
-                    label: t("sheets", { defaultValue: "Sheets" }),
+                    label: t("signupSheets", {
+                      defaultValue: "Sign-up Sheets",
+                    }),
                     href: "/sheets",
                     icon: ClipboardListIcon,
                     isActive:
