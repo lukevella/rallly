@@ -1,0 +1,39 @@
+model Sheet {
+  id          String  @id @default(cuid())
+  spaceId     String  @map("space_id")
+  hostId      String  @map("host_id")
+  title       String
+  description String?
+  urlId       String  @unique @map("url_id")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deleted   Boolean   @default(false)
+  deletedAt DateTime? @map("deleted_at")
+
+  space Space       @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  host  User        @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  slots SheetSlot[]
+
+  @@index([spaceId])
+  @@index([hostId])
+  @@map("sheets")
+}
+
+model SheetSlot {
+  id          String   @id @default(cuid())
+  sheetId     String   @map("sheet_id")
+  eventTypeId String   @map("event_type_id")
+  startTime   DateTime @map("start_time")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  sheet          Sheet           @relation(fields: [sheetId], references: [id], onDelete: Cascade)
+  eventType      EventType       @relation(fields: [eventTypeId], references: [id], onDelete: Restrict)
+  scheduledEvent ScheduledEvent?
+
+  @@index([sheetId, startTime])
+  @@index([eventTypeId])
+  @@map("sheet_slots")
+}

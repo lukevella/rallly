@@ -73,6 +73,7 @@ model User {
   scheduledEvents       ScheduledEvent[]
   scheduledEventInvites ScheduledEventInvite[]
   hostedEventTypes      EventType[]
+  hostedSheets          Sheet[]
 
   calendarConnections CalendarConnection[]
   credentials         Credential[]
