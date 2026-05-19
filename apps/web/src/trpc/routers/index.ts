@@ -9,6 +9,7 @@ import { dashboard } from "./dashboard";
 import { eventTypes } from "./event-types";
 import { events } from "./events";
 import { polls } from "./polls";
+import { sheets } from "./sheets";
 import { spaces } from "./spaces";
 import { system } from "./system";
 import { user } from "./user";
@@ -22,6 +23,7 @@ export const appRouter = mergeRouters(
     eventTypes,
     events,
     polls,
+    sheets,
     spaces,
     system,
     user,
