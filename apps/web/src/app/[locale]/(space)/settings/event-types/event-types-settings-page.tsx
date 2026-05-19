@@ -179,7 +179,7 @@ export function EventTypesSettingsPage() {
           <SettingsPageDescription>
             <Trans
               i18nKey="eventTypesDescription"
-              defaults="Reusable event configurations that power sign-up sheets."
+              defaults="Reusable event configurations."
             />
           </SettingsPageDescription>
         </SettingsPageHeader>
