@@ -16,25 +16,26 @@ enum ScheduledEventInviteStatus {
 }
 
 model ScheduledEvent {
-  id          String               @id @default(cuid())
-  userId      String               @map("user_id")
-  spaceId     String               @map("space_id")
-  eventTypeId String?              @map("event_type_id")
-  sheetSlotId String?              @unique @map("sheet_slot_id")
-  title       String
-  description String?
-  location    String?
-  capacity    Int?
-  createdAt   DateTime             @default(now()) @map("created_at")
-  updatedAt   DateTime             @updatedAt @map("updated_at")
-  status      ScheduledEventStatus @default(confirmed)
-  timeZone    String?              @map("time_zone")
-  start       DateTime
-  end         DateTime
-  allDay      Boolean              @default(false) @map("all_day")
-  deletedAt   DateTime?            @map("deleted_at")
-  sequence    Int                  @default(0)
-  uid         String               @unique
+  id            String               @id @default(cuid())
+  userId        String               @map("user_id")
+  spaceId       String               @map("space_id")
+  eventTypeId   String?              @map("event_type_id")
+  sheetSlotId   String?              @unique @map("sheet_slot_id")
+  title         String
+  description   String?
+  location      String?
+  capacity      Int?
+  createdAt     DateTime             @default(now()) @map("created_at")
+  updatedAt     DateTime             @updatedAt @map("updated_at")
+  status        ScheduledEventStatus @default(confirmed)
+  timeZone      String?              @map("time_zone")
+  start         DateTime
+  end           DateTime
+  allDay        Boolean              @default(false) @map("all_day")
+  deletedAt     DateTime?            @map("deleted_at")
+  sequence      Int                  @default(0)
+  uid           String               @unique
+  hideAttendees Boolean              @default(false) @map("hide_attendees")
 
   user             User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   space            Space                  @relation(fields: [spaceId], references: [id], onDelete: Cascade)
