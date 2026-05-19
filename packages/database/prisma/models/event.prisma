@@ -69,7 +69,7 @@ model ScheduledEventInvite {
   uid              String                     @unique
   scheduledEventId String                     @map("scheduled_event_id")
   inviteeName      String                     @map("invitee_name")
-  inviteeEmail     String                     @map("invitee_email")
+  inviteeEmail     String                     @map("invitee_email") @db.Citext
   inviteeId        String?                    @map("invitee_id")
   inviteeTimeZone  String?                    @map("invitee_time_zone")
   inviteeLocale    String?                    @map("invitee_locale")
