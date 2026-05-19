@@ -653,5 +653,15 @@
   "maxAttendeesInvalid": "Pozitív egész számnak kell lennie",
   "requiredField": "Kötelező",
   "urlInvalid": "Érvényes URL-nek kell lennie",
-  "locationDisplayTextPlaceholder": "Találkozó link"
+  "locationDisplayTextPlaceholder": "Találkozó link",
+  "eventTypeActionsLabel": "Eseménytípus műveletek",
+  "edit": "Szerkesztés",
+  "sheetUpdatedRelative": "Frissitve {relativeTime}",
+  "deleteEventTypeTitle": "Eseménytípus törlése?",
+  "deleteEventTypeDescription": "<b>{name}</b> el lesz rejtve a létrehozható lehetőségek közül. Ezt nem lehet visszavonni.",
+  "deleteEventTypeError": "Nem sikerült az eseménytípus törlése",
+  "editEventTypeTitle": "Eseménytípus szerkesztése",
+  "updateEventTypeError": "Nem sikerült az eseménytípus frissítése",
+  "signupSheets": "Jelentkezési lapok",
+  "signupSheetsEmptyTitle": "Nincsenek még jelentkezési lapok"
 }
