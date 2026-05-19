@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 const inPersonLocationSchema = z.object({
   type: z.literal("in_person"),
