@@ -653,5 +653,17 @@
   "maxAttendeesInvalid": "Must be a positive integer",
   "requiredField": "Required",
   "urlInvalid": "Must be a valid URL",
-  "locationDisplayTextPlaceholder": "Meeting link"
+  "locationDisplayTextPlaceholder": "Meeting link",
+  "eventTypeActionsLabel": "Event type actions",
+  "edit": "Edit",
+  "sheets": "Sheets",
+  "sheetsEmptyTitle": "No sheets yet",
+  "sheetsEmptyDescription": "Create a sign-up sheet so people can book the time slots you offer.",
+  "newSheet": "New Sheet",
+  "sheetUpdatedRelative": "Updated {relativeTime}",
+  "deleteEventTypeTitle": "Delete event type?",
+  "deleteEventTypeDescription": "<b>{name}</b> will be hidden from creation pickers. This cannot be undone.",
+  "deleteEventTypeError": "Failed to delete event type",
+  "editEventTypeTitle": "Edit Event Type",
+  "updateEventTypeError": "Failed to update event type"
 }
