@@ -1,6 +1,6 @@
 import { Prisma, prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import * as z from "zod";
 import { isEventTypesEnabled } from "@/features/event-types/constants";
 import { createEventTypeDTO, getEventTypes } from "@/features/event-types/data";
 import {

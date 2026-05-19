@@ -14,7 +14,7 @@ import { Textarea } from "@rallly/ui/textarea";
 import { Link2Icon, MapPinIcon, PlusIcon } from "lucide-react";
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod";
 import type { EventTypeDTO } from "@/features/event-types/types";
 import { Trans, useTranslation } from "@/i18n/client";
 import type { Location } from "@/lib/location";

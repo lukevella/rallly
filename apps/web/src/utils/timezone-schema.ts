@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 // Override runtime canonicalization when ICU data lags behind IANA updates.
 const ianaOverrides: Record<string, string> = {
