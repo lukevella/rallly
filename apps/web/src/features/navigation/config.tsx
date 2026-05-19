@@ -7,7 +7,6 @@ import {
   CalendarIcon,
   ClipboardListIcon,
   HomeIcon,
-  ShapesIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -39,7 +38,6 @@ export const useSpaceMenu = () => {
   const { t } = useTranslation();
   const pathname = usePathname();
   const isCalendarsEnabled = useFeatureFlag("calendars");
-  const isEventTypesEnabled = useFeatureFlag("eventTypes");
   const isSignupSheetsEnabled = useFeatureFlag("signupSheets");
   const config = React.useMemo<NavigationConfig>(
     () => ({
@@ -85,19 +83,6 @@ export const useSpaceMenu = () => {
                   },
                 ]
               : []),
-            ...(isEventTypesEnabled
-              ? [
-                  {
-                    id: "event-types",
-                    label: t("eventTypes", { defaultValue: "Event Types" }),
-                    href: "/event-types",
-                    icon: ShapesIcon,
-                    isActive:
-                      pathname === "/event-types" ||
-                      pathname.startsWith("/event-types/"),
-                  },
-                ]
-              : []),
             ...(isSignupSheetsEnabled
               ? [
                   {
@@ -116,13 +101,7 @@ export const useSpaceMenu = () => {
         },
       ],
     }),
-    [
-      pathname,
-      t,
-      isCalendarsEnabled,
-      isEventTypesEnabled,
-      isSignupSheetsEnabled,
-    ],
+    [pathname, t, isCalendarsEnabled, isSignupSheetsEnabled],
   );
 
   return React.useMemo(
