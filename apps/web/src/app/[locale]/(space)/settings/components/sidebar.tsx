@@ -19,6 +19,7 @@ import {
   LockIcon,
   PanelsTopLeftIcon,
   Settings2Icon,
+  ShapesIcon,
   UserIcon,
   UsersIcon,
 } from "lucide-react";
@@ -99,6 +100,7 @@ export function SpaceSidebarMenu() {
   const { t } = useTranslation();
   const pathname = usePathname();
   const isBillingEnabled = useFeatureFlag("billing");
+  const isEventTypesEnabled = useFeatureFlag("eventTypes");
   const menuItems = [
     {
       id: "general",
@@ -112,6 +114,16 @@ export function SpaceSidebarMenu() {
       icon: <UsersIcon />,
       href: "/settings/members",
     },
+    ...(isEventTypesEnabled
+      ? [
+          {
+            id: "event-types",
+            label: t("eventTypes", { defaultValue: "Event Types" }),
+            icon: <ShapesIcon />,
+            href: "/settings/event-types",
+          },
+        ]
+      : []),
     ...(isBillingEnabled
       ? [
           {

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
-import { EventTypesPage } from "./event-types-page";
+import { EventTypesSettingsPage } from "./event-types-settings-page";
 
 export default async function Page() {
   if (!isFeatureEnabled("eventTypes")) {
@@ -16,7 +16,7 @@ export default async function Page() {
 
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
-      <EventTypesPage />
+      <EventTypesSettingsPage />
     </HydrationBoundary>
   );
 }

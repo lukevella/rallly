@@ -24,13 +24,12 @@ import {
 } from "lucide-react";
 import React from "react";
 import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageHeaderActions,
-  PageHeaderContent,
-  PageTitle,
-} from "@/app/components/page-layout";
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageDescription,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/app/components/settings-layout";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -162,7 +161,7 @@ function EventTypeCard({
   );
 }
 
-export function EventTypesPage() {
+export function EventTypesSettingsPage() {
   const [{ eventTypes }] = trpc.eventTypes.list.useSuspenseQuery();
   const createDialog = useDialog();
   const editDialog = useDialog();
@@ -171,26 +170,32 @@ export function EventTypesPage() {
     React.useState<EventTypeDTO | null>(null);
 
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageHeaderContent>
-          <PageTitle>
+    <SettingsPage>
+      <div className="flex justify-between gap-4">
+        <SettingsPageHeader>
+          <SettingsPageTitle>
             <Trans i18nKey="eventTypes" defaults="Event Types" />
-          </PageTitle>
-        </PageHeaderContent>
-        <PageHeaderActions>
+          </SettingsPageTitle>
+          <SettingsPageDescription>
+            <Trans
+              i18nKey="eventTypesDescription"
+              defaults="Reusable event configurations."
+            />
+          </SettingsPageDescription>
+        </SettingsPageHeader>
+        <div>
           <Button variant="primary" onClick={() => createDialog.trigger()}>
             <PlusIcon data-icon="inline-start" />
             <Trans i18nKey="newEventType" defaults="New Event Type" />
           </Button>
-        </PageHeaderActions>
-      </PageHeader>
-      <PageContent>
+        </div>
+      </div>
+      <SettingsPageContent>
         {eventTypes.length === 0 ? (
           <EventTypesEmptyState onCreate={() => createDialog.trigger()} />
         ) : (
           <div className="@container">
-            <div className="grid @4xl:grid-cols-3 @md:grid-cols-2 grid-cols-1 gap-4">
+            <div className="grid @md:grid-cols-2 grid-cols-1 gap-4">
               {eventTypes.map((eventType) => (
                 <EventTypeCard
                   key={eventType.id}
@@ -220,7 +225,7 @@ export function EventTypesPage() {
             </div>
           </div>
         )}
-      </PageContent>
+      </SettingsPageContent>
       <CreateEventTypeDialog {...createDialog.dialogProps} />
       {selectedEventType ? (
         <>
@@ -235,6 +240,6 @@ export function EventTypesPage() {
           />
         </>
       ) : null}
-    </PageContainer>
+    </SettingsPage>
   );
 }
