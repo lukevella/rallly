@@ -666,5 +666,9 @@
   "signupSheetsEmptyTitle": "No sign-up sheets yet",
   "signupSheetsEmptyDescription": "Create a sign-up sheet so people can book the time slots you offer.",
   "newSignupSheet": "New Sign-up Sheet",
-  "eventTypesDescription": "Reusable event configurations."
+  "eventTypesDescription": "Reusable event configurations.",
+  "eventHostedBy": "Hosted by {name}",
+  "eventStatusCanceled": "Canceled",
+  "eventStatusPast": "Past",
+  "eventStatusUpcoming": "Upcoming"
 }

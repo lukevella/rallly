@@ -26,7 +26,7 @@ export function AddToCalendarButton({ eventId }: { eventId: string }) {
           <Trans i18nKey="addToCalendar" defaults="Add to Calendar" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent forceMount={true} align="start">
+      <DropdownMenuContent align="start">
         <DropdownMenuItem asChild>
           <a
             href={`/api/event/${eventId}/google-calendar`}
