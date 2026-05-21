@@ -16,7 +16,11 @@ import {
   requireUserMiddleware,
   router,
 } from "../../trpc";
-import { createParticipantEditToken, resolveUserId } from "./utils";
+import {
+  createParticipantEditToken,
+  resolveUserId,
+  tryResolveUserId,
+} from "./utils";
 
 const logger = createLogger("participants");
 
@@ -107,9 +111,10 @@ export const participants = router({
     .input(
       z.object({
         pollId: z.string(),
+        token: z.string().optional(),
       }),
     )
-    .query(async ({ ctx, input: { pollId } }) => {
+    .query(async ({ ctx, input: { pollId, token } }) => {
       const poll = await prisma.poll.findUnique({
         where: { id: pollId },
         select: {
@@ -152,12 +157,16 @@ export const participants = router({
       // Hide participants if the poll has hideParticipants enabled
       // and the current user is not an admin
       if (poll.hideParticipants) {
+        // Admin check is intentionally bound to ctx.user only — an edit
+        // token must never unlock the admin view of other participants.
         const isAdmin =
           ctx.user && (await hasPollAdminAccess(pollId, ctx.user.id));
         if (!isAdmin) {
+          // Fall back to the edit token so a guest can still see their own
+          // response when opening the email link in a fresh browser.
+          const viewerId = await tryResolveUserId(token, ctx.user);
           return participants.map((participant) => {
-            // If the current user is the participant, return the participant
-            if (ctx.user && participant.userId === ctx.user.id) {
+            if (viewerId && participant.userId === viewerId) {
               return participant;
             }
 

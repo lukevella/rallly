@@ -1,5 +1,5 @@
 import type { VoteType } from "@rallly/database";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import * as React from "react";
 import { useVisibility } from "@/components/visibility";
 import { usePermissions } from "@/contexts/permissions";
@@ -17,8 +17,10 @@ export function filterParticipantsByVote<
 
 export const useParticipants = () => {
   const urlId = useParams<{ urlId: string }>().urlId;
+  const token = useSearchParams().get("token") ?? undefined;
   const [participants] = trpc.polls.participants.list.useSuspenseQuery({
     pollId: urlId,
+    token,
   });
 
   return { participants };
