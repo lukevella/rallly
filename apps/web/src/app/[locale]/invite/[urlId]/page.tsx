@@ -43,14 +43,14 @@ export default async function Page(props: {
 
   const trpc = await createPublicSSRHelper();
 
+  const token = (await props.searchParams).token;
+
   await Promise.all([
     trpc.user.getMe.prefetch(),
     trpc.polls.get.prefetch({ urlId: params.urlId }),
-    trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
+    trpc.polls.participants.list.prefetch({ pollId: params.urlId, token }),
     trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
   ]);
-
-  const token = (await props.searchParams).token;
 
   let impersonatedUserId: string | null = null;
   if (token) {
