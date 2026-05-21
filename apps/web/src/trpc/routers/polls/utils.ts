@@ -27,8 +27,7 @@ export async function resolveUserId(
   token: string | undefined,
   ctxUser: { id: string } | undefined,
 ): Promise<string> {
-  const userIdFromToken = await getUserIdFromToken(token);
-  const userId = userIdFromToken ?? ctxUser?.id;
+  const userId = await tryResolveUserId(token, ctxUser);
   if (!userId) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
@@ -36,4 +35,12 @@ export async function resolveUserId(
     });
   }
   return userId;
+}
+
+export async function tryResolveUserId(
+  token: string | undefined,
+  ctxUser: { id: string } | undefined,
+): Promise<string | null> {
+  const userIdFromToken = await getUserIdFromToken(token);
+  return userIdFromToken ?? ctxUser?.id ?? null;
 }

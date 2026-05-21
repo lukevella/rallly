@@ -26,10 +26,11 @@ export const useAddParticipantMutation = () => {
 
 export const useUpdateParticipantMutation = () => {
   const queryClient = trpc.useUtils();
+  const token = useEditToken();
   return trpc.polls.participants.update.useMutation({
     onSuccess: (participant) => {
       queryClient.polls.participants.list.setData(
-        { pollId: participant.pollId },
+        { pollId: participant.pollId, token },
         (existingParticipants = []) => {
           const newParticipants = [...existingParticipants];
 
@@ -51,10 +52,11 @@ export const useUpdateParticipantMutation = () => {
 export const useDeleteParticipantMutation = () => {
   const queryClient = trpc.useUtils();
   const { poll } = usePoll();
+  const token = useEditToken();
   return trpc.polls.participants.delete.useMutation({
     onMutate: ({ participantId }) => {
       queryClient.polls.participants.list.setData(
-        { pollId: poll.id },
+        { pollId: poll.id, token },
         (existingParticipants = []) => {
           return existingParticipants.filter(({ id }) => id !== participantId);
         },
