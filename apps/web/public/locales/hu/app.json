@@ -653,5 +653,18 @@
   "maxAttendeesInvalid": "Pozitív egész számnak kell lennie",
   "requiredField": "Kötelező",
   "urlInvalid": "Érvényes URL-nek kell lennie",
-  "locationDisplayTextPlaceholder": "Találkozó link"
+  "locationDisplayTextPlaceholder": "Találkozó link",
+  "eventTypeActionsLabel": "Eseménytípus műveletek",
+  "edit": "Szerkesztés",
+  "sheetUpdatedRelative": "Frissítve {relativeTime}",
+  "deleteEventTypeTitle": "Eseménytípus törlése?",
+  "deleteEventTypeDescription": "<b>{name}</b> el lesz rejtve a létrehozható lehetőségek közül. Ezt nem lehet visszavonni.",
+  "deleteEventTypeError": "Nem sikerült az eseménytípus törlése",
+  "editEventTypeTitle": "Eseménytípus szerkesztése",
+  "updateEventTypeError": "Nem sikerült az eseménytípus frissítése",
+  "signupSheets": "Jelentkező űrlapok",
+  "signupSheetsEmptyTitle": "Nincsenek még jelentkező űrlapok",
+  "signupSheetsEmptyDescription": "Hozz létre egy jelentkező űrlapot, hogy az emberek foglalhassanak az általad kínált időpontokat közül.",
+  "newSignupSheet": "Új jelentkező űrlap",
+  "eventTypesDescription": "Újrahasználható esemény beállítások."
 }
