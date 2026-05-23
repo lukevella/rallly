@@ -653,5 +653,18 @@
   "maxAttendeesInvalid": "Muss eine positive ganze Zahl sein",
   "requiredField": "Erforderlich",
   "urlInvalid": "Muss eine gültige URL sein",
-  "locationDisplayTextPlaceholder": "Meeting-Link"
+  "locationDisplayTextPlaceholder": "Meeting-Link",
+  "eventTypeActionsLabel": "Aktionen für Termintypen",
+  "edit": "Bearbeiten",
+  "sheetUpdatedRelative": "{relativeTime} geändert",
+  "deleteEventTypeTitle": "Termintyp löschen?",
+  "deleteEventTypeDescription": "<b>{name}</b> wird aus der Schnellwahl beim Erstellen neuer Umfragen entfernt. Dies kann nicht rückgängig gemacht werden.",
+  "deleteEventTypeError": "Fehler beim Löschen des Termintyps",
+  "editEventTypeTitle": "Termintyp bearbeiten",
+  "updateEventTypeError": "Fehler beim Aktualisieren des Termintyps",
+  "signupSheets": "Anmeldelisten",
+  "signupSheetsEmptyTitle": "Noch keine Anmeldelisten vorhanden",
+  "signupSheetsEmptyDescription": "Erstelle eine Anmeldeliste, damit die Leute die von dir angebotenen Zeitfenster buchen können.",
+  "newSignupSheet": "Neue Anmeldeliste",
+  "eventTypesDescription": "Wiederverwendbare Terminkonfigurationen."
 }
