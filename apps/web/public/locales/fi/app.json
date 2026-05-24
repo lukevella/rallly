@@ -618,5 +618,16 @@
   "viewPoll": "Näytä kysely",
   "responseOptions": "Vastausvaihtoehdot",
   "viewResults": "Näytä tulokset",
-  "pollClosedDescription": "Uusia vastauksia ei hyväksytä."
+  "pollClosedDescription": "Uusia vastauksia ei hyväksytä.",
+  "showBrandingDescription": "Tuo brändi-ilmeesi esiin julkisilla sivuillasi ja sähköposteissasi",
+  "useCustomBranding": "Ota oma brändäys",
+  "customBranding": "Oma brändäys",
+  "customBrandingDescription": "Näytä osallistujillesi logosi ja brändivärit",
+  "customBrandingPromptTitle": "Oma brändäys",
+  "customBrandingPromptDescription": "Luo ammattimaisia aikataulukyselyjä omalla logollasi ja väreilläsi.",
+  "customBrandingPromptCta": "Aloita heti",
+  "dismiss": "Hylkää",
+  "new": "Uusi",
+  "updateAvailable": "Päivitys saatavilla",
+  "eventTypesEmptyTitle": "Ei vielä tapahtumalajeja"
 }
