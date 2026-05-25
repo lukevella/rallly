@@ -20,7 +20,6 @@ import { PollFooter } from "@/components/poll/poll-footer";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { BrandingStyle } from "@/features/branding/branding-style";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
-import { getDisplayTimeZone } from "@/features/scheduled-event/data";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 import { EventDateTime } from "./event-date-time";
@@ -59,10 +58,7 @@ const getScheduledEvent = cache(async (id: string) => {
     notFound();
   }
 
-  return {
-    ...event,
-    displayTimeZone: getDisplayTimeZone(event.timeZone),
-  };
+  return event;
 });
 
 async function EventsBackLink() {

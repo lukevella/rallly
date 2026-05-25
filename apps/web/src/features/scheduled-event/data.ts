@@ -3,16 +3,6 @@ import { prisma } from "@rallly/database";
 import { dayjs } from "@/lib/dayjs";
 import type { Status } from "./schema";
 
-// Derive the display timezone from the stored `timeZone`.
-// The stored field's semantics are inverted from how we want to render:
-//   stored null = "render in UTC, everyone sees the same time" → displayTimeZone = "UTC"
-//   stored set  = "render in viewer's local TZ"                → displayTimeZone = null
-// Returning null is the signal to the renderer that the time row must
-// be resolved client-side using the viewer's TZ.
-export function getDisplayTimeZone(timeZone: string | null): string | null {
-  return timeZone === null ? "UTC" : null;
-}
-
 // Common event selection fields
 const eventSelectFields = {
   id: true,
@@ -84,7 +74,6 @@ function transformEvent(event: RawEventData) {
     end: event.end,
     allDay: event.allDay,
     timeZone: event.timeZone,
-    displayTimeZone: getDisplayTimeZone(event.timeZone),
     status: event.status,
     createdBy: {
       name: event.user.name,
