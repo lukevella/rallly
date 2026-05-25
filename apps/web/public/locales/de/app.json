@@ -666,5 +666,9 @@
   "signupSheetsEmptyTitle": "Noch keine Anmeldelisten vorhanden",
   "signupSheetsEmptyDescription": "Erstelle eine Anmeldeliste, damit die Leute die von dir angebotenen Zeitfenster buchen können.",
   "newSignupSheet": "Neue Anmeldeliste",
-  "eventTypesDescription": "Wiederverwendbare Terminkonfigurationen."
+  "eventTypesDescription": "Wiederverwendbare Terminkonfigurationen.",
+  "eventHostedBy": "Veranstaltet von {name}",
+  "eventStatusCanceled": "Abgesagt",
+  "eventStatusPast": "Vergangen",
+  "eventStatusUpcoming": "Bevorstehend"
 }
