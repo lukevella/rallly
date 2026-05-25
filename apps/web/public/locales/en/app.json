@@ -670,5 +670,13 @@
   "eventHostedBy": "Hosted by {name}",
   "eventStatusCanceled": "Canceled",
   "eventStatusPast": "Past",
-  "eventStatusUpcoming": "Upcoming"
+  "eventStatusUpcoming": "Upcoming",
+  "attendeeStatusGoing": "Going",
+  "attendeeStatusMaybe": "Maybe",
+  "attendeeStatusDeclined": "Declined",
+  "attendeeStatusPending": "Pending",
+  "conferencing": "Conferencing",
+  "notes": "Notes",
+  "attendees": "Attendees",
+  "invited": "Invited"
 }

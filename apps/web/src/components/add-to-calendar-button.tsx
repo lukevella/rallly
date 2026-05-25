@@ -10,6 +10,7 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import { DownloadIcon, PlusIcon } from "lucide-react";
+import type * as React from "react";
 import GoogleCalendarIcon from "@/features/calendars/assets/google-calendar.svg";
 import Microsoft365Icon from "@/features/calendars/assets/microsoft-365.svg";
 import OutlookIcon from "@/features/calendars/assets/outlook.svg";
@@ -17,11 +18,19 @@ import YahooIcon from "@/features/calendars/assets/yahoo.svg";
 
 import { Trans } from "@/i18n/client";
 
-export function AddToCalendarButton({ eventId }: { eventId: string }) {
+export function AddToCalendarButton({
+  eventId,
+  size,
+  className,
+}: {
+  eventId: string;
+  size?: React.ComponentProps<typeof Button>["size"];
+  className?: string;
+}) {
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button>
+        <Button size={size} className={className}>
           <PlusIcon data-icon="inline-start" />
           <Trans i18nKey="addToCalendar" defaults="Add to Calendar" />
         </Button>

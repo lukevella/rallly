@@ -4,7 +4,7 @@ import { cn } from "./lib/utils";
 
 export const buttonVariants = cva(
   cn(
-    "group inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg font-normal outline-none transition-opacity transition-transform focus-visible:ring-2 focus-visible:ring-ring active:shadow-none disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:opacity-90",
+    "group inline-flex shrink-0 items-center justify-center whitespace-nowrap font-normal outline-none active:scale-[0.98] active:opacity-80 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[state=open]:scale-[0.98] data-[state=open]:opacity-80 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:opacity-90",
   ),
   {
     variants: {
@@ -14,21 +14,21 @@ export const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground ring-1 ring-button-outline ring-inset hover:bg-destructive/90",
         default:
-          "bg-transparent ring-1 ring-button-outline ring-inset hover:bg-accent",
+          "bg-background/80 ring-1 ring-button-outline ring-inset backdrop-blur-lg hover:bg-accent",
         ghost:
-          "border-transparent bg-transparent text-foreground ring-1 ring-transparent ring-inset hover:bg-accent data-[state=open]:bg-accent",
+          "border-transparent bg-transparent text-foreground ring-1 ring-transparent ring-inset hover:bg-accent data-[state=open]:bg-accent [&>svg]:opacity-75",
         actionBar:
           "border-transparent bg-action-bar text-action-bar-foreground hover:bg-action-bar-foreground/10 data-[state=open]:bg-action-bar-foreground/20",
         link: "border-transparent text-primary underline-offset-4 hover:underline",
       },
       size: {
         default:
-          "h-8 gap-1.5 px-2.5 text-sm has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+          "h-8 gap-1.5 rounded-lg px-2.5 text-sm has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
         xs: "h-6 gap-1 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),10px)] px-2 text-sm text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] text-sm has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-10 gap-1.5 px-3 text-sm has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5",
-        xl: "h-12 gap-2 px-4 text-base has-data-[icon=inline-end]:pr-3.5 has-data-[icon=inline-start]:pl-3.5",
-        icon: "size-8",
+        sm: "h-7 gap-1.5 in-data-[slot=button-group]:rounded-lg rounded-lg px-2.5 text-[0.8rem] text-sm has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-10 gap-1.5 rounded-xl px-3 text-sm has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5",
+        xl: "h-12 gap-2 rounded-xl px-4 text-base has-data-[icon=inline-end]:pr-3.5 has-data-[icon=inline-start]:pl-3.5",
+        icon: "size-8 rounded-lg",
         "icon-xs":
           "size-6 in-data-[slot=button-group]:rounded-lg rounded-[min(var(--radius-md),10px)] [&_svg:not([class*='size-'])]:size-3",
         "icon-sm":

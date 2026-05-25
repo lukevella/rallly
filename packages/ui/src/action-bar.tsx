@@ -1,65 +1,47 @@
-import * as DialogPrimitive from "@radix-ui/react-dialog";
 import * as React from "react";
 import { cn } from "./lib/utils";
 
-interface ActionBarProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
-    "open" | "onOpenChange"
-  > {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  children: React.ReactNode;
-}
-
 const ActionBar = React.forwardRef<
-  React.ComponentRef<typeof DialogPrimitive.Content>,
-  ActionBarProps
->(({ open, onOpenChange, children, className, ...props }, ref) => {
-  return (
-    <DialogPrimitive.Root modal={false} open={open} onOpenChange={onOpenChange}>
-      <DialogPrimitive.Content
-        forceMount={true}
-        ref={ref}
-        className={cn(
-          "fixed bottom-3 z-50 flex -translate-x-1/2 items-center gap-2 rounded-xl border border-action-bar-border bg-action-bar p-2 text-action-bar-foreground shadow-lg transition-transform duration-200 ease-out data-[state=closed]:pointer-events-none data-[state=closed]:translate-y-full data-[state=open]:translate-y-0 data-[state=closed]:opacity-0 data-[state=open]:opacity-100",
-          "left-1/2 md:bottom-16 md:w-fit",
-          "w-[calc(100%-24px)]",
-          className,
-        )}
-        {...props}
-      >
-        {children}
-      </DialogPrimitive.Content>
-    </DialogPrimitive.Root>
-  );
-});
-ActionBar.displayName = "ActionBar";
-
-const ActionBarTitle = React.forwardRef<
-  HTMLHeadingElement,
-  React.HTMLAttributes<HTMLHeadingElement>
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => (
-  <DialogPrimitive.Title
+  <div
     ref={ref}
-    className={cn("flex flex-1 items-center px-2.5 py-2 text-sm", className)}
+    className={cn(
+      "pointer-events-none fixed inset-x-0 bottom-0 z-40 bg-linear-to-t from-25% from-gray-100/50 to-transparent dark:from-gray-900",
+      className,
+    )}
     {...props}
   >
-    {children}
-  </DialogPrimitive.Title>
+    <div className="pointer-events-auto mx-auto flex max-w-xl items-center justify-center gap-3 px-4 pt-12 pb-[max(--spacing(10),env(safe-area-inset-bottom))]">
+      {children}
+    </div>
+  </div>
 ));
-ActionBarTitle.displayName = "ActionBarTitle";
+ActionBar.displayName = "ActionBar";
 
-const ActionBarGroup = React.forwardRef<
+const ActionBarSpacer = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("flex-1", className)} {...props} />
+));
+ActionBarSpacer.displayName = "ActionBarSpacer";
+
+const ActionBarOffset = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex justify-end gap-2", className)}
+    aria-hidden
+    className={cn(
+      "h-[calc(--spacing(12)+max(--spacing(8),env(safe-area-inset-bottom)))]",
+      className,
+    )}
     {...props}
   />
 ));
-ActionBarGroup.displayName = "ActionBarGroup";
+ActionBarOffset.displayName = "ActionBarOffset";
 
-export { ActionBar, ActionBarTitle, ActionBarGroup };
+export { ActionBar, ActionBarOffset, ActionBarSpacer };

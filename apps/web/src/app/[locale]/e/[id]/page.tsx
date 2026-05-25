@@ -1,23 +1,21 @@
 import { prisma } from "@rallly/database";
 import { buttonVariants } from "@rallly/ui";
+import {
+  ActionBar,
+  ActionBarOffset,
+  ActionBarSpacer,
+} from "@rallly/ui/action-bar";
 import { Badge } from "@rallly/ui/badge";
-import { Icon } from "@rallly/ui/icon";
+import { Button } from "@rallly/ui/button";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import { ArrowLeftIcon, MapPinIcon } from "lucide-react";
+import { ArrowLeftIcon, MapPinIcon, VideoIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache, Suspense } from "react";
 import { getCurrentUser } from "@/auth/data";
 import { AddToCalendarButton } from "@/components/add-to-calendar-button";
-import {
-  EventMetaDescription,
-  EventMetaItem,
-  EventMetaList,
-  EventMetaTitle,
-} from "@/components/event-meta";
-import { PollFooter } from "@/components/poll/poll-footer";
-import { RandomGradientBar } from "@/components/random-gradient-bar";
+import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { BrandingStyle } from "@/features/branding/branding-style";
 import { ConferencingLink } from "@/features/conferencing/components/conferencing-link";
 import { formatLocationText } from "@/features/location/utils";
@@ -25,7 +23,15 @@ import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
 import { createScheduledEventDTO } from "@/features/scheduled-event/data";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
-import { EventDateTime } from "./event-date-time";
+import { AttendeeRows } from "./attendee-rows";
+import { EventDateLine } from "./event-header";
+import {
+  Section,
+  SectionGroup,
+  SectionItem,
+  SectionItemLabel,
+  SectionItemValue,
+} from "./section";
 
 const getScheduledEvent = cache(async (id: string) => {
   const event = await prisma.scheduledEvent.findUnique({
@@ -42,6 +48,7 @@ const getScheduledEvent = cache(async (id: string) => {
       timeZone: true,
       status: true,
       deletedAt: true,
+      hideAttendees: true,
       user: {
         select: {
           name: true,
@@ -53,6 +60,18 @@ const getScheduledEvent = cache(async (id: string) => {
           image: true,
           showBranding: true,
           primaryColor: true,
+        },
+      },
+      invites: {
+        select: {
+          id: true,
+          inviteeName: true,
+          status: true,
+          user: {
+            select: {
+              image: true,
+            },
+          },
         },
       },
     },
@@ -78,9 +97,7 @@ async function EventsBackLink() {
       href="/events"
       className={buttonVariants({ variant: "ghost", size: "sm" })}
     >
-      <Icon>
-        <ArrowLeftIcon />
-      </Icon>
+      <ArrowLeftIcon data-icon="inline-start" />
       <Trans i18nKey="events" defaults="Events" />
     </Link>
   );
@@ -131,79 +148,135 @@ export default async function EventPage({
       ? event.space.primaryColor
       : null;
   const hasEnded = event.end < new Date();
+  const visibleAttendees = event.hideAttendees
+    ? []
+    : event.invites.filter((i) => i.status !== "pending");
 
   return (
-    <div className="page-bg-gray-100 relative flex min-h-dvh flex-col overflow-auto sm:dark:bg-gray-900">
+    <div className="page-bg-gray-100 flex min-h-dvh flex-col antialiased dark:bg-gray-900">
       {brandingColor ? <BrandingStyle primaryColor={brandingColor} /> : null}
-      <div className="p-3">
+
+      <div className="flex items-center gap-4 p-3 sm:pb-6">
         <Suspense fallback={null}>
           <EventsBackLink />
         </Suspense>
       </div>
-      <div className="flex-1 px-2 md:flex md:items-center md:justify-center">
-        <div className="w-full max-w-md gap-4 overflow-hidden rounded-2xl border bg-card">
-          <RandomGradientBar />
-          <div className="relative p-4">
-            <div className="absolute top-3 right-3">
+
+      <div className="mx-auto w-full max-w-xl flex-1">
+        {isBranded ? (
+          <div className="flex items-center gap-2 p-3 py-4">
+            <SpaceIcon
+              name={event.space.name}
+              src={event.space.image ?? undefined}
+              size="md"
+            />
+            <p className="font-medium text-muted-foreground text-sm">
+              {event.space.name}
+            </p>
+          </div>
+        ) : null}
+        <header className="flex gap-4 px-5 pb-6">
+          <div className="w-1 rounded-xs bg-primary" />
+          <div className="flex-1">
+            <div className="flex items-start justify-between gap-3">
+              <h1 className="text-balance font-semibold text-2xl text-foreground tracking-tight sm:text-xl">
+                {event.title}
+              </h1>
               <StatusBadge status={event.status} hasEnded={hasEnded} />
             </div>
-            <div>
-              {isBranded ? (
-                <div className="mb-4">
-                  <SpaceIcon
-                    name={event.space.name}
-                    src={event.space.image ?? undefined}
-                    size="xl"
-                  />
-                  <p className="mt-2 font-medium text-muted-foreground text-sm">
-                    {event.space.name}
-                  </p>
-                </div>
-              ) : null}
-              <EventMetaTitle className="pr-24">{event.title}</EventMetaTitle>
-              {event.user?.name ? (
-                <p className="mt-1 text-muted-foreground text-sm">
-                  <Trans
-                    i18nKey="eventHostedBy"
-                    defaults="Hosted by {name}"
-                    values={{ name: event.user.name }}
-                  />
-                </p>
-              ) : null}
-              {event.description ? (
-                <EventMetaDescription className="mt-4">
-                  {event.description}
-                </EventMetaDescription>
-              ) : null}
-              <EventMetaList className="mt-6">
-                <EventDateTime
-                  start={event.start}
-                  end={event.end}
-                  allDay={event.allDay}
-                  timezone={event.displayTimeZone}
+            {event.user?.name ? (
+              <p className="mt-1 text-muted-foreground text-sm">
+                <Trans
+                  i18nKey="eventHostedBy"
+                  defaults="Hosted by {name}"
+                  values={{ name: event.user.name }}
                 />
+              </p>
+            ) : null}
+            <EventDateLine
+              start={event.start}
+              end={event.end}
+              allDay={event.allDay}
+              timezone={event.displayTimeZone}
+            />
+          </div>
+        </header>
+
+        <div className="px-3 pb-8">
+          <SectionGroup>
+            {event.location || event.conferencing ? (
+              <Section>
                 {event.location ? (
-                  <EventMetaItem>
-                    <MapPinIcon />
-                    {formatLocationText(event.location)}
-                  </EventMetaItem>
+                  <SectionItem>
+                    <SectionItemLabel>
+                      <MapPinIcon />
+                      <Trans i18nKey="location" defaults="Location" />
+                    </SectionItemLabel>
+                    <SectionItemValue className="text-foreground">
+                      {formatLocationText(event.location)}
+                    </SectionItemValue>
+                  </SectionItem>
                 ) : null}
                 {event.conferencing ? (
-                  <EventMetaItem>
-                    <ConferencingLink conferencing={event.conferencing} />
-                  </EventMetaItem>
+                  <SectionItem>
+                    <SectionItemLabel>
+                      <VideoIcon />
+                      <Trans i18nKey="conferencing" defaults="Conferencing" />
+                    </SectionItemLabel>
+                    <SectionItemValue className="overflow-hidden">
+                      <ConferencingLink conferencing={event.conferencing} />
+                    </SectionItemValue>
+                  </SectionItem>
                 ) : null}
-              </EventMetaList>
-              <div className="mt-6">
-                <AddToCalendarButton eventId={event.id} />
-              </div>
-            </div>
-          </div>
+              </Section>
+            ) : null}
+
+            {event.description ? (
+              <Section title={<Trans i18nKey="notes" defaults="Notes" />}>
+                <SectionItem className="py-3">
+                  <p className="whitespace-pre-wrap text-pretty text-foreground text-sm leading-relaxed">
+                    <TruncatedLinkify>{event.description}</TruncatedLinkify>
+                  </p>
+                </SectionItem>
+              </Section>
+            ) : null}
+
+            {visibleAttendees.length > 0 ? (
+              <Section
+                title={<Trans i18nKey="attendees" defaults="Attendees" />}
+              >
+                <SectionItem>
+                  <SectionItemLabel>
+                    <Trans i18nKey="invited" defaults="Invited" />
+                  </SectionItemLabel>
+                  <SectionItemValue className="tabular-nums">
+                    {visibleAttendees.length}
+                  </SectionItemValue>
+                </SectionItem>
+                <AttendeeRows
+                  attendees={visibleAttendees.map((invite) => ({
+                    id: invite.id,
+                    name: invite.inviteeName,
+                    image: invite.user?.image ?? undefined,
+                    status: invite.status,
+                  }))}
+                />
+              </Section>
+            ) : null}
+          </SectionGroup>
         </div>
       </div>
-      <div className="mt-auto py-6">
-        <PollFooter />
-      </div>
+
+      <ActionBarOffset />
+
+      <ActionBar>
+        <AddToCalendarButton eventId={event.id} size="lg" />
+        <ActionBarSpacer />
+        <Button size="lg">Decline</Button>
+        <Button variant="primary" size="lg">
+          Accept
+        </Button>
+      </ActionBar>
     </div>
   );
 }
