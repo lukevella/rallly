@@ -675,6 +675,7 @@
   "attendeeStatusDeclined": "Declined",
   "attendeeStatusPending": "Pending",
   "conferencing": "Conferencing",
+  "notes": "Notes",
   "attendees": "Attendees",
   "invited": "Invited",
   "eventOrganizedBy": "Organized by {name}",
