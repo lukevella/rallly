@@ -3,6 +3,10 @@ import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
+import { parseConferencing } from "@/features/conferencing/data";
+import { getConferencingUri } from "@/features/conferencing/utils";
+import { parseLocation } from "@/features/location/data";
+import { formatLocationText } from "@/features/location/utils";
 import { getEventsChronological } from "@/features/scheduled-event/data";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { defineAbilityForMember } from "@/features/space/member/ability";
@@ -96,12 +100,36 @@ export const events = router({
         include: { invites: true },
       });
 
+      const cancelLocation = parseLocation(updatedEvent.location, {
+        scheduledEventId: updatedEvent.id,
+      });
+      const cancelConferencing = parseConferencing(updatedEvent.conferencing, {
+        scheduledEventId: updatedEvent.id,
+      });
+      const cancelLocationText = cancelLocation
+        ? formatLocationText(cancelLocation)
+        : undefined;
+      const cancelConferencingUri = cancelConferencing
+        ? getConferencingUri(cancelConferencing)
+        : undefined;
+      const cancelDescriptionParts: string[] = [];
+      if (updatedEvent.description) {
+        cancelDescriptionParts.push(updatedEvent.description);
+      }
+      if (cancelConferencingUri) {
+        cancelDescriptionParts.push(cancelConferencingUri);
+      }
+      const cancelDescription =
+        cancelDescriptionParts.length > 0
+          ? cancelDescriptionParts.join("\n\n")
+          : undefined;
+
       const cancelEvent = createIcsEvent({
         uid: updatedEvent.uid,
         sequence: updatedEvent.sequence,
         title: updatedEvent.title,
-        description: updatedEvent.description ?? undefined,
-        location: updatedEvent.location ?? undefined,
+        description: cancelDescription,
+        location: cancelLocationText ?? cancelConferencingUri,
         start: updatedEvent.start,
         end: updatedEvent.end,
         allDay: updatedEvent.allDay,

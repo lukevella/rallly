@@ -13,10 +13,10 @@ export function EventDateTime({
   start: Date;
   end: Date;
   allDay: boolean;
-  timezone: string;
+  timezone: string | null;
 }) {
-  const startD = dayjs(start).tz(timezone);
-  const endD = dayjs(end).tz(timezone);
+  const startD = timezone ? dayjs(start).tz(timezone) : dayjs(start);
+  const endD = timezone ? dayjs(end).tz(timezone) : dayjs(end);
   const date = startD.format("dddd, LL");
 
   return (

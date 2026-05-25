@@ -4,6 +4,10 @@ import { google, office365, outlook, yahoo } from "calendar-link";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
+import { parseConferencing } from "@/features/conferencing/data";
+import { getConferencingUri } from "@/features/conferencing/utils";
+import { parseLocation } from "@/features/location/data";
+import { formatLocationText } from "@/features/location/utils";
 import { createIcsEvent } from "@/utils/ics";
 
 const app = new Hono().basePath("/api/event");
@@ -12,10 +16,12 @@ async function getScheduledEvent(eventId: string) {
   return prisma.scheduledEvent.findUnique({
     where: { id: eventId },
     select: {
+      id: true,
       uid: true,
       title: true,
       description: true,
       location: true,
+      conferencing: true,
       start: true,
       end: true,
       allDay: true,
@@ -30,16 +36,50 @@ async function getScheduledEvent(eventId: string) {
   });
 }
 
-function toCalendarEvent(
-  event: NonNullable<Awaited<ReturnType<typeof getScheduledEvent>>>,
-): CalendarEvent {
+type ScheduledEventRow = NonNullable<
+  Awaited<ReturnType<typeof getScheduledEvent>>
+>;
+
+// Flattens structured location/conferencing into the single-string fields the
+// calendar-link / ICS libraries accept.
+function buildCalendarFields(event: ScheduledEventRow) {
+  const location = parseLocation(event.location, {
+    scheduledEventId: event.id,
+  });
+  const conferencing = parseConferencing(event.conferencing, {
+    scheduledEventId: event.id,
+  });
+
+  const locationText = location ? formatLocationText(location) : undefined;
+  const conferencingUri = conferencing
+    ? getConferencingUri(conferencing)
+    : undefined;
+
+  const descriptionParts: string[] = [];
+  if (event.description) {
+    descriptionParts.push(event.description);
+  }
+  if (conferencingUri) {
+    descriptionParts.push(conferencingUri);
+  }
+  const description =
+    descriptionParts.length > 0 ? descriptionParts.join("\n\n") : undefined;
+
+  return {
+    location: locationText ?? conferencingUri,
+    description,
+  };
+}
+
+function toCalendarEvent(event: ScheduledEventRow): CalendarEvent {
+  const { location, description } = buildCalendarFields(event);
   return {
     title: event.title,
-    description: event.description ?? undefined,
+    description,
     start: event.start,
     end: event.end,
     allDay: event.allDay,
-    location: event.location ?? undefined,
+    location,
     organizer: { name: event.user.name, email: event.user.email },
     busy: true,
   };
@@ -83,11 +123,13 @@ app.get("/:eventId/ics", async (c) => {
     return c.json({ error: "Event not found" }, 404);
   }
 
+  const { location, description } = buildCalendarFields(event);
+
   const { error, value } = createIcsEvent({
     uid: event.uid,
     title: event.title,
-    description: event.description ?? undefined,
-    location: event.location ?? undefined,
+    description,
+    location,
     start: event.start,
     end: event.end,
     allDay: event.allDay,
