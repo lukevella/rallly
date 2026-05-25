@@ -666,5 +666,9 @@
   "signupSheetsEmptyTitle": "Nincsenek még jelentkező űrlapok",
   "signupSheetsEmptyDescription": "Hozz létre egy jelentkező űrlapot, hogy az emberek foglalhassanak az általad kínált időpontokat közül.",
   "newSignupSheet": "Új jelentkező űrlap",
-  "eventTypesDescription": "Újrahasználható esemény beállítások."
+  "eventTypesDescription": "Újrahasználható esemény beállítások.",
+  "eventHostedBy": "Szervező: {name}",
+  "eventStatusCanceled": "Lemondva",
+  "eventStatusPast": "Korábbi",
+  "eventStatusUpcoming": "Közelgő"
 }
