@@ -18,7 +18,7 @@ export function ErrorPage({
   actions: React.ReactNode;
 }) {
   return (
-    <div className="bg-background">
+    <div className="page-bg-gray-100">
       <main className="mx-auto w-full max-w-7xl px-6 pt-10 pb-16 sm:pb-24 lg:px-8">
         <Image
           src="/static/logo.svg"
