@@ -19,7 +19,10 @@ import {
 import { PollFooter } from "@/components/poll/poll-footer";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { BrandingStyle } from "@/features/branding/branding-style";
+import { ConferencingLink } from "@/features/conferencing/components/conferencing-link";
+import { formatLocationText } from "@/features/location/utils";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
+import { createScheduledEventDTO } from "@/features/scheduled-event/data";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 import { EventDateTime } from "./event-date-time";
@@ -32,6 +35,7 @@ const getScheduledEvent = cache(async (id: string) => {
       title: true,
       description: true,
       location: true,
+      conferencing: true,
       start: true,
       end: true,
       allDay: true,
@@ -58,7 +62,10 @@ const getScheduledEvent = cache(async (id: string) => {
     notFound();
   }
 
-  return event;
+  return {
+    ...event,
+    ...createScheduledEventDTO(event),
+  };
 });
 
 async function EventsBackLink() {
@@ -173,12 +180,17 @@ export default async function EventPage({
                   start={event.start}
                   end={event.end}
                   allDay={event.allDay}
-                  timezone={event.timeZone || "UTC"}
+                  timezone={event.displayTimeZone}
                 />
                 {event.location ? (
                   <EventMetaItem>
                     <MapPinIcon />
-                    {event.location}
+                    {formatLocationText(event.location)}
+                  </EventMetaItem>
+                ) : null}
+                {event.conferencing ? (
+                  <EventMetaItem>
+                    <ConferencingLink conferencing={event.conferencing} />
                   </EventMetaItem>
                 ) : null}
               </EventMetaList>

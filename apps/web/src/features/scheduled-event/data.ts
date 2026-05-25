@@ -1,7 +1,91 @@
 import type { Prisma, ScheduledEventStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { parseConferencing } from "@/features/conferencing/data";
+import type { Conferencing } from "@/features/conferencing/schema";
+import { parseLocation } from "@/features/location/data";
+import type { Location } from "@/features/location/schema";
 import { dayjs } from "@/lib/dayjs";
 import type { Status } from "./schema";
+
+// Legacy fallback used when neither location nor conferencing is populated.
+// Inverts the stored timeZone: stored null = "everyone sees UTC"; stored set = "viewer's TZ".
+function legacyDisplayTimeZone(timeZone: string | null): string | null {
+  return timeZone === null ? "UTC" : null;
+}
+
+// Derives the timezone the public page should render the event in, per the population table:
+//   in-person  (location set,  conferencing null) -> timeZone (venue TZ)
+//   remote     (location null, conferencing set)  -> null     (viewer's TZ)
+//   hybrid     (both set)                          -> timeZone (venue TZ; viewer toggle in UI)
+//   unspecified (neither set)                     -> legacy rule
+export function deriveDisplayTimeZone({
+  timeZone,
+  hasLocation,
+  hasConferencing,
+}: {
+  timeZone: string | null;
+  hasLocation: boolean;
+  hasConferencing: boolean;
+}): string | null {
+  if (hasLocation) {
+    return timeZone;
+  }
+  if (hasConferencing) {
+    return null;
+  }
+  return legacyDisplayTimeZone(timeZone);
+}
+
+export type ScheduledEventDTO = {
+  id: string;
+  title: string;
+  description: string | null;
+  location: Location | null;
+  conferencing: Conferencing | null;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  timeZone: string | null;
+  displayTimeZone: string | null;
+  status: ScheduledEventStatus;
+};
+
+export function createScheduledEventDTO(event: {
+  id: string;
+  title: string;
+  description: string | null;
+  location: Prisma.JsonValue | null;
+  conferencing: Prisma.JsonValue | null;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  timeZone: string | null;
+  status: ScheduledEventStatus;
+}): ScheduledEventDTO {
+  const location = parseLocation(event.location, {
+    scheduledEventId: event.id,
+  });
+  const conferencing = parseConferencing(event.conferencing, {
+    scheduledEventId: event.id,
+  });
+  return {
+    id: event.id,
+    title: event.title,
+    description: event.description,
+    location,
+    conferencing,
+    start: event.start,
+    end: event.end,
+    allDay: event.allDay,
+    timeZone: event.timeZone,
+    status: event.status,
+    displayTimeZone: deriveDisplayTimeZone({
+      timeZone: event.timeZone,
+      hasLocation: location !== null,
+      hasConferencing: conferencing !== null,
+    }),
+  };
+}
 
 // Common event selection fields
 const eventSelectFields = {
@@ -9,6 +93,7 @@ const eventSelectFields = {
   title: true,
   description: true,
   location: true,
+  conferencing: true,
   start: true,
   end: true,
   allDay: true,
@@ -42,7 +127,8 @@ type RawEventData = {
   id: string;
   title: string;
   description: string | null;
-  location: string | null;
+  location: Prisma.JsonValue | null;
+  conferencing: Prisma.JsonValue | null;
   start: Date;
   end: Date;
   allDay: boolean;
@@ -65,16 +151,9 @@ type RawEventData = {
 
 // Common event transformation function
 function transformEvent(event: RawEventData) {
+  const dto = createScheduledEventDTO(event);
   return {
-    id: event.id,
-    title: event.title,
-    description: event.description,
-    location: event.location,
-    start: event.start,
-    end: event.end,
-    allDay: event.allDay,
-    timeZone: event.timeZone,
-    status: event.status,
+    ...dto,
     createdBy: {
       name: event.user.name,
       image: event.user.image ?? undefined,

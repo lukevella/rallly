@@ -23,11 +23,13 @@ model ScheduledEvent {
   sheetSlotId   String?              @unique @map("sheet_slot_id")
   title         String
   description   String?
-  location      String?
+  location      Json?
+  conferencing  Json?
   capacity      Int?
   createdAt     DateTime             @default(now()) @map("created_at")
   updatedAt     DateTime             @updatedAt @map("updated_at")
   status        ScheduledEventStatus @default(confirmed)
+  /// Venue / anchor timezone for in-person or hybrid events. Null means no fixed venue (e.g. remote-only).
   timeZone      String?              @map("time_zone")
   start         DateTime
   end           DateTime

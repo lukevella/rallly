@@ -2,6 +2,8 @@ import { prisma } from "@rallly/database";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import type { Conferencing } from "@/features/conferencing/schema";
+import type { Location as ScheduledEventLocation } from "@/features/location/schema";
 import { isSignupSheetsEnabled } from "@/features/sheets/constants";
 import {
   createSheetDTO,
@@ -38,19 +40,39 @@ const requireSignupSheetsEnabled = middleware(async ({ next }) => {
 const sheetSpaceProcedure = spaceProcedure.use(requireSignupSheetsEnabled);
 const sheetPublicProcedure = publicProcedure.use(requireSignupSheetsEnabled);
 
-function locationSnapshot(value: unknown): string | null {
+// Convert an EventType.location (in_person or custom_link) into the new
+// scheduled-event structured `location` / `conferencing` columns. An
+// in-person source becomes a custom location; a custom link becomes
+// conferencing metadata.
+function locationSnapshot(value: unknown): {
+  location: ScheduledEventLocation | null;
+  conferencing: Conferencing | null;
+} {
   if (value === null || value === undefined) {
-    return null;
+    return { location: null, conferencing: null };
   }
   const parsed = locationSchema.safeParse(value);
   if (!parsed.success) {
-    return null;
+    return { location: null, conferencing: null };
   }
-  const location: Location = parsed.data;
-  if (location.type === "in_person") {
-    return location.address;
+  const source: Location = parsed.data;
+  if (source.type === "in_person") {
+    return {
+      location: {
+        provider: "custom",
+        address: source.address,
+      },
+      conferencing: null,
+    };
   }
-  return location.text ?? location.url;
+  return {
+    location: null,
+    conferencing: {
+      provider: "custom",
+      uri: source.url,
+      label: source.text ?? source.url,
+    },
+  };
 }
 
 const sheetsRoot = router({
@@ -310,6 +332,9 @@ const bookings = router({
         });
 
         const eventId = nanoid();
+        const { location, conferencing } = locationSnapshot(
+          slot.eventType.location,
+        );
         const created = await tx.scheduledEvent.create({
           data: {
             id: eventId,
@@ -320,7 +345,8 @@ const bookings = router({
             spaceId: slot.sheet.spaceId,
             title: slot.eventType.name,
             description: slot.eventType.description,
-            location: locationSnapshot(slot.eventType.location),
+            location: location ?? undefined,
+            conferencing: conferencing ?? undefined,
             capacity: slot.eventType.capacity,
             start: slot.startTime,
             end: endTime,

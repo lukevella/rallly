@@ -841,7 +841,9 @@ export const polls = router({
                 : eventStart.add(1, "day").toDate(),
             title: poll.title,
             description: poll.description,
-            location: poll.location,
+            location: poll.location
+              ? { provider: "custom", address: poll.location }
+              : undefined,
             timeZone: poll.timeZone,
             userId: ctx.user.id,
             spaceId,
