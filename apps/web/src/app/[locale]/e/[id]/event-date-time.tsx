@@ -1,8 +1,6 @@
 "use client";
 
-import { Skeleton } from "@rallly/ui/skeleton";
 import { CalendarIcon, ClockIcon } from "lucide-react";
-import * as React from "react";
 import { EventMetaItem } from "@/components/event-meta";
 import { dayjs } from "@/lib/dayjs";
 
