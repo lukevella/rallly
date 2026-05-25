@@ -27,7 +27,7 @@ export function EventMetaDescription({
     <p
       className={cn(
         className,
-        "min-w-0 whitespace-pre-wrap text-pretty text-muted-foreground text-sm leading-relaxed",
+        "min-w-0 whitespace-pre-wrap text-pretty text-foreground text-sm leading-relaxed opacity-90",
       )}
     >
       <TruncatedLinkify>{children}</TruncatedLinkify>
@@ -56,7 +56,7 @@ export function EventMetaItem({
     <li
       className={cn(
         className,
-        "flex flex-wrap items-center gap-1.5 text-sm [&_svg]:size-4 [&_svg]:shrink-0",
+        "flex flex-wrap items-center gap-1.5 text-sm [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground",
       )}
     >
       {children}

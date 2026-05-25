@@ -22,9 +22,12 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import { shortUrl } from "@rallly/utils/absolute-url";
 import { MoreVerticalIcon } from "lucide-react";
+import { CopyLinkButton } from "@/components/copy-link-button";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList } from "@/components/stacked-list";
+import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
 import { Trans } from "@/i18n/client";
 import { FormattedDateTime } from "@/lib/timezone/client/formatted-date-time";
 import { trpc } from "@/trpc/client";
@@ -64,13 +67,13 @@ export function ScheduledEventListItem({
         <div className="flex items-center gap-4 text-sm">
           <div className="flex flex-1 items-center gap-2">
             <div className="flex flex-col gap-1">
-              <div
+              <span
                 className={cn("font-medium", {
                   "line-through": status === "canceled",
                 })}
               >
                 {title}
-              </div>
+              </span>
               <div className="text-muted-foreground text-sm">
                 {invites.length > 0 ? (
                   <Tooltip>
@@ -155,6 +158,9 @@ export function ScheduledEventListItem({
             <TooltipContent>{createdBy.name}</TooltipContent>
           </Tooltip>
         </div>
+        {isScheduledEventEnabled && (
+          <CopyLinkButton href={shortUrl(`/e/${eventId}`)} />
+        )}
         {status !== "canceled" ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
