@@ -16,7 +16,6 @@ export function ConferencingLink({
               ? `tel:${conferencing.number},,${conferencing.extension}`
               : `tel:${conferencing.number}`
           }
-          target="_blank"
           rel="noreferrer"
           className={buttonVariants({ variant: "ghost" })}
         >
