@@ -116,8 +116,7 @@ export const MarketingHero = ({
             className={buttonVariants({
               size: "xl",
               variant: "primary",
-              className:
-                "transition-all hover:shadow-md active:translate-y-1 active:shadow-none",
+              className: "shadow-md transition-all active:shadow-none",
             })}
           >
             {callToAction}

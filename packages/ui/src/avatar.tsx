@@ -8,7 +8,7 @@ const avatarVariants = cva("relative flex shrink-0 overflow-hidden", {
   variants: {
     size: {
       xl: "size-12 rounded-xl text-lg",
-      lg: "size-8 rounded-md text-sm",
+      lg: "size-8 rounded-md text-xs",
       md: "size-5 rounded-md text-[9px]",
       sm: "size-4 rounded text-[8px]",
     },
@@ -54,7 +54,7 @@ const AvatarFallback = React.forwardRef<
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      "flex h-full w-full items-center justify-center bg-gray-200 font-normal text-muted-foreground dark:bg-gray-800",
+      "flex h-full w-full items-center justify-center bg-gray-200 font-medium text-muted-foreground dark:bg-gray-800",
       className,
     )}
     {...props}

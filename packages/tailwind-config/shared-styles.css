@@ -227,6 +227,9 @@
   html.light body:has(.page-bg-gray-100) {
     @apply bg-gray-100;
   }
+  html.light body:has(.page-bg-gray-50) {
+    @apply bg-gray-50;
+  }
   html {
     @apply h-full font-sans text-base text-gray-700;
   }
