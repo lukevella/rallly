@@ -667,7 +667,6 @@
   "signupSheetsEmptyDescription": "Luo ilmoittautumislomake, jonka kautta ihmiset voivat varata tarjoamiasi aikoja.",
   "newSignupSheet": "Uusi ilmoittautumislomake",
   "eventTypesDescription": "Uudelleenkäytettävät tapahtuma-asetukset.",
-  "eventHostedBy": "Järjestäjä: {name}",
   "eventStatusCanceled": "Peruttu",
   "eventStatusPast": "Mennyt",
   "eventStatusUpcoming": "Tulossa"
