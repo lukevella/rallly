@@ -664,7 +664,6 @@
   "signupSheetsEmptyDescription": "Vytvořte přihlašovací formulář, aby si lidé mohli rezervovat časové sloty, které nabízíte.",
   "newSignupSheet": "Nový registrační formulář",
   "eventTypesDescription": "Znovu použitelné konfigurace událostí.",
-  "eventHostedBy": "Hostováno {name}",
   "eventStatusCanceled": "Zrušeno",
   "eventStatusPast": "Minulé",
   "eventStatusUpcoming": "Nadcházející"
