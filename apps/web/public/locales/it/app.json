@@ -666,5 +666,16 @@
   "signupSheetsEmptyTitle": "Nessun foglio di iscrizione presente",
   "signupSheetsEmptyDescription": "Crea un foglio di iscrizione per permettere alle persone di prenotare le fasce orarie che offri.",
   "newSignupSheet": "Nuovo foglio di iscrizione",
-  "eventTypesDescription": "Configurazioni di eventi riutilizzabili."
+  "eventTypesDescription": "Configurazioni di eventi riutilizzabili.",
+  "eventStatusCanceled": "Annullato",
+  "eventStatusPast": "Passato",
+  "eventStatusUpcoming": "Prossimamente",
+  "attendeeStatusGoing": "Parteciperà",
+  "attendeeStatusMaybe": "Forse",
+  "attendeeStatusDeclined": "Rifiutato",
+  "attendeeStatusPending": "In attesa",
+  "conferencing": "Conferenza",
+  "attendees": "Partecipanti",
+  "invited": "Invitato",
+  "eventOrganizedBy": "Organizzato da {name}"
 }
