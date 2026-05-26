@@ -667,8 +667,15 @@
   "signupSheetsEmptyDescription": "Hozz létre egy jelentkező űrlapot, hogy az emberek foglalhassanak az általad kínált időpontokat közül.",
   "newSignupSheet": "Új jelentkező űrlap",
   "eventTypesDescription": "Újrahasználható esemény beállítások.",
-  "eventHostedBy": "Szervező: {name}",
   "eventStatusCanceled": "Lemondva",
   "eventStatusPast": "Korábbi",
-  "eventStatusUpcoming": "Közelgő"
+  "eventStatusUpcoming": "Közelgő",
+  "attendeeStatusGoing": "Részt vesz",
+  "attendeeStatusMaybe": "Talán",
+  "attendeeStatusDeclined": "Elutasítva",
+  "attendeeStatusPending": "Függőben",
+  "conferencing": "Konferálás",
+  "attendees": "Résztvevők",
+  "invited": "Meghívva",
+  "eventOrganizedBy": "Szervező: {name}"
 }
