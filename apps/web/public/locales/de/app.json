@@ -669,5 +669,13 @@
   "eventTypesDescription": "Wiederverwendbare Terminkonfigurationen.",
   "eventStatusCanceled": "Abgesagt",
   "eventStatusPast": "Vergangen",
-  "eventStatusUpcoming": "Bevorstehend"
+  "eventStatusUpcoming": "Bevorstehend",
+  "attendeeStatusGoing": "Zugesagt",
+  "attendeeStatusMaybe": "Vielleicht",
+  "attendeeStatusDeclined": "Abgesagt",
+  "attendeeStatusPending": "Ausstehend",
+  "conferencing": "Konferenz",
+  "attendees": "Teilnehmer",
+  "invited": "Eingeladen",
+  "eventOrganizedBy": "Organisiert von {name}"
 }
