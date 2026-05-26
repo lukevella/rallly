@@ -13,7 +13,7 @@ const ActionBar = React.forwardRef<
     )}
     {...props}
   >
-    <div className="pointer-events-auto mx-auto flex max-w-xl items-center justify-center gap-3 px-4 pt-12 pb-[max(--spacing(10),env(safe-area-inset-bottom))]">
+    <div className="pointer-events-auto mx-auto flex max-w-xl items-center justify-center gap-3 px-4 pt-12 pb-[max(--spacing(4),env(safe-area-inset-bottom))] sm:pb-[max(--spacing(8),env(safe-area-inset-bottom))]">
       {children}
     </div>
   </div>
@@ -36,7 +36,7 @@ const ActionBarOffset = React.forwardRef<
     ref={ref}
     aria-hidden
     className={cn(
-      "h-[calc(--spacing(12)+max(--spacing(8),env(safe-area-inset-bottom)))]",
+      "h-[calc(--spacing(12)+max(--spacing(4),env(safe-area-inset-bottom)))] sm:h-[calc(--spacing(12)+max(--spacing(8),env(safe-area-inset-bottom)))]",
       className,
     )}
     {...props}
