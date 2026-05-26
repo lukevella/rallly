@@ -153,7 +153,7 @@ export default async function EventPage({
     : event.invites.filter((i) => i.status !== "pending");
 
   return (
-    <div className="page-bg-gray-100 flex min-h-dvh flex-col antialiased dark:bg-gray-900">
+    <div className="page-bg-gray-50 flex min-h-dvh flex-col antialiased dark:bg-gray-900">
       {brandingColor ? <BrandingStyle primaryColor={brandingColor} /> : null}
 
       <div className="flex items-center gap-4 p-3 sm:pb-6">
@@ -179,7 +179,7 @@ export default async function EventPage({
           <div className="w-1 rounded-xs bg-primary" />
           <div className="flex-1">
             <div className="flex items-start justify-between gap-3">
-              <h1 className="text-balance font-semibold text-2xl text-foreground tracking-tight sm:text-xl">
+              <h1 className="text-balance font-semibold text-2xl text-foreground leading-tight tracking-tight sm:text-xl">
                 {event.title}
               </h1>
               <StatusBadge status={event.status} hasEnded={hasEnded} />
@@ -187,8 +187,8 @@ export default async function EventPage({
             {event.user?.name ? (
               <p className="mt-1 text-muted-foreground text-sm">
                 <Trans
-                  i18nKey="eventHostedBy"
-                  defaults="Hosted by {name}"
+                  i18nKey="eventOrganizedBy"
+                  defaults="Organized by {name}"
                   values={{ name: event.user.name }}
                 />
               </p>
@@ -202,7 +202,7 @@ export default async function EventPage({
           </div>
         </header>
 
-        <div className="px-3 pb-8">
+        <div className="px-3 pb-3">
           <SectionGroup>
             {event.location || event.conferencing ? (
               <Section>
@@ -232,7 +232,9 @@ export default async function EventPage({
             ) : null}
 
             {event.description ? (
-              <Section title={<Trans i18nKey="notes" defaults="Notes" />}>
+              <Section
+                title={<Trans i18nKey="description" defaults="Description" />}
+              >
                 <SectionItem className="py-3">
                   <p className="whitespace-pre-wrap text-pretty text-foreground text-sm leading-relaxed">
                     <TruncatedLinkify>{event.description}</TruncatedLinkify>
@@ -264,10 +266,9 @@ export default async function EventPage({
               </Section>
             ) : null}
           </SectionGroup>
+          <ActionBarOffset />
         </div>
       </div>
-
-      <ActionBarOffset />
 
       <ActionBar>
         <AddToCalendarButton eventId={event.id} size="lg" />
