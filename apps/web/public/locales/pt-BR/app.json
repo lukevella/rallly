@@ -666,5 +666,16 @@
   "signupSheetsEmptyTitle": "Nenhuma planilha de inscrição ainda",
   "signupSheetsEmptyDescription": "Crie uma planilha de inscrição para que as pessoas possam reservar os horários que você oferece.",
   "newSignupSheet": "Nova Planilha de Inscrição",
-  "eventTypesDescription": "Configurações de evento reutilizáveis."
+  "eventTypesDescription": "Configurações de evento reutilizáveis.",
+  "eventStatusCanceled": "Cancelado",
+  "eventStatusPast": "Anterior",
+  "eventStatusUpcoming": "Por vir",
+  "attendeeStatusGoing": "Comparecerá",
+  "attendeeStatusMaybe": "Talvez",
+  "attendeeStatusDeclined": "Recusado",
+  "attendeeStatusPending": "Pendente",
+  "conferencing": "Conferência",
+  "attendees": "Participantes",
+  "invited": "Convidado",
+  "eventOrganizedBy": "Organizado por {name}"
 }
