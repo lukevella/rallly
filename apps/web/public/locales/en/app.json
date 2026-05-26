@@ -667,7 +667,6 @@
   "signupSheetsEmptyDescription": "Create a sign-up sheet so people can book the time slots you offer.",
   "newSignupSheet": "New Sign-up Sheet",
   "eventTypesDescription": "Reusable event configurations.",
-  "eventHostedBy": "Hosted by {name}",
   "eventStatusCanceled": "Canceled",
   "eventStatusPast": "Past",
   "eventStatusUpcoming": "Upcoming",
@@ -676,7 +675,7 @@
   "attendeeStatusDeclined": "Declined",
   "attendeeStatusPending": "Pending",
   "conferencing": "Conferencing",
-  "notes": "Notes",
   "attendees": "Attendees",
-  "invited": "Invited"
+  "invited": "Invited",
+  "eventOrganizedBy": "Organized by {name}"
 }
