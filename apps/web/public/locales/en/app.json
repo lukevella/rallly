@@ -679,5 +679,18 @@
   "invited": "Invited",
   "eventOrganizedBy": "Organized by {name}",
   "expiredVerificationCode": "This code has expired. Request a new one to continue.",
-  "tooManyVerificationAttempts": "Too many incorrect attempts. Request a new code to continue."
+  "tooManyVerificationAttempts": "Too many incorrect attempts. Request a new code to continue.",
+  "createEventPageAdTitle": "Create your own event page",
+  "ad": "Ad",
+  "createEventPageAdSubtitle": "Schedule meetings and share event details with Rallly. Free to start.",
+  "rsvp": "RSVP",
+  "sendRsvp": "Send RSVP",
+  "yourResponse": "Your response",
+  "rsvpDecline": "Decline",
+  "rsvpMaybe": "Maybe",
+  "rsvpAccept": "Going",
+  "rsvpSheetTitle": "You're {label}",
+  "confirmRsvp": "Confirm response",
+  "rsvpPickResponse": "Pick your response to send your RSVP",
+  "rsvpNotGoing": "Not going"
 }
