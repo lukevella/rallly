@@ -1,12 +1,15 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@rallly/ui";
 import { ActionBar, ActionBarOffset } from "@rallly/ui/action-bar";
 import { Button } from "@rallly/ui/button";
-import { Field, FieldGroup, FieldLabel } from "@rallly/ui/field";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@rallly/ui/field";
 import { Input } from "@rallly/ui/input";
 import { CheckIcon, MapPinIcon, VideoIcon, XIcon } from "lucide-react";
 import React from "react";
+import { Controller, useForm } from "react-hook-form";
+import * as z from "zod";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { ConferencingLink } from "@/features/conferencing/components/conferencing-link";
 import type { Conferencing } from "@/features/conferencing/schema";
@@ -201,37 +204,92 @@ function RsvpResponseBanner({
   );
 }
 
+function useRsvpFormSchema() {
+  const { t } = useTranslation();
+  return z.object({
+    name: z
+      .string()
+      .trim()
+      .min(1, t("nameRequired", { defaultValue: "Please enter your name" })),
+    email: z.email(
+      t("invalidEmail", {
+        defaultValue: "Please enter a valid email address",
+      }),
+    ),
+  });
+}
+
 function RsvpForm() {
   const { t } = useTranslation();
+  const schema = useRsvpFormSchema();
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: "",
+      email: "",
+    },
+  });
+
   return (
-    <div>
+    <form
+      onSubmit={form.handleSubmit(async (data) => {
+        console.log(data);
+      })}
+    >
       <FieldGroup>
-        <Field>
-          <FieldLabel htmlFor="rsvp-name">
-            <Trans i18nKey="name" defaults="Name" />
-          </FieldLabel>
-          <Input
-            id="rsvp-name"
-            placeholder={t("namePlaceholder")}
-            autoFocus={true}
-          />
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="rsvp-email">
-            <Trans i18nKey="email" defaults="Email" />
-          </FieldLabel>
-          <Input
-            id="rsvp-email"
-            placeholder={t("emailPlaceholder")}
-            autoComplete="email"
-          />
-        </Field>
+        <Controller
+          control={form.control}
+          name="name"
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>
+                <Trans i18nKey="name" defaults="Name" />
+              </FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                placeholder={t("namePlaceholder")}
+                autoFocus={true}
+                autoComplete="name"
+                disabled={form.formState.isSubmitting}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="email"
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>
+                <Trans i18nKey="email" defaults="Email" />
+              </FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                placeholder={t("emailPlaceholder")}
+                autoComplete="email"
+                disabled={form.formState.isSubmitting}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
       </FieldGroup>
       <ActionBar>
-        <Button size="lg" variant="primary" className="flex-1" type="submit">
+        <Button
+          size="lg"
+          variant="primary"
+          className="flex-1"
+          type="submit"
+          loading={form.formState.isSubmitting}
+        >
           <Trans i18nKey="confirmResponse" defaults="Confirm response" />
         </Button>
       </ActionBar>
-    </div>
+    </form>
   );
 }
