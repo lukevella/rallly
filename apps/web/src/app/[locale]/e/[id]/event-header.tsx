@@ -1,8 +1,101 @@
 "use client";
 
+import { cn } from "@rallly/ui";
+import { Badge } from "@rallly/ui/badge";
+import { Trans } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
 
-export function EventDateLine({
+export function EventHeader({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <header className={cn("flex gap-4 px-4 pb-6", className)}>
+      {/* <div className="w-1 rounded-xs bg-primary" /> */}
+      <div className="flex-1">{children}</div>
+    </header>
+  );
+}
+
+export function EventHeaderRow({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex items-start justify-between gap-3", className)}>
+      {children}
+    </div>
+  );
+}
+
+export function EventTitle({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <h1
+      className={cn(
+        "text-balance font-semibold text-foreground text-xl leading-tight tracking-tight",
+        className,
+      )}
+    >
+      {children}
+    </h1>
+  );
+}
+
+export function EventSubtitle({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <p className={cn("mt-1 text-muted-foreground text-sm", className)}>
+      {children}
+    </p>
+  );
+}
+
+export function EventStatus({
+  status,
+  hasEnded,
+}: {
+  status: "confirmed" | "canceled" | "unconfirmed";
+  hasEnded: boolean;
+}) {
+  if (status === "canceled") {
+    return (
+      <Badge variant="destructive">
+        <Trans i18nKey="eventStatusCanceled" defaults="Canceled" />
+      </Badge>
+    );
+  }
+  if (hasEnded) {
+    return (
+      <Badge variant="default">
+        <Trans i18nKey="eventStatusPast" defaults="Past" />
+      </Badge>
+    );
+  }
+  return (
+    <Badge variant="green">
+      <Trans i18nKey="eventStatusUpcoming" defaults="Upcoming" />
+    </Badge>
+  );
+}
+
+export function EventDate({
   start,
   end,
   allDay,

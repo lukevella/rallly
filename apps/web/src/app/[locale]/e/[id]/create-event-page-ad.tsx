@@ -17,7 +17,7 @@ export function CreateEventPageAd() {
         className="pointer-events-none absolute -bottom-20 -left-12 size-44 rounded-full bg-primary/10 blur-3xl"
       />
       <div className="relative flex items-center gap-3 p-3">
-        <div className="relative flex size-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-primary to-primary/70 text-primary-foreground ring-1 ring-primary/30 ring-inset">
+        <div className="relative flex size-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-primary to-primary/70 text-primary-foreground shadow ring-1 ring-primary/30 ring-inset">
           <CalendarIcon className="size-5" />
         </div>
         <div className="min-w-0 flex-1">

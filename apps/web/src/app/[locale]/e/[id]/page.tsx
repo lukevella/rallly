@@ -8,10 +8,19 @@ import { notFound } from "next/navigation";
 import { cache, Suspense } from "react";
 import { getCurrentUser } from "@/auth/data";
 import { BrandingStyle } from "@/features/branding/branding-style";
+import { formatLocationText } from "@/features/location/utils";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
 import { createScheduledEventDTO } from "@/features/scheduled-event/data";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
+import {
+  EventDate,
+  EventHeader,
+  EventHeaderRow,
+  EventStatus,
+  EventSubtitle,
+  EventTitle,
+} from "./event-header";
 import { EventWizard } from "./event-wizard";
 
 const getScheduledEvent = cache(async (id: string) => {
@@ -113,7 +122,7 @@ export default async function EventPage({
         }));
 
   return (
-    <div className="page-bg-gray-50 flex min-h-dvh flex-col antialiased dark:bg-gray-900">
+    <div className="min- flex h-dvh flex-col antialiased dark:bg-gray-900">
       {brandingColor ? <BrandingStyle primaryColor={brandingColor} /> : null}
 
       <div className="flex items-center gap-4 p-3 sm:pb-6">
@@ -124,7 +133,7 @@ export default async function EventPage({
 
       <div className="mx-auto w-full max-w-xl flex-1">
         {isBranded ? (
-          <div className="flex items-center gap-2 p-3 py-4">
+          <div className="mb-6 flex items-center gap-2 px-4 py-3">
             <SpaceIcon
               name={event.space.name}
               src={event.space.image ?? undefined}
@@ -136,22 +145,33 @@ export default async function EventPage({
           </div>
         ) : null}
 
+        <EventHeader>
+          <EventHeaderRow>
+            <EventTitle>{event.title}</EventTitle>
+            <EventStatus status={event.status} hasEnded={hasEnded} />
+          </EventHeaderRow>
+          <EventSubtitle>
+            <Trans
+              i18nKey="eventOrganizedBy"
+              defaults="Organized by {name}"
+              values={{ name: event.user.name }}
+            />
+          </EventSubtitle>
+          <EventDate
+            start={event.start}
+            end={event.end}
+            allDay={event.allDay}
+            timezone={event.displayTimeZone}
+          />
+        </EventHeader>
+
         <EventWizard
-          event={{
-            id: event.id,
-            title: event.title,
-            description: event.description,
-            location: event.location,
-            conferencing: event.conferencing,
-            start: event.start,
-            end: event.end,
-            allDay: event.allDay,
-            displayTimeZone: event.displayTimeZone,
-            status: event.status,
-            hasEnded,
-            organizerName: event.user?.name ?? null,
-            visibleAttendees,
-          }}
+          description={event.description}
+          locationText={
+            event.location ? formatLocationText(event.location) : null
+          }
+          conferencing={event.conferencing}
+          attendees={visibleAttendees}
         />
       </div>
     </div>

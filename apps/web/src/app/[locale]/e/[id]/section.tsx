@@ -28,7 +28,7 @@ export function Section({
       ) : null}
       <div
         className={cn(
-          "divide-y divide-gray-950/5 overflow-hidden rounded-2xl border border-card-border bg-card",
+          "divide-y divide-gray-950/5 overflow-hidden rounded-2xl bg-gray-100 dark:divide-foreground/5 dark:bg-foreground/5",
           className,
         )}
       >
