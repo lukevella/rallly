@@ -1,4 +1,3 @@
-import { openai } from "@ai-sdk/openai";
 import { createLogger } from "@rallly/logger";
 import { generateText } from "ai";
 
@@ -21,7 +20,7 @@ export async function moderateContentWithAI(
 ): Promise<ModerationResult> {
   try {
     const result = await generateText({
-      model: openai("gpt-4.1"),
+      model: "openai/gpt-4.1",
       messages: [
         {
           role: "system",
