@@ -680,14 +680,11 @@
   "eventOrganizedBy": "Organized by {name}",
   "expiredVerificationCode": "This code has expired. Request a new one to continue.",
   "tooManyVerificationAttempts": "Too many incorrect attempts. Request a new code to continue.",
-  "createEventPageAdTitle": "Create your own event page",
-  "ad": "Ad",
-  "createEventPageAdSubtitle": "Schedule meetings and share event details with Rallly. Free to start.",
   "rsvpDecline": "Decline",
   "rsvpResponseHeadingGoing": "You're going",
   "rsvpResponseHeadingDeclining": "You're declining",
   "rsvpChange": "Change",
-  "message": "Message",
   "confirmResponse": "Confirm response",
-  "messagePlaceholder": "What's on your mind?"
+  "nameRequired": "Please enter your name",
+  "rsvpAlreadyResponded": "It looks like you've already responded with this email"
 }

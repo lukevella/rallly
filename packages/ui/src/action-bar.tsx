@@ -29,6 +29,7 @@ function ActionBarButton({
   variant,
   size = "lg",
   loading,
+  disabled,
   children,
   ...props
 }: Toolbar.Button.Props &
@@ -42,6 +43,8 @@ function ActionBarButton({
         { "pointer-events-none": loading },
         className,
       )}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
       {...props}
     >
       {loading ? (
