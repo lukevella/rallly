@@ -77,7 +77,7 @@
   "verificationCodePlaceholder": "6-stelligen Code eingeben",
   "startOfWeek": "Wochenbeginn",
   "weekView": "Wochenansicht",
-  "wrongVerificationCode": "Dein Bestätigungscode ist abgelaufen oder falsch",
+  "wrongVerificationCode": "Dein Bestätigungscode ist falsch",
   "yes": "Ja",
   "you": "Du",
   "yourName": "Dein Name…",
@@ -666,5 +666,18 @@
   "signupSheetsEmptyTitle": "Noch keine Anmeldelisten vorhanden",
   "signupSheetsEmptyDescription": "Erstelle eine Anmeldeliste, damit die Leute die von dir angebotenen Zeitfenster buchen können.",
   "newSignupSheet": "Neue Anmeldeliste",
-  "eventTypesDescription": "Wiederverwendbare Terminkonfigurationen."
+  "eventTypesDescription": "Wiederverwendbare Terminkonfigurationen.",
+  "eventStatusCanceled": "Abgesagt",
+  "eventStatusPast": "Vergangen",
+  "eventStatusUpcoming": "Bevorstehend",
+  "attendeeStatusGoing": "Zugesagt",
+  "attendeeStatusMaybe": "Vielleicht",
+  "attendeeStatusDeclined": "Abgesagt",
+  "attendeeStatusPending": "Ausstehend",
+  "conferencing": "Konferenz",
+  "attendees": "Teilnehmer",
+  "invited": "Eingeladen",
+  "eventOrganizedBy": "Organisiert von {name}",
+  "expiredVerificationCode": "Dieser Code ist abgelaufen. Fordere einen neuen an, um fortzufahren.",
+  "tooManyVerificationAttempts": "Zu viele falsche Versuche. Fordere einen neuen Code an, um fortzufahren."
 }
