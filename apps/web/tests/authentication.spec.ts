@@ -100,7 +100,7 @@ test.describe.serial(() => {
       await page.getByPlaceholder("Enter your 6-digit code").fill("000000");
 
       await expect(
-        page.getByText("Your verification code is incorrect or has expired"),
+        page.getByText("Your verification code is incorrect"),
       ).toBeVisible();
     });
 

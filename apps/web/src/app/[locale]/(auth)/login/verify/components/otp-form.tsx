@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -25,6 +26,7 @@ const otpFormSchema = z.object({
 
 export function OTPForm({ email }: { email: string }) {
   const { t } = useTranslation();
+  const posthog = usePostHog();
   const form = useForm({
     defaultValues: {
       otp: "",
@@ -40,10 +42,33 @@ export function OTPForm({ email }: { email: string }) {
     });
 
     if (res.error) {
+      posthog?.capture("login:otp_verify_error", {
+        error_code: res.error.code ?? "UNKNOWN",
+        status: res.error.status,
+      });
+
       switch (res.error.code) {
         case "INVALID_OTP":
           form.setError("otp", {
-            message: t("wrongVerificationCode"),
+            message: t("wrongVerificationCode", {
+              defaultValue: "Your verification code is incorrect",
+            }),
+          });
+          return;
+        case "OTP_EXPIRED":
+          form.setError("otp", {
+            message: t("expiredVerificationCode", {
+              defaultValue:
+                "This code has expired. Request a new one to continue.",
+            }),
+          });
+          return;
+        case "TOO_MANY_ATTEMPTS":
+          form.setError("otp", {
+            message: t("tooManyVerificationAttempts", {
+              defaultValue:
+                "Too many incorrect attempts. Request a new code to continue.",
+            }),
           });
           return;
         default:

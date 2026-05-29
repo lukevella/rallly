@@ -77,7 +77,7 @@
   "verificationCodePlaceholder": "Enter your 6-digit code",
   "startOfWeek": "Start of week",
   "weekView": "Week view",
-  "wrongVerificationCode": "Your verification code is incorrect or has expired",
+  "wrongVerificationCode": "Your verification code is incorrect",
   "yes": "Yes",
   "you": "You",
   "yourName": "Your name…",
@@ -677,5 +677,7 @@
   "conferencing": "Conferencing",
   "attendees": "Attendees",
   "invited": "Invited",
-  "eventOrganizedBy": "Organized by {name}"
+  "eventOrganizedBy": "Organized by {name}",
+  "expiredVerificationCode": "This code has expired. Request a new one to continue.",
+  "tooManyVerificationAttempts": "Too many incorrect attempts. Request a new code to continue."
 }
