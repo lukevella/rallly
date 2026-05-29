@@ -62,6 +62,7 @@
       "cache": false
     }
   },
+  "globalPassThroughEnv": ["MAILPIT_API_URL", "PLAYWRIGHT_BROWSERS_PATH"],
   "globalEnv": [
     "ALLOWED_EMAILS",
     "ANALYZE",

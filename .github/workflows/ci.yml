@@ -77,13 +77,78 @@ jobs:
         if: failure()
         run: docker compose logs
 
+  # Single source of truth for the Playwright version: read the resolved version
+  # from the lockfile so the container image tag below always matches the
+  # @playwright/test package the tests run against. Bumping the dependency
+  # automatically moves the image tag — no second place to update.
+  playwright-version:
+    name: Resolve Playwright version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: resolve
+        run: |
+          version=$(awk "/'@playwright\/test':/{getline; getline; if(\$1==\"version:\"){print \$2; exit}}" pnpm-lock.yaml)
+          if [ -z "$version" ]; then
+            echo "Could not resolve @playwright/test version from pnpm-lock.yaml" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Resolved Playwright version: $version"
+
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-latest
+    needs: playwright-version
+    # Run inside the official Playwright image: chromium and all of its system
+    # dependencies are pre-installed, so there is no `playwright install` step.
+    # This sidesteps the runner-side bug where `playwright install` hangs while
+    # "extracting archive" on the current ubuntu-latest image. The tag is derived
+    # from the lockfile (see the playwright-version job) so it can't drift from
+    # the installed @playwright/test version.
+    container:
+      image: mcr.microsoft.com/playwright:v${{ needs.playwright-version.outputs.version }}-noble
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5450/rallly
-      DIRECT_DATABASE_URL: postgresql://postgres:postgres@localhost:5450/rallly
+      # The job runs in a container, so services are reachable by their network
+      # aliases (NOT localhost). These job-level vars are in process.env before
+      # playwright.config.ts runs, so dotenv's `.env.test` (which uses localhost
+      # for local dev) does not override them — both `prisma migrate deploy` and
+      # the `next start` webServer use these values.
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/rallly
+      DIRECT_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/rallly
+      # The app sends mail to the mailpit service; the tests read it back via its
+      # API (see packages/test-helpers/src/mailpit.ts, which honors MAILPIT_API_URL).
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      MAILPIT_API_URL: http://mailpit:8025/api
+      # The Playwright image preinstalls browsers at /ms-playwright. In a
+      # containerized job GitHub sets HOME=/github/home, so without this Playwright
+      # looks in ~/.cache/ms-playwright and can't find the bundled browser.
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
       CI: true
+    services:
+      # Replaces `pnpm docker:up`. The integration suite needs postgres (data) and
+      # mailpit (login/OTP emails). redis/garage are unused: RATE_LIMIT_ENABLED=false
+      # and no S3 vars in .env.test.
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: rallly
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+      mailpit:
+        image: axllent/mailpit
+        options: >-
+          --health-cmd "wget --no-verbose --tries=1 --spider http://localhost:8025/readyz"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
@@ -92,17 +157,8 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm db:generate
 
-      - name: Install system dependencies
-        run: sudo apt-get update
-
-      - name: Install playwright dependencies
-        run: pnpm playwright install --with-deps chromium
-
       - name: Create production build
         run: pnpm turbo build:test --filter=@rallly/web
-
-      - name: Start services
-        run: pnpm docker:up
 
       - name: Setup database
         run: pnpm db:deploy
