@@ -12,26 +12,7 @@ export function EventHeader({
   children: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <header className={cn("flex gap-4 px-4 pb-6", className)}>
-      {/* <div className="w-1 rounded-xs bg-primary" /> */}
-      <div className="flex-1">{children}</div>
-    </header>
-  );
-}
-
-export function EventHeaderRow({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={cn("flex items-start justify-between gap-3", className)}>
-      {children}
-    </div>
-  );
+  return <header className={cn("px-4 pb-6", className)}>{children}</header>;
 }
 
 export function EventTitle({

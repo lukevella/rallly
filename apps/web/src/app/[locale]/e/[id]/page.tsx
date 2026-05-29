@@ -1,4 +1,3 @@
-import { prisma } from "@rallly/database";
 import { buttonVariants } from "@rallly/ui";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { ArrowLeftIcon } from "lucide-react";
@@ -10,13 +9,15 @@ import { getCurrentUser } from "@/auth/data";
 import { BrandingStyle } from "@/features/branding/branding-style";
 import { formatLocationText } from "@/features/location/utils";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
-import { createScheduledEventDTO } from "@/features/scheduled-event/data";
+import {
+  createScheduledEventDTO,
+  getCachedPublicScheduledEvent,
+} from "@/features/scheduled-event/data";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 import {
   EventDate,
   EventHeader,
-  EventHeaderRow,
   EventStatus,
   EventSubtitle,
   EventTitle,
@@ -24,48 +25,7 @@ import {
 import { EventWizard } from "./event-wizard";
 
 const getScheduledEvent = cache(async (id: string) => {
-  const event = await prisma.scheduledEvent.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      title: true,
-      description: true,
-      location: true,
-      conferencing: true,
-      start: true,
-      end: true,
-      allDay: true,
-      timeZone: true,
-      status: true,
-      deletedAt: true,
-      hideAttendees: true,
-      user: {
-        select: {
-          name: true,
-        },
-      },
-      space: {
-        select: {
-          name: true,
-          image: true,
-          showBranding: true,
-          primaryColor: true,
-        },
-      },
-      invites: {
-        select: {
-          id: true,
-          inviteeName: true,
-          status: true,
-          user: {
-            select: {
-              image: true,
-            },
-          },
-        },
-      },
-    },
-  });
+  const event = await getCachedPublicScheduledEvent(id);
 
   if (!event || event.deletedAt) {
     notFound();
@@ -90,6 +50,15 @@ async function EventsBackLink() {
       <ArrowLeftIcon data-icon="inline-start" />
       <Trans i18nKey="events" defaults="Events" />
     </Link>
+  );
+}
+
+function SpaceBranding({ name, image }: { name: string; image?: string }) {
+  return (
+    <div className="mb-4 flex flex-col gap-2 px-4">
+      <SpaceIcon name={name} src={image} size="lg" />
+      <p className="font-medium text-muted-foreground text-sm">{name}</p>
+    </div>
   );
 }
 
@@ -125,31 +94,24 @@ export default async function EventPage({
     <div className="min- flex h-dvh flex-col antialiased dark:bg-gray-900">
       {brandingColor ? <BrandingStyle primaryColor={brandingColor} /> : null}
 
-      <div className="flex items-center gap-4 p-3 sm:pb-6">
-        <Suspense fallback={null}>
-          <EventsBackLink />
-        </Suspense>
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-40 bg-linear-to-b from-25% from-white to-transparent dark:from-gray-900">
+        <div className="pointer-events-auto flex items-center gap-4 px-3 pt-[max(--spacing(3),env(safe-area-inset-top))] pb-12">
+          <Suspense fallback={null}>
+            <EventsBackLink />
+          </Suspense>
+        </div>
       </div>
 
-      <div className="mx-auto w-full max-w-xl flex-1">
+      <div className="mx-auto mt-12 w-full max-w-xl flex-1 py-4 sm:py-8">
         {isBranded ? (
-          <div className="mb-6 flex items-center gap-2 px-4 py-3">
-            <SpaceIcon
-              name={event.space.name}
-              src={event.space.image ?? undefined}
-              size="md"
-            />
-            <p className="font-medium text-muted-foreground text-sm">
-              {event.space.name}
-            </p>
-          </div>
+          <SpaceBranding
+            name={event.space.name}
+            image={event.space.image ?? undefined}
+          />
         ) : null}
 
         <EventHeader>
-          <EventHeaderRow>
-            <EventTitle>{event.title}</EventTitle>
-            <EventStatus status={event.status} hasEnded={hasEnded} />
-          </EventHeaderRow>
+          <EventTitle>{event.title}</EventTitle>
           <EventSubtitle>
             <Trans
               i18nKey="eventOrganizedBy"
@@ -157,15 +119,19 @@ export default async function EventPage({
               values={{ name: event.user.name }}
             />
           </EventSubtitle>
-          <EventDate
-            start={event.start}
-            end={event.end}
-            allDay={event.allDay}
-            timezone={event.displayTimeZone}
-          />
+          <div className="flex items-center justify-between gap-3">
+            <EventDate
+              start={event.start}
+              end={event.end}
+              allDay={event.allDay}
+              timezone={event.displayTimeZone}
+            />
+            <EventStatus status={event.status} hasEnded={hasEnded} />
+          </div>
         </EventHeader>
 
         <EventWizard
+          eventId={event.id}
           description={event.description}
           locationText={
             event.location ? formatLocationText(event.location) : null

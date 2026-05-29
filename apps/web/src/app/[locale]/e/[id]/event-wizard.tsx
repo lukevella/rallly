@@ -2,8 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@rallly/ui";
-import { ActionBar, ActionBarOffset } from "@rallly/ui/action-bar";
-import { Button } from "@rallly/ui/button";
+import {
+  ActionBar,
+  ActionBarButton,
+  ActionBarOffset,
+} from "@rallly/ui/action-bar";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@rallly/ui/field";
 import { Input } from "@rallly/ui/input";
 import { CheckIcon, MapPinIcon, VideoIcon, XIcon } from "lucide-react";
@@ -13,7 +16,9 @@ import * as z from "zod";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { ConferencingLink } from "@/features/conferencing/components/conferencing-link";
 import type { Conferencing } from "@/features/conferencing/schema";
+import { submitRsvpAction } from "@/features/scheduled-event/actions";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import type { Attendee } from "./attendee-rows";
 import { AttendeeRows } from "./attendee-rows";
 import {
@@ -27,11 +32,13 @@ import {
 type RsvpStatus = "accepted" | "declined";
 
 export function EventWizard({
+  eventId,
   description,
   locationText,
   conferencing,
   attendees,
 }: {
+  eventId: string;
   description: string | null;
   locationText: string | null;
   conferencing: Conferencing | null;
@@ -46,7 +53,7 @@ export function EventWizard({
           response={response}
           onChange={() => setResponse(null)}
         />
-        <RsvpForm />
+        <RsvpForm eventId={eventId} status={response} />
       </div>
     );
   }
@@ -139,24 +146,22 @@ function EventBody({
 function RsvpActions({ onPick }: { onPick: (status: RsvpStatus) => void }) {
   return (
     <ActionBar>
-      <Button
-        size="lg"
+      <ActionBarButton
         variant="default"
         className="flex-1"
         onClick={() => onPick("declined")}
       >
         <XIcon />
         <Trans i18nKey="rsvpDecline" defaults="Decline" />
-      </Button>
-      <Button
-        size="lg"
+      </ActionBarButton>
+      <ActionBarButton
         variant="primary"
         className="flex-1"
         onClick={() => onPick("accepted")}
       >
         <CheckIcon />
         <Trans i18nKey="attendeeStatusGoing" defaults="Going" />
-      </Button>
+      </ActionBarButton>
     </ActionBar>
   );
 }
@@ -219,9 +224,16 @@ function useRsvpFormSchema() {
   });
 }
 
-function RsvpForm() {
+function RsvpForm({
+  eventId,
+  status,
+}: {
+  eventId: string;
+  status: RsvpStatus;
+}) {
   const { t } = useTranslation();
   const schema = useRsvpFormSchema();
+  const submitRsvp = useSafeAction(submitRsvpAction);
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -233,7 +245,23 @@ function RsvpForm() {
   return (
     <form
       onSubmit={form.handleSubmit(async (data) => {
-        console.log(data);
+        const result = await submitRsvp.executeAsync({
+          eventId,
+          status,
+          name: data.name,
+          email: data.email,
+        });
+
+        if (result.data?.ok === false) {
+          if (result.data.reason === "already_responded") {
+            form.setError("email", {
+              message: t("rsvpAlreadyResponded", {
+                defaultValue:
+                  "It looks like you've already responded with this email",
+              }),
+            });
+          }
+        }
       })}
     >
       <FieldGroup>
@@ -280,15 +308,14 @@ function RsvpForm() {
         />
       </FieldGroup>
       <ActionBar>
-        <Button
-          size="lg"
+        <ActionBarButton
           variant="primary"
           className="flex-1"
           type="submit"
           loading={form.formState.isSubmitting}
         >
           <Trans i18nKey="confirmResponse" defaults="Confirm response" />
-        </Button>
+        </ActionBarButton>
       </ActionBar>
     </form>
   );
