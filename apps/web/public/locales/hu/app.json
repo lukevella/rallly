@@ -77,7 +77,7 @@
   "verificationCodePlaceholder": "Írd be a hatjegyű kódot",
   "startOfWeek": "Hét kezdőnapja",
   "weekView": "Heti nézet",
-  "wrongVerificationCode": "A hitelesítő kódod helytelen vagy már lejárt",
+  "wrongVerificationCode": "A hitelesítő kódod helytelen",
   "yes": "Igen",
   "you": "Te",
   "yourName": "Neved…",
@@ -666,5 +666,18 @@
   "signupSheetsEmptyTitle": "Nincsenek még jelentkező űrlapok",
   "signupSheetsEmptyDescription": "Hozz létre egy jelentkező űrlapot, hogy az emberek foglalhassanak az általad kínált időpontokat közül.",
   "newSignupSheet": "Új jelentkező űrlap",
-  "eventTypesDescription": "Újrahasználható esemény beállítások."
+  "eventTypesDescription": "Újrahasználható esemény beállítások.",
+  "eventStatusCanceled": "Lemondva",
+  "eventStatusPast": "Korábbi",
+  "eventStatusUpcoming": "Közelgő",
+  "attendeeStatusGoing": "Részt vesz",
+  "attendeeStatusMaybe": "Talán",
+  "attendeeStatusDeclined": "Elutasítva",
+  "attendeeStatusPending": "Függőben",
+  "conferencing": "Konferálás",
+  "attendees": "Résztvevők",
+  "invited": "Meghívva",
+  "eventOrganizedBy": "Szervező: {name}",
+  "expiredVerificationCode": "Ez a kód lejárt. Kérj egy újat a folytatáshoz!",
+  "tooManyVerificationAttempts": "Túl sok hibás kísérlet. Kérj egy új kódot a folytatáshoz!"
 }
