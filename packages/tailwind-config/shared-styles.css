@@ -64,7 +64,7 @@
   --background: var(--color-gray-900);
   --foreground: var(--color-white);
 
-  --button-outline: rgba(255, 255, 255, 0.1);
+  --button-outline: rgba(255, 255, 255, 0.05);
   --menu-item-outline: rgba(255, 255, 255, 0.05);
 
   --primary: var(--primary-dark, var(--color-indigo-500));
@@ -80,7 +80,7 @@
   --border: oklch(0.32 0.006 286.033);
   --border-muted: var(--color-gray-800);
 
-  --input: var(--color-gray-700);
+  --input: rgba(255, 255, 255, 0.1);
   --input-foreground: var(--color-gray-100);
 
   --ring: var(--color-gray-600);
