@@ -77,13 +77,60 @@ jobs:
         if: failure()
         run: docker compose logs
 
+  # Resolves the @playwright/test version from the lockfile so the container
+  # image tag below stays in sync with it automatically.
+  playwright-version:
+    name: Resolve Playwright version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: resolve
+        run: |
+          version=$(awk "/'@playwright\/test':/{getline; getline; if(\$1==\"version:\"){print \$2; exit}}" pnpm-lock.yaml)
+          if [ -z "$version" ]; then
+            echo "Could not resolve @playwright/test version from pnpm-lock.yaml" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Resolved Playwright version: $version"
+
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-latest
+    needs: playwright-version
+    # Uses the Playwright image (browsers preinstalled); tag must stay v<version>-noble.
+    container:
+      image: mcr.microsoft.com/playwright:v${{ needs.playwright-version.outputs.version }}-noble
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5450/rallly
-      DIRECT_DATABASE_URL: postgresql://postgres:postgres@localhost:5450/rallly
+      # Services are reached by network alias (the job is containerized, so not localhost).
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/rallly
+      DIRECT_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/rallly
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      MAILPIT_API_URL: http://mailpit:8025/api
+      # Point Playwright at the image's preinstalled browsers (HOME is /github/home in-container).
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
       CI: true
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: rallly
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+      mailpit:
+        image: axllent/mailpit
+        options: >-
+          --health-cmd "wget --no-verbose --tries=1 --spider http://localhost:8025/readyz"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
@@ -92,23 +139,15 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm db:generate
 
-      - name: Install system dependencies
-        run: sudo apt-get update
-
-      - name: Install playwright dependencies
-        run: pnpm playwright install --with-deps chromium
-
       - name: Create production build
         run: pnpm turbo build:test --filter=@rallly/web
-
-      - name: Start services
-        run: pnpm docker:up
 
       - name: Setup database
         run: pnpm db:deploy
 
       - name: Run tests
-        run: pnpm turbo test:integration
+        # Run directly, not via turbo, so the job env reaches the test process.
+        run: pnpm --filter @rallly/web test:integration
 
       - name: Upload artifact playwright-report
         if: ${{ success() || failure() }}
