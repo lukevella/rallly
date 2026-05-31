@@ -679,5 +679,12 @@
   "invited": "Eingeladen",
   "eventOrganizedBy": "Organisiert von {name}",
   "expiredVerificationCode": "Dieser Code ist abgelaufen. Fordere einen neuen an, um fortzufahren.",
-  "tooManyVerificationAttempts": "Zu viele falsche Versuche. Fordere einen neuen Code an, um fortzufahren."
+  "tooManyVerificationAttempts": "Zu viele falsche Versuche. Fordere einen neuen Code an, um fortzufahren.",
+  "rsvpDecline": "Absagen",
+  "rsvpResponseHeadingGoing": "Du bist dabei",
+  "rsvpResponseHeadingDeclining": "Du hast abgesagt",
+  "rsvpChange": "Ändern",
+  "confirmResponse": "Antwort bestätigen",
+  "nameRequired": "Bitte gib deinen Namen ein",
+  "rsvpAlreadyResponded": "Es sieht so aus, als hättest du bereits mit dieser E-Mail-Adresse geantwortet"
 }
