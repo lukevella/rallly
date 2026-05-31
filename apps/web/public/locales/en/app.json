@@ -679,12 +679,5 @@
   "invited": "Invited",
   "eventOrganizedBy": "Organized by {name}",
   "expiredVerificationCode": "This code has expired. Request a new one to continue.",
-  "tooManyVerificationAttempts": "Too many incorrect attempts. Request a new code to continue.",
-  "rsvpDecline": "Decline",
-  "rsvpResponseHeadingGoing": "You're going",
-  "rsvpResponseHeadingDeclining": "You're declining",
-  "rsvpChange": "Change",
-  "confirmResponse": "Confirm response",
-  "nameRequired": "Please enter your name",
-  "rsvpAlreadyResponded": "It looks like you've already responded with this email"
+  "tooManyVerificationAttempts": "Too many incorrect attempts. Request a new code to continue."
 }
