@@ -164,7 +164,11 @@ jobs:
         run: pnpm db:deploy
 
       - name: Run tests
-        run: pnpm turbo test:integration
+        # Invoke the package script directly rather than via turbo: integration
+        # tests are not cacheable (they need the live services + webserver), so
+        # turbo adds no value here, and its env sanitization would otherwise strip
+        # the job-level vars the tests rely on (MAILPIT_API_URL, PLAYWRIGHT_BROWSERS_PATH).
+        run: pnpm --filter @rallly/web test:integration
 
       - name: Upload artifact playwright-report
         if: ${{ success() || failure() }}
