@@ -77,7 +77,7 @@
   "verificationCodePlaceholder": "Insira o seu código de 6 dígitos",
   "startOfWeek": "Início da semana",
   "weekView": "Visão semanal",
-  "wrongVerificationCode": "Seu código de verificação está incorreto ou expirou",
+  "wrongVerificationCode": "Seu código de verificação está incorreto",
   "yes": "Sim",
   "you": "Você",
   "yourName": "Seu nome…",
@@ -666,5 +666,18 @@
   "signupSheetsEmptyTitle": "Nenhuma planilha de inscrição ainda",
   "signupSheetsEmptyDescription": "Crie uma planilha de inscrição para que as pessoas possam reservar os horários que você oferece.",
   "newSignupSheet": "Nova Planilha de Inscrição",
-  "eventTypesDescription": "Configurações de evento reutilizáveis."
+  "eventTypesDescription": "Configurações de evento reutilizáveis.",
+  "eventStatusCanceled": "Cancelado",
+  "eventStatusPast": "Anterior",
+  "eventStatusUpcoming": "Por vir",
+  "attendeeStatusGoing": "Comparecerá",
+  "attendeeStatusMaybe": "Talvez",
+  "attendeeStatusDeclined": "Recusado",
+  "attendeeStatusPending": "Pendente",
+  "conferencing": "Conferência",
+  "attendees": "Participantes",
+  "invited": "Convidado",
+  "eventOrganizedBy": "Organizado por {name}",
+  "expiredVerificationCode": "Este código expirou. Solicite um novo para continuar.",
+  "tooManyVerificationAttempts": "Muitas tentativas incorretas. Solicite um novo código para continuar."
 }

@@ -77,7 +77,7 @@
   "verificationCodePlaceholder": "Inserisci il codice a 6 cifre",
   "startOfWeek": "Inizio settimana",
   "weekView": "Vista settimanale",
-  "wrongVerificationCode": "Il tuo codice di verifica non è corretto o è scaduto",
+  "wrongVerificationCode": "Il tuo codice di verifica non è corretto",
   "yes": "Si",
   "you": "Tu",
   "yourName": "Il tuo nome…",
@@ -666,5 +666,18 @@
   "signupSheetsEmptyTitle": "Nessun foglio di iscrizione presente",
   "signupSheetsEmptyDescription": "Crea un foglio di iscrizione per permettere alle persone di prenotare le fasce orarie che offri.",
   "newSignupSheet": "Nuovo foglio di iscrizione",
-  "eventTypesDescription": "Configurazioni di eventi riutilizzabili."
+  "eventTypesDescription": "Configurazioni di eventi riutilizzabili.",
+  "eventStatusCanceled": "Annullato",
+  "eventStatusPast": "Passato",
+  "eventStatusUpcoming": "Prossimamente",
+  "attendeeStatusGoing": "Parteciperà",
+  "attendeeStatusMaybe": "Forse",
+  "attendeeStatusDeclined": "Rifiutato",
+  "attendeeStatusPending": "In attesa",
+  "conferencing": "Conferenza",
+  "attendees": "Partecipanti",
+  "invited": "Invitato",
+  "eventOrganizedBy": "Organizzato da {name}",
+  "expiredVerificationCode": "Questo codice è scaduto. Richiedi un nuovo codice per continuare.",
+  "tooManyVerificationAttempts": "Troppi tentativi sbagliati. Richiedi un nuovo codice per continuare."
 }
