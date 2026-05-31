@@ -77,10 +77,8 @@ jobs:
         if: failure()
         run: docker compose logs
 
-  # Single source of truth for the Playwright version: read the resolved version
-  # from the lockfile so the container image tag below always matches the
-  # @playwright/test package the tests run against. Bumping the dependency
-  # automatically moves the image tag — no second place to update.
+  # Resolves the @playwright/test version from the lockfile so the container
+  # image tag below stays in sync with it automatically.
   playwright-version:
     name: Resolve Playwright version
     runs-on: ubuntu-latest
@@ -102,36 +100,20 @@ jobs:
     name: Integration tests
     runs-on: ubuntu-latest
     needs: playwright-version
-    # Run inside the official Playwright image: chromium and all of its system
-    # dependencies are pre-installed, so there is no `playwright install` step.
-    # This sidesteps the runner-side bug where `playwright install` hangs while
-    # "extracting archive" on the current ubuntu-latest image. The tag is derived
-    # from the lockfile (see the playwright-version job) so it can't drift from
-    # the installed @playwright/test version.
+    # Uses the Playwright image (browsers preinstalled); tag must stay v<version>-noble.
     container:
       image: mcr.microsoft.com/playwright:v${{ needs.playwright-version.outputs.version }}-noble
     env:
-      # The job runs in a container, so services are reachable by their network
-      # aliases (NOT localhost). These job-level vars are in process.env before
-      # playwright.config.ts runs, so dotenv's `.env.test` (which uses localhost
-      # for local dev) does not override them — both `prisma migrate deploy` and
-      # the `next start` webServer use these values.
+      # Services are reached by network alias (the job is containerized, so not localhost).
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/rallly
       DIRECT_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/rallly
-      # The app sends mail to the mailpit service; the tests read it back via its
-      # API (see packages/test-helpers/src/mailpit.ts, which honors MAILPIT_API_URL).
       SMTP_HOST: mailpit
       SMTP_PORT: "1025"
       MAILPIT_API_URL: http://mailpit:8025/api
-      # The Playwright image preinstalls browsers at /ms-playwright. In a
-      # containerized job GitHub sets HOME=/github/home, so without this Playwright
-      # looks in ~/.cache/ms-playwright and can't find the bundled browser.
+      # Point Playwright at the image's preinstalled browsers (HOME is /github/home in-container).
       PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
       CI: true
     services:
-      # Replaces `pnpm docker:up`. The integration suite needs postgres (data) and
-      # mailpit (login/OTP emails). redis/garage are unused: RATE_LIMIT_ENABLED=false
-      # and no S3 vars in .env.test.
       postgres:
         image: postgres:18-alpine
         env:
@@ -164,10 +146,7 @@ jobs:
         run: pnpm db:deploy
 
       - name: Run tests
-        # Invoke the package script directly rather than via turbo: integration
-        # tests are not cacheable (they need the live services + webserver), so
-        # turbo adds no value here, and its env sanitization would otherwise strip
-        # the job-level vars the tests rely on (MAILPIT_API_URL, PLAYWRIGHT_BROWSERS_PATH).
+        # Run directly, not via turbo, so the job env reaches the test process.
         run: pnpm --filter @rallly/web test:integration
 
       - name: Upload artifact playwright-report
