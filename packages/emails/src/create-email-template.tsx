@@ -43,6 +43,7 @@ export function createEmailTemplate<
       supportEmail: process.env.SUPPORT_EMAIL ?? "",
       i18n,
       t,
+      i18nProps: { i18n, t, ns: "emails" },
     };
 
     return sendEmail({

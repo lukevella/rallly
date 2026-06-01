@@ -35,10 +35,8 @@ export const ChangeEmailRequest = ({
       </Heading>
       <Text>
         <Trans
-          i18n={ctx.i18n}
-          t={ctx.t}
+          {...ctx.i18nProps}
           i18nKey="changeEmailRequest_text1"
-          ns="emails"
           defaults="We've received a request to change the email address for your account from <b>{fromEmail}</b> to <b>{toEmail}</b>."
           values={{ fromEmail, toEmail }}
           components={{ b: <b /> }}

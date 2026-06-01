@@ -55,10 +55,8 @@ export const EmailLayout = ({
             <Section>
               <Text light={true}>
                 <Trans
-                  i18n={ctx.i18n}
-                  t={ctx.t}
+                  {...ctx.i18nProps}
                   i18nKey="common_poweredBy"
-                  ns="emails"
                   defaults="Powered by <a>{domain}</a>"
                   values={{ domain: "rallly.co" }}
                   components={{

@@ -39,18 +39,15 @@ export const ResetPasswordEmail = ({
       <Section style={{ marginBottom: 32 }}>
         <Button href={resetLink} id="resetLink" color={ctx.primaryColor}>
           <Trans
-            i18n={ctx.i18n}
-            t={ctx.t}
+            {...ctx.i18nProps}
             i18nKey="resetPassword_button"
             defaults="Reset password"
-            ns="emails"
           />
         </Button>
       </Section>
       <Text light>
         <Trans
-          i18n={ctx.i18n}
-          t={ctx.t}
+          {...ctx.i18nProps}
           i18nKey="resetPassword_content2"
           defaults="If you didn't request a password reset, you can ignore this email. Your password will not change unless you create a new one. If this request is suspicious, contact <a>{supportEmail}</a>."
           values={{ supportEmail: ctx.supportEmail }}
@@ -62,7 +59,6 @@ export const ResetPasswordEmail = ({
               />
             ),
           }}
-          ns="emails"
         />
       </Text>
     </EmailLayout>
