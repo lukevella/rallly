@@ -45,6 +45,7 @@
   "license_key_subject": "Az általad üzemeltetett Rallly {tier} licenced",
   "license_key_support": "Válaszolj erre az emailre vagy keress minket a <a>{supportEmail}</a> címen, ha segítségre van szükséged.",
   "license_key_yourKey": "Licenc részletei",
+  "login_content2": "Ezt az emailt azért kaptad, mert bejelentkezési kísérlet történt a(z) <domain /> címre. Ha ez nem te voltál, lépj kapcsolatba a(z) <a>{supportEmail}</a> címmel.",
   "newComment_content": "<b>{authorName}</b> hozzászólt ehhez: <b>{title}</b>.",
   "newComment_heading": "Új hozzászólás",
   "newComment_preview": "Irány a szavazásod, hogy lásd a hozzászólásokat.",
