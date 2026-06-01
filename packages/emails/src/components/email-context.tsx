@@ -3,7 +3,7 @@ import type { EmailContext } from "../types";
 
 i18nInstance.init({
   ...i18nDefaultConfig,
-  initImmediate: true,
+  initAsync: true,
 });
 
 export const previewEmailContext: EmailContext = {
