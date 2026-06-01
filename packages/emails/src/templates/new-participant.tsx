@@ -35,10 +35,8 @@ const NewParticipantEmail = ({
       </Heading>
       <Text>
         <Trans
-          i18n={ctx.i18n}
-          t={ctx.t}
+          {...ctx.i18nProps}
           i18nKey="newParticipant_content"
-          ns="emails"
           defaults="<b>{name}</b> has responded to <b>{title}</b>."
           components={{
             b: <strong />,
@@ -48,11 +46,9 @@ const NewParticipantEmail = ({
       </Text>
       <Text>
         <Trans
-          i18n={ctx.i18n}
-          t={ctx.t}
+          {...ctx.i18nProps}
           i18nKey="newParticipant_content2"
           defaults="Go to your poll to see the new response."
-          ns="emails"
         />
       </Text>
     </NotificationEmail>

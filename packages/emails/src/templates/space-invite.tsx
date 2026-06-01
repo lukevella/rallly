@@ -37,12 +37,10 @@ export const SpaceInviteEmail = ({
     </Heading>
     <Text>
       <Trans
-        i18n={ctx.i18n}
-        t={ctx.t}
+        {...ctx.i18nProps}
         i18nKey="spaceInvite_content"
         defaults="{inviterName} has invited you to join the {spaceName} space as a {role}."
         values={{ inviterName, spaceName, role }}
-        ns="emails"
       />
     </Text>
     <Section style={{ marginBottom: 16 }}>

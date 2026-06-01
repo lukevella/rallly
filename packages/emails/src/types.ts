@@ -25,4 +25,10 @@ export type EmailContext = EmailBranding & {
   supportEmail: string;
   i18n: I18nInstance;
   t: TFunction;
+  /**
+   * Spread into every `<Trans {...ctx.i18nProps} />` to bind it to the email
+   * instance, locale-pinned `t`, and the `emails` namespace — so a template
+   * can't accidentally resolve a key against the wrong namespace.
+   */
+  i18nProps: { i18n: I18nInstance; t: TFunction; ns: "emails" };
 };

@@ -29,16 +29,14 @@ const NewCommentEmail = ({
     >
       <Heading>
         <Trans
-          i18n={ctx.i18n}
-          ns="emails"
+          {...ctx.i18nProps}
           i18nKey="newComment_heading"
           defaults="New Comment"
         />
       </Heading>
       <Text>
         <Trans
-          i18n={ctx.i18n}
-          ns="emails"
+          {...ctx.i18nProps}
           i18nKey="newComment_content"
           defaults="<b>{authorName}</b> has commented on <b>{title}</b>."
           components={{

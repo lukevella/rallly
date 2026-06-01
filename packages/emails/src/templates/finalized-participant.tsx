@@ -48,10 +48,8 @@ const FinalizeParticipantEmail = ({
       </Heading>
       <Text>
         <Trans
-          i18n={ctx.i18n}
-          t={ctx.t}
+          {...ctx.i18nProps}
           i18nKey="finalizeParticipant_content"
-          ns="emails"
           defaults="<b>{hostName}</b> has booked <b>{title}</b> for the following date:"
           values={{ hostName, title }}
           components={{
@@ -106,8 +104,7 @@ const FinalizeParticipantEmail = ({
       <Section style={{ marginTop: 32 }}>
         <Button href={pollUrl} color={ctx.primaryColor}>
           <Trans
-            t={ctx.t}
-            ns="emails"
+            {...ctx.i18nProps}
             i18nKey="finalizeHost_button"
             defaults="View Event"
           />

@@ -29,18 +29,14 @@ export const LicenseKeyEmail = ({
     >
       <Text>
         <Trans
-          t={ctx.t}
-          i18n={ctx.i18n}
-          ns="emails"
+          {...ctx.i18nProps}
           i18nKey="license_key_content"
           defaults="Your purchase has been confirmed and your license key has been generated."
         />
       </Text>
       <Heading as="h2">
         <Trans
-          t={ctx.t}
-          i18n={ctx.i18n}
-          ns="emails"
+          {...ctx.i18nProps}
           i18nKey="license_key_yourKey"
           defaults="License Details"
         />
@@ -49,9 +45,7 @@ export const LicenseKeyEmail = ({
         <tr>
           <td style={{ paddingRight: "16px" }}>
             <Trans
-              t={ctx.t}
-              i18n={ctx.i18n}
-              ns="emails"
+              {...ctx.i18nProps}
               i18nKey="license_key_plan"
               defaults="Plan"
             />
@@ -61,9 +55,7 @@ export const LicenseKeyEmail = ({
         <tr>
           <td style={{ paddingRight: "16px" }}>
             <Trans
-              t={ctx.t}
-              i18n={ctx.i18n}
-              ns="emails"
+              {...ctx.i18nProps}
               i18nKey="license_key_seats"
               defaults="Seats"
             />
@@ -73,9 +65,7 @@ export const LicenseKeyEmail = ({
         <tr>
           <td style={{ paddingRight: "16px" }}>
             <Trans
-              t={ctx.t}
-              i18n={ctx.i18n}
-              ns="emails"
+              {...ctx.i18nProps}
               i18nKey="license_key_licenseKey"
               defaults="License Key"
             />
@@ -93,16 +83,14 @@ export const LicenseKeyEmail = ({
       </table>
       <Heading as="h2">
         <Trans
-          t={ctx.t}
-          ns="emails"
+          {...ctx.i18nProps}
           i18nKey="license_key_nextStepsHeading"
           defaults="Next Steps"
         />
       </Heading>
       <Text>
         <Trans
-          t={ctx.t}
-          ns="emails"
+          {...ctx.i18nProps}
           i18nKey="license_key_activationSteps"
           defaults={
             "Follow these <a>instructions</a> to activate your license on your Rallly Self-Hosted instance."
@@ -120,16 +108,14 @@ export const LicenseKeyEmail = ({
       </Text>
       <Heading as="h2">
         <Trans
-          t={ctx.t}
-          ns="emails"
+          {...ctx.i18nProps}
           i18nKey="license_key_questionsHeading"
           defaults="Questions?"
         />
       </Heading>
       <Text>
         <Trans
-          t={ctx.t}
-          ns="emails"
+          {...ctx.i18nProps}
           i18nKey="license_key_support"
           defaults={
             "Reply to this email or contact us at <a>{supportEmail}</a> if you need help."
@@ -148,8 +134,7 @@ export const LicenseKeyEmail = ({
       </Text>
       <Text>
         <Trans
-          t={ctx.t}
-          ns="emails"
+          {...ctx.i18nProps}
           i18nKey="license_key_signoff"
           defaults="Thank you for choosing Rallly!"
         />
