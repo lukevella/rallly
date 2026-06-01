@@ -1,8 +1,11 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { sendRawEmail } from "@rallly/emails";
+import { sendChangeEmailRequest } from "@rallly/emails/templates/change-email-request";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { getInstanceBranding } from "@/emails/branding";
 import { posthog } from "@/features/analytics/posthog";
 import { feedbackSchema } from "@/features/feedback/schema";
 import { defaultNotificationPreferences } from "@/features/notifications/constants";
@@ -13,7 +16,6 @@ import {
   deleteImageFromS3,
   getImageUploadUrl,
 } from "@/lib/storage/image-upload";
-import { getEmailClient } from "@/utils/emails";
 import { createToken } from "@/utils/session";
 import { timezoneSchema } from "@/utils/timezone-schema";
 import {
@@ -115,12 +117,10 @@ export const user = router({
         },
       );
 
-      const emailClient = await getEmailClient({
-        locale: currentUser.locale ?? undefined,
-      });
-
-      emailClient.sendTemplate("ChangeEmailRequest", {
+      sendChangeEmailRequest({
         to: input.email,
+        locale: currentUser.locale ?? undefined,
+        branding: await getInstanceBranding(),
         props: {
           verificationUrl: absoluteUrl(
             `/api/user/verify-email-change?token=${token}`,
@@ -297,8 +297,7 @@ export const user = router({
     .use(createRateLimitMiddleware("submit_feedback", 5, "1 h"))
     .input(feedbackSchema)
     .mutation(async ({ input, ctx }) => {
-      const emailClient = await getEmailClient();
-      emailClient.sendEmail({
+      sendRawEmail({
         to: "feedback@rallly.co",
         replyTo: ctx.user.email ?? undefined,
         subject: "Feedback",

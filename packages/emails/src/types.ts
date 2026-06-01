@@ -1,27 +1,28 @@
 import type { TFunction } from "i18next";
 
 import type { I18nInstance } from "./i18n";
-import type { EmailTemplates } from "./templates";
 
-export type EmailContext = {
+/**
+ * The themeable part of an email — the only thing that varies between instance
+ * and space branding. Passed as a prop on every send; the caller decides which
+ * to use. (Deployment constants like base URL / support email are resolved by
+ * the package from env, not passed.)
+ */
+export type EmailBranding = {
+  primaryColor: string;
   logoUrl: string;
+  appName: string;
+  hideAttribution: boolean;
+};
+
+/**
+ * Internal per-render context handed to template components: branding + env
+ * constants + a locale-pinned i18n. Assembled inside the package.
+ */
+export type EmailContext = EmailBranding & {
   baseUrl: string;
   domain: string;
   supportEmail: string;
   i18n: I18nInstance;
   t: TFunction;
-  appName: string;
-  primaryColor?: string;
-  hideAttribution?: boolean;
-};
-
-export type TemplateName = keyof EmailTemplates;
-
-export type TemplateProps<T extends TemplateName> = Omit<
-  React.ComponentProps<EmailTemplates[T]>,
-  "ctx"
->;
-
-export type TemplateComponent<T extends TemplateName> = EmailTemplates[T] & {
-  getSubject?: (props: TemplateProps<T>, ctx: EmailContext) => string;
 };

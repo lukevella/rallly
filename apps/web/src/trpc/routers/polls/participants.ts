@@ -1,15 +1,16 @@
 import type { Participant, VoteType } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { sendNewParticipantEmail } from "@rallly/emails/templates/new-participant";
+import { sendNewParticipantConfirmationEmail } from "@rallly/emails/templates/new-participant-confirmation";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
+import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { posthog } from "@/features/analytics/posthog";
 import { getNotificationRecipient } from "@/features/notifications/queries";
 import { hasPollAdminAccess } from "@/features/poll/query";
-import { getEmailClient } from "@/utils/emails";
-import { resolveStorageUrl } from "@/utils/storage";
 import {
   createRateLimitMiddleware,
   publicProcedure,
@@ -86,11 +87,10 @@ async function sendNewResponseNotificationEmail({
       return;
     }
 
-    const emailClient = await getEmailClient({
-      locale: recipient.locale ?? undefined,
-    });
-    await emailClient.sendTemplate("NewParticipantEmail", {
+    await sendNewParticipantEmail({
       to: recipient.email,
+      locale: recipient.locale ?? undefined,
+      branding: await getInstanceBranding(),
       props: {
         participantName,
         pollUrl: absoluteUrl(`/poll/${pollId}`),
@@ -316,21 +316,14 @@ export const participants = router({
           const token = await createParticipantEditToken(ctx.user.id);
 
           const space = participant.poll.space;
-          const emailClient = await getEmailClient({
-            locale: ctx.locale,
-            ...(space?.showBranding
-              ? {
-                  primaryColor: space.primaryColor ?? undefined,
-                  logoUrl: space.image
-                    ? resolveStorageUrl(space.image)
-                    : undefined,
-                }
-              : {}),
-          });
 
-          after(() =>
-            emailClient.sendTemplate("NewParticipantConfirmationEmail", {
+          after(async () =>
+            sendNewParticipantConfirmationEmail({
               to: email,
+              locale: ctx.locale,
+              branding: space
+                ? await getSpaceBranding(space)
+                : await getInstanceBranding(),
               props: {
                 title: participant.poll.title,
                 editSubmissionUrl: absoluteUrl(

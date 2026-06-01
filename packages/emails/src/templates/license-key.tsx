@@ -2,6 +2,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 
 import { EmailLayout } from "../components/email-layout";
 import { Heading, Link, Text } from "../components/styled-components";
+import { createEmailTemplate } from "../create-email-template";
 import type { EmailContext } from "../types";
 
 interface LicenseKeyEmailProps {
@@ -157,15 +158,12 @@ export const LicenseKeyEmail = ({
   );
 };
 
-LicenseKeyEmail.getSubject = (
-  props: LicenseKeyEmailProps,
-  ctx: EmailContext,
-) => {
-  return ctx.t("license_key_subject", {
-    defaultValue: "Your Rallly Self-Hosted {tier} License",
-    ns: "emails",
-    tier: props.tier,
-  });
-};
-
-export default LicenseKeyEmail;
+export const sendLicenseKeyEmail = createEmailTemplate({
+  component: LicenseKeyEmail,
+  subject: (props, ctx) =>
+    ctx.t("license_key_subject", {
+      defaultValue: "Your Rallly Self-Hosted {tier} License",
+      ns: "emails",
+      tier: props.tier,
+    }),
+});

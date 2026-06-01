@@ -1,13 +1,14 @@
 import { prisma } from "@rallly/database";
+import { sendNewCommentEmail } from "@rallly/emails/templates/new-comment";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
+import { getInstanceBranding } from "@/emails/branding";
 import { posthog } from "@/features/analytics/posthog";
 import { getNotificationRecipient } from "@/features/notifications/queries";
 import { hasPollAdminAccess } from "@/features/poll/query";
-import { getEmailClient } from "@/utils/emails";
 import {
   createRateLimitMiddleware,
   publicProcedure,
@@ -137,12 +138,11 @@ export const comments = router({
         });
 
         if (recipient) {
-          const emailClient = await getEmailClient({
-            locale: recipient.locale ?? undefined,
-          });
-          after(() =>
-            emailClient.sendTemplate("NewCommentEmail", {
+          after(async () =>
+            sendNewCommentEmail({
               to: recipient.email,
+              locale: recipient.locale ?? undefined,
+              branding: await getInstanceBranding(),
               props: {
                 authorName,
                 pollUrl: absoluteUrl(`/poll/${poll.id}`),

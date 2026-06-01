@@ -3,6 +3,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 
 import { EmailLayout } from "../components/email-layout";
 import { borderColor, Heading, Text } from "../components/styled-components";
+import { createEmailTemplate } from "../create-email-template";
 import type { EmailContext } from "../types";
 
 export interface EventCanceledEmailProps {
@@ -93,15 +94,14 @@ const EventCanceledEmail = ({
   );
 };
 
-EventCanceledEmail.getSubject = (
-  props: EventCanceledEmailProps,
-  ctx: EmailContext,
-) => {
-  return ctx.t("eventCanceledSubject", {
-    defaultValue: "Canceled: {title}",
-    title: props.title,
-    ns: "emails",
-  });
-};
-
 export { EventCanceledEmail };
+
+export const sendEventCanceledEmail = createEmailTemplate({
+  component: EventCanceledEmail,
+  subject: (props, ctx) =>
+    ctx.t("eventCanceledSubject", {
+      defaultValue: "Canceled: {title}",
+      title: props.title,
+      ns: "emails",
+    }),
+});

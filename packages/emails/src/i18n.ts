@@ -26,4 +26,16 @@ const i18nDefaultConfig: InitOptions = {
 
 export type I18nInstance = typeof i18nInstance;
 
+/**
+ * Initialises the email i18n instance for `locale` and returns the instance
+ * plus a locale-pinned `t`. `getFixedT(locale)` is concurrency-safe even though
+ * the instance is shared — it captures the locale regardless of the instance's
+ * current `language`. (Whether to swap the shared singleton for a per-send
+ * `createInstance()` is tracked in RAL-1219.)
+ */
+export async function createEmailI18n(locale: string) {
+  await i18nInstance.init({ ...i18nDefaultConfig, lng: locale });
+  return { i18n: i18nInstance, t: i18nInstance.getFixedT(locale) };
+}
+
 export { i18nDefaultConfig, i18nInstance };

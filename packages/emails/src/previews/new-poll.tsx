@@ -1,5 +1,5 @@
 import { previewEmailContext } from "../components/email-context";
-import NewPollEmail from "../templates/new-poll";
+import { NewPollEmail } from "../templates/new-poll";
 
 export default function NewPollPreview() {
   return (

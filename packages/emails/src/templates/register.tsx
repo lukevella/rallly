@@ -10,6 +10,7 @@ import {
   Text,
   trackingWide,
 } from "../components/styled-components";
+import { createEmailTemplate } from "../create-email-template";
 import type { EmailContext } from "../types";
 
 interface RegisterEmailProps {
@@ -84,11 +85,11 @@ export const RegisterEmail = ({ code, ctx }: RegisterEmailProps) => {
   );
 };
 
-RegisterEmail.getSubject = (_props: RegisterEmailProps, ctx: EmailContext) => {
-  return ctx.t("register_subject", {
-    defaultValue: "Please verify your email address",
-    ns: "emails",
-  });
-};
-
-export default RegisterEmail;
+export const sendRegisterEmail = createEmailTemplate({
+  component: RegisterEmail,
+  subject: (_props, ctx) =>
+    ctx.t("register_subject", {
+      defaultValue: "Please verify your email address",
+      ns: "emails",
+    }),
+});

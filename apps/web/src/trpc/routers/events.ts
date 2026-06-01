@@ -1,8 +1,10 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { sendEventCanceledEmail } from "@rallly/emails/templates/event-canceled";
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
+import { getInstanceBranding } from "@/emails/branding";
 import { parseConferencing } from "@/features/conferencing/data";
 import { getConferencingUri } from "@/features/conferencing/utils";
 import { parseLocation } from "@/features/location/data";
@@ -10,7 +12,6 @@ import { formatLocationText } from "@/features/location/utils";
 import { getEventsChronological } from "@/features/scheduled-event/data";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { defineAbilityForMember } from "@/features/space/member/ability";
-import { getEmailClient } from "@/utils/emails";
 import { createIcsEvent } from "@/utils/ics";
 import { router, spaceProcedure } from "../trpc";
 
@@ -170,10 +171,15 @@ export const events = router({
             inviteeTimeZone: invite.inviteeTimeZone,
           });
 
-          const emailClient = await getEmailClient();
-          after(() =>
-            emailClient.sendTemplate("EventCanceledEmail", {
+          after(async () =>
+            sendEventCanceledEmail({
               to: invite.inviteeEmail,
+              branding: await getInstanceBranding(),
+              icalEvent: {
+                filename: "cancel.ics",
+                method: "cancel",
+                content: cancelEvent.value,
+              },
               props: {
                 title: updatedEvent.title,
                 hostName: ctx.user.name,
@@ -181,11 +187,6 @@ export const events = router({
                 dow,
                 date,
                 time,
-              },
-              icalEvent: {
-                filename: "cancel.ics",
-                method: "cancel",
-                content: cancelEvent.value,
               },
             }),
           );
