@@ -8,7 +8,7 @@
     "analyze": "cross-env ANALYZE=true next build",
     "start": "next start",
     "type-check": "tsc --pretty --noEmit",
-    "i18n:scan": "i18next-scanner --config i18next-scanner.config.js"
+    "i18n:scan": "i18next-cli extract"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
@@ -24,8 +24,8 @@
     "@vercel/analytics": "^1.5.0",
     "dayjs": "^1.11.13",
     "gray-matter": "^4.0.3",
-    "i18next": "^24.2.2",
-    "i18next-icu": "^2.3.0",
+    "i18next": "^26.3.0",
+    "i18next-icu": "^2.4.3",
     "i18next-resources-to-backend": "^1.2.1",
     "intl-messageformat": "^10.7.15",
     "lodash": "^4.17.21",
@@ -38,7 +38,7 @@
     "pg": "^8.17.1",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "react-i18next": "^15.5.1",
+    "react-i18next": "^17.0.8",
     "react-use": "^17.6.0",
     "tailwindcss": "^4.1.18"
   },
@@ -51,7 +51,6 @@
     "@types/react": "19.2.13",
     "@types/react-dom": "19.2.3",
     "cross-env": "^7.0.3",
-    "i18next-scanner": "^4.2.0",
-    "i18next-scanner-typescript": "^1.1.1"
+    "i18next-cli": "^1.58.1"
   }
 }
