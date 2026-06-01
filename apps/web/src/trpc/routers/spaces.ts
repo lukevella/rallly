@@ -1,10 +1,12 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { sendSpaceInviteEmail } from "@rallly/emails/templates/space-invite";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
+import { getInstanceBranding } from "@/emails/branding";
 import { posthog } from "@/features/analytics/posthog";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import {
@@ -27,7 +29,6 @@ import {
   deleteImageFromS3,
   getImageUploadUrl,
 } from "@/lib/storage/image-upload";
-import { getEmailClient } from "@/utils/emails";
 import {
   createRateLimitMiddleware,
   privateProcedure,
@@ -441,13 +442,11 @@ export const spaces = router({
         },
       });
 
-      const emailClient = await getEmailClient({
-        locale: existingUser?.locale ?? ctx.user.locale,
-      });
-
       try {
-        await emailClient.sendTemplate("SpaceInviteEmail", {
+        await sendSpaceInviteEmail({
           to: input.email,
+          locale: existingUser?.locale ?? ctx.user.locale,
+          branding: await getInstanceBranding(),
           props: {
             spaceName: ctx.space.name,
             inviterName: ctx.user.name,

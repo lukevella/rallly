@@ -3,6 +3,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 
 import { EmailLayout } from "../components/email-layout";
 import { Button, Heading, Link, Text } from "../components/styled-components";
+import { createEmailTemplate } from "../create-email-template";
 import type { EmailContext } from "../types";
 
 interface ResetPasswordEmailProps {
@@ -68,14 +69,11 @@ export const ResetPasswordEmail = ({
   );
 };
 
-ResetPasswordEmail.getSubject = (
-  _props: ResetPasswordEmailProps,
-  ctx: EmailContext,
-) => {
-  return ctx.t("resetPassword_subject", {
-    defaultValue: "Reset your password",
-    ns: "emails",
-  });
-};
-
-export default ResetPasswordEmail;
+export const sendResetPasswordEmail = createEmailTemplate({
+  component: ResetPasswordEmail,
+  subject: (_props, ctx) =>
+    ctx.t("resetPassword_subject", {
+      defaultValue: "Reset your password",
+      ns: "emails",
+    }),
+});

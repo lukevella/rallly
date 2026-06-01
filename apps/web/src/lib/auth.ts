@@ -1,4 +1,6 @@
 import { prisma } from "@rallly/database";
+import { sendRegisterEmail } from "@rallly/emails/templates/register";
+import { sendResetPasswordEmail } from "@rallly/emails/templates/reset-password";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { BetterAuthPlugin } from "better-auth";
@@ -21,13 +23,13 @@ import { isEmailBlocked } from "@/auth/helpers/is-email-blocked";
 import { linkAnonymousUser } from "@/auth/helpers/merge-user";
 import { isTemporaryEmail } from "@/auth/helpers/temp-email-domains";
 import { hostOnlyCookieCleanup } from "@/auth/plugins/host-only-cookie-cleanup";
+import { getInstanceBranding } from "@/emails/branding";
 import { env } from "@/env";
 import { posthog } from "@/features/analytics/posthog";
 import { createSpace } from "@/features/space/mutations";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { redis } from "@/lib/kv";
-import { getEmailClient } from "@/utils/emails";
 import { getValueByPath } from "@/utils/get-value-by-path";
 
 const kv = redis;
@@ -108,15 +110,12 @@ export const authLib = betterAuth({
       const locale =
         "locale" in user ? (user.locale as string) : await getLocale();
 
-      await (await getEmailClient({ locale })).sendTemplate(
-        "ResetPasswordEmail",
-        {
-          to: user.email,
-          props: {
-            resetLink: url,
-          },
-        },
-      );
+      await sendResetPasswordEmail({
+        to: user.email,
+        locale,
+        branding: await getInstanceBranding(),
+        props: { resetLink: url },
+      });
     },
     onPasswordReset: async ({ user }) => {
       posthog()?.capture({
@@ -153,24 +152,17 @@ export const authLib = betterAuth({
       overrideDefaultEmailVerification: true,
       async sendVerificationOTP({ email, otp, type }) {
         const locale = await getLocale(); // TODO: Get locale from email
-        const emailClient = await getEmailClient({ locale });
+        const branding = await getInstanceBranding();
         switch (type) {
           // We're not actually using the sign-in type anymore since we just we have `autoSignInAfterVerification` enabled.
           // This lets us keep things a bit simpler since we share the same verification flow for both login and registration.
           case "sign-in":
-            after(() =>
-              emailClient.sendTemplate("RegisterEmail", {
-                to: email,
-                props: {
-                  code: otp,
-                },
-              }),
-            );
-            break;
           case "email-verification":
             after(() =>
-              emailClient.sendTemplate("RegisterEmail", {
+              sendRegisterEmail({
                 to: email,
+                locale,
+                branding,
                 props: { code: otp },
               }),
             );

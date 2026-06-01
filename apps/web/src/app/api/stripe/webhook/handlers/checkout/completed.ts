@@ -1,9 +1,10 @@
 import type { Stripe } from "@rallly/billing";
+import { sendLicenseKeyEmail } from "@rallly/emails/templates/license-key";
+import { getInstanceBranding } from "@/emails/branding";
 import { env } from "@/env";
 import { posthog } from "@/features/analytics/posthog";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
 import { licenseManager } from "@/features/licensing/server";
-import { getEmailClient } from "@/utils/emails";
 
 export async function onCheckoutSessionCompleted(event: Stripe.Event) {
   const checkoutSession = event.data.object as Stripe.Checkout.Session;
@@ -51,14 +52,10 @@ export async function onCheckoutSessionCompleted(event: Stripe.Event) {
       );
     }
 
-    const emailClient = await getEmailClient();
-
-    await emailClient.sendTemplate("LicenseKeyEmail", {
+    await sendLicenseKeyEmail({
       to: email,
-      from: {
-        name: "Luke from Rallly",
-        address: env.SUPPORT_EMAIL,
-      },
+      from: { name: "Luke from Rallly", address: env.SUPPORT_EMAIL },
+      branding: await getInstanceBranding(),
       props: {
         licenseKey: license.data.key,
         seats,

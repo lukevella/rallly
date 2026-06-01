@@ -3,7 +3,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import type { NotificationBaseProps } from "../components/notification-email";
 import NotificationEmail from "../components/notification-email";
 import { Heading, Text } from "../components/styled-components";
-import type { EmailContext } from "../types";
+import { createEmailTemplate } from "../create-email-template";
 
 export interface NewParticipantEmailProps extends NotificationBaseProps {
   participantName: string;
@@ -59,16 +59,15 @@ const NewParticipantEmail = ({
   );
 };
 
-NewParticipantEmail.getSubject = (
-  props: NewParticipantEmailProps,
-  ctx: EmailContext,
-) => {
-  return ctx.t("newParticipant_subject", {
-    defaultValue: "{name} has responded to {title}",
-    name: props.participantName,
-    title: props.title,
-    ns: "emails",
-  });
-};
-
 export { NewParticipantEmail };
+
+export const sendNewParticipantEmail = createEmailTemplate({
+  component: NewParticipantEmail,
+  subject: (props, ctx) =>
+    ctx.t("newParticipant_subject", {
+      defaultValue: "{name} has responded to {title}",
+      name: props.participantName,
+      title: props.title,
+      ns: "emails",
+    }),
+});

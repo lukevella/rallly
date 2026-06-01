@@ -8,6 +8,7 @@ import {
   Section,
   Text,
 } from "../components/styled-components";
+import { createEmailTemplate } from "../create-email-template";
 import type { EmailContext } from "../types";
 
 interface NewParticipantConfirmationEmailProps {
@@ -90,15 +91,14 @@ const NewParticipantConfirmationEmail = ({
   );
 };
 
-NewParticipantConfirmationEmail.getSubject = (
-  props: NewParticipantConfirmationEmailProps,
-  ctx: EmailContext,
-) => {
-  return ctx.t("newParticipantConfirmation_subject", {
-    defaultValue: "Thanks for responding to {title}",
-    title: props.title,
-    ns: "emails",
-  });
-};
-
 export { NewParticipantConfirmationEmail };
+
+export const sendNewParticipantConfirmationEmail = createEmailTemplate({
+  component: NewParticipantConfirmationEmail,
+  subject: (props, ctx) =>
+    ctx.t("newParticipantConfirmation_subject", {
+      defaultValue: "Thanks for responding to {title}",
+      title: props.title,
+      ns: "emails",
+    }),
+});

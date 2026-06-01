@@ -3,6 +3,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 
 import { EmailLayout } from "../components/email-layout";
 import { Button, Heading, Text } from "../components/styled-components";
+import { createEmailTemplate } from "../create-email-template";
 import type { EmailContext } from "../types";
 
 interface ChangeEmailRequestProps {
@@ -69,14 +70,11 @@ export const ChangeEmailRequest = ({
   );
 };
 
-ChangeEmailRequest.getSubject = (
-  _props: ChangeEmailRequestProps,
-  ctx: EmailContext,
-) => {
-  return ctx.t("changeEmailRequest_subject", {
-    defaultValue: "Verify your new email address",
-    ns: "emails",
-  });
-};
-
-export default ChangeEmailRequest;
+export const sendChangeEmailRequest = createEmailTemplate({
+  component: ChangeEmailRequest,
+  subject: (_props, ctx) =>
+    ctx.t("changeEmailRequest_subject", {
+      defaultValue: "Verify your new email address",
+      ns: "emails",
+    }),
+});

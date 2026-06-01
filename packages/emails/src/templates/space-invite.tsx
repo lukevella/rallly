@@ -3,6 +3,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 
 import { EmailLayout } from "../components/email-layout";
 import { Button, Heading, Text } from "../components/styled-components";
+import { createEmailTemplate } from "../create-email-template";
 import type { EmailContext } from "../types";
 
 interface SpaceInviteEmailProps {
@@ -55,14 +56,12 @@ export const SpaceInviteEmail = ({
   </EmailLayout>
 );
 
-SpaceInviteEmail.getSubject = (
-  props: SpaceInviteEmailProps,
-  ctx: EmailContext,
-) =>
-  ctx.t("spaceInvite_subject", {
-    defaultValue: "You're invited to join {spaceName}",
-    spaceName: props.spaceName,
-    ns: "emails",
-  });
-
-export default SpaceInviteEmail;
+export const sendSpaceInviteEmail = createEmailTemplate({
+  component: SpaceInviteEmail,
+  subject: (props, ctx) =>
+    ctx.t("spaceInvite_subject", {
+      defaultValue: "You're invited to join {spaceName}",
+      spaceName: props.spaceName,
+      ns: "emails",
+    }),
+});

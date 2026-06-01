@@ -1,11 +1,15 @@
 import { getPolls } from "@rallly/api-core/polls/data";
 import type { PollStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { sendFinalizeHostEmail } from "@rallly/emails/templates/finalized-host";
+import { sendFinalizeParticipantEmail } from "@rallly/emails/templates/finalized-participant";
+import { sendNewPollEmail } from "@rallly/emails/templates/new-poll";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
+import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { posthog } from "@/features/analytics/posthog";
 import { moderateContent } from "@/features/moderation";
 import { canUserManagePoll } from "@/features/poll/helpers";
@@ -13,9 +17,7 @@ import { hasPollAdminAccess } from "@/features/poll/query";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { dayjs } from "@/lib/dayjs";
-import { getEmailClient } from "@/utils/emails";
 import { createIcsEvent } from "@/utils/ics";
-import { resolveStorageUrl } from "@/utils/storage";
 import {
   createRateLimitMiddleware,
   possiblyPublicProcedure,
@@ -219,12 +221,12 @@ export const polls = router({
         });
 
         if (user) {
-          const emailClient = await getEmailClient({
-            locale: ctx.user.locale ?? undefined,
-          });
+          const branding = await getInstanceBranding();
           after(() =>
-            emailClient.sendTemplate("NewPollEmail", {
+            sendNewPollEmail({
               to: user.email,
+              locale: ctx.user.locale ?? undefined,
+              branding,
               props: {
                 title: poll.title,
                 name: user.name,
@@ -944,19 +946,22 @@ export const polls = router({
 
         const hostEmail = poll.user.email;
         const hostName = poll.user.name;
+        const hostLocale = poll.user.locale ?? undefined;
         const space = poll.space;
-        const participantBrandingOptions = space?.showBranding
-          ? {
-              primaryColor: space.primaryColor ?? undefined,
-              logoUrl: space.image ? resolveStorageUrl(space.image) : undefined,
-            }
-          : {};
-        const emailClient = await getEmailClient({
-          locale: poll.user.locale ?? undefined,
-        });
+        const instanceBranding = await getInstanceBranding();
+        const participantBranding = space
+          ? await getSpaceBranding(space)
+          : instanceBranding;
         after(() =>
-          emailClient.sendTemplate("FinalizeHostEmail", {
+          sendFinalizeHostEmail({
             to: hostEmail,
+            locale: hostLocale,
+            branding: instanceBranding,
+            icalEvent: {
+              filename: "invite.ics",
+              method: "request",
+              content: event.value,
+            },
             props: {
               name: hostName,
               pollUrl: absoluteUrl(`/poll/${poll.id}`),
@@ -974,11 +979,6 @@ export const polls = router({
               dow,
               time,
             },
-            icalEvent: {
-              filename: "invite.ics",
-              method: "request",
-              content: event.value,
-            },
           }),
         );
 
@@ -990,13 +990,16 @@ export const polls = router({
             timeZone: scheduledEvent.timeZone,
             inviteeTimeZone: p.timeZone,
           });
-          const emailClient = await getEmailClient({
-            locale: p.locale ?? undefined,
-            ...participantBrandingOptions,
-          });
           after(() =>
-            emailClient.sendTemplate("FinalizeParticipantEmail", {
+            sendFinalizeParticipantEmail({
               to: p.email,
+              locale: p.locale ?? undefined,
+              branding: participantBranding,
+              icalEvent: {
+                filename: "invite.ics",
+                method: "request",
+                content: event.value,
+              },
               props: {
                 pollUrl: absoluteUrl(`/invite/${poll.id}`),
                 title: poll.title,
@@ -1005,11 +1008,6 @@ export const polls = router({
                 day,
                 dow,
                 time,
-              },
-              icalEvent: {
-                filename: "invite.ics",
-                method: "request",
-                content: event.value,
               },
             }),
           );

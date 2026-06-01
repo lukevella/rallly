@@ -1,8 +1,8 @@
 import { prisma } from "@rallly/database";
+import { sendRawEmail } from "@rallly/emails";
 import { createLogger } from "@rallly/logger";
 import { after } from "next/server";
 import { env } from "@/env";
-import { getEmailClient } from "@/utils/emails";
 import type { ModerationResult, ModerationVerdict } from "./libs/ai-moderation";
 import { moderateContentWithAI } from "./libs/ai-moderation";
 import { containsSuspiciousPatterns } from "./libs/pattern-moderation";
@@ -100,9 +100,8 @@ export async function moderateContent({
           { userId, verdict: result.verdict, reason: result.reason },
           `Content ${result.verdict} by AI moderation`,
         );
-        const emailClient = await getEmailClient();
         after(() =>
-          emailClient.sendEmail({
+          sendRawEmail({
             to: env.SUPPORT_EMAIL,
             subject: `Content ${result.verdict} by moderation`,
             text: [
