@@ -51,10 +51,8 @@ const FinalizeHostEmail = ({
       </Heading>
       <Text>
         <Trans
-          i18n={ctx.i18n}
-          t={ctx.t}
+          {...ctx.i18nProps}
           i18nKey="finalizeHost_content"
-          ns="emails"
           values={{ title }}
           components={{
             b: <strong />,

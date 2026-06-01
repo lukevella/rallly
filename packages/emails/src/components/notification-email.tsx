@@ -38,10 +38,8 @@ export const NotificationEmail = ({
       </Section>
       <Text light={true}>
         <Trans
-          i18n={ctx.i18n}
-          t={ctx.t}
+          {...ctx.i18nProps}
           i18nKey="common_disableNotifications"
-          ns="emails"
           defaults="You can <a>manage your notification settings</a> to stop receiving these emails."
           components={{
             a: (

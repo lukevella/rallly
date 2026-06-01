@@ -41,10 +41,8 @@ const EventCanceledEmail = ({
       </Heading>
       <Text>
         <Trans
-          i18n={ctx.i18n}
-          t={ctx.t}
+          {...ctx.i18nProps}
           i18nKey="eventCanceledContent"
-          ns="emails"
           defaults="<b>{hostName}</b> has canceled <b>{title}</b> that was scheduled for:"
           values={{ hostName, title }}
           components={{
