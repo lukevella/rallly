@@ -45,7 +45,7 @@
   "license_key_subject": "Your Rallly Self-Hosted {tier} License",
   "license_key_support": "Reply to this email or contact us at <a>{supportEmail}</a> if you need help.",
   "license_key_yourKey": "License Details",
-  "login_content2": "You're receiving this email because a request was made to login to <domain />. If this wasn't you contact <a>{supportEmail}</a>.",
+  "login_content2": "You're receiving this email because a request was made to login to <domain />. If this wasn't you, contact <a>{supportEmail}</a>.",
   "newComment_content": "<b>{authorName}</b> has commented on <b>{title}</b>.",
   "newComment_heading": "New Comment",
   "newComment_preview": "Go to your poll to see what they said.",
