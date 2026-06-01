@@ -161,7 +161,6 @@ export const events = router({
         });
       }
 
-      const branding = await getInstanceBranding();
       for (const invite of updatedEvent.invites) {
         if (invite.status !== "declined") {
           const { day, dow, date, time } = formatEventDateTime({
@@ -172,10 +171,10 @@ export const events = router({
             inviteeTimeZone: invite.inviteeTimeZone,
           });
 
-          after(() =>
+          after(async () =>
             sendEventCanceledEmail({
               to: invite.inviteeEmail,
-              branding,
+              branding: await getInstanceBranding(),
               icalEvent: {
                 filename: "cancel.ics",
                 method: "cancel",

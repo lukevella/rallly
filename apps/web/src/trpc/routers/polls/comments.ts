@@ -138,12 +138,11 @@ export const comments = router({
         });
 
         if (recipient) {
-          const branding = await getInstanceBranding();
-          after(() =>
+          after(async () =>
             sendNewCommentEmail({
               to: recipient.email,
               locale: recipient.locale ?? undefined,
-              branding,
+              branding: await getInstanceBranding(),
               props: {
                 authorName,
                 pollUrl: absoluteUrl(`/poll/${poll.id}`),

@@ -221,12 +221,11 @@ export const polls = router({
         });
 
         if (user) {
-          const branding = await getInstanceBranding();
-          after(() =>
+          after(async () =>
             sendNewPollEmail({
               to: user.email,
               locale: ctx.user.locale ?? undefined,
-              branding,
+              branding: await getInstanceBranding(),
               props: {
                 title: poll.title,
                 name: user.name,
@@ -948,15 +947,11 @@ export const polls = router({
         const hostName = poll.user.name;
         const hostLocale = poll.user.locale ?? undefined;
         const space = poll.space;
-        const instanceBranding = await getInstanceBranding();
-        const participantBranding = space
-          ? await getSpaceBranding(space)
-          : instanceBranding;
-        after(() =>
+        after(async () =>
           sendFinalizeHostEmail({
             to: hostEmail,
             locale: hostLocale,
-            branding: instanceBranding,
+            branding: await getInstanceBranding(),
             icalEvent: {
               filename: "invite.ics",
               method: "request",
@@ -990,11 +985,13 @@ export const polls = router({
             timeZone: scheduledEvent.timeZone,
             inviteeTimeZone: p.timeZone,
           });
-          after(() =>
+          after(async () =>
             sendFinalizeParticipantEmail({
               to: p.email,
               locale: p.locale ?? undefined,
-              branding: participantBranding,
+              branding: space
+                ? await getSpaceBranding(space)
+                : await getInstanceBranding(),
               icalEvent: {
                 filename: "invite.ics",
                 method: "request",

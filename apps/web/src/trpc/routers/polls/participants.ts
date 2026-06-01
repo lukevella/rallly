@@ -316,15 +316,14 @@ export const participants = router({
           const token = await createParticipantEditToken(ctx.user.id);
 
           const space = participant.poll.space;
-          const branding = space
-            ? await getSpaceBranding(space)
-            : await getInstanceBranding();
 
-          after(() =>
+          after(async () =>
             sendNewParticipantConfirmationEmail({
               to: email,
               locale: ctx.locale,
-              branding,
+              branding: space
+                ? await getSpaceBranding(space)
+                : await getInstanceBranding(),
               props: {
                 title: participant.poll.title,
                 editSubmissionUrl: absoluteUrl(
