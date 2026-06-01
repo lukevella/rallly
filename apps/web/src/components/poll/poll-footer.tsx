@@ -11,7 +11,7 @@ export function PollFooter() {
   }
 
   return (
-    <div className="text-center text-muted-foreground text-sm">
+    <div className="py-6 text-center text-muted-foreground text-sm">
       <Trans
         defaults="Powered by <a>{name}</a>"
         i18nKey="poweredByRallly"
