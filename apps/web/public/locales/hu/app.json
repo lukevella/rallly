@@ -679,5 +679,12 @@
   "invited": "Meghívva",
   "eventOrganizedBy": "Szervező: {name}",
   "expiredVerificationCode": "Ez a kód lejárt. Kérj egy újat a folytatáshoz!",
-  "tooManyVerificationAttempts": "Túl sok hibás kísérlet. Kérj egy új kódot a folytatáshoz!"
+  "tooManyVerificationAttempts": "Túl sok hibás kísérlet. Kérj egy új kódot a folytatáshoz!",
+  "rsvpDecline": "Elutasít",
+  "rsvpResponseHeadingGoing": "Részt veszel",
+  "rsvpResponseHeadingDeclining": "Elutasítottad",
+  "rsvpChange": "Módosítás",
+  "confirmResponse": "Válasz megerősítése",
+  "nameRequired": "Kérjük, add meg a neved",
+  "rsvpAlreadyResponded": "Úgy tűnik, hogy már válaszoltál ezzel az emaillel"
 }
