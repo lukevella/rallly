@@ -45,6 +45,7 @@
   "license_key_subject": "La tua licenza Rallly Self-Hosted {tier}",
   "license_key_support": "Rispondi a questa email o contattaci all'indirizzo <a>{supportEmail}</a> se hai bisogno di aiuto.",
   "license_key_yourKey": "Dettagli della licenza",
+  "login_content2": "Ricevi questa email perché è stata effettuata una richiesta di accesso a <domain />. Se non sei stato tu, contatta <a>{supportEmail}</a>.",
   "newComment_content": "<b>{authorName}</b> ha commentato <b>{title}</b>.",
   "newComment_heading": "Nuovo Commento",
   "newComment_preview": "Vai al tuo sondaggio per vedere cosa hanno detto.",
