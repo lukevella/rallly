@@ -45,6 +45,7 @@
   "license_key_subject": "{tier} licence pro vaši hostovanou instanci Rallly",
   "license_key_support": "Pokud potřebujete pomoc, odpovězte na tento e-mail nebo nás kontaktujte na <a>{supportEmail}</a>.",
   "license_key_yourKey": "Podrobnosti o licenci",
+  "login_content2": "Obdrželi jste tento e-mail, protože byla podána žádost k přihlášení do <domain />. Pokud jste to nebyli vy, kontaktujte <a>{supportEmail}</a>.",
   "newComment_content": "<b>{authorName}</b> okomentoval/a <b>{title}</b>.",
   "newComment_heading": "Nový komentář",
   "newComment_preview": "Pro zobrazení komentáře přejděte na svou anketu.",
