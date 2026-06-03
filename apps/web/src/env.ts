@@ -178,6 +178,12 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_BASE_URL: z.url(),
+    /**
+     * RepSuite / Wanaku Suite portal (SSO hub) URL. Used for the "Wanaku Suite"
+     * sidebar link and the post-sign-out redirect, so users can get back to the
+     * portal and the other suite tools. Defaults to the prod portal.
+     */
+    NEXT_PUBLIC_PORTAL_URL: z.url().default("https://app.wanakusuite.com"),
     NEXT_PUBLIC_POSTHOG_API_KEY: z.string().optional(),
     NEXT_PUBLIC_POSTHOG_API_HOST: z.url().optional(),
     NEXT_PUBLIC_SELF_HOSTED: z.enum(["true", "false"]).optional(),
@@ -232,6 +238,7 @@ export const env = createEnv({
     NEXT_PUBLIC_BASE_URL:
       process.env.NEXT_PUBLIC_BASE_URL ??
       (vercelUrl ? `https://${vercelUrl}` : undefined),
+    NEXT_PUBLIC_PORTAL_URL: process.env.NEXT_PUBLIC_PORTAL_URL,
     NEXT_PUBLIC_POSTHOG_API_KEY: process.env.NEXT_PUBLIC_POSTHOG_API_KEY,
     NEXT_PUBLIC_POSTHOG_API_HOST: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
     NEXT_PUBLIC_SELF_HOSTED: process.env.NEXT_PUBLIC_SELF_HOSTED,
