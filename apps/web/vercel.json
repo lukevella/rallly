@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd ../.. && pnpm build:web && pnpm db:push",
+  "buildCommand": "cd ../.. && pnpm build:web",
   "crons": [
     {
       "path": "/api/house-keeping/delete-inactive-polls",
