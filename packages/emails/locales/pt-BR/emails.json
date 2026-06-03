@@ -45,6 +45,7 @@
   "license_key_subject": "Sua licença auto-hospedada do Rallly {tier}",
   "license_key_support": "Responda a este email ou entre em contato em <a>{supportEmail}</a> se você precisar de ajuda.",
   "license_key_yourKey": "Detalhes da Licença",
+  "login_content2": "Você está recebendo este e-mail porque foi feito um pedido para fazer login em <domain />. Se não foi você, entre em contato com <a>{supportEmail}</a>.",
   "newComment_content": "<b>{authorName}</b> comentou sobre <b>{title}</b>.",
   "newComment_heading": "Novo Comentário",
   "newComment_preview": "Vá para a sua enquete para ver o que eles disseram.",
