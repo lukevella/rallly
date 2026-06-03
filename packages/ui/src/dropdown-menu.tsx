@@ -89,7 +89,7 @@ const DropdownMenuContent = React.forwardRef<
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
 
 export const dropdownMenuItemVariants = cva(
-  "relative flex cursor-default select-none items-center gap-x-2.5 rounded-lg px-2 py-1.5 text-sm outline-hidden focus:bg-popover-accent focus:ring-1 focus:ring-menu-item-outline focus:ring-inset data-disabled:pointer-events-none data-disabled:opacity-50",
+  "relative flex cursor-default select-none items-center gap-x-2.5 rounded-lg px-2 py-1.5 text-sm focus:bg-popover-accent focus:ring-1 focus:ring-menu-item-outline focus:ring-inset data-disabled:pointer-events-none data-disabled:opacity-50",
 
   {
     variants: {

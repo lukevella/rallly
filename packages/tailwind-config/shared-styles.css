@@ -208,7 +208,7 @@
 }
 
 @utility text-link {
-  @apply text-primary rounded-md font-medium outline-hidden hover:underline focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-1;
+  @apply text-primary rounded-md font-medium hover:underline focus-visible:ring-2 focus-visible:ring-offset-1;
 }
 
 @layer utilities {

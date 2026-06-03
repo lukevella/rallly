@@ -55,7 +55,7 @@ function HexColorInput() {
       {...inputProps}
       ref={inputRef}
       data-slot="input-group-control"
-      className="flex-1 rounded-none border-0 bg-transparent font-mono text-sm uppercase shadow-none outline-none ring-0 focus-visible:ring-0"
+      className="flex-1 rounded-none border-0 bg-transparent font-mono text-sm uppercase shadow-none ring-0 focus-visible:ring-0"
     />
   );
 }
@@ -82,7 +82,7 @@ export function ColorPicker(props: ColorPickerProps) {
           >
             <ColorThumb
               className={cn(
-                "top-[50%] left-[50%] size-4 rounded-full border-2 border-white shadow-md outline-none",
+                "top-[50%] left-[50%] size-4 rounded-full border-2 border-white shadow-md",
                 "data-[focus-visible]:ring-2 data-[focus-visible]:ring-offset-1",
               )}
             />
@@ -91,7 +91,7 @@ export function ColorPicker(props: ColorPickerProps) {
             <SliderTrack className="mt-2 h-3 w-full rounded-full">
               <ColorThumb
                 className={cn(
-                  "top-[50%] size-4 rounded-full border-2 border-white shadow-md outline-none",
+                  "top-[50%] size-4 rounded-full border-2 border-white shadow-md",
                   "data-[focus-visible]:ring-2 data-[focus-visible]:ring-offset-1",
                 )}
               />
