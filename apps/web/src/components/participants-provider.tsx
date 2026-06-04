@@ -3,6 +3,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import * as React from "react";
 import { useVisibility } from "@/components/visibility";
 import { usePermissions } from "@/contexts/permissions";
+import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 export function filterParticipantsByVote<
@@ -16,29 +17,46 @@ export function filterParticipantsByVote<
 }
 
 export const useParticipants = () => {
+  const { t } = useTranslation();
   const urlId = useParams<{ urlId: string }>().urlId;
   const token = useSearchParams().get("token") ?? undefined;
-  const [participants] = trpc.polls.participants.list.useSuspenseQuery({
+  const [rawParticipants] = trpc.polls.participants.list.useSuspenseQuery({
     pollId: urlId,
     token,
   });
+
+  const participants = React.useMemo(() => {
+    return rawParticipants.map((participant, index) => {
+      if (!participant.hidden) {
+        return participant;
+      }
+
+      return {
+        ...participant,
+        name: t("hiddenParticipantName", {
+          defaultValue: "Participant #{number}",
+          number: rawParticipants.length - index,
+        }),
+      };
+    });
+  }, [rawParticipants, t]);
 
   return { participants };
 };
 
 export const useVisibleParticipants = () => {
-  const { canSeeOtherParticipants } = useVisibility();
+  const { canSeeScores } = useVisibility();
   const { canEditParticipant } = usePermissions();
   const { participants } = useParticipants();
 
   const filteredParticipants = React.useMemo(() => {
-    if (!canSeeOtherParticipants) {
+    if (!canSeeScores) {
       return participants.filter((participant) =>
         canEditParticipant(participant.id),
       );
     }
     return participants;
-  }, [canEditParticipant, canSeeOtherParticipants, participants]);
+  }, [canEditParticipant, canSeeScores, participants]);
 
   return filteredParticipants;
 };

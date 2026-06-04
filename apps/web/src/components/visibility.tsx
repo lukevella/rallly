@@ -7,16 +7,6 @@ import { useParticipants } from "@/components/participants-provider";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 
-export const IfParticipantsVisible = (props: React.PropsWithChildren) => {
-  const context = React.useContext(VisibilityContext);
-
-  if (context.canSeeOtherParticipants) {
-    return <>{props.children}</>;
-  }
-
-  return null;
-};
-
 export const IfScoresVisible = (props: React.PropsWithChildren) => {
   const context = React.useContext(VisibilityContext);
 
@@ -32,11 +22,9 @@ export const useVisibility = () => {
 };
 
 const VisibilityContext = React.createContext<{
-  canSeeOtherParticipants: boolean;
   canSeeScores: boolean;
 }>({
   canSeeScores: true,
-  canSeeOtherParticipants: true,
 });
 
 export const VisibilityProvider = ({ children }: React.PropsWithChildren) => {
@@ -48,12 +36,10 @@ export const VisibilityProvider = ({ children }: React.PropsWithChildren) => {
   });
 
   const canSeeScores = poll.hideScores ? userAlreadyVoted : true;
-  const canSeeOtherParticipants = poll.hideParticipants ? false : canSeeScores;
 
   return (
     <VisibilityContext.Provider
       value={{
-        canSeeOtherParticipants,
         canSeeScores,
       }}
     >
