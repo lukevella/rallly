@@ -294,6 +294,7 @@
   "guest": "Guest",
   "guestPollAlertDescription": "<0>Create an account</0> or <1>login</1> to claim this poll.",
   "guestPollAlertTitle": "Your administrator rights can be lost if you clear your cookies",
+  "hiddenParticipantName": "Participant #{number}",
   "hideAttribution": "Hide Attribution",
   "hideParticipantsLabel": "Hide participant list from other participants",
   "hideScoresLabel": "Hide scores until after a participant has voted",
