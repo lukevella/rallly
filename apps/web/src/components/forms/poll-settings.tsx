@@ -136,7 +136,10 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             icon={EyeIcon}
             pro
             title={
-              <Trans i18nKey="hideParticipantsTitle" defaults="Hide names" />
+              <Trans
+                i18nKey="hideParticipantsTitle"
+                defaults="Hide participant names"
+              />
             }
             description={
               <Trans
