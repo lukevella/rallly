@@ -59,7 +59,7 @@ const PollSetting = ({
           <Switch
             checked={!!field.value}
             onCheckedChange={(checked) => {
-              if (pro && isFree) {
+              if (checked && pro && isFree) {
                 showPayWall();
                 posthog?.capture("trigger paywall", {
                   setting: name,
