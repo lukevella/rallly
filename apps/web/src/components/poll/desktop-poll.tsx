@@ -229,7 +229,7 @@ const DesktopPoll: React.FunctionComponent = () => {
   }, []);
 
   return (
-    <Card>
+    <Card className="pb-0">
       <div ref={measureRef} style={{ height: expanded ? height : undefined }}>
         <div
           className={cn(

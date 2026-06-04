@@ -46,7 +46,7 @@ function IconDescription({
 export function EventCard() {
   const poll = usePoll();
   return (
-    <Card>
+    <Card className="pt-0">
       <RandomGradientBar />
       <CardContent>
         {poll.space?.showBranding && poll.space.image ? (

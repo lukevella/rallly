@@ -194,7 +194,7 @@ function DiscussionInner() {
                         />
                         <ParticipantName>{comment.authorName}</ParticipantName>
                         {session.ownsObject(comment) ? (
-                          <Badge>
+                          <Badge variant="secondary">
                             <Trans i18nKey="you" />
                           </Badge>
                         ) : null}
