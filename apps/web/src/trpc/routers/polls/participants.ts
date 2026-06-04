@@ -37,6 +37,7 @@ function createParticipantFullDTO(
     ...rest,
     image: user?.image ?? null,
     votes,
+    hidden: false,
   };
 }
 
@@ -173,9 +174,10 @@ export const participants = router({
             return {
               ...participant,
               userId: null,
-              name: "Anonymous",
+              name: "",
               email: null,
               image: null,
+              hidden: true,
             };
           });
         }
