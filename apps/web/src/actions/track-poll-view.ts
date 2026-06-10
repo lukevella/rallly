@@ -1,8 +1,11 @@
 "use server";
 
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { headers } from "next/headers";
 import { getUserIdIfLoggedIn } from "@/lib/auth";
+
+const logger = createLogger("actions/track-poll-view");
 
 /**
  * Server action to track a poll view
@@ -27,7 +30,7 @@ export async function trackPollView(pollId: string) {
 
     return { success: true };
   } catch (error) {
-    console.error("Error recording poll view:", error);
+    logger.error({ error, pollId }, "Failed to record poll view");
     return { success: false, error: "Failed to record view" };
   }
 }
