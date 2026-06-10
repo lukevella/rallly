@@ -19,7 +19,8 @@ export const removeInstanceLicenseAction = adminActionClient
     try {
       await prisma.instanceLicense.deleteMany();
       updateTag(INSTANCE_LICENSE_TAG);
-    } catch (_error) {
+    } catch (error) {
+      logger.error({ error }, "Failed to delete instance license");
       return {
         success: false,
         message: "Failed to delete license",

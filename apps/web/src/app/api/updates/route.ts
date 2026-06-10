@@ -1,10 +1,13 @@
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import type { NextRequest } from "next/server";
 import { after, NextResponse } from "next/server";
 import * as z from "zod";
 import { createCache } from "@/lib/cache";
 import { createRatelimit } from "@/lib/rate-limit";
 import { isSelfHosted } from "@/utils/constants";
+
+const logger = createLogger("api/updates");
 
 const GITHUB_RELEASES_URL =
   "https://api.github.com/repos/lukevella/rallly/releases/latest";
@@ -108,7 +111,10 @@ export async function GET(request: NextRequest) {
         });
         await seenInstanceCache.set(validInstanceId, validVersion);
       } catch (error) {
-        console.error("Failed to upsert RegisteredInstance", error);
+        logger.error(
+          { error, instanceId: validInstanceId, version: validVersion },
+          "Failed to upsert RegisteredInstance",
+        );
       }
     });
   }
