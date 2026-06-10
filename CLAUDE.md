@@ -10,7 +10,7 @@ Rallly is a meeting scheduling application built with Next.js that allows users 
 - Next.js 16 with React 19
 - tRPC for API layer
 - Prisma with PostgreSQL
-- Better-Auth for authentication (legacy NextAuth.js is still supported)
+- Better-Auth for authentication
 - TailwindCSS for styling
 - TypeScript throughout
 - dayjs for date handling
@@ -88,7 +88,7 @@ pnpm sherif               # Check package dependencies
 ### Key Features & Structure
 - **Polls**: Core scheduling functionality in `apps/web/src/components/poll/`
 - **Spaces**: Workspace/team organization in `apps/web/src/features/space/`
-- **Authentication**: NextAuth.js setup in `apps/web/src/auth/`
+- **Authentication**: Better-Auth config in `apps/web/src/lib/auth.ts`, helpers in `apps/web/src/auth/`
 - **tRPC API**: Routers in `apps/web/src/trpc/routers/`
 - **Feature Flags**: Quick create and other toggles in `apps/web/src/lib/feature-flags/`
 
@@ -98,7 +98,7 @@ pnpm sherif               # Check package dependencies
 - Supports both cloud (Vercel KV) and self-hosted Redis for rate limiting
 
 ### Authentication & Authorization
-- NextAuth.js with multiple providers (Google, Microsoft, OIDC, Guest)
+- Better-Auth with multiple providers (Google, Microsoft, OIDC, email OTP, guest)
 - CASL-based permissions system for spaces and polls
 - User roles: admin, member with tier-based abilities (free/pro)
 
