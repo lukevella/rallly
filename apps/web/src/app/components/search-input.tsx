@@ -2,7 +2,6 @@
 
 import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
-import debounce from "lodash/debounce";
 import { SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
@@ -21,37 +20,55 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
   // Track input value in state
   const [inputValue, setInputValue] = React.useState(currentSearchValue);
 
-  // Create a debounced function to update the URL
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix this later
-  const debouncedUpdateUrl = React.useCallback(
-    debounce((value: string) => {
-      const params = new URLSearchParams(searchParams);
-      if (value) {
-        params.set("q", value);
-      } else {
-        params.delete("q");
-      }
-
-      params.delete("page");
-
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    }, 500),
-    [pathname, router, searchParams],
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
   );
+  const pendingValueRef = React.useRef<string | null>(null);
 
-  // Handle input changes
+  const updateUrl = (value: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (value) {
+      params.set("q", value);
+    } else {
+      params.delete("q");
+    }
+
+    params.delete("page");
+
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  // Handle input changes, updating the URL after the user stops typing
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
-    debouncedUpdateUrl(newValue);
+    pendingValueRef.current = newValue;
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      pendingValueRef.current = null;
+      updateUrl(newValue);
+    }, 500);
   };
+
+  const flushPendingUpdate = () => {
+    if (pendingValueRef.current !== null) {
+      clearTimeout(timeoutRef.current);
+      const value = pendingValueRef.current;
+      pendingValueRef.current = null;
+      updateUrl(value);
+    }
+  };
+
+  React.useEffect(() => {
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
 
   return (
     <form
       className="relative w-72"
       onSubmit={(e) => {
         e.preventDefault();
-        debouncedUpdateUrl.flush();
+        flushPendingUpdate();
       }}
     >
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5">

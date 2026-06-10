@@ -175,9 +175,6 @@ importers:
       intl-messageformat:
         specifier: ^10.7.15
         version: 10.7.18
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.23
       lucide-react:
         specifier: ^0.479.0
         version: 0.479.0(react@19.2.6)
@@ -224,9 +221,6 @@ importers:
       '@types/color-hash':
         specifier: ^1.0.2
         version: 1.0.5
-      '@types/lodash':
-        specifier: ^4.14.178
-        version: 4.17.23
       '@types/node':
         specifier: ^24.1.0
         version: 24.10.11
@@ -401,9 +395,6 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.19
-      es-toolkit:
-        specifier: ^1.39.9
-        version: 1.44.0
       googleapis:
         specifier: ^169.0.0
         version: 169.0.0
@@ -440,9 +431,6 @@ importers:
       linkify-react:
         specifier: ^4.3.2
         version: 4.3.2(linkifyjs@4.3.2)(react@19.2.6)
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.23
       lucide-react:
         specifier: ^0.479.0
         version: 0.479.0(react@19.2.6)
@@ -546,9 +534,6 @@ importers:
       '@types/js-cookie':
         specifier: ^3.0.1
         version: 3.0.6
-      '@types/lodash':
-        specifier: ^4.14.178
-        version: 4.17.23
       '@types/node':
         specifier: ^24.1.0
         version: 24.10.11
@@ -666,8 +651,6 @@ importers:
       tsx:
         specifier: ^4.6.2
         version: 4.21.0
-
-  packages/dayjs: {}
 
   packages/emails:
     dependencies:
@@ -6071,9 +6054,6 @@ packages:
 
   '@types/koa@2.15.0':
     resolution: {integrity: sha512-7QFsywoE5URbuVnG3loe03QXuGajrnotr3gQkXcEBShORai23MePfFYdhz90FEtBBpkyIYQbVD+evKtloCgX3g==}
-
-  '@types/lodash@4.17.23':
-    resolution: {integrity: sha512-RDvF6wTulMPjrNdCoYRC8gNR880JNGT8uB+REUpC2Ns4pRqQJhGz90wh7rgdXDPpCczF3VGktDuFGVnz8zP7HA==}
 
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
@@ -18105,8 +18085,6 @@ snapshots:
       '@types/keygrip': 1.0.6
       '@types/koa-compose': 3.2.9
       '@types/node': 24.10.11
-
-  '@types/lodash@4.17.23': {}
 
   '@types/mdast@4.0.4':
     dependencies:
