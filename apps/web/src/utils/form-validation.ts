@@ -5,11 +5,7 @@ import { useTranslation } from "@/i18n/client";
  */
 export const requiredString = (value: string) => !!value.trim();
 
-/**
- * @deprecated Use form validation hook instead
- */
-export const validEmail = (value: string) =>
-  /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value);
+const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 export const useFormValidation = () => {
   const { t } = useTranslation();
@@ -22,8 +18,7 @@ export const useFormValidation = () => {
     },
 
     validEmail: (value: string) => {
-      const isValidEmail = validEmail(value);
-      if (!isValidEmail) {
+      if (!emailRegex.test(value)) {
         return t("validEmail");
       }
     },
