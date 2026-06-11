@@ -1,3 +1,5 @@
+"use client";
+
 import type { VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
