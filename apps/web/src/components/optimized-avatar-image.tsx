@@ -60,7 +60,7 @@ export function OptimizedAvatarImage({
   const imageSrc = src || gravatarUrl;
 
   return (
-    <Avatar className={cn("rounded-full", className)} size={size}>
+    <Avatar className={className} size={size === "md" ? "default" : size}>
       {imageSrc ? (
         imageSrc.startsWith("https") || imageSrc.startsWith("data:") ? (
           <AvatarImage src={imageSrc} alt={name} />
@@ -78,7 +78,7 @@ export function OptimizedAvatarImage({
         )
       ) : null}
       {!imageSrc || !isLoaded ? (
-        <AvatarFallback seed={name} className={cn("shrink-0")}>
+        <AvatarFallback className={cn("shrink-0")}>
           {/^\p{L}+$/u.test(initials) ? (
             initials
           ) : (
