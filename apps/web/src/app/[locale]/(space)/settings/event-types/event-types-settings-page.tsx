@@ -101,7 +101,7 @@ function EventTypeCard({
       <RandomGradientBar />
       <div className="p-3">
         <div className="flex items-start justify-between gap-2">
-          <OptimizedAvatarImage size="lg" src={hostImage} name={hostName} />
+          <OptimizedAvatarImage size="md" src={hostImage} name={hostName} />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">

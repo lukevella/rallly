@@ -66,7 +66,7 @@ const ParticipantRowForm = ({
             {name ? (
               <OptimizedAvatarImage
                 name={participantName}
-                size="md"
+                size="sm"
                 email={email}
                 src={image ?? undefined}
               />
