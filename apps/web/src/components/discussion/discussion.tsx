@@ -190,7 +190,7 @@ function DiscussionInner() {
                       <Participant>
                         <OptimizedAvatarImage
                           name={comment.authorName}
-                          size="md"
+                          size="sm"
                         />
                         <ParticipantName>{comment.authorName}</ParticipantName>
                         {session.ownsObject(comment) ? (
@@ -228,7 +228,7 @@ function DiscussionInner() {
                         )}
                       </div>
                     </div>
-                    <div className="w-fit whitespace-pre-wrap pl-7 text-sm leading-relaxed">
+                    <div className="w-fit whitespace-pre-wrap pl-8 text-sm leading-relaxed">
                       <TruncatedLinkify>{comment.content}</TruncatedLinkify>
                     </div>
                   </div>

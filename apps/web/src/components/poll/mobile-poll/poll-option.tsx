@@ -68,7 +68,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-4 items-center justify-center">
                   <OptimizedAvatarImage
-                    size="md"
+                    size="sm"
                     name={name}
                     email={email ?? undefined}
                     src={image ?? undefined}
@@ -76,7 +76,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                   <VoteIcon
                     type="yes"
                     size="sm"
-                    className="absolute bottom-full left-full -translate-x-1 translate-y-2 rounded-full bg-background"
+                    className="absolute bottom-0 left-full -translate-x-1 translate-y-1 rounded-full bg-background"
                   />
                 </div>
                 <div className="truncate text-sm">{name}</div>
@@ -87,7 +87,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-4 items-center justify-center">
                   <OptimizedAvatarImage
-                    size="md"
+                    size="sm"
                     name={name}
                     email={email ?? undefined}
                     src={image ?? undefined}
@@ -95,7 +95,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                   <VoteIcon
                     type="ifNeedBe"
                     size="sm"
-                    className="absolute bottom-full left-full -translate-x-1 translate-y-2 rounded-full bg-background"
+                    className="absolute bottom-0 left-full -translate-x-1 translate-y-1 rounded-full bg-background"
                   />
                 </div>
                 <div className="truncate text-sm"> {name}</div>
@@ -108,7 +108,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-4 items-center justify-center">
                   <OptimizedAvatarImage
-                    size="md"
+                    size="sm"
                     name={name}
                     email={email ?? undefined}
                     src={image ?? undefined}
@@ -116,7 +116,7 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                   <VoteIcon
                     type="no"
                     size="sm"
-                    className="absolute bottom-full left-full -translate-x-1 translate-y-2 rounded-full bg-background"
+                    className="absolute bottom-0 left-full -translate-x-1 translate-y-1 rounded-full bg-background"
                   />
                 </div>
                 <div className="truncate text-sm">{name}</div>

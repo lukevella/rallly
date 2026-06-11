@@ -35,7 +35,8 @@ export function OptimizedAvatarImage({
   className?: string;
   email?: string;
 }) {
-  const [isLoaded, setLoaded] = React.useState(false);
+  const [loadedSrc, setLoadedSrc] = React.useState<string | null>(null);
+  const [erroredSrc, setErroredSrc] = React.useState<string | null>(null);
   const [gravatarUrl, setGravatarUrl] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -58,10 +59,12 @@ export function OptimizedAvatarImage({
     .toUpperCase();
 
   const imageSrc = src || gravatarUrl;
+  const isLoaded = !!imageSrc && loadedSrc === imageSrc;
+  const hasError = !!imageSrc && erroredSrc === imageSrc;
 
   return (
-    <Avatar className={cn("rounded-full", className)} size={size}>
-      {imageSrc ? (
+    <Avatar className={className} size={size === "md" ? "default" : size}>
+      {imageSrc && !hasError ? (
         imageSrc.startsWith("https") || imageSrc.startsWith("data:") ? (
           <AvatarImage src={imageSrc} alt={name} />
         ) : (
@@ -72,13 +75,16 @@ export function OptimizedAvatarImage({
             alt={name}
             style={{ objectFit: "cover" }}
             onLoad={() => {
-              setLoaded(true);
+              setLoadedSrc(imageSrc);
+            }}
+            onError={() => {
+              setErroredSrc(imageSrc);
             }}
           />
         )
       ) : null}
       {!imageSrc || !isLoaded ? (
-        <AvatarFallback seed={name} className={cn("shrink-0")}>
+        <AvatarFallback className={cn("shrink-0")}>
           {/^\p{L}+$/u.test(initials) ? (
             initials
           ) : (

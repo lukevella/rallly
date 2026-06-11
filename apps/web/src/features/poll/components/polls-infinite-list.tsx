@@ -118,7 +118,7 @@ function PollListItem({
             <Tooltip>
               <TooltipTrigger>
                 <OptimizedAvatarImage
-                  size="md"
+                  size="sm"
                   name={user.name}
                   src={user.image ?? undefined}
                 />
