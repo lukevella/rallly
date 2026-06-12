@@ -77,6 +77,30 @@ export async function updateUserImage({
   revalidateTag(userProfileTag(userId), "max");
 }
 
+export async function updateUserEmail({
+  userId,
+  email,
+}: {
+  userId: string;
+  email: string;
+}) {
+  // Better-Auth blocks email updates through api.updateUser because they
+  // require verification, which our email change flow has already done by
+  // the time this runs. The internal adapter refreshes the cached session
+  // data in secondary storage for all of the user's sessions.
+  const { internalAdapter } = await authLib.$context;
+  await internalAdapter.updateUser(userId, { email });
+
+  // Re-set the session cookie cache for the current device with the
+  // updated user data.
+  await authLib.api.getSession({
+    headers: await headers(),
+    query: { disableCookieCache: true },
+  });
+
+  revalidateTag(userProfileTag(userId), "max");
+}
+
 export async function setActiveSpace({
   userId,
   spaceId,

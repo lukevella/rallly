@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { posthog } from "@/features/analytics/posthog";
+import { updateUserEmail } from "@/features/user/mutations";
 import { getSession } from "@/lib/auth";
 import { withPostHog } from "@/utils/posthog";
 import { decryptToken } from "@/utils/session";
@@ -46,16 +47,17 @@ const handler = async (request: NextRequest) => {
     );
   }
 
-  const user = await prisma.user.update({
+  await updateUserEmail({ userId: payload.userId, email: payload.toEmail });
+
+  const user = await prisma.user.findUnique({
     where: { id: payload.userId },
-    data: { email: payload.toEmail },
     select: {
       customerId: true,
     },
   });
 
   try {
-    if (user.customerId) {
+    if (user?.customerId) {
       await stripe.customers.update(user.customerId, {
         email: payload.toEmail,
       });
