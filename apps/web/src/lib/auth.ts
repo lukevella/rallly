@@ -1,4 +1,6 @@
+import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
+import { sendChangeEmailEmail } from "@rallly/emails/templates/change-email";
 import { sendRegisterEmail } from "@rallly/emails/templates/register";
 import { sendResetPasswordEmail } from "@rallly/emails/templates/reset-password";
 import { createLogger } from "@rallly/logger";
@@ -6,7 +8,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { BetterAuthPlugin } from "better-auth";
 import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { createAuthMiddleware } from "better-auth/api";
+import { createAuthMiddleware, getSessionFromCtx } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import {
   admin,
@@ -151,6 +153,9 @@ export const authLib = betterAuth({
       disableSignUp: true,
       expiresIn: 15 * 60,
       overrideDefaultEmailVerification: true,
+      changeEmail: {
+        enabled: true,
+      },
       async sendVerificationOTP({ email, otp, type }) {
         const locale = await getLocale(); // TODO: Get locale from email
         const branding = await getInstanceBranding();
@@ -161,6 +166,16 @@ export const authLib = betterAuth({
           case "email-verification":
             after(() =>
               sendRegisterEmail({
+                to: email,
+                locale,
+                branding,
+                props: { code: otp },
+              }),
+            );
+            break;
+          case "change-email":
+            after(() =>
+              sendChangeEmailEmail({
                 to: email,
                 locale,
                 branding,
@@ -235,6 +250,10 @@ export const authLib = betterAuth({
         window: 60 * 60, // 1 hour
         max: 100,
       },
+      "/email-otp/request-email-change": {
+        window: 60 * 60, // 1 hour
+        max: 5,
+      },
     },
   },
   account: {
@@ -272,6 +291,78 @@ export const authLib = betterAuth({
             });
           }
         }
+      }
+    }),
+    after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === "/email-otp/request-email-change") {
+        const returned = ctx.context.returned as
+          | { success?: boolean }
+          | undefined;
+
+        if (returned?.success !== true) {
+          return;
+        }
+
+        const session = await getSessionFromCtx(ctx);
+
+        if (!session) {
+          return;
+        }
+
+        posthog()?.capture({
+          event: "account_email_change_request",
+          distinctId: session.user.id,
+          properties: {
+            fromEmail: session.user.email,
+            toEmail: (ctx.body?.newEmail as string).toLowerCase(),
+          },
+        });
+      }
+
+      if (ctx.path === "/email-otp/change-email") {
+        const returned = ctx.context.returned as
+          | { success?: boolean }
+          | undefined;
+
+        if (returned?.success !== true) {
+          return;
+        }
+
+        const session = await getSessionFromCtx(ctx);
+
+        if (!session) {
+          return;
+        }
+
+        const newEmail = (ctx.body?.newEmail as string).toLowerCase();
+
+        const user = await prisma.user.findUnique({
+          where: { id: session.user.id },
+          select: { customerId: true },
+        });
+
+        if (user?.customerId) {
+          try {
+            await stripe.customers.update(user.customerId, {
+              email: newEmail,
+            });
+          } catch (error) {
+            logger.error(
+              { error },
+              "Failed to update Stripe customer email after email change",
+            );
+          }
+        }
+
+        posthog()?.capture({
+          event: "account_email_change_complete",
+          distinctId: session.user.id,
+          properties: {
+            $set: {
+              email: newEmail,
+            },
+          },
+        });
       }
     }),
   },
