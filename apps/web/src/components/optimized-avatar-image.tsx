@@ -3,8 +3,8 @@ import { cn } from "@rallly/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import { Icon } from "@rallly/ui/icon";
 import { UserIcon } from "lucide-react";
-import Image from "next/image";
 import React from "react";
+import { resolveStorageUrl } from "@/utils/storage";
 
 async function getGravatarUrl(email: string): Promise<string | null> {
   if (typeof crypto === "undefined" || !crypto.subtle) {
@@ -35,8 +35,6 @@ export function OptimizedAvatarImage({
   className?: string;
   email?: string;
 }) {
-  const [loadedSrc, setLoadedSrc] = React.useState<string | null>(null);
-  const [erroredSrc, setErroredSrc] = React.useState<string | null>(null);
   const [gravatarUrl, setGravatarUrl] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -59,42 +57,21 @@ export function OptimizedAvatarImage({
     .toUpperCase();
 
   const imageSrc = src || gravatarUrl;
-  const isLoaded = !!imageSrc && loadedSrc === imageSrc;
-  const hasError = !!imageSrc && erroredSrc === imageSrc;
 
   return (
     <Avatar className={className} size={size === "md" ? "default" : size}>
-      {imageSrc && !hasError ? (
-        imageSrc.startsWith("https") || imageSrc.startsWith("data:") ? (
-          <AvatarImage src={imageSrc} alt={name} />
+      {imageSrc ? (
+        <AvatarImage src={resolveStorageUrl(imageSrc)} alt={name} />
+      ) : null}
+      <AvatarFallback className={cn("shrink-0")}>
+        {/^\p{L}+$/u.test(initials) ? (
+          initials
         ) : (
-          <Image
-            src={`/api/storage/${imageSrc}`}
-            width={128}
-            height={128}
-            alt={name}
-            style={{ objectFit: "cover" }}
-            className="rounded-full"
-            onLoad={() => {
-              setLoadedSrc(imageSrc);
-            }}
-            onError={() => {
-              setErroredSrc(imageSrc);
-            }}
-          />
-        )
-      ) : null}
-      {!imageSrc || !isLoaded ? (
-        <AvatarFallback className={cn("shrink-0")}>
-          {/^\p{L}+$/u.test(initials) ? (
-            initials
-          ) : (
-            <Icon>
-              <UserIcon />
-            </Icon>
-          )}
-        </AvatarFallback>
-      ) : null}
+          <Icon>
+            <UserIcon />
+          </Icon>
+        )}
+      </AvatarFallback>
     </Avatar>
   );
 }
