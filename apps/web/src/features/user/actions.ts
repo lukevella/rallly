@@ -2,8 +2,90 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import * as z from "zod";
+import { updateUserImage, updateUserName } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors";
-import { adminActionClient } from "@/lib/safe-action/server";
+import {
+  adminActionClient,
+  authActionClient,
+  createRateLimitMiddleware,
+} from "@/lib/safe-action/server";
+import {
+  deleteImageFromS3,
+  getImageUploadUrl,
+} from "@/lib/storage/image-upload";
+
+export const updateUserNameAction = authActionClient
+  .metadata({ actionName: "update_user_name" })
+  .inputSchema(
+    z.object({
+      name: z.string().trim().min(1).max(100),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    await updateUserName({ userId: ctx.user.id, name: parsedInput.name });
+  });
+
+export const getAvatarUploadUrlAction = authActionClient
+  .metadata({ actionName: "get_avatar_upload_url" })
+  .use(createRateLimitMiddleware(10, "1 h"))
+  .inputSchema(
+    z.object({
+      fileType: z.enum(["image/jpeg", "image/png"]),
+      fileSize: z.number(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    return await getImageUploadUrl({
+      keyPrefix: "avatars",
+      entityId: ctx.user.id,
+      fileType: parsedInput.fileType,
+      fileSize: parsedInput.fileSize,
+    });
+  });
+
+export const updateUserAvatarAction = authActionClient
+  .metadata({ actionName: "update_user_avatar" })
+  .inputSchema(
+    z.object({
+      imageKey: z.string().max(255),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    const { imageKey } = parsedInput;
+
+    if (!imageKey.startsWith(`avatars/${ctx.user.id}-`)) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "Invalid image key",
+      });
+    }
+
+    const oldImageKey = ctx.user.image;
+
+    await updateUserImage({ userId: ctx.user.id, image: imageKey });
+
+    // Only delete from storage if it's an internal avatar, not an external
+    // URL from an OAuth provider.
+    if (oldImageKey && !oldImageKey.startsWith("https://")) {
+      await deleteImageFromS3(oldImageKey);
+    }
+  });
+
+export const removeUserAvatarAction = authActionClient
+  .metadata({ actionName: "remove_user_avatar" })
+  .action(async ({ ctx }) => {
+    const oldImageKey = ctx.user.image;
+
+    await updateUserImage({ userId: ctx.user.id, image: null });
+
+    // Only delete from storage if it's an internal avatar, not an external
+    // URL from an OAuth provider.
+    const isInternalAvatar = oldImageKey && !oldImageKey.startsWith("https://");
+
+    if (isInternalAvatar) {
+      await deleteImageFromS3(oldImageKey);
+    }
+  });
 
 export const changeRoleAction = adminActionClient
   .metadata({ actionName: "change_role" })

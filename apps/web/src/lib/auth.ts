@@ -7,6 +7,7 @@ import type { BetterAuthPlugin } from "better-auth";
 import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { createAuthMiddleware } from "better-auth/api";
+import { nextCookies } from "better-auth/next-js";
 import {
   admin,
   anonymous,
@@ -172,6 +173,9 @@ export const authLib = betterAuth({
     }),
     ...conditionalPlugins,
     hostOnlyCookieCleanup,
+    // Must be last — applies Set-Cookie headers from auth.api calls made in
+    // server actions and route handlers.
+    nextCookies(),
   ],
   socialProviders: {
     google:

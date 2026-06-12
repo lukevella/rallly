@@ -10,11 +10,12 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { updateUserNameAction } from "@/features/user/actions";
 import { Trans } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
 
 import { ProfilePicture } from "./profile-picture";
@@ -26,8 +27,7 @@ const profileSettingsFormData = z.object({
 export const ProfileSettings = () => {
   const [user] = trpc.user.getAuthed.useSuspenseQuery();
 
-  const changeName = trpc.user.changeName.useMutation();
-  const router = useRouter();
+  const updateUserName = useSafeAction(updateUserNameAction);
   const form = useForm({
     defaultValues: {
       name: user.name,
@@ -42,10 +42,9 @@ export const ProfileSettings = () => {
         <form
           onSubmit={handleSubmit(async (data) => {
             if (data.name !== user.name) {
-              await changeName.mutateAsync({ name: data.name });
+              await updateUserName.executeAsync({ name: data.name });
             }
             reset(data);
-            router.refresh();
           })}
         >
           <div className="flex flex-col gap-y-4">

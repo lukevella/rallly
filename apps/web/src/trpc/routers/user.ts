@@ -12,10 +12,6 @@ import { defaultNotificationPreferences } from "@/features/notifications/constan
 import { getNotificationPreferences } from "@/features/notifications/queries";
 import { activityEventTypes } from "@/features/notifications/schema";
 import { defineAbilityFor } from "@/features/user/ability";
-import {
-  deleteImageFromS3,
-  getImageUploadUrl,
-} from "@/lib/storage/image-upload";
 import { createToken } from "@/utils/session";
 import { timezoneSchema } from "@/utils/timezone-schema";
 import {
@@ -36,22 +32,6 @@ export const user = router({
   getAuthed: privateProcedure.query(async ({ ctx }) => {
     return ctx.user;
   }),
-  changeName: privateProcedure
-    .input(
-      z.object({
-        name: z.string().min(1).max(100),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      await prisma.user.update({
-        where: {
-          id: ctx.user.id,
-        },
-        data: {
-          name: input.name,
-        },
-      });
-    }),
   updatePreferences: privateProcedure
     .input(
       z.object({
@@ -141,67 +121,6 @@ export const user = router({
 
       return { success: true as const };
     }),
-  getAvatarUploadUrl: privateProcedure
-    .use(createRateLimitMiddleware("get_avatar_upload_url", 10, "1 h"))
-    .input(
-      z.object({
-        fileType: z.enum(["image/jpeg", "image/png"]),
-        fileSize: z.number(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      return await getImageUploadUrl({
-        keyPrefix: "avatars",
-        entityId: ctx.user.id,
-        fileType: input.fileType,
-        fileSize: input.fileSize,
-      });
-    }),
-  updateAvatar: privateProcedure
-    .input(z.object({ imageKey: z.string().max(255) }))
-    .mutation(async ({ ctx, input }) => {
-      const userId = ctx.user.id;
-
-      const expectedPrefix = `avatars/${userId}-`;
-      if (!input.imageKey.startsWith(expectedPrefix)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Invalid image key",
-        });
-      }
-
-      const oldImageKey = ctx.user.image;
-
-      await prisma.user.update({
-        where: { id: userId },
-        data: { image: input.imageKey },
-      });
-
-      // Delete old image from S3 if it exists
-      if (oldImageKey) {
-        await deleteImageFromS3(oldImageKey);
-      }
-
-      return { success: true };
-    }),
-  removeAvatar: privateProcedure.mutation(async ({ ctx }) => {
-    const userId = ctx.user.id;
-    const oldImageKey = ctx.user.image;
-
-    await prisma.user.update({
-      where: { id: userId },
-      data: { image: null },
-    });
-
-    // Delete the avatar from storage if it's an internal avatar
-    const isInternalAvatar = oldImageKey && !oldImageKey.startsWith("https://");
-
-    if (isInternalAvatar) {
-      await deleteImageFromS3(oldImageKey);
-    }
-
-    return { success: true };
-  }),
   deleteMe: privateProcedure.mutation(async ({ ctx }) => {
     const userId = ctx.user.id;
 
