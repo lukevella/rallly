@@ -19,7 +19,6 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import {
   ArrowUpRight,
-  ChevronDownIcon,
   LifeBuoyIcon,
   ListIcon,
   LogOutIcon,
@@ -75,14 +74,13 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         asChild
         className={cn("group min-w-0", className)}
       >
-        <Button variant="ghost">
+        <Button variant="ghost" className="rounded-full" size="icon">
           <OptimizedAvatarImage src={image} name={name} size="sm" />
-          <span className="truncate">{name}</span>
-          <ChevronDownIcon data-icon="inline-end" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="min-w-48">
         <DropdownMenuLabel className="flex items-center gap-2">
+          <OptimizedAvatarImage src={image} name={name} size="md" />
           <div className="grow">
             <div className="font-medium text-foreground text-sm">{name}</div>
             {email ? (
