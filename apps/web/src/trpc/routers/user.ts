@@ -12,6 +12,7 @@ import { defaultNotificationPreferences } from "@/features/notifications/constan
 import { getNotificationPreferences } from "@/features/notifications/queries";
 import { activityEventTypes } from "@/features/notifications/schema";
 import { defineAbilityFor } from "@/features/user/ability";
+import { updateUserImage, updateUserName } from "@/features/user/mutations";
 import {
   deleteImageFromS3,
   getImageUploadUrl,
@@ -36,6 +37,7 @@ export const user = router({
   getAuthed: privateProcedure.query(async ({ ctx }) => {
     return ctx.user;
   }),
+  /** @deprecated Use `updateUserNameAction` from `@/features/user/actions` instead. */
   changeName: privateProcedure
     .input(
       z.object({
@@ -43,14 +45,7 @@ export const user = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      await prisma.user.update({
-        where: {
-          id: ctx.user.id,
-        },
-        data: {
-          name: input.name,
-        },
-      });
+      await updateUserName({ userId: ctx.user.id, name: input.name });
     }),
   updatePreferences: privateProcedure
     .input(
@@ -141,6 +136,7 @@ export const user = router({
 
       return { success: true as const };
     }),
+  /** @deprecated Use `getAvatarUploadUrlAction` from `@/features/user/actions` instead. */
   getAvatarUploadUrl: privateProcedure
     .use(createRateLimitMiddleware("get_avatar_upload_url", 10, "1 h"))
     .input(
@@ -157,6 +153,7 @@ export const user = router({
         fileSize: input.fileSize,
       });
     }),
+  /** @deprecated Use `updateUserAvatarAction` from `@/features/user/actions` instead. */
   updateAvatar: privateProcedure
     .input(z.object({ imageKey: z.string().max(255) }))
     .mutation(async ({ ctx, input }) => {
@@ -172,10 +169,7 @@ export const user = router({
 
       const oldImageKey = ctx.user.image;
 
-      await prisma.user.update({
-        where: { id: userId },
-        data: { image: input.imageKey },
-      });
+      await updateUserImage({ userId, image: input.imageKey });
 
       // Delete old image from S3 if it exists
       if (oldImageKey) {
@@ -184,14 +178,12 @@ export const user = router({
 
       return { success: true };
     }),
+  /** @deprecated Use `removeUserAvatarAction` from `@/features/user/actions` instead. */
   removeAvatar: privateProcedure.mutation(async ({ ctx }) => {
     const userId = ctx.user.id;
     const oldImageKey = ctx.user.image;
 
-    await prisma.user.update({
-      where: { id: userId },
-      data: { image: null },
-    });
+    await updateUserImage({ userId, image: null });
 
     // Delete the avatar from storage if it's an internal avatar
     const isInternalAvatar = oldImageKey && !oldImageKey.startsWith("https://");

@@ -1,14 +1,18 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import {
   ImageUpload,
   ImageUploadControl,
   ImageUploadPreview,
 } from "@/components/image-upload";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import {
+  getAvatarUploadUrlAction,
+  removeUserAvatarAction,
+  updateUserAvatarAction,
+} from "@/features/user/actions";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
-import { trpc } from "@/trpc/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 function ProfilePictureUpload({
   image,
@@ -17,20 +21,16 @@ function ProfilePictureUpload({
   image?: string;
   name: string;
 }) {
-  const router = useRouter();
-
-  const getAvatarUploadUrl = trpc.user.getAvatarUploadUrl.useMutation();
-  const updateAvatar = trpc.user.updateAvatar.useMutation();
-  const removeAvatar = trpc.user.removeAvatar.useMutation();
+  const getAvatarUploadUrl = useSafeAction(getAvatarUploadUrlAction);
+  const updateUserAvatar = useSafeAction(updateUserAvatarAction);
+  const removeUserAvatar = useSafeAction(removeUserAvatarAction);
 
   const handleUploadSuccess = async (imageKey: string) => {
-    await updateAvatar.mutateAsync({ imageKey });
-    router.refresh();
+    await updateUserAvatar.executeAsync({ imageKey });
   };
 
   const handleRemoveSuccess = async () => {
-    await removeAvatar.mutateAsync();
-    router.refresh();
+    await removeUserAvatar.executeAsync();
   };
 
   return (
@@ -39,7 +39,13 @@ function ProfilePictureUpload({
         <OptimizedAvatarImage src={image} name={name} size="xl" />
       </ImageUploadPreview>
       <ImageUploadControl
-        getUploadUrl={(input) => getAvatarUploadUrl.mutateAsync(input)}
+        getUploadUrl={async (input) => {
+          const result = await getAvatarUploadUrl.executeAsync(input);
+          if (!result?.data) {
+            throw new Error("Failed to get upload URL");
+          }
+          return result.data;
+        }}
         onUploadSuccess={handleUploadSuccess}
         onRemoveSuccess={handleRemoveSuccess}
         hasCurrentImage={!!image}
