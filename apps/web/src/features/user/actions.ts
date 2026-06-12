@@ -64,7 +64,9 @@ export const updateUserAvatarAction = authActionClient
 
     await updateUserImage({ userId: ctx.user.id, image: imageKey });
 
-    if (oldImageKey) {
+    // Only delete from storage if it's an internal avatar, not an external
+    // URL from an OAuth provider.
+    if (oldImageKey && !oldImageKey.startsWith("https://")) {
       await deleteImageFromS3(oldImageKey);
     }
   });
