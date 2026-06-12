@@ -74,6 +74,7 @@ export function OptimizedAvatarImage({
             height={128}
             alt={name}
             style={{ objectFit: "cover" }}
+            className="rounded-full"
             onLoad={() => {
               setLoadedSrc(imageSrc);
             }}
