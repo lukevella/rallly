@@ -27,7 +27,7 @@ const emailChangeFormData = z.object({
 });
 
 const verifyEmailChangeFormData = z.object({
-  otp: z.string().length(6),
+  otp: z.string().regex(/^\d{6}$/),
 });
 
 function VerifyEmailChangeForm({
@@ -80,7 +80,9 @@ function VerifyEmailChangeForm({
           break;
         default:
           form.setError("otp", {
-            message: res.error.message,
+            message: t("emailChangeVerifyError", {
+              defaultValue: "Verification failed. Please try again.",
+            }),
           });
       }
       return;
@@ -153,6 +155,7 @@ export const ProfileEmailAddress = () => {
   const [user] = trpc.user.getAuthed.useSuspenseQuery();
   const utils = trpc.useUtils();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [pendingEmail, setPendingEmail] = React.useState<string | null>(null);
   const [didChangeEmail, setDidChangeEmail] = React.useState(false);
@@ -202,7 +205,10 @@ export const ProfileEmailAddress = () => {
 
             if (res.error) {
               form.setError("email", {
-                message: res.error.message,
+                message: t("emailChangeRequestError", {
+                  defaultValue:
+                    "We couldn't process this request. Please try again later.",
+                }),
               });
               return;
             }
