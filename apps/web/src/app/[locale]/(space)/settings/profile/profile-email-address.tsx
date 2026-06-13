@@ -12,61 +12,208 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { CheckCircleIcon, InfoIcon, XIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { CheckCircleIcon, InfoIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { InputOTP } from "@/components/input-otp";
 import { Trans, useTranslation } from "@/i18n/client";
+import { authClient } from "@/lib/auth-client";
 import { trpc } from "@/trpc/client";
 
 const emailChangeFormData = z.object({
   email: z.email(),
 });
 
+const verifyEmailChangeFormData = z.object({
+  otp: z.string().regex(/^\d{6}$/),
+});
+
+function VerifyEmailChangeForm({
+  newEmail,
+  onSuccess,
+  onCancel,
+}: {
+  newEmail: string;
+  onSuccess: () => Promise<void> | void;
+  onCancel: () => void;
+}) {
+  const { t } = useTranslation();
+  const form = useForm({
+    defaultValues: {
+      otp: "",
+    },
+    resolver: zodResolver(verifyEmailChangeFormData),
+  });
+
+  const handleSubmit = form.handleSubmit(async (data) => {
+    const res = await authClient.emailOtp.changeEmail({
+      newEmail,
+      otp: data.otp,
+    });
+
+    if (res.error) {
+      switch (res.error.code) {
+        case "INVALID_OTP":
+          form.setError("otp", {
+            message: t("wrongVerificationCode", {
+              defaultValue: "Your verification code is incorrect",
+            }),
+          });
+          break;
+        case "OTP_EXPIRED":
+          form.setError("otp", {
+            message: t("expiredVerificationCode", {
+              defaultValue:
+                "This code has expired. Request a new one to continue.",
+            }),
+          });
+          break;
+        case "TOO_MANY_ATTEMPTS":
+          form.setError("otp", {
+            message: t("tooManyVerificationAttempts", {
+              defaultValue:
+                "Too many incorrect attempts. Request a new code to continue.",
+            }),
+          });
+          break;
+        default:
+          form.setError("otp", {
+            message: t("emailChangeVerifyError", {
+              defaultValue: "Verification failed. Please try again.",
+            }),
+          });
+      }
+      return;
+    }
+
+    await onSuccess();
+  });
+
+  return (
+    <Form {...form}>
+      <form onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-y-4">
+          <Alert>
+            <InfoIcon />
+            <AlertTitle>
+              <Trans
+                i18nKey="emailChangeRequestSent"
+                defaults="Verify your new email address"
+              />
+            </AlertTitle>
+            <AlertDescription>
+              <p>
+                <Trans
+                  i18nKey="emailChangeVerifyDescription"
+                  defaults="Enter the 6 digit verification code we sent to {email}."
+                  values={{ email: newEmail }}
+                />
+              </p>
+            </AlertDescription>
+          </Alert>
+          <FormField
+            control={form.control}
+            name="otp"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <InputOTP
+                    placeholder={t("verificationCodePlaceholder")}
+                    disabled={form.formState.isSubmitting}
+                    autoFocus={true}
+                    onValidCode={() => {
+                      handleSubmit();
+                    }}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="mt-4 flex gap-x-2">
+            <Button
+              loading={form.formState.isSubmitting}
+              type="submit"
+              variant="primary"
+            >
+              <Trans i18nKey="verify" defaults="Verify" />
+            </Button>
+            <Button type="button" onClick={onCancel}>
+              <Trans i18nKey="cancel" />
+            </Button>
+          </div>
+        </div>
+      </form>
+    </Form>
+  );
+}
+
 export const ProfileEmailAddress = () => {
   const [user] = trpc.user.getAuthed.useSuspenseQuery();
-  const requestEmailChange = trpc.user.requestEmailChange.useMutation();
+  const utils = trpc.useUtils();
+  const router = useRouter();
+  const { t } = useTranslation();
+
+  const [pendingEmail, setPendingEmail] = React.useState<string | null>(null);
+  const [didChangeEmail, setDidChangeEmail] = React.useState(false);
+
   const form = useForm({
     defaultValues: {
       email: user.email,
     },
     resolver: zodResolver(emailChangeFormData),
   });
-  const { t } = useTranslation();
-
-  const searchParams = useSearchParams();
-  const error = searchParams.get("error");
-  const didEmailChange = searchParams.get("emailChanged") === "true";
-
-  const [didRequestEmailChange, setDidRequestEmailChange] =
-    React.useState(false);
 
   const { handleSubmit, formState, reset } = form;
+
+  if (pendingEmail) {
+    return (
+      <VerifyEmailChangeForm
+        newEmail={pendingEmail}
+        onCancel={() => {
+          setPendingEmail(null);
+          reset({ email: user.email });
+        }}
+        onSuccess={async () => {
+          reset({ email: pendingEmail });
+          setPendingEmail(null);
+          setDidChangeEmail(true);
+          await utils.user.getAuthed.invalidate();
+          router.refresh();
+        }}
+      />
+    );
+  }
 
   return (
     <div className="grid gap-y-4">
       <Form {...form}>
         <form
           onSubmit={handleSubmit(async (data) => {
-            if (data.email !== user.email) {
-              const res = await requestEmailChange.mutateAsync({
-                email: data.email,
-              });
-              if (res.success === false) {
-                if (res.reason === "emailAlreadyInUse") {
-                  form.setError("email", {
-                    message: t("emailAlreadyInUse", {
-                      defaultValue:
-                        "This email address is already associated with another account. Please use a different email address.",
-                    }),
-                  });
-                }
-              } else {
-                setDidRequestEmailChange(true);
-                reset(data);
-              }
+            if (data.email === user.email) {
+              return;
             }
+
+            setDidChangeEmail(false);
+
+            const res = await authClient.emailOtp.requestEmailChange({
+              newEmail: data.email,
+            });
+
+            if (res.error) {
+              form.setError("email", {
+                message: t("emailChangeRequestError", {
+                  defaultValue:
+                    "We couldn't process this request. Please try again later.",
+                }),
+              });
+              return;
+            }
+
+            setPendingEmail(data.email);
           })}
         >
           <div className="flex flex-col gap-y-4">
@@ -85,26 +232,7 @@ export const ProfileEmailAddress = () => {
                 </FormItem>
               )}
             />
-            {didRequestEmailChange ? (
-              <Alert>
-                <InfoIcon />
-                <AlertTitle>
-                  <Trans
-                    i18nKey="emailChangeRequestSent"
-                    defaults="Verify your new email address"
-                  />
-                </AlertTitle>
-                <AlertDescription>
-                  <p>
-                    <Trans
-                      i18nKey="emailChangeRequestSentDescription"
-                      defaults="To complete the change, please check your email for a verification link."
-                    />
-                  </p>
-                </AlertDescription>
-              </Alert>
-            ) : null}
-            {didEmailChange ? (
+            {didChangeEmail ? (
               <Alert variant="success">
                 <CheckCircleIcon />
                 <AlertDescription>
@@ -112,32 +240,6 @@ export const ProfileEmailAddress = () => {
                     <Trans
                       i18nKey="emailChangeSuccess"
                       defaults="Email changed successfully"
-                    />
-                  </p>
-                </AlertDescription>
-              </Alert>
-            ) : null}
-            {error === "invalidToken" ? (
-              <Alert variant="warning">
-                <XIcon />
-                <AlertDescription>
-                  <p>
-                    <Trans
-                      i18nKey="emailChangeInvalidToken"
-                      defaults="The verification link is invalid or has expired. Please try again."
-                    />
-                  </p>
-                </AlertDescription>
-              </Alert>
-            ) : null}
-            {error === "invalidUserId" ? (
-              <Alert variant="warning">
-                <XIcon />
-                <AlertDescription>
-                  <p>
-                    <Trans
-                      i18nKey="emailChangeInvalidUserId"
-                      defaults="Please login with the same email address as the one you used to request the change."
                     />
                   </p>
                 </AlertDescription>

@@ -1,4 +1,6 @@
+import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
+import { sendChangeEmailEmail } from "@rallly/emails/templates/change-email";
 import { sendRegisterEmail } from "@rallly/emails/templates/register";
 import { sendResetPasswordEmail } from "@rallly/emails/templates/reset-password";
 import { createLogger } from "@rallly/logger";
@@ -6,7 +8,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { BetterAuthPlugin } from "better-auth";
 import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { createAuthMiddleware } from "better-auth/api";
+import { createAuthMiddleware, getSessionFromCtx } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import {
   admin,
@@ -151,6 +153,9 @@ export const authLib = betterAuth({
       disableSignUp: true,
       expiresIn: 15 * 60,
       overrideDefaultEmailVerification: true,
+      changeEmail: {
+        enabled: true,
+      },
       async sendVerificationOTP({ email, otp, type }) {
         const locale = await getLocale(); // TODO: Get locale from email
         const branding = await getInstanceBranding();
@@ -161,6 +166,16 @@ export const authLib = betterAuth({
           case "email-verification":
             after(() =>
               sendRegisterEmail({
+                to: email,
+                locale,
+                branding,
+                props: { code: otp },
+              }),
+            );
+            break;
+          case "change-email":
+            after(() =>
+              sendChangeEmailEmail({
                 to: email,
                 locale,
                 branding,
@@ -235,6 +250,10 @@ export const authLib = betterAuth({
         window: 60 * 60, // 1 hour
         max: 100,
       },
+      "/email-otp/request-email-change": {
+        window: 60 * 60, // 1 hour
+        max: 5,
+      },
     },
   },
   account: {
@@ -256,15 +275,19 @@ export const authLib = betterAuth({
         ctx.path.startsWith("/sign-up") ||
         ctx.path.startsWith("/email-otp")
       ) {
-        if (ctx.body?.email) {
-          if (isEmailBlocked(ctx.body.email as string)) {
+        // The email change endpoints submit the address as `newEmail`
+        const email = (ctx.body?.email ?? ctx.body?.newEmail) as
+          | string
+          | undefined;
+        if (email) {
+          if (isEmailBlocked(email)) {
             throw new APIError("BAD_REQUEST", {
               code: "EMAIL_BLOCKED",
               message:
                 "This email address is not allowed. Please use a different email or contact support.",
             });
           }
-          if (isTemporaryEmail(ctx.body.email as string)) {
+          if (isTemporaryEmail(email)) {
             throw new APIError("BAD_REQUEST", {
               code: "TEMPORARY_EMAIL_NOT_ALLOWED",
               message:
@@ -273,6 +296,79 @@ export const authLib = betterAuth({
           }
         }
       }
+    }),
+    after: createAuthMiddleware(async (ctx) => {
+      if (
+        ctx.path !== "/email-otp/request-email-change" &&
+        ctx.path !== "/email-otp/change-email"
+      ) {
+        return;
+      }
+
+      const returned = ctx.context.returned as
+        | { success?: boolean }
+        | undefined;
+
+      if (returned?.success !== true) {
+        return;
+      }
+
+      const path = ctx.path;
+      const newEmail = (ctx.body?.newEmail as string).toLowerCase();
+
+      // Run side effects after the response so they can't fail or delay an
+      // email change that Better-Auth has already accepted.
+      after(async () => {
+        try {
+          const session = await getSessionFromCtx(ctx);
+
+          if (!session) {
+            return;
+          }
+
+          if (path === "/email-otp/request-email-change") {
+            posthog()?.capture({
+              event: "account_email_change_request",
+              distinctId: session.user.id,
+              properties: {
+                fromEmail: session.user.email,
+                toEmail: newEmail,
+              },
+            });
+            return;
+          }
+
+          const user = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            select: { customerId: true },
+          });
+
+          if (user?.customerId) {
+            try {
+              await stripe.customers.update(user.customerId, {
+                email: newEmail,
+              });
+            } catch (error) {
+              logger.error(
+                { error },
+                "Failed to update Stripe customer email after email change",
+              );
+            }
+          }
+
+          posthog()?.capture({
+            event: "account_email_change_complete",
+            distinctId: session.user.id,
+            properties: {
+              $set: {
+                email: newEmail,
+              },
+            },
+          });
+        } catch (error) {
+          logger.error({ error }, "Failed to run email change side effects");
+        }
+      });
     }),
   },
   databaseHooks: {

@@ -1,18 +1,14 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { sendRawEmail } from "@rallly/emails";
-import { sendChangeEmailRequest } from "@rallly/emails/templates/change-email-request";
-import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
-import { getInstanceBranding } from "@/emails/branding";
 import { posthog } from "@/features/analytics/posthog";
 import { feedbackSchema } from "@/features/feedback/schema";
 import { defaultNotificationPreferences } from "@/features/notifications/constants";
 import { getNotificationPreferences } from "@/features/notifications/queries";
 import { activityEventTypes } from "@/features/notifications/schema";
 import { defineAbilityFor } from "@/features/user/ability";
-import { createToken } from "@/utils/session";
 import { timezoneSchema } from "@/utils/timezone-schema";
 import {
   createRateLimitMiddleware,
@@ -57,69 +53,6 @@ export const user = router({
       });
 
       return { success: true };
-    }),
-  requestEmailChange: privateProcedure
-    .input(z.object({ email: z.email() }))
-    .use(createRateLimitMiddleware("request_email_change", 5, "1 h"))
-    .mutation(async ({ input, ctx }) => {
-      const currentUser = await prisma.user.findUnique({
-        where: { id: ctx.user.id },
-        select: { email: true, id: true, locale: true },
-      });
-
-      if (!currentUser) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "User not found",
-        });
-      }
-
-      // check if the email is already in use
-      const existingUser = await prisma.user.count({
-        where: { email: input.email },
-      });
-
-      if (existingUser) {
-        return {
-          success: false as const,
-          reason: "emailAlreadyInUse" as const,
-        };
-      }
-
-      // create a verification token
-      const token = await createToken(
-        {
-          userId: currentUser.id,
-          toEmail: input.email,
-        },
-        {
-          ttl: 60 * 10,
-        },
-      );
-
-      sendChangeEmailRequest({
-        to: input.email,
-        locale: currentUser.locale ?? undefined,
-        branding: await getInstanceBranding(),
-        props: {
-          verificationUrl: absoluteUrl(
-            `/api/user/verify-email-change?token=${token}`,
-          ),
-          fromEmail: currentUser.email,
-          toEmail: input.email,
-        },
-      });
-
-      posthog()?.capture({
-        event: "account_email_change_request",
-        distinctId: ctx.user.id,
-        properties: {
-          toEmail: input.email,
-          fromEmail: currentUser.email,
-        },
-      });
-
-      return { success: true as const };
     }),
   deleteMe: privateProcedure.mutation(async ({ ctx }) => {
     const userId = ctx.user.id;
