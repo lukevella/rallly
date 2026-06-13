@@ -48,12 +48,12 @@ import {
   RegistrationFlowView,
 } from "./components/registration-flow";
 import { RegistrationForm } from "./components/registration-form";
+import { RSVPArea } from "./components/rsvp-area";
 import {
   RsvpCard,
   RsvpCardContent,
   RsvpCardTitle,
 } from "./components/rsvp-card";
-import { RsvpStatus } from "./components/rsvp-status";
 
 const getScheduledEvent = cache(async (id: string) => {
   const event = await getPublicScheduledEvent(id);
@@ -108,27 +108,31 @@ export default async function EventPage({
   const session = await getSession();
 
   return (
-    <div className="bg-background md:h-dvh md:items-center md:justify-center md:p-5">
+    <div className="page-bg-gray-50 absolute inset-0 h-dvh overflow-auto md:h-dvh md:items-center md:justify-center md:p-5 dark:bg-gray-900">
       {brandingColor ? <BrandingStyle primaryColor={brandingColor} /> : null}
       <header className="fixed top-0 right-0 left-0 z-10 flex justify-between p-4">
-        <LogoMark className="size-8" />
-        {session?.user.isGuest === false ? (
-          <UserDropdown
-            name={session.user.name}
-            email={session.user.email}
-            image={session.user.image ?? undefined}
-          />
-        ) : (
-          <Link
-            href="/login"
-            className={buttonVariants({ variant: "ghost", size: "sm" })}
-          >
-            <Trans i18nKey="signIn" defaults="Sign in" />
-          </Link>
-        )}
+        <Link href="/">
+          <LogoMark className="size-8" />
+        </Link>
+        <div className="flex items-center gap-2">
+          {session?.user.isGuest === false ? (
+            <UserDropdown
+              name={session.user.name}
+              email={session.user.email}
+              image={session.user.image ?? undefined}
+            />
+          ) : (
+            <Link
+              href="/login"
+              className={buttonVariants({ variant: "ghost", size: "sm" })}
+            >
+              <Trans i18nKey="signIn" defaults="Sign in" />
+            </Link>
+          )}
+        </div>
       </header>
       <div className="mx-auto max-w-lg pt-16">
-        <RegistrationFlow eventId={event.id}>
+        <RegistrationFlow>
           <RegistrationFlowView view="details">
             <div className="flex flex-col justify-between gap-6 p-4">
               <EventHeader>
@@ -187,7 +191,7 @@ export default async function EventPage({
                   <Trans i18nKey="rsvpCardTitle" defaults="Registration" />
                 </RsvpCardTitle>
                 <RsvpCardContent>
-                  <RsvpStatus>
+                  <RSVPArea eventId={event.id}>
                     <p className="text-muted-foreground text-sm">
                       <Trans
                         i18nKey="rsvpCardDescription"
@@ -202,7 +206,7 @@ export default async function EventPage({
                     >
                       <Trans i18nKey="register" defaults="Register" />
                     </RegistrationFlowTrigger>
-                  </RsvpStatus>
+                  </RSVPArea>
                 </RsvpCardContent>
               </RsvpCard>
               {event.description ? (

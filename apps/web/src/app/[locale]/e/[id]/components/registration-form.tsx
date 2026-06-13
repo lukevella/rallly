@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { submitRsvpAction } from "@/features/scheduled-event/actions";
@@ -26,6 +27,7 @@ const formSchema = z.object({
 export function RegistrationForm({ eventId }: { eventId: string }) {
   const { t } = useTranslation();
   const flow = useRegistrationFlow();
+  const router = useRouter();
   const submitRsvp = useSafeAction(submitRsvpAction);
   const form = useForm({
     defaultValues: {
@@ -57,12 +59,10 @@ export function RegistrationForm({ eventId }: { eventId: string }) {
           }
 
           if (result.data?.ok) {
-            flow.setRegistration({
-              name: data.name,
-              email: data.email,
-              inviteUid: result.data.inviteUid,
-            });
             flow.setView("success");
+            // Re-run the server query so the RSVP card reflects the new
+            // registration once the flow returns to the details view.
+            router.refresh();
           }
         })}
       >
