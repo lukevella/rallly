@@ -1,28 +1,14 @@
 import { buttonVariants } from "@rallly/ui";
 import { AvatarGroup } from "@rallly/ui/avatar";
-import { Button } from "@rallly/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@rallly/ui/dropdown-menu";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import {
-  ArrowLeftIcon,
-  CircleCheckIcon,
-  MapPinIcon,
-  Settings2Icon,
-  UserIcon,
-} from "lucide-react";
+import { ArrowLeftIcon, CircleCheckIcon, MapPinIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { SpaceBranding } from "@/app/[locale]/e/[id]/components/space-branding";
-import { Logo } from "@/components/logo";
+import { UserDropdown } from "@/app/[locale]/e/[id]/components/user-dropdown";
+import LogoMark from "@/assets/logo-mark.svg";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { BrandingStyle } from "@/features/branding/branding-style";
@@ -125,57 +111,13 @@ export default async function EventPage({
     <div className="bg-background md:h-dvh md:items-center md:justify-center md:p-5">
       {brandingColor ? <BrandingStyle primaryColor={brandingColor} /> : null}
       <header className="fixed top-0 right-0 left-0 z-10 flex justify-between p-4">
-        <Logo size="sm" />
+        <LogoMark className="size-8" />
         {session?.user.isGuest === false ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <OptimizedAvatarImage
-                  name={session.user.name}
-                  src={session.user.image ?? undefined}
-                  size="sm"
-                />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-48">
-              <DropdownMenuLabel className="flex items-center gap-2">
-                <OptimizedAvatarImage
-                  src={session.user.image ?? undefined}
-                  name={session.user.name}
-                  size="md"
-                />
-                <div className="grow">
-                  <div className="font-medium text-foreground text-sm">
-                    {session.user.name}
-                  </div>
-                  {session.user.email ? (
-                    <div className="font-normal text-muted-foreground text-xs">
-                      {session.user.email}
-                    </div>
-                  ) : null}
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/settings/profile"
-                  className="flex items-center gap-x-2"
-                >
-                  <UserIcon className="size-4 text-muted-foreground" />
-                  <Trans i18nKey="profile" defaults="Profile" />
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/settings/preferences"
-                  className="flex items-center gap-x-2"
-                >
-                  <Settings2Icon className="size-4 text-muted-foreground" />
-                  <Trans i18nKey="preferences" defaults="Preferences" />
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <UserDropdown
+            name={session.user.name}
+            email={session.user.email}
+            image={session.user.image ?? undefined}
+          />
         ) : (
           <Link
             href="/login"
