@@ -1,31 +1,76 @@
 import { buttonVariants } from "@rallly/ui";
+import { AvatarGroup } from "@rallly/ui/avatar";
+import { Button } from "@rallly/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import { ArrowLeftIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  CircleCheckIcon,
+  MapPinIcon,
+  Settings2Icon,
+  UserIcon,
+} from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { cache, Suspense } from "react";
-import { getCurrentUser } from "@/auth/data";
+import { cache } from "react";
+import { SpaceBranding } from "@/app/[locale]/e/[id]/components/space-branding";
+import { Logo } from "@/components/logo";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { BrandingStyle } from "@/features/branding/branding-style";
 import { formatLocationText } from "@/features/location/utils";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
 import {
   createScheduledEventDTO,
-  getCachedPublicScheduledEvent,
+  getPublicScheduledEvent,
 } from "@/features/scheduled-event/data";
-import { SpaceIcon } from "@/features/space/components/space-icon";
+import { getSpaceBranding } from "@/features/space/data";
+import { getUserProfile } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
+import { getSession } from "@/lib/auth";
+import { dayjs } from "@/lib/dayjs";
 import {
-  EventDate,
+  CalendarCard,
+  CalendarCardDay,
+  CalendarCardMonth,
+} from "./components/calendar-card";
+import {
+  EventDetail,
+  EventDetailContent,
+  EventDetailDescription,
+  EventDetailIcon,
+  EventDetailTitle,
+} from "./components/event-detail";
+import {
   EventHeader,
-  EventStatus,
   EventSubtitle,
   EventTitle,
-} from "./event-header";
-import { EventWizard } from "./event-wizard";
+} from "./components/event-header";
+import { EventSection, EventSectionTitle } from "./components/event-section";
+import {
+  RegistrationFlow,
+  RegistrationFlowRedirect,
+  RegistrationFlowTrigger,
+  RegistrationFlowView,
+} from "./components/registration-flow";
+import { RegistrationForm } from "./components/registration-form";
+import {
+  RsvpCard,
+  RsvpCardContent,
+  RsvpCardTitle,
+} from "./components/rsvp-card";
+import { RsvpStatus } from "./components/rsvp-status";
 
 const getScheduledEvent = cache(async (id: string) => {
-  const event = await getCachedPublicScheduledEvent(id);
+  const event = await getPublicScheduledEvent(id);
 
   if (!event || event.deletedAt) {
     notFound();
@@ -37,31 +82,6 @@ const getScheduledEvent = cache(async (id: string) => {
   };
 });
 
-async function EventsBackLink() {
-  const user = await getCurrentUser();
-  if (!user) {
-    return null;
-  }
-  return (
-    <Link
-      href="/events"
-      className={buttonVariants({ variant: "ghost", size: "sm" })}
-    >
-      <ArrowLeftIcon data-icon="inline-start" />
-      <Trans i18nKey="events" defaults="Events" />
-    </Link>
-  );
-}
-
-function SpaceBranding({ name, image }: { name: string; image?: string }) {
-  return (
-    <div className="mb-4 flex flex-col gap-2 px-4">
-      <SpaceIcon name={name} src={image} size="lg" />
-      <p className="font-medium text-muted-foreground text-sm">{name}</p>
-    </div>
-  );
-}
-
 export default async function EventPage({
   params,
 }: {
@@ -72,17 +92,26 @@ export default async function EventPage({
   }
   const { id } = await params;
   const event = await getScheduledEvent(id);
+  const [branding, host] = await Promise.all([
+    getSpaceBranding(event.spaceId),
+    getUserProfile(event.userId),
+  ]);
 
-  const isBranded = event.space.showBranding && !!event.space.image;
+  if (!host) {
+    // The host relation cascades on delete, so a missing host means the
+    // cached event is stale and the event no longer exists.
+    notFound();
+  }
+
+  const isBranded = !!branding?.showBranding && !!branding.image;
   const brandingColor =
-    event.space.showBranding && event.space.primaryColor
-      ? event.space.primaryColor
+    branding?.showBranding && branding.primaryColor
+      ? branding.primaryColor
       : null;
-  const hasEnded = event.end < new Date();
   const visibleAttendees = event.hideAttendees
     ? []
     : event.invites
-        .filter((i) => i.status !== "pending")
+        .filter((invite) => invite.status !== "pending")
         .map((invite) => ({
           id: invite.id,
           name: invite.inviteeName,
@@ -90,55 +119,240 @@ export default async function EventPage({
           status: invite.status,
         }));
 
+  const session = await getSession();
+
   return (
-    <div className="min- flex h-dvh flex-col antialiased dark:bg-gray-900">
+    <div className="bg-background md:h-dvh md:items-center md:justify-center md:p-5">
       {brandingColor ? <BrandingStyle primaryColor={brandingColor} /> : null}
-
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-40 bg-linear-to-b from-25% from-white to-transparent dark:from-gray-900">
-        <div className="pointer-events-auto flex items-center gap-4 px-3 pt-[max(--spacing(3),env(safe-area-inset-top))] pb-12">
-          <Suspense fallback={null}>
-            <EventsBackLink />
-          </Suspense>
-        </div>
-      </div>
-
-      <div className="mx-auto mt-12 w-full max-w-xl flex-1 py-4 sm:py-8">
-        {isBranded ? (
-          <SpaceBranding
-            name={event.space.name}
-            image={event.space.image ?? undefined}
-          />
-        ) : null}
-
-        <EventHeader>
-          <EventTitle>{event.title}</EventTitle>
-          <EventSubtitle>
-            <Trans
-              i18nKey="eventOrganizedBy"
-              defaults="Organized by {name}"
-              values={{ name: event.user.name }}
-            />
-          </EventSubtitle>
-          <div className="flex items-center justify-between gap-3">
-            <EventDate
-              start={event.start}
-              end={event.end}
-              allDay={event.allDay}
-              timezone={event.displayTimeZone}
-            />
-            <EventStatus status={event.status} hasEnded={hasEnded} />
-          </div>
-        </EventHeader>
-
-        <EventWizard
-          eventId={event.id}
-          description={event.description}
-          locationText={
-            event.location ? formatLocationText(event.location) : null
-          }
-          conferencing={event.conferencing}
-          attendees={visibleAttendees}
-        />
+      <header className="fixed top-0 right-0 left-0 z-10 flex justify-between p-4">
+        <Logo size="sm" />
+        {session?.user.isGuest === false ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <OptimizedAvatarImage
+                  name={session.user.name}
+                  src={session.user.image ?? undefined}
+                  size="sm"
+                />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-48">
+              <DropdownMenuLabel className="flex items-center gap-2">
+                <OptimizedAvatarImage
+                  src={session.user.image ?? undefined}
+                  name={session.user.name}
+                  size="md"
+                />
+                <div className="grow">
+                  <div className="font-medium text-foreground text-sm">
+                    {session.user.name}
+                  </div>
+                  {session.user.email ? (
+                    <div className="font-normal text-muted-foreground text-xs">
+                      {session.user.email}
+                    </div>
+                  ) : null}
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/settings/profile"
+                  className="flex items-center gap-x-2"
+                >
+                  <UserIcon className="size-4 text-muted-foreground" />
+                  <Trans i18nKey="profile" defaults="Profile" />
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/settings/preferences"
+                  className="flex items-center gap-x-2"
+                >
+                  <Settings2Icon className="size-4 text-muted-foreground" />
+                  <Trans i18nKey="preferences" defaults="Preferences" />
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Link
+            href="/login"
+            className={buttonVariants({ variant: "ghost", size: "sm" })}
+          >
+            <Trans i18nKey="signIn" defaults="Sign in" />
+          </Link>
+        )}
+      </header>
+      <div className="mx-auto max-w-lg pt-16">
+        <RegistrationFlow eventId={event.id}>
+          <RegistrationFlowView view="details">
+            <div className="flex flex-col justify-between gap-6 p-4">
+              <EventHeader>
+                {isBranded && branding ? (
+                  <SpaceBranding
+                    className="mb-4"
+                    name={branding.name}
+                    image={branding.image ?? undefined}
+                  />
+                ) : null}
+                <EventTitle>{event.title}</EventTitle>
+                <EventSubtitle className="flex items-center gap-2">
+                  <OptimizedAvatarImage
+                    name={host.name}
+                    src={host.image ?? undefined}
+                    size="sm"
+                  />
+                  Hosted by {host.name}
+                </EventSubtitle>
+                <div className="mt-4 grid gap-4">
+                  <EventDetail>
+                    <CalendarCard>
+                      <CalendarCardMonth>
+                        {dayjs(event.start).format("MMM")}
+                      </CalendarCardMonth>
+                      <CalendarCardDay>
+                        {dayjs(event.start).format("D")}
+                      </CalendarCardDay>
+                    </CalendarCard>
+                    <EventDetailContent>
+                      <EventDetailTitle>
+                        {dayjs(event.start).format("dddd, D MMMM")}
+                      </EventDetailTitle>
+                      <EventDetailDescription>
+                        {dayjs(event.start).format("LT")} -{" "}
+                        {dayjs(event.end).format("LT z")}
+                      </EventDetailDescription>
+                    </EventDetailContent>
+                  </EventDetail>
+                  {event.location ? (
+                    <EventDetail>
+                      <EventDetailIcon>
+                        <MapPinIcon />
+                      </EventDetailIcon>
+                      <EventDetailContent>
+                        <EventDetailTitle>
+                          {formatLocationText(event.location)}
+                        </EventDetailTitle>
+                      </EventDetailContent>
+                    </EventDetail>
+                  ) : null}
+                </div>
+              </EventHeader>
+              <RsvpCard>
+                <RsvpCardTitle>
+                  <Trans i18nKey="rsvpCardTitle" defaults="Registration" />
+                </RsvpCardTitle>
+                <RsvpCardContent>
+                  <RsvpStatus>
+                    <p className="text-muted-foreground text-sm">
+                      <Trans
+                        i18nKey="rsvpCardDescription"
+                        defaults="To join this event, please register below."
+                      />
+                    </p>
+                    <RegistrationFlowTrigger
+                      view="register"
+                      size="lg"
+                      variant="primary"
+                      className="flex-2/3"
+                    >
+                      <Trans i18nKey="register" defaults="Register" />
+                    </RegistrationFlowTrigger>
+                  </RsvpStatus>
+                </RsvpCardContent>
+              </RsvpCard>
+              {event.description ? (
+                <EventSection>
+                  <EventSectionTitle>
+                    <Trans i18nKey="eventPageAbout" defaults="About" />
+                  </EventSectionTitle>
+                  <p className="whitespace-pre-wrap text-pretty text-foreground text-sm leading-relaxed">
+                    <TruncatedLinkify>{event.description}</TruncatedLinkify>
+                  </p>
+                </EventSection>
+              ) : null}
+              {visibleAttendees.length > 0 ? (
+                <EventSection>
+                  <EventSectionTitle>
+                    <Trans
+                      i18nKey="eventPageGoingCount"
+                      defaults="{count, plural, one {# going} other {# going}}"
+                      values={{ count: visibleAttendees.length }}
+                    />
+                  </EventSectionTitle>
+                  <AvatarGroup>
+                    {visibleAttendees.map((attendee) => (
+                      <OptimizedAvatarImage
+                        key={attendee.id}
+                        name={attendee.name}
+                        src={attendee.image}
+                        size="md"
+                      />
+                    ))}
+                  </AvatarGroup>
+                </EventSection>
+              ) : null}
+            </div>
+          </RegistrationFlowView>
+          <RegistrationFlowView view="register">
+            <div className="flex flex-col gap-6 p-6">
+              <div className="flex items-start gap-4">
+                <RegistrationFlowTrigger
+                  view="details"
+                  variant="ghost"
+                  size="icon"
+                  className="-mx-2"
+                >
+                  <ArrowLeftIcon />
+                  <span className="sr-only">
+                    <Trans i18nKey="back" defaults="Back" />
+                  </span>
+                </RegistrationFlowTrigger>
+                <EventDetail>
+                  <EventDetailContent>
+                    <EventDetailTitle>{event.title}</EventDetailTitle>
+                    <EventDetailDescription>
+                      {dayjs(event.start).format("dddd, D MMMM")} ·{" "}
+                      {dayjs(event.start).format("LT z")}
+                    </EventDetailDescription>
+                  </EventDetailContent>
+                </EventDetail>
+              </div>
+              <EventSection className="gap-4">
+                <h1 className="font-semibold text-lg tracking-tight">
+                  <Trans
+                    i18nKey="eventRegisterYourDetails"
+                    defaults="Your details"
+                  />
+                </h1>
+                <RegistrationForm eventId={event.id} />
+              </EventSection>
+            </div>
+          </RegistrationFlowView>
+          <RegistrationFlowView view="success">
+            <RegistrationFlowRedirect view="details" />
+            <div className="flex flex-col items-center gap-4 p-6 py-16 text-center">
+              <CircleCheckIcon className="size-10 text-green-600" />
+              <div className="grid gap-1">
+                <h1 className="font-semibold text-lg tracking-tight">
+                  <Trans
+                    i18nKey="eventRegisterSuccessTitle"
+                    defaults="You're registered"
+                  />
+                </h1>
+                <p className="text-muted-foreground text-sm">
+                  <Trans
+                    i18nKey="eventRegisterSuccessDescription"
+                    defaults="You're going to {title}"
+                    values={{ title: event.title }}
+                  />
+                </p>
+              </div>
+            </div>
+          </RegistrationFlowView>
+        </RegistrationFlow>
       </div>
     </div>
   );

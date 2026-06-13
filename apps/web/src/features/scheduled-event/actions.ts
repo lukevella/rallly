@@ -1,10 +1,8 @@
 "use server";
 
 import { prisma } from "@rallly/database";
-import { nanoid } from "@rallly/utils/nanoid";
-import { updateTag } from "next/cache";
 import * as z from "zod";
-import { scheduledEventTag } from "@/features/scheduled-event/constants";
+import { cancelRsvp, createRsvp } from "@/features/scheduled-event/mutations";
 import { AppError } from "@/lib/errors";
 import { actionClient } from "@/lib/safe-action/server";
 
@@ -33,26 +31,18 @@ export const submitRsvpAction = actionClient
       });
     }
 
-    const existing = await prisma.scheduledEventInvite.findFirst({
-      where: { scheduledEventId: eventId, inviteeEmail: email },
-      select: { id: true },
-    });
+    return await createRsvp({ eventId, name, email, status });
+  });
 
-    if (existing) {
-      return { ok: false, reason: "already_responded" } as const;
-    }
-
-    await prisma.scheduledEventInvite.create({
-      data: {
-        uid: nanoid(),
-        scheduledEventId: eventId,
-        inviteeName: name,
-        inviteeEmail: email,
-        status,
-      },
-    });
-
-    updateTag(scheduledEventTag(eventId));
-
-    return { ok: true } as const;
+export const cancelRsvpAction = actionClient
+  .metadata({ actionName: "cancel_rsvp" })
+  .inputSchema(
+    z.object({
+      // The invite uid is an unguessable token that acts as proof of
+      // ownership — registrants are unauthenticated.
+      inviteUid: z.string().min(1).max(255),
+    }),
+  )
+  .action(async ({ parsedInput }) => {
+    return await cancelRsvp({ inviteUid: parsedInput.inviteUid });
   });
