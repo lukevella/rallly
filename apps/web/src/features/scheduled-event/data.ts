@@ -1,63 +1,45 @@
 import type { Prisma, ScheduledEventStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { unstable_cache } from "next/cache";
 import { parseConferencing } from "@/features/conferencing/data";
 import type { Conferencing } from "@/features/conferencing/schema";
 import { parseLocation } from "@/features/location/data";
 import type { Location } from "@/features/location/schema";
 import { dayjs } from "@/lib/dayjs";
-import { scheduledEventTag } from "./constants";
 import type { Status } from "./schema";
 
-export function getCachedPublicScheduledEvent(id: string) {
-  return unstable_cache(
-    async () => {
-      return prisma.scheduledEvent.findUnique({
-        where: { id },
+export function getPublicScheduledEvent(id: string) {
+  return prisma.scheduledEvent.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      location: true,
+      conferencing: true,
+      start: true,
+      end: true,
+      allDay: true,
+      timeZone: true,
+      status: true,
+      deletedAt: true,
+      capacity: true,
+      hideAttendees: true,
+      userId: true,
+      spaceId: true,
+      invites: {
         select: {
           id: true,
-          title: true,
-          description: true,
-          location: true,
-          conferencing: true,
-          start: true,
-          end: true,
-          allDay: true,
-          timeZone: true,
+          inviteeName: true,
           status: true,
-          deletedAt: true,
-          hideAttendees: true,
           user: {
             select: {
-              name: true,
-            },
-          },
-          space: {
-            select: {
-              name: true,
               image: true,
-              showBranding: true,
-              primaryColor: true,
-            },
-          },
-          invites: {
-            select: {
-              id: true,
-              inviteeName: true,
-              status: true,
-              user: {
-                select: {
-                  image: true,
-                },
-              },
             },
           },
         },
-      });
+      },
     },
-    [`public-scheduled-event-${id}`],
-    { tags: [scheduledEventTag(id)] },
-  )();
+  });
 }
 
 // Legacy fallback used when neither location nor conferencing is populated.
