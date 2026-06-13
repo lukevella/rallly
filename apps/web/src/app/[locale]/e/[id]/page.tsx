@@ -104,6 +104,9 @@ export default async function EventPage({
           image: invite.user?.image ?? undefined,
           status: invite.status,
         }));
+  const acceptedCount = event.invites.filter(
+    (invite) => invite.status === "accepted",
+  ).length;
 
   const session = await getSession();
 
@@ -191,22 +194,14 @@ export default async function EventPage({
                   <Trans i18nKey="rsvpCardTitle" defaults="Registration" />
                 </RsvpCardTitle>
                 <RsvpCardContent>
-                  <RSVPArea eventId={event.id}>
-                    <p className="text-muted-foreground text-sm">
-                      <Trans
-                        i18nKey="rsvpCardDescription"
-                        defaults="To join this event, please register below."
-                      />
-                    </p>
-                    <RegistrationFlowTrigger
-                      view="register"
-                      size="lg"
-                      variant="primary"
-                      className="flex-2/3"
-                    >
-                      <Trans i18nKey="register" defaults="Register" />
-                    </RegistrationFlowTrigger>
-                  </RSVPArea>
+                  <RSVPArea
+                    eventId={event.id}
+                    status={event.status}
+                    start={event.start}
+                    end={event.end}
+                    capacity={event.capacity}
+                    acceptedCount={acceptedCount}
+                  />
                 </RsvpCardContent>
               </RsvpCard>
               {event.description ? (
