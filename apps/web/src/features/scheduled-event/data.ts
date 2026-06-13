@@ -42,6 +42,30 @@ export function getPublicScheduledEvent(id: string) {
   });
 }
 
+// Looks up the current user's registration for an event, keyed by email
+// (invites are email-keyed and case-insensitive). Returns the invite the
+// public event page needs to render the "you're going" state, or null.
+export function getEventRegistration({
+  eventId,
+  email,
+}: {
+  eventId: string;
+  email: string;
+}) {
+  return prisma.scheduledEventInvite.findFirst({
+    where: {
+      scheduledEventId: eventId,
+      inviteeEmail: email,
+      status: { not: "pending" },
+    },
+    select: {
+      uid: true,
+      inviteeName: true,
+      inviteeEmail: true,
+    },
+  });
+}
+
 // Legacy fallback used when neither location nor conferencing is populated.
 // Inverts the stored timeZone: stored null = "everyone sees UTC"; stored set = "viewer's TZ".
 function legacyDisplayTimeZone(timeZone: string | null): string | null {
