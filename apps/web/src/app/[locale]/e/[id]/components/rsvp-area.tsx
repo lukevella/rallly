@@ -1,37 +1,109 @@
+import type { ScheduledEventStatus } from "@rallly/database";
 import { getEventRegistration } from "@/features/scheduled-event/data";
+import {
+  getEventPhase,
+  isEventFull,
+} from "@/features/scheduled-event/registration";
 import { getSession } from "@/lib/auth";
-import { RsvpStatus } from "./rsvp-status";
+import { RsvpCancel } from "./rsvp-cancel";
+import { RsvpNotice } from "./rsvp-notice";
+import { RsvpOneClickRegister } from "./rsvp-one-click-register";
+import { RsvpRegister } from "./rsvp-register";
+import { RsvpRegistered } from "./rsvp-registered";
+
+function Separator() {
+  return <hr className="border-card-border" />;
+}
 
 /**
- * Server component that decides what to show in the RSVP card. It checks
- * whether the signed-in user has already registered for the event (a dedicated
- * query keyed on their email) and renders the registered state, otherwise it
- * falls back to the registration call to action passed as children.
+ * Server component that owns the RSVP card's dynamic content. It reads the
+ * session, runs a dedicated query for the viewer's registration, and resolves
+ * the event phase + capacity to decide which sections to render.
  */
 export async function RSVPArea({
   eventId,
-  children,
+  status,
+  start,
+  end,
+  capacity,
+  acceptedCount,
 }: {
   eventId: string;
-  children: React.ReactNode;
+  status: ScheduledEventStatus;
+  start: Date;
+  end: Date;
+  capacity: number | null;
+  acceptedCount: number;
 }) {
   const session = await getSession();
-  const email =
-    session?.user && !session.user.isGuest ? session.user.email : undefined;
+  // Only real accounts get a server-resolved registration / one-click. Guests
+  // (anonymous sessions) are treated as logged out.
+  const user = session?.user && !session.user.isGuest ? session.user : null;
 
-  const registration = email
-    ? await getEventRegistration({ eventId, email })
+  const registration = user
+    ? await getEventRegistration({ eventId, email: user.email })
     : null;
 
-  if (!registration) {
-    return <>{children}</>;
+  const phase = getEventPhase({ status, start, end, now: new Date() });
+
+  // A canceled event overrides everything else.
+  if (phase === "canceled") {
+    return <RsvpNotice variant="canceled" />;
   }
 
-  return (
-    <RsvpStatus
-      name={registration.inviteeName}
-      email={registration.inviteeEmail}
-      inviteUid={registration.uid}
-    />
-  );
+  // Registered: show the status, layering a notice for started/ended events
+  // and offering cancellation only while the event is still upcoming.
+  if (registration) {
+    const notice =
+      phase === "ended" ? (
+        <RsvpNotice variant="ended" />
+      ) : phase === "inProgress" ? (
+        <RsvpNotice variant="inProgress" />
+      ) : null;
+
+    return (
+      <div className="flex flex-col gap-3">
+        {notice ? (
+          <>
+            {notice}
+            <Separator />
+          </>
+        ) : null}
+        <RsvpRegistered
+          name={registration.inviteeName}
+          email={registration.inviteeEmail}
+        />
+        {phase === "upcoming" ? (
+          <>
+            <Separator />
+            <RsvpCancel inviteUid={registration.uid} />
+          </>
+        ) : null}
+      </div>
+    );
+  }
+
+  // Not registered: surface why registration is unavailable, otherwise the CTA.
+  if (phase === "ended") {
+    return <RsvpNotice variant="ended" />;
+  }
+  if (phase === "inProgress") {
+    return <RsvpNotice variant="inProgress" />;
+  }
+  if (isEventFull({ capacity, acceptedCount })) {
+    return <RsvpNotice variant="full" />;
+  }
+
+  if (user) {
+    return (
+      <RsvpOneClickRegister
+        eventId={eventId}
+        name={user.name}
+        email={user.email}
+        image={user.image ?? undefined}
+      />
+    );
+  }
+
+  return <RsvpRegister />;
 }

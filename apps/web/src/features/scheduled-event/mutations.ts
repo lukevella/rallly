@@ -9,11 +9,14 @@ export async function createRsvp({
   name,
   email,
   status,
+  inviteeId,
 }: {
   eventId: string;
   name: string;
   email: string;
   status: Extract<ScheduledEventInviteStatus, "accepted" | "declined">;
+  // Links the registration to a user account when the registrant is logged in.
+  inviteeId?: string;
 }) {
   const existing = await prisma.scheduledEventInvite.findFirst({
     where: { scheduledEventId: eventId, inviteeEmail: email },
@@ -30,6 +33,7 @@ export async function createRsvp({
       scheduledEventId: eventId,
       inviteeName: name,
       inviteeEmail: email,
+      inviteeId,
       status,
     },
     select: { uid: true },
