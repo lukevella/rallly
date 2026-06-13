@@ -1,6 +1,7 @@
 import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { posthog } from "@/features/analytics/posthog";
+import { updateSpaceTier } from "@/features/space/mutations";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
 import {
   getExpandedSubscription,
@@ -42,52 +43,42 @@ export async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
   const quantity = subscriptionItem.quantity ?? 1;
 
   // Update the subscription in the database
-  await prisma.$transaction(async (tx) => {
-    await tx.subscription.upsert({
-      where: {
-        id: subscription.id,
-      },
-      update: {
-        active: isActive,
-        priceId,
-        currency,
-        interval,
-        subscriptionItemId,
-        quantity,
-        amount,
-        status: subscription.status,
-        periodStart: toDate(subscription.current_period_start),
-        periodEnd: toDate(subscription.current_period_end),
-        cancelAtPeriodEnd: subscription.cancel_at_period_end,
-      },
-      create: {
-        id: subscription.id,
-        userId,
-        spaceId,
-        active: isActive,
-        priceId,
-        currency,
-        interval,
-        subscriptionItemId,
-        quantity,
-        amount,
-        status: subscription.status,
-        periodStart: toDate(subscription.current_period_start),
-        periodEnd: toDate(subscription.current_period_end),
-        cancelAtPeriodEnd: subscription.cancel_at_period_end,
-      },
-    });
-
-    await tx.space.update({
-      where: {
-        id: spaceId,
-      },
-      data: {
-        tier,
-        ...(tier === "hobby" ? { showBranding: false } : {}),
-      },
-    });
+  await prisma.subscription.upsert({
+    where: {
+      id: subscription.id,
+    },
+    update: {
+      active: isActive,
+      priceId,
+      currency,
+      interval,
+      subscriptionItemId,
+      quantity,
+      amount,
+      status: subscription.status,
+      periodStart: toDate(subscription.current_period_start),
+      periodEnd: toDate(subscription.current_period_end),
+      cancelAtPeriodEnd: subscription.cancel_at_period_end,
+    },
+    create: {
+      id: subscription.id,
+      userId,
+      spaceId,
+      active: isActive,
+      priceId,
+      currency,
+      interval,
+      subscriptionItemId,
+      quantity,
+      amount,
+      status: subscription.status,
+      periodStart: toDate(subscription.current_period_start),
+      periodEnd: toDate(subscription.current_period_end),
+      cancelAtPeriodEnd: subscription.cancel_at_period_end,
+    },
   });
+
+  await updateSpaceTier({ spaceId, tier });
 
   posthog()?.groupIdentify({
     groupType: "space",

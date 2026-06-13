@@ -4,7 +4,6 @@ import { sendSpaceInviteEmail } from "@rallly/emails/templates/space-invite";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
-import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
 import { posthog } from "@/features/analytics/posthog";
@@ -16,7 +15,12 @@ import {
   getSpaceSeatCount,
 } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
-import { createSpace } from "@/features/space/mutations";
+import {
+  createSpace,
+  updateSpace,
+  updateSpaceImage,
+  updateSpaceShowBranding,
+} from "@/features/space/mutations";
 import { memberRoleSchema } from "@/features/space/schema";
 import type { SpaceDTO } from "@/features/space/types";
 import {
@@ -25,10 +29,7 @@ import {
   toDBRole,
 } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
-import {
-  deleteImageFromS3,
-  getImageUploadUrl,
-} from "@/lib/storage/image-upload";
+import { getImageUploadUrl } from "@/lib/storage/image-upload";
 import {
   createRateLimitMiddleware,
   privateProcedure,
@@ -290,14 +291,10 @@ export const spaces = router({
         });
       }
 
-      await prisma.space.update({
-        where: { id: ctx.space.id },
-        data: {
-          ...(input.name !== undefined && { name: input.name }),
-          ...(input.primaryColor !== undefined && {
-            primaryColor: input.primaryColor,
-          }),
-        },
+      await updateSpace({
+        spaceId: ctx.space.id,
+        name: input.name,
+        primaryColor: input.primaryColor,
       });
 
       posthog()?.capture({
@@ -334,9 +331,9 @@ export const spaces = router({
         });
       }
 
-      await prisma.space.update({
-        where: { id: ctx.space.id },
-        data: { showBranding: input.showBranding },
+      await updateSpaceShowBranding({
+        spaceId: ctx.space.id,
+        showBranding: input.showBranding,
       });
 
       posthog()?.groupIdentify({
@@ -859,16 +856,10 @@ export const spaces = router({
         });
       }
 
-      const oldImageKey = ctx.space.image;
-
-      await prisma.space.update({
-        where: { id: ctx.space.id },
-        data: { image: input.imageKey },
+      await updateSpaceImage({
+        spaceId: ctx.space.id,
+        imageKey: input.imageKey,
       });
-
-      if (oldImageKey) {
-        after(() => deleteImageFromS3(oldImageKey));
-      }
     }),
 
   removeImage: spaceProcedure.mutation(async ({ ctx }) => {
@@ -884,15 +875,9 @@ export const spaces = router({
       });
     }
 
-    const oldImageKey = ctx.space.image;
-
-    await prisma.space.update({
-      where: { id: ctx.space.id },
-      data: { image: null },
+    await updateSpaceImage({
+      spaceId: ctx.space.id,
+      imageKey: null,
     });
-
-    if (oldImageKey) {
-      await deleteImageFromS3(oldImageKey);
-    }
   }),
 });

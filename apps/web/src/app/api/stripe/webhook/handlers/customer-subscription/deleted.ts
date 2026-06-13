@@ -2,6 +2,7 @@ import type { Stripe } from "@rallly/billing";
 import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { posthog } from "@/features/analytics/posthog";
+import { updateSpaceTier } from "@/features/space/mutations";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
 
 export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
@@ -27,27 +28,17 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
 
   const { userId, spaceId } = res.data;
 
-  await prisma.$transaction(async (tx) => {
-    await tx.subscription.update({
-      where: {
-        id: subscription.id,
-      },
-      data: {
-        active: false,
-        status: "canceled",
-      },
-    });
-
-    await tx.space.update({
-      where: {
-        id: spaceId,
-      },
-      data: {
-        tier: "hobby",
-        showBranding: false,
-      },
-    });
+  await prisma.subscription.update({
+    where: {
+      id: subscription.id,
+    },
+    data: {
+      active: false,
+      status: "canceled",
+    },
   });
+
+  await updateSpaceTier({ spaceId, tier: "hobby" });
 
   posthog()?.groupIdentify({
     groupType: "space",
