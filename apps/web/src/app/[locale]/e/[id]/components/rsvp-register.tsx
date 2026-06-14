@@ -1,11 +1,12 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
+import { useDialog } from "@rallly/ui/dialog";
 import { Trans } from "@/i18n/client";
-import { useRegistrationFlow } from "./registration-flow";
+import { RegistrationDialog } from "./registration-dialog";
 
-export function RsvpRegister() {
-  const flow = useRegistrationFlow();
+export function RsvpRegister({ eventId }: { eventId: string }) {
+  const dialog = useDialog();
 
   return (
     <div className="flex flex-col gap-3">
@@ -15,13 +16,10 @@ export function RsvpRegister() {
           defaults="To join this event, please register below."
         />
       </p>
-      <Button
-        size="lg"
-        variant="primary"
-        onClick={() => flow.setView("register")}
-      >
+      <Button size="lg" variant="primary" onClick={() => dialog.trigger()}>
         <Trans i18nKey="register" defaults="Register" />
       </Button>
+      <RegistrationDialog eventId={eventId} {...dialog.dialogProps} />
     </div>
   );
 }

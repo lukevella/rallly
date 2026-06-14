@@ -1,7 +1,7 @@
 import { buttonVariants } from "@rallly/ui";
 import { AvatarGroup } from "@rallly/ui/avatar";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import { ArrowLeftIcon, CircleCheckIcon, MapPinIcon } from "lucide-react";
+import { MapPinIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -41,13 +41,6 @@ import {
   EventTitle,
 } from "./components/event-header";
 import { EventSection, EventSectionTitle } from "./components/event-section";
-import {
-  RegistrationFlow,
-  RegistrationFlowRedirect,
-  RegistrationFlowTrigger,
-  RegistrationFlowView,
-} from "./components/registration-flow";
-import { RegistrationForm } from "./components/registration-form";
 import { RSVPArea } from "./components/rsvp-area";
 import {
   RsvpCard,
@@ -135,165 +128,105 @@ export default async function EventPage({
         </div>
       </header>
       <div className="mx-auto max-w-lg pt-16">
-        <RegistrationFlow>
-          <RegistrationFlowView view="details">
-            <div className="flex flex-col justify-between gap-6 p-4">
-              <EventHeader>
-                {isBranded && branding ? (
-                  <SpaceBranding
-                    className="mb-4"
-                    name={branding.name}
-                    image={branding.image ?? undefined}
-                  />
-                ) : null}
-                <EventTitle>{event.title}</EventTitle>
-                <EventSubtitle className="flex items-center gap-2">
-                  <OptimizedAvatarImage
-                    name={host.name}
-                    src={host.image ?? undefined}
-                    size="sm"
-                  />
-                  Hosted by {host.name}
-                </EventSubtitle>
-                <div className="mt-4 grid gap-4">
-                  <EventDetail>
-                    <CalendarCard>
-                      <CalendarCardMonth>
-                        {dayjs(event.start).format("MMM")}
-                      </CalendarCardMonth>
-                      <CalendarCardDay>
-                        {dayjs(event.start).format("D")}
-                      </CalendarCardDay>
-                    </CalendarCard>
-                    <EventDetailContent>
-                      <EventDetailTitle>
-                        {dayjs(event.start).format("dddd, D MMMM")}
-                      </EventDetailTitle>
-                      <EventDetailDescription>
-                        {dayjs(event.start).format("LT")} -{" "}
-                        {dayjs(event.end).format("LT z")}
-                      </EventDetailDescription>
-                    </EventDetailContent>
-                  </EventDetail>
-                  {event.location ? (
-                    <EventDetail>
-                      <EventDetailIcon>
-                        <MapPinIcon />
-                      </EventDetailIcon>
-                      <EventDetailContent>
-                        <EventDetailTitle>
-                          {formatLocationText(event.location)}
-                        </EventDetailTitle>
-                      </EventDetailContent>
-                    </EventDetail>
-                  ) : null}
-                </div>
-              </EventHeader>
-              <RsvpCard>
-                <RsvpCardTitle>
-                  <Trans i18nKey="rsvpCardTitle" defaults="Registration" />
-                </RsvpCardTitle>
-                <RsvpCardContent>
-                  <RSVPArea
-                    eventId={event.id}
-                    status={event.status}
-                    start={event.start}
-                    end={event.end}
-                    capacity={event.capacity}
-                    acceptedCount={acceptedCount}
-                  />
-                </RsvpCardContent>
-              </RsvpCard>
-              {event.description ? (
-                <EventSection>
-                  <EventSectionTitle>
-                    <Trans i18nKey="eventPageAbout" defaults="About" />
-                  </EventSectionTitle>
-                  <p className="whitespace-pre-wrap text-pretty text-foreground text-sm leading-relaxed">
-                    <TruncatedLinkify>{event.description}</TruncatedLinkify>
-                  </p>
-                </EventSection>
-              ) : null}
-              {visibleAttendees.length > 0 ? (
-                <EventSection>
-                  <EventSectionTitle>
-                    <Trans
-                      i18nKey="eventPageGoingCount"
-                      defaults="{count, plural, one {# going} other {# going}}"
-                      values={{ count: visibleAttendees.length }}
-                    />
-                  </EventSectionTitle>
-                  <AvatarGroup>
-                    {visibleAttendees.map((attendee) => (
-                      <OptimizedAvatarImage
-                        key={attendee.id}
-                        name={attendee.name}
-                        src={attendee.image}
-                        size="md"
-                      />
-                    ))}
-                  </AvatarGroup>
-                </EventSection>
-              ) : null}
-            </div>
-          </RegistrationFlowView>
-          <RegistrationFlowView view="register">
-            <div className="flex flex-col gap-6 p-6">
-              <div className="flex items-start gap-4">
-                <RegistrationFlowTrigger
-                  view="details"
-                  variant="ghost"
-                  size="icon"
-                  className="-mx-2"
-                >
-                  <ArrowLeftIcon />
-                  <span className="sr-only">
-                    <Trans i18nKey="back" defaults="Back" />
-                  </span>
-                </RegistrationFlowTrigger>
+        <div className="flex flex-col justify-between gap-6 p-4">
+          <EventHeader>
+            {isBranded && branding ? (
+              <SpaceBranding
+                className="mb-4"
+                name={branding.name}
+                image={branding.image ?? undefined}
+              />
+            ) : null}
+            <EventTitle>{event.title}</EventTitle>
+            <EventSubtitle className="flex items-center gap-2">
+              <OptimizedAvatarImage
+                name={host.name}
+                src={host.image ?? undefined}
+                size="sm"
+              />
+              Hosted by {host.name}
+            </EventSubtitle>
+            <div className="mt-4 grid gap-4">
+              <EventDetail>
+                <CalendarCard>
+                  <CalendarCardMonth>
+                    {dayjs(event.start).format("MMM")}
+                  </CalendarCardMonth>
+                  <CalendarCardDay>
+                    {dayjs(event.start).format("D")}
+                  </CalendarCardDay>
+                </CalendarCard>
+                <EventDetailContent>
+                  <EventDetailTitle>
+                    {dayjs(event.start).format("dddd, D MMMM")}
+                  </EventDetailTitle>
+                  <EventDetailDescription>
+                    {dayjs(event.start).format("LT")} -{" "}
+                    {dayjs(event.end).format("LT z")}
+                  </EventDetailDescription>
+                </EventDetailContent>
+              </EventDetail>
+              {event.location ? (
                 <EventDetail>
+                  <EventDetailIcon>
+                    <MapPinIcon />
+                  </EventDetailIcon>
                   <EventDetailContent>
-                    <EventDetailTitle>{event.title}</EventDetailTitle>
-                    <EventDetailDescription>
-                      {dayjs(event.start).format("dddd, D MMMM")} ·{" "}
-                      {dayjs(event.start).format("LT z")}
-                    </EventDetailDescription>
+                    <EventDetailTitle>
+                      {formatLocationText(event.location)}
+                    </EventDetailTitle>
                   </EventDetailContent>
                 </EventDetail>
-              </div>
-              <EventSection className="gap-4">
-                <h1 className="font-semibold text-lg tracking-tight">
-                  <Trans
-                    i18nKey="eventRegisterYourDetails"
-                    defaults="Your details"
-                  />
-                </h1>
-                <RegistrationForm eventId={event.id} />
-              </EventSection>
+              ) : null}
             </div>
-          </RegistrationFlowView>
-          <RegistrationFlowView view="success">
-            <RegistrationFlowRedirect view="details" />
-            <div className="flex flex-col items-center gap-4 p-6 py-16 text-center">
-              <CircleCheckIcon className="size-10 text-green-600" />
-              <div className="grid gap-1">
-                <h1 className="font-semibold text-lg tracking-tight">
-                  <Trans
-                    i18nKey="eventRegisterSuccessTitle"
-                    defaults="You're registered"
+          </EventHeader>
+          <RsvpCard>
+            <RsvpCardTitle>
+              <Trans i18nKey="rsvpCardTitle" defaults="Registration" />
+            </RsvpCardTitle>
+            <RsvpCardContent>
+              <RSVPArea
+                eventId={event.id}
+                status={event.status}
+                start={event.start}
+                end={event.end}
+                capacity={event.capacity}
+                acceptedCount={acceptedCount}
+              />
+            </RsvpCardContent>
+          </RsvpCard>
+          {event.description ? (
+            <EventSection>
+              <EventSectionTitle>
+                <Trans i18nKey="eventPageAbout" defaults="About" />
+              </EventSectionTitle>
+              <p className="whitespace-pre-wrap text-pretty text-foreground text-sm leading-relaxed">
+                <TruncatedLinkify>{event.description}</TruncatedLinkify>
+              </p>
+            </EventSection>
+          ) : null}
+          {visibleAttendees.length > 0 ? (
+            <EventSection>
+              <EventSectionTitle>
+                <Trans
+                  i18nKey="eventPageGoingCount"
+                  defaults="{count, plural, one {# going} other {# going}}"
+                  values={{ count: visibleAttendees.length }}
+                />
+              </EventSectionTitle>
+              <AvatarGroup>
+                {visibleAttendees.map((attendee) => (
+                  <OptimizedAvatarImage
+                    key={attendee.id}
+                    name={attendee.name}
+                    src={attendee.image}
+                    size="md"
                   />
-                </h1>
-                <p className="text-muted-foreground text-sm">
-                  <Trans
-                    i18nKey="eventRegisterSuccessDescription"
-                    defaults="You're going to {title}"
-                    values={{ title: event.title }}
-                  />
-                </p>
-              </div>
-            </div>
-          </RegistrationFlowView>
-        </RegistrationFlow>
+                ))}
+              </AvatarGroup>
+            </EventSection>
+          ) : null}
+        </div>
       </div>
     </div>
   );

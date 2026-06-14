@@ -105,5 +105,5 @@ export async function RSVPArea({
     );
   }
 
-  return <RsvpRegister />;
+  return <RsvpRegister eventId={eventId} />;
 }
