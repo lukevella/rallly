@@ -36,12 +36,14 @@ export async function RSVPArea({
   acceptedCount: number;
 }) {
   const session = await getSession();
-  // Only real accounts get a server-resolved registration / one-click. Guests
-  // (anonymous sessions) are treated as logged out.
-  const user = session?.user && !session.user.isGuest ? session.user : null;
+  // The invite is tied to a user (real or anonymous), so any session can have
+  // a registration. Only real accounts, though, get the one-click CTA — guests
+  // without a registration are treated as logged out.
+  const user = session?.user ?? null;
+  const realUser = user && !user.isGuest ? user : null;
 
   const registration = user
-    ? await getEventRegistration({ eventId, email: user.email })
+    ? await getEventRegistration({ eventId, userId: user.id })
     : null;
 
   const phase = getEventPhase({ status, start, end, now: new Date() });
@@ -94,13 +96,13 @@ export async function RSVPArea({
     return <RsvpNotice variant="full" />;
   }
 
-  if (user) {
+  if (realUser) {
     return (
       <RsvpOneClickRegister
         eventId={eventId}
-        name={user.name}
-        email={user.email}
-        image={user.image ?? undefined}
+        name={realUser.name}
+        email={realUser.email}
+        image={realUser.image ?? undefined}
       />
     );
   }
