@@ -26,7 +26,13 @@ import { authClient } from "@/lib/auth-client";
 
 const otpSchema = z.object({ otp: z.string().regex(/^\d{6}$/) });
 
-export function RsvpVerifyEmail({ email }: { email: string }) {
+export function RsvpVerifyEmail({
+  email,
+  name,
+}: {
+  email: string;
+  name: string;
+}) {
   const { t } = useTranslation();
   const router = useRouter();
   const dialog = useDialog();
@@ -39,7 +45,12 @@ export function RsvpVerifyEmail({ email }: { email: string }) {
     // Verifying signs the guest in: into their existing account if the email
     // is already in use, otherwise into a freshly created one. The anonymous
     // session is linked, migrating their registration to the real account.
-    const res = await authClient.signIn.emailOtp({ email, otp: data.otp });
+    // `name` is only applied when a new account is created.
+    const res = await authClient.signIn.emailOtp({
+      email,
+      otp: data.otp,
+      name,
+    });
 
     if (res.error) {
       switch (res.error.code) {

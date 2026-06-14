@@ -79,7 +79,10 @@ export async function RSVPArea({
         {phase === "upcoming" && !realUser ? (
           <>
             <Separator />
-            <RsvpVerifyEmail email={registration.inviteeEmail} />
+            <RsvpVerifyEmail
+              email={registration.inviteeEmail}
+              name={registration.inviteeName}
+            />
           </>
         ) : null}
         {phase === "upcoming" ? (
