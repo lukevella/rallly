@@ -26,17 +26,28 @@ export const linkAnonymousUser = async (
   anonymousUserId: string,
 ) => {
   try {
-    // Event registrations aren't scoped to a space, so migrate them
-    // unconditionally — a freshly created account may not have its space yet,
-    // and we still need the registration to follow the user.
-    await prisma.scheduledEventInvite.updateMany({
-      where: {
-        inviteeId: anonymousUserId,
-      },
-      data: {
-        inviteeId: authenticatedUserId,
-      },
+    // Claim event registrations made with the account's own email. A
+    // registration's email is its identity (the host's record), so it must
+    // not be reassigned to an account that doesn't control that address —
+    // only the ones whose email matches follow the user. This is scoped
+    // independently of the space because a freshly created account may not
+    // have its space provisioned yet.
+    const authenticatedUser = await prisma.user.findUnique({
+      where: { id: authenticatedUserId },
+      select: { email: true },
     });
+
+    if (authenticatedUser?.email) {
+      await prisma.scheduledEventInvite.updateMany({
+        where: {
+          inviteeId: anonymousUserId,
+          inviteeEmail: authenticatedUser.email,
+        },
+        data: {
+          inviteeId: authenticatedUserId,
+        },
+      });
+    }
 
     const spaceId = await getActiveSpaceForUser({
       userId: authenticatedUserId,
