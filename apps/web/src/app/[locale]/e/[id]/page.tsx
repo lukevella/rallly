@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { SpaceBranding } from "@/app/[locale]/e/[id]/components/space-branding";
 import { UserDropdown } from "@/app/[locale]/e/[id]/components/user-dropdown";
-import LogoMark from "@/assets/logo-mark.svg";
+import LogoMarkGray from "@/assets/logo-mark-gray.svg";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { BrandingStyle } from "@/features/branding/branding-style";
@@ -115,7 +115,7 @@ export default async function EventPage({
       {brandingColor ? <BrandingStyle primaryColor={brandingColor} /> : null}
       <header className="fixed top-0 right-0 left-0 z-10 flex justify-between p-4">
         <Link href="/">
-          <LogoMark className="size-8" />
+          <LogoMarkGray className="size-8 text-muted-foreground" />
         </Link>
         <div className="flex items-center gap-2">
           {session?.user.isGuest === false ? (
