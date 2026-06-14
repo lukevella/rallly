@@ -87,6 +87,14 @@ export function RsvpVerifyEmail({
       }
     }
 
+    // A newly created account may come back without a name; set it from the
+    // registration. Existing accounts keep their own name (we only fill a
+    // missing one). updateUser also refreshes the session so the name shows
+    // immediately.
+    if (!res.data?.user?.name) {
+      await authClient.updateUser({ name });
+    }
+
     dialog.dismiss();
     router.refresh();
   });
