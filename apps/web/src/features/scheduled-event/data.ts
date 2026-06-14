@@ -42,20 +42,20 @@ export function getPublicScheduledEvent(id: string) {
   });
 }
 
-// Looks up the current user's registration for an event, keyed by email
-// (invites are email-keyed and case-insensitive). Returns the invite the
-// public event page needs to render the "you're going" state, or null.
+// Looks up the current user's registration for an event, keyed by the user
+// (real or anonymous) the invite is tied to. Returns the invite the public
+// event page needs to render the "you're going" state, or null.
 export function getEventRegistration({
   eventId,
-  email,
+  userId,
 }: {
   eventId: string;
-  email: string;
+  userId: string;
 }) {
   return prisma.scheduledEventInvite.findFirst({
     where: {
       scheduledEventId: eventId,
-      inviteeEmail: email,
+      inviteeId: userId,
       status: { not: "pending" },
     },
     select: {
