@@ -150,7 +150,11 @@ export const authLib = betterAuth({
       storeInDatabase: true,
     }),
     emailOTP({
-      disableSignUp: true,
+      // Sign-up via OTP is allowed so that registering for an event can either
+      // log a guest into their existing account or create one for a new email.
+      // The login page is unaffected: it sends "email-verification" OTPs and
+      // verifies with verifyEmail, neither of which is gated by this flag.
+      disableSignUp: false,
       expiresIn: 15 * 60,
       resendStrategy: "reuse",
       overrideDefaultEmailVerification: true,

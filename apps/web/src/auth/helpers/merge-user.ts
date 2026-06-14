@@ -66,6 +66,16 @@ export const linkAnonymousUser = async (
             userId: authenticatedUserId,
           },
         }),
+
+        // Transfer event registrations
+        tx.scheduledEventInvite.updateMany({
+          where: {
+            inviteeId: anonymousUserId,
+          },
+          data: {
+            inviteeId: authenticatedUserId,
+          },
+        }),
       ]);
     });
 

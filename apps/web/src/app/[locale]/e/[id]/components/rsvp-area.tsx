@@ -10,6 +10,7 @@ import { RsvpNotice } from "./rsvp-notice";
 import { RsvpOneClickRegister } from "./rsvp-one-click-register";
 import { RsvpRegister } from "./rsvp-register";
 import { RsvpRegistered } from "./rsvp-registered";
+import { RsvpVerifyEmail } from "./rsvp-verify-email";
 
 function Separator() {
   return <hr className="border-card-border" />;
@@ -75,6 +76,12 @@ export async function RSVPArea({
           name={registration.inviteeName}
           email={registration.inviteeEmail}
         />
+        {phase === "upcoming" && !realUser ? (
+          <>
+            <Separator />
+            <RsvpVerifyEmail email={registration.inviteeEmail} />
+          </>
+        ) : null}
         {phase === "upcoming" ? (
           <>
             <Separator />
