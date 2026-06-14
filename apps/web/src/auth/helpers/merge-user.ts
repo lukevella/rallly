@@ -25,59 +25,65 @@ export const linkAnonymousUser = async (
   authenticatedUserId: string,
   anonymousUserId: string,
 ) => {
-  const spaceId = await getActiveSpaceForUser({ userId: authenticatedUserId });
-
-  if (!spaceId) {
-    logger.error({ userId: authenticatedUserId }, "User has no active space");
-    return;
-  }
-
   try {
-    await prisma.$transaction(async (tx) => {
-      // Transfer all data from anonymous user to authenticated user
-      await Promise.all([
-        // Transfer polls
-        tx.poll.updateMany({
-          where: {
-            userId: anonymousUserId,
-          },
-          data: {
-            userId: authenticatedUserId,
-            spaceId,
-          },
-        }),
-
-        // Transfer participants
-        tx.participant.updateMany({
-          where: {
-            userId: anonymousUserId,
-          },
-          data: {
-            userId: authenticatedUserId,
-          },
-        }),
-
-        // Transfer comments
-        tx.comment.updateMany({
-          where: {
-            userId: anonymousUserId,
-          },
-          data: {
-            userId: authenticatedUserId,
-          },
-        }),
-
-        // Transfer event registrations
-        tx.scheduledEventInvite.updateMany({
-          where: {
-            inviteeId: anonymousUserId,
-          },
-          data: {
-            inviteeId: authenticatedUserId,
-          },
-        }),
-      ]);
+    // Event registrations aren't scoped to a space, so migrate them
+    // unconditionally — a freshly created account may not have its space yet,
+    // and we still need the registration to follow the user.
+    await prisma.scheduledEventInvite.updateMany({
+      where: {
+        inviteeId: anonymousUserId,
+      },
+      data: {
+        inviteeId: authenticatedUserId,
+      },
     });
+
+    const spaceId = await getActiveSpaceForUser({
+      userId: authenticatedUserId,
+    });
+
+    if (spaceId) {
+      await prisma.$transaction(async (tx) => {
+        // Transfer space-scoped data from anonymous user to authenticated user
+        await Promise.all([
+          // Transfer polls
+          tx.poll.updateMany({
+            where: {
+              userId: anonymousUserId,
+            },
+            data: {
+              userId: authenticatedUserId,
+              spaceId,
+            },
+          }),
+
+          // Transfer participants
+          tx.participant.updateMany({
+            where: {
+              userId: anonymousUserId,
+            },
+            data: {
+              userId: authenticatedUserId,
+            },
+          }),
+
+          // Transfer comments
+          tx.comment.updateMany({
+            where: {
+              userId: anonymousUserId,
+            },
+            data: {
+              userId: authenticatedUserId,
+            },
+          }),
+        ]);
+      });
+    } else {
+      logger.error(
+        { userId: authenticatedUserId },
+        "User has no active space; skipped poll/participant/comment migration",
+      );
+    }
 
     // Merge user identities in PostHog
     posthog()?.capture({
