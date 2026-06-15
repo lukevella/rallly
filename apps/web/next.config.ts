@@ -120,6 +120,28 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Browser-cache the manifest and root icons; without this they default to
+      // `max-age=0, must-revalidate` and are revalidated on every page load.
+      {
+        source: "/manifest.json",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        ],
+      },
+      {
+        // Single-segment root files only, so content-hashed `/_next/static/*`
+        // assets keep their immutable headers.
+        source: "/:file([^/]+\\.(?:ico|png|svg|webp))",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
     ];
   },
   devIndicators:
