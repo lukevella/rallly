@@ -452,7 +452,13 @@ export const authLib = betterAuth({
                 where: { id: session.userId },
                 data: { lastSeenAt: new Date() },
               })
-              .catch(() => null),
+              .catch((error) => {
+                logger.error(
+                  { error, userId: session.userId },
+                  "Failed to update lastSeenAt",
+                );
+                return null;
+              }),
           );
         },
       },
