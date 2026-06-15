@@ -448,7 +448,7 @@ export const authLib = betterAuth({
         after: async (session) => {
           after(() =>
             prisma.user
-              .updateMany({
+              .update({
                 where: { id: session.userId },
                 data: { lastSeenAt: new Date() },
               })
