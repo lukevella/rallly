@@ -221,7 +221,12 @@ const PollOptionsForm = ({
                     }
                   }}
                 />
-                <Label htmlFor="timeZone">
+                <Label
+                  htmlFor="timeZone"
+                  className={
+                    disableTimeZoneChange ? "text-muted-foreground" : undefined
+                  }
+                >
                   <Trans
                     i18nKey="autoTimeZone"
                     defaults="Automatic Time Zone Conversion"
@@ -232,19 +237,40 @@ const PollOptionsForm = ({
                     <InfoIcon className="size-4 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent className="w-72">
-                    <Trans
-                      i18nKey="autoTimeZoneHelp"
-                      defaults="Enable this setting to automatically adjust event times to each participant's local time zone."
-                    />
+                    {disableTimeZoneChange ? (
+                      <Trans
+                        i18nKey="autoTimeZoneDisabledHelp"
+                        defaults="Time zone cannot be changed after votes have been cast. To change the time zone, ask participants to clear their votes first."
+                      />
+                    ) : (
+                      <Trans
+                        i18nKey="autoTimeZoneHelp"
+                        defaults="Enable this setting to automatically adjust event times to each participant's local time zone."
+                      />
+                    )}
                   </TooltipContent>
                 </Tooltip>
               </div>
               {field.value ? (
-                <TimeZoneSelect
-                  disabled={disableTimeZoneChange}
-                  value={field.value}
-                  onValueChange={field.onChange}
-                />
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <TimeZoneSelect
+                        disabled={disableTimeZoneChange}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      />
+                    </span>
+                  </TooltipTrigger>
+                  {disableTimeZoneChange ? (
+                    <TooltipContent className="w-72">
+                      <Trans
+                        i18nKey="autoTimeZoneDisabledHelp"
+                        defaults="Time zone cannot be changed after votes have been cast. To change the time zone, ask participants to clear their votes first."
+                      />
+                    </TooltipContent>
+                  ) : null}
+                </Tooltip>
               ) : null}
             </div>
           )}
