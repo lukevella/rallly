@@ -56,6 +56,7 @@ model User {
   role            UserRole    @default(user)
   lastLoginMethod String?     @map("last_login_method")
   isAnonymous     Boolean     @default(false) @map("anonymous")
+  lastSeenAt      DateTime    @default(now()) @map("last_seen_at")
 
   comments                Comment[]
   polls                   Poll[]
