@@ -4,7 +4,6 @@ import {
   eventTypes,
   polls,
   scheduledEvents,
-  sheets,
   spaceMembers,
   spaces,
   users,
@@ -191,20 +190,6 @@ async function main() {
     })),
   });
   console.info(`✓ ${eventTypes.length} event types`);
-
-  // 7. Sheets
-  await prisma.sheet.createMany({
-    data: sheets.map((sheet, i) => ({
-      id: sheet.id,
-      spaceId: sheet.spaceId,
-      hostId: sheet.hostId,
-      title: sheet.title,
-      description: sheet.description,
-      urlId: sheet.urlId,
-      updatedAt: new Date(now - i * 60_000),
-    })),
-  });
-  console.info(`✓ ${sheets.length} sheets`);
 }
 
 main()

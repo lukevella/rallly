@@ -4,7 +4,6 @@ import { isBillingEnabled } from "@/features/billing/constants";
 import { isCalendarsEnabled } from "@/features/calendars/constants";
 import { isEventTypesEnabled } from "@/features/event-types/constants";
 import { isFeedbackEnabled } from "@/features/feedback/constants";
-import { isSignupSheetsEnabled } from "@/features/sheets/constants";
 import type { FeatureFlagConfig } from "@/lib/feature-flags/types";
 import { isStorageEnabled } from "@/lib/storage";
 
@@ -19,5 +18,4 @@ export const featureFlagConfig: FeatureFlagConfig = {
   registration: isEmailLoginEnabled && isRegistrationEnabled,
   calendars: isCalendarsEnabled,
   eventTypes: isEventTypesEnabled,
-  signupSheets: isSignupSheetsEnabled,
 };
