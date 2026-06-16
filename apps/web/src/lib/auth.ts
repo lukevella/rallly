@@ -152,6 +152,7 @@ export const authLib = betterAuth({
     emailOTP({
       disableSignUp: true,
       expiresIn: 15 * 60,
+      resendStrategy: "reuse",
       overrideDefaultEmailVerification: true,
       changeEmail: {
         enabled: true,
