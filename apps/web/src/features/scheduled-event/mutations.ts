@@ -1,5 +1,5 @@
 import type { ScheduledEventInviteStatus } from "@rallly/database";
-import { prisma } from "@rallly/database";
+import { Prisma, prisma } from "@rallly/database";
 import { nanoid } from "@rallly/utils/nanoid";
 import { updateTag } from "next/cache";
 import { scheduledEventTag } from "@/features/scheduled-event/constants";
@@ -18,26 +18,31 @@ export async function createRsvp({
   // Links the registration to a user account when the registrant is logged in.
   inviteeId?: string;
 }) {
-  const existing = await prisma.scheduledEventInvite.findFirst({
-    where: { scheduledEventId: eventId, inviteeEmail: email },
-    select: { id: true },
-  });
-
-  if (existing) {
-    return { ok: false, reason: "already_responded" } as const;
+  let invite: { uid: string };
+  try {
+    // The unique (scheduledEventId, inviteeEmail) index makes this atomic: a
+    // concurrent duplicate fails with P2002 instead of racing past a prior
+    // existence check.
+    invite = await prisma.scheduledEventInvite.create({
+      data: {
+        uid: nanoid(),
+        scheduledEventId: eventId,
+        inviteeName: name,
+        inviteeEmail: email,
+        inviteeId,
+        status,
+      },
+      select: { uid: true },
+    });
+  } catch (e) {
+    if (
+      e instanceof Prisma.PrismaClientKnownRequestError &&
+      e.code === "P2002"
+    ) {
+      return { ok: false, reason: "already_responded" } as const;
+    }
+    throw e;
   }
-
-  const invite = await prisma.scheduledEventInvite.create({
-    data: {
-      uid: nanoid(),
-      scheduledEventId: eventId,
-      inviteeName: name,
-      inviteeEmail: email,
-      inviteeId,
-      status,
-    },
-    select: { uid: true },
-  });
 
   updateTag(scheduledEventTag(eventId));
 

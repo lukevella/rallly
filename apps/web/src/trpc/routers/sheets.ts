@@ -1,4 +1,4 @@
-import { prisma } from "@rallly/database";
+import { Prisma, prisma } from "@rallly/database";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
@@ -310,16 +310,32 @@ const bookings = router({
         );
 
         if (slot.scheduledEvent) {
-          await tx.scheduledEventInvite.create({
-            data: {
-              uid: inviteUid,
-              scheduledEventId: slot.scheduledEvent.id,
-              inviteeName: input.name,
-              inviteeEmail: input.email,
-              inviteeTimeZone: input.timeZone,
-              status: "accepted",
-            },
-          });
+          try {
+            // Backs the existence check above: the unique
+            // (scheduledEventId, inviteeEmail) index rejects a concurrent
+            // duplicate booking that races past it.
+            await tx.scheduledEventInvite.create({
+              data: {
+                uid: inviteUid,
+                scheduledEventId: slot.scheduledEvent.id,
+                inviteeName: input.name,
+                inviteeEmail: input.email,
+                inviteeTimeZone: input.timeZone,
+                status: "accepted",
+              },
+            });
+          } catch (e) {
+            if (
+              e instanceof Prisma.PrismaClientKnownRequestError &&
+              e.code === "P2002"
+            ) {
+              throw new TRPCError({
+                code: "CONFLICT",
+                message: "You've already booked this slot",
+              });
+            }
+            throw e;
+          }
           return {
             scheduledEventId: slot.scheduledEvent.id,
             attendeeUid: inviteUid,
