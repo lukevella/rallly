@@ -16,7 +16,7 @@ export function RsvpRegister({ eventId }: { eventId: string }) {
           defaults="To join this event, please register below."
         />
       </p>
-      <Button size="lg" variant="primary" onClick={() => dialog.trigger()}>
+      <Button size="lg" variant="primary" {...dialog.triggerProps}>
         <Trans i18nKey="register" defaults="Register" />
       </Button>
       <RegistrationDialog eventId={eventId} {...dialog.dialogProps} />
