@@ -424,20 +424,42 @@ export const authLib = betterAuth({
     session: {
       create: {
         after: async (session) => {
-          const user = await prisma.user.findUnique({
-            where: { id: session.userId },
-            select: { isAnonymous: true, lastLoginMethod: true },
-          });
+          after(async () => {
+            const user = await prisma.user
+              .update({
+                where: { id: session.userId },
+                data: { lastSeenAt: new Date() },
+                select: { isAnonymous: true, lastLoginMethod: true },
+              })
+              .catch(() => null);
 
-          // Only track login events for non-anonymous users
-          // Anonymous users shouldn't trigger login events or create person profiles
-          if (user && !user.isAnonymous) {
-            posthog()?.capture({
-              distinctId: session.userId,
-              event: "login",
-              properties: { method: user.lastLoginMethod },
-            });
-          }
+            // Anonymous users shouldn't trigger login events or create person profiles.
+            if (user && !user.isAnonymous) {
+              posthog()?.capture({
+                distinctId: session.userId,
+                event: "login",
+                properties: { method: user.lastLoginMethod },
+              });
+            }
+          });
+        },
+      },
+      update: {
+        after: async (session) => {
+          after(() =>
+            prisma.user
+              .update({
+                where: { id: session.userId },
+                data: { lastSeenAt: new Date() },
+              })
+              .catch((error) => {
+                logger.error(
+                  { error, userId: session.userId },
+                  "Failed to update lastSeenAt",
+                );
+                return null;
+              }),
+          );
         },
       },
     },
