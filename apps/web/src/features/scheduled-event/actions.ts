@@ -2,7 +2,10 @@
 
 import { headers } from "next/headers";
 import * as z from "zod";
-import { getPublicScheduledEvent } from "@/features/scheduled-event/data";
+import {
+  getEventAcceptedCount,
+  getPublicScheduledEvent,
+} from "@/features/scheduled-event/data";
 import { cancelRsvp, createRsvp } from "@/features/scheduled-event/mutations";
 import {
   getEventPhase,
@@ -35,9 +38,7 @@ async function assertRegistrationOpen(eventId: string) {
     });
   }
 
-  const acceptedCount = event.invites.filter(
-    (invite) => invite.status === "accepted",
-  ).length;
+  const acceptedCount = await getEventAcceptedCount({ eventId });
 
   if (isEventFull({ capacity: event.capacity, acceptedCount })) {
     throw new AppError({ code: "FORBIDDEN", message: "Event is full" });

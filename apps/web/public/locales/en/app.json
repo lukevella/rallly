@@ -251,6 +251,7 @@
   "eventHostDescription": "You are the creator of this poll",
   "eventPageAbout": "About",
   "eventPageGoingCount": "{count, plural, one {# going} other {# going}}",
+  "eventPageHostedBy": "Hosted by {name}",
   "eventRegisterAlreadyResponded": "This email has already been used to respond",
   "eventRegisterSuccessTitle": "You're registered",
   "eventRegisterYourDetails": "Your details",

@@ -1,5 +1,5 @@
 import { buttonVariants } from "@rallly/ui";
-import { AvatarGroup } from "@rallly/ui/avatar";
+import { AvatarGroup, AvatarGroupCount } from "@rallly/ui/avatar";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { MapPinIcon } from "lucide-react";
 import type { Metadata } from "next";
@@ -16,11 +16,13 @@ import { formatLocationText } from "@/features/location/utils";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
 import {
   createScheduledEventDTO,
+  getEventAcceptedCount,
+  getEventAttendeePreview,
   getPublicScheduledEvent,
 } from "@/features/scheduled-event/data";
 import { getSpaceBranding } from "@/features/space/data";
 import { getUserProfile } from "@/features/user/data";
-import { Trans } from "@/i18n/client";
+import { getTranslation } from "@/i18n/server";
 import { getSession } from "@/lib/auth";
 import { dayjs } from "@/lib/dayjs";
 import {
@@ -48,6 +50,8 @@ import {
   RsvpCardTitle,
 } from "./components/rsvp-card";
 
+const ATTENDEE_PREVIEW_LIMIT = 5;
+
 const getScheduledEvent = cache(async (id: string) => {
   const event = await getPublicScheduledEvent(id);
 
@@ -71,9 +75,13 @@ export default async function EventPage({
   }
   const { id } = await params;
   const event = await getScheduledEvent(id);
-  const [branding, host] = await Promise.all([
+  const [branding, host, acceptedCount, visibleAttendees] = await Promise.all([
     getSpaceBranding(event.spaceId),
     getUserProfile(event.userId),
+    getEventAcceptedCount({ eventId: id }),
+    event.hideAttendees
+      ? Promise.resolve([])
+      : getEventAttendeePreview({ eventId: id, take: ATTENDEE_PREVIEW_LIMIT }),
   ]);
 
   if (!host) {
@@ -87,21 +95,9 @@ export default async function EventPage({
     branding?.showBranding && branding.primaryColor
       ? branding.primaryColor
       : null;
-  const visibleAttendees = event.hideAttendees
-    ? []
-    : event.invites
-        .filter((invite) => invite.status !== "pending")
-        .map((invite) => ({
-          id: invite.id,
-          name: invite.inviteeName,
-          image: invite.user?.image ?? undefined,
-          status: invite.status,
-        }));
-  const acceptedCount = event.invites.filter(
-    (invite) => invite.status === "accepted",
-  ).length;
 
   const session = await getSession();
+  const { t } = await getTranslation();
 
   return (
     <div className="page-bg-gray-50 absolute inset-0 h-dvh overflow-auto md:h-dvh md:items-center md:justify-center md:p-5 dark:bg-gray-900">
@@ -122,7 +118,7 @@ export default async function EventPage({
               href="/login"
               className={buttonVariants({ variant: "ghost", size: "sm" })}
             >
-              <Trans i18nKey="signIn" defaults="Sign in" />
+              {t("signIn", { defaultValue: "Sign in" })}
             </Link>
           )}
         </div>
@@ -144,7 +140,10 @@ export default async function EventPage({
                 src={host.image ?? undefined}
                 size="sm"
               />
-              Hosted by {host.name}
+              {t("eventPageHostedBy", {
+                defaultValue: "Hosted by {name}",
+                name: host.name,
+              })}
             </EventSubtitle>
             <div className="mt-4 grid gap-4">
               <EventDetail>
@@ -182,7 +181,7 @@ export default async function EventPage({
           </EventHeader>
           <RsvpCard>
             <RsvpCardTitle>
-              <Trans i18nKey="rsvpCardTitle" defaults="Registration" />
+              {t("rsvpCardTitle", { defaultValue: "Registration" })}
             </RsvpCardTitle>
             <RsvpCardContent>
               <RSVPArea
@@ -198,7 +197,7 @@ export default async function EventPage({
           {event.description ? (
             <EventSection>
               <EventSectionTitle>
-                <Trans i18nKey="eventPageAbout" defaults="About" />
+                {t("eventPageAbout", { defaultValue: "About" })}
               </EventSectionTitle>
               <p className="whitespace-pre-wrap text-pretty text-foreground text-sm leading-relaxed">
                 <TruncatedLinkify>{event.description}</TruncatedLinkify>
@@ -208,11 +207,11 @@ export default async function EventPage({
           {visibleAttendees.length > 0 ? (
             <EventSection>
               <EventSectionTitle>
-                <Trans
-                  i18nKey="eventPageGoingCount"
-                  defaults="{count, plural, one {# going} other {# going}}"
-                  values={{ count: visibleAttendees.length }}
-                />
+                {t("eventPageGoingCount", {
+                  defaultValue:
+                    "{count, plural, one {# going} other {# going}}",
+                  count: acceptedCount,
+                })}
               </EventSectionTitle>
               <AvatarGroup>
                 {visibleAttendees.map((attendee) => (
@@ -223,6 +222,11 @@ export default async function EventPage({
                     size="md"
                   />
                 ))}
+                {acceptedCount > visibleAttendees.length ? (
+                  <AvatarGroupCount>
+                    +{acceptedCount - visibleAttendees.length}
+                  </AvatarGroupCount>
+                ) : null}
               </AvatarGroup>
             </EventSection>
           ) : null}

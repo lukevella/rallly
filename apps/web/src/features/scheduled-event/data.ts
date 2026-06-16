@@ -26,20 +26,44 @@ export function getPublicScheduledEvent(id: string) {
       hideAttendees: true,
       userId: true,
       spaceId: true,
-      invites: {
-        select: {
-          id: true,
-          inviteeName: true,
-          status: true,
-          user: {
-            select: {
-              image: true,
-            },
-          },
-        },
-      },
     },
   });
+}
+
+// Live count of accepted registrations. Kept separate from the event read so
+// the (stable) event can be cached while this churns on every RSVP, and so the
+// capacity gate always sees a fresh count.
+export function getEventAcceptedCount({ eventId }: { eventId: string }) {
+  return prisma.scheduledEventInvite.count({
+    where: { scheduledEventId: eventId, status: "accepted" },
+  });
+}
+
+// A capped slice of accepted attendees for the avatar preview — never the full
+// list, which is unbounded. Pair with getEventAcceptedCount for the total.
+export async function getEventAttendeePreview({
+  eventId,
+  take,
+}: {
+  eventId: string;
+  take: number;
+}) {
+  const invites = await prisma.scheduledEventInvite.findMany({
+    where: { scheduledEventId: eventId, status: "accepted" },
+    select: {
+      id: true,
+      inviteeName: true,
+      user: { select: { image: true } },
+    },
+    orderBy: { createdAt: "asc" },
+    take,
+  });
+
+  return invites.map((invite) => ({
+    id: invite.id,
+    name: invite.inviteeName,
+    image: invite.user?.image ?? undefined,
+  }));
 }
 
 // Looks up the current user's registration for an event, keyed by the user
