@@ -25,49 +25,76 @@ export const linkAnonymousUser = async (
   authenticatedUserId: string,
   anonymousUserId: string,
 ) => {
-  const spaceId = await getActiveSpaceForUser({ userId: authenticatedUserId });
-
-  if (!spaceId) {
-    logger.error({ userId: authenticatedUserId }, "User has no active space");
-    return;
-  }
-
   try {
-    await prisma.$transaction(async (tx) => {
-      // Transfer all data from anonymous user to authenticated user
-      await Promise.all([
-        // Transfer polls
-        tx.poll.updateMany({
-          where: {
-            userId: anonymousUserId,
-          },
-          data: {
-            userId: authenticatedUserId,
-            spaceId,
-          },
-        }),
-
-        // Transfer participants
-        tx.participant.updateMany({
-          where: {
-            userId: anonymousUserId,
-          },
-          data: {
-            userId: authenticatedUserId,
-          },
-        }),
-
-        // Transfer comments
-        tx.comment.updateMany({
-          where: {
-            userId: anonymousUserId,
-          },
-          data: {
-            userId: authenticatedUserId,
-          },
-        }),
-      ]);
+    // Claim event registrations made with the account's own email. A
+    // registration's email is its identity (the host's record), so it must
+    // not be reassigned to an account that doesn't control that address —
+    // only the ones whose email matches follow the user. This is scoped
+    // independently of the space because a freshly created account may not
+    // have its space provisioned yet.
+    const authenticatedUser = await prisma.user.findUnique({
+      where: { id: authenticatedUserId },
+      select: { email: true },
     });
+
+    if (authenticatedUser?.email) {
+      await prisma.scheduledEventInvite.updateMany({
+        where: {
+          inviteeId: anonymousUserId,
+          inviteeEmail: authenticatedUser.email,
+        },
+        data: {
+          inviteeId: authenticatedUserId,
+        },
+      });
+    }
+
+    const spaceId = await getActiveSpaceForUser({
+      userId: authenticatedUserId,
+    });
+
+    if (spaceId) {
+      await prisma.$transaction(async (tx) => {
+        // Transfer space-scoped data from anonymous user to authenticated user
+        await Promise.all([
+          // Transfer polls
+          tx.poll.updateMany({
+            where: {
+              userId: anonymousUserId,
+            },
+            data: {
+              userId: authenticatedUserId,
+              spaceId,
+            },
+          }),
+
+          // Transfer participants
+          tx.participant.updateMany({
+            where: {
+              userId: anonymousUserId,
+            },
+            data: {
+              userId: authenticatedUserId,
+            },
+          }),
+
+          // Transfer comments
+          tx.comment.updateMany({
+            where: {
+              userId: anonymousUserId,
+            },
+            data: {
+              userId: authenticatedUserId,
+            },
+          }),
+        ]);
+      });
+    } else {
+      logger.error(
+        { userId: authenticatedUserId },
+        "User has no active space; skipped poll/participant/comment migration",
+      );
+    }
 
     // Merge user identities in PostHog
     posthog()?.capture({

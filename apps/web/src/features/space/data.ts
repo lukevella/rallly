@@ -97,6 +97,18 @@ export const getMember = async (id: string) => {
   return createMemberDTO(member);
 };
 
+export function getSpaceBranding(spaceId: string) {
+  return prisma.space.findUnique({
+    where: { id: spaceId },
+    select: {
+      name: true,
+      image: true,
+      showBranding: true,
+      primaryColor: true,
+    },
+  });
+}
+
 export const getActiveSpaceForUser = async (userId: string) => {
   const spaceMember = await prisma.spaceMember.findFirst({
     where: {

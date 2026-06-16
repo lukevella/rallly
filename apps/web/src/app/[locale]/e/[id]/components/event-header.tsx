@@ -12,7 +12,7 @@ export function EventHeader({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <header className={cn("px-4 pb-6", className)}>{children}</header>;
+  return <header className={cn(className)}>{children}</header>;
 }
 
 export function EventTitle({
@@ -25,7 +25,7 @@ export function EventTitle({
   return (
     <h1
       className={cn(
-        "text-balance font-semibold text-foreground text-xl leading-tight tracking-tight",
+        "text-balance font-semibold text-foreground text-xl leading-tight tracking-tight md:text-2xl",
         className,
       )}
     >

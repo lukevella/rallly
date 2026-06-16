@@ -1,63 +1,93 @@
 import type { Prisma, ScheduledEventStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { unstable_cache } from "next/cache";
 import { parseConferencing } from "@/features/conferencing/data";
 import type { Conferencing } from "@/features/conferencing/schema";
 import { parseLocation } from "@/features/location/data";
 import type { Location } from "@/features/location/schema";
 import { dayjs } from "@/lib/dayjs";
-import { scheduledEventTag } from "./constants";
 import type { Status } from "./schema";
 
-export function getCachedPublicScheduledEvent(id: string) {
-  return unstable_cache(
-    async () => {
-      return prisma.scheduledEvent.findUnique({
-        where: { id },
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          location: true,
-          conferencing: true,
-          start: true,
-          end: true,
-          allDay: true,
-          timeZone: true,
-          status: true,
-          deletedAt: true,
-          hideAttendees: true,
-          user: {
-            select: {
-              name: true,
-            },
-          },
-          space: {
-            select: {
-              name: true,
-              image: true,
-              showBranding: true,
-              primaryColor: true,
-            },
-          },
-          invites: {
-            select: {
-              id: true,
-              inviteeName: true,
-              status: true,
-              user: {
-                select: {
-                  image: true,
-                },
-              },
-            },
-          },
-        },
-      });
+export function getPublicScheduledEvent(id: string) {
+  return prisma.scheduledEvent.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      location: true,
+      conferencing: true,
+      start: true,
+      end: true,
+      allDay: true,
+      timeZone: true,
+      status: true,
+      deletedAt: true,
+      capacity: true,
+      hideAttendees: true,
+      userId: true,
+      spaceId: true,
     },
-    [`public-scheduled-event-${id}`],
-    { tags: [scheduledEventTag(id)] },
-  )();
+  });
+}
+
+// Live count of accepted registrations. Kept separate from the event read so
+// the (stable) event can be cached while this churns on every RSVP, and so the
+// capacity gate always sees a fresh count.
+export function getEventAcceptedCount({ eventId }: { eventId: string }) {
+  return prisma.scheduledEventInvite.count({
+    where: { scheduledEventId: eventId, status: "accepted" },
+  });
+}
+
+// A capped slice of accepted attendees for the avatar preview — never the full
+// list, which is unbounded. Pair with getEventAcceptedCount for the total.
+export async function getEventAttendeePreview({
+  eventId,
+  take,
+}: {
+  eventId: string;
+  take: number;
+}) {
+  const invites = await prisma.scheduledEventInvite.findMany({
+    where: { scheduledEventId: eventId, status: "accepted" },
+    select: {
+      id: true,
+      inviteeName: true,
+      user: { select: { image: true } },
+    },
+    orderBy: { createdAt: "asc" },
+    take,
+  });
+
+  return invites.map((invite) => ({
+    id: invite.id,
+    name: invite.inviteeName,
+    image: invite.user?.image ?? undefined,
+  }));
+}
+
+// Looks up the current user's registration for an event, keyed by the user
+// (real or anonymous) the invite is tied to. Returns the invite the public
+// event page needs to render the "you're going" state, or null.
+export function getEventRegistration({
+  eventId,
+  userId,
+}: {
+  eventId: string;
+  userId: string;
+}) {
+  return prisma.scheduledEventInvite.findFirst({
+    where: {
+      scheduledEventId: eventId,
+      inviteeId: userId,
+      status: { not: "pending" },
+    },
+    select: {
+      uid: true,
+      inviteeName: true,
+      inviteeEmail: true,
+    },
+  });
 }
 
 // Legacy fallback used when neither location nor conferencing is populated.
