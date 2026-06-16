@@ -89,15 +89,6 @@ model User {
   @@map("users")
 }
 
-model VerificationToken {
-  identifier String   @db.Citext
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@map("verification_tokens")
-}
-
 model Session {
   id             String   @id
   expiresAt      DateTime @map("expires_at")
