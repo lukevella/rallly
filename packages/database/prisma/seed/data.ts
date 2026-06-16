@@ -1020,61 +1020,6 @@ export type EventTypeDef = {
   location: EventTypeLocation | null;
 };
 
-export type SheetDef = {
-  id: string;
-  spaceId: string;
-  hostId: string;
-  title: string;
-  description: string | null;
-  urlId: string;
-};
-
-export const sheets: SheetDef[] = [
-  // ── Personal space (space-1) ─────────────────────────────────────────────
-  {
-    id: "sheet-1",
-    spaceId: "space-1",
-    hostId: "user-1",
-    title: "Coffee chat sign-ups",
-    description: "Pick a slot for a 30 minute coffee chat next week.",
-    urlId: "personal-coffee-chats",
-  },
-  {
-    id: "sheet-2",
-    spaceId: "space-1",
-    hostId: "user-1",
-    title: "Mentorship office hours",
-    description: null,
-    urlId: "personal-mentorship",
-  },
-
-  // ── Acme Inc (space-2) ───────────────────────────────────────────────────
-  {
-    id: "sheet-3",
-    spaceId: "space-2",
-    hostId: "user-3",
-    title: "Engineering office hours",
-    description: "Drop in for help with code reviews or architecture.",
-    urlId: "acme-eng-office-hours",
-  },
-  {
-    id: "sheet-4",
-    spaceId: "space-2",
-    hostId: "user-2",
-    title: "Design critique slots",
-    description: "30 minute critiques of in-progress designs.",
-    urlId: "acme-design-critiques",
-  },
-  {
-    id: "sheet-5",
-    spaceId: "space-2",
-    hostId: "user-1",
-    title: "New hire intro chats",
-    description: "Welcome chat with our newest team members.",
-    urlId: "acme-new-hire-intros",
-  },
-];
-
 export const eventTypes: EventTypeDef[] = [
   // ── Personal space (space-1) ─────────────────────────────────────────────
   {
@@ -1164,7 +1109,7 @@ export type ScheduledEventDef = {
   id?: string;
   title: string;
   description?: string;
-  location?: string;
+  location?: { provider: "custom"; address: string };
   status: ScheduledEventStatus;
   timeZone?: string;
   start: string;
@@ -1185,7 +1130,7 @@ export const scheduledEvents: ScheduledEventDef[] = [
   // ── Personal space events ──────────────────────────────────────────────────
   {
     title: "Dentist Appointment",
-    location: "Dr. Lee's Office, 45 Oak St",
+    location: { provider: "custom", address: "Dr. Lee's Office, 45 Oak St" },
     status: "confirmed",
     timeZone: "America/New_York",
     start: d(-25, 14),
@@ -1196,7 +1141,7 @@ export const scheduledEvents: ScheduledEventDef[] = [
   },
   {
     title: "Dinner with Mom",
-    location: "Olive Garden, Paramus",
+    location: { provider: "custom", address: "Olive Garden, Paramus" },
     status: "confirmed",
     timeZone: "America/New_York",
     start: d(-20, 18),
@@ -1236,7 +1181,7 @@ export const scheduledEvents: ScheduledEventDef[] = [
   {
     title: "Book Club",
     description: "Discussing 'Project Hail Mary'.",
-    location: "Public Library, Room 2B",
+    location: { provider: "custom", address: "Public Library, Room 2B" },
     status: "confirmed",
     timeZone: "America/New_York",
     start: d(-16, 19),
@@ -1270,7 +1215,7 @@ export const scheduledEvents: ScheduledEventDef[] = [
   {
     id: "event-car-service",
     title: "Car Service",
-    location: "Mike's Auto Shop, 234 Elm St",
+    location: { provider: "custom", address: "Mike's Auto Shop, 234 Elm St" },
     status: "confirmed",
     timeZone: "America/New_York",
     start: d(-24, 9),
@@ -1281,7 +1226,7 @@ export const scheduledEvents: ScheduledEventDef[] = [
   },
   {
     title: "Coffee with Alex",
-    location: "Café on 5th",
+    location: { provider: "custom", address: "Café on 5th" },
     status: "confirmed",
     timeZone: "America/New_York",
     start: d(7, 10),
@@ -1302,7 +1247,7 @@ export const scheduledEvents: ScheduledEventDef[] = [
   {
     title: "Sprint 14 Retrospective",
     description: "Reflecting on what went well and what to improve.",
-    location: "Zoom",
+    location: { provider: "custom", address: "Zoom" },
     status: "confirmed",
     timeZone: "America/New_York",
     start: d(-28, 15),
@@ -1344,7 +1289,7 @@ export const scheduledEvents: ScheduledEventDef[] = [
   {
     title: "Design Review: Homepage",
     description: "Review the latest homepage mockups in Figma.",
-    location: "Conference Room A",
+    location: { provider: "custom", address: "Conference Room A" },
     status: "confirmed",
     timeZone: "America/New_York",
     start: d(-22, 14),
@@ -1372,7 +1317,7 @@ export const scheduledEvents: ScheduledEventDef[] = [
   {
     title: "Client Presentation: Globex Corp",
     description: "Final pitch to the Globex leadership team.",
-    location: "Globex HQ, 100 Innovation Blvd",
+    location: { provider: "custom", address: "Globex HQ, 100 Innovation Blvd" },
     status: "confirmed",
     timeZone: "America/New_York",
     start: d(-14, 10),
@@ -1432,7 +1377,7 @@ export const scheduledEvents: ScheduledEventDef[] = [
   {
     title: "Lunch & Learn: AI Tools",
     description: "Exploring AI productivity tools. Pizza provided!",
-    location: "Conference Room B",
+    location: { provider: "custom", address: "Conference Room B" },
     status: "confirmed",
     timeZone: "America/New_York",
     start: d(-21, 12),
@@ -1470,7 +1415,7 @@ export const scheduledEvents: ScheduledEventDef[] = [
   {
     title: "Q2 Kickoff",
     description: "All-hands to review Q1 and set Q2 objectives.",
-    location: "Main Conference Room",
+    location: { provider: "custom", address: "Main Conference Room" },
     status: "confirmed",
     timeZone: "America/New_York",
     start: d(7, 13),
@@ -1509,7 +1454,7 @@ export const scheduledEvents: ScheduledEventDef[] = [
     title: "Product Roadmap Workshop",
     description:
       "Half-day session to align on H2 priorities using RICE framework.",
-    location: "Conference Room A",
+    location: { provider: "custom", address: "Conference Room A" },
     status: "confirmed",
     timeZone: "America/New_York",
     start: d(9, 13),
