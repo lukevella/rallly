@@ -42,70 +42,6 @@ importers:
         specifier: ^4.0.16
         version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.11)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0)
 
-  apps/api:
-    dependencies:
-      '@hono-rate-limiter/redis':
-        specifier: ^0.1.4
-        version: 0.1.4(hono-rate-limiter@0.2.3(hono@4.11.7))
-      '@hono/node-server':
-        specifier: ^1.19.9
-        version: 1.19.9(hono@4.11.7)
-      '@hono/zod-openapi':
-        specifier: ^1.2.0
-        version: 1.2.1(hono@4.11.7)(zod@4.3.6)
-      '@rallly/api-core':
-        specifier: workspace:*
-        version: link:../../packages/api-core
-      '@rallly/database':
-        specifier: workspace:*
-        version: link:../../packages/database
-      '@rallly/logger':
-        specifier: workspace:*
-        version: link:../../packages/logger
-      '@rallly/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
-      '@scalar/hono-api-reference':
-        specifier: ^0.9.30
-        version: 0.9.40(hono@4.11.7)
-      '@t3-oss/env-core':
-        specifier: ^0.13.10
-        version: 0.13.10(arktype@2.1.27)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.3.6)
-      '@upstash/redis':
-        specifier: ^1.36.2
-        version: 1.36.2
-      dayjs:
-        specifier: ^1.11.13
-        version: 1.11.19
-      hono:
-        specifier: ^4.11.1
-        version: 4.11.7
-      hono-openapi:
-        specifier: ^1.1.2
-        version: 1.2.0(@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.11.7))(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(arktype@2.1.27)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.9.3))(zod@4.3.6))(@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(arktype@2.1.27)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.9.3))(zod@4.3.6))(@standard-schema/spec@1.1.0)(arktype@2.1.27)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.3.6))(@types/json-schema@7.0.15)(hono@4.11.7)(openapi-types@12.1.3)
-      hono-rate-limiter:
-        specifier: ^0.2.1
-        version: 0.2.3(hono@4.11.7)
-      zod:
-        specifier: ^4.3.6
-        version: 4.3.6
-    devDependencies:
-      '@rallly/tsconfig':
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      '@types/node':
-        specifier: ^24.1.0
-        version: 24.10.11
-      tsx:
-        specifier: ^4.6.2
-        version: 4.21.0
-      typescript:
-        specifier: ^5.8.2
-        version: 5.9.3
-      vitest:
-        specifier: ^4.0.16
-        version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.11)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0)
-
   apps/docs:
     dependencies:
       mint:
@@ -13432,10 +13368,6 @@ snapshots:
   '@hono/node-server@1.19.9(hono@4.11.4)':
     dependencies:
       hono: 4.11.4
-
-  '@hono/node-server@1.19.9(hono@4.11.7)':
-    dependencies:
-      hono: 4.11.7
 
   '@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.11.7)':
     dependencies:
