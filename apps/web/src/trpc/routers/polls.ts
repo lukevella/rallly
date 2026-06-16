@@ -829,6 +829,50 @@ export const polls = router({
         },
       });
 
+      // A poll can have several participants sharing an email; an event holds at
+      // most one invite per email, so collapse them, keeping the most committal
+      // response (accepted > tentative > declined) so a stale "no" duplicate
+      // can't bury an "accepted".
+      const inviteStatusByVote = {
+        yes: "accepted",
+        ifNeedBe: "tentative",
+        no: "declined",
+      } as const;
+      const inviteStatusRank = { accepted: 0, tentative: 1, declined: 2 };
+      const invitesByEmail = new Map<
+        string,
+        {
+          uid: string;
+          inviteeName: string;
+          inviteeEmail: string;
+          inviteeTimeZone: string | null | undefined;
+          status: (typeof inviteStatusByVote)[keyof typeof inviteStatusByVote];
+        }
+      >();
+      for (const p of poll.participants) {
+        if (!p.email) continue;
+        const status =
+          inviteStatusByVote[
+            p.votes.find((v) => v.optionId === input.optionId)?.type ?? "no"
+          ];
+        const key = p.email.trim().toLowerCase();
+        const existing = invitesByEmail.get(key);
+        if (
+          existing &&
+          inviteStatusRank[existing.status] <= inviteStatusRank[status]
+        ) {
+          continue;
+        }
+        invitesByEmail.set(key, {
+          uid: nanoid(),
+          inviteeName: p.name,
+          inviteeEmail: p.email,
+          inviteeTimeZone: p.user?.timeZone ?? p.timeZone ?? poll.timeZone,
+          status,
+        });
+      }
+      const inviteData = Array.from(invitesByEmail.values());
+
       const scheduledEvent = await prisma.$transaction(async (tx) => {
         // create scheduled event
         const event = await tx.scheduledEvent.create({
@@ -853,25 +897,7 @@ export const polls = router({
             hideAttendees: poll.hideParticipants,
             invites: {
               createMany: {
-                data: poll.participants
-                  .filter((p) => !!p.email)
-                  .map((p) => ({
-                    uid: nanoid(),
-                    inviteeName: p.name,
-                    inviteeEmail: p.email as string,
-                    inviteeTimeZone:
-                      p.user?.timeZone ?? p.timeZone ?? poll.timeZone,
-                    status: (
-                      {
-                        yes: "accepted",
-                        ifNeedBe: "tentative",
-                        no: "declined",
-                      } as const
-                    )[
-                      p.votes.find((v) => v.optionId === input.optionId)
-                        ?.type ?? "no"
-                    ],
-                  })),
+                data: inviteData,
               },
             },
           },
