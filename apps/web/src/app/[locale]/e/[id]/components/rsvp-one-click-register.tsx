@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { useRouter } from "next/navigation";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { registerForEventAction } from "@/features/scheduled-event/actions";
 import { Trans } from "@/i18n/client";
@@ -18,7 +17,6 @@ export function RsvpOneClickRegister({
   email: string;
   image?: string;
 }) {
-  const router = useRouter();
   const register = useSafeAction(registerForEventAction);
 
   return (
@@ -36,7 +34,6 @@ export function RsvpOneClickRegister({
         loading={register.isExecuting}
         onClick={async () => {
           await register.executeAsync({ eventId });
-          router.refresh();
         }}
       >
         <Trans i18nKey="rsvpOneClickRegister" defaults="One-click register" />
