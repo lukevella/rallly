@@ -74,7 +74,7 @@ export function UserDropdown({
           }}
         >
           <LogOutIcon className="size-4 text-muted-foreground" />
-          <Trans i18nKey="logout" />
+          <Trans i18nKey="logout" defaults="Logout" />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
