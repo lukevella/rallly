@@ -17,6 +17,78 @@ In order to maintain a high standard of code quality, please ensure that you are
 - [tRPC](https://trpc.io/)
 - [Prisma](https://www.prisma.io/)
 
+## Local development 🧑‍🔧
+
+The following instructions are for running the project locally for development.
+
+1. Clone the repository and switch to the project directory
+
+   ```bash
+   git clone https://github.com/lukevella/rallly.git
+   cd rallly
+   ```
+
+2. Install dependencies
+
+   ```bash
+   pnpm install
+   ```
+
+3. Setup environment variables
+
+   Copy the sample environment file and fill in the required values:
+
+   ```bash
+   cp apps/web/.env.sample apps/web/.env
+   cp packages/database/.env.sample packages/database/.env
+   ```
+
+   See [configuration options](https://support.rallly.co/self-hosting/configuration-options) for a full list of available options.
+
+4. Generate Prisma client
+
+   ```bash
+   pnpm db:generate
+   ```
+
+5. Setup database
+
+   You will need to have [Docker](https://docs.docker.com/get-docker/) installed and running to run the database using the provided docker-compose file.
+
+   To start the database, run:
+
+   ```bash
+   pnpm docker:up
+   ```
+
+   Next run the following command to setup the database:
+
+   ```bash
+   pnpm db:reset && pnpm db:seed
+   ```
+
+   This will:
+
+   - delete the existing database (if it exists)
+   - run migrations to create a new database schema
+   - seed the database with test users and random data
+
+6. Start the portless proxy
+
+   The dev scripts route the apps through [portless](https://portless.sh), which exposes them at stable HTTPS URLs (e.g. `https://web.local.rallly.co`) instead of `localhost:<port>`.
+
+   Start the proxy:
+
+   ```bash
+   pnpm proxy:start
+   ```
+
+7. Start the Next.js server
+
+   ```bash
+   pnpm dev
+   ```
+
 ## Translations 🌐
 
 To contribute translations, please check out our [guide for translators](https://support.rallly.co/contribute/translations) which contains all the information you need to get started.

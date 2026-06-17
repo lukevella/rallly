@@ -1,11 +1,15 @@
 <div align="center">
-  
+
 <img src="./assets/images/logo-color.svg" width="200px" alt="Rallly" />
 
-</div>
-<br />
-<div align="center">
-  
+### Schedule group meetings, without the back-and-forth
+
+<p>
+  <a href="https://rallly.co"><strong>Website</strong></a> ·
+  <a href="https://support.rallly.co"><strong>Documentation</strong></a> ·
+  <a href="https://discord.gg/uzg4ZcHbuM"><strong>Discord</strong></a>
+</p>
+
 [![Actions Status](https://github.com/lukevella/rallly/actions/workflows/ci.yml/badge.svg)](https://github.com/lukevella/rallly/actions)
 [![Crowdin](https://badges.crowdin.net/rallly/localized.svg)](https://crowdin.com/project/rallly)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-orange.svg)](https://www.gnu.org/licenses/agpl-3.0)
@@ -14,120 +18,61 @@
 
 </div>
 
-![Screenshot](https://github.com/user-attachments/assets/baafea52-c4da-43bb-96ef-50840f1c0c03)
+<br />
 
-Schedule group meetings with friends, colleagues and teams. Create meeting polls to find the best date and time to organize an event based on your participants' availability. Save time and avoid back-and-forth emails.
+<img src="./assets/images/splash.png" alt="Rallly screenshot" />
 
-Built with [Next.js](https://github.com/vercel/next.js/), [Prisma](https://github.com/prisma/prisma), [tRPC](https://github.com/trpc/trpc) & [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
+<br />
 
-## Self-hosting
+Rallly is an open-source scheduling tool that helps you find the best date and time to meet. Create a poll with a few options, share the link, and let your participants vote on when they're available. No more back-and-forth emails.
 
-Check out the [self-hosting docs](https://support.rallly.co/self-hosting) for more information on running your own instance of Rallly.
+## ✨ Features
 
-## Local Installation
+- 📅 **Date & time polls** — Propose multiple options and find what works for everyone
+- 🗳️ **No account needed to vote** — Participants just open the link and respond
+- 📊 **Availability grid** — See everyone's responses at a glance
+- 💬 **Comments** — Discuss the details right on the poll
+- 🔔 **Notifications** — Get notified when participants respond
+- ✅ **Finalize a date** — Pick the winning option and notify everyone
+- 🌍 **10+ languages** — Community-translated via [Crowdin](https://crowdin.com/project/rallly)
+- 🔒 **Open source & self-hostable** — Own your data
 
-The following instructions are for running the project locally for development.
+## ☁️ Cloud version
 
-1. Clone the repository and switch to the project directory
+The quickest way to get started is the hosted version. Create your first poll in seconds, no installation required.
 
-   ```bash
-   git clone https://github.com/lukevella/rallly.git
-   cd rallly
-   ```
+**[Try Rallly free →](https://rallly.co)**
 
-2. Install dependencies
+## 🐳 Self-hosting
 
-   ```bash
-   pnpm install
-   ```
+Prefer to run your own instance? Rallly ships as a Docker image and can be self-hosted in minutes.
 
-3. Setup environment variables
+See the [self-hosting docs](https://support.rallly.co/self-hosting) for installation and [configuration options](https://support.rallly.co/self-hosting/configuration-options).
 
-   Copy the sample environment file and fill in the required values:
+## 🛠️ Built with
 
-   ```bash
-   cp apps/web/.env.sample apps/web/.env
-   cp packages/database/.env.sample packages/database/.env
-   ```
+[Next.js](https://github.com/vercel/next.js/) · [Prisma](https://github.com/prisma/prisma) · [tRPC](https://github.com/trpc/trpc) · [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
 
-   See [configuration options](https://support.rallly.co/self-hosting/configuration-options) for a full list of available options.
+## 🤝 Contributing
 
-4. Generate Prisma client
+Contributions are welcome! Have a look at the [contributing guide](CONTRIBUTING.md) to get started with local development and find out how you can help.
 
-   ```bash
-   pnpm db:generate
-   ```
+- 🌐 **Translators** — Help [translate Rallly](https://support.rallly.co/contribute/translations) into your language
+- 🔐 **Security** — Found a vulnerability? See our [security policy](SECURITY.md)
+- 🤝 **Community** — Please read our [Code of Conduct](CODE_OF_CONDUCT.md)
 
-5. Setup database
-
-   You will need to have [Docker](https://docs.docker.com/get-docker/) installed and running to run the database using the provided docker-compose file.
-
-   To start the database, run:
-
-   ```bash
-   pnpm docker:up
-   ```
-
-   Next run the following command to setup the database:
-
-   ```bash
-   pnpm db:reset && pnpm db:seed
-   ```
-
-   This will:
-
-   - delete the existing database (if it exists)
-   - run migrations to create a new database schema
-   - seed the database with test users and random data
-
-6. Start the portless proxy
-
-   The dev scripts route the apps through [portless](https://portless.sh), which exposes them at stable HTTPS URLs (e.g. `https://web.local.rallly.co`) instead of `localhost:<port>`.
-
-   Start the proxy:
-
-   ```bash
-   pnpm proxy:start
-   ```
-
-7. Start the Next.js server
-
-   ```bash
-   pnpm dev
-   ```
-
-## Contributors
-
-Please read our [contributing guide](CONTRIBUTING.md) to learn about how to contribute to this project.
-
-### Translators 🌐
-
-You can help translate Rallly to another language by following our [guide for translators](https://support.rallly.co/contribute/translations).
-
-## License
+## 📜 License
 
 Rallly is open-source under the GNU Affero General Public License Version 3 (AGPLv3) or any later version. See [LICENSE](LICENSE) for more detail.
 
-## Sponsors
+## 💚 Sponsors
 
 Thank you to our sponsors for making this project possible.
 
 [Become a sponsor &rarr;](https://github.com/sponsors/lukevella)
 
-And thank you to these companies for sponsoring and showing support for this project.
-<table>
-  <tbody>
-    <tr>
-      <td align="center"><a href="https://appwrite.io?utm_source=rallly"><img src="./assets/images/appwrite.svg" alt="appwrite" height="24" /></a></td>
-      <td align="center"><a href="https://vercel.com/?utm_source=rallly&utm_campaign=oss"><img src="./assets/images/vercel-logotype-dark.svg#gh-light-mode-only" alt="Powered by Vercel" height="24" /></a></td>
-      <td align="center"><a href="https://ura.design?utm_source=rallly"><img height="24" alt="Ura Design" src="./assets/images/ura-logo-blue.svg"></a></td>
-      <td align="center"><a href="https://crowdin.com?utm_source=rallly"><img height="24" alt="Crowdin" src="./assets/images/crowdin-logo.svg"></a></td>
-    </tr>
-    <tr>
-      <td align="center"><a href="https://m.do.co/c/f91efc9c9e50"><img src="./assets/images/digitalocean-logo.svg" alt="Digital Ocean" height="24" /></a></td>
-      <td align="center"><a href="https://sentry.io?utm_source=rallly"><img src="./assets/images/sentry.svg" alt="Sentry" height="24" /></a></td>
-      <td align="center"><a href="https://cloudron.io?utm_source=rallly"><img src="./assets/images/cloudron-logo.svg" alt="Cloudron" height="30"></a></td>
-      <td align="center"><a href="https://featurebase.app?utm_source=rallly"><img src="./assets/images/featurebase.svg" alt="Featurebase" height="28"></a></td>
-    </tr>
-  </tbody>
-</table>
+<br />
+
+<a href="https://vercel.com/open-source-program">
+  <img alt="Vercel OSS Program" src="https://vercel.com/oss/program-badge-2026.svg" height="40" />
+</a>
