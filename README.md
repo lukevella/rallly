@@ -20,7 +20,7 @@
 
 <br />
 
-<img src="https://github.com/user-attachments/assets/baafea52-c4da-43bb-96ef-50840f1c0c03" alt="Rallly screenshot" />
+<img src="./assets/images/splash.png" alt="Rallly screenshot" />
 
 <br />
 
