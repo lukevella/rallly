@@ -8,12 +8,12 @@ const mockCreatePoll = vi.fn();
 const mockGetPollResults = vi.fn();
 const mockGetPollParticipants = vi.fn();
 
-vi.mock("@rallly/api-core/polls/mutations", () => ({
+vi.mock("@/features/poll/mutations", () => ({
   deletePoll: (...args: unknown[]) => mockDeletePoll(...args),
   createPoll: (...args: unknown[]) => mockCreatePoll(...args),
 }));
 
-vi.mock("@rallly/api-core/polls/data", () => ({
+vi.mock("@/features/poll/data", () => ({
   getPollResults: (...args: unknown[]) => mockGetPollResults(...args),
   getPollParticipants: (...args: unknown[]) => mockGetPollParticipants(...args),
 }));

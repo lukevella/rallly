@@ -1,11 +1,8 @@
 import crypto from "node:crypto";
-import {
-  extractApiKeyPrefix,
-  verifyApiKey,
-} from "@rallly/api-core/auth/api-key";
 import { prisma } from "@rallly/database";
 import { bearerAuth } from "hono/bearer-auth";
 import { after } from "next/server";
+import { extractApiKeyPrefix, verifyApiKey } from "@/features/api-keys/api-key";
 
 export const spaceApiKeyAuth = bearerAuth({
   verifyToken: async (rawKey, c) => {
