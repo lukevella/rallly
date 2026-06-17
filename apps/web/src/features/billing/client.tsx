@@ -1,7 +1,5 @@
 "use client";
 
-import type { ButtonProps } from "@rallly/ui/button";
-import { Button } from "@rallly/ui/button";
 import React from "react";
 import type { SpaceTier } from "@/features/space/schema";
 import { trpc } from "@/trpc/client";
@@ -53,16 +51,3 @@ export function useBilling() {
   }
   return context;
 }
-
-export const PayWallButton = ({ onClick, ...forwardedProps }: ButtonProps) => {
-  const { showPayWall } = useBilling();
-  return (
-    <Button
-      onClick={(e) => {
-        showPayWall();
-        onClick?.(e);
-      }}
-      {...forwardedProps}
-    />
-  );
-};
