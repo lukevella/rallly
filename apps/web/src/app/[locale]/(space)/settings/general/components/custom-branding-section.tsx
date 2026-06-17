@@ -14,7 +14,8 @@ import {
   PageSectionTitle,
 } from "@/app/components/page-layout";
 import { ProBadge } from "@/components/pro-badge";
-import { useBilling } from "@/features/billing/client";
+import { useIsFree } from "@/features/billing/client";
+import { showPayWall } from "@/features/billing/paywall-store";
 import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
 import { useSpace } from "@/features/space/client";
 import { Trans } from "@/i18n/client";
@@ -27,7 +28,7 @@ export function CustomBrandingSection({
   disabled?: boolean;
 }) {
   const { data: space } = useSpace();
-  const { isFree, showPayWall } = useBilling();
+  const isFree = useIsFree();
   const toastProgress = useToastProgress();
   const utils = trpc.useUtils();
   const posthog = usePostHog();

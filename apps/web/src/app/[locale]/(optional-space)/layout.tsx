@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { PreferencesProvider } from "@/contexts/preferences";
-import { BillingProvider } from "@/features/billing/client";
+import { PayWall } from "@/features/billing/components/pay-wall";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import {
   createPrivateSSRHelper,
@@ -24,7 +24,8 @@ export default async function Layout({
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
       <PreferencesProvider>
-        <BillingProvider>{children}</BillingProvider>
+        {children}
+        <PayWall />
       </PreferencesProvider>
     </HydrationBoundary>
   );

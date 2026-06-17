@@ -36,8 +36,8 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { useBilling } from "@/features/billing/client";
 import { SubscriptionStatusLabel } from "@/features/billing/components/subscription-status-label";
+import { showPayWall } from "@/features/billing/paywall-store";
 import { useSpace } from "@/features/space/client";
 import type { SpaceTier } from "@/features/space/schema";
 import { Trans } from "@/i18n/client";
@@ -75,7 +75,6 @@ export function BillingPageClient() {
 function BillingPageContent({ tier }: { tier: SpaceTier }) {
   const posthog = usePostHog();
   const searchParams = useSearchParams();
-  const { showPayWall } = useBilling();
 
   const [subscription] = trpc.billing.getSubscription.useSuspenseQuery();
   const [seats] = trpc.spaces.getSeats.useSuspenseQuery();

@@ -2,7 +2,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 import { SessionRefresher } from "@/components/session-refresher";
 import { PreferencesProvider } from "@/contexts/preferences";
-import { BillingProvider } from "@/features/billing/client";
+import { PayWall } from "@/features/billing/components/pay-wall";
 import { SpaceProvider } from "@/features/space/client";
 import { getPathname } from "@/lib/pathname";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
@@ -31,7 +31,8 @@ export default async function Layout({
       <SessionRefresher />
       <PreferencesProvider>
         <SpaceProvider>
-          <BillingProvider>{children}</BillingProvider>
+          {children}
+          <PayWall />
         </SpaceProvider>
       </PreferencesProvider>
     </HydrationBoundary>
