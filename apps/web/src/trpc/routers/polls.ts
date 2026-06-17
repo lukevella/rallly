@@ -1,4 +1,3 @@
-import { getPolls } from "@rallly/api-core/polls/data";
 import type { PollStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { sendFinalizeHostEmail } from "@rallly/emails/templates/finalized-host";
@@ -12,6 +11,7 @@ import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { posthog } from "@/features/analytics/posthog";
 import { moderateContent } from "@/features/moderation";
+import { getPolls } from "@/features/poll/data";
 import { canUserManagePoll } from "@/features/poll/helpers";
 import { hasPollAdminAccess } from "@/features/poll/query";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";

@@ -1,9 +1,4 @@
 import { RedisStore } from "@hono-rate-limiter/redis";
-import {
-  getPollParticipants,
-  getPollResults,
-} from "@rallly/api-core/polls/data";
-import { createPoll, deletePoll } from "@rallly/api-core/polls/mutations";
 import { prisma } from "@rallly/database";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { Scalar } from "@scalar/hono-api-reference";
@@ -16,6 +11,8 @@ import {
   validator,
 } from "hono-openapi";
 import { rateLimiter } from "hono-rate-limiter";
+import { getPollParticipants, getPollResults } from "@/features/poll/data";
+import { createPoll, deletePoll } from "@/features/poll/mutations";
 import { redis } from "@/lib/kv";
 import {
   createPollInputSchema,
