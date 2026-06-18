@@ -4,7 +4,7 @@
   "private": true,
   "exports": {
     "./server": "./src/server.ts",
-    "./client": "./src/client.tsx",
+    "./client": "./src/client.ts",
     "./utils": "./src/utils.ts"
   },
   "scripts": {

@@ -1,5 +1,5 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
+import { posthog } from "@rallly/posthog/client";
 import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
@@ -56,7 +56,6 @@ export interface CreatePollPageProps {
 
 export const CreatePoll: React.FunctionComponent = () => {
   const { t } = useTranslation();
-  const posthog = usePostHog();
   const { createGuestIfNeeded } = useUser();
   const [createdPollId, setCreatedPollId] = React.useState<string | null>(null);
   const [, copy] = useCopyToClipboard();

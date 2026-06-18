@@ -1,6 +1,6 @@
 "use client";
 
-import { usePostHog } from "@rallly/posthog/client";
+import { posthog } from "@rallly/posthog/client";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
@@ -38,7 +38,6 @@ export const useSpace = () => {
 export function SpaceProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { data: space, isLoading } = trpc.spaces.getCurrent.useQuery();
-  const posthog = usePostHog();
 
   React.useEffect(() => {
     if (!isLoading && !space) {
@@ -50,7 +49,7 @@ export function SpaceProvider({ children }: { children: React.ReactNode }) {
     if (space?.id) {
       posthog?.group("space", space.id);
     }
-  }, [posthog, space?.id]);
+  }, [space?.id]);
 
   if (!space) {
     return <RouterLoadingIndicator />;

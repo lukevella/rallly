@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePostHog } from "@rallly/posthog/client";
+import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -28,7 +28,6 @@ import { trpc } from "@/trpc/client";
 
 export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
   const { t } = useTranslation();
-  const posthog = usePostHog();
   const createEventType = trpc.eventTypes.create.useMutation();
   const [showMaxAttendees, setShowMaxAttendees] = React.useState(false);
   const [showDescription, setShowDescription] = React.useState(false);

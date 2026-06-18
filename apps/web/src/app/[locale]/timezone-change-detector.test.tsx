@@ -9,10 +9,6 @@ vi.mock("@/utils/date-time-utils", () => ({
   getBrowserTimeZone: () => mockTimeZone,
 }));
 
-vi.mock("@rallly/posthog/client", () => ({
-  usePostHog: () => ({ capture: vi.fn() }),
-}));
-
 describe("TimeZoneChangeDetector", () => {
   beforeEach(() => {
     localStorage.clear();
