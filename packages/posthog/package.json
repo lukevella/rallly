@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "js-cookie": "^3.0.1",
-    "posthog-js": "^1.364.6",
-    "posthog-node": "^5.28.11",
+    "posthog-js": "^1.390.2",
+    "posthog-node": "^5.38.0",
     "react": "19.2.6"
   },
   "devDependencies": {
