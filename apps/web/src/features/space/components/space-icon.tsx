@@ -4,6 +4,7 @@ import { cn } from "@rallly/ui";
 import { Avatar, AvatarFallback } from "@rallly/ui/avatar";
 import Image from "next/image";
 import * as React from "react";
+import { resolveStorageUrl } from "@/utils/storage";
 
 type SpaceIconProps = {
   name: string;
@@ -20,16 +21,18 @@ export function SpaceIcon({
 }: SpaceIconProps) {
   const [erroredSrc, setErroredSrc] = React.useState<string | null>(null);
   const hasError = src !== undefined && erroredSrc === src;
+  const hasImage = Boolean(src) && !hasError;
 
   return (
     <Avatar
       className={cn("overflow-hidden", className)}
       size={size}
       shape="square"
+      bordered={!hasImage}
     >
       {src && !hasError ? (
         <Image
-          src={`/api/storage/${src}`}
+          src={resolveStorageUrl(src)}
           width={128}
           height={128}
           alt={name}

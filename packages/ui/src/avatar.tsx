@@ -7,38 +7,41 @@ import type * as React from "react";
 
 import { cn } from "./lib/utils";
 
-const avatarVariants = cva(
-  "group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-border after:mix-blend-darken dark:after:mix-blend-lighten",
-  {
-    variants: {
-      size: {
-        sm: "size-6",
-        default: "size-8",
-        lg: "size-10",
-        xl: "size-12",
-      },
-      shape: {
-        circle: "rounded-full",
-        square: "",
-      },
+const avatarVariants = cva("group/avatar relative flex shrink-0 select-none", {
+  variants: {
+    size: {
+      sm: "size-6",
+      default: "size-8",
+      lg: "size-10",
+      xl: "size-12",
     },
-    compoundVariants: [
-      { shape: "square", size: "sm", className: "rounded-md" },
-      { shape: "square", size: "default", className: "rounded-md" },
-      { shape: "square", size: "lg", className: "rounded-lg" },
-      { shape: "square", size: "xl", className: "rounded-lg" },
-    ],
-    defaultVariants: {
-      size: "default",
-      shape: "circle",
+    shape: {
+      circle: "rounded-full",
+      square: "",
+    },
+    bordered: {
+      true: "after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-border after:mix-blend-darken dark:after:mix-blend-lighten",
+      false: "",
     },
   },
-);
+  compoundVariants: [
+    { shape: "square", size: "sm", className: "rounded-md" },
+    { shape: "square", size: "default", className: "rounded-md" },
+    { shape: "square", size: "lg", className: "rounded-lg" },
+    { shape: "square", size: "xl", className: "rounded-lg" },
+  ],
+  defaultVariants: {
+    size: "default",
+    shape: "circle",
+    bordered: true,
+  },
+});
 
 function Avatar({
   className,
   size = "default",
   shape = "circle",
+  bordered = true,
   ...props
 }: AvatarPrimitive.Root.Props & VariantProps<typeof avatarVariants>) {
   return (
@@ -46,7 +49,7 @@ function Avatar({
       data-slot="avatar"
       data-size={size}
       data-shape={shape}
-      className={cn(avatarVariants({ size, shape }), className)}
+      className={cn(avatarVariants({ size, shape, bordered }), className)}
       {...props}
     />
   );
@@ -73,7 +76,7 @@ function AvatarFallback({
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
       className={cn(
-        "flex size-full items-center justify-center rounded-[inherit] bg-muted text-muted-foreground text-xs group-data-[size=sm]/avatar:text-[0.625rem]",
+        "flex size-full items-center justify-center rounded-[inherit] bg-muted text-muted-foreground text-xs group-data-[size=lg]/avatar:text-sm group-data-[size=sm]/avatar:text-[0.625rem] group-data-[size=xl]/avatar:text-base",
         className,
       )}
       {...props}
