@@ -22,7 +22,6 @@ import { toggleVote, VoteSelector } from "../vote-selector";
 export interface ParticipantRowFormProps {
   name?: string;
   className?: string;
-  email?: string;
   image?: string;
   isYou?: boolean;
   isNew?: boolean;
@@ -32,7 +31,6 @@ export interface ParticipantRowFormProps {
 const ParticipantRowForm = ({
   name,
   image,
-  email,
   isNew,
   className,
 }: ParticipantRowFormProps) => {
@@ -67,7 +65,6 @@ const ParticipantRowForm = ({
               <OptimizedAvatarImage
                 name={participantName}
                 size="sm"
-                email={email}
                 src={image ?? undefined}
               />
             ) : (

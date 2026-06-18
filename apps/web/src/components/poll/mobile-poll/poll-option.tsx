@@ -63,14 +63,13 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
       ) : (
         <div className="grid grid-cols-2 gap-2">
           <div className="col-span-1 space-y-2.5">
-            {participantsWhoVotedYes.map(({ name, email, image }, i) => (
+            {participantsWhoVotedYes.map(({ name, image }, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-4 items-center justify-center">
                   <OptimizedAvatarImage
                     size="sm"
                     name={name}
-                    email={email ?? undefined}
                     src={image ?? undefined}
                   />
                   <VoteIcon
@@ -82,14 +81,13 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
                 <div className="truncate text-sm">{name}</div>
               </div>
             ))}
-            {participantsWhoVotedIfNeedBe.map(({ name, email, image }, i) => (
+            {participantsWhoVotedIfNeedBe.map(({ name, image }, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-4 items-center justify-center">
                   <OptimizedAvatarImage
                     size="sm"
                     name={name}
-                    email={email ?? undefined}
                     src={image ?? undefined}
                   />
                   <VoteIcon
@@ -103,14 +101,13 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
             ))}
           </div>
           <div className="col-span-1 space-y-2.5">
-            {participantsWhoVotedNo.map(({ name, email, image }, i) => (
+            {participantsWhoVotedNo.map(({ name, image }, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
               <div key={i} className="flex">
                 <div className="relative mr-2.5 flex size-4 items-center justify-center">
                   <OptimizedAvatarImage
                     size="sm"
                     name={name}
-                    email={email ?? undefined}
                     src={image ?? undefined}
                   />
                   <VoteIcon
