@@ -48,13 +48,9 @@ export function SpaceProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (space?.id) {
-      posthog?.group("space", space.id, {
-        name: space.name,
-        tier: space.tier,
-        custom_branding_enabled: space.showBranding,
-      });
+      posthog?.group("space", space.id);
     }
-  }, [posthog, space?.id, space?.name, space?.tier, space?.showBranding]);
+  }, [posthog, space?.id]);
 
   if (!space) {
     return <RouterLoadingIndicator />;
