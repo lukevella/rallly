@@ -1,12 +1,15 @@
 import { createHash } from "node:crypto";
+import { isSelfHosted } from "@/utils/constants";
 
 /**
  * Builds a Gravatar URL for an email address. Returns `null` when no email is
- * provided. `d=404` makes Gravatar respond with a 404 when no avatar exists so
- * the client falls back to initials.
+ * provided, or for self-hosted instances — which often must keep personal data
+ * (email hashes, client IPs) within the EU, so we don't send anything to a
+ * third party there. `d=404` makes Gravatar respond with a 404 when no avatar
+ * exists so the client falls back to initials.
  */
 export function getGravatarUrl(email?: string | null) {
-  if (!email) {
+  if (!email || isSelfHosted) {
     return null;
   }
 
