@@ -18,7 +18,7 @@ export function SpaceIcon({
 }: SpaceIconProps) {
   return (
     <Avatar className={className} size={size} shape="square" bordered={!src}>
-      {src ? <AvatarImage src={resolveStorageUrl(src)} alt={name} /> : null}
+      <AvatarImage src={src ? resolveStorageUrl(src) : undefined} alt={name} />
       <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
     </Avatar>
   );

@@ -7,35 +7,38 @@ import type * as React from "react";
 
 import { cn } from "./lib/utils";
 
-const avatarVariants = cva("group/avatar relative flex shrink-0 select-none", {
-  variants: {
-    size: {
-      sm: "size-6",
-      default: "size-8",
-      lg: "size-10",
-      xl: "size-12",
+const avatarVariants = cva(
+  "group/avatar relative flex shrink-0 select-none overflow-hidden bg-muted",
+  {
+    variants: {
+      size: {
+        sm: "size-6",
+        default: "size-8",
+        lg: "size-10",
+        xl: "size-12",
+      },
+      shape: {
+        circle: "rounded-full",
+        square: "",
+      },
+      bordered: {
+        true: "after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-border after:mix-blend-darken dark:after:mix-blend-lighten",
+        false: "",
+      },
     },
-    shape: {
-      circle: "rounded-full",
-      square: "",
-    },
-    bordered: {
-      true: "after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-border after:mix-blend-darken dark:after:mix-blend-lighten",
-      false: "",
+    compoundVariants: [
+      { shape: "square", size: "sm", className: "rounded-md" },
+      { shape: "square", size: "default", className: "rounded-md" },
+      { shape: "square", size: "lg", className: "rounded-lg" },
+      { shape: "square", size: "xl", className: "rounded-lg" },
+    ],
+    defaultVariants: {
+      size: "default",
+      shape: "circle",
+      bordered: true,
     },
   },
-  compoundVariants: [
-    { shape: "square", size: "sm", className: "rounded-md" },
-    { shape: "square", size: "default", className: "rounded-md" },
-    { shape: "square", size: "lg", className: "rounded-lg" },
-    { shape: "square", size: "xl", className: "rounded-lg" },
-  ],
-  defaultVariants: {
-    size: "default",
-    shape: "circle",
-    bordered: true,
-  },
-});
+);
 
 function Avatar({
   className,
@@ -60,7 +63,7 @@ function AvatarImage({ className, ...props }: AvatarPrimitive.Image.Props) {
     <AvatarPrimitive.Image
       data-slot="avatar-image"
       className={cn(
-        "aspect-square size-full rounded-[inherit] object-cover",
+        "absolute inset-0 size-full rounded-[inherit] object-cover opacity-100 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0",
         className,
       )}
       {...props}
