@@ -3,6 +3,7 @@ import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { posthog } from "@/features/analytics/posthog";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
+import { syncSpaceTier } from "../utils";
 
 export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
   const subscription = await stripe.subscriptions.retrieve(
@@ -27,7 +28,7 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
 
   const { userId, spaceId } = res.data;
 
-  await prisma.$transaction(async (tx) => {
+  const tier = await prisma.$transaction(async (tx) => {
     await tx.subscription.update({
       where: {
         id: subscription.id,
@@ -38,22 +39,14 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
       },
     });
 
-    await tx.space.update({
-      where: {
-        id: spaceId,
-      },
-      data: {
-        tier: "hobby",
-        showBranding: false,
-      },
-    });
+    return syncSpaceTier(tx, spaceId);
   });
 
   posthog()?.groupIdentify({
     groupType: "space",
     groupKey: spaceId,
     properties: {
-      tier: "hobby",
+      tier,
     },
   });
 
@@ -62,7 +55,7 @@ export async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     event: "subscription_cancel",
     properties: {
       $set: {
-        tier: "hobby",
+        tier,
       },
     },
     groups: {

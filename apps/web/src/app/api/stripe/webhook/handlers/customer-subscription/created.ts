@@ -9,6 +9,7 @@ import {
   getExpandedSubscription,
   getSubscriptionDetails,
   isSubscriptionActive,
+  syncSpaceTier,
   toDate,
 } from "../utils";
 
@@ -18,7 +19,6 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
   );
 
   const isActive = isSubscriptionActive(subscription);
-  const tier = isActive ? "pro" : "hobby";
   const { priceId, currency, interval, amount } =
     getSubscriptionDetails(subscription);
 
@@ -41,7 +41,7 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
   const subscriptionItemId = subscriptionItem.id;
   const quantity = subscriptionItem.quantity ?? 1;
 
-  await prisma.$transaction(async (tx) => {
+  const tier = await prisma.$transaction(async (tx) => {
     await tx.subscription.upsert({
       where: { id: subscription.id },
       create: {
@@ -83,14 +83,7 @@ export async function onCustomerSubscriptionCreated(event: Stripe.Event) {
       },
     });
 
-    await tx.space.update({
-      where: {
-        id: spaceId,
-      },
-      data: {
-        tier,
-      },
-    });
+    return syncSpaceTier(tx, spaceId);
   });
 
   posthog()?.groupIdentify({
