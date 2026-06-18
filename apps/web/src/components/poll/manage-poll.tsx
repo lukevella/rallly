@@ -1,4 +1,4 @@
-import { usePostHog } from "@rallly/posthog/client";
+import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
 import {
@@ -125,7 +125,6 @@ const ManagePoll: React.FunctionComponent<{
   const duplicateDialog = useDialog();
   const scheduleDialog = useDialog();
   const isFree = useIsFree();
-  const posthog = usePostHog();
   const { exportToCsv } = useCsvExporter();
 
   return (

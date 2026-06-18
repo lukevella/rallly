@@ -1,5 +1,5 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
+import { posthog } from "@rallly/posthog/client";
 import { useRouter } from "next/navigation";
 import React from "react";
 import type { UserAbility } from "@/features/user/ability";
@@ -10,7 +10,6 @@ import { isOwner } from "@/utils/permissions";
 
 export function useUser() {
   const [user] = trpc.user.getMe.useSuspenseQuery();
-  const posthog = usePostHog();
   const router = useRouter();
 
   const userId = user?.id;
@@ -20,7 +19,7 @@ export function useUser() {
     if (userId && !isGuest) {
       posthog.identify(userId);
     }
-  }, [userId, isGuest, posthog]);
+  }, [userId, isGuest]);
 
   return React.useMemo(() => {
     return {

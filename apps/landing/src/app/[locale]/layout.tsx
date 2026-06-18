@@ -1,7 +1,6 @@
 import "./globals.css";
 
 import languages from "@rallly/languages";
-import { PostHogProvider } from "@rallly/posthog/client";
 import { Analytics } from "@vercel/analytics/react";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
@@ -34,17 +33,12 @@ export default async function Root(props: {
     <html lang={i18n.resolvedLanguage} className={sans.className}>
       <body>
         <LazyMotion features={domAnimation}>
-          <PostHogProvider>
-            <Suspense fallback={null}>
-              <PostHogPageView />
-            </Suspense>
-            <I18nProvider
-              locale={i18n.resolvedLanguage}
-              resources={translations}
-            >
-              {children}
-            </I18nProvider>
-          </PostHogProvider>
+          <Suspense fallback={null}>
+            <PostHogPageView />
+          </Suspense>
+          <I18nProvider locale={i18n.resolvedLanguage} resources={translations}>
+            {children}
+          </I18nProvider>
         </LazyMotion>
         <Analytics />
       </body>

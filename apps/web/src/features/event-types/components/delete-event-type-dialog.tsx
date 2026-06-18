@@ -1,6 +1,6 @@
 "use client";
 
-import { usePostHog } from "@rallly/posthog/client";
+import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -26,7 +26,6 @@ export function DeleteEventTypeDialog({
   eventTypeName: string;
 }) {
   const { t } = useTranslation();
-  const posthog = usePostHog();
   const softDelete = trpc.eventTypes.softDelete.useMutation();
 
   const handleDelete = async () => {

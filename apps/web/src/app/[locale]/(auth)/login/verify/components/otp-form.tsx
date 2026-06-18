@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePostHog } from "@rallly/posthog/client";
+import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -26,7 +26,6 @@ const otpFormSchema = z.object({
 
 export function OTPForm({ email }: { email: string }) {
   const { t } = useTranslation();
-  const posthog = usePostHog();
   const form = useForm({
     defaultValues: {
       otp: "",
