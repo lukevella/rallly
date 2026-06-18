@@ -339,11 +339,14 @@ export const spaces = router({
         data: { showBranding: input.showBranding },
       });
 
-      posthog()?.groupIdentify({
-        groupType: "space",
-        groupKey: ctx.space.id,
+      posthog()?.capture({
+        distinctId: ctx.user.id,
+        event: "space_update_show_branding",
         properties: {
-          custom_branding_enabled: input.showBranding,
+          showBranding: input.showBranding,
+        },
+        groups: {
+          space: ctx.space.id,
         },
       });
     }),
