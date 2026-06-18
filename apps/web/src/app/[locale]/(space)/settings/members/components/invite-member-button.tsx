@@ -5,7 +5,7 @@ import { useDialog } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { UserPlusIcon } from "lucide-react";
-import { useBilling } from "@/features/billing/client";
+import { showPayWall } from "@/features/billing/paywall-store";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { InviteMemberDialog } from "./invite-member-dialog";
@@ -20,7 +20,6 @@ export function InviteMemberButton({
   const { t } = useTranslation();
   const inviteMemberDialog = useDialog();
   const space = useSpace();
-  const { showPayWall } = useBilling();
   const availableSeats = Math.max(totalSeats - usedSeats, 0);
   return (
     <>

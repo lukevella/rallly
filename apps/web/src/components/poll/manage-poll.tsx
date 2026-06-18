@@ -28,7 +28,8 @@ import { DuplicateDialog } from "@/app/[locale]/(optional-space)/poll/[urlId]/du
 import { SchedulePollDialog } from "@/components/poll/manage-poll/schedule-poll-dialog";
 import { ProBadge } from "@/components/pro-badge";
 import { usePoll } from "@/contexts/poll";
-import { useBilling } from "@/features/billing/client";
+import { useIsFree } from "@/features/billing/client";
+import { showPayWall } from "@/features/billing/paywall-store";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
@@ -123,7 +124,7 @@ const ManagePoll: React.FunctionComponent<{
   const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
   const duplicateDialog = useDialog();
   const scheduleDialog = useDialog();
-  const { showPayWall, isFree } = useBilling();
+  const isFree = useIsFree();
   const posthog = usePostHog();
   const { exportToCsv } = useCsvExporter();
 

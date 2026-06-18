@@ -12,7 +12,8 @@ import { AtSignIcon, EyeIcon, MessageCircleIcon, VoteIcon } from "lucide-react";
 import type React from "react";
 import { useFormContext } from "react-hook-form";
 import { ProBadge } from "@/components/pro-badge";
-import { useBilling } from "@/features/billing/client";
+import { useIsFree } from "@/features/billing/client";
+import { showPayWall } from "@/features/billing/paywall-store";
 import { Trans } from "@/i18n/client";
 
 export type PollSettingsFormData = {
@@ -37,7 +38,7 @@ const PollSetting = ({
 }) => {
   const form = useFormContext<PollSettingsFormData>();
   const posthog = usePostHog();
-  const { showPayWall, isFree } = useBilling();
+  const isFree = useIsFree();
 
   return (
     <FormField
