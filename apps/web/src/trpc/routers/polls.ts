@@ -553,17 +553,6 @@ export const polls = router({
           muted: input.muted,
         },
       });
-
-      posthog()?.capture({
-        event: "poll_notification_toggle",
-        distinctId: ctx.user.id,
-        properties: {
-          muted: input.muted,
-        },
-        groups: {
-          poll: input.pollId,
-        },
-      });
     }),
   get: publicProcedure
     .input(
