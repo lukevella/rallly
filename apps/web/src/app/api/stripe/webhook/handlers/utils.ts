@@ -15,7 +15,11 @@ export async function getExpandedSubscription(subscriptionId: string) {
 }
 
 export function isSubscriptionActive(subscription: Stripe.Subscription) {
-  return subscription.status === "active" || subscription.status === "trialing";
+  return (
+    subscription.status === "active" ||
+    subscription.status === "trialing" ||
+    subscription.status === "past_due"
+  );
 }
 
 /**
