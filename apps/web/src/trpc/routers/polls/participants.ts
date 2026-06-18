@@ -345,21 +345,11 @@ export const participants = router({
           }),
         );
 
-        posthog()?.groupIdentify({
-          groupType: "poll",
-          groupKey: pollId,
-          properties: {
-            participant_count: totalResponses,
-          },
-        });
-
-        // Track participant addition analytics
         posthog()?.capture({
           distinctId: ctx.user.id,
           event: "poll_response_submit",
           properties: {
             participant_id: participant.id,
-            participant_name: participant.name,
             has_email: !!email,
             total_responses: totalResponses,
           },
