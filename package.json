@@ -19,7 +19,7 @@
     "db:seed": "pnpm --filter @rallly/database exec prisma db seed",
     "db:push": "pnpm --filter @rallly/database exec prisma db push",
     "db:format": "pnpm --filter @rallly/database exec prisma format",
-    "proxy:start": "portless proxy start --tld co",
+    "proxy:start": "portless proxy start --tld test",
     "proxy:stop": "portless proxy stop",
     "docker:up": "docker compose -f docker-compose.dev.yml up -d --wait",
     "docker:pull": "docker compose -f docker-compose.dev.yml pull",
