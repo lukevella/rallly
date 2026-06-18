@@ -22,6 +22,34 @@ export function isSubscriptionActive(subscription: Stripe.Subscription) {
   );
 }
 
+/**
+ * Recomputes a space's tier from its subscriptions so the tier reflects whether
+ * *any* subscription is active, rather than the state of a single webhook event.
+ * Must run after the triggering subscription's `active` flag has been written in
+ * the same transaction. Returns the resolved tier.
+ */
+export async function syncSpaceTier(
+  tx: Prisma.TransactionClient,
+  spaceId: string,
+) {
+  const activeSubscription = await tx.subscription.findFirst({
+    where: { spaceId, active: true },
+    select: { id: true },
+  });
+
+  const tier = activeSubscription ? "pro" : "hobby";
+
+  await tx.space.update({
+    where: { id: spaceId },
+    data: {
+      tier,
+      ...(tier === "hobby" ? { showBranding: false } : {}),
+    },
+  });
+
+  return tier;
+}
+
 export function getSubscriptionDetails(subscription: Stripe.Subscription) {
   const subscriptionItem = subscription.items.data[0];
   const interval = subscriptionItem.price.recurring?.interval;
