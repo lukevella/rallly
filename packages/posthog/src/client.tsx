@@ -21,6 +21,9 @@ if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
     autocapture: false,
     opt_out_capturing_by_default: isGlobalPrivacyControlEnabled(),
     cross_subdomain_cookie: true,
+    capture_performance: {
+      web_vitals: false,
+    },
   });
 }
 
