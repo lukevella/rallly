@@ -75,7 +75,7 @@ The following instructions are for running the project locally for development.
 
 6. Start the portless proxy
 
-   The dev scripts route the apps through [portless](https://portless.sh), which exposes them at stable HTTPS URLs (e.g. `https://web.local.rallly.co`) instead of `localhost:<port>`.
+   The dev scripts route the apps through [portless](https://portless.sh), which exposes them at stable HTTPS URLs (e.g. `https://web.rallly.test`) instead of `localhost:<port>`.
 
    Start the proxy:
 

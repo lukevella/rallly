@@ -14,7 +14,7 @@ function createAppUrl(subpath: string) {
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
-  allowedDevOrigins: ["landing.local.rallly.co"],
+  allowedDevOrigins: ["landing.rallly.test"],
   productionBrowserSourceMaps: true,
   transpilePackages: [
     "@rallly/ui",
