@@ -19,8 +19,3 @@ export const authClient = createAuthClient({
     anonymousClient(),
   ],
 });
-
-export async function signOut() {
-  await authClient.signOut();
-  window.location.href = "/login";
-}

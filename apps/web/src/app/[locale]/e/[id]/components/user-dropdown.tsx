@@ -14,8 +14,8 @@ import { LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { useSignOut } from "@/features/user/use-sign-out";
 import { Trans } from "@/i18n/client";
-import { authClient } from "@/lib/auth-client";
 
 export function UserDropdown({
   name,
@@ -29,6 +29,7 @@ export function UserDropdown({
   className?: string;
 }) {
   const router = useRouter();
+  const signOut = useSignOut();
 
   return (
     <DropdownMenu modal={false}>
@@ -69,7 +70,7 @@ export function UserDropdown({
         <DropdownMenuItem
           className="flex items-center gap-x-2"
           onClick={async () => {
-            await authClient.signOut();
+            await signOut();
             router.refresh();
           }}
         >

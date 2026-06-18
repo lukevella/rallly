@@ -1,6 +1,5 @@
 "use client";
 
-import { usePostHog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -32,14 +31,14 @@ import React from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { useTheme } from "@/features/theme/client";
+import { useSignOut } from "@/features/user/use-sign-out";
 import { Trans } from "@/i18n/client";
-import { signOut } from "@/lib/auth-client";
 import { trpc } from "@/trpc/client";
 
 export function NavUser() {
   const { data: user } = trpc.user.getAuthed.useQuery();
   const [isPending, setIsPending] = React.useState(false);
-  const posthog = usePostHog();
+  const signOut = useSignOut();
   const { theme, setTheme } = useTheme();
 
   if (!user) {
@@ -126,7 +125,7 @@ export function NavUser() {
             onClick={async () => {
               setIsPending(true);
               await signOut();
-              posthog?.reset();
+              window.location.href = "/login";
             }}
           >
             <Icon>

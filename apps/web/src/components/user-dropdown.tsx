@@ -1,5 +1,4 @@
 "use client";
-import { usePostHog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
@@ -33,13 +32,13 @@ import Link from "next/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { useUser } from "@/components/user-provider";
 import { useTheme } from "@/features/theme/client";
+import { useSignOut } from "@/features/user/use-sign-out";
 import { Trans } from "@/i18n/client";
-import { signOut } from "@/lib/auth-client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 
 export const UserDropdown = ({ className }: { className?: string }) => {
   const { user } = useUser();
-  const posthog = usePostHog();
+  const signOut = useSignOut();
   const { theme, setTheme } = useTheme();
 
   const isRegistrationEnabled = useFeatureFlag("registration");
@@ -163,7 +162,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         <DropdownMenuItem
           onClick={async () => {
             await signOut();
-            posthog?.reset();
+            window.location.href = "/login";
           }}
           className="flex items-center gap-x-2"
         >
