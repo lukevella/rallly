@@ -1,9 +1,6 @@
 "use client";
 
-import { cn } from "@rallly/ui";
-import { Avatar, AvatarFallback } from "@rallly/ui/avatar";
-import Image from "next/image";
-import * as React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import { resolveStorageUrl } from "@/utils/storage";
 
 type SpaceIconProps = {
@@ -19,31 +16,10 @@ export function SpaceIcon({
   className,
   size = "default",
 }: SpaceIconProps) {
-  const [erroredSrc, setErroredSrc] = React.useState<string | null>(null);
-  const hasError = src !== undefined && erroredSrc === src;
-  const hasImage = Boolean(src) && !hasError;
-
   return (
-    <Avatar
-      className={cn("overflow-hidden", className)}
-      size={size}
-      shape="square"
-      bordered={!hasImage}
-    >
-      {src && !hasError ? (
-        <Image
-          src={resolveStorageUrl(src)}
-          width={128}
-          height={128}
-          alt={name}
-          style={{ objectFit: "cover" }}
-          onError={() => {
-            setErroredSrc(src);
-          }}
-        />
-      ) : (
-        <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
-      )}
+    <Avatar className={className} size={size} shape="square" bordered={!src}>
+      {src ? <AvatarImage src={resolveStorageUrl(src)} alt={name} /> : null}
+      <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
     </Avatar>
   );
 }
