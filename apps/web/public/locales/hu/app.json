@@ -605,8 +605,6 @@
   "spaceSettings": "Munkatér beállítások",
   "spaceUpdatedError": "Nem sikerült a munkaterület frissítése",
   "spaceUpdatedSuccess": "Munkaterület frissítve",
-  "specifyTimes": "Időpontok megadása",
-  "specifyTimesDescription": "Adj meg kezdő és záró időpontot minden lehetőséghez",
   "ssoAuthenticationOnly": "A hitelesítést a Single Sign-On (SSO) kezeli. A jelszókezelés nem elérhető.",
   "startOfWeek": "Hét kezdőnapja",
   "submit": "Küldés",
