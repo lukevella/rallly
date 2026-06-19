@@ -166,18 +166,23 @@ export const polls = router({
       const pollId = nanoid();
       const spaceId = activeSpace?.id;
 
+      // Date-only (all-day) polls are floating: they carry no timezone, so a
+      // falsy poll.timeZone is the single source of truth for "floating". Drop
+      // any timezone the client sent for a date-only poll so options are stored
+      // at UTC midnight and never shift across timezones.
+      const isTimePoll = input.options.some((option) => option.endDate);
+      const timeZone = isTimePoll ? input.timeZone : null;
+
       const optionsData = input.options.map((option) => ({
-        startTime: input.timeZone
-          ? dayjs(option.startDate).tz(input.timeZone, true).toDate()
+        startTime: timeZone
+          ? dayjs(option.startDate).tz(timeZone, true).toDate()
           : dayjs(option.startDate).utc(true).toDate(),
         duration: option.endDate
           ? dayjs(option.endDate).diff(dayjs(option.startDate), "minute")
           : 0,
       }));
 
-      const kind = optionsData.some((option) => option.duration > 0)
-        ? "time"
-        : "date";
+      const kind = isTimePoll ? "time" : "date";
 
       const poll = await prisma.poll.create({
         include: {
@@ -190,7 +195,7 @@ export const polls = router({
         data: {
           id: pollId,
           title,
-          timeZone: input.timeZone,
+          timeZone,
           location,
           description,
           adminUrlId: adminToken,
@@ -389,7 +394,9 @@ export const polls = router({
             title: input.title,
             location: input.location,
             description: input.description,
-            timeZone: input.timeZone,
+            // Date-only polls are floating: keep timeZone null so it stays the
+            // single source of truth for whether options are timezone-bound.
+            timeZone: kind === "time" ? input.timeZone : null,
             hideScores: input.hideScores,
             hideParticipants: input.hideParticipants,
             disableComments: input.disableComments,
