@@ -526,8 +526,6 @@
   "spaceSettings": "Rum indstillinger",
   "spaceUpdatedError": "Mislykkedes i at opdatere rum",
   "spaceUpdatedSuccess": "Rummet blev opdateret med succes",
-  "specifyTimes": "Angiv tidspunkter",
-  "specifyTimesDescription": "Inkluder start- og sluttidspunkter for hver valgmulighed",
   "ssoAuthenticationOnly": "Godkendelse administreres via Single Sign-On (SSO). Adgangskodehåndtering er ikke tilgængelig.",
   "startOfWeek": "Start på ugen",
   "submit": "Send",
