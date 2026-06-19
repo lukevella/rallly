@@ -11,7 +11,7 @@ import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { useState } from "react";
 import superjson from "superjson";
 import { useTranslation } from "@/i18n/client";
-import { authClient } from "@/lib/auth-client";
+import { signOut } from "@/lib/auth-client";
 import { trpc } from "../client";
 import type { AppRouter } from "../routers";
 
@@ -29,7 +29,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
 
       switch (error.data?.code) {
         case "UNAUTHORIZED":
-          authClient.signOut().finally(() => {
+          signOut().finally(() => {
             window.location.href = "/login";
           });
           break;

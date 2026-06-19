@@ -1,12 +1,13 @@
 "use client";
 
-import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 
 export function SignOutButton() {
+  const router = useRouter();
   const [isPending, setIsPending] = React.useState(false);
   return (
     <Button
@@ -15,7 +16,7 @@ export function SignOutButton() {
       onClick={async () => {
         setIsPending(true);
         await signOut();
-        posthog?.reset();
+        router.refresh();
       }}
     >
       <Trans

@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/i18n/client";
-import { authClient } from "@/lib/auth-client";
+import { signOut } from "@/lib/auth-client";
 
 export function UserDropdown({
   name,
@@ -69,7 +69,7 @@ export function UserDropdown({
         <DropdownMenuItem
           className="flex items-center gap-x-2"
           onClick={async () => {
-            await authClient.signOut();
+            await signOut();
             router.refresh();
           }}
         >
