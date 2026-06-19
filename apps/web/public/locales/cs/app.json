@@ -572,8 +572,6 @@
   "spaceSettings": "Nastavení prostoru",
   "spaceUpdatedError": "Nepodařilo se aktualizovat prostor",
   "spaceUpdatedSuccess": "Prostor úspěšně aktualizován",
-  "specifyTimes": "Určete časy",
-  "specifyTimesDescription": "Zahrnout počáteční a koncové časy pro každý termín",
   "ssoAuthenticationOnly": "Ověřování je řízeno prostřednictvím jednotného přihlášení (SSO). Správa hesel není k dispozici.",
   "startOfWeek": "Začátek týdne",
   "submit": "Odeslat",
