@@ -11,8 +11,8 @@
     "i18n:scan": "i18next-cli extract"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.3.0",
-    "@prisma/client": "^7.3.0",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
     "@rallly/billing": "workspace:*",
     "@rallly/database": "workspace:*",
     "@rallly/languages": "workspace:*",

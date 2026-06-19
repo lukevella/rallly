@@ -44,7 +44,7 @@
     "lint-staged": "^16.2.7",
     "portless": "^0.12.0",
     "prettier": "^3.5.3",
-    "prisma": "^7.3.0",
+    "prisma": "^7.8.0",
     "turbo": "^2.6.3",
     "typescript": "^5.8.2",
     "vitest": "^4.0.16"
