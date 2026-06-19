@@ -10,6 +10,18 @@ export const env = createEnv({
    */
   server: {
     DATABASE_URL: z.url(),
+    /**
+     * Direct (non-pooled) connection used only by Prisma CLI / migrations.
+     * On Supabase this is the session connection (port 5432); DATABASE_URL is
+     * the transaction pooler (port 6543) used by the runtime driver adapter.
+     */
+    DIRECT_DATABASE_URL: z.url().optional(),
+    /**
+     * Postgres schema Rallly's tables live in. Unset locally (defaults to
+     * `public`); set to `rallly` in the shared Supabase project to isolate
+     * Rallly's tables from the portal's `public.*` tables.
+     */
+    DATABASE_SCHEMA: z.string().optional(),
     NODE_ENV: z
       .enum(["development", "production", "test"])
       .default("development"),
@@ -201,6 +213,8 @@ export const env = createEnv({
    */
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
+    DIRECT_DATABASE_URL: process.env.DIRECT_DATABASE_URL,
+    DATABASE_SCHEMA: process.env.DATABASE_SCHEMA,
     NODE_ENV: process.env.NODE_ENV,
     SECRET_PASSWORD: process.env.SECRET_PASSWORD,
     API_SECRET: process.env.API_SECRET,
