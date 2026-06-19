@@ -571,8 +571,6 @@
   "spaceSettings": "Tilan asetukset",
   "spaceUpdatedError": "Tilan päivittäminen ei onnistunut",
   "spaceUpdatedSuccess": "Tilan päivittäminen onnistui",
-  "specifyTimes": "Määritä ajat",
-  "specifyTimesDescription": "Aseta jokaiselle vaihtoehdolle alkamis- ja päättymisaika",
   "ssoAuthenticationOnly": "Tunnistautumista hallitaan kertakirjautumisen (SSO) kautta. Salasanan hallinta ei ole käytettävissä.",
   "startOfWeek": "Viikon aloituspäivä",
   "submit": "Lähetä",
