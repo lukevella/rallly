@@ -3,7 +3,7 @@ import type { Page } from "@playwright/test";
 export class EditOptionsPage {
   constructor(public readonly page: Page) {}
 
-  async switchToSpecifyTimes() {
-    await this.page.click("[data-testid='specify-times-switch']");
+  async selectAllDay() {
+    await this.page.click("[data-testid='all-day-option']");
   }
 }

@@ -18,11 +18,9 @@ test.describe("edit options", () => {
   });
 
   test("should show warning when deleting options with votes in them", async () => {
-    editOptionsPage.switchToSpecifyTimes();
-
-    await page.click("text='12:00 PM'");
-    const listbox = page.getByRole("listbox");
-    listbox.getByText("1:00 PM", { exact: true }).click();
+    // Polls default to timed options. Selecting all-day replaces the voted
+    // time options with date options, which deletes the options that have votes.
+    await editOptionsPage.selectAllDay();
     await page.getByRole("button", { name: "Save" }).click();
     await expect(page.locator('text="Are you sure?"')).toBeVisible();
     await page.click("text='Delete'");
