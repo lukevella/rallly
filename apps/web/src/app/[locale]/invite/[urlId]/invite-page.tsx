@@ -5,7 +5,6 @@ import Link from "next/link";
 import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import { PollFooter } from "@/components/poll/poll-footer";
-import { PollViewTracker } from "@/components/poll/poll-view-tracker";
 import { ResponsiveResults } from "@/components/poll/responsive-results";
 import { VotingForm } from "@/components/poll/voting-form";
 import { usePoll } from "@/contexts/poll";
@@ -47,11 +46,8 @@ const GoToApp = () => {
 };
 
 export function InvitePage() {
-  const poll = usePoll();
-
   return (
     <div className="page-bg-gray-100 h-dvh overflow-auto p-3 lg:p-6 dark:bg-gray-900">
-      <PollViewTracker pollId={poll.id} />
       <div className="mx-auto w-full max-w-4xl space-y-3">
         <GoToApp />
         <EventCard />
