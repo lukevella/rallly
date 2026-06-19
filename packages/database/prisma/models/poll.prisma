@@ -53,7 +53,6 @@ model Poll {
   participants   Participant[]
   comments       Comment[]
   votes          Vote[]
-  views          PollView[]
   space          Space?          @relation(fields: [spaceId], references: [id], onDelete: SetNull)
   spaceId        String?         @map("space_id")
 
@@ -142,21 +141,4 @@ model Comment {
 
   @@index([pollId])
   @@map("comments")
-}
-
-model PollView {
-  id        String   @id @default(cuid())
-  pollId    String   @map("poll_id")
-  ipAddress String?  @map("ip_address")
-  userId    String?  @map("user_id")
-  userAgent String?  @map("user_agent")
-  viewedAt  DateTime @default(now()) @map("viewed_at")
-
-  poll Poll  @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  @@index([pollId], type: Hash)
-  @@index([userId], type: Hash)
-  @@index([viewedAt])
-  @@map("poll_views")
 }

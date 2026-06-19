@@ -442,11 +442,14 @@ export const participants = router({
           })),
         });
 
-        // Return updated participant with votes
-        return tx.participant.findUniqueOrThrow({
+        // Bump `updatedAt` so it reflects this vote change; the poll cleanup
+        // job uses it to detect recent activity. An empty `data: {}` update is
+        // a no-op for `@updatedAt`, so set it explicitly.
+        return tx.participant.update({
           where: {
             id: participantId,
           },
+          data: { updatedAt: new Date() },
           include: {
             votes: {
               select: {

@@ -120,14 +120,38 @@ test.describe("House-keeping API", () => {
     });
     createdPollIds.push(oldPollWithFutureOptions.id);
 
-    const oldPollWithRecentViews = await createTestPoll({
-      id: "old-poll-recent-views",
-      title: "Old Poll with Recent Views",
+    // Protected: old/unedited, but a participant responded (or changed their
+    // vote) recently
+    const oldPollWithRecentParticipant = await createTestPoll({
+      id: "old-poll-recent-participant",
+      title: "Old Poll with Recent Participant",
       userId: freeUser.id,
       updatedAt: dayjs().subtract(35, "day").toDate(),
-      hasRecentViews: true,
+      participantActiveAt: dayjs().subtract(15, "day").toDate(),
     });
-    createdPollIds.push(oldPollWithRecentViews.id);
+    createdPollIds.push(oldPollWithRecentParticipant.id);
+
+    // Protected: old/unedited, but someone commented recently
+    const oldPollWithRecentComment = await createTestPoll({
+      id: "old-poll-recent-comment",
+      title: "Old Poll with Recent Comment",
+      userId: freeUser.id,
+      updatedAt: dayjs().subtract(35, "day").toDate(),
+      commentCreatedAt: dayjs().subtract(15, "day").toDate(),
+    });
+    createdPollIds.push(oldPollWithRecentComment.id);
+
+    // Should be deleted: has activity, but all of it is older than 30 days
+    // (proves the check is recency-based, not mere existence)
+    const oldPollWithOldActivity = await createTestPoll({
+      id: "old-poll-old-activity",
+      title: "Old Poll with Old Activity",
+      userId: freeUser.id,
+      updatedAt: dayjs().subtract(35, "day").toDate(),
+      participantActiveAt: dayjs().subtract(35, "day").toDate(),
+      commentCreatedAt: dayjs().subtract(40, "day").toDate(),
+    });
+    createdPollIds.push(oldPollWithOldActivity.id);
 
     // Call the delete-inactive-polls endpoint
     const response = await request.get(
@@ -143,10 +167,11 @@ test.describe("House-keeping API", () => {
     const responseData = await response.json();
     expect(responseData.success).toBeTruthy();
 
-    // We expect 2 polls to be marked as deleted:
+    // We expect 3 polls to be marked as deleted:
     // - Old poll from free user (not in a paid space)
     // - Old poll without a user
-    expect(responseData.summary.markedDeleted).toBe(2);
+    // - Old poll whose only participant/comment activity is also older than 30 days
+    expect(responseData.summary.markedDeleted).toBe(3);
 
     // Verify polls that should be marked as deleted
     const deletedPollFromFreeUser = await prisma.poll.findUnique({
@@ -180,11 +205,24 @@ test.describe("House-keeping API", () => {
     expect(protectedPollWithFutureOptions?.deleted).toBe(false);
     expect(protectedPollWithFutureOptions?.deletedAt).toBeNull();
 
-    const protectedPollWithRecentViews = await prisma.poll.findUnique({
-      where: { id: oldPollWithRecentViews.id },
+    const protectedPollWithRecentParticipant = await prisma.poll.findUnique({
+      where: { id: oldPollWithRecentParticipant.id },
     });
-    expect(protectedPollWithRecentViews?.deleted).toBe(false);
-    expect(protectedPollWithRecentViews?.deletedAt).toBeNull();
+    expect(protectedPollWithRecentParticipant?.deleted).toBe(false);
+    expect(protectedPollWithRecentParticipant?.deletedAt).toBeNull();
+
+    const protectedPollWithRecentComment = await prisma.poll.findUnique({
+      where: { id: oldPollWithRecentComment.id },
+    });
+    expect(protectedPollWithRecentComment?.deleted).toBe(false);
+    expect(protectedPollWithRecentComment?.deletedAt).toBeNull();
+
+    // The poll whose activity is all older than 30 days should be deleted
+    const deletedPollWithOldActivity = await prisma.poll.findUnique({
+      where: { id: oldPollWithOldActivity.id },
+    });
+    expect(deletedPollWithOldActivity?.deleted).toBe(true);
+    expect(deletedPollWithOldActivity?.deletedAt).not.toBeNull();
   });
 
   test("should permanently remove polls that have been marked as deleted for more than 7 days", async ({

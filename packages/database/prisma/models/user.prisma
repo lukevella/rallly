@@ -70,7 +70,6 @@ model User {
   spaces        Space[]        @relation("UserSpaces")
   memberOf      SpaceMember[]
 
-  pollViews             PollView[]
   scheduledEvents       ScheduledEvent[]
   scheduledEventInvites ScheduledEventInvite[]
   hostedEventTypes      EventType[]
