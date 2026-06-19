@@ -25,7 +25,7 @@
   "upgrade": "Előfizetés",
   "upgradeNowSaveLater": "Fizess elő most, spórolj később",
   "whenPollInactive": "Mikor lesz egy szavazás inaktív?",
-  "whenPollInactiveAnswer": "A szavazások inaktívak lesznek, ha az összes dátum lehetőség múltbeli ÉS a szavazás nem volt megtekintve a legutóbbi 30 napban. Az inaktív szavazások automatikusan törlődnek, ha nincs előfizetésed.",
+  "whenPollInactiveAnswer": "Szavazások inaktívvá válnak, ha az összes dátum lehetőség múltbéli ÉS több mint 30 napja nem volt aktivitás. Az aktivitás magában foglalja az új szavazásokat, hozzászólásokat vagy a szavazás megváltoztatását. Az inaktív szavazások automatikusan törlődnek, ha nincs előfizetésed.",
   "whyUpgrade": "Miért fizessek elő?",
   "whyUpgradeAnswer2": "Akkor érdemes előfizetned, ha a Rallly-t gyakran vagy munka miatt használod. A jelenlegi előfizetési ár speciális bevezető ár és a jövőben emelkedni fog. Ha most előfizetsz, korai hozzáférést kapsz új, minőségi ütemező eszközökhöz megjelenéskor és a jelenlegi előfizetési árat megőrizve, nem fognak érinteni a jövőbeni áremelések.",
   "yearlyBillingDescription": "évente"
