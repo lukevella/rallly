@@ -130,7 +130,7 @@ export const useOptions = () => {
   return context;
 };
 
-function createOptionsContextValue(
+export function createOptionsContextValue(
   pollOptions: { id: string; startTime: Date; duration: number }[],
   targetTimeZone: string,
   sourceTimeZone: string | null,
@@ -175,9 +175,9 @@ function createOptionsContextValue(
     return {
       pollType: "date",
       options: pollOptions.map((option) => {
-        const localTime = sourceTimeZone
-          ? dayjs(option.startTime).tz(targetTimeZone)
-          : dayjs(option.startTime).utc();
+        // All-day options are floating dates: always read them in UTC so the
+        // calendar date is identical for every viewer, regardless of timezone.
+        const localTime = dayjs(option.startTime).utc();
 
         return {
           optionId: option.id,
