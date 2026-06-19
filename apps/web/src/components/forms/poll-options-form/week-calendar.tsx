@@ -168,8 +168,12 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               onChangeDuration(diff);
             }
           } else {
+            // Fall back to an hour when the duration is 0 (all-day mode) so a
+            // click never creates a zero-length time slot.
             newEvent.end = formatDateWithoutTz(
-              dayjs(startDate).add(duration, "minutes").toDate(),
+              dayjs(startDate)
+                .add(duration || 60, "minutes")
+                .toDate(),
             );
           }
 
