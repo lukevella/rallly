@@ -15,8 +15,12 @@ export function SignOutButton() {
       loading={isPending}
       onClick={async () => {
         setIsPending(true);
-        await signOut();
-        router.refresh();
+        try {
+          await signOut();
+          router.refresh();
+        } finally {
+          setIsPending(false);
+        }
       }}
     >
       <Trans

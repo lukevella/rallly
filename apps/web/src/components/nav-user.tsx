@@ -125,8 +125,12 @@ export function NavUser() {
           <DropdownMenuItem
             onClick={async () => {
               setIsPending(true);
-              await signOut();
-              router.refresh();
+              try {
+                await signOut();
+                router.refresh();
+              } finally {
+                setIsPending(false);
+              }
             }}
           >
             <Icon>

@@ -25,7 +25,7 @@ export default function LocaleErrorBoundary({
 
   React.useEffect(() => {
     if (isInvalidSession) {
-      signOut().then(() => {
+      signOut().finally(() => {
         router.push("/login");
       });
       return;
