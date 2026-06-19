@@ -1,5 +1,4 @@
 "use client";
-import { posthog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
@@ -30,6 +29,7 @@ import {
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { useUser } from "@/components/user-provider";
 import { useTheme } from "@/features/theme/client";
@@ -39,6 +39,7 @@ import { useFeatureFlag } from "@/lib/feature-flags/client";
 
 export const UserDropdown = ({ className }: { className?: string }) => {
   const { user } = useUser();
+  const router = useRouter();
   const { theme, setTheme } = useTheme();
 
   const isRegistrationEnabled = useFeatureFlag("registration");
@@ -162,7 +163,7 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         <DropdownMenuItem
           onClick={async () => {
             await signOut();
-            posthog?.reset();
+            router.refresh();
           }}
           className="flex items-center gap-x-2"
         >

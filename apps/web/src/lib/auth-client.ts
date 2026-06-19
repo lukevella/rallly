@@ -1,3 +1,4 @@
+import { posthog } from "@rallly/posthog/client";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import {
   anonymousClient,
@@ -22,5 +23,5 @@ export const authClient = createAuthClient({
 
 export async function signOut() {
   await authClient.signOut();
-  window.location.href = "/login";
+  posthog?.reset();
 }

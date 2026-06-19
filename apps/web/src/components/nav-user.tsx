@@ -1,6 +1,5 @@
 "use client";
 
-import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
@@ -28,6 +27,7 @@ import {
   UserIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
@@ -40,6 +40,7 @@ export function NavUser() {
   const { data: user } = trpc.user.getAuthed.useQuery();
   const [isPending, setIsPending] = React.useState(false);
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
 
   if (!user) {
     return null;
@@ -124,8 +125,12 @@ export function NavUser() {
           <DropdownMenuItem
             onClick={async () => {
               setIsPending(true);
-              await signOut();
-              posthog?.reset();
+              try {
+                await signOut();
+                router.refresh();
+              } finally {
+                setIsPending(false);
+              }
             }}
           >
             <Icon>

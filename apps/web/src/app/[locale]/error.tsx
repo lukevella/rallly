@@ -10,7 +10,7 @@ import React from "react";
 import { ErrorPage, ErrorPageLinkItem } from "@/components/error-page";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/i18n/client";
-import { authClient } from "@/lib/auth-client";
+import { signOut } from "@/lib/auth-client";
 import { INVALID_SESSION } from "@/lib/errors/invalid-session-error";
 
 export default function LocaleErrorBoundary({
@@ -25,12 +25,8 @@ export default function LocaleErrorBoundary({
 
   React.useEffect(() => {
     if (isInvalidSession) {
-      authClient.signOut({
-        fetchOptions: {
-          onSuccess: () => {
-            router.push("/login");
-          },
-        },
+      signOut().finally(() => {
+        router.push("/login");
       });
       return;
     }
