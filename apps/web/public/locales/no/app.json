@@ -537,8 +537,6 @@
   "spaceSettings": "Områdeinnstillinger",
   "spaceUpdatedError": "Kunne ikke oppdatere område",
   "spaceUpdatedSuccess": "Område oppdatert",
-  "specifyTimes": "Angi klokkeslett",
-  "specifyTimesDescription": "Inkluder start- og sluttidspunkt for hvert alternativ",
   "ssoAuthenticationOnly": "Autentisering håndteres via Single Sign-On (SSO). Passordadministrasjon er ikke tilgjengelig.",
   "startOfWeek": "Første dag i uken",
   "submit": "Send",
