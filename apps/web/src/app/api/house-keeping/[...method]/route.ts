@@ -51,11 +51,11 @@ app.get("/delete-inactive-polls", async (c) => {
           },
         },
       ],
-      // Poll is inactive: not edited, and no new participants or comments in
-      // the last 30 days
+      // Poll is inactive: not edited, and no participant activity (new or
+      // updated responses) or new comments in the last 30 days
       updatedAt: { lt: thirtyDaysAgo },
       participants: {
-        none: { createdAt: { gte: thirtyDaysAgo } },
+        none: { updatedAt: { gte: thirtyDaysAgo } },
       },
       comments: {
         none: { createdAt: { gte: thirtyDaysAgo } },

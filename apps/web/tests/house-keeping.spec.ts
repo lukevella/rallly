@@ -120,13 +120,14 @@ test.describe("House-keeping API", () => {
     });
     createdPollIds.push(oldPollWithFutureOptions.id);
 
-    // Protected: old/unedited, but someone responded recently
+    // Protected: old/unedited, but a participant responded (or changed their
+    // vote) recently
     const oldPollWithRecentParticipant = await createTestPoll({
       id: "old-poll-recent-participant",
       title: "Old Poll with Recent Participant",
       userId: freeUser.id,
       updatedAt: dayjs().subtract(35, "day").toDate(),
-      participantCreatedAt: dayjs().subtract(15, "day").toDate(),
+      participantActiveAt: dayjs().subtract(15, "day").toDate(),
     });
     createdPollIds.push(oldPollWithRecentParticipant.id);
 
@@ -147,7 +148,7 @@ test.describe("House-keeping API", () => {
       title: "Old Poll with Old Activity",
       userId: freeUser.id,
       updatedAt: dayjs().subtract(35, "day").toDate(),
-      participantCreatedAt: dayjs().subtract(35, "day").toDate(),
+      participantActiveAt: dayjs().subtract(35, "day").toDate(),
       commentCreatedAt: dayjs().subtract(40, "day").toDate(),
     });
     createdPollIds.push(oldPollWithOldActivity.id);
