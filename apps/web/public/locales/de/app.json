@@ -605,8 +605,6 @@
   "spaceSettings": "Gruppeneinstellungen",
   "spaceUpdatedError": "Fehler beim Aktualisieren der Gruppe",
   "spaceUpdatedSuccess": "Gruppe erfolgreich aktualisiert",
-  "specifyTimes": "Uhrzeiten angeben",
-  "specifyTimesDescription": "Start- und Endzeit für jede Option angeben",
   "ssoAuthenticationOnly": "Die Authentifizierung wird über Single Sign-On (SSO) verwaltet. Die Passwortverwaltung ist nicht verfügbar.",
   "startOfWeek": "Wochenbeginn",
   "submit": "Absenden",
