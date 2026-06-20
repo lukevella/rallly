@@ -4,18 +4,6 @@ import ICU from "i18next-icu";
 import resourcesToBackend from "i18next-resources-to-backend";
 import { initReactI18next } from "react-i18next/initReactI18next";
 
-const i18nInstance = createInstance();
-
-i18nInstance
-  .use(initReactI18next)
-  .use(ICU)
-  .use(
-    resourcesToBackend(
-      (language: string, namespace: string) =>
-        import(`../locales/${language}/${namespace}.json`),
-    ),
-  );
-
 const i18nDefaultConfig: InitOptions = {
   lng: "en",
   fallbackLng: "en",
@@ -24,18 +12,28 @@ const i18nDefaultConfig: InitOptions = {
   defaultNS: "emails",
 } as const;
 
-export type I18nInstance = typeof i18nInstance;
-
 /**
- * Initialises the email i18n instance for `locale` and returns the instance
- * plus a locale-pinned `t`. `getFixedT(locale)` is concurrency-safe even though
- * the instance is shared — it captures the locale regardless of the instance's
- * current `language`. (Whether to swap the shared singleton for a per-send
- * `createInstance()` is tracked in RAL-1219.)
+ * Builds a fresh, locale-bound i18n instance for a single email render and
+ * returns it with a locale-pinned `t`. Each email calls this with its `locale`
+ * prop and localizes with `t(...)`; pass `t` + `i18n` to `<Trans>` (from
+ * react-i18next/TransWithoutContext) for the few strings with inline markup.
+ *
+ * A fresh per-render instance (not a shared singleton) keeps `i18n.language`
+ * correct under a concurrent fan-out, and TransWithoutContext keeps it free of
+ * React context, which Next disallows in the server components that send email.
  */
 export async function createEmailI18n(locale: string) {
-  await i18nInstance.init({ ...i18nDefaultConfig, lng: locale });
-  return { i18n: i18nInstance, t: i18nInstance.getFixedT(locale) };
-}
+  const i18n = createInstance();
+  await i18n
+    .use(ICU)
+    .use(
+      resourcesToBackend(
+        (language: string, namespace: string) =>
+          import(`../locales/${language}/${namespace}.json`),
+      ),
+    )
+    .use(initReactI18next)
+    .init({ ...i18nDefaultConfig, lng: locale });
 
-export { i18nDefaultConfig, i18nInstance };
+  return { i18n, t: i18n.getFixedT(locale, "emails") };
+}
