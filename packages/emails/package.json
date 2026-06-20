@@ -17,8 +17,8 @@
     "@aws-sdk/credential-provider-node": "^3.501.0",
     "@rallly/logger": "workspace:*",
     "@rallly/utils": "workspace:*",
-    "@react-email/components": "^0.0.36",
-    "@react-email/render": "^1.0.6",
+    "@react-email/components": "^1.0.12",
+    "@react-email/render": "^2.0.9",
     "i18next": "^26.3.0",
     "i18next-icu": "^2.4.3",
     "i18next-resources-to-backend": "^1.2.1",
@@ -30,9 +30,9 @@
   "devDependencies": {
     "@rallly/tailwind-config": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
-    "@react-email/preview-server": "5.2.7",
+    "@react-email/ui": "^6.6.3",
     "@types/nodemailer": "^6.4.14",
     "i18next-cli": "^1.58.1",
-    "react-email": "^5.0.8"
+    "react-email": "^6.6.3"
   }
 }
