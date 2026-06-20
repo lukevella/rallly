@@ -31,7 +31,6 @@ model Poll {
   description             String?
   location                String?
   userId                  String?    @map("user_id")
-  guestId                 String?    @map("guest_id") // @deprecated - legacy NextAuth field, no longer used
   timeZone                String?    @map("time_zone")
   status                  PollStatus @default(open)
   kind                    PollKind   @default(date)
@@ -66,7 +65,6 @@ model Participant {
   name      String
   email     String?
   userId    String?   @map("user_id")
-  guestId   String?   @map("guest_id") // @deprecated - legacy NextAuth field, no longer used
   pollId    String    @map("poll_id")
   locale    String?
   timeZone  String?   @map("time_zone")
@@ -132,7 +130,6 @@ model Comment {
   pollId     String    @map("poll_id")
   authorName String    @map("author_name")
   userId     String?   @map("user_id")
-  guestId    String?   @map("guest_id") // @deprecated - legacy NextAuth field, no longer used
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime? @updatedAt @map("updated_at")
 
