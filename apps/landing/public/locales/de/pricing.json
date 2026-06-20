@@ -25,7 +25,7 @@
   "upgrade": "Upgrade",
   "upgradeNowSaveLater": "Jetzt upgraden, später sparen",
   "whenPollInactive": "Wann wird eine Umfrage inaktiv?",
-  "whenPollInactiveAnswer": "Umfragen werden inaktiv, wenn alle Datumsoptionen in der Vergangenheit liegen UND die Umfrage seit mehr als 30 Tagen nicht aufgerufen wurde. Inaktive Umfragen werden automatisch gelöscht, wenn du kein kostenpflichtiges Abonnement hast.",
+  "whenPollInactiveAnswer": "Umfragen werden inaktiv, wenn alle Datumsoptionen in der Vergangenheit liegen UND seit mehr als 30 Tagen keine Aktivität stattgefunden hat. Aktivität umfasst neue Stimmen, Kommentare oder Änderungen an der Umfrage. Inaktive Umfragen werden automatisch gelöscht, wenn du kein bezahltes Abonnement hast.",
   "whyUpgrade": "Warum sollte ich upgraden?",
   "whyUpgradeAnswer2": "Ein Upgrade auf einen kostenpflichtigen Plan lohnt sich, wenn du Rallly häufig nutzt oder beruflich einsetzt. Der aktuelle Preis ist ein spezieller Frühbucher-Tarif, der in Zukunft steigen wird. Wenn du jetzt ein Upgrade machst, erhältst du frühzeitigen Zugang zu neuen, hochwertigen Planungstools und sicherst dir den aktuellen Preis – zukünftige Preiserhöhungen betreffen dich dann nicht.",
   "yearlyBillingDescription": "pro Jahr"
