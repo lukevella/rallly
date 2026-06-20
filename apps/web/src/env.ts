@@ -1,3 +1,8 @@
+// Keep this module out of client bundles: its runtime validation requires
+// `NEXT_PUBLIC_BASE_URL`, which self-hosted deployments set at runtime and is
+// therefore absent on the client. A client import here crashes those builds
+// (see issue #2474). Client code must read `process.env.NEXT_PUBLIC_*` directly.
+import "server-only";
 import { createEnv } from "@t3-oss/env-nextjs";
 import * as z from "zod";
 
