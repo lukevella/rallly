@@ -144,7 +144,6 @@ export function RsvpVerifyEmail({
                     <FormControl>
                       <InputOTP
                         autoFocus
-                        placeholder={t("verificationCodePlaceholder")}
                         disabled={form.formState.isSubmitting}
                         onValidCode={() => handleSubmit()}
                         {...field}
