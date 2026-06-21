@@ -1,6 +1,7 @@
 import {
   Column,
   Head,
+  Hr,
   Html,
   Img,
   Preview,
@@ -128,12 +129,11 @@ async function FinalizeHostEmail({
                 "We've notified participants and sent them calendar invites.",
             })}
           </Text>
-          <Section style={{ marginTop: 32 }}>
-            <Button href={pollUrl} color={chrome.primaryColor}>
-              {t("finalizeHost_button", { defaultValue: "View Event" })}
-            </Button>
-          </Section>
-          <PoweredBy chrome={chrome} />
+          <Button href={pollUrl} color={chrome.primaryColor}>
+            {t("finalizeHost_button", { defaultValue: "View Event" })}
+          </Button>
+          <Hr style={{ margin: "16px 0" }} />
+          <PoweredBy chrome={chrome} locale={locale} />
         </Container>
       </Body>
     </Html>

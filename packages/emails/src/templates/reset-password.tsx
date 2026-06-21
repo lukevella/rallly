@@ -1,4 +1,4 @@
-import { Head, Html, Img, Preview, Section } from "@react-email/components";
+import { Head, Hr, Html, Img, Preview } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { resolveChrome } from "../chrome";
@@ -56,17 +56,16 @@ async function ResetPasswordEmail({
                 "We received a request to reset your password. Click the button below to create a new password.",
             })}
           </Text>
-          <Section style={{ marginBottom: 32 }}>
-            <Button href={resetLink} id="resetLink" color={chrome.primaryColor}>
-              <Trans
-                t={t}
-                i18n={i18n}
-                ns="emails"
-                i18nKey="resetPassword_button"
-                defaults="Reset password"
-              />
-            </Button>
-          </Section>
+          <Button href={resetLink} id="resetLink" color={chrome.primaryColor}>
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="emails"
+              i18nKey="resetPassword_button"
+              defaults="Reset password"
+            />
+          </Button>
+          <Hr style={{ margin: "16px 0" }} />
           <Text small light>
             <Trans
               t={t}
@@ -85,7 +84,7 @@ async function ResetPasswordEmail({
               }}
             />
           </Text>
-          <PoweredBy chrome={chrome} />
+          <PoweredBy chrome={chrome} locale={locale} />
         </Container>
       </Body>
     </Html>

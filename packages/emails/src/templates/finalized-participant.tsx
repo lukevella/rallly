@@ -1,6 +1,7 @@
 import {
   Column,
   Head,
+  Hr,
   Html,
   Img,
   Preview,
@@ -127,18 +128,17 @@ async function FinalizeParticipantEmail({
                 "Please find attached a calendar invite for this event.",
             })}
           </Text>
-          <Section style={{ marginTop: 32 }}>
-            <Button href={pollUrl} color={chrome.primaryColor}>
-              <Trans
-                t={t}
-                i18n={i18n}
-                ns="emails"
-                i18nKey="finalizeHost_button"
-                defaults="View Event"
-              />
-            </Button>
-          </Section>
-          <PoweredBy chrome={chrome} />
+          <Button href={pollUrl} color={chrome.primaryColor}>
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="emails"
+              i18nKey="finalizeHost_button"
+              defaults="View Event"
+            />
+          </Button>
+          <Hr style={{ margin: "16px 0" }} />
+          <PoweredBy chrome={chrome} locale={locale} />
         </Container>
       </Body>
     </Html>

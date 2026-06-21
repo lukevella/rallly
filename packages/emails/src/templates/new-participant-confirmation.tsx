@@ -1,4 +1,4 @@
-import { Head, Html, Img, Preview, Section } from "@react-email/components";
+import { Head, Hr, Html, Img, Preview } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { resolveChrome } from "../chrome";
@@ -72,23 +72,22 @@ async function NewParticipantConfirmationEmail({
               defaults="While the poll is still open you can change your response using the link below."
             />
           </Text>
-          <Section style={{ marginTop: 32 }}>
-            <Button
-              id="editSubmissionUrl"
-              href={editSubmissionUrl}
-              color={chrome.primaryColor}
-            >
-              <Trans
-                t={t}
-                i18n={i18n}
-                ns="emails"
-                i18nKey="newParticipantConfirmation_button"
-                defaults="Review response on {domain}"
-                values={{ domain: chrome.domain }}
-              />
-            </Button>
-          </Section>
-          <Text light={true}>
+          <Button
+            id="editSubmissionUrl"
+            href={editSubmissionUrl}
+            color={chrome.primaryColor}
+          >
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="emails"
+              i18nKey="newParticipantConfirmation_button"
+              defaults="Review response on {domain}"
+              values={{ domain: chrome.domain }}
+            />
+          </Button>
+          <Hr style={{ margin: "16px 0" }} />
+          <Text small light={true}>
             <Trans
               t={t}
               i18n={i18n}
@@ -104,7 +103,7 @@ async function NewParticipantConfirmationEmail({
               }}
             />
           </Text>
-          <PoweredBy chrome={chrome} />
+          <PoweredBy chrome={chrome} locale={locale} />
         </Container>
       </Body>
     </Html>

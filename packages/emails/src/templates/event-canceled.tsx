@@ -1,6 +1,7 @@
 import {
   Column,
   Head,
+  Hr,
   Html,
   Img,
   Preview,
@@ -118,7 +119,8 @@ async function EventCanceledEmail({
               </Column>
             </Row>
           </Section>
-          <PoweredBy chrome={chrome} />
+          <Hr style={{ margin: "16px 0" }} />
+          <PoweredBy chrome={chrome} locale={locale} />
         </Container>
       </Body>
     </Html>

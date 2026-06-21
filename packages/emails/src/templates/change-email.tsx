@@ -1,4 +1,4 @@
-import { Head, Html, Img, Preview, Section } from "@react-email/components";
+import { Head, Hr, Html, Img, Preview } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { resolveChrome } from "../chrome";
@@ -6,7 +6,6 @@ import { PoweredBy } from "../components/powered-by";
 import { previewChrome } from "../components/preview-chrome";
 import {
   Body,
-  Card,
   Container,
   Heading,
   Link,
@@ -58,50 +57,46 @@ async function ChangeEmailEmail({
                 "Please use the following 6-digit verification code to confirm your new email address",
             })}
           </Text>
-          <Card style={{ textAlign: "center" }}>
-            <Text
-              style={{
-                ...trackingWide,
-                textAlign: "center",
-                fontSize: "32px",
-                fontWeight: "bold",
+          <Text
+            style={{
+              ...trackingWide,
+              fontSize: "32px",
+              fontWeight: "bold",
+            }}
+            id="code"
+          >
+            {code}
+          </Text>
+          <Text light={true}>
+            {t("changeEmail_codeValid", {
+              defaultValue: "This code is valid for 15 minutes",
+            })}
+          </Text>
+          <Hr />
+          <Text small light={true}>
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="emails"
+              i18nKey="changeEmail_content2"
+              defaults="You're receiving this email because a request was made to change the email address of an account on <domain />. If this wasn't you contact <a>{supportEmail}</a>."
+              values={{ supportEmail: chrome.supportEmail }}
+              components={{
+                domain: (
+                  <Link color={chrome.primaryColor} href={chrome.baseUrl}>
+                    {chrome.domain}
+                  </Link>
+                ),
+                a: (
+                  <Link
+                    color={chrome.primaryColor}
+                    href={`mailto:${chrome.supportEmail}`}
+                  />
+                ),
               }}
-              id="code"
-            >
-              {code}
-            </Text>
-            <Text style={{ textAlign: "center" }} light={true}>
-              {t("changeEmail_codeValid", {
-                defaultValue: "This code is valid for 15 minutes",
-              })}
-            </Text>
-          </Card>
-          <Section>
-            <Text light={true}>
-              <Trans
-                t={t}
-                i18n={i18n}
-                ns="emails"
-                i18nKey="changeEmail_content2"
-                defaults="You're receiving this email because a request was made to change the email address of an account on <domain />. If this wasn't you contact <a>{supportEmail}</a>."
-                values={{ supportEmail: chrome.supportEmail }}
-                components={{
-                  domain: (
-                    <Link color={chrome.primaryColor} href={chrome.baseUrl}>
-                      {chrome.domain}
-                    </Link>
-                  ),
-                  a: (
-                    <Link
-                      color={chrome.primaryColor}
-                      href={`mailto:${chrome.supportEmail}`}
-                    />
-                  ),
-                }}
-              />
-            </Text>
-          </Section>
-          <PoweredBy chrome={chrome} />
+            />
+          </Text>
+          <PoweredBy chrome={chrome} locale={locale} />
         </Container>
       </Body>
     </Html>

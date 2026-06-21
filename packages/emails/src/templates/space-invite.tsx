@@ -1,4 +1,4 @@
-import { Head, Html, Img, Preview, Section } from "@react-email/components";
+import { Head, Hr, Html, Img, Preview } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { resolveChrome } from "../chrome";
@@ -66,14 +66,13 @@ async function SpaceInviteEmail({
               values={{ inviterName, spaceName, role }}
             />
           </Text>
-          <Section style={{ marginBottom: 16 }}>
-            <Button href={inviteUrl} id="inviteUrl" color={chrome.primaryColor}>
-              {t("spaceInvite_button", {
-                defaultValue: "Accept Invitation",
-              })}
-            </Button>
-          </Section>
-          <PoweredBy chrome={chrome} />
+          <Button href={inviteUrl} id="inviteUrl" color={chrome.primaryColor}>
+            {t("spaceInvite_button", {
+              defaultValue: "Accept Invitation",
+            })}
+          </Button>
+          <Hr style={{ margin: "16px 0" }} />
+          <PoweredBy chrome={chrome} locale={locale} />
         </Container>
       </Body>
     </Html>

@@ -1,4 +1,4 @@
-import { Head, Html, Img, Preview, Section } from "@react-email/components";
+import { Head, Hr, Html, Img, Preview } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { resolveChrome } from "../chrome";
@@ -80,18 +80,17 @@ async function NewParticipantEmail({
               defaults="Go to your poll to see the new response."
             />
           </Text>
-          <Section style={{ marginTop: 32, marginBottom: 32 }}>
-            <Button href={pollUrl} color={chrome.primaryColor}>
-              <Trans
-                t={t}
-                i18n={i18n}
-                ns="emails"
-                i18nKey="common_viewOn"
-                defaults="View on {domain}"
-                values={{ domain: chrome.domain }}
-              />
-            </Button>
-          </Section>
+          <Button href={pollUrl} color={chrome.primaryColor}>
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="emails"
+              i18nKey="common_viewOn"
+              defaults="View on {domain}"
+              values={{ domain: chrome.domain }}
+            />
+          </Button>
+          <Hr style={{ margin: "16px 0" }} />
           <Text small light={true}>
             <Trans
               t={t}
@@ -110,7 +109,7 @@ async function NewParticipantEmail({
               }}
             />
           </Text>
-          <PoweredBy chrome={chrome} />
+          <PoweredBy chrome={chrome} locale={locale} />
         </Container>
       </Body>
     </Html>

@@ -58,6 +58,7 @@ export const Button = (
         borderRadius: "6px",
         padding: "14px",
         fontFamily,
+        minWidth: "200px",
         boxSizing: "border-box",
         textAlign: "center",
         margin: "0 auto",

@@ -1,4 +1,4 @@
-import { Head, Html, Img, Preview } from "@react-email/components";
+import { Head, Hr, Html, Img, Preview } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { resolveChrome } from "../chrome";
@@ -7,7 +7,6 @@ import { previewChrome } from "../components/preview-chrome";
 import {
   Body,
   Button,
-  Card,
   Container,
   Heading,
   Link,
@@ -70,19 +69,18 @@ async function NewPollEmail({
               defaults="Your meeting poll titled <b>{title}</b> is ready! Share it using the link below:"
             />
           </Text>
-          <Card style={{ textAlign: "center" }}>
-            <Text style={{ textAlign: "center" }}>
-              <Link color={chrome.primaryColor} href={participantLink}>
-                {participantLink}
-              </Link>
-            </Text>
-          </Card>
+          <Text>
+            <Link color={chrome.primaryColor} href={participantLink}>
+              {participantLink}
+            </Link>
+          </Text>
           <Button href={adminLink} color={chrome.primaryColor}>
             {t("newPoll_button", {
               defaultValue: "Manage Poll",
             })}
           </Button>
-          <PoweredBy chrome={chrome} />
+          <Hr style={{ margin: "16px 0" }} />
+          <PoweredBy chrome={chrome} locale={locale} />
         </Container>
       </Body>
     </Html>
