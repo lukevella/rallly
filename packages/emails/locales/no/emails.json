@@ -1,13 +1,4 @@
 {
-  "abandoned_checkout_button": "Oppgrader til Rallly Pro",
-  "abandoned_checkout_content": "Jeg la merke til at du sjekket <b>Rallly Pro</b> tidligere. Har du spørsmål, eller behøver du hjelp med noe?",
-  "abandoned_checkout_name": "Hei, {name}",
-  "abandoned_checkout_noname": "Hei",
-  "abandoned_checkout_offer": "For å hjelpe deg i gang, tilbyr vi <b>{discount} % avslag</b> på ditt første år. Bruk koden under i kassen:",
-  "abandoned_checkout_preview": "Eksklusivt tilbud: Få {discount} % avslag på ditt første år med Rallly Pro!",
-  "abandoned_checkout_signoff": "Med vennlig hilsen,",
-  "abandoned_checkout_subject": "Få {discount} % avslag på ditt første år med Rallly Pro",
-  "abandoned_checkout_support": "Har du spørsmål om Rallly Pro, eller behøver du hjelp med noe, kan du svare på denne e-posten. Jeg er her for å hjelpe!",
   "common_disableNotifications": "Du kan <a>endre varslinger</a> for å slutte å motta disse e-postene.",
   "common_poweredBy": "Drevet av <a>{domain}</a>",
   "common_viewOn": "Se på {domain}",
