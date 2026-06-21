@@ -133,7 +133,7 @@ async function FinalizeParticipantEmail({
               t={t}
               i18n={i18n}
               ns="emails"
-              i18nKey="finalizeHost_button"
+              i18nKey="finalizeParticipant_button"
               defaults="View Event"
             />
           </Button>

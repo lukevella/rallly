@@ -169,7 +169,7 @@ async function LicenseKeyEmail({
                   <Link
                     color={chrome.primaryColor}
                     className="text-link"
-                    href="mailto:support@rallly.co"
+                    href={`mailto:${chrome.supportEmail}`}
                   />
                 ),
               }}

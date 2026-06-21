@@ -102,7 +102,7 @@ async function NewParticipantEmail({
                 a: (
                   <Link
                     color={chrome.primaryColor}
-                    className="whitespace-nowrap"
+                    style={{ whiteSpace: "nowrap" }}
                     href={disableNotificationsUrl}
                   />
                 ),
