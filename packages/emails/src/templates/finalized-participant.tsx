@@ -80,7 +80,7 @@ async function FinalizeParticipantEmail({
               defaults="<b>{hostName}</b> has booked <b>{title}</b> for the following date:"
               values={{ hostName, title }}
               components={{
-                b: <span />,
+                b: <strong />,
               }}
             />
           </Text>

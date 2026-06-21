@@ -63,7 +63,7 @@ export const Button = (
         textAlign: "center",
         margin: "0 auto",
         fontSize: "16px",
-        fontWeight: "medium",
+        fontWeight: "bold",
         color: "white",
       }}
     />
@@ -103,7 +103,7 @@ export const Heading = (
       as={as}
       style={{
         fontSize: fontSize[as],
-        fontWeight: "semibold",
+        fontWeight: "bold",
         ...props.style,
       }}
     />
