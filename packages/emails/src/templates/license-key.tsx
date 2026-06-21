@@ -47,6 +47,11 @@ async function LicenseKeyEmail({
             style={{ marginBottom: 32, borderRadius: 6 }}
             alt={chrome.appName}
           />
+          <Heading>
+            {t("license_key_heading", {
+              defaultValue: "License confirmation",
+            })}
+          </Heading>
           <Text>
             <Trans
               t={t}

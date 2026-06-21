@@ -2,10 +2,10 @@ import { Head, Html, Img, Preview, Section } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { resolveChrome } from "../chrome";
+import { PoweredBy } from "../components/powered-by";
 import { previewChrome } from "../components/preview-chrome";
 import {
   Body,
-  Card,
   Container,
   Heading,
   Link,
@@ -57,11 +57,10 @@ async function RegisterEmail({
                 "Please use the following 6-digit verification code to verify your email",
             })}
           </Text>
-          <Card style={{ textAlign: "center" }}>
+          <Section>
             <Text
               style={{
                 ...trackingWide,
-                textAlign: "center",
                 fontSize: "32px",
                 fontWeight: "bold",
               }}
@@ -69,14 +68,14 @@ async function RegisterEmail({
             >
               {code}
             </Text>
-            <Text style={{ textAlign: "center" }} light={true}>
+            <Text light={true}>
               {t("register_codeValid", {
                 defaultValue: "This code is valid for 15 minutes",
               })}
             </Text>
-          </Card>
+          </Section>
           <Section>
-            <Text light={true}>
+            <Text small light={true}>
               <Trans
                 t={t}
                 i18n={i18n}
@@ -100,28 +99,7 @@ async function RegisterEmail({
               />
             </Text>
           </Section>
-          {!chrome.hideAttribution ? (
-            <Section>
-              <Text light={true}>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="emails"
-                  i18nKey="common_poweredBy"
-                  defaults="Powered by <a>{domain}</a>"
-                  values={{ domain: "rallly.co" }}
-                  components={{
-                    a: (
-                      <Link
-                        color={chrome.primaryColor}
-                        href="https://rallly.co?utm_source=email&utm_medium=transactional"
-                      />
-                    ),
-                  }}
-                />
-              </Text>
-            </Section>
-          ) : null}
+          <PoweredBy chrome={chrome} />
         </Container>
       </Body>
     </Html>

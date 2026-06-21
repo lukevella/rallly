@@ -59,12 +59,10 @@ export const Button = (
         padding: "14px",
         fontFamily,
         boxSizing: "border-box",
-        display: "block",
-        width: "100%",
-        maxWidth: "100%",
         textAlign: "center",
-        fontSize: "14px",
-        fontWeight: "bold",
+        margin: "0 auto",
+        fontSize: "16px",
+        fontWeight: "medium",
         color: "white",
       }}
     />
@@ -75,14 +73,18 @@ export const Link = (props: LinkProps & { color?: string }) => {
   return (
     <UnstyledLink
       {...props}
-      style={{ color: props.color ?? "#4F46E5", fontFamily, ...props.style }}
+      style={{
+        color: props.color ?? "#4F46E5",
+        fontFamily,
+        ...props.style,
+      }}
     />
   );
 };
 
 const fontSize = {
   h1: "20px",
-  h2: "18px",
+  h2: "16px",
   h3: "16px",
   h4: "16px",
   h5: "14px",
@@ -100,6 +102,7 @@ export const Heading = (
       as={as}
       style={{
         fontSize: fontSize[as],
+        fontWeight: "semibold",
         ...props.style,
       }}
     />

@@ -2,6 +2,7 @@ import { Head, Html, Img, Preview, Section } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { resolveChrome } from "../chrome";
+import { PoweredBy } from "../components/powered-by";
 import { previewChrome } from "../components/preview-chrome";
 import {
   Body,
@@ -66,7 +67,7 @@ async function ResetPasswordEmail({
               />
             </Button>
           </Section>
-          <Text light>
+          <Text small light>
             <Trans
               t={t}
               i18n={i18n}
@@ -84,28 +85,7 @@ async function ResetPasswordEmail({
               }}
             />
           </Text>
-          {!chrome.hideAttribution ? (
-            <Section>
-              <Text light={true}>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="emails"
-                  i18nKey="common_poweredBy"
-                  defaults="Powered by <a>{domain}</a>"
-                  values={{ domain: "rallly.co" }}
-                  components={{
-                    a: (
-                      <Link
-                        color={chrome.primaryColor}
-                        href="https://rallly.co?utm_source=email&utm_medium=transactional"
-                      />
-                    ),
-                  }}
-                />
-              </Text>
-            </Section>
-          ) : null}
+          <PoweredBy chrome={chrome} />
         </Container>
       </Body>
     </Html>
