@@ -1,13 +1,4 @@
 {
-  "abandoned_checkout_button": "Aggiorna a Rallly Pro",
-  "abandoned_checkout_content": "Ho notato che stavi dando un'occhiata a <b>Rallly Pro</b> prima. Volevo contattarti per sapere se avevi domande o se avevi bisogno di aiuto.",
-  "abandoned_checkout_name": "Ciao {name},",
-  "abandoned_checkout_noname": "Ciao lì,",
-  "abandoned_checkout_offer": "Per aiutarti a iniziare, puoi ottenere uno sconto del <b>{discount}%</b> sul tuo primo anno. Usa il codice qui sotto al momento del pagamento:",
-  "abandoned_checkout_preview": "Offerta esclusiva: ottieni il {discount}% di sconto sul tuo primo anno di Rallly Pro!",
-  "abandoned_checkout_signoff": "Cordiali saluti,",
-  "abandoned_checkout_subject": "Ottieni uno sconto del {discount}% sul tuo primo anno di Rallly Pro",
-  "abandoned_checkout_support": "Se hai domande su Rallly Pro o hai bisogno di aiuto, rispondi a questa email. Sono qui per aiutarti!",
   "common_disableNotifications": "È possibile <a>gestire le impostazioni di notifica</a> per interrompere la ricezione di queste email.",
   "common_poweredBy": "Alimentato da <a>{domain}</a>",
   "common_viewOn": "Visualizza su {domain}",
