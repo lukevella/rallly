@@ -1,13 +1,4 @@
 {
-  "abandoned_checkout_button": "Rallly Pro-ra váltás",
-  "abandoned_checkout_content": "Észrevettem, hogy kipróbáltad a <b>Rallly Pro</b>-t korábban. Meg akartalak keresni, hátha kérdésed van vagy szükséged van segítségre.",
-  "abandoned_checkout_name": "Kedves {name}!",
-  "abandoned_checkout_noname": "Szia!",
-  "abandoned_checkout_offer": "Hogy segítsek a kezdésben, az első évben egy <b>{discount}%</b> kedvezményt kapsz. Csak használd az alábbi kódot fizetéskor:",
-  "abandoned_checkout_preview": "Különleges ajánlat: {discount}% kedvezmény a Rallly Pro első évéhez!",
-  "abandoned_checkout_signoff": "Üdvözlettel,",
-  "abandoned_checkout_subject": "Szerezz {discount}% kedvezményt a Rallly Pro első évéhez",
-  "abandoned_checkout_support": "Ha van bármi kérdésed a Rallly Pro kapcsán vagy segítségre van szükséged, csak válaszolj erre a levélre. Örömmel segítek!",
   "changeEmail_codeValid": "Ez a kód 15 percig érvényes",
   "changeEmail_content2": "Ezt az emailt azért kaptad, mert kérés érkezett a fiókod email címének megváltoztatására <domain /> címen. Ha ez nem te voltál, lépj kapcsolatba a(z) <a>{supportEmail}</a> címmel.",
   "changeEmail_heading": "Hitelesítsd az új email címed",
