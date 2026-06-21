@@ -1,13 +1,4 @@
 {
-  "abandoned_checkout_button": "Upgradovat na Rallly Pro",
-  "abandoned_checkout_content": "Všiml jsem si, že jste si dříve prohlíželi <b>Rallly Pro</b>. Chtěl jsem se zeptat, jestli máte nějaké otázky nebo potřebujete s něčím pomoci.",
-  "abandoned_checkout_name": "Ahoj {name},",
-  "abandoned_checkout_noname": "Ahoj,",
-  "abandoned_checkout_offer": "Abyste mohli snadno začít, nabízíme vám <b>{discount}% slevu</b> na první rok. Stačí při platbě použít následující kód:",
-  "abandoned_checkout_preview": "Exkluzivní nabídka: Získejte {discount}% slevu z prvního roku Rallly Pro!",
-  "abandoned_checkout_signoff": "S pozdravem,",
-  "abandoned_checkout_subject": "Získejte {discount}% slevu z prvního roku Rallly Pro",
-  "abandoned_checkout_support": "Pokud máte jakékoli otázky ohledně Rallly Pro nebo potřebujete s čímkoli pomoci, stačí odpovědět na tento e-mail. Jsem tu pro vás!",
   "common_disableNotifications": "Můžete <a>upravit nastavení svých oznámení</a>, abyste přestali dostávat tyto e-maily.",
   "common_poweredBy": "Běží na <a>{domain}</a>",
   "common_viewOn": "Zobrazit na {domain}",
