@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "email dev --dir ./src/previews",
+    "dev": "email dev --dir ./src/templates",
     "type-check": "tsc --pretty --noEmit",
     "i18n:scan": "i18next-cli extract"
   },

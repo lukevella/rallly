@@ -1,93 +1,136 @@
-import { Section } from "@react-email/components";
+import { Head, Hr, Html, Img, Preview } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { EmailLayout } from "../components/email-layout";
+import { resolveChrome } from "../chrome";
+import { PoweredBy } from "../components/powered-by";
+import { previewChrome } from "../components/preview-chrome";
 import {
-  Card,
-  Domain,
+  Body,
+  Container,
   Heading,
   Link,
   Text,
   trackingWide,
 } from "../components/styled-components";
-import { createEmailTemplate } from "../create-email-template";
-import type { EmailContext } from "../types";
+import { createEmailI18n } from "../i18n";
+import type { SendArgs } from "../send";
+import { sendRenderedEmail } from "../send";
+import type { EmailChrome } from "../types";
 
-interface ChangeEmailEmailProps {
+type ChangeEmailEmailProps = {
+  locale?: string;
+  chrome: EmailChrome;
   code: string;
-  ctx: EmailContext;
-}
-
-export const ChangeEmailEmail = ({ code, ctx }: ChangeEmailEmailProps) => {
-  return (
-    <EmailLayout
-      ctx={ctx}
-      preview={ctx.t("changeEmail_preview", {
-        ns: "emails",
-        defaultValue: "Your 6-digit code is: {code}",
-        code,
-      })}
-    >
-      <Heading>
-        {ctx.t("changeEmail_heading", {
-          defaultValue: "Verify your new email address",
-          ns: "emails",
-        })}
-      </Heading>
-      <Text>
-        {ctx.t("changeEmail_text", {
-          defaultValue:
-            "Please use the following 6-digit verification code to confirm your new email address",
-          ns: "emails",
-        })}
-      </Text>
-      <Card style={{ textAlign: "center" }}>
-        <Text
-          style={{
-            ...trackingWide,
-            textAlign: "center",
-            fontSize: "32px",
-            fontWeight: "bold",
-          }}
-          id="code"
-        >
-          {code}
-        </Text>
-        <Text style={{ textAlign: "center" }} light={true}>
-          {ctx.t("changeEmail_codeValid", {
-            defaultValue: "This code is valid for 15 minutes",
-            ns: "emails",
-          })}
-        </Text>
-      </Card>
-      <Section>
-        <Text light={true}>
-          <Trans
-            {...ctx.i18nProps}
-            i18nKey="changeEmail_content2"
-            defaults="You're receiving this email because a request was made to change the email address of an account on <domain />. If this wasn't you contact <a>{supportEmail}</a>."
-            values={{ supportEmail: ctx.supportEmail }}
-            components={{
-              domain: <Domain ctx={ctx} />,
-              a: (
-                <Link
-                  color={ctx.primaryColor}
-                  href={`mailto:${ctx.supportEmail}`}
-                />
-              ),
-            }}
-          />
-        </Text>
-      </Section>
-    </EmailLayout>
-  );
 };
 
-export const sendChangeEmailEmail = createEmailTemplate({
-  component: ChangeEmailEmail,
-  subject: (_props, ctx) =>
-    ctx.t("changeEmail_subject", {
+async function ChangeEmailEmail({
+  code,
+  locale = "en",
+  chrome,
+}: ChangeEmailEmailProps) {
+  const { t, i18n } = await createEmailI18n(locale);
+  return (
+    <Html>
+      <Head />
+      <Preview>
+        {t("changeEmail_preview", {
+          defaultValue: "Your 6-digit code is: {code}",
+          code,
+        })}
+      </Preview>
+      <Body>
+        <Container>
+          <Img
+            src={chrome.logoUrl}
+            height="42"
+            style={{ marginBottom: 32, borderRadius: 6 }}
+            alt={chrome.appName}
+          />
+          <Heading>
+            {t("changeEmail_heading", {
+              defaultValue: "Verify your new email address",
+            })}
+          </Heading>
+          <Text>
+            {t("changeEmail_text", {
+              defaultValue:
+                "Please use the following 6-digit verification code to confirm your new email address",
+            })}
+          </Text>
+          <Text
+            style={{
+              ...trackingWide,
+              fontSize: "32px",
+              fontWeight: "bold",
+            }}
+            id="code"
+          >
+            {code}
+          </Text>
+          <Text light={true}>
+            {t("changeEmail_codeValid", {
+              defaultValue: "This code is valid for 15 minutes",
+            })}
+          </Text>
+          <Hr />
+          <Text small light={true}>
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="emails"
+              i18nKey="changeEmail_content2"
+              defaults="You're receiving this email because a request was made to change the email address of an account on <domain />. If this wasn't you contact <a>{supportEmail}</a>."
+              values={{ supportEmail: chrome.supportEmail }}
+              components={{
+                domain: (
+                  <Link color={chrome.primaryColor} href={chrome.baseUrl}>
+                    {chrome.domain}
+                  </Link>
+                ),
+                a: (
+                  <Link
+                    color={chrome.primaryColor}
+                    href={`mailto:${chrome.supportEmail}`}
+                  />
+                ),
+              }}
+            />
+          </Text>
+          <PoweredBy chrome={chrome} locale={locale} />
+        </Container>
+      </Body>
+    </Html>
+  );
+}
+
+ChangeEmailEmail.PreviewProps = {
+  code: "123456",
+  locale: "en",
+  chrome: previewChrome,
+} as ChangeEmailEmailProps;
+
+export default ChangeEmailEmail;
+
+export async function sendChangeEmailEmail({
+  to,
+  locale = "en",
+  branding,
+  props,
+  ...rest
+}: SendArgs<ChangeEmailEmailProps>) {
+  const { t } = await createEmailI18n(locale);
+  await sendRenderedEmail({
+    to,
+    subject: t("changeEmail_subject", {
       defaultValue: "Verify your new email address",
-      ns: "emails",
     }),
-});
+    element: (
+      <ChangeEmailEmail
+        {...props}
+        locale={locale}
+        chrome={resolveChrome(branding)}
+      />
+    ),
+    ...rest,
+  });
+}

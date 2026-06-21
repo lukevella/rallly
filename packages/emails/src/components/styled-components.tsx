@@ -4,14 +4,16 @@ import type {
   TextProps,
 } from "@react-email/components";
 import {
+  Body as UnstyledBody,
   Button as UnstyledButton,
+  Container as UnstyledContainer,
   Heading as UnstyledHeading,
   Link as UnstyledLink,
   Section as UnstyledSection,
   Text as UnstyledText,
 } from "@react-email/components";
 
-import type { EmailContext } from "../types";
+import type { EmailChrome } from "../types";
 
 export const lightTextColor = "#4B5563";
 export const darkTextColor = "#1F2937";
@@ -36,11 +38,10 @@ export const Text = (
   );
 };
 
-export const Domain = ({ ctx }: { ctx: EmailContext }) => {
-  const { baseUrl, domain } = ctx;
+export const Domain = ({ chrome }: { chrome: EmailChrome }) => {
   return (
-    <Link color={ctx.primaryColor} href={baseUrl}>
-      {domain}
+    <Link color={chrome.primaryColor} href={chrome.baseUrl}>
+      {chrome.domain}
     </Link>
   );
 };
@@ -57,12 +58,11 @@ export const Button = (
         borderRadius: "6px",
         padding: "14px",
         fontFamily,
+        minWidth: "200px",
         boxSizing: "border-box",
-        display: "block",
-        width: "100%",
-        maxWidth: "100%",
         textAlign: "center",
-        fontSize: "14px",
+        margin: "0 auto",
+        fontSize: "16px",
         fontWeight: "bold",
         color: "white",
       }}
@@ -74,14 +74,18 @@ export const Link = (props: LinkProps & { color?: string }) => {
   return (
     <UnstyledLink
       {...props}
-      style={{ color: props.color ?? "#4F46E5", fontFamily, ...props.style }}
+      style={{
+        color: props.color ?? "#4F46E5",
+        fontFamily,
+        ...props.style,
+      }}
     />
   );
 };
 
 const fontSize = {
   h1: "20px",
-  h2: "18px",
+  h2: "16px",
   h3: "16px",
   h4: "16px",
   h5: "14px",
@@ -99,6 +103,7 @@ export const Heading = (
       as={as}
       style={{
         fontSize: fontSize[as],
+        fontWeight: "bold",
         ...props.style,
       }}
     />
@@ -194,3 +199,31 @@ export const trackingWide = {
 
 export const fontFamily =
   "'Inter UI', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif";
+
+export const Body = (props: React.ComponentProps<typeof UnstyledBody>) => {
+  return (
+    <UnstyledBody
+      {...props}
+      style={{ backgroundColor: "#FFFFFF", ...props.style }}
+    />
+  );
+};
+
+export const Container = (
+  props: React.ComponentProps<typeof UnstyledContainer>,
+) => {
+  return (
+    <UnstyledContainer
+      {...props}
+      style={{
+        maxWidth: "480px",
+        margin: "0 auto",
+        background: "white",
+        fontFamily,
+        padding: "32px 8px",
+        color: darkTextColor,
+        ...props.style,
+      }}
+    />
+  );
+};

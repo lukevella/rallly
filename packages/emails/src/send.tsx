@@ -3,13 +3,24 @@ import { render } from "@react-email/render";
 import type Mail from "nodemailer/lib/mailer";
 
 import { getTransport } from "./transport";
-import type { EmailContext } from "./types";
+import type { EmailBranding } from "./types";
 
 const logger = createLogger("emails");
 
 export type EmailAttachments = Mail.Options["attachments"];
 export type IcalEvent = Mail.Options["icalEvent"];
 type From = { name: string; address: string };
+
+/** Args every `sendXEmail(...)` accepts. `props` are the template's own fields. */
+export type SendArgs<P> = {
+  to: string;
+  locale?: string;
+  branding: EmailBranding;
+  props: Omit<P, "locale" | "chrome">;
+  from?: From;
+  attachments?: EmailAttachments;
+  icalEvent?: IcalEvent;
+};
 
 function resolveFrom(from?: From): From {
   return (
@@ -61,27 +72,20 @@ async function dispatch(options: DispatchOptions) {
 }
 
 /**
- * Internal: render a template component to html + plain text and dispatch.
- * Used by `createEmailTemplate` — not part of the public API.
+ * Renders a ready-built React element to html + plain text and dispatches.
+ * Each template's `sendXEmail` builds its element (and subject) then calls this.
  */
-export async function sendEmail<P extends object>(options: {
+export async function sendRenderedEmail(options: {
   to: string;
-  component: (props: P & { ctx: EmailContext }) => React.ReactNode;
-  props: P;
-  ctx: EmailContext;
+  element: React.ReactNode;
   subject: string;
   from?: From;
   attachments?: EmailAttachments;
   icalEvent?: IcalEvent;
 }) {
-  const Component = options.component as unknown as (
-    props: P & { ctx: EmailContext },
-  ) => React.ReactNode;
-  const element = <Component {...options.props} ctx={options.ctx} />;
-
   const [html, text] = await Promise.all([
-    render(element),
-    render(element, { plainText: true }),
+    render(options.element),
+    render(options.element, { plainText: true }),
   ]);
 
   await dispatch({

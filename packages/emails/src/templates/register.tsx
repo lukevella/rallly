@@ -1,93 +1,136 @@
-import { Section } from "@react-email/components";
+import { Head, Hr, Html, Img, Preview } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { EmailLayout } from "../components/email-layout";
+import { resolveChrome } from "../chrome";
+import { PoweredBy } from "../components/powered-by";
+import { previewChrome } from "../components/preview-chrome";
 import {
-  Card,
-  Domain,
+  Body,
+  Container,
   Heading,
   Link,
   Text,
   trackingWide,
 } from "../components/styled-components";
-import { createEmailTemplate } from "../create-email-template";
-import type { EmailContext } from "../types";
+import { createEmailI18n } from "../i18n";
+import type { SendArgs } from "../send";
+import { sendRenderedEmail } from "../send";
+import type { EmailChrome } from "../types";
 
-interface RegisterEmailProps {
+type RegisterEmailProps = {
+  locale?: string;
+  chrome: EmailChrome;
   code: string;
-  ctx: EmailContext;
-}
-
-export const RegisterEmail = ({ code, ctx }: RegisterEmailProps) => {
-  return (
-    <EmailLayout
-      ctx={ctx}
-      preview={ctx.t("register_preview", {
-        ns: "emails",
-        defaultValue: "Your 6-digit code is: {code}",
-        code,
-      })}
-    >
-      <Heading>
-        {ctx.t("register_heading", {
-          defaultValue: "Verify your email address",
-          ns: "emails",
-        })}
-      </Heading>
-      <Text>
-        {ctx.t("register_text", {
-          defaultValue:
-            "Please use the following 6-digit verification code to verify your email",
-          ns: "emails",
-        })}
-      </Text>
-      <Card style={{ textAlign: "center" }}>
-        <Text
-          style={{
-            ...trackingWide,
-            textAlign: "center",
-            fontSize: "32px",
-            fontWeight: "bold",
-          }}
-          id="code"
-        >
-          {code}
-        </Text>
-        <Text style={{ textAlign: "center" }} light={true}>
-          {ctx.t("register_codeValid", {
-            defaultValue: "This code is valid for 15 minutes",
-            ns: "emails",
-          })}
-        </Text>
-      </Card>
-      <Section>
-        <Text light={true}>
-          <Trans
-            {...ctx.i18nProps}
-            i18nKey="login_content2"
-            defaults="You're receiving this email because a request was made to login to <domain />. If this wasn't you contact <a>{supportEmail}</a>."
-            values={{ supportEmail: ctx.supportEmail }}
-            components={{
-              domain: <Domain ctx={ctx} />,
-              a: (
-                <Link
-                  color={ctx.primaryColor}
-                  href={`mailto:${ctx.supportEmail}`}
-                />
-              ),
-            }}
-          />
-        </Text>
-      </Section>
-    </EmailLayout>
-  );
 };
 
-export const sendRegisterEmail = createEmailTemplate({
-  component: RegisterEmail,
-  subject: (_props, ctx) =>
-    ctx.t("register_subject", {
+async function RegisterEmail({
+  code,
+  locale = "en",
+  chrome,
+}: RegisterEmailProps) {
+  const { t, i18n } = await createEmailI18n(locale);
+  return (
+    <Html>
+      <Head />
+      <Preview>
+        {t("register_preview", {
+          defaultValue: "Your 6-digit code is: {code}",
+          code,
+        })}
+      </Preview>
+      <Body>
+        <Container>
+          <Img
+            src={chrome.logoUrl}
+            height="42"
+            style={{ marginBottom: 32, borderRadius: 6 }}
+            alt={chrome.appName}
+          />
+          <Heading>
+            {t("register_heading", {
+              defaultValue: "Verify your email address",
+            })}
+          </Heading>
+          <Text>
+            {t("register_text", {
+              defaultValue:
+                "Please use the following 6-digit verification code to verify your email",
+            })}
+          </Text>
+          <Text
+            style={{
+              ...trackingWide,
+              fontSize: "32px",
+              fontWeight: "bold",
+            }}
+            id="code"
+          >
+            {code}
+          </Text>
+          <Text light={true}>
+            {t("register_codeValid", {
+              defaultValue: "This code is valid for 15 minutes",
+            })}
+          </Text>
+          <Hr />
+          <Text small light={true}>
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="emails"
+              i18nKey="login_content2"
+              defaults="You're receiving this email because a request was made to login to <domain />. If this wasn't you contact <a>{supportEmail}</a>."
+              values={{ supportEmail: chrome.supportEmail }}
+              components={{
+                domain: (
+                  <Link color={chrome.primaryColor} href={chrome.baseUrl}>
+                    {chrome.domain}
+                  </Link>
+                ),
+                a: (
+                  <Link
+                    color={chrome.primaryColor}
+                    href={`mailto:${chrome.supportEmail}`}
+                  />
+                ),
+              }}
+            />
+          </Text>
+          <PoweredBy chrome={chrome} locale={locale} />
+        </Container>
+      </Body>
+    </Html>
+  );
+}
+
+RegisterEmail.PreviewProps = {
+  code: "123456",
+  locale: "en",
+  chrome: previewChrome,
+} as RegisterEmailProps;
+
+export default RegisterEmail;
+
+export async function sendRegisterEmail({
+  to,
+  locale = "en",
+  branding,
+  props,
+  ...rest
+}: SendArgs<RegisterEmailProps>) {
+  const { t } = await createEmailI18n(locale);
+  await sendRenderedEmail({
+    to,
+    subject: t("register_subject", {
       defaultValue: "Please verify your email address",
-      ns: "emails",
     }),
-});
+    element: (
+      <RegisterEmail
+        {...props}
+        locale={locale}
+        chrome={resolveChrome(branding)}
+      />
+    ),
+    ...rest,
+  });
+}

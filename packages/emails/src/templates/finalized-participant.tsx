@@ -1,17 +1,34 @@
-import { Column, Row, Section } from "@react-email/components";
+import {
+  Column,
+  Head,
+  Hr,
+  Html,
+  Img,
+  Preview,
+  Row,
+  Section,
+} from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { EmailLayout } from "../components/email-layout";
+import { resolveChrome } from "../chrome";
+import { PoweredBy } from "../components/powered-by";
+import { previewChrome } from "../components/preview-chrome";
 import {
+  Body,
   Button,
   borderColor,
+  Container,
   Heading,
   Text,
 } from "../components/styled-components";
-import { createEmailTemplate } from "../create-email-template";
-import type { EmailContext } from "../types";
+import { createEmailI18n } from "../i18n";
+import type { SendArgs } from "../send";
+import { sendRenderedEmail } from "../send";
+import type { EmailChrome } from "../types";
 
-export interface FinalizeParticipantEmailProps {
+type FinalizeParticipantEmailProps = {
+  locale?: string;
+  chrome: EmailChrome;
   date: string;
   day: string;
   dow: string;
@@ -19,10 +36,9 @@ export interface FinalizeParticipantEmailProps {
   title: string;
   hostName: string;
   pollUrl: string;
-  ctx: EmailContext;
-}
+};
 
-const FinalizeParticipantEmail = ({
+async function FinalizeParticipantEmail({
   title,
   hostName,
   pollUrl,
@@ -30,98 +46,140 @@ const FinalizeParticipantEmail = ({
   dow,
   date,
   time,
-  ctx,
-}: FinalizeParticipantEmailProps) => {
+  locale = "en",
+  chrome,
+}: FinalizeParticipantEmailProps) {
+  const { t, i18n } = await createEmailI18n(locale);
   return (
-    <EmailLayout
-      ctx={ctx}
-      preview={ctx.t("finalizeParticipant_preview", {
-        defaultValue: "Final date booked!",
-        ns: "emails",
-      })}
-    >
-      <Heading>
-        {ctx.t("finalizeParticipant_heading", {
+    <Html>
+      <Head />
+      <Preview>
+        {t("finalizeParticipant_preview", {
           defaultValue: "Final date booked!",
-          ns: "emails",
         })}
-      </Heading>
-      <Text>
-        <Trans
-          {...ctx.i18nProps}
-          i18nKey="finalizeParticipant_content"
-          defaults="<b>{hostName}</b> has booked <b>{title}</b> for the following date:"
-          values={{ hostName, title }}
-          components={{
-            b: <strong />,
-          }}
-        />
-      </Text>
-      <Section data-testid="date-section">
-        <Row>
-          <Column style={{ width: 48 }}>
-            <Section
-              style={{
-                borderRadius: 5,
-                margin: 0,
-                width: 48,
-                height: 48,
-                textAlign: "center",
-                border: `1px solid ${borderColor}`,
-              }}
-            >
-              <Text
-                style={{ margin: "0 0 4px 0", fontSize: 10, lineHeight: 1 }}
-              >
-                {dow}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 20,
-                  lineHeight: 1,
-                  fontWeight: "bold",
-                  margin: 0,
-                }}
-              >
-                {day}
-              </Text>
-            </Section>
-          </Column>
-          <Column style={{ paddingLeft: 16 }} align="left">
-            <Text style={{ margin: 0, fontWeight: "bold" }}>{date}</Text>
-            <Text light={true} style={{ margin: 0 }}>
-              {time}
-            </Text>
-          </Column>
-        </Row>
-      </Section>
-      <Text>
-        {ctx.t("finalizeParticipant_content2", {
-          defaultValue:
-            "Please find attached a calendar invite for this event.",
-        })}
-      </Text>
-      <Section style={{ marginTop: 32 }}>
-        <Button href={pollUrl} color={ctx.primaryColor}>
-          <Trans
-            {...ctx.i18nProps}
-            i18nKey="finalizeHost_button"
-            defaults="View Event"
+      </Preview>
+      <Body>
+        <Container>
+          <Img
+            src={chrome.logoUrl}
+            height="42"
+            style={{ marginBottom: 32, borderRadius: 6 }}
+            alt={chrome.appName}
           />
-        </Button>
-      </Section>
-    </EmailLayout>
+          <Heading>
+            {t("finalizeParticipant_heading", {
+              defaultValue: "Final date booked!",
+            })}
+          </Heading>
+          <Text>
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="emails"
+              i18nKey="finalizeParticipant_content"
+              defaults="<b>{hostName}</b> has booked <b>{title}</b> for the following date:"
+              values={{ hostName, title }}
+              components={{
+                b: <strong />,
+              }}
+            />
+          </Text>
+          <Section data-testid="date-section">
+            <Row>
+              <Column style={{ width: 48 }}>
+                <Section
+                  style={{
+                    borderRadius: 5,
+                    margin: 0,
+                    width: 48,
+                    height: 48,
+                    textAlign: "center",
+                    border: `1px solid ${borderColor}`,
+                  }}
+                >
+                  <Text
+                    style={{ margin: "0 0 4px 0", fontSize: 10, lineHeight: 1 }}
+                  >
+                    {dow}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      lineHeight: 1,
+                      fontWeight: "bold",
+                      margin: 0,
+                    }}
+                  >
+                    {day}
+                  </Text>
+                </Section>
+              </Column>
+              <Column style={{ paddingLeft: 16 }} align="left">
+                <Text style={{ margin: 0, fontWeight: "bold" }}>{date}</Text>
+                <Text light={true} style={{ margin: 0 }}>
+                  {time}
+                </Text>
+              </Column>
+            </Row>
+          </Section>
+          <Text>
+            {t("finalizeParticipant_content2", {
+              defaultValue:
+                "Please find attached a calendar invite for this event.",
+            })}
+          </Text>
+          <Button href={pollUrl} color={chrome.primaryColor}>
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="emails"
+              i18nKey="finalizeParticipant_button"
+              defaults="View Event"
+            />
+          </Button>
+          <Hr style={{ margin: "16px 0" }} />
+          <PoweredBy chrome={chrome} locale={locale} />
+        </Container>
+      </Body>
+    </Html>
   );
-};
+}
 
-export { FinalizeParticipantEmail };
+FinalizeParticipantEmail.PreviewProps = {
+  title: "Untitled Poll",
+  hostName: "Host",
+  pollUrl: "https://rallly.co",
+  day: "12",
+  dow: "Fri",
+  date: "Friday, 12th June 2020",
+  time: "6:00 PM to 11:00 PM BST",
+  locale: "en",
+  chrome: previewChrome,
+} as FinalizeParticipantEmailProps;
 
-export const sendFinalizeParticipantEmail = createEmailTemplate({
-  component: FinalizeParticipantEmail,
-  subject: (props, ctx) =>
-    ctx.t("finalizeParticipant_subject", {
+export default FinalizeParticipantEmail;
+
+export async function sendFinalizeParticipantEmail({
+  to,
+  locale = "en",
+  branding,
+  props,
+  ...rest
+}: SendArgs<FinalizeParticipantEmailProps>) {
+  const { t } = await createEmailI18n(locale);
+  await sendRenderedEmail({
+    to,
+    subject: t("finalizeParticipant_subject", {
       defaultValue: "Date booked for {title}",
       title: props.title,
-      ns: "emails",
     }),
-});
+    element: (
+      <FinalizeParticipantEmail
+        {...props}
+        locale={locale}
+        chrome={resolveChrome(branding)}
+      />
+    ),
+    ...rest,
+  });
+}
