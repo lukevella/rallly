@@ -1,8 +1,9 @@
+import { createStripeSubscriptionUpdateConfirmation } from "@rallly/billing/lib/portal";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 
 import { getSpaceSubscription } from "@/features/billing/data";
-import { createStripeSubscriptionUpdateConfirmation } from "@/features/billing/utils";
 import {
   getActiveSpaceForUser,
   getSpaceSeatCount,
@@ -72,6 +73,10 @@ export const billing = router({
           newSeatCount,
           subscriptionId: subscription.id,
           subscriptionItemId: subscription.subscriptionItemId,
+          returnUrl: absoluteUrl("/settings/billing"),
+          successUrl: absoluteUrl("/settings/billing", {
+            seats_updated: "true",
+          }),
         },
       );
 

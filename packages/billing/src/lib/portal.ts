@@ -2,8 +2,9 @@ import { getProPricing, stripe } from "./stripe";
 
 /**
  * Shared definition for the billing portal configuration used by the seat-update
- * flow. Both the app (apps/web/src/features/billing/utils.ts) and the cleanup
- * script (scripts/cleanup-portal-configurations.ts) depend on these markers.
+ * flow. Both the seat-update flow (createStripeSubscriptionUpdateConfirmation,
+ * below) and the cleanup script (scripts/cleanup-portal-configurations.ts) depend
+ * on these markers.
  *
  * The configuration is created lazily and reused — `getSeatUpdatePortalConfigurationId`
  * finds the existing configuration for the current VERSION (or creates one) instead
@@ -80,7 +81,7 @@ async function resolveConfigurationId(): Promise<string> {
 // warm invocations; resets on failure so the next call retries.
 let configurationIdPromise: Promise<string> | undefined;
 
-export function getSeatUpdatePortalConfigurationId(): Promise<string> {
+function getSeatUpdatePortalConfigurationId(): Promise<string> {
   if (!configurationIdPromise) {
     configurationIdPromise = resolveConfigurationId().catch((error) => {
       configurationIdPromise = undefined;
@@ -88,4 +89,55 @@ export function getSeatUpdatePortalConfigurationId(): Promise<string> {
     });
   }
   return configurationIdPromise;
+}
+
+/**
+ * Creates a billing portal session deep-linked to the seat-update confirmation
+ * screen for a specific quantity change, reusing the shared configuration.
+ *
+ * `returnUrl`/`successUrl` are passed in by the caller so this package stays
+ * free of app routing concerns.
+ */
+export async function createStripeSubscriptionUpdateConfirmation({
+  customerId,
+  subscriptionId,
+  subscriptionItemId,
+  newSeatCount,
+  returnUrl,
+  successUrl,
+}: {
+  customerId: string;
+  subscriptionId: string;
+  subscriptionItemId: string;
+  newSeatCount: number;
+  returnUrl: string;
+  successUrl: string;
+}) {
+  const configurationId = await getSeatUpdatePortalConfigurationId();
+
+  const portalSession = await stripe.billingPortal.sessions.create({
+    customer: customerId,
+    configuration: configurationId,
+    return_url: returnUrl,
+    flow_data: {
+      type: "subscription_update_confirm",
+      subscription_update_confirm: {
+        subscription: subscriptionId,
+        items: [
+          {
+            id: subscriptionItemId,
+            quantity: newSeatCount,
+          },
+        ],
+      },
+      after_completion: {
+        type: "redirect",
+        redirect: {
+          return_url: successUrl,
+        },
+      },
+    },
+  });
+
+  return portalSession.url;
 }
