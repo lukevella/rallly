@@ -1,4 +1,3 @@
-import type { Stripe } from "./stripe";
 import { getProPricing, stripe } from "./stripe";
 
 /**
@@ -18,14 +17,14 @@ export const SEAT_UPDATE_PORTAL_HEADLINE = "Update your seat allocation";
 export const SEAT_UPDATE_PORTAL_PURPOSE = "seat_update";
 export const SEAT_UPDATE_PORTAL_VERSION = "1";
 
-async function buildConfigurationParams(): Promise<Stripe.BillingPortal.ConfigurationCreateParams> {
+async function createSeatUpdateBillingConfig() {
   const pricing = await getProPricing();
 
   // Both monthly and yearly prices share the same product.
   const monthlyPrice = await stripe.prices.retrieve(pricing.monthly.id);
   const productId = monthlyPrice.product as string;
 
-  return {
+  return stripe.billingPortal.configurations.create({
     business_profile: {
       headline: SEAT_UPDATE_PORTAL_HEADLINE,
     },
@@ -57,7 +56,7 @@ async function buildConfigurationParams(): Promise<Stripe.BillingPortal.Configur
       purpose: SEAT_UPDATE_PORTAL_PURPOSE,
       version: SEAT_UPDATE_PORTAL_VERSION,
     },
-  };
+  });
 }
 
 async function resolveConfigurationId(): Promise<string> {
@@ -73,9 +72,7 @@ async function resolveConfigurationId(): Promise<string> {
   );
   if (match) return match.id;
 
-  const created = await stripe.billingPortal.configurations.create(
-    await buildConfigurationParams(),
-  );
+  const created = await createSeatUpdateBillingConfig();
   return created.id;
 }
 
