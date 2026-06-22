@@ -1,13 +1,4 @@
 {
-  "abandoned_checkout_button": "Atualize para o Rallly Pro",
-  "abandoned_checkout_content": "Percebi que você estava pesquisando <b>Rallly Pro</b> mais cedo. Eu gostaria de entrar em contato para saber se você tem alguma pergunta ou precisa de ajuda com algo.",
-  "abandoned_checkout_name": "Olá {name},",
-  "abandoned_checkout_noname": "Olá,",
-  "abandoned_checkout_offer": "Para ajudar você a iniciar, aqui está um desconto de <b>{discount}</b> no seu primeiro ano. Use o código abaixo na finalização da compra:",
-  "abandoned_checkout_preview": "Oferta exclusiva: obtenha {discount}% de desconto em seu primeiro ano de Rallly Pro!",
-  "abandoned_checkout_signoff": "Atenciosamente,",
-  "abandoned_checkout_subject": "Receba {discount}% de desconto no seu primeiro ano do Rallly Pro",
-  "abandoned_checkout_support": "Se você tiver alguma dúvida sobre Rallly Pro ou precisar de ajuda com qualquer coisa, basta responder a este e-mail. Estou aqui para ajudar!",
   "changeEmail_codeValid": "Este código é válido por 15 minutos",
   "changeEmail_content2": "Você está recebendo este e-mail porque foi feito um pedido para mudar o endereço de e-mail de uma conta em <domain />. Se não foi você, entre em contato com <a>{supportEmail}</a>.",
   "changeEmail_heading": "Verifique seu novo endereço de email",

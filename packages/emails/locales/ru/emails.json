@@ -1,13 +1,4 @@
 {
-  "abandoned_checkout_button": "Обновитесь до Rallly Pro",
-  "abandoned_checkout_content": "«Я заметил, что вы ранее интересовались <b>Rallly Pro</b>. Я хотел связаться с вами, чтобы узнать, есть ли у вас какие-либо вопросы или нужна ли помощь.",
-  "abandoned_checkout_name": "Привет, {name},",
-  "abandoned_checkout_noname": "Привет",
-  "abandoned_checkout_offer": "Чтобы помочь вам начать, вы можете получить <b>{discount}% скидку</b> на первый год. Просто используйте указанный ниже код при оформлении заказа:",
-  "abandoned_checkout_preview": "Эксклюзивное предложение: получите скидку {discount}% на первый год использования Rallly Pro!",
-  "abandoned_checkout_signoff": "С наилучшими пожеланиями,",
-  "abandoned_checkout_subject": "Получите скидку {discount}% на первый год использования Rallly Pro",
-  "abandoned_checkout_support": "«Если у вас есть какие-либо вопросы о Rallly Pro или вам нужна помощь в чем-либо, просто ответьте на это письмо. Я здесь, чтобы помочь!",
   "common_poweredBy": "Работает с помощью <a>{domain}</a>",
   "common_viewOn": "Посмотреть на {domain}",
   "eventCanceledContent": "<b>{hostName}</b> отменил <b>{title}</b>, который был запланирован на:",

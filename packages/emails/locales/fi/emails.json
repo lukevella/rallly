@@ -1,13 +1,4 @@
 {
-  "abandoned_checkout_button": "Päivitä Rallly Pro-versioon",
-  "abandoned_checkout_content": "huomasin, että katselit aiemmin <b>Rallly Prota</b>. Lähetän tämän viestin sen varalta, että sinulla on kysymyksiä tai tarvitset apua jonkin kanssa.",
-  "abandoned_checkout_name": "Hei {name},",
-  "abandoned_checkout_noname": "Hei vain,",
-  "abandoned_checkout_offer": "Päästäksesi alkuun voit saada <b>{discount} % alennusta</b> ensimmäisestä vuodestasi. Käytä seuraavaa koodia tilauksesi yhteydessä:",
-  "abandoned_checkout_preview": "Ainutlaatuinen tarjous: {discount} % alennus ensimmäisestä Rallly Pro -vuodesta!",
-  "abandoned_checkout_signoff": "Parhain terveisin",
-  "abandoned_checkout_subject": "{discount} % alennus ensimmäisestä Rallly Pro -vuodestasi",
-  "abandoned_checkout_support": "Jos sinulla on kysyttävää Rallly Prosta tai tarvitset apua missä tahansa asiassa, vastaa vain tähän sähköpostiin. Olen mielelläni avuksi!",
   "common_disableNotifications": "Voit <a>hallita ilmoitusasetuksiasi</a>, jos et halua saada tällaisia sähköposteja.",
   "common_poweredBy": "Palvelun tarjoaa <a>{domain}</a>",
   "common_viewOn": "Näytä osoitteessa {domain}",

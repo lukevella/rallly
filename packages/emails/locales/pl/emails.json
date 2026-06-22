@@ -1,13 +1,4 @@
 {
-  "abandoned_checkout_button": "Ulepsz do Rallly Pro",
-  "abandoned_checkout_content": "Zauważyłem, że wcześniej sprawdziłeś <b>Rallly Pro</b>. Chciałem się dowiedzieć, czy masz jakieś pytania lub potrzebujesz pomocy z czymkolwiek.",
-  "abandoned_checkout_name": "Cześć {name},",
-  "abandoned_checkout_noname": "Cześć,",
-  "abandoned_checkout_offer": "Aby pomóc Ci zacząć, możesz dostać <b>zniżkę {discount}%</b> na pierwszy rok. Po prostu użyj poniższego kodu przy finalizacji zamówienia:",
-  "abandoned_checkout_preview": "Ekskluzywna oferta: otrzymaj {discount}% zniżki na pierwszy rok Rallly Pro!",
-  "abandoned_checkout_signoff": "Z poważaniem,",
-  "abandoned_checkout_subject": "Otrzymaj {discount}% zniżki na pierwszy rok Rallly Pro",
-  "abandoned_checkout_support": "Jeśli masz jakiekolwiek pytania dotyczące Rallly Pro lub potrzebujesz pomocy z cokolwiek, po prostu odpowiedz na ten e-mail. Jestem tutaj, aby pomóc!",
   "common_poweredBy": "Obsługiwane przez <a>{domain}</a>",
   "common_viewOn": "Zobacz na {domain}",
   "finalizeHost_button": "Zobacz wydarzenie",
