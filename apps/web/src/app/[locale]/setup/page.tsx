@@ -18,7 +18,7 @@ export default async function SetupPage() {
   return (
     <div className="flex min-h-dvh justify-center bg-background p-4 sm:items-center">
       <div className="w-full max-w-sm">
-        <article className="space-y-8 lg:space-y-10">
+        <article className="space-y-8">
           <div className="flex justify-center py-8">
             <Logo />
           </div>

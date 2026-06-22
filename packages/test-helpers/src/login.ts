@@ -18,7 +18,7 @@ export async function loginWithEmail(
   } else {
     const code = await getCode(email);
     await page.getByRole("heading", { name: "Finish Logging In" }).waitFor();
-    await page.getByPlaceholder("Enter your 6-digit code").fill(code);
+    await page.getByLabel("Enter your 6-digit code").fill(code);
   }
 
   await page.waitForLoadState("networkidle");

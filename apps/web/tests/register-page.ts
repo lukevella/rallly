@@ -36,7 +36,7 @@ export class RegisterPage {
     await this.page
       .getByRole("heading", { name: "Finish Logging In" })
       .waitFor();
-    await this.page.getByPlaceholder("Enter your 6-digit code").fill(code);
+    await this.page.getByLabel("Enter your 6-digit code").fill(code);
 
     // Verify successful registration
     await expect(this.page.getByText(name)).toBeVisible();

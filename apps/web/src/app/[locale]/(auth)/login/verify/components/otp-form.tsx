@@ -15,10 +15,10 @@ import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { InputOTP } from "@/components/input-otp";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/utils/redirect";
-import { InputOTP } from "../../../../../../components/input-otp";
 
 const otpFormSchema = z.object({
   otp: z.string().length(6),
@@ -83,7 +83,10 @@ export function OTPForm({ email }: { email: string }) {
 
   return (
     <Form {...form}>
-      <form className="space-y-6" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col items-center space-y-6 text-center"
+        onSubmit={handleSubmit}
+      >
         <FormField
           control={form.control}
           name="otp"
@@ -92,8 +95,6 @@ export function OTPForm({ email }: { email: string }) {
               <FormItem>
                 <FormControl>
                   <InputOTP
-                    large
-                    placeholder={t("verificationCodePlaceholder")}
                     disabled={
                       form.formState.isSubmitting ||
                       form.formState.isSubmitSuccessful
@@ -105,7 +106,7 @@ export function OTPForm({ email }: { email: string }) {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
+                <FormDescription className="mt-4">
                   <Trans i18nKey="verificationCodeHelp" />
                 </FormDescription>
                 <FormMessage />

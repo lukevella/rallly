@@ -31,7 +31,7 @@ export class LoginPage {
       await this.page
         .getByRole("heading", { name: "Finish Logging In" })
         .waitFor();
-      await this.page.getByPlaceholder("Enter your 6-digit code").fill(code);
+      await this.page.getByLabel("Enter your 6-digit code").fill(code);
     }
 
     // Wait for page to load

@@ -120,7 +120,6 @@ function VerifyEmailChangeForm({
               <FormItem>
                 <FormControl>
                   <InputOTP
-                    placeholder={t("verificationCodePlaceholder")}
                     disabled={form.formState.isSubmitting}
                     autoFocus={true}
                     onValidCode={() => {

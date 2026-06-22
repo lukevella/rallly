@@ -60,7 +60,7 @@ test.describe.serial(() => {
 
       // The existing user should have received a sign-in OTP
       const code = await getCode(testUserEmail);
-      await page.getByPlaceholder("Enter your 6-digit code").fill(code);
+      await page.getByLabel("Enter your 6-digit code").fill(code);
 
       // Existing user should be signed in
       await expect(page.getByText("Test User")).toBeVisible();
@@ -97,7 +97,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Login with email" }).click();
 
-      await page.getByPlaceholder("Enter your 6-digit code").fill("000000");
+      await page.getByLabel("Enter your 6-digit code").fill("000000");
 
       await expect(
         page.getByText("Your verification code is incorrect"),
@@ -119,7 +119,7 @@ test.describe.serial(() => {
 
       const code = await getCode(testUserEmail);
 
-      await page.getByPlaceholder("Enter your 6-digit code").fill(code);
+      await page.getByLabel("Enter your 6-digit code").fill(code);
 
       await expect(page.getByText("Test User")).toBeVisible();
     });
