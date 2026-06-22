@@ -1,56 +1,6 @@
-import { getProPricing, stripe } from "@rallly/billing";
+import { stripe } from "@rallly/billing";
+import { getSeatUpdatePortalConfigurationId } from "@rallly/billing/lib/portal";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import { AppError } from "@/lib/errors";
-
-async function createQuantityUpdatePortalConfiguration(): Promise<string> {
-  try {
-    // Get pricing data to configure allowed products and prices
-    const pricingData = await getProPricing();
-
-    // Get the product ID from one of the prices (both monthly and yearly should have the same product)
-    const monthlyPrice = await stripe.prices.retrieve(pricingData.monthly.id);
-    const productId = monthlyPrice.product as string;
-
-    // Create a billing portal configuration that allows both price and quantity changes
-    const configuration = await stripe.billingPortal.configurations.create({
-      business_profile: {
-        headline: "Update your seat allocation",
-      },
-      features: {
-        subscription_update: {
-          enabled: true,
-          default_allowed_updates: ["price", "quantity"], // Allow both price and quantity changes
-          // Invoice prorations immediately so seat additions are charged right away
-          // rather than deferred onto the next renewal invoice.
-          proration_behavior: "always_invoice",
-          products: [
-            {
-              product: productId,
-              prices: [pricingData.monthly.id, pricingData.yearly.id], // Allow switching between monthly and yearly
-            },
-          ],
-        },
-        subscription_cancel: {
-          enabled: false, // Disable cancellation in seat management flow
-        },
-        payment_method_update: {
-          enabled: true,
-        },
-        invoice_history: {
-          enabled: true,
-        },
-      },
-    });
-
-    return configuration.id;
-  } catch (error) {
-    throw new AppError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to create billing portal configuration",
-      cause: error,
-    });
-  }
-}
 
 export const createStripeSubscriptionUpdateConfirmation = async ({
   customerId,
@@ -63,8 +13,8 @@ export const createStripeSubscriptionUpdateConfirmation = async ({
   subscriptionItemId: string;
   newSeatCount: number;
 }) => {
-  // Create a billing portal configuration that allows quantity updates
-  const configurationId = await createQuantityUpdatePortalConfiguration();
+  // Reuse the shared seat-update portal configuration (created on first use)
+  const configurationId = await getSeatUpdatePortalConfigurationId();
 
   // Create Stripe billing portal session with subscription_update_confirm flow
   // This deep links directly to the confirmation screen for the specific quantity change
