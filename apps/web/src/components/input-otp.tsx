@@ -4,8 +4,10 @@ import {
   InputOTP as InputOTPBase,
   InputOTPGroup,
   InputOTPSlot,
+  REGEXP_ONLY_DIGITS,
 } from "@rallly/ui/input-otp";
 import type * as React from "react";
+import { useTranslation } from "@/i18n/client";
 
 type InputOTPProps = Omit<
   React.ComponentProps<typeof InputOTPBase>,
@@ -15,11 +17,13 @@ type InputOTPProps = Omit<
 };
 
 function InputOTP({ onValidCode, ...props }: InputOTPProps) {
+  const { t } = useTranslation();
   return (
     <InputOTPBase
       maxLength={6}
       inputMode="numeric"
-      pattern="\d{6}"
+      pattern={REGEXP_ONLY_DIGITS}
+      aria-label={t("verificationCodePlaceholder")}
       onComplete={onValidCode}
       {...props}
     >
