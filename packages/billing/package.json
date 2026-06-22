@@ -8,6 +8,7 @@
   },
   "scripts": {
     "checkout-expiry": "dotenv -e .env -- pnpx tsx ./src/scripts/checkout-expiry.ts",
+    "invoice-pending-prorations": "dotenv -e .env -- pnpx tsx ./src/scripts/invoice-pending-prorations.ts",
     "subscription-data-sync": "dotenv -e .env -- pnpx tsx ./src/scripts/subscription-data-sync.ts",
     "sync-payment-methods": "dotenv -e .env -- pnpx tsx ./src/scripts/sync-payment-methods.ts",
     "sync-space-subscription": "dotenv -e .env -- pnpx tsx ./src/scripts/sync-space-subscription.ts",

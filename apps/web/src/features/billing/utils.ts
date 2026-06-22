@@ -20,7 +20,9 @@ async function createQuantityUpdatePortalConfiguration(): Promise<string> {
         subscription_update: {
           enabled: true,
           default_allowed_updates: ["price", "quantity"], // Allow both price and quantity changes
-          proration_behavior: "create_prorations",
+          // Invoice prorations immediately so seat additions are charged right away
+          // rather than deferred onto the next renewal invoice.
+          proration_behavior: "always_invoice",
           products: [
             {
               product: productId,
