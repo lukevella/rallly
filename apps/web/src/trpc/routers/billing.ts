@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 
 import { getSpaceSubscription } from "@/features/billing/data";
-import { createStripeSubscriptionUpdateConfirmation } from "@/features/billing/utils";
+import { createStripeSubscriptionUpdateConfirmation } from "@/features/billing/portal";
 import {
   getActiveSpaceForUser,
   getSpaceSeatCount,
