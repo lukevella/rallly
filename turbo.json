@@ -54,8 +54,7 @@
       "persistent": true
     },
     "i18n:scan": {
-      "inputs": ["src/**", "i18next-scanner.config.js"],
-      "outputs": ["public/locales/**", "locales/**"]
+      "cache": false
     },
     "//#check": {},
     "//#check:fix": {
