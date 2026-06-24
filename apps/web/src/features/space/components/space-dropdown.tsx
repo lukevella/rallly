@@ -21,8 +21,10 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { setActiveSpaceAction } from "@/features/space/actions";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { Trans } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
 import { CreateSpaceDialog } from "./create-space-dialog";
 import { SpaceIcon } from "./space-icon";
@@ -31,7 +33,12 @@ export function SpaceDropdown() {
   const { data: spaces = [] } = trpc.spaces.list.useQuery();
   const { data: activeSpace } = trpc.spaces.getCurrent.useQuery();
 
-  const setActiveSpace = trpc.spaces.setActive.useMutation();
+  const utils = trpc.useUtils();
+  const setActiveSpace = useSafeAction(setActiveSpaceAction, {
+    onSuccess: () => {
+      utils.spaces.getCurrent.invalidate();
+    },
+  });
   const newSpaceDialog = useDialog();
 
   if (!activeSpace) {
@@ -47,7 +54,7 @@ export function SpaceDropdown() {
         <DropdownMenuTrigger asChild={true}>
           <Button
             className={cn("flex h-auto w-full gap-2.5 p-2", {
-              "pointer-events-none animate-pulse": setActiveSpace.isPending,
+              "pointer-events-none animate-pulse": setActiveSpace.isExecuting,
             })}
             variant="ghost"
           >
@@ -80,7 +87,7 @@ export function SpaceDropdown() {
             value={selectedSpaceId}
             onValueChange={(value) => {
               if (value === selectedSpaceId) return;
-              setActiveSpace.mutate({ spaceId: value });
+              setActiveSpace.execute({ spaceId: value });
             }}
           >
             {spaces.map((space) => (
