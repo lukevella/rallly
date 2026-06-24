@@ -110,7 +110,8 @@ export const polls = router({
             startDate: z.string(),
             endDate: z.string().optional(),
           })
-          .array(),
+          .array()
+          .min(1),
       }),
     )
     .use(requireUserMiddleware)
@@ -376,6 +377,14 @@ export const polls = router({
                 };
               }
             }),
+          });
+        }
+
+        const remainingOptions = await tx.option.count({ where: { pollId } });
+        if (remainingOptions === 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "A poll must have at least one option",
           });
         }
 
