@@ -76,6 +76,41 @@ app.get("/delete-inactive-polls", async (c) => {
 });
 
 /**
+ * Closes polls whose options have all ended — i.e. no option ends in the
+ * future, where an option ends at start_time + duration (all-day options, with
+ * duration 0, are treated as ending 24h after their start). Closing is
+ * non-destructive: the poll becomes read-only but is preserved.
+ *
+ * Raw SQL because the option-end comparison (start_time + duration) can't be
+ * expressed in a Prisma `where`. It also deliberately does not touch
+ * `updated_at`, so closing a poll doesn't reset the inactivity clock that
+ * delete-inactive-polls keys off.
+ */
+app.get("/auto-close-polls", async (c) => {
+  const closed = await prisma.$executeRaw`
+    UPDATE polls p
+    SET status = 'closed'
+    WHERE p.status = 'open'
+      AND p.deleted = false
+      AND EXISTS (SELECT 1 FROM options o WHERE o.poll_id = p.id)
+      AND NOT EXISTS (
+        SELECT 1 FROM options o
+        WHERE o.poll_id = p.id
+          AND o.start_time + (CASE WHEN o.duration_minutes = 0
+                THEN interval '24 hours'
+                ELSE make_interval(mins => o.duration_minutes) END) > (now() AT TIME ZONE 'UTC')
+      )
+  `;
+
+  return c.json({
+    success: true,
+    summary: {
+      closed,
+    },
+  });
+});
+
+/**
  * Remove polls and corresponding data that have been marked deleted for more than 7 days.
  */
 app.get("/remove-deleted-polls", async (c) => {

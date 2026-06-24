@@ -3,6 +3,10 @@
   "buildCommand": "cd ../.. && pnpm build:web && pnpm db:deploy",
   "crons": [
     {
+      "path": "/api/house-keeping/auto-close-polls",
+      "schedule": "30 5 * * *"
+    },
+    {
       "path": "/api/house-keeping/delete-inactive-polls",
       "schedule": "0 6 * * *"
     },
