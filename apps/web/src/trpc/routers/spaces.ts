@@ -155,42 +155,6 @@ export const spaces = router({
   }),
 
   // ── Mutations ────────────────────────────────────────────────────────
-  setActive: privateProcedure
-    .input(z.object({ spaceId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const member = await prisma.spaceMember.findUnique({
-        where: {
-          spaceId_userId: {
-            spaceId: input.spaceId,
-            userId: ctx.user.id,
-          },
-        },
-      });
-
-      if (!member) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Space not found",
-        });
-      }
-
-      await setActiveSpace({
-        userId: ctx.user.id,
-        spaceId: input.spaceId,
-      });
-
-      posthog()?.capture({
-        distinctId: ctx.user.id,
-        event: "space_set_active",
-        properties: {
-          space_id: input.spaceId,
-        },
-        groups: {
-          space: input.spaceId,
-        },
-      });
-    }),
-
   create: privateProcedure
     .use(createRateLimitMiddleware("space_create", 5, "1 m"))
     .input(z.object({ name: z.string().min(1).max(100) }))
