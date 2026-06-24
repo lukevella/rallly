@@ -7,6 +7,7 @@ import { createSpaceInDb, createTestPoll, createUserInDb } from "./test-utils";
  * This test suite tests the house-keeping API endpoints:
  * 1. delete-inactive-polls: Marks inactive polls as deleted
  * 2. remove-deleted-polls: Permanently removes polls that have been marked as deleted for more than 7 days
+ * 3. auto-close-polls: Closes open polls whose options have all ended
  */
 test.describe("House-keeping API", () => {
   // Store created poll IDs for cleanup
@@ -284,5 +285,152 @@ test.describe("House-keeping API", () => {
     });
     expect(checkRecentDeletedPoll).not.toBeNull();
     expect(checkRecentDeletedPoll?.deleted).toBe(true);
+  });
+
+  test("should close open polls whose options have all ended, leaving others untouched", async ({
+    request,
+    baseURL,
+  }) => {
+    // Should be closed: open poll whose only option ended in the past
+    const allPast = await prisma.poll.create({
+      data: {
+        id: "ac-all-past",
+        title: "Auto-close: all options in the past",
+        participantUrlId: "ac-all-past-participant",
+        adminUrlId: "ac-all-past-admin",
+        options: {
+          create: {
+            startTime: dayjs().subtract(10, "day").toDate(),
+            duration: 60,
+          },
+        },
+      },
+    });
+    createdPollIds.push(allPast.id);
+
+    // Should be closed: all-day option (duration 0), treated as ending 24h after
+    // its start, whose date is well in the past
+    const allDayPast = await prisma.poll.create({
+      data: {
+        id: "ac-allday-past",
+        title: "Auto-close: past all-day option",
+        participantUrlId: "ac-allday-past-participant",
+        adminUrlId: "ac-allday-past-admin",
+        options: {
+          create: {
+            startTime: dayjs().subtract(5, "day").toDate(),
+            duration: 0,
+          },
+        },
+      },
+    });
+    createdPollIds.push(allDayPast.id);
+
+    // Should stay open: has a future option
+    const futureOption = await prisma.poll.create({
+      data: {
+        id: "ac-future",
+        title: "Auto-close: has a future option",
+        participantUrlId: "ac-future-participant",
+        adminUrlId: "ac-future-admin",
+        options: {
+          create: {
+            startTime: dayjs().add(10, "day").toDate(),
+            duration: 60,
+          },
+        },
+      },
+    });
+    createdPollIds.push(futureOption.id);
+
+    // Should stay open: one past and one future option
+    const mixed = await prisma.poll.create({
+      data: {
+        id: "ac-mixed",
+        title: "Auto-close: past and future options",
+        participantUrlId: "ac-mixed-participant",
+        adminUrlId: "ac-mixed-admin",
+        options: {
+          create: [
+            { startTime: dayjs().subtract(10, "day").toDate(), duration: 60 },
+            { startTime: dayjs().add(10, "day").toDate(), duration: 60 },
+          ],
+        },
+      },
+    });
+    createdPollIds.push(mixed.id);
+
+    // Should stay open: option started in the past but is still running (its end
+    // is in the future) — proves the check uses the option's END, not its start
+    const stillRunning = await prisma.poll.create({
+      data: {
+        id: "ac-running",
+        title: "Auto-close: option still running",
+        participantUrlId: "ac-running-participant",
+        adminUrlId: "ac-running-admin",
+        options: {
+          create: {
+            startTime: dayjs().subtract(30, "minute").toDate(),
+            duration: 120,
+          },
+        },
+      },
+    });
+    createdPollIds.push(stillRunning.id);
+
+    // Should stay open: no options at all (unlike delete-inactive, auto-close
+    // ignores polls that have no dates to be in the past)
+    const noOptions = await prisma.poll.create({
+      data: {
+        id: "ac-no-options",
+        title: "Auto-close: no options",
+        participantUrlId: "ac-no-options-participant",
+        adminUrlId: "ac-no-options-admin",
+      },
+    });
+    createdPollIds.push(noOptions.id);
+
+    // Should stay scheduled: only open polls are auto-closed
+    const scheduled = await prisma.poll.create({
+      data: {
+        id: "ac-scheduled",
+        title: "Auto-close: already scheduled",
+        participantUrlId: "ac-scheduled-participant",
+        adminUrlId: "ac-scheduled-admin",
+        status: "scheduled",
+        options: {
+          create: {
+            startTime: dayjs().subtract(10, "day").toDate(),
+            duration: 60,
+          },
+        },
+      },
+    });
+    createdPollIds.push(scheduled.id);
+
+    const response = await request.get(
+      `${baseURL}/api/house-keeping/auto-close-polls`,
+      {
+        headers: {
+          Authorization: `Bearer ${CRON_SECRET}`,
+        },
+      },
+    );
+
+    expect(response.ok()).toBeTruthy();
+    const responseData = await response.json();
+    expect(responseData.success).toBeTruthy();
+
+    const statusOf = async (id: string) =>
+      (await prisma.poll.findUnique({ where: { id } }))?.status;
+
+    expect(await statusOf(allPast.id)).toBe("closed");
+    expect(await statusOf(allDayPast.id)).toBe("closed");
+
+    expect(await statusOf(futureOption.id)).toBe("open");
+    expect(await statusOf(mixed.id)).toBe("open");
+    expect(await statusOf(stillRunning.id)).toBe("open");
+    expect(await statusOf(noOptions.id)).toBe("open");
+    expect(await statusOf(scheduled.id)).toBe("scheduled");
   });
 });
