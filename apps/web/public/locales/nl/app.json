@@ -538,8 +538,6 @@
   "spaceSettings": "Ruimte-instellingen",
   "spaceUpdatedError": "Bijwerken van ruimte is mislukt",
   "spaceUpdatedSuccess": "Ruimte bijgewerkt",
-  "specifyTimes": "Tijden opgeven",
-  "specifyTimesDescription": "Voeg start- en eindtijden voor elke optie toe",
   "ssoAuthenticationOnly": "Authenticatie wordt beheerd via Single Sign-On (SSO). Wachtwoordbeheer is niet beschikbaar.",
   "startOfWeek": "Week begint op",
   "submit": "Verzenden",
