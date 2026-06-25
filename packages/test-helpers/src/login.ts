@@ -16,8 +16,8 @@ export async function loginWithEmail(
     await page.getByLabel("Password").fill(password);
     await page.getByRole("button", { name: "Login with password" }).click();
   } else {
-    const code = await getCode(email);
     await page.getByRole("heading", { name: "Finish Logging In" }).waitFor();
+    const code = await getCode(email);
     await page.getByLabel("Enter your 6-digit code").fill(code);
   }
 
