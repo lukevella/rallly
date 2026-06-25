@@ -28,7 +28,7 @@ import { CopyLinkButton } from "@/components/copy-link-button";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList } from "@/components/stacked-list";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { FormattedDateTime } from "@/lib/timezone/client/formatted-date-time";
 import { trpc } from "@/trpc/client";
 
@@ -55,6 +55,7 @@ export function ScheduledEventListItem({
   floating: boolean;
   createdBy: { name: string; image?: string };
 }) {
+  const { t } = useTranslation();
   const dialog = useDialog();
   const cancelEvent = trpc.events.cancel.useMutation({
     onSuccess: () => {
@@ -164,7 +165,11 @@ export function ScheduledEventListItem({
         {status !== "canceled" ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button
+                aria-label={t("moreOptions", { defaultValue: "More options" })}
+                variant="ghost"
+                size="icon"
+              >
                 <Icon>
                   <MoreVerticalIcon />
                 </Icon>

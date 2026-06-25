@@ -144,12 +144,18 @@ const MobilePoll: React.FunctionComponent = () => {
                 votingForm.setEditingParticipantId(selectedParticipant.id);
               }}
             >
-              <Button size="icon">
+              <Button
+                aria-label={t("moreOptions", { defaultValue: "More options" })}
+                size="icon"
+              >
                 <MoreVerticalIcon />
               </Button>
             </ParticipantDropdown>
           ) : canAddNewParticipant ? (
             <Button
+              aria-label={t("addParticipant", {
+                defaultValue: "Add participant",
+              })}
               size="icon"
               onClick={() => {
                 votingForm.newParticipant();

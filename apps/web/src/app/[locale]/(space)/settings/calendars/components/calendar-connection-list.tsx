@@ -69,6 +69,9 @@ export function CalendarConnectionList() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
+                    aria-label={t("syncCalendar", {
+                      defaultValue: "Sync calendar",
+                    })}
                     loading={syncCalendar.isPending}
                     variant="ghost"
                     size="icon"
@@ -101,7 +104,13 @@ export function CalendarConnectionList() {
               </Tooltip>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
+                  <Button
+                    aria-label={t("moreOptions", {
+                      defaultValue: "More options",
+                    })}
+                    variant="ghost"
+                    size="icon"
+                  >
                     <Icon>
                       <MoreVerticalIcon />
                     </Icon>

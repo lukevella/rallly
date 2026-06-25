@@ -116,6 +116,7 @@ export function CreateApiKeyButton() {
                       className="font-mono text-sm"
                     />
                     <Button
+                      aria-label={t("copy", { defaultValue: "Copy" })}
                       variant="ghost"
                       size="icon"
                       onClick={handleCopy}

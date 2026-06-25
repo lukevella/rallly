@@ -21,7 +21,7 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedListItem } from "@/components/stacked-list";
 import { changeRoleAction } from "@/features/user/actions";
 import { userRoleSchema } from "@/features/user/schema";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { DeleteUserDialog } from "./dialogs/delete-user-dialog";
 
@@ -42,6 +42,7 @@ export function UserRow({
   canChangeRole: boolean;
   canDelete: boolean;
 }) {
+  const { t } = useTranslation();
   const changeRole = useSafeAction(changeRoleAction);
 
   const [isPending, startTransition] = useTransition();
@@ -65,7 +66,11 @@ export function UserRow({
           <span className="capitalize">{role}</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button
+                aria-label={t("moreOptions", { defaultValue: "More options" })}
+                variant="ghost"
+                size="icon"
+              >
                 <Icon>
                   <MoreHorizontal />
                 </Icon>
