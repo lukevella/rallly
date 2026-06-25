@@ -247,4 +247,12 @@
   html {
     @apply h-full font-sans text-base text-gray-700;
   }
+  *,
+  ::before,
+  ::after {
+    @apply outline-ring;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2;
+  }
 }
