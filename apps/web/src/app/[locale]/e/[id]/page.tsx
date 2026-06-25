@@ -11,6 +11,7 @@ import { UserDropdown } from "@/app/[locale]/e/[id]/components/user-dropdown";
 import LogoMarkGray from "@/assets/logo-mark-gray.svg";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
+import { SessionRefresher } from "@/components/session-refresher";
 import { BrandingStyle } from "@/features/branding/branding-style";
 import { formatLocationText } from "@/features/location/utils";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
@@ -101,6 +102,7 @@ export default async function EventPage({
 
   return (
     <div className="page-bg-gray-50 absolute inset-0 h-dvh overflow-auto md:h-dvh md:items-center md:justify-center md:p-5 dark:bg-gray-900">
+      <SessionRefresher />
       {brandingColor ? <BrandingStyle primaryColor={brandingColor} /> : null}
       <header className="fixed top-0 right-0 left-0 z-10 flex justify-between p-4">
         <Link href="/">

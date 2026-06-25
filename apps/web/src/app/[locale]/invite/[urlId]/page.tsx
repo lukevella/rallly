@@ -4,6 +4,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
+import { SessionRefresher } from "@/components/session-refresher";
 import { PermissionProvider } from "@/contexts/permissions";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
@@ -62,6 +63,7 @@ export default async function Page(props: {
 
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
+      <SessionRefresher />
       <PreferencesProvider>
         <Providers>
           <PermissionProvider impersonatedUserId={impersonatedUserId}>

@@ -1,15 +1,16 @@
-"use client";
+import { getSession } from "@/lib/auth";
+import { SessionKeepAlive } from "./session-keep-alive";
 
-import { authClient } from "@/lib/auth-client";
+// Keeps an existing session (guest OR authenticated) alive while the user is
+// active. Gated on getSession — which reads the cookie cache — so truly
+// anonymous viewers with no session never mount the client keep-alive and
+// never trigger a /get-session request. Safe to mount on public layouts.
+export async function SessionRefresher() {
+  const session = await getSession();
 
-// Fires /get-session on mount (and on tab focus, via better-auth defaults)
-// so the cookieCache Set-Cookie reaches the browser. Without this, the
-// session_data cookie only ever propagates at sign-in and every request
-// past its 5-min lifetime falls back to a DB lookup.
-//
-// Only mount inside authenticated layouts — using this on public layouts
-// would trigger a /get-session call for every anonymous poll viewer.
-export function SessionRefresher() {
-  authClient.useSession();
-  return null;
+  if (!session) {
+    return null;
+  }
+
+  return <SessionKeepAlive />;
 }

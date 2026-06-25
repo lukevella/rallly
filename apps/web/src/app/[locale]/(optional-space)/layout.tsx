@@ -1,4 +1,5 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { SessionRefresher } from "@/components/session-refresher";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { isQuickCreateEnabled } from "@/features/quick-create";
@@ -23,6 +24,7 @@ export default async function Layout({
 
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
+      <SessionRefresher />
       <PreferencesProvider>
         {children}
         <PayWall />
