@@ -538,8 +538,6 @@
   "spaceSettings": "Paramètres de l'espace",
   "spaceUpdatedError": "Échec de la mise à jour de l'espace",
   "spaceUpdatedSuccess": "Espace mis à jour avec succès",
-  "specifyTimes": "Précisez les horaires",
-  "specifyTimesDescription": "Indiquez les heures de début et de fin pour chaque option",
   "ssoAuthenticationOnly": "L'authentification est gérée par Single Sign-On (SSO). La gestion des mots de passe n'est pas disponible.",
   "startOfWeek": "Début de la semaine",
   "submit": "Valider",
