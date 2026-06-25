@@ -305,8 +305,6 @@
   "signUp": "注册",
   "spaceUpdatedError": "空间更新失败",
   "spaceUpdatedSuccess": "空间更新成功",
-  "specifyTimes": "指定时间",
-  "specifyTimesDescription": "为每个选项设置开始和结束时间",
   "startOfWeek": "一周的开始",
   "submit": "送出",
   "subscriptionCancelOn": "取消 {date}",
