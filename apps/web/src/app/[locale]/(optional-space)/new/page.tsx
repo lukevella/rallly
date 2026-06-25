@@ -45,9 +45,13 @@ export default async function Page() {
           </div>
         </div>
       </div>
-      <div className="mx-auto max-w-4xl p-3 sm:px-6 sm:py-5">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="mx-auto max-w-4xl p-3 sm:px-6 sm:py-5"
+      >
         <CreatePoll />
-      </div>
+      </main>
     </div>
   );
 }

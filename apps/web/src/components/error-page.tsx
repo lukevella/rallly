@@ -19,7 +19,11 @@ export function ErrorPage({
 }) {
   return (
     <div className="page-bg-gray-100">
-      <main className="mx-auto w-full max-w-7xl px-6 pt-10 pb-16 sm:pb-24 lg:px-8">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="mx-auto w-full max-w-7xl px-6 pt-10 pb-16 sm:pb-24 lg:px-8"
+      >
         <Image
           src="/static/logo.svg"
           alt="Rallly"

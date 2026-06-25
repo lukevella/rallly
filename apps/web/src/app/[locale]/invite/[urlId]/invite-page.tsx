@@ -48,7 +48,11 @@ const GoToApp = () => {
 export function InvitePage() {
   return (
     <div className="page-bg-gray-100 h-dvh overflow-auto p-3 lg:p-6 dark:bg-gray-900">
-      <div className="mx-auto w-full max-w-4xl space-y-3">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="mx-auto w-full max-w-4xl space-y-3"
+      >
         <GoToApp />
         <EventCard />
         <VotingForm>
@@ -56,7 +60,7 @@ export function InvitePage() {
         </VotingForm>
         <Discussion />
         <PollFooter />
-      </div>
+      </main>
     </div>
   );
 }

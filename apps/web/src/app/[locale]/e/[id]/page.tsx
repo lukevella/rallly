@@ -123,7 +123,7 @@ export default async function EventPage({
           )}
         </div>
       </header>
-      <div className="mx-auto max-w-lg pt-16">
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-lg pt-16">
         <div className="flex flex-col justify-between gap-6 p-4">
           <EventHeader>
             {isBranded && branding ? (
@@ -231,7 +231,7 @@ export default async function EventPage({
             </EventSection>
           ) : null}
         </div>
-      </div>
+      </main>
     </div>
   );
 }

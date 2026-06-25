@@ -71,9 +71,9 @@ const Layout = ({ children }: React.PropsWithChildren) => {
           </div>
         </div>
       </div>
-      <div className="p-3">
+      <main id="main-content" tabIndex={-1} className="p-3">
         <div className="mx-auto max-w-4xl space-y-3">{children}</div>
-      </div>
+      </main>
     </div>
   );
 };

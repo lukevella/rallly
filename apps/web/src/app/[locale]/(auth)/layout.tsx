@@ -14,7 +14,13 @@ export default async function Layout({
       <div className="z-10 flex w-full flex-1 lg:p-4">
         <div className="flex flex-1 flex-col gap-4 p-6">
           <div className="my-auto">
-            <div className="mx-auto w-full max-w-sm">{children}</div>
+            <main
+              id="main-content"
+              tabIndex={-1}
+              className="mx-auto w-full max-w-sm"
+            >
+              {children}
+            </main>
           </div>
           {isQuickCreateEnabled ? (
             <div className="flex justify-center lg:hidden">
