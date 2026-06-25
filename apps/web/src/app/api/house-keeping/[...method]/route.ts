@@ -1,9 +1,12 @@
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
 
 const BATCH_SIZE = 100;
+
+const logger = createLogger("api/house-keeping");
 
 const app = new Hono().basePath("/api/house-keeping");
 
@@ -11,6 +14,8 @@ app.use("*", async (c, next) => {
   if (process.env.CRON_SECRET) {
     return bearerAuth({ token: process.env.CRON_SECRET })(c, next);
   }
+
+  logger.error("CRON_SECRET is not set in environment variables");
 
   return c.json(
     {
@@ -67,6 +72,11 @@ app.get("/delete-inactive-polls", async (c) => {
     },
   });
 
+  logger.info(
+    { task: "delete-inactive-polls", markedDeleted },
+    "Marked inactive polls as deleted",
+  );
+
   return c.json({
     success: true,
     summary: {
@@ -101,6 +111,11 @@ app.get("/auto-close-polls", async (c) => {
                 ELSE make_interval(mins => o.duration_minutes) END) > (now() AT TIME ZONE 'UTC')
       )
   `;
+
+  logger.info(
+    { task: "auto-close-polls", closed },
+    "Closed polls with all options ended",
+  );
 
   return c.json({
     success: true,
@@ -145,6 +160,11 @@ app.get("/remove-deleted-polls", async (c) => {
 
     totalDeletedPolls += deleted.count;
   }
+
+  logger.info(
+    { task: "remove-deleted-polls", deletedPolls: totalDeletedPolls },
+    "Removed polls marked deleted over 7 days ago",
+  );
 
   return c.json({
     success: true,
