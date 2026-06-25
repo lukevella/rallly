@@ -570,8 +570,6 @@
   "spaceSettings": "Preferencias del espacio",
   "spaceUpdatedError": "No se pudo actualizar el espacio",
   "spaceUpdatedSuccess": "Espacio actualizado con éxito",
-  "specifyTimes": "Especificar horas",
-  "specifyTimesDescription": "Incluir horas de inicio y fin para cada opción",
   "ssoAuthenticationOnly": "La autenticación se gestiona a través de la autenticación única (SSO). La gestión de contraseñas no está disponible.",
   "startOfWeek": "Inicio de la semana",
   "submit": "Enviar",
