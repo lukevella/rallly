@@ -78,7 +78,7 @@ export function getForegroundColor(backgroundColor: string): string {
 export function adjustColorForContrast(
   color: string,
   backgroundColor: string,
-  minContrastRatio = 3.5,
+  minContrastRatio = 5,
 ): string {
   const colorRgb = hexToRgb(color);
   const bgRgb = hexToRgb(backgroundColor);
