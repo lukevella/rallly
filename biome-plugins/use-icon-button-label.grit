@@ -1,0 +1,40 @@
+// WCAG 1.1.1 / 4.1.2: icon-only buttons need an accessible name.
+// A <Button> with an icon-* size must provide a name via aria-label,
+// aria-labelledby, title, or visually-hidden (sr-only) text.
+language js
+
+or {
+  `<Button $props />` where {
+    $props <: or {
+      contains `size="icon"`,
+      contains `size="icon-xs"`,
+      contains `size="icon-sm"`,
+      contains `size="icon-lg"`
+    },
+    $props <: not contains JsxAttribute(name=$name) where {
+      $name <: or {
+        `aria-label`,
+        `aria-labelledby`,
+        `title`
+      }
+    }
+  },
+  `<Button $props>$children</Button>` where {
+    $props <: or {
+      contains `size="icon"`,
+      contains `size="icon-xs"`,
+      contains `size="icon-sm"`,
+      contains `size="icon-lg"`
+    },
+    $props <: not contains JsxAttribute(name=$name) where {
+      $name <: or {
+        `aria-label`,
+        `aria-labelledby`,
+        `title`
+      }
+    },
+    $children <: not contains `className="sr-only"`
+  }
+} where {
+  register_diagnostic(span=$props, message="Icon-only Button must have an accessible name: add `aria-label`, `aria-labelledby`, `title`, or visually-hidden (sr-only) text (WCAG 1.1.1 / 4.1.2).")
+}

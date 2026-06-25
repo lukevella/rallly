@@ -45,7 +45,11 @@ export function InviteDropdownMenu({ invite }: { invite: SpaceMemberInvite }) {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
+          <Button
+            aria-label={t("moreOptions", { defaultValue: "More options" })}
+            variant="ghost"
+            size="icon"
+          >
             <Icon>
               <MoreVerticalIcon />
             </Icon>

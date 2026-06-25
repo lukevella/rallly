@@ -81,6 +81,7 @@ function TableControls({
   onGoToPreviousPage: () => void;
   onGoToNextPage: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center gap-4">
       {showTimeZone ? (
@@ -98,6 +99,7 @@ function TableControls({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
+                  aria-label={t("scrollLeft", { defaultValue: "Scroll Left" })}
                   variant="ghost"
                   size="icon"
                   disabled={!canScrollPrev}
@@ -115,6 +117,9 @@ function TableControls({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
+                  aria-label={t("scrollRight", {
+                    defaultValue: "Scroll Right",
+                  })}
                   className="relative"
                   variant="ghost"
                   size="icon"
@@ -139,7 +144,12 @@ function TableControls({
             {expanded ? (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" onClick={onCollapse}>
+                  <Button
+                    aria-label={t("shrink", { defaultValue: "Shrink" })}
+                    variant="ghost"
+                    size="icon"
+                    onClick={onCollapse}
+                  >
                     <Icon>
                       <ShrinkIcon />
                     </Icon>
@@ -152,7 +162,12 @@ function TableControls({
             ) : (
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" onClick={onExpand}>
+                  <Button
+                    aria-label={t("expand", { defaultValue: "Expand" })}
+                    variant="ghost"
+                    size="icon"
+                    onClick={onExpand}
+                  >
                     <Icon>
                       <ExpandIcon />
                     </Icon>
@@ -258,6 +273,9 @@ const DesktopPoll: React.FunctionComponent = () => {
                 <Badge>{participants.length}</Badge>
                 {canAddNewParticipant && mode !== "new" ? (
                   <Button
+                    aria-label={t("addParticipant", {
+                      defaultValue: "Add participant",
+                    })}
                     className="ml-2"
                     size="icon-xs"
                     data-testid="add-participant-button"

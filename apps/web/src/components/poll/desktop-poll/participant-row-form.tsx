@@ -77,6 +77,7 @@ const ParticipantRowForm = ({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
+                    aria-label={t("cancel", { defaultValue: "Cancel" })}
                     variant="ghost"
                     onClick={() => {
                       form.cancel();

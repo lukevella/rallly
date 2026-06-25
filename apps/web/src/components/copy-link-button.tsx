@@ -23,6 +23,7 @@ export function CopyLinkButton({
     <Tooltip open={didCopy ? true : undefined}>
       <TooltipTrigger asChild>
         <Button
+          aria-label={t("copyLink", { defaultValue: "Copy link" })}
           className={className}
           variant="ghost"
           size="icon"

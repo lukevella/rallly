@@ -14,7 +14,7 @@ import { LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 
 export function UserDropdown({
@@ -29,11 +29,17 @@ export function UserDropdown({
   className?: string;
 }) {
   const router = useRouter();
+  const { t } = useTranslation();
 
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild className={cn("group min-w-0", className)}>
-        <Button variant="ghost" className="rounded-full" size="icon">
+        <Button
+          aria-label={t("accountMenu", { defaultValue: "Account menu" })}
+          variant="ghost"
+          className="rounded-full"
+          size="icon"
+        >
           <OptimizedAvatarImage src={image} name={name} size="sm" />
         </Button>
       </DropdownMenuTrigger>

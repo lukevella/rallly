@@ -13,7 +13,7 @@ import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { usePoll } from "@/components/poll-context";
 import { useUser } from "@/components/user-provider";
 import { usePermissions } from "@/contexts/permissions";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import type { Vote } from "@/trpc/client/types";
 
 import VoteIcon from "../vote-icon";
@@ -96,6 +96,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   className,
   onChangeEditMode,
 }) => {
+  const { t } = useTranslation();
   const { ownsObject } = useUser();
   const { getVote, optionIds } = usePoll();
 
@@ -132,7 +133,11 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
             align="start"
             onEdit={() => onChangeEditMode?.(true)}
           >
-            <Button size="icon-xs" variant="ghost">
+            <Button
+              aria-label={t("moreOptions", { defaultValue: "More options" })}
+              size="icon-xs"
+              variant="ghost"
+            >
               <MoreHorizontalIcon />
             </Button>
           </ParticipantDropdown>

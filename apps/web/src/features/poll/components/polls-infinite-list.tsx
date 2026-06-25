@@ -36,7 +36,7 @@ import { Spinner } from "@/components/spinner";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import type { PollStatus } from "@/features/poll/schema";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 interface PollsInfiniteListProps {
@@ -59,6 +59,7 @@ function PollListItem({
   participants: { id: string; name: string }[];
   user: { name: string; image: string | null } | null;
 }) {
+  const { t } = useTranslation();
   const deletePollDialog = useDialog();
   const deletePoll = trpc.polls.markAsDeleted.useMutation();
   const closePoll = trpc.polls.close.useMutation();
@@ -129,7 +130,11 @@ function PollListItem({
           <CopyLinkButton href={shortUrl(`/invite/${id}`)} />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button
+                aria-label={t("moreOptions", { defaultValue: "More options" })}
+                variant="ghost"
+                size="icon"
+              >
                 <MoreVerticalIcon />
               </Button>
             </DropdownMenuTrigger>

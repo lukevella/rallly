@@ -33,11 +33,12 @@ import { useRouter } from "next/navigation";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { useUser } from "@/components/user-provider";
 import { useTheme } from "@/features/theme/client";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 
 export const UserDropdown = ({ className }: { className?: string }) => {
+  const { t } = useTranslation();
   const { user } = useUser();
   const router = useRouter();
   const { theme, setTheme } = useTheme();
@@ -74,7 +75,12 @@ export const UserDropdown = ({ className }: { className?: string }) => {
         asChild
         className={cn("group min-w-0", className)}
       >
-        <Button variant="ghost" className="rounded-full" size="icon">
+        <Button
+          aria-label={t("accountMenu", { defaultValue: "Account menu" })}
+          variant="ghost"
+          className="rounded-full"
+          size="icon"
+        >
           <OptimizedAvatarImage src={image} name={name} size="sm" />
         </Button>
       </DropdownMenuTrigger>

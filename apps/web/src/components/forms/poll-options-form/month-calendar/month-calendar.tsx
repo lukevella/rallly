@@ -419,6 +419,9 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                   }}
                                 />
                                 <Button
+                                  aria-label={t("removeTimeSlot", {
+                                    defaultValue: "Remove time slot",
+                                  })}
                                   size="icon"
                                   variant="ghost"
                                   onClick={() => {
@@ -469,7 +472,13 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                             </Button>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild={true}>
-                                <Button variant="ghost" size="icon">
+                                <Button
+                                  aria-label={t("moreOptions", {
+                                    defaultValue: "More options",
+                                  })}
+                                  variant="ghost"
+                                  size="icon"
+                                >
                                   <MoreVerticalIcon />
                                 </Button>
                               </DropdownMenuTrigger>
