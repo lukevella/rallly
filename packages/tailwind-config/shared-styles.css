@@ -22,7 +22,7 @@
   --input: var(--color-gray-200);
   --input-foreground: var(--color-gray-800);
 
-  --ring: #d1d5db;
+  --ring: var(--color-gray-500);
 
   --destructive: var(--color-rose-600);
   --destructive-foreground: var(--color-rose-100);
