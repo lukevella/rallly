@@ -25,7 +25,7 @@
   "upgrade": "Upgradovat",
   "upgradeNowSaveLater": "Upgradujte dnes a ušetřete",
   "whenPollInactive": "Kdy se anketa stane neaktivní?",
-  "whenPollInactiveAnswer": "Anketa se stane neaktivní, když jsou všechny možnosti (data) v minulosti a zároveň nikdo anketu nenavštívil více než 30 dní. Neaktivní ankety jsou automaticky smazány, pokud nemáte placené předplatné.",
+  "whenPollInactiveAnswer": "Ankety se stanou neaktivní pokud jsou všechna data v minulosti a po více než 30 dní se neuskutečnila žádná aktivita. Do aktivit spadají nová hlasování, komentáře nebo změny v anketě. Neaktivní ankety jsou automaticky odstraněny, pokud nemáte placené předplatné.",
   "whyUpgrade": "Proč bych měl upgradovat?",
   "whyUpgradeAnswer2": "Upgrade na placený plán má smysl, pokud používáte Rallly často nebo ho používáte pro práci. Aktuální cena předplatného je akce pro \"early adopters\" a v budoucnu se zvýší. Upgradem dnes získáte přednostní přístup k novým funkcím vysoce kvalitního nástroje pro plánování a cena vašeho předplátného vám zůstane napořád. Budoucí zvýšení cen se vás nedotkne.",
   "yearlyBillingDescription": "za rok"
