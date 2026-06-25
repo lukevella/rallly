@@ -39,7 +39,7 @@
   --action-bar-foreground: var(--color-gray-100);
 
   --muted: var(--color-gray-100);
-  --muted-foreground: var(--color-gray-500);
+  --muted-foreground: var(--color-gray-600);
   --muted-border: var(--color-gray-200);
 
   --popover: var(--color-white);
