@@ -332,8 +332,6 @@
   "spaces": "Пространства",
   "spaceUpdatedError": "Не удалось обновить пространство",
   "spaceUpdatedSuccess": "Пространство успешно обновлено",
-  "specifyTimes": "Укажите время",
-  "specifyTimesDescription": "Считать время начала и окончания для каждого варианта включительно",
   "startOfWeek": "Начало недели",
   "submit": "Отправить",
   "subscriptionCancelOn": "Отмена {date}",
