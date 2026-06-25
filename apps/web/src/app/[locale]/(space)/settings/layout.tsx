@@ -88,7 +88,7 @@ export default async function Layout({
             <NavUser />
           </SidebarFooter>
         </Sidebar>
-        <SidebarInset>
+        <SidebarInset id="main-content" tabIndex={-1}>
           <div className="flex flex-1 flex-col">
             <header className="sticky top-0 z-10 border-b bg-background/90 p-3 backdrop-blur-xs md:hidden">
               <div className="flex items-center gap-4">
@@ -103,7 +103,7 @@ export default async function Layout({
                 </div>
               </div>
             </header>
-            <main className="flex-1 p-4 lg:py-12">{children}</main>
+            <div className="flex-1 p-4 lg:py-12">{children}</div>
           </div>
         </SidebarInset>
       </SidebarProvider>

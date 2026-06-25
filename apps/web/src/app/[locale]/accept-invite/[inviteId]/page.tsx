@@ -50,59 +50,61 @@ export default async function JoinPage({
   return (
     <div className="flex h-dvh flex-col items-center gap-12 py-12">
       <Logo />
-      <Card className="flex w-full max-w-sm flex-col p-12 text-center">
-        <div className="mx-auto mb-4">
-          <SpaceIcon
-            src={invite.space.image ?? undefined}
-            name={invite.space.name}
-            size="xl"
-          />
-        </div>
-        <h1 className="font-bold text-base">
-          <Trans
-            i18nKey="joinSpace"
-            defaults="Join {spaceName}"
-            values={{
-              spaceName: invite.space.name,
-            }}
-          />
-        </h1>
-        <p className="mt-1 text-sm">
-          <Trans
-            i18nKey="acceptInviteTitle"
-            defaults="{inviterName} invited you to join {spaceName}"
-            values={{
-              spaceName: invite.space.name,
-              inviterName: invite.invitedBy.name,
-            }}
-          />
-        </p>
-        <div className="mt-6">
-          <div className="flex flex-col items-center gap-y-2">
-            <p className="text-muted-foreground text-sm">
-              <Trans
-                i18nKey="youAreSignedInAs"
-                defaults="You're signed in as"
-              />
-            </p>
-            <div className="flex items-center gap-x-2 rounded-full border p-1 pr-2">
-              <OptimizedAvatarImage
-                src={user.image}
-                name={user.name}
-                size="sm"
-              />
-              <p className="text-sm">{user.email}</p>
+      <main id="main-content" tabIndex={-1} className="w-full max-w-sm">
+        <Card className="flex w-full flex-col p-12 text-center">
+          <div className="mx-auto mb-4">
+            <SpaceIcon
+              src={invite.space.image ?? undefined}
+              name={invite.space.name}
+              size="xl"
+            />
+          </div>
+          <h1 className="font-bold text-base">
+            <Trans
+              i18nKey="joinSpace"
+              defaults="Join {spaceName}"
+              values={{
+                spaceName: invite.space.name,
+              }}
+            />
+          </h1>
+          <p className="mt-1 text-sm">
+            <Trans
+              i18nKey="acceptInviteTitle"
+              defaults="{inviterName} invited you to join {spaceName}"
+              values={{
+                spaceName: invite.space.name,
+                inviterName: invite.invitedBy.name,
+              }}
+            />
+          </p>
+          <div className="mt-6">
+            <div className="flex flex-col items-center gap-y-2">
+              <p className="text-muted-foreground text-sm">
+                <Trans
+                  i18nKey="youAreSignedInAs"
+                  defaults="You're signed in as"
+                />
+              </p>
+              <div className="flex items-center gap-x-2 rounded-full border p-1 pr-2">
+                <OptimizedAvatarImage
+                  src={user.image}
+                  name={user.name}
+                  size="sm"
+                />
+                <p className="text-sm">{user.email}</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="mt-6">
-          {isWrongAccount ? (
-            <SignOutButton />
-          ) : (
-            <AcceptInviteButton spaceId={invite.spaceId} />
-          )}
-        </div>
-      </Card>
+          <div className="mt-6">
+            {isWrongAccount ? (
+              <SignOutButton />
+            ) : (
+              <AcceptInviteButton spaceId={invite.spaceId} />
+            )}
+          </div>
+        </Card>
+      </main>
     </div>
   );
 }

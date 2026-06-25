@@ -18,7 +18,7 @@ export default async function QuickCreatePage() {
 
   const { t } = await getTranslation();
   return (
-    <div className="flex h-dvh p-2">
+    <main id="main-content" tabIndex={-1} className="flex h-dvh p-2">
       <Card className="flex flex-1 flex-col gap-6 p-6">
         <div className="mx-auto w-full max-w-md flex-1">
           <div className="space-y-8">
@@ -39,7 +39,7 @@ export default async function QuickCreatePage() {
           </Link>
         </div>
       </Card>
-    </div>
+    </main>
   );
 }
 

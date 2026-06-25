@@ -9,6 +9,7 @@ import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import type React from "react";
 import type { Params } from "@/app/[locale]/types";
+import { SkipNavLink } from "@/components/skip-nav-link";
 import { BrandingProvider } from "@/features/branding/client";
 import { getInstanceBrandingConfig } from "@/features/branding/queries";
 import { ThemeProvider } from "@/features/theme/client";
@@ -78,6 +79,7 @@ export default async function Root({
               <I18nProvider locale={locale} resources={resources}>
                 <TRPCProvider>
                   <LazyMotion features={domAnimation}>
+                    <SkipNavLink />
                     <PostHogPageView />
                     <TooltipProvider>{children}</TooltipProvider>
                   </LazyMotion>

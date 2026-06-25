@@ -29,7 +29,11 @@ export default async function AdminSetupPage() {
   }
 
   return (
-    <div className="flex h-dvh items-center justify-center">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="flex h-dvh items-center justify-center"
+    >
       <EmptyState className="h-full">
         <EmptyStateIcon>
           <CrownIcon />
@@ -50,7 +54,7 @@ export default async function AdminSetupPage() {
           <MakeMeAdminButton />
         </EmptyStateFooter>
       </EmptyState>
-    </div>
+    </main>
   );
 }
 

@@ -2,3 +2,12 @@
 @import "@rallly/tailwind-config";
 
 /* Any app specific overrides will go here */
+
+/*
+ * The skip-to-content link moves focus to the page's #main-content landmark.
+ * The link itself is the visible focus indicator, so suppress the outline on
+ * the landmark to avoid drawing a box around the entire content region.
+ */
+#main-content:focus {
+  outline: none;
+}

@@ -76,7 +76,7 @@ export default async function Layout({
             <NavUser />
           </SidebarFooter>
         </Sidebar>
-        <SidebarInset className="min-w-0">
+        <SidebarInset id="main-content" tabIndex={-1} className="min-w-0">
           <LicenseLimitWarning />
           <CustomBrandingPrompt />
           <div className="flex flex-1 flex-col">

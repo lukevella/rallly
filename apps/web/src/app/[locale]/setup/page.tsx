@@ -17,7 +17,7 @@ export default async function SetupPage() {
 
   return (
     <div className="flex min-h-dvh justify-center bg-background p-4 sm:items-center">
-      <div className="w-full max-w-sm">
+      <main id="main-content" tabIndex={-1} className="w-full max-w-sm">
         <article className="space-y-8">
           <div className="flex justify-center py-8">
             <Logo />
@@ -33,11 +33,11 @@ export default async function SetupPage() {
               />
             </p>
           </header>
-          <main>
+          <div>
             <CreateSpaceForm />
-          </main>
+          </div>
         </article>
-      </div>
+      </main>
     </div>
   );
 }
