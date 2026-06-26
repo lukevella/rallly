@@ -1,4 +1,6 @@
 {
+  "changeEmail_codeValid": "Koodi on voimassa 15 minuuttia",
+  "changeEmail_content2": "Saat tämän viestin, koska sähköpostiosoitteen vaihtamista on pyydetty <domain /> -tilille. Jos se et ollut sinä, ota yhteyttä osoitteeseen <a>{supportEmail}</a>.",
   "common_disableNotifications": "Voit <a>hallita ilmoitusasetuksiasi</a>, jos et halua saada tällaisia sähköposteja.",
   "common_poweredBy": "Palvelun tarjoaa <a>{domain}</a>",
   "common_viewOn": "Näytä osoitteessa {domain}",
