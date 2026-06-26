@@ -578,8 +578,6 @@
   "spaceSettings": "Områdesinställningar",
   "spaceUpdatedError": "Kunde inte uppdatera området",
   "spaceUpdatedSuccess": "Område uppdaterat",
-  "specifyTimes": "Ange tider",
-  "specifyTimesDescription": "Inkludera start- och sluttider för varje alternativ",
   "ssoAuthenticationOnly": "Autentisering hanteras via Single Sign-On (SSO). Lösenordshantering är inte tillgänglig.",
   "startOfWeek": "Början av veckan",
   "submit": "Skicka",
