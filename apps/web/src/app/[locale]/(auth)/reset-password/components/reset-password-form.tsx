@@ -10,10 +10,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
-import { PasswordInput } from "@rallly/ui/password-input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { PasswordInput } from "@/components/password-input";
 import { PasswordStrengthMeter } from "@/features/password/components/password-strength-meter";
 import { usePasswordValidationSchema } from "@/features/password/schema";
 import { Trans } from "@/i18n/client";
