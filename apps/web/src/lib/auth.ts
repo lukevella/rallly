@@ -509,6 +509,7 @@ export const getSession = cache(async () => {
           timeZone: session.user.timeZone ?? undefined,
         },
         expires: session.session.expiresAt.toISOString(),
+        updatedAt: session.session.updatedAt.toISOString(),
       };
     }
   } catch (e) {
