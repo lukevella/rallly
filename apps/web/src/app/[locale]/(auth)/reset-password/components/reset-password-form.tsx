@@ -92,6 +92,7 @@ export function ResetPasswordForm() {
                   <PasswordInput
                     {...field}
                     large
+                    autoComplete="new-password"
                     disabled={formState.isSubmitting}
                     autoFocus={true}
                     placeholder="••••••••"

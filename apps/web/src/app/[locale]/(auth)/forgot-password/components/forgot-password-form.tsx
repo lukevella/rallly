@@ -91,6 +91,7 @@ export function ForgotPasswordForm() {
                   {...field}
                   large
                   type="email"
+                  autoComplete="email"
                   disabled={formState.isSubmitting}
                   autoFocus={true}
                   placeholder={t("emailPlaceholder")}
