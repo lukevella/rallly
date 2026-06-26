@@ -225,7 +225,12 @@ export const ProfileEmailAddress = () => {
                     <Trans i18nKey="email" />
                   </FormLabel>
                   <FormControl>
-                    <Input disabled={form.formState.isSubmitting} {...field} />
+                    <Input
+                      type="email"
+                      autoComplete="email"
+                      disabled={form.formState.isSubmitting}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

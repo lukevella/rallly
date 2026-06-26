@@ -137,6 +137,7 @@ export function RegisterNameForm() {
                     <Input
                       {...field}
                       large
+                      autoComplete="name"
                       data-1p-ignore
                       placeholder={t("namePlaceholder")}
                       disabled={form.formState.isSubmitting}
@@ -159,6 +160,8 @@ export function RegisterNameForm() {
                 <FormControl>
                   <Input
                     large
+                    type="email"
+                    autoComplete="email"
                     placeholder={t("emailPlaceholder")}
                     disabled={form.formState.isSubmitting}
                     {...field}
@@ -179,6 +182,7 @@ export function RegisterNameForm() {
                 <FormControl>
                   <PasswordInput
                     large
+                    autoComplete="new-password"
                     placeholder="••••••••"
                     disabled={form.formState.isSubmitting}
                     {...field}

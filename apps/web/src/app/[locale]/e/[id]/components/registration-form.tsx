@@ -75,6 +75,7 @@ export function RegistrationForm({
               <FormControl>
                 <Input
                   autoFocus
+                  autoComplete="name"
                   disabled={form.formState.isSubmitting}
                   placeholder={t("namePlaceholder", {
                     defaultValue: "Jessie Smith",
@@ -96,6 +97,7 @@ export function RegistrationForm({
               <FormControl>
                 <Input
                   type="email"
+                  autoComplete="email"
                   disabled={form.formState.isSubmitting}
                   placeholder={t("emailPlaceholder", {
                     defaultValue: "jessie.smith@example.com",

@@ -111,6 +111,7 @@ const PollHeader = () => {
         {monthGroups.map((group) => (
           <th
             key={`${group.month} ${group.year}`}
+            scope="colgroup"
             colSpan={group.count}
             style={{ height: monthRowHeight }}
             className={cn(
@@ -128,6 +129,7 @@ const PollHeader = () => {
         {dayGroups.map((group) => (
           <th
             key={`${group.year}-${group.month}-${group.day}`}
+            scope="colgroup"
             colSpan={group.count}
             style={{ height: dayRowHeight, top: monthRowHeight }}
             className="sticky z-10 border-l bg-background"
@@ -149,6 +151,7 @@ const PollHeader = () => {
           return (
             <th
               key={option.optionId}
+              scope="col"
               style={{ minWidth: 80, top: scoreRowTop }}
               className="sticky z-20 border-b border-l bg-background pb-2.5 align-top"
             >

@@ -144,6 +144,7 @@ export function LoginWithEmailForm() {
                   {...field}
                   large
                   type="text"
+                  autoComplete="username"
                   disabled={formState.isSubmitting}
                   autoFocus={true}
                   placeholder={t("emailPlaceholder")}
@@ -184,6 +185,7 @@ export function LoginWithEmailForm() {
                     autoFocus={true}
                     large
                     type="password"
+                    autoComplete="current-password"
                     disabled={form.formState.isSubmitting}
                     placeholder="••••••••"
                     {...field}

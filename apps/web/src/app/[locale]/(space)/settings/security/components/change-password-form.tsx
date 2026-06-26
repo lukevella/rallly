@@ -107,6 +107,7 @@ export function ChangePasswordForm() {
                 <FormControl>
                   <PasswordInput
                     {...field}
+                    autoComplete="current-password"
                     disabled={formState.isSubmitting}
                     placeholder="••••••••"
                   />
@@ -127,6 +128,7 @@ export function ChangePasswordForm() {
                 <FormControl>
                   <PasswordInput
                     {...field}
+                    autoComplete="new-password"
                     disabled={formState.isSubmitting}
                     placeholder="••••••••"
                   />
