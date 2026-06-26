@@ -12,12 +12,12 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { PasswordInput } from "@rallly/ui/password-input";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
+import { PasswordInput } from "@/components/password-input";
 import { PasswordStrengthMeter } from "@/features/password/components/password-strength-meter";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
