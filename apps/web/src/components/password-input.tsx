@@ -26,7 +26,10 @@ export const PasswordInput = React.forwardRef<
         {...props}
         type={showPassword ? "text" : "password"}
       />
-      <InputGroupAddon align="inline-end">
+      <InputGroupAddon
+        align="inline-end"
+        className={cn("has-[>button]:mr-0", large ? "pr-2" : "pr-1.5")}
+      >
         <InputGroupButton
           variant="ghost"
           size={large ? "icon-sm" : "icon-xs"}
