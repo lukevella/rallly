@@ -250,7 +250,7 @@ test.describe.serial(() => {
 
         // Fill in new password
         const newPassword = "NewPassword456!";
-        await page.getByLabel("Password").fill(newPassword);
+        await page.getByLabel("Password", { exact: true }).fill(newPassword);
 
         // Submit form
         await page.getByRole("button", { name: "Reset password" }).click();
@@ -264,7 +264,9 @@ test.describe.serial(() => {
         await page.goto("/reset-password?token=invalid-token-123");
 
         // Fill fields and submit
-        await page.getByLabel("Password").fill("NewPassword456!");
+        await page
+          .getByLabel("Password", { exact: true })
+          .fill("NewPassword456!");
         await page.getByRole("button", { name: "Reset password" }).click();
 
         // Should show error message
@@ -295,7 +297,7 @@ test.describe.serial(() => {
         // Reset to a new password
         const finalPassword = "FinalPassword789!";
         await page.goto(resetLink);
-        await page.getByLabel("Password").fill(finalPassword);
+        await page.getByLabel("Password", { exact: true }).fill(finalPassword);
         await page.getByRole("button", { name: "Reset password" }).click();
 
         // Now try to login with the new password
@@ -347,7 +349,7 @@ test.describe.serial(() => {
 
         // Fill in password
         const safePassword = "SafePassword123!";
-        await page.getByLabel("Password").fill(safePassword);
+        await page.getByLabel("Password", { exact: true }).fill(safePassword);
 
         // Submit form
         await page.getByRole("button", { name: "Reset password" }).click();
