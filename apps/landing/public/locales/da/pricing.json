@@ -25,7 +25,7 @@
   "upgrade": "Opgrader",
   "upgradeNowSaveLater": "Opgrader nu, spar senere",
   "whenPollInactive": "Hvornår bliver en afstemning inaktiv?",
-  "whenPollInactiveAnswer": "Afstemninger bliver inaktive, når alle dato-muligheder er i fortiden, OG meningsmålingen ikke er blevet tilgået i over 30 dage. Inaktive afstemninger slettes automatisk, hvis du ikke har et betalt abonnement.",
+  "whenPollInactiveAnswer": "Afstemninger bliver inaktive, når alle dato-muligheder er i fortiden, OG der har ikke været aktivitet i over 30 dage. Aktiviteten omfatter nye stemmer, kommentarer eller ændringer i afstemningen. Inaktive afstemninger slettes automatisk, hvis du ikke har et betalt abonnement.",
   "whyUpgrade": "Hvorfor opgradere?",
   "whyUpgradeAnswer2": "Opgradering til et betalt abonnement giver mening, hvis du bruger Rallly ofte eller bruge det til arbejde. Den nuværende abonnementssats er en særlig pris og vil stige i fremtiden. Ved at opgradere nu, vil du få tidlig adgang til nye, som de bliver frigivet. Desuden vil du ikke blive påvirket af fremtidige prisstigninger.",
   "yearlyBillingDescription": "pr. år"
