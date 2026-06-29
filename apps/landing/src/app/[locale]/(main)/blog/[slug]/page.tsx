@@ -1,7 +1,10 @@
+"use cache";
+
 import { buttonVariants } from "@rallly/ui";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
+import { cacheLife } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -12,6 +15,7 @@ import { getAllPosts, getPostBySlug } from "@/lib/api";
 export default async function Page(props: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
+  cacheLife("max");
   const params = await props.params;
   const post = getPostBySlug(params.slug, [
     "title",
@@ -75,6 +79,7 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: {
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
+  cacheLife("max");
   const params = await props.params;
   const post = getPostBySlug(params.slug, [
     "title",

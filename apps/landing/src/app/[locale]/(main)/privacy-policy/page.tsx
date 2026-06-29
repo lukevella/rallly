@@ -1,4 +1,9 @@
-export default function PrivacyPolicy() {
+"use cache";
+
+import { cacheLife } from "next/cache";
+
+export default async function PrivacyPolicy() {
+  cacheLife("max");
   return (
     <div className="prose mx-auto max-w-3xl">
       <h1>Privacy Policy</h1>
@@ -120,7 +125,8 @@ export default function PrivacyPolicy() {
   );
 }
 
-export function generateMetadata() {
+export async function generateMetadata() {
+  cacheLife("max");
   return {
     title: "Rallly: Privacy Policy",
     description: "The privacy policy for Rallly.",

@@ -12,6 +12,7 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { MenuIcon } from "lucide-react";
 import type { Viewport } from "next";
+import { cacheLife } from "next/cache";
 import Image from "next/image";
 
 import { Trans } from "react-i18next/TransWithoutContext";
@@ -37,6 +38,8 @@ export default async function Root(props: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
+  "use cache";
+  cacheLife("max");
   const { children, params } = props;
   const { locale } = await params;
 

@@ -1,4 +1,9 @@
-export default function CookiePolicy() {
+"use cache";
+
+import { cacheLife } from "next/cache";
+
+export default async function CookiePolicy() {
+  cacheLife("max");
   return (
     <div className="prose mx-auto max-w-3xl">
       <h1>Cookie Policy</h1>
@@ -57,7 +62,8 @@ export default function CookiePolicy() {
   );
 }
 
-export function generateMetadata() {
+export async function generateMetadata() {
+  cacheLife("max");
   return {
     title: "Rallly: Cookie Policy",
     description: "The cookie policy for Rallly.",

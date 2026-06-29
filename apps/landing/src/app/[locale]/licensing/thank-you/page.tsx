@@ -1,3 +1,6 @@
+"use cache";
+
+import { cacheLife } from "next/cache";
 import Image from "next/image";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { LinkBase } from "@/i18n/client/link";
@@ -6,6 +9,7 @@ import { getTranslation } from "@/i18n/server";
 export default async function LicensingThankYouPage(props: {
   params: Promise<{ locale: string }>;
 }) {
+  cacheLife("max");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale);
   return (
