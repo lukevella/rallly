@@ -77,6 +77,30 @@ export async function updateUserImage({
   revalidateTag(userProfileTag(userId), "max");
 }
 
+// Localization is written directly via Prisma (not Better-Auth): the cookie is
+// the SSR source of truth, so the session cache doesn't need refreshing here.
+// Undefined fields are no-ops in Prisma, giving patch semantics.
+export async function updateUserLocalization({
+  userId,
+  timeZone,
+  timeFormat,
+  weekStart,
+}: {
+  userId: string;
+  timeZone?: string;
+  timeFormat?: TimeFormat;
+  weekStart?: number;
+}) {
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      timeZone,
+      timeFormat,
+      weekStart,
+    },
+  });
+}
+
 export async function setActiveSpace({
   userId,
   spaceId,

@@ -2,8 +2,13 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import * as z from "zod";
-import { updateUserImage, updateUserName } from "@/features/user/mutations";
+import {
+  updateUserImage,
+  updateUserLocalization,
+  updateUserName,
+} from "@/features/user/mutations";
 import { AppError } from "@/lib/errors";
+import { timeFormatSchema, weekStartSchema } from "@/lib/localization/schema";
 import {
   adminActionClient,
   authActionClient,
@@ -13,6 +18,7 @@ import {
   deleteImageFromS3,
   getImageUploadUrl,
 } from "@/lib/storage/image-upload";
+import { timezoneSchema } from "@/utils/timezone-schema";
 
 export const updateUserNameAction = authActionClient
   .metadata({ actionName: "update_user_name" })
@@ -23,6 +29,24 @@ export const updateUserNameAction = authActionClient
   )
   .action(async ({ ctx, parsedInput }) => {
     await updateUserName({ userId: ctx.user.id, name: parsedInput.name });
+  });
+
+export const updateLocalizationAction = authActionClient
+  .metadata({ actionName: "update_localization" })
+  .inputSchema(
+    z.object({
+      timeZone: timezoneSchema.optional(),
+      timeFormat: timeFormatSchema.optional(),
+      weekStart: weekStartSchema.optional(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    await updateUserLocalization({
+      userId: ctx.user.id,
+      timeZone: parsedInput.timeZone,
+      timeFormat: parsedInput.timeFormat,
+      weekStart: parsedInput.weekStart,
+    });
   });
 
 export const getAvatarUploadUrlAction = authActionClient
