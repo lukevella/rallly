@@ -17,29 +17,31 @@ import { getBrowserTimeZone } from "@/utils/date-time-utils";
  * SSR/skeleton fallback.
  */
 export function useDateTimeFormat() {
-  const { locale, timeZone, timeFormat } = useLocalization();
-  const resolvedTimeZone = timeZone ?? getBrowserTimeZone();
+  const { locale, timeZone: viewerTimeZone, timeFormat } = useLocalization();
+  const automaticTimeZone = viewerTimeZone ?? getBrowserTimeZone();
 
   return React.useMemo(() => {
-    const ctx = (floating?: boolean) => ({
+    // `timeZone` is the fixed display zone (the event's zone, or "UTC" for
+    // all-day); omit it to use the viewer's zone.
+    const ctx = (timeZone?: string) => ({
       locale,
       timeFormat,
-      timeZone: floating ? "UTC" : resolvedTimeZone,
+      timeZone: timeZone ?? automaticTimeZone,
     });
     return {
       format: (
         value: DateInput,
         preset: DateTimePreset,
-        opts?: { floating?: boolean },
-      ) => formatDateTime(value, preset, ctx(opts?.floating)),
+        opts?: { timeZone?: string },
+      ) => formatDateTime(value, preset, ctx(opts?.timeZone)),
       formatRange: (
         start: DateInput,
         end: DateInput,
         preset: DateTimePreset,
-        opts?: { floating?: boolean },
-      ) => formatDateTimeRange(start, end, preset, ctx(opts?.floating)),
+        opts?: { timeZone?: string },
+      ) => formatDateTimeRange(start, end, preset, ctx(opts?.timeZone)),
       formatRelative: (value: DateInput, now?: DateInput) =>
         formatRelativeTime(value, locale, now),
     };
-  }, [locale, timeFormat, resolvedTimeZone]);
+  }, [locale, timeFormat, automaticTimeZone]);
 }

@@ -33,41 +33,47 @@ export function TimeSkeleton({ className }: { className?: string }) {
 }
 
 /**
- * Resolves the timezone for display. `floating` values are wall-clock
- * (all-day / tz-agnostic) and format in UTC. Otherwise we use the localization
- * timezone when known (SSR-personalized), falling back to the browser zone
- * after mount — `undefined` before that, so the caller renders a skeleton.
+ * Resolves the timezone to display in. A fixed `timeZone` (the event's own zone,
+ * or "UTC" for all-day) is known regardless of the viewer, so it renders
+ * directly — SSR-safe even for anonymous viewers, no skeleton. Omitting it means
+ * "automatic": display in the viewer's zone, falling back to the browser zone
+ * after mount (`undefined` before that, so the caller renders a skeleton).
  */
-function useDisplayTimeZone(floating?: boolean) {
-  const { timeZone } = useLocalization();
+function useDisplayTimeZone(fixedTimeZone?: string) {
+  const { timeZone: viewerTimeZone } = useLocalization();
   const mounted = useMounted();
-  if (floating) return "UTC";
-  return timeZone ?? (mounted ? getBrowserTimeZone() : undefined);
+  if (fixedTimeZone) return fixedTimeZone;
+  return viewerTimeZone ?? (mounted ? getBrowserTimeZone() : undefined);
 }
 
 type TimeProps = {
   value: DateInput;
   preset?: DateTimePreset;
-  floating?: boolean;
+  /** Fixed display zone (the event's zone, or "UTC" for all-day). Omit for the viewer's zone. */
+  timeZone?: string;
   className?: string;
 };
 
 export function Time({
   value,
   preset = "time",
-  floating,
+  timeZone,
   className,
 }: TimeProps) {
   const { locale, timeFormat } = useLocalization();
-  const timeZone = useDisplayTimeZone(floating);
+  const displayTimeZone = useDisplayTimeZone(timeZone);
 
-  if (!timeZone) {
+  if (!displayTimeZone) {
     return <TimeSkeleton className={className} />;
   }
 
   return (
     <time dateTime={toISO(value)} className={className}>
-      {formatDateTime(value, preset, { locale, timeFormat, timeZone })}
+      {formatDateTime(value, preset, {
+        locale,
+        timeFormat,
+        timeZone: displayTimeZone,
+      })}
     </time>
   );
 }
@@ -76,7 +82,8 @@ type TimeRangeProps = {
   start: DateInput;
   end: DateInput;
   preset?: DateTimePreset;
-  floating?: boolean;
+  /** Fixed display zone (the event's zone, or "UTC" for all-day). Omit for the viewer's zone. */
+  timeZone?: string;
   className?: string;
 };
 
@@ -84,13 +91,13 @@ export function TimeRange({
   start,
   end,
   preset = "time",
-  floating,
+  timeZone,
   className,
 }: TimeRangeProps) {
   const { locale, timeFormat } = useLocalization();
-  const timeZone = useDisplayTimeZone(floating);
+  const displayTimeZone = useDisplayTimeZone(timeZone);
 
-  if (!timeZone) {
+  if (!displayTimeZone) {
     return <TimeSkeleton className={cn("w-24", className)} />;
   }
 
@@ -99,7 +106,7 @@ export function TimeRange({
       {formatDateTimeRange(start, end, preset, {
         locale,
         timeFormat,
-        timeZone,
+        timeZone: displayTimeZone,
       })}
     </span>
   );
