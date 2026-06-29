@@ -4,6 +4,7 @@ import languages from "@rallly/languages";
 import { Analytics } from "@vercel/analytics/react";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
+import { cacheLife } from "next/cache";
 import { Suspense } from "react";
 import { PostHogPageView } from "@/components/posthog-page-view";
 import { sans } from "@/fonts/sans";
@@ -23,6 +24,8 @@ export default async function Root(props: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
+  "use cache";
+  cacheLife("max");
   const { children, params } = props;
   const { locale } = await params;
 

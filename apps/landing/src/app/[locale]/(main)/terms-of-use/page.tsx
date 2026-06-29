@@ -1,6 +1,10 @@
-import type { Metadata } from "next";
+"use cache";
 
-export default function TermsOfUse() {
+import type { Metadata } from "next";
+import { cacheLife } from "next/cache";
+
+export default async function TermsOfUse() {
+  cacheLife("max");
   return (
     <div className="prose mx-auto max-w-3xl">
       <h1>Terms of Use</h1>
@@ -232,7 +236,8 @@ export default function TermsOfUse() {
   );
 }
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata(): Promise<Metadata> {
+  cacheLife("max");
   return {
     title: "Rallly: Terms of Use",
     description: "The terms of use for Rallly.",

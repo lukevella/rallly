@@ -1,4 +1,7 @@
+"use cache";
+
 import type { Metadata } from "next";
+import { cacheLife } from "next/cache";
 import { Trans } from "react-i18next/TransWithoutContext";
 import Bonus from "@/components/home/bonus";
 import { MarketingHero } from "@/components/home/hero";
@@ -8,6 +11,7 @@ import { getTranslation } from "@/i18n/server";
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
 }) {
+  cacheLife("max");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["home"]);
   return (
@@ -31,6 +35,7 @@ export default async function Page(props: {
 export async function generateMetadata(props: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
+  cacheLife("max");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, "home");
   return {
