@@ -12,9 +12,15 @@ export const useCsvExporter = () => {
 
   return {
     exportToCsv: () => {
+      // Excel only recognises a naive "YYYY-MM-DD HH:mm:ss" value (no "T", no
+      // offset) as a date, so the timezone lives in the header, not the cell.
+      // Use the IANA zone name rather than a fixed offset so the label stays
+      // correct for rows on either side of a DST change.
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const header = [
         t("name"),
         t("email"),
+        `${t("respondedOn", { defaultValue: "Responded on" })} (${timeZone})`,
         ...options.map((decodedOption) => {
           const day = `${decodedOption.dow} ${decodedOption.day} ${decodedOption.month} ${decodedOption.year}`;
           return decodedOption.type === "date"
@@ -26,6 +32,7 @@ export const useCsvExporter = () => {
         return [
           participant.name,
           participant.email,
+          dayjs(participant.createdAt).format("YYYY-MM-DD HH:mm:ss"),
           ...poll.options.map((option) => {
             const vote = participant.votes.find((vote) => {
               return vote.optionId === option.id;
