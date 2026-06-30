@@ -12,9 +12,15 @@ export const useCsvExporter = () => {
 
   return {
     exportToCsv: () => {
+      // Excel only recognises a naive "YYYY-MM-DD HH:mm:ss" value (no "T", no
+      // offset) as a date, so the zone lives in the header instead of the cell.
+      const respondedOnHeader = `${t("respondedOn", {
+        defaultValue: "Responded on",
+      })} (UTC${dayjs().format("Z")})`;
       const header = [
         t("name"),
         t("email"),
+        respondedOnHeader,
         ...options.map((decodedOption) => {
           const day = `${decodedOption.dow} ${decodedOption.day} ${decodedOption.month} ${decodedOption.year}`;
           return decodedOption.type === "date"
@@ -26,6 +32,7 @@ export const useCsvExporter = () => {
         return [
           participant.name,
           participant.email,
+          dayjs(participant.createdAt).format("YYYY-MM-DD HH:mm:ss"),
           ...poll.options.map((option) => {
             const vote = participant.votes.find((vote) => {
               return vote.optionId === option.id;
