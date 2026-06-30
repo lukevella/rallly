@@ -540,6 +540,7 @@
   "resetPasswordFooter": "Don't need to reset? <a>Back to login</a>",
   "resetPasswordInvalidTokenMessage": "The password reset link is invalid or has expired. Please request a new one.",
   "resetPasswordTitle": "Reset Password",
+  "respondedOn": "Responded on",
   "response": "Response",
   "responseOptions": "Response Options",
   "revoke": "Revoke",
