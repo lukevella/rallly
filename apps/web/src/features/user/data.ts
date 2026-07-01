@@ -10,7 +10,9 @@ export const createUserDTO = (user: User): UserDTO => ({
   email: user.email,
   role: user.role,
   banned: user.banned,
-  timeZone: user.timeZone ?? undefined,
+  // Treat an empty-string timezone as unset — "" is an invalid IANA zone and
+  // throws when passed to Intl / dayjs.tz().
+  timeZone: user.timeZone || undefined,
   timeFormat: user.timeFormat ?? undefined,
   locale: user.locale ?? undefined,
   weekStart: user.weekStart ?? undefined,
@@ -34,7 +36,7 @@ const createGuestDTO = (session: {
   banned: false,
   isGuest: true,
   locale: session.locale,
-  timeZone: session.timeZone,
+  timeZone: session.timeZone || undefined,
 });
 
 export const getUser = async (id: string) => {

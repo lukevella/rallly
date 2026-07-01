@@ -516,7 +516,7 @@ export const getSession = cache(async () => {
           isGuest: !!session.user.isAnonymous,
           image: session.user.image,
           locale: session.user.locale ?? undefined,
-          timeZone: session.user.timeZone ?? undefined,
+          timeZone: session.user.timeZone || undefined,
           timeFormat: session.user.timeFormat ?? undefined,
           weekStart: session.user.weekStart ?? undefined,
         },
