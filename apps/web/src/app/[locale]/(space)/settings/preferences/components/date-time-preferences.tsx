@@ -23,9 +23,9 @@ import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { updateLocalizationAction } from "@/features/user/actions";
 import { Trans } from "@/i18n/client";
+import { getLocaleDefaults } from "@/lib/datetime/locales";
 import { dayjs } from "@/lib/dayjs";
 import { useLocale } from "@/lib/locale/client";
-import { getLocaleDefaults } from "@/lib/localization/locales";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
 

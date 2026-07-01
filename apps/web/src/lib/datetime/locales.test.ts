@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getLocaleDefaults } from "@/lib/localization/locales";
+import { getLocaleDefaults } from "@/lib/datetime/locales";
 
 // Tripwire: these lock the CLDR-derived defaults so an ICU/Node upgrade that
 // shifts one fails loudly.

@@ -1,5 +1,5 @@
-import type { DateInput } from "@/lib/localization/format";
-import { formatRelativeTime } from "@/lib/localization/format";
+import type { DateInput } from "@/lib/datetime/format";
+import { formatRelativeTime } from "@/lib/datetime/format";
 import { toISO } from "./utils";
 
 export type RelativeTimeProps = {

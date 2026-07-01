@@ -5,7 +5,7 @@ import {
   formatDateTime,
   formatDateTimeRange,
   formatRelativeTime,
-} from "@/lib/localization/format";
+} from "@/lib/datetime/format";
 
 // Fri 26 Jun 2026, in UTC.
 const at = (hour: number, minute = 0) =>

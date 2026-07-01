@@ -1,5 +1,5 @@
-import type { CalendarPreset, DateInput } from "@/lib/localization/format";
-import { formatCalendarDate } from "@/lib/localization/format";
+import type { CalendarPreset, DateInput } from "@/lib/datetime/format";
+import { formatCalendarDate } from "@/lib/datetime/format";
 import { toISODate } from "./utils";
 
 // No `timeZone` prop by design: a calendar date has no zone, so it must not be

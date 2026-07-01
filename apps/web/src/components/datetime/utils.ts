@@ -1,4 +1,4 @@
-import type { DateInput } from "@/lib/localization/format";
+import type { DateInput } from "@/lib/datetime/format";
 
 function toDate(value: DateInput) {
   return value instanceof Date ? value : new Date(value);

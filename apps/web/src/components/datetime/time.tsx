@@ -1,7 +1,7 @@
 import type { TimeFormat } from "@rallly/database";
-import type { DateInput, DateTimePreset } from "@/lib/localization/format";
-import { formatDateTime, formatDateTimeRange } from "@/lib/localization/format";
-import { getLocaleDefaults } from "@/lib/localization/locales";
+import type { DateInput, DateTimePreset } from "@/lib/datetime/format";
+import { formatDateTime, formatDateTimeRange } from "@/lib/datetime/format";
+import { getLocaleDefaults } from "@/lib/datetime/locales";
 import { toISO } from "./utils";
 
 export type TimeProps = {

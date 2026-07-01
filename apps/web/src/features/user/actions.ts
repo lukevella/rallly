@@ -5,8 +5,8 @@ import { headers } from "next/headers";
 import * as z from "zod";
 import { updateUserImage, updateUserName } from "@/features/user/mutations";
 import authLib from "@/lib/auth";
+import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
 import { AppError } from "@/lib/errors";
-import { timeFormatSchema, weekStartSchema } from "@/lib/localization/schema";
 import {
   adminActionClient,
   authActionClient,
