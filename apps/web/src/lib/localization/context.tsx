@@ -1,13 +1,11 @@
 "use client";
 
 import React from "react";
-import { useRequiredContext } from "@/components/use-required-context";
+import { useLocale } from "@/lib/locale/client";
+import { getLocaleDefaults } from "@/lib/localization/locales";
 import type { Localization } from "@/lib/localization/schema";
 
-type LocalizationContextValue = Localization;
-
-const LocalizationContext =
-  React.createContext<LocalizationContextValue | null>(null);
+const LocalizationContext = React.createContext<Localization | null>(null);
 
 LocalizationContext.displayName = "LocalizationContext";
 
@@ -25,6 +23,11 @@ export function LocalizationProvider({
   );
 }
 
-export function useLocalization() {
-  return useRequiredContext(LocalizationContext);
+// Never throws: the provider is an optional enhancement that supplies the user's
+// saved preferences. Without it, formatting still works from the active locale
+// (guaranteed on server and client) and that locale's defaults.
+export function useLocalization(): Localization {
+  const ctx = React.useContext(LocalizationContext);
+  const { locale } = useLocale();
+  return ctx ?? { locale, ...getLocaleDefaults(locale) };
 }
