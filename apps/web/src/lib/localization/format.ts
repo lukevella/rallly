@@ -31,7 +31,8 @@ function getCachedIntlDateFormatter(
     ...presetOptions(preset, {
       timeFormat: ctx.timeFormat,
     }),
-    timeZone: ctx.timeZone,
+    // An empty string is an invalid IANA zone and throws; treat it as "unset".
+    timeZone: ctx.timeZone || undefined,
   };
   const key = `${ctx.locale}|${JSON.stringify(options)}`;
   let f = formatters.get(key);
