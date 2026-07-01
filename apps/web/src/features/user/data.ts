@@ -10,8 +10,6 @@ export const createUserDTO = (user: User): UserDTO => ({
   email: user.email,
   role: user.role,
   banned: user.banned,
-  // Treat an empty-string timezone as unset — "" is an invalid IANA zone and
-  // throws when passed to Intl / dayjs.tz().
   timeZone: user.timeZone || undefined,
   timeFormat: user.timeFormat ?? undefined,
   locale: user.locale ?? undefined,

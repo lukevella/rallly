@@ -23,13 +23,13 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { shortUrl } from "@rallly/utils/absolute-url";
-import { MoreVerticalIcon } from "lucide-react";
+import { GlobeIcon, MoreVerticalIcon } from "lucide-react";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList } from "@/components/stacked-list";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
 import { Trans, useTranslation } from "@/i18n/client";
-import { Time } from "@/lib/localization/components";
+import { Time, TimeRange } from "@/lib/localization/components";
 import { trpc } from "@/trpc/client";
 
 export const ScheduledEventList = StackedList;
@@ -42,6 +42,7 @@ export function ScheduledEventListItem({
   allDay,
   invites,
   floating: isFloating,
+  timeZone,
   status,
   createdBy,
 }: {
@@ -50,6 +51,7 @@ export function ScheduledEventListItem({
   status: ScheduledEventStatus;
   start: Date;
   end: Date;
+  timeZone?: string;
   allDay: boolean;
   invites: { id: string; inviteeName: string; inviteeImage?: string }[];
   floating: boolean;
@@ -62,8 +64,8 @@ export function ScheduledEventListItem({
       dialog.dismiss();
     },
   });
-  // Floating times have no zone — render the wall clock as-is.
-  const displayTimeZone = isFloating ? "UTC" : undefined;
+
+  const displayTimeZone = isFloating ? "UTC" : timeZone;
   return (
     <div className="flex w-full gap-6">
       <div className="flex flex-1 flex-col gap-y-1 lg:flex-row-reverse lg:justify-end lg:gap-x-4">
@@ -130,14 +132,23 @@ export function ScheduledEventListItem({
               {allDay ? (
                 <Trans i18nKey="allDay" defaults="All day" />
               ) : (
-                <div className="flex items-center gap-x-1">
-                  <Time
-                    value={start}
+                <div className="flex items-center gap-x-2">
+                  <TimeRange
+                    start={start}
+                    end={end}
                     preset="time"
                     timeZone={displayTimeZone}
                   />
-                  <span>-</span>
-                  <Time value={end} preset="time" timeZone={displayTimeZone} />
+                  {!isFloating ? (
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Icon>
+                          <GlobeIcon />
+                        </Icon>
+                      </TooltipTrigger>
+                      <TooltipContent>{displayTimeZone}</TooltipContent>
+                    </Tooltip>
+                  ) : null}
                 </div>
               )}
             </div>

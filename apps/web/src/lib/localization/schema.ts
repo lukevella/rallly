@@ -8,7 +8,6 @@ export const weekStartSchema = z.coerce.number().int().min(0).max(6);
 
 export type Localization = {
   locale: string;
-  timeZone?: string;
   timeFormat: TimeFormat;
   weekStart: number;
 };

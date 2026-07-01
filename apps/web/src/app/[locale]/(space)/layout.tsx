@@ -33,19 +33,19 @@ export default async function Layout({
   }
 
   const localeDefaults = getLocaleDefaults(locale);
-  const localization = {
-    locale,
-    timeZone: user?.timeZone ?? undefined,
-    timeFormat: user?.timeFormat ?? localeDefaults.timeFormat,
-    weekStart: user?.weekStart ?? localeDefaults.weekStart,
-  };
 
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
       <SessionRefresher />
       <LocaleSync userLocale={user?.locale} />
       <TimeZoneChangeDetector initialTimeZone={user?.timeZone} />
-      <LocalizationProvider defaults={localization}>
+      <LocalizationProvider
+        defaults={{
+          locale,
+          timeFormat: user?.timeFormat ?? localeDefaults.timeFormat,
+          weekStart: user?.weekStart ?? localeDefaults.weekStart,
+        }}
+      >
         <SpaceProvider>
           {children}
           <PayWall />
