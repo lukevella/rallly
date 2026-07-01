@@ -2,6 +2,7 @@
 
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
+import React from "react";
 import { useTheme } from "@/features/theme/client";
 import { Trans } from "@/i18n/client";
 
@@ -30,10 +31,15 @@ function ThemeOptionLabel({ children }: { children: React.ReactNode }) {
 
 export function ThemePreference() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <RadioGroup
-      value={theme}
+      value={mounted ? theme : undefined}
       onValueChange={setTheme}
       className="flex flex-wrap gap-2"
     >

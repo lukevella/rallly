@@ -5,9 +5,8 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@rallly/ui/select";
-import { LanguagesIcon } from "lucide-react";
+import { ChevronsUpDownIcon, LanguagesIcon } from "lucide-react";
 
 export const LanguageSelect: React.FunctionComponent<{
   className?: string;
@@ -20,7 +19,8 @@ export const LanguageSelect: React.FunctionComponent<{
         <Icon>
           <LanguagesIcon />
         </Icon>
-        <SelectValue />
+        {languages[value as keyof typeof languages] ?? value}
+        <ChevronsUpDownIcon className="size-4 opacity-50" />
       </SelectTrigger>
       <SelectContent>
         {Object.entries(languages).map(([code, name]) => (

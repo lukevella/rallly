@@ -1,12 +1,10 @@
 "use server";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { headers } from "next/headers";
 import * as z from "zod";
-import {
-  updateUserImage,
-  updateUserLocalization,
-  updateUserName,
-} from "@/features/user/mutations";
+import { updateUserImage, updateUserName } from "@/features/user/mutations";
+import authLib from "@/lib/auth";
 import { AppError } from "@/lib/errors";
 import { timeFormatSchema, weekStartSchema } from "@/lib/localization/schema";
 import {
@@ -40,12 +38,14 @@ export const updateLocalizationAction = authActionClient
       weekStart: weekStartSchema.optional(),
     }),
   )
-  .action(async ({ ctx, parsedInput }) => {
-    await updateUserLocalization({
-      userId: ctx.user.id,
-      timeZone: parsedInput.timeZone,
-      timeFormat: parsedInput.timeFormat,
-      weekStart: parsedInput.weekStart,
+  .action(async ({ parsedInput }) => {
+    await authLib.api.updateUser({
+      body: {
+        timeZone: parsedInput.timeZone,
+        timeFormat: parsedInput.timeFormat,
+        weekStart: parsedInput.weekStart,
+      },
+      headers: await headers(),
     });
   });
 

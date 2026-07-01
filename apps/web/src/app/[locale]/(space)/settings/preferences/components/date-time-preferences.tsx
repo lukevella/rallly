@@ -1,4 +1,7 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { TimeFormat } from "@rallly/database";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -18,11 +21,13 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
-import { usePreferences } from "@/contexts/preferences";
+import { updateLocalizationAction } from "@/features/user/actions";
 import { Trans } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
-import { useTimezone } from "@/lib/timezone/client/context";
-import { useDayjs } from "@/utils/dayjs";
+import { useLocale } from "@/lib/locale/client";
+import { getLocaleDefaults } from "@/lib/localization/locales";
+import { useSafeAction } from "@/lib/safe-action/client";
+import { getBrowserTimeZone } from "@/utils/date-time-utils";
 
 const formSchema = z.object({
   timeFormat: z.enum(["hours12", "hours24"]),
@@ -30,17 +35,25 @@ const formSchema = z.object({
   weekStart: z.number().min(0).max(6),
 });
 
-export const DateTimePreferences = () => {
-  const { timezone } = useTimezone();
-  const { timeFormat, weekStart } = useDayjs();
-  const { updatePreferences } = usePreferences();
+export const DateTimePreferences = ({
+  initialValues,
+}: {
+  initialValues: {
+    timeFormat?: TimeFormat;
+    timeZone?: string;
+    weekStart?: number;
+  };
+}) => {
+  const updateLocalization = useSafeAction(updateLocalizationAction);
+  const { locale } = useLocale();
+  const localeDefaults = getLocaleDefaults(locale);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      timeFormat,
-      weekStart,
-      timeZone: timezone,
+      timeFormat: initialValues.timeFormat ?? localeDefaults.timeFormat,
+      weekStart: initialValues.weekStart ?? localeDefaults.weekStart,
+      timeZone: initialValues.timeZone ?? getBrowserTimeZone(),
     },
   });
 
@@ -50,7 +63,7 @@ export const DateTimePreferences = () => {
     <Form {...form}>
       <form
         onSubmit={handleSubmit(async (data) => {
-          updatePreferences(data);
+          await updateLocalization.executeAsync(data);
           form.reset(data);
         })}
       >
@@ -107,7 +120,7 @@ export const DateTimePreferences = () => {
                       field.onChange(Number.parseInt(value, 10));
                     }}
                   >
-                    <SelectTrigger className="w-fit">
+                    <SelectTrigger className="w-fit min-w-32">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
