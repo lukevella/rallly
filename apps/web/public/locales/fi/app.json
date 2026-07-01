@@ -540,6 +540,7 @@
   "resetPasswordFooter": "Eikö vaihto ole tarpeen? <a>Takaisin kirjautumiseen</a>",
   "resetPasswordInvalidTokenMessage": "Salasanan vaihtolinkki on virheellinen tai vanhentunut. Pyydä uusi linkki.",
   "resetPasswordTitle": "Vaihda salasana",
+  "respondedOn": "Vastausaika",
   "response": "Vastaus",
   "responseOptions": "Vastausvaihtoehdot",
   "revoke": "Peru",
