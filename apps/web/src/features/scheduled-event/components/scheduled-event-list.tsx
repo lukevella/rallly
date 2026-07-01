@@ -28,8 +28,8 @@ import { CopyLinkButton } from "@/components/copy-link-button";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList } from "@/components/stacked-list";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
+import { UserTime, UserTimeRange } from "@/features/user/components/user-time";
 import { Trans, useTranslation } from "@/i18n/client";
-import { Time, TimeRange } from "@/lib/localization/components";
 import { trpc } from "@/trpc/client";
 
 export const ScheduledEventList = StackedList;
@@ -122,7 +122,7 @@ export function ScheduledEventListItem({
         <div className="flex items-center whitespace-nowrap text-sm lg:min-w-40">
           <div>
             <div>
-              <Time
+              <UserTime
                 value={start}
                 preset="dateLong"
                 timeZone={displayTimeZone}
@@ -133,7 +133,7 @@ export function ScheduledEventListItem({
                 <Trans i18nKey="allDay" defaults="All day" />
               ) : (
                 <div className="flex items-center gap-x-2">
-                  <TimeRange
+                  <UserTimeRange
                     start={start}
                     end={end}
                     preset="time"
