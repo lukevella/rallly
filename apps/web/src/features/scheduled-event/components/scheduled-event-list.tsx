@@ -29,7 +29,7 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList } from "@/components/stacked-list";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
 import { Trans, useTranslation } from "@/i18n/client";
-import { FormattedDateTime } from "@/lib/timezone/client/formatted-date-time";
+import { Time } from "@/lib/localization/components";
 import { trpc } from "@/trpc/client";
 
 export const ScheduledEventList = StackedList;
@@ -62,6 +62,8 @@ export function ScheduledEventListItem({
       dialog.dismiss();
     },
   });
+  // Floating times have no zone — render the wall clock as-is.
+  const displayTimeZone = isFloating ? "UTC" : undefined;
   return (
     <div className="flex w-full gap-6">
       <div className="flex flex-1 flex-col gap-y-1 lg:flex-row-reverse lg:justify-end lg:gap-x-4">
@@ -118,10 +120,10 @@ export function ScheduledEventListItem({
         <div className="flex items-center whitespace-nowrap text-sm lg:min-w-40">
           <div>
             <div>
-              <FormattedDateTime
-                date={start}
-                floating={isFloating}
-                format="LL"
+              <Time
+                value={start}
+                preset="dateLong"
+                timeZone={displayTimeZone}
               />
             </div>
             <div className="mt-1 text-muted-foreground">
@@ -129,17 +131,13 @@ export function ScheduledEventListItem({
                 <Trans i18nKey="allDay" defaults="All day" />
               ) : (
                 <div className="flex items-center gap-x-1">
-                  <FormattedDateTime
-                    date={start}
-                    floating={isFloating}
-                    format="LT"
+                  <Time
+                    value={start}
+                    preset="time"
+                    timeZone={displayTimeZone}
                   />
                   <span>-</span>
-                  <FormattedDateTime
-                    date={end}
-                    floating={isFloating}
-                    format="LT"
-                  />
+                  <Time value={end} preset="time" timeZone={displayTimeZone} />
                 </div>
               )}
             </div>
