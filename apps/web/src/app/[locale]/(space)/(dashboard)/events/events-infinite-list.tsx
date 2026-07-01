@@ -99,6 +99,7 @@ export function EventsInfiniteList({
             floating={!event.timeZone}
             title={event.title}
             start={event.start}
+            timeZone={event.timeZone ?? undefined}
             end={event.end}
             allDay={event.allDay}
             invites={event.invites}

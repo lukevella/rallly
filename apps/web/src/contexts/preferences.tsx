@@ -4,7 +4,6 @@ import type { TimeFormat } from "@rallly/database";
 import React from "react";
 import { useLocalStorage } from "react-use";
 import * as z from "zod";
-import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { useRequiredContext } from "@/components/use-required-context";
 import { LocaleSync, useLocale } from "@/lib/locale/client";
 import { trpc } from "@/trpc/client";
@@ -95,12 +94,6 @@ export const PreferencesProvider = ({
         }}
       >
         {children}
-        <TimeZoneChangeDetector
-          initialTimeZone={preferences.timeZone}
-          onTimeZoneChange={(timeZone) => {
-            updatePreferences({ timeZone });
-          }}
-        />
         <LocaleSync userLocale={user?.locale} />
       </DayjsProvider>
     </PreferencesContext.Provider>
