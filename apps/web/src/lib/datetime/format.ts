@@ -9,8 +9,6 @@ export type DateTimePreset =
   | "weekday"
   | "datetime";
 
-export type CalendarPreset = "date" | "dateLong" | "weekday";
-
 type FormatContext = {
   locale: string;
   timeFormat: TimeFormat;
@@ -101,19 +99,6 @@ export function formatDateTimeRange(
     toDate(start),
     toDate(end),
   );
-}
-
-export function formatCalendarDate(
-  value: DateInput,
-  preset: CalendarPreset,
-  locale: string,
-): string {
-  // UTC so an all-day date renders the same label in every viewer's zone.
-  return getCachedIntlDateFormatter(preset, {
-    locale,
-    timeFormat: "hours24",
-    timeZone: "UTC",
-  }).format(toDate(value));
 }
 
 const relativeFormatters = new Map<string, Intl.RelativeTimeFormat>();

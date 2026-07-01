@@ -7,7 +7,3 @@ function toDate(value: DateInput) {
 export function toISO(value: DateInput) {
   return toDate(value).toISOString();
 }
-
-export function toISODate(value: DateInput) {
-  return toISO(value).slice(0, 10);
-}

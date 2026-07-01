@@ -1,7 +1,6 @@
 import type { TimeFormat } from "@rallly/database";
 import { describe, expect, it } from "vitest";
 import {
-  formatCalendarDate,
   formatDateTime,
   formatDateTimeRange,
   formatRelativeTime,
@@ -107,25 +106,6 @@ describe("formatDateTimeRange", () => {
     );
     expect(out).toContain("13:00");
     expect(out).toContain("14:00");
-  });
-});
-
-describe("formatCalendarDate", () => {
-  // UTC midnight: in a negative-offset zone this would slip to the 25th.
-  const allDay = new Date(Date.UTC(2026, 5, 26));
-
-  it("formats a weekday without drifting across zones", () => {
-    expect(formatCalendarDate(allDay, "weekday", "en")).toBe("Friday");
-  });
-
-  it("formats a date", () => {
-    const out = formatCalendarDate(allDay, "date", "en");
-    expect(out).toContain("26");
-    expect(out).toContain("2026");
-  });
-
-  it("localizes the weekday", () => {
-    expect(formatCalendarDate(allDay, "weekday", "de")).toBe("Freitag");
   });
 });
 
