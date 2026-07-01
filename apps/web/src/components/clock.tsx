@@ -23,7 +23,7 @@ import { Trans } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
 import { useDayjs } from "@/utils/dayjs";
 
-export const TimePreferences = () => {
+const TimePreferences = () => {
   const { updatePreferences } = usePreferences();
   const { timeFormat, timeZone } = useDayjs();
 
@@ -55,7 +55,7 @@ export const TimePreferences = () => {
   );
 };
 
-export const Clock = ({ className }: { className?: string }) => {
+const Clock = ({ className }: { className?: string }) => {
   const { timeZone, timeFormat } = useDayjs();
   const timeZoneDisplayFormat = soft(timeZone)[0];
   const now = spacetime.now(timeZone);
@@ -75,23 +75,7 @@ export const Clock = ({ className }: { className?: string }) => {
   );
 };
 
-export const TimesShownIn = () => {
-  const { timeZone } = useDayjs();
-  return (
-    <ClockPreferences>
-      <Button type="button" variant="ghost">
-        <GlobeIcon data-icon="inline-start" />
-        <Trans
-          i18nKey="cityTime"
-          defaults="{city} Time"
-          values={{ city: getCityFromTimezoneId(timeZone) }}
-        />
-      </Button>
-    </ClockPreferences>
-  );
-};
-
-export const ClockPreferences = ({ children }: React.PropsWithChildren) => {
+const ClockPreferences = ({ children }: React.PropsWithChildren) => {
   return (
     <Dialog modal={false}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -113,5 +97,21 @@ export const ClockPreferences = ({ children }: React.PropsWithChildren) => {
         <TimePreferences />
       </DialogContent>
     </Dialog>
+  );
+};
+
+export const TimesShownIn = () => {
+  const { timeZone } = useDayjs();
+  return (
+    <ClockPreferences>
+      <Button type="button" variant="ghost">
+        <GlobeIcon data-icon="inline-start" />
+        <Trans
+          i18nKey="cityTime"
+          defaults="{city} Time"
+          values={{ city: getCityFromTimezoneId(timeZone) }}
+        />
+      </Button>
+    </ClockPreferences>
   );
 };
