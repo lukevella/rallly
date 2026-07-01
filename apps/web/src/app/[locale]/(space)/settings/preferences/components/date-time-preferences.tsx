@@ -63,8 +63,10 @@ export const DateTimePreferences = ({
     <Form {...form}>
       <form
         onSubmit={handleSubmit(async (data) => {
-          await updateLocalization.executeAsync(data);
-          form.reset(data);
+          const result = await updateLocalization.executeAsync(data);
+          if (!result?.serverError && !result?.validationErrors) {
+            form.reset(data);
+          }
         })}
       >
         <div className="space-y-6">
