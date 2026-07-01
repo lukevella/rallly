@@ -95,12 +95,7 @@ export const PreferencesProvider = ({
         }}
       >
         {children}
-        <TimeZoneChangeDetector
-          initialTimeZone={preferences.timeZone}
-          onTimeZoneChange={(timeZone) => {
-            updatePreferences({ timeZone });
-          }}
-        />
+        <TimeZoneChangeDetector initialTimeZone={preferences.timeZone} />
         <LocaleSync userLocale={user?.locale} />
       </DayjsProvider>
     </PreferencesContext.Provider>

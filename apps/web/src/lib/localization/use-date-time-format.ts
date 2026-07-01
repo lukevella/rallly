@@ -40,8 +40,7 @@ export function useDateTimeFormat() {
         preset: DateTimePreset,
         opts?: { timeZone?: string },
       ) => formatDateTimeRange(start, end, preset, ctx(opts?.timeZone)),
-      formatRelative: (value: DateInput, now?: DateInput) =>
-        formatRelativeTime(value, locale, now),
+      formatRelative: (value: DateInput) => formatRelativeTime(value, locale),
     };
   }, [locale, timeFormat, automaticTimeZone]);
 }

@@ -3,11 +3,6 @@
 import type { TimeFormat } from "@rallly/database";
 import React from "react";
 import { useRequiredContext } from "@/components/use-required-context";
-import {
-  setTimeFormatCookie,
-  setTimeZoneCookie,
-  setWeekStartCookie,
-} from "@/lib/localization/cookies";
 import type { Localization } from "@/lib/localization/schema";
 
 type LocalizationContextValue = Localization & {
@@ -23,30 +18,42 @@ LocalizationContext.displayName = "LocalizationContext";
 
 export function LocalizationProvider({
   children,
-  initial,
+  defaults,
+  onTimeZoneChange,
+  onTimeFormatChange,
+  onWeekStartChange,
 }: {
   children?: React.ReactNode;
-  initial: Localization;
+  defaults: Localization;
+  onTimeZoneChange?: (timeZone: string) => void;
+  onTimeFormatChange?: (timeFormat: TimeFormat) => void;
+  onWeekStartChange?: (weekStart: number) => void;
 }) {
-  const [state, setState] = React.useState(initial);
+  const [state, setState] = React.useState(defaults);
 
-  // Each setter updates local state instantly, then persists to the cookie
-  // (next-request SSR / cross-device read). No DB write — that happens only on
-  // an explicit save in the "Language & Region" settings — and no router.refresh.
-  const setTimeZone = React.useCallback((timeZone: string) => {
-    setState((prev) => ({ ...prev, timeZone }));
-    setTimeZoneCookie(timeZone);
-  }, []);
+  const setTimeZone = React.useCallback(
+    (timeZone: string) => {
+      setState((prev) => ({ ...prev, timeZone }));
+      onTimeZoneChange?.(timeZone);
+    },
+    [onTimeZoneChange],
+  );
 
-  const setTimeFormat = React.useCallback((timeFormat: TimeFormat) => {
-    setState((prev) => ({ ...prev, timeFormat }));
-    setTimeFormatCookie(timeFormat);
-  }, []);
+  const setTimeFormat = React.useCallback(
+    (timeFormat: TimeFormat) => {
+      setState((prev) => ({ ...prev, timeFormat }));
+      onTimeFormatChange?.(timeFormat);
+    },
+    [onTimeFormatChange],
+  );
 
-  const setWeekStart = React.useCallback((weekStart: number) => {
-    setState((prev) => ({ ...prev, weekStart }));
-    setWeekStartCookie(weekStart);
-  }, []);
+  const setWeekStart = React.useCallback(
+    (weekStart: number) => {
+      setState((prev) => ({ ...prev, weekStart }));
+      onWeekStartChange?.(weekStart);
+    },
+    [onWeekStartChange],
+  );
 
   const value = React.useMemo(
     () => ({ ...state, setTimeZone, setTimeFormat, setWeekStart }),
@@ -64,7 +71,14 @@ export function useLocalization() {
   return useRequiredContext(LocalizationContext);
 }
 
-// Timezone is its own concern → thin selector.
+// Thin selectors for the switcher components. Timezone and time format are
+// distinct concerns, each exposing its value plus an instant setter.
 export function useTimeZone() {
-  return useLocalization().timeZone;
+  const { timeZone, setTimeZone } = useLocalization();
+  return { timeZone, setTimeZone };
+}
+
+export function useTimeFormat() {
+  const { timeFormat, setTimeFormat } = useLocalization();
+  return { timeFormat, setTimeFormat };
 }

@@ -1,4 +1,4 @@
-import type { Localization } from "@/lib/localization/schema";
+import type { TimeFormat } from "@rallly/database";
 
 export type DateInput = Date | string | number;
 
@@ -9,7 +9,11 @@ export type DateTimePreset =
   | "weekday"
   | "datetime";
 
-type FormatContext = Pick<Localization, "locale" | "timeFormat"> & {
+export type CalendarPreset = "date" | "dateLong" | "weekday";
+
+type FormatContext = {
+  locale: string;
+  timeFormat: TimeFormat;
   timeZone?: string;
 };
 
@@ -17,51 +21,65 @@ function toDate(value: DateInput): Date {
   return value instanceof Date ? value : new Date(value);
 }
 
-// Intl.DateTimeFormat construction is comparatively expensive; memoize by
-// (locale, options). Formatters are pure and request-agnostic, so sharing the
-// cache across requests on the server is safe.
-const formatterCache = new Map<string, Intl.DateTimeFormat>();
+const formatters = new Map<string, Intl.DateTimeFormat>();
 
-function getFormatter(locale: string, options: Intl.DateTimeFormatOptions) {
-  const key = `${locale}|${JSON.stringify(options)}`;
-  let formatter = formatterCache.get(key);
-  if (!formatter) {
-    formatter = new Intl.DateTimeFormat(locale, options);
-    formatterCache.set(key, formatter);
-  }
-  return formatter;
-}
-
-const PRESET_OPTIONS: Record<DateTimePreset, Intl.DateTimeFormatOptions> = {
-  time: { timeStyle: "short" },
-  date: { dateStyle: "medium" },
-  dateLong: { dateStyle: "long" },
-  weekday: { weekday: "long" },
-  datetime: { dateStyle: "medium", timeStyle: "short" },
-};
-
-const PRESET_SHOWS_TIME: Record<DateTimePreset, boolean> = {
-  time: true,
-  date: false,
-  dateLong: false,
-  weekday: false,
-  datetime: true,
-};
-
-// The hour cycle (12/24h) is applied to the *locale*, not the options, so it is
-// honored alongside `timeStyle` and keeps every CLDR per-locale nuance intact:
-// separators (Finnish "15.30"), leading-zero rules, and meridiem placement.
-function resolveLocale(preset: DateTimePreset, ctx: FormatContext): string {
-  if (!PRESET_SHOWS_TIME[preset]) return ctx.locale;
-  const hourCycle = ctx.timeFormat === "hours12" ? "h12" : "h23";
-  return new Intl.Locale(ctx.locale, { hourCycle }).toString();
-}
-
-function formatterFor(preset: DateTimePreset, ctx: FormatContext) {
-  return getFormatter(resolveLocale(preset, ctx), {
-    ...PRESET_OPTIONS[preset],
+function getCachedIntlDateFormatter(
+  preset: DateTimePreset,
+  ctx: FormatContext,
+) {
+  const options = {
+    ...presetOptions(preset, {
+      timeFormat: ctx.timeFormat,
+    }),
     timeZone: ctx.timeZone,
-  });
+  };
+  const key = `${ctx.locale}|${JSON.stringify(options)}`;
+  let f = formatters.get(key);
+  if (!f) {
+    f = new Intl.DateTimeFormat(ctx.locale, options);
+    formatters.set(key, f);
+  }
+  return f;
+}
+
+function presetOptions(
+  preset: DateTimePreset,
+  options: {
+    timeFormat: TimeFormat;
+  },
+): Intl.DateTimeFormatOptions {
+  const hour12 = options.timeFormat === "hours12";
+  switch (preset) {
+    case "time":
+      return {
+        hour: hour12 ? "numeric" : "2-digit",
+        minute: "2-digit",
+        hour12,
+      };
+    case "date":
+      return {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      };
+    case "dateLong":
+      return {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+    case "weekday":
+      return { weekday: "long" };
+    case "datetime":
+      return {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: hour12 ? "numeric" : "2-digit",
+        minute: "2-digit",
+        hour12,
+      };
+  }
 }
 
 export function formatDateTime(
@@ -69,7 +87,7 @@ export function formatDateTime(
   preset: DateTimePreset,
   ctx: FormatContext,
 ): string {
-  return formatterFor(preset, ctx).format(toDate(value));
+  return getCachedIntlDateFormatter(preset, ctx).format(toDate(value));
 }
 
 export function formatDateTimeRange(
@@ -78,40 +96,51 @@ export function formatDateTimeRange(
   preset: DateTimePreset,
   ctx: FormatContext,
 ): string {
-  return formatterFor(preset, ctx).formatRange(toDate(start), toDate(end));
+  return getCachedIntlDateFormatter(preset, ctx).formatRange(
+    toDate(start),
+    toDate(end),
+  );
 }
 
-const RELATIVE_UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
-  ["year", 31_536_000_000],
-  ["month", 2_592_000_000],
-  ["day", 86_400_000],
-  ["hour", 3_600_000],
-  ["minute", 60_000],
-  ["second", 1_000],
+export function formatCalendarDate(
+  value: DateInput,
+  preset: CalendarPreset,
+  locale: string,
+): string {
+  // UTC so an all-day date renders the same label in every viewer's zone.
+  return getCachedIntlDateFormatter(preset, {
+    locale,
+    timeFormat: "hours24",
+    timeZone: "UTC",
+  }).format(toDate(value));
+}
+
+const relativeFormatters = new Map<string, Intl.RelativeTimeFormat>();
+
+// Largest-first; each entry is how many of the unit make up the next one.
+const DIVISIONS: [Intl.RelativeTimeFormatUnit, number][] = [
+  ["second", 60],
+  ["minute", 60],
+  ["hour", 24],
+  ["day", 7],
+  ["week", 4.34524],
+  ["month", 12],
+  ["year", Number.POSITIVE_INFINITY],
 ];
 
-const relativeCache = new Map<string, Intl.RelativeTimeFormat>();
-
-function getRelativeFormatter(locale: string) {
-  let formatter = relativeCache.get(locale);
-  if (!formatter) {
-    formatter = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
-    relativeCache.set(locale, formatter);
+export function formatRelativeTime(value: DateInput, locale: string): string {
+  let rtf = relativeFormatters.get(locale);
+  if (!rtf) {
+    rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+    relativeFormatters.set(locale, rtf);
   }
-  return formatter;
-}
 
-export function formatRelativeTime(
-  value: DateInput,
-  locale: string,
-  now: DateInput = new Date(),
-): string {
-  const diff = toDate(value).getTime() - toDate(now).getTime();
-  const formatter = getRelativeFormatter(locale);
-  for (const [unit, ms] of RELATIVE_UNITS) {
-    if (Math.abs(diff) >= ms || unit === "second") {
-      return formatter.format(Math.round(diff / ms), unit);
+  let amount = (toDate(value).getTime() - Date.now()) / 1000;
+  for (const [unit, perNext] of DIVISIONS) {
+    if (Math.abs(amount) < perNext) {
+      return rtf.format(Math.round(amount), unit);
     }
+    amount /= perNext;
   }
-  return formatter.format(0, "second");
+  return rtf.format(Math.round(amount), "year");
 }
