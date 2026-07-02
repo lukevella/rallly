@@ -482,7 +482,6 @@
   "planFree": "Free",
   "planHobbyDescription": "For casual users",
   "planProDescription": "For professionals and power users",
-  "pollCalendarAvailableOfTotal": "of {total}",
   "pollCalendarEmptyDescription": "This poll doesn't have any date options yet",
   "pollCalendarEmptyTitle": "No dates to show",
   "pollCalendarSelectDateDescription": "Click a highlighted date to see who's available",

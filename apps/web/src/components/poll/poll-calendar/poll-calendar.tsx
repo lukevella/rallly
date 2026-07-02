@@ -30,23 +30,23 @@ export function PollCalendar() {
         <CardTitle>
           <Trans i18nKey="calendar" defaults="Calendar" />
         </CardTitle>
-        <div className="flex items-center gap-4">
+        <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
           {showTimeZone ? (
-            <>
+            <div className="flex items-center gap-4">
               <TimesShownIn />
-              <span className="h-4 w-px bg-border" />
-            </>
+              <span className="hidden h-4 w-px bg-border sm:block" />
+            </div>
           ) : null}
           <Tabs
             value={view}
             onValueChange={(value) => setView(value as "month" | "week")}
           >
-            <TabsList>
-              <TabsTrigger value="month">
+            <TabsList className="w-full sm:w-auto">
+              <TabsTrigger className="grow sm:grow-0" value="month">
                 <CalendarIcon className="mr-2 size-4" />
                 <Trans i18nKey="monthView" defaults="Month view" />
               </TabsTrigger>
-              <TabsTrigger value="week">
+              <TabsTrigger className="grow sm:grow-0" value="week">
                 <TableIcon className="mr-2 size-4" />
                 <Trans i18nKey="weekView" defaults="Week view" />
               </TabsTrigger>

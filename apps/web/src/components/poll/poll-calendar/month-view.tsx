@@ -15,18 +15,14 @@ import { useHeadlessDatePicker } from "@/components/headless-date-picker";
 import { Trans, useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
 
-import {
-  AvailabilityCount,
-  getHeatOpacity,
-  VoteBreakdown,
-} from "./availability";
-import type { CalendarOption } from "./use-poll-calendar";
+import { AvailabilityCount, getHeatOpacity } from "./availability";
+import { DayDetail } from "./option-detail";
 import { getDayBestOption, usePollCalendar } from "./use-poll-calendar";
 
 export function MonthView() {
   const { t } = useTranslation();
   const data = usePollCalendar();
-  const { optionsByDay, highScore, participantCount } = data;
+  const { optionsByDay, highScore } = data;
 
   const [navigationDate, setNavigationDate] = React.useState(
     () => data.firstOptionDate ?? new Date(),
@@ -162,11 +158,7 @@ export function MonthView() {
       </div>
       <div className="min-w-0 grow p-3 sm:p-4">
         {selectedDay && selectedOptions ? (
-          <DayDetails
-            dayKey={selectedDay}
-            options={selectedOptions}
-            participantCount={participantCount}
-          />
+          <DayDetail dayKey={selectedDay} options={selectedOptions} />
         ) : (
           <div className="flex h-full items-center justify-center py-12">
             <EmptyState>
@@ -189,62 +181,6 @@ export function MonthView() {
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function DayDetails({
-  dayKey,
-  options,
-  participantCount,
-}: {
-  dayKey: string;
-  options: CalendarOption[];
-  participantCount: number;
-}) {
-  const date = dayjs(`${dayKey}T12:00:00`);
-  return (
-    <div>
-      <h3 className="mb-3 font-semibold text-sm">{date.format("dddd, LL")}</h3>
-      <ul className="space-y-2">
-        {options.map((option) => (
-          <li
-            key={option.optionId}
-            className="flex items-center justify-between gap-3 rounded-lg border p-3"
-          >
-            <div className="min-w-0">
-              <div className="font-medium text-sm">
-                {option.duration > 0 ? (
-                  `${option.start.format("LT")} – ${option.end.format("LT")}`
-                ) : (
-                  <Trans i18nKey="allDay" defaults="All day" />
-                )}
-              </div>
-              <div className="mt-1">
-                <VoteBreakdown
-                  yes={option.yes}
-                  ifNeedBe={option.ifNeedBe}
-                  no={option.no}
-                />
-              </div>
-            </div>
-            <div className="shrink-0 text-right">
-              <AvailabilityCount
-                available={option.available}
-                ifNeedBe={option.ifNeedBe}
-                className="text-emerald-700 dark:text-emerald-300"
-              />
-              <div className="text-muted-foreground text-xs">
-                <Trans
-                  i18nKey="pollCalendarAvailableOfTotal"
-                  defaults="of {total}"
-                  values={{ total: participantCount }}
-                />
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }

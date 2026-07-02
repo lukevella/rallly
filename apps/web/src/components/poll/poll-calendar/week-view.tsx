@@ -9,6 +9,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
 
 import { AvailabilityCount, getHeatOpacity } from "./availability";
+import { DayDetail } from "./option-detail";
 import type { CalendarOption } from "./use-poll-calendar";
 import { usePollCalendar } from "./use-poll-calendar";
 
@@ -19,6 +20,9 @@ export function WeekView() {
 
   const [anchor, setAnchor] = React.useState(
     () => data.firstOptionDate ?? new Date(),
+  );
+  const [selectedDay, setSelectedDay] = React.useState<string | null>(
+    () => data.dayKeys[0] ?? null,
   );
 
   const weekStart = dayjs(anchor).startOf("week");
@@ -61,27 +65,49 @@ export function WeekView() {
           const isToday = day.isSame(new Date(), "day");
           const isWeekend = day.day() === 0 || day.day() === 6;
 
-          return (
+          const header = (
             <div
-              key={dayKey}
               className={cn(
-                "flex min-h-32 flex-col rounded-lg border",
-                isWeekend && "bg-muted/30",
+                "border-b px-2 py-1.5 text-center",
+                isToday && "text-rose-500",
               )}
             >
+              <div className="font-medium text-muted-foreground text-xs uppercase">
+                {day.format("ddd")}
+              </div>
+              <div className="font-semibold text-sm">{day.format("D")}</div>
+            </div>
+          );
+
+          if (!options) {
+            return (
               <div
+                key={dayKey}
                 className={cn(
-                  "border-b px-2 py-1.5 text-center",
-                  isToday && "text-rose-500",
+                  "flex min-h-32 flex-col rounded-lg border",
+                  isWeekend && "bg-muted/30",
                 )}
               >
-                <div className="font-medium text-muted-foreground text-xs uppercase">
-                  {day.format("ddd")}
-                </div>
-                <div className="font-semibold text-sm">{day.format("D")}</div>
+                {header}
               </div>
+            );
+          }
+
+          return (
+            <button
+              type="button"
+              key={dayKey}
+              onClick={() => setSelectedDay(dayKey)}
+              className={cn(
+                "flex min-h-32 flex-col rounded-lg border text-left transition-colors hover:border-emerald-500/40",
+                isWeekend && "bg-muted/30",
+                selectedDay === dayKey &&
+                  "border-emerald-500 ring-1 ring-emerald-500",
+              )}
+            >
+              {header}
               <div className="flex grow flex-col gap-1.5 p-1.5">
-                {options?.map((option) => (
+                {options.map((option) => (
                   <OptionCard
                     key={option.optionId}
                     option={option}
@@ -89,10 +115,15 @@ export function WeekView() {
                   />
                 ))}
               </div>
-            </div>
+            </button>
           );
         })}
       </div>
+      {selectedDay && optionsByDay[selectedDay] ? (
+        <div className="mt-4 border-t pt-4">
+          <DayDetail dayKey={selectedDay} options={optionsByDay[selectedDay]} />
+        </div>
+      ) : null}
     </div>
   );
 }

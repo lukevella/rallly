@@ -10,16 +10,10 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import * as React from "react";
 import { useToggle } from "react-use";
 
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import {
-  filterParticipantsByVote,
-  useParticipants,
-} from "@/components/participants-provider";
-import { useTranslation } from "@/i18n/client";
-
 import { ConnectedScoreSummary } from "../score-summary";
 import VoteIcon from "../vote-icon";
 import { VoteSelector } from "../vote-selector";
+import { VoteSummary } from "../vote-summary";
 
 export interface PollOptionProps {
   children?: React.ReactNode;
@@ -31,100 +25,6 @@ export interface PollOptionProps {
   selectedParticipantId?: string;
   optionId: string;
 }
-
-const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
-  optionId,
-}) => {
-  const { t } = useTranslation();
-  const { participants } = useParticipants();
-  const participantsWhoVotedYes = filterParticipantsByVote(
-    participants,
-    optionId,
-    "yes",
-  );
-  const participantsWhoVotedIfNeedBe = filterParticipantsByVote(
-    participants,
-    optionId,
-    "ifNeedBe",
-  );
-  const participantsWhoVotedNo = filterParticipantsByVote(
-    participants,
-    optionId,
-    "no",
-  );
-  const noVotes =
-    participantsWhoVotedYes.length + participantsWhoVotedIfNeedBe.length === 0;
-  return (
-    <div>
-      {noVotes ? (
-        <p className="rounded-lg bg-muted p-2 text-center text-muted-foreground text-sm">
-          {t("noVotes")}
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 gap-2">
-          <div className="col-span-1 space-y-2.5">
-            {participantsWhoVotedYes.map(({ name, image }, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
-              <div key={i} className="flex">
-                <div className="relative mr-2.5 flex size-4 items-center justify-center">
-                  <OptimizedAvatarImage
-                    size="sm"
-                    name={name}
-                    src={image ?? undefined}
-                  />
-                  <VoteIcon
-                    type="yes"
-                    size="sm"
-                    className="absolute bottom-0 left-full -translate-x-1 translate-y-1 rounded-full bg-background"
-                  />
-                </div>
-                <div className="truncate text-sm">{name}</div>
-              </div>
-            ))}
-            {participantsWhoVotedIfNeedBe.map(({ name, image }, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
-              <div key={i} className="flex">
-                <div className="relative mr-2.5 flex size-4 items-center justify-center">
-                  <OptimizedAvatarImage
-                    size="sm"
-                    name={name}
-                    src={image ?? undefined}
-                  />
-                  <VoteIcon
-                    type="ifNeedBe"
-                    size="sm"
-                    className="absolute bottom-0 left-full -translate-x-1 translate-y-1 rounded-full bg-background"
-                  />
-                </div>
-                <div className="truncate text-sm"> {name}</div>
-              </div>
-            ))}
-          </div>
-          <div className="col-span-1 space-y-2.5">
-            {participantsWhoVotedNo.map(({ name, image }, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
-              <div key={i} className="flex">
-                <div className="relative mr-2.5 flex size-4 items-center justify-center">
-                  <OptimizedAvatarImage
-                    size="sm"
-                    name={name}
-                    src={image ?? undefined}
-                  />
-                  <VoteIcon
-                    type="no"
-                    size="sm"
-                    className="absolute bottom-0 left-full -translate-x-1 translate-y-1 rounded-full bg-background"
-                  />
-                </div>
-                <div className="truncate text-sm">{name}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 const PollOption: React.FunctionComponent<PollOptionProps> = ({
   children,
@@ -187,7 +87,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           ) : null}
         </div>
       </div>
-      {isExpanded ? <PollOptionVoteSummary optionId={optionId} /> : null}
+      {isExpanded ? <VoteSummary optionId={optionId} /> : null}
     </div>
   );
 };
