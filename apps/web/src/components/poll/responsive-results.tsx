@@ -2,7 +2,8 @@
 
 import { Button } from "@rallly/ui/button";
 import { Card } from "@rallly/ui/card";
-import { CalendarIcon, LockIcon } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@rallly/ui/tabs";
+import { CalendarIcon, LockIcon, TableIcon } from "lucide-react";
 import * as React from "react";
 import { createBreakpoint } from "react-use";
 
@@ -16,6 +17,8 @@ import {
 } from "@/components/empty-state";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
+import { PollCalendar } from "@/components/poll/poll-calendar";
+import { useResultsView } from "@/components/poll/use-results-view";
 import { usePoll } from "@/contexts/poll";
 import { Trans } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
@@ -61,10 +64,39 @@ function ScheduledDateTime({
   );
 }
 
+function ResultsViewToggle({
+  view,
+  onViewChange,
+}: {
+  view: "grid" | "calendar";
+  onViewChange: (view: "grid" | "calendar") => void;
+}) {
+  return (
+    <div className="flex justify-end">
+      <Tabs
+        value={view}
+        onValueChange={(value) => onViewChange(value as "grid" | "calendar")}
+      >
+        <TabsList>
+          <TabsTrigger value="grid">
+            <TableIcon className="mr-2 size-4" />
+            <Trans i18nKey="gridView" defaults="Grid" />
+          </TabsTrigger>
+          <TabsTrigger value="calendar">
+            <CalendarIcon className="mr-2 size-4" />
+            <Trans i18nKey="calendarView" defaults="Calendar" />
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+    </div>
+  );
+}
+
 export function ResponsiveResults() {
   const poll = usePoll();
   const breakpoint = useBreakpoint();
   const [dismissed, setDismissed] = React.useState(false);
+  const { view, setView } = useResultsView();
   const PollComponent = breakpoint === "table" ? DesktopPoll : MobilePoll;
 
   if (!dismissed && poll.status === "scheduled" && poll.event) {
@@ -121,5 +153,10 @@ export function ResponsiveResults() {
     );
   }
 
-  return <PollComponent />;
+  return (
+    <div className="space-y-4">
+      <ResultsViewToggle view={view} onViewChange={setView} />
+      {view === "calendar" ? <PollCalendar /> : <PollComponent />}
+    </div>
+  );
 }
