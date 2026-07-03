@@ -645,8 +645,6 @@
   "themeSystem": "System",
   "timeFormat": "Tidsformat:",
   "timeZone": "Tidszone:",
-  "timeZoneChangeDetectorMessage": "Din tidszone er ændret til <b>{currentTimeZone}</b>. Vil du opdatere dine indstillinger?",
-  "timeZoneChangeDetectorTitle": "Tidszoneændring registreret",
   "timezoneInputPlaceholder": "Søg tidszone…",
   "timeZoneSelect__noOption": "Ingen valgmulighed fundet",
   "title": "Overskrift",
