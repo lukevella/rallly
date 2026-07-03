@@ -599,8 +599,6 @@
   "themeSystem": "Sistema",
   "timeFormat": "Formato de hora",
   "timeZone": "Zona horaria",
-  "timeZoneChangeDetectorMessage": "Tu zona horaria ha cambiado a <b>{currentTimeZone}</b>. ¿Quieres actualizar tus preferencias?",
-  "timeZoneChangeDetectorTitle": "Cambio de zona horaria detectado",
   "timezoneInputPlaceholder": "Buscar zona horaria…",
   "timeZoneSelect__noOption": "No se encontraron opciones",
   "title": "Título",
