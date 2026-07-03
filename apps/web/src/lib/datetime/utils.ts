@@ -1,3 +1,4 @@
+import type { TimeFormat } from "@rallly/database";
 import type { DateInput } from "@/lib/datetime/format";
 
 function toDate(value: DateInput) {
@@ -27,4 +28,11 @@ export function normalizeTimeZone(timeZone: string | undefined | null) {
   } catch {
     return undefined;
   }
+}
+
+/** Narrows a stored value to a TimeFormat; anything else means "unset". */
+export function normalizeTimeFormat(
+  value: string | undefined | null,
+): TimeFormat | undefined {
+  return value === "hours12" || value === "hours24" ? value : undefined;
 }

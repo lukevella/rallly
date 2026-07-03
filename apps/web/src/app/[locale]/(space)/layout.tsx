@@ -1,10 +1,9 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
-import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { SessionRefresher } from "@/components/session-refresher";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { SpaceProvider } from "@/features/space/client";
-import { getLocale } from "@/i18n/server/get-locale";
+import { TimeZoneMismatchDialog } from "@/features/user/components/timezone-mismatch-dialog";
 import { DateTimeProvider } from "@/lib/datetime/client";
 import { LocaleSync } from "@/lib/locale/client";
 import { getPathname } from "@/lib/pathname";
@@ -16,7 +15,6 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const locale = await getLocale();
   const helpers = await createPrivateSSRHelper();
 
   const [user, space] = await Promise.all([
@@ -35,12 +33,8 @@ export default async function Layout({
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
       <SessionRefresher />
       <LocaleSync userLocale={user?.locale} />
-      <TimeZoneChangeDetector initialTimeZone={user?.timeZone} />
-      <DateTimeProvider
-        locale={locale}
-        timeZone={user?.timeZone}
-        timeFormat={user?.timeFormat}
-      >
+      <TimeZoneMismatchDialog homeTimeZone={user?.timeZone} />
+      <DateTimeProvider timeZone={user?.timeZone} timeFormat={user?.timeFormat}>
         <SpaceProvider>
           {children}
           <PayWall />
