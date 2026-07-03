@@ -15,6 +15,7 @@ import { getInstanceBrandingConfig } from "@/features/branding/queries";
 import { ThemeProvider } from "@/features/theme/client";
 import { I18nProvider } from "@/i18n/client";
 import { initI18next } from "@/i18n/i18n";
+import { TimeZoneSync } from "@/lib/datetime/timezone-sync";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
 import { featureFlagConfig } from "@/lib/feature-flags/config";
 import { TRPCProvider } from "@/trpc/client/provider";
@@ -81,7 +82,9 @@ export default async function Root({
                   <LazyMotion features={domAnimation}>
                     <SkipNavLink />
                     <PostHogPageView />
-                    <TooltipProvider>{children}</TooltipProvider>
+                    <TimeZoneSync>
+                      <TooltipProvider>{children}</TooltipProvider>
+                    </TimeZoneSync>
                   </LazyMotion>
                 </TRPCProvider>
               </I18nProvider>
