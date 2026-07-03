@@ -4,6 +4,12 @@ import type { TimeFormat } from "@rallly/database";
 import { defaultLocale } from "@rallly/languages";
 import { useParams } from "next/navigation";
 import React from "react";
+import type { DateInput, DateTimePreset } from "@/lib/datetime/format";
+import {
+  formatDateTime as baseFormatDateTime,
+  formatRelativeTime,
+} from "@/lib/datetime/format";
+import { getWeekdayNames } from "@/lib/datetime/locales";
 import { normalizeTimeZone } from "@/lib/datetime/utils";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
 
@@ -62,4 +68,31 @@ export function useDateTimeConfig() {
     timeZone: config?.timeZone,
     timeFormat: config?.timeFormat,
   };
+}
+
+// Formatters bound to the viewer's config so call sites don't thread
+// locale/timeZone themselves. UTC covers the pre-hydration window before the
+// browser zone is detected.
+export function useDateTime() {
+  const { locale, timeZone, timeFormat } = useDateTimeConfig();
+
+  return React.useMemo(
+    () => ({
+      formatDateTime: (
+        value: DateInput,
+        preset?: DateTimePreset,
+        opts?: { timeZone?: string; showTimeZone?: boolean },
+      ) =>
+        baseFormatDateTime(value, {
+          preset,
+          locale,
+          timeFormat,
+          timeZone: opts?.timeZone ?? timeZone ?? "UTC",
+          showTimeZone: opts?.showTimeZone,
+        }),
+      toRelativeTime: (value: DateInput) => formatRelativeTime(value, locale),
+      weekdays: () => getWeekdayNames(locale),
+    }),
+    [locale, timeZone, timeFormat],
+  );
 }

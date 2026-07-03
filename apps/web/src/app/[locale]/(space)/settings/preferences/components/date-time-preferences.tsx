@@ -17,13 +17,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
-import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { updateLocalizationAction } from "@/features/user/actions";
 import { Trans } from "@/i18n/client";
+import { useDateTime } from "@/lib/datetime/client";
 import { getLocaleDefaults } from "@/lib/datetime/locales";
 import { useLocale } from "@/lib/locale/client";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -47,17 +47,7 @@ export const DateTimePreferences = ({
   const updateLocalization = useSafeAction(updateLocalizationAction);
   const { locale } = useLocale();
   const localeDefaults = getLocaleDefaults(locale);
-
-  // 2024-01-07 is a Sunday; formatting in UTC keeps the 0=Sunday mapping.
-  const weekdays = React.useMemo(() => {
-    const formatter = new Intl.DateTimeFormat(locale, {
-      weekday: "long",
-      timeZone: "UTC",
-    });
-    return Array.from({ length: 7 }, (_, index) =>
-      formatter.format(new Date(Date.UTC(2024, 0, 7 + index))),
-    );
-  }, [locale]);
+  const { weekdays } = useDateTime();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -137,7 +127,7 @@ export const DateTimePreferences = ({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {weekdays.map((day, index) => (
+                      {weekdays().map((day, index) => (
                         <SelectItem key={day} value={index.toString()}>
                           {day}
                         </SelectItem>

@@ -16,6 +16,24 @@ function getWeekInfo(locale: string): WeekInfo {
   return l.getWeekInfo?.() ?? l.weekInfo ?? { firstDay: 1 };
 }
 
+const weekdayCache = new Map<string, string[]>();
+
+// 2024-01-07 is a Sunday; formatting in UTC keeps the 0=Sunday mapping.
+export function getWeekdayNames(locale: string): string[] {
+  let names = weekdayCache.get(locale);
+  if (!names) {
+    const formatter = new Intl.DateTimeFormat(locale, {
+      weekday: "long",
+      timeZone: "UTC",
+    });
+    names = Array.from({ length: 7 }, (_, index) =>
+      formatter.format(new Date(Date.UTC(2024, 0, 7 + index))),
+    );
+    weekdayCache.set(locale, names);
+  }
+  return names;
+}
+
 const cache = new Map<string, LocaleDefaults>();
 
 export function getLocaleDefaults(locale: string): LocaleDefaults {
