@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TIME_ZONE_COOKIE_NAME } from "@/lib/datetime/constants";
 import { TimeZoneSync } from "@/lib/datetime/timezone-sync";
-import { render, screen } from "@/test/test-utils";
+import { act, render, screen } from "@/test/test-utils";
 
 import { TimeZoneMismatchDialog } from "./timezone-mismatch-dialog";
 
@@ -12,16 +12,10 @@ vi.mock("@/utils/date-time-utils", () => ({
   getBrowserTimeZone: () => mockTimeZone,
 }));
 
-const { mockExecute, mockRefresh } = vi.hoisted(() => ({
-  mockExecute: vi.fn(),
-  mockRefresh: vi.fn(),
-}));
+const { mockExecute } = vi.hoisted(() => ({ mockExecute: vi.fn() }));
 vi.mock("@/features/user/actions", () => ({ updateLocalizationAction: {} }));
 vi.mock("@/lib/safe-action/client", () => ({
   useSafeAction: () => ({ execute: mockExecute }),
-}));
-vi.mock("next/navigation", () => ({
-  useRouter: () => ({ refresh: mockRefresh }),
 }));
 
 function renderDialog(props: { homeTimeZone?: string } = {}) {
@@ -36,7 +30,6 @@ describe("TimeZoneMismatchDialog", () => {
   beforeEach(() => {
     mockTimeZone = "America/New_York";
     mockExecute.mockClear();
-    mockRefresh.mockClear();
   });
 
   afterEach(() => {
@@ -83,7 +76,7 @@ describe("TimeZoneMismatchDialog", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("updating syncs the account zone and refreshes", async () => {
+  it("updating syncs the account zone", async () => {
     const user = userEvent.setup();
     Cookies.set(TIME_ZONE_COOKIE_NAME, "Asia/Tokyo");
     renderDialog({ homeTimeZone: "Europe/Malta" });
@@ -91,7 +84,25 @@ describe("TimeZoneMismatchDialog", () => {
     await user.click(screen.getByText("Yes, update my timezone"));
 
     expect(mockExecute).toHaveBeenCalledWith({ timeZone: "America/New_York" });
-    expect(mockRefresh).toHaveBeenCalled();
+  });
+
+  it("shows when the zone changes while the tab is open and regains focus", async () => {
+    Cookies.set(TIME_ZONE_COOKIE_NAME, "America/New_York");
+    renderDialog({ homeTimeZone: "America/New_York" });
+    expect(
+      screen.queryByText("Timezone Mismatch Detected"),
+    ).not.toBeInTheDocument();
+
+    // Laptop reopened in a new zone: no remount, just a focus event.
+    mockTimeZone = "Asia/Tokyo";
+    act(() => {
+      window.dispatchEvent(new Event("focus"));
+    });
+
+    expect(
+      await screen.findByText("Timezone Mismatch Detected"),
+    ).toBeInTheDocument();
+    expect(Cookies.get(TIME_ZONE_COOKIE_NAME)).toBe("Asia/Tokyo");
   });
 
   it("declining closes without updating the account", async () => {
@@ -102,7 +113,6 @@ describe("TimeZoneMismatchDialog", () => {
     await user.click(screen.getByText("No, keep the current timezone"));
 
     expect(mockExecute).not.toHaveBeenCalled();
-    expect(mockRefresh).not.toHaveBeenCalled();
     expect(
       screen.queryByText("Timezone Mismatch Detected"),
     ).not.toBeInTheDocument();

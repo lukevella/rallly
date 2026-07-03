@@ -30,24 +30,40 @@ export function TimeZoneSync({ children }: { children: React.ReactNode }) {
   } | null>(null);
 
   React.useEffect(() => {
-    const currentTimeZone = getBrowserTimeZone();
-    const previousTimeZone = Cookies.get(TIME_ZONE_COOKIE_NAME);
+    // Also re-check when the tab regains focus: long-lived tabs are how most
+    // zone changes arrive (laptop reopened after travel), with no remount.
+    const syncTimeZone = () => {
+      if (document.visibilityState === "hidden") {
+        return;
+      }
 
-    if (previousTimeZone === currentTimeZone) {
-      return;
-    }
+      const currentTimeZone = getBrowserTimeZone();
+      const previousTimeZone = Cookies.get(TIME_ZONE_COOKIE_NAME);
 
-    Cookies.set(TIME_ZONE_COOKIE_NAME, currentTimeZone, {
-      path: "/",
-      expires: 365,
-      sameSite: "lax",
-      domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
-    });
+      if (previousTimeZone === currentTimeZone) {
+        return;
+      }
 
-    // A first visit sets the cookie without announcing a change.
-    if (previousTimeZone) {
-      setChange({ previousTimeZone, currentTimeZone });
-    }
+      Cookies.set(TIME_ZONE_COOKIE_NAME, currentTimeZone, {
+        path: "/",
+        expires: 365,
+        sameSite: "lax",
+        domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
+      });
+
+      // A first visit sets the cookie without announcing a change.
+      if (previousTimeZone) {
+        setChange({ previousTimeZone, currentTimeZone });
+      }
+    };
+
+    syncTimeZone();
+    window.addEventListener("focus", syncTimeZone);
+    document.addEventListener("visibilitychange", syncTimeZone);
+    return () => {
+      window.removeEventListener("focus", syncTimeZone);
+      document.removeEventListener("visibilitychange", syncTimeZone);
+    };
   }, []);
 
   const value = React.useMemo(
