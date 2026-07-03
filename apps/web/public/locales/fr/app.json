@@ -564,8 +564,6 @@
   "themeSystem": "Système",
   "timeFormat": "Format horaire",
   "timeZone": "Fuseau horaire",
-  "timeZoneChangeDetectorMessage": "Votre fuseau horaire a été modifié en <b>{currentTimeZone}</b>. Souhaitez-vous mettre à jour vos préférences ?",
-  "timeZoneChangeDetectorTitle": "Changement de fuseau horaire détecté",
   "timezoneInputPlaceholder": "Rechercher un fuseau horaire…",
   "timeZoneSelect__noOption": "Aucune option trouvée",
   "title": "Titre",
