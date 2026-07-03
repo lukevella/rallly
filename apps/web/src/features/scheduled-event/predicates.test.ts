@@ -26,10 +26,13 @@ function matchesWhere(where: Where, event: TestEvent) {
     if (arm.allDay !== event.allDay) {
       return false;
     }
-    if ("gt" in arm.end) {
+    if ("gt" in arm.end && arm.end.gt !== undefined) {
       return event.end.getTime() > arm.end.gt.getTime();
     }
-    return event.end.getTime() <= arm.end.lte.getTime();
+    if ("lte" in arm.end && arm.end.lte !== undefined) {
+      return event.end.getTime() <= arm.end.lte.getTime();
+    }
+    throw new Error("Unexpected end filter shape");
   });
 }
 
