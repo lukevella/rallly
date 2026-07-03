@@ -646,6 +646,8 @@
   "timeFormat": "Zeitformat",
   "timeZone": "Zeitzone",
   "timezoneInputPlaceholder": "Zeitzone suchen…",
+  "timeZoneMismatchDialogMessage": "Es sieht so aus, als ob du dich in <b>{currentTimeZone}</b> befindest, deine Zeitzone ist jedoch auf <b>{homeTimeZone}</b> eingestellt. Möchtest du sie aktualisieren?",
+  "timeZoneMismatchDialogTitle": "Zeitzonenabweichung erkannt",
   "timeZoneSelect__noOption": "Keine Option gefunden",
   "title": "Titel",
   "titlePlaceholder": "Monatliches Meeting",
