@@ -3,7 +3,7 @@
 import type { SubscriptionStatus } from "@rallly/database";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
-import { formatDate } from "@/lib/datetime/format";
+import { formatDateTime } from "@/lib/datetime/format";
 
 interface SubscriptionStatusLabelProps {
   status: SubscriptionStatus;
@@ -17,7 +17,7 @@ export const SubscriptionStatusLabel = ({
   periodEnd,
 }: SubscriptionStatusLabelProps) => {
   const { t } = useTranslation();
-  const { locale } = useDateTimeConfig();
+  const { locale, timeZone } = useDateTimeConfig();
 
   const statusConfig: Record<
     string,
@@ -63,7 +63,13 @@ export const SubscriptionStatusLabel = ({
       <Trans
         i18nKey="subscriptionCancelOn"
         defaults="Cancels {date}"
-        values={{ date: formatDate(periodEnd, { preset: "date", locale }) }}
+        values={{
+          date: formatDateTime(periodEnd, {
+            preset: "date",
+            locale,
+            timeZone: timeZone ?? "UTC",
+          }),
+        }}
       />
     );
   }
