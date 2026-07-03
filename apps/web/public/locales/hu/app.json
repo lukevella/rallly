@@ -645,8 +645,6 @@
   "themeSystem": "Rendszer",
   "timeFormat": "Időformátum",
   "timeZone": "Időzóna",
-  "timeZoneChangeDetectorMessage": "Az időzónád megváltozott erre: <b>{currentTimeZone}</b>. Szeretnéd frissíteni a beállításaidat?",
-  "timeZoneChangeDetectorTitle": "Időzóna változás észlelve",
   "timezoneInputPlaceholder": "Időzóna keresése…",
   "timeZoneSelect__noOption": "Nem található lehetőség",
   "title": "Cím",
