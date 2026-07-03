@@ -1,3 +1,5 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
@@ -13,7 +15,6 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { LanguageSelect } from "@/components/poll/language-selector";
-import { useUser } from "@/components/user-provider";
 import { Trans } from "@/i18n/client";
 import { useLocale } from "@/lib/locale/client";
 import { trpc } from "@/trpc/client";
@@ -22,8 +23,11 @@ const formSchema = z.object({
   language: z.string(),
 });
 
-export const LanguagePreference = () => {
-  const { user } = useUser();
+export const LanguagePreference = ({
+  defaultValue,
+}: {
+  defaultValue?: string;
+}) => {
   const { locale, changeLocale } = useLocale();
   const updateLocale = trpc.user.updateLocale.useMutation({
     onSuccess: (_data, variables) => {
@@ -32,7 +36,7 @@ export const LanguagePreference = () => {
   });
   const form = useForm({
     defaultValues: {
-      language: user?.locale ?? locale,
+      language: defaultValue ?? locale,
     },
     resolver: zodResolver(formSchema),
   });
@@ -54,7 +58,7 @@ export const LanguagePreference = () => {
               </FormLabel>
               <FormControl>
                 <LanguageSelect
-                  className="w-fit"
+                  className="w-fit min-w-32"
                   value={field.value}
                   onChange={field.onChange}
                 />

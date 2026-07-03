@@ -1,5 +1,16 @@
 import type { Metadata } from "next";
+import { DateTimePreferences } from "@/app/[locale]/(space)/settings/preferences/components/date-time-preferences";
+import { LanguagePreference } from "@/app/[locale]/(space)/settings/preferences/components/language-preference";
+import { ThemePreference } from "@/app/[locale]/(space)/settings/preferences/components/theme-preference";
 import type { Params } from "@/app/[locale]/types";
+import {
+  PageSection,
+  PageSectionContent,
+  PageSectionDescription,
+  PageSectionGroup,
+  PageSectionHeader,
+  PageSectionTitle,
+} from "@/app/components/page-layout";
 import {
   SettingsPage,
   SettingsPageContent,
@@ -7,11 +18,18 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
+import { getCurrentUser } from "@/auth/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { PreferencesPage } from "./preferences-page";
+import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 
 export default async function Page() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    throw new InvalidSessionError();
+  }
+
   return (
     <SettingsPage>
       <SettingsPageHeader>
@@ -26,7 +44,64 @@ export default async function Page() {
         </SettingsPageDescription>
       </SettingsPageHeader>
       <SettingsPageContent>
-        <PreferencesPage />
+        <PageSectionGroup>
+          <PageSection variant="card">
+            <PageSectionHeader>
+              <PageSectionTitle>
+                <Trans i18nKey="language" defaults="Language" />
+              </PageSectionTitle>
+              <PageSectionDescription>
+                <Trans
+                  i18nKey="languageDescription"
+                  defaults="Change your preferred language"
+                />
+              </PageSectionDescription>
+            </PageSectionHeader>
+            <PageSectionContent>
+              <LanguagePreference defaultValue={user.locale} />
+            </PageSectionContent>
+          </PageSection>
+
+          <PageSection variant="card">
+            <PageSectionHeader>
+              <PageSectionTitle>
+                <Trans i18nKey="theme" defaults="Theme" />
+              </PageSectionTitle>
+              <PageSectionDescription>
+                <Trans
+                  i18nKey="themeDescription"
+                  defaults="Choose your preferred appearance"
+                />
+              </PageSectionDescription>
+            </PageSectionHeader>
+            <PageSectionContent>
+              <ThemePreference />
+            </PageSectionContent>
+          </PageSection>
+
+          <PageSection variant="card">
+            <PageSectionHeader>
+              <PageSectionTitle>
+                <Trans i18nKey="dateAndTime" defaults="Date & Time" />
+              </PageSectionTitle>
+              <PageSectionDescription>
+                <Trans
+                  i18nKey="dateAndTimeDescription"
+                  defaults="Change your preferred date and time settings"
+                />
+              </PageSectionDescription>
+            </PageSectionHeader>
+            <PageSectionContent>
+              <DateTimePreferences
+                initialValues={{
+                  timeFormat: user.timeFormat,
+                  timeZone: user.timeZone,
+                  weekStart: user.weekStart,
+                }}
+              />
+            </PageSectionContent>
+          </PageSection>
+        </PageSectionGroup>
       </SettingsPageContent>
     </SettingsPage>
   );

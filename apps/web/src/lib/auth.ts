@@ -226,6 +226,16 @@ export const authLib = betterAuth({
         type: "string",
         input: true,
       },
+      timeFormat: {
+        type: "string",
+        input: true,
+        required: false,
+      },
+      weekStart: {
+        type: "number",
+        input: true,
+        required: false,
+      },
     },
   },
   secondaryStorage: kv
@@ -506,7 +516,9 @@ export const getSession = cache(async () => {
           isGuest: !!session.user.isAnonymous,
           image: session.user.image,
           locale: session.user.locale ?? undefined,
-          timeZone: session.user.timeZone ?? undefined,
+          timeZone: session.user.timeZone || undefined,
+          timeFormat: session.user.timeFormat ?? undefined,
+          weekStart: session.user.weekStart ?? undefined,
         },
         expires: session.session.expiresAt.toISOString(),
         updatedAt: session.session.updatedAt.toISOString(),

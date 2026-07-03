@@ -11,6 +11,9 @@ export default defineConfig({
     exclude: ["**/node_modules/**", "**/*.spec.ts"],
     setupFiles: ["./src/test/setup.ts"],
     css: true,
+    // Non-UTC, non-integer offset so code that omits an explicit timeZone fails
+    // loudly instead of passing by luck on a UTC runner.
+    env: { TZ: "Asia/Kathmandu" },
   },
   resolve: {
     alias: {

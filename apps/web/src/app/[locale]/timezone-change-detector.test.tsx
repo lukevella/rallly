@@ -9,10 +9,17 @@ vi.mock("@/utils/date-time-utils", () => ({
   getBrowserTimeZone: () => mockTimeZone,
 }));
 
+const { mockExecute } = vi.hoisted(() => ({ mockExecute: vi.fn() }));
+vi.mock("@/features/user/actions", () => ({ updateLocalizationAction: {} }));
+vi.mock("@/lib/safe-action/client", () => ({
+  useSafeAction: () => ({ execute: mockExecute }),
+}));
+
 describe("TimeZoneChangeDetector", () => {
   beforeEach(() => {
     localStorage.clear();
     mockTimeZone = "America/New_York";
+    mockExecute.mockClear();
   });
 
   afterEach(() => {
@@ -32,27 +39,25 @@ describe("TimeZoneChangeDetector", () => {
     expect(screen.getByText("Timezone Change Detected")).toBeInTheDocument();
   });
 
-  it("accepting timezone change calls onTimeZoneChange and updates localStorage", async () => {
+  it("accepting the change updates the localization and localStorage", async () => {
     const user = userEvent.setup();
-    const mockOnTimeZoneChange = vi.fn();
     localStorage.setItem("previousTimeZone", "Fake/Timezone");
 
-    render(<TimeZoneChangeDetector onTimeZoneChange={mockOnTimeZoneChange} />);
+    render(<TimeZoneChangeDetector />);
     await user.click(screen.getByText("Yes, update my timezone"));
 
-    expect(mockOnTimeZoneChange).toHaveBeenCalledWith("America/New_York");
+    expect(mockExecute).toHaveBeenCalledWith({ timeZone: "America/New_York" });
     expect(localStorage.getItem("previousTimeZone")).toBe("America/New_York");
   });
 
-  it("declining timezone change updates localStorage without calling onTimeZoneChange", async () => {
+  it("declining the change updates localStorage without updating localization", async () => {
     const user = userEvent.setup();
-    const mockOnTimeZoneChange = vi.fn();
     localStorage.setItem("previousTimeZone", "Fake/Timezone");
 
-    render(<TimeZoneChangeDetector onTimeZoneChange={mockOnTimeZoneChange} />);
+    render(<TimeZoneChangeDetector />);
     await user.click(screen.getByText("No, keep the current timezone"));
 
-    expect(mockOnTimeZoneChange).not.toHaveBeenCalled();
+    expect(mockExecute).not.toHaveBeenCalled();
     expect(localStorage.getItem("previousTimeZone")).toBe("America/New_York");
   });
 

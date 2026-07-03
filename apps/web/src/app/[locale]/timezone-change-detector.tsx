@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -7,20 +9,22 @@ import {
   DialogTitle,
 } from "@rallly/ui/dialog";
 import React, { useState } from "react";
+import { updateLocalizationAction } from "@/features/user/actions";
 import { Trans } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { safeLocalStorage } from "@/utils/local-storage";
 
 export function TimeZoneChangeDetector({
   initialTimeZone,
-  onTimeZoneChange,
 }: {
   initialTimeZone?: string;
-  onTimeZoneChange?: (timeZone: string) => void;
 }) {
   const [open, setOpen] = useState(false);
 
   const currentTimeZone = getBrowserTimeZone();
+
+  const updateLocalization = useSafeAction(updateLocalizationAction);
 
   const [previousTimeZone, setPreviousTimeZone] = useState(() => {
     const cachedPreviousTimeZone = safeLocalStorage.getItem("previousTimeZone");
@@ -65,7 +69,9 @@ export function TimeZoneChangeDetector({
             variant="primary"
             onClick={() => {
               safeLocalStorage.setItem("previousTimeZone", currentTimeZone);
-              onTimeZoneChange?.(currentTimeZone);
+              updateLocalization.execute({
+                timeZone: currentTimeZone,
+              });
               setOpen(false);
             }}
           >

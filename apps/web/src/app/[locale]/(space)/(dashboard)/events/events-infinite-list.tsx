@@ -96,9 +96,9 @@ export function EventsInfiniteList({
         <StackedListItem key={event.id}>
           <ScheduledEventListItem
             eventId={event.id}
-            floating={!event.timeZone}
             title={event.title}
             start={event.start}
+            timeZone={event.timeZone}
             end={event.end}
             allDay={event.allDay}
             invites={event.invites}

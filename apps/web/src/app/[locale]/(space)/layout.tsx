@@ -1,9 +1,12 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
+import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { SessionRefresher } from "@/components/session-refresher";
-import { PreferencesProvider } from "@/contexts/preferences";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { SpaceProvider } from "@/features/space/client";
+import { getLocale } from "@/i18n/server/get-locale";
+import { DateTimeProvider } from "@/lib/datetime/client";
+import { LocaleSync } from "@/lib/locale/client";
 import { getPathname } from "@/lib/pathname";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { buildSafeRedirectUrl } from "@/utils/redirect";
@@ -13,11 +16,13 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
   const helpers = await createPrivateSSRHelper();
 
-  await Promise.all([helpers.user.getMe.prefetch()]);
-
-  const space = await helpers.spaces.getCurrent.fetch();
+  const [user, space] = await Promise.all([
+    helpers.user.getMe.fetch(),
+    helpers.spaces.getCurrent.fetch(),
+  ]);
 
   if (!space) {
     const pathname = await getPathname();
@@ -29,12 +34,18 @@ export default async function Layout({
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
       <SessionRefresher />
-      <PreferencesProvider>
+      <LocaleSync userLocale={user?.locale} />
+      <TimeZoneChangeDetector initialTimeZone={user?.timeZone} />
+      <DateTimeProvider
+        locale={locale}
+        timeZone={user?.timeZone}
+        timeFormat={user?.timeFormat}
+      >
         <SpaceProvider>
           {children}
           <PayWall />
         </SpaceProvider>
-      </PreferencesProvider>
+      </DateTimeProvider>
     </HydrationBoundary>
   );
 }
