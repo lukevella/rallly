@@ -50,6 +50,7 @@ model ScheduledEvent {
   @@index([spaceId])
   @@index([userId])
   @@index([eventTypeId])
+  @@index([spaceId, status, start])
   @@map("scheduled_events")
 }
 

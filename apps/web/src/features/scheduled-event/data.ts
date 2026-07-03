@@ -4,7 +4,10 @@ import { parseConferencing } from "@/features/conferencing/data";
 import type { Conferencing } from "@/features/conferencing/schema";
 import { parseLocation } from "@/features/location/data";
 import type { Location } from "@/features/location/schema";
-import { dayjs } from "@/lib/dayjs";
+import {
+  pastScheduledEventWhere,
+  upcomingScheduledEventWhere,
+} from "./predicates";
 import type { Status } from "./schema";
 
 export function getPublicScheduledEvent(id: string) {
@@ -278,23 +281,18 @@ export const getUpcomingEvents = async ({
   page = 1,
   pageSize = 20,
   spaceId,
+  timeZone,
 }: {
   search?: string;
   member?: string;
   page?: number;
   pageSize?: number;
   spaceId: string;
+  timeZone: string;
 }) => {
-  const now = new Date();
-  const todayStart = dayjs().startOf("day").utc().toDate();
-
   const where: Prisma.ScheduledEventWhereInput = {
     ...buildBaseWhere(spaceId, search, member),
-    status: "confirmed",
-    OR: [
-      { allDay: false, start: { gte: now } },
-      { allDay: true, start: { gte: todayStart } },
-    ],
+    ...upcomingScheduledEventWhere({ now: new Date(), timeZone }),
   };
 
   const [totalCount, allEvents] = await prisma.$transaction([
@@ -329,23 +327,18 @@ export const getPastEvents = async ({
   page = 1,
   pageSize = 20,
   spaceId,
+  timeZone,
 }: {
   search?: string;
   member?: string;
   page?: number;
   pageSize?: number;
   spaceId: string;
+  timeZone: string;
 }) => {
-  const now = new Date();
-  const todayStart = dayjs().startOf("day").utc().toDate();
-
   const where: Prisma.ScheduledEventWhereInput = {
     ...buildBaseWhere(spaceId, search, member),
-    status: "confirmed",
-    OR: [
-      { allDay: false, start: { lt: now } },
-      { allDay: true, start: { lt: todayStart } },
-    ],
+    ...pastScheduledEventWhere({ now: new Date(), timeZone }),
   };
 
   const [totalCount, allEvents] = await prisma.$transaction([
@@ -469,6 +462,7 @@ export const getEventsChronological = async ({
   page = 1,
   pageSize = 20,
   spaceId,
+  timeZone,
 }: {
   status?: Status;
   search?: string;
@@ -476,20 +470,21 @@ export const getEventsChronological = async ({
   page?: number;
   pageSize?: number;
   spaceId: string;
+  timeZone: string;
 }) => {
   const commonParams = { search, member, page, pageSize, spaceId };
 
   switch (status) {
     case "upcoming":
-      return getUpcomingEvents(commonParams);
+      return getUpcomingEvents({ ...commonParams, timeZone });
     case "past":
-      return getPastEvents(commonParams);
+      return getPastEvents({ ...commonParams, timeZone });
     case "unconfirmed":
       return getUnconfirmedEvents(commonParams);
     case "canceled":
       return getCanceledEvents(commonParams);
     default:
       // If no status specified, default to upcoming
-      return getUpcomingEvents(commonParams);
+      return getUpcomingEvents({ ...commonParams, timeZone });
   }
 };

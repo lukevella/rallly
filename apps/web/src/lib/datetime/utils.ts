@@ -14,6 +14,27 @@ export function toISODate(value: DateInput) {
 }
 
 /**
+ * The calendar date (YYYY-MM-DD) at the given instant in the given zone.
+ * en-CA is the locale whose date format is ISO 8601.
+ */
+export function getCalendarDate(now: Date, timeZone: string): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+}
+
+/**
+ * Encodes a calendar date the same way allDay event dates are stored in the
+ * database: as UTC midnight of that date.
+ */
+export function calendarDateToUTCMidnight(date: string): Date {
+  return new Date(`${date}T00:00:00Z`);
+}
+
+/**
  * Returns the given zone if it's a valid IANA identifier, otherwise
  * undefined. Guards against empty strings and corrupt stored values, which
  * would make Intl.DateTimeFormat throw.
