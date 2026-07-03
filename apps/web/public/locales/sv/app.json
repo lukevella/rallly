@@ -607,8 +607,6 @@
   "themeSystem": "System",
   "timeFormat": "Tidsformat",
   "timeZone": "Tidszon",
-  "timeZoneChangeDetectorMessage": "Din tidszon har ändrats till <b>{currentTimeZone}</b>. Vill du uppdatera dina inställningar?",
-  "timeZoneChangeDetectorTitle": "Tidszonsändring upptäckt",
   "timezoneInputPlaceholder": "Sök tidszon…",
   "timeZoneSelect__noOption": "Inga alternativ hittades",
   "title": "Titel",
