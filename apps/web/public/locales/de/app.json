@@ -645,8 +645,6 @@
   "themeSystem": "System",
   "timeFormat": "Zeitformat",
   "timeZone": "Zeitzone",
-  "timeZoneChangeDetectorMessage": "Deine Zeitzone wurde auf <b>{currentTimeZone}</b> geändert. Möchtest du deine Einstellungen aktualisieren?",
-  "timeZoneChangeDetectorTitle": "Zeitzonenänderung erkannt",
   "timezoneInputPlaceholder": "Zeitzone suchen…",
   "timeZoneSelect__noOption": "Keine Option gefunden",
   "title": "Titel",
