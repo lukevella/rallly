@@ -1,5 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
+import { TimeZoneChangeDetector } from "@/app/[locale]/timezone-change-detector";
 import { SessionRefresher } from "@/components/session-refresher";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { SpaceProvider } from "@/features/space/client";
@@ -34,6 +35,7 @@ export default async function Layout({
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
       <SessionRefresher />
       <LocaleSync userLocale={user?.locale} />
+      <TimeZoneChangeDetector initialTimeZone={user?.timeZone} />
       <DateTimeProvider
         locale={locale}
         timeZone={user?.timeZone}
