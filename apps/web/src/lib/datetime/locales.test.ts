@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getLocaleDefaults } from "@/lib/datetime/locales";
+import { getLocaleDefaults, getWeekdayNames } from "@/lib/datetime/locales";
 
 // Tripwire: these lock the CLDR-derived defaults so an ICU/Node upgrade that
 // shifts one fails loudly.
@@ -30,5 +30,27 @@ describe("getLocaleDefaults", () => {
       timeFormat: "hours24",
       weekStart: 0,
     });
+  });
+});
+
+// Order follows the locale's default week start; `day` stays canonical
+// (0=Sunday .. 6=Saturday) regardless of position.
+describe("getWeekdayNames", () => {
+  it("starts with Sunday for en", () => {
+    expect(getWeekdayNames("en")).toEqual([
+      { day: 0, label: "Sunday" },
+      { day: 1, label: "Monday" },
+      { day: 2, label: "Tuesday" },
+      { day: 3, label: "Wednesday" },
+      { day: 4, label: "Thursday" },
+      { day: 5, label: "Friday" },
+      { day: 6, label: "Saturday" },
+    ]);
+  });
+
+  it("starts with Monday for de, keeping canonical day numbers", () => {
+    const weekdays = getWeekdayNames("de");
+    expect(weekdays[0]).toEqual({ day: 1, label: "Montag" });
+    expect(weekdays[6]).toEqual({ day: 0, label: "Sonntag" });
   });
 });
