@@ -16,22 +16,31 @@ function getWeekInfo(locale: string): WeekInfo {
   return l.getWeekInfo?.() ?? l.weekInfo ?? { firstDay: 1 };
 }
 
-const weekdayCache = new Map<string, string[]>();
+type Weekday = { day: number; label: string };
 
-// 2024-01-07 is a Sunday; formatting in UTC keeps the 0=Sunday mapping.
-export function getWeekdayNames(locale: string): string[] {
-  let names = weekdayCache.get(locale);
-  if (!names) {
+const weekdayCache = new Map<string, Weekday[]>();
+
+// 2024-01-07 is a Sunday; formatting in UTC keeps the 0=Sunday mapping. Days
+// are ordered from the locale's default week start; `day` stays canonical
+// (0=Sunday .. 6=Saturday).
+export function getWeekdayNames(locale: string): Weekday[] {
+  let weekdays = weekdayCache.get(locale);
+  if (!weekdays) {
     const formatter = new Intl.DateTimeFormat(locale, {
       weekday: "long",
       timeZone: "UTC",
     });
-    names = Array.from({ length: 7 }, (_, index) =>
-      formatter.format(new Date(Date.UTC(2024, 0, 7 + index))),
-    );
-    weekdayCache.set(locale, names);
+    const { weekStart } = getLocaleDefaults(locale);
+    weekdays = Array.from({ length: 7 }, (_, index) => {
+      const day = (weekStart + index) % 7;
+      return {
+        day,
+        label: formatter.format(new Date(Date.UTC(2024, 0, 7 + day))),
+      };
+    });
+    weekdayCache.set(locale, weekdays);
   }
-  return names;
+  return weekdays;
 }
 
 const cache = new Map<string, LocaleDefaults>();

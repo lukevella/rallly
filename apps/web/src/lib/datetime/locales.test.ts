@@ -33,24 +33,24 @@ describe("getLocaleDefaults", () => {
   });
 });
 
-// Index 0 must be Sunday regardless of the locale's own week start, to match
-// the weekStart 0-6 contract.
+// Order follows the locale's default week start; `day` stays canonical
+// (0=Sunday .. 6=Saturday) regardless of position.
 describe("getWeekdayNames", () => {
-  it("returns Sunday-first names for en", () => {
+  it("starts with Sunday for en", () => {
     expect(getWeekdayNames("en")).toEqual([
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
+      { day: 0, label: "Sunday" },
+      { day: 1, label: "Monday" },
+      { day: 2, label: "Tuesday" },
+      { day: 3, label: "Wednesday" },
+      { day: 4, label: "Thursday" },
+      { day: 5, label: "Friday" },
+      { day: 6, label: "Saturday" },
     ]);
   });
 
-  it("stays Sunday-first for a Monday-start locale (de)", () => {
-    const names = getWeekdayNames("de");
-    expect(names[0]).toBe("Sonntag");
-    expect(names[6]).toBe("Samstag");
+  it("starts with Monday for de, keeping canonical day numbers", () => {
+    const weekdays = getWeekdayNames("de");
+    expect(weekdays[0]).toEqual({ day: 1, label: "Montag" });
+    expect(weekdays[6]).toEqual({ day: 0, label: "Sonntag" });
   });
 });

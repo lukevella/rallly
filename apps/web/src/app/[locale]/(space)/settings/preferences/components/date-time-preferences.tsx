@@ -127,9 +127,9 @@ export const DateTimePreferences = ({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {weekdays().map((day, index) => (
-                        <SelectItem key={day} value={index.toString()}>
-                          {day}
+                      {weekdays().map(({ day, label }) => (
+                        <SelectItem key={day} value={day.toString()}>
+                          {label}
                         </SelectItem>
                       ))}
                     </SelectContent>
