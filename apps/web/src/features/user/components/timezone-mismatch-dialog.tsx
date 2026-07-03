@@ -8,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
-import { useRouter } from "next/navigation";
 import React from "react";
 import { updateLocalizationAction } from "@/features/user/actions";
 import { Trans } from "@/i18n/client";
@@ -27,7 +26,6 @@ export function TimeZoneMismatchDialog({
 }: {
   homeTimeZone?: string;
 }) {
-  const router = useRouter();
   const change = useTimeZoneChange();
 
   const [prompt, setPrompt] = React.useState<{ currentTimeZone: string }>();
@@ -79,7 +77,6 @@ export function TimeZoneMismatchDialog({
                 timeZone: prompt.currentTimeZone,
               });
               setPrompt(undefined);
-              router.refresh();
             }}
           >
             <Trans
