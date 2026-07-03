@@ -610,8 +610,6 @@
   "themeSystem": "Sistema",
   "timeFormat": "Formato orario:",
   "timeZone": "Fuso orario:",
-  "timeZoneChangeDetectorMessage": "Il tuo fuso orario è cambiato in <b>{currentTimeZone}</b>. Vuoi aggiornare le tue preferenze?",
-  "timeZoneChangeDetectorTitle": "Rilevato Cambio Fuso Orario",
   "timezoneInputPlaceholder": "Cerca fuso orario…",
   "timeZoneSelect__noOption": "Nessuna opzione trovata",
   "title": "Titolo",
