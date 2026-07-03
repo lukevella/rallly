@@ -9,6 +9,7 @@ import { ScheduledEventListItem } from "@/features/scheduled-event/components/sc
 import type { Status } from "@/features/scheduled-event/schema";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
+import { getBrowserTimeZone } from "@/utils/date-time-utils";
 
 interface EventsInfiniteListProps {
   status?: Status;
@@ -35,6 +36,7 @@ export function EventsInfiniteList({
       status,
       search,
       member,
+      timeZone: getBrowserTimeZone(),
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,

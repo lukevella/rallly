@@ -2,6 +2,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { getTranslation } from "@/i18n/server";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { EventsPage } from "./events-page";
 import { eventsSearchParamsSchema } from "./schema";
 
@@ -19,6 +20,9 @@ export default async function Page(props: {
       status,
       search: q,
       member,
+      // Server zone, matching what the SSR pass of EventsInfiniteList
+      // computes; the client refetches with the browser zone if it differs.
+      timeZone: getBrowserTimeZone(),
     }),
   ]);
 

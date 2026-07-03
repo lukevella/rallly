@@ -19,10 +19,13 @@ import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled, useFeatureFlag } from "@/lib/feature-flags/client";
 import { trpc } from "@/trpc/client";
+import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { PasswordSetupAlert } from "./password-setup-alert";
 
 export function DashboardHome() {
-  const [stats] = trpc.dashboard.stats.useSuspenseQuery();
+  const [stats] = trpc.dashboard.stats.useSuspenseQuery({
+    timeZone: getBrowserTimeZone(),
+  });
   const isEmailLoginEnabled = useFeatureFlag("emailLogin");
 
   return (

@@ -12,6 +12,8 @@ import { formatLocationText } from "@/features/location/utils";
 import { getEventsChronological } from "@/features/scheduled-event/data";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { defineAbilityForMember } from "@/features/space/member/ability";
+import { timeZoneSchema } from "@/lib/datetime/schema";
+import { normalizeTimeZone } from "@/lib/datetime/utils";
 import { createIcsEvent } from "@/utils/ics";
 import { router, spaceProcedure } from "../trpc";
 
@@ -24,12 +26,15 @@ export const events = router({
           .optional(),
         search: z.string().optional(),
         member: z.string().optional(),
+        timeZone: timeZoneSchema.optional(),
         cursor: z.number().optional().default(1),
         limit: z.number().max(100).optional().default(20),
       }),
     )
     .query(async ({ ctx, input }) => {
       const { cursor: page, limit: pageSize, status, search, member } = input;
+      const timeZone =
+        input.timeZone ?? normalizeTimeZone(ctx.user.timeZone) ?? "UTC";
 
       const result = await getEventsChronological({
         status,
@@ -38,6 +43,7 @@ export const events = router({
         page,
         pageSize,
         spaceId: ctx.space.id,
+        timeZone,
       });
 
       let nextCursor: number | undefined;
