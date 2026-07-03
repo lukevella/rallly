@@ -1,5 +1,6 @@
 "use client";
 
+import type { VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -8,6 +9,9 @@ import * as React from "react";
 import { Trans, useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
 
+import { useOptionVote } from "../use-option-vote";
+import VoteIcon from "../vote-icon";
+import { useVotingForm } from "../voting-form";
 import { AvailabilityCount, getHeatOpacity } from "./availability";
 import { DayDetail } from "./option-detail";
 import type { CalendarOption } from "./use-poll-calendar";
@@ -17,6 +21,9 @@ export function WeekView() {
   const { t } = useTranslation();
   const data = usePollCalendar();
   const { optionsByDay, highScore } = data;
+
+  const votingForm = useVotingForm();
+  const isEditing = votingForm.watch("mode") !== "view";
 
   const [anchor, setAnchor] = React.useState(
     () => data.firstOptionDate ?? new Date(),
@@ -94,28 +101,37 @@ export function WeekView() {
           }
 
           return (
-            <button
-              type="button"
+            <div
               key={dayKey}
-              onClick={() => setSelectedDay(dayKey)}
               className={cn(
-                "flex min-h-32 flex-col rounded-lg border text-left transition-colors hover:border-emerald-500/40",
+                "flex min-h-32 flex-col rounded-lg border transition-colors",
                 isWeekend && "bg-muted/30",
                 selectedDay === dayKey &&
                   "border-emerald-500 ring-1 ring-emerald-500",
               )}
             >
-              {header}
+              <button
+                type="button"
+                className="w-full"
+                onClick={() => setSelectedDay(dayKey)}
+              >
+                {header}
+              </button>
               <div className="flex grow flex-col gap-1.5 p-1.5">
-                {options.map((option) => (
-                  <OptionCard
-                    key={option.optionId}
-                    option={option}
-                    highScore={highScore}
-                  />
-                ))}
+                {options.map((option) =>
+                  isEditing ? (
+                    <EditableOptionCard key={option.optionId} option={option} />
+                  ) : (
+                    <OptionCard
+                      key={option.optionId}
+                      option={option}
+                      highScore={highScore}
+                      onSelect={() => setSelectedDay(dayKey)}
+                    />
+                  ),
+                )}
               </div>
-            </button>
+            </div>
           );
         })}
       </div>
@@ -128,15 +144,29 @@ export function WeekView() {
   );
 }
 
+function OptionTime({ option }: { option: CalendarOption }) {
+  return option.duration > 0 ? (
+    <span>{option.start.format("LT")}</span>
+  ) : (
+    <Trans i18nKey="allDay" defaults="All day" />
+  );
+}
+
 function OptionCard({
   option,
   highScore,
+  onSelect,
 }: {
   option: CalendarOption;
   highScore: number;
+  onSelect: () => void;
 }) {
   return (
-    <div className="relative overflow-hidden rounded-md border bg-card p-2">
+    <button
+      type="button"
+      onClick={onSelect}
+      className="relative overflow-hidden rounded-md border bg-card p-2 text-left"
+    >
       <span
         aria-hidden
         className="absolute inset-y-0 left-0 w-1 bg-emerald-500 dark:bg-emerald-400"
@@ -144,11 +174,7 @@ function OptionCard({
       />
       <div className="pl-1.5">
         <div className="font-medium text-xs">
-          {option.duration > 0 ? (
-            option.start.format("LT")
-          ) : (
-            <Trans i18nKey="allDay" defaults="All day" />
-          )}
+          <OptionTime option={option} />
         </div>
         <AvailabilityCount
           available={option.available}
@@ -156,6 +182,37 @@ function OptionCard({
           className="mt-1 text-emerald-700 dark:text-emerald-300"
         />
       </div>
-    </div>
+    </button>
+  );
+}
+
+const voteCardClass: Record<"yes" | "ifNeedBe" | "no" | "pending", string> = {
+  yes: "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300",
+  ifNeedBe:
+    "border-amber-500 bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300",
+  no: "border-rose-200 bg-rose-50 text-rose-600 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-300",
+  pending: "border-dashed bg-card text-muted-foreground hover:border-primary",
+};
+
+function EditableOptionCard({ option }: { option: CalendarOption }) {
+  const { vote, cycle } = useOptionVote(option.optionId);
+  const style: VoteType | "pending" = vote ?? "pending";
+
+  return (
+    <button
+      type="button"
+      data-testid="poll-option"
+      onClick={(e) => {
+        e.stopPropagation();
+        cycle();
+      }}
+      className={cn(
+        "flex items-center justify-between gap-2 rounded-md border p-2 text-left font-medium text-xs transition-colors",
+        voteCardClass[style],
+      )}
+    >
+      <OptionTime option={option} />
+      <VoteIcon type={vote} />
+    </button>
   );
 }

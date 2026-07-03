@@ -14,6 +14,8 @@ import {
 } from "@/components/empty-state";
 import { Trans } from "@/i18n/client";
 
+import { VotingControlBar, VotingSubmitButton } from "../voting-controls";
+import { useVotingForm } from "../voting-form";
 import { MonthView } from "./month-view";
 import { usePollCalendar } from "./use-poll-calendar";
 import { WeekView } from "./week-view";
@@ -22,7 +24,11 @@ export function PollCalendar() {
   const { dayKeys, pollType, timeZone } = usePollCalendar();
   const [view, setView] = React.useState<"month" | "week">("month");
 
+  const votingForm = useVotingForm();
+  const isEditing = votingForm.watch("mode") !== "view";
+
   const showTimeZone = pollType === "timeSlot" && !!timeZone;
+  const isEmpty = dayKeys.length === 0;
 
   return (
     <Card>
@@ -54,7 +60,7 @@ export function PollCalendar() {
           </Tabs>
         </div>
       </CardHeader>
-      {dayKeys.length === 0 ? (
+      {isEmpty ? (
         <EmptyState className="p-16">
           <EmptyStateIcon>
             <CalendarIcon />
@@ -72,10 +78,18 @@ export function PollCalendar() {
             />
           </EmptyStateDescription>
         </EmptyState>
-      ) : view === "month" ? (
-        <MonthView />
       ) : (
-        <WeekView />
+        <>
+          <div className="border-b p-2">
+            <VotingControlBar />
+          </div>
+          {view === "month" ? <MonthView /> : <WeekView />}
+          {isEditing ? (
+            <div className="border-t p-3">
+              <VotingSubmitButton className="w-full" />
+            </div>
+          ) : null}
+        </>
       )}
     </Card>
   );
