@@ -322,8 +322,6 @@
   "temporaryEmailNotAllowed": "不允许使用临时或一次性的电子邮件地址。",
   "timeFormat": "时间格式",
   "timeZone": "时区",
-  "timeZoneChangeDetectorMessage": "您的时区已更改为 <b>{currentTimeZone}</b>。您想要更新您的偏好设置吗？",
-  "timeZoneChangeDetectorTitle": "检测到时区更改",
   "timeZoneSelect__noOption": "未找到选项",
   "title": "标题",
   "titlePlaceholder": "月度会议",
