@@ -15,18 +15,21 @@ import { toggleVote } from "./vote-selector";
  * click-to-cycle surfaces like the calendar grid.
  */
 export function useOptionVote(optionId: string) {
-  const { control, setValue, getValues } = useVotingForm();
+  const { control, setValue } = useVotingForm();
   const { optionIds } = usePoll();
   const index = optionIds.indexOf(optionId);
 
-  const votes = useWatch({ control, name: "votes" });
-  const vote = votes?.[index]?.type;
+  // Scope the watch/write to this option's slot so a vote only re-renders the
+  // clicked card, not every option card sharing the form.
+  const vote = useWatch({ control, name: `votes.${index}.type` });
 
   const setVote = (newVote: VoteType) => {
-    const current = getValues("votes") ?? [];
-    const newValue = [...current];
-    newValue[index] = { optionId, type: newVote };
-    setValue("votes", newValue, { shouldDirty: true });
+    if (index === -1) return;
+    setValue(
+      `votes.${index}`,
+      { optionId, type: newVote },
+      { shouldDirty: true },
+    );
   };
 
   return {

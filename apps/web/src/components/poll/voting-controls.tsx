@@ -47,10 +47,12 @@ export function VotingControlBar() {
     <div className="flex gap-x-2.5">
       {selectedParticipantId || !isEditing ? (
         <Select
-          defaultValue="all"
-          value={selectedParticipantId}
+          value={selectedParticipantId ?? "all"}
           onValueChange={(participantId) => {
-            votingForm.setValue("participantId", participantId);
+            votingForm.setValue(
+              "participantId",
+              participantId === "all" ? undefined : participantId,
+            );
           }}
           disabled={isEditing}
         >
@@ -83,7 +85,7 @@ export function VotingControlBar() {
                   <ParticipantName>{participant.name}</ParticipantName>
                   {session.ownsObject(participant) && (
                     <Badge>
-                      <Trans i18nKey="you" />
+                      <Trans i18nKey="you" defaults="You" />
                     </Badge>
                   )}
                 </Participant>

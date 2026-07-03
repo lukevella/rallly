@@ -135,7 +135,7 @@ export function WeekView() {
           );
         })}
       </div>
-      {selectedDay && optionsByDay[selectedDay] ? (
+      {!isEditing && selectedDay && optionsByDay[selectedDay] ? (
         <div className="mt-4 border-t pt-4">
           <DayDetail dayKey={selectedDay} options={optionsByDay[selectedDay]} />
         </div>
@@ -165,7 +165,7 @@ function OptionCard({
     <button
       type="button"
       onClick={onSelect}
-      className="relative overflow-hidden rounded-md border bg-card p-2 text-left"
+      className="relative overflow-hidden rounded-md border bg-card p-2 text-left ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       <span
         aria-hidden
@@ -207,7 +207,7 @@ function EditableOptionCard({ option }: { option: CalendarOption }) {
         cycle();
       }}
       className={cn(
-        "flex items-center justify-between gap-2 rounded-md border p-2 text-left font-medium text-xs transition-colors",
+        "flex items-center justify-between gap-2 rounded-md border p-2 text-left font-medium text-xs ring-offset-background transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         voteCardClass[style],
       )}
     >
