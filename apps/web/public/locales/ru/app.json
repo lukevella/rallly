@@ -349,8 +349,6 @@
   "temporaryEmailNotAllowed": "Временные или одноразовые электронные адреса не допускаются.",
   "timeFormat": "Формат времени",
   "timeZone": "Часовой пояс",
-  "timeZoneChangeDetectorMessage": "Ваш часовой пояс изменился на <b>{currentTimeZone}</b>. Хотите обновить ваши предпочтения?",
-  "timeZoneChangeDetectorTitle": "Обнаружено изменение часового пояса",
   "timeZoneSelect__noOption": "Вариантов не найдено",
   "title": "Название",
   "titlePlaceholder": "Ежемесячная Встреча",
