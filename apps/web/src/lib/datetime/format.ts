@@ -2,17 +2,16 @@ import type { TimeFormat } from "@rallly/database";
 
 export type DateInput = Date | string | number;
 
-export type DateTimePreset =
-  | "time"
-  | "date"
-  | "dateLong"
-  | "weekday"
-  | "datetime";
+export type DatePreset = "date" | "dateLong" | "weekday";
 
-type FormatContext = {
+export type DateTimePreset = DatePreset | "time" | "datetime";
+
+export type FormatDateTimeOptions = {
+  preset?: DateTimePreset;
   locale: string;
-  timeFormat: TimeFormat;
+  timeFormat?: TimeFormat;
   timeZone?: string;
+  showTimeZone?: boolean;
 };
 
 function toDate(value: DateInput): Date {
@@ -21,21 +20,23 @@ function toDate(value: DateInput): Date {
 
 const formatters = new Map<string, Intl.DateTimeFormat>();
 
-function getCachedIntlDateFormatter(
-  preset: DateTimePreset,
-  ctx: FormatContext,
-) {
+function getCachedIntlDateFormatter({
+  preset = "datetime",
+  locale,
+  timeFormat,
+  timeZone,
+  showTimeZone,
+}: FormatDateTimeOptions) {
   const options = {
-    ...presetOptions(preset, {
-      timeFormat: ctx.timeFormat,
-    }),
+    ...presetOptions(preset, timeFormat),
     // An empty string is an invalid IANA zone and throws; treat it as "unset".
-    timeZone: ctx.timeZone || undefined,
+    timeZone: timeZone || undefined,
+    timeZoneName: showTimeZone ? ("short" as const) : undefined,
   };
-  const key = `${ctx.locale}|${JSON.stringify(options)}`;
+  const key = `${locale}|${JSON.stringify(options)}`;
   let f = formatters.get(key);
   if (!f) {
-    f = new Intl.DateTimeFormat(ctx.locale, options);
+    f = new Intl.DateTimeFormat(locale, options);
     formatters.set(key, f);
   }
   return f;
@@ -43,15 +44,14 @@ function getCachedIntlDateFormatter(
 
 function presetOptions(
   preset: DateTimePreset,
-  options: {
-    timeFormat: TimeFormat;
-  },
+  timeFormat?: TimeFormat,
 ): Intl.DateTimeFormatOptions {
-  const hour12 = options.timeFormat === "hours12";
+  // Leave hour12 undefined when there's no preference so the locale decides.
+  const hour12 = timeFormat ? timeFormat === "hours12" : undefined;
   switch (preset) {
     case "time":
       return {
-        hour: hour12 ? "numeric" : "2-digit",
+        hour: hour12 === false ? "2-digit" : "numeric",
         minute: "2-digit",
         hour12,
       };
@@ -74,7 +74,7 @@ function presetOptions(
         year: "numeric",
         month: "short",
         day: "numeric",
-        hour: hour12 ? "numeric" : "2-digit",
+        hour: hour12 === false ? "2-digit" : "numeric",
         minute: "2-digit",
         hour12,
       };
@@ -83,22 +83,32 @@ function presetOptions(
 
 export function formatDateTime(
   value: DateInput,
-  preset: DateTimePreset,
-  ctx: FormatContext,
+  options: FormatDateTimeOptions,
 ): string {
-  return getCachedIntlDateFormatter(preset, ctx).format(toDate(value));
+  return getCachedIntlDateFormatter(options).format(toDate(value));
 }
 
 export function formatDateTimeRange(
   start: DateInput,
   end: DateInput,
-  preset: DateTimePreset,
-  ctx: FormatContext,
+  options: FormatDateTimeOptions,
 ): string {
-  return getCachedIntlDateFormatter(preset, ctx).formatRange(
+  return getCachedIntlDateFormatter(options).formatRange(
     toDate(start),
     toDate(end),
   );
+}
+
+// All-day values are stored as UTC midnight, so they always format in UTC.
+export function formatDate(
+  value: DateInput,
+  options: { preset?: DatePreset; locale: string },
+): string {
+  return formatDateTime(value, {
+    preset: options.preset ?? "dateLong",
+    locale: options.locale,
+    timeZone: "UTC",
+  });
 }
 
 const relativeFormatters = new Map<string, Intl.RelativeTimeFormat>();
