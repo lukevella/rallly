@@ -2,7 +2,8 @@
 
 import type { SubscriptionStatus } from "@rallly/database";
 import { Trans, useTranslation } from "@/i18n/client";
-import { dayjs } from "@/lib/dayjs";
+import { useDateTimeConfig } from "@/lib/datetime/client";
+import { formatDate } from "@/lib/datetime/format";
 
 interface SubscriptionStatusLabelProps {
   status: SubscriptionStatus;
@@ -16,6 +17,7 @@ export const SubscriptionStatusLabel = ({
   periodEnd,
 }: SubscriptionStatusLabelProps) => {
   const { t } = useTranslation();
+  const { locale } = useDateTimeConfig();
 
   const statusConfig: Record<
     string,
@@ -61,7 +63,7 @@ export const SubscriptionStatusLabel = ({
       <Trans
         i18nKey="subscriptionCancelOn"
         defaults="Cancels {date}"
-        values={{ date: dayjs(periodEnd).format("MMM D YYYY") }}
+        values={{ date: formatDate(periodEnd, { preset: "date", locale }) }}
       />
     );
   }

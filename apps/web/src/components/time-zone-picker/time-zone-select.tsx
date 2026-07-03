@@ -9,7 +9,6 @@ import {
   useComboboxAnchor,
 } from "@rallly/ui/combobox";
 import { InputGroupAddon } from "@rallly/ui/input-group";
-import dayjs from "dayjs";
 import { GlobeIcon } from "lucide-react";
 import React from "react";
 import {
@@ -18,6 +17,7 @@ import {
   getCityFromTimezoneId,
 } from "@/components/time-zone-picker/timezone-data";
 import { useTranslation } from "@/i18n/client";
+import { Time } from "@/lib/datetime/time";
 
 const allIds = getAllTimezoneIds().sort((a, b) =>
   getCityFromTimezoneId(a).localeCompare(getCityFromTimezoneId(b)),
@@ -46,6 +46,8 @@ export function TimeZoneSelect({
   const anchorRef = useComboboxAnchor();
 
   const [isSearching, setIsSearching] = React.useState(false);
+
+  const now = new Date();
 
   return (
     <Combobox
@@ -92,7 +94,12 @@ export function TimeZoneSelect({
                 {getCityFromTimezoneId(entry)}
               </span>
               <span className="rounded-full px-1 py-0.5 text-center text-muted-foreground text-xs tabular-nums">
-                {dayjs().tz(entry).format("LT")}
+                <Time
+                  value={now}
+                  preset="time"
+                  timeZone={entry}
+                  showTimeZone={false}
+                />
               </span>
             </ComboboxItem>
           )}

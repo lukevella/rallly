@@ -12,12 +12,14 @@ import {
 import { Spinner } from "@/components/spinner";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/i18n/client";
-import { dayjs } from "@/lib/dayjs";
+import { useDateTimeConfig } from "@/lib/datetime/client";
+import { formatRelativeTime } from "@/lib/datetime/format";
 import { trpc } from "@/trpc/client";
 import { RevokeApiKeyButton } from "./revoke-api-key-button";
 
 export function ApiKeysList() {
   const { data: apiKeys } = trpc.apiKeys.list.useQuery();
+  const { locale } = useDateTimeConfig();
 
   if (apiKeys === undefined) {
     return <Spinner />;
@@ -77,7 +79,7 @@ export function ApiKeysList() {
                 i18nKey="lastUsedAt"
                 defaults="Last used {date}"
                 values={{
-                  date: dayjs(apiKey.lastUsedAt).fromNow(),
+                  date: formatRelativeTime(apiKey.lastUsedAt, locale),
                 }}
               />
             ) : (
