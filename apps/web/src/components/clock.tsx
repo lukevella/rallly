@@ -11,7 +11,6 @@ import {
 } from "@rallly/ui/dialog";
 import { Label } from "@rallly/ui/label";
 import { GlobeIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import React from "react";
 import { useInterval } from "react-use";
 import { TimeFormatPicker } from "@/components/time-format-picker";
@@ -19,23 +18,16 @@ import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { getCityFromTimezoneId } from "@/components/time-zone-picker/timezone-data";
 import { Trans } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
-import {
-  setDeviceTimeFormat,
-  setTimeZoneOverride,
-} from "@/lib/datetime/device";
+import { useDeviceDateTime } from "@/lib/datetime/device";
+import { getLocaleDefaults } from "@/lib/datetime/locales";
 import { Time } from "@/lib/datetime/time";
 
 const TimePreferences = () => {
-  const router = useRouter();
+  const { setTimeZone, setTimeFormat } = useDeviceDateTime();
   const { locale, timeZone, timeFormat } = useDateTimeConfig();
 
   // When there's no explicit preference, show the locale's default format.
-  const resolvedTimeFormat =
-    timeFormat ??
-    (new Intl.DateTimeFormat(locale, { hour: "numeric" }).resolvedOptions()
-      .hour12
-      ? "hours12"
-      : "hours24");
+  const resolvedTimeFormat = timeFormat ?? getLocaleDefaults(locale).timeFormat;
 
   return (
     <div className="grid gap-4">
@@ -43,25 +35,13 @@ const TimePreferences = () => {
         <Label>
           <Trans i18nKey="timeZone" />
         </Label>
-        <TimeZoneSelect
-          value={timeZone}
-          onValueChange={(newTimeZone) => {
-            setTimeZoneOverride(newTimeZone);
-            router.refresh();
-          }}
-        />
+        <TimeZoneSelect value={timeZone} onValueChange={setTimeZone} />
       </div>
       <div className="grid gap-2">
         <Label>
           <Trans i18nKey="timeFormat" />
         </Label>
-        <TimeFormatPicker
-          value={resolvedTimeFormat}
-          onChange={(newTimeFormat) => {
-            setDeviceTimeFormat(newTimeFormat);
-            router.refresh();
-          }}
-        />
+        <TimeFormatPicker value={resolvedTimeFormat} onChange={setTimeFormat} />
       </div>
     </div>
   );

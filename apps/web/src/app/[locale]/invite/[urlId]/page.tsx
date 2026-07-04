@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
 import { PermissionProvider } from "@/contexts/permissions";
-import { DateTimeProvider } from "@/lib/datetime/client";
+import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 import { LocaleSync } from "@/lib/locale/client";
 import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
@@ -68,7 +68,7 @@ export default async function Page(props: {
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
       <SessionRefresher />
       <LocaleSync userLocale={user?.locale ?? undefined} />
-      <DateTimeProvider
+      <DeviceDateTimeProvider
         timeZone={deviceDateTimeConfig.timeZone}
         timeFormat={deviceDateTimeConfig.timeFormat}
       >
@@ -77,7 +77,7 @@ export default async function Page(props: {
             <InvitePageLoader />
           </PermissionProvider>
         </Providers>
-      </DateTimeProvider>
+      </DeviceDateTimeProvider>
     </HydrationBoundary>
   );
 }

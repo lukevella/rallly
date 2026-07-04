@@ -3,7 +3,7 @@ import { SessionRefresher } from "@/components/session-refresher";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { isQuickCreateEnabled } from "@/features/quick-create";
-import { DateTimeProvider } from "@/lib/datetime/client";
+import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 import {
   createPrivateSSRHelper,
@@ -29,7 +29,7 @@ export default async function Layout({
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
       <SessionRefresher />
       <PreferencesProvider>
-        <DateTimeProvider
+        <DeviceDateTimeProvider
           timeZone={
             deviceDateTimeConfig.timeZone ?? user?.timeZone ?? undefined
           }
@@ -39,7 +39,7 @@ export default async function Layout({
         >
           {children}
           <PayWall />
-        </DateTimeProvider>
+        </DeviceDateTimeProvider>
       </PreferencesProvider>
     </HydrationBoundary>
   );
