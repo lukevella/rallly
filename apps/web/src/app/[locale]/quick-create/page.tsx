@@ -10,6 +10,8 @@ import {
   QuickCreateWidget,
 } from "@/features/quick-create";
 import { getTranslation } from "@/i18n/server";
+import { DeviceDateTimeProvider } from "@/lib/datetime/device";
+import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 
 export default async function QuickCreatePage() {
   if (!isQuickCreateEnabled) {
@@ -17,29 +19,36 @@ export default async function QuickCreatePage() {
   }
 
   const { t } = await getTranslation();
+  const deviceDateTimeConfig = await getDeviceDateTimeConfig();
+
   return (
-    <main id="main-content" tabIndex={-1} className="flex h-dvh p-2">
-      <Card className="flex flex-1 flex-col gap-6 p-6">
-        <div className="mx-auto w-full max-w-md flex-1">
-          <div className="space-y-8">
-            <div className="flex-1">
-              <QuickCreateWidget />
+    <DeviceDateTimeProvider
+      timeZone={deviceDateTimeConfig.timeZone}
+      timeFormat={deviceDateTimeConfig.timeFormat}
+    >
+      <main id="main-content" tabIndex={-1} className="flex h-dvh p-2">
+        <Card className="flex flex-1 flex-col gap-6 p-6">
+          <div className="mx-auto w-full max-w-md flex-1">
+            <div className="space-y-8">
+              <div className="flex-1">
+                <QuickCreateWidget />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex justify-center gap-4">
-          <Link
-            href="/login"
-            className={buttonVariants({ className: "rounded-full" })}
-          >
-            <Icon>
-              <LogInIcon />
-            </Icon>
-            {t("login")}
-          </Link>
-        </div>
-      </Card>
-    </main>
+          <div className="flex justify-center gap-4">
+            <Link
+              href="/login"
+              className={buttonVariants({ className: "rounded-full" })}
+            >
+              <Icon>
+                <LogInIcon />
+              </Icon>
+              {t("login")}
+            </Link>
+          </div>
+        </Card>
+      </main>
+    </DeviceDateTimeProvider>
   );
 }
 

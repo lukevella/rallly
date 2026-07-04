@@ -1,16 +1,15 @@
 "use client";
 
 import { Trans } from "@/i18n/client";
-import { useDateTimeConfig } from "@/lib/datetime/client";
-import { formatRelativeTime } from "@/lib/datetime/format";
+import { useDateTime } from "@/lib/datetime/client";
 
 export function RelativeDate({ date }: { date: Date }) {
-  const { locale } = useDateTimeConfig();
+  const { toRelativeTime } = useDateTime();
   return (
     <Trans
       i18nKey="createdTime"
       defaults="Created {relativeTime}"
-      values={{ relativeTime: formatRelativeTime(date, locale) }}
+      values={{ relativeTime: toRelativeTime(date) }}
     />
   );
 }
