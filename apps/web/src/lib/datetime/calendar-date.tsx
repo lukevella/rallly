@@ -3,6 +3,7 @@
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import type { DateInput, DatePreset } from "@/lib/datetime/format";
 import { formatDate } from "@/lib/datetime/format";
+import { useHydrated } from "@/lib/datetime/use-hydrated";
 import { toISODate } from "./utils";
 
 export type CalendarDateProps = {
@@ -17,10 +18,11 @@ export function CalendarDate({
   preset = "dateLong",
   className,
 }: CalendarDateProps) {
+  const hydrated = useHydrated();
   const { locale } = useDateTimeConfig();
   return (
     <time dateTime={toISODate(value)} className={className}>
-      {formatDate(value, { preset, locale })}
+      {hydrated ? formatDate(value, { preset, locale }) : " "}
     </time>
   );
 }
