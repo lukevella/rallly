@@ -174,7 +174,6 @@ export default async function EventPage({
                           value={event.start}
                           preset="weekdayMonthDay"
                           timeZone={event.displayTimeZone ?? undefined}
-                          showTimeZone={false}
                         />
                       )}
                     </EventDetailTitle>

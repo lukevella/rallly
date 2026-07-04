@@ -36,7 +36,6 @@ export function EventDate({
         value={value}
         preset={preset}
         timeZone="UTC"
-        showTimeZone={false}
         className={className}
       />
     );
@@ -67,13 +66,7 @@ export function EventTimeRange({
   }
   if (timeZone === null) {
     return (
-      <TimeRange
-        start={start}
-        end={end}
-        timeZone="UTC"
-        showTimeZone={false}
-        className={className}
-      />
+      <TimeRange start={start} end={end} timeZone="UTC" className={className} />
     );
   }
   return (

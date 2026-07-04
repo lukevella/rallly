@@ -10,7 +10,7 @@ export type TimeProps = {
   preset?: DateTimePreset;
   /** Display zone (e.g. a venue's zone). Omit to show the viewer's local time. */
   timeZone?: string;
-  /** Overrides the default rule: show the zone when it isn't the viewer's. */
+  /** Append the zone name (e.g. "GMT+1"). Off unless set. */
   showTimeZone?: boolean;
   className?: string;
 };
@@ -43,8 +43,7 @@ export function Time({
         locale: config.locale,
         timeFormat: config.timeFormat,
         timeZone: displayTimeZone,
-        showTimeZone:
-          showTimeZone ?? Boolean(timeZone && timeZone !== config.timeZone),
+        showTimeZone,
       })}
     </time>
   );
@@ -56,7 +55,7 @@ export type TimeRangeProps = {
   preset?: DateTimePreset;
   /** Display zone (e.g. a venue's zone). Omit to show the viewer's local time. */
   timeZone?: string;
-  /** Overrides the default rule: show the zone when it isn't the viewer's. */
+  /** Append the zone name (e.g. "GMT+1"). Off unless set. */
   showTimeZone?: boolean;
   className?: string;
 };
@@ -86,8 +85,7 @@ export function TimeRange({
         locale: config.locale,
         timeFormat: config.timeFormat,
         timeZone: displayTimeZone,
-        showTimeZone:
-          showTimeZone ?? Boolean(timeZone && timeZone !== config.timeZone),
+        showTimeZone,
       })}
     </span>
   );
