@@ -7,8 +7,9 @@ import {
 } from "@rallly/ui/select";
 import * as React from "react";
 
+import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
+import { formatDateTime } from "@/lib/datetime/format";
 import { dayjs } from "@/lib/dayjs";
-import { getDuration } from "@/utils/date-time-utils";
 
 export interface TimePickerProps {
   value?: Date;
@@ -23,7 +24,14 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
   className,
   after,
 }) => {
+  const { locale, timeFormat } = useDateTimeConfig();
+  const { formatDuration } = useDateTime();
   const [open, setOpen] = React.useState(false);
+
+  // The form works in naive local times, so options format in the system zone.
+  const formatTime = (time: string | Date) =>
+    formatDateTime(time, { preset: "time", locale, timeFormat });
+
   const getOptions = React.useCallback(() => {
     if (!open) {
       return [dayjs(value).toISOString()];
@@ -70,10 +78,10 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
             return (
               <SelectItem key={option} value={dayjs(option).toISOString()}>
                 <div className="flex items-center gap-2">
-                  <span>{dayjs(option).format("LT")}</span>
+                  <span>{formatTime(option)}</span>
                   {after ? (
                     <span className="text-muted-foreground text-sm">
-                      {getDuration(dayjs(after), dayjs(option))}
+                      {formatDuration(dayjs(option).diff(after, "minute"))}
                     </span>
                   ) : null}
                 </div>
@@ -83,10 +91,10 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
         ) : (
           <SelectItem value={dayjs(value).toISOString()}>
             <div className="flex items-center gap-2">
-              <span>{dayjs(value).format("LT")}</span>
+              <span>{formatTime(dayjs(value).toDate())}</span>
               {after ? (
                 <span className="text-muted-foreground text-sm">
-                  {getDuration(dayjs(after), dayjs(value))}
+                  {formatDuration(dayjs(value).diff(after, "minute"))}
                 </span>
               ) : null}
             </div>

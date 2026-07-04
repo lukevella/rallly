@@ -3,13 +3,16 @@ import { TrashIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
-import { formatDateParts, formatDateTime } from "@/lib/datetime/format";
+import {
+  formatDateParts,
+  formatDateTime,
+  formatDuration,
+} from "@/lib/datetime/format";
 import type { GetPollApiResponse } from "@/trpc/client/types";
 import type {
   ParsedDateOption,
   ParsedTimeSlotOption,
 } from "@/utils/date-time-utils";
-import { formatDuration } from "@/utils/date-time-utils";
 
 import { useParticipants } from "./participants-provider";
 import { useRequiredContext } from "./use-required-context";

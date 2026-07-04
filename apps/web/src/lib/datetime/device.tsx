@@ -53,10 +53,12 @@ const DeviceDateTimeContext = React.createContext<DeviceDateTime | null>(null);
 export function DeviceDateTimeProvider({
   timeZone: initialTimeZone,
   timeFormat: initialTimeFormat,
+  weekStart,
   children,
 }: {
   timeZone?: string;
   timeFormat?: TimeFormat;
+  weekStart?: number;
   children: React.ReactNode;
 }) {
   const [timeZone, setTimeZoneState] = React.useState(initialTimeZone);
@@ -78,7 +80,11 @@ export function DeviceDateTimeProvider({
 
   return (
     <DeviceDateTimeContext.Provider value={value}>
-      <DateTimeProvider timeZone={timeZone} timeFormat={timeFormat}>
+      <DateTimeProvider
+        timeZone={timeZone}
+        timeFormat={timeFormat}
+        weekStart={weekStart}
+      >
         {children}
       </DateTimeProvider>
     </DeviceDateTimeContext.Provider>

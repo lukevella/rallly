@@ -2,7 +2,12 @@ import type { TimeFormat } from "@rallly/database";
 
 export type DateInput = Date | string | number;
 
-export type DatePreset = "date" | "dateLong" | "dateFull" | "weekday";
+export type DatePreset =
+  | "date"
+  | "dateLong"
+  | "dateFull"
+  | "weekday"
+  | "monthYear";
 
 export type DateTimePreset = DatePreset | "time" | "datetime";
 
@@ -76,6 +81,8 @@ function presetOptions(
       };
     case "weekday":
       return { weekday: "long" };
+    case "monthYear":
+      return { month: "long", year: "numeric" };
     case "datetime":
       return {
         year: "numeric",
@@ -157,6 +164,35 @@ export function formatDateParts(
     }
   }
   return parts;
+}
+
+type DurationFormatCtor = new (
+  locale: string | undefined,
+  options: { style: "narrow" },
+) => { format(duration: { hours?: number; minutes?: number }): string };
+
+const durationFormatters = new Map<string, InstanceType<DurationFormatCtor>>();
+
+export function formatDuration(minutes: number, locale: string): string {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const DurationFormat = (Intl as { DurationFormat?: DurationFormatCtor })
+    .DurationFormat;
+  if (DurationFormat) {
+    let formatter = durationFormatters.get(locale);
+    if (!formatter) {
+      formatter = new DurationFormat(locale, { style: "narrow" });
+      durationFormatters.set(locale, formatter);
+    }
+    return formatter.format({ hours, minutes: mins });
+  }
+  if (hours && mins) {
+    return `${hours}h ${mins}m`;
+  }
+  if (hours) {
+    return `${hours}h`;
+  }
+  return `${mins}m`;
 }
 
 const relativeFormatters = new Map<string, Intl.RelativeTimeFormat>();

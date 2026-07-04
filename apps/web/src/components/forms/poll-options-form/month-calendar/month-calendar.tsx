@@ -28,12 +28,12 @@ import {
 } from "@/components/empty-state";
 import type { NewEventData } from "@/components/forms";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
+import { formatDateParts } from "@/lib/datetime/format";
 import { dayjs } from "@/lib/dayjs";
 import {
   expectTimeOption,
-  formatDuration,
   getBrowserTimeZone,
-  getDateProps,
   removeAllOptionsForDay,
 } from "../../../../utils/date-time-utils";
 import DateCard from "../../../date-card";
@@ -52,6 +52,8 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   onChangeDuration,
 }) => {
   const { t } = useTranslation();
+  const { locale } = useDateTimeConfig();
+  const { formatDuration } = useDateTime();
   // Time-based options are the default. With no options yet the selected
   // duration drives the mode (0 = all-day) so the first selection creates the
   // right kind of option; once options exist their type is the source of truth.
@@ -355,14 +357,16 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                   .sort((a, b) => (a > b ? 1 : -1))
                   .map((dateString) => {
                     const optionsForDay = optionsByDay[dateString];
+                    const dateParts = formatDateParts(
+                      new Date(`${dateString}T12:00:00`),
+                      { locale },
+                    );
                     return (
                       <div
                         key={dateString}
                         className="space-y-3 p-3 sm:flex sm:items-start sm:space-x-4 sm:space-y-0 sm:p-4"
                       >
-                        <DateCard
-                          {...getDateProps(new Date(`${dateString}T12:00:00`))}
-                        />
+                        <DateCard day={dateParts.day} month={dateParts.month} />
                         <div className="grow space-y-3">
                           {optionsForDay.map(({ option, index }) => {
                             if (option.type === "date") {
@@ -555,11 +559,15 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 {datepicker.selection
                   .sort((a, b) => a.getTime() - b.getTime())
                   .map((selectedDate, i) => {
+                    const dateParts = formatDateParts(selectedDate, {
+                      locale,
+                    });
                     return (
                       <DateCard
                         // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
                         key={i}
-                        {...getDateProps(selectedDate)}
+                        day={dateParts.day}
+                        month={dateParts.month}
                         // annotation={
                         //   <CompactButton
                         //     icon={XIcon}

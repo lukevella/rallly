@@ -6,9 +6,10 @@ import type React from "react";
 import type { CalendarProps } from "react-big-calendar";
 import { Calendar } from "react-big-calendar";
 import { createBreakpoint } from "react-use";
+import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
+import { formatDateParts, formatDateTime } from "@/lib/datetime/format";
 import { dayjs } from "@/lib/dayjs";
 
-import { getDuration } from "../../../utils/date-time-utils";
 import DateNavigationToolbar from "./date-navigation-toolbar";
 import dayjsLocalizer from "./dayjs-localizer";
 import type { DateTimeOption, DateTimePickerProps } from "./types";
@@ -32,6 +33,8 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   duration = 60,
   onChangeDuration,
 }) => {
+  const { locale, timeFormat } = useDateTimeConfig();
+  const { formatDuration } = useDateTime();
   const scrollToTime =
     options.length > 0
       ? options[0].type === "timeSlot"
@@ -97,6 +100,9 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           eventWrapper: function EventWraper(props) {
             const start = dayjs(props.event.start);
             const end = dayjs(props.event.end);
+            // The form works in naive local times; format in the system zone.
+            const formatTime = (time: Date) =>
+              formatDateTime(time, { preset: "time", locale, timeFormat });
             return (
               // biome-ignore lint/a11y/noStaticElementInteractions: fix later
               <div
@@ -114,11 +120,15 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                   <XIcon className="size-3" />
                 </div>
                 <div>
-                  <div className="font-semibold">{start.format("LT")}</div>
-                  <div className="opacity-50">{getDuration(start, end)}</div>
+                  <div className="font-semibold">
+                    {formatTime(start.toDate())}
+                  </div>
+                  <div className="opacity-50">
+                    {formatDuration(end.diff(start, "minute"))}
+                  </div>
                 </div>
                 <div>
-                  <div className="opacity-50">{end.format("LT")}</div>
+                  <div className="opacity-50">{formatTime(end.toDate())}</div>
                 </div>
               </div>
             );
@@ -126,14 +136,11 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           week: {
             // biome-ignore lint/suspicious/noExplicitAny: Fix this later
             header: function Header({ date }: any) {
+              const parts = formatDateParts(date, { locale });
               return (
                 <span className="w-full rounded-md text-center text-xs tracking-tight">
-                  <span className="mr-1.5 font-normal">
-                    {dayjs(date).format("ddd")}
-                  </span>
-                  <span className="font-medium">
-                    {dayjs(date).format("DD")}
-                  </span>
+                  <span className="mr-1.5 font-normal">{parts.weekday}</span>
+                  <span className="font-medium">{parts.day}</span>
                 </span>
               );
             },
