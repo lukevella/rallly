@@ -636,8 +636,6 @@
   "themeSystem": "Systémový",
   "timeFormat": "Formát času:",
   "timeZone": "Časová zóna:",
-  "timeZoneChangeDetectorMessage": "Vaše časové pásmo se změnilo na <b>{currentTimeZone}</b>. Chcete aktualizovat svá nastavení?",
-  "timeZoneChangeDetectorTitle": "Změna časového pásma byla detekována",
   "timezoneInputPlaceholder": "Vyhledat časové pásmo…",
   "timeZoneSelect__noOption": "Nenalezeny žádné možnosti",
   "title": "Název",

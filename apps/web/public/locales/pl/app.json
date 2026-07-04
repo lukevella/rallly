@@ -258,8 +258,6 @@
   "temporaryEmailNotAllowed": "Tymczasowe lub jednorazowe adresy e-mail nie są dozwolone.",
   "timeFormat": "Format czasu:",
   "timeZone": "Strefa czasowa:",
-  "timeZoneChangeDetectorMessage": "Twoja strefa czasowa została zmieniona na <b>{currentTimeZone}</b>. Czy chcesz zaktualizować swoje preferencje?",
-  "timeZoneChangeDetectorTitle": "Wykryto zmianę strefy czasowej",
   "timeZoneSelect__noOption": "Nie znaleziono opcji",
   "title": "Tytuł",
   "titlePlaceholder": "Miesięczne spotkanie",

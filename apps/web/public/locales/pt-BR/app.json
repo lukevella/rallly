@@ -644,8 +644,6 @@
   "themeSystem": "Sistema",
   "timeFormat": "Formato de hora:",
   "timeZone": "Fuso horário:",
-  "timeZoneChangeDetectorMessage": "Seu fuso horário mudou para <b>{currentTimeZone}</b>. Você deseja atualizar suas preferências?",
-  "timeZoneChangeDetectorTitle": "Alteração de Fuso Horário Detectada",
   "timezoneInputPlaceholder": "Pesquisar fuso horário…",
   "timeZoneSelect__noOption": "Nenhuma opção encontrada",
   "title": "Título",

@@ -567,8 +567,6 @@
   "themeSystem": "Systeem",
   "timeFormat": "Tijdnotatie:",
   "timeZone": "Tijdzone",
-  "timeZoneChangeDetectorMessage": "Je tijdzone is veranderd naar <b>{currentTimeZone}</b>. Wil je je voorkeuren bijwerken?",
-  "timeZoneChangeDetectorTitle": "Verandering van tijdzone gedetecteerd",
   "timezoneInputPlaceholder": "Zoek tijdzone…",
   "timeZoneSelect__noOption": "Geen optie gevonden",
   "title": "Titel",

@@ -645,8 +645,6 @@
   "themeSystem": "Järjestelmä",
   "timeFormat": "Aikojen esitysmuoto",
   "timeZone": "Aikavyöhyke",
-  "timeZoneChangeDetectorMessage": "Aikavyöhykkeesi on nyt <b>{currentTimeZone}</b>. Haluatko päivittää asetuksesi?",
-  "timeZoneChangeDetectorTitle": "Aikavyöhykkeen muutos havaittu",
   "timezoneInputPlaceholder": "Hae aikavyöhykkeistä…",
   "timeZoneSelect__noOption": "Vaihtoehtoja ei löytynyt",
   "title": "Otsikko",

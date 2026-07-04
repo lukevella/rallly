@@ -566,8 +566,6 @@
   "themeSystem": "System",
   "timeFormat": "Klokkeslettformat",
   "timeZone": "Tidssone",
-  "timeZoneChangeDetectorMessage": "Tidssonen din har endret seg til <b>{currentTimeZone}</b>. Ønsker du å oppdatere innstillingene dine?",
-  "timeZoneChangeDetectorTitle": "Tidssoneendring oppdaget",
   "timezoneInputPlaceholder": "Søk etter tidssone…",
   "timeZoneSelect__noOption": "Intet alternativ funnet",
   "title": "Tittel",
