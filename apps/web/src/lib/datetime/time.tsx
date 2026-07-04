@@ -3,6 +3,7 @@
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import type { DateInput, DateTimePreset } from "@/lib/datetime/format";
 import { formatDateTime, formatDateTimeRange } from "@/lib/datetime/format";
+import { useHydrated } from "@/lib/datetime/use-hydrated";
 import { toISO } from "./utils";
 
 export type TimeProps = {
@@ -10,7 +11,7 @@ export type TimeProps = {
   preset?: DateTimePreset;
   /** Display zone (e.g. a venue's zone). Omit to show the viewer's local time. */
   timeZone?: string;
-  /** Overrides the default rule: show the zone when it isn't the viewer's. */
+  /** Append the zone name (e.g. "GMT+1"). Off unless set. */
   showTimeZone?: boolean;
   className?: string;
 };
@@ -22,13 +23,14 @@ export function Time({
   showTimeZone,
   className,
 }: TimeProps) {
+  const hydrated = useHydrated();
   const config = useDateTimeConfig();
   const displayTimeZone = timeZone ?? config.timeZone;
 
-  // The viewer's zone isn't known until the provider detects it on the
-  // client; render a non-breaking space (preserves the line height) rather
-  // than a time that may be wrong.
-  if (!displayTimeZone) {
+  // Intl output isn't stable across engines, so it can't be rendered on the
+  // server; render a non-breaking space (preserves the line height) until
+  // hydration and until the viewer's zone is known.
+  if (!hydrated || !displayTimeZone) {
     return (
       <time dateTime={toISO(value)} className={className}>
         {" "}
@@ -43,8 +45,7 @@ export function Time({
         locale: config.locale,
         timeFormat: config.timeFormat,
         timeZone: displayTimeZone,
-        showTimeZone:
-          showTimeZone ?? Boolean(timeZone && timeZone !== config.timeZone),
+        showTimeZone,
       })}
     </time>
   );
@@ -56,7 +57,7 @@ export type TimeRangeProps = {
   preset?: DateTimePreset;
   /** Display zone (e.g. a venue's zone). Omit to show the viewer's local time. */
   timeZone?: string;
-  /** Overrides the default rule: show the zone when it isn't the viewer's. */
+  /** Append the zone name (e.g. "GMT+1"). Off unless set. */
   showTimeZone?: boolean;
   className?: string;
 };
@@ -69,13 +70,14 @@ export function TimeRange({
   showTimeZone,
   className,
 }: TimeRangeProps) {
+  const hydrated = useHydrated();
   const config = useDateTimeConfig();
   const displayTimeZone = timeZone ?? config.timeZone;
 
-  // The viewer's zone isn't known until the provider detects it on the
-  // client; render a non-breaking space (preserves the line height) rather
-  // than a time that may be wrong.
-  if (!displayTimeZone) {
+  // Intl output isn't stable across engines, so it can't be rendered on the
+  // server; render a non-breaking space (preserves the line height) until
+  // hydration and until the viewer's zone is known.
+  if (!hydrated || !displayTimeZone) {
     return <span className={className}>{" "}</span>;
   }
 
@@ -86,8 +88,7 @@ export function TimeRange({
         locale: config.locale,
         timeFormat: config.timeFormat,
         timeZone: displayTimeZone,
-        showTimeZone:
-          showTimeZone ?? Boolean(timeZone && timeZone !== config.timeZone),
+        showTimeZone,
       })}
     </span>
   );

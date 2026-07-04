@@ -14,6 +14,11 @@ import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { SessionRefresher } from "@/components/session-refresher";
 import { BrandingStyle } from "@/features/branding/branding-style";
 import { formatLocationText } from "@/features/location/utils";
+import {
+  EventCalendarCard,
+  EventDate,
+  EventTimeRange,
+} from "@/features/scheduled-event/components/event-date-time";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
 import {
   createScheduledEventDTO,
@@ -25,12 +30,8 @@ import { getSpaceBranding } from "@/features/space/data";
 import { getUserProfile } from "@/features/user/data";
 import { getTranslation } from "@/i18n/server";
 import { getSession } from "@/lib/auth";
-import { dayjs } from "@/lib/dayjs";
-import {
-  CalendarCard,
-  CalendarCardDay,
-  CalendarCardMonth,
-} from "./components/calendar-card";
+import { DeviceDateTimeProvider } from "@/lib/datetime/device";
+import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 import {
   EventDetail,
   EventDetailContent,
@@ -99,142 +100,159 @@ export default async function EventPage({
 
   const session = await getSession();
   const { t } = await getTranslation();
+  const deviceDateTimeConfig = await getDeviceDateTimeConfig();
 
   return (
-    <div className="page-bg-gray-50 absolute inset-0 h-dvh overflow-auto md:h-dvh md:items-center md:justify-center md:p-5 dark:bg-gray-900">
-      <SessionRefresher />
-      {brandingColor ? <BrandingStyle primaryColor={brandingColor} /> : null}
-      <header className="fixed top-0 right-0 left-0 z-10 flex justify-between p-4">
-        <Link href="/">
-          <LogoMarkGray className="size-8 text-muted-foreground" />
-        </Link>
-        <div className="flex items-center gap-2">
-          {session?.user.isGuest === false ? (
-            <UserDropdown
-              name={session.user.name}
-              email={session.user.email}
-              image={session.user.image ?? undefined}
-            />
-          ) : (
-            <Link
-              href="/login"
-              className={buttonVariants({ variant: "ghost", size: "sm" })}
-            >
-              {t("signIn", { defaultValue: "Sign in" })}
-            </Link>
-          )}
-        </div>
-      </header>
-      <main id="main-content" tabIndex={-1} className="mx-auto max-w-lg pt-16">
-        <div className="flex flex-col justify-between gap-6 p-4">
-          <EventHeader>
-            {isBranded && branding ? (
-              <SpaceBranding
-                className="mb-4"
-                name={branding.name}
-                image={branding.image ?? undefined}
+    <DeviceDateTimeProvider
+      timeZone={deviceDateTimeConfig.timeZone}
+      timeFormat={deviceDateTimeConfig.timeFormat}
+    >
+      <div className="page-bg-gray-50 absolute inset-0 h-dvh overflow-auto md:h-dvh md:items-center md:justify-center md:p-5 dark:bg-gray-900">
+        <SessionRefresher />
+        {brandingColor ? <BrandingStyle primaryColor={brandingColor} /> : null}
+        <header className="fixed top-0 right-0 left-0 z-10 flex justify-between p-4">
+          <Link href="/">
+            <LogoMarkGray className="size-8 text-muted-foreground" />
+          </Link>
+          <div className="flex items-center gap-2">
+            {session?.user.isGuest === false ? (
+              <UserDropdown
+                name={session.user.name}
+                email={session.user.email}
+                image={session.user.image ?? undefined}
               />
-            ) : null}
-            <EventTitle>{event.title}</EventTitle>
-            <EventSubtitle className="flex items-center gap-2">
-              <OptimizedAvatarImage
-                name={host.name}
-                src={host.image ?? undefined}
-                size="sm"
-              />
-              {t("eventPageHostedBy", {
-                defaultValue: "Hosted by {name}",
-                name: host.name,
-              })}
-            </EventSubtitle>
-            <div className="mt-4 grid gap-4">
-              <EventDetail>
-                <CalendarCard>
-                  <CalendarCardMonth>
-                    {dayjs(event.start).format("MMM")}
-                  </CalendarCardMonth>
-                  <CalendarCardDay>
-                    {dayjs(event.start).format("D")}
-                  </CalendarCardDay>
-                </CalendarCard>
-                <EventDetailContent>
-                  <EventDetailTitle>
-                    {dayjs(event.start).format("dddd, D MMMM")}
-                  </EventDetailTitle>
-                  <EventDetailDescription>
-                    {dayjs(event.start).format("LT")} -{" "}
-                    {dayjs(event.end).format("LT z")}
-                  </EventDetailDescription>
-                </EventDetailContent>
-              </EventDetail>
-              {event.location ? (
+            ) : (
+              <Link
+                href="/login"
+                className={buttonVariants({ variant: "ghost", size: "sm" })}
+              >
+                {t("signIn", { defaultValue: "Sign in" })}
+              </Link>
+            )}
+          </div>
+        </header>
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="mx-auto max-w-lg pt-16"
+        >
+          <div className="flex flex-col justify-between gap-6 p-4">
+            <EventHeader>
+              {isBranded && branding ? (
+                <SpaceBranding
+                  className="mb-4"
+                  name={branding.name}
+                  image={branding.image ?? undefined}
+                />
+              ) : null}
+              <EventTitle>{event.title}</EventTitle>
+              <EventSubtitle className="flex items-center gap-2">
+                <OptimizedAvatarImage
+                  name={host.name}
+                  src={host.image ?? undefined}
+                  size="sm"
+                />
+                {t("eventPageHostedBy", {
+                  defaultValue: "Hosted by {name}",
+                  name: host.name,
+                })}
+              </EventSubtitle>
+              <div className="mt-4 grid gap-4">
                 <EventDetail>
-                  <EventDetailIcon>
-                    <MapPinIcon />
-                  </EventDetailIcon>
+                  <EventCalendarCard
+                    start={event.start}
+                    allDay={event.allDay}
+                    timeZone={event.displayTimeZone}
+                  />
                   <EventDetailContent>
                     <EventDetailTitle>
-                      {formatLocationText(event.location)}
+                      <EventDate
+                        value={event.start}
+                        preset="weekdayMonthDay"
+                        allDay={event.allDay}
+                        timeZone={event.displayTimeZone}
+                      />
                     </EventDetailTitle>
+                    <EventDetailDescription>
+                      <EventTimeRange
+                        start={event.start}
+                        end={event.end}
+                        allDay={event.allDay}
+                        timeZone={event.displayTimeZone}
+                        showTimeZone={true}
+                      />
+                    </EventDetailDescription>
                   </EventDetailContent>
                 </EventDetail>
-              ) : null}
-            </div>
-          </EventHeader>
-          <RsvpCard>
-            <RsvpCardTitle>
-              {t("rsvpCardTitle", { defaultValue: "Registration" })}
-            </RsvpCardTitle>
-            <RsvpCardContent>
-              <RSVPArea
-                eventId={event.id}
-                status={event.status}
-                start={event.start}
-                end={event.end}
-                capacity={event.capacity}
-                acceptedCount={acceptedCount}
-              />
-            </RsvpCardContent>
-          </RsvpCard>
-          {event.description ? (
-            <EventSection>
-              <EventSectionTitle>
-                {t("eventPageAbout", { defaultValue: "About" })}
-              </EventSectionTitle>
-              <p className="whitespace-pre-wrap text-pretty text-foreground text-sm leading-relaxed">
-                <TruncatedLinkify>{event.description}</TruncatedLinkify>
-              </p>
-            </EventSection>
-          ) : null}
-          {visibleAttendees.length > 0 ? (
-            <EventSection>
-              <EventSectionTitle>
-                {t("eventPageGoingCount", {
-                  defaultValue:
-                    "{count, plural, one {# going} other {# going}}",
-                  count: acceptedCount,
-                })}
-              </EventSectionTitle>
-              <AvatarGroup>
-                {visibleAttendees.map((attendee) => (
-                  <OptimizedAvatarImage
-                    key={attendee.id}
-                    name={attendee.name}
-                    src={attendee.image}
-                    size="md"
-                  />
-                ))}
-                {acceptedCount > visibleAttendees.length ? (
-                  <AvatarGroupCount>
-                    +{acceptedCount - visibleAttendees.length}
-                  </AvatarGroupCount>
+                {event.location ? (
+                  <EventDetail>
+                    <EventDetailIcon>
+                      <MapPinIcon />
+                    </EventDetailIcon>
+                    <EventDetailContent>
+                      <EventDetailTitle>
+                        {formatLocationText(event.location)}
+                      </EventDetailTitle>
+                    </EventDetailContent>
+                  </EventDetail>
                 ) : null}
-              </AvatarGroup>
-            </EventSection>
-          ) : null}
-        </div>
-      </main>
-    </div>
+              </div>
+            </EventHeader>
+            <RsvpCard>
+              <RsvpCardTitle>
+                {t("rsvpCardTitle", { defaultValue: "Registration" })}
+              </RsvpCardTitle>
+              <RsvpCardContent>
+                <RSVPArea
+                  eventId={event.id}
+                  status={event.status}
+                  start={event.start}
+                  end={event.end}
+                  capacity={event.capacity}
+                  acceptedCount={acceptedCount}
+                />
+              </RsvpCardContent>
+            </RsvpCard>
+            {event.description ? (
+              <EventSection>
+                <EventSectionTitle>
+                  {t("eventPageAbout", { defaultValue: "About" })}
+                </EventSectionTitle>
+                <p className="whitespace-pre-wrap text-pretty text-foreground text-sm leading-relaxed">
+                  <TruncatedLinkify>{event.description}</TruncatedLinkify>
+                </p>
+              </EventSection>
+            ) : null}
+            {visibleAttendees.length > 0 ? (
+              <EventSection>
+                <EventSectionTitle>
+                  {t("eventPageGoingCount", {
+                    defaultValue:
+                      "{count, plural, one {# going} other {# going}}",
+                    count: acceptedCount,
+                  })}
+                </EventSectionTitle>
+                <AvatarGroup>
+                  {visibleAttendees.map((attendee) => (
+                    <OptimizedAvatarImage
+                      key={attendee.id}
+                      name={attendee.name}
+                      src={attendee.image}
+                      size="md"
+                    />
+                  ))}
+                  {acceptedCount > visibleAttendees.length ? (
+                    <AvatarGroupCount>
+                      +{acceptedCount - visibleAttendees.length}
+                    </AvatarGroupCount>
+                  ) : null}
+                </AvatarGroup>
+              </EventSection>
+            ) : null}
+          </div>
+        </main>
+      </div>
+    </DeviceDateTimeProvider>
   );
 }
 

@@ -3,6 +3,7 @@
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import type { DateInput } from "@/lib/datetime/format";
 import { formatRelativeTime } from "@/lib/datetime/format";
+import { useHydrated } from "@/lib/datetime/use-hydrated";
 import { toISO } from "./utils";
 
 export type RelativeTimeProps = {
@@ -13,10 +14,11 @@ export type RelativeTimeProps = {
 };
 
 export function RelativeTime({ value, locale, className }: RelativeTimeProps) {
+  const hydrated = useHydrated();
   const config = useDateTimeConfig();
   return (
     <time dateTime={toISO(value)} className={className}>
-      {formatRelativeTime(value, locale ?? config.locale)}
+      {hydrated ? formatRelativeTime(value, locale ?? config.locale) : " "}
     </time>
   );
 }
