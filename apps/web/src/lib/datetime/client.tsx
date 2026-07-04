@@ -9,7 +9,7 @@ import {
   formatDateTime as baseFormatDateTime,
   formatRelativeTime,
 } from "@/lib/datetime/format";
-import { getWeekdayNames } from "@/lib/datetime/locales";
+import { getLocaleDefaults, getWeekdayNames } from "@/lib/datetime/locales";
 import { normalizeTimeZone } from "@/lib/datetime/utils";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
 
@@ -17,6 +17,7 @@ type DateTimeConfig = {
   locale?: string;
   timeZone?: string;
   timeFormat?: TimeFormat;
+  weekStart?: number;
 };
 
 const DateTimeContext = React.createContext<DateTimeConfig | undefined>(
@@ -31,6 +32,7 @@ export function DateTimeProvider({
   locale,
   timeZone,
   timeFormat,
+  weekStart,
   children,
 }: DateTimeConfig & { children: React.ReactNode }) {
   const parent = React.useContext(DateTimeContext);
@@ -48,8 +50,9 @@ export function DateTimeProvider({
       timeZone:
         normalizeTimeZone(timeZone) ?? parent?.timeZone ?? browserTimeZone,
       timeFormat: timeFormat ?? parent?.timeFormat,
+      weekStart: weekStart ?? parent?.weekStart,
     }),
-    [locale, timeZone, timeFormat, parent, browserTimeZone],
+    [locale, timeZone, timeFormat, weekStart, parent, browserTimeZone],
   );
 
   return (
@@ -62,11 +65,13 @@ export function DateTimeProvider({
 export function useDateTimeConfig() {
   const config = React.useContext(DateTimeContext);
   const params = useParams<{ locale?: string }>();
+  const locale = config?.locale ?? params?.locale ?? defaultLocale;
 
   return {
-    locale: config?.locale ?? params?.locale ?? defaultLocale,
+    locale,
     timeZone: config?.timeZone,
     timeFormat: config?.timeFormat,
+    weekStart: config?.weekStart ?? getLocaleDefaults(locale).weekStart,
   };
 }
 

@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useDateTimeConfig } from "@/lib/datetime/client";
+import { formatDateParts, formatDateTime } from "@/lib/datetime/format";
 import { dayjs } from "@/lib/dayjs";
 
 interface DayProps {
@@ -34,13 +36,19 @@ export const useHeadlessDatePicker = (
   selection: Date[];
   toggle: (date: Date) => void;
 } => {
+  const { locale, weekStart } = useDateTimeConfig();
   const [localSelection, setSelection] = React.useState<Date[]>([]);
   const selection = options?.selection ?? localSelection;
   const [localNavigationDate, setNavigationDate] = React.useState(today);
   const navigationDate = dayjs(options?.date ?? localNavigationDate);
 
   const firstDayOfMonth = navigationDate.startOf("month");
-  const firstDayOfFirstWeek = firstDayOfMonth.startOf("week");
+  // dayjs's startOf("week") depends on the global locale; shift explicitly so
+  // the grid follows the viewer's week start.
+  const firstDayOfFirstWeek = firstDayOfMonth.subtract(
+    (firstDayOfMonth.day() - weekStart + 7) % 7,
+    "days",
+  );
 
   const currentMonth = navigationDate.get("month");
 
@@ -49,7 +57,10 @@ export const useHeadlessDatePicker = (
   const daysOfWeek: string[] = [];
 
   for (let i = 0; i < 7; i++) {
-    daysOfWeek.push(firstDayOfFirstWeek.add(i, "days").format("dd"));
+    daysOfWeek.push(
+      formatDateParts(firstDayOfFirstWeek.add(i, "days").toDate(), { locale })
+        .weekday,
+    );
   }
 
   let reachedEnd = false;
@@ -58,7 +69,7 @@ export const useHeadlessDatePicker = (
     const d = firstDayOfFirstWeek.add(i, "days");
     days.push({
       date: d.toDate(),
-      day: d.format("D"),
+      day: formatDateParts(d.toDate(), { locale }).day,
       weekend: d.day() === 0 || d.day() === 6,
       outOfMonth: d.month() !== currentMonth,
       today: d.isSame(today, "day"),
@@ -72,7 +83,10 @@ export const useHeadlessDatePicker = (
 
   return {
     navigationDate: navigationDate.toDate(),
-    label: navigationDate.format("MMMM YYYY"),
+    label: formatDateTime(navigationDate.toDate(), {
+      preset: "monthYear",
+      locale,
+    }),
     next: () => {
       const newDate = navigationDate.add(1, "month").startOf("month").toDate();
       if (!options?.date) {

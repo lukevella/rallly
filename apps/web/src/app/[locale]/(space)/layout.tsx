@@ -34,7 +34,11 @@ export default async function Layout({
       <SessionRefresher />
       <LocaleSync userLocale={user?.locale} />
       <TimeZoneMismatchDialog homeTimeZone={user?.timeZone} />
-      <DateTimeProvider timeZone={user?.timeZone} timeFormat={user?.timeFormat}>
+      <DateTimeProvider
+        timeZone={user?.timeZone}
+        timeFormat={user?.timeFormat}
+        weekStart={user?.weekStart ?? undefined}
+      >
         <SpaceProvider>
           {children}
           <PayWall />

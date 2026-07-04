@@ -2,7 +2,12 @@ import type { TimeFormat } from "@rallly/database";
 
 export type DateInput = Date | string | number;
 
-export type DatePreset = "date" | "dateLong" | "dateFull" | "weekday";
+export type DatePreset =
+  | "date"
+  | "dateLong"
+  | "dateFull"
+  | "weekday"
+  | "monthYear";
 
 export type DateTimePreset = DatePreset | "time" | "datetime";
 
@@ -76,6 +81,8 @@ function presetOptions(
       };
     case "weekday":
       return { weekday: "long" };
+    case "monthYear":
+      return { month: "long", year: "numeric" };
     case "datetime":
       return {
         year: "numeric",

@@ -63,10 +63,6 @@ export const formatDuration = (minutes: number, locale?: string) => {
   return `${mins}m`;
 };
 
-export const getDuration = (startTime: dayjs.Dayjs, endTime: dayjs.Dayjs) => {
-  return formatDuration(endTime.diff(startTime, "minute"));
-};
-
 export const removeAllOptionsForDay = (
   options: DateTimeOption[],
   date: Date,
@@ -77,15 +73,6 @@ export const removeAllOptionsForDay = (
       "day",
     );
   });
-};
-
-export const getDateProps = (date: Date) => {
-  const d = dayjs(date);
-  return {
-    day: d.format("D"),
-    dow: d.format("ddd"),
-    month: d.format("MMM"),
-  };
 };
 
 export const expectTimeOption = (d: DateTimeOption): TimeOption => {

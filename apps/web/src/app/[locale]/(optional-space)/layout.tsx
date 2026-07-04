@@ -36,6 +36,7 @@ export default async function Layout({
           timeFormat={
             deviceDateTimeConfig.timeFormat ?? user?.timeFormat ?? undefined
           }
+          weekStart={user?.weekStart ?? undefined}
         >
           {children}
           <PayWall />
