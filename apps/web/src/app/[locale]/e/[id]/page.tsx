@@ -14,6 +14,11 @@ import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { SessionRefresher } from "@/components/session-refresher";
 import { BrandingStyle } from "@/features/branding/branding-style";
 import { formatLocationText } from "@/features/location/utils";
+import {
+  EventCalendarCard,
+  EventDate,
+  EventTimeRange,
+} from "@/features/scheduled-event/components/event-date-time";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
 import {
   createScheduledEventDTO,
@@ -25,11 +30,8 @@ import { getSpaceBranding } from "@/features/space/data";
 import { getUserProfile } from "@/features/user/data";
 import { getTranslation } from "@/i18n/server";
 import { getSession } from "@/lib/auth";
-import { CalendarDate } from "@/lib/datetime/calendar-date";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
-import { Time, TimeRange } from "@/lib/datetime/time";
-import { EventCalendarCard } from "./components/event-calendar-card";
 import {
   EventDetail,
   EventDetailContent,
@@ -160,34 +162,25 @@ export default async function EventPage({
                   <EventCalendarCard
                     start={event.start}
                     allDay={event.allDay}
-                    displayTimeZone={event.displayTimeZone}
+                    timeZone={event.displayTimeZone}
                   />
                   <EventDetailContent>
                     <EventDetailTitle>
-                      {event.allDay ? (
-                        <CalendarDate
-                          value={event.start}
-                          preset="weekdayMonthDay"
-                        />
-                      ) : (
-                        <Time
-                          value={event.start}
-                          preset="weekdayMonthDay"
-                          timeZone={event.displayTimeZone ?? undefined}
-                        />
-                      )}
+                      <EventDate
+                        value={event.start}
+                        preset="weekdayMonthDay"
+                        allDay={event.allDay}
+                        timeZone={event.displayTimeZone}
+                      />
                     </EventDetailTitle>
                     <EventDetailDescription>
-                      {event.allDay ? (
-                        t("allDay", { defaultValue: "All day" })
-                      ) : (
-                        <TimeRange
-                          start={event.start}
-                          end={event.end}
-                          timeZone={event.displayTimeZone ?? undefined}
-                          showTimeZone
-                        />
-                      )}
+                      <EventTimeRange
+                        start={event.start}
+                        end={event.end}
+                        allDay={event.allDay}
+                        timeZone={event.displayTimeZone}
+                        showTimeZone={true}
+                      />
                     </EventDetailDescription>
                   </EventDetailContent>
                 </EventDetail>
