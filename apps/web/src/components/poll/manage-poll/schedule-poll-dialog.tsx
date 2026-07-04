@@ -27,10 +27,14 @@ import { useParticipants } from "@/components/participants-provider";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { VoteSummaryProgressBar } from "@/components/vote-summary-progress-bar";
 import { usePoll } from "@/contexts/poll";
+import {
+  EventDate,
+  EventTimeRange,
+} from "@/features/scheduled-event/components/event-date-time";
 import { Trans } from "@/i18n/client";
-import { dayjs } from "@/lib/dayjs";
+import { useDateTimeConfig } from "@/lib/datetime/client";
+import { formatDateParts } from "@/lib/datetime/format";
 import { trpc } from "@/trpc/client";
-import { useDayjs } from "@/utils/dayjs";
 
 const formSchema = z.object({
   selectedOptionId: z.string(),
@@ -71,9 +75,13 @@ const useScoreByOptionId = () => {
 
 function DateIcon({ start }: { start: Date }) {
   const poll = usePoll();
-  const { adjustTimeZone } = useDayjs();
-  const d = adjustTimeZone(start, !poll.timeZone);
-  return <DateIconInner dow={d.format("ddd")} day={d.format("D")} />;
+  const config = useDateTimeConfig();
+  const parts = formatDateParts(start, {
+    locale: config.locale,
+    // Floating times are stored as UTC wall times; read them unshifted.
+    timeZone: poll.timeZone ? config.timeZone : "UTC",
+  });
+  return <DateIconInner dow={parts.weekday} day={parts.day} />;
 }
 
 export const SchedulePollForm = ({
@@ -85,7 +93,6 @@ export const SchedulePollForm = ({
 }) => {
   const poll = usePoll();
 
-  const { adjustTimeZone } = useDayjs();
   const scoreByOptionId = useScoreByOptionId();
   const { participants } = useParticipants();
 
@@ -146,15 +153,7 @@ export const SchedulePollForm = ({
                     className="grid max-h-96 gap-2 overflow-y-auto rounded-xl bg-gray-100 p-2 dark:bg-gray-900"
                   >
                     {options.map((option) => {
-                      const start = adjustTimeZone(
-                        option.startTime,
-                        !poll.timeZone,
-                      );
-
-                      const end = adjustTimeZone(
-                        dayjs(option.startTime).add(option.duration, "minute"),
-                        !poll.timeZone,
-                      );
+                      const allDay = option.duration === 0;
 
                       return (
                         <label
@@ -171,19 +170,24 @@ export const SchedulePollForm = ({
                               <DateIcon start={option.startTime} />
                               <div className="grow whitespace-nowrap">
                                 <div className="font-medium text-sm">
-                                  {start.format("LL")}
+                                  <EventDate
+                                    value={option.startTime}
+                                    allDay={allDay}
+                                    timeZone={poll.timeZone}
+                                  />
                                 </div>
                                 <div className="text-muted-foreground text-sm">
-                                  {option.duration > 0 ? (
-                                    `${start.format("LT")} - ${end.format(
-                                      "LT",
-                                    )}`
-                                  ) : (
-                                    <Trans
-                                      i18nKey="allDay"
-                                      defaults="All day"
-                                    />
-                                  )}
+                                  <EventTimeRange
+                                    start={option.startTime}
+                                    end={
+                                      new Date(
+                                        option.startTime.getTime() +
+                                          option.duration * 60_000,
+                                      )
+                                    }
+                                    allDay={allDay}
+                                    timeZone={poll.timeZone}
+                                  />
                                 </div>
                               </div>
                               <div>
