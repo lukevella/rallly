@@ -171,16 +171,20 @@ type DurationFormatCtor = new (
   options: { style: "narrow" },
 ) => { format(duration: { hours?: number; minutes?: number }): string };
 
+const durationFormatters = new Map<string, InstanceType<DurationFormatCtor>>();
+
 export function formatDuration(minutes: number, locale: string): string {
   const hours = Math.floor(minutes / 60);
   const mins = minutes % 60;
   const DurationFormat = (Intl as { DurationFormat?: DurationFormatCtor })
     .DurationFormat;
   if (DurationFormat) {
-    return new DurationFormat(locale, { style: "narrow" }).format({
-      hours,
-      minutes: mins,
-    });
+    let formatter = durationFormatters.get(locale);
+    if (!formatter) {
+      formatter = new DurationFormat(locale, { style: "narrow" });
+      durationFormatters.set(locale, formatter);
+    }
+    return formatter.format({ hours, minutes: mins });
   }
   if (hours && mins) {
     return `${hours}h ${mins}m`;
