@@ -177,7 +177,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             formatDateTimeRange(start, end, { preset: "monthDay", locale }),
           // The toolbar shows the year separately, so leave it out here.
           dayHeaderFormat: (date: Date) =>
-            `${formatDateTime(date, { preset: "weekday", locale })}, ${formatDateTime(date, { preset: "monthDay", locale })}`,
+            formatDateTime(date, { preset: "weekdayMonthDay", locale }),
         }}
         step={15}
         onSelectSlot={({ start, end, action }) => {
