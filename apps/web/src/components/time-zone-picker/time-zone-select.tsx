@@ -94,12 +94,7 @@ export function TimeZoneSelect({
                 {getCityFromTimezoneId(entry)}
               </span>
               <span className="rounded-full px-1 py-0.5 text-center text-muted-foreground text-xs tabular-nums">
-                <Time
-                  value={now}
-                  preset="time"
-                  timeZone={entry}
-                  showTimeZone={false}
-                />
+                <Time value={now} preset="time" timeZone={entry} />
               </span>
             </ComboboxItem>
           )}
