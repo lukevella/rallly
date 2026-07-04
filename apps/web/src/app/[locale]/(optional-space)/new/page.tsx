@@ -1,3 +1,4 @@
+import { prisma } from "@rallly/database";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,12 +12,50 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CreatePoll } from "@/components/create-poll";
 import { UserDropdown } from "@/components/user-dropdown";
+import { BrandStyle } from "@/features/branding/brand-style";
+import { createSpaceDTO } from "@/features/space/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { getSession } from "@/lib/auth";
+
+const getActiveSpace = async () => {
+  const session = await getSession();
+
+  if (session?.user.isGuest || !session?.user.id) {
+    return null;
+  }
+
+  const spaceMember = await prisma.spaceMember.findFirst({
+    where: {
+      userId: session?.user.id,
+    },
+    orderBy: {
+      lastSelectedAt: "desc",
+    },
+    include: {
+      space: true,
+    },
+  });
+
+  return spaceMember?.space
+    ? createSpaceDTO({ ...spaceMember.space, role: spaceMember.role })
+    : null;
+};
+
+async function getPrimaryColor() {
+  const space = await getActiveSpace();
+  if (space) {
+    return space.showBranding && space.primaryColor ? space.primaryColor : null;
+  }
+  return null;
+}
 
 export default async function Page() {
+  const primaryColor = await getPrimaryColor();
+
   return (
     <div className="page-bg-gray-100 absolute inset-0 h-dvh overflow-auto dark:bg-gray-900">
+      {primaryColor ? <BrandStyle primaryColor={primaryColor} /> : null}
       <div className="sticky top-0 z-20 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:grid-cols-3 dark:bg-gray-900/90">
         <div className="mx-auto flex items-center justify-between gap-x-2">
           <div className="sm:flex-1">
