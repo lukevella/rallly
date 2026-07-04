@@ -9,7 +9,6 @@ import { defaultNotificationPreferences } from "@/features/notifications/constan
 import { getNotificationPreferences } from "@/features/notifications/queries";
 import { activityEventTypes } from "@/features/notifications/schema";
 import { defineAbilityFor } from "@/features/user/ability";
-import { timezoneSchema } from "@/utils/timezone-schema";
 import {
   createRateLimitMiddleware,
   privateProcedure,
@@ -28,32 +27,6 @@ export const user = router({
   getAuthed: privateProcedure.query(async ({ ctx }) => {
     return ctx.user;
   }),
-  updatePreferences: privateProcedure
-    .input(
-      z.object({
-        locale: z.string().optional(),
-        timeZone: timezoneSchema.optional(),
-        weekStart: z.number().min(0).max(6).optional(),
-        timeFormat: z.enum(["hours12", "hours24"]).optional(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      if (ctx.user.isGuest) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Guest users cannot update preferences",
-        });
-      }
-
-      await prisma.user.update({
-        where: {
-          id: ctx.user.id,
-        },
-        data: input,
-      });
-
-      return { success: true };
-    }),
   deleteMe: privateProcedure.mutation(async ({ ctx }) => {
     const userId = ctx.user.id;
 

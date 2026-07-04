@@ -1,14 +1,16 @@
 "use client";
 
 import { Trans } from "@/i18n/client";
-import { dayjs } from "@/lib/dayjs";
+import { useDateTimeConfig } from "@/lib/datetime/client";
+import { formatRelativeTime } from "@/lib/datetime/format";
 
 export function RelativeDate({ date }: { date: Date }) {
+  const { locale } = useDateTimeConfig();
   return (
     <Trans
       i18nKey="createdTime"
       defaults="Created {relativeTime}"
-      values={{ relativeTime: dayjs(date).fromNow() }}
+      values={{ relativeTime: formatRelativeTime(date, locale) }}
     />
   );
 }

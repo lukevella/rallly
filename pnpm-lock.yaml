@@ -430,18 +430,12 @@ importers:
       smoothscroll-polyfill:
         specifier: ^0.4.4
         version: 0.4.4
-      spacetime:
-        specifier: ^7.4.7
-        version: 7.12.0
       superjson:
         specifier: ^2.0.0
         version: 2.2.6
       tailwindcss:
         specifier: ^4.1.18
         version: 4.1.18
-      timezone-soft:
-        specifier: ^1.5.2
-        version: 1.5.2
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -10592,9 +10586,6 @@ packages:
   space-separated-tokens@2.0.2:
     resolution: {integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==}
 
-  spacetime@7.12.0:
-    resolution: {integrity: sha512-n7iQdr/oiTc0Yc0m5/8lpqRPMxuD9c6Yk7F8Np5+jH7tawt+dJZeCLDHNnr2kP5tUlv1H0fazdCOE9EQUv0B3g==}
-
   split2@4.2.0:
     resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
     engines: {node: '>= 10.x'}
@@ -10861,9 +10852,6 @@ packages:
 
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
-
-  timezone-soft@1.5.2:
-    resolution: {integrity: sha512-BUr+CfBfeWXJwFAuEzPO9uF+v6sy3pL5SKLkDg4vdEhsyXgbBnpFoBCW8oEKSNTqNq9YHbVOjNb31xE7WyGmrA==}
 
   tiny-case@1.0.3:
     resolution: {integrity: sha512-Eet/eeMhkO6TX8mnUteS9zgPbUMQa4I6Kkp5ORiBD5476/m+PIRiumP5tmh5ioJpH7k51Kehawy2UDfsnxxY8Q==}
@@ -23653,8 +23641,6 @@ snapshots:
 
   space-separated-tokens@2.0.2: {}
 
-  spacetime@7.12.0: {}
-
   split2@4.2.0: {}
 
   sprintf-js@1.0.3: {}
@@ -23962,8 +23948,6 @@ snapshots:
   throttle-debounce@3.0.1: {}
 
   through@2.3.8: {}
-
-  timezone-soft@1.5.2: {}
 
   tiny-case@1.0.3: {}
 
