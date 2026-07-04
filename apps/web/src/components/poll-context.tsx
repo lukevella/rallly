@@ -1,15 +1,15 @@
-import type { VoteType } from "@rallly/database";
+import type { TimeFormat, VoteType } from "@rallly/database";
 import { TrashIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "@/i18n/client";
-import { dayjs } from "@/lib/dayjs";
+import { useDateTimeConfig } from "@/lib/datetime/client";
+import { formatDateParts, formatDateTime } from "@/lib/datetime/format";
 import type { GetPollApiResponse } from "@/trpc/client/types";
 import type {
   ParsedDateOption,
   ParsedTimeSlotOption,
 } from "@/utils/date-time-utils";
-import { getDuration } from "@/utils/date-time-utils";
-import { useDayjs } from "@/utils/dayjs";
+import { formatDuration } from "@/utils/date-time-utils";
 
 import { useParticipants } from "./participants-provider";
 import { useRequiredContext } from "./use-required-context";
@@ -130,11 +130,24 @@ export const useOptions = () => {
   return context;
 };
 
-export function createOptionsContextValue(
-  pollOptions: { id: string; startTime: Date; duration: number }[],
-  targetTimeZone: string,
-  sourceTimeZone: string | null,
-): OptionsContextValue {
+export function createOptionsContextValue({
+  pollOptions,
+  pollTimeZone,
+  locale,
+  timeZone,
+  timeFormat,
+}: {
+  pollOptions: { id: string; startTime: Date; duration: number }[];
+  /**
+   * The poll's zone: set means options are fixed instants shown in the
+   * viewer's zone; null means floating times shown as stored.
+   */
+  pollTimeZone: string | null;
+  locale: string;
+  /** The viewer's zone; undefined falls back to the system zone. */
+  timeZone?: string;
+  timeFormat?: TimeFormat;
+}): OptionsContextValue {
   if (pollOptions.length === 0) {
     return {
       pollType: "date",
@@ -142,32 +155,40 @@ export function createOptionsContextValue(
     };
   }
   if (pollOptions[0].duration > 0) {
+    // Floating times are stored as UTC wall times, so reading them in UTC
+    // shows them unshifted.
+    const displayTimeZone = pollTimeZone ? timeZone : "UTC";
     return {
       pollType: "timeSlot",
       options: pollOptions.map((option) => {
-        function adjustTimeZone(date: Date) {
-          if (sourceTimeZone) {
-            return dayjs(date).tz(targetTimeZone);
-          }
-          return dayjs(date).utc();
-        }
-        const localStartTime = adjustTimeZone(option.startTime);
-
-        // for some reason, dayjs requires us to do timezone conversion at the end
-        const localEndTime = adjustTimeZone(
-          dayjs(option.startTime).add(option.duration, "minute").toDate(),
+        const endTime = new Date(
+          option.startTime.getTime() + option.duration * 60_000,
         );
+        const parts = formatDateParts(option.startTime, {
+          locale,
+          timeZone: displayTimeZone,
+        });
 
         return {
           optionId: option.id,
           type: "timeSlot",
-          startTime: localStartTime.format("LT"),
-          endTime: localEndTime.format("LT"),
-          duration: getDuration(localStartTime, localEndTime),
-          month: localStartTime.format("MMM"),
-          day: localStartTime.format("D"),
-          dow: localStartTime.format("ddd"),
-          year: localStartTime.format("YYYY"),
+          startTime: formatDateTime(option.startTime, {
+            preset: "time",
+            locale,
+            timeFormat,
+            timeZone: displayTimeZone,
+          }),
+          endTime: formatDateTime(endTime, {
+            preset: "time",
+            locale,
+            timeFormat,
+            timeZone: displayTimeZone,
+          }),
+          duration: formatDuration(option.duration, locale),
+          month: parts.month,
+          day: parts.day,
+          dow: parts.weekday,
+          year: parts.year,
         } satisfies ParsedTimeSlotOption;
       }),
     };
@@ -177,15 +198,18 @@ export function createOptionsContextValue(
       options: pollOptions.map((option) => {
         // All-day options are floating dates: always read them in UTC so the
         // calendar date is identical for every viewer, regardless of timezone.
-        const localTime = dayjs(option.startTime).utc();
+        const parts = formatDateParts(option.startTime, {
+          locale,
+          timeZone: "UTC",
+        });
 
         return {
           optionId: option.id,
           type: "date",
-          month: localTime.format("MMM"),
-          day: localTime.format("D"),
-          dow: localTime.format("ddd"),
-          year: localTime.format("YYYY"),
+          month: parts.month,
+          day: parts.day,
+          dow: parts.weekday,
+          year: parts.year,
         } satisfies ParsedDateOption;
       }),
     };
@@ -194,16 +218,17 @@ export function createOptionsContextValue(
 
 export const OptionsProvider = (props: React.PropsWithChildren) => {
   const { poll } = usePoll();
-  const { timeZone: targetTimeZone, timeFormat } = useDayjs();
+  const { locale, timeZone, timeFormat } = useDateTimeConfig();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix this later
   const options = React.useMemo(() => {
-    return createOptionsContextValue(
-      poll.options,
-      targetTimeZone,
-      poll.timeZone,
-    );
-  }, [poll.options, poll.timeZone, targetTimeZone, timeFormat]);
+    return createOptionsContextValue({
+      pollOptions: poll.options,
+      pollTimeZone: poll.timeZone,
+      locale,
+      timeZone,
+      timeFormat,
+    });
+  }, [poll.options, poll.timeZone, locale, timeZone, timeFormat]);
 
   return (
     <OptionsContext.Provider value={options}>

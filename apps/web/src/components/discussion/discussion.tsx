@@ -28,7 +28,7 @@ import { useEditToken } from "@/components/poll/mutations";
 import { usePoll } from "@/contexts/poll";
 import { useRole } from "@/contexts/role";
 import { Trans, useTranslation } from "@/i18n/client";
-import { dayjs } from "@/lib/dayjs";
+import { RelativeTime } from "@/lib/datetime/relative-time";
 import { trpc } from "@/trpc/client";
 import { requiredString } from "../../utils/form-validation";
 import TruncatedLinkify from "../poll/truncated-linkify";
@@ -201,7 +201,7 @@ function DiscussionInner() {
                       </Participant>
                       <div className="flex items-center gap-2 text-sm">
                         <div className="text-muted-foreground">
-                          {dayjs(comment.createdAt).fromNow()}
+                          <RelativeTime value={comment.createdAt} />
                         </div>
                         {canDelete && (
                           <DropdownMenu>

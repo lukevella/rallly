@@ -3,6 +3,8 @@ import { SessionRefresher } from "@/components/session-refresher";
 import { PreferencesProvider } from "@/contexts/preferences";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { isQuickCreateEnabled } from "@/features/quick-create";
+import { DateTimeProvider } from "@/lib/datetime/client";
+import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 import {
   createPrivateSSRHelper,
   createPublicSSRHelper,
@@ -17,17 +19,27 @@ export default async function Layout({
     ? await createPublicSSRHelper()
     : await createPrivateSSRHelper();
 
-  await Promise.all([
+  const [deviceDateTimeConfig, user] = await Promise.all([
+    getDeviceDateTimeConfig(),
+    helpers.user.getMe.fetch(),
     helpers.billing.getTier.prefetch(),
-    helpers.user.getMe.prefetch(),
   ]);
 
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
       <SessionRefresher />
       <PreferencesProvider>
-        {children}
-        <PayWall />
+        <DateTimeProvider
+          timeZone={
+            deviceDateTimeConfig.timeZone ?? user?.timeZone ?? undefined
+          }
+          timeFormat={
+            deviceDateTimeConfig.timeFormat ?? user?.timeFormat ?? undefined
+          }
+        >
+          {children}
+          <PayWall />
+        </DateTimeProvider>
       </PreferencesProvider>
     </HydrationBoundary>
   );

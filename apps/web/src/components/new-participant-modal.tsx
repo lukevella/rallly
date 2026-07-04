@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { usePoll } from "@/contexts/poll";
 import { useTranslation } from "@/i18n/client";
-import { useDayjs } from "@/utils/dayjs";
+import { useDateTimeConfig } from "@/lib/datetime/client";
 import { useAddParticipantMutation } from "./poll/mutations";
 import VoteIcon from "./poll/vote-icon";
 import { useUser } from "./user-provider";
@@ -91,7 +91,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const poll = usePoll();
 
   const isEmailRequired = poll.requireParticipantEmail;
-  const { timeZone } = useDayjs();
+  const { timeZone } = useDateTimeConfig();
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = user && !user.isGuest;
   const form = useForm({
