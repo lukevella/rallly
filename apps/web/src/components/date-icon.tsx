@@ -1,7 +1,4 @@
 import { cn } from "@rallly/ui";
-import type { Dayjs } from "dayjs";
-
-import { dayjs } from "@/lib/dayjs";
 
 export const DateIconInner = (props: {
   dow?: React.ReactNode;
@@ -23,16 +20,5 @@ export const DateIconInner = (props: {
         {props.day}
       </div>
     </div>
-  );
-};
-
-export const DateIcon = (props: { date: Dayjs; className?: string }) => {
-  return (
-    <DateIconInner
-      className={props.className}
-      dow={dayjs(props.date).format("ddd")}
-      day={dayjs(props.date).format("D")}
-      month={dayjs(props.date).format("MMM")}
-    />
   );
 };
