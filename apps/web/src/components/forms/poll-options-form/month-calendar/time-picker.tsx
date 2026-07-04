@@ -7,10 +7,9 @@ import {
 } from "@rallly/ui/select";
 import * as React from "react";
 
-import { useDateTimeConfig } from "@/lib/datetime/client";
+import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { formatDateTime } from "@/lib/datetime/format";
 import { dayjs } from "@/lib/dayjs";
-import { formatDuration } from "@/utils/date-time-utils";
 
 export interface TimePickerProps {
   value?: Date;
@@ -26,6 +25,7 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
   after,
 }) => {
   const { locale, timeFormat } = useDateTimeConfig();
+  const { formatDuration } = useDateTime();
   const [open, setOpen] = React.useState(false);
 
   // The form works in naive local times, so options format in the system zone.
@@ -81,10 +81,7 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
                   <span>{formatTime(option)}</span>
                   {after ? (
                     <span className="text-muted-foreground text-sm">
-                      {formatDuration(
-                        dayjs(option).diff(after, "minute"),
-                        locale,
-                      )}
+                      {formatDuration(dayjs(option).diff(after, "minute"))}
                     </span>
                   ) : null}
                 </div>
@@ -97,7 +94,7 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
               <span>{formatTime(dayjs(value).toDate())}</span>
               {after ? (
                 <span className="text-muted-foreground text-sm">
-                  {formatDuration(dayjs(value).diff(after, "minute"), locale)}
+                  {formatDuration(dayjs(value).diff(after, "minute"))}
                 </span>
               ) : null}
             </div>

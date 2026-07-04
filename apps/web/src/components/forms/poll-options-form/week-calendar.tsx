@@ -6,11 +6,10 @@ import type React from "react";
 import type { CalendarProps } from "react-big-calendar";
 import { Calendar } from "react-big-calendar";
 import { createBreakpoint } from "react-use";
-import { useDateTimeConfig } from "@/lib/datetime/client";
+import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { formatDateParts, formatDateTime } from "@/lib/datetime/format";
 import { dayjs } from "@/lib/dayjs";
 
-import { formatDuration } from "../../../utils/date-time-utils";
 import DateNavigationToolbar from "./date-navigation-toolbar";
 import dayjsLocalizer from "./dayjs-localizer";
 import type { DateTimeOption, DateTimePickerProps } from "./types";
@@ -35,6 +34,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   onChangeDuration,
 }) => {
   const { locale, timeFormat } = useDateTimeConfig();
+  const { formatDuration } = useDateTime();
   const scrollToTime =
     options.length > 0
       ? options[0].type === "timeSlot"
@@ -124,7 +124,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                     {formatTime(start.toDate())}
                   </div>
                   <div className="opacity-50">
-                    {formatDuration(end.diff(start, "minute"), locale)}
+                    {formatDuration(end.diff(start, "minute"))}
                   </div>
                 </div>
                 <div>

@@ -28,12 +28,11 @@ import {
 } from "@/components/empty-state";
 import type { NewEventData } from "@/components/forms";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useDateTimeConfig } from "@/lib/datetime/client";
+import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { formatDateParts } from "@/lib/datetime/format";
 import { dayjs } from "@/lib/dayjs";
 import {
   expectTimeOption,
-  formatDuration,
   getBrowserTimeZone,
   removeAllOptionsForDay,
 } from "../../../../utils/date-time-utils";
@@ -54,6 +53,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 }) => {
   const { t } = useTranslation();
   const { locale } = useDateTimeConfig();
+  const { formatDuration } = useDateTime();
   // Time-based options are the default. With no options yet the selected
   // duration drives the mode (0 = all-day) so the first selection creates the
   // right kind of option; once options exist their type is the source of truth.
@@ -190,7 +190,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           >
             {durationOptions.map((minutes) => (
               <RadioCardsItem key={minutes} value={String(minutes)}>
-                {formatDuration(minutes, locale)}
+                {formatDuration(minutes)}
               </RadioCardsItem>
             ))}
             <RadioCardsItem data-testid="all-day-option" value="all-day">

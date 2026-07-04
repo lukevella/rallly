@@ -166,6 +166,31 @@ export function formatDateParts(
   return parts;
 }
 
+type DurationFormatCtor = new (
+  locale: string | undefined,
+  options: { style: "narrow" },
+) => { format(duration: { hours?: number; minutes?: number }): string };
+
+export function formatDuration(minutes: number, locale: string): string {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const DurationFormat = (Intl as { DurationFormat?: DurationFormatCtor })
+    .DurationFormat;
+  if (DurationFormat) {
+    return new DurationFormat(locale, { style: "narrow" }).format({
+      hours,
+      minutes: mins,
+    });
+  }
+  if (hours && mins) {
+    return `${hours}h ${mins}m`;
+  }
+  if (hours) {
+    return `${hours}h`;
+  }
+  return `${mins}m`;
+}
+
 const relativeFormatters = new Map<string, Intl.RelativeTimeFormat>();
 
 // Largest-first; each entry is how many of the unit make up the next one.

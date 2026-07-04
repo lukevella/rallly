@@ -44,10 +44,10 @@ import { DeleteEventTypeDialog } from "@/features/event-types/components/delete-
 import { EditEventTypeDialog } from "@/features/event-types/components/edit-event-type-dialog";
 import type { EventTypeDTO } from "@/features/event-types/types";
 import { Trans } from "@/i18n/client";
+import { formatDuration } from "@/lib/datetime/format";
 import { useLocale } from "@/lib/locale/client";
 import type { LocationType } from "@/lib/location";
 import { trpc } from "@/trpc/client";
-import { formatDuration } from "@/utils/date-time-utils";
 
 function EventTypesEmptyState({ onCreate }: { onCreate: () => void }) {
   return (
