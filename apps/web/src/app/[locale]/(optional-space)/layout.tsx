@@ -30,9 +30,9 @@ export default async function Layout({
       <SessionRefresher />
       <LocaleSync userLocale={user?.locale ?? undefined} />
       <DeviceDateTimeProvider
-        timeZone={deviceDateTimeConfig.timeZone ?? user?.timeZone ?? undefined}
+        timeZone={user?.timeZone ?? deviceDateTimeConfig.timeZone ?? undefined}
         timeFormat={
-          deviceDateTimeConfig.timeFormat ?? user?.timeFormat ?? undefined
+          user?.timeFormat ?? deviceDateTimeConfig.timeFormat ?? undefined
         }
         weekStart={user?.weekStart ?? undefined}
       >
