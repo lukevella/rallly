@@ -6,7 +6,9 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
 import { PermissionProvider } from "@/contexts/permissions";
-import { PreferencesProvider } from "@/contexts/preferences";
+import { DateTimeProvider } from "@/lib/datetime/client";
+import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
+import { LocaleSync } from "@/lib/locale/client";
 import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { decryptToken } from "@/utils/session";
 import { InvitePageLoader } from "./invite-page-loader";
@@ -46,8 +48,9 @@ export default async function Page(props: {
 
   const token = (await props.searchParams).token;
 
-  await Promise.all([
-    trpc.user.getMe.prefetch(),
+  const [user, deviceDateTimeConfig] = await Promise.all([
+    trpc.user.getMe.fetch(),
+    getDeviceDateTimeConfig(),
     trpc.polls.get.prefetch({ urlId: params.urlId }),
     trpc.polls.participants.list.prefetch({ pollId: params.urlId, token }),
     trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
@@ -64,13 +67,17 @@ export default async function Page(props: {
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
       <SessionRefresher />
-      <PreferencesProvider>
+      <LocaleSync userLocale={user?.locale ?? undefined} />
+      <DateTimeProvider
+        timeZone={deviceDateTimeConfig.timeZone}
+        timeFormat={deviceDateTimeConfig.timeFormat}
+      >
         <Providers>
           <PermissionProvider impersonatedUserId={impersonatedUserId}>
             <InvitePageLoader />
           </PermissionProvider>
         </Providers>
-      </PreferencesProvider>
+      </DateTimeProvider>
     </HydrationBoundary>
   );
 }

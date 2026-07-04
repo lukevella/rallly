@@ -17,9 +17,11 @@ import {
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
 import { usePoll } from "@/contexts/poll";
+import {
+  EventDate,
+  EventTimeRange,
+} from "@/features/scheduled-event/components/event-date-time";
 import { Trans } from "@/i18n/client";
-import { dayjs } from "@/lib/dayjs";
-import { useDayjs } from "@/utils/dayjs";
 
 const useBreakpoint = createBreakpoint({ list: 320, table: 640 });
 
@@ -32,31 +34,24 @@ function ScheduledDateTime({
   duration: number;
   timeZone: string | null;
 }) {
-  const { adjustTimeZone } = useDayjs();
-  const adjusted = adjustTimeZone(start, !timeZone);
-  const date = adjusted.format("dddd, LL");
-
-  if (duration === 0) {
-    return (
-      <span className="flex flex-col items-center gap-0.5">
-        <span>{date}</span>
-        <span>
-          <Trans i18nKey="allDay" />
-        </span>
-      </span>
-    );
-  }
-
-  const endTime = adjustTimeZone(
-    dayjs(start).add(duration, "minutes"),
-    !timeZone,
-  );
-  const time = `${adjusted.format("LT")} - ${endTime.format(timeZone ? "LT z" : "LT")}`;
+  const allDay = duration === 0;
 
   return (
     <span className="flex flex-col items-center gap-0.5">
-      <span className="text-foreground">{date}</span>
-      <span>{time}</span>
+      <EventDate
+        value={start}
+        allDay={allDay}
+        timeZone={timeZone}
+        preset="dateFull"
+        className={allDay ? undefined : "text-foreground"}
+      />
+      <EventTimeRange
+        start={start}
+        end={new Date(start.getTime() + duration * 60_000)}
+        allDay={allDay}
+        timeZone={timeZone}
+        showTimeZone
+      />
     </span>
   );
 }

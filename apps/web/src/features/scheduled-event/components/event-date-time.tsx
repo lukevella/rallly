@@ -49,10 +49,13 @@ export function EventTimeRange({
   end,
   allDay,
   timeZone,
+  showTimeZone,
   className,
 }: SchedulingFields & {
   start: DateInput;
   end: DateInput;
+  /** Show the zone label on fixed times; floating times never show one. */
+  showTimeZone?: boolean;
   className?: string;
 }) {
   if (allDay) {
@@ -73,5 +76,12 @@ export function EventTimeRange({
       />
     );
   }
-  return <TimeRange start={start} end={end} className={className} />;
+  return (
+    <TimeRange
+      start={start}
+      end={end}
+      showTimeZone={showTimeZone}
+      className={className}
+    />
+  );
 }

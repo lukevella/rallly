@@ -18,12 +18,13 @@ describe("createOptionsContextValue — all-day options are timezone-invariant",
     ["Europe/Berlin", "America/Los_Angeles"], // viewer far ahead of source
     ["Asia/Tokyo", "Europe/Berlin"],
     ["UTC", "Europe/Berlin"],
-  ])("renders Jul 1 for target=%s, source=%s", (targetTimeZone, sourceTimeZone) => {
-    const result = createOptionsContextValue(
-      [allDayOption],
-      targetTimeZone,
-      sourceTimeZone,
-    );
+  ])("renders Jul 1 for viewer=%s, poll=%s", (timeZone, pollTimeZone) => {
+    const result = createOptionsContextValue({
+      pollOptions: [allDayOption],
+      pollTimeZone,
+      locale: "en",
+      timeZone,
+    });
 
     expect(result.pollType).toBe("date");
     expect(result.options[0]).toMatchObject({
@@ -35,12 +36,57 @@ describe("createOptionsContextValue — all-day options are timezone-invariant",
   });
 
   it("does not shift when the poll has no timezone", () => {
-    const result = createOptionsContextValue(
-      [allDayOption],
-      "America/Los_Angeles",
-      null,
-    );
+    const result = createOptionsContextValue({
+      pollOptions: [allDayOption],
+      pollTimeZone: null,
+      locale: "en",
+      timeZone: "America/Los_Angeles",
+    });
 
     expect(result.options[0]).toMatchObject({ day: "1", month: "Jul" });
+  });
+});
+
+describe("createOptionsContextValue — time slots", () => {
+  const timeSlotOption = {
+    id: "opt-1",
+    startTime: new Date("2026-07-01T18:00:00Z"),
+    duration: 60,
+  };
+
+  it("shows fixed times in the viewer's zone", () => {
+    const result = createOptionsContextValue({
+      pollOptions: [timeSlotOption],
+      pollTimeZone: "Europe/London",
+      locale: "en",
+      timeZone: "America/New_York",
+      timeFormat: "hours12",
+    });
+
+    expect(result.pollType).toBe("timeSlot");
+    expect(result.options[0]).toMatchObject({
+      type: "timeSlot",
+      startTime: "2:00 PM",
+      endTime: "3:00 PM",
+      day: "1",
+      dow: "Wed",
+      month: "Jul",
+      year: "2026",
+    });
+  });
+
+  it("shows floating times as stored, ignoring the viewer's zone", () => {
+    const result = createOptionsContextValue({
+      pollOptions: [timeSlotOption],
+      pollTimeZone: null,
+      locale: "en",
+      timeZone: "America/New_York",
+      timeFormat: "hours24",
+    });
+
+    expect(result.options[0]).toMatchObject({
+      startTime: "18:00",
+      endTime: "19:00",
+    });
   });
 });

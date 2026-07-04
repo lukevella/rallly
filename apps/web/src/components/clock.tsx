@@ -11,21 +11,31 @@ import {
 } from "@rallly/ui/dialog";
 import { Label } from "@rallly/ui/label";
 import { GlobeIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useInterval } from "react-use";
-import spacetime from "spacetime";
-import soft from "timezone-soft";
 import { TimeFormatPicker } from "@/components/time-format-picker";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { getCityFromTimezoneId } from "@/components/time-zone-picker/timezone-data";
-import { usePreferences } from "@/contexts/preferences";
 import { Trans } from "@/i18n/client";
-import { dayjs } from "@/lib/dayjs";
-import { useDayjs } from "@/utils/dayjs";
+import { useDateTimeConfig } from "@/lib/datetime/client";
+import {
+  setDeviceTimeFormat,
+  setTimeZoneOverride,
+} from "@/lib/datetime/device";
+import { Time } from "@/lib/datetime/time";
 
 const TimePreferences = () => {
-  const { updatePreferences } = usePreferences();
-  const { timeFormat, timeZone } = useDayjs();
+  const router = useRouter();
+  const { locale, timeZone, timeFormat } = useDateTimeConfig();
+
+  // When there's no explicit preference, show the locale's default format.
+  const resolvedTimeFormat =
+    timeFormat ??
+    (new Intl.DateTimeFormat(locale, { hour: "numeric" }).resolvedOptions()
+      .hour12
+      ? "hours12"
+      : "hours24");
 
   return (
     <div className="grid gap-4">
@@ -36,7 +46,8 @@ const TimePreferences = () => {
         <TimeZoneSelect
           value={timeZone}
           onValueChange={(newTimeZone) => {
-            updatePreferences({ timeZone: newTimeZone });
+            setTimeZoneOverride(newTimeZone);
+            router.refresh();
           }}
         />
       </div>
@@ -45,9 +56,10 @@ const TimePreferences = () => {
           <Trans i18nKey="timeFormat" />
         </Label>
         <TimeFormatPicker
-          value={timeFormat}
+          value={resolvedTimeFormat}
           onChange={(newTimeFormat) => {
-            updatePreferences({ timeFormat: newTimeFormat });
+            setDeviceTimeFormat(newTimeFormat);
+            router.refresh();
           }}
         />
       </div>
@@ -56,22 +68,18 @@ const TimePreferences = () => {
 };
 
 const Clock = ({ className }: { className?: string }) => {
-  const { timeZone, timeFormat } = useDayjs();
-  const timeZoneDisplayFormat = soft(timeZone)[0];
-  const now = spacetime.now(timeZone);
-  const standardAbbrev = timeZoneDisplayFormat.standard.abbr;
-  const dstAbbrev = timeZoneDisplayFormat.daylight?.abbr;
-  const abbrev = now.isDST() ? dstAbbrev : standardAbbrev;
-  const [time, setTime] = React.useState(new Date());
+  const [time, setTime] = React.useState(() => new Date());
   useInterval(() => {
     setTime(new Date());
   }, 1000);
 
   return (
-    <span
-      key={timeFormat}
+    <Time
+      value={time}
+      preset="time"
+      showTimeZone
       className={cn("inline-block font-medium tabular-nums", className)}
-    >{`${dayjs(time).tz(timeZone).format("LT")} ${abbrev}`}</span>
+    />
   );
 };
 
@@ -101,7 +109,12 @@ const ClockPreferences = ({ children }: React.PropsWithChildren) => {
 };
 
 export const TimesShownIn = () => {
-  const { timeZone } = useDayjs();
+  const { timeZone } = useDateTimeConfig();
+
+  if (!timeZone) {
+    return null;
+  }
+
   return (
     <ClockPreferences>
       <Button type="button" variant="ghost">
