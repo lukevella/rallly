@@ -1,10 +1,10 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { SessionRefresher } from "@/components/session-refresher";
-import { PreferencesProvider } from "@/contexts/preferences";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
+import { LocaleSync } from "@/lib/locale/client";
 import {
   createPrivateSSRHelper,
   createPublicSSRHelper,
@@ -28,20 +28,17 @@ export default async function Layout({
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
       <SessionRefresher />
-      <PreferencesProvider>
-        <DeviceDateTimeProvider
-          timeZone={
-            deviceDateTimeConfig.timeZone ?? user?.timeZone ?? undefined
-          }
-          timeFormat={
-            deviceDateTimeConfig.timeFormat ?? user?.timeFormat ?? undefined
-          }
-          weekStart={user?.weekStart ?? undefined}
-        >
-          {children}
-          <PayWall />
-        </DeviceDateTimeProvider>
-      </PreferencesProvider>
+      <LocaleSync userLocale={user?.locale ?? undefined} />
+      <DeviceDateTimeProvider
+        timeZone={user?.timeZone ?? deviceDateTimeConfig.timeZone ?? undefined}
+        timeFormat={
+          user?.timeFormat ?? deviceDateTimeConfig.timeFormat ?? undefined
+        }
+        weekStart={user?.weekStart ?? undefined}
+      >
+        {children}
+        <PayWall />
+      </DeviceDateTimeProvider>
     </HydrationBoundary>
   );
 }

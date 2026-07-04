@@ -100,10 +100,8 @@
     "react-image-crop": "^11.0.10",
     "react-use": "^17.6.0",
     "smoothscroll-polyfill": "^0.4.4",
-    "spacetime": "^7.4.7",
     "superjson": "^2.0.0",
     "tailwindcss": "^4.1.18",
-    "timezone-soft": "^1.5.2",
     "zod": "^4.3.6",
     "zustand": "^5.0.14",
     "zxcvbn": "^4.4.2"

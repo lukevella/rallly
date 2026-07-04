@@ -7,7 +7,11 @@ import type { CalendarProps } from "react-big-calendar";
 import { Calendar } from "react-big-calendar";
 import { createBreakpoint } from "react-use";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
-import { formatDateParts, formatDateTime } from "@/lib/datetime/format";
+import {
+  formatDateParts,
+  formatDateTime,
+  formatDateTimeRange,
+} from "@/lib/datetime/format";
 import { dayjs } from "@/lib/dayjs";
 
 import DateNavigationToolbar from "./date-navigation-toolbar";
@@ -35,6 +39,11 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 }) => {
   const { locale, timeFormat } = useDateTimeConfig();
   const { formatDuration } = useDateTime();
+
+  // The form works in naive local times; format in the system zone.
+  const formatTime = (time: Date) =>
+    formatDateTime(time, { preset: "time", locale, timeFormat });
+
   const scrollToTime =
     options.length > 0
       ? options[0].type === "timeSlot"
@@ -100,9 +109,6 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           eventWrapper: function EventWraper(props) {
             const start = dayjs(props.event.start);
             const end = dayjs(props.event.end);
-            // The form works in naive local times; format in the system zone.
-            const formatTime = (time: Date) =>
-              formatDateTime(time, { preset: "time", locale, timeFormat });
             return (
               // biome-ignore lint/a11y/noStaticElementInteractions: fix later
               <div
@@ -156,6 +162,22 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               </div>
             );
           },
+        }}
+        // Localizer strings that remain visible in the week/day views; the
+        // dayjs localizer only does date math for the grid.
+        formats={{
+          timeGutterFormat: (date: Date) => formatTime(date),
+          selectRangeFormat: ({ start, end }: { start: Date; end: Date }) =>
+            formatDateTimeRange(start, end, {
+              preset: "time",
+              locale,
+              timeFormat,
+            }),
+          dayRangeHeaderFormat: ({ start, end }: { start: Date; end: Date }) =>
+            formatDateTimeRange(start, end, { preset: "monthDay", locale }),
+          // The toolbar shows the year separately, so leave it out here.
+          dayHeaderFormat: (date: Date) =>
+            formatDateTime(date, { preset: "weekdayMonthDay", locale }),
         }}
         step={15}
         onSelectSlot={({ start, end, action }) => {
