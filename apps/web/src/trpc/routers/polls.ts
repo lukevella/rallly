@@ -731,6 +731,7 @@ export const polls = router({
               name: true,
               email: true,
               locale: true,
+              timeFormat: true,
             },
           },
           participants: {
@@ -976,6 +977,7 @@ export const polls = router({
           allDay: scheduledEvent.allDay,
           timeZone: scheduledEvent.timeZone,
           locale: hostLocale,
+          timeFormat: poll.user.timeFormat,
         });
 
         const space = poll.space;

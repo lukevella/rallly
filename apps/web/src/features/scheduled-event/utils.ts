@@ -1,3 +1,4 @@
+import type { TimeFormat } from "@rallly/database";
 import {
   formatDateParts,
   formatDateTime,
@@ -20,6 +21,8 @@ interface FormatEventDateTimeOptions {
   inviteeTimeZone?: string | null;
   /** Must match the locale the email template renders in. */
   locale?: string;
+  /** The recipient's preferred hour cycle; the locale decides when unset. */
+  timeFormat?: TimeFormat | null;
 }
 
 /**
@@ -41,6 +44,7 @@ export const formatEventDateTime = ({
   timeZone,
   inviteeTimeZone,
   locale = "en",
+  timeFormat,
 }: FormatEventDateTimeOptions): FormattedEventDateTime => {
   const displayTimeZone =
     allDay || !timeZone ? "UTC" : inviteeTimeZone || timeZone;
@@ -62,6 +66,7 @@ export const formatEventDateTime = ({
       : formatDateTimeRange(start, end, {
           preset: "time",
           locale,
+          timeFormat: timeFormat ?? undefined,
           timeZone: displayTimeZone,
           showTimeZone: Boolean(timeZone),
         }),

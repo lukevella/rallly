@@ -60,6 +60,18 @@ describe("formatEventDateTime", () => {
     expect(result.time).not.toMatch(/GMT|UTC|[A-Z]{3,4}$/);
   });
 
+  it("respects the recipient's preferred time format", () => {
+    const result = formatEventDateTime({
+      start,
+      end,
+      allDay: false,
+      timeZone: "Europe/London",
+      timeFormat: "hours24",
+    });
+    expect(result.time).toContain("14:00");
+    expect(result.time).not.toMatch(/PM/i);
+  });
+
   it("formats in the recipient's locale", () => {
     const result = formatEventDateTime({
       start,
