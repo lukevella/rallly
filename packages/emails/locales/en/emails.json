@@ -1,4 +1,5 @@
 {
+  "allDay": "All day",
   "changeEmail_codeValid": "This code is valid for 15 minutes",
   "changeEmail_content2": "You're receiving this email because a request was made to change the email address of an account on <domain />. If this wasn't you contact <a>{supportEmail}</a>.",
   "changeEmail_heading": "Verify your new email address",
