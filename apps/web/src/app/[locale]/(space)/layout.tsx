@@ -4,6 +4,7 @@ import { SessionRefresher } from "@/components/session-refresher";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { SpaceProvider } from "@/features/space/client";
 import { TimeZoneMismatchDialog } from "@/features/user/components/timezone-mismatch-dialog";
+import { getLocale } from "@/i18n/server/get-locale";
 import { DateTimeProvider } from "@/lib/datetime/client";
 import { LocaleSync } from "@/lib/locale/client";
 import { getPathname } from "@/lib/pathname";
@@ -17,7 +18,8 @@ export default async function Layout({
 }) {
   const helpers = await createPrivateSSRHelper();
 
-  const [user, space] = await Promise.all([
+  const [locale, user, space] = await Promise.all([
+    getLocale(),
     helpers.user.getMe.fetch(),
     helpers.spaces.getCurrent.fetch(),
   ]);
@@ -35,6 +37,7 @@ export default async function Layout({
       <LocaleSync userLocale={user?.locale} />
       <TimeZoneMismatchDialog homeTimeZone={user?.timeZone} />
       <DateTimeProvider
+        locale={locale}
         timeZone={user?.timeZone}
         timeFormat={user?.timeFormat}
         weekStart={user?.weekStart ?? undefined}

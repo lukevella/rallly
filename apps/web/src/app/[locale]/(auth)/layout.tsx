@@ -3,6 +3,7 @@ import {
   QuickCreateButton,
   QuickCreateWidget,
 } from "@/features/quick-create";
+import { getLocale } from "@/i18n/server/get-locale";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 
@@ -11,10 +12,14 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const deviceDateTimeConfig = await getDeviceDateTimeConfig();
+  const [locale, deviceDateTimeConfig] = await Promise.all([
+    getLocale(),
+    getDeviceDateTimeConfig(),
+  ]);
 
   return (
     <DeviceDateTimeProvider
+      locale={locale}
       timeZone={deviceDateTimeConfig.timeZone}
       timeFormat={deviceDateTimeConfig.timeFormat}
     >

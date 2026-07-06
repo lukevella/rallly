@@ -2,7 +2,6 @@
 
 import type { TimeFormat } from "@rallly/database";
 import { defaultLocale } from "@rallly/languages";
-import { useParams } from "next/navigation";
 import React from "react";
 import type { DateInput, DateTimePreset } from "@/lib/datetime/format";
 import {
@@ -15,7 +14,7 @@ import { normalizeTimeZone } from "@/lib/datetime/utils";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
 
 type DateTimeConfig = {
-  locale?: string;
+  locale: string;
   timeZone?: string;
   timeFormat?: TimeFormat;
   weekStart?: number;
@@ -26,9 +25,11 @@ const DateTimeContext = React.createContext<DateTimeConfig | undefined>(
 );
 
 // Merges with any parent provider so a nested provider can override a single
-// field (e.g. a time zone switcher) without restating the rest. Falls back to
-// the browser zone when no zone is known; detected in an effect so the server
-// and first client render match.
+// field (e.g. a time zone switcher) without restating the rest — except
+// locale, which is always passed explicitly (from getLocale on the server) so
+// formatting never falls back to the wrong language. Falls back to the
+// browser zone when no zone is known; detected in an effect so the server and
+// first client render match.
 export function DateTimeProvider({
   locale,
   timeZone,
@@ -45,7 +46,7 @@ export function DateTimeProvider({
 
   const value = React.useMemo(
     () => ({
-      locale: locale ?? parent?.locale,
+      locale,
       // Stored zones can be empty or corrupt; parent and browser zones are
       // already normalized.
       timeZone:
@@ -65,8 +66,7 @@ export function DateTimeProvider({
 
 export function useDateTimeConfig() {
   const config = React.useContext(DateTimeContext);
-  const params = useParams<{ locale?: string }>();
-  const locale = config?.locale ?? params?.locale ?? defaultLocale;
+  const locale = config?.locale ?? defaultLocale;
 
   return {
     locale,

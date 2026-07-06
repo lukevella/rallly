@@ -7,6 +7,7 @@ import { LicenseLimitWarning } from "@/features/licensing/components/license-lim
 import { CommandMenu } from "@/features/navigation/command-menu";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { getLocale } from "@/i18n/server/get-locale";
 import { DateTimeProvider } from "@/lib/datetime/client";
 import { createAdminSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { ControlPanelSidebarProvider } from "./control-panel-sidebar-provider";
@@ -18,11 +19,15 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const { helpers } = await createAdminSSRHelper();
-  const user = await helpers.user.getAuthed.fetch();
+  const [locale, user] = await Promise.all([
+    getLocale(),
+    helpers.user.getAuthed.fetch(),
+  ]);
 
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
       <DateTimeProvider
+        locale={locale}
         timeZone={user.timeZone}
         timeFormat={user.timeFormat}
         weekStart={user.weekStart}
