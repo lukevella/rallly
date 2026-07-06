@@ -53,14 +53,20 @@ function presetOptions(
   preset: DateTimePreset,
   timeFormat?: TimeFormat,
 ): Intl.DateTimeFormatOptions {
-  // Leave hour12 undefined when there's no preference so the locale decides.
-  const hour12 = timeFormat ? timeFormat === "hours12" : undefined;
+  // Leave hourCycle undefined when there's no preference so the locale
+  // decides. h23/h12 rather than hour12: false, which legacy engines can
+  // resolve to h24 ("24:00" instead of "00:00").
+  const hourCycle = timeFormat
+    ? timeFormat === "hours12"
+      ? ("h12" as const)
+      : ("h23" as const)
+    : undefined;
   switch (preset) {
     case "time":
       return {
-        hour: hour12 === false ? "2-digit" : "numeric",
+        hour: hourCycle === "h23" ? "2-digit" : "numeric",
         minute: "2-digit",
-        hour12,
+        hourCycle,
       };
     case "date":
       return {
@@ -94,9 +100,9 @@ function presetOptions(
         year: "numeric",
         month: "short",
         day: "numeric",
-        hour: hour12 === false ? "2-digit" : "numeric",
+        hour: hourCycle === "h23" ? "2-digit" : "numeric",
         minute: "2-digit",
-        hour12,
+        hourCycle,
       };
   }
 }
