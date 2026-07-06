@@ -32,7 +32,7 @@ type FinalizeHostEmailProps = {
   date: string;
   day: string;
   dow: string;
-  time: string;
+  time?: string;
   name: string;
   title: string;
   location: string | null;
@@ -118,7 +118,7 @@ async function FinalizeHostEmail({
               <Column style={{ paddingLeft: 16 }} align="left">
                 <Text style={{ margin: 0, fontWeight: "bold" }}>{date}</Text>
                 <Text light={true} style={{ margin: 0 }}>
-                  {time}
+                  {time ?? t("allDay", { defaultValue: "All day" })}
                 </Text>
               </Column>
             </Row>

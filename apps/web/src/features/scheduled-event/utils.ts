@@ -1,10 +1,16 @@
-import { dayjs } from "@/lib/dayjs";
+import type { TimeFormat } from "@rallly/database";
+import {
+  formatDateParts,
+  formatDateTime,
+  formatDateTimeRange,
+} from "@/lib/datetime/format";
 
 export interface FormattedEventDateTime {
   date: string;
   day: string;
   dow: string;
-  time: string;
+  /** Undefined for all-day events; the email templates render a localized "All day" label. */
+  time?: string;
 }
 
 interface FormatEventDateTimeOptions {
@@ -13,15 +19,23 @@ interface FormatEventDateTimeOptions {
   allDay: boolean;
   timeZone?: string | null;
   inviteeTimeZone?: string | null;
+  /** Must match the locale the email template renders in. */
+  locale?: string;
+  /** The recipient's preferred hour cycle; the locale decides when unset. */
+  timeFormat?: TimeFormat | null;
 }
 
 /**
- * Formats event date and time based on event type and timezone settings
+ * Builds the date/time display strings for the finalized/canceled email
+ * templates.
  *
- * Handles three scenarios:
- * 1. All-day events (same date for everyone)
- * 2. Events with a timezone (adjust to invitee's timezone if available)
- * 3. Events without a timezone (floating time - show in UTC)
+ * Zone semantics:
+ * - All-day events are stored as UTC midnight and format in UTC, so every
+ *   recipient sees the same date.
+ * - Fixed events (with a zone) render in the recipient's zone when known,
+ *   falling back to the event's zone, with the zone name appended.
+ * - Floating events (no zone) render their wall time, stored as UTC, with no
+ *   zone name.
  */
 export const formatEventDateTime = ({
   start,
@@ -29,40 +43,32 @@ export const formatEventDateTime = ({
   allDay,
   timeZone,
   inviteeTimeZone,
+  locale = "en",
+  timeFormat,
 }: FormatEventDateTimeOptions): FormattedEventDateTime => {
-  if (allDay) {
-    // For all-day events, show the same date to everyone
-    const eventDate = dayjs(start).utc();
-    return {
-      date: eventDate.format("MMMM D, YYYY"),
-      day: eventDate.format("D"),
-      dow: eventDate.format("ddd"),
-      time: "All day",
-    };
-  }
-
-  if (timeZone) {
-    // If event has a timezone, adjust to invitee's timezone if available
-    const targetTimeZone = inviteeTimeZone || timeZone;
-
-    const startTime = dayjs(start).tz(targetTimeZone);
-    const endTime = dayjs(end).tz(targetTimeZone);
-
-    return {
-      date: startTime.format("MMMM D, YYYY"),
-      day: startTime.format("D"),
-      dow: startTime.format("ddd"),
-      time: `${startTime.format("HH:mm")} - ${endTime.format("HH:mm z")}`,
-    };
-  }
-
-  const startTime = dayjs(start).utc();
-  const endTime = dayjs(end).utc();
+  const displayTimeZone =
+    allDay || !timeZone ? "UTC" : inviteeTimeZone || timeZone;
+  const { weekday, day } = formatDateParts(start, {
+    locale,
+    timeZone: displayTimeZone,
+  });
 
   return {
-    date: startTime.format("MMMM D, YYYY"),
-    day: startTime.format("D"),
-    dow: startTime.format("ddd"),
-    time: `${startTime.format("HH:mm")} - ${endTime.format("HH:mm")}`,
+    date: formatDateTime(start, {
+      preset: "dateLong",
+      locale,
+      timeZone: displayTimeZone,
+    }),
+    day,
+    dow: weekday,
+    time: allDay
+      ? undefined
+      : formatDateTimeRange(start, end, {
+          preset: "time",
+          locale,
+          timeFormat: timeFormat ?? undefined,
+          timeZone: displayTimeZone,
+          showTimeZone: Boolean(timeZone),
+        }),
   };
 };

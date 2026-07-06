@@ -175,11 +175,13 @@ export const events = router({
             allDay: updatedEvent.allDay,
             timeZone: updatedEvent.timeZone,
             inviteeTimeZone: invite.inviteeTimeZone,
+            locale: invite.inviteeLocale ?? undefined,
           });
 
           after(async () =>
             sendEventCanceledEmail({
               to: invite.inviteeEmail,
+              locale: invite.inviteeLocale ?? undefined,
               branding: await getInstanceBranding(),
               icalEvent: {
                 filename: "cancel.ics",

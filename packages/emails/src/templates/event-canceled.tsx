@@ -33,7 +33,7 @@ export type EventCanceledEmailProps = {
   day: string;
   dow: string;
   date: string;
-  time: string;
+  time?: string;
 };
 
 async function EventCanceledEmail({
@@ -114,7 +114,7 @@ async function EventCanceledEmail({
               <Column style={{ paddingLeft: 16 }} align="left">
                 <Text style={{ margin: 0, fontWeight: "bold" }}>{date}</Text>
                 <Text light={true} style={{ margin: 0 }}>
-                  {time}
+                  {time ?? t("allDay", { defaultValue: "All day" })}
                 </Text>
               </Column>
             </Row>

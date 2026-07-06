@@ -731,6 +731,7 @@ export const polls = router({
               name: true,
               email: true,
               locale: true,
+              timeFormat: true,
             },
           },
           participants: {
@@ -966,16 +967,19 @@ export const polls = router({
           });
         }
 
+        const hostEmail = poll.user.email;
+        const hostName = poll.user.name;
+        const hostLocale = poll.user.locale ?? undefined;
+
         const { date, day, dow, time } = formatEventDateTime({
           start: scheduledEvent.start,
           end: scheduledEvent.end,
           allDay: scheduledEvent.allDay,
           timeZone: scheduledEvent.timeZone,
+          locale: hostLocale,
+          timeFormat: poll.user.timeFormat,
         });
 
-        const hostEmail = poll.user.email;
-        const hostName = poll.user.name;
-        const hostLocale = poll.user.locale ?? undefined;
         const space = poll.space;
         after(async () =>
           sendFinalizeHostEmail({
@@ -1014,6 +1018,7 @@ export const polls = router({
             allDay: scheduledEvent.allDay,
             timeZone: scheduledEvent.timeZone,
             inviteeTimeZone: p.timeZone,
+            locale: p.locale,
           });
           after(async () =>
             sendFinalizeParticipantEmail({
