@@ -43,7 +43,7 @@ import { RemoveLicenseButton } from "@/features/licensing/components/remove-lice
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { dayjs } from "@/lib/dayjs";
+import { Time } from "@/lib/datetime/time";
 
 async function loadData() {
   const license = await loadInstanceLicense();
@@ -115,7 +115,7 @@ export default async function LicensePage() {
                     <Trans i18nKey="purchaseDate" defaults="Purchase Date" />
                   </DescriptionListTitle>
                   <DescriptionListValue>
-                    {dayjs(license.issuedAt).format("YYYY-MM-DD")}
+                    <Time value={license.issuedAt} preset="date" />
                   </DescriptionListValue>
                 </DescriptionList>
                 <div className="flex gap-2">

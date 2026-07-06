@@ -5,8 +5,5 @@ export async function getLocale() {
   const headersList = await headers();
   const localeFromHeader = headersList.get("x-locale");
 
-  if (!localeFromHeader) {
-    return defaultLocale;
-  }
-  return localeFromHeader;
+  return localeFromHeader ?? defaultLocale;
 }

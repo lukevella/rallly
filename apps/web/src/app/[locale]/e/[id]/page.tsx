@@ -29,6 +29,7 @@ import {
 import { getSpaceBranding } from "@/features/space/data";
 import { getUserProfile } from "@/features/user/data";
 import { getTranslation } from "@/i18n/server";
+import { getLocale } from "@/i18n/server/get-locale";
 import { getSession } from "@/lib/auth";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
@@ -100,10 +101,14 @@ export default async function EventPage({
 
   const session = await getSession();
   const { t } = await getTranslation();
-  const deviceDateTimeConfig = await getDeviceDateTimeConfig();
+  const [locale, deviceDateTimeConfig] = await Promise.all([
+    getLocale(),
+    getDeviceDateTimeConfig(),
+  ]);
 
   return (
     <DeviceDateTimeProvider
+      locale={locale}
       timeZone={deviceDateTimeConfig.timeZone}
       timeFormat={deviceDateTimeConfig.timeFormat}
     >

@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
 import { PermissionProvider } from "@/contexts/permissions";
+import { getLocale } from "@/i18n/server/get-locale";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 import { LocaleSync } from "@/lib/locale/client";
@@ -48,7 +49,8 @@ export default async function Page(props: {
 
   const token = (await props.searchParams).token;
 
-  const [user, deviceDateTimeConfig] = await Promise.all([
+  const [locale, user, deviceDateTimeConfig] = await Promise.all([
+    getLocale(),
     trpc.user.getMe.fetch(),
     getDeviceDateTimeConfig(),
     trpc.polls.get.prefetch({ urlId: params.urlId }),
@@ -69,6 +71,7 @@ export default async function Page(props: {
       <SessionRefresher />
       <LocaleSync userLocale={user?.locale ?? undefined} />
       <DeviceDateTimeProvider
+        locale={locale}
         timeZone={deviceDateTimeConfig.timeZone}
         timeFormat={deviceDateTimeConfig.timeFormat}
       >

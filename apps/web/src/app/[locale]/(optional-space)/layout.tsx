@@ -2,6 +2,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { SessionRefresher } from "@/components/session-refresher";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { isQuickCreateEnabled } from "@/features/quick-create";
+import { getLocale } from "@/i18n/server/get-locale";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 import { LocaleSync } from "@/lib/locale/client";
@@ -19,7 +20,8 @@ export default async function Layout({
     ? await createPublicSSRHelper()
     : await createPrivateSSRHelper();
 
-  const [deviceDateTimeConfig, user] = await Promise.all([
+  const [locale, deviceDateTimeConfig, user] = await Promise.all([
+    getLocale(),
     getDeviceDateTimeConfig(),
     helpers.user.getMe.fetch(),
     helpers.billing.getTier.prefetch(),
@@ -30,6 +32,7 @@ export default async function Layout({
       <SessionRefresher />
       <LocaleSync userLocale={user?.locale ?? undefined} />
       <DeviceDateTimeProvider
+        locale={locale}
         timeZone={user?.timeZone ?? deviceDateTimeConfig.timeZone ?? undefined}
         timeFormat={
           user?.timeFormat ?? deviceDateTimeConfig.timeFormat ?? undefined
