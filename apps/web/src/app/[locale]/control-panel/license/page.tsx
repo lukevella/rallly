@@ -43,14 +43,19 @@ import { RemoveLicenseButton } from "@/features/licensing/components/remove-lice
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { dayjs } from "@/lib/dayjs";
+import { formatDate } from "@/lib/datetime/format";
 
 async function loadData() {
   const license = await loadInstanceLicense();
   return { license };
 }
 
-export default async function LicensePage() {
+export default async function LicensePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const { license } = await loadData();
 
   return (
@@ -115,7 +120,7 @@ export default async function LicensePage() {
                     <Trans i18nKey="purchaseDate" defaults="Purchase Date" />
                   </DescriptionListTitle>
                   <DescriptionListValue>
-                    {dayjs(license.issuedAt).format("YYYY-MM-DD")}
+                    {formatDate(license.issuedAt, { locale, preset: "date" })}
                   </DescriptionListValue>
                 </DescriptionList>
                 <div className="flex gap-2">
