@@ -2,7 +2,12 @@ import crypto from "node:crypto";
 import { prisma } from "@rallly/database";
 import { bearerAuth } from "hono/bearer-auth";
 import { after } from "next/server";
-import { extractApiKeyPrefix, verifyApiKey } from "@/features/api-keys/api-key";
+import {
+  extractApiKeyPrefix,
+  hashApiKey,
+  isLegacyApiKeyHash,
+  verifyApiKey,
+} from "@/features/api-keys/api-key";
 
 export const spaceApiKeyAuth = bearerAuth({
   verifyToken: async (rawKey, c) => {
@@ -38,6 +43,7 @@ export const spaceApiKeyAuth = bearerAuth({
     let apiKeyId: string | null = null;
     let spaceId: string | null = null;
     let spaceOwnerId: string | null = null;
+    let needsRehash = false;
     for (const candidate of candidateKeys) {
       // Timing-safe prefix comparison
       const candidateBuffer = Buffer.from(candidate.prefix);
@@ -51,6 +57,7 @@ export const spaceApiKeyAuth = bearerAuth({
           apiKeyId = candidate.id;
           spaceId = candidate.spaceId;
           spaceOwnerId = candidate.space.ownerId;
+          needsRehash = isLegacyApiKeyHash(candidate.hashedKey);
         }
       }
     }
@@ -65,10 +72,17 @@ export const spaceApiKeyAuth = bearerAuth({
       apiKeyId,
     });
 
+    // Lazily migrate deprecated scrypt hashes to sha256 — we only hold the
+    // raw key during verification, so this is the one place we can re-hash.
+    const rehashedKey = needsRehash ? hashApiKey(rawKey) : null;
+
     after(() =>
       prisma.spaceApiKey.update({
         where: { id: apiKeyId },
-        data: { lastUsedAt: new Date() },
+        data: {
+          lastUsedAt: new Date(),
+          ...(rehashedKey ? { hashedKey: rehashedKey } : {}),
+        },
       }),
     );
 

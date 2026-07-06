@@ -56,10 +56,13 @@ vi.mock("@/lib/kv", () => ({
 }));
 
 import { prisma } from "@rallly/database";
+import { after } from "next/server";
+import { hashApiKey, verifyApiKey } from "@/features/api-keys/api-key";
 import { app } from "./route";
 
-// Pre-generated test API key fixture (eliminates non-deterministic scrypt timing issues)
-// Generated once using createApiKey() and saved here for consistent test behavior
+// Pre-generated test API key fixture. The stored hash deliberately uses the
+// deprecated scrypt format so every test in this file exercises the legacy
+// verification path that existing production keys depend on.
 const testApiKey = "sk_eXzkd84Y_bN24KFwZ_UyiQ0b6zckpNfL2pSdng3r3";
 const mockApiKey = {
   id: "api-key-id",
@@ -178,6 +181,71 @@ describe("Private API - /polls", () => {
       });
 
       expect(res.status).toBe(401);
+    });
+  });
+
+  describe("Hash migration (scrypt -> sha256)", () => {
+    // The lastUsedAt/re-hash update runs in an after() callback; invoke the
+    // captured callbacks to simulate the post-response phase
+    const flushAfterCallbacks = async () => {
+      for (const [callback] of vi.mocked(after).mock.calls) {
+        await (callback as () => Promise<unknown>)();
+      }
+    };
+
+    it("should authenticate a legacy scrypt-hashed key and re-hash it to sha256", async () => {
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Test Poll",
+          dates: ["2025-01-15"],
+        }),
+      });
+
+      expect(res.status).toBe(200);
+      await flushAfterCallbacks();
+
+      expect(prisma.spaceApiKey.update).toHaveBeenCalledWith({
+        where: { id: mockApiKey.id },
+        data: expect.objectContaining({
+          hashedKey: expect.stringMatching(/^sha256\$/),
+        }),
+      });
+
+      // The re-hashed value must still verify the original key
+      const updateCall = vi.mocked(prisma.spaceApiKey.update).mock.calls[0];
+      const newHash = updateCall?.[0]?.data?.hashedKey as string;
+      expect(await verifyApiKey(testApiKey, newHash)).toBe(true);
+    });
+
+    it("should authenticate a sha256-hashed key without re-hashing", async () => {
+      vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([
+        { ...mockApiKey, hashedKey: hashApiKey(testApiKey) },
+      ]);
+
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Test Poll",
+          dates: ["2025-01-15"],
+        }),
+      });
+
+      expect(res.status).toBe(200);
+      await flushAfterCallbacks();
+
+      expect(prisma.spaceApiKey.update).toHaveBeenCalledWith({
+        where: { id: mockApiKey.id },
+        data: { lastUsedAt: expect.any(Date) },
+      });
     });
   });
 
