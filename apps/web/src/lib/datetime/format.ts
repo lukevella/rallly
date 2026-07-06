@@ -1,4 +1,4 @@
-import type { TimeFormat } from "@rallly/database";
+import type { TimeFormat } from "@/lib/datetime/schema";
 
 export type DateInput = Date | string | number;
 

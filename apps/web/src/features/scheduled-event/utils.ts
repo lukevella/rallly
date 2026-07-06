@@ -1,9 +1,9 @@
-import type { TimeFormat } from "@rallly/database";
 import {
   formatDateParts,
   formatDateTime,
   formatDateTimeRange,
 } from "@/lib/datetime/format";
+import type { TimeFormat } from "@/lib/datetime/schema";
 
 export interface FormattedEventDateTime {
   date: string;
