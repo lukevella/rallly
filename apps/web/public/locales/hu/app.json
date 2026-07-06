@@ -646,6 +646,8 @@
   "timeFormat": "Időformátum",
   "timeZone": "Időzóna",
   "timezoneInputPlaceholder": "Időzóna keresése…",
+  "timeZoneMismatchDialogMessage": "Úgy tűnik, hogy <b>{currentTimeZone}</b> időzónában vagy, de az időzónád ide van beállítva: <b>{homeTimeZone}</b>. Szeretnéd frissíteni?",
+  "timeZoneMismatchDialogTitle": "Időzóna eltérés észlelve",
   "timeZoneSelect__noOption": "Nem található lehetőség",
   "title": "Cím",
   "titlePlaceholder": "Havi találkozó",
