@@ -1,4 +1,3 @@
-import type { TimeFormat } from "@rallly/database";
 import { describe, expect, it } from "vitest";
 import {
   formatDate,
@@ -6,6 +5,7 @@ import {
   formatDateTimeRange,
   formatRelativeTime,
 } from "@/lib/datetime/format";
+import type { TimeFormat } from "@/lib/datetime/schema";
 
 // Fri 26 Jun 2026, in UTC.
 const at = (hour: number, minute = 0) =>
