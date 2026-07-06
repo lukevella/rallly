@@ -12,7 +12,7 @@ import LogoMarkGray from "@/assets/logo-mark-gray.svg";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { SessionRefresher } from "@/components/session-refresher";
-import { BrandingStyle } from "@/features/branding/branding-style";
+import { BrandStyle } from "@/features/branding/brand-style";
 import { formatLocationText } from "@/features/location/utils";
 import {
   EventCalendarCard,
@@ -109,7 +109,7 @@ export default async function EventPage({
     >
       <div className="page-bg-gray-50 absolute inset-0 h-dvh overflow-auto md:h-dvh md:items-center md:justify-center md:p-5 dark:bg-gray-900">
         <SessionRefresher />
-        {brandingColor ? <BrandingStyle primaryColor={brandingColor} /> : null}
+        {brandingColor ? <BrandStyle primaryColor={brandingColor} /> : null}
         <header className="fixed top-0 right-0 left-0 z-10 flex justify-between p-4">
           <Link href="/">
             <LogoMarkGray className="size-8 text-muted-foreground" />

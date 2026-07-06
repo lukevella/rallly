@@ -1,6 +1,6 @@
 import { getPrimaryColorVars } from "@/features/branding/color";
 
-export function BrandingStyle({ primaryColor }: { primaryColor: string }) {
+export function BrandStyle({ primaryColor }: { primaryColor: string }) {
   const v = getPrimaryColorVars(primaryColor);
   return (
     <style>{`
