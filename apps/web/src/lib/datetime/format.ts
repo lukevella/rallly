@@ -1,6 +1,6 @@
 import type { TimeFormat } from "@rallly/database";
 
-export type DateInput = Date | string | number;
+export type DateInput = Date | number;
 
 export type DatePreset =
   | "date"

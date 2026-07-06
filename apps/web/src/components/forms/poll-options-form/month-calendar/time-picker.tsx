@@ -30,7 +30,7 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
 
   // The form works in naive local times, so options format in the system zone.
   const formatTime = (time: string | Date) =>
-    formatDateTime(time, { preset: "time", locale, timeFormat });
+    formatDateTime(new Date(time), { preset: "time", locale, timeFormat });
 
   const getOptions = React.useCallback(() => {
     if (!open) {
