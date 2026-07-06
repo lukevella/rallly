@@ -1,6 +1,6 @@
 import type { TimeFormat } from "@/lib/datetime/schema";
 
-export type DateInput = Date | string | number;
+export type DateInput = Date | number;
 
 export type DatePreset =
   | "date"

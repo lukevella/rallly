@@ -123,13 +123,7 @@ describe("formatDateTime", () => {
     expect(out).toContain("EDT");
   });
 
-  it("accepts ISO strings and timestamps", () => {
-    expect(
-      formatDateTime(at(13).toISOString(), {
-        preset: "time",
-        ...ctx("en", "hours24"),
-      }),
-    ).toBe("13:00");
+  it("accepts timestamps", () => {
     expect(
       formatDateTime(at(13).getTime(), {
         preset: "time",
