@@ -1,4 +1,5 @@
 {
+  "allDay": "Egész nap",
   "changeEmail_codeValid": "Ez a kód 15 percig érvényes",
   "changeEmail_content2": "Ezt az emailt azért kaptad, mert kérés érkezett a fiókod email címének megváltoztatására <domain /> címen. Ha ez nem te voltál, lépj kapcsolatba a(z) <a>{supportEmail}</a> címmel.",
   "changeEmail_heading": "Hitelesítsd az új email címed",
