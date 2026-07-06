@@ -1,10 +1,22 @@
+import crypto from "node:crypto";
 import { describe, expect, it } from "vitest";
 import {
   createApiKey,
   extractApiKeyPrefix,
+  hashApiKey,
+  isLegacyApiKeyHash,
   randomToken,
   verifyApiKey,
 } from "./api-key";
+
+// Helper to create a hash in the deprecated scrypt format, as stored by the
+// previous implementation (scrypt$N$r$p$salt$hash)
+const createLegacyScryptHash = (apiKey: string, salt: string): string => {
+  const hash = crypto
+    .scryptSync(apiKey, salt, 64, { N: 16384, r: 8, p: 1 })
+    .toString("hex");
+  return `scrypt$16384$8$1$${salt}$${hash}`;
+};
 
 describe("randomToken", () => {
   it("should generate tokens of correct length", () => {
@@ -45,17 +57,39 @@ describe("createApiKey", () => {
     expect(result.prefix.length).toBeGreaterThan(0);
   });
 
-  it("should generate a hashed key in scrypt format", async () => {
+  it("should generate a hashed key in sha256 format", async () => {
     const result = await createApiKey();
-    expect(result.hashedKey).toMatch(
-      /^scrypt\$\d+\$\d+\$\d+\$[A-Za-z0-9_-]+\$[a-f0-9]+$/,
-    );
+    expect(result.hashedKey).toMatch(/^sha256\$[A-Za-z0-9_-]+\$[a-f0-9]{64}$/);
   });
 
   it("should verify the generated API key against its hash", async () => {
     const result = await createApiKey();
     const isValid = await verifyApiKey(result.apiKey, result.hashedKey);
     expect(isValid).toBe(true);
+  });
+});
+
+describe("hashApiKey", () => {
+  it("should produce a sha256 format hash that verifies", async () => {
+    const hashed = hashApiKey("sk_test_somekey");
+    expect(hashed).toMatch(/^sha256\$[A-Za-z0-9_-]+\$[a-f0-9]{64}$/);
+    expect(await verifyApiKey("sk_test_somekey", hashed)).toBe(true);
+  });
+
+  it("should salt hashes so the same key hashes differently", () => {
+    const key = "sk_test_somekey";
+    expect(hashApiKey(key)).not.toBe(hashApiKey(key));
+  });
+});
+
+describe("isLegacyApiKeyHash", () => {
+  it("should identify scrypt hashes as legacy", () => {
+    const hash = createLegacyScryptHash("sk_test_key", "somesalt");
+    expect(isLegacyApiKeyHash(hash)).toBe(true);
+  });
+
+  it("should not identify sha256 hashes as legacy", () => {
+    expect(isLegacyApiKeyHash(hashApiKey("sk_test_key"))).toBe(false);
   });
 });
 
@@ -93,7 +127,7 @@ describe("verifyApiKey", () => {
   it("should reject API key with tampered salt", async () => {
     const result = await createApiKey();
     const parts = result.hashedKey.split("$");
-    parts[4] = "wrongsalt";
+    parts[1] = "wrongsalt";
     const tamperedHash = parts.join("$");
     const isValid = await verifyApiKey(result.apiKey, tamperedHash);
     expect(isValid).toBe(false);
@@ -102,7 +136,7 @@ describe("verifyApiKey", () => {
   it("should reject API key with tampered hash", async () => {
     const result = await createApiKey();
     const parts = result.hashedKey.split("$");
-    parts[5] = "0".repeat(128);
+    parts[2] = "0".repeat(64);
     const tamperedHash = parts.join("$");
     const isValid = await verifyApiKey(result.apiKey, tamperedHash);
     expect(isValid).toBe(false);
@@ -110,34 +144,29 @@ describe("verifyApiKey", () => {
 
   it("should reject malformed hash format", async () => {
     const result = await createApiKey();
-    const isValid = await verifyApiKey(result.apiKey, "scrypt$16384$8$1$salt");
+    const isValid = await verifyApiKey(result.apiKey, "sha256$saltonly");
+    expect(isValid).toBe(false);
+  });
+
+  it("should reject non-hex hash payload", async () => {
+    const isValid = await verifyApiKey("test-key", "sha256$salt$notahex");
     expect(isValid).toBe(false);
   });
 
   // ------------------------------------------------------------------
-  // DEPRECATED: Legacy SHA-256 format tests
-  // TODO: Remove this block once all existing API keys have been regenerated
+  // DEPRECATED: scrypt format tests — existing keys created before the
+  // sha256 migration must keep verifying until they are lazily re-hashed
   // ------------------------------------------------------------------
-  describe("legacy sha256 format (deprecated)", () => {
-    // Helper to create a legacy hash for testing
-    const createLegacySha256Hash = (apiKey: string, salt: string): string => {
-      const crypto = require("node:crypto");
-      const hash = crypto
-        .createHash("sha256")
-        .update(`${salt}:${apiKey}`)
-        .digest("hex");
-      return `sha256$${salt}$${hash}`;
-    };
-
+  describe("legacy scrypt format (deprecated)", () => {
     it("should verify correct legacy API key", async () => {
       const apiKey = "sk_test_legacykey";
-      const storedHash = createLegacySha256Hash(apiKey, "testsalt123");
+      const storedHash = createLegacyScryptHash(apiKey, "testsalt123");
       const isValid = await verifyApiKey(apiKey, storedHash);
       expect(isValid).toBe(true);
     });
 
     it("should reject incorrect legacy API key", async () => {
-      const storedHash = createLegacySha256Hash(
+      const storedHash = createLegacyScryptHash(
         "sk_test_legacykey",
         "testsalt123",
       );
@@ -145,8 +174,24 @@ describe("verifyApiKey", () => {
       expect(isValid).toBe(false);
     });
 
-    it("should reject malformed legacy hash", async () => {
-      const isValid = await verifyApiKey("test-key", "sha256$salt$notahex");
+    it("should reject legacy hash with tampered salt", async () => {
+      const apiKey = "sk_test_legacykey";
+      const parts = createLegacyScryptHash(apiKey, "testsalt123").split("$");
+      parts[4] = "wrongsalt";
+      const isValid = await verifyApiKey(apiKey, parts.join("$"));
+      expect(isValid).toBe(false);
+    });
+
+    it("should reject legacy hash with missing parts", async () => {
+      const isValid = await verifyApiKey("test-key", "scrypt$16384$8$1$salt");
+      expect(isValid).toBe(false);
+    });
+
+    it("should reject legacy hash with invalid cost parameters", async () => {
+      const isValid = await verifyApiKey(
+        "test-key",
+        "scrypt$12345$8$1$salt$deadbeef",
+      );
       expect(isValid).toBe(false);
     });
   });
@@ -164,7 +209,7 @@ describe("verifyApiKey", () => {
   });
 
   it("should reject hash with only prefix", async () => {
-    const isValid = await verifyApiKey("test-key", "scrypt$");
+    const isValid = await verifyApiKey("test-key", "sha256$");
     expect(isValid).toBe(false);
   });
 
