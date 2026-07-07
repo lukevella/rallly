@@ -3,9 +3,11 @@ import "server-only";
 import * as Sentry from "@sentry/nextjs";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import * as z from "zod";
-import { getCurrentUser } from "@/auth/data";
 import { defineAbilityFor } from "@/features/user/ability";
+import { getCurrentUser } from "@/features/user/data";
+import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
+import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import type { Duration } from "@/lib/rate-limit";
 import { createRatelimit } from "@/lib/rate-limit";
 
@@ -44,7 +46,20 @@ export const actionClient = createSafeActionClient({
     z.object({
       actionName: z.string(),
     }),
-  handleServerError: (error, { metadata }) => {
+  handleServerError: async (error, { metadata }) => {
+    if (error instanceof InvalidSessionError) {
+      // Expected condition, not reported to Sentry. Unlike server
+      // components, server actions can write cookies, so revoke the
+      // stale session directly instead of delegating to the client
+      // error boundary.
+      try {
+        await signOut();
+      } catch {
+        // The error response must be returned regardless
+      }
+      return "UNAUTHORIZED" as const;
+    }
+
     Sentry.captureException(error, {
       tags: {
         errorHandler: "safe-action",

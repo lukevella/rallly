@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { DateTimePreferences } from "@/app/[locale]/(space)/settings/preferences/components/date-time-preferences";
 import { LanguagePreference } from "@/app/[locale]/(space)/settings/preferences/components/language-preference";
 import { ThemePreference } from "@/app/[locale]/(space)/settings/preferences/components/theme-preference";
@@ -18,16 +19,22 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
-import { getCurrentUser } from "@/auth/data";
+import { getCurrentUser } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
+import { getPathname } from "@/lib/pathname";
+import { buildSafeRedirectUrl } from "@/utils/redirect";
 
 export default async function Page() {
   const user = await getCurrentUser();
 
   if (!user) {
-    throw new InvalidSessionError();
+    redirect(
+      buildSafeRedirectUrl({
+        destination: "/login",
+        returnUrl: await getPathname(),
+      }),
+    );
   }
 
   return (

@@ -1,7 +1,9 @@
 import type { User } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { cache } from "react";
 import type { UserDTO } from "@/features/user/schema";
 import { getSession } from "@/lib/auth";
+import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 
 export const createUserDTO = (user: User): UserDTO => ({
   id: user.id,
@@ -18,38 +20,29 @@ export const createUserDTO = (user: User): UserDTO => ({
   isGuest: user.isAnonymous,
 });
 
-const createGuestDTO = (session: {
-  id: string;
-  name: string;
-  email: string;
-  image?: string | null;
-  locale?: string;
-  timeZone?: string;
-}): UserDTO => ({
-  id: session.id,
-  name: session.name,
-  email: session.email,
-  image: session.image ?? undefined,
-  role: "user",
-  banned: false,
-  isGuest: true,
-  locale: session.locale,
-  timeZone: session.timeZone || undefined,
-});
+/**
+ * The current signed-in user, fetched from the database. Returns null
+ * when there is no session or the user is a guest — the caller decides
+ * how to respond (redirect, 401, etc.). Throws InvalidSessionError when
+ * the session references a user that no longer exists or is banned.
+ */
+export const getCurrentUser = cache(async () => {
+  const session = await getSession();
 
-export const getUser = async (id: string) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      id,
-    },
-  });
-
-  if (!user) {
+  if (!session?.user || session.user.isGuest) {
     return null;
   }
 
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+  });
+
+  if (!user || user.banned) {
+    throw new InvalidSessionError();
+  }
+
   return createUserDTO(user);
-};
+});
 
 export function getUserProfile(userId: string) {
   return prisma.user.findUnique({
@@ -60,17 +53,3 @@ export function getUserProfile(userId: string) {
     },
   });
 }
-
-export const getUserSession = async () => {
-  const session = await getSession();
-
-  if (!session?.user) {
-    return { session: null, user: undefined };
-  }
-
-  const user = session.user.isGuest
-    ? createGuestDTO(session.user)
-    : ((await getUser(session.user.id)) ?? undefined);
-
-  return { session, user };
-};

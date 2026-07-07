@@ -1,5 +1,4 @@
 import { getProPricing, stripe } from "@rallly/billing";
-import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -10,8 +9,9 @@ import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
 } from "@/features/subscription/schema";
-import { getUser } from "@/features/user/data";
-import { getSession } from "@/lib/auth";
+import { getCurrentUser } from "@/features/user/data";
+import type { UserDTO } from "@/features/user/schema";
+import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 
 const inputSchema = z.object({
   period: z.enum(["monthly", "yearly"]).optional(),
@@ -19,16 +19,19 @@ const inputSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const session = await getSession();
+  let user: UserDTO | null;
 
-  if (!session?.user || session.user.isGuest) {
-    return NextResponse.redirect(absoluteUrl("/login"), 303);
+  try {
+    user = await getCurrentUser();
+  } catch (error) {
+    if (!(error instanceof InvalidSessionError)) {
+      throw error;
+    }
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  const user = await getUser(session.user.id);
-
   if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    return NextResponse.redirect(absoluteUrl("/login"), 303);
   }
 
   const space = await getActiveSpaceForUser(user.id);
@@ -56,22 +59,13 @@ export async function POST(request: NextRequest) {
 
   let customerId: string;
 
-  const res = await prisma.user.findUniqueOrThrow({
-    where: {
-      id: user.id,
-    },
-    select: {
-      customerId: true,
-    },
-  });
-
   if (space.tier === "pro") {
     // User already has an active subscription. Take them to customer portal
     return NextResponse.redirect(absoluteUrl("/api/stripe/portal"), 303);
   }
 
-  if (res.customerId) {
-    customerId = res.customerId;
+  if (user.customerId) {
+    customerId = user.customerId;
   } else {
     // create a new customer in stripe
     const customer = await stripe.customers.create(

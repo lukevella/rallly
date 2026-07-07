@@ -1,7 +1,10 @@
+import { prisma } from "@rallly/database";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import { createUserDTO } from "@/features/user/data";
+import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
 import { createRatelimit } from "@/lib/rate-limit";
 import { isSelfHosted } from "@/utils/constants";
@@ -25,7 +28,39 @@ export const router = t.router;
 
 export const middleware = t.middleware;
 
-export const publicProcedure = t.procedure;
+// Reads trust the session (cookie cache) without hitting the database.
+// Mutations verify the user still exists and run with a fresh DTO; if the
+// user is gone, the session is revoked so the client can't keep bouncing
+// between the login page and pages that require an account.
+const mutationSessionGuard = t.middleware(async ({ ctx, type, next }) => {
+  if (type !== "mutation" || !ctx.user) {
+    return next();
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: ctx.user.id },
+  });
+
+  if (!user) {
+    try {
+      await signOut();
+    } catch {
+      // The UNAUTHORIZED error below must be thrown regardless
+    }
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Your session is no longer valid",
+    });
+  }
+
+  return next({
+    ctx: {
+      user: createUserDTO(user),
+    },
+  });
+});
+
+export const publicProcedure = t.procedure.use(mutationSessionGuard);
 
 export const possiblyPublicProcedure = publicProcedure.use(
   middleware(async ({ ctx, next }) => {
@@ -111,7 +146,7 @@ export const spaceProcedure = privateProcedure.use(async ({ ctx, next }) => {
 export const proProcedure = spaceProcedure.use(async ({ ctx, next }) => {
   if (!isSelfHosted && ctx.space.tier !== "pro") {
     throw new TRPCError({
-      code: "UNAUTHORIZED",
+      code: "PAYMENT_REQUIRED",
       message:
         "You must have an active paid subscription to perform this action",
     });
