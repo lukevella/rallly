@@ -47,6 +47,19 @@ export const actionClient = createSafeActionClient({
       actionName: z.string(),
     }),
   handleServerError: async (error, { metadata }) => {
+    if (error instanceof InvalidSessionError) {
+      // Expected condition, not reported to Sentry. Unlike server
+      // components, server actions can write cookies, so revoke the
+      // stale session directly instead of delegating to the client
+      // error boundary.
+      try {
+        await signOut();
+      } catch {
+        // The error response must be returned regardless
+      }
+      return "UNAUTHORIZED" as const;
+    }
+
     Sentry.captureException(error, {
       tags: {
         errorHandler: "safe-action",
@@ -55,18 +68,6 @@ export const actionClient = createSafeActionClient({
         actionName: metadata.actionName,
       },
     });
-
-    if (error instanceof InvalidSessionError) {
-      // Unlike server components, server actions can write cookies, so
-      // revoke the stale session directly instead of delegating to the
-      // client error boundary.
-      try {
-        await signOut();
-      } catch {
-        // The error response must be returned regardless
-      }
-      return "UNAUTHORIZED" as const;
-    }
 
     if (error instanceof AppError) {
       return error.code;
