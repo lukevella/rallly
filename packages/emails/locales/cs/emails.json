@@ -1,4 +1,5 @@
 {
+  "allDay": "Celý den",
   "changeEmail_codeValid": "Tento kód platí po dobu 15 minut",
   "changeEmail_content2": "Tento e-mail jste obdrželi, protože byl proveden požadavek na změnu e-mailové adresy účtu na <domain />. Pokud jste to nebyli vy, kontaktujte <a>{supportEmail}</a>.",
   "changeEmail_heading": "Ověřte svou novou e-mailovou adresu",
