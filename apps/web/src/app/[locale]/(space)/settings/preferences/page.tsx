@@ -19,16 +19,16 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
+import { getCurrentUser } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { getSession } from "@/lib/auth";
 import { getPathname } from "@/lib/pathname";
 import { buildSafeRedirectUrl } from "@/utils/redirect";
 
 export default async function Page() {
-  const session = await getSession();
+  const user = await getCurrentUser();
 
-  if (!session?.user || session.user.isGuest) {
+  if (!user) {
     redirect(
       buildSafeRedirectUrl({
         destination: "/login",
@@ -36,8 +36,6 @@ export default async function Page() {
       }),
     );
   }
-
-  const user = session.user;
 
   return (
     <SettingsPage>

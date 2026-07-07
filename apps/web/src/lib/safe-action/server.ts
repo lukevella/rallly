@@ -4,9 +4,11 @@ import * as Sentry from "@sentry/nextjs";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import * as z from "zod";
 import { defineAbilityFor } from "@/features/user/ability";
-import { getUser } from "@/features/user/data";
-import { getSession, signOut } from "@/lib/auth";
+import { getCurrentUser } from "@/features/user/data";
+import type { UserDTO } from "@/features/user/schema";
+import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
+import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import type { Duration } from "@/lib/rate-limit";
 import { createRatelimit } from "@/lib/rate-limit";
 
@@ -64,21 +66,18 @@ export const actionClient = createSafeActionClient({
 });
 
 export const authActionClient = actionClient.use(async ({ next }) => {
-  const session = await getSession();
+  let user: UserDTO | null;
 
-  if (!session?.user || session.user.isGuest) {
-    throw new AppError({
-      code: "UNAUTHORIZED",
-      message: "You are not authenticated.",
-    });
-  }
+  try {
+    user = await getCurrentUser();
+  } catch (error) {
+    if (!(error instanceof InvalidSessionError)) {
+      throw error;
+    }
 
-  // Server actions are mutations, so verify the user still exists in the
-  // database. If they don't, revoke the session to prevent the client from
-  // bouncing between the login page and pages that require an account.
-  const user = await getUser(session.user.id);
-
-  if (!user) {
+    // The session references a user that no longer exists. Revoke it to
+    // prevent the client from bouncing between the login page and pages
+    // that require an account.
     try {
       await signOut();
     } catch {
@@ -87,6 +86,13 @@ export const authActionClient = actionClient.use(async ({ next }) => {
     throw new AppError({
       code: "UNAUTHORIZED",
       message: "Your session is no longer valid.",
+    });
+  }
+
+  if (!user) {
+    throw new AppError({
+      code: "UNAUTHORIZED",
+      message: "You are not authenticated.",
     });
   }
 
