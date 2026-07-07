@@ -18,17 +18,19 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/app/components/settings-layout";
-import { getCurrentUser } from "@/auth/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { getSession } from "@/lib/auth";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 
 export default async function Page() {
-  const user = await getCurrentUser();
+  const session = await getSession();
 
-  if (!user) {
+  if (!session?.user || session.user.isGuest) {
     throw new InvalidSessionError();
   }
+
+  const user = session.user;
 
   return (
     <SettingsPage>

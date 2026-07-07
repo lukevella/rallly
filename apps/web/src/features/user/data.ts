@@ -1,7 +1,6 @@
 import type { User } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import type { UserDTO } from "@/features/user/schema";
-import { getSession } from "@/lib/auth";
 
 export const createUserDTO = (user: User): UserDTO => ({
   id: user.id,
@@ -16,22 +15,6 @@ export const createUserDTO = (user: User): UserDTO => ({
   weekStart: user.weekStart ?? undefined,
   customerId: user.customerId ?? undefined,
   isGuest: user.isAnonymous,
-});
-
-type SessionUser = NonNullable<Awaited<ReturnType<typeof getSession>>>["user"];
-
-export const createSessionUserDTO = (user: SessionUser): UserDTO => ({
-  id: user.id,
-  name: user.name,
-  email: user.email,
-  image: user.image ?? undefined,
-  role: user.role,
-  banned: user.banned,
-  isGuest: user.isGuest,
-  timeZone: user.timeZone,
-  timeFormat: user.timeFormat,
-  locale: user.locale,
-  weekStart: user.weekStart,
 });
 
 export const getUser = async (id: string) => {
@@ -57,13 +40,3 @@ export function getUserProfile(userId: string) {
     },
   });
 }
-
-export const getUserSession = async () => {
-  const session = await getSession();
-
-  if (!session?.user) {
-    return { session: null, user: undefined };
-  }
-
-  return { session, user: createSessionUserDTO(session.user) };
-};

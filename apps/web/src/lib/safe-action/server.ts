@@ -3,10 +3,9 @@ import "server-only";
 import * as Sentry from "@sentry/nextjs";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import * as z from "zod";
-import { getCurrentUser } from "@/auth/data";
 import { defineAbilityFor } from "@/features/user/ability";
 import { getUser } from "@/features/user/data";
-import { signOut } from "@/lib/auth";
+import { getSession, signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
 import type { Duration } from "@/lib/rate-limit";
 import { createRatelimit } from "@/lib/rate-limit";
@@ -65,9 +64,9 @@ export const actionClient = createSafeActionClient({
 });
 
 export const authActionClient = actionClient.use(async ({ next }) => {
-  const sessionUser = await getCurrentUser();
+  const session = await getSession();
 
-  if (!sessionUser) {
+  if (!session?.user || session.user.isGuest) {
     throw new AppError({
       code: "UNAUTHORIZED",
       message: "You are not authenticated.",
@@ -77,7 +76,7 @@ export const authActionClient = actionClient.use(async ({ next }) => {
   // Server actions are mutations, so verify the user still exists in the
   // database. If they don't, revoke the session to prevent the client from
   // bouncing between the login page and pages that require an account.
-  const user = await getUser(sessionUser.id);
+  const user = await getUser(session.user.id);
 
   if (!user) {
     try {

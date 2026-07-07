@@ -31,6 +31,7 @@ import { getInstanceBranding } from "@/emails/branding";
 import { env } from "@/env";
 import { posthog } from "@/features/analytics/posthog";
 import { createSpace } from "@/features/space/mutations";
+import type { UserDTO } from "@/features/user/schema";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { redis } from "@/lib/kv";
@@ -512,23 +513,22 @@ export const getSession = cache(async () => {
     });
 
     if (session) {
+      const user: UserDTO = {
+        id: session.user.id,
+        email: session.user.email,
+        name: session.user.name,
+        isGuest: !!session.user.isAnonymous,
+        image: session.user.image ?? undefined,
+        role: session.user.role === "admin" ? "admin" : "user",
+        banned: !!session.user.banned,
+        locale: session.user.locale ?? undefined,
+        timeZone: session.user.timeZone || undefined,
+        timeFormat: parseTimeFormat(session.user.timeFormat),
+        weekStart: session.user.weekStart ?? undefined,
+      };
+
       return {
-        user: {
-          id: session.user.id,
-          email: session.user.email,
-          name: session.user.name,
-          isGuest: !!session.user.isAnonymous,
-          image: session.user.image,
-          role:
-            session.user.role === "admin"
-              ? ("admin" as const)
-              : ("user" as const),
-          banned: !!session.user.banned,
-          locale: session.user.locale ?? undefined,
-          timeZone: session.user.timeZone || undefined,
-          timeFormat: parseTimeFormat(session.user.timeFormat),
-          weekStart: session.user.weekStart ?? undefined,
-        },
+        user,
         expires: session.session.expiresAt.toISOString(),
         updatedAt: session.session.updatedAt.toISOString(),
       };

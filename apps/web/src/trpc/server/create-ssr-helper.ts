@@ -2,7 +2,7 @@ import { createServerSideHelpers } from "@trpc/react-query/server";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import superjson from "superjson";
-import { getUserSession } from "@/features/user/data";
+import { getSession } from "@/lib/auth";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { getPathname } from "@/lib/pathname";
 import { isInitialAdmin } from "@/utils/is-initial-admin";
@@ -18,7 +18,7 @@ import { appRouter } from "../routers";
  * @see https://trpc.io/docs/client/nextjs/server-side-helpers#1-internal-router
  */
 export const createPublicSSRHelper = cache(async () => {
-  const { user } = await getUserSession();
+  const user = (await getSession())?.user;
 
   return createServerSideHelpers({
     router: appRouter,
@@ -35,7 +35,7 @@ export const createPublicSSRHelper = cache(async () => {
  * Redirects to /login if the user is not authenticated or is a guest.
  */
 export const createPrivateSSRHelper = cache(async () => {
-  const { user } = await getUserSession();
+  const user = (await getSession())?.user;
 
   if (!user || user.isGuest) {
     const pathname = await getPathname();
@@ -65,7 +65,7 @@ export const createPrivateSSRHelper = cache(async () => {
  * is not an admin.
  */
 export const createAdminSSRHelper = cache(async () => {
-  const { user } = await getUserSession();
+  const user = (await getSession())?.user;
 
   if (!user || user.isGuest) {
     redirect(
