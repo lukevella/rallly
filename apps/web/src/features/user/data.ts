@@ -24,7 +24,7 @@ export const createUserDTO = (user: User): UserDTO => ({
  * The current signed-in user, fetched from the database. Returns null
  * when there is no session or the user is a guest — the caller decides
  * how to respond (redirect, 401, etc.). Throws InvalidSessionError when
- * the session references a user that no longer exists.
+ * the session references a user that no longer exists or is banned.
  */
 export const getCurrentUser = cache(async () => {
   const session = await getSession();
@@ -37,7 +37,7 @@ export const getCurrentUser = cache(async () => {
     where: { id: session.user.id },
   });
 
-  if (!user) {
+  if (!user || user.banned) {
     throw new InvalidSessionError();
   }
 
