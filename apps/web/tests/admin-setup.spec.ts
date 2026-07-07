@@ -105,9 +105,14 @@ test.describe("Admin Setup Page Access", () => {
 
     await page.goto("/admin-setup");
     await expect(page.getByText("Are you the admin?")).toBeVisible();
-    await page.getByRole("button", { name: "Make me an admin" }).click();
 
-    await expect(page).toHaveURL("/control-panel", { timeout: 10000 });
+    // The button is visible before React hydrates it and its onClick
+    // handler is attached, so a click that lands too early is silently
+    // lost. Retry until the action redirects.
+    await expect(async () => {
+      await page.getByRole("button", { name: "Make me an admin" }).click();
+      await page.waitForURL("/control-panel", { timeout: 5000 });
+    }).toPass();
 
     const user = await prisma.user.findUnique({
       where: { email: INITIAL_ADMIN_TEST_EMAIL },
