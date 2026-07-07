@@ -35,11 +35,7 @@ export const createPublicSSRHelper = cache(async () => {
  * Redirects to /login if the user is not authenticated or is a guest.
  */
 export const createPrivateSSRHelper = cache(async () => {
-  const { user, session } = await getUserSession();
-
-  if (session && !user) {
-    throw new InvalidSessionError();
-  }
+  const { user } = await getUserSession();
 
   if (!user || user.isGuest) {
     const pathname = await getPathname();

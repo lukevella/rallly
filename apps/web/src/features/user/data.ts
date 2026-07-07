@@ -18,23 +18,20 @@ export const createUserDTO = (user: User): UserDTO => ({
   isGuest: user.isAnonymous,
 });
 
-const createGuestDTO = (session: {
-  id: string;
-  name: string;
-  email: string;
-  image?: string | null;
-  locale?: string;
-  timeZone?: string;
-}): UserDTO => ({
-  id: session.id,
-  name: session.name,
-  email: session.email,
-  image: session.image ?? undefined,
-  role: "user",
-  banned: false,
-  isGuest: true,
-  locale: session.locale,
-  timeZone: session.timeZone || undefined,
+type SessionUser = NonNullable<Awaited<ReturnType<typeof getSession>>>["user"];
+
+export const createSessionUserDTO = (user: SessionUser): UserDTO => ({
+  id: user.id,
+  name: user.name,
+  email: user.email,
+  image: user.image ?? undefined,
+  role: user.role,
+  banned: user.banned,
+  isGuest: user.isGuest,
+  timeZone: user.timeZone,
+  timeFormat: user.timeFormat,
+  locale: user.locale,
+  weekStart: user.weekStart,
 });
 
 export const getUser = async (id: string) => {
@@ -68,9 +65,5 @@ export const getUserSession = async () => {
     return { session: null, user: undefined };
   }
 
-  const user = session.user.isGuest
-    ? createGuestDTO(session.user)
-    : ((await getUser(session.user.id)) ?? undefined);
-
-  return { session, user };
+  return { session, user: createSessionUserDTO(session.user) };
 };

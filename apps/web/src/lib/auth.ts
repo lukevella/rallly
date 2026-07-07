@@ -1,4 +1,5 @@
 import { stripe } from "@rallly/billing";
+import type { TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { sendChangeEmailEmail } from "@rallly/emails/templates/change-email";
 import { sendRegisterEmail } from "@rallly/emails/templates/register";
@@ -501,6 +502,9 @@ export const authLib = betterAuth({
 
 export type Auth = typeof authLib;
 
+const parseTimeFormat = (value: unknown): TimeFormat | undefined =>
+  value === "hours12" || value === "hours24" ? value : undefined;
+
 export const getSession = cache(async () => {
   try {
     const session = await authLib.api.getSession({
@@ -515,9 +519,14 @@ export const getSession = cache(async () => {
           name: session.user.name,
           isGuest: !!session.user.isAnonymous,
           image: session.user.image,
+          role:
+            session.user.role === "admin"
+              ? ("admin" as const)
+              : ("user" as const),
+          banned: !!session.user.banned,
           locale: session.user.locale ?? undefined,
           timeZone: session.user.timeZone || undefined,
-          timeFormat: session.user.timeFormat ?? undefined,
+          timeFormat: parseTimeFormat(session.user.timeFormat),
           weekStart: session.user.weekStart ?? undefined,
         },
         expires: session.session.expiresAt.toISOString(),

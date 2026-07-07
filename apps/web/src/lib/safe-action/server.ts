@@ -5,6 +5,8 @@ import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import * as z from "zod";
 import { getCurrentUser } from "@/auth/data";
 import { defineAbilityFor } from "@/features/user/ability";
+import { getUser } from "@/features/user/data";
+import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
 import type { Duration } from "@/lib/rate-limit";
 import { createRatelimit } from "@/lib/rate-limit";
@@ -63,12 +65,29 @@ export const actionClient = createSafeActionClient({
 });
 
 export const authActionClient = actionClient.use(async ({ next }) => {
-  const user = await getCurrentUser();
+  const sessionUser = await getCurrentUser();
 
-  if (!user) {
+  if (!sessionUser) {
     throw new AppError({
       code: "UNAUTHORIZED",
       message: "You are not authenticated.",
+    });
+  }
+
+  // Server actions are mutations, so verify the user still exists in the
+  // database. If they don't, revoke the session to prevent the client from
+  // bouncing between the login page and pages that require an account.
+  const user = await getUser(sessionUser.id);
+
+  if (!user) {
+    try {
+      await signOut();
+    } catch {
+      // The UNAUTHORIZED error below must be thrown regardless
+    }
+    throw new AppError({
+      code: "UNAUTHORIZED",
+      message: "Your session is no longer valid.",
     });
   }
 
