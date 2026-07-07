@@ -5,7 +5,6 @@ import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import * as z from "zod";
 import { defineAbilityFor } from "@/features/user/ability";
 import { getCurrentUser } from "@/features/user/data";
-import type { UserDTO } from "@/features/user/schema";
 import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
@@ -47,7 +46,7 @@ export const actionClient = createSafeActionClient({
     z.object({
       actionName: z.string(),
     }),
-  handleServerError: (error, { metadata }) => {
+  handleServerError: async (error, { metadata }) => {
     Sentry.captureException(error, {
       tags: {
         errorHandler: "safe-action",
@@ -56,6 +55,18 @@ export const actionClient = createSafeActionClient({
         actionName: metadata.actionName,
       },
     });
+
+    if (error instanceof InvalidSessionError) {
+      // Unlike server components, server actions can write cookies, so
+      // revoke the stale session directly instead of delegating to the
+      // client error boundary.
+      try {
+        await signOut();
+      } catch {
+        // The error response must be returned regardless
+      }
+      return "UNAUTHORIZED" as const;
+    }
 
     if (error instanceof AppError) {
       return error.code;
@@ -66,28 +77,7 @@ export const actionClient = createSafeActionClient({
 });
 
 export const authActionClient = actionClient.use(async ({ next }) => {
-  let user: UserDTO | null;
-
-  try {
-    user = await getCurrentUser();
-  } catch (error) {
-    if (!(error instanceof InvalidSessionError)) {
-      throw error;
-    }
-
-    // The session references a user that no longer exists. Revoke it to
-    // prevent the client from bouncing between the login page and pages
-    // that require an account.
-    try {
-      await signOut();
-    } catch {
-      // The UNAUTHORIZED error below must be thrown regardless
-    }
-    throw new AppError({
-      code: "UNAUTHORIZED",
-      message: "Your session is no longer valid.",
-    });
-  }
+  const user = await getCurrentUser();
 
   if (!user) {
     throw new AppError({
