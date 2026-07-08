@@ -182,20 +182,6 @@ The stack bundles [Garage](https://garagehq.deuxfleurs.fr/) for file uploads, wh
   Secret key for the bucket.
 </ParamField>
 
-### Maintenance mode
-
-Take your instance offline for scheduled maintenance, such as migrating to a new database. While enabled, visitors are redirected to a maintenance page, API requests are rejected with a `503` response, and the startup database migration is skipped so the container can boot while the database is unreachable. The `/api/status` health check endpoint keeps working.
-
-A typical maintenance window looks like this: set `MAINTENANCE_MODE="true"` and restart, perform your maintenance, then set it back to `"false"` and restart again.
-
-<ParamField path="MAINTENANCE_MODE" default="false">
-  Set to `true` to take the instance offline for maintenance.
-</ParamField>
-
-<ParamField path="MAINTENANCE_BYPASS_TOKEN">
-  Optional secret (at least 16 characters) that lets you use the app while maintenance mode is enabled. Visit `/maintenance?token=<secret>` to set a bypass cookie that is valid for 4 hours — useful for verifying that everything works before you reopen traffic.
-</ParamField>
-
 ## Running the image directly
 
 If you're running the Rallly Docker image without the [Rallly CLI](/self-hosting/installation/docker), a few variables that the CLI normally supplies or derives become your responsibility.
