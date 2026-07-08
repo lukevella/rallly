@@ -2,8 +2,8 @@ import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { captureOne } from "@rallly/test-helpers";
 import { load } from "cheerio";
-import type { PollPage } from "tests/poll-page";
 import { NewPollPage } from "./new-poll-page";
+import type { PollPage } from "./poll-page";
 
 test.describe(() => {
   let page: Page;

@@ -4,3 +4,11 @@ packages:
 
 onlyBuiltDependencies:
   - '@prisma/client'
+
+overrides:
+  typescript: npm:@typescript/typescript6@^6.0.2
+
+packageExtensions:
+  '@hookform/resolvers':
+    peerDependencies:
+      zod: '*'
