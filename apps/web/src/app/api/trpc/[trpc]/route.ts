@@ -58,7 +58,7 @@ const handler = async (req: NextRequest) => {
         event.errorMessage = error.message;
         event.errorType = "TRPCError";
 
-        if (statusCode >= 500) {
+        if (statusCode >= 500 && error.code !== "SERVICE_UNAVAILABLE") {
           Sentry.captureException(error);
         }
       },

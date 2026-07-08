@@ -144,6 +144,18 @@ export const env = createEnv({
     RATE_LIMIT_ENABLED: z.enum(["true", "false"]).default("true"),
 
     /**
+     * Take the app offline for scheduled maintenance. Page traffic is
+     * redirected to /maintenance and API requests are rejected with 503.
+     * @default "false"
+     */
+    MAINTENANCE_MODE: z.enum(["true", "false"]).default("false"),
+    /**
+     * Secret that lets an operator bypass maintenance mode by visiting
+     * /maintenance?token=<secret>
+     */
+    MAINTENANCE_BYPASS_TOKEN: z.string().min(16).optional(),
+
+    /**
      * Upstash Redis URL and token for rate limiting and auth session storage.
      * If not set, in-memory rate limiting and db session storage is used.
      */
@@ -267,6 +279,8 @@ export const env = createEnv({
     APP_NAME: process.env.APP_NAME,
     HIDE_ATTRIBUTION: process.env.HIDE_ATTRIBUTION,
     RATE_LIMIT_ENABLED: process.env.RATE_LIMIT_ENABLED,
+    MAINTENANCE_MODE: process.env.MAINTENANCE_MODE,
+    MAINTENANCE_BYPASS_TOKEN: process.env.MAINTENANCE_BYPASS_TOKEN,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
     API_BASE_URL: process.env.API_BASE_URL,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
