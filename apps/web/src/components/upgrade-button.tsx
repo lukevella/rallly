@@ -1,8 +1,11 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import React from "react";
+import { usePathname } from "next/navigation";
+import type React from "react";
 
+import { upgradeToProAction } from "@/features/billing/actions";
 import { Trans } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 export const UpgradeButton = ({
   children,
@@ -12,35 +15,24 @@ export const UpgradeButton = ({
   annual?: boolean;
   className?: string;
 }>) => {
-  const formRef = React.useRef<HTMLFormElement>(null);
+  const pathname = usePathname();
+  const upgradeToPro = useSafeAction(upgradeToProAction);
 
   return (
-    <form ref={formRef} method="POST" action="/api/stripe/checkout">
-      <input
-        type="hidden"
-        name="period"
-        value={annual ? "yearly" : "monthly"}
-      />
-      <input
-        type="hidden"
-        name="return_path"
-        value={window.location.pathname}
-      />
-      <Button
-        size="xl"
-        className={className}
-        variant="primary"
-        onClick={(e) => {
-          // 🐛 Since we have nested forms, we need to prevent the default
-          // action of the button from being triggered so that we don't submit
-          // the parent form.
-          // TODO: Fix this by making sure we never have nested forms.
-          e.preventDefault();
-          formRef.current?.submit();
-        }}
-      >
-        {children || <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />}
-      </Button>
-    </form>
+    <Button
+      type="button"
+      size="xl"
+      className={className}
+      variant="primary"
+      loading={upgradeToPro.isExecuting}
+      onClick={() => {
+        upgradeToPro.execute({
+          period: annual ? "yearly" : "monthly",
+          returnPath: pathname,
+        });
+      }}
+    >
+      {children || <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />}
+    </Button>
   );
 };
