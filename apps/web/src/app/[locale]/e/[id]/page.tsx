@@ -167,23 +167,23 @@ export default async function EventPage({
                   <EventCalendarCard
                     start={event.start}
                     allDay={event.allDay}
-                    timeZone={event.displayTimeZone}
+                    timeZone={event.timeZone}
                   />
                   <EventDetailContent>
-                    <EventDetailTitle>
+                    <EventDetailTitle data-testid="event-start-date">
                       <EventDate
                         value={event.start}
                         preset="weekdayMonthDay"
                         allDay={event.allDay}
-                        timeZone={event.displayTimeZone}
+                        timeZone={event.timeZone}
                       />
                     </EventDetailTitle>
-                    <EventDetailDescription>
+                    <EventDetailDescription data-testid="event-time-range">
                       <EventTimeRange
                         start={event.start}
                         end={event.end}
                         allDay={event.allDay}
-                        timeZone={event.displayTimeZone}
+                        timeZone={event.timeZone}
                         showTimeZone={true}
                       />
                     </EventDetailDescription>

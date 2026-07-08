@@ -93,35 +93,6 @@ export function getEventRegistration({
   });
 }
 
-// Legacy fallback used when neither location nor conferencing is populated.
-// Inverts the stored timeZone: stored null = "everyone sees UTC"; stored set = "viewer's TZ".
-function legacyDisplayTimeZone(timeZone: string | null): string | null {
-  return timeZone === null ? "UTC" : null;
-}
-
-// Derives the timezone the public page should render the event in, per the population table:
-//   in-person  (location set,  conferencing null) -> timeZone (venue TZ)
-//   remote     (location null, conferencing set)  -> null     (viewer's TZ)
-//   hybrid     (both set)                          -> timeZone (venue TZ; viewer toggle in UI)
-//   unspecified (neither set)                     -> legacy rule
-export function deriveDisplayTimeZone({
-  timeZone,
-  hasLocation,
-  hasConferencing,
-}: {
-  timeZone: string | null;
-  hasLocation: boolean;
-  hasConferencing: boolean;
-}): string | null {
-  if (hasLocation) {
-    return timeZone;
-  }
-  if (hasConferencing) {
-    return null;
-  }
-  return legacyDisplayTimeZone(timeZone);
-}
-
 export type ScheduledEventDTO = {
   id: string;
   title: string;
@@ -132,7 +103,6 @@ export type ScheduledEventDTO = {
   end: Date;
   allDay: boolean;
   timeZone: string | null;
-  displayTimeZone: string | null;
   status: ScheduledEventStatus;
 };
 
@@ -165,11 +135,6 @@ export function createScheduledEventDTO(event: {
     allDay: event.allDay,
     timeZone: event.timeZone,
     status: event.status,
-    displayTimeZone: deriveDisplayTimeZone({
-      timeZone: event.timeZone,
-      hasLocation: location !== null,
-      hasConferencing: conferencing !== null,
-    }),
   };
 }
 

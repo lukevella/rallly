@@ -60,12 +60,13 @@ export function EventDetailContent({
 export function EventDetailTitle({
   children,
   className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+  ...props
+}: React.ComponentProps<"div">) {
   return (
-    <div className={cn("font-medium text-base text-foreground", className)}>
+    <div
+      className={cn("font-medium text-base text-foreground", className)}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -74,12 +75,10 @@ export function EventDetailTitle({
 export function EventDetailDescription({
   children,
   className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+  ...props
+}: React.ComponentProps<"div">) {
   return (
-    <div className={cn("text-muted-foreground text-sm", className)}>
+    <div className={cn("text-muted-foreground text-sm", className)} {...props}>
       {children}
     </div>
   );
