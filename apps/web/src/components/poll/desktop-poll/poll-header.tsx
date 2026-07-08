@@ -24,7 +24,7 @@ const TimeRange: React.FunctionComponent<{
         className,
       )}
     >
-      <span>{start}</span>
+      <span data-testid="option-start-time">{start}</span>
       <Tooltip delayDuration={0}>
         <TooltipTrigger className="flex items-center gap-x-1 opacity-50">
           <ClockIcon className="size-3" />
@@ -119,7 +119,7 @@ const PollHeader = () => {
             )}
           >
             <div className="sticky right-0 left-[236px] inline-flex h-5 gap-1 px-2 py-0.5 font-medium text-xs uppercase">
-              <span>{group.month}</span>
+              <span data-testid="option-month">{group.month}</span>
               <span className="text-muted-foreground">{group.year}</span>
             </div>
           </th>
@@ -141,7 +141,9 @@ const PollHeader = () => {
               <div className="font-normal text-muted-foreground text-xs">
                 {group.dow}
               </div>
-              <div className="font-medium text-sm">{group.day}</div>
+              <div data-testid="option-day" className="font-medium text-sm">
+                {group.day}
+              </div>
             </div>
           </th>
         ))}
