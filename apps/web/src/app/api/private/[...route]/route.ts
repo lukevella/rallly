@@ -1,4 +1,5 @@
 import { RedisStore } from "@hono-rate-limiter/redis";
+import type { SpaceTier } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { Scalar } from "@scalar/hono-api-reference";
@@ -37,6 +38,7 @@ type Env = {
     apiAuth: {
       spaceId: string;
       spaceOwnerId: string;
+      spaceTier: SpaceTier;
       apiKeyId: string;
     };
   };
@@ -45,6 +47,16 @@ type Env = {
 const app = new Hono<Env>().basePath("/api/private");
 
 const MAX_OPTIONS = 100;
+
+const spaceNotProResponse = {
+  description:
+    "The space associated with the API key does not have a Pro subscription",
+  content: {
+    "application/json": {
+      schema: resolver(errorResponseSchema),
+    },
+  },
+};
 
 app.get(
   "/openapi",
@@ -110,6 +122,7 @@ app.post(
           },
         },
       },
+      403: spaceNotProResponse,
     },
   }),
   validator("json", createPollInputSchema),
@@ -335,6 +348,7 @@ app.get(
           },
         },
       },
+      403: spaceNotProResponse,
       404: {
         description: "Poll not found",
         content: {
@@ -446,6 +460,7 @@ app.get(
           },
         },
       },
+      403: spaceNotProResponse,
       404: {
         description: "Poll not found",
         content: {
@@ -505,6 +520,7 @@ app.get(
           },
         },
       },
+      403: spaceNotProResponse,
       404: {
         description: "Poll not found",
         content: {
@@ -564,6 +580,7 @@ app.delete(
           },
         },
       },
+      403: spaceNotProResponse,
       404: {
         description: "Poll not found",
         content: {

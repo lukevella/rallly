@@ -78,6 +78,7 @@ const mockApiKey = {
   updatedAt: new Date("2025-01-01"),
   space: {
     ownerId: "test-user-id",
+    tier: "pro",
   },
 };
 
@@ -181,6 +182,129 @@ describe("Private API - /polls", () => {
       });
 
       expect(res.status).toBe(401);
+    });
+  });
+
+  describe("Pro tier enforcement", () => {
+    it("should return 403 with SPACE_NOT_PRO when the space is not pro", async () => {
+      const hobbyApiKey = {
+        ...mockApiKey,
+        space: { ...mockApiKey.space, tier: "hobby" },
+      };
+      vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([hobbyApiKey]);
+
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Test Poll",
+          dates: ["2025-01-15"],
+        }),
+      });
+
+      expect(res.status).toBe(403);
+      const json = await res.json();
+      expect(json.error.code).toBe("SPACE_NOT_PRO");
+    });
+
+    it("should return 200 with a valid key when the space is pro", async () => {
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Test Poll",
+          dates: ["2025-01-15"],
+        }),
+      });
+
+      expect(res.status).toBe(200);
+    });
+  });
+
+  describe("lastUsedAt throttling", () => {
+    it("should not schedule a write when lastUsedAt is recent", async () => {
+      vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([
+        {
+          ...mockApiKey,
+          hashedKey: hashApiKey(testApiKey),
+          lastUsedAt: new Date(Date.now() - 30_000),
+        },
+      ]);
+
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).not.toBe(401);
+      expect(after).not.toHaveBeenCalled();
+    });
+
+    it("should schedule a write when lastUsedAt is stale", async () => {
+      vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([
+        {
+          ...mockApiKey,
+          hashedKey: hashApiKey(testApiKey),
+          lastUsedAt: new Date(Date.now() - 120_000),
+        },
+      ]);
+
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).not.toBe(401);
+      expect(after).toHaveBeenCalledTimes(1);
+    });
+
+    it("should schedule a write when lastUsedAt is null", async () => {
+      vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([
+        {
+          ...mockApiKey,
+          hashedKey: hashApiKey(testApiKey),
+          lastUsedAt: null,
+        },
+      ]);
+
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).not.toBe(401);
+      expect(after).toHaveBeenCalledTimes(1);
+    });
+
+    it("should still re-hash a legacy key when lastUsedAt is recent", async () => {
+      vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([
+        {
+          ...mockApiKey,
+          lastUsedAt: new Date(Date.now() - 30_000),
+        },
+      ]);
+
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).not.toBe(401);
+      expect(after).toHaveBeenCalledTimes(1);
     });
   });
 
