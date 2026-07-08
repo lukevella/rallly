@@ -13,13 +13,21 @@ import type {
 } from "@/features/subscription/schema";
 import { AppError } from "@/lib/errors";
 import { authActionClient } from "@/lib/safe-action/server";
+import { validateRedirectUrl } from "@/utils/redirect";
+
+const returnPathSchema = z
+  .string()
+  .refine(
+    (path) => validateRedirectUrl(path) !== undefined,
+    "returnPath must be an app-relative path",
+  );
 
 export const upgradeToProAction = authActionClient
   .metadata({ actionName: "upgrade_to_pro" })
   .inputSchema(
     z.object({
       period: z.enum(["monthly", "yearly"]).optional(),
-      returnPath: z.string().startsWith("/").optional(),
+      returnPath: returnPathSchema.optional(),
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
@@ -137,7 +145,7 @@ export const openCustomerPortalAction = authActionClient
   .metadata({ actionName: "open_customer_portal" })
   .inputSchema(
     z.object({
-      returnPath: z.string().startsWith("/").optional(),
+      returnPath: returnPathSchema.optional(),
     }),
   )
   .action(async ({ ctx, parsedInput }) => {

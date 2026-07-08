@@ -1,6 +1,12 @@
+// A leading-"/" check alone is not enough: the WHATWG URL parser resolves
+// "//evil.com", "/\evil.com" and even "/\t/evil.com" (tabs/newlines are
+// stripped) to an external origin. Resolving against a sentinel origin uses
+// the same parser the redirect will, so nothing can slip through.
+const PROBE_ORIGIN = "https://redirect-probe.invalid";
+
 /**
  * Validates a redirect URL to prevent open redirect attacks.
- * Only allows relative URLs starting with "/" but not "//" (protocol-relative).
+ * Only allows app-relative URLs that cannot resolve to another origin.
  *
  * @param redirectTo - The redirect URL to validate
  * @returns The valid redirect URL or undefined if invalid
@@ -12,16 +18,21 @@ export function validateRedirectUrl(
     return undefined;
   }
 
-  // Trim whitespace
   const trimmed = redirectTo.trim();
 
-  // Only allow relative URLs starting with "/" but not "//"
-  if (trimmed.startsWith("/") && !trimmed.startsWith("//")) {
-    return trimmed;
+  if (!trimmed.startsWith("/")) {
+    return undefined;
   }
 
-  // Return undefined for invalid redirects, let caller decide the default
-  return undefined;
+  try {
+    if (new URL(trimmed, PROBE_ORIGIN).origin !== PROBE_ORIGIN) {
+      return undefined;
+    }
+  } catch {
+    return undefined;
+  }
+
+  return trimmed;
 }
 
 /**
