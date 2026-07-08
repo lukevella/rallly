@@ -6,6 +6,20 @@ import {
 } from "@rallly/billing/lib/portal";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 
+export async function createStripePortalSession({
+  customerId,
+  returnPath = "/settings/billing",
+}: {
+  customerId: string;
+  returnPath?: string;
+}) {
+  const portalSession = await stripe.billingPortal.sessions.create({
+    customer: customerId,
+    return_url: absoluteUrl(returnPath),
+  });
+  return portalSession.url;
+}
+
 async function createSeatUpdateBillingConfig() {
   const pricing = await getProPricing();
 
