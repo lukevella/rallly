@@ -4,3 +4,10 @@ packages:
 
 onlyBuiltDependencies:
   - '@prisma/client'
+
+# @hookform/resolvers imports zod/v4/core without declaring zod as a peer,
+# relying on pnpm's hoisted fallback which can flip to zod@3 on re-resolution
+packageExtensions:
+  '@hookform/resolvers':
+    peerDependencies:
+      zod: '*'

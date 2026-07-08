@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
-import type { EditOptionsPage } from "tests/edit-options-page";
-import { NewPollPage } from "tests/new-poll-page";
+import type { EditOptionsPage } from "./edit-options-page";
+import { NewPollPage } from "./new-poll-page";
 
 test.describe("edit options", () => {
   let page: Page;

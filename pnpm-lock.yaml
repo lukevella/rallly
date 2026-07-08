@@ -4,6 +4,8 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+packageExtensionsChecksum: sha256-7EyWhva5Lcamo6pe18OzfUc27A7xbWt39+G/ofluF9k=
+
 importers:
 
   .:
@@ -213,7 +215,7 @@ importers:
         version: 0.7.6(hono@4.11.7)(zod@4.3.6)
       '@hookform/resolvers':
         specifier: ^5.2.2
-        version: 5.2.2(react-hook-form@7.71.1(react@19.2.6))
+        version: 5.2.2(react-hook-form@7.71.1(react@19.2.6))(zod@4.3.6)
       '@marsidev/react-turnstile':
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -2471,6 +2473,7 @@ packages:
     resolution: {integrity: sha512-A/IxlMLShx3KjV/HeTcTfaMxdwy690+L/ZADoeaTltLx+CVuzkeVIPuybK3jrRfw7YZnmdKsVVHAlEPIAEUNlA==}
     peerDependencies:
       react-hook-form: ^7.55.0
+      zod: '*'
 
   '@img/colour@1.0.0':
     resolution: {integrity: sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw==}
@@ -13483,10 +13486,11 @@ snapshots:
       hono: 4.11.7
       zod: 4.3.6
 
-  '@hookform/resolvers@5.2.2(react-hook-form@7.71.1(react@19.2.6))':
+  '@hookform/resolvers@5.2.2(react-hook-form@7.71.1(react@19.2.6))(zod@4.3.6)':
     dependencies:
       '@standard-schema/utils': 0.3.0
       react-hook-form: 7.71.1(react@19.2.6)
+      zod: 4.3.6
 
   '@img/colour@1.0.0': {}
 
