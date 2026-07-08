@@ -1,13 +1,31 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
   "root": true,
-  "plugins": ["./biome-plugins/use-icon-button-label.grit"],
-  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "plugins": [
+    "./biome-plugins/use-icon-button-label.grit",
+    "./biome-plugins/no-raw-datetime-formatting.grit"
+  ],
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+              "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+            }
+          }
+        },
         "noUselessElse": "off",
         "noParameterAssign": "error",
         "useAsConstAssertion": "error",
@@ -42,6 +60,34 @@
       }
     }
   },
+  "overrides": [
+    {
+      "includes": [
+        "**/src/lib/dayjs.ts",
+        "**/src/lib/datetime/**",
+        "**/src/components/forms/poll-options-form/**",
+        "**/src/components/headless-date-picker.tsx",
+        "**/edit-options/page.tsx",
+        "**/src/trpc/routers/polls.ts",
+        "**/src/trpc/routers/index.ts",
+        "**/api/private/utils/time-slots.ts",
+        "**/src/utils/date-time-utils.ts",
+        "**/src/components/poll/manage-poll/use-csv-exporter.ts",
+        "**/src/app/**/blog/post-preview.tsx",
+        "**/src/components/blog/date-formatter.tsx",
+        "**/src/test/setup.ts",
+        "**/tests/**",
+        "packages/screenshots/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": "off"
+          }
+        }
+      }
+    }
+  ],
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,

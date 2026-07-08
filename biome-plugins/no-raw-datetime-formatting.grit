@@ -1,0 +1,22 @@
+// Datetime formatting must go through lib/datetime so locale, timezone,
+// and hour-cycle preferences are applied consistently (RAL-1244).
+// The allowlist below is the escape hatch: lib/datetime itself, zone
+// detection (timezone-schema), zone abbreviations (timezone-utils), and
+// files still pending migration. Shrink it as RAL-1247 proceeds.
+language js
+
+or {
+  `new Intl.DateTimeFormat($_)` as $match,
+  `Intl.DateTimeFormat($_)` as $match,
+  `$obj.toLocaleString($_)` as $match,
+  `$obj.toLocaleDateString($_)` as $match,
+  `$obj.toLocaleTimeString($_)` as $match
+} where {
+  $filename <: not or {
+    r".*/src/lib/datetime/.*",
+    r".*/src/utils/timezone-schema\.ts",
+    r".*/src/components/time-zone-picker/timezone-utils\.ts",
+    r".*/src/components/poll/manage-poll/use-csv-exporter\.ts"
+  },
+  register_diagnostic(span=$match, message="Do not format dates inline. Use the formatters in `@/lib/datetime` so locale, timezone, and hour-cycle preferences are applied consistently.")
+}
