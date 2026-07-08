@@ -1,4 +1,148 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
-  "extends": "//"
+  "extends": "//",
+  "overrides": [
+    {
+      "includes": ["src/**", "!src/app/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                },
+                "patterns": [
+                  {
+                    "group": ["@/app", "@/app/**"],
+                    "message": "Only files inside app/ may import from app/. Routes are thin adapters; shared code belongs in features/, components/, or lib/. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/components/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                },
+                "patterns": [
+                  {
+                    "group": ["@/features/**"],
+                    "message": "components/ is domain-agnostic UI and must not depend on features/. Move domain components into features/<domain>/components/ (RAL-1291). Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  },
+                  {
+                    "group": ["@/app", "@/app/**"],
+                    "message": "Only files inside app/ may import from app/. Routes are thin adapters; shared code belongs in features/, components/, or lib/."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/lib/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                },
+                "patterns": [
+                  {
+                    "group": ["@/features/**", "@/components/**"],
+                    "message": "lib/ is the bottom layer (app -> features -> components -> lib) and must not import from features/ or components/. If this code needs domain logic, it belongs in a feature. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  },
+                  {
+                    "group": ["@/app", "@/app/**"],
+                    "message": "Only files inside app/ may import from app/. Routes are thin adapters; shared code belongs in features/, components/, or lib/."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/components/add-to-calendar-button.tsx",
+        "src/components/event-card.tsx",
+        "src/components/forms/poll-settings.tsx",
+        "src/components/logo.tsx",
+        "src/components/nav-user.tsx",
+        "src/components/poll-status.tsx",
+        "src/components/poll/manage-poll.tsx",
+        "src/components/poll/manage-poll/schedule-poll-dialog.tsx",
+        "src/components/poll/poll-branding.tsx",
+        "src/components/poll/poll-footer.tsx",
+        "src/components/poll/responsive-results.tsx",
+        "src/components/pro-badge.tsx",
+        "src/components/upgrade-button.tsx",
+        "src/components/user-dropdown.tsx",
+        "src/components/user-provider.tsx",
+        "src/features/billing/components/pay-wall-dialog.tsx",
+        "src/features/navigation/command-menu/command-menu.tsx",
+        "src/features/quick-create/quick-create-widget.tsx",
+        "src/lib/auth.ts",
+        "src/lib/feature-flags/config.ts",
+        "src/lib/safe-action/server.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/lib/dayjs.ts",
+        "src/lib/datetime/**",
+        "src/components/forms/poll-options-form/**",
+        "src/components/headless-date-picker.tsx",
+        "src/**/edit-options/page.tsx",
+        "src/trpc/routers/polls.ts",
+        "src/trpc/routers/index.ts",
+        "src/app/api/private/utils/time-slots.ts",
+        "src/utils/date-time-utils.ts",
+        "src/components/poll/manage-poll/use-csv-exporter.ts",
+        "src/test/setup.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": "off"
+          }
+        }
+      }
+    }
+  ]
 }
