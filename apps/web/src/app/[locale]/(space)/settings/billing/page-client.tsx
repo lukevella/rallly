@@ -36,11 +36,13 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { openCustomerPortalAction } from "@/features/billing/actions";
 import { SubscriptionStatusLabel } from "@/features/billing/components/subscription-status-label";
 import { showPayWall } from "@/features/billing/paywall-store";
 import { useSpace } from "@/features/space/client";
 import type { SpaceTier } from "@/features/space/schema";
 import { Trans } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
 import { BillingPlan } from "./components/billing-plan";
 import { ManageSeatsDialog } from "./components/manage-seats-dialog";
@@ -74,6 +76,7 @@ export function BillingPageClient() {
 
 function BillingPageContent({ tier }: { tier: SpaceTier }) {
   const searchParams = useSearchParams();
+  const openCustomerPortal = useSafeAction(openCustomerPortalAction);
 
   const [subscription] = trpc.billing.getSubscription.useSuspenseQuery();
   const [seats] = trpc.spaces.getSeats.useSuspenseQuery();
@@ -126,13 +129,13 @@ function BillingPageContent({ tier }: { tier: SpaceTier }) {
               <div>
                 {subscription ? (
                   <div className="flex justify-between gap-2">
-                    <a
-                      href="/api/stripe/portal"
-                      className={buttonVariants()}
+                    <Button
+                      loading={openCustomerPortal.isExecuting}
                       onClick={() => {
                         posthog?.capture(
                           "space_billing:billing_portal_button_click",
                         );
+                        openCustomerPortal.execute({});
                       }}
                     >
                       <Icon>
@@ -142,7 +145,7 @@ function BillingPageContent({ tier }: { tier: SpaceTier }) {
                         i18nKey="manageSubscription"
                         defaults="Manage Subscription"
                       />
-                    </a>
+                    </Button>
                     <ManageSeatsDialog
                       usedSeats={seats.used}
                       currentSeats={seats.total}

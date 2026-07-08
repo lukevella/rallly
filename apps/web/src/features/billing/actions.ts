@@ -4,6 +4,7 @@ import { getProPricing, stripe } from "@rallly/billing";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { redirect } from "next/navigation";
 import * as z from "zod";
+import { createStripePortalSession } from "@/features/billing/portal";
 import type { CustomerMetadata } from "@/features/billing/schema";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import type {
@@ -40,7 +41,16 @@ export const upgradeToProAction = authActionClient
 
     if (space.tier === "pro") {
       // User already has an active subscription. Take them to customer portal
-      redirect("/api/stripe/portal");
+      if (!ctx.user.customerId) {
+        throw new AppError({
+          code: "NOT_FOUND",
+          message: "No customer ID found",
+        });
+      }
+
+      redirect(
+        await createStripePortalSession({ customerId: ctx.user.customerId }),
+      );
     }
 
     const { period, returnPath } = parsedInput;
@@ -121,4 +131,27 @@ export const upgradeToProAction = authActionClient
     }
 
     redirect(checkoutSession.url);
+  });
+
+export const openCustomerPortalAction = authActionClient
+  .metadata({ actionName: "open_customer_portal" })
+  .inputSchema(
+    z.object({
+      returnPath: z.string().startsWith("/").optional(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    if (!ctx.user.customerId) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: "No customer ID found",
+      });
+    }
+
+    redirect(
+      await createStripePortalSession({
+        customerId: ctx.user.customerId,
+        returnPath: parsedInput.returnPath,
+      }),
+    );
   });
