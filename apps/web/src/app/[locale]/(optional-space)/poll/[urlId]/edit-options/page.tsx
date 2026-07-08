@@ -109,7 +109,7 @@ const Page = () => {
             updatePollMutation(
               {
                 pollId: poll.id,
-                timeZone: data.timeZone,
+                timeZone: data.timeZone || null,
                 optionsToDelete: optionsToDelete.map(({ id }) => id),
                 optionsToAdd,
               },

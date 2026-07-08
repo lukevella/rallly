@@ -30,6 +30,7 @@ import {
 } from "../trpc";
 import { comments } from "./polls/comments";
 import { participants } from "./polls/participants";
+import { timeZoneInput } from "./polls/schema";
 
 const collapseNewlines = (s: string) => s.replace(/\n{3,}/g, "\n\n");
 
@@ -98,7 +99,7 @@ export const polls = router({
     .input(
       z.object({
         title: z.string().trim().min(1),
-        timeZone: z.string().optional(),
+        timeZone: timeZoneInput,
         location: z.string().trim().optional(),
         description: z.string().trim().transform(collapseNewlines).optional(),
         hideParticipants: z.boolean().optional(),
@@ -288,7 +289,7 @@ export const polls = router({
       z.object({
         pollId: z.string(),
         title: z.string().trim().optional(),
-        timeZone: z.string().optional(),
+        timeZone: timeZoneInput,
         location: z.string().trim().optional(),
         description: z.string().trim().transform(collapseNewlines).optional(),
         optionsToDelete: z.string().array().optional(),
