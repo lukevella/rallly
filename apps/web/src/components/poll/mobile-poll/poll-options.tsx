@@ -5,6 +5,7 @@ import { useParticipants } from "@/components/participants-provider";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { usePoll } from "@/components/poll-context";
 import type { ParsedDateTimeOpton } from "@/lib/utils/date-time-utils";
+import { getOptionDateTimeLabel } from "@/lib/utils/date-time-utils";
 import DateOption from "./date-option";
 import TimeSlotOption from "./time-slot-option";
 
@@ -59,6 +60,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                     <TimeSlotOption
                       onChange={handleChange}
                       optionId={option.optionId}
+                      optionLabel={getOptionDateTimeLabel(option)}
                       yesScore={score.yes}
                       ifNeedBeScore={score.ifNeedBe}
                       vote={vote}
@@ -74,6 +76,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                     <DateOption
                       onChange={handleChange}
                       optionId={option.optionId}
+                      optionLabel={getOptionDateTimeLabel(option)}
                       yesScore={score.yes}
                       ifNeedBeScore={score.ifNeedBe}
                       vote={vote}

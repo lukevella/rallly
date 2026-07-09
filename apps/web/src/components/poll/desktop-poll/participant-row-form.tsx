@@ -15,9 +15,10 @@ import { Participant, ParticipantName } from "@/components/participant";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { YouAvatar } from "@/components/poll/you-avatar";
 import { Trans, useTranslation } from "@/i18n/client";
+import { getOptionDateTimeLabel } from "@/lib/utils/date-time-utils";
 
-import { usePoll } from "../../poll-context";
-import { toggleVote, VoteSelector } from "../vote-selector";
+import { useOptions, usePoll } from "../../poll-context";
+import { VoteSelector } from "../vote-selector";
 
 export interface ParticipantRowFormProps {
   name?: string;
@@ -37,6 +38,7 @@ const ParticipantRowForm = ({
   const { t } = useTranslation();
 
   const { optionIds } = usePoll();
+  const { options } = useOptions();
   const form = useVotingForm();
 
   React.useEffect(() => {
@@ -107,6 +109,7 @@ const ParticipantRowForm = ({
         </div>
       </td>
       {optionIds.map((optionId, i) => {
+        const option = options[i];
         return (
           <td
             key={optionId}
@@ -116,21 +119,17 @@ const ParticipantRowForm = ({
               control={form.control}
               name={`votes.${i}`}
               render={({ field }) => (
-                // biome-ignore lint/a11y/useKeyWithClickEvents: Fix later
-                // biome-ignore lint/a11y/noStaticElementInteractions: Fix later
                 <div
-                  onClick={() => {
-                    field.onChange({
-                      optionId,
-                      type: toggleVote(field.value?.type),
-                    });
-                  }}
                   className={cn(
-                    "absolute inset-0 flex cursor-pointer items-center justify-center transition-colors",
+                    "absolute inset-0 flex items-center justify-center transition-colors",
                     "hover:bg-gray-50 active:bg-gray-100 active:ring-1 active:ring-gray-200 active:ring-inset dark:active:bg-gray-700/50 dark:active:ring-gray-700 dark:active:ring-inset dark:hover:bg-gray-800",
                   )}
                 >
                   <VoteSelector
+                    className="after:absolute after:inset-0"
+                    optionLabel={
+                      option ? getOptionDateTimeLabel(option) : undefined
+                    }
                     value={field.value?.type}
                     onChange={(vote) => {
                       field.onChange({ optionId, type: vote });

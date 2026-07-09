@@ -1,13 +1,10 @@
-/** biome-ignore-all lint/a11y/useSemanticElements: fix later */
-/** biome-ignore-all lint/a11y/useKeyWithClickEvents: fix later */
-/** biome-ignore-all lint/a11y/useFocusableInteractive: fix later */
 "use client";
 import type { VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Icon } from "@rallly/ui/icon";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import * as React from "react";
+import type * as React from "react";
 import { useToggle } from "react-use";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
@@ -30,6 +27,7 @@ export interface PollOptionProps {
   onChange: (vote: VoteType) => void;
   selectedParticipantId?: string;
   optionId: string;
+  optionLabel: string;
 }
 
 const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
@@ -133,24 +131,17 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   onChange,
   editable = false,
   optionId,
+  optionLabel,
 }) => {
   const showVotes = !!(selectedParticipantId || editable);
-  const selectorRef = React.useRef<HTMLButtonElement>(null);
-  const [active, setActive] = React.useState(false);
   const [isExpanded, toggle] = useToggle(false);
   return (
     <div
-      role="button"
-      className={cn("space-y-4 bg-background p-4 transition-colors", {
-        "bg-accent/50": editable && active,
-      })}
-      onPointerDown={() => setActive(editable)}
-      onPointerUp={() => setActive(false)}
-      onPointerOut={() => setActive(false)}
+      className={cn(
+        "relative space-y-4 bg-background p-4 transition-colors",
+        editable && "active:bg-accent/50",
+      )}
       data-testid="poll-option"
-      onClick={() => {
-        selectorRef.current?.click();
-      }}
     >
       <div className="flex h-7 items-center justify-between gap-x-4">
         <div className="shrink-0">{children}</div>
@@ -158,20 +149,19 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           <Button
             size="sm"
             variant="ghost"
-            onClick={(e) => {
-              e.stopPropagation();
-              toggle();
-            }}
+            className="relative z-10"
+            onClick={() => toggle()}
           >
             <ConnectedScoreSummary optionId={optionId} />
             <Icon>{isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}</Icon>
           </Button>
 
           {showVotes ? (
-            <div className="relative flex size-7 items-center justify-center">
+            <div className="flex size-7 items-center justify-center">
               {editable ? (
                 <VoteSelector
-                  ref={selectorRef}
+                  className="after:absolute after:inset-0"
+                  optionLabel={optionLabel}
                   value={vote}
                   onChange={onChange}
                 />
