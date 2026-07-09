@@ -28,6 +28,7 @@
     "test:unit": "turbo test:unit",
     "check": "biome check .",
     "check:fix": "biome check . --write",
+    "check:structure": "node scripts/check-feature-structure.mjs && node scripts/check-feature-cycles.mjs",
     "i18n:scan": "turbo i18n:scan",
     "type-check": "turbo type-check",
     "release": "./scripts/create-release.sh",
