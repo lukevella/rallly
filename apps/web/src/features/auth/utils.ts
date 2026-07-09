@@ -45,13 +45,16 @@ export const passwordQualityThresholds: Record<PasswordQuality, number> = {
 
 export function isEmailBlocked(email: string) {
   if (process.env.ALLOWED_EMAILS) {
-    const allowedEmails = process.env.ALLOWED_EMAILS.split(",");
+    const allowedEmails = process.env.ALLOWED_EMAILS.split(",")
+      .map((allowedEmail) => allowedEmail.trim())
+      .filter(Boolean);
     // Check whether the email matches enough of the patterns specified in ALLOWED_EMAILS
     const isAllowed = allowedEmails.some((allowedEmail) => {
       const regex = new RegExp(
         `^${allowedEmail
           .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
           .replaceAll(/[*]/g, ".*")}$`,
+        "i",
       );
       return regex.test(email);
     });
