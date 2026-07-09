@@ -47,6 +47,9 @@ jobs:
       - name: Check linting rules
         run: pnpm turbo check
 
+      - name: Check feature folder structure
+        run: pnpm check:structure
+
   unit-tests:
     name: Unit tests
     runs-on: ubuntu-latest
