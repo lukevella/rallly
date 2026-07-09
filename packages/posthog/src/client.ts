@@ -12,8 +12,6 @@ if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
     ui_host: process.env.NEXT_PUBLIC_POSTHOG_UI_HOST,
     capture_pageview: false,
     capture_pageleave: true,
-    capture_exceptions: false,
-    disable_session_recording: true,
     enable_heatmaps: false,
     persistence: "cookie",
     autocapture: false,
