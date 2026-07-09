@@ -63,19 +63,8 @@
   "overrides": [
     {
       "includes": [
-        "**/src/lib/dayjs.ts",
-        "**/src/lib/datetime/**",
-        "**/src/components/forms/poll-options-form/**",
-        "**/src/components/headless-date-picker.tsx",
-        "**/edit-options/page.tsx",
-        "**/src/trpc/routers/polls.ts",
-        "**/src/trpc/routers/index.ts",
-        "**/api/private/utils/time-slots.ts",
-        "**/src/utils/date-time-utils.ts",
-        "**/src/components/poll/manage-poll/use-csv-exporter.ts",
         "**/src/app/**/blog/post-preview.tsx",
         "**/src/components/blog/date-formatter.tsx",
-        "**/src/test/setup.ts",
         "**/tests/**",
         "packages/screenshots/**"
       ],
