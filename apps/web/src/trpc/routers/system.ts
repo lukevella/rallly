@@ -2,7 +2,7 @@ import { prisma } from "@rallly/database";
 import * as z from "zod";
 import { env } from "@/env";
 import { createCache } from "@/lib/cache";
-import { appVersion } from "@/utils/constants";
+import { appVersion } from "@/lib/constants";
 import { adminProcedure, router } from "../trpc";
 
 const upstreamSchema = z.object({

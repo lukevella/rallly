@@ -4,7 +4,7 @@ import { Textarea } from "@rallly/ui/textarea";
 import { useFormContext } from "react-hook-form";
 
 import { Trans, useTranslation } from "@/i18n/client";
-import { useFormValidation } from "@/utils/form-validation";
+import { useFormValidation } from "@/lib/utils/form-validation";
 
 import type { NewEventData } from "./types";
 

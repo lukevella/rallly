@@ -18,7 +18,7 @@ import { PasswordStrengthMeter } from "@/features/auth/components/password-stren
 import { usePasswordValidationSchema } from "@/features/auth/schema";
 import { Trans } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
-import { validateRedirectUrl } from "@/utils/redirect";
+import { validateRedirectUrl } from "@/lib/utils/redirect";
 
 function useResetPasswordSchema() {
   const passwordValidation = usePasswordValidationSchema();

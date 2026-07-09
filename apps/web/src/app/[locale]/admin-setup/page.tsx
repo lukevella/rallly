@@ -10,10 +10,10 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { isInitialAdmin } from "@/features/setup/utils";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
-import { isInitialAdmin } from "@/utils/is-initial-admin";
 import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {

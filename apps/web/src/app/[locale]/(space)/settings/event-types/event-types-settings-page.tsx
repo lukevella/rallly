@@ -24,13 +24,6 @@ import {
 } from "lucide-react";
 import React from "react";
 import {
-  SettingsPage,
-  SettingsPageContent,
-  SettingsPageDescription,
-  SettingsPageHeader,
-  SettingsPageTitle,
-} from "@/app/components/settings-layout";
-import {
   EmptyState,
   EmptyStateDescription,
   EmptyStateFooter,
@@ -39,6 +32,13 @@ import {
 } from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
+import {
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageDescription,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/components/settings-layout";
 import { CreateEventTypeDialog } from "@/features/event-types/components/create-event-type-dialog";
 import { DeleteEventTypeDialog } from "@/features/event-types/components/delete-event-type-dialog";
 import { EditEventTypeDialog } from "@/features/event-types/components/edit-event-type-dialog";

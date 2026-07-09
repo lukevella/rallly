@@ -17,7 +17,7 @@ import { hasPollAdminAccess } from "@/features/poll/query";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { dayjs } from "@/lib/dayjs";
-import { createIcsEvent } from "@/utils/ics";
+import { createIcsEvent } from "@/lib/utils/ics";
 import {
   createRateLimitMiddleware,
   possiblyPublicProcedure,

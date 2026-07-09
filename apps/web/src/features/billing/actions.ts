@@ -11,9 +11,9 @@ import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
 } from "@/features/subscription/schema";
-import { AppError } from "@/lib/errors";
+import { AppError } from "@/lib/errors/app-error";
 import { authActionClient } from "@/lib/safe-action/server";
-import { validateRedirectUrl } from "@/utils/redirect";
+import { validateRedirectUrl } from "@/lib/utils/redirect";
 
 const returnPathSchema = z
   .string()

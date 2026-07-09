@@ -11,19 +11,19 @@ import {
   PageSectionGroup,
   PageSectionHeader,
   PageSectionTitle,
-} from "@/app/components/page-layout";
+} from "@/components/page-layout";
 import {
   SettingsPage,
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
   SettingsPageTitle,
-} from "@/app/components/settings-layout";
+} from "@/components/settings-layout";
 import { getCurrentUser } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getPathname } from "@/lib/pathname";
-import { buildSafeRedirectUrl } from "@/utils/redirect";
+import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 
 export default async function Page() {
   const user = await getCurrentUser();

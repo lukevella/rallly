@@ -1,7 +1,7 @@
 import type { EmailBranding } from "@rallly/emails";
 
 import { getInstanceBrandingConfig } from "@/features/branding/queries";
-import { resolveStorageUrl } from "@/utils/storage";
+import { resolveStorageUrl } from "@/lib/storage/resolve-storage-url";
 
 /**
  * Branding for emails that represent the instance/product (auth, billing,

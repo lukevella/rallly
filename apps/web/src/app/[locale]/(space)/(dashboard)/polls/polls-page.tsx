@@ -5,15 +5,6 @@ import { InboxIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageHeaderActions,
-  PageHeaderContent,
-  PageTitle,
-} from "@/app/components/page-layout";
-import { SearchInput } from "@/app/components/search-input";
-import {
   EmptyState,
   EmptyStateDescription,
   EmptyStateFooter,
@@ -21,6 +12,15 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { MemberSelector } from "@/components/member-selector";
+import {
+  PageContainer,
+  PageContent,
+  PageHeader,
+  PageHeaderActions,
+  PageHeaderContent,
+  PageTitle,
+} from "@/components/page-layout";
+import { SearchInput } from "@/components/search-input";
 import { PollsInfiniteList } from "@/features/poll/components/polls-infinite-list";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";

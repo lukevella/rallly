@@ -39,8 +39,8 @@ import {
   useEditToken,
 } from "@/components/poll/mutations";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useFormValidation } from "@/lib/utils/form-validation";
 import { trpc } from "@/trpc/client";
-import { useFormValidation } from "@/utils/form-validation";
 
 export const ParticipantDropdown = ({
   participant,

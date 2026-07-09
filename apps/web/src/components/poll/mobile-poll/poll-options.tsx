@@ -4,7 +4,7 @@ import { Controller } from "react-hook-form";
 import { useParticipants } from "@/components/participants-provider";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { usePoll } from "@/components/poll-context";
-import type { ParsedDateTimeOpton } from "@/utils/date-time-utils";
+import type { ParsedDateTimeOpton } from "@/lib/utils/date-time-utils";
 import DateOption from "./date-option";
 import TimeSlotOption from "./time-slot-option";
 

@@ -15,6 +15,12 @@ import {
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
+import {
   PageSection,
   PageSectionContent,
   PageSectionDescription,
@@ -22,20 +28,14 @@ import {
   PageSectionGroup,
   PageSectionHeader,
   PageSectionTitle,
-} from "@/app/components/page-layout";
+} from "@/components/page-layout";
 import {
   SettingsPage,
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
   SettingsPageTitle,
-} from "@/app/components/settings-layout";
-import {
-  EmptyState,
-  EmptyStateDescription,
-  EmptyStateIcon,
-  EmptyStateTitle,
-} from "@/components/empty-state";
+} from "@/components/settings-layout";
 import { openCustomerPortalAction } from "@/features/billing/actions";
 import { SubscriptionStatusLabel } from "@/features/billing/components/subscription-status-label";
 import { showPayWall } from "@/features/billing/paywall-store";

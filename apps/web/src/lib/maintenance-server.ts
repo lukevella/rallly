@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cookies } from "next/headers";
-import { AppError } from "@/lib/errors";
+import { AppError } from "@/lib/errors/app-error";
 import {
   isMaintenanceModeEnabled,
   isValidBypassCookie,

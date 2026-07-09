@@ -35,7 +35,7 @@ import {
   expectTimeOption,
   getBrowserTimeZone,
   removeAllOptionsForDay,
-} from "../../../../utils/date-time-utils";
+} from "@/lib/utils/date-time-utils";
 import DateCard from "../../../date-card";
 import { useHeadlessDatePicker } from "../../../headless-date-picker";
 import type { DateTimeOption, DateTimePickerProps } from "../types";

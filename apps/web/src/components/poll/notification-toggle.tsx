@@ -10,7 +10,7 @@ import {
 import { BellIcon, BellOffIcon } from "lucide-react";
 
 import { useUser } from "@/components/user-provider";
-import { usePoll } from "@/contexts/poll";
+import { usePoll } from "@/features/poll/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 

@@ -5,14 +5,14 @@ import {
   PageSectionGroup,
   PageSectionHeader,
   PageSectionTitle,
-} from "@/app/components/page-layout";
+} from "@/components/page-layout";
 import {
   SettingsPage,
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
   SettingsPageTitle,
-} from "@/app/components/settings-layout";
+} from "@/components/settings-layout";
 import { getInstanceSettings } from "@/features/instance-settings/queries";
 import { Trans } from "@/i18n/client";
 import { InstanceSettingsForm } from "./instance-settings-form";

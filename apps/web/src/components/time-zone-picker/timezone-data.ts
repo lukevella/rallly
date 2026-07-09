@@ -1,4 +1,4 @@
-import { normalizeLegacyIanaId } from "@/utils/timezone-schema";
+import { normalizeLegacyIanaId } from "@/lib/utils/timezone-schema";
 
 export function getAllTimezoneIds(): string[] {
   return Intl.supportedValuesOf("timeZone");

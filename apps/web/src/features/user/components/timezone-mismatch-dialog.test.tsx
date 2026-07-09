@@ -8,7 +8,7 @@ import { act, render, screen } from "@/test/test-utils";
 import { TimeZoneMismatchDialog } from "./timezone-mismatch-dialog";
 
 let mockTimeZone = "America/New_York";
-vi.mock("@/utils/date-time-utils", () => ({
+vi.mock("@/lib/utils/date-time-utils", () => ({
   getBrowserTimeZone: () => mockTimeZone,
 }));
 

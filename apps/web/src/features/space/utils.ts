@@ -4,8 +4,8 @@ import { getSpaceSubscription } from "@/features/billing/data";
 import { cached_getInstanceLicense } from "@/features/licensing/data";
 import type { LicenseType } from "@/features/licensing/schema";
 import type { MemberRole } from "@/features/space/schema";
-import { AppError } from "@/lib/errors";
-import { isSelfHosted } from "@/utils/constants";
+import { isSelfHosted } from "@/lib/constants";
+import { AppError } from "@/lib/errors/app-error";
 
 const logger = createLogger("space/utils");
 

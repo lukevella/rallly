@@ -27,8 +27,7 @@ import {
 } from "@/components/empty-state";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { ScrollContainer } from "@/components/scroll-container";
-import { usePermissions } from "@/contexts/permissions";
-import { usePoll } from "@/contexts/poll";
+import { usePermissions, usePoll } from "@/features/poll/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useParticipants } from "../participants-provider";
 import { useVisibleParticipants } from "../visibility";

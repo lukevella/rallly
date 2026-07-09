@@ -1,8 +1,8 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { getTranslation } from "@/i18n/server";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { DashboardHome } from "./dashboard-home";
 
 export default async function Page() {

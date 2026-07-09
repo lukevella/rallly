@@ -26,7 +26,7 @@ import { DateIconInner } from "@/components/date-icon";
 import { useParticipants } from "@/components/participants-provider";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { VoteSummaryProgressBar } from "@/components/vote-summary-progress-bar";
-import { usePoll } from "@/contexts/poll";
+import { usePoll } from "@/features/poll/client";
 import {
   EventDate,
   EventTimeRange,

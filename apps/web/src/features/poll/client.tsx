@@ -1,10 +1,23 @@
 "use client";
+import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
 import { useParticipants } from "@/components/participants-provider";
-import { usePoll } from "@/contexts/poll";
-import { useRole } from "@/contexts/role";
 import { trpc } from "@/trpc/client";
+
+export const usePoll = () => {
+  const params = useParams<{ urlId: string }>();
+  const [poll] = trpc.polls.get.useSuspenseQuery({
+    urlId: params?.urlId as string,
+  });
+
+  return poll;
+};
+
+export const useRole = () => {
+  const pathname = usePathname();
+  return pathname?.includes("/poll") ? "admin" : "participant";
+};
 
 const PermissionsContext = React.createContext<{
   impersonatedUserId: string | null;

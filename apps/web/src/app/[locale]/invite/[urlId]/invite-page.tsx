@@ -7,7 +7,7 @@ import { EventCard } from "@/components/event-card";
 import { PollFooter } from "@/components/poll/poll-footer";
 import { ResponsiveResults } from "@/components/poll/responsive-results";
 import { VotingForm } from "@/components/poll/voting-form";
-import { usePoll } from "@/contexts/poll";
+import { usePoll } from "@/features/poll/client";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 

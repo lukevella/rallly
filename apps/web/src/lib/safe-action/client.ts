@@ -3,7 +3,7 @@ import { toast } from "@rallly/ui/sonner";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { useTranslation } from "@/i18n/client";
-import type { AppErrorCode } from "@/lib/errors";
+import type { AppErrorCode } from "@/lib/errors/app-error";
 
 export const useSafeAction: typeof useAction = (action, options) => {
   const { t } = useTranslation();

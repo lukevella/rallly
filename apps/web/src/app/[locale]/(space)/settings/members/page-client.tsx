@@ -4,6 +4,8 @@ import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Badge } from "@rallly/ui/badge";
 import { InfoIcon } from "lucide-react";
 import Link from "next/link";
+import { IfCloudHosted, IfSelfHosted } from "@/components/environment";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import {
   PageSection,
   PageSectionContent,
@@ -12,17 +14,15 @@ import {
   PageSectionGroup,
   PageSectionHeader,
   PageSectionTitle,
-} from "@/app/components/page-layout";
+} from "@/components/page-layout";
 import {
   SettingsPage,
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
   SettingsPageTitle,
-} from "@/app/components/settings-layout";
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+} from "@/components/settings-layout";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
-import { IfCloudHosted, IfSelfHosted } from "@/contexts/environment";
 import { SpaceRole } from "@/features/space/components/space-role";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";

@@ -19,7 +19,7 @@ import {
   PollPageIcon,
   PreferencesPageIcon,
   ProfilePageIcon,
-} from "@/app/components/page-icons";
+} from "@/components/page-icons";
 import { Trans, useTranslation } from "@/i18n/client";
 import { CommandGlobalShortcut } from "./command-global-shortcut";
 

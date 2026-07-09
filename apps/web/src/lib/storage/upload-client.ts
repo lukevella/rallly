@@ -1,4 +1,4 @@
-import { AppError } from "@/lib/errors";
+import { AppError } from "@/lib/errors/app-error";
 
 export interface UploadImageParams {
   file: File;

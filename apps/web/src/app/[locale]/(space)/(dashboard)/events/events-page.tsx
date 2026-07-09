@@ -5,20 +5,20 @@ import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import type React from "react";
 import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageSkeleton,
-  PageTitle,
-} from "@/app/components/page-layout";
-import { SearchInput } from "@/app/components/search-input";
-import {
   EmptyState,
   EmptyStateDescription,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { MemberSelector } from "@/components/member-selector";
+import {
+  PageContainer,
+  PageContent,
+  PageHeader,
+  PageSkeleton,
+  PageTitle,
+} from "@/components/page-layout";
+import { SearchInput } from "@/components/search-input";
 import type { Status } from "@/features/scheduled-event/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";

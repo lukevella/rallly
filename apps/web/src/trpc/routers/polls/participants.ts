@@ -11,7 +11,7 @@ import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { posthog } from "@/features/analytics/posthog";
 import { getNotificationRecipient } from "@/features/notifications/queries";
 import { hasPollAdminAccess } from "@/features/poll/query";
-import { getGravatarUrl } from "@/utils/gravatar";
+import { getGravatarUrl } from "@/lib/utils/gravatar";
 import {
   createRateLimitMiddleware,
   publicProcedure,

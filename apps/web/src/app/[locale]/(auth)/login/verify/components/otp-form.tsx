@@ -18,7 +18,7 @@ import * as z from "zod";
 import { InputOTP } from "@/components/input-otp";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
-import { validateRedirectUrl } from "@/utils/redirect";
+import { validateRedirectUrl } from "@/lib/utils/redirect";
 
 const otpFormSchema = z.object({
   otp: z.string().length(6),

@@ -11,7 +11,7 @@ import {
   isLegacyApiKeyHash,
   verifyApiKey,
 } from "@/features/api-keys/api-key";
-import { isSelfHosted } from "@/utils/constants";
+import { isSelfHosted } from "@/lib/constants";
 import { apiError } from "./poll";
 
 const LAST_USED_AT_WRITE_INTERVAL_MS = 60_000;

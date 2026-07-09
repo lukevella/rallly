@@ -3,9 +3,9 @@ import "server-only";
 import { cache } from "react";
 import { env } from "@/env";
 import { loadInstanceLicense } from "@/features/licensing/data";
+import { isSelfHosted } from "@/lib/constants";
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
-import { getForegroundColor } from "@/utils/color";
-import { isSelfHosted } from "@/utils/constants";
+import { getForegroundColor } from "@/lib/utils/color";
 import type { BrandingConfig } from "./client";
 import { getPrimaryColorVars } from "./color";
 import {

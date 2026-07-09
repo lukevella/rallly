@@ -5,8 +5,8 @@ import React from "react";
 import type { UserAbility } from "@/features/user/ability";
 import { defineAbilityFor } from "@/features/user/ability";
 import { authClient } from "@/lib/auth-client";
+import { isOwner } from "@/lib/utils/permissions";
 import { trpc } from "@/trpc/client";
-import { isOwner } from "@/utils/permissions";
 
 export function useUser() {
   const [user] = trpc.user.getMe.useSuspenseQuery();

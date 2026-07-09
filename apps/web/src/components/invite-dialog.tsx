@@ -14,7 +14,7 @@ import Link from "next/link";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 
-import { usePoll } from "@/contexts/poll";
+import { usePoll } from "@/features/poll/client";
 import { Trans } from "@/i18n/client";
 
 export function CopyInviteLinkButton() {

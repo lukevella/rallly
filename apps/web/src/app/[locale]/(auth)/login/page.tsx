@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { OIDCAutoSignIn } from "@/app/[locale]/(auth)/login/components/oidc-auto-sign-in";
 import { env } from "@/env";
+import { getRegistrationEnabled } from "@/features/instance-settings/data";
 import { getTranslation } from "@/i18n/server";
 import { authLib, redirectIfLoggedIn } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import {
   AuthPageContainer,
   AuthPageContent,

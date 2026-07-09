@@ -16,7 +16,7 @@ import {
 } from "@/components/empty-state";
 import DesktopPoll from "@/components/poll/desktop-poll";
 import MobilePoll from "@/components/poll/mobile-poll";
-import { usePoll } from "@/contexts/poll";
+import { usePoll } from "@/features/poll/client";
 import {
   EventDate,
   EventTimeRange,

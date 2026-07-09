@@ -1,9 +1,8 @@
-import { dayjs } from "@/lib/dayjs";
-
 import type {
   DateTimeOption,
   TimeOption,
-} from "../components/forms/poll-options-form/types";
+} from "@/components/forms/poll-options-form/types";
+import { dayjs } from "@/lib/dayjs";
 
 export function getBrowserTimeZone() {
   return dayjs.tz.guess();

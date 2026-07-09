@@ -12,7 +12,7 @@ import {
   isEventFull,
 } from "@/features/scheduled-event/registration";
 import { authLib, getSession } from "@/lib/auth";
-import { AppError } from "@/lib/errors";
+import { AppError } from "@/lib/errors/app-error";
 import { actionClient, authActionClient } from "@/lib/safe-action/server";
 
 // Re-validates the registration gate server-side — never trust that the client

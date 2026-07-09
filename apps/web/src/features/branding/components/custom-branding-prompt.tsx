@@ -10,7 +10,7 @@ import { useLocalStorage } from "react-use";
 import { useUser } from "@/components/user-provider";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { isBusinessEmail } from "@/utils/is-business-email";
+import { isBusinessEmail } from "@/lib/utils/is-business-email";
 
 export function CustomBrandingPrompt() {
   const { t } = useTranslation();

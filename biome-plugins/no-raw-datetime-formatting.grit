@@ -16,7 +16,7 @@ or {
 } where {
   $filename <: not or {
     r".*/src/lib/datetime/.*",
-    r".*/src/utils/timezone-schema\.ts",
+    r".*/src/lib/utils/timezone-schema\.ts",
     r".*/src/components/time-zone-picker/timezone-utils\.ts",
     r".*/src/components/poll/manage-poll/use-csv-exporter\.ts",
     r".*/tests/.*"

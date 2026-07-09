@@ -20,7 +20,7 @@ import {
   createLicenseInputSchema,
   validateLicenseKeyInputSchema,
 } from "@/features/licensing/schema";
-import { isSelfHosted } from "@/utils/constants";
+import { isSelfHosted } from "@/lib/constants";
 
 const app = new Hono().basePath("/api/licensing/v1");
 

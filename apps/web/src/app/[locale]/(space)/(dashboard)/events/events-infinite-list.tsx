@@ -8,8 +8,8 @@ import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { ScheduledEventListItem } from "@/features/scheduled-event/components/scheduled-event-list";
 import type { Status } from "@/features/scheduled-event/schema";
 import { Trans } from "@/i18n/client";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
 
 interface EventsInfiniteListProps {
   status?: Status;

@@ -1,3 +1,3 @@
-import { isSelfHosted } from "@/utils/constants";
+import { isSelfHosted } from "@/lib/constants";
 
 export const isFeedbackEnabled = !isSelfHosted;

@@ -3,8 +3,8 @@ import crypto from "node:crypto";
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { env } from "@/env";
-import { AppError } from "@/lib/errors";
-import { isSelfHosted } from "@/utils/constants";
+import { isSelfHosted } from "@/lib/constants";
+import { AppError } from "@/lib/errors/app-error";
 import { getS3Client } from "./s3";
 
 const UPLOAD_TOKEN_TTL_SECONDS = 3600;

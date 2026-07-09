@@ -5,7 +5,7 @@ import {
   DEFAULT_SEAT_LIMIT,
   INSTANCE_LICENSE_TAG,
 } from "@/features/licensing/constants";
-import { isSelfHosted } from "@/utils/constants";
+import { isSelfHosted } from "@/lib/constants";
 
 export function getInstanceLicense() {
   return prisma.instanceLicense.findFirst({

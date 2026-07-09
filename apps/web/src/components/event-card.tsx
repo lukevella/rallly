@@ -10,7 +10,7 @@ import {
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import VoteIcon from "@/components/poll/vote-icon";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
-import { usePoll } from "@/contexts/poll";
+import { usePoll } from "@/features/poll/client";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 

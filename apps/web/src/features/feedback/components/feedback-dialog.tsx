@@ -16,8 +16,8 @@ import { CheckCircle2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import { Trans } from "@/i18n/client";
+import { isSelfHosted } from "@/lib/constants";
 import { trpc } from "@/trpc/client";
-import { isSelfHosted } from "@/utils/constants";
 import { feedbackSchema } from "../schema";
 
 export function FeedbackDialog(props: DialogProps) {

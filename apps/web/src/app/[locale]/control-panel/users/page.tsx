@@ -5,19 +5,19 @@ import { UsersIcon } from "lucide-react";
 import type { Metadata } from "next";
 import * as z from "zod";
 import {
-  SettingsPage,
-  SettingsPageContent,
-  SettingsPageDescription,
-  SettingsPageHeader,
-  SettingsPageTitle,
-} from "@/app/components/settings-layout";
-import {
   EmptyState,
   EmptyStateDescription,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Pagination } from "@/components/pagination";
+import {
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageDescription,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/components/settings-layout";
 import { StackedList } from "@/components/stacked-list";
 import { defineAbilityFor } from "@/features/user/ability";
 import { Trans } from "@/i18n/client";

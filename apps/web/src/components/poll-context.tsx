@@ -8,11 +8,11 @@ import {
   formatDateTime,
   formatDuration,
 } from "@/lib/datetime/format";
-import type { GetPollApiResponse } from "@/trpc/client/types";
 import type {
   ParsedDateOption,
   ParsedTimeSlotOption,
-} from "@/utils/date-time-utils";
+} from "@/lib/utils/date-time-utils";
+import type { GetPollApiResponse } from "@/trpc/client/types";
 
 import { useParticipants } from "./participants-provider";
 import { useRequiredContext } from "./use-required-context";
