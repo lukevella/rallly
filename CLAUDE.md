@@ -86,7 +86,7 @@ pnpm sherif               # Check package dependencies
   - `utils/` - Shared utilities
 
 ### Key Features & Structure
-- **Polls**: Core scheduling functionality in `apps/web/src/components/poll/`
+- **Polls**: Core scheduling functionality in `apps/web/src/features/poll/` (legacy UI still in `components/poll/`)
 - **Spaces**: Workspace/team organization in `apps/web/src/features/space/`
 - **Authentication**: Better-Auth config in `apps/web/src/lib/auth.ts`, helpers in `apps/web/src/auth/`
 - **tRPC API**: Routers in `apps/web/src/trpc/routers/`
@@ -163,10 +163,38 @@ Always use gitmoji prefixes in commit messages. Follow the gitmoji convention (h
 - Add `"use client"` directive to the top of any `.tsx` file that requires client-side JavaScript
 
 ### File Organization
-- Features organized in `apps/web/src/features/[feature]/`
-- Shared components in `apps/web/src/components/`
 - Route handlers follow Next.js App Router conventions
 - Always use kebab-case for file names
+
+### Directory Structure (apps/web/src)
+
+**Layering** — import direction is `app → features → components → lib`. Each layer may import from layers to its right, and anything may import `lib`. Nothing outside `app/` imports `@/app/*`. Boundaries are lint-enforced via `noRestrictedImports` in `apps/web/biome.json`; existing violations live on a shrinking migration allowlist there.
+
+- `app/` — routing only. Pages/routes are thin adapters composing `features/*`. A route-private `components/` folder is allowed for exactly one route segment; the moment a second segment needs a component, it moves to the owning feature.
+- `features/<domain>/` — the product (see below).
+- `components/` — shared, domain-agnostic UI only. Admission test: "could this ship in a different product?" Must not import from `features/` or `app/`. Cross-app reusables graduate to `packages/ui`.
+- `lib/` — infrastructure and cross-cutting clients (auth config, cache, datetime, errors, feature flags, rate limiting, storage). Never imports from `features/`, `components/`, or `app/`.
+
+**What is a feature** — a feature owns at least one of: a database entity, an external integration, or server-side lifecycle logic. UI-only folders are NOT features — they belong in `components/` or an owning feature's `components/`. Create the folder when the first server logic for a new domain noun appears — never speculatively, never for a component alone. Sub-concerns are subdirectories of their parent feature (e.g. `space/member/`), not sibling features.
+
+**Feature file vocabulary** — closed set; new file names require a team decision. Applies recursively in sub-concern directories:
+
+- `data.ts` — reads (Prisma queries), must start with `import "server-only"`
+- `mutations.ts` — writes + cache invalidation, must start with `import "server-only"`
+- `actions.ts` — `"use server"` actions, thin wrappers over mutations, validated via safe-action + `schema.ts`
+- `schema.ts` — Zod schemas (isomorphic, no Prisma imports)
+- `types.ts` — domain types
+- `ability.ts` — CASL permissions
+- `constants.ts`
+- `utils.ts` — pure domain helpers, co-located `*.test.ts`
+- `client.tsx` — client entry: providers, context, hooks, stores (no separate `hooks.ts` or store files)
+- `components/` — feature UI (no components at feature root)
+- `assets/` — static files used by the feature
+- NOT allowed: `index.ts` barrels, `helpers.ts`, `queries.ts`, `hooks.ts`, `lib/`, `libs/`
+
+**Cross-feature imports** — allowed, public surface only (the vocabulary files above); never reach into another feature's internals. No cycles between features (CI-enforced). For UI, prefer composing multiple features at the page level in `app/` over feature-to-feature component imports.
+
+**`trpc/` is frozen legacy transport** — queries only; routers call `features/*/data.ts`. No new mutations — writes are server actions calling `features/*/mutations.ts`.
 
 ### PostHog Event Naming
 - Use the `category:object_action` pattern
