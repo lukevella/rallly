@@ -30,6 +30,7 @@ import {
 } from "../trpc";
 import { comments } from "./polls/comments";
 import { participants } from "./polls/participants";
+import { getScheduledEventTimes } from "./polls/scheduled-event-times";
 import { timeZoneInput } from "./polls/schema";
 
 const collapseNewlines = (s: string) => s.replace(/\n{3,}/g, "\n\n");
@@ -168,17 +169,19 @@ export const polls = router({
       const pollId = nanoid();
       const spaceId = activeSpace?.id;
 
-      // Date-only (all-day) polls are floating: they carry no timezone, so a
-      // falsy poll.timeZone is the single source of truth for "floating". Drop
-      // any timezone the client sent for a date-only poll so options are stored
-      // at UTC midnight and never shift across timezones.
+      // Date-only (all-day) options are floating: they are stored at UTC
+      // midnight so they never shift across timezones. A falsy poll.timeZone
+      // is the single source of truth for "floating", so date-only polls drop
+      // any timezone the client sent, and date-only options of mixed polls
+      // ignore the poll's timezone.
       const isTimePoll = input.options.some((option) => option.endDate);
       const timeZone = isTimePoll ? input.timeZone : null;
 
       const optionsData = input.options.map((option) => ({
-        startTime: timeZone
-          ? dayjs(option.startDate).tz(timeZone, true).toDate()
-          : dayjs(option.startDate).utc(true).toDate(),
+        startTime:
+          timeZone && option.endDate
+            ? dayjs(option.startDate).tz(timeZone, true).toDate()
+            : dayjs(option.startDate).utc(true).toDate(),
         duration: option.endDate
           ? dayjs(option.endDate).diff(dayjs(option.startDate), "minute")
           : 0,
@@ -792,13 +795,11 @@ export const polls = router({
         });
       }
 
-      let eventStart = dayjs(option.startTime);
-
-      if (poll.timeZone) {
-        eventStart = eventStart.tz(poll.timeZone);
-      } else {
-        eventStart = eventStart.utc();
-      }
+      const eventTimes = getScheduledEventTimes({
+        startTime: option.startTime,
+        duration: option.duration,
+        timeZone: poll.timeZone,
+      });
 
       const { spaceId } = poll;
 
@@ -822,13 +823,10 @@ export const polls = router({
         title: poll.title,
         location: poll.location ?? undefined,
         description: poll.description ?? undefined,
-        start: option.startTime,
-        end:
-          option.duration > 0
-            ? dayjs(option.startTime).add(option.duration, "minute").toDate()
-            : dayjs(option.startTime).add(1, "day").toDate(),
-        allDay: option.duration === 0,
-        timeZone: poll.timeZone ?? undefined,
+        start: eventTimes.start,
+        end: eventTimes.end,
+        allDay: eventTimes.allDay,
+        timeZone: eventTimes.timeZone ?? undefined,
         organizer: {
           name: poll.user.name,
           email: poll.user.email,
@@ -885,20 +883,17 @@ export const polls = router({
           data: {
             id: eventId,
             uid: `${eventId}@rallly.co`,
-            start: eventStart.toDate(),
-            end:
-              option.duration > 0
-                ? eventStart.add(option.duration, "minute").toDate()
-                : eventStart.add(1, "day").toDate(),
+            start: eventTimes.start,
+            end: eventTimes.end,
             title: poll.title,
             description: poll.description,
             location: poll.location
               ? { provider: "custom", address: poll.location }
               : undefined,
-            timeZone: poll.timeZone,
+            timeZone: eventTimes.timeZone,
             userId: ctx.user.id,
             spaceId,
-            allDay: option.duration === 0,
+            allDay: eventTimes.allDay,
             status: "confirmed",
             hideAttendees: poll.hideParticipants,
             invites: {
