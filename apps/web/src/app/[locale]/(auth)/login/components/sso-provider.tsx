@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
-import { validateRedirectUrl } from "@/utils/redirect";
+import { validateRedirectUrl } from "@/lib/utils/redirect";
 
 function SSOImage({ provider }: { provider: string }) {
   if (provider === "google") {

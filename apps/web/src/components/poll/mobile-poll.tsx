@@ -22,7 +22,7 @@ import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { YouAvatar } from "@/components/poll/you-avatar";
 import { useOptions, usePoll } from "@/components/poll-context";
-import { usePermissions } from "@/contexts/permissions";
+import { usePermissions } from "@/features/poll/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useUser } from "../user-provider";
 import { useVisibleParticipants } from "../visibility";

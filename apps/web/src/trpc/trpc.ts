@@ -5,10 +5,10 @@ import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { createUserDTO } from "@/features/user/data";
 import { signOut } from "@/lib/auth";
-import { AppError } from "@/lib/errors";
+import { isSelfHosted } from "@/lib/constants";
+import { AppError } from "@/lib/errors/app-error";
 import { isMaintenanceActiveForRequest } from "@/lib/maintenance-server";
 import { createRatelimit } from "@/lib/rate-limit";
-import { isSelfHosted } from "@/utils/constants";
 import type { TRPCContext } from "./context";
 
 const t = initTRPC.context<TRPCContext>().create({

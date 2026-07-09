@@ -17,14 +17,6 @@ import {
   ShoppingBagIcon,
 } from "lucide-react";
 import type { Metadata } from "next";
-import { PageSection } from "@/app/components/page-layout";
-import {
-  SettingsPage,
-  SettingsPageContent,
-  SettingsPageDescription,
-  SettingsPageHeader,
-  SettingsPageTitle,
-} from "@/app/components/settings-layout";
 import {
   DescriptionList,
   DescriptionListTitle,
@@ -37,6 +29,14 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { PageSection } from "@/components/page-layout";
+import {
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageDescription,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/components/settings-layout";
 import { LicenseKeyForm } from "@/features/licensing/components/license-key-form";
 import { RefreshLicenseButton } from "@/features/licensing/components/refresh-license-button";
 import { RemoveLicenseButton } from "@/features/licensing/components/remove-license-button";

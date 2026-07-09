@@ -1,5 +1,5 @@
 import { createLogger } from "@rallly/logger";
-import { AppError } from "@/lib/errors";
+import { AppError } from "@/lib/errors/app-error";
 import type {
   CreateLicenseInput,
   ValidateLicenseInputKeySchema,

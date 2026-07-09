@@ -4,9 +4,9 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { env } from "@/env";
+import { isSelfHosted } from "@/lib/constants";
 import { verifyUploadToken } from "@/lib/storage/image-upload";
 import { getS3Client } from "@/lib/storage/s3";
-import { isSelfHosted } from "@/utils/constants";
 
 const logger = createLogger("api/storage");
 

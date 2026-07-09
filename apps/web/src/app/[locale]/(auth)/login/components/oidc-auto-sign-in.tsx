@@ -5,7 +5,7 @@ import useMount from "react-use/lib/useMount";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
-import { validateRedirectUrl } from "@/utils/redirect";
+import { validateRedirectUrl } from "@/lib/utils/redirect";
 
 export function OIDCAutoSignIn() {
   const searchParams = useSearchParams();

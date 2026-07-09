@@ -2,11 +2,11 @@ import { createServerSideHelpers } from "@trpc/react-query/server";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import superjson from "superjson";
+import { isInitialAdmin } from "@/features/setup/utils";
 import { getSession } from "@/lib/auth";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { getPathname } from "@/lib/pathname";
-import { isInitialAdmin } from "@/utils/is-initial-admin";
-import { buildSafeRedirectUrl } from "@/utils/redirect";
+import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 import type { TRPCContext } from "../context";
 import { appRouter } from "../routers";
 

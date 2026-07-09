@@ -1,7 +1,7 @@
 import * as z from "zod";
 import { usePasswordValidationSchema } from "@/features/auth/schema";
 import { useTranslation } from "@/i18n/client";
-import { isValidName } from "@/utils/is-valid-name";
+import { isValidName } from "@/lib/utils/is-valid-name";
 
 export const useRegisterNameFormSchema = () => {
   const { t } = useTranslation();

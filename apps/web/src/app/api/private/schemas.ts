@@ -1,5 +1,5 @@
 import { z } from "@hono/zod-openapi";
-import { timezoneSchema } from "@/utils/timezone-schema";
+import { timezoneSchema } from "@/lib/utils/timezone-schema";
 
 export const dateSchema = z.iso.date().openapi({
   description: "Date in YYYY-MM-DD format",

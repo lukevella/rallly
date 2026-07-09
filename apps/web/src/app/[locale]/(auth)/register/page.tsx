@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
+import { getRegistrationEnabled } from "@/features/instance-settings/data";
 import { getTranslation } from "@/i18n/server";
 import { redirectIfLoggedIn } from "@/lib/auth";
-import { getRegistrationEnabled } from "@/utils/get-registration-enabled";
 import {
   AuthPageContainer,
   AuthPageContent,

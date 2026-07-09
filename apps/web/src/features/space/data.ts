@@ -7,7 +7,7 @@ import { prisma } from "@rallly/database";
 import type { MemberDTO } from "@/features/space/member/types";
 import type { SpaceDTO } from "@/features/space/types";
 import { fromDBRole } from "@/features/space/utils";
-import { isSelfHosted } from "@/utils/constants";
+import { isSelfHosted } from "@/lib/constants";
 
 function createMemberDTO(member: {
   id: string;

@@ -4,8 +4,7 @@
 import React from "react";
 
 import { useParticipants } from "@/components/participants-provider";
-import { usePermissions } from "@/contexts/permissions";
-import { usePoll } from "@/contexts/poll";
+import { usePermissions, usePoll } from "@/features/poll/client";
 
 export const IfScoresVisible = (props: React.PropsWithChildren) => {
   const context = React.useContext(VisibilityContext);

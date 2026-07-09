@@ -11,7 +11,7 @@ import {
 import { getLocaleDefaults, getWeekdayNames } from "@/lib/datetime/locales";
 import type { DateInput, TimeFormat } from "@/lib/datetime/types";
 import { normalizeTimeZone } from "@/lib/datetime/utils";
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 type DateTimeConfig = {
   locale: string;

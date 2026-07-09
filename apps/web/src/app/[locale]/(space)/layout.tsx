@@ -8,8 +8,8 @@ import { getLocale } from "@/i18n/server/get-locale";
 import { DateTimeProvider } from "@/lib/datetime/client";
 import { LocaleSync } from "@/lib/locale/client";
 import { getPathname } from "@/lib/pathname";
+import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
-import { buildSafeRedirectUrl } from "@/utils/redirect";
 
 export default async function Layout({
   children,

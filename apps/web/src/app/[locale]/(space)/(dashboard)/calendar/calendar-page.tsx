@@ -6,7 +6,7 @@ import {
   PageHeader,
   PageHeaderContent,
   PageTitle,
-} from "@/app/components/page-layout";
+} from "@/components/page-layout";
 import { Trans } from "@/i18n/client";
 
 export function CalendarPage() {

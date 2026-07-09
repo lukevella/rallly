@@ -1,7 +1,7 @@
 "use client";
 
-import { usePoll } from "@/contexts/poll";
 import { BrandStyle } from "@/features/branding/brand-style";
+import { usePoll } from "@/features/poll/client";
 
 export function PollBrandingFromContext() {
   const poll = usePoll();

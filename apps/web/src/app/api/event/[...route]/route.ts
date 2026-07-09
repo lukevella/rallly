@@ -8,7 +8,7 @@ import { parseConferencing } from "@/features/conferencing/data";
 import { getConferencingUri } from "@/features/conferencing/utils";
 import { parseLocation } from "@/features/location/data";
 import { formatLocationText } from "@/features/location/utils";
-import { createIcsEvent } from "@/utils/ics";
+import { createIcsEvent } from "@/lib/utils/ics";
 
 const app = new Hono().basePath("/api/event");
 

@@ -6,7 +6,7 @@ import * as z from "zod";
 import { updateUserImage, updateUserName } from "@/features/user/mutations";
 import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
-import { AppError } from "@/lib/errors";
+import { AppError } from "@/lib/errors/app-error";
 import {
   adminActionClient,
   authActionClient,
@@ -16,7 +16,7 @@ import {
   deleteImageFromS3,
   getImageUploadUrl,
 } from "@/lib/storage/image-upload";
-import { timezoneSchema } from "@/utils/timezone-schema";
+import { timezoneSchema } from "@/lib/utils/timezone-schema";
 
 export const updateUserNameAction = authActionClient
   .metadata({ actionName: "update_user_name" })

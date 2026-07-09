@@ -7,7 +7,7 @@ import {
   getActiveSpaceForUser,
   getSpaceSeatCount,
 } from "@/features/space/data";
-import { isSelfHosted } from "@/utils/constants";
+import { isSelfHosted } from "@/lib/constants";
 import { publicProcedure, router, spaceOwnerProcedure } from "../trpc";
 
 export const billing = router({

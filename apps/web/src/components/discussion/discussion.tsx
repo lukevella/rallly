@@ -25,12 +25,11 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Participant, ParticipantName } from "@/components/participant";
 import { useParticipants } from "@/components/participants-provider";
 import { useEditToken } from "@/components/poll/mutations";
-import { usePoll } from "@/contexts/poll";
-import { useRole } from "@/contexts/role";
+import { usePoll, useRole } from "@/features/poll/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { RelativeTime } from "@/lib/datetime/relative-time";
+import { requiredString } from "@/lib/utils/form-validation";
 import { trpc } from "@/trpc/client";
-import { requiredString } from "../../utils/form-validation";
 import TruncatedLinkify from "../poll/truncated-linkify";
 import { useUser } from "../user-provider";
 

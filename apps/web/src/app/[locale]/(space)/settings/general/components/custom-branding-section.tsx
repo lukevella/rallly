@@ -12,7 +12,7 @@ import {
   PageSectionDescription,
   PageSectionHeader,
   PageSectionTitle,
-} from "@/app/components/page-layout";
+} from "@/components/page-layout";
 import { ProBadge } from "@/components/pro-badge";
 import { useIsFree } from "@/features/billing/client";
 import { showPayWall } from "@/features/billing/paywall-store";

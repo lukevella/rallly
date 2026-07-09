@@ -18,6 +18,10 @@
                   {
                     "group": ["@/app", "@/app/**"],
                     "message": "Only files inside app/ may import from app/. Routes are thin adapters; shared code belongs in features/, components/, or lib/. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  },
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -46,6 +50,10 @@
                   {
                     "group": ["@/app", "@/app/**"],
                     "message": "Only files inside app/ may import from app/. Routes are thin adapters; shared code belongs in features/, components/, or lib/."
+                  },
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -74,6 +82,34 @@
                   {
                     "group": ["@/app", "@/app/**"],
                     "message": "Only files inside app/ may import from app/. Routes are thin adapters; shared code belongs in features/, components/, or lib/."
+                  },
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/app/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                },
+                "patterns": [
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -85,20 +121,31 @@
     {
       "includes": [
         "src/components/add-to-calendar-button.tsx",
+        "src/components/discussion/discussion.tsx",
         "src/components/event-card.tsx",
         "src/components/forms/poll-settings.tsx",
+        "src/components/invite-dialog.tsx",
+        "src/components/layouts/poll-layout.tsx",
         "src/components/logo.tsx",
         "src/components/nav-user.tsx",
+        "src/components/new-participant-modal.tsx",
         "src/components/poll-status.tsx",
+        "src/components/poll/desktop-poll.tsx",
+        "src/components/poll/desktop-poll/participant-row.tsx",
         "src/components/poll/manage-poll.tsx",
         "src/components/poll/manage-poll/schedule-poll-dialog.tsx",
+        "src/components/poll/mobile-poll.tsx",
+        "src/components/poll/notification-toggle.tsx",
         "src/components/poll/poll-branding.tsx",
+        "src/components/poll/poll-context-provider.tsx",
         "src/components/poll/poll-footer.tsx",
         "src/components/poll/responsive-results.tsx",
+        "src/components/poll/voting-form.tsx",
         "src/components/pro-badge.tsx",
         "src/components/upgrade-button.tsx",
         "src/components/user-dropdown.tsx",
         "src/components/user-provider.tsx",
+        "src/components/visibility.tsx",
         "src/features/billing/components/pay-wall-dialog.tsx",
         "src/features/navigation/command-menu/command-menu.tsx",
         "src/features/quick-create/quick-create-widget.tsx",
@@ -132,7 +179,7 @@
         "src/trpc/routers/polls.ts",
         "src/trpc/routers/index.ts",
         "src/app/api/private/utils/time-slots.ts",
-        "src/utils/date-time-utils.ts",
+        "src/lib/utils/date-time-utils.ts",
         "src/components/poll/manage-poll/use-csv-exporter.ts",
         "src/test/setup.ts"
       ],

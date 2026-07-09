@@ -3,7 +3,7 @@ import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getUserCount } from "@/features/user/queries";
 import { Trans } from "@/i18n/client";
-import { isSelfHosted } from "@/utils/constants";
+import { isSelfHosted } from "@/lib/constants";
 
 export async function LicenseLimitWarning() {
   if (!isSelfHosted) {

@@ -4,8 +4,8 @@ import type { NextRequest } from "next/server";
 import { after, NextResponse } from "next/server";
 import * as z from "zod";
 import { createCache } from "@/lib/cache";
+import { isSelfHosted } from "@/lib/constants";
 import { createRatelimit } from "@/lib/rate-limit";
-import { isSelfHosted } from "@/utils/constants";
 
 const logger = createLogger("api/updates");
 

@@ -19,8 +19,8 @@ import * as z from "zod";
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
+import { validateRedirectUrl } from "@/lib/utils/redirect";
 import { trpc } from "@/trpc/client";
-import { validateRedirectUrl } from "@/utils/redirect";
 
 function useLoginWithEmailSchema() {
   const { t } = useTranslation();

@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
-import { resolveStorageUrl } from "@/utils/storage";
+import { resolveStorageUrl } from "@/lib/storage/resolve-storage-url";
 
 type SpaceIconProps = {
   name: string;

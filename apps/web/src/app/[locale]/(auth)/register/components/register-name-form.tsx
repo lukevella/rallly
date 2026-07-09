@@ -21,8 +21,8 @@ import { PasswordInput } from "@/components/password-input";
 import { PasswordStrengthMeter } from "@/features/auth/components/password-strength-meter";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
-import { validateRedirectUrl } from "@/utils/redirect";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
+import { validateRedirectUrl } from "@/lib/utils/redirect";
 import { useRegisterNameFormSchema } from "./schema";
 
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;

@@ -10,13 +10,13 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PageIcon } from "@/app/components/page-icons";
+import { PageIcon } from "@/components/page-icons";
 import {
   SettingsPage,
   SettingsPageContent,
   SettingsPageHeader,
   SettingsPageTitle,
-} from "@/app/components/settings-layout";
+} from "@/components/settings-layout";
 import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getUserCount } from "@/features/user/queries";

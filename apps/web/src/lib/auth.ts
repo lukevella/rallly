@@ -34,7 +34,7 @@ import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
 import { redis } from "@/lib/kv";
-import { getValueByPath } from "@/utils/get-value-by-path";
+import { getValueByPath } from "@/lib/utils/get-value-by-path";
 
 const kv = redis;
 

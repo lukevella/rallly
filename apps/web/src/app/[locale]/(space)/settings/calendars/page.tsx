@@ -8,14 +8,14 @@ import {
   PageSectionDivider,
   PageSectionHeader,
   PageSectionTitle,
-} from "@/app/components/page-layout";
+} from "@/components/page-layout";
 import {
   SettingsPage,
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
   SettingsPageTitle,
-} from "@/app/components/settings-layout";
+} from "@/components/settings-layout";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";

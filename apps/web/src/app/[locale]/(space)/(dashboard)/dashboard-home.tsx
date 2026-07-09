@@ -1,6 +1,7 @@
 "use client";
 
 import { Tile, TileDescription, TileGrid, TileTitle } from "@rallly/ui/tile";
+import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import {
   BillingPageIcon,
   CreatePageIcon,
@@ -8,18 +9,17 @@ import {
   MembersPageIcon,
   PollPageIcon,
   SettingsPageIcon,
-} from "@/app/components/page-icons";
+} from "@/components/page-icons";
 import {
   PageContainer,
   PageContent,
   PageHeader,
   PageTitle,
-} from "@/app/components/page-layout";
-import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
+} from "@/components/page-layout";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled, useFeatureFlag } from "@/lib/feature-flags/client";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
 import { PasswordSetupAlert } from "./password-setup-alert";
 
 export function DashboardHome() {

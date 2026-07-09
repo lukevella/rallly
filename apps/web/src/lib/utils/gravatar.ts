@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { isSelfHosted } from "@/utils/constants";
+import { isSelfHosted } from "@/lib/constants";
 
 /**
  * Builds a Gravatar URL for an email address. Returns `null` when no email is

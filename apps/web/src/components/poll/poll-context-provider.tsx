@@ -3,7 +3,7 @@ import {
   OptionsProvider,
   PollContextProvider,
 } from "@/components/poll-context";
-import { usePoll } from "@/contexts/poll";
+import { usePoll } from "@/features/poll/client";
 
 export const LegacyPollContextProvider = (props: React.PropsWithChildren) => {
   const poll = usePoll();

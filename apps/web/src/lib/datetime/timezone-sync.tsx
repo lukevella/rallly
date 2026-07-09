@@ -3,7 +3,7 @@
 import Cookies from "js-cookie";
 import React from "react";
 import { TIME_ZONE_COOKIE_NAME } from "@/lib/datetime/constants";
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 type TimeZoneChange = {
   previousTimeZone: string;

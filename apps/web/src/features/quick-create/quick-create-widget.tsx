@@ -3,7 +3,7 @@ import { CheckIcon, PlusIcon, ZapIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { PollPageIcon } from "@/app/components/page-icons";
+import { PollPageIcon } from "@/components/page-icons";
 import { getGuestPolls } from "@/features/quick-create/lib/get-guest-polls";
 import { getTranslation } from "@/i18n/server";
 

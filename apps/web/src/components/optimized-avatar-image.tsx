@@ -2,7 +2,7 @@ import { cn } from "@rallly/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import { Icon } from "@rallly/ui/icon";
 import { UserIcon } from "lucide-react";
-import { resolveStorageUrl } from "@/utils/storage";
+import { resolveStorageUrl } from "@/lib/storage/resolve-storage-url";
 
 export function OptimizedAvatarImage({
   size = "md",

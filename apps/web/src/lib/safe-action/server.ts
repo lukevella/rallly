@@ -6,7 +6,7 @@ import * as z from "zod";
 import { defineAbilityFor } from "@/features/user/ability";
 import { getCurrentUser } from "@/features/user/data";
 import { signOut } from "@/lib/auth";
-import { AppError } from "@/lib/errors";
+import { AppError } from "@/lib/errors/app-error";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { assertAppAvailable } from "@/lib/maintenance-server";
 import type { Duration } from "@/lib/rate-limit";

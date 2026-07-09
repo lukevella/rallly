@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
-import { PermissionProvider } from "@/contexts/permissions";
+import { PermissionProvider } from "@/features/poll/client";
 import { getLocale } from "@/i18n/server/get-locale";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";

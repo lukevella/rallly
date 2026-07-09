@@ -28,7 +28,7 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 import React from "react";
-import { PageIcon } from "@/app/components/page-icons";
+import { PageIcon } from "@/components/page-icons";
 import { UpgradeButton } from "@/components/upgrade-button";
 import type { SpaceTier } from "@/features/space/schema";
 import { spaceTierSchema } from "@/features/space/schema";

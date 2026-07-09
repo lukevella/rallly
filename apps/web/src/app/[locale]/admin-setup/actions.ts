@@ -2,9 +2,9 @@
 
 import { prisma } from "@rallly/database";
 import { redirect } from "next/navigation";
-import { AppError } from "@/lib/errors";
+import { isInitialAdmin } from "@/features/setup/utils";
+import { AppError } from "@/lib/errors/app-error";
 import { authActionClient } from "@/lib/safe-action/server";
-import { isInitialAdmin } from "@/utils/is-initial-admin";
 
 export const makeMeAdminAction = authActionClient
   .metadata({ actionName: "make_admin" })

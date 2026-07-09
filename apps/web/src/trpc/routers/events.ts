@@ -14,7 +14,7 @@ import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { timeZoneSchema } from "@/lib/datetime/schema";
 import { normalizeTimeZone } from "@/lib/datetime/utils";
-import { createIcsEvent } from "@/utils/ics";
+import { createIcsEvent } from "@/lib/utils/ics";
 import { router, spaceProcedure } from "../trpc";
 
 export const events = router({

@@ -1,6 +1,6 @@
 import { posthog } from "@/features/analytics/posthog";
 import type { SpaceTier } from "@/features/space/schema";
-import { isSelfHosted } from "@/utils/constants";
+import { isSelfHosted } from "@/lib/constants";
 
 /**
  * Determines if a user has access to API features (API keys, developer tools)

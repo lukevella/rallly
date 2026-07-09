@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchInput } from "@/app/components/search-input";
+import { SearchInput } from "@/components/search-input";
 import { useTranslation } from "@/i18n/client";
 
 export function UserSearchInput() {

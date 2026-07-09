@@ -10,14 +10,14 @@ import {
   PageSectionGroup,
   PageSectionHeader,
   PageSectionTitle,
-} from "@/app/components/page-layout";
+} from "@/components/page-layout";
 import {
   SettingsPage,
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
   SettingsPageTitle,
-} from "@/app/components/settings-layout";
+} from "@/components/settings-layout";
 import { useSpace } from "@/features/space/client";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";

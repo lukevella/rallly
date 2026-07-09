@@ -1,4 +1,4 @@
-import { adjustColorForContrast, getForegroundColor } from "@/utils/color";
+import { adjustColorForContrast, getForegroundColor } from "@/lib/utils/color";
 import { DARK_MODE_BACKGROUND, LIGHT_MODE_BACKGROUND } from "./constants";
 
 export function getPrimaryColorVars(primaryColor: string) {

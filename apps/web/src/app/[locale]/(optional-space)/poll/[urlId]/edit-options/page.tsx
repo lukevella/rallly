@@ -16,7 +16,7 @@ import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { usePoll } from "@/components/poll-context";
 import { Trans, useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
-import { encodeDateOption } from "@/utils/date-time-utils";
+import { encodeDateOption } from "@/lib/utils/date-time-utils";
 
 const convertOptionToString = (
   option: { startTime: Date; duration: number },

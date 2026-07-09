@@ -8,7 +8,7 @@ import { Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { handle } from "hono/vercel";
 import * as z from "zod";
-import { validateRedirectUrl } from "@/utils/redirect";
+import { validateRedirectUrl } from "@/lib/utils/redirect";
 import type { CreateOAuthOptions } from "./types";
 
 const logger = createLogger("oauth");

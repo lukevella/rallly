@@ -17,9 +17,7 @@ import {
   useEditToken,
   useUpdateParticipantMutation,
 } from "@/components/poll/mutations";
-import { usePermissions } from "@/contexts/permissions";
-import { usePoll } from "@/contexts/poll";
-import { useRole } from "@/contexts/role";
+import { usePermissions, usePoll, useRole } from "@/features/poll/client";
 import { Trans } from "@/i18n/client";
 
 const formSchema = z.object({

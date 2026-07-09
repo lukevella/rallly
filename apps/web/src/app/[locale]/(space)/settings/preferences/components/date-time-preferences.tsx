@@ -27,7 +27,7 @@ import { useDateTime } from "@/lib/datetime/client";
 import { getLocaleDefaults } from "@/lib/datetime/locales";
 import { useLocale } from "@/lib/locale/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { getBrowserTimeZone } from "@/utils/date-time-utils";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 const formSchema = z.object({
   timeFormat: z.enum(["hours12", "hours24"]),

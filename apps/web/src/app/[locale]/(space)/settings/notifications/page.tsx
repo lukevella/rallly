@@ -7,7 +7,7 @@ import {
   SettingsPageDescription,
   SettingsPageHeader,
   SettingsPageTitle,
-} from "@/app/components/settings-layout";
+} from "@/components/settings-layout";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";

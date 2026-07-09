@@ -2,7 +2,7 @@ import { cn } from "@rallly/ui";
 import { groupBy } from "lodash";
 import type * as React from "react";
 
-import type { ParsedDateTimeOpton } from "@/utils/date-time-utils";
+import type { ParsedDateTimeOpton } from "@/lib/utils/date-time-utils";
 
 import PollOptions from "./poll-options";
 

@@ -3,7 +3,7 @@ import { Button } from "@rallly/ui/button";
 
 import { Trans } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
-import { validateRedirectUrl } from "@/utils/redirect";
+import { validateRedirectUrl } from "@/lib/utils/redirect";
 
 export function LoginWithOIDC({
   name,

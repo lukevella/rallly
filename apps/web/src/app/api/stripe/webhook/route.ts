@@ -3,8 +3,8 @@ import { stripe } from "@rallly/billing";
 import * as Sentry from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { isSelfHosted } from "@/utils/constants";
-import { withPostHog } from "@/utils/posthog";
+import { withPostHog } from "@/features/analytics/posthog";
+import { isSelfHosted } from "@/lib/constants";
 import { getEventHandler } from "./handlers";
 
 const handler = async (request: NextRequest) => {

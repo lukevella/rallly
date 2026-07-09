@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
-import { usePoll } from "@/contexts/poll";
+import { usePoll } from "@/features/poll/client";
 import { Trans } from "@/i18n/client";
 
 const Page = () => {

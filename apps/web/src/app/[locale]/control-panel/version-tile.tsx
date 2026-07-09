@@ -2,11 +2,11 @@
 
 import { Tile, TileDescription, TileTitle } from "@rallly/ui/tile";
 import { DownloadIcon } from "lucide-react";
-import { PageIcon } from "@/app/components/page-icons";
+import { PageIcon } from "@/components/page-icons";
 import { Spinner } from "@/components/spinner";
 import { Trans } from "@/i18n/client";
+import { appVersion } from "@/lib/constants";
 import { trpc } from "@/trpc/client";
-import { appVersion } from "@/utils/constants";
 
 const RELEASES_URL = "https://github.com/lukevella/rallly/releases";
 
