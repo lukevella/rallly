@@ -1,3 +1,4 @@
+import "server-only";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import * as Sentry from "@sentry/nextjs";

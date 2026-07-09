@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { createToken, decryptToken } from "@/utils/session";
+import { createToken, decryptToken } from "@/lib/session";
 
 export async function getUserIdFromToken(
   token: string | undefined,

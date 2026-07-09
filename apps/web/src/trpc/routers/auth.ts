@@ -1,7 +1,7 @@
 import { prisma } from "@rallly/database";
 import * as z from "zod";
 
-import { decryptToken } from "@/utils/session";
+import { decryptToken } from "@/lib/session";
 import { createRateLimitMiddleware, publicProcedure, router } from "../trpc";
 
 export const auth = router({

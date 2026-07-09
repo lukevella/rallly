@@ -3,7 +3,7 @@ import * as z from "zod";
 import {
   calculatePasswordStrength,
   passwordQualityThresholds,
-} from "@/features/password/utils";
+} from "@/features/auth/utils";
 import { useTranslation } from "@/i18n/client";
 
 export function usePasswordValidationSchema() {

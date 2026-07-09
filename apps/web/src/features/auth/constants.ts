@@ -53,13 +53,3 @@ export const temporaryEmailDomains = [
   "mailto.plus",
   "ethereal.mail",
 ];
-
-/**
- * Checks if an email domain is a known temporary/disposable email service
- */
-export const isTemporaryEmail = (email: string): boolean => {
-  const domain = email.split("@")[1]?.toLowerCase();
-  if (!domain) return false;
-
-  return temporaryEmailDomains.includes(domain);
-};

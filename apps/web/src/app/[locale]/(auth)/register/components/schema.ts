@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { usePasswordValidationSchema } from "@/features/password/schema";
+import { usePasswordValidationSchema } from "@/features/auth/schema";
 import { useTranslation } from "@/i18n/client";
 import { isValidName } from "@/utils/is-valid-name";
 
