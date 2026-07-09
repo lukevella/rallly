@@ -1,3 +1,5 @@
+import "server-only";
+
 import { prisma } from "@rallly/database";
 import { nanoid } from "@rallly/utils/nanoid";
 
@@ -104,3 +106,124 @@ export const deletePoll = async (pollId: string, spaceId: string) => {
 
   return { id: pollId };
 };
+
+/**
+ * Marks inactive polls as deleted. Polls are inactive if they have not been
+ * updated in the last 30 days and all dates are in the past.
+ * Only marks polls as deleted if they belong to users without an active subscription
+ * or if they don't have a user associated with them.
+ */
+export async function deleteInactivePolls() {
+  // Define the 30-day threshold once
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+
+  // Mark inactive polls as deleted in a single query
+  const { count: markedDeleted } = await prisma.poll.updateMany({
+    where: {
+      deleted: false,
+      // All poll dates are in the past
+      options: {
+        none: {
+          startTime: { gt: new Date() },
+        },
+      },
+      // We don't delete polls that belong to a space with an active subscription
+      OR: [
+        { spaceId: null },
+        {
+          space: {
+            tier: {
+              not: "pro",
+            },
+          },
+        },
+      ],
+      // Poll is inactive: not edited, and no participant activity (new or
+      // updated responses) or new comments in the last 30 days
+      updatedAt: { lt: thirtyDaysAgo },
+      participants: {
+        none: { updatedAt: { gte: thirtyDaysAgo } },
+      },
+      comments: {
+        none: { createdAt: { gte: thirtyDaysAgo } },
+      },
+    },
+    data: {
+      deleted: true,
+      deletedAt: new Date(),
+    },
+  });
+
+  return markedDeleted;
+}
+
+/**
+ * Closes polls whose options have all ended — i.e. no option ends in the
+ * future, where an option ends at start_time + duration (all-day options, with
+ * duration 0, are treated as ending 24h after their start). Closing is
+ * non-destructive: the poll becomes read-only but is preserved.
+ *
+ * Raw SQL because the option-end comparison (start_time + duration) can't be
+ * expressed in a Prisma `where`. It also deliberately does not touch
+ * `updated_at`, so closing a poll doesn't reset the inactivity clock that
+ * delete-inactive-polls keys off.
+ */
+export async function autoClosePolls() {
+  const closed = await prisma.$executeRaw`
+    UPDATE polls p
+    SET status = 'closed', closed_reason = 'auto'
+    WHERE p.status = 'open'
+      AND p.deleted = false
+      AND EXISTS (SELECT 1 FROM options o WHERE o.poll_id = p.id)
+      AND NOT EXISTS (
+        SELECT 1 FROM options o
+        WHERE o.poll_id = p.id
+          AND o.start_time + (CASE WHEN o.duration_minutes = 0
+                THEN interval '24 hours'
+                ELSE make_interval(mins => o.duration_minutes) END) > (now() AT TIME ZONE 'UTC')
+      )
+  `;
+
+  return closed;
+}
+
+const REMOVE_DELETED_POLLS_BATCH_SIZE = 100;
+
+/**
+ * Remove polls and corresponding data that have been marked deleted for more than 7 days.
+ */
+export async function removeDeletedPolls() {
+  // First get the ids of all the polls that have been marked as deleted for at least 7 days
+  let totalDeletedPolls = 0;
+  let hasMore = true;
+
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  while (hasMore) {
+    const batch = await prisma.poll.findMany({
+      where: {
+        deleted: true,
+        deletedAt: {
+          lt: sevenDaysAgo,
+        },
+      },
+      select: { id: true },
+      take: REMOVE_DELETED_POLLS_BATCH_SIZE,
+    });
+
+    if (batch.length === 0) {
+      hasMore = false;
+      break;
+    }
+
+    const deleted = await prisma.poll.deleteMany({
+      where: {
+        id: { in: batch.map((poll) => poll.id) },
+      },
+    });
+
+    totalDeletedPolls += deleted.count;
+  }
+
+  return totalDeletedPolls;
+}
