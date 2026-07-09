@@ -261,7 +261,6 @@
   "events": "Events",
   "eventStatusCanceled": "Canceled",
   "eventStatusPast": "Past",
-  "eventStatusUnconfirmed": "Unconfirmed",
   "eventStatusUpcoming": "Upcoming",
   "eventTypeActionsLabel": "Event type actions",
   "eventTypeDescriptionPlaceholder": "What is this event about?",
