@@ -140,6 +140,8 @@
   "createNewPoll": "Create new poll",
   "createPoll": "Create Poll",
   "createPollPollCreated": "Poll created",
+  "createPollValidationErrorDescription": "Please add a title and at least one option, then try again.",
+  "createPollValidationErrorTitle": "Your poll couldn't be created",
   "createSpace": "Create Space",
   "createSpaceDescription": "Create a new space to organize your polls and events.",
   "createSpaceError": "Failed to create space",

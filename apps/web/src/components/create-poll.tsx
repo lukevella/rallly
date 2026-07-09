@@ -87,45 +87,71 @@ export const CreatePoll: React.FunctionComponent = () => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(async (formData) => {
-          const title = required(formData?.title.trim());
-          await createGuestIfNeeded();
-          const res = await makePoll.mutateAsync({
-            title: title,
-            location: formData?.location?.trim(),
-            description: formData?.description?.trim(),
-            timeZone: formData?.timeZone || null,
-            hideParticipants: formData?.hideParticipants,
-            disableComments: formData?.disableComments,
-            hideScores: formData?.hideScores,
-            requireParticipantEmail: formData?.requireParticipantEmail,
-            options: required(formData?.options).map((option) => ({
-              startDate: option.type === "date" ? option.date : option.start,
-              endDate: option.type === "timeSlot" ? option.end : undefined,
-            })),
-          });
+        onSubmit={form.handleSubmit(
+          async (formData) => {
+            posthog?.capture("poll_creation:create_poll_submit", {
+              valid: true,
+            });
+            const title = required(formData?.title.trim());
+            await createGuestIfNeeded();
+            const res = await makePoll.mutateAsync({
+              title: title,
+              location: formData?.location?.trim(),
+              description: formData?.description?.trim(),
+              timeZone: formData?.timeZone || null,
+              hideParticipants: formData?.hideParticipants,
+              disableComments: formData?.disableComments,
+              hideScores: formData?.hideScores,
+              requireParticipantEmail: formData?.requireParticipantEmail,
+              options: required(formData?.options).map((option) => ({
+                startDate: option.type === "date" ? option.date : option.start,
+                endDate: option.type === "timeSlot" ? option.end : undefined,
+              })),
+            });
 
-          if (res.ok) {
-            setCreatedPollId(res.data.id);
-          } else {
-            toast.error(
-              t("inappropriateContent", {
-                defaultValue: "Inappropriate content",
-              }),
-              {
-                action: {
-                  label: t("learnMore", { defaultValue: "Learn more" }),
-                  onClick: () => {
-                    window.open(
-                      "https://support.rallly.co/guide/content-moderation",
-                      "_blank",
-                    );
+            if (res.ok) {
+              setCreatedPollId(res.data.id);
+            } else {
+              toast.error(
+                t("inappropriateContent", {
+                  defaultValue: "Inappropriate content",
+                }),
+                {
+                  action: {
+                    label: t("learnMore", { defaultValue: "Learn more" }),
+                    onClick: () => {
+                      window.open(
+                        "https://support.rallly.co/guide/content-moderation",
+                        "_blank",
+                      );
+                    },
                   },
                 },
+              );
+            }
+          },
+          (errors) => {
+            const invalidFields = Object.keys(errors);
+            posthog?.capture("poll_creation:create_poll_submit", {
+              valid: false,
+              invalid_fields: invalidFields,
+            });
+            posthog?.capture("poll_creation:validation_error", {
+              fields: invalidFields,
+            });
+            toast.error(
+              t("createPollValidationErrorTitle", {
+                defaultValue: "Your poll couldn't be created",
+              }),
+              {
+                description: t("createPollValidationErrorDescription", {
+                  defaultValue:
+                    "Please add a title and at least one option, then try again.",
+                }),
               },
             );
-          }
-        })}
+          },
+        )}
       >
         <div className="space-y-4">
           <Card>
