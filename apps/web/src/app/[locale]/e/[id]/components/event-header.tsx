@@ -61,6 +61,13 @@ export function EventStatus({
       </Badge>
     );
   }
+  if (status === "unconfirmed") {
+    return (
+      <Badge variant="default">
+        <Trans i18nKey="eventStatusUnconfirmed" defaults="Unconfirmed" />
+      </Badge>
+    );
+  }
   if (hasEnded) {
     return (
       <Badge variant="default">
