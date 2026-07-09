@@ -24,16 +24,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { getBrowserTimeZone } from "../../../utils/date-time-utils";
 import type { NewEventData } from "../types";
 import MonthCalendar from "./month-calendar";
-import type { DateTimeOption } from "./types";
 import WeekCalendar from "./week-calendar";
-
-export type PollOptionsData = {
-  navigationDate: string; // used to navigate to the right part of the calendar
-  duration: number; // duration of the event in minutes
-  timeZone: string;
-  view: string;
-  options: DateTimeOption[];
-};
 
 const PollOptionsForm = ({
   children,

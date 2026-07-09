@@ -1,5 +1,4 @@
-import type { DateInput } from "@/lib/datetime/format";
-import type { TimeFormat } from "@/lib/datetime/schema";
+import type { DateInput, TimeFormat } from "@/lib/datetime/types";
 
 function toDate(value: DateInput) {
   return value instanceof Date ? value : new Date(value);

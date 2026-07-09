@@ -1,4 +1,4 @@
-import type { TimeFormat } from "@/lib/datetime/schema";
+import type { TimeFormat } from "@/lib/datetime/types";
 
 type LocaleDefaults = {
   weekStart: number;

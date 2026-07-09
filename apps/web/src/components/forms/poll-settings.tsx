@@ -11,17 +11,11 @@ import { Switch } from "@rallly/ui/switch";
 import { AtSignIcon, EyeIcon, MessageCircleIcon, VoteIcon } from "lucide-react";
 import type React from "react";
 import { useFormContext } from "react-hook-form";
+import type { PollSettingsFormData } from "@/components/forms/types";
 import { ProBadge } from "@/components/pro-badge";
 import { useIsFree } from "@/features/billing/client";
 import { showPayWall } from "@/features/billing/paywall-store";
 import { Trans } from "@/i18n/client";
-
-export type PollSettingsFormData = {
-  requireParticipantEmail: boolean;
-  hideParticipants: boolean;
-  hideScores: boolean;
-  disableComments: boolean;
-};
 
 const PollSetting = ({
   name,

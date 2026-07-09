@@ -8,7 +8,7 @@ import {
   TIME_ZONE_COOKIE_NAME,
   TIME_ZONE_OVERRIDE_COOKIE_NAME,
 } from "@/lib/datetime/constants";
-import type { TimeFormat } from "@/lib/datetime/schema";
+import type { TimeFormat } from "@/lib/datetime/types";
 
 const cookieAttributes = {
   path: "/",

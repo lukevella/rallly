@@ -30,10 +30,8 @@ import { ScrollContainer } from "@/components/scroll-container";
 import { usePermissions } from "@/contexts/permissions";
 import { usePoll } from "@/contexts/poll";
 import { Trans, useTranslation } from "@/i18n/client";
-import {
-  useParticipants,
-  useVisibleParticipants,
-} from "../participants-provider";
+import { useParticipants } from "../participants-provider";
+import { useVisibleParticipants } from "../visibility";
 import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";
 import PollHeader from "./desktop-poll/poll-header";

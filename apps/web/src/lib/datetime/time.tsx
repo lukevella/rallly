@@ -1,8 +1,9 @@
 "use client";
 
 import { useDateTimeConfig } from "@/lib/datetime/client";
-import type { DateInput, DateTimePreset } from "@/lib/datetime/format";
+import type { DateTimePreset } from "@/lib/datetime/format";
 import { formatDateTime, formatDateTimeRange } from "@/lib/datetime/format";
+import type { DateInput } from "@/lib/datetime/types";
 import { useHydrated } from "@/lib/datetime/use-hydrated";
 import { toISO } from "./utils";
 

@@ -2,14 +2,14 @@
 
 import { defaultLocale } from "@rallly/languages";
 import React from "react";
-import type { DateInput, DateTimePreset } from "@/lib/datetime/format";
+import type { DateTimePreset } from "@/lib/datetime/format";
 import {
   formatDateTime as baseFormatDateTime,
   formatDuration as baseFormatDuration,
   formatRelativeTime,
 } from "@/lib/datetime/format";
 import { getLocaleDefaults, getWeekdayNames } from "@/lib/datetime/locales";
-import type { TimeFormat } from "@/lib/datetime/schema";
+import type { DateInput, TimeFormat } from "@/lib/datetime/types";
 import { normalizeTimeZone } from "@/lib/datetime/utils";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
 

@@ -1,7 +1,25 @@
-import type { PollSettingsFormData } from "@/components/forms/poll-settings";
+import type { DateTimeOption } from "./poll-options-form/types";
 
-import type { PollDetailsData } from "./poll-details-form";
-import type { PollOptionsData } from "./poll-options-form/poll-options-form";
+export interface PollDetailsData {
+  title: string;
+  location: string;
+  description: string;
+}
+
+export type PollOptionsData = {
+  navigationDate: string; // used to navigate to the right part of the calendar
+  duration: number; // duration of the event in minutes
+  timeZone: string;
+  view: string;
+  options: DateTimeOption[];
+};
+
+export type PollSettingsFormData = {
+  requireParticipantEmail: boolean;
+  hideParticipants: boolean;
+  hideScores: boolean;
+  disableComments: boolean;
+};
 
 export type NewEventData = PollDetailsData &
   PollOptionsData &
