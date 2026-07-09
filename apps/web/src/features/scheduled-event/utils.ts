@@ -3,7 +3,7 @@ import {
   formatDateTime,
   formatDateTimeRange,
 } from "@/lib/datetime/format";
-import type { TimeFormat } from "@/lib/datetime/schema";
+import type { TimeFormat } from "@/lib/datetime/types";
 
 export interface FormattedEventDateTime {
   date: string;

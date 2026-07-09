@@ -27,6 +27,23 @@ const VisibilityContext = React.createContext<{
   canSeeScores: true,
 });
 
+export const useVisibleParticipants = () => {
+  const { canSeeScores } = useVisibility();
+  const { canEditParticipant } = usePermissions();
+  const { participants } = useParticipants();
+
+  const filteredParticipants = React.useMemo(() => {
+    if (!canSeeScores) {
+      return participants.filter((participant) =>
+        canEditParticipant(participant.id),
+      );
+    }
+    return participants;
+  }, [canEditParticipant, canSeeScores, participants]);
+
+  return filteredParticipants;
+};
+
 export const VisibilityProvider = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
   const { participants } = useParticipants();

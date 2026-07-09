@@ -8,9 +8,10 @@ import {
 import { Trans } from "@/i18n/client";
 import { CalendarDate } from "@/lib/datetime/calendar-date";
 import { useDateTimeConfig } from "@/lib/datetime/client";
-import type { DateInput, DatePreset } from "@/lib/datetime/format";
+import type { DatePreset } from "@/lib/datetime/format";
 import { formatDateParts } from "@/lib/datetime/format";
 import { Time, TimeRange } from "@/lib/datetime/time";
+import type { DateInput } from "@/lib/datetime/types";
 import { useHydrated } from "@/lib/datetime/use-hydrated";
 
 /**

@@ -3,7 +3,7 @@ import { dayjs } from "@/lib/dayjs";
 import type {
   DateTimeOption,
   TimeOption,
-} from "../components/forms/poll-options-form";
+} from "../components/forms/poll-options-form/types";
 
 export function getBrowserTimeZone() {
   return dayjs.tz.guess();

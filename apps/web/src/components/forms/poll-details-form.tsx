@@ -8,12 +8,6 @@ import { useFormValidation } from "@/utils/form-validation";
 
 import type { NewEventData } from "./types";
 
-export interface PollDetailsData {
-  title: string;
-  location: string;
-  description: string;
-}
-
 export const PollDetailsForm = () => {
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();

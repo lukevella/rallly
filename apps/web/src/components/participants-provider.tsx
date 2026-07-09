@@ -1,8 +1,6 @@
 import type { VoteType } from "@rallly/database";
 import { useParams, useSearchParams } from "next/navigation";
 import * as React from "react";
-import { useVisibility } from "@/components/visibility";
-import { usePermissions } from "@/contexts/permissions";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
@@ -42,21 +40,4 @@ export const useParticipants = () => {
   }, [rawParticipants, t]);
 
   return { participants };
-};
-
-export const useVisibleParticipants = () => {
-  const { canSeeScores } = useVisibility();
-  const { canEditParticipant } = usePermissions();
-  const { participants } = useParticipants();
-
-  const filteredParticipants = React.useMemo(() => {
-    if (!canSeeScores) {
-      return participants.filter((participant) =>
-        canEditParticipant(participant.id),
-      );
-    }
-    return participants;
-  }, [canEditParticipant, canSeeScores, participants]);
-
-  return filteredParticipants;
 };
