@@ -1,5 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
-import { PollPage } from "tests/poll-page";
+import { PollPage } from "./poll-page";
 
 export class CreatePollSuccessDialog {
   constructor(private readonly page: Page) {}

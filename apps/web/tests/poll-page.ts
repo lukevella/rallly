@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
-import { EditOptionsPage } from "tests/edit-options-page";
-import { InvitePage } from "tests/invite-page";
+import { EditOptionsPage } from "./edit-options-page";
+import { InvitePage } from "./invite-page";
 
 export class PollPage {
   constructor(public readonly page: Page) {}
