@@ -26,7 +26,7 @@ const TimeRange: React.FunctionComponent<{
     >
       <span data-testid="option-start-time">{start}</span>
       <Tooltip delayDuration={0}>
-        <TooltipTrigger className="flex items-center gap-x-1 opacity-50">
+        <TooltipTrigger className="flex items-center gap-x-1">
           <ClockIcon className="size-3" />
           {duration}
         </TooltipTrigger>
@@ -165,7 +165,7 @@ const PollHeader = () => {
                     duration={option.duration}
                   />
                 ) : (
-                  <p className="font-normal text-muted-foreground text-xs opacity-50">
+                  <p className="font-normal text-muted-foreground text-xs">
                     <Trans i18nKey="allDay" defaults="All-Day" />
                   </p>
                 )}
