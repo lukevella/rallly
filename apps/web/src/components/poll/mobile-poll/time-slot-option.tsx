@@ -19,7 +19,7 @@ const TimeSlotOption: React.FunctionComponent<TimeSlotOptionProps> = ({
     <PollOption {...rest}>
       <div className="flex items-center gap-x-4 text-sm">
         <div>{startTime}</div>
-        <div className="flex items-center gap-x-1.5 opacity-50">
+        <div className="flex items-center gap-x-1.5 text-muted-foreground">
           <ClockIcon className="size-4" />
           {duration}
         </div>
