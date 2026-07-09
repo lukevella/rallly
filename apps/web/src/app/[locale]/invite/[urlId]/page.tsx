@@ -10,8 +10,8 @@ import { getLocale } from "@/i18n/server/get-locale";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 import { LocaleSync } from "@/lib/locale/client";
+import { decryptToken } from "@/lib/session";
 import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
-import { decryptToken } from "@/utils/session";
 import { InvitePageLoader } from "./invite-page-loader";
 import Providers from "./providers";
 

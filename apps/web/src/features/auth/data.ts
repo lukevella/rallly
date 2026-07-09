@@ -1,3 +1,4 @@
+import "server-only";
 import { prisma } from "@rallly/database";
 
 /**
@@ -87,25 +88,4 @@ export async function isEmailBanned(email: string) {
   });
 
   return bannedUser > 0;
-}
-
-export function isEmailBlocked(email: string) {
-  if (process.env.ALLOWED_EMAILS) {
-    const allowedEmails = process.env.ALLOWED_EMAILS.split(",");
-    // Check whether the email matches enough of the patterns specified in ALLOWED_EMAILS
-    const isAllowed = allowedEmails.some((allowedEmail) => {
-      const regex = new RegExp(
-        `^${allowedEmail
-          .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
-          .replaceAll(/[*]/g, ".*")}$`,
-      );
-      return regex.test(email);
-    });
-
-    if (!isAllowed) {
-      return true;
-    }
-  }
-
-  return false;
 }

@@ -18,7 +18,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { PasswordInput } from "@/components/password-input";
-import { PasswordStrengthMeter } from "@/features/password/components/password-strength-meter";
+import { PasswordStrengthMeter } from "@/features/auth/components/password-strength-meter";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { getBrowserTimeZone } from "@/utils/date-time-utils";
