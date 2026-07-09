@@ -175,6 +175,8 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
     date,
   });
 
+  const firstDayOfMonth = dayjs(date).startOf("month");
+
   return (
     <div className="overflow-hidden">
       <div className="border-b">
@@ -285,10 +287,19 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                             }
 
                             onChange([...options, newOption]);
-                            onNavigate(selectedDate);
+                            // For out-of-month days we navigate the view below;
+                            // avoid a second competing navigationDate write here.
+                            if (!day.outOfMonth) {
+                              onNavigate(selectedDate);
+                            }
                           }
                           if (day.outOfMonth) {
-                            if (i < 6) {
+                            // Navigate towards the month the clicked day belongs
+                            // to. Earlier months are leading padding (prev),
+                            // everything else is trailing padding (next).
+                            if (
+                              dayjs(day.date).isBefore(firstDayOfMonth, "month")
+                            ) {
                               datepicker.prev();
                             } else {
                               datepicker.next();

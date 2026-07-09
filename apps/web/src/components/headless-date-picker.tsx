@@ -102,7 +102,10 @@ export const useHeadlessDatePicker = (
       options?.onNavigationChange?.(newDate);
     },
     today: () => {
-      const newDate = today;
+      // Compute a fresh date at click time (the module-level `today` is stale)
+      // and normalize to the start of the month so the value is distinct from
+      // the current navigation date and reliably snaps the view back.
+      const newDate = dayjs().startOf("month").toDate();
       if (!options?.date) {
         setNavigationDate(newDate);
       }
