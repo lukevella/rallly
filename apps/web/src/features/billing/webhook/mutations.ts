@@ -533,46 +533,42 @@ async function onPaymentMethodUpdated(event: Stripe.Event) {
   });
 }
 
-type WebhookHandler = (event: Stripe.Event) => Promise<void>;
-
-function getEventHandler(
-  eventType: Stripe.Event["type"],
-): WebhookHandler | null {
-  switch (eventType) {
+export async function handleStripeWebhookEvent(event: Stripe.Event) {
+  switch (event.type) {
     case "checkout.session.completed":
-      return onCheckoutSessionCompleted;
+      await onCheckoutSessionCompleted(event);
+      break;
     case "checkout.session.expired":
-      return onCheckoutSessionExpired;
+      await onCheckoutSessionExpired(event);
+      break;
     case "customer.created":
-      return onCustomerCreated;
+      await onCustomerCreated(event);
+      break;
     case "customer.deleted":
-      return onCustomerDeleted;
+      await onCustomerDeleted(event);
+      break;
     case "customer.subscription.created":
-      return onCustomerSubscriptionCreated;
+      await onCustomerSubscriptionCreated(event);
+      break;
     case "customer.subscription.deleted":
-      return onCustomerSubscriptionDeleted;
+      await onCustomerSubscriptionDeleted(event);
+      break;
     case "customer.subscription.updated":
-      return onCustomerSubscriptionUpdated;
+      await onCustomerSubscriptionUpdated(event);
+      break;
     case "payment_method.attached":
-      return onPaymentMethodAttached;
+      await onPaymentMethodAttached(event);
+      break;
     case "payment_method.detached":
-      return onPaymentMethodDetached;
+      await onPaymentMethodDetached(event);
+      break;
     case "payment_method.automatically_updated":
     case "payment_method.updated":
-      return onPaymentMethodUpdated;
+      await onPaymentMethodUpdated(event);
+      break;
     default:
-      return null;
+      return { handled: false };
   }
-}
-
-export async function handleStripeWebhookEvent(event: Stripe.Event) {
-  const handler = getEventHandler(event.type);
-
-  if (!handler) {
-    return { handled: false };
-  }
-
-  await handler(event);
 
   return { handled: true };
 }
