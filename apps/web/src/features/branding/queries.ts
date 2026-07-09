@@ -3,6 +3,7 @@ import "server-only";
 import { cache } from "react";
 import { env } from "@/env";
 import { loadInstanceLicense } from "@/features/licensing/data";
+import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import { getForegroundColor } from "@/utils/color";
 import { isSelfHosted } from "@/utils/constants";
 import type { BrandingConfig } from "./client";
@@ -58,6 +59,11 @@ export function getCustomBrandingConfig() {
 export const getInstanceBrandingConfig = cache(async () => {
   if (!isSelfHosted) {
     return getCustomBrandingConfig();
+  }
+  if (isMaintenanceModeEnabled()) {
+    // Skip the license lookup so the maintenance page can render while the
+    // database is unreachable
+    return getDefaultBrandingConfig();
   }
   const license = await loadInstanceLicense();
   const hasWhiteLabelAddon = license?.whiteLabelAddon ?? false;

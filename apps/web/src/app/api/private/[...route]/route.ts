@@ -15,6 +15,7 @@ import { rateLimiter } from "hono-rate-limiter";
 import { getPollParticipants, getPollResults } from "@/features/poll/data";
 import { createPoll, deletePoll } from "@/features/poll/mutations";
 import { redis } from "@/lib/kv";
+import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import {
   createPollInputSchema,
   createPollSuccessResponseSchema,
@@ -45,6 +46,17 @@ type Env = {
 };
 
 const app = new Hono<Env>().basePath("/api/private");
+
+app.use("*", async (c, next) => {
+  if (isMaintenanceModeEnabled()) {
+    return c.json(
+      apiError("SERVICE_UNAVAILABLE", "The app is down for maintenance"),
+      503,
+      { "Retry-After": "300" },
+    );
+  }
+  await next();
+});
 
 const MAX_OPTIONS = 100;
 

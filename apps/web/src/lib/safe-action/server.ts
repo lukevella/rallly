@@ -8,6 +8,7 @@ import { getCurrentUser } from "@/features/user/data";
 import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
+import { assertAppAvailable } from "@/lib/maintenance-server";
 import type { Duration } from "@/lib/rate-limit";
 import { createRatelimit } from "@/lib/rate-limit";
 
@@ -60,6 +61,11 @@ export const actionClient = createSafeActionClient({
       return "UNAUTHORIZED" as const;
     }
 
+    if (error instanceof AppError && error.code === "SERVICE_UNAVAILABLE") {
+      // Maintenance mode — expected, not reported to Sentry
+      return error.code;
+    }
+
     Sentry.captureException(error, {
       tags: {
         errorHandler: "safe-action",
@@ -75,6 +81,9 @@ export const actionClient = createSafeActionClient({
 
     return "INTERNAL_SERVER_ERROR" as const;
   },
+}).use(async ({ next }) => {
+  await assertAppAvailable();
+  return next();
 });
 
 export const authActionClient = actionClient.use(async ({ next }) => {

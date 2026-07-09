@@ -6,6 +6,7 @@ import { getActiveSpaceForUser } from "@/features/space/data";
 import { createUserDTO } from "@/features/user/data";
 import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors";
+import { isMaintenanceActiveForRequest } from "@/lib/maintenance-server";
 import { createRatelimit } from "@/lib/rate-limit";
 import { isSelfHosted } from "@/utils/constants";
 import type { TRPCContext } from "./context";
@@ -27,6 +28,17 @@ const t = initTRPC.context<TRPCContext>().create({
 export const router = t.router;
 
 export const middleware = t.middleware;
+
+const maintenanceGuard = t.middleware(async ({ next }) => {
+  if (await isMaintenanceActiveForRequest()) {
+    throw new TRPCError({
+      code: "SERVICE_UNAVAILABLE",
+      message: "The app is down for maintenance",
+    });
+  }
+
+  return next();
+});
 
 // Reads trust the session (cookie cache) without hitting the database.
 // Mutations verify the user still exists and run with a fresh DTO; if the
@@ -60,7 +72,9 @@ const mutationSessionGuard = t.middleware(async ({ ctx, type, next }) => {
   });
 });
 
-export const publicProcedure = t.procedure.use(mutationSessionGuard);
+export const publicProcedure = t.procedure
+  .use(maintenanceGuard)
+  .use(mutationSessionGuard);
 
 export const possiblyPublicProcedure = publicProcedure.use(
   middleware(async ({ ctx, next }) => {
