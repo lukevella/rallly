@@ -16,7 +16,7 @@ function ThemeOption({
   return (
     <label
       key={value}
-      className="flex aspect-video flex-1 flex-col items-center justify-center gap-4 rounded-lg border border-card-border bg-card p-4 transition-colors hover:bg-card-accent has-data-[state=checked]:border-primary/50 has-data-[state=checked]:bg-linear-to-b has-data-[state=checked]:from-primary/10 has-data-[state=checked]:to-primary/5 has-data-[state=checked]:ring-primary [&>svg]:size-5"
+      className="flex aspect-video flex-1 flex-col items-center justify-center gap-4 rounded-lg border border-card-border bg-card p-4 transition-colors hover:bg-card-accent has-data-checked:border-primary/50 has-data-checked:bg-linear-to-b has-data-checked:from-primary/10 has-data-checked:to-primary/5 has-data-checked:ring-primary [&>svg]:size-5"
       htmlFor={value}
     >
       <RadioGroupItem value={value} id={value} className="peer sr-only" />
