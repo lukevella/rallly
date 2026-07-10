@@ -32,7 +32,6 @@
     "@next/env": "16.2.6",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
-    "@radix-ui/react-radio-group": "^1.2.3",
     "@radix-ui/react-select": "^2.2.2",
     "@radix-ui/react-slot": "^1.1.2",
     "@rallly/billing": "workspace:*",
