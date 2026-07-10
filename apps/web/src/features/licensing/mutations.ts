@@ -13,29 +13,26 @@ export async function createLicense({
   version,
   idempotencyKey,
 }: CreateLicenseInput) {
-  if (idempotencyKey) {
-    const existingLicense = await prisma.license.findUnique({
-      where: { idempotencyKey },
-    });
+  const data = {
+    licenseKey: generateLicenseKey({ version }),
+    version,
+    type,
+    seats,
+    issuedAt: new Date(),
+    expiresAt,
+    licenseeEmail,
+    licenseeName,
+  };
 
-    if (existingLicense) {
-      return { key: existingLicense.licenseKey };
-    }
-  }
-
-  const license = await prisma.license.create({
-    data: {
-      licenseKey: generateLicenseKey({ version }),
-      version,
-      type,
-      seats,
-      issuedAt: new Date(),
-      expiresAt,
-      licenseeEmail,
-      licenseeName,
-      idempotencyKey,
-    },
-  });
+  // Upsert with an empty update so concurrent requests with the same key
+  // atomically resolve to the existing license instead of racing the insert
+  const license = idempotencyKey
+    ? await prisma.license.upsert({
+        where: { idempotencyKey },
+        update: {},
+        create: { ...data, idempotencyKey },
+      })
+    : await prisma.license.create({ data });
 
   return { key: license.licenseKey };
 }
