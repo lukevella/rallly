@@ -138,46 +138,46 @@ function TableControls({
                 <Trans i18nKey="scrollRight" defaults="Scroll Right" />
               </TooltipContent>
             </Tooltip>
-            {expanded ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    aria-label={t("shrink", { defaultValue: "Shrink" })}
-                    variant="ghost"
-                    size="icon"
-                    onClick={onCollapse}
-                  >
-                    <Icon>
-                      <ShrinkIcon />
-                    </Icon>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <Trans i18nKey="shrink" defaults="Shrink" />
-                </TooltipContent>
-              </Tooltip>
-            ) : (
-              <Tooltip delayDuration={0}>
-                <TooltipTrigger asChild>
-                  <Button
-                    aria-label={t("expand", { defaultValue: "Expand" })}
-                    variant="ghost"
-                    size="icon"
-                    onClick={onExpand}
-                  >
-                    <Icon>
-                      <ExpandIcon />
-                    </Icon>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <Trans i18nKey="expand" defaults="Expand" />
-                </TooltipContent>
-              </Tooltip>
-            )}
-            {expanded ? <EscapeListener onEscape={onCollapse} /> : null}
           </>
         ) : null}
+        {expanded ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                aria-label={t("shrink", { defaultValue: "Shrink" })}
+                variant="ghost"
+                size="icon"
+                onClick={onCollapse}
+              >
+                <Icon>
+                  <ShrinkIcon />
+                </Icon>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <Trans i18nKey="shrink" defaults="Shrink" />
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>
+              <Button
+                aria-label={t("expand", { defaultValue: "Expand" })}
+                variant="ghost"
+                size="icon"
+                onClick={onExpand}
+              >
+                <Icon>
+                  <ExpandIcon />
+                </Icon>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <Trans i18nKey="expand" defaults="Expand" />
+            </TooltipContent>
+          </Tooltip>
+        )}
+        {expanded ? <EscapeListener onEscape={onCollapse} /> : null}
       </div>
     </div>
   );
