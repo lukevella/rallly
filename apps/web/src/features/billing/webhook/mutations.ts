@@ -111,6 +111,7 @@ async function onCheckoutSessionCompleted(event: Stripe.Event) {
       licenseeName: customerDetails.name ?? undefined,
       version,
       seats,
+      idempotencyKey: checkoutSession.id,
     });
 
     if (!license || !license.data) {
@@ -350,7 +351,9 @@ async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
   const { userId, spaceId } = res.data;
 
   const tier = await prisma.$transaction(async (tx) => {
-    await tx.subscription.update({
+    // updateMany so a missing row (e.g. already cascade-deleted with the user
+    // or space) doesn't abort the transaction before the tier sync runs
+    await tx.subscription.updateMany({
       where: {
         id: subscription.id,
       },
@@ -446,6 +449,7 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
         quantity,
         amount,
         status: subscription.status,
+        createdAt: toDate(subscription.created),
         periodStart: toDate(subscription.current_period_start),
         periodEnd: toDate(subscription.current_period_end),
         cancelAtPeriodEnd: subscription.cancel_at_period_end,
@@ -506,8 +510,8 @@ async function onPaymentMethodAttached(event: Stripe.Event) {
 async function onPaymentMethodDetached(event: Stripe.Event) {
   const paymentMethod = event.data.object as Stripe.PaymentMethod;
 
-  // Delete the payment method from our database
-  await prisma.paymentMethod.delete({
+  // deleteMany so repeated detach events don't throw when the record is gone
+  await prisma.paymentMethod.deleteMany({
     where: {
       id: paymentMethod.id,
     },
@@ -521,16 +525,19 @@ async function onPaymentMethodUpdated(event: Stripe.Event) {
     return;
   }
 
-  // Update the payment method data in our database
-  await prisma.paymentMethod.update({
+  // Find the user associated with this customer
+  const user = await prisma.user.findFirst({
     where: {
-      id: paymentMethod.id,
-    },
-    data: {
-      type: paymentMethod.type,
-      data: paymentMethod[paymentMethod.type] as Prisma.JsonObject,
+      customerId: paymentMethod.customer as string,
     },
   });
+
+  if (!user) {
+    throw new Error(`No user found for customer ${paymentMethod.customer}`);
+  }
+
+  // Upsert so the event succeeds even if the attach event was missed
+  await createOrUpdatePaymentMethod(user.id, paymentMethod);
 }
 
 export async function handleStripeWebhookEvent(event: Stripe.Event) {

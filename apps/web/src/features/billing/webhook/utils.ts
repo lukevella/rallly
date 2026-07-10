@@ -15,6 +15,13 @@ export function isSubscriptionActive(subscription: Stripe.Subscription) {
 
 export function getSubscriptionDetails(subscription: Stripe.Subscription) {
   const subscriptionItem = subscription.items.data[0];
+
+  if (!subscriptionItem) {
+    throw new Error(
+      `Missing subscription item in subscription ${subscription.id}`,
+    );
+  }
+
   const interval = subscriptionItem.price.recurring?.interval;
   const currency = subscription.currency;
   const amount =
@@ -25,7 +32,8 @@ export function getSubscriptionDetails(subscription: Stripe.Subscription) {
     throw new Error(`Missing interval in subscription ${subscription.id}`);
   }
 
-  if (!amount) {
+  // Nullish check: unit_amount can legitimately be 0 for free prices
+  if (amount == null) {
     throw new Error(`Missing amount in subscription ${subscription.id}`);
   }
 
