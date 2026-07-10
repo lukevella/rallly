@@ -44,10 +44,7 @@ const handler = async (request: NextRequest) => {
 
     if (!handled) {
       Sentry.captureException(new Error(`Unhandled event type: ${event.type}`));
-      return NextResponse.json(
-        { error: "Unhandled event type" },
-        { status: 400 },
-      );
+      return NextResponse.json({ received: true, ignored: true });
     }
 
     return NextResponse.json({ received: true });
