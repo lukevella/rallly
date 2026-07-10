@@ -62,6 +62,10 @@ const mutationSessionGuard = t.middleware(async ({ ctx, type, next }) => {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "Your session is no longer valid",
+      cause: new AppError({
+        code: "INVALID_SESSION",
+        message: "Session references a user that no longer exists",
+      }),
     });
   }
 

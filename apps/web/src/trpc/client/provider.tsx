@@ -29,9 +29,34 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
 
       switch (error.data?.code) {
         case "UNAUTHORIZED":
-          signOut().finally(() => {
-            window.location.href = "/login";
-          });
+          // Never sign out automatically — a failed sign out turns this
+          // into an infinite loop with the login page (RAL-1313).
+          if (error.data.appError === "INVALID_SESSION") {
+            toast.error(
+              t("actionErrorInvalidSession", {
+                defaultValue: "Your session is no longer valid",
+              }),
+              {
+                id: "invalid-session",
+                duration: Number.POSITIVE_INFINITY,
+                action: {
+                  label: t("signOut", { defaultValue: "Sign Out" }),
+                  onClick: () => {
+                    signOut().finally(() => {
+                      window.location.href = "/login";
+                    });
+                  },
+                },
+              },
+            );
+          } else {
+            toast.error(
+              t("actionErrorUnauthorized", {
+                defaultValue: "You are not authorized to perform this action",
+              }),
+              { id: "unauthorized" },
+            );
+          }
           break;
         case "FORBIDDEN":
           toast.error(

@@ -8,7 +8,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { ErrorPage, ErrorPageLinkItem } from "@/components/error-page";
-import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 import { INVALID_SESSION } from "@/lib/errors/invalid-session-error";
@@ -21,21 +20,51 @@ export default function LocaleErrorBoundary({
   reset: () => void;
 }) {
   const router = useRouter();
+  const [isSigningOut, setIsSigningOut] = React.useState(false);
   const isInvalidSession = error.digest === INVALID_SESSION;
 
   React.useEffect(() => {
-    if (isInvalidSession) {
-      signOut().finally(() => {
-        router.push("/login");
-      });
-      return;
+    if (!isInvalidSession) {
+      Sentry.captureException(error);
     }
-
-    Sentry.captureException(error);
-  }, [error, router, isInvalidSession]);
+  }, [error, isInvalidSession]);
 
   if (isInvalidSession) {
-    return <RouterLoadingIndicator />;
+    // Never sign out automatically — a failed sign out turns this into an
+    // infinite loop with the login page (RAL-1313).
+    return (
+      <ErrorPage
+        label={<Trans i18nKey="invalidSessionLabel" defaults="Session" />}
+        title={
+          <Trans
+            i18nKey="invalidSessionTitle"
+            defaults="Your session is no longer valid"
+          />
+        }
+        description={
+          <Trans
+            i18nKey="invalidSessionDescription"
+            defaults="Sign out and log in again to continue."
+          />
+        }
+        actions={
+          <Button
+            variant="primary"
+            loading={isSigningOut}
+            onClick={() => {
+              setIsSigningOut(true);
+              signOut().finally(() => {
+                router.push("/login");
+              });
+            }}
+          >
+            <Trans i18nKey="signOut" defaults="Sign Out" />
+          </Button>
+        }
+      >
+        {null}
+      </ErrorPage>
+    );
   }
 
   return (
