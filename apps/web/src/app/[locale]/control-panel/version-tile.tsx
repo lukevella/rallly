@@ -17,26 +17,28 @@ export function VersionTile() {
   });
 
   return (
-    <Tile asChild>
-      <a
-        href={data?.url ?? RELEASES_URL}
-        target="_blank"
-        rel="noreferrer noopener"
-      >
-        <PageIcon>
-          <DownloadIcon />
-        </PageIcon>
-        <TileTitle>{`v${appVersion ?? "unknown"}`}</TileTitle>
-        <TileDescription>
-          {isFetching ? (
-            <Spinner />
-          ) : data ? (
-            <span className="text-primary text-sm">
-              <Trans i18nKey="updateAvailable" defaults="Update available" />
-            </span>
-          ) : null}
-        </TileDescription>
-      </a>
+    <Tile
+      render={
+        <a
+          href={data?.url ?? RELEASES_URL}
+          target="_blank"
+          rel="noreferrer noopener"
+        />
+      }
+    >
+      <PageIcon>
+        <DownloadIcon />
+      </PageIcon>
+      <TileTitle>{`v${appVersion ?? "unknown"}`}</TileTitle>
+      <TileDescription>
+        {isFetching ? (
+          <Spinner />
+        ) : data ? (
+          <span className="text-primary text-sm">
+            <Trans i18nKey="updateAvailable" defaults="Update available" />
+          </span>
+        ) : null}
+      </TileDescription>
     </Tile>
   );
 }

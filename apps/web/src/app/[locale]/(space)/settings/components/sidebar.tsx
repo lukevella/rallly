@@ -81,14 +81,17 @@ export function AccountSidebarMenu() {
     <SidebarMenu>
       {menuItems.map((item) => (
         <SidebarMenuItem key={item.id}>
-          <SidebarMenuButton asChild isActive={pathname.startsWith(item.href)}>
-            <HoverPrefetchLink
-              href={item.href}
-              className="flex items-center gap-x-2"
-            >
-              {item.icon}
-              {item.label}
-            </HoverPrefetchLink>
+          <SidebarMenuButton
+            render={
+              <HoverPrefetchLink
+                href={item.href}
+                className="flex items-center gap-x-2"
+              />
+            }
+            isActive={pathname.startsWith(item.href)}
+          >
+            {item.icon}
+            {item.label}
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}
@@ -140,14 +143,17 @@ export function SpaceSidebarMenu() {
     <SidebarMenu>
       {menuItems.map((item) => (
         <SidebarMenuItem key={item.id}>
-          <SidebarMenuButton asChild isActive={pathname.startsWith(item.href)}>
-            <HoverPrefetchLink
-              href={item.href}
-              className="flex items-center gap-x-2"
-            >
-              <Icon>{item.icon}</Icon>
-              {item.label}
-            </HoverPrefetchLink>
+          <SidebarMenuButton
+            render={
+              <HoverPrefetchLink
+                href={item.href}
+                className="flex items-center gap-x-2"
+              />
+            }
+            isActive={pathname.startsWith(item.href)}
+          >
+            <Icon>{item.icon}</Icon>
+            {item.label}
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}
@@ -175,18 +181,18 @@ export function DeveloperSidebarMenu() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              asChild
+              render={
+                <HoverPrefetchLink
+                  href="/settings/api-keys"
+                  className="flex items-center gap-x-2"
+                />
+              }
               isActive={pathname.startsWith("/settings/api-keys")}
             >
-              <HoverPrefetchLink
-                href="/settings/api-keys"
-                className="flex items-center gap-x-2"
-              >
-                <Icon>
-                  <KeyIcon />
-                </Icon>
-                <Trans i18nKey="apiKeys" defaults="API Keys" />
-              </HoverPrefetchLink>
+              <Icon>
+                <KeyIcon />
+              </Icon>
+              <Trans i18nKey="apiKeys" defaults="API Keys" />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

@@ -16,8 +16,8 @@ export function NavItem({
 
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton asChild isActive={isActive}>
-        <Link href={href}>{children}</Link>
+      <SidebarMenuButton render={<Link href={href} />} isActive={isActive}>
+        {children}
       </SidebarMenuButton>
     </SidebarMenuItem>
   );
