@@ -35,6 +35,13 @@ import { timeZoneInput } from "./polls/schema";
 
 const collapseNewlines = (s: string) => s.replace(/\n{3,}/g, "\n\n");
 
+// Mirrors the auto-close-polls house-keeping task: an option ends at
+// start + duration, with all-day options (duration 0) treated as 24h.
+const optionEndsInFuture = (option: { startTime: Date; duration: number }) =>
+  dayjs(option.startTime)
+    .add(option.duration === 0 ? 24 * 60 : option.duration, "minute")
+    .isAfter(dayjs());
+
 export const polls = router({
   participants,
   comments,
@@ -350,6 +357,45 @@ export const polls = router({
       }
 
       await prisma.$transaction(async (tx) => {
+        const newOptions =
+          input.optionsToAdd?.map((optionValue) => {
+            const [start, end] = optionValue.split("/");
+
+            if (end) {
+              return {
+                startTime: input.timeZone
+                  ? dayjs(start).tz(input.timeZone, true).toDate()
+                  : dayjs(start).utc(true).toDate(),
+                duration: dayjs(end).diff(dayjs(start), "minute"),
+                pollId,
+              };
+            } else {
+              return {
+                startTime: dayjs(start).utc(true).toDate(),
+                duration: 0,
+                pollId,
+              };
+            }
+          }) ?? [];
+
+        // Reopen a closed poll when new future dates are added, but only if
+        // every pre-existing option had already ended — that state matches an
+        // auto-close, whereas a manual pause with future dates stays paused.
+        let reopen = false;
+        if (newOptions.some(optionEndsInFuture)) {
+          const poll = await tx.poll.findUnique({
+            where: { id: pollId },
+            select: { status: true },
+          });
+          if (poll?.status === "closed") {
+            const existingOptions = await tx.option.findMany({
+              where: { pollId },
+              select: { startTime: true, duration: true },
+            });
+            reopen = !existingOptions.some(optionEndsInFuture);
+          }
+        }
+
         if (input.optionsToDelete && input.optionsToDelete.length > 0) {
           await tx.option.deleteMany({
             where: {
@@ -361,26 +407,9 @@ export const polls = router({
           });
         }
 
-        if (input.optionsToAdd && input.optionsToAdd.length > 0) {
+        if (newOptions.length > 0) {
           await tx.option.createMany({
-            data: input.optionsToAdd.map((optionValue) => {
-              const [start, end] = optionValue.split("/");
-
-              if (end) {
-                return {
-                  startTime: input.timeZone
-                    ? dayjs(start).tz(input.timeZone, true).toDate()
-                    : dayjs(start).utc(true).toDate(),
-                  duration: dayjs(end).diff(dayjs(start), "minute"),
-                  pollId,
-                };
-              } else {
-                return {
-                  startTime: dayjs(start).utc(true).toDate(),
-                  pollId,
-                };
-              }
-            }),
+            data: newOptions,
           });
         }
 
@@ -415,6 +444,7 @@ export const polls = router({
             disableComments: input.disableComments,
             requireParticipantEmail: input.requireParticipantEmail,
             kind,
+            status: reopen ? "open" : undefined,
           },
         });
       });
