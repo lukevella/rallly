@@ -39,14 +39,9 @@ export const comments = router({
         },
       });
 
-      // A deleted poll's comments must only be visible to a manager. To
-      // everyone else it looks the same as a poll that has no comments.
+      // A deleted poll never exposes its comments.
       if (poll?.deleted) {
-        const isAdmin =
-          ctx.user && (await hasPollAdminAccess(pollId, ctx.user.id));
-        if (!isAdmin) {
-          return [];
-        }
+        return [];
       }
 
       const isOwner = poll?.userId === ctx.user?.id;
