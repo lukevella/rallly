@@ -1,7 +1,5 @@
 import type { TimeFormat, VoteType } from "@rallly/database";
-import { TrashIcon } from "lucide-react";
 import React from "react";
-import { useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import {
   formatDateParts,
@@ -43,7 +41,6 @@ export const PollContextProvider: React.FunctionComponent<{
   poll: GetPollApiResponse;
   children?: React.ReactNode;
 }> = ({ poll, children }) => {
-  const { t } = useTranslation();
   const { participants } = useParticipants();
 
   const getScore = React.useCallback(
@@ -95,19 +92,6 @@ export const PollContextProvider: React.FunctionComponent<{
     };
   }, [getScore, participants, poll]);
 
-  if (poll.deleted) {
-    return (
-      <div className="flex h-[calc(100vh-100px)] w-full items-center justify-center">
-        <div className="space-y-4 text-center">
-          <TrashIcon className="mb-4 inline-block size-24 text-muted-foreground" />
-          <div className="mb-2 font-bold text-3xl text-foreground">
-            {t("deletedPoll")}
-          </div>
-          <p className="text-muted-foreground">{t("deletedPollInfo")}</p>
-        </div>
-      </div>
-    );
-  }
   return (
     <PollContext.Provider value={contextValue}>{children}</PollContext.Provider>
   );
