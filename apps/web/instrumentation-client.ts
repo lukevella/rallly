@@ -28,6 +28,14 @@ Sentry.init({
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
 
+  // Suppress a known upstream Firefox error thrown from inside the bundled
+  // rrweb session-replay code (@sentry-internal/replay): when a replay starts
+  // recording on error, rrweb can touch a DOM node the browser has already
+  // garbage-collected, throwing "TypeError: can't access dead object". This
+  // originates in vendored code, not our own logic, and only clutters error
+  // tracking. https://bugzilla.mozilla.org/show_bug.cgi?id=695480
+  ignoreErrors: ["can't access dead object"],
+
   replaysOnErrorSampleRate: 1.0,
 
   // Only record replays for sessions with errors
