@@ -148,272 +148,274 @@ export function PayWallDialog({
         size="4xl"
         className="overflow-hidden p-0 lg:min-h-[500px]"
       >
-        <Tabs value={selectedPlan} onValueChange={handleChangePlan} asChild>
-          <div className="grid min-h-0 grid-cols-1 md:grid-cols-2">
-            <div className="flex flex-col p-6">
-              <DialogHeader>
-                <div className="flex items-center gap-3">
-                  <PageIcon size="sm" color="primary">
-                    <SparklesIcon />
-                  </PageIcon>
-                  <DialogTitle>
-                    <Trans i18nKey="upgradePromptTitle" />
-                  </DialogTitle>
-                </div>
-              </DialogHeader>
-              <div className="mt-6 flex flex-1 flex-col gap-4">
-                <Label htmlFor="plan">
-                  <Trans i18nKey="selectPlan" defaults="Select Plan:" />
-                </Label>
-                <RadioGroup
-                  id="plan"
-                  value={selectedPlan}
-                  onValueChange={handleChangePlan}
-                >
-                  <PlanRadioGroupItem
-                    value="hobby"
-                    id="hobby"
-                    title={PLAN_NAMES.HOBBY}
-                    price={<Trans i18nKey="planFree" defaults="Free" />}
-                  />
-                  <PlanRadioGroupItem
-                    value="pro"
-                    id="pro"
-                    title={PLAN_NAMES.PRO}
-                    price={getProPrice()}
-                    priceLabel={
-                      <Trans i18nKey="perSeatMonth" defaults="/seat/mo" />
-                    }
-                  />
-                </RadioGroup>
+        <Tabs
+          value={selectedPlan}
+          onValueChange={handleChangePlan}
+          className="grid min-h-0 grid-cols-1 md:grid-cols-2"
+        >
+          <div className="flex flex-col p-6">
+            <DialogHeader>
+              <div className="flex items-center gap-3">
+                <PageIcon size="sm" color="primary">
+                  <SparklesIcon />
+                </PageIcon>
+                <DialogTitle>
+                  <Trans i18nKey="upgradePromptTitle" />
+                </DialogTitle>
               </div>
+            </DialogHeader>
+            <div className="mt-6 flex flex-1 flex-col gap-4">
+              <Label htmlFor="plan">
+                <Trans i18nKey="selectPlan" defaults="Select Plan:" />
+              </Label>
+              <RadioGroup
+                id="plan"
+                value={selectedPlan}
+                onValueChange={handleChangePlan}
+              >
+                <PlanRadioGroupItem
+                  value="hobby"
+                  id="hobby"
+                  title={PLAN_NAMES.HOBBY}
+                  price={<Trans i18nKey="planFree" defaults="Free" />}
+                />
+                <PlanRadioGroupItem
+                  value="pro"
+                  id="pro"
+                  title={PLAN_NAMES.PRO}
+                  price={getProPrice()}
+                  priceLabel={
+                    <Trans i18nKey="perSeatMonth" defaults="/seat/mo" />
+                  }
+                />
+              </RadioGroup>
+            </div>
 
-              <div className="space-y-4 pt-4">
-                {selectedPlan === "pro" && (
-                  <label
-                    htmlFor="annual-switch"
-                    className="relative flex select-none items-start justify-between gap-4 overflow-hidden rounded-lg bg-gray-50 p-4 ring ring-button-outline ring-inset hover:bg-gray-100 dark:bg-gray-700/50 dark:hover:bg-gray-700"
-                  >
-                    <BadgeDollarSignIcon className="pointer-events-none absolute -top-5 right-16 size-24 opacity-5" />
+            <div className="space-y-4 pt-4">
+              {selectedPlan === "pro" && (
+                <label
+                  htmlFor="annual-switch"
+                  className="relative flex select-none items-start justify-between gap-4 overflow-hidden rounded-lg bg-gray-50 p-4 ring ring-button-outline ring-inset hover:bg-gray-100 dark:bg-gray-700/50 dark:hover:bg-gray-700"
+                >
+                  <BadgeDollarSignIcon className="pointer-events-none absolute -top-5 right-16 size-24 opacity-5" />
 
-                    <div className="flex-1">
-                      <div className="text-sm">
-                        <Trans
-                          defaults="Save {amount} with yearly billing"
-                          i18nKey="annualSavings"
-                          values={{
-                            amount: currencyFormatter.format(
-                              (pricingData.monthly.amount * 12 -
-                                pricingData.yearly.amount) /
-                                100,
-                            ),
-                          }}
-                        />
-                      </div>
-                      <div className="text-muted-foreground text-sm">
-                        <Trans
-                          defaults="Pay for {payMonths, number} months, get 12."
-                          i18nKey="annualDiscount"
-                          values={{
-                            payMonths: 8,
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="mt-1">
-                      <Switch
-                        checked={isAnnual}
-                        onCheckedChange={setIsAnnual}
-                        id="annual-switch"
+                  <div className="flex-1">
+                    <div className="text-sm">
+                      <Trans
+                        defaults="Save {amount} with yearly billing"
+                        i18nKey="annualSavings"
+                        values={{
+                          amount: currencyFormatter.format(
+                            (pricingData.monthly.amount * 12 -
+                              pricingData.yearly.amount) /
+                              100,
+                          ),
+                        }}
                       />
                     </div>
-                  </label>
-                )}
-                {selectedPlan === "pro" ? (
-                  <TabsContent value="pro">
-                    <UpgradeButton className="w-full" annual={isAnnual}>
-                      <Trans i18nKey="upgrade" defaults="Upgrade" />
-                    </UpgradeButton>
-                  </TabsContent>
-                ) : (
-                  <Button disabled={true} size="xl" className="w-full">
-                    <Trans i18nKey="currentPlan" defaults="Current Plan" />
-                  </Button>
-                )}
-              </div>
+                    <div className="text-muted-foreground text-sm">
+                      <Trans
+                        defaults="Pay for {payMonths, number} months, get 12."
+                        i18nKey="annualDiscount"
+                        values={{
+                          payMonths: 8,
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-1">
+                    <Switch
+                      checked={isAnnual}
+                      onCheckedChange={setIsAnnual}
+                      id="annual-switch"
+                    />
+                  </div>
+                </label>
+              )}
+              {selectedPlan === "pro" ? (
+                <TabsContent value="pro">
+                  <UpgradeButton className="w-full" annual={isAnnual}>
+                    <Trans i18nKey="upgrade" defaults="Upgrade" />
+                  </UpgradeButton>
+                </TabsContent>
+              ) : (
+                <Button disabled={true} size="xl" className="w-full">
+                  <Trans i18nKey="currentPlan" defaults="Current Plan" />
+                </Button>
+              )}
             </div>
+          </div>
 
-            {/* Right Side - Plan Benefits */}
-            <div className="hidden overflow-y-auto bg-gray-100 px-6 py-6 md:block dark:bg-gray-900">
-              <TabsContent value="hobby" className="space-y-6">
-                <DialogHeader>
-                  <DialogTitle>{PLAN_NAMES.HOBBY}</DialogTitle>
-                  <DialogDescription>
-                    <Trans
-                      i18nKey="planHobbyDescription"
-                      defaults="For casual users"
-                    />
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-3">
-                  <SubHeading>
-                    <Trans i18nKey="keyBenefits" defaults="Key Benefits" />
-                  </SubHeading>
-                  <KeyBenefits>
-                    <KeyBenefitsItem
-                      icon={<CalendarSearchIcon />}
-                      title={
-                        <Trans i18nKey="basicPolls" defaults="Basic polls" />
-                      }
-                      description={
-                        <Trans
-                          i18nKey="basicPollsDescription"
-                          defaults="Create simple scheduling polls"
-                        />
-                      }
-                    />
-                    <KeyBenefitsItem
-                      icon={<TimerResetIcon />}
-                      title={
-                        <Trans
-                          i18nKey="limitedPollLifetime"
-                          defaults="Limited Poll Lifetime"
-                        />
-                      }
-                      description={
-                        <Trans
-                          i18nKey="limitedPollLifetimeDescription"
-                          defaults="Inactive polls are automatically deleted"
-                        />
-                      }
-                    />
-                  </KeyBenefits>
-                </div>
-              </TabsContent>
-              <TabsContent value="pro" className="space-y-6">
-                <DialogHeader>
-                  <DialogTitle>{PLAN_NAMES.PRO}</DialogTitle>
-                  <DialogDescription>
-                    <Trans
-                      i18nKey="planProDescription"
-                      defaults="For professionals and power users"
-                    />
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-3">
-                  <SubHeading>
-                    <Trans i18nKey="keyBenefits" defaults="Key Benefits" />
-                  </SubHeading>
-                  <KeyBenefits>
-                    <KeyBenefitsItem
-                      icon={<PaletteIcon />}
-                      title={
-                        <Trans
-                          i18nKey="customBranding"
-                          defaults="Custom Branding"
-                        />
-                      }
-                      description={
-                        <Trans
-                          i18nKey="customBrandingDescription"
-                          defaults="Show your logo and brand colors to your participants"
-                        />
-                      }
-                    />
-                    <KeyBenefitsItem
-                      icon={<CalendarCheckIcon />}
-                      title={
-                        <Trans
-                          i18nKey="featureNameSchedule"
-                          defaults="Schedule Poll"
-                        />
-                      }
-                      description={
-                        <Trans
-                          i18nKey="schedulePollDescription"
-                          defaults="Lock in the final meeting time and notify participants"
-                        />
-                      }
-                    />
-                    <KeyBenefitsItem
-                      icon={<CopyIcon />}
-                      title={
-                        <Trans
-                          i18nKey="featureNameDuplicate"
-                          defaults="Duplicate Poll"
-                        />
-                      }
-                      description={
-                        <Trans
-                          i18nKey="duplicatePollDescription"
-                          defaults="Quickly create similar polls from existing ones"
-                        />
-                      }
-                    />
-                    <KeyBenefitsItem
-                      icon={<SettingsIcon />}
-                      title={
-                        <Trans
-                          i18nKey="featureNameAdvancedSettings"
-                          defaults="Advanced Settings"
-                        />
-                      }
-                      description={
-                        <Trans
-                          i18nKey="advancedSettingsDescription"
-                          defaults="Customize poll behavior and participant permissions"
-                        />
-                      }
-                    />
-                    <KeyBenefitsItem
-                      icon={<ClockIcon />}
-                      title={
-                        <Trans
-                          i18nKey="featureNameExtendedPollLifetime"
-                          defaults="Extended Poll Lifetime"
-                        />
-                      }
-                      description={
-                        <Trans
-                          i18nKey="extendedPollLifetimeDescription"
-                          defaults="Keep polls indefinitely"
-                        />
-                      }
-                    />
-                    <KeyBenefitsItem
-                      icon={<UserPlusIcon />}
-                      title={
-                        <Trans
-                          i18nKey="teamCollaboration"
-                          defaults="Team collaboration"
-                        />
-                      }
-                      description={
-                        <Trans
-                          i18nKey="teamCollaborationDescription"
-                          defaults="Invite team members with centralized billing"
-                        />
-                      }
-                    />
-                    <KeyBenefitsItem
-                      icon={<LifeBuoyIcon />}
-                      title={
-                        <Trans
-                          i18nKey="prioritySupport"
-                          defaults="Priority support"
-                        />
-                      }
-                      description={
-                        <Trans
-                          i18nKey="prioritySupportDescription"
-                          defaults="Get faster response times and dedicated assistance"
-                        />
-                      }
-                    />
-                  </KeyBenefits>
-                </div>
-              </TabsContent>
-            </div>
+          {/* Right Side - Plan Benefits */}
+          <div className="hidden overflow-y-auto bg-gray-100 px-6 py-6 md:block dark:bg-gray-900">
+            <TabsContent value="hobby" className="space-y-6">
+              <DialogHeader>
+                <DialogTitle>{PLAN_NAMES.HOBBY}</DialogTitle>
+                <DialogDescription>
+                  <Trans
+                    i18nKey="planHobbyDescription"
+                    defaults="For casual users"
+                  />
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-3">
+                <SubHeading>
+                  <Trans i18nKey="keyBenefits" defaults="Key Benefits" />
+                </SubHeading>
+                <KeyBenefits>
+                  <KeyBenefitsItem
+                    icon={<CalendarSearchIcon />}
+                    title={
+                      <Trans i18nKey="basicPolls" defaults="Basic polls" />
+                    }
+                    description={
+                      <Trans
+                        i18nKey="basicPollsDescription"
+                        defaults="Create simple scheduling polls"
+                      />
+                    }
+                  />
+                  <KeyBenefitsItem
+                    icon={<TimerResetIcon />}
+                    title={
+                      <Trans
+                        i18nKey="limitedPollLifetime"
+                        defaults="Limited Poll Lifetime"
+                      />
+                    }
+                    description={
+                      <Trans
+                        i18nKey="limitedPollLifetimeDescription"
+                        defaults="Inactive polls are automatically deleted"
+                      />
+                    }
+                  />
+                </KeyBenefits>
+              </div>
+            </TabsContent>
+            <TabsContent value="pro" className="space-y-6">
+              <DialogHeader>
+                <DialogTitle>{PLAN_NAMES.PRO}</DialogTitle>
+                <DialogDescription>
+                  <Trans
+                    i18nKey="planProDescription"
+                    defaults="For professionals and power users"
+                  />
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-3">
+                <SubHeading>
+                  <Trans i18nKey="keyBenefits" defaults="Key Benefits" />
+                </SubHeading>
+                <KeyBenefits>
+                  <KeyBenefitsItem
+                    icon={<PaletteIcon />}
+                    title={
+                      <Trans
+                        i18nKey="customBranding"
+                        defaults="Custom Branding"
+                      />
+                    }
+                    description={
+                      <Trans
+                        i18nKey="customBrandingDescription"
+                        defaults="Show your logo and brand colors to your participants"
+                      />
+                    }
+                  />
+                  <KeyBenefitsItem
+                    icon={<CalendarCheckIcon />}
+                    title={
+                      <Trans
+                        i18nKey="featureNameSchedule"
+                        defaults="Schedule Poll"
+                      />
+                    }
+                    description={
+                      <Trans
+                        i18nKey="schedulePollDescription"
+                        defaults="Lock in the final meeting time and notify participants"
+                      />
+                    }
+                  />
+                  <KeyBenefitsItem
+                    icon={<CopyIcon />}
+                    title={
+                      <Trans
+                        i18nKey="featureNameDuplicate"
+                        defaults="Duplicate Poll"
+                      />
+                    }
+                    description={
+                      <Trans
+                        i18nKey="duplicatePollDescription"
+                        defaults="Quickly create similar polls from existing ones"
+                      />
+                    }
+                  />
+                  <KeyBenefitsItem
+                    icon={<SettingsIcon />}
+                    title={
+                      <Trans
+                        i18nKey="featureNameAdvancedSettings"
+                        defaults="Advanced Settings"
+                      />
+                    }
+                    description={
+                      <Trans
+                        i18nKey="advancedSettingsDescription"
+                        defaults="Customize poll behavior and participant permissions"
+                      />
+                    }
+                  />
+                  <KeyBenefitsItem
+                    icon={<ClockIcon />}
+                    title={
+                      <Trans
+                        i18nKey="featureNameExtendedPollLifetime"
+                        defaults="Extended Poll Lifetime"
+                      />
+                    }
+                    description={
+                      <Trans
+                        i18nKey="extendedPollLifetimeDescription"
+                        defaults="Keep polls indefinitely"
+                      />
+                    }
+                  />
+                  <KeyBenefitsItem
+                    icon={<UserPlusIcon />}
+                    title={
+                      <Trans
+                        i18nKey="teamCollaboration"
+                        defaults="Team collaboration"
+                      />
+                    }
+                    description={
+                      <Trans
+                        i18nKey="teamCollaborationDescription"
+                        defaults="Invite team members with centralized billing"
+                      />
+                    }
+                  />
+                  <KeyBenefitsItem
+                    icon={<LifeBuoyIcon />}
+                    title={
+                      <Trans
+                        i18nKey="prioritySupport"
+                        defaults="Priority support"
+                      />
+                    }
+                    description={
+                      <Trans
+                        i18nKey="prioritySupportDescription"
+                        defaults="Get faster response times and dedicated assistance"
+                      />
+                    }
+                  />
+                </KeyBenefits>
+              </div>
+            </TabsContent>
           </div>
         </Tabs>
       </DialogContent>
