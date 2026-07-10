@@ -49,6 +49,10 @@ Prefer to run your own instance? Rallly ships as a Docker image and can be self-
 
 See the [self-hosting docs](https://support.rallly.co/self-hosting) for installation and [configuration options](https://support.rallly.co/self-hosting/configuration-options).
 
+Or deploy a managed instance without running your own server:
+
+[![Deploy with Zenith](https://cdn.zenith.hosting/buttons/deploy-with-zenith.svg)](https://zenith.hosting/host/rallly)
+
 ## 🛠️ Built with
 
 [Next.js](https://github.com/vercel/next.js/) · [Prisma](https://github.com/prisma/prisma) · [tRPC](https://github.com/trpc/trpc) · [TailwindCSS](https://github.com/tailwindlabs/tailwindcss)
