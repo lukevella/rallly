@@ -55,13 +55,11 @@ export const InviteDialog = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild={true}>
-        <Button variant="primary">
-          <Share2Icon data-icon="inline-start" />
-          <span className="sr-only sm:not-sr-only">
-            <Trans i18nKey="share" defaults="Share" />
-          </span>
-        </Button>
+      <DialogTrigger render={<Button variant="primary" />}>
+        <Share2Icon data-icon="inline-start" />
+        <span className="sr-only sm:not-sr-only">
+          <Trans i18nKey="share" defaults="Share" />
+        </span>
       </DialogTrigger>
       <DialogContent data-testid="invite-participant-dialog">
         <div className="flex">

@@ -174,10 +174,8 @@ export function ManageSeatsDialog({
           />
         </div>
         <DialogFooter>
-          <DialogClose asChild>
-            <Button>
-              <Trans i18nKey="cancel" defaults="Cancel" />
-            </Button>
+          <DialogClose render={<Button />}>
+            <Trans i18nKey="cancel" defaults="Cancel" />
           </DialogClose>
           <Button
             variant="primary"

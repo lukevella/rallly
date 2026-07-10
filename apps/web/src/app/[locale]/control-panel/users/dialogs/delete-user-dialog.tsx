@@ -110,10 +110,8 @@ export function DeleteUserDialog({
               )}
             />
             <DialogFooter className="mt-6">
-              <DialogClose asChild>
-                <Button>
-                  <Trans i18nKey="cancel" defaults="Cancel" />
-                </Button>
+              <DialogClose render={<Button />}>
+                <Trans i18nKey="cancel" defaults="Cancel" />
               </DialogClose>
               <Button
                 variant="destructive"

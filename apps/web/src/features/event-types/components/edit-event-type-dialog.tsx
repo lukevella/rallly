@@ -111,10 +111,12 @@ export function EditEventTypeDialog({
               setShowDescription={setShowDescription}
             />
             <DialogFooter className="pt-2">
-              <DialogClose asChild>
-                <Button type="button" disabled={updateEventType.isPending}>
-                  <Trans i18nKey="cancel" defaults="Cancel" />
-                </Button>
+              <DialogClose
+                render={
+                  <Button type="button" disabled={updateEventType.isPending} />
+                }
+              >
+                <Trans i18nKey="cancel" defaults="Cancel" />
               </DialogClose>
               <Button
                 type="submit"

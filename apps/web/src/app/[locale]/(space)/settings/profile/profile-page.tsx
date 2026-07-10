@@ -76,10 +76,8 @@ export function ProfilePage() {
             </PageSectionHeader>
             <PageSectionContent>
               <DeleteAccountDialog>
-                <DialogTrigger asChild>
-                  <Button className="text-destructive">
-                    <Trans i18nKey="deleteAccount" defaults="Delete Account" />
-                  </Button>
+                <DialogTrigger render={<Button className="text-destructive" />}>
+                  <Trans i18nKey="deleteAccount" defaults="Delete Account" />
                 </DialogTrigger>
               </DeleteAccountDialog>
             </PageSectionContent>
