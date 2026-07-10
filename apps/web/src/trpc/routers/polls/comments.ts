@@ -35,12 +35,18 @@ export const comments = router({
         select: {
           userId: true,
           hideParticipants: true,
+          deleted: true,
         },
       });
 
-      const isOwner = poll?.userId === ctx.user?.id;
+      // A deleted poll never exposes its comments.
+      if (!poll || poll.deleted) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
+      }
 
-      const hideParticipants = poll?.hideParticipants && !isOwner;
+      const isOwner = poll.userId === ctx.user?.id;
+
+      const hideParticipants = poll.hideParticipants && !isOwner;
 
       if (hideParticipants && !isOwner) {
         // if hideParticipants is enabled and the user is not the owner

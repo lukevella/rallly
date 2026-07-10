@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "js-cookie": "^3.0.1",
-    "posthog-js": "^1.399.0",
+    "posthog-js": "^1.399.1",
     "posthog-node": "^5.40.0",
     "react": "19.2.6"
   },

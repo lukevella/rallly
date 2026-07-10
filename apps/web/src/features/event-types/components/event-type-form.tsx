@@ -440,9 +440,9 @@ function RadioCardOption({
   return (
     <label
       htmlFor={id}
-      className="group flex cursor-pointer items-center gap-2 rounded-lg border border-input bg-card px-3 py-2.5 text-sm transition-colors hover:bg-accent has-data-[state=checked]:border-primary has-data-[state=checked]:bg-primary/5"
+      className="group flex cursor-pointer items-center gap-2 rounded-lg border border-input bg-card px-3 py-2.5 text-sm transition-colors hover:bg-accent has-data-checked:border-primary has-data-checked:bg-primary/5"
     >
-      <span className="text-muted-foreground group-has-data-[state=checked]:text-primary">
+      <span className="text-muted-foreground group-has-data-checked:text-primary">
         {icon}
       </span>
       <span className="flex-1 font-normal">{label}</span>

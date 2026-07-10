@@ -121,10 +121,12 @@ export const participants = router({
         where: { id: pollId },
         select: {
           hideParticipants: true,
+          deleted: true,
         },
       });
 
-      if (!poll) {
+      // A deleted poll never exposes its participants.
+      if (!poll || poll.deleted) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
       }
 
