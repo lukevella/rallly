@@ -1,6 +1,5 @@
 import { zValidator } from "@hono/zod-validator";
 import { RedisStore } from "@hono-rate-limiter/redis";
-import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
@@ -11,7 +10,10 @@ import { redis } from "@/lib/kv";
 
 const logger = createLogger("api/licensing");
 
-import { generateLicenseKey } from "@/features/licensing/helpers/generate-license-key";
+import {
+  createLicense,
+  validateLicenseKey,
+} from "@/features/licensing/mutations";
 import type {
   CreateLicenseResponse,
   ValidateLicenseKeyResponse,
@@ -46,24 +48,12 @@ if (env.LICENSE_API_AUTH_TOKEN) {
     zValidator("json", createLicenseInputSchema),
     bearerAuth({ token: env.LICENSE_API_AUTH_TOKEN }),
     async (c) => {
-      const { type, seats, expiresAt, licenseeEmail, licenseeName, version } =
-        c.req.valid("json");
+      const input = c.req.valid("json");
 
       try {
-        const license = await prisma.license.create({
-          data: {
-            licenseKey: generateLicenseKey({ version }),
-            version,
-            type,
-            seats,
-            issuedAt: new Date(),
-            expiresAt,
-            licenseeEmail,
-            licenseeName,
-          },
-        });
+        const license = await createLicense(input);
         return c.json({
-          data: { key: license.licenseKey },
+          data: { key: license.key },
         } satisfies CreateLicenseResponse);
       } catch (error) {
         logger.error({ error }, "Failed to create license");
@@ -92,57 +82,25 @@ app.post(
   async (c) => {
     const { key, fingerprint } = c.req.valid("json");
 
-    const license = await prisma.license.findUnique({
-      where: {
-        licenseKey: key,
-      },
-      select: {
-        id: true,
-        licenseKey: true,
-        status: true,
-        issuedAt: true,
-        expiresAt: true,
-        licenseeEmail: true,
-        licenseeName: true,
-        seats: true,
-        type: true,
-        version: true,
-        whiteLabelAddon: true,
-      },
+    const result = await validateLicenseKey({
+      key,
+      fingerprint,
+      ipAddress: c.req.header("x-forwarded-for"),
+      userAgent: c.req.header("user-agent"),
     });
 
-    if (!license) {
-      return c.json({ error: "License not found" }, 404);
-    }
-
-    if (license.status !== "ACTIVE") {
+    if (!result.valid) {
+      if (result.error === "not_found") {
+        return c.json({ error: "License not found" }, 404);
+      }
+      if (result.error === "expired") {
+        return c.json({ error: "License has expired" }, 400);
+      }
       return c.json({ error: "License is not active" }, 400);
     }
 
-    await prisma.licenseValidation.create({
-      data: {
-        licenseId: license.id,
-        ipAddress: c.req.header("x-forwarded-for"),
-        fingerprint,
-        validatedAt: new Date(),
-        userAgent: c.req.header("user-agent"),
-      },
-    });
-
     return c.json({
-      data: {
-        key: license.licenseKey,
-        valid: license.status === "ACTIVE",
-        status: license.status,
-        issuedAt: license.issuedAt,
-        expiresAt: license.expiresAt,
-        licenseeEmail: license.licenseeEmail,
-        licenseeName: license.licenseeName,
-        seats: license.seats,
-        type: license.type,
-        version: license.version,
-        whiteLabelAddon: license.whiteLabelAddon,
-      },
+      data: result.license,
     } satisfies ValidateLicenseKeyResponse);
   },
 );

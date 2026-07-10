@@ -4,8 +4,8 @@ import * as Sentry from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { withPostHog } from "@/features/analytics/posthog";
+import { handleStripeWebhookEvent } from "@/features/billing/webhook/mutations";
 import { isSelfHosted } from "@/lib/constants";
-import { getEventHandler } from "./handlers";
 
 const handler = async (request: NextRequest) => {
   if (isSelfHosted) {
@@ -40,17 +40,12 @@ const handler = async (request: NextRequest) => {
   }
 
   try {
-    const handler = getEventHandler(event.type);
+    const { handled } = await handleStripeWebhookEvent(event);
 
-    if (!handler) {
+    if (!handled) {
       Sentry.captureException(new Error(`Unhandled event type: ${event.type}`));
-      return NextResponse.json(
-        { error: "Unhandled event type" },
-        { status: 400 },
-      );
+      return NextResponse.json({ received: true, ignored: true });
     }
-
-    await handler(event);
 
     return NextResponse.json({ received: true });
   } catch (err) {

@@ -12,6 +12,7 @@ enum LicenseStatus {
 model License {
   id              String        @id @default(cuid())
   licenseKey      String        @unique @map("license_key")
+  idempotencyKey  String?       @unique @map("idempotency_key")
   version         Int?          @map("version")
   type            LicenseType
   seats           Int?          @map("seats")
