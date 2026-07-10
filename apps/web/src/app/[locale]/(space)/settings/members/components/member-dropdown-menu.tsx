@@ -66,16 +66,18 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            aria-label={t("moreOptions", { defaultValue: "More options" })}
-            variant="ghost"
-            size="icon"
-          >
-            <Icon>
-              <MoreVerticalIcon />
-            </Icon>
-          </Button>
+        <DropdownMenuTrigger
+          render={
+            <Button
+              aria-label={t("moreOptions", { defaultValue: "More options" })}
+              variant="ghost"
+              size="icon"
+            />
+          }
+        >
+          <Icon>
+            <MoreVerticalIcon />
+          </Icon>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           {member.role === "member" ? (

@@ -103,19 +103,21 @@ function EventTypeCard({
         <div className="flex items-start justify-between gap-2">
           <OptimizedAvatarImage size="md" src={hostImage} name={hostName} />
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Icon>
-                  <MoreVerticalIcon />
-                </Icon>
-                <span className="sr-only">
-                  <Trans
-                    i18nKey="eventTypeActionsLabel"
-                    defaults="Event type actions"
-                  />
-                </span>
-              </Button>
-            </DropdownMenuTrigger>
+            <DropdownMenuTrigger
+              render={
+                <Button variant="ghost" size="icon">
+                  <Icon>
+                    <MoreVerticalIcon />
+                  </Icon>
+                  <span className="sr-only">
+                    <Trans
+                      i18nKey="eventTypeActionsLabel"
+                      defaults="Event type actions"
+                    />
+                  </span>
+                </Button>
+              }
+            />
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={onEdit}>
                 <PencilIcon className="size-4" />

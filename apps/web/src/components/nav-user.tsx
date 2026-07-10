@@ -6,7 +6,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -50,43 +49,41 @@ export function NavUser() {
     <>
       {isPending && <RouterLoadingIndicator />}
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button className="flex h-auto w-full gap-2 p-2" variant="ghost">
-            <OptimizedAvatarImage size="lg" src={user.image} name={user.name} />
-            <div className="flex-1 truncate text-left">
-              <div className="font-medium">{user.name}</div>
-              <div className="mt-0.5 truncate font-normal text-muted-foreground text-xs">
-                {user.email}
-              </div>
+        <DropdownMenuTrigger
+          render={
+            <Button className="flex h-auto w-full gap-2 p-2" variant="ghost" />
+          }
+        >
+          <OptimizedAvatarImage size="lg" src={user.image} name={user.name} />
+          <div className="flex-1 truncate text-left">
+            <div className="font-medium">{user.name}</div>
+            <div className="mt-0.5 truncate font-normal text-muted-foreground text-xs">
+              {user.email}
             </div>
-            <Icon>
-              <ChevronDownIcon />
-            </Icon>
-          </Button>
+          </div>
+          <Icon>
+            <ChevronDownIcon />
+          </Icon>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="w-(--radix-dropdown-menu-trigger-width)"
+          className="w-(--anchor-width)"
           align="end"
           side="top"
         >
           <DropdownMenuLabel>
             <Trans i18nKey="account" defaults="Account" />
           </DropdownMenuLabel>
-          <DropdownMenuItem asChild>
-            <Link href="/settings/profile">
-              <Icon>
-                <UserIcon />
-              </Icon>
-              <Trans i18nKey="profile" defaults="Profile" />
-            </Link>
+          <DropdownMenuItem render={<Link href="/settings/profile" />}>
+            <Icon>
+              <UserIcon />
+            </Icon>
+            <Trans i18nKey="profile" defaults="Profile" />
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/settings/preferences">
-              <Icon>
-                <Settings2Icon />
-              </Icon>
-              <Trans i18nKey="preferences" defaults="Preferences" />
-            </Link>
+          <DropdownMenuItem render={<Link href="/settings/preferences" />}>
+            <Icon>
+              <Settings2Icon />
+            </Icon>
+            <Trans i18nKey="preferences" defaults="Preferences" />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuSub>
@@ -96,30 +93,28 @@ export function NavUser() {
               </Icon>
               <Trans i18nKey="theme" defaults="Theme" />
             </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
-                  <DropdownMenuRadioItem value="system">
-                    <Icon>
-                      <MonitorIcon />
-                    </Icon>
-                    <Trans i18nKey="themeSystem" defaults="System" />
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="light">
-                    <Icon>
-                      <SunIcon />
-                    </Icon>
-                    <Trans i18nKey="themeLight" defaults="Light" />
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="dark">
-                    <Icon>
-                      <MoonIcon />
-                    </Icon>
-                    <Trans i18nKey="themeDark" defaults="Dark" />
-                  </DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+                <DropdownMenuRadioItem value="system">
+                  <Icon>
+                    <MonitorIcon />
+                  </Icon>
+                  <Trans i18nKey="themeSystem" defaults="System" />
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="light">
+                  <Icon>
+                    <SunIcon />
+                  </Icon>
+                  <Trans i18nKey="themeLight" defaults="Light" />
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="dark">
+                  <Icon>
+                    <MoonIcon />
+                  </Icon>
+                  <Trans i18nKey="themeDark" defaults="Dark" />
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuSubContent>
           </DropdownMenuSub>
           <DropdownMenuSeparator />
           <DropdownMenuItem

@@ -65,16 +65,20 @@ export function UserRow({
         <div className="flex items-center gap-4">
           <span className="capitalize">{role}</span>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                aria-label={t("moreOptions", { defaultValue: "More options" })}
-                variant="ghost"
-                size="icon"
-              >
-                <Icon>
-                  <MoreHorizontal />
-                </Icon>
-              </Button>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  aria-label={t("moreOptions", {
+                    defaultValue: "More options",
+                  })}
+                  variant="ghost"
+                  size="icon"
+                />
+              }
+            >
+              <Icon>
+                <MoreHorizontal />
+              </Icon>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuSub>
