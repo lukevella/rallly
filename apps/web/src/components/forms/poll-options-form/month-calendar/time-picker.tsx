@@ -70,7 +70,22 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
       onOpenChange={setOpen}
     >
       <SelectTrigger className={className}>
-        <SelectValue placeholder="Select time" />
+        <SelectValue placeholder="Select time">
+          {(selected: string | null | undefined) =>
+            selected ? (
+              <div className="flex items-center gap-2">
+                <span>{formatTime(selected)}</span>
+                {after ? (
+                  <span className="text-muted-foreground text-sm">
+                    {formatDuration(dayjs(selected).diff(after, "minute"))}
+                  </span>
+                ) : null}
+              </div>
+            ) : (
+              "Select time"
+            )
+          }
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         {open ? (

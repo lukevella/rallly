@@ -42,36 +42,53 @@ export function MemberSelector({ members }: MemberSelectorProps) {
     });
   };
 
+  const options = [
+    {
+      value: "all",
+      label: (
+        <div className="flex items-center gap-2">
+          <Icon>
+            <UsersIcon />
+          </Icon>
+          <span>
+            <Trans i18nKey="allMembers" defaults="All Members" />
+          </span>
+        </div>
+      ),
+    },
+    ...members.map((member) => ({
+      value: member.userId,
+      label: (
+        <div className="flex items-center gap-2">
+          <OptimizedAvatarImage
+            size="sm"
+            name={member.name}
+            src={member.image}
+          />
+          <span>{member.name}</span>
+        </div>
+      ),
+    })),
+  ];
+
   return (
     <Select
+      items={options}
       value={optimisticMember}
-      onValueChange={handleMemberChange}
+      onValueChange={(memberId) => {
+        if (memberId) {
+          handleMemberChange(memberId);
+        }
+      }}
       disabled={isPending}
     >
       <SelectTrigger className="min-w-48">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">
-          <div className="flex items-center gap-2">
-            <Icon>
-              <UsersIcon />
-            </Icon>
-            <span>
-              <Trans i18nKey="allMembers" defaults="All Members" />
-            </span>
-          </div>
-        </SelectItem>
-        {members.map((member) => (
-          <SelectItem key={member.userId} value={member.userId}>
-            <div className="flex items-center gap-2">
-              <OptimizedAvatarImage
-                size="sm"
-                name={member.name}
-                src={member.image}
-              />
-              <span>{member.name}</span>
-            </div>
+        {options.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
           </SelectItem>
         ))}
       </SelectContent>

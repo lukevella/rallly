@@ -185,7 +185,14 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
                   </Tooltip>
                 </div>
                 <FormControl>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    items={Object.values(memberRoleSchema.enum).map((role) => ({
+                      value: role,
+                      label: <SpaceRole role={role} />,
+                    }))}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
                     <SelectTrigger className="w-full">
                       <SelectValue
                         placeholder={t("rolePlaceholder", {

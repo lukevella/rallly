@@ -61,8 +61,16 @@ export function InstanceSettingsForm({
           </p>
         </div>
         <Select
+          items={{
+            enabled: <Trans i18nKey="enabled" defaults="Enabled" />,
+            disabled: <Trans i18nKey="disabled" defaults="Disabled" />,
+          }}
           value={disableUserRegistration ? "disabled" : "enabled"}
-          onValueChange={handleChange}
+          onValueChange={(value) => {
+            if (value) {
+              handleChange(value);
+            }
+          }}
           disabled={!isRegistrationEnabled}
         >
           <SelectTrigger id="userRegistration" className="w-32">

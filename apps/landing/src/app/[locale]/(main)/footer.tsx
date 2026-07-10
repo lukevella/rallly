@@ -28,8 +28,13 @@ const LanguageSelect = () => {
   const { i18n } = useTranslation();
   return (
     <Select
+      items={languages}
       value={i18n.language}
       onValueChange={(newLocale) => {
+        if (!newLocale) {
+          return;
+        }
+
         const isLocalizedPath = supportedLngs.some((lng) =>
           pathname?.startsWith(`/${lng}`),
         );
