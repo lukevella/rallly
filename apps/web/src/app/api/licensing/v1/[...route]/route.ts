@@ -93,6 +93,9 @@ app.post(
       if (result.error === "not_found") {
         return c.json({ error: "License not found" }, 404);
       }
+      if (result.error === "expired") {
+        return c.json({ error: "License has expired" }, 400);
+      }
       return c.json({ error: "License is not active" }, 400);
     }
 

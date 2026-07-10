@@ -11,7 +11,18 @@ export async function createLicense({
   licenseeEmail,
   licenseeName,
   version,
+  idempotencyKey,
 }: CreateLicenseInput) {
+  if (idempotencyKey) {
+    const existingLicense = await prisma.license.findUnique({
+      where: { idempotencyKey },
+    });
+
+    if (existingLicense) {
+      return { key: existingLicense.licenseKey };
+    }
+  }
+
   const license = await prisma.license.create({
     data: {
       licenseKey: generateLicenseKey({ version }),
@@ -22,6 +33,7 @@ export async function createLicense({
       expiresAt,
       licenseeEmail,
       licenseeName,
+      idempotencyKey,
     },
   });
 
@@ -64,6 +76,10 @@ export async function validateLicenseKey({
 
   if (license.status !== "ACTIVE") {
     return { valid: false as const, error: "not_active" as const };
+  }
+
+  if (license.expiresAt && license.expiresAt < new Date()) {
+    return { valid: false as const, error: "expired" as const };
   }
 
   await prisma.licenseValidation.create({

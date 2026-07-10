@@ -36,6 +36,7 @@ export const createLicenseInputSchema = z.object({
   licenseeEmail: z.string().optional(),
   licenseeName: z.string().optional(),
   version: z.coerce.number().optional(),
+  idempotencyKey: z.string().optional(),
 });
 export type CreateLicenseInput = z.infer<typeof createLicenseInputSchema>;
 
