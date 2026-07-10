@@ -38,7 +38,10 @@ export function ThemePreference() {
   }, []);
 
   return (
+    // Base UI locks in uncontrolled mode when value is undefined on first
+    // render, so remount the group once the theme is known after hydration
     <RadioGroup
+      key={mounted ? "mounted" : "ssr"}
       value={mounted ? theme : undefined}
       onValueChange={setTheme}
       className="flex flex-wrap gap-2"
