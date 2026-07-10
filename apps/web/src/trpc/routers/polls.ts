@@ -378,22 +378,15 @@ export const polls = router({
             }
           }) ?? [];
 
-        // Reopen a closed poll when new future dates are added, but only if
-        // every pre-existing option had already ended — that state matches an
-        // auto-close, whereas a manual pause with future dates stays paused.
+        // Reopen an auto-closed poll when new future dates are added. Manually
+        // closed polls stay closed — that was the organizer's decision.
         let reopen = false;
         if (newOptions.some(optionEndsInFuture)) {
           const poll = await tx.poll.findUnique({
             where: { id: pollId },
-            select: { status: true },
+            select: { status: true, closedReason: true },
           });
-          if (poll?.status === "closed") {
-            const existingOptions = await tx.option.findMany({
-              where: { pollId },
-              select: { startTime: true, duration: true },
-            });
-            reopen = !existingOptions.some(optionEndsInFuture);
-          }
+          reopen = poll?.status === "closed" && poll.closedReason === "auto";
         }
 
         if (input.optionsToDelete && input.optionsToDelete.length > 0) {
@@ -444,7 +437,7 @@ export const polls = router({
             disableComments: input.disableComments,
             requireParticipantEmail: input.requireParticipantEmail,
             kind,
-            status: reopen ? "open" : undefined,
+            ...(reopen ? { status: "open" as const, closedReason: null } : {}),
           },
         });
       });
@@ -940,6 +933,7 @@ export const polls = router({
           },
           data: {
             status: "scheduled",
+            closedReason: null,
             scheduledEventId: event.id,
           },
         });
@@ -1108,6 +1102,7 @@ export const polls = router({
           },
           data: {
             status: "open",
+            closedReason: null,
           },
         });
 
@@ -1151,6 +1146,7 @@ export const polls = router({
         },
         data: {
           status: "closed",
+          closedReason: "manual",
         },
       });
 

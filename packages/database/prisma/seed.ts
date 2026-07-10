@@ -98,6 +98,7 @@ async function main() {
         description: poll.description,
         location: poll.location,
         status: poll.status,
+        closedReason: poll.closedReason,
         timeZone: poll.timeZone,
         deadline: poll.deadline ? new Date(poll.deadline) : undefined,
         userId: poll.userId,
