@@ -59,16 +59,57 @@ const MobilePoll: React.FunctionComponent = () => {
 
   const isEditing = votingForm.watch("mode") !== "view";
 
+  const participantOptions = [
+    {
+      value: "all",
+      label: (
+        <div className="flex items-center gap-x-2.5">
+          <div>
+            <Icon>
+              <UsersIcon />
+            </Icon>
+          </div>
+          <span>
+            {t("allParticipants", {
+              defaultValue: "All Participants",
+            })}
+          </span>
+        </div>
+      ),
+    },
+    ...visibleParticipants.map((participant) => ({
+      value: participant.id,
+      label: (
+        <Participant>
+          <OptimizedAvatarImage
+            name={participant.name}
+            src={participant.image ?? undefined}
+            size="sm"
+          />
+          <ParticipantName>{participant.name}</ParticipantName>
+          {session.ownsObject(participant) && (
+            <Badge>
+              <Trans i18nKey="you" />
+            </Badge>
+          )}
+        </Participant>
+      ),
+    })),
+  ];
+
   return (
     <Card>
       <div className="flex flex-col space-y-2 border-b p-2">
         <div className="flex gap-x-2.5">
           {selectedParticipantId || !isEditing ? (
             <Select
+              items={participantOptions}
               defaultValue="all"
               value={selectedParticipantId}
               onValueChange={(participantId) => {
-                votingForm.setValue("participantId", participantId);
+                if (participantId) {
+                  votingForm.setValue("participantId", participantId);
+                }
               }}
               disabled={isEditing}
             >
@@ -76,35 +117,9 @@ const MobilePoll: React.FunctionComponent = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">
-                  <div className="flex items-center gap-x-2.5">
-                    <div>
-                      <Icon>
-                        <UsersIcon />
-                      </Icon>
-                    </div>
-                    <span>
-                      {t("allParticipants", {
-                        defaultValue: "All Participants",
-                      })}
-                    </span>
-                  </div>
-                </SelectItem>
-                {visibleParticipants.map((participant) => (
-                  <SelectItem key={participant.id} value={participant.id}>
-                    <Participant>
-                      <OptimizedAvatarImage
-                        name={participant.name}
-                        src={participant.image ?? undefined}
-                        size="sm"
-                      />
-                      <ParticipantName>{participant.name}</ParticipantName>
-                      {session.ownsObject(participant) && (
-                        <Badge>
-                          <Trans i18nKey="you" />
-                        </Badge>
-                      )}
-                    </Participant>
+                {participantOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
                   </SelectItem>
                 ))}
               </SelectContent>

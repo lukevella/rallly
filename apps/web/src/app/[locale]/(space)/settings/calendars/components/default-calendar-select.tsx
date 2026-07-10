@@ -42,8 +42,28 @@ export function DefaultCalendarSelect() {
 
   return (
     <Select
+      items={{
+        [NONE_VALUE]: (
+          <Trans
+            i18nKey="defaultCalendarNone"
+            defaults="No calendar selected"
+          />
+        ),
+        ...Object.fromEntries(
+          (connections ?? []).flatMap((connection) =>
+            connection.providerCalendars.map((calendar) => [
+              calendar.id,
+              calendar.name,
+            ]),
+          ),
+        ),
+      }}
       defaultValue={defaultCalendar?.defaultDestinationCalendarId ?? NONE_VALUE}
-      onValueChange={onValueChange}
+      onValueChange={(value) => {
+        if (value) {
+          onValueChange(value);
+        }
+      }}
       disabled={setDefaultCalendar.isPending}
     >
       <SelectTrigger>
