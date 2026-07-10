@@ -35,7 +35,6 @@
     "@radix-ui/react-radio-group": "^1.2.3",
     "@radix-ui/react-select": "^2.2.2",
     "@radix-ui/react-slot": "^1.1.2",
-    "@radix-ui/react-switch": "^1.0.2",
     "@rallly/billing": "workspace:*",
     "@rallly/database": "workspace:*",
     "@rallly/emails": "workspace:*",
