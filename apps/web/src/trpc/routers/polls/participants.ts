@@ -121,11 +121,21 @@ export const participants = router({
         where: { id: pollId },
         select: {
           hideParticipants: true,
+          deleted: true,
         },
       });
 
       if (!poll) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
+      }
+
+      // A deleted poll's participants must only be visible to a manager.
+      if (poll.deleted) {
+        const isAdmin =
+          ctx.user && (await hasPollAdminAccess(pollId, ctx.user.id));
+        if (!isAdmin) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
+        }
       }
 
       const rawParticipants = await prisma.participant.findMany({
