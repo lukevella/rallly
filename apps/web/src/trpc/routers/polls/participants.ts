@@ -125,12 +125,8 @@ export const participants = router({
         },
       });
 
-      if (!poll) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
-      }
-
       // A deleted poll never exposes its participants.
-      if (poll.deleted) {
+      if (!poll || poll.deleted) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
       }
 

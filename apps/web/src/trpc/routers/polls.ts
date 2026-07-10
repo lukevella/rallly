@@ -672,7 +672,9 @@ export const polls = router({
         },
       });
 
-      if (!res) {
+      // A deleted poll is treated as if it never existed, for everyone
+      // including its owner and space managers.
+      if (!res || res.deleted) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Poll not found",
@@ -683,15 +685,6 @@ export const polls = router({
       const canManage = ctx.user
         ? await canUserManagePoll(ctx.user, res)
         : false;
-
-      // A deleted poll is treated as if it never existed, for everyone
-      // including its owner and space managers.
-      if (res.deleted) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Poll not found",
-        });
-      }
 
       const event = res.scheduledEvent
         ? {
