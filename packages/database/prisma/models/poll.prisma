@@ -22,29 +22,37 @@ enum PollKind {
   @@map("poll_kind")
 }
 
+enum PollClosedReason {
+  auto
+  manual
+
+  @@map("poll_closed_reason")
+}
+
 model Poll {
-  id                      String     @id @unique @map("id")
-  createdAt               DateTime   @default(now()) @map("created_at")
-  updatedAt               DateTime   @updatedAt @map("updated_at")
+  id                      String            @id @unique @map("id")
+  createdAt               DateTime          @default(now()) @map("created_at")
+  updatedAt               DateTime          @updatedAt @map("updated_at")
   deadline                DateTime?
   title                   String
   description             String?
   location                String?
-  userId                  String?    @map("user_id")
-  timeZone                String?    @map("time_zone")
-  status                  PollStatus @default(open)
-  kind                    PollKind   @default(date)
-  deleted                 Boolean    @default(false)
-  deletedAt               DateTime?  @map("deleted_at")
-  participantUrlId        String     @unique @map("participant_url_id")
-  adminUrlId              String     @unique @map("admin_url_id")
-  eventId                 String?    @unique @map("event_id")
-  scheduledEventId        String?    @map("scheduled_event_id")
-  hideParticipants        Boolean    @default(false) @map("hide_participants")
-  hideScores              Boolean    @default(false) @map("hide_scores")
-  disableComments         Boolean    @default(false) @map("disable_comments")
-  requireParticipantEmail Boolean    @default(false) @map("require_participant_email")
-  muted                   Boolean    @default(false)
+  userId                  String?           @map("user_id")
+  timeZone                String?           @map("time_zone")
+  status                  PollStatus        @default(open)
+  closedReason            PollClosedReason? @map("closed_reason")
+  kind                    PollKind          @default(date)
+  deleted                 Boolean           @default(false)
+  deletedAt               DateTime?         @map("deleted_at")
+  participantUrlId        String            @unique @map("participant_url_id")
+  adminUrlId              String            @unique @map("admin_url_id")
+  eventId                 String?           @unique @map("event_id")
+  scheduledEventId        String?           @map("scheduled_event_id")
+  hideParticipants        Boolean           @default(false) @map("hide_participants")
+  hideScores              Boolean           @default(false) @map("hide_scores")
+  disableComments         Boolean           @default(false) @map("disable_comments")
+  requireParticipantEmail Boolean           @default(false) @map("require_participant_email")
+  muted                   Boolean           @default(false)
 
   user           User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   scheduledEvent ScheduledEvent? @relation(fields: [scheduledEventId], references: [id], onDelete: SetNull)

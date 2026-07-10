@@ -1,4 +1,5 @@
 import type {
+  PollClosedReason,
   PollStatus,
   ScheduledEventInviteStatus,
   ScheduledEventStatus,
@@ -86,6 +87,7 @@ export type PollDef = {
   description?: string;
   location?: string;
   status: PollStatus;
+  closedReason?: PollClosedReason;
   timeZone?: string;
   deadline?: string;
   userId: string;
@@ -215,6 +217,7 @@ const personalPolls: PollDef[] = [
     title: "Dinner with the Johnsons",
     description: "Finding a good evening for dinner at their place.",
     status: "closed",
+    closedReason: "auto",
     timeZone: "America/New_York",
     userId: "user-1",
     spaceId: "space-1",
@@ -526,6 +529,7 @@ const acmePolls: PollDef[] = [
     description: "Reflecting on Sprint 14. What went well, what didn't.",
     location: "Zoom",
     status: "closed",
+    closedReason: "manual",
     timeZone: "America/New_York",
     userId: "user-3",
     spaceId: "space-2",
@@ -701,6 +705,7 @@ const acmePolls: PollDef[] = [
     description:
       "Our current 9am ET standup doesn't work for everyone. Let's find a better slot.",
     status: "closed",
+    closedReason: "auto",
     timeZone: "America/New_York",
     userId: "user-3",
     spaceId: "space-2",

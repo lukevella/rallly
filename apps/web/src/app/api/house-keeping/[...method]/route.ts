@@ -99,7 +99,7 @@ app.get("/delete-inactive-polls", async (c) => {
 app.get("/auto-close-polls", async (c) => {
   const closed = await prisma.$executeRaw`
     UPDATE polls p
-    SET status = 'closed'
+    SET status = 'closed', closed_reason = 'auto'
     WHERE p.status = 'open'
       AND p.deleted = false
       AND EXISTS (SELECT 1 FROM options o WHERE o.poll_id = p.id)
