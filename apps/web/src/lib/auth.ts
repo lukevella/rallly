@@ -552,8 +552,19 @@ export const getUserIdIfLoggedIn = async () => {
 };
 
 export const redirectIfLoggedIn = async () => {
-  const session = await getSession();
-  if (session?.user && !session.user.isGuest) {
+  // Bypass the cookie cache so a revoked or banned session can't bounce the
+  // user back to "/" (RAL-1313).
+  const session = await authLib.api
+    .getSession({
+      headers: await headers(),
+      query: { disableCookieCache: true },
+    })
+    .catch((error) => {
+      logger.error({ error }, "Failed to get session");
+      return null;
+    });
+
+  if (session?.user && !session.user.isAnonymous && !session.user.banned) {
     redirect("/");
   }
 };
