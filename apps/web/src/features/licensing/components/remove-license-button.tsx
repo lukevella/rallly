@@ -27,16 +27,18 @@ export function RemoveLicenseButton() {
   return (
     <Dialog {...dialog.dialogProps}>
       <Tooltip>
-        <TooltipTrigger asChild>
-          <DialogTrigger asChild>
-            <Button variant="ghost" onClick={() => dialog.trigger()}>
-              <XIcon data-icon="inline-start" />
-              <span className="sr-only">
-                <Trans i18nKey="removeLicense" defaults="Remove License" />
-              </span>
-            </Button>
-          </DialogTrigger>
-        </TooltipTrigger>
+        <TooltipTrigger
+          render={
+            <DialogTrigger asChild>
+              <Button variant="ghost" onClick={() => dialog.trigger()}>
+                <XIcon data-icon="inline-start" />
+                <span className="sr-only">
+                  <Trans i18nKey="removeLicense" defaults="Remove License" />
+                </span>
+              </Button>
+            </DialogTrigger>
+          }
+        />
         <TooltipContent>
           <Trans i18nKey="removeLicense" defaults="Remove License" />
         </TooltipContent>

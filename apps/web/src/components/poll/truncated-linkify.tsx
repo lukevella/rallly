@@ -27,15 +27,17 @@ export const truncateLink = (href: string, text: string, key: number) => {
     finalText += "…";
     return (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <Link
-            className="text-link"
-            target="_blank"
-            href={href}
-            rel="nofollow noreferrer noopener"
-          >
-            {finalText}
-          </Link>
+        <TooltipTrigger
+          render={
+            <Link
+              className="text-link"
+              target="_blank"
+              href={href}
+              rel="nofollow noreferrer noopener"
+            />
+          }
+        >
+          {finalText}
         </TooltipTrigger>
         <TooltipContent className="max-w-md break-all text-xs">
           {href}

@@ -1,41 +1,53 @@
 "use client";
 
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import * as React from "react";
+import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
 
 import { cn } from "./lib/utils";
 
-const TooltipProvider = TooltipPrimitive.Provider;
+function TooltipProvider(props: TooltipPrimitive.Provider.Props) {
+  return <TooltipPrimitive.Provider {...props} />;
+}
 
-const Tooltip = TooltipPrimitive.Root;
+function Tooltip(props: TooltipPrimitive.Root.Props) {
+  return <TooltipPrimitive.Root {...props} />;
+}
 
-const TooltipTrigger = TooltipPrimitive.Trigger;
+function TooltipTrigger(props: TooltipPrimitive.Trigger.Props) {
+  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
+}
 
-const TooltipPortal = TooltipPrimitive.Portal;
+function TooltipContent({
+  className,
+  align = "center",
+  alignOffset = 0,
+  side = "bottom",
+  sideOffset = 4,
+  ...props
+}: TooltipPrimitive.Popup.Props &
+  Pick<
+    TooltipPrimitive.Positioner.Props,
+    "align" | "alignOffset" | "side" | "sideOffset"
+  >) {
+  return (
+    <TooltipPrimitive.Portal>
+      <TooltipPrimitive.Positioner
+        align={align}
+        alignOffset={alignOffset}
+        side={side}
+        sideOffset={sideOffset}
+        className="isolate z-50"
+      >
+        <TooltipPrimitive.Popup
+          data-slot="tooltip-content"
+          className={cn(
+            "z-50 overflow-hidden rounded-md bg-gray-800 px-2 py-1.5 text-gray-50 text-sm shadow-2xs",
+            className,
+          )}
+          {...props}
+        />
+      </TooltipPrimitive.Positioner>
+    </TooltipPrimitive.Portal>
+  );
+}
 
-const TooltipContent = React.forwardRef<
-  React.ElementRef<typeof TooltipPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 4, side = "bottom", ...props }, ref) => (
-  <TooltipPrimitive.Content
-    ref={ref}
-    sideOffset={sideOffset}
-    side={side}
-    className={cn(
-      "z-50 overflow-hidden rounded-md bg-gray-800 px-2 py-1.5 text-gray-50 text-sm shadow-2xs",
-      className,
-    )}
-    {...props}
-  >
-    {props.children}
-  </TooltipPrimitive.Content>
-));
-TooltipContent.displayName = TooltipPrimitive.Content.displayName;
-
-export {
-  Tooltip,
-  TooltipContent,
-  TooltipPortal,
-  TooltipProvider,
-  TooltipTrigger,
-};
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };

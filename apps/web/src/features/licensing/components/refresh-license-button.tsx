@@ -13,19 +13,21 @@ export function RefreshLicenseButton() {
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          variant="ghost"
-          loading={refreshInstanceLicense.isExecuting}
-          onClick={async () => await refreshInstanceLicense.executeAsync()}
-        >
-          <Icon>
-            <RefreshCwIcon />
-          </Icon>
-          <span className="sr-only">
-            <Trans i18nKey="refreshLicense" defaults="Refresh License" />
-          </span>
-        </Button>
+      <TooltipTrigger
+        render={
+          <Button
+            variant="ghost"
+            loading={refreshInstanceLicense.isExecuting}
+            onClick={async () => await refreshInstanceLicense.executeAsync()}
+          />
+        }
+      >
+        <Icon>
+          <RefreshCwIcon />
+        </Icon>
+        <span className="sr-only">
+          <Trans i18nKey="refreshLicense" defaults="Refresh License" />
+        </span>
       </TooltipTrigger>
       <TooltipContent>
         <Trans i18nKey="refreshLicense" defaults="Refresh License" />

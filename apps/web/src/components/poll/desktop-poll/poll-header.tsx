@@ -1,10 +1,5 @@
 import { cn } from "@rallly/ui";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipPortal,
-  TooltipTrigger,
-} from "@rallly/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { ClockIcon } from "lucide-react";
 import type * as React from "react";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
@@ -25,16 +20,14 @@ const TimeRange: React.FunctionComponent<{
       )}
     >
       <span data-testid="option-start-time">{start}</span>
-      <Tooltip delayDuration={0}>
-        <TooltipTrigger className="flex items-center gap-x-1">
+      <Tooltip>
+        <TooltipTrigger delay={0} className="flex items-center gap-x-1">
           <ClockIcon className="size-3" />
           {duration}
         </TooltipTrigger>
-        <TooltipPortal>
-          <TooltipContent className="text-xs">
-            {start} - {end}
-          </TooltipContent>
-        </TooltipPortal>
+        <TooltipContent className="text-xs">
+          {start} - {end}
+        </TooltipContent>
       </Tooltip>
     </div>
   );

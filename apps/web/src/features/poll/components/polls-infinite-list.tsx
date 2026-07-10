@@ -80,14 +80,16 @@ function PollListItem({
         <div className="hidden items-center justify-end gap-4 sm:flex">
           {participants.length > 0 ? (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="cursor-help text-muted-foreground text-sm">
-                  <Trans
-                    i18nKey="participantCount"
-                    defaults="{count, plural, =0 {No participants} =1 {1 participant} other {# participants}}"
-                    values={{ count: participants.length }}
-                  />
-                </span>
+              <TooltipTrigger
+                render={
+                  <span className="cursor-help text-muted-foreground text-sm" />
+                }
+              >
+                <Trans
+                  i18nKey="participantCount"
+                  defaults="{count, plural, =0 {No participants} =1 {1 participant} other {# participants}}"
+                  values={{ count: participants.length }}
+                />
               </TooltipTrigger>
               <TooltipContent>
                 <ul>

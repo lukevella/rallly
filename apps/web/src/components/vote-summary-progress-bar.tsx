@@ -29,40 +29,46 @@ export const VoteSummaryProgressBar = (props: {
   return (
     <div className="flex h-1.5 grow overflow-hidden rounded-sm bg-muted">
       <Tooltip>
-        <TooltipTrigger asChild>
-          <div
-            className="h-full bg-green-500 opacity-75 hover:opacity-100"
-            style={{
-              width: `${(props.yes.length / props.total) * 100}%`,
-            }}
-          />
-        </TooltipTrigger>
+        <TooltipTrigger
+          render={
+            <div
+              className="h-full bg-green-500 opacity-75 hover:opacity-100"
+              style={{
+                width: `${(props.yes.length / props.total) * 100}%`,
+              }}
+            />
+          }
+        />
         <TooltipContent side="bottom">
           <ListNames participantIds={props.yes} />
         </TooltipContent>
       </Tooltip>
       <Tooltip>
-        <TooltipTrigger asChild>
-          <div
-            className="h-full bg-amber-400 opacity-75 hover:opacity-100"
-            style={{
-              width: `${(props.ifNeedBe.length / props.total) * 100}%`,
-            }}
-          />
-        </TooltipTrigger>
+        <TooltipTrigger
+          render={
+            <div
+              className="h-full bg-amber-400 opacity-75 hover:opacity-100"
+              style={{
+                width: `${(props.ifNeedBe.length / props.total) * 100}%`,
+              }}
+            />
+          }
+        />
         <TooltipContent side="bottom">
           <ListNames participantIds={props.ifNeedBe} />
         </TooltipContent>
       </Tooltip>
       <Tooltip>
-        <TooltipTrigger asChild>
-          <div
-            className="h-full bg-transparent opacity-75 hover:opacity-100"
-            style={{
-              width: `${(props.no.length / props.total) * 100}%`,
-            }}
-          />
-        </TooltipTrigger>
+        <TooltipTrigger
+          render={
+            <div
+              className="h-full bg-transparent opacity-75 hover:opacity-100"
+              style={{
+                width: `${(props.no.length / props.total) * 100}%`,
+              }}
+            />
+          }
+        />
         <TooltipContent side="bottom">
           <ListNames participantIds={props.no} />
         </TooltipContent>
