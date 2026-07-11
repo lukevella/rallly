@@ -11,6 +11,8 @@ import {
 
 const logger = createLogger("licensing/manager");
 
+const REQUEST_TIMEOUT_MS = 30_000;
+
 export class LicenseManager {
   apiUrl: string;
   authToken?: string;
@@ -37,6 +39,7 @@ export class LicenseManager {
         Authorization: `Bearer ${this.authToken}`,
       },
       body: JSON.stringify(input),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
 
     if (!res.ok) {
@@ -51,11 +54,17 @@ export class LicenseManager {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(input),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
 
-    const data = await res.json();
-
     if (!res.ok) {
+      const text = await res.text();
+      let data: unknown = text;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        // Non-JSON error response (e.g. HTML from a proxy) — keep raw text
+      }
       logger.error({ data }, "License validation failed");
       throw new AppError({
         code: "INTERNAL_SERVER_ERROR",
@@ -64,6 +73,6 @@ export class LicenseManager {
       });
     }
 
-    return validateLicenseKeyResponseSchema.parse(data);
+    return validateLicenseKeyResponseSchema.parse(await res.json());
   }
 }
