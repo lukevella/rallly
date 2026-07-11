@@ -16,10 +16,7 @@ export class GoogleCalendarService implements CalendarService {
     refreshToken: z.string().optional(),
   });
   constructor(params: {
-    credentials: {
-      accessToken: string;
-      refreshToken?: string;
-    };
+    credentials: z.infer<typeof GoogleCalendarService.credentialsSchema>;
   }) {
     const oauth2Client = new google.auth.OAuth2({
       clientId: env.GOOGLE_CLIENT_ID,
