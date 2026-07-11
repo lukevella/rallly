@@ -29,6 +29,10 @@ export const hashApiKey = (rawKey: string): string => {
   return `sha256$${salt}$${hash}`;
 };
 
+const API_KEY_SCHEME = "sk_";
+// randomToken(6) → 8 base64url characters
+const API_KEY_PREFIX_LENGTH = 8;
+
 /**
  * Create an API key with the format: sk_{prefix}_{secret}
  * @returns Object containing the full API key and components for storage
@@ -40,7 +44,7 @@ export const createApiKey = async (): Promise<{
 }> => {
   const prefix = randomToken(6);
   const secret = randomToken(24);
-  const apiKey = `sk_${prefix}_${secret}`;
+  const apiKey = `${API_KEY_SCHEME}${prefix}_${secret}`;
 
   return {
     apiKey,
@@ -50,14 +54,19 @@ export const createApiKey = async (): Promise<{
 };
 
 /**
- * Extract the prefix from a raw API key
+ * Extract the prefix from a raw API key.
+ *
+ * The prefix and secret are base64url, whose alphabet includes `_`, so the
+ * key cannot be split on underscores — the prefix is extracted by position.
  * @param rawKey Raw API key in format sk_{prefix}_{secret}
  * @returns The prefix portion
  */
 export const extractApiKeyPrefix = (rawKey: string): string => {
-  const parts = rawKey.split("_").filter(Boolean);
-  if (parts.length >= 3 && parts[1]) {
-    return parts[1];
+  if (rawKey.startsWith(API_KEY_SCHEME)) {
+    return rawKey.slice(
+      API_KEY_SCHEME.length,
+      API_KEY_SCHEME.length + API_KEY_PREFIX_LENGTH,
+    );
   }
   // Fallback for malformed keys
   return rawKey.slice(0, 12);
