@@ -254,8 +254,14 @@ export async function canUserManagePoll(
   poll: {
     userId?: string | null;
     spaceId?: string | null;
+    deleted?: boolean;
   },
 ) {
+  if (poll.deleted) {
+    // A deleted poll cannot be managed by anyone
+    return false;
+  }
+
   if (poll.userId && poll.userId === user.id) {
     // user is owner
     return true;
@@ -284,6 +290,7 @@ export const hasPollAdminAccess = async (pollId: string, userId: string) => {
   const poll = await prisma.poll.findFirst({
     where: {
       id: pollId,
+      deleted: false,
       OR: [{ userId: userId }, { space: { members: { some: { userId } } } }],
     },
     select: {

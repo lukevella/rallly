@@ -47,10 +47,15 @@ export async function getNotificationRecipient({
 }): Promise<NotificationRecipient | null> {
   const poll = await prisma.poll.findUnique({
     where: { id: pollId },
-    select: { userId: true, muted: true },
+    select: { userId: true, muted: true, deleted: true },
   });
 
-  if (!poll?.userId || poll.userId === excludeUserId || poll.muted) {
+  if (
+    !poll?.userId ||
+    poll.deleted ||
+    poll.userId === excludeUserId ||
+    poll.muted
+  ) {
     return null;
   }
 
