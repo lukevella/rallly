@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { ScheduledEventInviteStatus } from "@rallly/database";
 import { Prisma, prisma } from "@rallly/database";
 import { nanoid } from "@rallly/utils/nanoid";

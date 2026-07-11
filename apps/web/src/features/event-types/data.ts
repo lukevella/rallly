@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { EventType, User } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";

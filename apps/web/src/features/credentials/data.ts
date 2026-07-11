@@ -1,3 +1,5 @@
+import "server-only";
+
 import { prisma } from "@rallly/database";
 import { decrypt } from "@rallly/utils/encryption";
 import { env } from "@/env";

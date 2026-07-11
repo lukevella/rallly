@@ -57,7 +57,7 @@ vi.mock("@/lib/kv", () => ({
 
 import { prisma } from "@rallly/database";
 import { after } from "next/server";
-import { hashApiKey, verifyApiKey } from "@/features/api-keys/api-key";
+import { hashApiKey, verifyApiKey } from "@/features/api-keys/utils";
 import { app } from "./route";
 
 // Pre-generated test API key fixture. The stored hash deliberately uses the

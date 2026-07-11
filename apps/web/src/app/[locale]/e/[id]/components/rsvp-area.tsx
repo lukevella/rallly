@@ -1,9 +1,6 @@
 import type { ScheduledEventStatus } from "@rallly/database";
 import { getEventRegistration } from "@/features/scheduled-event/data";
-import {
-  getEventPhase,
-  isEventFull,
-} from "@/features/scheduled-event/registration";
+import { getEventPhase, isEventFull } from "@/features/scheduled-event/utils";
 import { getSession } from "@/lib/auth";
 import { RsvpCancel } from "./rsvp-cancel";
 import { RsvpNotice } from "./rsvp-notice";

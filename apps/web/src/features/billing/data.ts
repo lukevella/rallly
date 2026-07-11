@@ -1,3 +1,5 @@
+import "server-only";
+
 import { prisma } from "@rallly/database";
 import type { SpaceTier } from "@/features/space/schema";
 

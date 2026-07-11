@@ -1,7 +1,7 @@
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import * as z from "zod";
-import { upcomingScheduledEventWhere } from "@/features/scheduled-event/predicates";
+import { upcomingScheduledEventWhere } from "@/features/scheduled-event/utils";
 import type { MemberAbilityContext } from "@/features/space/member/ability";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { getTotalSeatsForSpace } from "@/features/space/utils";

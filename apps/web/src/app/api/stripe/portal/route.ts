@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { createStripePortalSession } from "@/features/billing/portal";
+import { createStripePortalSession } from "@/features/billing/mutations";
 
 /**
  * Checkout return endpoint. Stripe redirects the browser here after payment

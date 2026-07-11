@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 
@@ -242,4 +244,52 @@ export const getPolls = async ({
     hasNextPage,
     currentPage: page,
   };
+};
+
+export async function canUserManagePoll(
+  user: {
+    id: string;
+    isGuest: boolean;
+  },
+  poll: {
+    userId?: string | null;
+    spaceId?: string | null;
+  },
+) {
+  if (poll.userId && poll.userId === user.id) {
+    // user is owner
+    return true;
+  }
+
+  if (poll.spaceId) {
+    const space = await prisma.spaceMember.findUnique({
+      where: {
+        spaceId_userId: {
+          spaceId: poll.spaceId,
+          userId: user.id,
+        },
+      },
+    });
+
+    if (space) {
+      // user a member of this space
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export const hasPollAdminAccess = async (pollId: string, userId: string) => {
+  const poll = await prisma.poll.findFirst({
+    where: {
+      id: pollId,
+      OR: [{ userId: userId }, { space: { members: { some: { userId } } } }],
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return poll !== null;
 };

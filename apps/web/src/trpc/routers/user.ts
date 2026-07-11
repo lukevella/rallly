@@ -6,7 +6,7 @@ import * as z from "zod";
 import { posthog } from "@/features/analytics/posthog";
 import { feedbackSchema } from "@/features/feedback/schema";
 import { defaultNotificationPreferences } from "@/features/notifications/constants";
-import { getNotificationPreferences } from "@/features/notifications/queries";
+import { getNotificationPreferences } from "@/features/notifications/data";
 import { activityEventTypes } from "@/features/notifications/schema";
 import { defineAbilityFor } from "@/features/user/ability";
 import {

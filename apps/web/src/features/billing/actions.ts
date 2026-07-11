@@ -4,7 +4,7 @@ import { getProPricing, stripe } from "@rallly/billing";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { redirect } from "next/navigation";
 import * as z from "zod";
-import { createStripePortalSession } from "@/features/billing/portal";
+import { createStripePortalSession } from "@/features/billing/mutations";
 import type { CustomerMetadata } from "@/features/billing/schema";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import type {

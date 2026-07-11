@@ -7,8 +7,8 @@ import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
 import { posthog } from "@/features/analytics/posthog";
-import { getNotificationRecipient } from "@/features/notifications/queries";
-import { hasPollAdminAccess } from "@/features/poll/query";
+import { getNotificationRecipient } from "@/features/notifications/data";
+import { hasPollAdminAccess } from "@/features/poll/data";
 import {
   createRateLimitMiddleware,
   publicProcedure,

@@ -1,6 +1,6 @@
 "use client";
 
-import { usePayWallStore } from "../paywall-store";
+import { usePayWallStore } from "../client";
 import { PayWallDialog } from "./pay-wall-dialog";
 
 /**
