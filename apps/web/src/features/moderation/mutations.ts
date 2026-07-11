@@ -13,6 +13,8 @@ import { containsSuspiciousPatterns } from "./utils";
 const logger = createLogger("moderation");
 const aiLogger = createLogger("moderation/ai");
 
+const AI_REQUEST_TIMEOUT_MS = 30_000;
+
 /**
  * Moderates content using AI to detect inappropriate content
  * @param text The text to moderate
@@ -22,6 +24,7 @@ async function moderateContentWithAI(text: string): Promise<ModerationResult> {
   try {
     const result = await generateText({
       model: openai("gpt-4.1"),
+      abortSignal: AbortSignal.timeout(AI_REQUEST_TIMEOUT_MS),
       messages: [
         {
           role: "system",
@@ -55,7 +58,7 @@ Brief explanation of why this verdict was chosen.`,
     const reason = lines.slice(1).join("\n").trim() || "No reason provided";
 
     let verdict: ModerationVerdict = "safe";
-    if (verdictLine.includes("FLAGGED")) {
+    if (verdictLine.startsWith("FLAGGED")) {
       verdict = "flagged";
     }
 
