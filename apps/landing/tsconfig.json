@@ -6,7 +6,6 @@
       "~/*": ["./public/*"]
     },
     "checkJs": false,
-    "strictNullChecks": true,
     "target": "ES2017"
   },
   "include": [
