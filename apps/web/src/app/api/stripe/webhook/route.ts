@@ -3,9 +3,9 @@ import { stripe } from "@rallly/billing";
 import * as Sentry from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { withPostHog } from "@/features/analytics/posthog";
 import { handleStripeWebhookEvent } from "@/features/billing/webhook/mutations";
 import { isSelfHosted } from "@/lib/constants";
+import { withPostHog } from "@/lib/posthog";
 
 const handler = async (request: NextRequest) => {
   if (isSelfHosted) {

@@ -3,8 +3,8 @@
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 import React from "react";
-import { useTheme } from "@/features/theme/client";
 import { Trans } from "@/i18n/client";
+import { useTheme } from "@/lib/theme";
 
 function ThemeOption({
   value,

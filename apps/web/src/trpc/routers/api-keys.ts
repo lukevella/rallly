@@ -1,8 +1,8 @@
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { isApiAccessEnabled } from "@/features/api-keys/data";
 import { createApiKey } from "@/features/api-keys/utils";
-import { isApiAccessEnabled } from "@/features/developer/data";
 import { router, spaceOwnerProcedure } from "../trpc";
 
 const apiAccessProcedure = spaceOwnerProcedure.use(async ({ ctx, next }) => {

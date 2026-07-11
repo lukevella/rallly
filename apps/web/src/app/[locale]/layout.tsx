@@ -12,12 +12,12 @@ import type { Params } from "@/app/[locale]/types";
 import { SkipNavLink } from "@/components/skip-nav-link";
 import { BrandingProvider } from "@/features/branding/client";
 import { getInstanceBrandingConfig } from "@/features/branding/data";
-import { ThemeProvider } from "@/features/theme/client";
 import { I18nProvider } from "@/i18n/client";
 import { initI18next } from "@/i18n/i18n";
 import { TimeZoneSync } from "@/lib/datetime/timezone-sync";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
 import { featureFlagConfig } from "@/lib/feature-flags/config";
+import { ThemeProvider } from "@/lib/theme";
 import { TRPCProvider } from "@/trpc/client/provider";
 import { PostHogPageView } from "../posthog-page-view";
 

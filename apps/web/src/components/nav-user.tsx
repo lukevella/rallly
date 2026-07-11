@@ -31,9 +31,9 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
-import { useTheme } from "@/features/theme/client";
 import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
+import { useTheme } from "@/lib/theme";
 import { trpc } from "@/trpc/client";
 
 export function NavUser() {

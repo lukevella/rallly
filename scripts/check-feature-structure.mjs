@@ -32,15 +32,10 @@ const TEST_FILE_PATTERN = /\.test\.tsx?$/;
 const UNRESTRICTED_DIRS = new Set(["components", "assets"]);
 
 // Grandfathered exceptions. This list only shrinks — do not add to it.
-// Tracked by RAL-1287 / RAL-1288. Paths are relative to
-// apps/web/src/features/; entries ending in "/" exempt a whole directory.
-const GRANDFATHERED = [
-  "analytics/posthog.ts",
-  "calendars/service.ts",
-  "calendars/services/",
-  "google/service.ts",
-  "navigation/config.tsx",
-];
+// Remaining entries are pending the service.ts naming decision. Paths are
+// relative to apps/web/src/features/; entries ending in "/" exempt a whole
+// directory.
+const GRANDFATHERED = ["calendars/service.ts", "calendars/services/"];
 
 const usedGrandfatherEntries = new Set();
 

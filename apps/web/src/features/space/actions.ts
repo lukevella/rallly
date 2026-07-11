@@ -2,9 +2,9 @@
 
 import { prisma } from "@rallly/database";
 import * as z from "zod";
-import { posthog } from "@/features/analytics/posthog";
 import { setActiveSpace } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors/app-error";
+import { posthog } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
 
 export const setActiveSpaceAction = authActionClient
