@@ -1,4 +1,6 @@
-import { GoogleCalendarService } from "@/features/calendars/services/google-calendar";
+import "server-only";
+
+import { GoogleCalendarService } from "@/features/calendars/google/service";
 
 type CalendarServiceProvider = {
   provider: string;

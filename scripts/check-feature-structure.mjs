@@ -25,32 +25,12 @@ const ALLOWED_FILES = new Set([
   "constants.ts",
   "utils.ts",
   "client.tsx",
+  "service.ts",
 ]);
 
 const TEST_FILE_PATTERN = /\.test\.tsx?$/;
 
 const UNRESTRICTED_DIRS = new Set(["components", "assets"]);
-
-// Grandfathered exceptions. This list only shrinks — do not add to it.
-// Remaining entries are pending the service.ts naming decision. Paths are
-// relative to apps/web/src/features/; entries ending in "/" exempt a whole
-// directory.
-const GRANDFATHERED = ["calendars/service.ts", "calendars/services/"];
-
-const usedGrandfatherEntries = new Set();
-
-function isGrandfathered(relativePath) {
-  for (const entry of GRANDFATHERED) {
-    if (
-      entry === relativePath ||
-      (entry.endsWith("/") && relativePath.startsWith(entry))
-    ) {
-      usedGrandfatherEntries.add(entry);
-      return true;
-    }
-  }
-  return false;
-}
 
 const offenders = [];
 
@@ -68,14 +48,10 @@ function walk(dir) {
       if (UNRESTRICTED_DIRS.has(entry.name)) {
         continue;
       }
-      if (isGrandfathered(`${relativePath}/`)) {
-        continue;
-      }
       walk(absolutePath);
     } else if (
       !ALLOWED_FILES.has(entry.name) &&
-      !TEST_FILE_PATTERN.test(entry.name) &&
-      !isGrandfathered(relativePath)
+      !TEST_FILE_PATTERN.test(entry.name)
     ) {
       offenders.push(relativePath);
     }
@@ -93,17 +69,6 @@ for (const entry of fs.readdirSync(FEATURES_DIR, { withFileTypes: true })) {
   }
 }
 
-const staleEntries = GRANDFATHERED.filter(
-  (entry) => !usedGrandfatherEntries.has(entry),
-);
-if (staleEntries.length > 0) {
-  console.warn(
-    "Warning: stale grandfather entries in scripts/check-feature-structure.mjs (remove them):",
-  );
-  for (const entry of staleEntries) {
-    console.warn(`  ${entry}`);
-  }
-}
 
 if (offenders.length > 0) {
   console.error(

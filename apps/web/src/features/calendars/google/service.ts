@@ -4,10 +4,7 @@ import type { calendar_v3 } from "googleapis";
 import { google } from "googleapis";
 import * as z from "zod";
 import { env } from "@/env";
-import type {
-  CalendarInfo,
-  CalendarService,
-} from "@/features/calendars/services/types";
+import type { CalendarInfo, CalendarService } from "@/features/calendars/types";
 
 export class GoogleCalendarService implements CalendarService {
   private readonly client: calendar_v3.Calendar;
