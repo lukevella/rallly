@@ -95,8 +95,13 @@ describe("isLegacyApiKeyHash", () => {
 
 describe("extractApiKeyPrefix", () => {
   it("should extract prefix from valid API key", () => {
-    const apiKey = "sk_abc123_def456";
-    expect(extractApiKeyPrefix(apiKey)).toBe("abc123");
+    const apiKey = "sk_abc12345_def456ghi789jkl012mno345pqr678";
+    expect(extractApiKeyPrefix(apiKey)).toBe("abc12345");
+  });
+
+  it("should extract prefix containing underscores", () => {
+    const apiKey = "sk_a_b-c_d5_def456ghi789jkl012mno345pqr678";
+    expect(extractApiKeyPrefix(apiKey)).toBe("a_b-c_d5");
   });
 
   it("should handle malformed keys with fallback", () => {
@@ -104,9 +109,11 @@ describe("extractApiKeyPrefix", () => {
     expect(extractApiKeyPrefix(malformed)).toBe(malformed.slice(0, 12));
   });
 
-  it("should handle keys with extra underscores", () => {
-    const apiKey = "sk_prefix_secret_extra";
-    expect(extractApiKeyPrefix(apiKey)).toBe("prefix");
+  it("should extract the stored prefix from generated keys", async () => {
+    for (let i = 0; i < 50; i++) {
+      const result = await createApiKey();
+      expect(extractApiKeyPrefix(result.apiKey)).toBe(result.prefix);
+    }
   });
 });
 
