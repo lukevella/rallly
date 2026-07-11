@@ -1,3 +1,5 @@
+import "server-only";
+
 import { getProPricing, stripe } from "@rallly/billing";
 import {
   SEAT_UPDATE_PORTAL_HEADLINE,

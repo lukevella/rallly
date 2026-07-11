@@ -7,7 +7,6 @@ import { isSelfHosted } from "@/lib/constants";
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import { getForegroundColor } from "@/lib/utils/color";
 import type { BrandingConfig } from "./client";
-import { getPrimaryColorVars } from "./color";
 import {
   DEFAULT_APP_NAME,
   DEFAULT_LOGO_ICON_URL,
@@ -15,6 +14,7 @@ import {
   DEFAULT_LOGO_URL_DARK,
   DEFAULT_PRIMARY_COLOR,
 } from "./constants";
+import { getPrimaryColorVars } from "./utils";
 
 function getDefaultBrandingConfig(): BrandingConfig {
   return {

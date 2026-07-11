@@ -14,8 +14,7 @@ import {
   PageSectionTitle,
 } from "@/components/page-layout";
 import { ProBadge } from "@/components/pro-badge";
-import { useIsFree } from "@/features/billing/client";
-import { showPayWall } from "@/features/billing/paywall-store";
+import { showPayWall, useIsFree } from "@/features/billing/client";
 import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
 import { useSpace } from "@/features/space/client";
 import { Trans } from "@/i18n/client";

@@ -7,7 +7,7 @@ import { INSTANCE_LICENSE_TAG } from "@/features/licensing/constants";
 import { validateLicenseKeyInputSchema } from "@/features/licensing/schema";
 import { AppError } from "@/lib/errors/app-error";
 import { adminActionClient } from "@/lib/safe-action/server";
-import { licenseManager } from "./server";
+import { licenseManager } from "./mutations";
 
 const logger = createLogger("licensing/actions");
 

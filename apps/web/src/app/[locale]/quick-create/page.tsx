@@ -5,10 +5,8 @@ import { LogInIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  isQuickCreateEnabled,
-  QuickCreateWidget,
-} from "@/features/quick-create";
+import { QuickCreateWidget } from "@/features/quick-create/components/quick-create-widget";
+import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";

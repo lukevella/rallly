@@ -10,7 +10,7 @@ import {
   hashApiKey,
   isLegacyApiKeyHash,
   verifyApiKey,
-} from "@/features/api-keys/api-key";
+} from "@/features/api-keys/utils";
 import { isSelfHosted } from "@/lib/constants";
 import { apiError } from "./poll";
 

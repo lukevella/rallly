@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { Prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import type { Location } from "./schema";

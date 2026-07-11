@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { revalidateTag } from "next/cache";

@@ -1,14 +1,13 @@
+import "server-only";
+
 import type { Prisma, ScheduledEventStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { parseConferencing } from "@/features/conferencing/data";
 import type { Conferencing } from "@/features/conferencing/schema";
 import { parseLocation } from "@/features/location/data";
 import type { Location } from "@/features/location/schema";
-import {
-  pastScheduledEventWhere,
-  upcomingScheduledEventWhere,
-} from "./predicates";
 import type { Status } from "./schema";
+import { pastScheduledEventWhere, upcomingScheduledEventWhere } from "./utils";
 
 export function getPublicScheduledEvent(id: string) {
   return prisma.scheduledEvent.findUnique({

@@ -18,7 +18,7 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { getCustomBrandingConfig } from "@/features/branding/queries";
+import { getCustomBrandingConfig } from "@/features/branding/data";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";

@@ -1,11 +1,11 @@
 import * as z from "zod";
+import { getCalendars, getDefaultCalendar } from "@/features/calendars/data";
 import {
   disconnectCalendarConnection,
   setCalendarSelection,
   setDefaultCalendar,
   syncCalendars,
 } from "@/features/calendars/mutations";
-import { getCalendars, getDefaultCalendar } from "@/features/calendars/queries";
 import { privateProcedure, router } from "../trpc";
 
 export const calendars = router({

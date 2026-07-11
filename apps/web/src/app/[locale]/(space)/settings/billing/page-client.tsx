@@ -37,8 +37,8 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { openCustomerPortalAction } from "@/features/billing/actions";
+import { showPayWall } from "@/features/billing/client";
 import { SubscriptionStatusLabel } from "@/features/billing/components/subscription-status-label";
-import { showPayWall } from "@/features/billing/paywall-store";
 import { useSpace } from "@/features/space/client";
 import type { SpaceTier } from "@/features/space/schema";
 import { Trans } from "@/i18n/client";

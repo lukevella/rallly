@@ -13,7 +13,7 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { getInstanceSettings } from "@/features/instance-settings/queries";
+import { getInstanceSettings } from "@/features/instance-settings/data";
 import { Trans } from "@/i18n/client";
 import { InstanceSettingsForm } from "./instance-settings-form";
 
