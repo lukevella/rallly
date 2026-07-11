@@ -69,7 +69,6 @@ for (const entry of fs.readdirSync(FEATURES_DIR, { withFileTypes: true })) {
   }
 }
 
-
 if (offenders.length > 0) {
   console.error(
     `Found ${offenders.length} file(s) in apps/web/src/features/ that don't match the feature folder vocabulary:\n`,
