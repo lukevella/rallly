@@ -7,10 +7,7 @@ import {
   getPublicScheduledEvent,
 } from "@/features/scheduled-event/data";
 import { cancelRsvp, createRsvp } from "@/features/scheduled-event/mutations";
-import {
-  getEventPhase,
-  isEventFull,
-} from "@/features/scheduled-event/registration";
+import { getEventPhase, isEventFull } from "@/features/scheduled-event/utils";
 import { authLib, getSession } from "@/lib/auth";
 import { AppError } from "@/lib/errors/app-error";
 import { actionClient, authActionClient } from "@/lib/safe-action/server";

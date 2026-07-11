@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { SessionRefresher } from "@/components/session-refresher";
 import { PayWall } from "@/features/billing/components/pay-wall";
-import { isQuickCreateEnabled } from "@/features/quick-create";
+import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { getLocale } from "@/i18n/server/get-locale";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";

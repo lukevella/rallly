@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
 import { loadInstanceLicense } from "@/features/licensing/data";
-import { getUserCount } from "@/features/user/queries";
+import { getUserCount } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
 import { isSelfHosted } from "@/lib/constants";
 

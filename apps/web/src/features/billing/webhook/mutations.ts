@@ -17,8 +17,8 @@ import {
   isSubscriptionActive,
   toDate,
 } from "@/features/billing/webhook/utils";
+import { licenseManager } from "@/features/licensing/mutations";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
-import { licenseManager } from "@/features/licensing/server";
 import { subscriptionMetadataSchema } from "@/features/subscription/schema";
 
 async function getExpandedSubscription(subscriptionId: string) {

@@ -13,8 +13,7 @@ import type React from "react";
 import { useFormContext } from "react-hook-form";
 import type { PollSettingsFormData } from "@/components/forms/types";
 import { ProBadge } from "@/components/pro-badge";
-import { useIsFree } from "@/features/billing/client";
-import { showPayWall } from "@/features/billing/paywall-store";
+import { showPayWall, useIsFree } from "@/features/billing/client";
 import { Trans } from "@/i18n/client";
 
 const PollSetting = ({

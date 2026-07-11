@@ -1,6 +1,6 @@
 import type { EmailBranding } from "@rallly/emails";
 
-import { getInstanceBrandingConfig } from "@/features/branding/queries";
+import { getInstanceBrandingConfig } from "@/features/branding/data";
 import { resolveStorageUrl } from "@/lib/storage/resolve-storage-url";
 
 /**

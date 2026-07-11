@@ -17,7 +17,7 @@ import Link from "next/link";
 import { NavUser } from "@/components/nav-user";
 import { CustomBrandingPrompt } from "@/features/branding/components/custom-branding-prompt";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
-import { CommandMenu } from "@/features/navigation/command-menu";
+import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";

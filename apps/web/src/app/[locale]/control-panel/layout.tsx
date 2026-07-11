@@ -4,7 +4,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { GaugeIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
-import { CommandMenu } from "@/features/navigation/command-menu";
+import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";

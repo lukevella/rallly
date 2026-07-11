@@ -17,7 +17,7 @@ import * as z from "zod";
 import { validateLicenseKeyAction } from "@/features/licensing/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { checkLicenseKey } from "../helpers/check-license-key";
+import { checkLicenseKey } from "../utils";
 
 const formSchema = z.object({
   licenseKey: z.string().trim().min(1).refine(checkLicenseKey, {

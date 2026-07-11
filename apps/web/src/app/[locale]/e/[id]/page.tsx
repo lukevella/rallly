@@ -12,7 +12,7 @@ import LogoMarkGray from "@/assets/logo-mark-gray.svg";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { SessionRefresher } from "@/components/session-refresher";
-import { BrandStyle } from "@/features/branding/brand-style";
+import { BrandStyle } from "@/features/branding/components/brand-style";
 import { formatLocationText } from "@/features/location/utils";
 import {
   EventCalendarCard,

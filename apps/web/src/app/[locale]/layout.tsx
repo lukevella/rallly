@@ -11,7 +11,7 @@ import type React from "react";
 import type { Params } from "@/app/[locale]/types";
 import { SkipNavLink } from "@/components/skip-nav-link";
 import { BrandingProvider } from "@/features/branding/client";
-import { getInstanceBrandingConfig } from "@/features/branding/queries";
+import { getInstanceBrandingConfig } from "@/features/branding/data";
 import { ThemeProvider } from "@/features/theme/client";
 import { I18nProvider } from "@/i18n/client";
 import { initI18next } from "@/i18n/i18n";

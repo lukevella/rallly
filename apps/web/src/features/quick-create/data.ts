@@ -1,3 +1,5 @@
+import "server-only";
+
 import { prisma } from "@rallly/database";
 
 import { getSession } from "@/lib/auth";

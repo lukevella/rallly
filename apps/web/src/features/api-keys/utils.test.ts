@@ -7,7 +7,7 @@ import {
   isLegacyApiKeyHash,
   randomToken,
   verifyApiKey,
-} from "./api-key";
+} from "./utils";
 
 // Helper to create a hash in the deprecated scrypt format, as stored by the
 // previous implementation (scrypt$N$r$p$salt$hash)

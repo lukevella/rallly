@@ -4,7 +4,7 @@ import { posthog } from "@rallly/posthog/client";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
-import { getPrimaryColorVars } from "@/features/branding/color";
+import { getPrimaryColorVars } from "@/features/branding/utils";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { trpc } from "@/trpc/client";
 import { defineAbilityForSpace } from "./ability";

@@ -1,3 +1,5 @@
+import "server-only";
+
 import { prisma } from "@rallly/database";
 
 export const getCalendars = async (userId: string) => {

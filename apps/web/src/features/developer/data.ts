@@ -1,3 +1,5 @@
+import "server-only";
+
 import { posthog } from "@/features/analytics/posthog";
 import type { SpaceTier } from "@/features/space/schema";
 import { isSelfHosted } from "@/lib/constants";

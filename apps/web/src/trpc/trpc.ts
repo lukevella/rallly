@@ -1,7 +1,7 @@
 import { prisma } from "@rallly/database";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { isQuickCreateEnabled } from "@/features/quick-create";
+import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { createUserDTO } from "@/features/user/data";
 import { signOut } from "@/lib/auth";

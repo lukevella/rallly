@@ -1,8 +1,6 @@
-import {
-  isQuickCreateEnabled,
-  QuickCreateButton,
-  QuickCreateWidget,
-} from "@/features/quick-create";
+import { QuickCreateButton } from "@/features/quick-create/components/quick-create-button";
+import { QuickCreateWidget } from "@/features/quick-create/components/quick-create-widget";
+import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { getLocale } from "@/i18n/server/get-locale";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";

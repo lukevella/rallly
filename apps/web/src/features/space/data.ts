@@ -1,3 +1,5 @@
+import "server-only";
+
 import type {
   SpaceMemberRole as DBSpaceMemberRole,
   SpaceTier as DBSpaceTier,

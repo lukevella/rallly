@@ -1,6 +1,6 @@
 "use client";
 
-import { BrandStyle } from "@/features/branding/brand-style";
+import { BrandStyle } from "@/features/branding/components/brand-style";
 import { usePoll } from "@/features/poll/client";
 
 export function PollBrandingFromContext() {

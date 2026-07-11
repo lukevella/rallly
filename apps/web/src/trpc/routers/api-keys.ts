@@ -1,7 +1,7 @@
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
-import { createApiKey } from "@/features/api-keys/api-key";
+import { createApiKey } from "@/features/api-keys/utils";
 import { isApiAccessEnabled } from "@/features/developer/data";
 import { router, spaceOwnerProcedure } from "../trpc";
 

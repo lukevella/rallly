@@ -4,10 +4,10 @@ import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { PollPageIcon } from "@/components/page-icons";
-import { getGuestPolls } from "@/features/quick-create/lib/get-guest-polls";
+import { getGuestPolls } from "@/features/quick-create/data";
 import { getTranslation } from "@/i18n/server";
 
-import { RelativeDate } from "./components/relative-date";
+import { RelativeDate } from "./relative-date";
 
 export async function QuickCreateWidget() {
   const polls = await getGuestPolls();
