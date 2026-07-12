@@ -43,7 +43,7 @@ import { CreateEventTypeDialog } from "@/features/event-types/components/create-
 import { DeleteEventTypeDialog } from "@/features/event-types/components/delete-event-type-dialog";
 import { EditEventTypeDialog } from "@/features/event-types/components/edit-event-type-dialog";
 import type { EventTypeDTO } from "@/features/event-types/types";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { formatDuration } from "@/lib/datetime/format";
 import { useLocale } from "@/lib/locale/client";
 import type { LocationType } from "@/lib/location";
@@ -96,6 +96,7 @@ function EventTypeCard({
   onDelete: () => void;
 }) {
   const { locale } = useLocale();
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-card-border bg-card">
       <RandomGradientBar />
@@ -103,18 +104,20 @@ function EventTypeCard({
         <div className="flex items-start justify-between gap-2">
           <OptimizedAvatarImage size="md" src={hostImage} name={hostName} />
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Icon>
-                  <MoreVerticalIcon />
-                </Icon>
-                <span className="sr-only">
-                  <Trans
-                    i18nKey="eventTypeActionsLabel"
-                    defaults="Event type actions"
-                  />
-                </span>
-              </Button>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  aria-label={t("eventTypeActionsLabel", {
+                    defaultValue: "Event type actions",
+                  })}
+                  variant="ghost"
+                  size="icon"
+                />
+              }
+            >
+              <Icon>
+                <MoreVerticalIcon />
+              </Icon>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={onEdit}>

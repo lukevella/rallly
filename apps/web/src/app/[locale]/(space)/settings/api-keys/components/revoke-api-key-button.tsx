@@ -38,16 +38,18 @@ export function RevokeApiKeyButton({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            aria-label={t("moreOptions", { defaultValue: "More options" })}
-            variant="ghost"
-            size="icon"
-          >
-            <Icon>
-              <MoreVerticalIcon />
-            </Icon>
-          </Button>
+        <DropdownMenuTrigger
+          render={
+            <Button
+              aria-label={t("moreOptions", { defaultValue: "More options" })}
+              variant="ghost"
+              size="icon"
+            />
+          }
+        >
+          <Icon>
+            <MoreVerticalIcon />
+          </Icon>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem

@@ -131,19 +131,23 @@ function PollListItem({
           )}
           <CopyLinkButton href={shortUrl(`/invite/${id}`)} />
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                aria-label={t("moreOptions", { defaultValue: "More options" })}
-                variant="ghost"
-                size="icon"
-              >
-                <MoreVerticalIcon />
-              </Button>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  aria-label={t("moreOptions", {
+                    defaultValue: "More options",
+                  })}
+                  variant="ghost"
+                  size="icon"
+                />
+              }
+            >
+              <MoreVerticalIcon />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {status === "open" && (
                 <DropdownMenuItem
-                  onSelect={() => {
+                  onClick={() => {
                     toast.promise(closePoll.mutateAsync({ pollId: id }), {
                       loading: <Trans i18nKey="loading" defaults="Loading…" />,
                       success: (
@@ -160,7 +164,7 @@ function PollListItem({
               )}
               {status === "closed" && (
                 <DropdownMenuItem
-                  onSelect={() => {
+                  onClick={() => {
                     toast.promise(reopenPoll.mutateAsync({ pollId: id }), {
                       loading: <Trans i18nKey="loading" defaults="Loading…" />,
                       success: (
@@ -178,7 +182,7 @@ function PollListItem({
                   <Trans i18nKey="reopenPoll" defaults="Reopen" />
                 </DropdownMenuItem>
               )}
-              <DropdownMenuItem onSelect={() => deletePollDialog.trigger()}>
+              <DropdownMenuItem onClick={() => deletePollDialog.trigger()}>
                 <Icon>
                   <TrashIcon />
                 </Icon>

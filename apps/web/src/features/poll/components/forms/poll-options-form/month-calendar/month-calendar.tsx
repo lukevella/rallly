@@ -474,16 +474,18 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                               {t("addTimeOption")}
                             </Button>
                             <DropdownMenu>
-                              <DropdownMenuTrigger asChild={true}>
-                                <Button
-                                  aria-label={t("moreOptions", {
-                                    defaultValue: "More options",
-                                  })}
-                                  variant="ghost"
-                                  size="icon"
-                                >
-                                  <MoreVerticalIcon />
-                                </Button>
+                              <DropdownMenuTrigger
+                                render={
+                                  <Button
+                                    aria-label={t("moreOptions", {
+                                      defaultValue: "More options",
+                                    })}
+                                    variant="ghost"
+                                    size="icon"
+                                  />
+                                }
+                              >
+                                <MoreVerticalIcon />
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="start">
                                 <DropdownMenuItem

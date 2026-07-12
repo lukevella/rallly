@@ -129,35 +129,35 @@ const ManagePoll: React.FunctionComponent<{
   return (
     <>
       <DropdownMenu modal={false}>
-        <DropdownMenuTrigger asChild={true}>
-          <Button variant="ghost" disabled={disabled}>
-            <span>
-              <Trans i18nKey="manage" />
-            </span>
-            <ChevronDownIcon data-icon="inline-end" />
-          </Button>
+        <DropdownMenuTrigger
+          render={<Button variant="ghost" disabled={disabled} />}
+        >
+          <span>
+            <Trans i18nKey="manage" />
+          </span>
+          <ChevronDownIcon data-icon="inline-end" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem asChild>
-            <Link href={`/poll/${poll.id}/edit-details`}>
-              <DropdownMenuItemIconLabel icon={PencilIcon}>
-                <Trans i18nKey="editDetails" />
-              </DropdownMenuItemIconLabel>
-            </Link>
+          <DropdownMenuItem
+            render={<Link href={`/poll/${poll.id}/edit-details`} />}
+          >
+            <DropdownMenuItemIconLabel icon={PencilIcon}>
+              <Trans i18nKey="editDetails" />
+            </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={`/poll/${poll.id}/edit-options`}>
-              <DropdownMenuItemIconLabel icon={TableIcon}>
-                <Trans i18nKey="editOptions" />
-              </DropdownMenuItemIconLabel>
-            </Link>
+          <DropdownMenuItem
+            render={<Link href={`/poll/${poll.id}/edit-options`} />}
+          >
+            <DropdownMenuItemIconLabel icon={TableIcon}>
+              <Trans i18nKey="editOptions" />
+            </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={`/poll/${poll.id}/edit-settings`}>
-              <DropdownMenuItemIconLabel icon={Settings2Icon}>
-                <Trans i18nKey="editSettings" defaults="Edit settings" />
-              </DropdownMenuItemIconLabel>
-            </Link>
+          <DropdownMenuItem
+            render={<Link href={`/poll/${poll.id}/edit-settings`} />}
+          >
+            <DropdownMenuItemIconLabel icon={Settings2Icon}>
+              <Trans i18nKey="editSettings" defaults="Edit settings" />
+            </DropdownMenuItemIconLabel>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           {poll.status === "scheduled" || poll.status === "canceled" ? null : (

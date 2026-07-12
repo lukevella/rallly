@@ -58,7 +58,7 @@ export const ParticipantDropdown = ({
   };
   align?: "start" | "end";
   onEdit: () => void;
-  children: React.ReactNode;
+  children: React.ReactElement;
 }) => {
   const [isChangeNameModalVisible, setIsChangeNameModalVisible] =
     React.useState(false);
@@ -70,11 +70,9 @@ export const ParticipantDropdown = ({
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger
           disabled={disabled}
-          asChild={true}
           data-testid="participant-menu"
-        >
-          {children}
-        </DropdownMenuTrigger>
+          render={children}
+        />
         <DropdownMenuContent align={align}>
           <DropdownMenuLabel>
             <div className="grid gap-0.5">
