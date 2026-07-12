@@ -5,8 +5,6 @@ import { Card } from "@rallly/ui/card";
 import { CalendarIcon, LockIcon } from "lucide-react";
 import * as React from "react";
 import { createBreakpoint } from "react-use";
-
-import { AddToCalendarButton } from "@/components/add-to-calendar-button";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -14,6 +12,7 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { AddToCalendarButton } from "@/features/calendars/components/add-to-calendar-button";
 import { usePoll } from "@/features/poll/client";
 import DesktopPoll from "@/features/poll/components/desktop-poll";
 import MobilePoll from "@/features/poll/components/mobile-poll";

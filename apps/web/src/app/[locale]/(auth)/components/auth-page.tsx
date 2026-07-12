@@ -1,4 +1,4 @@
-import { Logo } from "@/components/logo";
+import { Logo } from "@/features/branding/components/logo";
 
 export function AuthPageContainer({ children }: { children: React.ReactNode }) {
   return (

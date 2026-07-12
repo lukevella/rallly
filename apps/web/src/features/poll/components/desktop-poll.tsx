@@ -26,9 +26,9 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { ScrollContainer } from "@/components/scroll-container";
-import { useVisibleParticipants } from "@/components/visibility";
 import { usePermissions, usePoll } from "@/features/poll/client";
 import { useParticipants } from "@/features/poll/components/participants-provider";
+import { useVisibleParticipants } from "@/features/poll/components/visibility";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { Trans, useTranslation } from "@/i18n/client";
 import ParticipantRow from "./desktop-poll/participant-row";

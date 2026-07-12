@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Logo } from "@/components/logo";
+import { Logo } from "@/features/branding/components/logo";
 import { CreateSpaceForm } from "@/features/setup/components/create-space-form";
 import { userHasSpaces } from "@/features/setup/utils";
 import { Trans } from "@/i18n/client";

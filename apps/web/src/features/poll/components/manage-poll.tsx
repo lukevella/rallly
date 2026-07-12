@@ -25,8 +25,8 @@ import {
 import Link from "next/link";
 import * as React from "react";
 import { DuplicateDialog } from "@/app/[locale]/(optional-space)/poll/[urlId]/duplicate-dialog";
-import { ProBadge } from "@/components/pro-badge";
 import { showPayWall, useIsFree } from "@/features/billing/client";
+import { ProBadge } from "@/features/billing/components/pro-badge";
 import { usePoll } from "@/features/poll/client";
 import { SchedulePollDialog } from "@/features/poll/components/manage-poll/schedule-poll-dialog";
 import { Trans } from "@/i18n/client";

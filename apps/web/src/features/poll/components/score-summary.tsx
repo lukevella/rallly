@@ -4,8 +4,8 @@ import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import * as React from "react";
 import { usePrevious } from "react-use";
-import { IfScoresVisible } from "@/components/visibility";
 import { usePoll } from "@/features/poll/components/poll-context";
+import { IfScoresVisible } from "@/features/poll/components/visibility";
 
 export interface PopularityScoreProps {
   yesScore: number;

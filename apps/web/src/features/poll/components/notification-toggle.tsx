@@ -3,9 +3,8 @@
 import { Button } from "@rallly/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { BellIcon, BellOffIcon } from "lucide-react";
-
-import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/features/poll/client";
+import { useUser } from "@/features/user/components/user-provider";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 

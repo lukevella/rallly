@@ -17,8 +17,6 @@ import smoothscroll from "smoothscroll-polyfill";
 
 import { TimesShownIn } from "@/components/clock";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { useUser } from "@/components/user-provider";
-import { useVisibleParticipants } from "@/components/visibility";
 import { usePermissions } from "@/features/poll/client";
 import {
   Participant,
@@ -26,8 +24,10 @@ import {
 } from "@/features/poll/components/participant";
 import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
 import { useOptions, usePoll } from "@/features/poll/components/poll-context";
+import { useVisibleParticipants } from "@/features/poll/components/visibility";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { YouAvatar } from "@/features/poll/components/you-avatar";
+import { useUser } from "@/features/user/components/user-provider";
 import { Trans, useTranslation } from "@/i18n/client";
 import GroupedOptions from "./mobile-poll/grouped-options";
 

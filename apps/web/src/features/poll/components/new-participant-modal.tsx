@@ -16,10 +16,10 @@ import { Label } from "@rallly/ui/label";
 import { TRPCClientError } from "@trpc/client";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/features/poll/client";
 import { useAddParticipantMutation } from "@/features/poll/components/mutations";
 import VoteIcon from "@/features/poll/components/vote-icon";
+import { useUser } from "@/features/user/components/user-provider";
 import { useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 
