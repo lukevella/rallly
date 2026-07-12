@@ -112,24 +112,31 @@ export const DateTimePreferences = ({
             control={form.control}
             name="weekStart"
             render={({ field }) => {
+              const options = weekdays().map(({ day, label }) => ({
+                value: day.toString(),
+                label,
+              }));
               return (
                 <FormItem>
                   <FormLabel>
                     <Trans i18nKey="startOfWeek" />
                   </FormLabel>
                   <Select
+                    items={options}
                     value={field.value.toString()}
                     onValueChange={(value) => {
-                      field.onChange(Number.parseInt(value, 10));
+                      if (value) {
+                        field.onChange(Number.parseInt(value, 10));
+                      }
                     }}
                   >
                     <SelectTrigger className="w-fit min-w-32">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {weekdays().map(({ day, label }) => (
-                        <SelectItem key={day} value={day.toString()}>
-                          {label}
+                      {options.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
                         </SelectItem>
                       ))}
                     </SelectContent>

@@ -15,7 +15,15 @@ export const LanguageSelect: React.FunctionComponent<{
   onChange?: (language: string) => void;
 }> = ({ className, value, onChange }) => {
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select
+      items={languages}
+      value={value}
+      onValueChange={(language) => {
+        if (language) {
+          onChange?.(language);
+        }
+      }}
+    >
       <SelectTrigger className={className}>
         <Icon>
           <LanguagesIcon />
