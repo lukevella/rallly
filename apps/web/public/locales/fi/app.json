@@ -445,7 +445,6 @@
   "outlook": "Outlook",
   "owner": "Omistaja",
   "ownerPermissionsRequired": "Laskutusasetuksiin pääsy on vain tilan omistajilla.",
-  "pageMovedDescription": "Ohjataan osoitteeseen <a>{newUrl}</a>",
   "paginationItems": "Näytetään {startItem}–{endItem} / {totalItems}",
   "paginationNext": "Seuraava",
   "paginationPage": "Sivu {currentPage, number} / {totalPages, number}",
