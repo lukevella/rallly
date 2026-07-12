@@ -11,9 +11,9 @@ import { Switch } from "@rallly/ui/switch";
 import { AtSignIcon, EyeIcon, MessageCircleIcon, VoteIcon } from "lucide-react";
 import type React from "react";
 import { useFormContext } from "react-hook-form";
-import type { PollSettingsFormData } from "@/components/forms/types";
 import { ProBadge } from "@/components/pro-badge";
 import { showPayWall, useIsFree } from "@/features/billing/client";
+import type { PollSettingsFormData } from "@/features/poll/components/forms/types";
 import { Trans } from "@/i18n/client";
 
 const PollSetting = ({

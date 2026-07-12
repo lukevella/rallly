@@ -20,13 +20,15 @@ import {
 } from "lucide-react";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
+import DateCard from "@/components/date-card";
 import {
   EmptyState,
   EmptyStateDescription,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import type { NewEventData } from "@/components/forms/types";
+import { useHeadlessDatePicker } from "@/components/headless-date-picker";
+import type { NewEventData } from "@/features/poll/components/forms/types";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { formatDateParts } from "@/lib/datetime/format";
@@ -36,8 +38,6 @@ import {
   getBrowserTimeZone,
   removeAllOptionsForDay,
 } from "@/lib/utils/date-time-utils";
-import DateCard from "../../../date-card";
-import { useHeadlessDatePicker } from "../../../headless-date-picker";
 import type { DateTimeOption, DateTimePickerProps } from "../types";
 import { formatDateWithoutTime, formatDateWithoutTz } from "../utils";
 import TimePicker from "./time-picker";

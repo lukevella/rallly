@@ -23,7 +23,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import type { NewEventData } from "../types";
-import MonthCalendar from "./month-calendar";
+import MonthCalendar from "./month-calendar/month-calendar";
 import WeekCalendar from "./week-calendar";
 
 const PollOptionsForm = ({

@@ -6,10 +6,10 @@ import { Form } from "@rallly/ui/form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import PollOptionsForm from "@/components/forms/poll-options-form";
 import { useModalContext } from "@/components/modal/modal-provider";
 import { useUpdatePollMutation } from "@/components/poll/mutations";
 import { usePoll } from "@/components/poll-context";
+import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
 import {
   filterParticipantsByVote,
   useParticipants,

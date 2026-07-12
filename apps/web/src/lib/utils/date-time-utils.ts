@@ -1,7 +1,7 @@
 import type {
   DateTimeOption,
   TimeOption,
-} from "@/components/forms/poll-options-form/types";
+} from "@/features/poll/components/forms/poll-options-form/types";
 import { dayjs } from "@/lib/dayjs";
 
 export function getBrowserTimeZone() {

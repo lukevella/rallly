@@ -122,7 +122,6 @@
       "includes": [
         "src/components/add-to-calendar-button.tsx",
         "src/components/event-card.tsx",
-        "src/components/forms/poll-settings.tsx",
         "src/components/layouts/poll-layout.tsx",
         "src/components/logo.tsx",
         "src/components/poll-context.tsx",
@@ -169,7 +168,7 @@
       "includes": [
         "src/lib/dayjs.ts",
         "src/lib/datetime/**",
-        "src/components/forms/poll-options-form/**",
+        "src/features/poll/components/forms/poll-options-form/**",
         "src/components/headless-date-picker.tsx",
         "src/**/edit-options/page.tsx",
         "src/trpc/routers/polls.ts",
