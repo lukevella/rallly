@@ -445,7 +445,6 @@
   "outlook": "Outlook",
   "owner": "Majitel",
   "ownerPermissionsRequired": "K nastavení fakturace mohou přistupovat pouze majitelé prostoru.",
-  "pageMovedDescription": "Přesměrovávám na <a>{newUrl}</a>",
   "paginationItems": "Zobrazuji {startItem}–{endItem} z {totalItems}",
   "paginationNext": "Další",
   "paginationPage": "Stránka {currentPage, number} z {totalPages, number}",
