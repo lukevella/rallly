@@ -1,10 +1,14 @@
 import "server-only";
 
+import { stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import { env } from "@/env";
 import type {
   CreateLicenseInput,
+  LicenseCheckoutMetadata,
+  LicenseCheckoutProduct,
+  LicenseType,
   ValidateLicenseInputKeySchema,
 } from "@/features/licensing/schema";
 import {
@@ -118,6 +122,94 @@ export async function createLicense({
     : await prisma.license.create({ data });
 
   return { key: license.licenseKey };
+}
+
+const licenseCheckoutProducts: Record<
+  LicenseCheckoutProduct,
+  { lookupKey: string; type: LicenseType; seats: number }
+> = {
+  plus: { lookupKey: "plus", type: "PLUS", seats: 5 },
+  organization: {
+    lookupKey: "early-organization",
+    type: "ORGANIZATION",
+    seats: 50,
+  },
+};
+
+export async function createLicenseCheckoutSession({
+  product,
+}: {
+  product: LicenseCheckoutProduct;
+}): Promise<{ url: string } | { error: string }> {
+  const { lookupKey, type, seats } = licenseCheckoutProducts[product];
+
+  const prices = await stripe.prices.list({
+    lookup_keys: [lookupKey],
+  });
+
+  if (!prices.data || prices.data.length === 0) {
+    logger.error({ product }, "No price found for lookup_key");
+    return { error: "Pricing information not found for this product." };
+  }
+
+  if (prices.data.length > 1) {
+    logger.warn(
+      { product },
+      "Multiple prices found for lookup_key, using the first one",
+    );
+  }
+
+  const price = prices.data[0];
+
+  if (!price.id) {
+    logger.error({ product }, "Price object is missing an ID");
+    return { error: "Price configuration error." };
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price: price.id,
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: "https://rallly.co/licensing/thank-you",
+      allow_promotion_codes: true,
+      billing_address_collection: "required",
+      tax_id_collection: {
+        enabled: true,
+      },
+      automatic_tax: {
+        enabled: true,
+      },
+      invoice_creation: {
+        enabled: true,
+      },
+      metadata: {
+        licenseType: type,
+        version: 4,
+        seats,
+      } satisfies LicenseCheckoutMetadata,
+    });
+
+    if (!session.url) {
+      return { error: "Something went wrong" };
+    }
+
+    return { url: session.url };
+  } catch (error) {
+    logger.error({ error }, "Stripe API error");
+
+    if (error instanceof stripe.errors.StripeError) {
+      return { error: error.message };
+    }
+
+    return {
+      error: "An unexpected error occurred with our payment processor.",
+    };
+  }
 }
 
 export async function validateLicenseKey({
