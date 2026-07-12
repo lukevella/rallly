@@ -6,7 +6,7 @@ import { createLogger } from "@rallly/logger";
 import { generateText } from "ai";
 import { after } from "next/server";
 import { env } from "@/env";
-import { banUserAsSystem } from "@/features/user/mutations";
+import { banUser } from "@/features/user/mutations";
 import type { ModerationResult, ModerationVerdict } from "./types";
 import { containsSuspiciousPatterns } from "./utils";
 
@@ -132,7 +132,7 @@ export async function moderateContent({
   if (containsBannedDomain(textToModerate)) {
     logger.warn({ userId }, "Banned domain detected, banning user");
     after(() =>
-      banUserAsSystem({
+      banUser({
         userId,
         reason: "Automatic ban: banned domain detected in content",
       }),
