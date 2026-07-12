@@ -174,8 +174,6 @@
   "deleteAccountDialogTitle": "Excluir conta",
   "deleteAccountInstruction": "Por favor, confirme seu endereço de e-mail para excluir sua conta",
   "deleteDate": "Excluir data",
-  "deletedPoll": "Enquete excluída",
-  "deletedPollInfo": "Esta enquete não existe mais.",
   "deletedSpaceSuccess": "O espaço foi excluído permanentemente",
   "deleteEventTypeDescription": "<b>{name}</b> será ocultado dos seletores de criação. Isso não pode ser desfeito.",
   "deleteEventTypeError": "Falha ao excluir tipo de evento",
