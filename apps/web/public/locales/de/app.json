@@ -457,7 +457,6 @@
   "outlook": "Outlook",
   "owner": "Besitzer",
   "ownerPermissionsRequired": "Nur Gruppenbesitzer können auf die Abrechnungseinstellungen zugreifen.",
-  "pageMovedDescription": "Weiterleitung zu <a>{newUrl}</a>",
   "paginationItems": "Zeige {startItem}–{endItem} von {totalItems}",
   "paginationNext": "Weiter",
   "paginationPage": "Seite {currentPage, number} von {totalPages, number}",

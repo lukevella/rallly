@@ -445,7 +445,6 @@
   "outlook": "Outlook",
   "owner": "Ejer",
   "ownerPermissionsRequired": "Kun ejerne af rum kan få adgang til faktureringsindstillinger.",
-  "pageMovedDescription": "Omdirigerer til <a>{newUrl}</a>",
   "paginationItems": "Viser {startItem}–{endItem} af {totalItems}",
   "paginationNext": "Næste",
   "paginationPage": "Side {currentPage, number} af {totalPages, number}",

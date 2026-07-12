@@ -454,7 +454,6 @@
   "outlook": "Outlook",
   "owner": "Proprietário",
   "ownerPermissionsRequired": "Somente donos de espaço podem acessar as configurações de cobrança.",
-  "pageMovedDescription": "Redirecionando para <a>{newUrl}</a>",
   "paginationItems": "Mostrando {startItem}–{endItem} de {totalItems}",
   "paginationNext": "Avançar",
   "paginationPage": "Página {currentPage, number} de {totalPages, number}",

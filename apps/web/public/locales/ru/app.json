@@ -252,7 +252,6 @@
   "outlook": "Outlook",
   "owner": "Владелец",
   "ownerPermissionsRequired": "Только владельцы пространства могут получить доступ к настройкам выставления счетов.",
-  "pageMovedDescription": "Перенаправление на <a>{newUrl}</a>",
   "paginationItems": "Показано {startItem}–{endItem} из {totalItems}",
   "paginationNext": "Далее",
   "paginationPage": "Страница {currentPage, number} из {totalPages, number}",

@@ -179,7 +179,6 @@
   "optionCount": "{count, plural,one {# opcja} few {# opcje} other {# opcji}}",
   "or": "Lub",
   "outlook": "Outlook",
-  "pageMovedDescription": "Przekierowanie do <a>{newUrl}</a>",
   "paginationItems": "Wyświetlono {startItem}–{endItem} z {totalItems}",
   "paginationNext": "Dalej",
   "paginationPage": "Strona {currentPage, number} z {totalPages, number}",
