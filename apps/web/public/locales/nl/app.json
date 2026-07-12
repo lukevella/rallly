@@ -391,7 +391,6 @@
   "outlook": "Outlook",
   "owner": "Eigenaar",
   "ownerPermissionsRequired": "Alleen eigenaren kunnen de betalingsinstellingen openen.",
-  "pageMovedDescription": "Doorverwijzen naar <a>{newUrl}</a>",
   "paginationItems": "Toont {startItem}-{endItem} van {totalItems}",
   "paginationNext": "Volgende",
   "paginationPage": "Pagina {currentPage, number} van {totalPages, number}",
