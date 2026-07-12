@@ -21,23 +21,25 @@ export function CopyLinkButton({
   const { t } = useTranslation();
   return (
     <Tooltip open={didCopy ? true : undefined}>
-      <TooltipTrigger asChild>
-        <Button
-          aria-label={t("copyLink", { defaultValue: "Copy link" })}
-          className={className}
-          variant="ghost"
-          size="icon"
-          onClick={() => {
-            copy(href);
-            setDidCopy(true);
-            setTimeout(() => setDidCopy(false), 1000);
-          }}
-        >
-          <Icon>
-            <CopyIcon />
-          </Icon>
-        </Button>
-      </TooltipTrigger>
+      <TooltipTrigger
+        render={
+          <Button
+            aria-label={t("copyLink", { defaultValue: "Copy link" })}
+            className={className}
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              copy(href);
+              setDidCopy(true);
+              setTimeout(() => setDidCopy(false), 1000);
+            }}
+          >
+            <Icon>
+              <CopyIcon />
+            </Icon>
+          </Button>
+        }
+      />
       <TooltipContent>
         {didCopy ? (
           <div className="flex items-center gap-2">
