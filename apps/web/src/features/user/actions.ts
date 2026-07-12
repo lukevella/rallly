@@ -3,7 +3,12 @@ import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { headers } from "next/headers";
 import * as z from "zod";
-import { updateUserImage, updateUserName } from "@/features/user/mutations";
+import {
+  banUser,
+  unbanUser,
+  updateUserImage,
+  updateUserName,
+} from "@/features/user/mutations";
 import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
 import { AppError } from "@/lib/errors/app-error";
@@ -155,6 +160,83 @@ export const changeRoleAction = adminActionClient
         role,
       },
     });
+  });
+
+export const banUserAction = adminActionClient
+  .metadata({ actionName: "ban_user" })
+  .inputSchema(
+    z.object({
+      userId: z.string(),
+      reason: z.string().trim().max(500).optional(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    const { userId, reason } = parsedInput;
+
+    const targetUser = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!targetUser) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: `User ${userId} not found`,
+      });
+    }
+
+    if (targetUser.banned) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "User is already banned",
+      });
+    }
+
+    if (ctx.ability.cannot("update", subject("User", targetUser), "banned")) {
+      throw new AppError({
+        code: "UNAUTHORIZED",
+        message: "Current user is not authorized to ban this user",
+      });
+    }
+
+    await banUser({ userId, reason: reason || undefined });
+  });
+
+export const unbanUserAction = adminActionClient
+  .metadata({ actionName: "unban_user" })
+  .inputSchema(
+    z.object({
+      userId: z.string(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    const { userId } = parsedInput;
+
+    const targetUser = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!targetUser) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: `User ${userId} not found`,
+      });
+    }
+
+    if (!targetUser.banned) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "User is not banned",
+      });
+    }
+
+    if (ctx.ability.cannot("update", subject("User", targetUser), "banned")) {
+      throw new AppError({
+        code: "UNAUTHORIZED",
+        message: "Current user is not authorized to unban this user",
+      });
+    }
+
+    await unbanUser({ userId });
   });
 
 export const deleteUserAction = adminActionClient

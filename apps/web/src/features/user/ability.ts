@@ -84,6 +84,10 @@ function defineAbilityForAdmin(
   can("update", "User", ["role"]);
   // Cannot update their own role
   cannot("update", "User", ["role"], { id: user.id });
+  // Can ban/unban any user
+  can("update", "User", ["banned"]);
+  // Cannot ban themselves
+  cannot("update", "User", ["banned"], { id: user.id });
   // Can delete any user
   can("delete", "User");
   // Cannot delete their own account

@@ -79,6 +79,68 @@ export async function updateUserImage({
   revalidateTag(userProfileTag(userId), "max");
 }
 
+// Bans must go through Better-Auth rather than Prisma so the user's sessions
+// are actually revoked — with secondary storage enabled, sessions live in
+// Redis, not the Session table, and only Better-Auth's own APIs delete those
+// keys. A bare `banned: true` write leaves the user logged in until their
+// session expires.
+
+export async function banUser({
+  userId,
+  reason,
+}: {
+  userId: string;
+  reason?: string;
+}) {
+  await authLib.api.banUser({
+    body: { userId, banReason: reason },
+    headers: await headers(),
+  });
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { bannedAt: new Date() },
+  });
+}
+
+export async function unbanUser({ userId }: { userId: string }) {
+  await authLib.api.unbanUser({
+    body: { userId },
+    headers: await headers(),
+  });
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { bannedAt: null },
+  });
+}
+
+// For bans issued without an admin session (e.g. the moderation auto-ban).
+// Mirrors what authLib.api.banUser does internally, minus the permission
+// checks — authorization is the caller's responsibility.
+export async function banUserAsSystem({
+  userId,
+  reason,
+}: {
+  userId: string;
+  reason: string;
+}) {
+  const { internalAdapter } = await authLib.$context;
+
+  await internalAdapter.updateUser(userId, {
+    banned: true,
+    banReason: reason,
+    updatedAt: new Date(),
+  });
+
+  await internalAdapter.deleteSessions(userId);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { bannedAt: new Date() },
+  });
+}
+
 export async function setActiveSpace({
   userId,
   spaceId,
