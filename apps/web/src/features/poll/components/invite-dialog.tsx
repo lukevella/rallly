@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  useDialog,
 } from "@rallly/ui/dialog";
 
 import { ArrowUpRightIcon, Share2Icon } from "lucide-react";
@@ -41,7 +42,7 @@ export function CopyInviteLinkButton() {
       }}
     >
       {didCopy ? (
-        <Trans i18nKey="copied" />
+        <Trans i18nKey="copied" defaults="Copied" />
       ) : (
         <span className="min-w-0 truncate">{inviteLinkWithoutProtocol}</span>
       )}
@@ -50,11 +51,11 @@ export function CopyInviteLinkButton() {
 }
 
 export const InviteDialog = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const dialog = useDialog();
   const poll = usePoll();
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog {...dialog.dialogProps}>
       <DialogTrigger render={<Button variant="primary" />}>
         <Share2Icon data-icon="inline-start" />
         <span className="sr-only sm:not-sr-only">

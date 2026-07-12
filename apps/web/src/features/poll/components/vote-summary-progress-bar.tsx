@@ -26,6 +26,9 @@ export const VoteSummaryProgressBar = (props: {
   ifNeedBe: string[];
   no: string[];
 }) => {
+  const toWidth = (count: number) =>
+    props.total > 0 ? `${(count / props.total) * 100}%` : "0%";
+
   return (
     <div className="flex h-1.5 grow overflow-hidden rounded-sm bg-muted">
       <Tooltip>
@@ -34,7 +37,7 @@ export const VoteSummaryProgressBar = (props: {
             <div
               className="h-full bg-green-500 opacity-75 hover:opacity-100"
               style={{
-                width: `${(props.yes.length / props.total) * 100}%`,
+                width: toWidth(props.yes.length),
               }}
             />
           }
@@ -49,7 +52,7 @@ export const VoteSummaryProgressBar = (props: {
             <div
               className="h-full bg-amber-400 opacity-75 hover:opacity-100"
               style={{
-                width: `${(props.ifNeedBe.length / props.total) * 100}%`,
+                width: toWidth(props.ifNeedBe.length),
               }}
             />
           }
@@ -64,7 +67,7 @@ export const VoteSummaryProgressBar = (props: {
             <div
               className="h-full bg-transparent opacity-75 hover:opacity-100"
               style={{
-                width: `${(props.no.length / props.total) * 100}%`,
+                width: toWidth(props.no.length),
               }}
             />
           }
