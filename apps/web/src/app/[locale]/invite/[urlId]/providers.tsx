@@ -1,7 +1,7 @@
 "use client";
 
-import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
-import { VisibilityProvider } from "@/components/visibility";
+import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
+import { VisibilityProvider } from "@/features/poll/components/visibility";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (

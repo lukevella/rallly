@@ -1,8 +1,8 @@
 import { prisma } from "@rallly/database";
 import { Card } from "@rallly/ui/card";
 import { notFound } from "next/navigation";
-import { Logo } from "@/components/logo";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { Logo } from "@/features/branding/components/logo";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";

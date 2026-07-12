@@ -1,0 +1,99 @@
+import type { VoteType } from "@rallly/database";
+import type * as React from "react";
+import { Controller } from "react-hook-form";
+import { useParticipants } from "@/features/poll/components/participants-provider";
+import { usePoll } from "@/features/poll/components/poll-context";
+import { useVotingForm } from "@/features/poll/components/voting-form";
+import type { ParsedDateTimeOpton } from "@/lib/utils/date-time-utils";
+import { getOptionDateTimeLabel } from "@/lib/utils/date-time-utils";
+import DateOption from "./date-option";
+import TimeSlotOption from "./time-slot-option";
+
+export interface PollOptions {
+  options: ParsedDateTimeOpton[];
+  editable?: boolean;
+  selectedParticipantId?: string;
+}
+
+const PollOptions: React.FunctionComponent<PollOptions> = ({
+  options,
+  editable,
+  selectedParticipantId,
+}) => {
+  const { control } = useVotingForm();
+  const { getScore, getVote, optionIds } = usePoll();
+  const { participants: allParticipants } = useParticipants();
+  const selectedParticipant = selectedParticipantId
+    ? allParticipants.find(
+        (participant) => participant.id === selectedParticipantId,
+      )
+    : undefined;
+
+  return (
+    <div className="divide-y">
+      {options.map((option) => {
+        const score = getScore(option.optionId);
+        const index = optionIds.indexOf(option.optionId);
+        return (
+          <Controller
+            key={option.optionId}
+            control={control}
+            name="votes"
+            render={({ field }) => {
+              const vote =
+                !editable && selectedParticipant
+                  ? getVote(selectedParticipant.id, option.optionId)
+                  : field.value[index]?.type;
+
+              const handleChange = (newVote: VoteType) => {
+                if (!editable) {
+                  return;
+                }
+                const newValue = [...field.value];
+                newValue[index] = { optionId: option.optionId, type: newVote };
+                field.onChange(newValue);
+              };
+
+              switch (option.type) {
+                case "timeSlot":
+                  return (
+                    <TimeSlotOption
+                      onChange={handleChange}
+                      optionId={option.optionId}
+                      optionLabel={getOptionDateTimeLabel(option)}
+                      yesScore={score.yes}
+                      ifNeedBeScore={score.ifNeedBe}
+                      vote={vote}
+                      startTime={option.startTime}
+                      endTime={option.endTime}
+                      duration={option.duration}
+                      editable={editable}
+                      selectedParticipantId={selectedParticipant?.id}
+                    />
+                  );
+                case "date":
+                  return (
+                    <DateOption
+                      onChange={handleChange}
+                      optionId={option.optionId}
+                      optionLabel={getOptionDateTimeLabel(option)}
+                      yesScore={score.yes}
+                      ifNeedBeScore={score.ifNeedBe}
+                      vote={vote}
+                      dow={option.dow}
+                      day={option.day}
+                      month={option.month}
+                      editable={editable}
+                      selectedParticipantId={selectedParticipant?.id}
+                    />
+                  );
+              }
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+export default PollOptions;

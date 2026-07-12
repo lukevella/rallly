@@ -13,8 +13,8 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
-import { ProBadge } from "@/components/pro-badge";
 import { showPayWall, useIsFree } from "@/features/billing/client";
+import { ProBadge } from "@/features/billing/components/pro-badge";
 import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
 import { useSpace } from "@/features/space/client";
 import { Trans } from "@/i18n/client";

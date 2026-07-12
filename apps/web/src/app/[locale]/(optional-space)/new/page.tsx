@@ -10,10 +10,10 @@ import {
 import { BarChart2Icon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CreatePoll } from "@/components/create-poll";
-import { UserDropdown } from "@/components/user-dropdown";
 import { BrandStyle } from "@/features/branding/components/brand-style";
+import { CreatePoll } from "@/features/poll/components/create-poll";
 import { createSpaceDTO } from "@/features/space/data";
+import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getSession } from "@/lib/auth";
