@@ -70,6 +70,7 @@
   "banUser": "Ban user",
   "banUserDesc": "Are you sure you want to ban <b>{email}</b>? They will be signed out and won't be able to log in.",
   "banUserReason": "Reason (optional)",
+  "banUserReasonTooLong": "Reason must be 500 characters or fewer",
   "banUserTitle": "Ban User",
   "basicPolls": "Basic Polls",
   "basicPollsDescription": "Create simple scheduling polls",

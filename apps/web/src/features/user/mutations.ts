@@ -133,12 +133,12 @@ export async function banUserAsSystem({
     updatedAt: new Date(),
   });
 
+  await internalAdapter.deleteSessions(userId);
+
   await prisma.user.update({
     where: { id: userId },
     data: { bannedAt: new Date() },
   });
-
-  await internalAdapter.deleteSessions(userId);
 }
 
 export async function setActiveSpace({

@@ -22,12 +22,22 @@ import { Textarea } from "@rallly/ui/textarea";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { banUserAction } from "@/features/user/actions";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
-const schema = z.object({
-  reason: z.string().trim().max(500),
-});
+const useSchema = () => {
+  const { t } = useTranslation();
+  return z.object({
+    reason: z
+      .string()
+      .trim()
+      .max(500, {
+        error: t("banUserReasonTooLong", {
+          defaultValue: "Reason must be 500 characters or fewer",
+        }),
+      }),
+  });
+};
 
 export function BanUserDialog({
   userId,
@@ -40,6 +50,7 @@ export function BanUserDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const schema = useSchema();
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
