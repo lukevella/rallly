@@ -65,10 +65,10 @@ export function DeleteEventTypeDialog({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button" disabled={softDelete.isPending}>
-              <Trans i18nKey="cancel" defaults="Cancel" />
-            </Button>
+          <DialogClose
+            render={<Button type="button" disabled={softDelete.isPending} />}
+          >
+            <Trans i18nKey="cancel" defaults="Cancel" />
           </DialogClose>
           <Button
             type="button"

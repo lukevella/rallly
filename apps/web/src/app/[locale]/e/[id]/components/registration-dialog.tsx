@@ -26,8 +26,8 @@ export function RegistrationDialog({
   return (
     <Dialog
       {...dialogProps}
-      onOpenChange={(open) => {
-        dialogProps.onOpenChange?.(open);
+      onOpenChange={(open, eventDetails) => {
+        dialogProps.onOpenChange?.(open, eventDetails);
         if (!open) {
           // Reflect the new registration (e.g. the going count) once the
           // dialog is dismissed, then reset for the next time it opens.

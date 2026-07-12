@@ -150,10 +150,8 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
             >
               <Trans i18nKey="confirm" defaults="Confirm" />
             </Button>
-            <DialogClose asChild>
-              <Button>
-                <Trans i18nKey="cancel" defaults="Cancel" />
-              </Button>
+            <DialogClose render={<Button />}>
+              <Trans i18nKey="cancel" defaults="Cancel" />
             </DialogClose>
           </DialogFooter>
         </DialogContent>

@@ -193,10 +193,8 @@ export function ScheduledEventListItem({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="default">
-                <Trans i18nKey="cancel" defaults="Cancel" />
-              </Button>
+            <DialogClose render={<Button variant="default" />}>
+              <Trans i18nKey="cancel" defaults="Cancel" />
             </DialogClose>
             <Button
               variant="destructive"

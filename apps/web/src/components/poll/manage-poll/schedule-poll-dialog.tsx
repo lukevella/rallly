@@ -244,10 +244,8 @@ export function SchedulePollDialog(props: DialogProps) {
           }}
         />
         <DialogFooter>
-          <DialogClose asChild>
-            <Button>
-              <Trans i18nKey="cancel" />
-            </Button>
+          <DialogClose render={<Button />}>
+            <Trans i18nKey="cancel" />
           </DialogClose>
           <Button
             loading={scheduleEvent.isPending}

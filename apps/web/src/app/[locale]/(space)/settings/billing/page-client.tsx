@@ -150,22 +150,21 @@ function BillingPageContent({ tier }: { tier: SpaceTier }) {
                       usedSeats={seats.used}
                       currentSeats={seats.total}
                     >
-                      <DialogTrigger asChild>
-                        <Button
-                          onClick={() => {
-                            posthog?.capture(
-                              "space_billing:manage_seats_button_click",
-                            );
-                          }}
-                        >
-                          <Icon>
-                            <ArmchairIcon />
-                          </Icon>
-                          <Trans
-                            i18nKey="manageSeats"
-                            defaults="Manage Seats"
+                      <DialogTrigger
+                        render={
+                          <Button
+                            onClick={() => {
+                              posthog?.capture(
+                                "space_billing:manage_seats_button_click",
+                              );
+                            }}
                           />
-                        </Button>
+                        }
+                      >
+                        <Icon>
+                          <ArmchairIcon />
+                        </Icon>
+                        <Trans i18nKey="manageSeats" defaults="Manage Seats" />
                       </DialogTrigger>
                     </ManageSeatsDialog>
                   </div>
