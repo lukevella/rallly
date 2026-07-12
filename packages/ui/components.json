@@ -1,11 +1,19 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "default",
+  "style": "base-vega",
   "rsc": true,
   "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "../tailwind-config/shared-styles.css",
+    "baseColor": "gray",
+    "cssVariables": true
+  },
   "aliases": {
     "components": "@rallly/ui",
-    "ui": "src",
-    "utils": "@rallly/ui"
-  }
+    "ui": "@rallly/ui",
+    "utils": "@rallly/ui",
+    "hooks": "@rallly/ui/hooks"
+  },
+  "iconLibrary": "lucide"
 }
