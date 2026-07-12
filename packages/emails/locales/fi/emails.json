@@ -1,4 +1,5 @@
 {
+  "allDay": "Koko päivän",
   "changeEmail_codeValid": "Koodi on voimassa 15 minuuttia",
   "changeEmail_content2": "Saat tämän viestin, koska sähköpostiosoitteen vaihtamista on pyydetty <domain /> -tilille. Jos se et ollut sinä, ota yhteyttä osoitteeseen <a>{supportEmail}</a>.",
   "changeEmail_heading": "Vahvista uusi sähköpostiosoitteesi",
