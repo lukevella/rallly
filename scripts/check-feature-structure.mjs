@@ -5,6 +5,10 @@
  * Every feature directory (and any sub-concern directory within it) may only
  * contain the allowed file names below, co-located tests, and the directories
  * `components/` and `assets/` (whose contents are unrestricted).
+ *
+ * A useFilenamingConvention override in apps/web/biome.json mirrors this rule
+ * at warn severity for in-editor feedback (JS/TS files only) — keep the two
+ * in sync when the vocabulary changes.
  */
 import fs from "node:fs";
 import path from "node:path";

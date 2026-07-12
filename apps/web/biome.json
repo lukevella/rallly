@@ -186,6 +186,26 @@
           }
         }
       }
+    },
+    {
+      "includes": [
+        "src/features/**",
+        "!src/features/**/components/**",
+        "!src/features/**/assets/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": {
+              "level": "warn",
+              "options": {
+                "match": "(?:data|mutations|actions|schema|types|ability|constants|utils|service)[.]ts|client[.]tsx|.+[.]test[.]tsx?",
+                "filenameCases": ["kebab-case"]
+              }
+            }
+          }
+        }
+      }
     }
   ]
 }
