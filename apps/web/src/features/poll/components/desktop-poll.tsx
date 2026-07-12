@@ -25,12 +25,12 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { useVotingForm } from "@/components/poll/voting-form";
 import { ScrollContainer } from "@/components/scroll-container";
+import { useVisibleParticipants } from "@/components/visibility";
 import { usePermissions, usePoll } from "@/features/poll/client";
 import { useParticipants } from "@/features/poll/components/participants-provider";
+import { useVotingForm } from "@/features/poll/components/voting-form";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useVisibleParticipants } from "../visibility";
 import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";
 import PollHeader from "./desktop-poll/poll-header";

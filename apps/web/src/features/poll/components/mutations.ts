@@ -1,6 +1,6 @@
 import { toast } from "@rallly/ui/sonner";
 import { useSearchParams } from "next/navigation";
-import { usePoll } from "@/components/poll-context";
+import { usePoll } from "@/features/poll/components/poll-context";
 import { useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import type { ParticipantForm } from "./types";

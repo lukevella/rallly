@@ -14,9 +14,9 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import DesktopPoll from "@/components/poll/desktop-poll";
-import MobilePoll from "@/components/poll/mobile-poll";
 import { usePoll } from "@/features/poll/client";
+import DesktopPoll from "@/features/poll/components/desktop-poll";
+import MobilePoll from "@/features/poll/components/mobile-poll";
 import {
   EventDate,
   EventTimeRange,

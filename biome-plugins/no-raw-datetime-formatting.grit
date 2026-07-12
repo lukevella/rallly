@@ -18,7 +18,7 @@ or {
     r".*/src/lib/datetime/.*",
     r".*/src/lib/utils/timezone-schema\.ts",
     r".*/src/components/time-zone-picker/timezone-utils\.ts",
-    r".*/src/components/poll/manage-poll/use-csv-exporter\.ts",
+    r".*/src/features/poll/components/manage-poll/use-csv-exporter\.ts",
     r".*/tests/.*"
   },
   register_diagnostic(span=$match, message="Do not format dates inline. Use the formatters in `@/lib/datetime` so locale, timezone, and hour-cycle preferences are applied consistently.")

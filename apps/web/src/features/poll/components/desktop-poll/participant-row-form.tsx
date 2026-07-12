@@ -6,16 +6,15 @@ import * as React from "react";
 import { Controller } from "react-hook-form";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { useVotingForm } from "@/components/poll/voting-form";
-import { YouAvatar } from "@/components/poll/you-avatar";
 import {
   Participant,
   ParticipantName,
 } from "@/features/poll/components/participant";
+import { useOptions, usePoll } from "@/features/poll/components/poll-context";
+import { useVotingForm } from "@/features/poll/components/voting-form";
+import { YouAvatar } from "@/features/poll/components/you-avatar";
 import { Trans, useTranslation } from "@/i18n/client";
 import { getOptionDateTimeLabel } from "@/lib/utils/date-time-utils";
-
-import { useOptions, usePoll } from "../../poll-context";
 import { VoteSelector } from "../vote-selector";
 
 export interface ParticipantRowFormProps {

@@ -8,7 +8,6 @@ import { MoreHorizontalIcon } from "lucide-react";
 import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { usePoll } from "@/components/poll-context";
 import { useUser } from "@/components/user-provider";
 import { usePermissions } from "@/features/poll/client";
 import {
@@ -16,6 +15,7 @@ import {
   ParticipantName,
 } from "@/features/poll/components/participant";
 import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
+import { usePoll } from "@/features/poll/components/poll-context";
 import { Trans, useTranslation } from "@/i18n/client";
 import type { Vote } from "@/trpc/client/types";
 

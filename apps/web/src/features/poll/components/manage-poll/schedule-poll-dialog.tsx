@@ -23,9 +23,9 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { DateIconInner } from "@/components/date-icon";
-import { ConnectedScoreSummary } from "@/components/poll/score-summary";
 import { usePoll } from "@/features/poll/client";
 import { useParticipants } from "@/features/poll/components/participants-provider";
+import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
 import { VoteSummaryProgressBar } from "@/features/poll/components/vote-summary-progress-bar";
 import {
   EventDate,

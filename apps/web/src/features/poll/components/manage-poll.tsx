@@ -25,10 +25,10 @@ import {
 import Link from "next/link";
 import * as React from "react";
 import { DuplicateDialog } from "@/app/[locale]/(optional-space)/poll/[urlId]/duplicate-dialog";
-import { SchedulePollDialog } from "@/components/poll/manage-poll/schedule-poll-dialog";
 import { ProBadge } from "@/components/pro-badge";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { usePoll } from "@/features/poll/client";
+import { SchedulePollDialog } from "@/features/poll/components/manage-poll/schedule-poll-dialog";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";

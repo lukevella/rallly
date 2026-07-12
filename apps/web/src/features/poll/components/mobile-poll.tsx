@@ -17,18 +17,18 @@ import smoothscroll from "smoothscroll-polyfill";
 
 import { TimesShownIn } from "@/components/clock";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { useVotingForm } from "@/components/poll/voting-form";
-import { YouAvatar } from "@/components/poll/you-avatar";
-import { useOptions, usePoll } from "@/components/poll-context";
+import { useUser } from "@/components/user-provider";
+import { useVisibleParticipants } from "@/components/visibility";
 import { usePermissions } from "@/features/poll/client";
 import {
   Participant,
   ParticipantName,
 } from "@/features/poll/components/participant";
 import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
+import { useOptions, usePoll } from "@/features/poll/components/poll-context";
+import { useVotingForm } from "@/features/poll/components/voting-form";
+import { YouAvatar } from "@/features/poll/components/you-avatar";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useUser } from "../user-provider";
-import { useVisibleParticipants } from "../visibility";
 import GroupedOptions from "./mobile-poll/grouped-options";
 
 if (typeof window !== "undefined") {

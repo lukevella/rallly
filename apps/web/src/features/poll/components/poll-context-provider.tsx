@@ -1,9 +1,9 @@
 import ModalProvider from "@/components/modal/modal-provider";
+import { usePoll } from "@/features/poll/client";
 import {
   OptionsProvider,
   PollContextProvider,
-} from "@/components/poll-context";
-import { usePoll } from "@/features/poll/client";
+} from "@/features/poll/components/poll-context";
 
 export const LegacyPollContextProvider = (props: React.PropsWithChildren) => {
   const poll = usePoll();

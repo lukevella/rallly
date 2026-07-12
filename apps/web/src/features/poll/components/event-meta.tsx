@@ -1,6 +1,6 @@
 import { cn } from "@rallly/ui";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import TruncatedLinkify from "@/components/poll/truncated-linkify";
+import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 
 export function EventMetaTitle({
   className,

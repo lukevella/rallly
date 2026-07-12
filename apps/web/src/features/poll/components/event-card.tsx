@@ -1,16 +1,16 @@
 "use client";
 import { Card, CardContent } from "@rallly/ui/card";
 import { MapPinIcon, User2Icon } from "lucide-react";
+import { RandomGradientBar } from "@/components/random-gradient-bar";
+import { usePoll } from "@/features/poll/client";
 import {
   EventMetaDescription,
   EventMetaItem,
   EventMetaList,
   EventMetaTitle,
-} from "@/components/event-meta";
-import TruncatedLinkify from "@/components/poll/truncated-linkify";
-import VoteIcon from "@/components/poll/vote-icon";
-import { RandomGradientBar } from "@/components/random-gradient-bar";
-import { usePoll } from "@/features/poll/client";
+} from "@/features/poll/components/event-meta";
+import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
+import VoteIcon from "@/features/poll/components/vote-icon";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 

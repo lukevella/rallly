@@ -9,12 +9,12 @@ import {
 import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import * as z from "zod";
+import { usePermissions, usePoll, useRole } from "@/features/poll/client";
 import {
   normalizeVotes,
   useEditToken,
   useUpdateParticipantMutation,
-} from "@/components/poll/mutations";
-import { usePermissions, usePoll, useRole } from "@/features/poll/client";
+} from "@/features/poll/components/mutations";
 import { NewParticipantForm } from "@/features/poll/components/new-participant-modal";
 import { useParticipants } from "@/features/poll/components/participants-provider";
 import { Trans } from "@/i18n/client";

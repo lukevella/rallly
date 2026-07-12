@@ -10,10 +10,10 @@ import { SpaceBranding } from "@/app/[locale]/e/[id]/components/space-branding";
 import { UserDropdown } from "@/app/[locale]/e/[id]/components/user-dropdown";
 import LogoMarkGray from "@/assets/logo-mark-gray.svg";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { SessionRefresher } from "@/components/session-refresher";
 import { BrandStyle } from "@/features/branding/components/brand-style";
 import { formatLocationText } from "@/features/location/utils";
+import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 import {
   EventCalendarCard,
   EventDate,

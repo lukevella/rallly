@@ -1,9 +1,9 @@
 import type { VoteType } from "@rallly/database";
 import type * as React from "react";
 import { Controller } from "react-hook-form";
-import { useVotingForm } from "@/components/poll/voting-form";
-import { usePoll } from "@/components/poll-context";
 import { useParticipants } from "@/features/poll/components/participants-provider";
+import { usePoll } from "@/features/poll/components/poll-context";
+import { useVotingForm } from "@/features/poll/components/voting-form";
 import type { ParsedDateTimeOpton } from "@/lib/utils/date-time-utils";
 import { getOptionDateTimeLabel } from "@/lib/utils/date-time-utils";
 import DateOption from "./date-option";

@@ -7,13 +7,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useModalContext } from "@/components/modal/modal-provider";
-import { useUpdatePollMutation } from "@/components/poll/mutations";
-import { usePoll } from "@/components/poll-context";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
+import { useUpdatePollMutation } from "@/features/poll/components/mutations";
 import {
   filterParticipantsByVote,
   useParticipants,
 } from "@/features/poll/components/participants-provider";
+import { usePoll } from "@/features/poll/components/poll-context";
 import { Trans, useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
 import { encodeDateOption } from "@/lib/utils/date-time-utils";

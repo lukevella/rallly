@@ -37,7 +37,7 @@ import * as z from "zod";
 import {
   useDeleteParticipantMutation,
   useEditToken,
-} from "@/components/poll/mutations";
+} from "@/features/poll/components/mutations";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFormValidation } from "@/lib/utils/form-validation";
 import { trpc } from "@/trpc/client";
