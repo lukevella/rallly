@@ -67,37 +67,39 @@ export function CalendarConnectionList() {
             </div>
             <div className="flex items-center gap-2">
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    aria-label={t("syncCalendar", {
-                      defaultValue: "Sync calendar",
-                    })}
-                    loading={syncCalendar.isPending}
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => {
-                      toast.promise(
-                        syncCalendar.mutateAsync({ id: calendar.id }),
-                        {
-                          loading: t("syncCalendarLoading", {
-                            defaultValue: "Syncing calendar…",
-                          }),
-                          success: t("syncCalendarSuccess", {
-                            defaultValue: "Calendar synced",
-                          }),
-                          error: t("syncCalendarError", {
-                            defaultValue:
-                              "There was an issue syncing your calendar",
-                          }),
-                        },
-                      );
-                    }}
-                  >
-                    <Icon>
-                      <RefreshCcwIcon />
-                    </Icon>
-                  </Button>
-                </TooltipTrigger>
+                <TooltipTrigger
+                  render={
+                    <Button
+                      aria-label={t("syncCalendar", {
+                        defaultValue: "Sync calendar",
+                      })}
+                      loading={syncCalendar.isPending}
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        toast.promise(
+                          syncCalendar.mutateAsync({ id: calendar.id }),
+                          {
+                            loading: t("syncCalendarLoading", {
+                              defaultValue: "Syncing calendar…",
+                            }),
+                            success: t("syncCalendarSuccess", {
+                              defaultValue: "Calendar synced",
+                            }),
+                            error: t("syncCalendarError", {
+                              defaultValue:
+                                "There was an issue syncing your calendar",
+                            }),
+                          },
+                        );
+                      }}
+                    >
+                      <Icon>
+                        <RefreshCcwIcon />
+                      </Icon>
+                    </Button>
+                  }
+                />
                 <TooltipContent>
                   <Trans i18nKey="syncCalendar" defaults="Sync calendar" />
                 </TooltipContent>

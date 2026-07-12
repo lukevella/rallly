@@ -1,11 +1,6 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipPortal,
-  TooltipTrigger,
-} from "@rallly/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { UndoIcon } from "lucide-react";
 import * as React from "react";
 import { Controller } from "react-hook-form";
@@ -77,23 +72,23 @@ const ParticipantRowForm = ({
           {!isNew ? (
             <div className="flex items-center gap-1">
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    aria-label={t("cancel", { defaultValue: "Cancel" })}
-                    variant="ghost"
-                    onClick={() => {
-                      form.cancel();
-                    }}
-                    size="icon-sm"
-                  >
-                    <UndoIcon />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipPortal>
-                  <TooltipContent>
-                    <Trans i18nKey="cancel" />
-                  </TooltipContent>
-                </TooltipPortal>
+                <TooltipTrigger
+                  render={
+                    <Button
+                      aria-label={t("cancel", { defaultValue: "Cancel" })}
+                      variant="ghost"
+                      onClick={() => {
+                        form.cancel();
+                      }}
+                      size="icon-sm"
+                    >
+                      <UndoIcon />
+                    </Button>
+                  }
+                />
+                <TooltipContent>
+                  <Trans i18nKey="cancel" />
+                </TooltipContent>
               </Tooltip>
               <Button
                 variant="primary"

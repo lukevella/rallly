@@ -56,9 +56,11 @@ export function PollStatusIcon({
     return (
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger asChild>
-            <span className={cn("inline-flex", className)}>{icon}</span>
-          </TooltipTrigger>
+          <TooltipTrigger
+            render={
+              <span className={cn("inline-flex", className)}>{icon}</span>
+            }
+          />
           <TooltipContent>
             <p>{label}</p>
           </TooltipContent>

@@ -94,46 +94,52 @@ function TableControls({
         {showScrollControls ? (
           <>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  aria-label={t("scrollLeft", { defaultValue: "Scroll Left" })}
-                  variant="ghost"
-                  size="icon"
-                  disabled={!canScrollPrev}
-                  onClick={onGoToPreviousPage}
-                >
-                  <Icon>
-                    <ArrowLeftIcon />
-                  </Icon>
-                </Button>
-              </TooltipTrigger>
+              <TooltipTrigger
+                render={
+                  <Button
+                    aria-label={t("scrollLeft", {
+                      defaultValue: "Scroll Left",
+                    })}
+                    variant="ghost"
+                    size="icon"
+                    disabled={!canScrollPrev}
+                    onClick={onGoToPreviousPage}
+                  >
+                    <Icon>
+                      <ArrowLeftIcon />
+                    </Icon>
+                  </Button>
+                }
+              />
               <TooltipContent>
                 <Trans i18nKey="scrollLeft" defaults="Scroll Left" />
               </TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  aria-label={t("scrollRight", {
-                    defaultValue: "Scroll Right",
-                  })}
-                  className="relative"
-                  variant="ghost"
-                  size="icon"
-                  disabled={!canScrollNext}
-                  onClick={onGoToNextPage}
-                >
-                  <Icon>
-                    <ArrowRightIcon />
-                  </Icon>
-                  {showScrollIndicator ? (
-                    <span className="absolute -top-0.5 -right-0.5 flex size-2">
-                      <span className="absolute top-0 right-0 inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
-                      <span className="relative inline-flex size-2 rounded-full bg-rose-500" />
-                    </span>
-                  ) : null}
-                </Button>
-              </TooltipTrigger>
+              <TooltipTrigger
+                render={
+                  <Button
+                    aria-label={t("scrollRight", {
+                      defaultValue: "Scroll Right",
+                    })}
+                    className="relative"
+                    variant="ghost"
+                    size="icon"
+                    disabled={!canScrollNext}
+                    onClick={onGoToNextPage}
+                  >
+                    <Icon>
+                      <ArrowRightIcon />
+                    </Icon>
+                    {showScrollIndicator ? (
+                      <span className="absolute -top-0.5 -right-0.5 flex size-2">
+                        <span className="absolute top-0 right-0 inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
+                        <span className="relative inline-flex size-2 rounded-full bg-rose-500" />
+                      </span>
+                    ) : null}
+                  </Button>
+                }
+              />
               <TooltipContent>
                 <Trans i18nKey="scrollRight" defaults="Scroll Right" />
               </TooltipContent>
@@ -142,36 +148,41 @@ function TableControls({
         ) : null}
         {expanded ? (
           <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                aria-label={t("shrink", { defaultValue: "Shrink" })}
-                variant="ghost"
-                size="icon"
-                onClick={onCollapse}
-              >
-                <Icon>
-                  <ShrinkIcon />
-                </Icon>
-              </Button>
-            </TooltipTrigger>
+            <TooltipTrigger
+              render={
+                <Button
+                  aria-label={t("shrink", { defaultValue: "Shrink" })}
+                  variant="ghost"
+                  size="icon"
+                  onClick={onCollapse}
+                >
+                  <Icon>
+                    <ShrinkIcon />
+                  </Icon>
+                </Button>
+              }
+            />
             <TooltipContent>
               <Trans i18nKey="shrink" defaults="Shrink" />
             </TooltipContent>
           </Tooltip>
         ) : (
-          <Tooltip delayDuration={0}>
-            <TooltipTrigger asChild>
-              <Button
-                aria-label={t("expand", { defaultValue: "Expand" })}
-                variant="ghost"
-                size="icon"
-                onClick={onExpand}
-              >
-                <Icon>
-                  <ExpandIcon />
-                </Icon>
-              </Button>
-            </TooltipTrigger>
+          <Tooltip>
+            <TooltipTrigger
+              delay={0}
+              render={
+                <Button
+                  aria-label={t("expand", { defaultValue: "Expand" })}
+                  variant="ghost"
+                  size="icon"
+                  onClick={onExpand}
+                >
+                  <Icon>
+                    <ExpandIcon />
+                  </Icon>
+                </Button>
+              }
+            />
             <TooltipContent>
               <Trans i18nKey="expand" defaults="Expand" />
             </TooltipContent>
