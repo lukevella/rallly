@@ -120,10 +120,8 @@ function LeaveSpaceDialog({
             />
           </form>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button>
-                <Trans i18nKey="cancel" defaults="Cancel" />
-              </Button>
+            <DialogClose render={<Button />}>
+              <Trans i18nKey="cancel" defaults="Cancel" />
             </DialogClose>
             <Button
               form={formName}
@@ -151,11 +149,9 @@ export function LeaveSpaceButton({
 }: LeaveSpaceButtonProps) {
   return (
     <LeaveSpaceDialog spaceName={spaceName} spaceId={spaceId}>
-      <DialogTrigger asChild>
-        <Button>
-          <LogOutIcon data-icon="inline-start" />
-          <Trans i18nKey="leaveSpace" defaults="Leave Space" />
-        </Button>
+      <DialogTrigger render={<Button />}>
+        <LogOutIcon data-icon="inline-start" />
+        <Trans i18nKey="leaveSpace" defaults="Leave Space" />
       </DialogTrigger>
     </LeaveSpaceDialog>
   );

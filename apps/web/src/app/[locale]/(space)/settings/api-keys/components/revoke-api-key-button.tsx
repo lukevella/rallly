@@ -107,10 +107,8 @@ export function RevokeApiKeyButton({
             >
               <Trans i18nKey="revoke" defaults="Revoke" />
             </Button>
-            <DialogClose asChild>
-              <Button>
-                <Trans i18nKey="cancel" defaults="Cancel" />
-              </Button>
+            <DialogClose render={<Button />}>
+              <Trans i18nKey="cancel" defaults="Cancel" />
             </DialogClose>
           </DialogFooter>
         </DialogContent>

@@ -63,10 +63,10 @@ const Clock = ({ className }: { className?: string }) => {
   );
 };
 
-const ClockPreferences = ({ children }: React.PropsWithChildren) => {
+const ClockPreferences = ({ children }: { children: React.ReactElement }) => {
   return (
     <Dialog modal={false}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger render={children} />
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>

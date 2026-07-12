@@ -206,10 +206,8 @@ function PollListItem({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button>
-                <Trans i18nKey="cancel" />
-              </Button>
+            <DialogClose render={<Button />}>
+              <Trans i18nKey="cancel" />
             </DialogClose>
             <Button
               variant="destructive"

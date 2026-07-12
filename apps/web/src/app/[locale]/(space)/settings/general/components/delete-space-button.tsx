@@ -109,10 +109,8 @@ function DeleteSpaceDialog({
               />
             </div>
             <DialogFooter>
-              <DialogClose asChild>
-                <Button>
-                  <Trans i18nKey="cancel" defaults="Cancel" />
-                </Button>
+              <DialogClose render={<Button />}>
+                <Trans i18nKey="cancel" defaults="Cancel" />
               </DialogClose>
               <Button
                 type="submit"
@@ -139,10 +137,8 @@ interface DeleteSpaceButtonProps {
 export function DeleteSpaceButton({ spaceName }: DeleteSpaceButtonProps) {
   return (
     <DeleteSpaceDialog spaceName={spaceName}>
-      <DialogTrigger asChild>
-        <Button className="text-destructive">
-          <Trans i18nKey="deleteSpace" defaults="Delete Space" />
-        </Button>
+      <DialogTrigger render={<Button className="text-destructive" />}>
+        <Trans i18nKey="deleteSpace" defaults="Delete Space" />
       </DialogTrigger>
     </DeleteSpaceDialog>
   );

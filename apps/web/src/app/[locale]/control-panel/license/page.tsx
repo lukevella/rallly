@@ -194,11 +194,9 @@ export default async function LicensePage() {
                 <Trans i18nKey="purchaseLicense" defaults="Purchase license" />
               </a>
               <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="primary">
-                    <PlusIcon data-icon="inline-start" />
-                    <Trans i18nKey="addLicenseKey" defaults="Add license key" />
-                  </Button>
+                <DialogTrigger render={<Button variant="primary" />}>
+                  <PlusIcon data-icon="inline-start" />
+                  <Trans i18nKey="addLicenseKey" defaults="Add license key" />
                 </DialogTrigger>
                 <DialogContent size="sm">
                   <DialogHeader>
