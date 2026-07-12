@@ -427,7 +427,6 @@
   "outlook": "Outlook",
   "owner": "Ägare",
   "ownerPermissionsRequired": "Endast områdesägare kan komma åt faktureringsinställningarna.",
-  "pageMovedDescription": "Omdirigerar till <a>{newUrl}</a>",
   "paginationItems": "Visar {startItem}–{endItem} av {totalItems}",
   "paginationNext": "Nästa",
   "paginationPage": "Sida {currentPage, number} av {totalPages, number}",
