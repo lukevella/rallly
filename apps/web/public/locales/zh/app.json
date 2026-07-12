@@ -228,7 +228,6 @@
   "or": "或",
   "outlook": "Outlook",
   "owner": "所有者",
-  "pageMovedDescription": "重新定向至 <a>{newUrl}</a>",
   "paginationItems": "显示{totalItems}的{startItem} - {endItem}",
   "paginationNext": "下一步",
   "paginationPage": "第 {currentPage, number} 页 共 {totalPages, number} 页",
