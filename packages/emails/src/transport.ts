@@ -1,9 +1,27 @@
 import * as aws from "@aws-sdk/client-ses";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
+import { logger } from "@rallly/logger";
 import type { Transporter } from "nodemailer";
 import { createTransport } from "nodemailer";
+import type { Logger as NodemailerLogger } from "nodemailer/lib/shared";
 
 type EmailProvider = "ses" | "smtp";
+
+// Adapts pino to nodemailer's bunyan-style logger interface. Pino exposes
+// `level` as a property while nodemailer's type expects a method (it never
+// calls it).
+function createSmtpDebugLogger(): NodemailerLogger {
+  const smtpLogger = logger.child({ name: "smtp" }, { level: "trace" });
+  return {
+    level: () => {},
+    trace: smtpLogger.trace.bind(smtpLogger),
+    debug: smtpLogger.debug.bind(smtpLogger),
+    info: smtpLogger.info.bind(smtpLogger),
+    warn: smtpLogger.warn.bind(smtpLogger),
+    error: smtpLogger.error.bind(smtpLogger),
+    fatal: smtpLogger.fatal.bind(smtpLogger),
+  };
+}
 
 export type SupportedEmailProviders = EmailProvider;
 
@@ -40,6 +58,11 @@ function createTransportForProvider(provider: EmailProvider): Transporter {
       const rejectUnauthorized =
         process.env.SMTP_REJECT_UNAUTHORIZED !== "false";
 
+      // Logs the full SMTP conversation including the auth exchange, where
+      // credentials are only base64 encoded. Never enable outside of
+      // troubleshooting.
+      const debug = process.env.SMTP_DEBUG === "true";
+
       // Warn about security change if no explicit setting
       if (
         process.env.SMTP_REJECT_UNAUTHORIZED === undefined &&
@@ -64,6 +87,8 @@ function createTransportForProvider(provider: EmailProvider): Transporter {
           rejectUnauthorized,
           servername: process.env.SMTP_TLS_SERVERNAME,
         },
+        debug,
+        logger: debug ? createSmtpDebugLogger() : undefined,
       });
     }
   }
