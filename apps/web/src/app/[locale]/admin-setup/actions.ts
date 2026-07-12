@@ -1,8 +1,10 @@
 "use server";
 
 import { prisma } from "@rallly/database";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { isInitialAdmin } from "@/features/setup/utils";
+import { authLib } from "@/lib/auth";
 import { AppError } from "@/lib/errors/app-error";
 import { authActionClient } from "@/lib/safe-action/server";
 
@@ -22,6 +24,16 @@ export const makeMeAdminAction = authActionClient
       },
       data: {
         role: "admin",
+      },
+    });
+
+    // The session cookie cache still holds the old role, which would send
+    // /control-panel straight back here. Re-issue it from the database
+    // before redirecting.
+    await authLib.api.getSession({
+      headers: await headers(),
+      query: {
+        disableCookieCache: true,
       },
     });
 

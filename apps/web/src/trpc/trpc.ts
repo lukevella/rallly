@@ -134,7 +134,14 @@ export const privateProcedure = publicProcedure.use(async ({ ctx, next }) => {
 });
 
 export const adminProcedure = privateProcedure.use(async ({ ctx, next }) => {
-  if (ctx.user.role !== "admin") {
+  // ctx.user comes from the session cookie cache, which can hold a stale
+  // role — admin access must be authorized against the database.
+  const user = await prisma.user.findUnique({
+    where: { id: ctx.user.id },
+    select: { role: true },
+  });
+
+  if (user?.role !== "admin") {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "Admin access required",

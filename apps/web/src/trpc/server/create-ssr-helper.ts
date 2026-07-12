@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import superjson from "superjson";
 import { isInitialAdmin } from "@/features/setup/utils";
+import { getCurrentUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { getPathname } from "@/lib/pathname";
@@ -65,19 +66,18 @@ export const createPrivateSSRHelper = cache(async () => {
  * is not an admin.
  */
 export const createAdminSSRHelper = cache(async () => {
-  const user = (await getSession())?.user;
+  // Admin access must be authorized against the database — the session
+  // cookie cache can hold a stale role. getCurrentUser also rejects
+  // banned users and returns null for guests.
+  const user = await getCurrentUser();
 
-  if (!user || user.isGuest) {
+  if (!user) {
     redirect(
       buildSafeRedirectUrl({
         destination: "/login",
         returnUrl: await getPathname(),
       }),
     );
-  }
-
-  if (user.banned) {
-    throw new InvalidSessionError();
   }
 
   if (user.role !== "admin") {

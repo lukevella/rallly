@@ -114,6 +114,14 @@ test.describe("Admin Setup Page Access", () => {
       await page.waitForURL("/control-panel", { timeout: 5000 });
     }).toPass();
 
+    // The URL check above can pass on the transient redirect even when a
+    // stale session cookie bounces us back to /admin-setup, so assert the
+    // control panel actually rendered.
+    await expect(
+      page.getByRole("heading", { name: "Home", level: 1 }),
+    ).toBeVisible();
+    await expect(page).toHaveURL("/control-panel");
+
     const user = await prisma.user.findUnique({
       where: { email: INITIAL_ADMIN_TEST_EMAIL },
     });
