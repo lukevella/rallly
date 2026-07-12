@@ -190,7 +190,11 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
                       value: role,
                       label: <SpaceRole role={role} />,
                     }))}
-                    onValueChange={field.onChange}
+                    onValueChange={(value) => {
+                      if (value) {
+                        field.onChange(value);
+                      }
+                    }}
                     value={field.value}
                   >
                     <SelectTrigger className="w-full">
