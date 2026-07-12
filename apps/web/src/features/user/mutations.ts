@@ -79,11 +79,36 @@ export async function updateUserImage({
   revalidateTag(userProfileTag(userId), "max");
 }
 
+// Role changes must go through Better-Auth's internal adapter so the user
+// snapshot cached in each session (secondary storage) gets refreshed — a bare
+// Prisma write leaves every active session on the old role, and Better-Auth's
+// own permission checks (e.g. banUser) read the session, not the database.
+// The admin plugin's setRole endpoint is not used because it authorizes
+// against the caller's possibly stale session — authorization is the caller's
+// responsibility.
+export async function updateUserRole({
+  userId,
+  role,
+}: {
+  userId: string;
+  role: "user" | "admin";
+}) {
+  const { internalAdapter } = await authLib.$context;
+
+  await internalAdapter.updateUser(userId, {
+    role,
+    updatedAt: new Date(),
+  });
+}
+
 // Bans must go through Better-Auth rather than Prisma so the user's sessions
 // are actually revoked — with secondary storage enabled, sessions live in
 // Redis, not the Session table, and only Better-Auth's own APIs delete those
 // keys. A bare `banned: true` write leaves the user logged in until their
-// session expires.
+// session expires. The admin plugin's banUser endpoint is deliberately not
+// used: it authorizes against the caller's session snapshot rather than the
+// database, and the moderation auto-ban runs without an admin session at all.
+// Authorization is the caller's responsibility.
 
 export async function banUser({
   userId,
@@ -92,44 +117,11 @@ export async function banUser({
   userId: string;
   reason?: string;
 }) {
-  await authLib.api.banUser({
-    body: { userId, banReason: reason },
-    headers: await headers(),
-  });
-
-  await prisma.user.update({
-    where: { id: userId },
-    data: { bannedAt: new Date() },
-  });
-}
-
-export async function unbanUser({ userId }: { userId: string }) {
-  await authLib.api.unbanUser({
-    body: { userId },
-    headers: await headers(),
-  });
-
-  await prisma.user.update({
-    where: { id: userId },
-    data: { bannedAt: null },
-  });
-}
-
-// For bans issued without an admin session (e.g. the moderation auto-ban).
-// Mirrors what authLib.api.banUser does internally, minus the permission
-// checks — authorization is the caller's responsibility.
-export async function banUserAsSystem({
-  userId,
-  reason,
-}: {
-  userId: string;
-  reason: string;
-}) {
   const { internalAdapter } = await authLib.$context;
 
   await internalAdapter.updateUser(userId, {
     banned: true,
-    banReason: reason,
+    banReason: reason ?? null,
     updatedAt: new Date(),
   });
 
@@ -138,6 +130,22 @@ export async function banUserAsSystem({
   await prisma.user.update({
     where: { id: userId },
     data: { bannedAt: new Date() },
+  });
+}
+
+export async function unbanUser({ userId }: { userId: string }) {
+  const { internalAdapter } = await authLib.$context;
+
+  await internalAdapter.updateUser(userId, {
+    banned: false,
+    banReason: null,
+    banExpires: null,
+    updatedAt: new Date(),
+  });
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { bannedAt: null },
   });
 }
 
