@@ -24,3 +24,33 @@ jobs:
           draft: true
           generateReleaseNotes: true
           makeLatest: true
+
+  docs:
+    name: Open docs release PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Open PR to merge pending doc updates
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ! git ls-remote --exit-code --heads origin doc-updates > /dev/null; then
+            echo "No doc-updates branch, skipping"
+            exit 0
+          fi
+          git fetch origin doc-updates main
+          if [ "$(git rev-list --count origin/main..origin/doc-updates)" -eq 0 ]; then
+            echo "doc-updates has no commits ahead of main, skipping"
+            exit 0
+          fi
+          gh pr create \
+            --base main \
+            --head doc-updates \
+            --title "📝 Publish docs for ${GITHUB_REF_NAME}" \
+            --body "Docs held back until this release. Merge to publish." \
+            || echo "PR already exists"
