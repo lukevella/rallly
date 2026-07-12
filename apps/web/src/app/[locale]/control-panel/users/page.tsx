@@ -65,26 +65,27 @@ async function loadData({
     where.role = role;
   }
 
-  const allUsers = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      image: true,
-      role: true,
-      banned: true,
-    },
-    take: pageSize,
-    skip: (page - 1) * pageSize,
-    where,
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  const totalUsers = await prisma.user.count({
-    where,
-  });
+  const [allUsers, totalUsers] = await Promise.all([
+    prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+        role: true,
+        banned: true,
+      },
+      take: pageSize,
+      skip: (page - 1) * pageSize,
+      where,
+      orderBy: {
+        createdAt: "desc",
+      },
+    }),
+    prisma.user.count({
+      where,
+    }),
+  ]);
 
   const ability = defineAbilityFor({ role: user.role, id: user.id });
 
