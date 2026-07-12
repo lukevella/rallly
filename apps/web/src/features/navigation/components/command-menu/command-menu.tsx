@@ -58,7 +58,9 @@ export function CommandMenu() {
         </DialogDescription>
         <CommandInput
           autoFocus={true}
-          placeholder="Type a command or search..."
+          placeholder={t("commandMenuSearchPlaceholder", {
+            defaultValue: "Type a command or search...",
+          })}
         />
         <CommandList className="max-h-max">
           <CommandEmpty>
@@ -66,7 +68,9 @@ export function CommandMenu() {
               <Trans i18nKey="commandMenuNoResults" defaults="No results" />
             </span>
           </CommandEmpty>
-          <CommandGroup heading={<Trans i18nKey="polls" defaults="Actions" />}>
+          <CommandGroup
+            heading={<Trans i18nKey="commandMenuActions" defaults="Actions" />}
+          >
             <CommandItem onSelect={() => handleSelect("/new")}>
               <Icon>
                 <PlusIcon />
@@ -74,7 +78,11 @@ export function CommandMenu() {
               <Trans i18nKey="createNewPoll" defaults="Create new poll" />
             </CommandItem>
           </CommandGroup>
-          <CommandGroup heading="Navigation">
+          <CommandGroup
+            heading={
+              <Trans i18nKey="commandMenuNavigation" defaults="Navigation" />
+            }
+          >
             <CommandItem onSelect={() => handleSelect("/")}>
               <HomePageIcon size="sm" />
               <NavigationCommandLabel label={t("home")} />
