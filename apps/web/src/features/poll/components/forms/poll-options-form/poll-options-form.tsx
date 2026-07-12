@@ -240,7 +240,7 @@ const PollOptionsForm = ({
                     {disableTimeZoneChange ? (
                       <Trans
                         i18nKey="autoTimeZoneDisabledHelp"
-                        defaults="Time zone cannot be changed after votes have been cast. To change the time zone, ask participants to clear their votes first."
+                        defaults="The time zone can't be changed after votes have been cast."
                       />
                     ) : (
                       <Trans
@@ -252,25 +252,11 @@ const PollOptionsForm = ({
                 </Tooltip>
               </div>
               {field.value ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span>
-                      <TimeZoneSelect
-                        disabled={disableTimeZoneChange}
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      />
-                    </span>
-                  </TooltipTrigger>
-                  {disableTimeZoneChange ? (
-                    <TooltipContent className="w-72">
-                      <Trans
-                        i18nKey="autoTimeZoneDisabledHelp"
-                        defaults="Time zone cannot be changed after votes have been cast. To change the time zone, ask participants to clear their votes first."
-                      />
-                    </TooltipContent>
-                  ) : null}
-                </Tooltip>
+                <TimeZoneSelect
+                  disabled={disableTimeZoneChange}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                />
               ) : null}
             </div>
           )}

@@ -39,7 +39,7 @@ const Page = () => {
   const { poll } = usePoll();
   const { participants } = useParticipants();
   const hasVotes = participants.some(
-    (p: { votes: unknown[] }) => p.votes.length > 0,
+    (participant) => participant.votes.length > 0,
   );
   const { mutate: updatePollMutation, isPending: isUpdating } =
     useUpdatePollMutation();
