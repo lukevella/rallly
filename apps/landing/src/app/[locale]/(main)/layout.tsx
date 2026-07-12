@@ -81,33 +81,31 @@ export default async function Root(props: {
           </div>
           <div className="flex items-center justify-center lg:hidden">
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button size="sm" variant="ghost">
-                  <Icon>
-                    <MenuIcon />
-                  </Icon>
-                </Button>
+              <DropdownMenuTrigger
+                render={<Button size="sm" variant="ghost" />}
+              >
+                <Icon>
+                  <MenuIcon />
+                </Icon>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-48" align="end" sideOffset={16}>
-                <DropdownMenuItem asChild>
-                  <LinkBase href="https://support.rallly.co/workflow/create">
-                    <Trans t={t} i18nKey="howItWorks" defaults="How it Works" />
-                  </LinkBase>
+                <DropdownMenuItem
+                  render={
+                    <LinkBase href="https://support.rallly.co/workflow/create" />
+                  }
+                >
+                  <Trans t={t} i18nKey="howItWorks" defaults="How it Works" />
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <LinkBase href="/pricing">
-                    <Trans t={t} i18nKey="pricing" defaults="Pricing" />
-                  </LinkBase>
+                <DropdownMenuItem render={<LinkBase href="/pricing" />}>
+                  <Trans t={t} i18nKey="pricing" defaults="Pricing" />
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <LinkBase href="/blog">
-                    <Trans t={t} i18nKey="blog" />
-                  </LinkBase>
+                <DropdownMenuItem render={<LinkBase href="/blog" />}>
+                  <Trans t={t} i18nKey="blog" />
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <LinkBase href="https://support.rallly.co">
-                    <Trans t={t} i18nKey="support" />
-                  </LinkBase>
+                <DropdownMenuItem
+                  render={<LinkBase href="https://support.rallly.co" />}
+                >
+                  <Trans t={t} i18nKey="support" />
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel className="space-y-2">

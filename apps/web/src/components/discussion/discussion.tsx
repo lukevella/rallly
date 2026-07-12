@@ -204,16 +204,18 @@ function DiscussionInner() {
                         </div>
                         {canDelete && (
                           <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                aria-label={t("moreOptions", {
-                                  defaultValue: "More options",
-                                })}
-                                variant="ghost"
-                                size="icon-xs"
-                              >
-                                <MoreHorizontalIcon />
-                              </Button>
+                            <DropdownMenuTrigger
+                              render={
+                                <Button
+                                  aria-label={t("moreOptions", {
+                                    defaultValue: "More options",
+                                  })}
+                                  variant="ghost"
+                                  size="icon-xs"
+                                />
+                              }
+                            >
+                              <MoreHorizontalIcon />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">
                               <DropdownMenuItem

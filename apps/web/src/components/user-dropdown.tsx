@@ -6,7 +6,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -72,17 +71,17 @@ export const UserDropdown = ({ className }: { className?: string }) => {
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger
         data-testid="user-dropdown"
-        asChild
         className={cn("group min-w-0", className)}
+        render={
+          <Button
+            aria-label={t("accountMenu", { defaultValue: "Account menu" })}
+            variant="ghost"
+            className="rounded-full"
+            size="icon"
+          />
+        }
       >
-        <Button
-          aria-label={t("accountMenu", { defaultValue: "Account menu" })}
-          variant="ghost"
-          className="rounded-full"
-          size="icon"
-        >
-          <OptimizedAvatarImage src={image} name={name} size="sm" />
-        </Button>
+        <OptimizedAvatarImage src={image} name={name} size="sm" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-48">
         <DropdownMenuLabel className="flex items-center gap-2">
@@ -97,40 +96,54 @@ export const UserDropdown = ({ className }: { className?: string }) => {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild={true}>
-          <Link href="/polls" className="flex items-center gap-x-2 sm:hidden">
-            <ListIcon className="size-4 text-muted-foreground" />
-            <Trans i18nKey="polls" defaults="Polls" />
-          </Link>
+        <DropdownMenuItem
+          render={
+            <Link
+              href="/polls"
+              className="flex items-center gap-x-2 sm:hidden"
+            />
+          }
+        >
+          <ListIcon className="size-4 text-muted-foreground" />
+          <Trans i18nKey="polls" defaults="Polls" />
         </DropdownMenuItem>
-        <DropdownMenuItem asChild={true}>
-          <Link href="/settings/profile" className="flex items-center gap-x-2">
-            <UserIcon className="size-4 text-muted-foreground" />
-            <Trans i18nKey="profile" defaults="Profile" />
-          </Link>
+        <DropdownMenuItem
+          render={
+            <Link
+              href="/settings/profile"
+              className="flex items-center gap-x-2"
+            />
+          }
+        >
+          <UserIcon className="size-4 text-muted-foreground" />
+          <Trans i18nKey="profile" defaults="Profile" />
         </DropdownMenuItem>
-        <DropdownMenuItem asChild={true}>
-          <Link
-            href="/settings/preferences"
-            className="flex items-center gap-x-2"
-          >
-            <Settings2Icon className="size-4 text-muted-foreground" />
-            <Trans i18nKey="preferences" defaults="Preferences" />
-          </Link>
+        <DropdownMenuItem
+          render={
+            <Link
+              href="/settings/preferences"
+              className="flex items-center gap-x-2"
+            />
+          }
+        >
+          <Settings2Icon className="size-4 text-muted-foreground" />
+          <Trans i18nKey="preferences" defaults="Preferences" />
         </DropdownMenuItem>
 
-        <DropdownMenuItem asChild={true}>
-          <Link
-            target="_blank"
-            href="https://support.rallly.co"
-            className="flex items-center gap-x-2"
-          >
-            <LifeBuoyIcon className="size-4 text-muted-foreground" />
-            <Trans i18nKey="support" defaults="Support" />
-            <Icon>
-              <ArrowUpRight />
-            </Icon>
-          </Link>
+        <DropdownMenuItem
+          render={
+            <Link
+              target="_blank"
+              href="https://support.rallly.co"
+              className="flex items-center gap-x-2"
+            />
+          }
+        >
+          <LifeBuoyIcon className="size-4 text-muted-foreground" />
+          <Trans i18nKey="support" defaults="Support" />
+          <Icon>
+            <ArrowUpRight />
+          </Icon>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuSub>
@@ -140,30 +153,28 @@ export const UserDropdown = ({ className }: { className?: string }) => {
             </Icon>
             <Trans i18nKey="theme" defaults="Theme" />
           </DropdownMenuSubTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuSubContent>
-              <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
-                <DropdownMenuRadioItem value="system">
-                  <Icon>
-                    <MonitorIcon />
-                  </Icon>
-                  <Trans i18nKey="themeSystem" defaults="System" />
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="light">
-                  <Icon>
-                    <SunIcon />
-                  </Icon>
-                  <Trans i18nKey="themeLight" defaults="Light" />
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="dark">
-                  <Icon>
-                    <MoonIcon />
-                  </Icon>
-                  <Trans i18nKey="themeDark" defaults="Dark" />
-                </DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuSubContent>
-          </DropdownMenuPortal>
+          <DropdownMenuSubContent>
+            <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+              <DropdownMenuRadioItem value="system">
+                <Icon>
+                  <MonitorIcon />
+                </Icon>
+                <Trans i18nKey="themeSystem" defaults="System" />
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="light">
+                <Icon>
+                  <SunIcon />
+                </Icon>
+                <Trans i18nKey="themeLight" defaults="Light" />
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="dark">
+                <Icon>
+                  <MoonIcon />
+                </Icon>
+                <Trans i18nKey="themeDark" defaults="Dark" />
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem

@@ -51,33 +51,35 @@ export function SpaceDropdown() {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild={true}>
-          <Button
-            className={cn("flex h-auto w-full gap-2.5 p-2", {
-              "pointer-events-none animate-pulse": setActiveSpace.isExecuting,
-            })}
-            variant="ghost"
-          >
-            <SpaceIcon
-              src={activeSpace.image}
-              name={activeSpace.name}
-              size="lg"
+        <DropdownMenuTrigger
+          render={
+            <Button
+              className={cn("flex h-auto w-full gap-2.5 p-2", {
+                "pointer-events-none animate-pulse": setActiveSpace.isExecuting,
+              })}
+              variant="ghost"
             />
-            <div className="min-w-0 flex-1 px-0.5 text-left">
-              <div className="truncate font-medium text-sm">
-                {activeSpace.name}
-              </div>
-              <div className="text-xs">
-                <SpaceTierLabel tier={activeSpace.tier} />
-              </div>
+          }
+        >
+          <SpaceIcon
+            src={activeSpace.image}
+            name={activeSpace.name}
+            size="lg"
+          />
+          <div className="min-w-0 flex-1 px-0.5 text-left">
+            <div className="truncate font-medium text-sm">
+              {activeSpace.name}
             </div>
-            <Icon>
-              <ChevronsUpDownIcon />
-            </Icon>
-          </Button>
+            <div className="text-xs">
+              <SpaceTierLabel tier={activeSpace.tier} />
+            </div>
+          </div>
+          <Icon>
+            <ChevronsUpDownIcon />
+          </Icon>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="min-w-[var(--radix-dropdown-menu-trigger-width)]"
+          className="min-w-[var(--anchor-width)]"
           align="start"
         >
           <DropdownMenuLabel>
@@ -108,21 +110,17 @@ export function SpaceDropdown() {
             <Trans i18nKey="createSpace" defaults="Create Space" />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="/settings/general">
-              <Icon>
-                <SettingsIcon />
-              </Icon>
-              <Trans i18nKey="spaceSettings" defaults="Space Settings" />
-            </Link>
+          <DropdownMenuItem render={<Link href="/settings/general" />}>
+            <Icon>
+              <SettingsIcon />
+            </Icon>
+            <Trans i18nKey="spaceSettings" defaults="Space Settings" />
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/settings/members">
-              <Icon>
-                <UserPlusIcon />
-              </Icon>
-              <Trans i18nKey="spaceInviteMember" defaults="Invite Member" />
-            </Link>
+          <DropdownMenuItem render={<Link href="/settings/members" />}>
+            <Icon>
+              <UserPlusIcon />
+            </Icon>
+            <Trans i18nKey="spaceInviteMember" defaults="Invite Member" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

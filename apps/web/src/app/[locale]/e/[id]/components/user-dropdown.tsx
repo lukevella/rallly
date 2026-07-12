@@ -33,15 +33,18 @@ export function UserDropdown({
 
   return (
     <DropdownMenu modal={false}>
-      <DropdownMenuTrigger asChild className={cn("group min-w-0", className)}>
-        <Button
-          aria-label={t("accountMenu", { defaultValue: "Account menu" })}
-          variant="ghost"
-          className="rounded-full"
-          size="icon"
-        >
-          <OptimizedAvatarImage src={image} name={name} size="sm" />
-        </Button>
+      <DropdownMenuTrigger
+        className={cn("group min-w-0", className)}
+        render={
+          <Button
+            aria-label={t("accountMenu", { defaultValue: "Account menu" })}
+            variant="ghost"
+            className="rounded-full"
+            size="icon"
+          />
+        }
+      >
+        <OptimizedAvatarImage src={image} name={name} size="sm" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-48">
         <DropdownMenuLabel className="flex items-center gap-2">
@@ -56,20 +59,27 @@ export function UserDropdown({
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/settings/profile" className="flex items-center gap-x-2">
-            <UserIcon className="size-4 text-muted-foreground" />
-            <Trans i18nKey="profile" defaults="Profile" />
-          </Link>
+        <DropdownMenuItem
+          render={
+            <Link
+              href="/settings/profile"
+              className="flex items-center gap-x-2"
+            />
+          }
+        >
+          <UserIcon className="size-4 text-muted-foreground" />
+          <Trans i18nKey="profile" defaults="Profile" />
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link
-            href="/settings/preferences"
-            className="flex items-center gap-x-2"
-          >
-            <Settings2Icon className="size-4 text-muted-foreground" />
-            <Trans i18nKey="preferences" defaults="Preferences" />
-          </Link>
+        <DropdownMenuItem
+          render={
+            <Link
+              href="/settings/preferences"
+              className="flex items-center gap-x-2"
+            />
+          }
+        >
+          <Settings2Icon className="size-4 text-muted-foreground" />
+          <Trans i18nKey="preferences" defaults="Preferences" />
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem

@@ -16,16 +16,14 @@ import { Trans } from "@/i18n/client";
 export function ConnectCalendarDropdown() {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button>
-          <PlusIcon data-icon="inline-start" />
-          <Trans i18nKey="connectCalendar" defaults="Connect Calendar" />
-          <ChevronDownIcon data-icon="inline-end" />
-        </Button>
+      <DropdownMenuTrigger render={<Button />}>
+        <PlusIcon data-icon="inline-start" />
+        <Trans i18nKey="connectCalendar" defaults="Connect Calendar" />
+        <ChevronDownIcon data-icon="inline-end" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem
-          onSelect={() => {
+          onClick={() => {
             connectToCalendar("google-calendar");
           }}
         >
@@ -38,7 +36,7 @@ export function ConnectCalendarDropdown() {
           <Trans i18nKey="connectGoogleCalendar" defaults="Google Calendar" />
         </DropdownMenuItem>
         <DropdownMenuItem
-          onSelect={() => {
+          onClick={() => {
             connectToCalendar("outlook");
           }}
         >
