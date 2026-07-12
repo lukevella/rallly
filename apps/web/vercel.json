@@ -1,6 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "cd ../.. && pnpm build:web && pnpm db:deploy",
+  "git": {
+    "deploymentEnabled": {
+      "l10n_*": false
+    }
+  },
   "crons": [
     {
       "path": "/api/house-keeping/auto-close-polls",
