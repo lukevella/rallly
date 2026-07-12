@@ -8,6 +8,7 @@ import {
   unbanUser,
   updateUserImage,
   updateUserName,
+  updateUserRole,
 } from "@/features/user/mutations";
 import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
@@ -152,14 +153,7 @@ export const changeRoleAction = adminActionClient
       });
     }
 
-    await prisma.user.update({
-      where: {
-        id: targetUser.id,
-      },
-      data: {
-        role,
-      },
-    });
+    await updateUserRole({ userId: targetUser.id, role });
   });
 
 export const banUserAction = adminActionClient

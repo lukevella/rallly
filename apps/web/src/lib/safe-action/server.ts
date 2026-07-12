@@ -1,6 +1,7 @@
 import "server-only";
 
 import * as Sentry from "@sentry/nextjs";
+import { APIError } from "better-auth/api";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import * as z from "zod";
 import { defineAbilityFor } from "@/features/user/ability";
@@ -77,6 +78,19 @@ export const actionClient = createSafeActionClient({
 
     if (error instanceof AppError) {
       return error.code;
+    }
+
+    if (error instanceof APIError) {
+      switch (error.status) {
+        case "UNAUTHORIZED":
+        case "FORBIDDEN":
+        case "NOT_FOUND":
+        case "PAYMENT_REQUIRED":
+        case "PAYLOAD_TOO_LARGE":
+        case "TOO_MANY_REQUESTS":
+        case "SERVICE_UNAVAILABLE":
+          return error.status;
+      }
     }
 
     return "INTERNAL_SERVER_ERROR" as const;

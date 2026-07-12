@@ -1,9 +1,9 @@
 "use server";
 
-import { prisma } from "@rallly/database";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { isInitialAdmin } from "@/features/setup/utils";
+import { updateUserRole } from "@/features/user/mutations";
 import { authLib } from "@/lib/auth";
 import { AppError } from "@/lib/errors/app-error";
 import { authActionClient } from "@/lib/safe-action/server";
@@ -18,14 +18,7 @@ export const makeMeAdminAction = authActionClient
       });
     }
 
-    await prisma.user.update({
-      where: {
-        id: ctx.user.id,
-      },
-      data: {
-        role: "admin",
-      },
-    });
+    await updateUserRole({ userId: ctx.user.id, role: "admin" });
 
     // The session cookie cache still holds the old role, which would send
     // /control-panel straight back here. Re-issue it from the database
