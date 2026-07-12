@@ -1,9 +1,9 @@
 "use client";
-import Discussion from "@/components/discussion";
 import { EventCard } from "@/components/event-card";
 import { PollFooter } from "@/components/poll/poll-footer";
 import { ResponsiveResults } from "@/components/poll/responsive-results";
 import { VotingForm } from "@/components/poll/voting-form";
+import Discussion from "@/features/poll/components/discussion";
 import { GuestPollAlert } from "./guest-poll-alert";
 
 export function AdminPage() {

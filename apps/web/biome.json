@@ -121,7 +121,6 @@
     {
       "includes": [
         "src/components/add-to-calendar-button.tsx",
-        "src/components/discussion/discussion.tsx",
         "src/components/event-card.tsx",
         "src/components/forms/poll-settings.tsx",
         "src/components/layouts/poll-layout.tsx",
