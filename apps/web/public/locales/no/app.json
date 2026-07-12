@@ -390,7 +390,6 @@
   "outlook": "Outlook",
   "owner": "Eier",
   "ownerPermissionsRequired": "Kun områdeeiere kan få tilgang til fakturainnstillinger.",
-  "pageMovedDescription": "Omdirigerer til <a>{newUrl}</a>",
   "paginationItems": "Viser {startItem}–{endItem} av {totalItems}",
   "paginationNext": "Neste",
   "paginationPage": "Side {currentPage, number} av {totalPages, number}",
