@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import { PollBrandingFromContext } from "@/components/poll/poll-branding";
+import { PollBrandingFromContext } from "@/features/poll/components/poll-branding";
 
 const AdminPage = dynamic(
   () => import("./admin-page").then((mod) => mod.AdminPage),

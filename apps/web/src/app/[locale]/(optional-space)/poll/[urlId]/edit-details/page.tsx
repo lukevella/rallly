@@ -13,10 +13,9 @@ import { Form } from "@rallly/ui/form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-
-import { PollDetailsForm } from "@/components/forms/poll-details-form";
-import { useUpdatePollMutation } from "@/components/poll/mutations";
-import { usePoll } from "@/components/poll-context";
+import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
+import { useUpdatePollMutation } from "@/features/poll/components/mutations";
+import { usePoll } from "@/features/poll/components/poll-context";
 import { Trans } from "@/i18n/client";
 
 const Page = () => {

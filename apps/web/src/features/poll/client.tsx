@@ -2,7 +2,7 @@
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
-import { useParticipants } from "@/components/participants-provider";
+import { useParticipants } from "@/features/poll/components/participants-provider";
 import { trpc } from "@/trpc/client";
 
 export const usePoll = () => {

@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
-import { PollLayout } from "@/components/layouts/poll-layout";
+import { PollLayout } from "@/features/poll/components/poll-layout";
 import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
 
 export default async function Layout(
