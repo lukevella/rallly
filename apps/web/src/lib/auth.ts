@@ -320,7 +320,7 @@ export const authLib = betterAuth({
         const accountEmail = ctx.body?.email as string | undefined;
         if (accountEmail) {
           const user = await prisma.user.findUnique({
-            where: { email: accountEmail.toLowerCase() },
+            where: { email: accountEmail },
             select: { banned: true },
           });
           if (user?.banned) {
