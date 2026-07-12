@@ -1,6 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "cd ../.. && pnpm build:landing",
+  "git": {
+    "deploymentEnabled": {
+      "l10n_*": false
+    }
+  },
   "rewrites": [
     {
       "source": "/poll/:path*",
