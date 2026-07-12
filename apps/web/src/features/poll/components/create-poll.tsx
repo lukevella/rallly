@@ -32,12 +32,12 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useCopyToClipboard, useUnmount } from "react-use";
+import type { NewEventData } from "@/components/forms";
+import { PollDetailsForm, PollOptionsForm } from "@/components/forms";
 import { PollSettingsForm } from "@/components/forms/poll-settings";
 import { useUser } from "@/components/user-provider";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
-import type { NewEventData } from "./forms";
-import { PollDetailsForm, PollOptionsForm } from "./forms";
 
 const required = <T,>(v: T | undefined): T => {
   if (!v) {

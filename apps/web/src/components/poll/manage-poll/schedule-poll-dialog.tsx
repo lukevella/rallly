@@ -25,8 +25,8 @@ import * as z from "zod";
 import { DateIconInner } from "@/components/date-icon";
 import { useParticipants } from "@/components/participants-provider";
 import { ConnectedScoreSummary } from "@/components/poll/score-summary";
-import { VoteSummaryProgressBar } from "@/components/vote-summary-progress-bar";
 import { usePoll } from "@/features/poll/client";
+import { VoteSummaryProgressBar } from "@/features/poll/components/vote-summary-progress-bar";
 import {
   EventDate,
   EventTimeRange,

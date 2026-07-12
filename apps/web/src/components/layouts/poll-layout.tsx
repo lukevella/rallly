@@ -11,11 +11,11 @@ import { BarChart2Icon } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import type React from "react";
-import { InviteDialog } from "@/components/invite-dialog";
 import ManagePoll from "@/components/poll/manage-poll";
 import { NotificationToggle } from "@/components/poll/notification-toggle";
 import { LegacyPollContextProvider } from "@/components/poll/poll-context-provider";
 import { usePoll } from "@/features/poll/client";
+import { InviteDialog } from "@/features/poll/components/invite-dialog";
 import { Trans } from "@/i18n/client";
 
 const AdminControls = () => {
