@@ -311,6 +311,25 @@ export const authLib = betterAuth({
             });
           }
         }
+
+        // Reject banned users before a verification code goes out — the
+        // admin plugin only enforces bans at session creation, which is
+        // after the OTP email has already been sent. Keyed off `email`
+        // only: the change-email endpoints submit `newEmail` and already
+        // require a session, which a banned user cannot hold.
+        const accountEmail = ctx.body?.email as string | undefined;
+        if (accountEmail) {
+          const user = await prisma.user.findUnique({
+            where: { email: accountEmail },
+            select: { banned: true },
+          });
+          if (user?.banned) {
+            throw new APIError("FORBIDDEN", {
+              code: "BANNED_USER",
+              message: "You have been banned from this application",
+            });
+          }
+        }
       }
     }),
     after: createAuthMiddleware(async (ctx) => {

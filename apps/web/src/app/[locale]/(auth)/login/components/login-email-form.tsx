@@ -74,6 +74,14 @@ export function LoginWithEmailForm() {
                     }),
                   });
                   break;
+                case "BANNED_USER":
+                  form.setError("identifier", {
+                    message: t("authErrorsUserBanned", {
+                      defaultValue:
+                        "This account has been banned. Please contact support if you believe this is an error.",
+                    }),
+                  });
+                  break;
                 default:
                   form.setError("password", {
                     message: res.error.message,
@@ -109,6 +117,14 @@ export function LoginWithEmailForm() {
                 case "EMAIL_BLOCKED":
                   form.setError("identifier", {
                     message: t("authErrorsEmailBlocked"),
+                  });
+                  break;
+                case "BANNED_USER":
+                  form.setError("identifier", {
+                    message: t("authErrorsUserBanned", {
+                      defaultValue:
+                        "This account has been banned. Please contact support if you believe this is an error.",
+                    }),
                   });
                   break;
                 default:
