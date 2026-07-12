@@ -1,12 +1,12 @@
 import "server-only";
 
 import { openai } from "@ai-sdk/openai";
-import { prisma } from "@rallly/database";
 import { sendRawEmail } from "@rallly/emails";
 import { createLogger } from "@rallly/logger";
 import { generateText } from "ai";
 import { after } from "next/server";
 import { env } from "@/env";
+import { banUserAsSystem } from "@/features/user/mutations";
 import type { ModerationResult, ModerationVerdict } from "./types";
 import { containsSuspiciousPatterns } from "./utils";
 
@@ -132,13 +132,9 @@ export async function moderateContent({
   if (containsBannedDomain(textToModerate)) {
     logger.warn({ userId }, "Banned domain detected, banning user");
     after(() =>
-      prisma.user.update({
-        where: { id: userId },
-        data: {
-          banned: true,
-          bannedAt: new Date(),
-          banReason: "Automatic ban: banned domain detected in content",
-        },
+      banUserAsSystem({
+        userId,
+        reason: "Automatic ban: banned domain detected in content",
       }),
     );
     return {

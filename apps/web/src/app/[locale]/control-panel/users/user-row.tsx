@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@rallly/ui";
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
 import {
@@ -15,14 +16,21 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
-import { MoreHorizontal, TrashIcon, UserPenIcon } from "lucide-react";
+import {
+  BanIcon,
+  MoreHorizontal,
+  TrashIcon,
+  UserCheckIcon,
+  UserPenIcon,
+} from "lucide-react";
 import { useTransition } from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedListItem } from "@/components/stacked-list";
-import { changeRoleAction } from "@/features/user/actions";
+import { changeRoleAction, unbanUserAction } from "@/features/user/actions";
 import { userRoleSchema } from "@/features/user/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
+import { BanUserDialog } from "./dialogs/ban-user-dialog";
 import { DeleteUserDialog } from "./dialogs/delete-user-dialog";
 
 export function UserRow({
@@ -31,7 +39,9 @@ export function UserRow({
   userId,
   image,
   role,
+  banned,
   canChangeRole,
+  canBan,
   canDelete,
 }: {
   name: string;
@@ -39,14 +49,18 @@ export function UserRow({
   userId: string;
   image?: string;
   role: "admin" | "user";
+  banned: boolean;
   canChangeRole: boolean;
+  canBan: boolean;
   canDelete: boolean;
 }) {
   const { t } = useTranslation();
   const changeRole = useSafeAction(changeRoleAction);
+  const unbanUser = useSafeAction(unbanUserAction);
 
   const [isPending, startTransition] = useTransition();
   const deleteDialog = useDialog();
+  const banDialog = useDialog();
 
   return (
     <>
@@ -63,6 +77,11 @@ export function UserRow({
           <div className="truncate text-muted-foreground">{email}</div>
         </div>
         <div className="flex items-center gap-4">
+          {banned ? (
+            <Badge variant="destructive">
+              <Trans i18nKey="banned" defaults="Banned" />
+            </Badge>
+          ) : null}
           <span className="capitalize">{role}</span>
           <DropdownMenu>
             <DropdownMenuTrigger
@@ -110,6 +129,32 @@ export function UserRow({
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
               <DropdownMenuSeparator />
+              {banned ? (
+                <DropdownMenuItem
+                  onClick={() => {
+                    startTransition(async () => {
+                      await unbanUser.executeAsync({ userId });
+                    });
+                  }}
+                  disabled={!canBan}
+                >
+                  <Icon>
+                    <UserCheckIcon />
+                  </Icon>
+                  <Trans i18nKey="unbanUser" defaults="Unban user" />
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  className="text-destructive"
+                  onClick={() => {
+                    banDialog.trigger();
+                  }}
+                  disabled={!canBan}
+                >
+                  <BanIcon className="size-4" />
+                  <Trans i18nKey="banUser" defaults="Ban user" />
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 className="text-destructive"
                 onClick={async () => {
@@ -124,6 +169,7 @@ export function UserRow({
           </DropdownMenu>
         </div>
       </StackedListItem>
+      <BanUserDialog {...banDialog.dialogProps} userId={userId} email={email} />
       <DeleteUserDialog
         {...deleteDialog.dialogProps}
         userId={userId}

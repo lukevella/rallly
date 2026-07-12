@@ -72,6 +72,7 @@ async function loadData({
       email: true,
       image: true,
       role: true,
+      banned: true,
     },
     take: pageSize,
     skip: (page - 1) * pageSize,
@@ -93,6 +94,7 @@ async function loadData({
       ...u,
       image: u.image ?? undefined,
       canChangeRole: ability.can("update", subject("User", u), "role"),
+      canBan: ability.can("update", subject("User", u), "banned"),
       canDelete: ability.can("delete", subject("User", u)),
     })),
     totalUsers,
@@ -149,7 +151,9 @@ export default async function AdminPage(props: {
                       userId={user.id}
                       image={user.image}
                       role={user.role}
+                      banned={user.banned}
                       canChangeRole={user.canChangeRole}
+                      canBan={user.canBan}
                       canDelete={user.canDelete}
                     />
                   ))}
