@@ -174,8 +174,6 @@
   "deleteAccountDialogTitle": "Fiók törlése",
   "deleteAccountInstruction": "Kérjük, erősítsd meg email címed a fiókod törléséhez",
   "deleteDate": "Dátum törlése",
-  "deletedPoll": "Törölt szavazás",
-  "deletedPollInfo": "Ez a szavazás már nem létezik.",
   "deletedSpaceSuccess": "A munkaterület véglegesen törölve lett",
   "deleteEventTypeDescription": "<b>{name}</b> el lesz rejtve a létrehozható lehetőségek közül. Ezt nem lehet visszavonni.",
   "deleteEventTypeError": "Nem sikerült az eseménytípus törlése",
