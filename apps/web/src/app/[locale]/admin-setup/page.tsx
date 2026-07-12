@@ -11,14 +11,25 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { isInitialAdmin } from "@/features/setup/utils";
+import { getCurrentUser } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {
-  const helpers = await createPrivateSSRHelper();
-  const user = await helpers.user.getAuthed.fetch();
+  // Read the role from the database — the session cookie cache can hold
+  // a stale role.
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect(
+      buildSafeRedirectUrl({
+        destination: "/login",
+        returnUrl: "/admin-setup",
+      }),
+    );
+  }
 
   if (user.role === "admin") {
     redirect("/control-panel");
