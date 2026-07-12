@@ -79,6 +79,12 @@ export type ValidateLicenseKeyResponse = z.infer<
   typeof validateLicenseKeyResponseSchema
 >;
 
+export const licenseCheckoutProductSchema = z.enum(["plus", "organization"]);
+
+export type LicenseCheckoutProduct = z.infer<
+  typeof licenseCheckoutProductSchema
+>;
+
 export const licenseCheckoutMetadataSchema = z.object({
   licenseType: licenseTypeSchema,
   version: z.coerce.number(),
