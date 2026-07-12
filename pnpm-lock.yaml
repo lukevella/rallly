@@ -228,9 +228,6 @@ importers:
       '@prisma/client':
         specifier: ^7.8.0
         version: 7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3))(typescript@6.0.3)
-      '@radix-ui/react-slot':
-        specifier: ^1.1.2
-        version: 1.2.4(@types/react@19.2.13)(react@19.2.6)
       '@rallly/billing':
         specifier: workspace:*
         version: link:../../packages/billing
@@ -767,9 +764,6 @@ importers:
       '@radix-ui/react-portal':
         specifier: ^1.1.6
         version: 1.1.10(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      '@radix-ui/react-slot':
-        specifier: ^1.1.2
-        version: 1.2.4(@types/react@19.2.13)(react@19.2.6)
       '@rallly/languages':
         specifier: workspace:*
         version: link:../languages

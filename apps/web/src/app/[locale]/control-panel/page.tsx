@@ -52,89 +52,81 @@ export default async function AdminPage() {
         <div className="space-y-4">
           <TileGrid>
             {/* USERS */}
-            <Tile asChild>
-              <Link href="/control-panel/users">
-                <div className="flex justify-between">
-                  <div>
-                    <PageIcon>
-                      <UsersIcon />
-                    </PageIcon>
-                    <TileTitle>
-                      <Trans i18nKey="users" defaults="Users" />
-                    </TileTitle>
-                  </div>
-                  <div className="text-muted-foreground text-sm">
-                    <span
-                      className={cn({
-                        "text-destructive":
-                          userLimit !== null && userCount > userLimit,
-                      })}
-                    >
-                      <Trans
-                        i18nKey="userCount"
-                        defaults="{count, number, ::compact-short}"
-                        values={{ count: userCount }}
-                      />
-                      /
-                      {userLimit === Number.POSITIVE_INFINITY ? (
-                        <Icon className="inline-flex">
-                          <InfinityIcon />
-                        </Icon>
-                      ) : (
-                        userLimit
-                      )}
-                    </span>
-                  </div>
+            <Tile render={<Link href="/control-panel/users" />}>
+              <div className="flex justify-between">
+                <div>
+                  <PageIcon>
+                    <UsersIcon />
+                  </PageIcon>
+                  <TileTitle>
+                    <Trans i18nKey="users" defaults="Users" />
+                  </TileTitle>
                 </div>
-              </Link>
+                <div className="text-muted-foreground text-sm">
+                  <span
+                    className={cn({
+                      "text-destructive":
+                        userLimit !== null && userCount > userLimit,
+                    })}
+                  >
+                    <Trans
+                      i18nKey="userCount"
+                      defaults="{count, number, ::compact-short}"
+                      values={{ count: userCount }}
+                    />
+                    /
+                    {userLimit === Number.POSITIVE_INFINITY ? (
+                      <Icon className="inline-flex">
+                        <InfinityIcon />
+                      </Icon>
+                    ) : (
+                      userLimit
+                    )}
+                  </span>
+                </div>
+              </div>
             </Tile>
             {/* LICENSE */}
-            <Tile asChild>
-              <Link href="/control-panel/license">
-                <div className="flex justify-between">
-                  <PageIcon>
-                    <KeySquareIcon />
-                  </PageIcon>
-                  {tier ? (
-                    <span className="text-primary text-sm capitalize">
-                      {tier}
-                    </span>
-                  ) : (
-                    <span className="text-muted-foreground text-sm">
-                      <Trans i18nKey="unlicensed" defaults="Unlicensed" />
-                    </span>
-                  )}
-                </div>
-                <TileTitle>
-                  <Trans i18nKey="license" defaults="License" />
-                </TileTitle>
-              </Link>
+            <Tile render={<Link href="/control-panel/license" />}>
+              <div className="flex justify-between">
+                <PageIcon>
+                  <KeySquareIcon />
+                </PageIcon>
+                {tier ? (
+                  <span className="text-primary text-sm capitalize">
+                    {tier}
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground text-sm">
+                    <Trans i18nKey="unlicensed" defaults="Unlicensed" />
+                  </span>
+                )}
+              </div>
+              <TileTitle>
+                <Trans i18nKey="license" defaults="License" />
+              </TileTitle>
             </Tile>
             {/* BRANDING */}
-            <Tile asChild>
-              <Link href="/control-panel/branding">
-                <div className="flex justify-between">
-                  <PageIcon>
-                    <PaletteIcon />
-                  </PageIcon>
-                </div>
-                <TileTitle>
-                  <Trans i18nKey="branding" defaults="Branding" />
-                </TileTitle>
-              </Link>
+            <Tile render={<Link href="/control-panel/branding" />}>
+              <div className="flex justify-between">
+                <PageIcon>
+                  <PaletteIcon />
+                </PageIcon>
+              </div>
+              <TileTitle>
+                <Trans i18nKey="branding" defaults="Branding" />
+              </TileTitle>
             </Tile>
             {/* INSTANCE SETTINGS */}
-            <Tile asChild>
-              <Link href="/control-panel/settings">
-                <div className="flex justify-between">
-                  <PageIcon>
-                    <SettingsIcon />
-                  </PageIcon>
-                </div>
-                <TileTitle>
-                  <Trans i18nKey="settings" defaults="Settings" />
-                </TileTitle>
-              </Link>
+            <Tile render={<Link href="/control-panel/settings" />}>
+              <div className="flex justify-between">
+                <PageIcon>
+                  <SettingsIcon />
+                </PageIcon>
+              </div>
+              <TileTitle>
+                <Trans i18nKey="settings" defaults="Settings" />
+              </TileTitle>
             </Tile>
             {/* VERSION */}
             <VersionTile />

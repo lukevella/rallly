@@ -26,11 +26,12 @@ export function SpaceSidebarMenu() {
                 {section.items.map((item) => {
                   return (
                     <SidebarMenuItem key={item.id}>
-                      <SidebarMenuButton asChild isActive={item.isActive}>
-                        <HoverPrefetchLink href={item.href}>
-                          <item.icon />
-                          {item.label}
-                        </HoverPrefetchLink>
+                      <SidebarMenuButton
+                        render={<HoverPrefetchLink href={item.href} />}
+                        isActive={item.isActive}
+                      >
+                        <item.icon />
+                        {item.label}
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );
