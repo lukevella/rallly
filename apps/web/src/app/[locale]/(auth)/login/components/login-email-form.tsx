@@ -111,6 +111,14 @@ export function LoginWithEmailForm() {
                     message: t("authErrorsEmailBlocked"),
                   });
                   break;
+                case "BANNED_USER":
+                  form.setError("identifier", {
+                    message: t("authErrorsUserBanned", {
+                      defaultValue:
+                        "This account has been banned. Please contact support if you believe this is an error.",
+                    }),
+                  });
+                  break;
                 default:
                   form.setError("identifier", {
                     message: res.error.message,
