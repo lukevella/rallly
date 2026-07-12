@@ -32,6 +32,8 @@
     "@rallly/tsconfig": "workspace:*",
     "@react-email/ui": "^6.6.3",
     "@types/nodemailer": "^6.4.14",
+    "@types/react": "19.2.13",
+    "@types/react-dom": "19.2.3",
     "i18next-cli": "^1.58.1",
     "react-email": "^6.6.3"
   }
