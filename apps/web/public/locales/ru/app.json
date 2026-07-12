@@ -106,8 +106,6 @@
   "deleteAccountDialogTitle": "Удалить аккаунт",
   "deleteAccountInstruction": "Пожалуйста, подтвердите ваш адрес электронной почты, чтобы удалить ваш аккаунт",
   "deleteDate": "Удалить дату",
-  "deletedPoll": "Удаленный опрос",
-  "deletedPollInfo": "Этот опрос больше не существует.",
   "deletedSpaceSuccess": "Пространство было удалено навсегда",
   "deleteParticipant": "Удалить {name}?",
   "deleteParticipantDescription": "Вы уверены, что хотите удалить этого участника? Это действие нельзя отменить.",

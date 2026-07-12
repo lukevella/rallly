@@ -173,8 +173,6 @@
   "deleteAccountDialogTitle": "Poista tili",
   "deleteAccountInstruction": "Vahvista sähköpostiosoitteesi tilisi poistamiseksi",
   "deleteDate": "Poista päivämäärä",
-  "deletedPoll": "Poistettu kysely",
-  "deletedPollInfo": "Tätä kyselyä ei ole enää olemassa.",
   "deletedSpaceSuccess": "Tila on poistettu pysyvästi",
   "deleteEventTypeDescription": "<b>{name}</b> piilotetaan valintavalikosta. Tätä ei voi kumota.",
   "deleteEventTypeError": "Tapahtumalajin poistaminen ei onnistunut",

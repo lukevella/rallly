@@ -164,8 +164,6 @@
   "deleteAccountDialogTitle": "Account verwijderen",
   "deleteAccountInstruction": "Bevestig je e-mailadres om je account te verwijderen",
   "deleteDate": "Datum verwijderen",
-  "deletedPoll": "Verwijderde poll",
-  "deletedPollInfo": "Deze poll bestaat niet meer.",
   "deletedSpaceSuccess": "Ruimte is definitief verwijderd",
   "deleteMenuItem": "Verwijderen",
   "deleteParticipant": "Verwijder {name}?",

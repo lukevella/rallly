@@ -72,8 +72,6 @@
   "deleteAccountDialogTitle": "Usuń konto",
   "deleteAccountInstruction": "Potwierdź swój adres e-mail, aby usunąć konto",
   "deleteDate": "Usuń datę",
-  "deletedPoll": "Usuń ankietę",
-  "deletedPollInfo": "Ta ankieta już nie istnieje.",
   "deleteParticipant": "Usunąć {name}?",
   "deleteParticipantDescription": "Czy na pewno chcesz usunąć tego uczestnika? Tej operacji nie można cofnąć.",
   "deletePoll": "Usuń ankietę",

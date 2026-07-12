@@ -173,8 +173,6 @@
   "deleteAccountDialogTitle": "Eliminar cuenta",
   "deleteAccountInstruction": "Por favor, confirma tu dirección de correo electrónico para eliminar tu cuenta",
   "deleteDate": "Eliminar fecha",
-  "deletedPoll": "Encuesta eliminada",
-  "deletedPollInfo": "Esta encuesta ya no existe.",
   "deletedSpaceSuccess": "El espacio ha sido eliminado permanentemente",
   "deleteEventTypeDescription": "<b>{name}</b> será oculto de los seleccionadores de creación. Esto no se puede deshacer.",
   "deleteEventTypeError": "Error al eliminar el tipo de evento",

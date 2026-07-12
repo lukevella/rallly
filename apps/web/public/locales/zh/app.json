@@ -98,8 +98,6 @@
   "deleteAccountDialogTitle": "删除账户",
   "deleteAccountInstruction": "请确认您的电子邮件地址以删除您的账户",
   "deleteDate": "删除日期",
-  "deletedPoll": "已删除投票",
-  "deletedPollInfo": "该投票不存在。",
   "deleteParticipant": "刪除 {name}?",
   "deleteParticipantDescription": "您确定要删除此参与者吗？此操作无法撤销。",
   "deletePoll": "删除投票",

@@ -169,8 +169,6 @@
   "deleteAccountDialogTitle": "Radera konto",
   "deleteAccountInstruction": "Bekräfta din e-postadress för att radera ditt konto",
   "deleteDate": "Radera datum",
-  "deletedPoll": "Raderad förfrågan",
-  "deletedPollInfo": "Denna förfrågan finns inte längre.",
   "deletedSpaceSuccess": "Området har tagits bort permanent",
   "deleteEventTypeDescription": "<b>{name}</b> kommer att döljas i skaparmenyerna. Detta kan inte ångras.",
   "deleteEventTypeError": "Kunde inte ta bort evenemangstypen",

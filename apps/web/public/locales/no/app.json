@@ -164,8 +164,6 @@
   "deleteAccountDialogTitle": "Slett konto",
   "deleteAccountInstruction": "Bekreft e-postadressen din for å slette kontoen din",
   "deleteDate": "Slett dato",
-  "deletedPoll": "Slettet avstemning",
-  "deletedPollInfo": "Denne avstemningen eksisterer ikke lenger.",
   "deletedSpaceSuccess": "Området er slettet permanent",
   "deleteMenuItem": "Slett",
   "deleteParticipant": "Slette {name}?",

@@ -173,8 +173,6 @@
   "deleteAccountDialogTitle": "Smazat účet",
   "deleteAccountInstruction": "Potvrďte prosím svou e-mailovou adresu pro smazání účtu",
   "deleteDate": "Odstranit termín",
-  "deletedPoll": "Smazané hlasování",
-  "deletedPollInfo": "Tato anketa již neexistuje.",
   "deletedSpaceSuccess": "Prostor byl trvale smazán",
   "deleteEventTypeDescription": "<b>{name}</b> bude skryto z výběru při tvorbě. Tuto akci nelze vrátit zpět.",
   "deleteEventTypeError": "Smazání typu události se nezdařilo",
