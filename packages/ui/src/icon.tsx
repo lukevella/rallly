@@ -1,7 +1,8 @@
 "use client";
-import { Slot } from "@radix-ui/react-slot";
+import { useRender } from "@base-ui/react/use-render";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
+import * as React from "react";
 
 import { cn } from "./lib/utils";
 
@@ -36,15 +37,21 @@ export function Icon({
   size,
   variant,
 }: { className?: string } & IconProps) {
-  return (
-    <Slot
-      className={cn(
+  const element = useRender({
+    defaultTagName: "span",
+    render: React.isValidElement<{ className?: string }>(children)
+      ? children
+      : undefined,
+    props: {
+      className: cn(
         iconVariants({ size, variant }),
         "group shrink-0 group-[.bg-destructive]:text-destructive-foreground group-[.bg-primary]:text-primary-foreground",
         className,
-      )}
-    >
-      {children}
-    </Slot>
-  );
+      ),
+    },
+  });
+  if (!React.isValidElement(children)) {
+    return null;
+  }
+  return element;
 }

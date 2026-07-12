@@ -15,11 +15,9 @@ export function ControlPanelMenuItem() {
 
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton asChild>
-        <Link href="/control-panel">
-          <GaugeIcon />
-          <Trans i18nKey="controlPanel" defaults="Control Panel" />
-        </Link>
+      <SidebarMenuButton render={<Link href="/control-panel" />}>
+        <GaugeIcon />
+        <Trans i18nKey="controlPanel" defaults="Control Panel" />
       </SidebarMenuButton>
     </SidebarMenuItem>
   );

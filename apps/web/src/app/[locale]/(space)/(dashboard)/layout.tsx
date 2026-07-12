@@ -62,11 +62,11 @@ export default async function Layout({
                   </IfFeatureEnabled>
                   <ControlPanelMenuItem />
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link href="/settings/profile">
-                        <SettingsIcon />
-                        <Trans i18nKey="settings" defaults="Settings" />
-                      </Link>
+                    <SidebarMenuButton
+                      render={<Link href="/settings/profile" />}
+                    >
+                      <SettingsIcon />
+                      <Trans i18nKey="settings" defaults="Settings" />
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 </SidebarMenu>
