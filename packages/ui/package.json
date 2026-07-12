@@ -18,9 +18,6 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
-    "@radix-ui/react-avatar": "^1.1.0",
-    "@radix-ui/react-popover": "^1.0.5",
-    "@radix-ui/react-portal": "^1.1.6",
     "@rallly/languages": "workspace:*",
     "@rallly/tailwind-config": "workspace:*",
     "@react-aria/color": "^3.1.5",
