@@ -28,8 +28,8 @@ import {
 import { useVotingForm } from "@/components/poll/voting-form";
 import { ScrollContainer } from "@/components/scroll-container";
 import { usePermissions, usePoll } from "@/features/poll/client";
+import { useParticipants } from "@/features/poll/components/participants-provider";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useParticipants } from "../participants-provider";
 import { useVisibleParticipants } from "../visibility";
 import ParticipantRow from "./desktop-poll/participant-row";
 import ParticipantRowForm from "./desktop-poll/participant-row-form";

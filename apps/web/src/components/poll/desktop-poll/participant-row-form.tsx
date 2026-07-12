@@ -6,9 +6,12 @@ import * as React from "react";
 import { Controller } from "react-hook-form";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Participant, ParticipantName } from "@/components/participant";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { YouAvatar } from "@/components/poll/you-avatar";
+import {
+  Participant,
+  ParticipantName,
+} from "@/features/poll/components/participant";
 import { Trans, useTranslation } from "@/i18n/client";
 import { getOptionDateTimeLabel } from "@/lib/utils/date-time-utils";
 

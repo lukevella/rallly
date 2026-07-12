@@ -17,12 +17,15 @@ import smoothscroll from "smoothscroll-polyfill";
 
 import { TimesShownIn } from "@/components/clock";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Participant, ParticipantName } from "@/components/participant";
-import { ParticipantDropdown } from "@/components/participant-dropdown";
 import { useVotingForm } from "@/components/poll/voting-form";
 import { YouAvatar } from "@/components/poll/you-avatar";
 import { useOptions, usePoll } from "@/components/poll-context";
 import { usePermissions } from "@/features/poll/client";
+import {
+  Participant,
+  ParticipantName,
+} from "@/features/poll/components/participant";
+import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useUser } from "../user-provider";
 import { useVisibleParticipants } from "../visibility";

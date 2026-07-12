@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 
-import { useParticipants } from "@/components/participants-provider";
+import { useParticipants } from "@/features/poll/components/participants-provider";
 
 const ListNames = ({ participantIds }: { participantIds: string[] }) => {
   const { participants } = useParticipants();

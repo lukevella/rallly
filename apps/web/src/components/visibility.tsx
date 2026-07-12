@@ -2,9 +2,8 @@
  * Manage what the user can and cannot see on the page
  */
 import React from "react";
-
-import { useParticipants } from "@/components/participants-provider";
 import { usePermissions, usePoll } from "@/features/poll/client";
+import { useParticipants } from "@/features/poll/components/participants-provider";
 
 export const IfScoresVisible = (props: React.PropsWithChildren) => {
   const context = React.useContext(VisibilityContext);

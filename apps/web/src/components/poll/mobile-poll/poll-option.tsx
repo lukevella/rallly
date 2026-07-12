@@ -11,7 +11,7 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import {
   filterParticipantsByVote,
   useParticipants,
-} from "@/components/participants-provider";
+} from "@/features/poll/components/participants-provider";
 import { useTranslation } from "@/i18n/client";
 
 import { ConnectedScoreSummary } from "../score-summary";

@@ -22,12 +22,15 @@ import { MoreHorizontalIcon, TrashIcon } from "lucide-react";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Participant, ParticipantName } from "@/components/participant";
-import { useParticipants } from "@/components/participants-provider";
 import { useEditToken } from "@/components/poll/mutations";
 import TruncatedLinkify from "@/components/poll/truncated-linkify";
 import { useUser } from "@/components/user-provider";
 import { usePoll, useRole } from "@/features/poll/client";
+import {
+  Participant,
+  ParticipantName,
+} from "@/features/poll/components/participant";
+import { useParticipants } from "@/features/poll/components/participants-provider";
 import { Trans, useTranslation } from "@/i18n/client";
 import { RelativeTime } from "@/lib/datetime/relative-time";
 import { requiredString } from "@/lib/utils/form-validation";

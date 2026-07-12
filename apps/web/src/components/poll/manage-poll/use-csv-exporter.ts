@@ -1,8 +1,7 @@
 import { useOptions, usePoll } from "@/components/poll-context";
+import { useParticipants } from "@/features/poll/components/participants-provider";
 import { useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
-
-import { useParticipants } from "../../participants-provider";
 
 export const useCsvExporter = () => {
   const { poll } = usePoll();

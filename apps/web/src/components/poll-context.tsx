@@ -1,5 +1,6 @@
 import type { TimeFormat, VoteType } from "@rallly/database";
 import React from "react";
+import { useParticipants } from "@/features/poll/components/participants-provider";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import {
   formatDateParts,
@@ -11,8 +12,6 @@ import type {
   ParsedTimeSlotOption,
 } from "@/lib/utils/date-time-utils";
 import type { GetPollApiResponse } from "@/trpc/client/types";
-
-import { useParticipants } from "./participants-provider";
 import { useRequiredContext } from "./use-required-context";
 
 type PollContextValue = {

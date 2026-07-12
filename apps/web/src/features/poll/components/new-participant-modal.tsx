@@ -16,12 +16,12 @@ import { Label } from "@rallly/ui/label";
 import { TRPCClientError } from "@trpc/client";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useAddParticipantMutation } from "@/components/poll/mutations";
+import VoteIcon from "@/components/poll/vote-icon";
+import { useUser } from "@/components/user-provider";
 import { usePoll } from "@/features/poll/client";
 import { useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
-import { useAddParticipantMutation } from "./poll/mutations";
-import VoteIcon from "./poll/vote-icon";
-import { useUser } from "./user-provider";
 
 const requiredEmailSchema = z.object({
   requireEmail: z.literal(true),
