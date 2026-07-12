@@ -173,8 +173,6 @@
   "deleteAccountDialogTitle": "Slet konto",
   "deleteAccountInstruction": "Bekræft venligst din e-mailadresse for at slette din konto",
   "deleteDate": "Slet dato",
-  "deletedPoll": "Slettet afstemning",
-  "deletedPollInfo": "Denne afstemning eksistere ikke længere.",
   "deletedSpaceSuccess": "Rummet er blevet slettet permanent",
   "deleteEventTypeDescription": "<b>{name}</b> vil blive skjult fra oprettelsesvælgere. Dette kan ikke fortrydes.",
   "deleteEventTypeError": "Kunne ikke slette begivenhedstype",
