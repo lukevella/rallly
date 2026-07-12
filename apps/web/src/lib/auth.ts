@@ -25,7 +25,6 @@ import { after } from "next/server";
 import { cache } from "react";
 import { getInstanceBranding } from "@/emails/branding";
 import { env } from "@/env";
-import { posthog } from "@/features/analytics/posthog";
 import { linkAnonymousUser } from "@/features/auth/mutations";
 import { isEmailBlocked, isTemporaryEmail } from "@/features/auth/utils";
 import { createSpace } from "@/features/space/mutations";
@@ -34,6 +33,7 @@ import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
 import { redis } from "@/lib/kv";
+import { posthog } from "@/lib/posthog";
 import { getValueByPath } from "@/lib/utils/get-value-by-path";
 
 const kv = redis;

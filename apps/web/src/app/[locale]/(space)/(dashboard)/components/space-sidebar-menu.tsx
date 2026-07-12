@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
 } from "@rallly/ui/sidebar";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
-import { useSpaceMenu } from "@/features/navigation/config";
+import { useSpaceMenu } from "@/features/navigation/client";
 
 export function SpaceSidebarMenu() {
   const { config } = useSpaceMenu();

@@ -2,7 +2,7 @@ import "server-only";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import * as Sentry from "@sentry/nextjs";
-import { posthog } from "@/features/analytics/posthog";
+import { posthog } from "@/lib/posthog";
 
 const logger = createLogger("auth/merge-user");
 

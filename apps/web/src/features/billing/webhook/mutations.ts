@@ -10,8 +10,10 @@ import * as Sentry from "@sentry/nextjs";
 import { after } from "next/server";
 import { getInstanceBranding } from "@/emails/branding";
 import { env } from "@/env";
-import { posthog } from "@/features/analytics/posthog";
-import { customerMetadataSchema } from "@/features/billing/schema";
+import {
+  customerMetadataSchema,
+  subscriptionMetadataSchema,
+} from "@/features/billing/schema";
 import {
   getSubscriptionDetails,
   isSubscriptionActive,
@@ -19,7 +21,7 @@ import {
 } from "@/features/billing/webhook/utils";
 import { licenseManager } from "@/features/licensing/mutations";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
-import { subscriptionMetadataSchema } from "@/features/subscription/schema";
+import { posthog } from "@/lib/posthog";
 
 async function getExpandedSubscription(subscriptionId: string) {
   return stripe.subscriptions.retrieve(subscriptionId, {

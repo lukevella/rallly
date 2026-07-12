@@ -127,7 +127,6 @@
         "src/components/invite-dialog.tsx",
         "src/components/layouts/poll-layout.tsx",
         "src/components/logo.tsx",
-        "src/components/nav-user.tsx",
         "src/components/new-participant-modal.tsx",
         "src/components/poll-status.tsx",
         "src/components/poll/desktop-poll.tsx",
@@ -143,12 +142,9 @@
         "src/components/poll/voting-form.tsx",
         "src/components/pro-badge.tsx",
         "src/components/upgrade-button.tsx",
-        "src/components/user-dropdown.tsx",
         "src/components/user-provider.tsx",
         "src/components/visibility.tsx",
         "src/features/billing/components/pay-wall-dialog.tsx",
-        "src/features/navigation/command-menu/command-menu.tsx",
-        "src/features/quick-create/quick-create-widget.tsx",
         "src/lib/auth.ts",
         "src/lib/feature-flags/config.ts",
         "src/lib/safe-action/server.ts"
@@ -187,6 +183,26 @@
         "rules": {
           "style": {
             "noRestrictedImports": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/features/**",
+        "!src/features/**/components/**",
+        "!src/features/**/assets/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": {
+              "level": "warn",
+              "options": {
+                "match": "(?:data|mutations|actions|schema|types|ability|constants|utils|service)[.]ts|client[.]tsx|.+[.]test[.]tsx?",
+                "filenameCases": ["kebab-case"]
+              }
+            }
           }
         }
       }

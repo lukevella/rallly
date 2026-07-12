@@ -8,9 +8,9 @@ import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
-import { posthog } from "@/features/analytics/posthog";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { hasPollAdminAccess } from "@/features/poll/data";
+import { posthog } from "@/lib/posthog";
 import { getGravatarUrl } from "@/lib/utils/gravatar";
 import {
   createRateLimitMiddleware,

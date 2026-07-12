@@ -9,7 +9,6 @@ import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
-import { posthog } from "@/features/analytics/posthog";
 import { moderateContent } from "@/features/moderation/mutations";
 import {
   canUserManagePoll,
@@ -19,6 +18,7 @@ import {
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { dayjs } from "@/lib/dayjs";
+import { posthog } from "@/lib/posthog";
 import { createIcsEvent } from "@/lib/utils/ics";
 import {
   createRateLimitMiddleware,

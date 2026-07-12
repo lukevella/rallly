@@ -188,6 +188,7 @@ Always use gitmoji prefixes in commit messages. Follow the gitmoji convention (h
 - `constants.ts`
 - `utils.ts` — pure domain helpers, co-located `*.test.ts`
 - `client.tsx` — client entry: providers, context, hooks, stores (no separate `hooks.ts` or store files)
+- `service.ts` — external integration client (class/factory wrapping a third-party API), must start with `import "server-only"`
 - `components/` — feature UI (no components at feature root)
 - `assets/` — static files used by the feature
 - NOT allowed: `index.ts` barrels, `helpers.ts`, `queries.ts`, `hooks.ts`, `lib/`, `libs/`

@@ -7,7 +7,6 @@ import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
-import { posthog } from "@/features/analytics/posthog";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import {
   createSpaceDTO,
@@ -25,6 +24,7 @@ import {
   toDBRole,
 } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
+import { posthog } from "@/lib/posthog";
 import {
   deleteImageFromS3,
   getImageUploadUrl,

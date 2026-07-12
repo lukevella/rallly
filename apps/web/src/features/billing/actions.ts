@@ -5,12 +5,12 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { redirect } from "next/navigation";
 import * as z from "zod";
 import { createStripePortalSession } from "@/features/billing/mutations";
-import type { CustomerMetadata } from "@/features/billing/schema";
-import { getActiveSpaceForUser } from "@/features/space/data";
 import type {
+  CustomerMetadata,
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
-} from "@/features/subscription/schema";
+} from "@/features/billing/schema";
+import { getActiveSpaceForUser } from "@/features/space/data";
 import { AppError } from "@/lib/errors/app-error";
 import { authActionClient } from "@/lib/safe-action/server";
 import { validateRedirectUrl } from "@/lib/utils/redirect";

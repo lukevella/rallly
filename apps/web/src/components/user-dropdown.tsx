@@ -32,10 +32,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { useUser } from "@/components/user-provider";
-import { useTheme } from "@/features/theme/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
+import { useTheme } from "@/lib/theme";
 
 export const UserDropdown = ({ className }: { className?: string }) => {
   const { t } = useTranslation();

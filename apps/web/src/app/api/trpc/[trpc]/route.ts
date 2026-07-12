@@ -4,9 +4,9 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
-import { withPostHog } from "@/features/analytics/posthog";
 import { getSession } from "@/lib/auth";
 import { getLocaleFromRequest } from "@/lib/locale/server";
+import { withPostHog } from "@/lib/posthog";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
 
