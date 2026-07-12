@@ -173,8 +173,6 @@
   "deleteAccountDialogTitle": "Supprimer le compte",
   "deleteAccountInstruction": "Veuillez confirmer votre adresse e-mail pour supprimer votre compte",
   "deleteDate": "Supprimer la date",
-  "deletedPoll": "Sondage supprimé",
-  "deletedPollInfo": "Ce sondage n'existe plus.",
   "deletedSpaceSuccess": "L'espace a été définitivement supprimé",
   "deleteEventTypeDescription": "<b>{name}</b> sera masqué dans les sélecteurs de création. Cette action est irréversible.",
   "deleteEventTypeError": "Échec de la suppression du type d'événement",
