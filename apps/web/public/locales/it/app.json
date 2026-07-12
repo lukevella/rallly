@@ -454,7 +454,6 @@
   "outlook": "Outlook",
   "owner": "Proprietario",
   "ownerPermissionsRequired": "Solo i proprietari dello spazio possono accedere alle impostazioni di fatturazione.",
-  "pageMovedDescription": "Reindirizzamento a <a>{newUrl}</a>",
   "paginationItems": "Visualizzazione di {startItem}–{endItem} di {totalItems}",
   "paginationNext": "Prossimo",
   "paginationPage": "Pagina {currentPage, number} di {totalPages, number}",
