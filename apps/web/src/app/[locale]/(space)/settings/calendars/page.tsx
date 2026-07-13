@@ -11,8 +11,11 @@ import {
 } from "@/components/page-layout";
 import {
   SettingsPage,
+  SettingsPageAction,
   SettingsPageContent,
+  SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
@@ -39,16 +42,20 @@ export default async function CalendarsPage() {
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
       <SettingsPage>
-        <SettingsPageHeader
-          title={<Trans i18nKey="calendars" defaults="Calendars" />}
-          description={
+        <SettingsPageHeader>
+          <SettingsPageTitle>
+            <Trans i18nKey="calendars" defaults="Calendars" />
+          </SettingsPageTitle>
+          <SettingsPageDescription>
             <Trans
               i18nKey="calendarsDescription"
               defaults="Manage your calendar connections"
             />
-          }
-          actions={<ConnectCalendarDropdown />}
-        />
+          </SettingsPageDescription>
+          <SettingsPageAction>
+            <ConnectCalendarDropdown />
+          </SettingsPageAction>
+        </SettingsPageHeader>
         <SettingsPageContent>
           <PageSection variant="card">
             <PageSectionHeader>

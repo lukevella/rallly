@@ -33,7 +33,9 @@ import { PageSection } from "@/components/page-layout";
 import {
   SettingsPage,
   SettingsPageContent,
+  SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { LicenseKeyForm } from "@/features/licensing/components/license-key-form";
 import { RefreshLicenseButton } from "@/features/licensing/components/refresh-license-button";
@@ -53,15 +55,17 @@ export default async function LicensePage() {
 
   return (
     <SettingsPage>
-      <SettingsPageHeader
-        title={<Trans i18nKey="license" defaults="License" />}
-        description={
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="license" defaults="License" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
           <Trans
             i18nKey="licenseKeyDescription"
             defaults="Manage your instance license"
           />
-        }
-      />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
       <SettingsPageContent>
         {license ? (
           <>

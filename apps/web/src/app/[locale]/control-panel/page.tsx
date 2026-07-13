@@ -15,6 +15,7 @@ import {
   SettingsPage,
   SettingsPageContent,
   SettingsPageHeader,
+  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
 import { loadInstanceLicense } from "@/features/licensing/data";
@@ -42,7 +43,11 @@ export default async function AdminPage() {
 
   return (
     <SettingsPage>
-      <SettingsPageHeader title={<Trans i18nKey="home" defaults="Home" />} />
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="home" defaults="Home" />
+        </SettingsPageTitle>
+      </SettingsPageHeader>
       <SettingsPageContent>
         <div className="space-y-4">
           <TileGrid>

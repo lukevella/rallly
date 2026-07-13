@@ -18,7 +18,9 @@ import {
 import {
   SettingsPage,
   SettingsPageContent,
+  SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { SpaceRole } from "@/features/space/components/space-role";
@@ -35,15 +37,17 @@ export function MembersSettingsPageClient() {
 
   return (
     <SettingsPage>
-      <SettingsPageHeader
-        title={<Trans i18nKey="members" defaults="Members" />}
-        description={
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="members" defaults="Members" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
           <Trans
             i18nKey="membersDescription"
             defaults="Members have access to your space"
           />
-        }
-      />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
       <SettingsPageContent>
         <PageSectionGroup>
           <PageSection>

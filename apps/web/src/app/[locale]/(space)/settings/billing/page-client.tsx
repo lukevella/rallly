@@ -32,7 +32,9 @@ import {
 import {
   SettingsPage,
   SettingsPageContent,
+  SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { openCustomerPortalAction } from "@/features/billing/actions";
 import { showPayWall } from "@/features/billing/client";
@@ -83,15 +85,17 @@ function BillingPageContent({ tier }: { tier: SpaceTier }) {
 
   return (
     <SettingsPage>
-      <SettingsPageHeader
-        title={<Trans i18nKey="billing" defaults="Billing" />}
-        description={
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="billing" defaults="Billing" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
           <Trans
             i18nKey="billingDescription"
             defaults="Manage your billing information and subscription."
           />
-        }
-      />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
       <SettingsPageContent>
         <PageSectionGroup>
           <PageSection>

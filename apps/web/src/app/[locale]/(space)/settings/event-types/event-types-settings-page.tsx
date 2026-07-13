@@ -34,8 +34,11 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
 import {
   SettingsPage,
+  SettingsPageAction,
   SettingsPageContent,
+  SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { CreateEventTypeDialog } from "@/features/event-types/components/create-event-type-dialog";
 import { DeleteEventTypeDialog } from "@/features/event-types/components/delete-event-type-dialog";
@@ -172,21 +175,23 @@ export function EventTypesSettingsPage() {
 
   return (
     <SettingsPage>
-      <SettingsPageHeader
-        title={<Trans i18nKey="eventTypes" defaults="Event Types" />}
-        description={
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="eventTypes" defaults="Event Types" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
           <Trans
             i18nKey="eventTypesDescription"
             defaults="Reusable event configurations."
           />
-        }
-        actions={
+        </SettingsPageDescription>
+        <SettingsPageAction>
           <Button variant="primary" onClick={() => createDialog.trigger()}>
             <PlusIcon data-icon="inline-start" />
             <Trans i18nKey="newEventType" defaults="New Event Type" />
           </Button>
-        }
-      />
+        </SettingsPageAction>
+      </SettingsPageHeader>
       <SettingsPageContent>
         {eventTypes.length === 0 ? (
           <EventTypesEmptyState onCreate={() => createDialog.trigger()} />

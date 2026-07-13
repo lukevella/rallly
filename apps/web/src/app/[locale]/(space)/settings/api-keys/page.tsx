@@ -7,8 +7,11 @@ import {
 } from "@/components/page-layout";
 import {
   SettingsPage,
+  SettingsPageAction,
   SettingsPageContent,
+  SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getApiKeysPageState, getSpaceApiKeys } from "@/features/api-keys/data";
 import { Trans } from "@/i18n/client";
@@ -38,18 +41,22 @@ export default async function ApiKeysSettingsPage() {
 
   return (
     <SettingsPage>
-      <SettingsPageHeader
-        title={<Trans i18nKey="apiKeys" defaults="API Keys" />}
-        description={
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="apiKeys" defaults="API Keys" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
           <Trans
             i18nKey="apiKeysDescription"
             defaults="Manage API keys for programmatic access to your space"
           />
-        }
-        actions={
-          pageState.state === "enabled" ? <CreateApiKeyButton /> : undefined
-        }
-      />
+        </SettingsPageDescription>
+        {pageState.state === "enabled" ? (
+          <SettingsPageAction>
+            <CreateApiKeyButton />
+          </SettingsPageAction>
+        ) : null}
+      </SettingsPageHeader>
       <SettingsPageContent>
         {pageState.state === "upgrade_required" ? (
           <ApiAccessUpgrade />

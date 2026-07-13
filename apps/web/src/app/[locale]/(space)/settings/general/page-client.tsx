@@ -14,7 +14,9 @@ import {
 import {
   SettingsPage,
   SettingsPageContent,
+  SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { useSpace } from "@/features/space/client";
 import { Trans } from "@/i18n/client";
@@ -34,15 +36,17 @@ export function GeneralSettingsPageClient() {
 
   return (
     <SettingsPage>
-      <SettingsPageHeader
-        title={<Trans i18nKey="general" defaults="General" />}
-        description={
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="general" defaults="General" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
           <Trans
             i18nKey="generalDescription"
             defaults="Change the settings of your current space"
           />
-        }
-      />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
       <SettingsPageContent>
         <PageSectionGroup>
           {!isAdmin ? (

@@ -14,7 +14,9 @@ import {
 import {
   SettingsPage,
   SettingsPageContent,
+  SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getCustomBrandingConfig } from "@/features/branding/data";
 import { loadInstanceLicense } from "@/features/licensing/data";
@@ -72,15 +74,17 @@ export default async function BrandingPage() {
 
   return (
     <SettingsPage>
-      <SettingsPageHeader
-        title={<Trans i18nKey="branding" defaults="Branding" />}
-        description={
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="branding" defaults="Branding" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
           <Trans
             i18nKey="brandingDescription"
             defaults="View your instance branding configuration"
           />
-        }
-      />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
       <SettingsPageContent>
         {!hasWhiteLabelAddon ? (
           <Alert variant="primary">

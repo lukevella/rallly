@@ -4,7 +4,9 @@ import type { Params } from "@/app/[locale]/types";
 import {
   SettingsPage,
   SettingsPageContent,
+  SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
@@ -18,15 +20,17 @@ export default async function Page() {
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
       <SettingsPage>
-        <SettingsPageHeader
-          title={<Trans i18nKey="notifications" defaults="Notifications" />}
-          description={
+        <SettingsPageHeader>
+          <SettingsPageTitle>
+            <Trans i18nKey="notifications" defaults="Notifications" />
+          </SettingsPageTitle>
+          <SettingsPageDescription>
             <Trans
               i18nKey="notificationsDescription"
               defaults="Choose which email notifications you receive"
             />
-          }
-        />
+          </SettingsPageDescription>
+        </SettingsPageHeader>
         <SettingsPageContent>
           <NotificationsPage />
         </SettingsPageContent>
