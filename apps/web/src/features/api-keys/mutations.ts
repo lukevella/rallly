@@ -29,7 +29,7 @@ export async function createApiKey({
   // Expected outcome the caller handles specifically, so it's part of the
   // return value; thrown errors are reserved for the global error handler.
   if (activeCount >= MAX_ACTIVE_API_KEYS_PER_SPACE) {
-    return { ok: false, reason: "maxApiKeysExceeded" } as const;
+    return { ok: false, reason: "max_api_keys_exceeded" } as const;
   }
 
   const { apiKey, prefix, hashedKey } = await generateApiKey();

@@ -149,7 +149,9 @@ export function CreateApiKeyButton() {
                     if (result?.data?.ok) {
                       setCreatedApiKey(result.data.apiKey);
                       form.reset();
-                    } else if (result?.data?.reason === "maxApiKeysExceeded") {
+                    } else if (
+                      result?.data?.reason === "max_api_keys_exceeded"
+                    ) {
                       toast.error(
                         t("apiKeyLimitReached", {
                           defaultValue:
