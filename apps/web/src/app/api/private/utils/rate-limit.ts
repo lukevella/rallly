@@ -1,13 +1,15 @@
 import { RedisStore } from "@hono-rate-limiter/redis";
 import { rateLimiter } from "hono-rate-limiter";
+import { API_RATE_LIMIT_PER_MINUTE } from "@/features/api-keys/constants";
 import { redis } from "@/lib/kv";
 import { apiError } from "./poll";
 
 /**
- * Requests per minute allowed for a single space, uniform across all
- * endpoints. Adding more API keys to a space does not raise this limit.
+ * Re-exported for the OpenAPI docs and tests. The value lives in the
+ * api-keys feature so the settings UI can read it without pulling in this
+ * server-only module.
  */
-export const RATE_LIMIT_PER_MINUTE = 60;
+export const RATE_LIMIT_PER_MINUTE = API_RATE_LIMIT_PER_MINUTE;
 
 type RateLimitEnv = {
   Variables: {
