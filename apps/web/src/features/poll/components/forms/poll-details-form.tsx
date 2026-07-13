@@ -1,11 +1,11 @@
 import { FormField, FormItem, FormLabel, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { Textarea } from "@rallly/ui/textarea";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFormValidation } from "@/lib/utils/form-validation";
 
+import { LazyRichTextEditor } from "./lazy-rich-text-editor";
 import type { NewEventData } from "./types";
 
 export const PollDetailsForm = () => {
@@ -64,12 +64,39 @@ export const PollDetailsForm = () => {
             <Trans i18nKey="optionalLabel" defaults="(Optional)" />
           </span>
         </div>
-        <Textarea
-          className="w-full"
-          id="description"
-          placeholder={t("descriptionPlaceholder")}
-          rows={5}
-          {...register("description")}
+        <Controller
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <LazyRichTextEditor
+              id="description"
+              value={field.value ?? ""}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              placeholder={t("descriptionPlaceholder")}
+              labels={{
+                bold: t("richTextBold", { defaultValue: "Bold" }),
+                italic: t("richTextItalic", { defaultValue: "Italic" }),
+                link: t("richTextLink", { defaultValue: "Link" }),
+                bulletList: t("richTextBulletList", {
+                  defaultValue: "Bullet list",
+                }),
+                numberedList: t("richTextNumberedList", {
+                  defaultValue: "Numbered list",
+                }),
+                linkPlaceholder: t("richTextLinkPlaceholder", {
+                  defaultValue: "Paste or type a link",
+                }),
+                linkApply: t("richTextLinkApply", { defaultValue: "Apply" }),
+                linkRemove: t("richTextLinkRemove", {
+                  defaultValue: "Remove link",
+                }),
+                linkVisit: t("richTextLinkVisit", {
+                  defaultValue: "Open link in new tab",
+                }),
+              }}
+            />
+          )}
         />
       </FormItem>
     </div>

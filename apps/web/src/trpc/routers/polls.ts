@@ -37,6 +37,10 @@ import { timeZoneInput } from "./polls/schema";
 
 const collapseNewlines = (s: string) => s.replace(/\n{3,}/g, "\n\n");
 
+// Descriptions are Markdown (RAL-1222); cap the source length so rich text
+// can't balloon the field. ~2000 chars is generous for a meeting description.
+const MAX_DESCRIPTION_LENGTH = 2000;
+
 // Mirrors the auto-close-polls house-keeping task: an option ends at
 // start + duration, with all-day options (duration 0) treated as 24h.
 const optionEndsInFuture = (option: { startTime: Date; duration: number }) =>
@@ -111,7 +115,12 @@ export const polls = router({
         title: z.string().trim().min(1),
         timeZone: timeZoneInput,
         location: z.string().trim().optional(),
-        description: z.string().trim().transform(collapseNewlines).optional(),
+        description: z
+          .string()
+          .trim()
+          .max(MAX_DESCRIPTION_LENGTH)
+          .transform(collapseNewlines)
+          .optional(),
         hideParticipants: z.boolean().optional(),
         hideScores: z.boolean().optional(),
         disableComments: z.boolean().optional(),
@@ -303,7 +312,12 @@ export const polls = router({
         title: z.string().trim().optional(),
         timeZone: timeZoneInput,
         location: z.string().trim().optional(),
-        description: z.string().trim().transform(collapseNewlines).optional(),
+        description: z
+          .string()
+          .trim()
+          .max(MAX_DESCRIPTION_LENGTH)
+          .transform(collapseNewlines)
+          .optional(),
         optionsToDelete: z.string().array().optional(),
         optionsToAdd: z.string().array().optional(),
         hideParticipants: z.boolean().optional(),
