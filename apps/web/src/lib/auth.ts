@@ -524,7 +524,25 @@ export type Auth = typeof authLib;
 const parseTimeFormat = (value: unknown): TimeFormat | undefined =>
   value === "hours12" || value === "hours24" ? value : undefined;
 
-export const getSession = cache(async () => {
+export type SessionData = {
+  user: UserDTO;
+  expires: string;
+  updatedAt: string;
+};
+
+/**
+ * "Couldn't read the session" (session store unreachable, transient
+ * failure) is not the same as "there is no session". Redirect guards must
+ * not treat an error as either logged-in or logged-out — reacting to an
+ * unknown state is what turns a transient failure into a redirect loop
+ * between / and /login (RAL-1313).
+ */
+export type SessionState =
+  | { status: "authenticated"; session: SessionData }
+  | { status: "unauthenticated" }
+  | { status: "error" };
+
+export const getSessionState = cache(async (): Promise<SessionState> => {
   try {
     const session = await authLib.api.getSession({
       headers: await headers(),
@@ -546,18 +564,31 @@ export const getSession = cache(async () => {
       };
 
       return {
-        user,
-        expires: session.session.expiresAt.toISOString(),
-        updatedAt: session.session.updatedAt.toISOString(),
+        status: "authenticated",
+        session: {
+          user,
+          expires: session.session.expiresAt.toISOString(),
+          updatedAt: session.session.updatedAt.toISOString(),
+        },
       };
     }
   } catch (e) {
     logger.error({ error: e }, "Failed to get session");
-    return null;
+    return { status: "error" };
   }
 
-  return null;
+  return { status: "unauthenticated" };
 });
+
+/**
+ * Session-or-null view for callers where an unreadable session can safely
+ * degrade to "no session" (optional personalization, public reads). Guards
+ * that redirect or gate access should use getSessionState instead.
+ */
+export const getSession = async () => {
+  const state = await getSessionState();
+  return state.status === "authenticated" ? state.session : null;
+};
 
 export const signOut = async () => {
   await authLib.api.signOut({
@@ -571,8 +602,10 @@ export const getUserIdIfLoggedIn = async () => {
 };
 
 export const redirectIfLoggedIn = async () => {
-  const session = await getSession();
-  if (session?.user && !session.user.isGuest) {
+  const state = await getSessionState();
+  // On "error" the session is unknown — render the page rather than
+  // redirect, so a transient session-store failure can't feed a loop.
+  if (state.status === "authenticated" && !state.session.user.isGuest) {
     redirect("/");
   }
 };

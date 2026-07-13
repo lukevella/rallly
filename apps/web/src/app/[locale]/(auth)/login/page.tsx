@@ -4,8 +4,9 @@ import { OIDCAutoSignIn } from "@/app/[locale]/(auth)/login/components/oidc-auto
 import { env } from "@/env";
 import { getRegistrationEnabled } from "@/features/instance-settings/data";
 import { getTranslation } from "@/i18n/server";
-import { authLib, redirectIfLoggedIn } from "@/lib/auth";
+import { authLib, getSessionState } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
+import { AlreadyLoggedIn } from "../components/already-logged-in";
 import {
   AuthPageContainer,
   AuthPageContent,
@@ -41,7 +42,17 @@ export default async function LoginPage(props: {
 }) {
   const searchParams = await props.searchParams;
 
-  await redirectIfLoggedIn();
+  // No automatic redirect to / — an automated redirect here is one leg of
+  // the / ↔ /login redirect loop (RAL-1313). The user must click through.
+  // On "error" the session is unknown, so we fall through to the login
+  // form rather than guess.
+  const sessionState = await getSessionState();
+  if (
+    sessionState.status === "authenticated" &&
+    !sessionState.session.user.isGuest
+  ) {
+    return <AlreadyLoggedIn redirectTo={searchParams?.redirectTo} />;
+  }
 
   const { isRegistrationEnabled, t } = await loadData();
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
