@@ -67,11 +67,13 @@ const DescriptionField = () => {
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();
 
-  // Start expanded when a description already exists (e.g. the edit form);
-  // otherwise the field is revealed on demand via the button below.
-  const [expanded, setExpanded] = React.useState(
-    () => !!form.getValues("description")?.trim(),
-  );
+  // Reveal the editor whenever the field holds content — this covers values
+  // restored asynchronously (persisted drafts, the edit form) that aren't yet
+  // present on first render — or once the user opens it via the button. Remove
+  // clears the value and resets `opened`, so it collapses again.
+  const [opened, setOpened] = React.useState(false);
+  const hasContent = !!form.watch("description")?.trim();
+  const expanded = opened || hasContent;
 
   if (!expanded) {
     return (
@@ -81,7 +83,7 @@ const DescriptionField = () => {
           variant="ghost"
           size="sm"
           className="text-muted-foreground"
-          onClick={() => setExpanded(true)}
+          onClick={() => setOpened(true)}
         >
           <PlusIcon data-icon="inline-start" />
           <Trans i18nKey="addDescription" defaults="Add description" />
@@ -99,7 +101,7 @@ const DescriptionField = () => {
           className="font-normal text-muted-foreground text-sm underline-offset-2 hover:text-foreground hover:underline"
           onClick={() => {
             form.setValue("description", "");
-            setExpanded(false);
+            setOpened(false);
           }}
         >
           <Trans i18nKey="remove" defaults="Remove" />
