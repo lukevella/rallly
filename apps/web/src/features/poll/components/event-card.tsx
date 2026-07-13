@@ -63,9 +63,7 @@ export function EventCard() {
         ) : null}
         <div>
           <EventMetaTitle>{poll.title}</EventMetaTitle>
-          <EventMetaDescription className="mt-2">
-            {poll.description}
-          </EventMetaDescription>
+          <EventMetaDescription className="mt-2" content={poll.description} />
         </div>
         <EventMetaList className="mt-4">
           {poll.user ? (
