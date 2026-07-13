@@ -1,14 +1,48 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
+import { getActiveSpaceForUser } from "@/features/space/data";
 import type { SpaceTier } from "@/features/space/schema";
+import { getCurrentUser } from "@/features/user/data";
 import { isSelfHosted } from "@/lib/constants";
 import { posthog } from "@/lib/posthog";
 
-export function getSpaceApiKeys(spaceId: string) {
-  return prisma.spaceApiKey.findMany({
+/**
+ * Resolve the current user's space and verify API access. Auth is enforced
+ * here in the DAL so no call site can fetch API keys without the gate.
+ * Failures are returned as values; stale sessions still throw
+ * InvalidSessionError from getCurrentUser for the boundary to handle.
+ */
+export async function getApiKeyAccessContext() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return { ok: false, reason: "unauthorized" } as const;
+  }
+
+  const space = await getActiveSpaceForUser(user.id);
+
+  if (!space) {
+    return { ok: false, reason: "no_active_space" } as const;
+  }
+
+  if (!(await isApiAccessEnabled(user, space))) {
+    return { ok: false, reason: "api_access_not_enabled" } as const;
+  }
+
+  return { ok: true, user, space } as const;
+}
+
+export async function getSpaceApiKeys() {
+  const context = await getApiKeyAccessContext();
+
+  if (!context.ok) {
+    return context;
+  }
+
+  const apiKeys = await prisma.spaceApiKey.findMany({
     where: {
-      spaceId,
+      spaceId: context.space.id,
     },
     select: {
       id: true,
@@ -23,6 +57,8 @@ export function getSpaceApiKeys(spaceId: string) {
       createdAt: "desc",
     },
   });
+
+  return { ok: true, apiKeys } as const;
 }
 
 /**
@@ -31,7 +67,7 @@ export function getSpaceApiKeys(spaceId: string) {
  * @param space - The space to check access for
  * @returns True if the user can access API features
  */
-export async function isApiAccessEnabled(
+async function isApiAccessEnabled(
   user: {
     id: string;
   },

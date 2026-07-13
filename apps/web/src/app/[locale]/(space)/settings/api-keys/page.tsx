@@ -12,9 +12,7 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { getSpaceApiKeys, isApiAccessEnabled } from "@/features/api-keys/data";
-import { getActiveSpaceForUser } from "@/features/space/data";
-import { getCurrentUser } from "@/features/user/data";
+import { getSpaceApiKeys } from "@/features/api-keys/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getPathname } from "@/lib/pathname";
@@ -23,24 +21,20 @@ import { ApiKeysList } from "./components/api-keys-list";
 import { CreateApiKeyButton } from "./components/create-api-key-button";
 
 export default async function ApiKeysSettingsPage() {
-  const user = await getCurrentUser();
+  const result = await getSpaceApiKeys();
 
-  if (!user) {
-    redirect(
-      buildSafeRedirectUrl({
-        destination: "/login",
-        returnUrl: await getPathname(),
-      }),
-    );
-  }
+  if (!result.ok) {
+    if (result.reason === "unauthorized") {
+      redirect(
+        buildSafeRedirectUrl({
+          destination: "/login",
+          returnUrl: await getPathname(),
+        }),
+      );
+    }
 
-  const space = await getActiveSpaceForUser(user.id);
-
-  if (!space || !(await isApiAccessEnabled(user, space))) {
     notFound();
   }
-
-  const apiKeys = await getSpaceApiKeys(space.id);
 
   return (
     <SettingsPage>
@@ -62,7 +56,7 @@ export default async function ApiKeysSettingsPage() {
         <PageSectionGroup>
           <PageSection>
             <PageSectionContent>
-              <ApiKeysList apiKeys={apiKeys} />
+              <ApiKeysList apiKeys={result.apiKeys} />
             </PageSectionContent>
           </PageSection>
         </PageSectionGroup>

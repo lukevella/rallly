@@ -15,7 +15,10 @@ import { Trans } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
 import { RevokeApiKeyButton } from "./revoke-api-key-button";
 
-type ApiKey = Awaited<ReturnType<typeof getSpaceApiKeys>>[number];
+type ApiKey = Extract<
+  Awaited<ReturnType<typeof getSpaceApiKeys>>,
+  { ok: true }
+>["apiKeys"][number];
 
 export function ApiKeysList({ apiKeys }: { apiKeys: ApiKey[] }) {
   const { toRelativeTime } = useDateTime();
