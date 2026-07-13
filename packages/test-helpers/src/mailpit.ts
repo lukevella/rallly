@@ -28,9 +28,12 @@ export interface MailpitMessageSummary {
   To: MailpitEmailAddress[];
 }
 
-export interface MailpitMessage extends MailpitMessageSummary {
+export interface MailpitMessage
+  extends Omit<MailpitMessageSummary, "Attachments"> {
   HTML: string;
   Text: string;
+  // The full-message endpoint returns attachment objects, not the summary's count.
+  Attachments: MailpitAttachment[];
   Inline: MailpitAttachment[];
   ReturnPath: string;
   Date: string;
@@ -103,6 +106,16 @@ export async function captureOne(
   }
 
   throw new Error(`No email received for ${to} within ${timeout}ms`);
+}
+
+export async function getAttachmentText(
+  messageId: string,
+  partId: string,
+): Promise<string> {
+  const response = await fetch(
+    `${MAILPIT_API_URL}/v1/message/${messageId}/part/${partId}`,
+  );
+  return await response.text();
 }
 
 export async function captureEmailHTML(to: string): Promise<string> {
