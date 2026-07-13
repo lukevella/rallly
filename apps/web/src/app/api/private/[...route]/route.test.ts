@@ -1106,6 +1106,63 @@ describe("Private API - /polls", () => {
     });
   });
 
+  describe("Rate limiting", () => {
+    // The rate limiter is keyed per space and shares a module-level memory
+    // store across the whole file. Use a dedicated space id here so the
+    // requests below don't count against (or get counted by) other tests.
+    const rateLimitSpaceId = "rate-limit-space-id";
+
+    beforeEach(() => {
+      vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([
+        {
+          ...mockApiKey,
+          hashedKey: hashApiKey(testApiKey),
+          spaceId: rateLimitSpaceId,
+          lastUsedAt: new Date(),
+        },
+      ]);
+    });
+
+    it("should include standard RateLimit headers on successful responses", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue(null);
+
+      const res = await app.request("/api/private/polls/some-poll", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${testApiKey}` },
+      });
+
+      expect(res.headers.get("RateLimit-Limit")).toBe("120");
+      expect(res.headers.get("RateLimit-Remaining")).not.toBeNull();
+    });
+
+    it("should return 429 with RATE_LIMIT_EXCEEDED once the per-space limit is exceeded", async () => {
+      vi.mocked(prisma.poll.findFirst).mockResolvedValue(null);
+
+      const request = () =>
+        app.request("/api/private/polls/some-poll", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${testApiKey}` },
+        });
+
+      // The limit is 120 requests/minute per space. The 121st request trips it.
+      let limited: Response | undefined;
+      for (let i = 0; i < 121; i++) {
+        const res = await request();
+        if (res.status === 429) {
+          limited = res;
+          break;
+        }
+      }
+
+      expect(limited).toBeDefined();
+      expect(limited?.status).toBe(429);
+      expect(limited?.headers.get("Retry-After")).not.toBeNull();
+
+      const json = await limited?.json();
+      expect(json.error.code).toBe("RATE_LIMIT_EXCEEDED");
+    });
+  });
+
   describe("Get poll participants", () => {
     it("should return participants", async () => {
       mockGetPollParticipants.mockResolvedValue({
