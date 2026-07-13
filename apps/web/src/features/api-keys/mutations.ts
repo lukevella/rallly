@@ -26,11 +26,10 @@ export async function createApiKey({
 }) {
   const activeCount = await countActiveApiKeys(spaceId);
 
+  // Expected outcome the caller handles specifically, so it's part of the
+  // return value; thrown errors are reserved for the global error handler.
   if (activeCount >= MAX_ACTIVE_API_KEYS_PER_SPACE) {
-    throw new AppError({
-      code: "CONFLICT",
-      message: `You can have at most ${MAX_ACTIVE_API_KEYS_PER_SPACE} active API keys. Revoke one before creating another.`,
-    });
+    return { ok: false, reason: "maxApiKeysExceeded" } as const;
   }
 
   const { apiKey, prefix, hashedKey } = await generateApiKey();
@@ -44,7 +43,7 @@ export async function createApiKey({
     },
   });
 
-  return { apiKey };
+  return { ok: true, apiKey } as const;
 }
 
 export async function revokeApiKey({

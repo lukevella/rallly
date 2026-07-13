@@ -148,7 +148,6 @@
   "createEventTypeDescription": "Set up a reusable event type that people can book with you.",
   "createEventTypeError": "Failed to create event type",
   "createEventTypeTitle": "Create Event Type",
-  "createFailed": "Failed to create",
   "createNewPoll": "Create new poll",
   "createPoll": "Create Poll",
   "createPollPollCreated": "Poll created",

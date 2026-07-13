@@ -36,18 +36,7 @@ export function CreateApiKeyButton() {
   const { t } = useTranslation();
   const dialog = useDialog();
   const [createdApiKey, setCreatedApiKey] = React.useState<string | null>(null);
-  const createApiKey = useSafeAction(createApiKeyAction, {
-    onError: ({ error }) => {
-      toast.error(
-        error.serverError === "CONFLICT"
-          ? t("apiKeyLimitReached", {
-              defaultValue:
-                "You've reached the maximum number of API keys. Revoke one before creating another.",
-            })
-          : t("createFailed", { defaultValue: "Failed to create" }),
-      );
-    },
-  });
+  const createApiKey = useSafeAction(createApiKeyAction);
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
 
@@ -157,9 +146,16 @@ export function CreateApiKeyButton() {
                 <form
                   onSubmit={form.handleSubmit(async (data) => {
                     const result = await createApiKey.executeAsync(data);
-                    if (result?.data) {
+                    if (result?.data?.ok) {
                       setCreatedApiKey(result.data.apiKey);
                       form.reset();
+                    } else if (result?.data?.reason === "maxApiKeysExceeded") {
+                      toast.error(
+                        t("apiKeyLimitReached", {
+                          defaultValue:
+                            "You've reached the maximum number of API keys. Revoke one before creating another.",
+                        }),
+                      );
                     }
                   })}
                 >

@@ -39,20 +39,22 @@ export const createApiKeyAction = authActionClient
   .action(async ({ ctx, parsedInput }) => {
     const space = await requireApiAccess(ctx.user.id);
 
-    const { apiKey } = await createApiKey({
+    const result = await createApiKey({
       spaceId: space.id,
       name: parsedInput.name,
     });
 
-    posthog()?.capture({
-      distinctId: ctx.user.id,
-      event: "developer:api_key_create",
-      groups: {
-        space: space.id,
-      },
-    });
+    if (result.ok) {
+      posthog()?.capture({
+        distinctId: ctx.user.id,
+        event: "developer:api_key_create",
+        groups: {
+          space: space.id,
+        },
+      });
+    }
 
-    return { apiKey };
+    return result;
   });
 
 export const revokeApiKeyAction = authActionClient
