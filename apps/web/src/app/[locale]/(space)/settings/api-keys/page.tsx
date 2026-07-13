@@ -10,6 +10,8 @@ import {
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageHeaderActions,
+  SettingsPageHeaderContent,
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getApiKeysPageState, getSpaceApiKeys } from "@/features/api-keys/data";
@@ -40,8 +42,8 @@ export default async function ApiKeysSettingsPage() {
 
   return (
     <SettingsPage>
-      <SettingsPageHeader className="flex-row items-center justify-between">
-        <div>
+      <SettingsPageHeader>
+        <SettingsPageHeaderContent>
           <SettingsPageTitle>
             <Trans i18nKey="apiKeys" defaults="API Keys" />
           </SettingsPageTitle>
@@ -51,8 +53,12 @@ export default async function ApiKeysSettingsPage() {
               defaults="Manage API keys for programmatic access to your space"
             />
           </SettingsPageDescription>
-        </div>
-        {pageState.state === "enabled" ? <CreateApiKeyButton /> : null}
+        </SettingsPageHeaderContent>
+        {pageState.state === "enabled" ? (
+          <SettingsPageHeaderActions>
+            <CreateApiKeyButton />
+          </SettingsPageHeaderActions>
+        ) : null}
       </SettingsPageHeader>
       <SettingsPageContent>
         {pageState.state === "upgrade_required" ? (

@@ -16,6 +16,7 @@ import {
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageHeaderContent,
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { Trans } from "@/i18n/client";
@@ -27,15 +28,17 @@ export function ProfilePage() {
   return (
     <SettingsPage>
       <SettingsPageHeader>
-        <SettingsPageTitle>
-          <Trans i18nKey="profile" defaults="Profile" />
-        </SettingsPageTitle>
-        <SettingsPageDescription>
-          <Trans
-            i18nKey="profileDescription"
-            defaults="Set your public profile information"
-          />
-        </SettingsPageDescription>
+        <SettingsPageHeaderContent>
+          <SettingsPageTitle>
+            <Trans i18nKey="profile" defaults="Profile" />
+          </SettingsPageTitle>
+          <SettingsPageDescription>
+            <Trans
+              i18nKey="profileDescription"
+              defaults="Set your public profile information"
+            />
+          </SettingsPageDescription>
+        </SettingsPageHeaderContent>
       </SettingsPageHeader>
       <SettingsPageContent>
         <PageSectionGroup>

@@ -17,6 +17,7 @@ import {
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageHeaderContent,
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getCurrentUser } from "@/features/user/data";
@@ -40,15 +41,17 @@ export default async function Page() {
   return (
     <SettingsPage>
       <SettingsPageHeader>
-        <SettingsPageTitle>
-          <Trans i18nKey="preferences" defaults="Preferences" />
-        </SettingsPageTitle>
-        <SettingsPageDescription>
-          <Trans
-            i18nKey="preferencesDescription"
-            defaults="Manage your preferences"
-          />
-        </SettingsPageDescription>
+        <SettingsPageHeaderContent>
+          <SettingsPageTitle>
+            <Trans i18nKey="preferences" defaults="Preferences" />
+          </SettingsPageTitle>
+          <SettingsPageDescription>
+            <Trans
+              i18nKey="preferencesDescription"
+              defaults="Manage your preferences"
+            />
+          </SettingsPageDescription>
+        </SettingsPageHeaderContent>
       </SettingsPageHeader>
       <SettingsPageContent>
         <PageSectionGroup>

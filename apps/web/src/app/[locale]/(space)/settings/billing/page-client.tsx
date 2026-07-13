@@ -34,6 +34,7 @@ import {
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageHeaderContent,
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { openCustomerPortalAction } from "@/features/billing/actions";
@@ -86,15 +87,17 @@ function BillingPageContent({ tier }: { tier: SpaceTier }) {
   return (
     <SettingsPage>
       <SettingsPageHeader>
-        <SettingsPageTitle>
-          <Trans i18nKey="billing" defaults="Billing" />
-        </SettingsPageTitle>
-        <SettingsPageDescription>
-          <Trans
-            i18nKey="billingDescription"
-            defaults="Manage your billing information and subscription."
-          />
-        </SettingsPageDescription>
+        <SettingsPageHeaderContent>
+          <SettingsPageTitle>
+            <Trans i18nKey="billing" defaults="Billing" />
+          </SettingsPageTitle>
+          <SettingsPageDescription>
+            <Trans
+              i18nKey="billingDescription"
+              defaults="Manage your billing information and subscription."
+            />
+          </SettingsPageDescription>
+        </SettingsPageHeaderContent>
       </SettingsPageHeader>
       <SettingsPageContent>
         <PageSectionGroup>

@@ -7,6 +7,7 @@ import {
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageHeaderContent,
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { Trans } from "@/i18n/client";
@@ -24,15 +25,17 @@ export default async function Page() {
   return (
     <SettingsPage>
       <SettingsPageHeader>
-        <SettingsPageTitle>
-          <Trans i18nKey="spaces" defaults="Spaces" />
-        </SettingsPageTitle>
-        <SettingsPageDescription>
-          <Trans
-            i18nKey="spacesDescription"
-            defaults="Manage the spaces you belong to"
-          />
-        </SettingsPageDescription>
+        <SettingsPageHeaderContent>
+          <SettingsPageTitle>
+            <Trans i18nKey="spaces" defaults="Spaces" />
+          </SettingsPageTitle>
+          <SettingsPageDescription>
+            <Trans
+              i18nKey="spacesDescription"
+              defaults="Manage the spaces you belong to"
+            />
+          </SettingsPageDescription>
+        </SettingsPageHeaderContent>
       </SettingsPageHeader>
       <SettingsPageContent>
         <PageSectionGroup>

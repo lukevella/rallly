@@ -14,6 +14,8 @@ import {
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageHeaderActions,
+  SettingsPageHeaderContent,
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { Trans } from "@/i18n/client";
@@ -41,8 +43,8 @@ export default async function CalendarsPage() {
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
       <SettingsPage>
-        <div className="flex justify-between">
-          <SettingsPageHeader>
+        <SettingsPageHeader>
+          <SettingsPageHeaderContent>
             <SettingsPageTitle>
               <Trans i18nKey="calendars" defaults="Calendars" />
             </SettingsPageTitle>
@@ -52,11 +54,11 @@ export default async function CalendarsPage() {
                 defaults="Manage your calendar connections"
               />
             </SettingsPageDescription>
-          </SettingsPageHeader>
-          <div>
+          </SettingsPageHeaderContent>
+          <SettingsPageHeaderActions>
             <ConnectCalendarDropdown />
-          </div>
-        </div>
+          </SettingsPageHeaderActions>
+        </SettingsPageHeader>
         <SettingsPageContent>
           <PageSection variant="card">
             <PageSectionHeader>

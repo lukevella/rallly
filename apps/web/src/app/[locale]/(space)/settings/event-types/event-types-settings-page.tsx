@@ -37,6 +37,8 @@ import {
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
+  SettingsPageHeaderActions,
+  SettingsPageHeaderContent,
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { CreateEventTypeDialog } from "@/features/event-types/components/create-event-type-dialog";
@@ -174,8 +176,8 @@ export function EventTypesSettingsPage() {
 
   return (
     <SettingsPage>
-      <div className="flex justify-between gap-4">
-        <SettingsPageHeader>
+      <SettingsPageHeader>
+        <SettingsPageHeaderContent>
           <SettingsPageTitle>
             <Trans i18nKey="eventTypes" defaults="Event Types" />
           </SettingsPageTitle>
@@ -185,14 +187,14 @@ export function EventTypesSettingsPage() {
               defaults="Reusable event configurations."
             />
           </SettingsPageDescription>
-        </SettingsPageHeader>
-        <div>
+        </SettingsPageHeaderContent>
+        <SettingsPageHeaderActions>
           <Button variant="primary" onClick={() => createDialog.trigger()}>
             <PlusIcon data-icon="inline-start" />
             <Trans i18nKey="newEventType" defaults="New Event Type" />
           </Button>
-        </div>
-      </div>
+        </SettingsPageHeaderActions>
+      </SettingsPageHeader>
       <SettingsPageContent>
         {eventTypes.length === 0 ? (
           <EventTypesEmptyState onCreate={() => createDialog.trigger()} />

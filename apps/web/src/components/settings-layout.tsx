@@ -24,7 +24,40 @@ export function SettingsPageHeader({
   className?: string;
 }) {
   return (
+    <div
+      className={cn(
+        "flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function SettingsPageHeaderContent({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return (
     <div className={cn("flex flex-col items-start", className)}>{children}</div>
+  );
+}
+
+export function SettingsPageHeaderActions({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex shrink-0 items-center gap-2", className)}>
+      {children}
+    </div>
   );
 }
 
