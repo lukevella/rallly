@@ -66,6 +66,22 @@ describe("MarkdownDescription", () => {
       expect(anchor?.getAttribute("href") ?? "").not.toContain("javascript:");
     });
 
+    it("does not parse GFM structures the schema cannot preserve", () => {
+      // Tables must not vanish into empty output — without table parsing the
+      // source survives as plain text.
+      const table = renderMarkdown("| a | b |\n|---|---|\n| 1 | 2 |");
+      expect(table.querySelector("table")).toBeNull();
+      expect(table.textContent).toContain("| a | b |");
+
+      // Footnotes must not leave dangling in-page anchors. (Without footnote
+      // parsing, [^1] falls back to a plain CommonMark reference link.)
+      const footnote = renderMarkdown("text[^1]\n\n[^1]: note");
+      expect(footnote.querySelector('a[href^="#"]')).toBeNull();
+
+      // Strikethrough stays literal rather than silently losing its markup.
+      expect(renderMarkdown("~~gone~~").textContent).toContain("~~gone~~");
+    });
+
     it("strips disallowed tags but keeps their text", () => {
       const container = renderMarkdown("# heading\n\n> quote\n\n`code`");
       expect(container.querySelector("h1")).toBeNull();

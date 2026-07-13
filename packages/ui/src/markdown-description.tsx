@@ -1,9 +1,29 @@
+import { gfmAutolinkLiteralFromMarkdown } from "mdast-util-gfm-autolink-literal";
+import { gfmAutolinkLiteral } from "micromark-extension-gfm-autolink-literal";
 import Markdown from "react-markdown";
 import type { Options as SanitizeSchema } from "rehype-sanitize";
 import rehypeSanitize from "rehype-sanitize";
 import remarkBreaks from "remark-breaks";
-import remarkGfm from "remark-gfm";
+import type { Plugin } from "unified";
 import { cn } from "./lib/utils";
+
+// Autolink bare URLs only — the one GFM behavior we want. Using the full
+// remark-gfm would also parse tables, strikethrough, task lists and footnotes,
+// which the sanitize schema below can't preserve: tables collapse to empty
+// output and footnotes leave dangling anchors. So we wire up just the autolink
+// extension instead.
+const remarkAutolinkLiteral: Plugin = function () {
+  // These data fields are declared by remark-parse's type augmentation, which
+  // we don't depend on directly — hence the local shape.
+  const data = this.data() as {
+    micromarkExtensions?: unknown[];
+    fromMarkdownExtensions?: unknown[];
+  };
+  data.micromarkExtensions ??= [];
+  data.micromarkExtensions.push(gfmAutolinkLiteral());
+  data.fromMarkdownExtensions ??= [];
+  data.fromMarkdownExtensions.push(gfmAutolinkLiteralFromMarkdown());
+};
 
 // Locked-down allowlist: only the formatting the editor can produce.
 // Deliberately built from scratch rather than extending rehype-sanitize's
@@ -37,7 +57,7 @@ export function MarkdownDescription({
       )}
     >
       <Markdown
-        remarkPlugins={[remarkGfm, remarkBreaks]}
+        remarkPlugins={[remarkAutolinkLiteral, remarkBreaks]}
         rehypePlugins={[[rehypeSanitize, schema]]}
         components={{
           a: ({ href, children }) => (
