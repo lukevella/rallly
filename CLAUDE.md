@@ -180,8 +180,8 @@ Always use gitmoji prefixes in commit messages. Follow the gitmoji convention (h
 **Feature file vocabulary** — closed set; new file names require a team decision. Applies recursively in sub-concern directories:
 
 - `data.ts` — reads (Prisma queries), must start with `import "server-only"`
-- `mutations.ts` — writes + cache invalidation, must start with `import "server-only"`
-- `actions.ts` — `"use server"` actions, thin wrappers over mutations, validated via safe-action + `schema.ts`
+- `mutations.ts` — writes + cache invalidation, must start with `import "server-only"`. Trusts its input: takes explicit parameters (`userId`, not headers), no session reads, no `headers()`, callable from system contexts (webhooks, cron, moderation). Authorization happens in `actions.ts` (safe-action middleware + CASL against the database). Never call Better-Auth endpoints from a mutation — they resolve the target user from request headers and authorize against the session snapshot; use adapter-level APIs (`authLib.$context` → `internalAdapter`) instead
+- `actions.ts` — `"use server"` actions, thin wrappers over mutations, validated via safe-action + `schema.ts`. Owns authentication and authorization (safe-action clients + CASL checks against database state, never against the session snapshot). Exception to the thin-wrapper rule: writes whose target user is defined by the session (self-profile updates) call the Better-Auth endpoint directly in the action — the endpoint refreshes the session snapshot and cookie cache in one step. Rule of thumb: target user from a parameter → mutation via `internalAdapter`; target user from the session → Better-Auth endpoint in the action
 - `schema.ts` — Zod schemas (isomorphic, no Prisma imports)
 - `types.ts` — domain types
 - `ability.ts` — CASL permissions
