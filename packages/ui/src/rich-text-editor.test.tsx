@@ -1,36 +1,15 @@
 import { render } from "@testing-library/react";
-import { Link } from "@tiptap/extension-link";
-import { Markdown } from "@tiptap/markdown";
 import { Editor } from "@tiptap/react";
-import { StarterKit } from "@tiptap/starter-kit";
 import { describe, expect, it } from "vitest";
 
 import { MarkdownDescription } from "./markdown-description";
+import { baseExtensions } from "./rich-text-editor";
 
-// Mirrors the extension set in rich-text-editor.tsx so this test exercises the
-// exact serializer the editor ships. Kept in sync by hand — the component's
-// list is the source of truth.
+// Reuse the component's exact extension set so the serializer AND the
+// isAllowedUri link validation under test stay in sync automatically.
 function makeEditor(content: string, contentType: "html" | "markdown") {
   return new Editor({
-    extensions: [
-      StarterKit.configure({
-        heading: false,
-        code: false,
-        codeBlock: false,
-        blockquote: false,
-        strike: false,
-        horizontalRule: false,
-        underline: false,
-        link: false,
-      }),
-      Markdown,
-      Link.configure({
-        openOnClick: false,
-        autolink: true,
-        defaultProtocol: "https",
-        protocols: ["mailto"],
-      }),
-    ],
+    extensions: [...baseExtensions],
     content,
     contentType,
   });
@@ -88,5 +67,32 @@ describe("RichTextEditor markdown serialization", () => {
     expect(container.querySelector("strong")?.textContent).toBe("noon");
     expect(container.querySelector("ul")).not.toBeNull();
     expect(container.querySelector("li")?.textContent).toContain("bring ID");
+  });
+});
+
+describe("RichTextEditor link validation (isAllowedUri)", () => {
+  it("keeps allowed schemes and bare URLs", () => {
+    for (const href of [
+      "https://example.com",
+      "http://example.com",
+      "mailto:x@example.com",
+    ]) {
+      const editor = makeEditor(`<a href="${href}">x</a>`, "html");
+      expect(editor.getAttributes("link").href).toBe(href);
+      editor.destroy();
+    }
+  });
+
+  it("rejects dangerous URL schemes", () => {
+    for (const href of [
+      "javascript:alert(1)",
+      "data:text/html,<script>alert(1)</script>",
+      "ftp://example.com",
+      "tel:+123456789",
+    ]) {
+      const editor = makeEditor(`<a href="${href}">x</a>`, "html");
+      expect(editor.getAttributes("link").href).toBeFalsy();
+      editor.destroy();
+    }
   });
 });

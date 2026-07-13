@@ -96,16 +96,18 @@ const DescriptionField = () => {
     <FormItem>
       <div className="flex items-center justify-between">
         <FormLabel htmlFor="description">{t("description")}</FormLabel>
-        <button
+        <Button
           type="button"
-          className="font-normal text-muted-foreground text-sm underline-offset-2 hover:text-foreground hover:underline"
+          variant="link"
+          size="sm"
+          className="h-auto p-0 text-muted-foreground hover:text-foreground"
           onClick={() => {
             form.setValue("description", "");
             setOpened(false);
           }}
         >
           <Trans i18nKey="remove" defaults="Remove" />
-        </button>
+        </Button>
       </div>
       <Controller
         control={form.control}

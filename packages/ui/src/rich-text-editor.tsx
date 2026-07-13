@@ -27,7 +27,9 @@ import {
 import { cn } from "./lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
-const baseExtensions = [
+// Exported so tests exercise the exact extension set — including the
+// isAllowedUri link validation that is the editor's XSS guard.
+export const baseExtensions = [
   StarterKit.configure({
     heading: false,
     code: false,
@@ -323,17 +325,23 @@ function LinkButton({
 
   const apply = () => {
     const trimmed = url.trim();
-    if (trimmed) {
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href: trimmed })
-        .run();
-    } else {
+    if (!trimmed) {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      setOpen(false);
+      return;
     }
-    setOpen(false);
+    // setLink runs the link extension's isAllowedUri check and returns false for
+    // rejected schemes (javascript:, data:, …). Keep the popover open on failure
+    // so the typed value isn't silently lost.
+    const ok = editor
+      .chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({ href: trimmed })
+      .run();
+    if (ok) {
+      setOpen(false);
+    }
   };
 
   const remove = () => {
