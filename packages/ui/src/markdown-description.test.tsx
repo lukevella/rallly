@@ -1,6 +1,6 @@
-import { MarkdownDescription } from "@rallly/ui/markdown-description";
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { MarkdownDescription } from "./markdown-description";
 
 function renderMarkdown(content: string) {
   const { container } = render(<MarkdownDescription content={content} />);
