@@ -14,9 +14,15 @@ export function SignOutButton() {
       loading={isSigningOut}
       onClick={() => {
         setIsSigningOut(true);
-        signOut().finally(() => {
-          window.location.reload();
-        });
+        signOut()
+          .catch(() => {
+            // Reload even if sign out fails: the server re-renders from
+            // the real cookie state, so the user sees this page again
+            // instead of a stuck spinner or an unhandled rejection.
+          })
+          .finally(() => {
+            window.location.reload();
+          });
       }}
     >
       <Trans i18nKey="signOut" defaults="Sign Out" />
