@@ -1,9 +1,14 @@
 const port = process.env.PORT || 3000;
 
 const getVercelUrl = () => {
-  return process.env.NEXT_PUBLIC_VERCEL_URL
-    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-    : null;
+  // Prefer `VERCEL_BRANCH_URL` — the stable per-branch alias Vercel links to from
+  // PR comments and the dashboard. That is the URL users actually open, so the
+  // base URL must match it or auth cookies/callbacks break cross-origin. Fall
+  // back to the per-deployment `VERCEL_URL`. Both are server-only (not
+  // `NEXT_PUBLIC_`), so this resolves only on the server; on the client we fall
+  // back to `window.location.origin` below.
+  const vercelUrl = process.env.VERCEL_BRANCH_URL || process.env.VERCEL_URL;
+  return vercelUrl ? `https://${vercelUrl}` : null;
 };
 
 function joinPath(baseUrl: string, subpath = "") {

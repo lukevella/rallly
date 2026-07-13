@@ -32,15 +32,35 @@ describe("absoluteUrl", () => {
       );
     });
 
-    describe("when NEXT_PUBLIC_VERCEL_URL is set", () => {
+    describe("when VERCEL_URL is set", () => {
       beforeAll(() => {
-        process.env.NEXT_PUBLIC_VERCEL_URL = "example.vercel.com";
+        process.env.VERCEL_URL = "example.vercel.com";
+      });
+
+      afterAll(() => {
+        delete process.env.VERCEL_URL;
       });
 
       it("should return the correct absolute URL with a subpath and query params", () => {
         expect(absoluteUrl("/test", { test: "test" })).toBe(
           "https://example.vercel.com/test?test=test",
         );
+      });
+
+      describe("and VERCEL_BRANCH_URL is set", () => {
+        beforeAll(() => {
+          process.env.VERCEL_BRANCH_URL = "branch.vercel.com";
+        });
+
+        afterAll(() => {
+          delete process.env.VERCEL_BRANCH_URL;
+        });
+
+        it("should prefer VERCEL_BRANCH_URL", () => {
+          expect(absoluteUrl("/test", { test: "test" })).toBe(
+            "https://branch.vercel.com/test?test=test",
+          );
+        });
       });
     });
   });
