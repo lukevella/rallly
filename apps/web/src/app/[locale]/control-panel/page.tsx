@@ -15,6 +15,7 @@ import {
   SettingsPage,
   SettingsPageContent,
   SettingsPageHeader,
+  SettingsPageHeaderContent,
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
@@ -44,9 +45,11 @@ export default async function AdminPage() {
   return (
     <SettingsPage>
       <SettingsPageHeader>
-        <SettingsPageTitle>
-          <Trans i18nKey="home" defaults="Home" />
-        </SettingsPageTitle>
+        <SettingsPageHeaderContent>
+          <SettingsPageTitle>
+            <Trans i18nKey="home" defaults="Home" />
+          </SettingsPageTitle>
+        </SettingsPageHeaderContent>
       </SettingsPageHeader>
       <SettingsPageContent>
         <div className="space-y-4">
