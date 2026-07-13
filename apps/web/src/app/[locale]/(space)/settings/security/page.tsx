@@ -13,10 +13,7 @@ import {
 import {
   SettingsPage,
   SettingsPageContent,
-  SettingsPageDescription,
   SettingsPageHeader,
-  SettingsPageHeaderContent,
-  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getUserHasPassword } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
@@ -42,19 +39,15 @@ export default async function SecurityPage({
 
   return (
     <SettingsPage>
-      <SettingsPageHeader>
-        <SettingsPageHeaderContent>
-          <SettingsPageTitle>
-            <Trans i18nKey="security" defaults="Security" />
-          </SettingsPageTitle>
-          <SettingsPageDescription>
-            <Trans
-              i18nKey="securityDescription"
-              defaults="Manage your account security and password settings"
-            />
-          </SettingsPageDescription>
-        </SettingsPageHeaderContent>
-      </SettingsPageHeader>
+      <SettingsPageHeader
+        title={<Trans i18nKey="security" defaults="Security" />}
+        description={
+          <Trans
+            i18nKey="securityDescription"
+            defaults="Manage your account security and password settings"
+          />
+        }
+      />
       <SettingsPageContent>
         {isEmailLoginEnabled ? (
           <>

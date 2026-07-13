@@ -15,10 +15,7 @@ import {
 import {
   SettingsPage,
   SettingsPageContent,
-  SettingsPageDescription,
   SettingsPageHeader,
-  SettingsPageHeaderContent,
-  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getCurrentUser } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
@@ -40,19 +37,15 @@ export default async function Page() {
 
   return (
     <SettingsPage>
-      <SettingsPageHeader>
-        <SettingsPageHeaderContent>
-          <SettingsPageTitle>
-            <Trans i18nKey="preferences" defaults="Preferences" />
-          </SettingsPageTitle>
-          <SettingsPageDescription>
-            <Trans
-              i18nKey="preferencesDescription"
-              defaults="Manage your preferences"
-            />
-          </SettingsPageDescription>
-        </SettingsPageHeaderContent>
-      </SettingsPageHeader>
+      <SettingsPageHeader
+        title={<Trans i18nKey="preferences" defaults="Preferences" />}
+        description={
+          <Trans
+            i18nKey="preferencesDescription"
+            defaults="Manage your preferences"
+          />
+        }
+      />
       <SettingsPageContent>
         <PageSectionGroup>
           <PageSection variant="card">

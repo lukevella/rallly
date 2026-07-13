@@ -9,10 +9,7 @@ import {
 import {
   SettingsPage,
   SettingsPageContent,
-  SettingsPageDescription,
   SettingsPageHeader,
-  SettingsPageHeaderContent,
-  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getInstanceSettings } from "@/features/instance-settings/data";
 import { Trans } from "@/i18n/client";
@@ -31,19 +28,15 @@ export default async function InstanceSettingsPage() {
 
   return (
     <SettingsPage>
-      <SettingsPageHeader>
-        <SettingsPageHeaderContent>
-          <SettingsPageTitle>
-            <Trans i18nKey="settings" defaults="Settings" />
-          </SettingsPageTitle>
-          <SettingsPageDescription>
-            <Trans
-              i18nKey="instanceSettingsDescription"
-              defaults="Configure your instance settings"
-            />
-          </SettingsPageDescription>
-        </SettingsPageHeaderContent>
-      </SettingsPageHeader>
+      <SettingsPageHeader
+        title={<Trans i18nKey="settings" defaults="Settings" />}
+        description={
+          <Trans
+            i18nKey="instanceSettingsDescription"
+            defaults="Configure your instance settings"
+          />
+        }
+      />
       <SettingsPageContent>
         <PageSectionGroup>
           <PageSection variant="card">

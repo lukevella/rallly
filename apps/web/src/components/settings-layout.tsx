@@ -17,10 +17,14 @@ export function SettingsPage({
 }
 
 export function SettingsPageHeader({
-  children,
+  title,
+  description,
+  actions,
   className,
 }: {
-  children?: React.ReactNode;
+  title: React.ReactNode;
+  description?: React.ReactNode;
+  actions?: React.ReactNode;
   className?: string;
 }) {
   return (
@@ -30,67 +34,18 @@ export function SettingsPageHeader({
         className,
       )}
     >
-      {children}
+      <div className="flex flex-col items-start">
+        <h1 className="font-semibold text-xl leading-tight tracking-tight">
+          {title}
+        </h1>
+        {description ? (
+          <p className="mt-1 text-muted-foreground text-sm">{description}</p>
+        ) : null}
+      </div>
+      {actions ? (
+        <div className="flex shrink-0 items-center gap-2">{actions}</div>
+      ) : null}
     </div>
-  );
-}
-
-export function SettingsPageHeaderContent({
-  children,
-  className,
-}: {
-  children?: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={cn("flex flex-col items-start", className)}>{children}</div>
-  );
-}
-
-export function SettingsPageHeaderActions({
-  children,
-  className,
-}: {
-  children?: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={cn("flex shrink-0 items-center gap-2", className)}>
-      {children}
-    </div>
-  );
-}
-
-export function SettingsPageTitle({
-  children,
-  className,
-}: {
-  children?: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <h1
-      className={cn(
-        "font-semibold text-xl leading-tight tracking-tight",
-        className,
-      )}
-    >
-      {children}
-    </h1>
-  );
-}
-
-export function SettingsPageDescription({
-  children,
-  className,
-}: {
-  children?: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <p className={cn("mt-1 text-muted-foreground text-sm", className)}>
-      {children}
-    </p>
   );
 }
 

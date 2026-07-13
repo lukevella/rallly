@@ -14,10 +14,7 @@ import { Pagination } from "@/components/pagination";
 import {
   SettingsPage,
   SettingsPageContent,
-  SettingsPageDescription,
   SettingsPageHeader,
-  SettingsPageHeaderContent,
-  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { StackedList } from "@/components/stacked-list";
 import { defineAbilityFor } from "@/features/user/ability";
@@ -127,19 +124,15 @@ export default async function AdminPage(props: {
 
   return (
     <SettingsPage>
-      <SettingsPageHeader>
-        <SettingsPageHeaderContent>
-          <SettingsPageTitle>
-            <Trans i18nKey="users" defaults="Users" />
-          </SettingsPageTitle>
-          <SettingsPageDescription>
-            <Trans
-              i18nKey="usersDescription"
-              defaults="Manage users on this instance"
-            />
-          </SettingsPageDescription>
-        </SettingsPageHeaderContent>
-      </SettingsPageHeader>
+      <SettingsPageHeader
+        title={<Trans i18nKey="users" defaults="Users" />}
+        description={
+          <Trans
+            i18nKey="usersDescription"
+            defaults="Manage users on this instance"
+          />
+        }
+      />
       <SettingsPageContent>
         <div className="space-y-4">
           <UserSearchInput />

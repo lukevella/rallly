@@ -14,10 +14,7 @@ import {
 import {
   SettingsPage,
   SettingsPageContent,
-  SettingsPageDescription,
   SettingsPageHeader,
-  SettingsPageHeaderContent,
-  SettingsPageTitle,
 } from "@/components/settings-layout";
 import { Trans } from "@/i18n/client";
 import { DeleteAccountDialog } from "./delete-account-dialog";
@@ -27,19 +24,15 @@ import { ProfileSettings } from "./profile-settings";
 export function ProfilePage() {
   return (
     <SettingsPage>
-      <SettingsPageHeader>
-        <SettingsPageHeaderContent>
-          <SettingsPageTitle>
-            <Trans i18nKey="profile" defaults="Profile" />
-          </SettingsPageTitle>
-          <SettingsPageDescription>
-            <Trans
-              i18nKey="profileDescription"
-              defaults="Set your public profile information"
-            />
-          </SettingsPageDescription>
-        </SettingsPageHeaderContent>
-      </SettingsPageHeader>
+      <SettingsPageHeader
+        title={<Trans i18nKey="profile" defaults="Profile" />}
+        description={
+          <Trans
+            i18nKey="profileDescription"
+            defaults="Set your public profile information"
+          />
+        }
+      />
       <SettingsPageContent>
         <PageSectionGroup>
           <PageSection variant="card">
