@@ -58,6 +58,7 @@ vi.mock("@/lib/kv", () => ({
 import { prisma } from "@rallly/database";
 import { after } from "next/server";
 import { hashApiKey, verifyApiKey } from "@/features/api-keys/utils";
+import { RATE_LIMIT_PER_MINUTE } from "../utils/rate-limit";
 import { app } from "./route";
 
 // Pre-generated test API key fixture. The stored hash deliberately uses the
@@ -1131,7 +1132,9 @@ describe("Private API - /polls", () => {
         headers: { Authorization: `Bearer ${testApiKey}` },
       });
 
-      expect(res.headers.get("RateLimit-Limit")).toBe("60");
+      expect(res.headers.get("RateLimit-Limit")).toBe(
+        String(RATE_LIMIT_PER_MINUTE),
+      );
       expect(res.headers.get("RateLimit-Remaining")).not.toBeNull();
     });
 
@@ -1144,9 +1147,9 @@ describe("Private API - /polls", () => {
           headers: { Authorization: `Bearer ${testApiKey}` },
         });
 
-      // The limit is 60 requests/minute per space. The 61st request trips it.
+      // The limit is RATE_LIMIT_PER_MINUTE requests/minute per space; one more trips it.
       let limited: Response | undefined;
-      for (let i = 0; i < 61; i++) {
+      for (let i = 0; i < RATE_LIMIT_PER_MINUTE + 1; i++) {
         const res = await request();
         if (res.status === 429) {
           limited = res;
