@@ -11,6 +11,7 @@ import {
 } from "@/components/page-layout";
 import {
   SettingsPage,
+  SettingsPageAction,
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
@@ -41,22 +42,20 @@ export default async function CalendarsPage() {
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
       <SettingsPage>
-        <div className="flex justify-between">
-          <SettingsPageHeader>
-            <SettingsPageTitle>
-              <Trans i18nKey="calendars" defaults="Calendars" />
-            </SettingsPageTitle>
-            <SettingsPageDescription>
-              <Trans
-                i18nKey="calendarsDescription"
-                defaults="Manage your calendar connections"
-              />
-            </SettingsPageDescription>
-          </SettingsPageHeader>
-          <div>
+        <SettingsPageHeader>
+          <SettingsPageTitle>
+            <Trans i18nKey="calendars" defaults="Calendars" />
+          </SettingsPageTitle>
+          <SettingsPageDescription>
+            <Trans
+              i18nKey="calendarsDescription"
+              defaults="Manage your calendar connections"
+            />
+          </SettingsPageDescription>
+          <SettingsPageAction>
             <ConnectCalendarDropdown />
-          </div>
-        </div>
+          </SettingsPageAction>
+        </SettingsPageHeader>
         <SettingsPageContent>
           <PageSection variant="card">
             <PageSectionHeader>

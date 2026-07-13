@@ -39,7 +39,7 @@ export function MembersSettingsPageClient() {
     <SettingsPage>
       <SettingsPageHeader>
         <SettingsPageTitle>
-          <Trans i18nKey="members" />
+          <Trans i18nKey="members" defaults="Members" />
         </SettingsPageTitle>
         <SettingsPageDescription>
           <Trans

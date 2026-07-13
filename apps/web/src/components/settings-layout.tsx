@@ -24,7 +24,14 @@ export function SettingsPageHeader({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-start", className)}>{children}</div>
+    <div
+      className={cn(
+        "grid auto-rows-min items-start gap-x-4 gap-y-1 has-data-[slot=settings-page-action]:grid-cols-1 has-data-[slot=settings-page-action]:sm:grid-cols-[1fr_auto]",
+        className,
+      )}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -55,9 +62,27 @@ export function SettingsPageDescription({
   className?: string;
 }) {
   return (
-    <p className={cn("mt-1 text-muted-foreground text-sm", className)}>
+    <p className={cn("text-muted-foreground text-sm", className)}>{children}</p>
+  );
+}
+
+export function SettingsPageAction({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      data-slot="settings-page-action"
+      className={cn(
+        "mt-3 flex shrink-0 items-center gap-2 sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:mt-0 sm:self-center sm:justify-self-end",
+        className,
+      )}
+    >
       {children}
-    </p>
+    </div>
   );
 }
 

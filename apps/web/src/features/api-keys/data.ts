@@ -63,6 +63,36 @@ export const getSpaceApiKeys = cache(async () => {
 });
 
 /**
+ * Resolve the current space's tier for the API keys page. Lets the page tell
+ * "needs to upgrade" (hobby tier) apart from other reasons access is blocked
+ * (feature flag off, not the owner), which all collapse to a single reason in
+ * getApiKeyAccessContext.
+ */
+export const getApiKeysPageState = cache(async () => {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return { state: "unauthorized" } as const;
+  }
+
+  const space = await getActiveSpaceForUser(user.id);
+
+  if (!space) {
+    return { state: "unauthorized" } as const;
+  }
+
+  if (await isApiAccessEnabled(user, space)) {
+    return { state: "enabled" } as const;
+  }
+
+  if (space.tier === "hobby") {
+    return { state: "upgrade_required" } as const;
+  }
+
+  return { state: "unavailable" } as const;
+});
+
+/**
  * Determines if a user has access to API features (API keys, developer tools)
  * @param user - The user to check access for
  * @param space - The space to check access for

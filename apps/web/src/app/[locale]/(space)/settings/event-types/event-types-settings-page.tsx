@@ -34,6 +34,7 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
 import {
   SettingsPage,
+  SettingsPageAction,
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
@@ -174,25 +175,23 @@ export function EventTypesSettingsPage() {
 
   return (
     <SettingsPage>
-      <div className="flex justify-between gap-4">
-        <SettingsPageHeader>
-          <SettingsPageTitle>
-            <Trans i18nKey="eventTypes" defaults="Event Types" />
-          </SettingsPageTitle>
-          <SettingsPageDescription>
-            <Trans
-              i18nKey="eventTypesDescription"
-              defaults="Reusable event configurations."
-            />
-          </SettingsPageDescription>
-        </SettingsPageHeader>
-        <div>
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="eventTypes" defaults="Event Types" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
+          <Trans
+            i18nKey="eventTypesDescription"
+            defaults="Reusable event configurations."
+          />
+        </SettingsPageDescription>
+        <SettingsPageAction>
           <Button variant="primary" onClick={() => createDialog.trigger()}>
             <PlusIcon data-icon="inline-start" />
             <Trans i18nKey="newEventType" defaults="New Event Type" />
           </Button>
-        </div>
-      </div>
+        </SettingsPageAction>
+      </SettingsPageHeader>
       <SettingsPageContent>
         {eventTypes.length === 0 ? (
           <EventTypesEmptyState onCreate={() => createDialog.trigger()} />

@@ -7,61 +7,83 @@ import {
 } from "@/components/page-layout";
 import {
   SettingsPage,
+  SettingsPageAction,
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { getSpaceApiKeys } from "@/features/api-keys/data";
+import { getApiKeysPageState, getSpaceApiKeys } from "@/features/api-keys/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getPathname } from "@/lib/pathname";
 import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
+import { ApiAccessUpgrade } from "./components/api-access-upgrade";
 import { ApiKeysList } from "./components/api-keys-list";
+import { ApiUsageLimits } from "./components/api-usage-limits";
 import { CreateApiKeyButton } from "./components/create-api-key-button";
 
 export default async function ApiKeysSettingsPage() {
-  const result = await getSpaceApiKeys();
+  const pageState = await getApiKeysPageState();
 
-  if (!result.ok) {
-    if (result.reason === "unauthorized") {
-      redirect(
-        buildSafeRedirectUrl({
-          destination: "/login",
-          returnUrl: await getPathname(),
-        }),
-      );
-    }
+  if (pageState.state === "unauthorized") {
+    redirect(
+      buildSafeRedirectUrl({
+        destination: "/login",
+        returnUrl: await getPathname(),
+      }),
+    );
+  }
 
+  if (pageState.state === "unavailable") {
     notFound();
   }
 
   return (
     <SettingsPage>
-      <SettingsPageHeader className="flex-row items-center justify-between">
-        <div>
-          <SettingsPageTitle>
-            <Trans i18nKey="apiKeys" defaults="API Keys" />
-          </SettingsPageTitle>
-          <SettingsPageDescription>
-            <Trans
-              i18nKey="apiKeysDescription"
-              defaults="Manage API keys for programmatic access to your space"
-            />
-          </SettingsPageDescription>
-        </div>
-        <CreateApiKeyButton />
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="apiKeys" defaults="API Keys" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
+          <Trans
+            i18nKey="apiKeysDescription"
+            defaults="Manage API keys for programmatic access to your space"
+          />
+        </SettingsPageDescription>
+        {pageState.state === "enabled" ? (
+          <SettingsPageAction>
+            <CreateApiKeyButton />
+          </SettingsPageAction>
+        ) : null}
       </SettingsPageHeader>
       <SettingsPageContent>
-        <PageSectionGroup>
-          <PageSection>
-            <PageSectionContent>
-              <ApiKeysList apiKeys={result.apiKeys} />
-            </PageSectionContent>
-          </PageSection>
-        </PageSectionGroup>
+        {pageState.state === "upgrade_required" ? (
+          <ApiAccessUpgrade />
+        ) : (
+          <ApiKeysContent />
+        )}
       </SettingsPageContent>
     </SettingsPage>
+  );
+}
+
+async function ApiKeysContent() {
+  const result = await getSpaceApiKeys();
+
+  if (!result.ok) {
+    notFound();
+  }
+
+  return (
+    <PageSectionGroup>
+      <ApiUsageLimits />
+      <PageSection>
+        <PageSectionContent>
+          <ApiKeysList apiKeys={result.apiKeys} />
+        </PageSectionContent>
+      </PageSection>
+    </PageSectionGroup>
   );
 }
 
