@@ -279,7 +279,8 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
                             if (
                               options.length === 0 &&
-                              newOption.type === "timeSlot"
+                              newOption.type === "timeSlot" &&
+                              !form.getValues("timeZone")
                             ) {
                               form.setValue("timeZone", getBrowserTimeZone());
                             }
