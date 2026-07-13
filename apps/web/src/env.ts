@@ -6,7 +6,10 @@ import "server-only";
 import { createEnv } from "@t3-oss/env-nextjs";
 import * as z from "zod";
 
-const vercelUrl = process.env.NEXT_PUBLIC_VERCEL_URL;
+// Base URL fallback on preview deployments, where `NEXT_PUBLIC_BASE_URL` is
+// unset. Prefer the stable branch alias (the URL Vercel links to) over the
+// per-deployment URL. See `getVercelUrl` in `@rallly/utils/absolute-url`.
+const vercelUrl = process.env.VERCEL_BRANCH_URL || process.env.VERCEL_URL;
 
 export const env = createEnv({
   /*
