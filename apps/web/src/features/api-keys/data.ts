@@ -1,6 +1,7 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
+import { cache } from "react";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import type { SpaceTier } from "@/features/space/schema";
 import { getCurrentUser } from "@/features/user/data";
@@ -13,7 +14,7 @@ import { posthog } from "@/lib/posthog";
  * Failures are returned as values; stale sessions still throw
  * InvalidSessionError from getCurrentUser for the boundary to handle.
  */
-export async function getApiKeyAccessContext() {
+export const getApiKeyAccessContext = cache(async () => {
   const user = await getCurrentUser();
 
   if (!user) {
@@ -31,9 +32,9 @@ export async function getApiKeyAccessContext() {
   }
 
   return { ok: true, user, space } as const;
-}
+});
 
-export async function getSpaceApiKeys() {
+export const getSpaceApiKeys = cache(async () => {
   const context = await getApiKeyAccessContext();
 
   if (!context.ok) {
@@ -59,7 +60,7 @@ export async function getSpaceApiKeys() {
   });
 
   return { ok: true, apiKeys } as const;
-}
+});
 
 /**
  * Determines if a user has access to API features (API keys, developer tools)
