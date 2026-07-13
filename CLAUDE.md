@@ -86,7 +86,7 @@ pnpm sherif               # Check package dependencies
   - `utils/` - Shared utilities
 
 ### Key Features & Structure
-- **Polls**: Core scheduling functionality in `apps/web/src/features/poll/` (legacy UI still in `components/poll/`)
+- **Polls**: Core scheduling functionality in `apps/web/src/features/poll/`
 - **Spaces**: Workspace/team organization in `apps/web/src/features/space/`
 - **Authentication**: Better-Auth config in `apps/web/src/lib/auth.ts`, domain logic in `apps/web/src/features/auth/`
 - **tRPC API**: Routers in `apps/web/src/trpc/routers/`
