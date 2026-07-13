@@ -3,7 +3,7 @@ import "server-only";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { defineAbilityForApiKeys } from "@/features/api-keys/ability";
-import { createApiKey as generateApiKey } from "@/features/api-keys/utils";
+import { generateApiKey } from "@/features/api-keys/utils";
 import { AppError } from "@/lib/errors/app-error";
 import { MAX_ACTIVE_API_KEYS_PER_SPACE } from "./schema";
 

@@ -34,10 +34,10 @@ const API_KEY_SCHEME = "sk_";
 const API_KEY_PREFIX_LENGTH = 8;
 
 /**
- * Create an API key with the format: sk_{prefix}_{secret}
+ * Generate API key material with the format: sk_{prefix}_{secret}
  * @returns Object containing the full API key and components for storage
  */
-export const createApiKey = async (): Promise<{
+export const generateApiKey = async (): Promise<{
   apiKey: string;
   prefix: string;
   hashedKey: string;
