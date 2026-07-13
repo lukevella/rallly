@@ -1,10 +1,8 @@
 "use server";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
-import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import * as z from "zod";
-import { userProfileTag } from "@/features/user/constants";
 import { banUser, unbanUser, updateUserRole } from "@/features/user/mutations";
 import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
@@ -34,13 +32,11 @@ export const updateUserNameAction = authActionClient
       name: z.string().trim().min(1).max(100),
     }),
   )
-  .action(async ({ ctx, parsedInput }) => {
+  .action(async ({ parsedInput }) => {
     await authLib.api.updateUser({
       body: { name: parsedInput.name },
       headers: await headers(),
     });
-
-    revalidateTag(userProfileTag(ctx.user.id), "max");
   });
 
 export const updateLocalizationAction = authActionClient
@@ -105,8 +101,6 @@ export const updateUserAvatarAction = authActionClient
       headers: await headers(),
     });
 
-    revalidateTag(userProfileTag(ctx.user.id), "max");
-
     // Only delete from storage if it's an internal avatar, not an external
     // URL from an OAuth provider.
     if (oldImageKey && !oldImageKey.startsWith("https://")) {
@@ -123,8 +117,6 @@ export const removeUserAvatarAction = authActionClient
       body: { image: null },
       headers: await headers(),
     });
-
-    revalidateTag(userProfileTag(ctx.user.id), "max");
 
     // Only delete from storage if it's an internal avatar, not an external
     // URL from an OAuth provider.
