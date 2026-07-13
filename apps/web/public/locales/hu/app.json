@@ -64,6 +64,7 @@
   "authErrorsUserBanned": "Ez a felhasználó le lett tiltva. Kérjük keresd az ügyfélszolgálatot, ha úgy hiszed, hogy ez egy hiba!",
   "authErrorsUserNotFound": "Nincs fiók ezzel az email címmel. Kérjük ellenőrizd az emailt vagy regisztrálj egy új fiókot!",
   "autoTimeZone": "Automatikus időzóna",
+  "autoTimeZoneDisabledHelp": "Az időzónát nem lehet megváltoztatni, miután szavazott már valaki.",
   "autoTimeZoneHelp": "Bekapcsolt állapotban az időpontok automatikusan minden egyes résztvevő helyi időzónájához igazodnak.",
   "back": "Vissza",
   "basicPolls": "Szavazások",
