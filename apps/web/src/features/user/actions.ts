@@ -1,16 +1,12 @@
 "use server";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { revalidateTag } from "next/cache";
+import { headers } from "next/headers";
 import * as z from "zod";
-import {
-  banUser,
-  unbanUser,
-  updateUserImage,
-  updateUserLocalization,
-  updateUserName,
-  updateUserRole,
-} from "@/features/user/mutations";
-import { refreshSessionCookieCache } from "@/lib/auth";
+import { userProfileTag } from "@/features/user/constants";
+import { banUser, unbanUser, updateUserRole } from "@/features/user/mutations";
+import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
 import { AppError } from "@/lib/errors/app-error";
 import {
@@ -24,6 +20,13 @@ import {
 } from "@/lib/storage/image-upload";
 import { timezoneSchema } from "@/lib/utils/timezone-schema";
 
+// Self-profile updates call Better-Auth's updateUser endpoint directly
+// instead of going through a mutation: the target user is defined by the
+// session (identity, not a privilege decision), and the endpoint refreshes
+// both the session snapshot in secondary storage and the session cookie
+// cache in one step. Writes that target an arbitrary userId (admin,
+// moderation, system contexts) live in mutations.ts.
+
 export const updateUserNameAction = authActionClient
   .metadata({ actionName: "update_user_name" })
   .inputSchema(
@@ -32,9 +35,12 @@ export const updateUserNameAction = authActionClient
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
-    await updateUserName({ userId: ctx.user.id, name: parsedInput.name });
+    await authLib.api.updateUser({
+      body: { name: parsedInput.name },
+      headers: await headers(),
+    });
 
-    await refreshSessionCookieCache();
+    revalidateTag(userProfileTag(ctx.user.id), "max");
   });
 
 export const updateLocalizationAction = authActionClient
@@ -46,15 +52,15 @@ export const updateLocalizationAction = authActionClient
       weekStart: weekStartSchema.optional(),
     }),
   )
-  .action(async ({ ctx, parsedInput }) => {
-    await updateUserLocalization({
-      userId: ctx.user.id,
-      timeZone: parsedInput.timeZone,
-      timeFormat: parsedInput.timeFormat,
-      weekStart: parsedInput.weekStart,
+  .action(async ({ parsedInput }) => {
+    await authLib.api.updateUser({
+      body: {
+        timeZone: parsedInput.timeZone,
+        timeFormat: parsedInput.timeFormat,
+        weekStart: parsedInput.weekStart,
+      },
+      headers: await headers(),
     });
-
-    await refreshSessionCookieCache();
   });
 
 export const getAvatarUploadUrlAction = authActionClient
@@ -94,9 +100,12 @@ export const updateUserAvatarAction = authActionClient
 
     const oldImageKey = ctx.user.image;
 
-    await updateUserImage({ userId: ctx.user.id, image: imageKey });
+    await authLib.api.updateUser({
+      body: { image: imageKey },
+      headers: await headers(),
+    });
 
-    await refreshSessionCookieCache();
+    revalidateTag(userProfileTag(ctx.user.id), "max");
 
     // Only delete from storage if it's an internal avatar, not an external
     // URL from an OAuth provider.
@@ -110,9 +119,12 @@ export const removeUserAvatarAction = authActionClient
   .action(async ({ ctx }) => {
     const oldImageKey = ctx.user.image;
 
-    await updateUserImage({ userId: ctx.user.id, image: null });
+    await authLib.api.updateUser({
+      body: { image: null },
+      headers: await headers(),
+    });
 
-    await refreshSessionCookieCache();
+    revalidateTag(userProfileTag(ctx.user.id), "max");
 
     // Only delete from storage if it's an internal avatar, not an external
     // URL from an OAuth provider.

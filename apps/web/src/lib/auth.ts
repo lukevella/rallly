@@ -559,20 +559,6 @@ export const getSession = cache(async () => {
   return null;
 });
 
-// The session cookie caches a snapshot of the user for up to five minutes.
-// Mutations that write through the internal adapter refresh the session data
-// in secondary storage but cannot touch cookies, so after a self-update the
-// action must call this to re-fetch the session (bypassing the cookie cache)
-// and re-set the cookie via the nextCookies plugin — otherwise the UI serves
-// the stale snapshot until the cache expires. Only callable from contexts
-// that can write cookies (server actions, route handlers).
-export const refreshSessionCookieCache = async () => {
-  await authLib.api.getSession({
-    headers: await headers(),
-    query: { disableCookieCache: true },
-  });
-};
-
 export const signOut = async () => {
   await authLib.api.signOut({
     headers: await headers(),
