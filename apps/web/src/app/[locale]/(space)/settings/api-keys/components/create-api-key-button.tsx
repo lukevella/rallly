@@ -27,14 +27,10 @@ import { AlertTriangleIcon, CheckIcon, CopyIcon, PlusIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useCopyToClipboard } from "react-use";
-import * as z from "zod";
 import { createApiKeyAction } from "@/features/api-keys/actions";
+import { createApiKeySchema } from "@/features/api-keys/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-
-const formSchema = z.object({
-  name: z.string().min(1).max(100),
-});
 
 export function CreateApiKeyButton() {
   const { t } = useTranslation();
@@ -56,7 +52,7 @@ export function CreateApiKeyButton() {
   const [didCopy, setDidCopy] = React.useState(false);
 
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(createApiKeySchema),
     defaultValues: {
       name: "",
     },

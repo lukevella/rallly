@@ -82,8 +82,17 @@ export async function revokeApiKey({
     });
   }
 
-  await prisma.spaceApiKey.update({
-    where: { id },
+  // Guard on revokedAt so a concurrent revoke can't have both requests report
+  // success (and emit duplicate lifecycle events). The loser updates 0 rows.
+  const { count } = await prisma.spaceApiKey.updateMany({
+    where: { id, revokedAt: null },
     data: { revokedAt: new Date() },
   });
+
+  if (count === 0) {
+    throw new AppError({
+      code: "CONFLICT",
+      message: "API key is already revoked",
+    });
+  }
 }
