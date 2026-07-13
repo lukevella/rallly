@@ -27,25 +27,21 @@ import { AlertTriangleIcon, CheckIcon, CopyIcon, PlusIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useCopyToClipboard } from "react-use";
-import * as z from "zod";
+import { createApiKeyAction } from "@/features/api-keys/actions";
+import { createApiKeySchema } from "@/features/api-keys/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
-
-const formSchema = z.object({
-  name: z.string().min(1).max(100),
-});
+import { useSafeAction } from "@/lib/safe-action/client";
 
 export function CreateApiKeyButton() {
   const { t } = useTranslation();
   const dialog = useDialog();
   const [createdApiKey, setCreatedApiKey] = React.useState<string | null>(null);
-  const createApiKey = trpc.apiKeys.create.useMutation();
-  const utils = trpc.useUtils();
+  const createApiKey = useSafeAction(createApiKeyAction);
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
 
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(createApiKeySchema),
     defaultValues: {
       name: "",
     },
@@ -149,15 +145,17 @@ export function CreateApiKeyButton() {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(async (data) => {
-                    try {
-                      const result = await createApiKey.mutateAsync(data);
-                      setCreatedApiKey(result.apiKey);
-                      await utils.apiKeys.list.invalidate();
+                    const result = await createApiKey.executeAsync(data);
+                    if (result?.data?.ok) {
+                      setCreatedApiKey(result.data.apiKey);
                       form.reset();
-                    } catch {
+                    } else if (
+                      result?.data?.reason === "max_api_keys_exceeded"
+                    ) {
                       toast.error(
-                        t("createFailed", {
-                          defaultValue: "Failed to create",
+                        t("apiKeyLimitReached", {
+                          defaultValue:
+                            "You've reached the maximum number of API keys. Revoke one before creating another.",
                         }),
                       );
                     }
@@ -190,8 +188,8 @@ export function CreateApiKeyButton() {
                     <Button
                       variant="primary"
                       type="submit"
-                      disabled={createApiKey.isPending}
-                      loading={createApiKey.isPending}
+                      disabled={createApiKey.isExecuting}
+                      loading={createApiKey.isExecuting}
                     >
                       <Trans i18nKey="create" defaults="Create" />
                     </Button>

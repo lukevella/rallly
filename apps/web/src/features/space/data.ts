@@ -5,6 +5,7 @@ import type {
   SpaceTier as DBSpaceTier,
 } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { cache } from "react";
 
 import type { MemberDTO } from "@/features/space/member/types";
 import type { SpaceDTO } from "@/features/space/types";
@@ -111,7 +112,7 @@ export function getSpaceBranding(spaceId: string) {
   });
 }
 
-export const getActiveSpaceForUser = async (userId: string) => {
+export const getActiveSpaceForUser = cache(async (userId: string) => {
   const spaceMember = await prisma.spaceMember.findFirst({
     where: {
       userId,
@@ -132,4 +133,4 @@ export const getActiveSpaceForUser = async (userId: string) => {
     ...spaceMember.space,
     role: spaceMember.role,
   });
-};
+});

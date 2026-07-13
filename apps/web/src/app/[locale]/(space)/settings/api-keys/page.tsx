@@ -1,6 +1,5 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import {
   PageSection,
   PageSectionContent,
@@ -13,48 +12,56 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
+import { getSpaceApiKeys } from "@/features/api-keys/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { getPathname } from "@/lib/pathname";
+import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 import { ApiKeysList } from "./components/api-keys-list";
 import { CreateApiKeyButton } from "./components/create-api-key-button";
 
 export default async function ApiKeysSettingsPage() {
-  const helpers = await createPrivateSSRHelper();
-  try {
-    await helpers.apiKeys.list.prefetch();
-  } catch {
+  const result = await getSpaceApiKeys();
+
+  if (!result.ok) {
+    if (result.reason === "unauthorized") {
+      redirect(
+        buildSafeRedirectUrl({
+          destination: "/login",
+          returnUrl: await getPathname(),
+        }),
+      );
+    }
+
     notFound();
   }
 
   return (
-    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
-      <SettingsPage>
-        <SettingsPageHeader className="flex-row items-center justify-between">
-          <div>
-            <SettingsPageTitle>
-              <Trans i18nKey="apiKeys" defaults="API Keys" />
-            </SettingsPageTitle>
-            <SettingsPageDescription>
-              <Trans
-                i18nKey="apiKeysDescription"
-                defaults="Manage API keys for programmatic access to your space"
-              />
-            </SettingsPageDescription>
-          </div>
-          <CreateApiKeyButton />
-        </SettingsPageHeader>
-        <SettingsPageContent>
-          <PageSectionGroup>
-            <PageSection>
-              <PageSectionContent>
-                <ApiKeysList />
-              </PageSectionContent>
-            </PageSection>
-          </PageSectionGroup>
-        </SettingsPageContent>
-      </SettingsPage>
-    </HydrationBoundary>
+    <SettingsPage>
+      <SettingsPageHeader className="flex-row items-center justify-between">
+        <div>
+          <SettingsPageTitle>
+            <Trans i18nKey="apiKeys" defaults="API Keys" />
+          </SettingsPageTitle>
+          <SettingsPageDescription>
+            <Trans
+              i18nKey="apiKeysDescription"
+              defaults="Manage API keys for programmatic access to your space"
+            />
+          </SettingsPageDescription>
+        </div>
+        <CreateApiKeyButton />
+      </SettingsPageHeader>
+      <SettingsPageContent>
+        <PageSectionGroup>
+          <PageSection>
+            <PageSectionContent>
+              <ApiKeysList apiKeys={result.apiKeys} />
+            </PageSectionContent>
+          </PageSection>
+        </PageSectionGroup>
+      </SettingsPageContent>
+    </SettingsPage>
   );
 }
 

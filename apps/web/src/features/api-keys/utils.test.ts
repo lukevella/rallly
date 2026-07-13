@@ -1,8 +1,8 @@
 import crypto from "node:crypto";
 import { describe, expect, it } from "vitest";
 import {
-  createApiKey,
   extractApiKeyPrefix,
+  generateApiKey,
   hashApiKey,
   isLegacyApiKeyHash,
   randomToken,
@@ -38,32 +38,32 @@ describe("randomToken", () => {
   });
 });
 
-describe("createApiKey", () => {
+describe("generateApiKey", () => {
   it("should generate an API key with correct format", async () => {
-    const result = await createApiKey();
+    const result = await generateApiKey();
     expect(result.apiKey).toMatch(/^sk_[A-Za-z0-9_-]+_[A-Za-z0-9_-]+$/);
   });
 
   it("should generate unique API keys on each call", async () => {
-    const result1 = await createApiKey();
-    const result2 = await createApiKey();
+    const result1 = await generateApiKey();
+    const result2 = await generateApiKey();
     expect(result1.apiKey).not.toBe(result2.apiKey);
     expect(result1.prefix).not.toBe(result2.prefix);
   });
 
   it("should generate a valid prefix", async () => {
-    const result = await createApiKey();
+    const result = await generateApiKey();
     expect(result.prefix).toBeTruthy();
     expect(result.prefix.length).toBeGreaterThan(0);
   });
 
   it("should generate a hashed key in sha256 format", async () => {
-    const result = await createApiKey();
+    const result = await generateApiKey();
     expect(result.hashedKey).toMatch(/^sha256\$[A-Za-z0-9_-]+\$[a-f0-9]{64}$/);
   });
 
   it("should verify the generated API key against its hash", async () => {
-    const result = await createApiKey();
+    const result = await generateApiKey();
     const isValid = await verifyApiKey(result.apiKey, result.hashedKey);
     expect(isValid).toBe(true);
   });
@@ -111,7 +111,7 @@ describe("extractApiKeyPrefix", () => {
 
   it("should extract the stored prefix from generated keys", async () => {
     for (let i = 0; i < 50; i++) {
-      const result = await createApiKey();
+      const result = await generateApiKey();
       expect(extractApiKeyPrefix(result.apiKey)).toBe(result.prefix);
     }
   });
@@ -119,20 +119,20 @@ describe("extractApiKeyPrefix", () => {
 
 describe("verifyApiKey", () => {
   it("should verify correct API key", async () => {
-    const result = await createApiKey();
+    const result = await generateApiKey();
     const isValid = await verifyApiKey(result.apiKey, result.hashedKey);
     expect(isValid).toBe(true);
   });
 
   it("should reject incorrect API key", async () => {
-    const result = await createApiKey();
+    const result = await generateApiKey();
     const wrongKey = "sk_wrong_prefix_wrong_secret";
     const isValid = await verifyApiKey(wrongKey, result.hashedKey);
     expect(isValid).toBe(false);
   });
 
   it("should reject API key with tampered salt", async () => {
-    const result = await createApiKey();
+    const result = await generateApiKey();
     const parts = result.hashedKey.split("$");
     parts[1] = "wrongsalt";
     const tamperedHash = parts.join("$");
@@ -141,7 +141,7 @@ describe("verifyApiKey", () => {
   });
 
   it("should reject API key with tampered hash", async () => {
-    const result = await createApiKey();
+    const result = await generateApiKey();
     const parts = result.hashedKey.split("$");
     parts[2] = "0".repeat(64);
     const tamperedHash = parts.join("$");
@@ -150,7 +150,7 @@ describe("verifyApiKey", () => {
   });
 
   it("should reject malformed hash format", async () => {
-    const result = await createApiKey();
+    const result = await generateApiKey();
     const isValid = await verifyApiKey(result.apiKey, "sha256$saltonly");
     expect(isValid).toBe(false);
   });
@@ -204,7 +204,7 @@ describe("verifyApiKey", () => {
   });
 
   it("should handle hashes with whitespace", async () => {
-    const result = await createApiKey();
+    const result = await generateApiKey();
     const hashWithSpace = `  ${result.hashedKey}  `;
     const isValid = await verifyApiKey(result.apiKey, hashWithSpace);
     expect(isValid).toBe(true);
@@ -221,7 +221,7 @@ describe("verifyApiKey", () => {
   });
 
   it("should use constant-time comparison", async () => {
-    const result = await createApiKey();
+    const result = await generateApiKey();
 
     // Both should complete without throwing
     await expect(

@@ -9,20 +9,19 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { Spinner } from "@/components/spinner";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
+import type { getSpaceApiKeys } from "@/features/api-keys/data";
 import { Trans } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
-import { trpc } from "@/trpc/client";
 import { RevokeApiKeyButton } from "./revoke-api-key-button";
 
-export function ApiKeysList() {
-  const { data: apiKeys } = trpc.apiKeys.list.useQuery();
-  const { toRelativeTime } = useDateTime();
+type ApiKey = Extract<
+  Awaited<ReturnType<typeof getSpaceApiKeys>>,
+  { ok: true }
+>["apiKeys"][number];
 
-  if (apiKeys === undefined) {
-    return <Spinner />;
-  }
+export function ApiKeysList({ apiKeys }: { apiKeys: ApiKey[] }) {
+  const { toRelativeTime } = useDateTime();
 
   if (apiKeys.length === 0) {
     return (
