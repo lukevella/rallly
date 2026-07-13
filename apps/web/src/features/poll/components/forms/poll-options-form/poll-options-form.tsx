@@ -221,7 +221,12 @@ const PollOptionsForm = ({
                     }
                   }}
                 />
-                <Label htmlFor="timeZone">
+                <Label
+                  htmlFor="timeZone"
+                  className={
+                    disableTimeZoneChange ? "text-muted-foreground" : undefined
+                  }
+                >
                   <Trans
                     i18nKey="autoTimeZone"
                     defaults="Automatic Time Zone Conversion"
@@ -232,10 +237,17 @@ const PollOptionsForm = ({
                     <InfoIcon className="size-4 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent className="w-72">
-                    <Trans
-                      i18nKey="autoTimeZoneHelp"
-                      defaults="Enable this setting to automatically adjust event times to each participant's local time zone."
-                    />
+                    {disableTimeZoneChange ? (
+                      <Trans
+                        i18nKey="autoTimeZoneDisabledHelp"
+                        defaults="The time zone can't be changed after votes have been cast."
+                      />
+                    ) : (
+                      <Trans
+                        i18nKey="autoTimeZoneHelp"
+                        defaults="Enable this setting to automatically adjust event times to each participant's local time zone."
+                      />
+                    )}
                   </TooltipContent>
                 </Tooltip>
               </div>

@@ -38,6 +38,9 @@ const convertOptionToString = (
 const Page = () => {
   const { poll } = usePoll();
   const { participants } = useParticipants();
+  const hasVotes = participants.some(
+    (participant) => participant.votes.length > 0,
+  );
   const { mutate: updatePollMutation, isPending: isUpdating } =
     useUpdatePollMutation();
   const { t } = useTranslation();
@@ -150,7 +153,7 @@ const Page = () => {
           }
         })}
       >
-        <PollOptionsForm disableTimeZoneChange={true}>
+        <PollOptionsForm disableTimeZoneChange={hasVotes}>
           <CardFooter className="justify-between">
             <Link href={pollLink} className={buttonVariants()}>
               <Trans i18nKey="cancel" />

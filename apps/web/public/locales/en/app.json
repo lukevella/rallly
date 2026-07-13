@@ -64,6 +64,7 @@
   "authErrorsUserBanned": "This account has been banned. Please contact support if you believe this is an error.",
   "authErrorsUserNotFound": "No account found with this email address. Please check the email or register for a new account.",
   "autoTimeZone": "Automatic Time Zone Conversion",
+  "autoTimeZoneDisabledHelp": "The time zone can't be changed after votes have been cast.",
   "autoTimeZoneHelp": "Enable this setting to automatically adjust event times to each participant's local time zone.",
   "back": "Back",
   "banned": "Banned",
