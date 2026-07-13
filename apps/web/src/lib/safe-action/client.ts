@@ -14,7 +14,8 @@ export const useSafeAction: typeof useAction = (action, options) => {
       router.refresh();
       options?.onSuccess?.(args);
     },
-    onError: ({ error }) => {
+    onError: (args) => {
+      const { error } = args;
       if (error.serverError) {
         let translatedDescription = "An unexpected error occurred";
 
@@ -27,6 +28,12 @@ export const useSafeAction: typeof useAction = (action, options) => {
           case "NOT_FOUND":
             translatedDescription = t("actionErrorNotFound", {
               defaultValue: "The resource was not found",
+            });
+            break;
+          case "CONFLICT":
+            translatedDescription = t("actionErrorConflict", {
+              defaultValue:
+                "This action conflicts with the current state. Please refresh and try again.",
             });
             break;
           case "FORBIDDEN":
@@ -63,8 +70,14 @@ export const useSafeAction: typeof useAction = (action, options) => {
             break;
         }
 
-        toast.error(translatedDescription);
+        // A caller that supplies its own onError owns error UX for this
+        // action (e.g. a context-specific message), so skip the default toast.
+        if (!options?.onError) {
+          toast.error(translatedDescription);
+        }
       }
+
+      options?.onError?.(args);
     },
   });
 };

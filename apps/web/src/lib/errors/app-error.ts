@@ -2,6 +2,7 @@ export type AppErrorCode =
   | "UNAUTHORIZED"
   | "INVALID_SESSION"
   | "NOT_FOUND"
+  | "CONFLICT"
   | "FORBIDDEN"
   | "INTERNAL_SERVER_ERROR"
   | "PAYMENT_REQUIRED"

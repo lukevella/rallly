@@ -40,6 +40,9 @@ export function RevokeApiKeyButton({
       utils.apiKeys.list.invalidate();
       toast.success(t("revoked", { defaultValue: "Revoked" }));
     },
+    onSettled: () => {
+      revokeDialog.dismiss();
+    },
   });
 
   return (
@@ -93,7 +96,6 @@ export function RevokeApiKeyButton({
               loading={revokeApiKey.isExecuting}
               onClick={() => {
                 revokeApiKey.execute({ id: apiKeyId });
-                revokeDialog.dismiss();
               }}
             >
               <Trans i18nKey="revoke" defaults="Revoke" />

@@ -9,6 +9,7 @@
   "account": "Account",
   "accountMenu": "Account menu",
   "accountNotLinkedDescription": "A user with this email already exists. Please log in using the original method.",
+  "actionErrorConflict": "This action conflicts with the current state. Please refresh and try again.",
   "actionErrorForbidden": "You are not allowed to perform this action",
   "actionErrorInternalServerError": "An internal server error occurred",
   "actionErrorInvalidSession": "Your session is no longer valid",

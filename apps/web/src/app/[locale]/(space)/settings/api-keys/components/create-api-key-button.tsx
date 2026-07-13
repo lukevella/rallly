@@ -24,13 +24,13 @@ import {
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
 import { AlertTriangleIcon, CheckIcon, CopyIcon, PlusIcon } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useCopyToClipboard } from "react-use";
 import * as z from "zod";
 import { createApiKeyAction } from "@/features/api-keys/actions";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
 
 const formSchema = z.object({
@@ -42,10 +42,10 @@ export function CreateApiKeyButton() {
   const dialog = useDialog();
   const [createdApiKey, setCreatedApiKey] = React.useState<string | null>(null);
   const utils = trpc.useUtils();
-  const createApiKey = useAction(createApiKeyAction, {
+  const createApiKey = useSafeAction(createApiKeyAction, {
     onError: ({ error }) => {
       toast.error(
-        error.serverError === "TOO_MANY_REQUESTS"
+        error.serverError === "CONFLICT"
           ? t("apiKeyLimitReached", {
               defaultValue:
                 "You've reached the maximum number of API keys. Revoke one before creating another.",

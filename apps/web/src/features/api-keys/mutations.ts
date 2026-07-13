@@ -28,7 +28,7 @@ export async function createApiKey({
 
   if (activeCount >= MAX_ACTIVE_API_KEYS_PER_SPACE) {
     throw new AppError({
-      code: "TOO_MANY_REQUESTS",
+      code: "CONFLICT",
       message: `You can have at most ${MAX_ACTIVE_API_KEYS_PER_SPACE} active API keys. Revoke one before creating another.`,
     });
   }
@@ -77,7 +77,7 @@ export async function revokeApiKey({
 
   if (apiKey.revokedAt) {
     throw new AppError({
-      code: "FORBIDDEN",
+      code: "CONFLICT",
       message: "API key is already revoked",
     });
   }
