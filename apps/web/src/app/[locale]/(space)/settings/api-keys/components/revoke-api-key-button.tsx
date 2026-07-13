@@ -23,7 +23,6 @@ import { BanIcon, MoreVerticalIcon } from "lucide-react";
 import { revokeApiKeyAction } from "@/features/api-keys/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { trpc } from "@/trpc/client";
 
 export function RevokeApiKeyButton({
   apiKeyId,
@@ -34,10 +33,8 @@ export function RevokeApiKeyButton({
 }) {
   const { t } = useTranslation();
   const revokeDialog = useDialog();
-  const utils = trpc.useUtils();
   const revokeApiKey = useSafeAction(revokeApiKeyAction, {
     onSuccess: () => {
-      utils.apiKeys.list.invalidate();
       toast.success(t("revoked", { defaultValue: "Revoked" }));
     },
     onSettled: () => {

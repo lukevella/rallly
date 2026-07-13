@@ -31,7 +31,6 @@ import * as z from "zod";
 import { createApiKeyAction } from "@/features/api-keys/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { trpc } from "@/trpc/client";
 
 const formSchema = z.object({
   name: z.string().min(1).max(100),
@@ -41,7 +40,6 @@ export function CreateApiKeyButton() {
   const { t } = useTranslation();
   const dialog = useDialog();
   const [createdApiKey, setCreatedApiKey] = React.useState<string | null>(null);
-  const utils = trpc.useUtils();
   const createApiKey = useSafeAction(createApiKeyAction, {
     onError: ({ error }) => {
       toast.error(
@@ -165,7 +163,6 @@ export function CreateApiKeyButton() {
                     const result = await createApiKey.executeAsync(data);
                     if (result?.data) {
                       setCreatedApiKey(result.data.apiKey);
-                      await utils.apiKeys.list.invalidate();
                       form.reset();
                     }
                   })}
