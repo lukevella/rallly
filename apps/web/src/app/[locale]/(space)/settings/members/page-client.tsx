@@ -36,7 +36,7 @@ export function MembersSettingsPageClient() {
   return (
     <SettingsPage>
       <SettingsPageHeader
-        title={<Trans i18nKey="members" />}
+        title={<Trans i18nKey="members" defaults="Members" />}
         description={
           <Trans
             i18nKey="membersDescription"
