@@ -31,6 +31,7 @@ import {
   generateTimeSlots,
   parseStartTime,
 } from "../utils/time-slots";
+import { wideEvent } from "../utils/wide-event";
 
 type Env = {
   Variables: {
@@ -44,6 +45,8 @@ type Env = {
 };
 
 const app = new Hono<Env>().basePath("/api/private");
+
+app.use("*", wideEvent);
 
 app.use("*", async (c, next) => {
   if (isMaintenanceModeEnabled()) {
