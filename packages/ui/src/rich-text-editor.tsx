@@ -62,6 +62,7 @@ export function RichTextEditor({
   placeholder,
   className,
   id,
+  maxLength,
   "aria-labelledby": ariaLabelledBy,
   labels,
 }: {
@@ -71,6 +72,9 @@ export function RichTextEditor({
   placeholder?: string;
   className?: string;
   id?: string;
+  /** Character cap on the Markdown source. Shows a counter as the user nears
+   * it and flags the count when exceeded. Advisory — enforcement is server-side. */
+  maxLength?: number;
   "aria-labelledby"?: string;
   labels: {
     bold: string;
@@ -136,8 +140,46 @@ export function RichTextEditor({
         <Toolbar editor={editor} labels={labels} />
       </InputGroupAddon>
       <EditorContent editor={editor} />
+      {maxLength ? (
+        <InputGroupAddon align="block-end" className="justify-end">
+          <CharacterCount editor={editor} maxLength={maxLength} />
+        </InputGroupAddon>
+      ) : null}
       <LinkBubbleMenu editor={editor} labels={labels} />
     </InputGroup>
+  );
+}
+
+function CharacterCount({
+  editor,
+  maxLength,
+}: {
+  editor: TiptapEditor;
+  maxLength: number;
+}) {
+  const { length } = useEditorState({
+    editor,
+    // Count the Markdown source — that's what the cap (and the iCal
+    // DESCRIPTION) sees, so `**bold**` costs more than its rendered text.
+    selector: (ctx) => ({ length: ctx.editor.getMarkdown().length }),
+  });
+
+  const over = length > maxLength;
+  // Stay out of the way until the user is within ~15% of the cap.
+  if (!over && length < maxLength * 0.85) {
+    return null;
+  }
+
+  return (
+    <span
+      aria-live="polite"
+      className={cn(
+        "text-xs tabular-nums",
+        over ? "font-medium text-destructive" : "text-muted-foreground",
+      )}
+    >
+      {length}/{maxLength}
+    </span>
   );
 }
 

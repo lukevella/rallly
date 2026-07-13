@@ -207,6 +207,7 @@
   "describeYourEvent": "Describe what your event is about",
   "description": "Description",
   "descriptionPlaceholder": "Hey everyone, please choose the dates that work for you!",
+  "descriptionTooLong": "Description must be at most {count} characters",
   "developer": "Developer",
   "disableCommentsDescription": "Remove the option to leave comments on the poll.",
   "disableCommentsTitle": "Disable comments",

@@ -4,7 +4,7 @@ import { Input } from "@rallly/ui/input";
 import { PlusIcon } from "lucide-react";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
-
+import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFormValidation } from "@/lib/utils/form-validation";
 
@@ -108,35 +108,52 @@ const DescriptionField = () => {
       <Controller
         control={form.control}
         name="description"
-        render={({ field }) => (
-          <LazyRichTextEditor
-            id="description"
-            value={field.value ?? ""}
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            placeholder={t("descriptionPlaceholder")}
-            labels={{
-              bold: t("richTextBold", { defaultValue: "Bold" }),
-              italic: t("richTextItalic", { defaultValue: "Italic" }),
-              link: t("richTextLink", { defaultValue: "Link" }),
-              bulletList: t("richTextBulletList", {
-                defaultValue: "Bullet list",
-              }),
-              numberedList: t("richTextNumberedList", {
-                defaultValue: "Numbered list",
-              }),
-              linkPlaceholder: t("richTextLinkPlaceholder", {
-                defaultValue: "Paste or type a link",
-              }),
-              linkApply: t("richTextLinkApply", { defaultValue: "Apply" }),
-              linkRemove: t("richTextLinkRemove", {
-                defaultValue: "Remove link",
-              }),
-              linkVisit: t("richTextLinkVisit", {
-                defaultValue: "Open link in new tab",
-              }),
-            }}
-          />
+        rules={{
+          maxLength: {
+            value: MAX_POLL_DESCRIPTION_LENGTH,
+            message: t("descriptionTooLong", {
+              defaultValue: "Description must be at most {count} characters",
+              count: MAX_POLL_DESCRIPTION_LENGTH,
+            }),
+          },
+        }}
+        render={({ field, fieldState }) => (
+          <>
+            <LazyRichTextEditor
+              id="description"
+              value={field.value ?? ""}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              maxLength={MAX_POLL_DESCRIPTION_LENGTH}
+              placeholder={t("descriptionPlaceholder")}
+              labels={{
+                bold: t("richTextBold", { defaultValue: "Bold" }),
+                italic: t("richTextItalic", { defaultValue: "Italic" }),
+                link: t("richTextLink", { defaultValue: "Link" }),
+                bulletList: t("richTextBulletList", {
+                  defaultValue: "Bullet list",
+                }),
+                numberedList: t("richTextNumberedList", {
+                  defaultValue: "Numbered list",
+                }),
+                linkPlaceholder: t("richTextLinkPlaceholder", {
+                  defaultValue: "Paste or type a link",
+                }),
+                linkApply: t("richTextLinkApply", { defaultValue: "Apply" }),
+                linkRemove: t("richTextLinkRemove", {
+                  defaultValue: "Remove link",
+                }),
+                linkVisit: t("richTextLinkVisit", {
+                  defaultValue: "Open link in new tab",
+                }),
+              }}
+            />
+            {fieldState.error ? (
+              <p className="text-destructive text-sm">
+                {fieldState.error.message}
+              </p>
+            ) : null}
+          </>
         )}
       />
     </FormItem>
