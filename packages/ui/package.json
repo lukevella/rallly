@@ -8,6 +8,7 @@
     "check": "biome check .",
     "check:fix": "biome check . --write",
     "ui:add": "npx shadcn-ui@latest add",
+    "test:unit": "vitest run",
     "type-check": "tsc --noEmit"
   },
   "exports": {
@@ -42,8 +43,12 @@
   },
   "devDependencies": {
     "@rallly/tsconfig": "workspace:*",
+    "@testing-library/react": "^16.3.0",
     "@types/react": "19.2.13",
     "@types/react-dom": "19.2.3",
-    "unified": "^11.0.5"
+    "@vitejs/plugin-react": "^5.0.0",
+    "jsdom": "^26.1.0",
+    "unified": "^11.0.5",
+    "vitest": "^4.0.16"
   }
 }
