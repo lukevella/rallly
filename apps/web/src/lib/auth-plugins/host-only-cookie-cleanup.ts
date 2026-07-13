@@ -1,8 +1,11 @@
+import { createLogger } from "@rallly/logger";
 import type { BetterAuthPlugin } from "better-auth";
 import { createAuthMiddleware } from "better-auth/api";
 import { parseSetCookieHeader } from "better-auth/cookies";
 import { env } from "@/env";
 import { hasDuplicateCookie } from "./has-duplicate-cookie";
+
+const logger = createLogger("auth");
 
 // Deletes the host-only variants of better-auth's session cookies left over
 // from before cross-subdomain mode was enabled. Must be registered *after*
@@ -39,6 +42,14 @@ export const hostOnlyCookieCleanup: BetterAuthPlugin = {
               sessionTokenName,
             );
             if (!newToken && !hasShadowedSessionToken) return;
+            if (!newToken) {
+              // Observability for the healing path: how often shadowed
+              // cookies are still out there. No token values logged.
+              logger.info(
+                { path: ctx.path },
+                "Clearing shadowed host-only session cookies",
+              );
+            }
           }
           for (const cookie of [
             ctx.context.authCookies.sessionToken,
