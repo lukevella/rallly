@@ -29,12 +29,6 @@ export const useSafeAction: typeof useAction = (action, options) => {
               defaultValue: "The resource was not found",
             });
             break;
-          case "CONFLICT":
-            translatedDescription = t("actionErrorConflict", {
-              defaultValue:
-                "This action conflicts with the current state. Please refresh and try again.",
-            });
-            break;
           case "FORBIDDEN":
             translatedDescription = t("actionErrorForbidden", {
               defaultValue: "You are not allowed to perform this action",

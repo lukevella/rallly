@@ -76,7 +76,7 @@ export async function revokeApiKey({
 
   if (apiKey.revokedAt) {
     throw new AppError({
-      code: "CONFLICT",
+      code: "FORBIDDEN",
       message: "API key is already revoked",
     });
   }
@@ -90,7 +90,7 @@ export async function revokeApiKey({
 
   if (count === 0) {
     throw new AppError({
-      code: "CONFLICT",
+      code: "FORBIDDEN",
       message: "API key is already revoked",
     });
   }
