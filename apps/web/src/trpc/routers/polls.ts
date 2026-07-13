@@ -309,10 +309,12 @@ export const polls = router({
         title: z.string().trim().optional(),
         timeZone: timeZoneInput,
         location: z.string().trim().optional(),
-        // No length cap here: polls created before the limit may hold longer
-        // descriptions, and editing an unrelated field must not reject them.
-        // New over-limit content is caught client-side by the editor counter.
-        description: z.string().trim().transform(collapseNewlines).optional(),
+        description: z
+          .string()
+          .trim()
+          .max(MAX_POLL_DESCRIPTION_LENGTH)
+          .transform(collapseNewlines)
+          .optional(),
         optionsToDelete: z.string().array().optional(),
         optionsToAdd: z.string().array().optional(),
         hideParticipants: z.boolean().optional(),

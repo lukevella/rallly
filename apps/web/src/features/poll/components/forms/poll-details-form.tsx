@@ -95,7 +95,9 @@ const DescriptionField = () => {
   return (
     <FormItem>
       <div className="flex items-center justify-between">
-        <FormLabel htmlFor="description">{t("description")}</FormLabel>
+        <FormLabel id="description-label" htmlFor="description">
+          {t("description")}
+        </FormLabel>
         <Button
           type="button"
           variant="link"
@@ -125,6 +127,7 @@ const DescriptionField = () => {
           <>
             <LazyRichTextEditor
               id="description"
+              aria-labelledby="description-label"
               value={field.value ?? ""}
               onChange={field.onChange}
               onBlur={field.onBlur}
