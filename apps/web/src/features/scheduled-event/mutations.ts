@@ -12,6 +12,8 @@ export async function createRsvp({
   email,
   status,
   inviteeId,
+  locale,
+  timeZone,
 }: {
   eventId: string;
   name: string;
@@ -19,6 +21,10 @@ export async function createRsvp({
   status: Extract<ScheduledEventInviteStatus, "accepted" | "declined">;
   // Links the registration to a user account when the registrant is logged in.
   inviteeId?: string;
+  // Captured at registration time so later emails (confirmation, cancellation)
+  // can render in the invitee's language and zone.
+  locale?: string;
+  timeZone?: string;
 }) {
   let invite: { uid: string };
   try {
@@ -32,6 +38,8 @@ export async function createRsvp({
         inviteeName: name,
         inviteeEmail: email,
         inviteeId,
+        inviteeLocale: locale,
+        inviteeTimeZone: timeZone,
         status,
       },
       select: { uid: true },

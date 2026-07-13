@@ -4,6 +4,7 @@ export {
   captureEmailHTML,
   captureOne,
   deleteAllMessages,
+  getAttachmentText,
   getMessage,
   getMessages,
   type MailpitAttachment,
