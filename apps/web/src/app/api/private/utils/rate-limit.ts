@@ -7,7 +7,7 @@ import { apiError } from "./poll";
  * Requests per minute allowed for a single space, uniform across all
  * endpoints. Adding more API keys to a space does not raise this limit.
  */
-export const RATE_LIMIT_PER_MINUTE = 120;
+export const RATE_LIMIT_PER_MINUTE = 60;
 
 type RateLimitEnv = {
   Variables: {

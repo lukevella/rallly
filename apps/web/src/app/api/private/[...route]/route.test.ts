@@ -1131,7 +1131,7 @@ describe("Private API - /polls", () => {
         headers: { Authorization: `Bearer ${testApiKey}` },
       });
 
-      expect(res.headers.get("RateLimit-Limit")).toBe("120");
+      expect(res.headers.get("RateLimit-Limit")).toBe("60");
       expect(res.headers.get("RateLimit-Remaining")).not.toBeNull();
     });
 
@@ -1144,9 +1144,9 @@ describe("Private API - /polls", () => {
           headers: { Authorization: `Bearer ${testApiKey}` },
         });
 
-      // The limit is 120 requests/minute per space. The 121st request trips it.
+      // The limit is 60 requests/minute per space. The 61st request trips it.
       let limited: Response | undefined;
-      for (let i = 0; i < 121; i++) {
+      for (let i = 0; i < 61; i++) {
         const res = await request();
         if (res.status === 429) {
           limited = res;
