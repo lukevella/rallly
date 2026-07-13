@@ -1,16 +1,16 @@
 "use server";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
-import { headers } from "next/headers";
 import * as z from "zod";
 import {
   banUser,
   unbanUser,
   updateUserImage,
+  updateUserLocalization,
   updateUserName,
   updateUserRole,
 } from "@/features/user/mutations";
-import authLib from "@/lib/auth";
+import { refreshSessionCookieCache } from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
 import { AppError } from "@/lib/errors/app-error";
 import {
@@ -33,6 +33,8 @@ export const updateUserNameAction = authActionClient
   )
   .action(async ({ ctx, parsedInput }) => {
     await updateUserName({ userId: ctx.user.id, name: parsedInput.name });
+
+    await refreshSessionCookieCache();
   });
 
 export const updateLocalizationAction = authActionClient
@@ -44,15 +46,15 @@ export const updateLocalizationAction = authActionClient
       weekStart: weekStartSchema.optional(),
     }),
   )
-  .action(async ({ parsedInput }) => {
-    await authLib.api.updateUser({
-      body: {
-        timeZone: parsedInput.timeZone,
-        timeFormat: parsedInput.timeFormat,
-        weekStart: parsedInput.weekStart,
-      },
-      headers: await headers(),
+  .action(async ({ ctx, parsedInput }) => {
+    await updateUserLocalization({
+      userId: ctx.user.id,
+      timeZone: parsedInput.timeZone,
+      timeFormat: parsedInput.timeFormat,
+      weekStart: parsedInput.weekStart,
     });
+
+    await refreshSessionCookieCache();
   });
 
 export const getAvatarUploadUrlAction = authActionClient
@@ -94,6 +96,8 @@ export const updateUserAvatarAction = authActionClient
 
     await updateUserImage({ userId: ctx.user.id, image: imageKey });
 
+    await refreshSessionCookieCache();
+
     // Only delete from storage if it's an internal avatar, not an external
     // URL from an OAuth provider.
     if (oldImageKey && !oldImageKey.startsWith("https://")) {
@@ -107,6 +111,8 @@ export const removeUserAvatarAction = authActionClient
     const oldImageKey = ctx.user.image;
 
     await updateUserImage({ userId: ctx.user.id, image: null });
+
+    await refreshSessionCookieCache();
 
     // Only delete from storage if it's an internal avatar, not an external
     // URL from an OAuth provider.

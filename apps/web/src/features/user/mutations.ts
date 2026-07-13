@@ -3,7 +3,6 @@ import "server-only";
 import type { TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { revalidateTag } from "next/cache";
-import { headers } from "next/headers";
 import { userProfileTag } from "@/features/user/constants";
 import { authLib } from "@/lib/auth";
 
@@ -43,11 +42,14 @@ export async function createUser({
   return user;
 }
 
-// Profile updates must go through Better-Auth rather than Prisma so that the
-// session cookie cache and the cached session data in secondary storage get
-// refreshed. Better-Auth always updates the user tied to the session in
-// `headers`, so `userId` must be the current user's id (it scopes the cache
-// tag).
+// Profile updates must go through Better-Auth's internal adapter rather than
+// Prisma so the user snapshot cached in each session (secondary storage) gets
+// refreshed. The updateUser endpoint is deliberately not used: it resolves
+// the target user from request headers, which couples the mutation to a
+// request context and hides its auth semantics. Authorization is the
+// caller's responsibility. Callers acting on the current user's session must
+// refresh the session cookie cache afterwards (refreshSessionCookieCache in
+// lib/auth) so the change is visible before the cookie cache expires.
 
 export async function updateUserName({
   userId,
@@ -56,9 +58,11 @@ export async function updateUserName({
   userId: string;
   name: string;
 }) {
-  await authLib.api.updateUser({
-    body: { name },
-    headers: await headers(),
+  const { internalAdapter } = await authLib.$context;
+
+  await internalAdapter.updateUser(userId, {
+    name,
+    updatedAt: new Date(),
   });
 
   revalidateTag(userProfileTag(userId), "max");
@@ -71,12 +75,35 @@ export async function updateUserImage({
   userId: string;
   image: string | null;
 }) {
-  await authLib.api.updateUser({
-    body: { image },
-    headers: await headers(),
+  const { internalAdapter } = await authLib.$context;
+
+  await internalAdapter.updateUser(userId, {
+    image,
+    updatedAt: new Date(),
   });
 
   revalidateTag(userProfileTag(userId), "max");
+}
+
+export async function updateUserLocalization({
+  userId,
+  timeZone,
+  timeFormat,
+  weekStart,
+}: {
+  userId: string;
+  timeZone?: string;
+  timeFormat?: TimeFormat;
+  weekStart?: number;
+}) {
+  const { internalAdapter } = await authLib.$context;
+
+  await internalAdapter.updateUser(userId, {
+    ...(timeZone !== undefined && { timeZone }),
+    ...(timeFormat !== undefined && { timeFormat }),
+    ...(weekStart !== undefined && { weekStart }),
+    updatedAt: new Date(),
+  });
 }
 
 // Role changes must go through Better-Auth's internal adapter so the user
