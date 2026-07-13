@@ -28,9 +28,15 @@ export class NewPollPage {
 
     await page.getByLabel(/title|event/i).fill(name);
     await page.getByLabel("Location").fill("Online");
-    await page
-      .getByLabel("Description")
-      .fill("Hey everyone, what time can you meet?");
+
+    // The description is a rich text editor revealed on demand, so open it, then
+    // type into its contenteditable (fill() doesn't work on contenteditable).
+    await page.getByRole("button", { name: /add description/i }).click();
+    const description = page.locator('#description[contenteditable="true"]');
+    await description.click();
+    await description.pressSequentially(
+      "Hey everyone, what time can you meet?",
+    );
 
     await page.getByTitle("Next month").click();
 

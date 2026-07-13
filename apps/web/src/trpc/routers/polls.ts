@@ -15,6 +15,7 @@ import {
   getPolls,
   hasPollAdminAccess,
 } from "@/features/poll/data";
+import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { dayjs } from "@/lib/dayjs";
@@ -111,7 +112,12 @@ export const polls = router({
         title: z.string().trim().min(1),
         timeZone: timeZoneInput,
         location: z.string().trim().optional(),
-        description: z.string().trim().transform(collapseNewlines).optional(),
+        description: z
+          .string()
+          .trim()
+          .max(MAX_POLL_DESCRIPTION_LENGTH)
+          .transform(collapseNewlines)
+          .optional(),
         hideParticipants: z.boolean().optional(),
         hideScores: z.boolean().optional(),
         disableComments: z.boolean().optional(),
@@ -303,7 +309,12 @@ export const polls = router({
         title: z.string().trim().optional(),
         timeZone: timeZoneInput,
         location: z.string().trim().optional(),
-        description: z.string().trim().transform(collapseNewlines).optional(),
+        description: z
+          .string()
+          .trim()
+          .max(MAX_POLL_DESCRIPTION_LENGTH)
+          .transform(collapseNewlines)
+          .optional(),
         optionsToDelete: z.string().array().optional(),
         optionsToAdd: z.string().array().optional(),
         hideParticipants: z.boolean().optional(),
