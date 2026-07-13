@@ -32,6 +32,31 @@ export function getPublicScheduledEvent(id: string) {
   });
 }
 
+// Everything the RSVP confirmation email needs: ICS identity (uid/sequence),
+// event details, the host as organizer, and the space's branding fields.
+export function getScheduledEventRsvpEmailData(eventId: string) {
+  return prisma.scheduledEvent.findUnique({
+    where: { id: eventId },
+    select: {
+      id: true,
+      uid: true,
+      sequence: true,
+      title: true,
+      description: true,
+      location: true,
+      conferencing: true,
+      start: true,
+      end: true,
+      allDay: true,
+      timeZone: true,
+      user: { select: { name: true, email: true } },
+      space: {
+        select: { showBranding: true, primaryColor: true, image: true },
+      },
+    },
+  });
+}
+
 // Live count of accepted registrations. Kept separate from the event read so
 // the (stable) event can be cached while this churns on every RSVP, and so the
 // capacity gate always sees a fresh count.

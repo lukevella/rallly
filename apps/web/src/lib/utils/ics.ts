@@ -19,6 +19,7 @@ export interface CreateIcsEventOptions {
   attendees?: Array<{
     name: string;
     email: string;
+    partstat?: ics.ParticipationStatus;
   }>;
   method?: "request" | "publish" | "cancel";
   status?: ics.EventStatus;
