@@ -1,11 +1,7 @@
-"use client";
-
 import { buttonVariants } from "@rallly/ui";
-import { Button } from "@rallly/ui/button";
 import Link from "next/link";
-import React from "react";
-import { Trans } from "@/i18n/client";
-import { signOut } from "@/lib/auth-client";
+import { Trans } from "react-i18next/TransWithoutContext";
+import { getTranslation } from "@/i18n/server";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
 import {
   AuthPageContainer,
@@ -14,6 +10,7 @@ import {
   AuthPageHeader,
   AuthPageTitle,
 } from "./auth-page";
+import { SignOutButton } from "./sign-out-button";
 
 /**
  * Shown on /login instead of redirecting when a session already exists.
@@ -21,21 +18,28 @@ import {
  * / ↔ /login redirect loop (RAL-1313) — a loop needs two automated legs,
  * so the user must click to continue. The sign out button is the escape
  * hatch when the session only looks alive (stale cookie cache).
+ *
+ * Server component: AuthPageContainer renders the async server-only Logo,
+ * so this must not be a client module.
  */
-export function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
-  const [isSigningOut, setIsSigningOut] = React.useState(false);
+export async function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
+  const { t } = await getTranslation();
 
   return (
     <AuthPageContainer>
       <AuthPageHeader>
         <AuthPageTitle>
           <Trans
+            t={t}
+            ns="app"
             i18nKey="alreadyLoggedInTitle"
             defaults="You're already signed in"
           />
         </AuthPageTitle>
         <AuthPageDescription>
           <Trans
+            t={t}
+            ns="app"
             i18nKey="alreadyLoggedInDescription"
             defaults="Continue to your dashboard or sign out to use a different account."
           />
@@ -47,20 +51,14 @@ export function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
             className={buttonVariants({ variant: "primary", size: "xl" })}
             href={validateRedirectUrl(redirectTo) ?? "/"}
           >
-            <Trans i18nKey="alreadyLoggedInContinue" defaults="Continue" />
+            <Trans
+              t={t}
+              ns="app"
+              i18nKey="alreadyLoggedInContinue"
+              defaults="Continue"
+            />
           </Link>
-          <Button
-            size="xl"
-            loading={isSigningOut}
-            onClick={() => {
-              setIsSigningOut(true);
-              signOut().finally(() => {
-                window.location.reload();
-              });
-            }}
-          >
-            <Trans i18nKey="signOut" defaults="Sign Out" />
-          </Button>
+          <SignOutButton />
         </div>
       </AuthPageContent>
     </AuthPageContainer>
