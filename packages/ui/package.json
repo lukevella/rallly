@@ -32,6 +32,10 @@
     "react-aria-components": "^1.16.0",
     "react-dom": "19.2.6",
     "react-hook-form": "^7.68.0",
+    "react-markdown": "^10.1.0",
+    "rehype-sanitize": "^6.0.0",
+    "remark-breaks": "^4.0.0",
+    "remark-gfm": "^4.0.1",
     "sonner": "^2.0.6",
     "tailwind-merge": "^1.12.0"
   },

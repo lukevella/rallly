@@ -1,6 +1,6 @@
 import { cn } from "@rallly/ui";
+import { MarkdownDescription } from "@rallly/ui/markdown-description";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 
 export function EventMetaTitle({
   className,
@@ -18,20 +18,19 @@ export function EventMetaTitle({
 
 export function EventMetaDescription({
   className,
-  children,
+  content,
 }: {
   className?: string;
-  children: React.ReactNode;
+  content?: string | null;
 }) {
+  if (!content) {
+    return null;
+  }
   return (
-    <p
-      className={cn(
-        className,
-        "min-w-0 whitespace-pre-wrap text-pretty text-foreground text-sm leading-relaxed opacity-90",
-      )}
-    >
-      <TruncatedLinkify>{children}</TruncatedLinkify>
-    </p>
+    <MarkdownDescription
+      content={content}
+      className={cn(className, "min-w-0 opacity-90")}
+    />
   );
 }
 

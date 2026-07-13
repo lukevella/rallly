@@ -1,5 +1,6 @@
 import { buttonVariants } from "@rallly/ui";
 import { AvatarGroup, AvatarGroupCount } from "@rallly/ui/avatar";
+import { MarkdownDescription } from "@rallly/ui/markdown-description";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { MapPinIcon } from "lucide-react";
 import type { Metadata } from "next";
@@ -13,7 +14,6 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { SessionRefresher } from "@/components/session-refresher";
 import { BrandStyle } from "@/features/branding/components/brand-style";
 import { formatLocationText } from "@/features/location/utils";
-import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 import {
   EventCalendarCard,
   EventDate,
@@ -223,9 +223,7 @@ export default async function EventPage({
                 <EventSectionTitle>
                   {t("eventPageAbout", { defaultValue: "About" })}
                 </EventSectionTitle>
-                <p className="whitespace-pre-wrap text-pretty text-foreground text-sm leading-relaxed">
-                  <TruncatedLinkify>{event.description}</TruncatedLinkify>
-                </p>
+                <MarkdownDescription content={event.description} />
               </EventSection>
             ) : null}
             {visibleAttendees.length > 0 ? (
