@@ -24,10 +24,12 @@ import {
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
 import { AlertTriangleIcon, CheckIcon, CopyIcon, PlusIcon } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useCopyToClipboard } from "react-use";
 import * as z from "zod";
+import { createApiKeyAction } from "@/features/api-keys/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
@@ -39,8 +41,19 @@ export function CreateApiKeyButton() {
   const { t } = useTranslation();
   const dialog = useDialog();
   const [createdApiKey, setCreatedApiKey] = React.useState<string | null>(null);
-  const createApiKey = trpc.apiKeys.create.useMutation();
   const utils = trpc.useUtils();
+  const createApiKey = useAction(createApiKeyAction, {
+    onError: ({ error }) => {
+      toast.error(
+        error.serverError === "TOO_MANY_REQUESTS"
+          ? t("apiKeyLimitReached", {
+              defaultValue:
+                "You've reached the maximum number of API keys. Revoke one before creating another.",
+            })
+          : t("createFailed", { defaultValue: "Failed to create" }),
+      );
+    },
+  });
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
 
@@ -149,17 +162,11 @@ export function CreateApiKeyButton() {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(async (data) => {
-                    try {
-                      const result = await createApiKey.mutateAsync(data);
-                      setCreatedApiKey(result.apiKey);
+                    const result = await createApiKey.executeAsync(data);
+                    if (result?.data) {
+                      setCreatedApiKey(result.data.apiKey);
                       await utils.apiKeys.list.invalidate();
                       form.reset();
-                    } catch {
-                      toast.error(
-                        t("createFailed", {
-                          defaultValue: "Failed to create",
-                        }),
-                      );
                     }
                   })}
                 >
@@ -190,8 +197,8 @@ export function CreateApiKeyButton() {
                     <Button
                       variant="primary"
                       type="submit"
-                      disabled={createApiKey.isPending}
-                      loading={createApiKey.isPending}
+                      disabled={createApiKey.isExecuting}
+                      loading={createApiKey.isExecuting}
                     >
                       <Trans i18nKey="create" defaults="Create" />
                     </Button>

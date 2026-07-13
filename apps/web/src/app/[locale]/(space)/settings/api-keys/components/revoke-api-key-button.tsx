@@ -20,7 +20,9 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { BanIcon, MoreVerticalIcon } from "lucide-react";
+import { revokeApiKeyAction } from "@/features/api-keys/actions";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
 
 export function RevokeApiKeyButton({
@@ -32,8 +34,13 @@ export function RevokeApiKeyButton({
 }) {
   const { t } = useTranslation();
   const revokeDialog = useDialog();
-  const revokeApiKey = trpc.apiKeys.revoke.useMutation();
   const utils = trpc.useUtils();
+  const revokeApiKey = useSafeAction(revokeApiKeyAction, {
+    onSuccess: () => {
+      utils.apiKeys.list.invalidate();
+      toast.success(t("revoked", { defaultValue: "Revoked" }));
+    },
+  });
 
   return (
     <>
@@ -83,27 +90,9 @@ export function RevokeApiKeyButton({
           <DialogFooter>
             <Button
               variant="destructive"
+              loading={revokeApiKey.isExecuting}
               onClick={() => {
-                toast.promise(
-                  revokeApiKey
-                    .mutateAsync({
-                      id: apiKeyId,
-                    })
-                    .then(() => {
-                      utils.apiKeys.list.invalidate();
-                    }),
-                  {
-                    loading: t("revoking", {
-                      defaultValue: "Revoking...",
-                    }),
-                    success: t("revoked", {
-                      defaultValue: "Revoked",
-                    }),
-                    error: t("revokeFailed", {
-                      defaultValue: "Failed to revoke",
-                    }),
-                  },
-                );
+                revokeApiKey.execute({ id: apiKeyId });
                 revokeDialog.dismiss();
               }}
             >

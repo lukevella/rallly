@@ -1,8 +1,6 @@
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
-import * as z from "zod";
 import { isApiAccessEnabled } from "@/features/api-keys/data";
-import { createApiKey } from "@/features/api-keys/utils";
 import { router, spaceOwnerProcedure } from "../trpc";
 
 const apiAccessProcedure = spaceOwnerProcedure.use(async ({ ctx, next }) => {
@@ -40,62 +38,4 @@ export const apiKeys = router({
 
     return keys;
   }),
-  create: apiAccessProcedure
-    .input(
-      z.object({
-        name: z.string().min(1).max(100),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      const { apiKey, prefix, hashedKey } = await createApiKey();
-
-      await prisma.spaceApiKey.create({
-        data: {
-          spaceId: ctx.space.id,
-          name: input.name,
-          prefix,
-          hashedKey,
-        },
-      });
-
-      return { apiKey };
-    }),
-  revoke: apiAccessProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      const apiKey = await prisma.spaceApiKey.findUnique({
-        where: { id: input.id },
-        select: { spaceId: true, revokedAt: true },
-      });
-
-      if (!apiKey) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "API key not found",
-        });
-      }
-
-      if (apiKey.spaceId !== ctx.space.id) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You do not have permission to revoke this API key",
-        });
-      }
-
-      if (apiKey.revokedAt) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "API key is already revoked",
-        });
-      }
-
-      await prisma.spaceApiKey.update({
-        where: { id: input.id },
-        data: { revokedAt: new Date() },
-      });
-    }),
 });
