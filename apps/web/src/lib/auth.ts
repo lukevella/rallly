@@ -535,7 +535,7 @@ export type SessionData = {
  * failure) is not the same as "there is no session". Redirect guards must
  * not treat an error as either logged-in or logged-out — reacting to an
  * unknown state is what turns a transient failure into a redirect loop
- * between / and /login (RAL-1313).
+ * between / and /login.
  */
 export type SessionState =
   | { status: "authenticated"; session: SessionData }

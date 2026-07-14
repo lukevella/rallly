@@ -31,7 +31,7 @@ export default function LocaleErrorBoundary({
 
   if (isInvalidSession) {
     // Never sign out automatically — a failed sign out turns this into an
-    // infinite loop with the login page (RAL-1313).
+    // infinite loop with the login page.
     return (
       <ErrorPage
         label={<Trans i18nKey="invalidSessionLabel" defaults="Session" />}

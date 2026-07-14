@@ -40,7 +40,7 @@ export const createPrivateSSRHelper = cache(async () => {
 
   // An unreadable session (store unreachable, transient failure) is not
   // "logged out". Redirecting to /login on it is one leg of the / ↔ /login
-  // redirect loop (RAL-1313) — fail the render instead so the user gets
+  // redirect loop — fail the render instead so the user gets
   // the error boundary's retry page.
   if (state.status === "error") {
     throw new Error("Failed to read session");

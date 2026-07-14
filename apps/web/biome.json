@@ -22,7 +22,7 @@
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -47,7 +47,7 @@
                 "patterns": [
                   {
                     "group": ["@/features/**"],
-                    "message": "components/ is domain-agnostic UI and must not depend on features/. Move domain components into features/<domain>/components/ (RAL-1291). Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                    "message": "components/ is domain-agnostic UI and must not depend on features/. Move domain components into features/<domain>/components/. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
                   },
                   {
                     "group": ["@/app", "@/app/**"],
@@ -55,7 +55,7 @@
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -88,7 +88,7 @@
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -113,7 +113,7 @@
                 "patterns": [
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -149,7 +149,7 @@
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -186,7 +186,7 @@
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -219,7 +219,7 @@
                 "patterns": [
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -279,7 +279,7 @@
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -303,7 +303,7 @@
                 "patterns": [
                   {
                     "group": ["@/features/**"],
-                    "message": "components/ is domain-agnostic UI and must not depend on features/. Move domain components into features/<domain>/components/ (RAL-1291). Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                    "message": "components/ is domain-agnostic UI and must not depend on features/. Move domain components into features/<domain>/components/. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
                   },
                   {
                     "group": ["@/app", "@/app/**"],
@@ -311,7 +311,7 @@
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -343,7 +343,7 @@
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }

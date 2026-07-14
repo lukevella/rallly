@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 import { NewPollPage } from "./new-poll-page";
 
 /**
- * Standing accessibility regression check (RAL-1233).
+ * Standing accessibility regression check.
  *
  * Runs axe-core against the pages covered by the ACR evidence scans. Scope is
  * WCAG 2.1 A/AA. If this fails, either fix the violation or — only for issues

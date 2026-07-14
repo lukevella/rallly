@@ -1,7 +1,7 @@
 import type { MemberRole } from "@/features/space/schema";
 
 // Tenant scope proven by auth. Minted only by the session gate and the API
-// key middleware; parameterized DAL reads require it (RAL-1333).
+// key middleware; parameterized DAL reads require it.
 export type AuthorizedSpaceId = string & {
   readonly __brand: "AuthorizedSpaceId";
 };

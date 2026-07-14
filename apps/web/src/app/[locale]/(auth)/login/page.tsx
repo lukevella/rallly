@@ -43,7 +43,7 @@ export default async function LoginPage(props: {
   const searchParams = await props.searchParams;
 
   // No automatic redirect to / — an automated redirect here is one leg of
-  // the / ↔ /login redirect loop (RAL-1313). The user must click through.
+  // the / ↔ /login redirect loop. The user must click through.
   // On "error" the session is unknown, so we fall through to the login
   // form rather than guess.
   const sessionState = await getSessionState();
