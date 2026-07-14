@@ -211,6 +211,31 @@ describe("Private API - /polls", () => {
       expect(json.error.code).toBe("SPACE_NOT_PRO");
     });
 
+    it("should not schedule a lastUsedAt write when the space is not pro", async () => {
+      const hobbyApiKey = {
+        ...mockApiKey,
+        hashedKey: hashApiKey(testApiKey),
+        lastUsedAt: null,
+        space: { ...mockApiKey.space, tier: "hobby" },
+      };
+      vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([hobbyApiKey]);
+
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Test Poll",
+          dates: ["2025-01-15"],
+        }),
+      });
+
+      expect(res.status).toBe(403);
+      expect(after).not.toHaveBeenCalled();
+    });
+
     it("should return 200 with a valid key when the space is pro", async () => {
       const res = await app.request("/api/private/polls", {
         method: "POST",
