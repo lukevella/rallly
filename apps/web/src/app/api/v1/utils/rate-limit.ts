@@ -30,7 +30,7 @@ type RateLimitEnv = {
 export const rateLimit = rateLimiter<RateLimitEnv>({
   windowMs: 60 * 1000,
   limit: RATE_LIMIT_PER_MINUTE,
-  keyGenerator: (c) => `private-api:${c.get("apiAuth").spaceId}`,
+  keyGenerator: (c) => `api:${c.get("apiAuth").spaceId}`,
   store: redis ? new RedisStore({ client: redis }) : undefined,
   handler: (c) => {
     return c.json(

@@ -73,13 +73,13 @@ describe("wideEvent middleware", () => {
 
     const event = info.mock.calls[0][0];
     expect(event).toMatchObject({
-      service: "private-api",
+      service: "api",
       method: "GET",
       path: "/ok",
       statusCode: 200,
       spaceId: "space-1",
       apiKeyId: "key-1",
-      rateLimiter: "private-api",
+      rateLimiter: "api",
       rateLimiterConsumedPoints: 1,
       rateLimiterRemainingPoints: 4,
     });

@@ -58,6 +58,10 @@ vi.mock("@/lib/kv", () => ({
 import { prisma } from "@rallly/database";
 import { after } from "next/server";
 import { hashApiKey, verifyApiKey } from "@/features/api-keys/utils";
+import {
+  GET as legacyGet,
+  POST as legacyPost,
+} from "../../private/[...route]/route";
 import { RATE_LIMIT_PER_MINUTE } from "../utils/rate-limit";
 import { app } from "./route";
 
@@ -83,7 +87,7 @@ const mockApiKey = {
   },
 };
 
-describe("Private API - /polls", () => {
+describe("API v1 - /polls", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
@@ -117,7 +121,7 @@ describe("Private API - /polls", () => {
 
   describe("Authentication", () => {
     it("should return 401 without authorization header", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -132,7 +136,7 @@ describe("Private API - /polls", () => {
     it("should return 401 with invalid API key", async () => {
       vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([]);
 
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -151,7 +155,7 @@ describe("Private API - /polls", () => {
       // Revoked keys are filtered out by the database query
       vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([]);
 
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -170,7 +174,7 @@ describe("Private API - /polls", () => {
       // Expired keys are filtered out by the database query
       vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([]);
 
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -194,7 +198,7 @@ describe("Private API - /polls", () => {
       };
       vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([hobbyApiKey]);
 
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -212,7 +216,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return 200 with a valid key when the space is pro", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -238,7 +242,7 @@ describe("Private API - /polls", () => {
         },
       ]);
 
-      const res = await app.request("/api/private/polls/test-poll-id", {
+      const res = await app.request("/api/v1/polls/test-poll-id", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -258,7 +262,7 @@ describe("Private API - /polls", () => {
         },
       ]);
 
-      const res = await app.request("/api/private/polls/test-poll-id", {
+      const res = await app.request("/api/v1/polls/test-poll-id", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -278,7 +282,7 @@ describe("Private API - /polls", () => {
         },
       ]);
 
-      const res = await app.request("/api/private/polls/test-poll-id", {
+      const res = await app.request("/api/v1/polls/test-poll-id", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -297,7 +301,7 @@ describe("Private API - /polls", () => {
         },
       ]);
 
-      const res = await app.request("/api/private/polls/test-poll-id", {
+      const res = await app.request("/api/v1/polls/test-poll-id", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -319,7 +323,7 @@ describe("Private API - /polls", () => {
     };
 
     it("should authenticate a legacy scrypt-hashed key and re-hash it to sha256", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -352,7 +356,7 @@ describe("Private API - /polls", () => {
         { ...mockApiKey, hashedKey: hashApiKey(testApiKey) },
       ]);
 
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -376,7 +380,7 @@ describe("Private API - /polls", () => {
 
   describe("Create poll with dates", () => {
     it("should create a poll with date options", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -418,7 +422,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should save location when provided", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -446,7 +450,7 @@ describe("Private API - /polls", () => {
         return date.toISOString().split("T")[0];
       });
 
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -464,7 +468,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return error when duplicate dates are provided", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -485,7 +489,7 @@ describe("Private API - /polls", () => {
 
   describe("Create poll with slots", () => {
     it("should create a poll with time slot options", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -514,7 +518,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should create poll without timezone when not provided in request", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -538,7 +542,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return error for invalid timezone", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -558,7 +562,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should create poll with slot generator", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -589,7 +593,7 @@ describe("Private API - /polls", () => {
 
   describe("Validation", () => {
     it("should return error when neither dates nor slots provided", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -604,7 +608,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return error when both dates and slots provided", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -625,7 +629,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return error when title is missing", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -640,7 +644,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return error when dates array is empty", async () => {
-      const res = await app.request("/api/private/polls", {
+      const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -658,15 +662,15 @@ describe("Private API - /polls", () => {
 
   describe("OpenAPI endpoints", () => {
     it("should return OpenAPI spec", async () => {
-      const res = await app.request("/api/private/openapi");
+      const res = await app.request("/api/v1/openapi");
 
       expect(res.status).toBe(200);
       const json = await res.json();
-      expect(json.info.title).toBe("Rallly Private API");
+      expect(json.info.title).toBe("Rallly API");
     });
 
     it("should return docs page", async () => {
-      const res = await app.request("/api/private/docs");
+      const res = await app.request("/api/v1/docs");
 
       expect(res.status).toBe(200);
       expect(res.headers.get("content-type")).toContain("text/html");
@@ -677,7 +681,7 @@ describe("Private API - /polls", () => {
     it("should delete a poll", async () => {
       mockDeletePoll.mockResolvedValue({ id: "test-poll-id" });
 
-      const res = await app.request("/api/private/polls/test-poll-id", {
+      const res = await app.request("/api/v1/polls/test-poll-id", {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -698,7 +702,7 @@ describe("Private API - /polls", () => {
     it("should return 404 when poll not found", async () => {
       mockDeletePoll.mockResolvedValue(null);
 
-      const res = await app.request("/api/private/polls/nonexistent-poll", {
+      const res = await app.request("/api/v1/polls/nonexistent-poll", {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -713,7 +717,7 @@ describe("Private API - /polls", () => {
     it("should return 404 when poll belongs to different space", async () => {
       mockDeletePoll.mockResolvedValue(null);
 
-      const res = await app.request("/api/private/polls/other-space-poll", {
+      const res = await app.request("/api/v1/polls/other-space-poll", {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -726,7 +730,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return 401 without authorization", async () => {
-      const res = await app.request("/api/private/polls/test-poll-id", {
+      const res = await app.request("/api/v1/polls/test-poll-id", {
         method: "DELETE",
       });
 
@@ -736,7 +740,7 @@ describe("Private API - /polls", () => {
     it("should return 404 when poll is already deleted", async () => {
       mockDeletePoll.mockResolvedValue(null);
 
-      const res = await app.request("/api/private/polls/deleted-poll-id", {
+      const res = await app.request("/api/v1/polls/deleted-poll-id", {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -779,7 +783,7 @@ describe("Private API - /polls", () => {
     it("should return poll data", async () => {
       vi.mocked(prisma.poll.findFirst).mockResolvedValue(mockPoll as never);
 
-      const res = await app.request("/api/private/polls/test-poll-id", {
+      const res = await app.request("/api/v1/polls/test-poll-id", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -836,7 +840,7 @@ describe("Private API - /polls", () => {
         user: null,
       } as never);
 
-      const res = await app.request("/api/private/polls/test-poll-id", {
+      const res = await app.request("/api/v1/polls/test-poll-id", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -851,7 +855,7 @@ describe("Private API - /polls", () => {
     it("should return 404 when poll not found", async () => {
       vi.mocked(prisma.poll.findFirst).mockResolvedValue(null);
 
-      const res = await app.request("/api/private/polls/nonexistent-poll", {
+      const res = await app.request("/api/v1/polls/nonexistent-poll", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -866,7 +870,7 @@ describe("Private API - /polls", () => {
     it("should return 404 when poll belongs to different space", async () => {
       vi.mocked(prisma.poll.findFirst).mockResolvedValue(null);
 
-      const res = await app.request("/api/private/polls/other-space-poll", {
+      const res = await app.request("/api/v1/polls/other-space-poll", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -879,7 +883,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return 401 without authorization", async () => {
-      const res = await app.request("/api/private/polls/test-poll-id", {
+      const res = await app.request("/api/v1/polls/test-poll-id", {
         method: "GET",
       });
 
@@ -928,7 +932,7 @@ describe("Private API - /polls", () => {
         ],
       });
 
-      const res = await app.request("/api/private/polls/test-poll-id/results", {
+      const res = await app.request("/api/v1/polls/test-poll-id/results", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -974,7 +978,7 @@ describe("Private API - /polls", () => {
         ],
       });
 
-      const res = await app.request("/api/private/polls/test-poll-id/results", {
+      const res = await app.request("/api/v1/polls/test-poll-id/results", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -1018,7 +1022,7 @@ describe("Private API - /polls", () => {
         ],
       });
 
-      const res = await app.request("/api/private/polls/test-poll-id/results", {
+      const res = await app.request("/api/v1/polls/test-poll-id/results", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -1063,7 +1067,7 @@ describe("Private API - /polls", () => {
         ],
       });
 
-      const res = await app.request("/api/private/polls/test-poll-id/results", {
+      const res = await app.request("/api/v1/polls/test-poll-id/results", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${testApiKey}`,
@@ -1083,15 +1087,12 @@ describe("Private API - /polls", () => {
     it("should return 404 when poll not found", async () => {
       mockGetPollResults.mockResolvedValue(null);
 
-      const res = await app.request(
-        "/api/private/polls/nonexistent-poll/results",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${testApiKey}`,
-          },
+      const res = await app.request("/api/v1/polls/nonexistent-poll/results", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
         },
-      );
+      });
 
       expect(res.status).toBe(404);
       const json = await res.json();
@@ -1099,7 +1100,7 @@ describe("Private API - /polls", () => {
     });
 
     it("should return 401 without authorization", async () => {
-      const res = await app.request("/api/private/polls/test-poll-id/results", {
+      const res = await app.request("/api/v1/polls/test-poll-id/results", {
         method: "GET",
       });
 
@@ -1127,7 +1128,7 @@ describe("Private API - /polls", () => {
     it("should include standard RateLimit headers on successful responses", async () => {
       vi.mocked(prisma.poll.findFirst).mockResolvedValue(null);
 
-      const res = await app.request("/api/private/polls/some-poll", {
+      const res = await app.request("/api/v1/polls/some-poll", {
         method: "GET",
         headers: { Authorization: `Bearer ${testApiKey}` },
       });
@@ -1142,7 +1143,7 @@ describe("Private API - /polls", () => {
       vi.mocked(prisma.poll.findFirst).mockResolvedValue(null);
 
       const request = () =>
-        app.request("/api/private/polls/some-poll", {
+        app.request("/api/v1/polls/some-poll", {
           method: "GET",
           headers: { Authorization: `Bearer ${testApiKey}` },
         });
@@ -1186,15 +1187,12 @@ describe("Private API - /polls", () => {
         ],
       });
 
-      const res = await app.request(
-        "/api/private/polls/test-poll-id/participants",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${testApiKey}`,
-          },
+      const res = await app.request("/api/v1/polls/test-poll-id/participants", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
         },
-      );
+      });
 
       expect(res.status).toBe(200);
       const json = await res.json();
@@ -1214,15 +1212,12 @@ describe("Private API - /polls", () => {
         participants: [],
       });
 
-      const res = await app.request(
-        "/api/private/polls/test-poll-id/participants",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${testApiKey}`,
-          },
+      const res = await app.request("/api/v1/polls/test-poll-id/participants", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
         },
-      );
+      });
 
       expect(res.status).toBe(200);
       const json = await res.json();
@@ -1235,7 +1230,7 @@ describe("Private API - /polls", () => {
       mockGetPollParticipants.mockResolvedValue(null);
 
       const res = await app.request(
-        "/api/private/polls/nonexistent-poll/participants",
+        "/api/v1/polls/nonexistent-poll/participants",
         {
           method: "GET",
           headers: {
@@ -1250,14 +1245,45 @@ describe("Private API - /polls", () => {
     });
 
     it("should return 401 without authorization", async () => {
-      const res = await app.request(
-        "/api/private/polls/test-poll-id/participants",
-        {
-          method: "GET",
-        },
-      );
+      const res = await app.request("/api/v1/polls/test-poll-id/participants", {
+        method: "GET",
+      });
 
       expect(res.status).toBe(401);
+    });
+  });
+
+  // Removing the alias (post-deprecation) breaks this block's import — delete
+  // the block together with the /api/private directory.
+  describe("Legacy /api/private alias", () => {
+    it("serves the old path through the v1 app", async () => {
+      const res = await legacyGet(
+        new Request("https://example.com/api/private/openapi"),
+      );
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.info.title).toBe("Rallly API");
+    });
+
+    it("forwards method, headers, and body", async () => {
+      const res = await legacyPost(
+        new Request("https://example.com/api/private/polls", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${testApiKey}`,
+          },
+          body: JSON.stringify({
+            title: "Test Poll",
+            dates: ["2025-01-15"],
+          }),
+        }),
+      );
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.data.id).toBe("test-poll-id");
     });
   });
 });

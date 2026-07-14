@@ -151,7 +151,7 @@
         "src/**/edit-options/page.tsx",
         "src/trpc/routers/polls.ts",
         "src/trpc/routers/index.ts",
-        "src/app/api/private/utils/time-slots.ts",
+        "src/app/api/v1/utils/time-slots.ts",
         "src/lib/utils/date-time-utils.ts",
         "src/features/poll/components/manage-poll/use-csv-exporter.ts",
         "src/test/setup.ts"

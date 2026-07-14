@@ -21,7 +21,7 @@ type WideEventEnv = {
 export const wideEvent = createMiddleware<WideEventEnv>(async (c, next) => {
   const startTime = Date.now();
   const event = createWideEvent({
-    service: "private-api",
+    service: "api",
     requestId:
       c.req.header("x-vercel-id") ?? c.req.header("x-request-id") ?? undefined,
     method: c.req.method,
@@ -55,7 +55,7 @@ export const wideEvent = createMiddleware<WideEventEnv>(async (c, next) => {
 
     const rateLimit = c.get("rateLimit");
     if (rateLimit) {
-      event.rateLimiter = "private-api";
+      event.rateLimiter = "api";
       event.rateLimiterConsumedPoints = rateLimit.used;
       event.rateLimiterRemainingPoints = rateLimit.remaining;
     }
