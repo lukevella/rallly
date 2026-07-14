@@ -193,6 +193,8 @@ Always use gitmoji prefixes in commit messages. Follow the gitmoji convention (h
 - `assets/` — static files used by the feature
 - NOT allowed: `index.ts` barrels, `helpers.ts`, `queries.ts`, `hooks.ts`, `lib/`, `libs/`
 
+**DAL enforcement** — `@rallly/database` may only be imported from `features/**/data.ts` and `features/**/mutations.ts` (lint-enforced via `noRestrictedImports`; existing violations sit on a shrinking migration allowlist in `apps/web/biome.json`). Parameterized reads take their tenant scope as `spaceId: AuthorizedSpaceId` (from `@/features/space/types`); only the session gate (`createSpaceDTO`) and the API key middleware may cast to it. API routes under `app/api/**` (except tRPC and better-auth) must not import session scoped DAL modules — they authenticate their own way and pass proven scope to parameterized reads. `api/private` handlers own serialization and must parse response bodies through their zod schemas.
+
 **Cross-feature imports** — allowed, public surface only (the vocabulary files above); never reach into another feature's internals. No cycles between features (CI-enforced). For UI, prefer composing multiple features at the page level in `app/` over feature-to-feature component imports.
 
 **`trpc/` is frozen legacy transport** — queries only; routers call `features/*/data.ts`. No new mutations — writes are server actions calling `features/*/mutations.ts`.

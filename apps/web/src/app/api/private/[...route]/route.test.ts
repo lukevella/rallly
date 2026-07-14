@@ -58,8 +58,26 @@ vi.mock("@/lib/kv", () => ({
 import { prisma } from "@rallly/database";
 import { after } from "next/server";
 import { hashApiKey, verifyApiKey } from "@/features/api-keys/utils";
+import {
+  createPollSuccessResponseSchema,
+  deletePollSuccessResponseSchema,
+  getPollParticipantsSuccessResponseSchema,
+  getPollResultsSuccessResponseSchema,
+  getPollSuccessResponseSchema,
+} from "../schemas";
 import { RATE_LIMIT_PER_MINUTE } from "../utils/rate-limit";
 import { app } from "./route";
+
+const expectMatchesContract = (
+  schema: {
+    safeParse: (data: unknown) => { success: boolean; error?: unknown };
+  },
+  body: unknown,
+) => {
+  const result = schema.safeParse(body);
+  expect(result.error).toBeUndefined();
+  expect(result.success).toBe(true);
+};
 
 // Pre-generated test API key fixture. The stored hash deliberately uses the
 // deprecated scrypt format so every test in this file exercises the legacy
@@ -415,6 +433,7 @@ describe("Private API - /polls", () => {
 
       expect(res.status).toBe(200);
       const json = await res.json();
+      expectMatchesContract(createPollSuccessResponseSchema, json);
       expect(json.data.id).toBe("test-poll-id");
       expect(json.data.adminUrl).toBe("https://example.com/poll/test-poll-id");
       expect(json.data.inviteUrl).toBe(
@@ -528,6 +547,7 @@ describe("Private API - /polls", () => {
 
       expect(res.status).toBe(200);
       const json = await res.json();
+      expectMatchesContract(createPollSuccessResponseSchema, json);
       expect(json.data.id).toBe("test-poll-id");
 
       expect(mockCreatePoll).toHaveBeenCalledWith(
@@ -711,6 +731,7 @@ describe("Private API - /polls", () => {
 
       expect(res.status).toBe(200);
       const json = await res.json();
+      expectMatchesContract(deletePollSuccessResponseSchema, json);
       expect(json.data.id).toBe("test-poll-id");
       expect(json.data.deleted).toBe(true);
 
@@ -813,6 +834,7 @@ describe("Private API - /polls", () => {
 
       expect(res.status).toBe(200);
       const json = await res.json();
+      expectMatchesContract(getPollSuccessResponseSchema, json);
       expect(json.data.id).toBe("test-poll-id");
       expect(json.data.title).toBe("Team sync");
       expect(json.data.description).toBe("Weekly team meeting");
@@ -962,6 +984,7 @@ describe("Private API - /polls", () => {
 
       expect(res.status).toBe(200);
       const json = await res.json();
+      expectMatchesContract(getPollResultsSuccessResponseSchema, json);
 
       expect(json.data.pollId).toBe("test-poll-id");
       expect(json.data.participantCount).toBe(5);
@@ -1223,6 +1246,7 @@ describe("Private API - /polls", () => {
 
       expect(res.status).toBe(200);
       const json = await res.json();
+      expectMatchesContract(getPollParticipantsSuccessResponseSchema, json);
 
       expect(json.data.pollId).toBe("test-poll-id");
       expect(json.data.participants).toHaveLength(2);

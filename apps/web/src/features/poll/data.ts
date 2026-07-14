@@ -2,13 +2,14 @@ import "server-only";
 
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import type { AuthorizedSpaceId } from "@/features/space/types";
 
 export async function getPollResults({
   pollId,
   spaceId,
 }: {
   pollId: string;
-  spaceId: string;
+  spaceId: AuthorizedSpaceId;
 }) {
   // Run poll query and vote aggregation in parallel
   const [poll, voteCounts] = await Promise.all([
@@ -114,7 +115,7 @@ export async function getPollParticipants({
   spaceId,
 }: {
   pollId: string;
-  spaceId: string;
+  spaceId: AuthorizedSpaceId;
 }) {
   const poll = await prisma.poll.findFirst({
     where: {

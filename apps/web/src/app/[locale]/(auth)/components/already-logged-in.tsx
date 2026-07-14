@@ -15,7 +15,7 @@ import { SignOutButton } from "./sign-out-button";
 /**
  * Shown on /login instead of redirecting when a session already exists.
  * The redirect used to be automatic, which made /login one leg of the
- * / ↔ /login redirect loop (RAL-1313) — a loop needs two automated legs,
+ * / ↔ /login redirect loop — a loop needs two automated legs,
  * so the user must click to continue. The sign out button is the escape
  * hatch when the session only looks alive (stale cookie cache).
  *

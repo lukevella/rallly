@@ -30,7 +30,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
       switch (error.data?.code) {
         case "UNAUTHORIZED":
           // Never sign out automatically — a failed sign out turns this
-          // into an infinite loop with the login page (RAL-1313).
+          // into an infinite loop with the login page.
           if (error.data.appError === "INVALID_SESSION") {
             toast.error(
               t("actionErrorInvalidSession", {

@@ -12,7 +12,8 @@
               "options": {
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
                 },
                 "patterns": [
                   {
@@ -21,7 +22,7 @@
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -40,12 +41,13 @@
               "options": {
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
                 },
                 "patterns": [
                   {
                     "group": ["@/features/**"],
-                    "message": "components/ is domain-agnostic UI and must not depend on features/. Move domain components into features/<domain>/components/ (RAL-1291). Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                    "message": "components/ is domain-agnostic UI and must not depend on features/. Move domain components into features/<domain>/components/. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
                   },
                   {
                     "group": ["@/app", "@/app/**"],
@@ -53,7 +55,7 @@
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -72,7 +74,8 @@
               "options": {
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
                 },
                 "patterns": [
                   {
@@ -85,7 +88,7 @@
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }
@@ -104,12 +107,243 @@
               "options": {
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                },
+                "patterns": [
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/app/api/**",
+        "!src/app/api/trpc/**",
+        "!src/app/api/better-auth/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                },
+                "patterns": [
+                  {
+                    "group": [
+                      "@/features/user/data",
+                      "@/features/api-keys/data"
+                    ],
+                    "message": "Session scoped DAL modules derive the actor from cookies and must not be used in API routes. Webhooks, cron and API key routes authenticate their own way and pass proven scope to parameterized reads."
+                  },
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/app/api/event/**",
+        "src/app/api/legacy/**",
+        "src/app/api/status/**",
+        "src/app/api/updates/**",
+        "src/app/api/private/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                },
+                "patterns": [
+                  {
+                    "group": [
+                      "@/features/user/data",
+                      "@/features/api-keys/data"
+                    ],
+                    "message": "Session scoped DAL modules derive the actor from cookies and must not be used in API routes. Webhooks, cron and API key routes authenticate their own way and pass proven scope to parameterized reads."
+                  },
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/app/*/(optional-space)/new/page.tsx",
+        "src/app/*/(optional-space)/poll/*/layout.tsx",
+        "src/app/*/(space)/settings/preferences/components/date-time-preferences.tsx",
+        "src/app/*/accept-invite/*/page.tsx",
+        "src/app/*/invite/*/page.tsx",
+        "src/app/*/control-panel/settings/actions.ts",
+        "src/app/*/control-panel/users/page.tsx",
+        "src/app/*/e/*/components/rsvp-area.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
                 },
                 "patterns": [
                   {
                     "group": ["@/utils", "@/utils/**"],
-                    "message": "src/utils is dissolved (RAL-1286). Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/trpc/trpc.ts",
+        "src/trpc/client/types.ts",
+        "src/trpc/routers/auth.ts",
+        "src/trpc/routers/dashboard.ts",
+        "src/trpc/routers/event-types.ts",
+        "src/trpc/routers/events.ts",
+        "src/trpc/routers/spaces.ts",
+        "src/trpc/routers/system.ts",
+        "src/trpc/routers/user.ts",
+        "src/trpc/routers/polls/comments.ts",
+        "src/trpc/routers/polls/participants.ts",
+        "src/features/billing/components/subscription-status-label.tsx",
+        "src/features/licensing/actions.ts",
+        "src/features/poll/components/desktop-poll/participant-row.tsx",
+        "src/features/poll/components/mobile-poll/poll-option.tsx",
+        "src/features/poll/components/mobile-poll/poll-options.tsx",
+        "src/features/poll/components/new-participant-modal.tsx",
+        "src/features/poll/components/participants-provider.tsx",
+        "src/features/poll/components/poll-context.tsx",
+        "src/features/poll/components/poll-status-icon.tsx",
+        "src/features/poll/components/types.ts",
+        "src/features/poll/components/vote-icon.tsx",
+        "src/features/poll/components/vote-selector.tsx",
+        "src/features/scheduled-event/components/scheduled-event-list.tsx",
+        "src/features/scheduled-event/utils.ts",
+        "src/features/setup/utils.ts",
+        "src/features/space/actions.ts",
+        "src/features/space/utils.ts",
+        "src/features/user/ability.ts",
+        "src/features/user/actions.ts",
+        "src/features/user/schema.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                },
+                "patterns": [
+                  {
+                    "group": ["@/app", "@/app/**"],
+                    "message": "Only files inside app/ may import from app/. Routes are thin adapters; shared code belongs in features/, components/, or lib/. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  },
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/components/time-format-picker.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                },
+                "patterns": [
+                  {
+                    "group": ["@/features/**"],
+                    "message": "components/ is domain-agnostic UI and must not depend on features/. Move domain components into features/<domain>/components/. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  },
+                  {
+                    "group": ["@/app", "@/app/**"],
+                    "message": "Only files inside app/ may import from app/. Routes are thin adapters; shared code belongs in features/, components/, or lib/."
+                  },
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/features/**/data.ts",
+        "src/features/**/mutations.ts",
+        "!src/features/**/components/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                },
+                "patterns": [
+                  {
+                    "group": ["@/app", "@/app/**"],
+                    "message": "Only files inside app/ may import from app/. Routes are thin adapters; shared code belongs in features/, components/, or lib/. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  },
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
                 ]
               }

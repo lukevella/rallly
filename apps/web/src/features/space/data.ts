@@ -8,7 +8,7 @@ import { prisma } from "@rallly/database";
 import { cache } from "react";
 
 import type { MemberDTO } from "@/features/space/member/types";
-import type { SpaceDTO } from "@/features/space/types";
+import type { AuthorizedSpaceId, SpaceDTO } from "@/features/space/types";
 import { fromDBRole } from "@/features/space/utils";
 import { isSelfHosted } from "@/lib/constants";
 
@@ -57,7 +57,7 @@ export function createSpaceDTO(space: {
   showBranding: boolean;
 }): SpaceDTO {
   return {
-    id: space.id,
+    id: space.id as AuthorizedSpaceId,
     name: space.name,
     ownerId: space.ownerId,
     tier: isSelfHosted ? "pro" : space.tier,

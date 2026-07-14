@@ -12,6 +12,7 @@ import {
 } from "hono-openapi";
 import { getPollParticipants, getPollResults } from "@/features/poll/data";
 import { createPoll, deletePoll } from "@/features/poll/mutations";
+import type { AuthorizedSpaceId } from "@/features/space/types";
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import {
   createPollInputSchema,
@@ -36,7 +37,7 @@ import { wideEvent } from "../utils/wide-event";
 type Env = {
   Variables: {
     apiAuth: {
-      spaceId: string;
+      spaceId: AuthorizedSpaceId;
       spaceOwnerId: string;
       spaceTier: SpaceTier;
       apiKeyId: string;
@@ -45,6 +46,43 @@ type Env = {
 };
 
 const app = new Hono<Env>().basePath("/api/private");
+
+function toPollResponseBody(poll: {
+  id: string;
+  title: string;
+  description: string | null;
+  location: string | null;
+  timeZone: string | null;
+  status: string;
+  createdAt: Date;
+  user: { name: string; image: string | null } | null;
+  options: { id: string; startTime: Date; duration: number }[];
+}) {
+  return {
+    data: {
+      id: poll.id,
+      title: poll.title,
+      description: poll.description,
+      location: poll.location,
+      timezone: poll.timeZone,
+      status: poll.status,
+      createdAt: poll.createdAt.toISOString(),
+      user: poll.user
+        ? {
+            name: poll.user.name,
+            image: poll.user.image,
+          }
+        : null,
+      options: poll.options.map((option) => ({
+        id: option.id,
+        startTime: option.startTime.toISOString(),
+        duration: option.duration,
+      })),
+      adminUrl: absoluteUrl(`/poll/${poll.id}`),
+      inviteUrl: shortUrl(`/invite/${poll.id}`),
+    },
+  };
+}
 
 app.use("*", wideEvent);
 
@@ -226,30 +264,9 @@ app.post(
         spaceId,
       });
 
-      return c.json({
-        data: {
-          id: poll.id,
-          title: poll.title,
-          description: poll.description,
-          location: poll.location,
-          timeZone: poll.timeZone,
-          status: poll.status,
-          createdAt: poll.createdAt.toISOString(),
-          user: poll.user
-            ? {
-                name: poll.user.name,
-                image: poll.user.image,
-              }
-            : null,
-          options: poll.options.map((option) => ({
-            id: option.id,
-            startTime: option.startTime.toISOString(),
-            duration: option.duration,
-          })),
-          adminUrl: absoluteUrl(`/poll/${poll.id}`),
-          inviteUrl: shortUrl(`/invite/${poll.id}`),
-        },
-      });
+      return c.json(
+        createPollSuccessResponseSchema.parse(toPollResponseBody(poll)),
+      );
     }
 
     // Process slots (time-based options)
@@ -317,30 +334,9 @@ app.post(
       spaceId,
     });
 
-    return c.json({
-      data: {
-        id: poll.id,
-        title: poll.title,
-        description: poll.description,
-        location: poll.location,
-        timezone: poll.timeZone,
-        status: poll.status,
-        createdAt: poll.createdAt.toISOString(),
-        user: poll.user
-          ? {
-              name: poll.user.name,
-              image: poll.user.image,
-            }
-          : null,
-        options: poll.options.map((option) => ({
-          id: option.id,
-          startTime: option.startTime.toISOString(),
-          duration: option.duration,
-        })),
-        adminUrl: absoluteUrl(`/poll/${poll.id}`),
-        inviteUrl: shortUrl(`/invite/${poll.id}`),
-      },
-    });
+    return c.json(
+      createPollSuccessResponseSchema.parse(toPollResponseBody(poll)),
+    );
   },
 );
 
@@ -422,30 +418,7 @@ app.get(
       );
     }
 
-    return c.json({
-      data: {
-        id: poll.id,
-        title: poll.title,
-        description: poll.description,
-        location: poll.location,
-        timezone: poll.timeZone,
-        status: poll.status,
-        createdAt: poll.createdAt.toISOString(),
-        user: poll.user
-          ? {
-              name: poll.user.name,
-              image: poll.user.image,
-            }
-          : null,
-        options: poll.options.map((option) => ({
-          id: option.id,
-          startTime: option.startTime.toISOString(),
-          duration: option.duration,
-        })),
-        adminUrl: absoluteUrl(`/poll/${poll.id}`),
-        inviteUrl: shortUrl(`/invite/${poll.id}`),
-      },
-    });
+    return c.json(getPollSuccessResponseSchema.parse(toPollResponseBody(poll)));
   },
 );
 
@@ -496,9 +469,17 @@ app.get(
       );
     }
 
-    return c.json({
-      data,
-    });
+    return c.json(
+      getPollResultsSuccessResponseSchema.parse({
+        data: {
+          ...data,
+          options: data.options.map((option) => ({
+            ...option,
+            startTime: option.startTime.toISOString(),
+          })),
+        },
+      }),
+    );
   },
 );
 
@@ -549,9 +530,17 @@ app.get(
       );
     }
 
-    return c.json({
-      data,
-    });
+    return c.json(
+      getPollParticipantsSuccessResponseSchema.parse({
+        data: {
+          pollId: data.pollId,
+          participants: data.participants.map((participant) => ({
+            ...participant,
+            createdAt: participant.createdAt.toISOString(),
+          })),
+        },
+      }),
+    );
   },
 );
 
@@ -602,12 +591,14 @@ app.delete(
       );
     }
 
-    return c.json({
-      data: {
-        id: result.id,
-        deleted: true as const,
-      },
-    });
+    return c.json(
+      deletePollSuccessResponseSchema.parse({
+        data: {
+          id: result.id,
+          deleted: true,
+        },
+      }),
+    );
   },
 );
 
