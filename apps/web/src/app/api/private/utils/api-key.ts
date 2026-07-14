@@ -79,10 +79,12 @@ const verifyKey = bearerAuth({
       return false;
     }
 
+    const effectiveTier = isSelfHosted ? ("pro" as const) : spaceTier;
+
     c.set("apiAuth", {
       spaceId,
       spaceOwnerId,
-      spaceTier: isSelfHosted ? ("pro" as const) : spaceTier,
+      spaceTier: effectiveTier,
       apiKeyId,
     });
 
@@ -97,7 +99,10 @@ const verifyKey = bearerAuth({
       !lastUsedAt ||
       now.getTime() - lastUsedAt.getTime() > LAST_USED_AT_WRITE_INTERVAL_MS;
 
-    if (rehashedKey || isLastUsedAtStale) {
+    // Skip the write for non-Pro spaces: requireProSpace rejects them with
+    // 403, so bumping lastUsedAt would misreport a blocked key as active and
+    // waste a DB write on rejected traffic. Self-hosted is always Pro here.
+    if (effectiveTier === "pro" && (rehashedKey || isLastUsedAtStale)) {
       after(() =>
         prisma.spaceApiKey.update({
           where: { id: apiKeyId },
