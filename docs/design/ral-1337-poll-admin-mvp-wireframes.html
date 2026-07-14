@@ -114,8 +114,14 @@
     margin: 10px 0 14px;
     text-wrap: balance;
   }
-  .lede { max-width: 65ch; color: var(--muted); margin: 0 0 24px; }
+  .lede { max-width: 65ch; color: var(--muted); margin: 0 0 18px; }
   .lede strong { color: var(--ink); font-weight: 600; }
+  .rev {
+    max-width: 65ch; font-size: 13px; color: var(--muted);
+    border-left: 3px solid var(--pen); padding: 6px 0 6px 14px; margin: 0 0 24px;
+    background: var(--pen-soft); border-radius: 0 6px 6px 0;
+  }
+  .rev b { color: var(--ink); }
 
   .legend {
     display: flex; flex-wrap: wrap; gap: 10px 22px;
@@ -229,7 +235,6 @@
   }
   .wbtn.pri { background: var(--wf-btn); color: var(--wf-btn-ink); border-color: var(--wf-btn); }
   .wbtn.ghost { border-color: transparent; background: transparent; }
-  .wbtn.danger { color: var(--wf-muted); text-decoration: line-through transparent; }
   .more { color: var(--wf-muted); font-weight: 700; letter-spacing: 1px; }
 
   .wchip {
@@ -273,33 +278,56 @@
     font-size: 10.5px; color: var(--wf-muted);
     flex: 1; min-width: 0; overflow: hidden; white-space: nowrap;
   }
+  .input.sm { flex: none; width: 140px; }
 
   .cols { display: flex; gap: 20px; align-items: start; }
   .main-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
-  .rail { flex: none; width: 232px; display: flex; flex-direction: column; gap: 12px; }
+  .rail { flex: none; width: 210px; display: flex; flex-direction: column; gap: 12px; }
 
-  /* availability grid */
-  table.grid { border-collapse: collapse; width: 100%; }
-  .grid th, .grid td {
-    border: 1px solid var(--wf-line-soft); padding: 6px 8px;
-    font-size: 11px; text-align: center; font-weight: 400;
+  /* participation cockpit */
+  .band {
+    background: var(--wf-surface); border: 1px solid var(--wf-line);
+    border-radius: 8px; padding: 12px 14px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .band .prog { flex: 1; min-width: 180px; }
+  .progbar { height: 8px; border-radius: 4px; background: var(--wf-fill); overflow: hidden; margin-top: 6px; }
+  .progbar i { display: block; height: 100%; background: var(--wf-line); border-radius: 4px; }
+
+  /* ranked option rows */
+  .ropt {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border: 1px solid var(--wf-line-soft); border-radius: 7px;
     background: var(--wf-surface);
   }
-  .grid th { vertical-align: bottom; }
-  .grid td.who, .grid th.who { text-align: left; min-width: 130px; }
-  .grid .lead-col { background: var(--wf-fill); }
-  .grid th.lead-col { border-top: 2px solid var(--wf-ink); }
-  .opt-h .dow { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--wf-muted); }
-  .opt-h .d { font-size: 15px; font-weight: 600; color: var(--wf-ink); line-height: 1.2; }
-  .opt-h .t { font-size: 9.5px; color: var(--wf-muted); }
+  .ropt.lead { border-color: var(--wf-ink); }
+  .rank {
+    flex: none; width: 20px; text-align: right;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10px; color: var(--wf-muted);
+  }
+  .ropt .when { flex: none; width: 128px; font-size: 11px; font-weight: 600; }
+  .ropt .when small { display: block; font-weight: 400; color: var(--wf-muted); font-size: 9.5px; }
+  .sbar { flex: 1; min-width: 60px; height: 10px; border-radius: 5px; overflow: hidden; display: flex; background: var(--wf-fill); }
+  .sbar .y { background: var(--wf-btn); opacity: 0.75; }
+  .sbar .i { background: var(--wf-line); }
+  .counts { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 9.5px; color: var(--wf-muted); white-space: nowrap; }
   .score { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 9.5px; color: var(--wf-muted); }
+
+  /* participants table */
+  table.pt { border-collapse: collapse; width: 100%; font-size: 11px; }
+  .pt th {
+    text-align: left; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500;
+    color: var(--wf-muted); padding: 6px 8px; border-bottom: 1px solid var(--wf-line-soft);
+  }
+  .pt td { padding: 7px 8px; border-bottom: 1px solid var(--wf-line-soft); background: var(--wf-surface); }
+  .pt tr:last-child td { border-bottom: 0; }
+
   .v { font-size: 12px; line-height: 1; }
   .v.y { color: var(--wf-ink); font-weight: 700; }
   .v.i { color: var(--wf-muted); }
   .v.n { color: var(--wf-line); font-weight: 600; }
-
-  .scorebar { height: 6px; border-radius: 3px; background: var(--wf-fill); overflow: hidden; }
-  .scorebar i { display: block; height: 100%; background: var(--wf-line); border-radius: 3px; }
 
   /* dialogs */
   .dlg-wrap { background: var(--wf-canvas); padding: 26px; display: flex; justify-content: center; }
@@ -364,13 +392,19 @@
 <div class="wrap">
 
   <header>
-    <div class="eyebrow">RAL-1337 · Poll admin project · Lofi wireframes · 14 Jul 2026</div>
+    <div class="eyebrow">RAL-1337 · Poll admin project · Lofi wireframes · Rev 2 · 14 Jul 2026</div>
     <h1>Poll admin — the page that turns a poll into a plan</h1>
     <p class="lede">
       Poll management moves out of the session-identified <span class="mono">/poll/{id}</span> page into a
       dedicated, login-required page in the dashboard shell. The organizer's job:
-      <strong>get people in, watch results converge, finalize a time</strong> — without leaving this page.
-      Wireframes below are structure and flow only; no visual design decisions are being made here.
+      <strong>get people in, chase the stragglers, watch results converge, finalize a time</strong> — without
+      leaving Rallly. Wireframes are structure and flow only; no visual design decisions are being made here.
+    </p>
+    <p class="rev">
+      <b>Rev 2 changes:</b> results redesigned around a ranked option list that scales to 40+ options
+      (the participants × options grid is gone as the primary view) · a persistent participation cockpit
+      puts invite and remind front and center · people merged into one participants table ·
+      manual "add participant" removed — participants join through the invite page like everyone else.
     </p>
     <div class="legend">
       <span><b>Reading key</b></span>
@@ -386,9 +420,10 @@
   <section>
     <div class="sec-head"><span class="sec-num">01</span><h2>Page anatomy</h2></div>
     <p class="sec-sub">
-      One page, two columns. The <strong>main column is the scheduling work</strong> (results, options, comments);
-      the <strong>right rail is people &amp; access</strong> (invites now; collaborators and activity later).
-      Growth happens by stacking cards in the rail — no redesign needed.
+      The page is organized around the organizer's loop: <strong>participation first</strong> (a persistent
+      cockpit with response progress, invite, and remind), then results, then the people themselves.
+      Everything that scales with poll size — options, participants — is a vertical list that can search,
+      group, and paginate. The rail holds context and future growth, never primary workflow.
     </p>
     <div class="duo">
       <div class="frame">
@@ -406,22 +441,25 @@
               </div>
               <div class="row">
                 <span class="wbtn ghost">View invite page ↗</span>
-                <span class="wbtn pri">Invite</span>
                 <span class="wbtn">Manage ▾</span>
-                <span class="k in">2</span>
               </div>
             </div>
             <div class="cols" style="margin-top: 14px;">
               <div class="main-col">
-                <div class="slot" style="min-height: 120px;"><span class="t">A · Hero zone — varies by state</span>
-                  <p>Fresh: the invite moment · Active: availability overview + leading option · Finalized: event summary</p></div>
-                <div class="slot"><span class="t">B · Options</span><p>Add / remove dates and times on a live poll</p></div>
-                <div class="slot"><span class="t">C · Comments</span><p>View and delete</p></div>
+                <div class="slot" style="min-height: 64px; border-style: solid; border-color: var(--pen); color: var(--pen); background: var(--pen-soft);">
+                  <span class="t">A · Participation cockpit — persistent <span class="k in">2</span></span>
+                  <p style="color: inherit;">Response progress · Invite · Send reminder. The page's center of gravity in every state.</p>
+                </div>
+                <div class="slot" style="min-height: 90px;"><span class="t">B · Results — ranked option list</span>
+                  <p>Options as rows, sorted by score. Scales to 40+ options. <span class="k in">3</span></p></div>
+                <div class="slot"><span class="t">C · Participants</span><p>One table: invited + link responders. Search, remind, edit votes, remove. No manual add. <span class="k in">4</span></p></div>
+                <div class="slot"><span class="t">D · Options</span><p>Add / remove dates, grouped by month at scale</p></div>
+                <div class="slot"><span class="t">E · Comments</span><p>View and delete</p></div>
               </div>
               <div class="rail">
-                <div class="slot" style="min-height: 90px;"><span class="t">D · Invite &amp; roster</span><p>Share link (free) · email invites + invitee roster (Pro)</p></div>
-                <div class="slot"><span class="t">E · Collaborators — later</span><p>Reserved, not designed <span class="k in">4</span></p></div>
-                <div class="slot"><span class="t">F · Activity — later</span><p>Reserved, not designed</p></div>
+                <div class="slot"><span class="t">F · Details</span><p>Title, description, location · edit</p></div>
+                <div class="slot"><span class="t">G · Collaborators — later</span><p>Reserved, not designed</p></div>
+                <div class="slot"><span class="t">H · Activity — later</span><p>Reserved, not designed</p></div>
               </div>
             </div>
           </div>
@@ -430,10 +468,10 @@
       <aside class="notes">
         <h3>Annotations</h3>
         <ol>
-          <li><span class="k">1</span><p><b>Header:</b> breadcrumb back to Polls, poll title, status chip (Live / Paused / Finalized). Sits in the standard dashboard page header.</p></li>
-          <li><span class="k">2</span><p><b>Two persistent actions:</b> Invite (primary — the page's most valuable act) and a Manage menu carrying edit, lifecycle, export, duplicate, delete. "View invite page" opens the participant-facing page in a new tab.</p></li>
-          <li><span class="k">3</span><p><b>Column collapse:</b> under ~1024px the rail folds beneath the hero zone (order: A, D, B, C, E, F). See section 08 for mobile.</p></li>
-          <li><span class="k">4</span><p><b>Future-proofing:</b> collaborators and activity are rail cards. The invitee roster row (avatar · name · status chip · overflow menu) is the same row contract the collaborators card will reuse.</p></li>
+          <li><span class="k">1</span><p><b>Header:</b> breadcrumb back to Polls, poll title, status chip (Live / Paused / Finalized), Manage menu. Invite lives in the cockpit, not the header — one home, maximum prominence.</p></li>
+          <li><span class="k">2</span><p><b>The cockpit is the thesis of the page:</b> the full flow — invite, chase, converge — is managed from here. It never scrolls away conceptually: on long pages it can stick below the page header.</p></li>
+          <li><span class="k">3</span><p><b>Vertical everything:</b> options as rows means 4 options and 44 behave the same — the list just gets longer, with grouping and "show all". No axis explodes horizontally.</p></li>
+          <li><span class="k">4</span><p><b>One door for participants:</b> people enter via the invite page (shared link or personal email link). The admin manages responses; it doesn't create them. This kills the old confusion of the participant table being misused as invites.</p></li>
         </ol>
       </aside>
     </div>
@@ -443,9 +481,9 @@
   <section>
     <div class="sec-head"><span class="sec-num">02</span><h2>Fresh poll — the invite moment is the hero</h2></div>
     <p class="sec-sub">
-      Zero responses. There are no results to show, so the page doesn't pretend there are:
-      the main column <strong>is</strong> the invite. These are the same sections defined by the
-      Unified Invite Dialog project, rendered inline instead of in a dialog — one component, two hosts.
+      Zero responses. The cockpit expands into the invite hero — same sections defined by the Unified
+      Invite Dialog project, rendered inline. Once invites are out, the hero compresses into the
+      one-line cockpit and the roster starts filling in below.
     </p>
     <div class="duo">
       <div class="frame">
@@ -455,21 +493,21 @@
           <div class="page">
             <div class="row between" style="margin-bottom: 14px;">
               <div class="row"><span class="bar" style="width: 70px;"></span><span style="color: var(--wf-muted);">/</span><span class="bar d" style="width: 140px;"></span><span class="wchip"><span class="dot"></span>Live</span></div>
-              <div class="row"><span class="wbtn ghost">View invite page ↗</span><span class="wbtn pri">Invite</span><span class="wbtn">Manage ▾</span></div>
+              <div class="row"><span class="wbtn ghost">View invite page ↗</span><span class="wbtn">Manage ▾</span></div>
             </div>
             <div class="cols">
               <div class="main-col">
                 <div class="card" style="padding: 22px; text-align: center;">
                   <div class="av" style="width: 34px; height: 34px; margin: 0 auto 10px;"></div>
                   <div style="font-size: 14px; font-weight: 600;">Your poll is live <span class="k in">1</span></div>
-                  <p style="color: var(--wf-muted); font-size: 11px; margin: 4px auto 14px; max-width: 320px;">Share it with participants to start collecting responses</p>
+                  <p style="color: var(--wf-muted); font-size: 11px; margin: 4px auto 14px; max-width: 320px;">Invite participants to start collecting responses</p>
                   <div class="row" style="max-width: 380px; margin: 0 auto;">
                     <span class="input">rallly.co/invite/xyz123</span>
                     <span class="wbtn pri">Copy link</span>
                   </div>
                   <hr class="hr" style="max-width: 380px; margin-left: auto; margin-right: auto;">
                   <div class="row" style="max-width: 380px; margin: 0 auto; justify-content: space-between;">
-                    <span style="font-weight: 600;">Invite by email <span class="wchip pro">Pro</span> <span class="k in" >2</span></span>
+                    <span style="font-weight: 600;">Invite by email <span class="wchip pro">Pro</span> <span class="k in">2</span></span>
                     <span style="color: var(--wf-muted);">▾</span>
                   </div>
                   <div style="max-width: 380px; margin: 10px auto 0; text-align: left;">
@@ -477,16 +515,21 @@
                       <span class="input">maria@school.org × &nbsp; sam@… × &nbsp; Add emails…</span>
                       <span class="wbtn pri">Send invites</span>
                     </div>
-                    <p style="color: var(--wf-muted); font-size: 10.5px; margin: 6px 0 0;">Each invitee gets a personal link, so you can track who has responded <span class="k in">3</span></p>
+                    <p style="color: var(--wf-muted); font-size: 10.5px; margin: 6px 0 0;">Each invitee gets a personal link, so you can track and remind who hasn't responded <span class="k in">3</span></p>
                   </div>
                 </div>
                 <div class="card">
-                  <div class="row between"><h4>Options <span class="score">· 4 options</span></h4><span class="wbtn">＋ Add options</span></div>
+                  <div class="row between"><h4>Participants <span class="score">· 0</span></h4></div>
+                  <hr class="hr">
+                  <p style="margin: 0; color: var(--wf-muted); font-size: 11px; text-align: center; padding: 8px 0;">No one yet — invitees and link responses will appear here <span class="k in">4</span></p>
+                </div>
+                <div class="card">
+                  <div class="row between"><h4>Options <span class="score">· 44 options</span></h4><span class="wbtn">＋ Add options</span></div>
                   <hr class="hr">
                   <div class="stack">
-                    <div class="row between"><div class="row"><span class="bar d" style="width: 110px;"></span><span class="bar" style="width: 66px;"></span></div><span class="score">No responses yet <span class="k in">4</span></span></div>
-                    <div class="row between"><div class="row"><span class="bar d" style="width: 110px;"></span><span class="bar" style="width: 66px;"></span></div><span class="score">No responses yet</span></div>
-                    <div class="row between"><div class="row"><span class="bar d" style="width: 110px;"></span><span class="bar" style="width: 66px;"></span></div><span class="score">No responses yet</span></div>
+                    <div class="row between"><span style="font-size: 11px; font-weight: 600;">September 2026 <span class="score">· 18 options</span></span><span style="color: var(--wf-muted);">▸</span></div>
+                    <div class="row between"><span style="font-size: 11px; font-weight: 600;">October 2026 <span class="score">· 20 options</span></span><span style="color: var(--wf-muted);">▸</span></div>
+                    <div class="row between"><span style="font-size: 11px; font-weight: 600;">November 2026 <span class="score">· 6 options</span></span><span style="color: var(--wf-muted);">▸</span></div>
                   </div>
                 </div>
               </div>
@@ -495,9 +538,9 @@
                   <h4>Details</h4>
                   <hr class="hr">
                   <div class="stack">
-                    <span class="bar d" style="width: 140px;"></span>
-                    <span class="bar" style="width: 170px;"></span>
-                    <span class="bar" style="width: 120px;"></span>
+                    <span class="bar d" style="width: 130px;"></span>
+                    <span class="bar" style="width: 160px;"></span>
+                    <span class="bar" style="width: 110px;"></span>
                   </div>
                   <hr class="hr">
                   <span class="wbtn" style="width: 100%; justify-content: center;">Edit details</span>
@@ -512,10 +555,10 @@
       <aside class="notes">
         <h3>Annotations</h3>
         <ol>
-          <li><span class="k">1</span><p><b>Empty state = call to action.</b> The hero replaces the results zone until the first response arrives; then it demotes to a compact rail card (section 03) and results take over. The invite is discoverable in the first session by being unmissable.</p></li>
-          <li><span class="k amber">2</span><p><b>Progressive disclosure, per the Unified Invite Dialog decision:</b> the link is primary and free; "Invite by email" is a collapsed row with a Pro badge. Shown expanded here (Pro user). Free users: same row, gate on use — section 06.</p></li>
-          <li><span class="k">3</span><p><b>Per-invitee tokenized links</b> from day one (mirrors <span class="mono">ScheduledEventInvite</span>: uid, inviteeEmail, status). Sending creates the roster entries shown in section 03.</p></li>
-          <li><span class="k">4</span><p><b>Options preview stays visible</b> so the organizer can sanity-check dates before sharing — the most common "oops" moment is right after creation.</p></li>
+          <li><span class="k">1</span><p><b>Empty state = call to action.</b> With no responses there are no results to fake — the cockpit expands into the invite hero. After the first invite or response it compresses to the one-line cockpit (section 03) in place; nothing moves anywhere else.</p></li>
+          <li><span class="k amber">2</span><p><b>Progressive disclosure, per the Unified Invite Dialog decision:</b> link primary and free; "Invite by email" is a collapsed row with a Pro badge, shown expanded here (Pro user). Free users hit the gate on use — section 06.</p></li>
+          <li><span class="k">3</span><p><b>Per-invitee tokenized links</b> from day one (mirrors <span class="mono">ScheduledEventInvite</span>: uid, inviteeEmail, status). The same tokens power reminders — invite and remind are one system.</p></li>
+          <li><span class="k">4</span><p><b>The participants section teaches the model early:</b> its empty state says people arrive by invitation or link — there is no "add" button to mistake for an invite.</p></li>
         </ol>
       </aside>
     </div>
@@ -523,10 +566,11 @@
 
   <!-- ============ 03 ACTIVE ============ -->
   <section>
-    <div class="sec-head"><span class="sec-num">03</span><h2>Active poll — watch results converge</h2></div>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Active poll at scale — 44 options, 26 participants</h2></div>
     <p class="sec-sub">
-      Responses are coming in. The availability overview leads, the winning option is called out and carries the
-      path to finalize, and the roster in the rail answers "who's missing?" at a glance.
+      The stress case is the design case. Results are a <strong>ranked list of options</strong> — rows, not columns —
+      with stacked availability bars. The cockpit reports progress and carries remind. The participants table
+      answers "who's missing" and lets the organizer chase them without leaving Rallly.
     </p>
     <div class="duo">
       <div class="frame">
@@ -536,63 +580,127 @@
           <div class="page">
             <div class="row between" style="margin-bottom: 14px;">
               <div class="row"><span class="bar" style="width: 70px;"></span><span style="color: var(--wf-muted);">/</span><span class="bar d" style="width: 140px;"></span><span class="wchip"><span class="dot"></span>Live</span></div>
-              <div class="row"><span class="wbtn ghost">View invite page ↗</span><span class="wbtn pri">Invite</span><span class="wbtn">Manage ▾</span></div>
+              <div class="row"><span class="wbtn ghost">View invite page ↗</span><span class="wbtn">Manage ▾</span></div>
             </div>
             <div class="cols">
               <div class="main-col">
+                <div class="band">
+                  <div class="prog">
+                    <div class="row between"><b style="font-size: 12px;">12 of 17 invitees responded <span class="k in">1</span></b><span class="score">+ 9 via link · 26 total</span></div>
+                    <div class="progbar"><i style="width: 70%;"></i></div>
+                  </div>
+                  <div class="row">
+                    <span class="wbtn">Send reminder · 5 <span class="k in">2</span></span>
+                    <span class="wbtn pri">Invite</span>
+                  </div>
+                </div>
                 <div class="card" style="padding: 0; overflow: hidden;">
                   <div class="row between" style="padding: 12px 14px;">
-                    <h4>Availability <span class="score">· 6 of 8 responded</span></h4>
-                    <div class="row"><span class="wchip">Leading: Fri 26 Sep <span class="k in">1</span></span><span class="wbtn pri">Finalize ▾</span></div>
+                    <h4>Results <span class="score">· 44 options</span></h4>
+                    <div class="row"><span class="wbtn ghost">Sort: most votes ▾ <span class="k in">3</span></span></div>
                   </div>
-                  <div style="overflow-x: auto;">
-                  <table class="grid">
+                  <div class="stack" style="padding: 0 14px 12px; gap: 6px;">
+                    <div class="ropt lead">
+                      <span class="rank">1</span>
+                      <span class="when">Fri 26 Sep<small>14:00–15:00</small></span>
+                      <span class="sbar"><i class="y" style="width: 78%;"></i><i class="i" style="width: 11%;"></i></span>
+                      <span class="counts">20 ✓ · 3 (✓) · 3 ✕</span>
+                      <span class="wchip">Leading</span>
+                      <span class="wbtn pri">Finalize <span class="k in">4</span></span>
+                    </div>
+                    <div class="ropt" style="flex-wrap: wrap;">
+                      <span class="rank">2</span>
+                      <span class="when">Thu 25 Sep<small>14:00–15:00</small></span>
+                      <span class="sbar"><i class="y" style="width: 65%;"></i><i class="i" style="width: 12%;"></i></span>
+                      <span class="counts">17 ✓ · 3 (✓) · 6 ✕</span>
+                      <span style="color: var(--wf-muted);">▾</span>
+                      <div style="flex-basis: 100%; border-top: 1px solid var(--wf-line-soft); margin-top: 6px; padding: 8px 0 2px 30px; font-size: 10.5px;">
+                        <div class="row" style="flex-wrap: wrap; gap: 6px;">
+                          <span class="v y">✓</span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="score">+12</span>
+                          <span style="width: 10px;"></span>
+                          <span class="v i">(✓)</span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span>
+                          <span style="width: 10px;"></span>
+                          <span class="v n">✕</span><span class="score">6 unavailable <span class="k in">5</span></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ropt">
+                      <span class="rank">3</span>
+                      <span class="when">Fri 3 Oct<small>14:00–15:00</small></span>
+                      <span class="sbar"><i class="y" style="width: 54%;"></i><i class="i" style="width: 15%;"></i></span>
+                      <span class="counts">14 ✓ · 4 (✓) · 8 ✕</span>
+                      <span style="color: var(--wf-muted);">▸</span>
+                    </div>
+                    <div class="ropt">
+                      <span class="rank">4</span>
+                      <span class="when">Wed 24 Sep<small>16:00–17:00</small></span>
+                      <span class="sbar"><i class="y" style="width: 46%;"></i><i class="i" style="width: 8%;"></i></span>
+                      <span class="counts">12 ✓ · 2 (✓) · 12 ✕</span>
+                      <span style="color: var(--wf-muted);">▸</span>
+                    </div>
+                    <div class="ropt">
+                      <span class="rank">5</span>
+                      <span class="when">Mon 6 Oct<small>14:00–15:00</small></span>
+                      <span class="sbar"><i class="y" style="width: 38%;"></i><i class="i" style="width: 19%;"></i></span>
+                      <span class="counts">10 ✓ · 5 (✓) · 11 ✕</span>
+                      <span style="color: var(--wf-muted);">▸</span>
+                    </div>
+                    <span class="wbtn" style="justify-content: center;">Show all 44 options <span class="k in">6</span></span>
+                  </div>
+                </div>
+                <div class="card" style="padding: 0; overflow: hidden;">
+                  <div class="row between" style="padding: 12px 14px;">
+                    <h4>Participants <span class="score">· 26</span></h4>
+                    <span class="input sm">Search…</span>
+                  </div>
+                  <table class="pt">
+                    <tr><th>Name</th><th>Status <span class="k in">7</span></th><th>Responded</th><th></th></tr>
                     <tr>
-                      <th class="who"></th>
-                      <th class="opt-h"><div class="dow">Wed</div><div class="d">24</div><div class="t">Sep · 14:00</div><div class="score">3 ✓</div></th>
-                      <th class="opt-h"><div class="dow">Thu</div><div class="d">25</div><div class="t">Sep · 14:00</div><div class="score">4 ✓</div></th>
-                      <th class="opt-h lead-col"><div class="dow">Fri</div><div class="d">26</div><div class="t">Sep · 14:00</div><div class="score">6 ✓ <span class="k in">2</span></div></th>
-                      <th class="opt-h"><div class="dow">Fri</div><div class="d">26</div><div class="t">Sep · 16:00</div><div class="score">2 ✓</div></th>
+                      <td><div class="row"><span class="av sm"></span><span class="bar d" style="width: 84px;"></span></div></td>
+                      <td><span class="wchip ok"><span class="dot"></span>Responded</span></td>
+                      <td class="score">2h ago</td>
+                      <td><span class="more">⋯ <span class="k in">8</span></span></td>
                     </tr>
                     <tr>
-                      <td class="who"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 64px;"></span><span class="more" style="margin-left: auto;">⋯</span><span class="k in">3</span></div></td>
-                      <td><span class="v y">✓</span></td><td><span class="v y">✓</span></td><td class="lead-col"><span class="v y">✓</span></td><td><span class="v n">✕</span></td>
+                      <td><div class="row"><span class="av sm"></span><span class="bar d" style="width: 70px;"></span></div></td>
+                      <td><span class="wchip ok"><span class="dot"></span>Via link</span></td>
+                      <td class="score">1d ago</td>
+                      <td><span class="more">⋯</span></td>
                     </tr>
                     <tr>
-                      <td class="who"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 78px;"></span></div></td>
-                      <td><span class="v n">✕</span></td><td><span class="v y">✓</span></td><td class="lead-col"><span class="v y">✓</span></td><td><span class="v y">✓</span></td>
+                      <td><div class="row"><span class="av sm"></span><span class="bar d" style="width: 92px;"></span></div></td>
+                      <td><span class="wchip"><span class="dot"></span>Pending</span></td>
+                      <td class="score">— · invited 3d ago</td>
+                      <td><span class="wbtn ghost">Remind</span></td>
                     </tr>
                     <tr>
-                      <td class="who"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 58px;"></span></div></td>
-                      <td><span class="v i">(✓)</span></td><td><span class="v n">✕</span></td><td class="lead-col"><span class="v y">✓</span></td><td><span class="v n">✕</span></td>
+                      <td><div class="row"><span class="av sm"></span><span class="bar d" style="width: 64px;"></span></div></td>
+                      <td><span class="wchip"><span class="dot"></span>Pending</span></td>
+                      <td class="score">— · reminded 1d ago</td>
+                      <td><span class="wbtn ghost">Remind</span></td>
                     </tr>
                     <tr>
-                      <td class="who"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 70px;"></span></div></td>
-                      <td><span class="v y">✓</span></td><td><span class="v i">(✓)</span></td><td class="lead-col"><span class="v y">✓</span></td><td><span class="v n">✕</span></td>
-                    </tr>
-                    <tr>
-                      <td class="who"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 82px;"></span></div></td>
-                      <td><span class="v y">✓</span></td><td><span class="v y">✓</span></td><td class="lead-col"><span class="v y">✓</span></td><td><span class="v y">✓</span></td>
-                    </tr>
-                    <tr>
-                      <td class="who"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 66px;"></span></div></td>
-                      <td><span class="v n">✕</span></td><td><span class="v y">✓</span></td><td class="lead-col"><span class="v y">✓</span></td><td><span class="v i">(✓)</span></td>
+                      <td><div class="row"><span class="av sm"></span><span class="bar d" style="width: 78px;"></span></div></td>
+                      <td><span class="wchip ok"><span class="dot"></span>Responded</span></td>
+                      <td class="score">3d ago</td>
+                      <td><span class="more">⋯</span></td>
                     </tr>
                   </table>
-                  </div>
-                  <div class="row" style="padding: 10px 14px; border-top: 1px solid var(--wf-line-soft);">
-                    <span class="wbtn ghost">＋ Add participant <span class="k in">4</span></span>
-                    <span class="score" style="margin-left: auto;">✓ yes · (✓) if need be · ✕ no</span>
+                  <div class="row between" style="padding: 10px 14px; border-top: 1px solid var(--wf-line-soft);">
+                    <span class="score">1–5 of 26</span>
+                    <span class="wbtn ghost">Next ›</span>
                   </div>
                 </div>
                 <div class="card">
-                  <div class="row between"><h4>Options <span class="score">· 4 options</span></h4><span class="wbtn">＋ Add options <span class="k in">5</span></span></div>
+                  <div class="row between"><h4>Options <span class="score">· 44 options</span></h4><span class="wbtn">＋ Add options <span class="k in">9</span></span></div>
                   <hr class="hr">
                   <div class="stack">
-                    <div class="row between"><div class="row"><span class="bar d" style="width: 120px;"></span><span class="score">6 ✓ of 6</span></div><div class="scorebar" style="width: 90px;"><i style="width: 100%;"></i></div><span class="more">✕</span></div>
-                    <div class="row between"><div class="row"><span class="bar d" style="width: 120px;"></span><span class="score">4 ✓ of 6</span></div><div class="scorebar" style="width: 90px;"><i style="width: 66%;"></i></div><span class="more">✕</span></div>
-                    <div class="row between"><div class="row"><span class="bar d" style="width: 120px;"></span><span class="score">3 ✓ of 6</span></div><div class="scorebar" style="width: 90px;"><i style="width: 50%;"></i></div><span class="more">✕</span></div>
-                    <div class="row between"><div class="row"><span class="bar d" style="width: 120px;"></span><span class="score">2 ✓ of 6</span></div><div class="scorebar" style="width: 90px;"><i style="width: 33%;"></i></div><span class="more">✕</span></div>
+                    <div class="row between"><span style="font-size: 11px; font-weight: 600;">September 2026 <span class="score">· 18 options</span></span><span style="color: var(--wf-muted);">▾</span></div>
+                    <div class="row between" style="padding-left: 14px;"><div class="row"><span class="bar d" style="width: 110px;"></span><span class="score">20 ✓</span></div><span class="more">✕</span></div>
+                    <div class="row between" style="padding-left: 14px;"><div class="row"><span class="bar d" style="width: 110px;"></span><span class="score">17 ✓</span></div><span class="more">✕</span></div>
+                    <div class="row between" style="padding-left: 14px;"><div class="row"><span class="bar d" style="width: 110px;"></span><span class="score">0 ✓</span></div><span class="more">✕</span></div>
+                    <div class="row between"><span style="font-size: 11px; font-weight: 600;">October 2026 <span class="score">· 20 options</span></span><span style="color: var(--wf-muted);">▸</span></div>
+                    <div class="row between"><span style="font-size: 11px; font-weight: 600;">November 2026 <span class="score">· 6 options</span></span><span style="color: var(--wf-muted);">▸</span></div>
                   </div>
                 </div>
                 <div class="card">
@@ -602,11 +710,6 @@
                     <div class="row" style="align-items: start;">
                       <span class="av"></span>
                       <div class="stack" style="gap: 5px; flex: 1;"><div class="row"><span class="bar d" style="width: 70px;"></span><span class="score">2h ago</span></div><span class="bar" style="width: 85%;"></span><span class="bar" style="width: 55%;"></span></div>
-                      <span class="more">⋯ <span class="k in">6</span></span>
-                    </div>
-                    <div class="row" style="align-items: start;">
-                      <span class="av"></span>
-                      <div class="stack" style="gap: 5px; flex: 1;"><div class="row"><span class="bar d" style="width: 90px;"></span><span class="score">1d ago</span></div><span class="bar" style="width: 70%;"></span></div>
                       <span class="more">⋯</span>
                     </div>
                   </div>
@@ -614,19 +717,14 @@
               </div>
               <div class="rail">
                 <div class="card">
-                  <div class="row between"><h4>Invite <span class="k in">7</span></h4><span class="wbtn ghost">Open ↗</span></div>
+                  <h4>Details</h4>
                   <hr class="hr">
-                  <div class="row"><span class="input">rallly.co/invite/xyz…</span><span class="wbtn">Copy</span></div>
-                  <hr class="hr">
-                  <div class="row between" style="margin-bottom: 8px;"><span style="font-weight: 600; font-size: 11px;">Invited <span class="score">· 4</span></span><span class="wbtn ghost">＋ Invite</span></div>
-                  <div class="stack" style="gap: 8px;">
-                    <div class="row"><span class="av sm"></span><span class="bar d" style="width: 84px;"></span><span class="wchip ok" style="margin-left: auto;"><span class="dot"></span>Responded</span></div>
-                    <div class="row"><span class="av sm"></span><span class="bar d" style="width: 70px;"></span><span class="wchip ok" style="margin-left: auto;"><span class="dot"></span>Responded</span></div>
-                    <div class="row"><span class="av sm"></span><span class="bar d" style="width: 92px;"></span><span class="wchip" style="margin-left: auto;"><span class="dot"></span>Pending</span><span class="more">⋯ <span class="k in">8</span></span></div>
-                    <div class="row"><span class="av sm"></span><span class="bar d" style="width: 64px;"></span><span class="wchip" style="margin-left: auto;"><span class="dot"></span>Pending</span><span class="more">⋯</span></div>
+                  <div class="stack">
+                    <span class="bar d" style="width: 130px;"></span>
+                    <span class="bar" style="width: 160px;"></span>
                   </div>
                   <hr class="hr">
-                  <p style="margin: 0; font-size: 10.5px; color: var(--wf-muted);">2 more responded via the link</p>
+                  <span class="wbtn" style="width: 100%; justify-content: center;">Edit details</span>
                 </div>
                 <div class="slot"><span class="t">Collaborators — later</span></div>
                 <div class="slot"><span class="t">Activity — later</span></div>
@@ -638,14 +736,15 @@
       <aside class="notes">
         <h3>Annotations</h3>
         <ol>
-          <li><span class="k">1</span><p><b>Winning option is named, not inferred.</b> The chip states the current leader; the Finalize split-button defaults to it and drops down to pick another. Answers "which option is winning" without reading the table.</p></li>
-          <li><span class="k">2</span><p><b>Leading column highlighted</b> in the grid itself. Columns are options, rows are participants — same mental model as today's desktop poll, minus the organizer's own voting row.</p></li>
-          <li><span class="k">3</span><p><b>Edit / remove a participant</b> via row overflow: Edit votes (inline row edit, existing pattern) and Remove (confirm dialog). Covers scope item 2.</p></li>
-          <li><span class="k">4</span><p><b>Add participant manually</b> — the organizer records someone's answer from a phone call or hallway chat. Kept, since the participant table is today misused for invites precisely because this need is real.</p></li>
-          <li><span class="k">5</span><p><b>Options on a live poll:</b> ＋ opens the calendar picker (existing edit-options view) scoped to adding; ✕ on a row with votes warns "3 people voted for this option — their votes will be deleted".</p></li>
-          <li><span class="k">6</span><p><b>Comment moderation</b> = delete, via overflow. Disabling comments entirely lives in Settings (section 07).</p></li>
-          <li><span class="k">7</span><p><b>The invite card is the demoted hero:</b> link + roster, compact. "＋ Invite" reopens the full invite sections in a dialog — same composition as section 02.</p></li>
-          <li><span class="k">8</span><p><b>Roster row states:</b> Responded (matched to a participant) or Pending. Pending overflow: Resend invite, Copy personal link, Revoke. Link-responders who were never invited count in the footer line, not the roster.</p></li>
+          <li><span class="k">1</span><p><b>The cockpit reports the number that matters:</b> invitee response rate, with link responders counted separately (they can't be chased individually — no email). Progress bar tracks invitees.</p></li>
+          <li><span class="k">2</span><p><b>Send reminder is a first-class action</b>, not buried in a menu: one click opens a confirm listing the 5 pending invitees (deselect individuals, optional personal note). Per-person remind also lives on each pending row below. Guardrail: one reminder per invitee per 24h.</p></li>
+          <li><span class="k">3</span><p><b>Sort covers both mental models:</b> "most votes" (default) for deciding, "date" for scanning the calendar shape. Search is unnecessary here — sorting does the work at 44 options.</p></li>
+          <li><span class="k">4</span><p><b>Rank 1 is the only row with a Finalize button.</b> Any other row can be finalized from its expanded view — deliberate friction: choosing a non-leader should be a considered act.</p></li>
+          <li><span class="k">5</span><p><b>Row expansion replaces the grid's cross-reference job:</b> "who can make this time" appears under the option, grouped by vote. The per-person full ballot lives on the participant row (note 8) — the two axes of the old grid, each queried from its own list.</p></li>
+          <li><span class="k">6</span><p><b>Top 5 by default, rest on demand.</b> With 44 options the tail is noise until asked for; "show all" renders the full ranked list (virtualized).</p></li>
+          <li><span class="k">7</span><p><b>One people table, three states:</b> Responded (invited, has ballot), Via link (ballot, no invite), Pending (invite, no ballot). Roster and participant list are the same thing here — no duplicated concepts. And no "add participant": the admin manages responses, it doesn't create them.</p></li>
+          <li><span class="k">8</span><p><b>Row overflow:</b> View votes (their full ballot in a side panel — the vertical slice of the old grid), Edit votes, Remove. Pending rows instead get Remind · Copy personal link · Revoke invite.</p></li>
+          <li><span class="k">9</span><p><b>Options grouped by month with live vote counts.</b> A 0 ✓ row is a pruning candidate the organizer can spot and remove; removing an option with votes warns before deleting them. ＋ opens the calendar picker.</p></li>
         </ol>
       </aside>
     </div>
@@ -655,34 +754,36 @@
   <section>
     <div class="sec-head"><span class="sec-num">04</span><h2>Finalize — from poll to scheduled event</h2></div>
     <p class="sec-sub">
-      Entered from the Finalize button (defaulting to the leading option) or the Manage menu.
-      Two steps in one dialog: <strong>pick, then confirm what happens</strong>. Finalizing closes the poll,
-      creates an event, and optionally notifies everyone.
+      Entered from the leading option's Finalize button or the Manage menu. Two steps in one dialog:
+      <strong>pick, then confirm what happens</strong>. The option list here is the same ranked list as the
+      page — sorted by votes, top pick pre-selected, filterable at scale.
     </p>
     <div class="duo">
       <div class="grid2">
         <div class="frame">
           <div class="dlg-wrap"><div class="dlg">
             <h4>Finalize this poll <span class="score">· Step 1 of 2</span></h4>
-            <p class="sub">Pick the time that works best. Options are sorted by votes. <span class="k in">1</span></p>
+            <p class="sub">Pick the time that works best. Sorted by votes. <span class="k in">1</span></p>
+            <div class="row" style="margin-bottom: 8px;"><span class="input">Filter 44 options…</span></div>
             <div class="stack" style="gap: 8px;">
               <div class="row card" style="padding: 9px 10px; border-color: var(--wf-ink);">
                 <span class="radio on"></span>
-                <div class="stack" style="gap: 3px; flex: 1;"><b style="font-size: 11.5px;">Fri 26 Sep · 14:00–15:00</b><div class="scorebar"><i style="width: 100%;"></i></div></div>
-                <span class="score">6 ✓ · 0 (✓) · 0 ✕</span>
+                <div class="stack" style="gap: 3px; flex: 1;"><b style="font-size: 11.5px;">Fri 26 Sep · 14:00–15:00</b><span class="sbar"><i class="y" style="width: 78%;"></i><i class="i" style="width: 11%;"></i></span></div>
+                <span class="score">20 ✓ · 3 (✓) · 3 ✕</span>
               </div>
               <div class="row card" style="padding: 9px 10px;">
                 <span class="radio"></span>
-                <div class="stack" style="gap: 3px; flex: 1;"><b style="font-size: 11.5px;">Thu 25 Sep · 14:00–15:00</b><div class="scorebar"><i style="width: 66%;"></i></div></div>
-                <span class="score">4 ✓ · 1 (✓) · 1 ✕</span>
+                <div class="stack" style="gap: 3px; flex: 1;"><b style="font-size: 11.5px;">Thu 25 Sep · 14:00–15:00</b><span class="sbar"><i class="y" style="width: 65%;"></i><i class="i" style="width: 12%;"></i></span></div>
+                <span class="score">17 ✓ · 3 (✓) · 6 ✕</span>
               </div>
               <div class="row card" style="padding: 9px 10px;">
                 <span class="radio"></span>
-                <div class="stack" style="gap: 3px; flex: 1;"><b style="font-size: 11.5px;">Wed 24 Sep · 14:00–15:00</b><div class="scorebar"><i style="width: 50%;"></i></div></div>
-                <span class="score">3 ✓ · 1 (✓) · 2 ✕</span>
+                <div class="stack" style="gap: 3px; flex: 1;"><b style="font-size: 11.5px;">Fri 3 Oct · 14:00–15:00</b><span class="sbar"><i class="y" style="width: 54%;"></i><i class="i" style="width: 15%;"></i></span></div>
+                <span class="score">14 ✓ · 4 (✓) · 8 ✕</span>
               </div>
+              <span class="score" style="text-align: center;">Scroll for 41 more…</span>
             </div>
-            <p class="sub" style="margin: 10px 0 0;">2 of 8 invitees haven't responded yet <span class="k in">2</span></p>
+            <p class="sub" style="margin: 10px 0 0;">5 of 17 invitees haven't responded yet — send a reminder first? <span class="k in">2</span></p>
             <hr class="hr">
             <div class="row" style="justify-content: flex-end;"><span class="wbtn">Cancel</span><span class="wbtn pri">Continue</span></div>
           </div></div>
@@ -692,8 +793,8 @@
             <h4>Confirm <span class="score">· Step 2 of 2</span></h4>
             <p class="sub">Fri 26 Sep 2026 · 14:00–15:00 (CET)</p>
             <div class="card" style="padding: 10px;">
-              <div class="row between"><b style="font-size: 11px;">Going · 6</b><span class="score">Can't make it · 0 <span class="k in">3</span></span></div>
-              <div class="row" style="margin-top: 8px;"><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span></div>
+              <div class="row between"><b style="font-size: 11px;">Going · 23</b><span class="score">Can't make it · 3 <span class="k in">3</span></span></div>
+              <div class="row" style="margin-top: 8px;"><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="score">+17</span></div>
             </div>
             <div class="row" style="margin-top: 12px;"><span class="checkbox">✓</span><span style="font-size: 11px;">Notify participants by email <span class="k in">4</span></span></div>
             <p class="sub" style="margin: 10px 0 0;">This closes the poll and adds the event to your events list. Participants can no longer vote.</p>
@@ -705,8 +806,8 @@
       <aside class="notes">
         <h3>Annotations</h3>
         <ol>
-          <li><span class="k">1</span><p><b>Sorted by score, pre-selected to the leader.</b> The organizer confirms rather than hunts. Availability bar + explicit vote counts per option.</p></li>
-          <li><span class="k">2</span><p><b>Pressure release, not a blocker:</b> if invitees are still pending, say so here — the organizer decides whether to wait or proceed. Links back to the roster.</p></li>
+          <li><span class="k">1</span><p><b>Sorted by score, pre-selected to the leader, filterable.</b> At 44 options the filter (by date text, weekday, month) earns its place here even though the page list doesn't need it — this is a commitment moment, not a scan.</p></li>
+          <li><span class="k">2</span><p><b>Pressure release, not a blocker:</b> pending invitees are surfaced with a shortcut to remind — closing the loop between chasing and deciding. The organizer chooses to wait or proceed.</p></li>
           <li><span class="k">3</span><p><b>Consequence preview:</b> who's in, who's out for the chosen slot, before committing. No surprises after the emails go out.</p></li>
           <li><span class="k">4</span><p><b>Notify is a choice, checked by default.</b> Recurring organizers sometimes finalize retroactively and don't want a mail blast.</p></li>
         </ol>
@@ -734,7 +835,7 @@
             <div class="card">
               <h4>Fri 26 Sep 2026 · 14:00–15:00 <span class="k in">1</span></h4>
               <p style="color: var(--wf-muted); font-size: 11px; margin: 4px 0 10px;">Finalized 2 days ago · participants were notified</p>
-              <div class="row"><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="score">6 going</span></div>
+              <div class="row"><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="score">23 going</span></div>
               <hr class="hr">
               <div class="row"><span class="wbtn pri">View event</span><span class="wbtn">Add to calendar</span></div>
             </div>
@@ -742,7 +843,10 @@
               <div class="row between"><h4>Final results</h4><span style="color: var(--wf-muted);">▸ <span class="k in">3</span></span></div>
             </div>
             <div class="card" style="margin-top: 12px;">
-              <div class="row between"><h4>Comments <span class="score">· 2</span></h4><span style="color: var(--wf-muted);">▸</span></div>
+              <div class="row between"><h4>Participants · 26</h4><span style="color: var(--wf-muted);">▸</span></div>
+            </div>
+            <div class="card" style="margin-top: 12px;">
+              <div class="row between"><h4>Comments · 2</h4><span style="color: var(--wf-muted);">▸</span></div>
             </div>
           </div>
         </div>
@@ -755,15 +859,16 @@
             </div>
             <div class="card" style="border-style: solid;">
               <div class="row between">
-                <div><h4>Voting is paused <span class="k in">4</span></h4><p style="color: var(--wf-muted); font-size: 11px; margin: 4px 0 0;">Participants can see the poll but can't vote or comment</p></div>
+                <div><h4>Voting is paused <span class="k in">4</span></h4><p style="color: var(--wf-muted); font-size: 11px; margin: 4px 0 0;">Participants can see the poll but can't vote or comment. Invites and reminders are on hold.</p></div>
                 <span class="wbtn pri">Reopen</span>
               </div>
             </div>
             <div class="card" style="margin-top: 12px;">
-              <div class="row between"><h4>Availability <span class="score">· read-only</span></h4><span class="wbtn">Finalize ▾ <span class="k in">5</span></span></div>
+              <div class="row between"><h4>Results <span class="score">· read-only</span></h4><span class="wbtn">Finalize ▾ <span class="k in">5</span></span></div>
               <hr class="hr">
-              <div class="stack">
-                <span class="bar" style="width: 90%;"></span><span class="bar" style="width: 84%;"></span><span class="bar" style="width: 88%;"></span>
+              <div class="stack" style="gap: 6px;">
+                <div class="ropt"><span class="rank">1</span><span class="when">Fri 26 Sep<small>14:00</small></span><span class="sbar"><i class="y" style="width: 78%;"></i><i class="i" style="width: 11%;"></i></span><span class="counts">20 ✓</span></div>
+                <div class="ropt"><span class="rank">2</span><span class="when">Thu 25 Sep<small>14:00</small></span><span class="sbar"><i class="y" style="width: 65%;"></i><i class="i" style="width: 12%;"></i></span><span class="counts">17 ✓</span></div>
               </div>
             </div>
           </div>
@@ -772,10 +877,10 @@
       <aside class="notes">
         <h3>Annotations</h3>
         <ol>
-          <li><span class="k">1</span><p><b>Finalized: the event replaces availability as the hero.</b> Links out to the existing event page; the poll page remains the record of how the time was chosen.</p></li>
-          <li><span class="k">2</span><p><b>Manage menu shrinks with state.</b> Finalized: Duplicate (Pro), Export, Delete — no close/reopen, no edit options. Paused: full menu minus nothing. Live: everything (see 03).</p></li>
-          <li><span class="k">3</span><p><b>Results and comments collapse to accordions</b> once finalized — retrievable, not competing with the event.</p></li>
-          <li><span class="k">4</span><p><b>Paused banner explains what participants experience</b>, so the organizer knows exactly what "paused" means. Reopen is immediate, no dialog.</p></li>
+          <li><span class="k">1</span><p><b>Finalized: the event replaces the cockpit and results as the hero.</b> Links out to the existing event page; the poll page remains the record of how the time was chosen.</p></li>
+          <li><span class="k">2</span><p><b>Manage menu shrinks with state.</b> Finalized: Duplicate (Pro), Export, Delete. Paused: full menu. Live: everything (see 06).</p></li>
+          <li><span class="k">3</span><p><b>Results, participants, and comments collapse to accordions</b> once finalized — retrievable, not competing with the event.</p></li>
+          <li><span class="k">4</span><p><b>Paused banner explains what participants experience</b> — including that invites/reminders are suspended, since the cockpit is hidden while paused. Reopen is immediate, no dialog.</p></li>
           <li><span class="k">5</span><p><b>Finalize still available while paused</b> — pausing to stop late votes and then finalizing is a natural sequence.</p></li>
         </ol>
       </aside>
@@ -787,8 +892,8 @@
     <div class="sec-head"><span class="sec-num">06</span><h2>Pro gates — capability discovery, one moment each</h2></div>
     <p class="sec-sub">
       Free users see the full capability and hit the gate <strong>at the moment of use</strong> — never before,
-      never repeatedly. Amber marks the two gated moments on this page: email invites and duplicate.
-      (Both fire the existing paywall + PostHog capture.)
+      never repeatedly. Two gated moments on this page: email invites (which reminders ride on) and duplicate.
+      Both fire the existing paywall + PostHog capture.
     </p>
     <div class="duo">
       <div class="grid2">
@@ -800,10 +905,10 @@
             <hr class="hr">
             <div class="row between"><span style="font-weight: 600;">Invite by email <span class="wchip pro">Pro</span></span><span style="color: var(--wf-muted);">▾</span></div>
             <div class="card" style="margin-top: 10px; background: var(--wf-canvas);">
-              <p style="margin: 0 0 8px; font-size: 11px;"><b>Send invites and see who's responded</b> <span class="k in amber">1</span></p>
+              <p style="margin: 0 0 8px; font-size: 11px;"><b>Send invites, track responses, and remind the stragglers</b> <span class="k in amber">1</span></p>
               <div class="stack" style="gap: 6px; opacity: 0.65;">
                 <div class="row"><span class="av sm"></span><span class="bar" style="width: 80px;"></span><span class="wchip ok" style="margin-left: auto;"><span class="dot"></span>Responded</span></div>
-                <div class="row"><span class="av sm"></span><span class="bar" style="width: 66px;"></span><span class="wchip" style="margin-left: auto;"><span class="dot"></span>Pending</span></div>
+                <div class="row"><span class="av sm"></span><span class="bar" style="width: 66px;"></span><span class="wchip" style="margin-left: auto;"><span class="dot"></span>Pending</span><span class="wbtn ghost">Remind</span></div>
               </div>
               <hr class="hr">
               <div class="row"><span class="wbtn pri">Upgrade to Pro</span><span class="wbtn ghost">Not now <span class="k in amber">2</span></span></div>
@@ -823,7 +928,7 @@
               <span class="wbtn ghost" style="justify-content: flex-start;">Export to CSV</span>
               <span class="wbtn ghost" style="justify-content: flex-start;">Duplicate <span class="wchip pro">Pro</span> <span class="k in amber">4</span></span>
               <hr class="hr" style="margin: 4px 0;">
-              <span class="wbtn ghost danger" style="justify-content: flex-start; color: var(--wf-muted);">Delete…</span>
+              <span class="wbtn ghost" style="justify-content: flex-start; color: var(--wf-muted);">Delete…</span>
             </div>
           </div></div>
         </div>
@@ -831,9 +936,9 @@
       <aside class="notes">
         <h3>Annotations</h3>
         <ol>
-          <li><span class="k amber">1</span><p><b>The gate shows the feature doing its job:</b> expanding the email row reveals a grayed roster preview, not a wall of marketing. The user learns what they'd get — that's the discovery.</p></li>
-          <li><span class="k amber">2</span><p><b>Dismissible and quiet afterwards.</b> "Not now" collapses the row; the badge stays as passive signage. No re-prompting on this page.</p></li>
-          <li><span class="k">3</span><p><b>Finalize is intentionally not badged here.</b> Today "Schedule" is Pro-gated; this design assumes finalize goes free while invites carry conversion. Flagged as open question 1 — if it stays Pro, it gets the same badge-then-gate treatment.</p></li>
+          <li><span class="k amber">1</span><p><b>The gate shows the feature doing its job:</b> a grayed roster preview with a Remind button — invite, track, chase as one capability. Reminders don't need their own gate: they only exist where invitees exist, so the invite gate covers them.</p></li>
+          <li><span class="k amber">2</span><p><b>Dismissible and quiet afterwards.</b> "Not now" collapses the row; the badge stays as passive signage. No re-prompting on this page. For free users the cockpit shows link-response count and the Invite button only — no dead Remind button.</p></li>
+          <li><span class="k">3</span><p><b>Finalize is intentionally not badged.</b> Today "Schedule" is Pro-gated; this design assumes finalize goes free while invites carry conversion. Open question 1 — if it stays Pro, it gets the same badge-then-gate treatment.</p></li>
           <li><span class="k amber">4</span><p><b>Duplicate keeps its existing gate:</b> badge in the menu, paywall on click. Prime for recurring organizers — the exact Pro audience.</p></li>
         </ol>
       </aside>
@@ -881,7 +986,7 @@
         <h3>Annotations</h3>
         <ol>
           <li><span class="k">1</span><p><b>Settings copy explains the participant-side effect</b>, one line each — these four toggles are the existing poll settings, unchanged in behavior.</p></li>
-          <li><span class="k">2</span><p><b>Require email matters more now:</b> it's what makes link-responders matchable against the invitee roster. Worth a helper line in hi-fi.</p></li>
+          <li><span class="k">2</span><p><b>Require email matters more now:</b> it's what makes link responders matchable against invitees and reachable by a finalize notification. Worth a helper line in hi-fi.</p></li>
         </ol>
       </aside>
     </div>
@@ -891,9 +996,9 @@
   <section>
     <div class="sec-head"><span class="sec-num">08</span><h2>Mobile — checking results from a phone</h2></div>
     <p class="sec-sub">
-      The organizer's mobile job is monitoring, not authoring. Columns stack (hero → invite → results → comments);
-      the availability grid becomes <strong>option rows with score bars</strong> — tap a row to see who voted for it
-      (today's mobile poll pattern). A sticky action bar keeps Invite and Finalize reachable.
+      The organizer's mobile job is monitoring and chasing. The ranked list is already phone-shaped — rows,
+      not a grid — so nothing degrades: cockpit → top options → participants, stacked. The sticky bar keeps
+      Remind and Finalize one thumb away.
     </p>
     <div class="phones">
       <div class="phone-unit">
@@ -901,14 +1006,14 @@
           <div class="row between"><span>←</span><span class="bar d" style="width: 90px;"></span><span class="wchip"><span class="dot"></span>Live</span></div>
           <div class="card" style="text-align: center; padding: 16px;">
             <div style="font-weight: 600;">Your poll is live</div>
-            <p style="color: var(--wf-muted); font-size: 10px; margin: 4px 0 10px;">Share it to start collecting responses</p>
+            <p style="color: var(--wf-muted); font-size: 10px; margin: 4px 0 10px;">Invite participants to start collecting responses</p>
             <div class="stack" style="gap: 8px;">
               <span class="wbtn pri" style="justify-content: center;">Copy invite link</span>
               <span class="wbtn" style="justify-content: center;">Invite by email <span class="wchip pro">Pro</span></span>
             </div>
           </div>
-          <div class="card"><div class="row between"><h4>Options · 4</h4><span class="wbtn ghost">＋</span></div></div>
-          <div class="card"><h4>Details</h4><hr class="hr"><span class="bar" style="width: 80%;"></span></div>
+          <div class="card" style="padding: 10px;"><div class="row between"><h4>Participants · 0</h4><span style="color: var(--wf-muted);">▸</span></div></div>
+          <div class="card" style="padding: 10px;"><div class="row between"><h4>Options · 44</h4><span class="wbtn ghost">＋</span></div></div>
           <div class="sticky-bar"><span class="wbtn pri">Invite</span><span class="wbtn">Manage ▾</span></div>
         </div></div>
         <div class="phone-cap">M1 · Fresh</div>
@@ -918,24 +1023,24 @@
         <div class="phone"><div class="phone-top"><i></i></div><div class="phone-body">
           <div class="row between"><span>←</span><span class="bar d" style="width: 90px;"></span><span class="wchip"><span class="dot"></span>Live</span></div>
           <div class="card" style="padding: 10px;">
-            <div class="row between"><span class="score">6 of 8 responded</span><span class="wchip">Leading</span></div>
-            <b style="font-size: 12px;">Fri 26 Sep · 14:00</b>
-            <div class="scorebar" style="margin-top: 6px;"><i style="width: 100%;"></i></div>
+            <div class="row between"><b style="font-size: 11px;">12 of 17 responded</b><span class="score">+9 via link</span></div>
+            <div class="progbar" style="margin-top: 6px;"><i style="width: 70%;"></i></div>
           </div>
           <div class="card" style="padding: 10px;">
-            <div class="stack" style="gap: 9px;">
-              <div class="row between"><span class="bar d" style="width: 88px;"></span><div class="scorebar" style="width: 70px;"><i style="width: 100%;"></i></div><span class="score">6✓</span><span style="color: var(--wf-muted);">▸</span></div>
-              <div class="row between"><span class="bar d" style="width: 88px;"></span><div class="scorebar" style="width: 70px;"><i style="width: 66%;"></i></div><span class="score">4✓</span><span style="color: var(--wf-muted);">▸</span></div>
-              <div class="row between"><span class="bar d" style="width: 88px;"></span><div class="scorebar" style="width: 70px;"><i style="width: 50%;"></i></div><span class="score">3✓</span><span style="color: var(--wf-muted);">▸</span></div>
-              <div class="row between"><span class="bar d" style="width: 88px;"></span><div class="scorebar" style="width: 70px;"><i style="width: 33%;"></i></div><span class="score">2✓</span><span style="color: var(--wf-muted);">▸</span></div>
+            <div class="row between" style="margin-bottom: 8px;"><h4>Results · 44</h4><span class="score">most votes ▾</span></div>
+            <div class="stack" style="gap: 7px;">
+              <div class="row between"><span class="rank">1</span><span style="font-size: 10.5px; font-weight: 600; width: 76px;">Fri 26 Sep</span><span class="sbar" style="width: 62px;"><i class="y" style="width: 78%;"></i><i class="i" style="width: 11%;"></i></span><span class="score">20✓</span><span style="color: var(--wf-muted);">▸</span></div>
+              <div class="row between"><span class="rank">2</span><span style="font-size: 10.5px; font-weight: 600; width: 76px;">Thu 25 Sep</span><span class="sbar" style="width: 62px;"><i class="y" style="width: 65%;"></i><i class="i" style="width: 12%;"></i></span><span class="score">17✓</span><span style="color: var(--wf-muted);">▸</span></div>
+              <div class="row between"><span class="rank">3</span><span style="font-size: 10.5px; font-weight: 600; width: 76px;">Fri 3 Oct</span><span class="sbar" style="width: 62px;"><i class="y" style="width: 54%;"></i><i class="i" style="width: 15%;"></i></span><span class="score">14✓</span><span style="color: var(--wf-muted);">▸</span></div>
+              <span class="wbtn ghost" style="justify-content: center;">Show all 44</span>
             </div>
           </div>
-          <div class="card" style="padding: 10px;"><div class="row between"><h4>Participants · 6</h4><span style="color: var(--wf-muted);">▸</span></div></div>
+          <div class="card" style="padding: 10px;"><div class="row between"><h4>Participants · 26</h4><span class="wchip"><span class="dot"></span>5 pending</span></div></div>
           <div class="card" style="padding: 10px;"><div class="row between"><h4>Comments · 2</h4><span style="color: var(--wf-muted);">▸</span></div></div>
-          <div class="sticky-bar"><span class="wbtn">Invite</span><span class="wbtn pri">Finalize</span></div>
+          <div class="sticky-bar"><span class="wbtn">Remind · 5</span><span class="wbtn pri">Finalize</span></div>
         </div></div>
         <div class="phone-cap">M2 · Active</div>
-        <p>Leading option pinned on top; option rows expand to per-participant votes. No horizontal table on mobile.</p>
+        <p>Same ranked rows as desktop; option rows expand to who's available. No horizontal anything.</p>
       </div>
       <div class="phone-unit">
         <div class="phone"><div class="phone-top"><i></i></div><div class="phone-body">
@@ -947,8 +1052,8 @@
             <div class="row" style="justify-content: center; margin-bottom: 8px;"><span class="bar" style="width: 32px;"></span></div>
             <h4>Finalize this poll</h4>
             <div class="stack" style="gap: 7px; margin-top: 10px;">
-              <div class="row card" style="padding: 8px; border-color: var(--wf-ink);"><span class="radio on"></span><b style="font-size: 11px;">Fri 26 Sep · 14:00</b><span class="score" style="margin-left: auto;">6✓</span></div>
-              <div class="row card" style="padding: 8px;"><span class="radio"></span><b style="font-size: 11px;">Thu 25 Sep · 14:00</b><span class="score" style="margin-left: auto;">4✓</span></div>
+              <div class="row card" style="padding: 8px; border-color: var(--wf-ink);"><span class="radio on"></span><b style="font-size: 11px;">Fri 26 Sep · 14:00</b><span class="score" style="margin-left: auto;">20✓</span></div>
+              <div class="row card" style="padding: 8px;"><span class="radio"></span><b style="font-size: 11px;">Thu 25 Sep · 14:00</b><span class="score" style="margin-left: auto;">17✓</span></div>
             </div>
             <div class="row" style="margin-top: 10px;"><span class="checkbox">✓</span><span style="font-size: 10.5px;">Notify participants by email</span></div>
             <hr class="hr">
@@ -964,7 +1069,7 @@
           <div class="card">
             <h4>Fri 26 Sep · 14:00–15:00</h4>
             <p style="color: var(--wf-muted); font-size: 10px; margin: 4px 0 8px;">Participants were notified</p>
-            <div class="row"><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="score">6 going</span></div>
+            <div class="row"><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="score">23 going</span></div>
             <hr class="hr">
             <div class="stack" style="gap: 8px;">
               <span class="wbtn pri" style="justify-content: center;">View event</span>
@@ -984,18 +1089,18 @@
   <section>
     <div class="sec-head"><span class="sec-num">09</span><h2>Built for what's next — without designing it</h2></div>
     <p class="sec-sub">
-      The rail is an append-only stack of people-and-access cards. Collaborators and activity slot in beneath
-      the invite card using the <strong>same row contract the roster already establishes</strong>
-      (avatar · identity · status chip · overflow menu). Nothing in the main column moves when they arrive.
+      The rail is an append-only stack of context cards; the participants table establishes the row contract
+      (avatar · identity · status chip · action) that the collaborators card will reuse for its own
+      pending-invite rows. Nothing in the main column moves when collaborators or activity arrive.
     </p>
     <div class="duo">
       <div class="frame">
         <div class="frame-body bare" style="display: flex; gap: 20px; align-items: start; flex-wrap: wrap;">
           <div class="rail" style="width: 232px;">
-            <div class="card"><h4>Invite</h4><hr class="hr"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 80px;"></span><span class="wchip ok" style="margin-left: auto;"><span class="dot"></span>Responded</span></div></div>
+            <div class="card"><h4>Details</h4><hr class="hr"><span class="bar" style="width: 140px;"></span></div>
             <div class="slot" style="border-color: var(--pen); color: var(--pen); background: var(--pen-soft);">
               <span class="t">Collaborators (Pro)</span>
-              <p style="color: inherit;">Same row anatomy: avatar · name · Pending/Active chip · overflow (resend, revoke). Poll-level, capped per poll, occupies no seat.</p>
+              <p style="color: inherit;">Same row anatomy as the participants table: avatar · name · Pending/Active chip · overflow (resend, revoke). Poll-level, capped per poll, occupies no seat.</p>
             </div>
             <div class="slot" style="border-color: var(--pen); color: var(--pen); background: var(--pen-soft);">
               <span class="t">Activity</span>
@@ -1005,15 +1110,15 @@
           <div style="flex: 1; min-width: 220px; font-size: 12px; color: var(--wf-muted); max-width: 46ch;">
             <p style="margin-top: 0;"><b style="color: var(--wf-ink);">Also reserved, off-canvas:</b></p>
             <p>"Shared with me" polls land in the collaborator's own dashboard poll list — no layout impact here.</p>
-            <p>Private polls change the invite card's composition (email form primary, no share link) — a card-internal swap, not a page change.</p>
+            <p>Private polls change the invite hero's composition (email form primary, no share link) — a swap inside the cockpit, not a page change.</p>
             <p style="margin-bottom: 0;">The status chip in the page header has room for a visibility label (Public / Private) later.</p>
           </div>
         </div>
       </div>
       <aside class="notes">
-        <h3>Why a rail, not tabs</h3>
+        <h3>Why lists, not tabs or grids</h3>
         <ol>
-          <li><span class="k">→</span><p>Tabs would hide the roster while the organizer reads results — but "who hasn't answered" and "how are results converging" are the <b>same glance</b>. The rail keeps both visible and gives later features a home that doesn't cost a redesign.</p></li>
+          <li><span class="k">→</span><p>"Who hasn't answered" and "how are results converging" are the <b>same glance</b> — tabs would split them. And every scalable surface on this page (results, participants, options) is a vertical list, so growth in any dimension is more scroll, never more width and never a redesign.</p></li>
         </ol>
       </aside>
     </div>
@@ -1025,16 +1130,18 @@
     <div class="qa" style="margin-top: 18px;">
       <ol>
         <li><b>Is finalize free or Pro?</b> Today "Schedule" triggers the paywall for free users, but the brief lists finalizing under core lifecycle and the conversion bet has moved to invites. <span class="rec">Recommend</span> free — finalize is the job to be done; gating it competes with the invite gate for the same moment of intent.</li>
+        <li><b>Reminder guardrails.</b> Wireframed: one reminder per invitee per 24h, per-person and bulk. Do we also want an automatic nudge (e.g. auto-remind pending invitees after N days) as a setting, or is manual-only right for the MVP? <span class="rec">Recommend</span> manual-only first; auto-remind is a natural Pro follow-up.</li>
+        <li><b>Does a compact grid survive anywhere?</b> The ranked list is the only results view in these wireframes. For ≤ ~8 options and ≤ ~10 participants the old participants × options grid is genuinely pleasant. Ship list-only first, or keep a "grid" toggle that auto-hides at scale? <span class="rec">Recommend</span> list-only first; add the toggle later if small-poll users miss it.</li>
         <li><b>Can a finalized poll be un-finalized?</b> The wireframes treat it as terminal (delete the event to undo). If reopening must exist, it belongs in the Manage menu with a strong confirm.</li>
-        <li><b>Notify participants when options change?</b> Adding/removing options on a live poll may deserve an optional "let participants know" nudge. Not wireframed; needs a product call.</li>
-        <li><b>Roster matching edge case:</b> an invitee who responds via the shared link under a different email shows as Pending forever. Manual "mark as responded" / link-to-participant on the roster row could resolve it — deferred to the invites implementation spec.</li>
+        <li><b>Notify participants when options change?</b> Adding/removing options on a live poll may deserve an optional "let participants know" nudge — possibly reusing the reminder machinery. Needs a product call.</li>
+        <li><b>Roster matching edge case:</b> an invitee who responds via the shared link under a different email shows as Pending forever (and keeps receiving reminders). A "link to participant" action on the pending row could resolve it — deferred to the invites implementation spec.</li>
         <li><b>Where does the legacy <span class="mono">/poll/{id}</span> URL go?</b> Owners: redirect here. Guests who managed via session: the Unified Invite project's account prompt is the on-ramp — needs a decided redirect + claim flow before this page ships.</li>
-        <li><b>Add participant vs invite:</b> keeping manual "＋ Add participant" (free) alongside email invites (Pro) risks the old confusion. Mitigation wireframed: they live in different sections with distinct verbs. Validate in usability pass.</li>
       </ol>
     </div>
   </section>
 
   <footer>
+    <p><b>Rev 2 — 14 Jul 2026:</b> ranked option list replaces the participants × options grid as the primary results view (scales to 40+ options) · participation cockpit with response progress, invite, and per-person/bulk reminders · roster and participant list merged into one table · manual "add participant" removed (participants join via the invite page only).</p>
     <p><b>Sources:</b> RAL-1337 design brief · Poll Admin project (decisions of 2026-07-13, collaborators &amp; pricing boundary) · Unified Invite Dialog project (progressive disclosure decision, section composition, tokenized invites) · current implementation in <span class="mono">apps/web/src/features/poll/</span> and the dashboard shell.</p>
     <p><b>Note:</b> the referenced spec <span class="mono">docs/superpowers/specs/2026-07-14-poll-collaborators-design.md</span> is not present in the repository; roster semantics were taken from the Poll Admin project description (per-invitee token, status mirroring <span class="mono">ScheduledEventInvite</span>).</p>
   </footer>
