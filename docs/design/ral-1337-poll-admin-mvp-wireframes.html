@@ -1,0 +1,1042 @@
+<title>Poll admin MVP — lofi wireframes (RAL-1337)</title>
+<style>
+  :root {
+    --bg: #eff1ed;
+    --surface: #ffffff;
+    --ink: #20242a;
+    --muted: #697077;
+    --line: #dee1da;
+    --wf-canvas: #f6f7f8;
+    --wf-surface: #ffffff;
+    --wf-line: #c4c9d0;
+    --wf-line-soft: #dde0e5;
+    --wf-fill: #edeff2;
+    --wf-ink: #3a4048;
+    --wf-muted: #8b929b;
+    --wf-btn: #363b42;
+    --wf-btn-ink: #ffffff;
+    --pen: #3556c7;
+    --pen-soft: rgba(53, 86, 199, 0.08);
+    --pro: #b07c10;
+    --pro-soft: rgba(176, 124, 16, 0.1);
+    --ok: #2f7d4f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #15171a;
+      --surface: #1e2126;
+      --ink: #e6e8eb;
+      --muted: #9aa1a9;
+      --line: #2c3036;
+      --wf-canvas: #191c20;
+      --wf-surface: #22262b;
+      --wf-line: #4b525a;
+      --wf-line-soft: #363c43;
+      --wf-fill: #2c3138;
+      --wf-ink: #c9cdd3;
+      --wf-muted: #7d848d;
+      --wf-btn: #dfe2e6;
+      --wf-btn-ink: #191c20;
+      --pen: #8ba1ee;
+      --pen-soft: rgba(139, 161, 238, 0.12);
+      --pro: #d6a445;
+      --pro-soft: rgba(214, 164, 69, 0.14);
+      --ok: #6dbb8c;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15171a;
+    --surface: #1e2126;
+    --ink: #e6e8eb;
+    --muted: #9aa1a9;
+    --line: #2c3036;
+    --wf-canvas: #191c20;
+    --wf-surface: #22262b;
+    --wf-line: #4b525a;
+    --wf-line-soft: #363c43;
+    --wf-fill: #2c3138;
+    --wf-ink: #c9cdd3;
+    --wf-muted: #7d848d;
+    --wf-btn: #dfe2e6;
+    --wf-btn-ink: #191c20;
+    --pen: #8ba1ee;
+    --pen-soft: rgba(139, 161, 238, 0.12);
+    --pro: #d6a445;
+    --pro-soft: rgba(214, 164, 69, 0.14);
+    --ok: #6dbb8c;
+  }
+  :root[data-theme="light"] {
+    --bg: #eff1ed;
+    --surface: #ffffff;
+    --ink: #20242a;
+    --muted: #697077;
+    --line: #dee1da;
+    --wf-canvas: #f6f7f8;
+    --wf-surface: #ffffff;
+    --wf-line: #c4c9d0;
+    --wf-line-soft: #dde0e5;
+    --wf-fill: #edeff2;
+    --wf-ink: #3a4048;
+    --wf-muted: #8b929b;
+    --wf-btn: #363b42;
+    --wf-btn-ink: #ffffff;
+    --pen: #3556c7;
+    --pen-soft: rgba(53, 86, 199, 0.08);
+    --pro: #b07c10;
+    --pro-soft: rgba(176, 124, 16, 0.1);
+    --ok: #2f7d4f;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+  }
+  .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .wrap { max-width: 1220px; margin: 0 auto; padding: 48px 24px 96px; }
+
+  /* ---------- board chrome ---------- */
+  .eyebrow {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--pen);
+  }
+  h1 {
+    font-size: clamp(30px, 5vw, 44px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin: 10px 0 14px;
+    text-wrap: balance;
+  }
+  .lede { max-width: 65ch; color: var(--muted); margin: 0 0 24px; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 10px 22px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 0;
+    font-size: 12.5px; color: var(--muted);
+  }
+  .legend b { font-weight: 600; color: var(--ink); }
+  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; vertical-align: -1px; margin-right: 7px; }
+
+  section { margin-top: 72px; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; }
+  .sec-num {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px; color: var(--pen); letter-spacing: 0.1em;
+  }
+  h2 { font-size: 23px; letter-spacing: -0.015em; margin: 0; text-wrap: balance; }
+  .sec-sub { max-width: 68ch; color: var(--muted); margin: 10px 0 26px; font-size: 14px; }
+  .sec-sub strong { color: var(--ink); font-weight: 600; }
+
+  .duo {
+    display: grid; grid-template-columns: minmax(0, 1fr) 296px; gap: 26px;
+    align-items: start;
+  }
+  @media (max-width: 980px) { .duo { grid-template-columns: minmax(0, 1fr); } }
+
+  .notes { font-size: 13.5px; color: var(--muted); }
+  .notes h3 {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--pen); margin: 0 0 10px; font-weight: 600;
+  }
+  .notes ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .notes li { display: flex; gap: 10px; }
+  .notes li p { margin: 0; }
+  .notes b { color: var(--ink); font-weight: 600; }
+
+  .k {
+    flex: none;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 1.5px solid var(--pen); color: var(--pen);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10.5px; font-weight: 600; line-height: 1;
+    background: var(--pen-soft);
+  }
+  .k.amber { border-color: var(--pro); color: var(--pro); background: var(--pro-soft); }
+  .k.in { vertical-align: 2px; margin-left: 6px; width: 16px; height: 16px; font-size: 9.5px; }
+
+  /* ---------- wireframe frames ---------- */
+  .frame {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .frame-bar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border-bottom: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .dots { display: flex; gap: 4px; }
+  .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--wf-fill); border: 1px solid var(--wf-line-soft); }
+  .url {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10.5px; color: var(--wf-muted);
+    background: var(--wf-canvas); border: 1px solid var(--wf-line-soft);
+    border-radius: 5px; padding: 2px 10px;
+  }
+  .frame-scroll { overflow-x: auto; }
+  .frame-body {
+    background: var(--wf-canvas);
+    display: flex;
+    min-width: 860px;
+    font-size: 12px; color: var(--wf-ink);
+  }
+  .frame-body.bare { min-width: 0; display: block; padding: 28px; }
+
+  /* dashboard shell strip */
+  .shell {
+    flex: none; width: 52px; border-right: 1px solid var(--wf-line-soft);
+    background: var(--wf-surface);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    padding: 12px 0;
+  }
+  .shell .sq { width: 24px; height: 24px; border-radius: 6px; background: var(--wf-fill); border: 1px solid var(--wf-line-soft); }
+  .shell .lbl {
+    writing-mode: vertical-rl;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--wf-muted);
+    margin-top: auto;
+  }
+  .page { flex: 1; min-width: 0; padding: 20px 24px 28px; }
+
+  /* wireframe primitives */
+  .bar { display: inline-block; height: 7px; border-radius: 4px; background: var(--wf-fill); vertical-align: middle; }
+  .bar.d { background: var(--wf-line); height: 9px; }
+  .stack { display: flex; flex-direction: column; gap: 7px; }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .row.between { justify-content: space-between; }
+  .av { flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--wf-fill); border: 1px solid var(--wf-line); }
+  .av.sm { width: 16px; height: 16px; }
+
+  .wbtn {
+    display: inline-flex; align-items: center; gap: 5px;
+    border: 1px solid var(--wf-line); border-radius: 6px;
+    padding: 4px 10px; font-size: 11px; font-weight: 500;
+    color: var(--wf-ink); background: var(--wf-surface); white-space: nowrap;
+  }
+  .wbtn.pri { background: var(--wf-btn); color: var(--wf-btn-ink); border-color: var(--wf-btn); }
+  .wbtn.ghost { border-color: transparent; background: transparent; }
+  .wbtn.danger { color: var(--wf-muted); text-decoration: line-through transparent; }
+  .more { color: var(--wf-muted); font-weight: 700; letter-spacing: 1px; }
+
+  .wchip {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    border: 1px solid var(--wf-line); border-radius: 999px;
+    padding: 2px 8px; color: var(--wf-muted); white-space: nowrap;
+  }
+  .wchip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--wf-line); }
+  .wchip.ok { color: var(--ok); border-color: var(--ok); }
+  .wchip.ok .dot { background: var(--ok); }
+  .wchip.pro { color: var(--pro); border-color: var(--pro); background: var(--pro-soft); }
+
+  .card {
+    background: var(--wf-surface); border: 1px solid var(--wf-line-soft);
+    border-radius: 8px; padding: 14px;
+  }
+  .card h4 {
+    margin: 0; font-size: 12px; font-weight: 600; color: var(--wf-ink);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .hr { border: 0; border-top: 1px solid var(--wf-line-soft); margin: 12px 0; }
+
+  .slot {
+    border: 1.5px dashed var(--wf-line); border-radius: 8px;
+    padding: 12px 14px; color: var(--wf-muted);
+    background: repeating-linear-gradient(45deg, transparent 0 8px, var(--wf-fill) 8px 9px);
+  }
+  .slot .t {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .slot p { margin: 4px 0 0; font-size: 11px; }
+
+  .input {
+    display: flex; align-items: center;
+    border: 1px solid var(--wf-line); border-radius: 6px;
+    background: var(--wf-surface); padding: 5px 9px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10.5px; color: var(--wf-muted);
+    flex: 1; min-width: 0; overflow: hidden; white-space: nowrap;
+  }
+
+  .cols { display: flex; gap: 20px; align-items: start; }
+  .main-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+  .rail { flex: none; width: 232px; display: flex; flex-direction: column; gap: 12px; }
+
+  /* availability grid */
+  table.grid { border-collapse: collapse; width: 100%; }
+  .grid th, .grid td {
+    border: 1px solid var(--wf-line-soft); padding: 6px 8px;
+    font-size: 11px; text-align: center; font-weight: 400;
+    background: var(--wf-surface);
+  }
+  .grid th { vertical-align: bottom; }
+  .grid td.who, .grid th.who { text-align: left; min-width: 130px; }
+  .grid .lead-col { background: var(--wf-fill); }
+  .grid th.lead-col { border-top: 2px solid var(--wf-ink); }
+  .opt-h .dow { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--wf-muted); }
+  .opt-h .d { font-size: 15px; font-weight: 600; color: var(--wf-ink); line-height: 1.2; }
+  .opt-h .t { font-size: 9.5px; color: var(--wf-muted); }
+  .score { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 9.5px; color: var(--wf-muted); }
+  .v { font-size: 12px; line-height: 1; }
+  .v.y { color: var(--wf-ink); font-weight: 700; }
+  .v.i { color: var(--wf-muted); }
+  .v.n { color: var(--wf-line); font-weight: 600; }
+
+  .scorebar { height: 6px; border-radius: 3px; background: var(--wf-fill); overflow: hidden; }
+  .scorebar i { display: block; height: 100%; background: var(--wf-line); border-radius: 3px; }
+
+  /* dialogs */
+  .dlg-wrap { background: var(--wf-canvas); padding: 26px; display: flex; justify-content: center; }
+  .dlg {
+    width: 100%; max-width: 400px;
+    background: var(--wf-surface); border: 1px solid var(--wf-line);
+    border-radius: 10px; padding: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    font-size: 12px; color: var(--wf-ink);
+  }
+  .dlg h4 { margin: 0 0 4px; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+  .dlg .sub { color: var(--wf-muted); font-size: 11px; margin: 0 0 12px; }
+  .radio { flex: none; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--wf-line); }
+  .radio.on { border-color: var(--wf-ink); box-shadow: inset 0 0 0 3px var(--wf-surface); background: var(--wf-ink); }
+  .checkbox { flex: none; width: 13px; height: 13px; border-radius: 3px; border: 1.5px solid var(--wf-ink); display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: var(--wf-ink); }
+  .field label { display: block; font-size: 10.5px; font-weight: 600; margin-bottom: 4px; color: var(--wf-ink); }
+  .field .box { border: 1px solid var(--wf-line); border-radius: 6px; background: var(--wf-surface); padding: 7px 9px; }
+  .toggle { flex: none; width: 26px; height: 15px; border-radius: 999px; background: var(--wf-line); position: relative; }
+  .toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: var(--wf-surface); }
+  .toggle.on { background: var(--wf-ink); }
+  .toggle.on::after { left: auto; right: 2px; }
+
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; align-items: start; }
+
+  /* phones */
+  .phones { display: flex; gap: 22px; overflow-x: auto; padding: 4px 2px 14px; }
+  .phone-unit { flex: none; width: 262px; }
+  .phone {
+    border: 1.5px solid var(--line); border-radius: 22px; overflow: hidden;
+    background: var(--wf-canvas);
+  }
+  .phone-top { display: flex; justify-content: center; padding: 7px 0 3px; background: var(--wf-canvas); }
+  .phone-top i { width: 60px; height: 5px; border-radius: 3px; background: var(--wf-fill); }
+  .phone-body { padding: 10px 12px 12px; font-size: 11px; color: var(--wf-ink); display: flex; flex-direction: column; gap: 10px; min-height: 480px; }
+  .phone-cap {
+    margin-top: 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pen);
+  }
+  .phone-cap + p { font-size: 12.5px; color: var(--muted); margin: 4px 0 0; }
+  .sticky-bar {
+    margin-top: auto; border-top: 1px solid var(--wf-line-soft);
+    background: var(--wf-surface); border-radius: 8px;
+    padding: 8px; display: flex; gap: 8px;
+  }
+  .sticky-bar .wbtn { flex: 1; justify-content: center; }
+
+  .qa { max-width: 74ch; }
+  .qa ol { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 14px; color: var(--muted); font-size: 14px; }
+  .qa b { color: var(--ink); font-weight: 600; }
+  .rec {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--pen); border: 1px solid var(--pen); border-radius: 4px;
+    padding: 1px 6px; margin-right: 6px; white-space: nowrap;
+  }
+
+  footer { margin-top: 80px; border-top: 1px solid var(--line); padding-top: 18px; font-size: 12.5px; color: var(--muted); }
+  footer p { margin: 4px 0; max-width: 78ch; }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">RAL-1337 · Poll admin project · Lofi wireframes · 14 Jul 2026</div>
+    <h1>Poll admin — the page that turns a poll into a plan</h1>
+    <p class="lede">
+      Poll management moves out of the session-identified <span class="mono">/poll/{id}</span> page into a
+      dedicated, login-required page in the dashboard shell. The organizer's job:
+      <strong>get people in, watch results converge, finalize a time</strong> — without leaving this page.
+      Wireframes below are structure and flow only; no visual design decisions are being made here.
+    </p>
+    <div class="legend">
+      <span><b>Reading key</b></span>
+      <span><span class="swatch" style="background: var(--wf-fill); border: 1px solid var(--wf-line);"></span>Grayscale = the wireframe</span>
+      <span><span class="swatch" style="background: var(--pen);"></span>Blue = annotations, not UI</span>
+      <span><span class="swatch" style="background: var(--pro);"></span>Amber = Pro gate moment</span>
+      <span><span class="swatch" style="background: var(--ok);"></span>Green dot = responded status</span>
+      <span>▨ Dashed = reserved for a later project</span>
+    </div>
+  </header>
+
+  <!-- ============ 01 ANATOMY ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Page anatomy</h2></div>
+    <p class="sec-sub">
+      One page, two columns. The <strong>main column is the scheduling work</strong> (results, options, comments);
+      the <strong>right rail is people &amp; access</strong> (invites now; collaborators and activity later).
+      Growth happens by stacking cards in the rail — no redesign needed.
+    </p>
+    <div class="duo">
+      <div class="frame">
+        <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">app.rallly.co/poll/xyz123</span></div>
+        <div class="frame-scroll"><div class="frame-body">
+          <div class="shell"><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="lbl">dashboard shell</span></div>
+          <div class="page">
+            <div class="row between" style="margin-bottom: 6px;">
+              <div class="row">
+                <span class="bar" style="width: 90px;"></span>
+                <span style="color: var(--wf-muted);">/</span>
+                <span class="bar d" style="width: 150px;"></span>
+                <span class="wchip"><span class="dot"></span>Live</span>
+                <span class="k in">1</span>
+              </div>
+              <div class="row">
+                <span class="wbtn ghost">View invite page ↗</span>
+                <span class="wbtn pri">Invite</span>
+                <span class="wbtn">Manage ▾</span>
+                <span class="k in">2</span>
+              </div>
+            </div>
+            <div class="cols" style="margin-top: 14px;">
+              <div class="main-col">
+                <div class="slot" style="min-height: 120px;"><span class="t">A · Hero zone — varies by state</span>
+                  <p>Fresh: the invite moment · Active: availability overview + leading option · Finalized: event summary</p></div>
+                <div class="slot"><span class="t">B · Options</span><p>Add / remove dates and times on a live poll</p></div>
+                <div class="slot"><span class="t">C · Comments</span><p>View and delete</p></div>
+              </div>
+              <div class="rail">
+                <div class="slot" style="min-height: 90px;"><span class="t">D · Invite &amp; roster</span><p>Share link (free) · email invites + invitee roster (Pro)</p></div>
+                <div class="slot"><span class="t">E · Collaborators — later</span><p>Reserved, not designed <span class="k in">4</span></p></div>
+                <div class="slot"><span class="t">F · Activity — later</span><p>Reserved, not designed</p></div>
+              </div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <aside class="notes">
+        <h3>Annotations</h3>
+        <ol>
+          <li><span class="k">1</span><p><b>Header:</b> breadcrumb back to Polls, poll title, status chip (Live / Paused / Finalized). Sits in the standard dashboard page header.</p></li>
+          <li><span class="k">2</span><p><b>Two persistent actions:</b> Invite (primary — the page's most valuable act) and a Manage menu carrying edit, lifecycle, export, duplicate, delete. "View invite page" opens the participant-facing page in a new tab.</p></li>
+          <li><span class="k">3</span><p><b>Column collapse:</b> under ~1024px the rail folds beneath the hero zone (order: A, D, B, C, E, F). See section 08 for mobile.</p></li>
+          <li><span class="k">4</span><p><b>Future-proofing:</b> collaborators and activity are rail cards. The invitee roster row (avatar · name · status chip · overflow menu) is the same row contract the collaborators card will reuse.</p></li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 02 FRESH ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Fresh poll — the invite moment is the hero</h2></div>
+    <p class="sec-sub">
+      Zero responses. There are no results to show, so the page doesn't pretend there are:
+      the main column <strong>is</strong> the invite. These are the same sections defined by the
+      Unified Invite Dialog project, rendered inline instead of in a dialog — one component, two hosts.
+    </p>
+    <div class="duo">
+      <div class="frame">
+        <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">app.rallly.co/poll/xyz123</span></div>
+        <div class="frame-scroll"><div class="frame-body">
+          <div class="shell"><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="lbl">dashboard shell</span></div>
+          <div class="page">
+            <div class="row between" style="margin-bottom: 14px;">
+              <div class="row"><span class="bar" style="width: 70px;"></span><span style="color: var(--wf-muted);">/</span><span class="bar d" style="width: 140px;"></span><span class="wchip"><span class="dot"></span>Live</span></div>
+              <div class="row"><span class="wbtn ghost">View invite page ↗</span><span class="wbtn pri">Invite</span><span class="wbtn">Manage ▾</span></div>
+            </div>
+            <div class="cols">
+              <div class="main-col">
+                <div class="card" style="padding: 22px; text-align: center;">
+                  <div class="av" style="width: 34px; height: 34px; margin: 0 auto 10px;"></div>
+                  <div style="font-size: 14px; font-weight: 600;">Your poll is live <span class="k in">1</span></div>
+                  <p style="color: var(--wf-muted); font-size: 11px; margin: 4px auto 14px; max-width: 320px;">Share it with participants to start collecting responses</p>
+                  <div class="row" style="max-width: 380px; margin: 0 auto;">
+                    <span class="input">rallly.co/invite/xyz123</span>
+                    <span class="wbtn pri">Copy link</span>
+                  </div>
+                  <hr class="hr" style="max-width: 380px; margin-left: auto; margin-right: auto;">
+                  <div class="row" style="max-width: 380px; margin: 0 auto; justify-content: space-between;">
+                    <span style="font-weight: 600;">Invite by email <span class="wchip pro">Pro</span> <span class="k in" >2</span></span>
+                    <span style="color: var(--wf-muted);">▾</span>
+                  </div>
+                  <div style="max-width: 380px; margin: 10px auto 0; text-align: left;">
+                    <div class="row">
+                      <span class="input">maria@school.org × &nbsp; sam@… × &nbsp; Add emails…</span>
+                      <span class="wbtn pri">Send invites</span>
+                    </div>
+                    <p style="color: var(--wf-muted); font-size: 10.5px; margin: 6px 0 0;">Each invitee gets a personal link, so you can track who has responded <span class="k in">3</span></p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="row between"><h4>Options <span class="score">· 4 options</span></h4><span class="wbtn">＋ Add options</span></div>
+                  <hr class="hr">
+                  <div class="stack">
+                    <div class="row between"><div class="row"><span class="bar d" style="width: 110px;"></span><span class="bar" style="width: 66px;"></span></div><span class="score">No responses yet <span class="k in">4</span></span></div>
+                    <div class="row between"><div class="row"><span class="bar d" style="width: 110px;"></span><span class="bar" style="width: 66px;"></span></div><span class="score">No responses yet</span></div>
+                    <div class="row between"><div class="row"><span class="bar d" style="width: 110px;"></span><span class="bar" style="width: 66px;"></span></div><span class="score">No responses yet</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="rail">
+                <div class="card">
+                  <h4>Details</h4>
+                  <hr class="hr">
+                  <div class="stack">
+                    <span class="bar d" style="width: 140px;"></span>
+                    <span class="bar" style="width: 170px;"></span>
+                    <span class="bar" style="width: 120px;"></span>
+                  </div>
+                  <hr class="hr">
+                  <span class="wbtn" style="width: 100%; justify-content: center;">Edit details</span>
+                </div>
+                <div class="slot"><span class="t">Collaborators — later</span></div>
+                <div class="slot"><span class="t">Activity — later</span></div>
+              </div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <aside class="notes">
+        <h3>Annotations</h3>
+        <ol>
+          <li><span class="k">1</span><p><b>Empty state = call to action.</b> The hero replaces the results zone until the first response arrives; then it demotes to a compact rail card (section 03) and results take over. The invite is discoverable in the first session by being unmissable.</p></li>
+          <li><span class="k amber">2</span><p><b>Progressive disclosure, per the Unified Invite Dialog decision:</b> the link is primary and free; "Invite by email" is a collapsed row with a Pro badge. Shown expanded here (Pro user). Free users: same row, gate on use — section 06.</p></li>
+          <li><span class="k">3</span><p><b>Per-invitee tokenized links</b> from day one (mirrors <span class="mono">ScheduledEventInvite</span>: uid, inviteeEmail, status). Sending creates the roster entries shown in section 03.</p></li>
+          <li><span class="k">4</span><p><b>Options preview stays visible</b> so the organizer can sanity-check dates before sharing — the most common "oops" moment is right after creation.</p></li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 03 ACTIVE ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Active poll — watch results converge</h2></div>
+    <p class="sec-sub">
+      Responses are coming in. The availability overview leads, the winning option is called out and carries the
+      path to finalize, and the roster in the rail answers "who's missing?" at a glance.
+    </p>
+    <div class="duo">
+      <div class="frame">
+        <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">app.rallly.co/poll/xyz123</span></div>
+        <div class="frame-scroll"><div class="frame-body">
+          <div class="shell"><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="lbl">dashboard shell</span></div>
+          <div class="page">
+            <div class="row between" style="margin-bottom: 14px;">
+              <div class="row"><span class="bar" style="width: 70px;"></span><span style="color: var(--wf-muted);">/</span><span class="bar d" style="width: 140px;"></span><span class="wchip"><span class="dot"></span>Live</span></div>
+              <div class="row"><span class="wbtn ghost">View invite page ↗</span><span class="wbtn pri">Invite</span><span class="wbtn">Manage ▾</span></div>
+            </div>
+            <div class="cols">
+              <div class="main-col">
+                <div class="card" style="padding: 0; overflow: hidden;">
+                  <div class="row between" style="padding: 12px 14px;">
+                    <h4>Availability <span class="score">· 6 of 8 responded</span></h4>
+                    <div class="row"><span class="wchip">Leading: Fri 26 Sep <span class="k in">1</span></span><span class="wbtn pri">Finalize ▾</span></div>
+                  </div>
+                  <div style="overflow-x: auto;">
+                  <table class="grid">
+                    <tr>
+                      <th class="who"></th>
+                      <th class="opt-h"><div class="dow">Wed</div><div class="d">24</div><div class="t">Sep · 14:00</div><div class="score">3 ✓</div></th>
+                      <th class="opt-h"><div class="dow">Thu</div><div class="d">25</div><div class="t">Sep · 14:00</div><div class="score">4 ✓</div></th>
+                      <th class="opt-h lead-col"><div class="dow">Fri</div><div class="d">26</div><div class="t">Sep · 14:00</div><div class="score">6 ✓ <span class="k in">2</span></div></th>
+                      <th class="opt-h"><div class="dow">Fri</div><div class="d">26</div><div class="t">Sep · 16:00</div><div class="score">2 ✓</div></th>
+                    </tr>
+                    <tr>
+                      <td class="who"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 64px;"></span><span class="more" style="margin-left: auto;">⋯</span><span class="k in">3</span></div></td>
+                      <td><span class="v y">✓</span></td><td><span class="v y">✓</span></td><td class="lead-col"><span class="v y">✓</span></td><td><span class="v n">✕</span></td>
+                    </tr>
+                    <tr>
+                      <td class="who"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 78px;"></span></div></td>
+                      <td><span class="v n">✕</span></td><td><span class="v y">✓</span></td><td class="lead-col"><span class="v y">✓</span></td><td><span class="v y">✓</span></td>
+                    </tr>
+                    <tr>
+                      <td class="who"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 58px;"></span></div></td>
+                      <td><span class="v i">(✓)</span></td><td><span class="v n">✕</span></td><td class="lead-col"><span class="v y">✓</span></td><td><span class="v n">✕</span></td>
+                    </tr>
+                    <tr>
+                      <td class="who"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 70px;"></span></div></td>
+                      <td><span class="v y">✓</span></td><td><span class="v i">(✓)</span></td><td class="lead-col"><span class="v y">✓</span></td><td><span class="v n">✕</span></td>
+                    </tr>
+                    <tr>
+                      <td class="who"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 82px;"></span></div></td>
+                      <td><span class="v y">✓</span></td><td><span class="v y">✓</span></td><td class="lead-col"><span class="v y">✓</span></td><td><span class="v y">✓</span></td>
+                    </tr>
+                    <tr>
+                      <td class="who"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 66px;"></span></div></td>
+                      <td><span class="v n">✕</span></td><td><span class="v y">✓</span></td><td class="lead-col"><span class="v y">✓</span></td><td><span class="v i">(✓)</span></td>
+                    </tr>
+                  </table>
+                  </div>
+                  <div class="row" style="padding: 10px 14px; border-top: 1px solid var(--wf-line-soft);">
+                    <span class="wbtn ghost">＋ Add participant <span class="k in">4</span></span>
+                    <span class="score" style="margin-left: auto;">✓ yes · (✓) if need be · ✕ no</span>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="row between"><h4>Options <span class="score">· 4 options</span></h4><span class="wbtn">＋ Add options <span class="k in">5</span></span></div>
+                  <hr class="hr">
+                  <div class="stack">
+                    <div class="row between"><div class="row"><span class="bar d" style="width: 120px;"></span><span class="score">6 ✓ of 6</span></div><div class="scorebar" style="width: 90px;"><i style="width: 100%;"></i></div><span class="more">✕</span></div>
+                    <div class="row between"><div class="row"><span class="bar d" style="width: 120px;"></span><span class="score">4 ✓ of 6</span></div><div class="scorebar" style="width: 90px;"><i style="width: 66%;"></i></div><span class="more">✕</span></div>
+                    <div class="row between"><div class="row"><span class="bar d" style="width: 120px;"></span><span class="score">3 ✓ of 6</span></div><div class="scorebar" style="width: 90px;"><i style="width: 50%;"></i></div><span class="more">✕</span></div>
+                    <div class="row between"><div class="row"><span class="bar d" style="width: 120px;"></span><span class="score">2 ✓ of 6</span></div><div class="scorebar" style="width: 90px;"><i style="width: 33%;"></i></div><span class="more">✕</span></div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="row between"><h4>Comments <span class="score">· 2</span></h4></div>
+                  <hr class="hr">
+                  <div class="stack" style="gap: 12px;">
+                    <div class="row" style="align-items: start;">
+                      <span class="av"></span>
+                      <div class="stack" style="gap: 5px; flex: 1;"><div class="row"><span class="bar d" style="width: 70px;"></span><span class="score">2h ago</span></div><span class="bar" style="width: 85%;"></span><span class="bar" style="width: 55%;"></span></div>
+                      <span class="more">⋯ <span class="k in">6</span></span>
+                    </div>
+                    <div class="row" style="align-items: start;">
+                      <span class="av"></span>
+                      <div class="stack" style="gap: 5px; flex: 1;"><div class="row"><span class="bar d" style="width: 90px;"></span><span class="score">1d ago</span></div><span class="bar" style="width: 70%;"></span></div>
+                      <span class="more">⋯</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="rail">
+                <div class="card">
+                  <div class="row between"><h4>Invite <span class="k in">7</span></h4><span class="wbtn ghost">Open ↗</span></div>
+                  <hr class="hr">
+                  <div class="row"><span class="input">rallly.co/invite/xyz…</span><span class="wbtn">Copy</span></div>
+                  <hr class="hr">
+                  <div class="row between" style="margin-bottom: 8px;"><span style="font-weight: 600; font-size: 11px;">Invited <span class="score">· 4</span></span><span class="wbtn ghost">＋ Invite</span></div>
+                  <div class="stack" style="gap: 8px;">
+                    <div class="row"><span class="av sm"></span><span class="bar d" style="width: 84px;"></span><span class="wchip ok" style="margin-left: auto;"><span class="dot"></span>Responded</span></div>
+                    <div class="row"><span class="av sm"></span><span class="bar d" style="width: 70px;"></span><span class="wchip ok" style="margin-left: auto;"><span class="dot"></span>Responded</span></div>
+                    <div class="row"><span class="av sm"></span><span class="bar d" style="width: 92px;"></span><span class="wchip" style="margin-left: auto;"><span class="dot"></span>Pending</span><span class="more">⋯ <span class="k in">8</span></span></div>
+                    <div class="row"><span class="av sm"></span><span class="bar d" style="width: 64px;"></span><span class="wchip" style="margin-left: auto;"><span class="dot"></span>Pending</span><span class="more">⋯</span></div>
+                  </div>
+                  <hr class="hr">
+                  <p style="margin: 0; font-size: 10.5px; color: var(--wf-muted);">2 more responded via the link</p>
+                </div>
+                <div class="slot"><span class="t">Collaborators — later</span></div>
+                <div class="slot"><span class="t">Activity — later</span></div>
+              </div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <aside class="notes">
+        <h3>Annotations</h3>
+        <ol>
+          <li><span class="k">1</span><p><b>Winning option is named, not inferred.</b> The chip states the current leader; the Finalize split-button defaults to it and drops down to pick another. Answers "which option is winning" without reading the table.</p></li>
+          <li><span class="k">2</span><p><b>Leading column highlighted</b> in the grid itself. Columns are options, rows are participants — same mental model as today's desktop poll, minus the organizer's own voting row.</p></li>
+          <li><span class="k">3</span><p><b>Edit / remove a participant</b> via row overflow: Edit votes (inline row edit, existing pattern) and Remove (confirm dialog). Covers scope item 2.</p></li>
+          <li><span class="k">4</span><p><b>Add participant manually</b> — the organizer records someone's answer from a phone call or hallway chat. Kept, since the participant table is today misused for invites precisely because this need is real.</p></li>
+          <li><span class="k">5</span><p><b>Options on a live poll:</b> ＋ opens the calendar picker (existing edit-options view) scoped to adding; ✕ on a row with votes warns "3 people voted for this option — their votes will be deleted".</p></li>
+          <li><span class="k">6</span><p><b>Comment moderation</b> = delete, via overflow. Disabling comments entirely lives in Settings (section 07).</p></li>
+          <li><span class="k">7</span><p><b>The invite card is the demoted hero:</b> link + roster, compact. "＋ Invite" reopens the full invite sections in a dialog — same composition as section 02.</p></li>
+          <li><span class="k">8</span><p><b>Roster row states:</b> Responded (matched to a participant) or Pending. Pending overflow: Resend invite, Copy personal link, Revoke. Link-responders who were never invited count in the footer line, not the roster.</p></li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 04 FINALIZE ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Finalize — from poll to scheduled event</h2></div>
+    <p class="sec-sub">
+      Entered from the Finalize button (defaulting to the leading option) or the Manage menu.
+      Two steps in one dialog: <strong>pick, then confirm what happens</strong>. Finalizing closes the poll,
+      creates an event, and optionally notifies everyone.
+    </p>
+    <div class="duo">
+      <div class="grid2">
+        <div class="frame">
+          <div class="dlg-wrap"><div class="dlg">
+            <h4>Finalize this poll <span class="score">· Step 1 of 2</span></h4>
+            <p class="sub">Pick the time that works best. Options are sorted by votes. <span class="k in">1</span></p>
+            <div class="stack" style="gap: 8px;">
+              <div class="row card" style="padding: 9px 10px; border-color: var(--wf-ink);">
+                <span class="radio on"></span>
+                <div class="stack" style="gap: 3px; flex: 1;"><b style="font-size: 11.5px;">Fri 26 Sep · 14:00–15:00</b><div class="scorebar"><i style="width: 100%;"></i></div></div>
+                <span class="score">6 ✓ · 0 (✓) · 0 ✕</span>
+              </div>
+              <div class="row card" style="padding: 9px 10px;">
+                <span class="radio"></span>
+                <div class="stack" style="gap: 3px; flex: 1;"><b style="font-size: 11.5px;">Thu 25 Sep · 14:00–15:00</b><div class="scorebar"><i style="width: 66%;"></i></div></div>
+                <span class="score">4 ✓ · 1 (✓) · 1 ✕</span>
+              </div>
+              <div class="row card" style="padding: 9px 10px;">
+                <span class="radio"></span>
+                <div class="stack" style="gap: 3px; flex: 1;"><b style="font-size: 11.5px;">Wed 24 Sep · 14:00–15:00</b><div class="scorebar"><i style="width: 50%;"></i></div></div>
+                <span class="score">3 ✓ · 1 (✓) · 2 ✕</span>
+              </div>
+            </div>
+            <p class="sub" style="margin: 10px 0 0;">2 of 8 invitees haven't responded yet <span class="k in">2</span></p>
+            <hr class="hr">
+            <div class="row" style="justify-content: flex-end;"><span class="wbtn">Cancel</span><span class="wbtn pri">Continue</span></div>
+          </div></div>
+        </div>
+        <div class="frame">
+          <div class="dlg-wrap"><div class="dlg">
+            <h4>Confirm <span class="score">· Step 2 of 2</span></h4>
+            <p class="sub">Fri 26 Sep 2026 · 14:00–15:00 (CET)</p>
+            <div class="card" style="padding: 10px;">
+              <div class="row between"><b style="font-size: 11px;">Going · 6</b><span class="score">Can't make it · 0 <span class="k in">3</span></span></div>
+              <div class="row" style="margin-top: 8px;"><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span></div>
+            </div>
+            <div class="row" style="margin-top: 12px;"><span class="checkbox">✓</span><span style="font-size: 11px;">Notify participants by email <span class="k in">4</span></span></div>
+            <p class="sub" style="margin: 10px 0 0;">This closes the poll and adds the event to your events list. Participants can no longer vote.</p>
+            <hr class="hr">
+            <div class="row" style="justify-content: space-between;"><span class="wbtn ghost">← Back</span><div class="row"><span class="wbtn">Cancel</span><span class="wbtn pri">Finalize</span></div></div>
+          </div></div>
+        </div>
+      </div>
+      <aside class="notes">
+        <h3>Annotations</h3>
+        <ol>
+          <li><span class="k">1</span><p><b>Sorted by score, pre-selected to the leader.</b> The organizer confirms rather than hunts. Availability bar + explicit vote counts per option.</p></li>
+          <li><span class="k">2</span><p><b>Pressure release, not a blocker:</b> if invitees are still pending, say so here — the organizer decides whether to wait or proceed. Links back to the roster.</p></li>
+          <li><span class="k">3</span><p><b>Consequence preview:</b> who's in, who's out for the chosen slot, before committing. No surprises after the emails go out.</p></li>
+          <li><span class="k">4</span><p><b>Notify is a choice, checked by default.</b> Recurring organizers sometimes finalize retroactively and don't want a mail blast.</p></li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 05 AFTER ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>After — finalized and paused states</h2></div>
+    <p class="sec-sub">
+      Two different "not collecting votes" states with different jobs. <strong>Finalized</strong> is terminal and
+      celebratory: the event is the hero, results are archived. <strong>Paused</strong> is temporary: everything
+      stays visible, voting is off, reopen is one click.
+    </p>
+    <div class="duo">
+      <div class="grid2">
+        <div class="frame">
+          <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">app.rallly.co/poll/xyz123</span></div>
+          <div class="frame-body bare">
+            <div class="row between" style="margin-bottom: 12px;">
+              <div class="row"><span class="bar d" style="width: 120px;"></span><span class="wchip ok"><span class="dot"></span>Finalized</span></div>
+              <div class="row"><span class="wbtn">Manage ▾ <span class="k in">2</span></span></div>
+            </div>
+            <div class="card">
+              <h4>Fri 26 Sep 2026 · 14:00–15:00 <span class="k in">1</span></h4>
+              <p style="color: var(--wf-muted); font-size: 11px; margin: 4px 0 10px;">Finalized 2 days ago · participants were notified</p>
+              <div class="row"><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="score">6 going</span></div>
+              <hr class="hr">
+              <div class="row"><span class="wbtn pri">View event</span><span class="wbtn">Add to calendar</span></div>
+            </div>
+            <div class="card" style="margin-top: 12px;">
+              <div class="row between"><h4>Final results</h4><span style="color: var(--wf-muted);">▸ <span class="k in">3</span></span></div>
+            </div>
+            <div class="card" style="margin-top: 12px;">
+              <div class="row between"><h4>Comments <span class="score">· 2</span></h4><span style="color: var(--wf-muted);">▸</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="frame">
+          <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">app.rallly.co/poll/xyz123</span></div>
+          <div class="frame-body bare">
+            <div class="row between" style="margin-bottom: 12px;">
+              <div class="row"><span class="bar d" style="width: 120px;"></span><span class="wchip"><span class="dot"></span>Paused</span></div>
+              <div class="row"><span class="wbtn">Manage ▾</span></div>
+            </div>
+            <div class="card" style="border-style: solid;">
+              <div class="row between">
+                <div><h4>Voting is paused <span class="k in">4</span></h4><p style="color: var(--wf-muted); font-size: 11px; margin: 4px 0 0;">Participants can see the poll but can't vote or comment</p></div>
+                <span class="wbtn pri">Reopen</span>
+              </div>
+            </div>
+            <div class="card" style="margin-top: 12px;">
+              <div class="row between"><h4>Availability <span class="score">· read-only</span></h4><span class="wbtn">Finalize ▾ <span class="k in">5</span></span></div>
+              <hr class="hr">
+              <div class="stack">
+                <span class="bar" style="width: 90%;"></span><span class="bar" style="width: 84%;"></span><span class="bar" style="width: 88%;"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        <h3>Annotations</h3>
+        <ol>
+          <li><span class="k">1</span><p><b>Finalized: the event replaces availability as the hero.</b> Links out to the existing event page; the poll page remains the record of how the time was chosen.</p></li>
+          <li><span class="k">2</span><p><b>Manage menu shrinks with state.</b> Finalized: Duplicate (Pro), Export, Delete — no close/reopen, no edit options. Paused: full menu minus nothing. Live: everything (see 03).</p></li>
+          <li><span class="k">3</span><p><b>Results and comments collapse to accordions</b> once finalized — retrievable, not competing with the event.</p></li>
+          <li><span class="k">4</span><p><b>Paused banner explains what participants experience</b>, so the organizer knows exactly what "paused" means. Reopen is immediate, no dialog.</p></li>
+          <li><span class="k">5</span><p><b>Finalize still available while paused</b> — pausing to stop late votes and then finalizing is a natural sequence.</p></li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 06 PRO GATES ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>Pro gates — capability discovery, one moment each</h2></div>
+    <p class="sec-sub">
+      Free users see the full capability and hit the gate <strong>at the moment of use</strong> — never before,
+      never repeatedly. Amber marks the two gated moments on this page: email invites and duplicate.
+      (Both fire the existing paywall + PostHog capture.)
+    </p>
+    <div class="duo">
+      <div class="grid2">
+        <div class="frame">
+          <div class="dlg-wrap"><div class="dlg">
+            <h4>Invite participants</h4>
+            <p class="sub">Share the link, or send email invites</p>
+            <div class="row"><span class="input">rallly.co/invite/xyz123</span><span class="wbtn pri">Copy link</span></div>
+            <hr class="hr">
+            <div class="row between"><span style="font-weight: 600;">Invite by email <span class="wchip pro">Pro</span></span><span style="color: var(--wf-muted);">▾</span></div>
+            <div class="card" style="margin-top: 10px; background: var(--wf-canvas);">
+              <p style="margin: 0 0 8px; font-size: 11px;"><b>Send invites and see who's responded</b> <span class="k in amber">1</span></p>
+              <div class="stack" style="gap: 6px; opacity: 0.65;">
+                <div class="row"><span class="av sm"></span><span class="bar" style="width: 80px;"></span><span class="wchip ok" style="margin-left: auto;"><span class="dot"></span>Responded</span></div>
+                <div class="row"><span class="av sm"></span><span class="bar" style="width: 66px;"></span><span class="wchip" style="margin-left: auto;"><span class="dot"></span>Pending</span></div>
+              </div>
+              <hr class="hr">
+              <div class="row"><span class="wbtn pri">Upgrade to Pro</span><span class="wbtn ghost">Not now <span class="k in amber">2</span></span></div>
+            </div>
+          </div></div>
+        </div>
+        <div class="frame">
+          <div class="dlg-wrap"><div class="dlg" style="max-width: 250px;">
+            <div class="stack" style="gap: 2px;">
+              <span class="wbtn ghost" style="justify-content: flex-start;">Edit details</span>
+              <span class="wbtn ghost" style="justify-content: flex-start;">Edit options</span>
+              <span class="wbtn ghost" style="justify-content: flex-start;">Edit settings</span>
+              <hr class="hr" style="margin: 4px 0;">
+              <span class="wbtn ghost" style="justify-content: flex-start;">Finalize <span class="k in">3</span></span>
+              <span class="wbtn ghost" style="justify-content: flex-start;">Pause</span>
+              <hr class="hr" style="margin: 4px 0;">
+              <span class="wbtn ghost" style="justify-content: flex-start;">Export to CSV</span>
+              <span class="wbtn ghost" style="justify-content: flex-start;">Duplicate <span class="wchip pro">Pro</span> <span class="k in amber">4</span></span>
+              <hr class="hr" style="margin: 4px 0;">
+              <span class="wbtn ghost danger" style="justify-content: flex-start; color: var(--wf-muted);">Delete…</span>
+            </div>
+          </div></div>
+        </div>
+      </div>
+      <aside class="notes">
+        <h3>Annotations</h3>
+        <ol>
+          <li><span class="k amber">1</span><p><b>The gate shows the feature doing its job:</b> expanding the email row reveals a grayed roster preview, not a wall of marketing. The user learns what they'd get — that's the discovery.</p></li>
+          <li><span class="k amber">2</span><p><b>Dismissible and quiet afterwards.</b> "Not now" collapses the row; the badge stays as passive signage. No re-prompting on this page.</p></li>
+          <li><span class="k">3</span><p><b>Finalize is intentionally not badged here.</b> Today "Schedule" is Pro-gated; this design assumes finalize goes free while invites carry conversion. Flagged as open question 1 — if it stays Pro, it gets the same badge-then-gate treatment.</p></li>
+          <li><span class="k amber">4</span><p><b>Duplicate keeps its existing gate:</b> badge in the menu, paywall on click. Prime for recurring organizers — the exact Pro audience.</p></li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 07 EDIT ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>Edit details &amp; settings</h2></div>
+    <p class="sec-sub">
+      Both open as dialogs from the Manage menu (details also from the rail card). Editing stays out of the
+      page flow — the page is for running the poll, not re-authoring it.
+    </p>
+    <div class="duo">
+      <div class="grid2">
+        <div class="frame">
+          <div class="dlg-wrap"><div class="dlg">
+            <h4>Edit details</h4>
+            <p class="sub">Changes are visible to participants immediately</p>
+            <div class="stack" style="gap: 10px;">
+              <div class="field"><label>Title</label><div class="box"><span class="bar d" style="width: 60%;"></span></div></div>
+              <div class="field"><label>Description</label><div class="box" style="height: 52px;"><span class="bar" style="width: 85%;"></span></div></div>
+              <div class="field"><label>Location</label><div class="box"><span class="bar" style="width: 40%;"></span></div></div>
+            </div>
+            <hr class="hr">
+            <div class="row" style="justify-content: flex-end;"><span class="wbtn">Cancel</span><span class="wbtn pri">Save</span></div>
+          </div></div>
+        </div>
+        <div class="frame">
+          <div class="dlg-wrap"><div class="dlg">
+            <h4>Settings</h4>
+            <p class="sub">Control what participants can see and do</p>
+            <div class="stack" style="gap: 12px;">
+              <div class="row between"><span>Hide participants from each other</span><span class="toggle"></span></div>
+              <div class="row between"><span>Hide scores until they vote <span class="k in">1</span></span><span class="toggle on"></span></div>
+              <div class="row between"><span>Disable comments</span><span class="toggle"></span></div>
+              <div class="row between"><span>Require participant email <span class="k in">2</span></span><span class="toggle on"></span></div>
+            </div>
+            <hr class="hr">
+            <div class="row" style="justify-content: flex-end;"><span class="wbtn">Cancel</span><span class="wbtn pri">Save</span></div>
+          </div></div>
+        </div>
+      </div>
+      <aside class="notes">
+        <h3>Annotations</h3>
+        <ol>
+          <li><span class="k">1</span><p><b>Settings copy explains the participant-side effect</b>, one line each — these four toggles are the existing poll settings, unchanged in behavior.</p></li>
+          <li><span class="k">2</span><p><b>Require email matters more now:</b> it's what makes link-responders matchable against the invitee roster. Worth a helper line in hi-fi.</p></li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 08 MOBILE ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><h2>Mobile — checking results from a phone</h2></div>
+    <p class="sec-sub">
+      The organizer's mobile job is monitoring, not authoring. Columns stack (hero → invite → results → comments);
+      the availability grid becomes <strong>option rows with score bars</strong> — tap a row to see who voted for it
+      (today's mobile poll pattern). A sticky action bar keeps Invite and Finalize reachable.
+    </p>
+    <div class="phones">
+      <div class="phone-unit">
+        <div class="phone"><div class="phone-top"><i></i></div><div class="phone-body">
+          <div class="row between"><span>←</span><span class="bar d" style="width: 90px;"></span><span class="wchip"><span class="dot"></span>Live</span></div>
+          <div class="card" style="text-align: center; padding: 16px;">
+            <div style="font-weight: 600;">Your poll is live</div>
+            <p style="color: var(--wf-muted); font-size: 10px; margin: 4px 0 10px;">Share it to start collecting responses</p>
+            <div class="stack" style="gap: 8px;">
+              <span class="wbtn pri" style="justify-content: center;">Copy invite link</span>
+              <span class="wbtn" style="justify-content: center;">Invite by email <span class="wchip pro">Pro</span></span>
+            </div>
+          </div>
+          <div class="card"><div class="row between"><h4>Options · 4</h4><span class="wbtn ghost">＋</span></div></div>
+          <div class="card"><h4>Details</h4><hr class="hr"><span class="bar" style="width: 80%;"></span></div>
+          <div class="sticky-bar"><span class="wbtn pri">Invite</span><span class="wbtn">Manage ▾</span></div>
+        </div></div>
+        <div class="phone-cap">M1 · Fresh</div>
+        <p>Invite hero stacks first; native share sheet behind "Copy invite link" long-press is a hi-fi question.</p>
+      </div>
+      <div class="phone-unit">
+        <div class="phone"><div class="phone-top"><i></i></div><div class="phone-body">
+          <div class="row between"><span>←</span><span class="bar d" style="width: 90px;"></span><span class="wchip"><span class="dot"></span>Live</span></div>
+          <div class="card" style="padding: 10px;">
+            <div class="row between"><span class="score">6 of 8 responded</span><span class="wchip">Leading</span></div>
+            <b style="font-size: 12px;">Fri 26 Sep · 14:00</b>
+            <div class="scorebar" style="margin-top: 6px;"><i style="width: 100%;"></i></div>
+          </div>
+          <div class="card" style="padding: 10px;">
+            <div class="stack" style="gap: 9px;">
+              <div class="row between"><span class="bar d" style="width: 88px;"></span><div class="scorebar" style="width: 70px;"><i style="width: 100%;"></i></div><span class="score">6✓</span><span style="color: var(--wf-muted);">▸</span></div>
+              <div class="row between"><span class="bar d" style="width: 88px;"></span><div class="scorebar" style="width: 70px;"><i style="width: 66%;"></i></div><span class="score">4✓</span><span style="color: var(--wf-muted);">▸</span></div>
+              <div class="row between"><span class="bar d" style="width: 88px;"></span><div class="scorebar" style="width: 70px;"><i style="width: 50%;"></i></div><span class="score">3✓</span><span style="color: var(--wf-muted);">▸</span></div>
+              <div class="row between"><span class="bar d" style="width: 88px;"></span><div class="scorebar" style="width: 70px;"><i style="width: 33%;"></i></div><span class="score">2✓</span><span style="color: var(--wf-muted);">▸</span></div>
+            </div>
+          </div>
+          <div class="card" style="padding: 10px;"><div class="row between"><h4>Participants · 6</h4><span style="color: var(--wf-muted);">▸</span></div></div>
+          <div class="card" style="padding: 10px;"><div class="row between"><h4>Comments · 2</h4><span style="color: var(--wf-muted);">▸</span></div></div>
+          <div class="sticky-bar"><span class="wbtn">Invite</span><span class="wbtn pri">Finalize</span></div>
+        </div></div>
+        <div class="phone-cap">M2 · Active</div>
+        <p>Leading option pinned on top; option rows expand to per-participant votes. No horizontal table on mobile.</p>
+      </div>
+      <div class="phone-unit">
+        <div class="phone"><div class="phone-top"><i></i></div><div class="phone-body">
+          <div style="opacity: 0.45;">
+            <div class="row between"><span>←</span><span class="bar d" style="width: 90px;"></span><span class="wchip">Live</span></div>
+            <div class="card" style="margin-top: 10px; height: 60px;"></div>
+          </div>
+          <div class="card" style="margin-top: auto; border-radius: 14px 14px 8px 8px; box-shadow: 0 -6px 18px rgba(0,0,0,0.08);">
+            <div class="row" style="justify-content: center; margin-bottom: 8px;"><span class="bar" style="width: 32px;"></span></div>
+            <h4>Finalize this poll</h4>
+            <div class="stack" style="gap: 7px; margin-top: 10px;">
+              <div class="row card" style="padding: 8px; border-color: var(--wf-ink);"><span class="radio on"></span><b style="font-size: 11px;">Fri 26 Sep · 14:00</b><span class="score" style="margin-left: auto;">6✓</span></div>
+              <div class="row card" style="padding: 8px;"><span class="radio"></span><b style="font-size: 11px;">Thu 25 Sep · 14:00</b><span class="score" style="margin-left: auto;">4✓</span></div>
+            </div>
+            <div class="row" style="margin-top: 10px;"><span class="checkbox">✓</span><span style="font-size: 10.5px;">Notify participants by email</span></div>
+            <hr class="hr">
+            <span class="wbtn pri" style="width: 100%; justify-content: center;">Finalize</span>
+          </div>
+        </div></div>
+        <div class="phone-cap">M3 · Finalize</div>
+        <p>Bottom sheet, same two-step content as desktop collapsed into one scroll.</p>
+      </div>
+      <div class="phone-unit">
+        <div class="phone"><div class="phone-top"><i></i></div><div class="phone-body">
+          <div class="row between"><span>←</span><span class="bar d" style="width: 90px;"></span><span class="wchip ok"><span class="dot"></span>Finalized</span></div>
+          <div class="card">
+            <h4>Fri 26 Sep · 14:00–15:00</h4>
+            <p style="color: var(--wf-muted); font-size: 10px; margin: 4px 0 8px;">Participants were notified</p>
+            <div class="row"><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="av sm"></span><span class="score">6 going</span></div>
+            <hr class="hr">
+            <div class="stack" style="gap: 8px;">
+              <span class="wbtn pri" style="justify-content: center;">View event</span>
+              <span class="wbtn" style="justify-content: center;">Add to calendar</span>
+            </div>
+          </div>
+          <div class="card" style="padding: 10px;"><div class="row between"><h4>Final results</h4><span style="color: var(--wf-muted);">▸</span></div></div>
+          <div class="card" style="padding: 10px;"><div class="row between"><h4>Comments · 2</h4><span style="color: var(--wf-muted);">▸</span></div></div>
+        </div></div>
+        <div class="phone-cap">M4 · Finalized</div>
+        <p>Event card leads; no sticky bar — the job here is done.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 09 FUTURE ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">09</span><h2>Built for what's next — without designing it</h2></div>
+    <p class="sec-sub">
+      The rail is an append-only stack of people-and-access cards. Collaborators and activity slot in beneath
+      the invite card using the <strong>same row contract the roster already establishes</strong>
+      (avatar · identity · status chip · overflow menu). Nothing in the main column moves when they arrive.
+    </p>
+    <div class="duo">
+      <div class="frame">
+        <div class="frame-body bare" style="display: flex; gap: 20px; align-items: start; flex-wrap: wrap;">
+          <div class="rail" style="width: 232px;">
+            <div class="card"><h4>Invite</h4><hr class="hr"><div class="row"><span class="av sm"></span><span class="bar d" style="width: 80px;"></span><span class="wchip ok" style="margin-left: auto;"><span class="dot"></span>Responded</span></div></div>
+            <div class="slot" style="border-color: var(--pen); color: var(--pen); background: var(--pen-soft);">
+              <span class="t">Collaborators (Pro)</span>
+              <p style="color: inherit;">Same row anatomy: avatar · name · Pending/Active chip · overflow (resend, revoke). Poll-level, capped per poll, occupies no seat.</p>
+            </div>
+            <div class="slot" style="border-color: var(--pen); color: var(--pen); background: var(--pen-soft);">
+              <span class="t">Activity</span>
+              <p style="color: inherit;">Timeline card, read-only. Lowest priority position; can paginate internally.</p>
+            </div>
+          </div>
+          <div style="flex: 1; min-width: 220px; font-size: 12px; color: var(--wf-muted); max-width: 46ch;">
+            <p style="margin-top: 0;"><b style="color: var(--wf-ink);">Also reserved, off-canvas:</b></p>
+            <p>"Shared with me" polls land in the collaborator's own dashboard poll list — no layout impact here.</p>
+            <p>Private polls change the invite card's composition (email form primary, no share link) — a card-internal swap, not a page change.</p>
+            <p style="margin-bottom: 0;">The status chip in the page header has room for a visibility label (Public / Private) later.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        <h3>Why a rail, not tabs</h3>
+        <ol>
+          <li><span class="k">→</span><p>Tabs would hide the roster while the organizer reads results — but "who hasn't answered" and "how are results converging" are the <b>same glance</b>. The rail keeps both visible and gives later features a home that doesn't cost a redesign.</p></li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 10 QUESTIONS ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">10</span><h2>Open questions before hi-fi</h2></div>
+    <div class="qa" style="margin-top: 18px;">
+      <ol>
+        <li><b>Is finalize free or Pro?</b> Today "Schedule" triggers the paywall for free users, but the brief lists finalizing under core lifecycle and the conversion bet has moved to invites. <span class="rec">Recommend</span> free — finalize is the job to be done; gating it competes with the invite gate for the same moment of intent.</li>
+        <li><b>Can a finalized poll be un-finalized?</b> The wireframes treat it as terminal (delete the event to undo). If reopening must exist, it belongs in the Manage menu with a strong confirm.</li>
+        <li><b>Notify participants when options change?</b> Adding/removing options on a live poll may deserve an optional "let participants know" nudge. Not wireframed; needs a product call.</li>
+        <li><b>Roster matching edge case:</b> an invitee who responds via the shared link under a different email shows as Pending forever. Manual "mark as responded" / link-to-participant on the roster row could resolve it — deferred to the invites implementation spec.</li>
+        <li><b>Where does the legacy <span class="mono">/poll/{id}</span> URL go?</b> Owners: redirect here. Guests who managed via session: the Unified Invite project's account prompt is the on-ramp — needs a decided redirect + claim flow before this page ships.</li>
+        <li><b>Add participant vs invite:</b> keeping manual "＋ Add participant" (free) alongside email invites (Pro) risks the old confusion. Mitigation wireframed: they live in different sections with distinct verbs. Validate in usability pass.</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Sources:</b> RAL-1337 design brief · Poll Admin project (decisions of 2026-07-13, collaborators &amp; pricing boundary) · Unified Invite Dialog project (progressive disclosure decision, section composition, tokenized invites) · current implementation in <span class="mono">apps/web/src/features/poll/</span> and the dashboard shell.</p>
+    <p><b>Note:</b> the referenced spec <span class="mono">docs/superpowers/specs/2026-07-14-poll-collaborators-design.md</span> is not present in the repository; roster semantics were taken from the Poll Admin project description (per-invitee token, status mirroring <span class="mono">ScheduledEventInvite</span>).</p>
+  </footer>
+
+</div>
