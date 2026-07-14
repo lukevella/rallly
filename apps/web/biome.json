@@ -13,7 +13,7 @@
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@rallly/database": "Database access is confined to the DAL (RAL-1333): only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
                 },
                 "patterns": [
                   {
@@ -42,7 +42,7 @@
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@rallly/database": "Database access is confined to the DAL (RAL-1333): only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
                 },
                 "patterns": [
                   {
@@ -75,7 +75,7 @@
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@rallly/database": "Database access is confined to the DAL (RAL-1333): only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
                 },
                 "patterns": [
                   {
@@ -108,7 +108,7 @@
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@rallly/database": "Database access is confined to the DAL (RAL-1333): only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
                 },
                 "patterns": [
                   {
@@ -137,7 +137,7 @@
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@rallly/database": "Database access is confined to the DAL (RAL-1333): only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
                 },
                 "patterns": [
                   {
@@ -145,7 +145,7 @@
                       "@/features/user/data",
                       "@/features/api-keys/data"
                     ],
-                    "message": "Session scoped DAL modules derive the actor from cookies and must not be used in API routes (RAL-1333). Webhooks, cron and API key routes authenticate their own way and pass proven scope to parameterized reads."
+                    "message": "Session scoped DAL modules derive the actor from cookies and must not be used in API routes. Webhooks, cron and API key routes authenticate their own way and pass proven scope to parameterized reads."
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
@@ -182,7 +182,7 @@
                       "@/features/user/data",
                       "@/features/api-keys/data"
                     ],
-                    "message": "Session scoped DAL modules derive the actor from cookies and must not be used in API routes (RAL-1333). Webhooks, cron and API key routes authenticate their own way and pass proven scope to parameterized reads."
+                    "message": "Session scoped DAL modules derive the actor from cookies and must not be used in API routes. Webhooks, cron and API key routes authenticate their own way and pass proven scope to parameterized reads."
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
