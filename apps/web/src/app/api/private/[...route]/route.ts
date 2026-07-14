@@ -47,9 +47,6 @@ type Env = {
 
 const app = new Hono<Env>().basePath("/api/private");
 
-// Routes own serialization: DAL results are mapped to the documented shape
-// and parsed through the response schema so contract drift fails loudly
-// instead of silently changing the public API (RAL-1333).
 function toPollResponseBody(poll: {
   id: string;
   title: string;

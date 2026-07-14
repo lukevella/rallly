@@ -68,8 +68,6 @@ import {
 import { RATE_LIMIT_PER_MINUTE } from "../utils/rate-limit";
 import { app } from "./route";
 
-// The response contract is what API clients depend on; a DAL or handler
-// change that drifts from the documented schema must fail here.
 const expectMatchesContract = (
   schema: {
     safeParse: (data: unknown) => { success: boolean; error?: unknown };
