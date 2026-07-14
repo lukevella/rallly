@@ -54,12 +54,30 @@ function fixUnit(unit) {
   return datePart;
 }
 
-export default function (dayjs) {
+export default function (dayjs, { weekStart } = {}) {
   const locale = (m, c) => (c ? m.locale(c) : m);
+
+  function firstOfWeek() {
+    if (weekStart !== undefined) {
+      return weekStart;
+    }
+    const data = dayjs.localeData();
+    return data ? data.firstDayOfWeek() : 0;
+  }
+
+  // dayjs' own startOf("week") uses the global locale's week start, so week
+  // boundaries are computed manually from the configured weekStart.
+  function startOfWeek(date) {
+    const day = dayjs(date).startOf("day");
+    return day.subtract((day.day() - firstOfWeek() + 7) % 7, "day");
+  }
 
   /*** BEGIN localized date arithmetic methods with dayjs ***/
   function defineComparators(a, b, unit) {
     const datePart = fixUnit(unit);
+    if (datePart === "week") {
+      return [startOfWeek(a), startOfWeek(b), "day"];
+    }
     const dtA = datePart ? dayjs(a).startOf(datePart) : dayjs(a);
     const dtB = datePart ? dayjs(b).startOf(datePart) : dayjs(b);
     return [dtA, dtB, datePart];
@@ -68,6 +86,9 @@ export default function (dayjs) {
   // biome-ignore lint/style/useDefaultParameterLast: Fix this later
   function startOf(date = null, unit) {
     const datePart = fixUnit(unit);
+    if (datePart === "week") {
+      return startOfWeek(date).toDate();
+    }
     if (datePart) {
       return dayjs(date).startOf(datePart).toDate();
     }
@@ -77,6 +98,9 @@ export default function (dayjs) {
   // biome-ignore lint/style/useDefaultParameterLast: Fix this later
   function endOf(date = null, unit) {
     const datePart = fixUnit(unit);
+    if (datePart === "week") {
+      return startOfWeek(date).add(6, "day").endOf("day").toDate();
+    }
     if (datePart) {
       return dayjs(date).endOf(datePart).toDate();
     }
@@ -184,17 +208,12 @@ export default function (dayjs) {
     return dt.minutes();
   }
 
-  function firstOfWeek() {
-    const data = dayjs.localeData();
-    return data ? data.firstDayOfWeek() : 0;
-  }
-
   function firstVisibleDay(date) {
-    return dayjs(date).startOf("month").startOf("week").toDate();
+    return startOfWeek(dayjs(date).startOf("month")).toDate();
   }
 
   function lastVisibleDay(date) {
-    return dayjs(date).endOf("month").endOf("week").toDate();
+    return endOf(dayjs(date).endOf("month").toDate(), "week");
   }
 
   function visibleDays(date) {

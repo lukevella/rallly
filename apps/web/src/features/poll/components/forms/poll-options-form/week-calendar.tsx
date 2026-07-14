@@ -2,7 +2,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./rbc-overrides.css";
 
 import { XIcon } from "lucide-react";
-import type React from "react";
+import React from "react";
 import type { CalendarProps } from "react-big-calendar";
 import { Calendar } from "react-big-calendar";
 import { createBreakpoint } from "react-use";
@@ -18,8 +18,6 @@ import DateNavigationToolbar from "./date-navigation-toolbar";
 import dayjsLocalizer from "./dayjs-localizer";
 import type { DateTimeOption, DateTimePickerProps } from "./types";
 import { formatDateWithoutTz } from "./utils";
-
-const localizer = dayjsLocalizer(dayjs);
 
 const useDevice = createBreakpoint({ desktop: 720, mobile: 360 });
 
@@ -37,8 +35,13 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   duration = 60,
   onChangeDuration,
 }) => {
-  const { locale, timeFormat } = useDateTimeConfig();
+  const { locale, timeFormat, weekStart } = useDateTimeConfig();
   const { formatDuration } = useDateTime();
+
+  const localizer = React.useMemo(
+    () => dayjsLocalizer(dayjs, { weekStart }),
+    [weekStart],
+  );
 
   // The form works in naive local times; format in the system zone.
   const formatTime = (time: Date) =>
