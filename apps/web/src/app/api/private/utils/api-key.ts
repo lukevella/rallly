@@ -11,6 +11,7 @@ import {
   isLegacyApiKeyHash,
   verifyApiKey,
 } from "@/features/api-keys/utils";
+import type { AuthorizedSpaceId } from "@/features/space/types";
 import { isSelfHosted } from "@/lib/constants";
 import { apiError } from "./poll";
 
@@ -80,7 +81,7 @@ const verifyKey = bearerAuth({
     }
 
     c.set("apiAuth", {
-      spaceId,
+      spaceId: spaceId as AuthorizedSpaceId,
       spaceOwnerId,
       spaceTier: isSelfHosted ? ("pro" as const) : spaceTier,
       apiKeyId,

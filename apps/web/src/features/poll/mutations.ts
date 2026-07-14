@@ -2,6 +2,7 @@ import "server-only";
 
 import { prisma } from "@rallly/database";
 import { nanoid } from "@rallly/utils/nanoid";
+import type { AuthorizedSpaceId } from "@/features/space/types";
 
 export type PollOption = {
   startTime: Date;
@@ -19,7 +20,7 @@ export type CreatePollParams = {
   hideScores?: boolean;
   disableComments?: boolean;
   options: PollOption[];
-  spaceId: string;
+  spaceId: AuthorizedSpaceId;
 };
 
 export const createPoll = async ({
@@ -85,7 +86,10 @@ export const createPoll = async ({
   return poll;
 };
 
-export const deletePoll = async (pollId: string, spaceId: string) => {
+export const deletePoll = async (
+  pollId: string,
+  spaceId: AuthorizedSpaceId,
+) => {
   const poll = await prisma.poll.findFirst({
     where: {
       id: pollId,

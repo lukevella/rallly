@@ -12,6 +12,7 @@ import {
 } from "hono-openapi";
 import { getPollParticipants, getPollResults } from "@/features/poll/data";
 import { createPoll, deletePoll } from "@/features/poll/mutations";
+import type { AuthorizedSpaceId } from "@/features/space/types";
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import {
   createPollInputSchema,
@@ -36,7 +37,7 @@ import { wideEvent } from "../utils/wide-event";
 type Env = {
   Variables: {
     apiAuth: {
-      spaceId: string;
+      spaceId: AuthorizedSpaceId;
       spaceOwnerId: string;
       spaceTier: SpaceTier;
       apiKeyId: string;
