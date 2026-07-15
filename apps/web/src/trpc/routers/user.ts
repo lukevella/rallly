@@ -103,12 +103,4 @@ export const user = router({
         },
       });
     }),
-  updateLocale: privateProcedure
-    .input(z.object({ locale: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      await prisma.user.update({
-        where: { id: ctx.user.id },
-        data: { locale: input.locale },
-      });
-    }),
 });

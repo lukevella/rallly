@@ -1,12 +1,14 @@
 "use server";
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { supportedLngs } from "@rallly/languages";
 import { headers } from "next/headers";
 import * as z from "zod";
 import { banUser, unbanUser, updateUserRole } from "@/features/user/mutations";
 import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
 import { AppError } from "@/lib/errors/app-error";
+import { setLocaleCookie } from "@/lib/locale/cookie";
 import {
   adminActionClient,
   authActionClient,
@@ -43,6 +45,10 @@ export const updateLocalizationAction = authActionClient
   .metadata({ actionName: "update_localization" })
   .inputSchema(
     z.object({
+      locale: z
+        .string()
+        .refine((value) => supportedLngs.includes(value))
+        .optional(),
       timeZone: timezoneSchema.optional(),
       timeFormat: timeFormatSchema.optional(),
       weekStart: weekStartSchema.optional(),
@@ -51,12 +57,17 @@ export const updateLocalizationAction = authActionClient
   .action(async ({ parsedInput }) => {
     await authLib.api.updateUser({
       body: {
+        locale: parsedInput.locale,
         timeZone: parsedInput.timeZone,
         timeFormat: parsedInput.timeFormat,
         weekStart: parsedInput.weekStart,
       },
       headers: await headers(),
     });
+
+    if (parsedInput.locale) {
+      await setLocaleCookie(parsedInput.locale);
+    }
   });
 
 export const getAvatarUploadUrlAction = authActionClient
