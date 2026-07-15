@@ -33,7 +33,7 @@ import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
 import { redis } from "@/lib/kv";
-import { setLocaleCookie } from "@/lib/locale/cookie";
+import { deleteLocaleCookie, setLocaleCookie } from "@/lib/locale/cookie";
 import { posthog } from "@/lib/posthog";
 import { getValueByPath } from "@/lib/utils/get-value-by-path";
 
@@ -334,6 +334,27 @@ export const authLib = betterAuth({
       }
     }),
     after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === "/sign-out") {
+        const returned = ctx.context.returned as
+          | { success?: boolean }
+          | undefined;
+
+        // The locale cookie projects the signed-out user's preference;
+        // revert to accept-language for whoever uses this device next.
+        // Best-effort: a failure must not break sign-out.
+        if (returned?.success === true) {
+          try {
+            await deleteLocaleCookie();
+          } catch (error) {
+            logger.error(
+              { error },
+              "Failed to delete locale cookie on sign-out",
+            );
+          }
+        }
+        return;
+      }
+
       if (
         ctx.path !== "/email-otp/request-email-change" &&
         ctx.path !== "/email-otp/change-email"
