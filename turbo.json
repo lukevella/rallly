@@ -39,7 +39,8 @@
     "dev": {
       "dependsOn": ["^db:generate"],
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "passThroughEnv": ["DEV_DOMAIN"]
     },
     "start": {
       "cache": false,

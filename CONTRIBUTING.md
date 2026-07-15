@@ -89,6 +89,14 @@ The following instructions are for running the project locally for development.
    pnpm dev
    ```
 
+   By default the app is served at `https://web.rallly.test`. To run it at a different domain (e.g. to run multiple dev servers from separate worktrees at the same time), set `DEV_DOMAIN` to the full domain you want:
+
+   ```bash
+   DEV_DOMAIN=web-myfeature.rallly.test pnpm dev
+   ```
+
+   This registers the domain with portless, allows it as a dev origin in Next.js, and overrides `NEXT_PUBLIC_BASE_URL` so links, assets, and auth callbacks point at the right host. Note that `DEV_DOMAIN` must be set in your shell — setting it in `.env` has no effect because the dev script reads it before Next.js loads env files.
+
 ## Translations 🌐
 
 To contribute translations, please check out our [guide for translators](https://support.rallly.co/contribute/translations) which contains all the information you need to get started.
