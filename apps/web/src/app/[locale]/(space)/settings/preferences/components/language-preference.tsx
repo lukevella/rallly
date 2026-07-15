@@ -38,6 +38,11 @@ export const LanguagePreference = ({
     resolver: zodResolver(formSchema),
   });
 
+  // The saved preference can differ from the locale the app is rendered in
+  // (e.g. the cookie was reset on this device). Saving must be possible in
+  // that state even though the field matches its default.
+  const selectedLanguage = form.watch("language");
+
   return (
     <Form {...form}>
       <form
@@ -70,7 +75,7 @@ export const LanguagePreference = ({
         />
         <div className="mt-6 flex flex-wrap gap-2">
           <Button
-            disabled={!form.formState.isDirty}
+            disabled={!form.formState.isDirty && selectedLanguage === locale}
             loading={form.formState.isSubmitting}
             type="submit"
           >
