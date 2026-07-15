@@ -33,6 +33,7 @@ import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
 import { redis } from "@/lib/kv";
+import { setLocaleCookie } from "@/lib/locale/cookie";
 import { posthog } from "@/lib/posthog";
 import { getValueByPath } from "@/lib/utils/get-value-by-path";
 
@@ -458,7 +459,20 @@ export const authLib = betterAuth({
     },
     session: {
       create: {
-        after: async (session) => {
+        after: async (session, ctx) => {
+          // Adopt the user's saved language on this device. Must happen
+          // before the response is sent (not in `after`), and only in a
+          // request context where cookies can be written.
+          if (ctx) {
+            const user = await prisma.user.findUnique({
+              where: { id: session.userId },
+              select: { locale: true },
+            });
+            if (user?.locale) {
+              await setLocaleCookie(user.locale);
+            }
+          }
+
           after(async () => {
             const user = await prisma.user
               .update({
