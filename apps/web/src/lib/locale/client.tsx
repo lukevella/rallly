@@ -4,7 +4,10 @@ import Cookies from "js-cookie";
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
 import { useTranslation } from "@/i18n/client";
-import { LOCALE_COOKIE_NAME } from "@/lib/locale/constants";
+import {
+  LOCALE_COOKIE_NAME,
+  LOCALE_COOKIE_OPTIONS,
+} from "@/lib/locale/constants";
 
 export function LocaleSync({ userLocale }: { userLocale?: string }) {
   const { locale } = useLocale();
@@ -34,22 +37,14 @@ export function LocaleSync({ userLocale }: { userLocale?: string }) {
   return null;
 }
 
-export function setLocaleCookie(locale: string) {
-  Cookies.set(LOCALE_COOKIE_NAME, locale, {
-    path: "/",
-    domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
-  });
+function setLocaleCookie(locale: string) {
+  Cookies.set(LOCALE_COOKIE_NAME, locale, LOCALE_COOKIE_OPTIONS);
 }
 
 export function useLocale() {
   const { locale } = useParams();
-  const router = useRouter();
 
   return {
     locale: locale as string,
-    changeLocale: (locale: string) => {
-      setLocaleCookie(locale);
-      router.refresh();
-    },
   };
 }

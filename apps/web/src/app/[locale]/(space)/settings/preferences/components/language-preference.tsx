@@ -15,9 +15,10 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { LanguageSelect } from "@/components/language-selector";
+import { updateLocalizationAction } from "@/features/user/actions";
 import { Trans } from "@/i18n/client";
 import { useLocale } from "@/lib/locale/client";
-import { trpc } from "@/trpc/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 const formSchema = z.object({
   language: z.string(),
@@ -28,12 +29,8 @@ export const LanguagePreference = ({
 }: {
   defaultValue?: string;
 }) => {
-  const { locale, changeLocale } = useLocale();
-  const updateLocale = trpc.user.updateLocale.useMutation({
-    onSuccess: (_data, variables) => {
-      changeLocale(variables.locale);
-    },
-  });
+  const { locale } = useLocale();
+  const updateLocalization = useSafeAction(updateLocalizationAction);
   const form = useForm({
     defaultValues: {
       language: defaultValue ?? locale,
@@ -45,7 +42,12 @@ export const LanguagePreference = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
-          await updateLocale.mutateAsync({ locale: data.language });
+          const result = await updateLocalization.executeAsync({
+            locale: data.language,
+          });
+          if (!result?.serverError && !result?.validationErrors) {
+            form.reset({ language: data.language });
+          }
         })}
       >
         <FormField
