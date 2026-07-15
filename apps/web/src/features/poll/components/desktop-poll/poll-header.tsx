@@ -148,7 +148,7 @@ const PollHeader = () => {
               key={option.optionId}
               scope="col"
               style={{ minWidth: 80, top: scoreRowTop }}
-              className="sticky z-20 border-b border-l bg-background pb-2.5 align-top"
+              className="sticky z-20 border-b border-l bg-background px-2 pb-2.5 align-top"
             >
               <div className="flex flex-col items-center gap-3">
                 {option.type === "timeSlot" ? (
@@ -158,7 +158,7 @@ const PollHeader = () => {
                     duration={option.duration}
                   />
                 ) : (
-                  <p className="font-normal text-muted-foreground text-xs">
+                  <p className="whitespace-nowrap font-normal text-muted-foreground text-xs">
                     <Trans i18nKey="allDay" defaults="All-Day" />
                   </p>
                 )}
