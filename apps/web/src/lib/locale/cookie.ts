@@ -12,17 +12,11 @@ export async function getLocaleCookie() {
   return locale && supportedLngs.includes(locale) ? locale : undefined;
 }
 
+// Server-action/RSC contexts only. Never call from better-auth hooks:
+// mutating Next's cookie store during a route-handler request makes Next
+// rebuild the handler's Set-Cookie headers through a name-keyed map,
+// dropping duplicate-name cookies (see the locale writes in lib/auth.ts).
 export async function setLocaleCookie(locale: string) {
   const cookieStore = await cookies();
   cookieStore.set(LOCALE_COOKIE_NAME, locale, LOCALE_COOKIE_OPTIONS);
-}
-
-export async function deleteLocaleCookie() {
-  const cookieStore = await cookies();
-  // Expire via set() with the same attributes — a deletion only takes
-  // effect when path and domain match the original cookie.
-  cookieStore.set(LOCALE_COOKIE_NAME, "", {
-    ...LOCALE_COOKIE_OPTIONS,
-    maxAge: 0,
-  });
 }
