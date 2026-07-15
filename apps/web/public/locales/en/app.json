@@ -297,6 +297,7 @@
   "featureNameExtendedPollLifetime": "Extended Poll Lifetime",
   "featureNameSchedule": "Schedule Poll",
   "feedback": "Feedback",
+  "feedbackDialogEnterFeedback": "Enter your feedback",
   "fileTooLarge": "File too large",
   "fileTooLargeDescription": "Please upload a file smaller than 2MB.",
   "forgotPassword": "Forgot Password?",

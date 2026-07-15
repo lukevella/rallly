@@ -15,13 +15,14 @@ import { Textarea } from "@rallly/ui/textarea";
 import { CheckCircle2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { submitFeedbackAction } from "../actions";
 import { isFeedbackEnabled } from "../constants";
 import { feedbackSchema } from "../schema";
 
 export function FeedbackDialog(props: DialogProps) {
+  const { t } = useTranslation();
   const submitFeedback = useSafeAction(submitFeedbackAction);
   const form = useForm({
     resolver: zodResolver(feedbackSchema),
@@ -64,7 +65,9 @@ export function FeedbackDialog(props: DialogProps) {
                         className="w-full"
                         rows={5}
                         {...field}
-                        placeholder="Enter your feedback"
+                        placeholder={t("feedbackDialogEnterFeedback", {
+                          defaultValue: "Enter your feedback",
+                        })}
                       />
                       <FormMessage />
                     </FormItem>
