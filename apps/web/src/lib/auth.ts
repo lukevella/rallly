@@ -462,14 +462,23 @@ export const authLib = betterAuth({
         after: async (session, ctx) => {
           // Adopt the user's saved language on this device. Must happen
           // before the response is sent (not in `after`), and only in a
-          // request context where cookies can be written.
+          // request context where cookies can be written. Best-effort:
+          // a failure here must not break a sign-in whose session is
+          // already persisted.
           if (ctx) {
-            const user = await prisma.user.findUnique({
-              where: { id: session.userId },
-              select: { locale: true },
-            });
-            if (user?.locale) {
-              await setLocaleCookie(user.locale);
+            try {
+              const user = await prisma.user.findUnique({
+                where: { id: session.userId },
+                select: { locale: true },
+              });
+              if (user?.locale) {
+                await setLocaleCookie(user.locale);
+              }
+            } catch (error) {
+              logger.error(
+                { error, userId: session.userId },
+                "Failed to set locale cookie on sign-in",
+              );
             }
           }
 
