@@ -6,7 +6,6 @@ import { SpaceProvider } from "@/features/space/client";
 import { TimeZoneMismatchDialog } from "@/features/user/components/timezone-mismatch-dialog";
 import { getLocale } from "@/i18n/server/get-locale";
 import { DateTimeProvider } from "@/lib/datetime/client";
-import { LocaleSync } from "@/lib/locale/client";
 import { getPathname } from "@/lib/pathname";
 import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
@@ -34,7 +33,6 @@ export default async function Layout({
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
       <SessionRefresher />
-      <LocaleSync userLocale={user?.locale} />
       <TimeZoneMismatchDialog homeTimeZone={user?.timeZone} />
       <DateTimeProvider
         locale={locale}

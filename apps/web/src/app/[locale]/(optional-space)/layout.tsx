@@ -5,7 +5,6 @@ import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { getLocale } from "@/i18n/server/get-locale";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
-import { LocaleSync } from "@/lib/locale/client";
 import {
   createPrivateSSRHelper,
   createPublicSSRHelper,
@@ -30,7 +29,6 @@ export default async function Layout({
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
       <SessionRefresher />
-      <LocaleSync userLocale={user?.locale ?? undefined} />
       <DeviceDateTimeProvider
         locale={locale}
         timeZone={user?.timeZone ?? deviceDateTimeConfig.timeZone ?? undefined}
