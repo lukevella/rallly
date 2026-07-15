@@ -33,7 +33,10 @@ import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
 import { redis } from "@/lib/kv";
-import { deleteLocaleCookie, setLocaleCookie } from "@/lib/locale/cookie";
+import {
+  LOCALE_COOKIE_NAME,
+  LOCALE_COOKIE_OPTIONS,
+} from "@/lib/locale/constants";
 import { posthog } from "@/lib/posthog";
 import { getValueByPath } from "@/lib/utils/get-value-by-path";
 
@@ -334,6 +337,14 @@ export const authLib = betterAuth({
       }
     }),
     after: createAuthMiddleware(async (ctx) => {
+      // Locale cookie writes go through better-auth's response
+      // (ctx.setCookie), never next/headers: mutating Next's cookie store
+      // makes Next rebuild this handler's Set-Cookie headers through a
+      // name-keyed map, which collapses the duplicate-name session cookies
+      // that crossSubDomainCookies + hostOnlyCookieCleanup produce and
+      // drops the real one. And it must happen in this hook rather than a
+      // database hook: create.after runs after the transaction, once the
+      // response cookies can no longer be changed.
       if (ctx.path === "/sign-out") {
         const returned = ctx.context.returned as
           | { success?: boolean }
@@ -341,18 +352,26 @@ export const authLib = betterAuth({
 
         // The locale cookie projects the signed-out user's preference;
         // revert to accept-language for whoever uses this device next.
-        // Best-effort: a failure must not break sign-out.
         if (returned?.success === true) {
-          try {
-            await deleteLocaleCookie();
-          } catch (error) {
-            logger.error(
-              { error },
-              "Failed to delete locale cookie on sign-out",
-            );
-          }
+          ctx.setCookie(LOCALE_COOKIE_NAME, "", {
+            ...LOCALE_COOKIE_OPTIONS,
+            maxAge: 0,
+          });
         }
         return;
+      }
+
+      // A new session in the response means the user just signed in:
+      // adopt their saved language on this device.
+      const newSessionUser = ctx.context.newSession?.user as
+        | { locale?: string | null }
+        | undefined;
+      if (newSessionUser?.locale) {
+        ctx.setCookie(
+          LOCALE_COOKIE_NAME,
+          newSessionUser.locale,
+          LOCALE_COOKIE_OPTIONS,
+        );
       }
 
       if (
@@ -480,29 +499,7 @@ export const authLib = betterAuth({
     },
     session: {
       create: {
-        after: async (session, ctx) => {
-          // Adopt the user's saved language on this device. Must happen
-          // before the response is sent (not in `after`), and only in a
-          // request context where cookies can be written. Best-effort:
-          // a failure here must not break a sign-in whose session is
-          // already persisted.
-          if (ctx) {
-            try {
-              const user = await prisma.user.findUnique({
-                where: { id: session.userId },
-                select: { locale: true },
-              });
-              if (user?.locale) {
-                await setLocaleCookie(user.locale);
-              }
-            } catch (error) {
-              logger.error(
-                { error, userId: session.userId },
-                "Failed to set locale cookie on sign-in",
-              );
-            }
-          }
-
+        after: async (session) => {
           after(async () => {
             const user = await prisma.user
               .update({
