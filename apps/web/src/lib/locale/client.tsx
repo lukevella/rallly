@@ -37,19 +37,14 @@ export function LocaleSync({ userLocale }: { userLocale?: string }) {
   return null;
 }
 
-export function setLocaleCookie(locale: string) {
+function setLocaleCookie(locale: string) {
   Cookies.set(LOCALE_COOKIE_NAME, locale, LOCALE_COOKIE_OPTIONS);
 }
 
 export function useLocale() {
   const { locale } = useParams();
-  const router = useRouter();
 
   return {
     locale: locale as string,
-    changeLocale: (locale: string) => {
-      setLocaleCookie(locale);
-      router.refresh();
-    },
   };
 }
