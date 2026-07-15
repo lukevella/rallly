@@ -15,25 +15,27 @@ import { Textarea } from "@rallly/ui/textarea";
 import { CheckCircle2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-import { Trans } from "@/i18n/client";
-import { isSelfHosted } from "@/lib/constants";
-import { trpc } from "@/trpc/client";
+import { Trans, useTranslation } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
+import { submitFeedbackAction } from "../actions";
+import { isFeedbackEnabled } from "../constants";
 import { feedbackSchema } from "../schema";
 
 export function FeedbackDialog(props: DialogProps) {
-  const submitFeedback = trpc.user.submitFeedback.useMutation();
+  const { t } = useTranslation();
+  const submitFeedback = useSafeAction(submitFeedbackAction);
   const form = useForm({
     resolver: zodResolver(feedbackSchema),
   });
 
-  if (isSelfHosted) {
+  if (!isFeedbackEnabled) {
     return null;
   }
 
   return (
     <Dialog {...props}>
       <DialogContent>
-        {!form.formState.isSubmitSuccessful ? (
+        {!submitFeedback.hasSucceeded ? (
           <>
             <DialogHeader>
               <DialogTitle>
@@ -49,9 +51,9 @@ export function FeedbackDialog(props: DialogProps) {
 
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit((data) =>
-                  submitFeedback.mutateAsync(data),
-                )}
+                onSubmit={form.handleSubmit(async (data) => {
+                  await submitFeedback.executeAsync(data);
+                })}
               >
                 <FormField
                   control={form.control}
@@ -63,7 +65,9 @@ export function FeedbackDialog(props: DialogProps) {
                         className="w-full"
                         rows={5}
                         {...field}
-                        placeholder="Enter your feedback"
+                        placeholder={t("feedbackDialogEnterFeedback", {
+                          defaultValue: "Enter your feedback",
+                        })}
                       />
                       <FormMessage />
                     </FormItem>

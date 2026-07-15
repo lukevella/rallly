@@ -1,20 +1,13 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
-import { sendRawEmail } from "@rallly/emails";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
-import { feedbackSchema } from "@/features/feedback/schema";
 import { defaultNotificationPreferences } from "@/features/notifications/constants";
 import { getNotificationPreferences } from "@/features/notifications/data";
 import { activityEventTypes } from "@/features/notifications/schema";
 import { defineAbilityFor } from "@/features/user/ability";
 import { posthog } from "@/lib/posthog";
-import {
-  createRateLimitMiddleware,
-  privateProcedure,
-  publicProcedure,
-  router,
-} from "../trpc";
+import { privateProcedure, publicProcedure, router } from "../trpc";
 
 export const user = router({
   getMe: publicProcedure.query(async ({ ctx }) => {
@@ -108,22 +101,6 @@ export const user = router({
           eventType: input.eventType,
           enabled: input.enabled,
         },
-      });
-    }),
-  submitFeedback: privateProcedure
-    .use(createRateLimitMiddleware("submit_feedback", 5, "1 h"))
-    .input(feedbackSchema)
-    .mutation(async ({ input, ctx }) => {
-      sendRawEmail({
-        to: "feedback@rallly.co",
-        replyTo: ctx.user.email ?? undefined,
-        subject: "Feedback",
-        text: `User: ${ctx.user.name} (${ctx.user.email})\n\n${input.content}`,
-      });
-
-      posthog()?.capture({
-        event: "feedback_send",
-        distinctId: ctx.user.id,
       });
     }),
 });
