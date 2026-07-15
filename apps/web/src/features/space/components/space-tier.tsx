@@ -7,9 +7,9 @@ import type { SpaceTier } from "@/features/space/schema";
 export const SpaceTierLabel = ({ tier }: { tier: SpaceTier }) => {
   switch (tier) {
     case "hobby":
-      return <span className="text-muted-foreground">{PLAN_NAMES.HOBBY}</span>;
+      return <span className="text-foreground">{PLAN_NAMES.HOBBY}</span>;
     case "pro":
-      return <span className="text-muted-foreground">{PLAN_NAMES.PRO}</span>;
+      return <span className="text-foreground">{PLAN_NAMES.PRO}</span>;
   }
 };
 
@@ -23,8 +23,8 @@ export const SpaceTierIcon = ({ tier }: { tier: SpaceTier }) => {
       );
     case "pro":
       return (
-        <div className="inline-flex size-10 items-center justify-center rounded-md border border-indigo-600/10 bg-indigo-600/10 text-xs">
-          <SparklesIcon className="size-5 text-indigo-600" />
+        <div className="inline-flex size-10 items-center justify-center rounded-md border border-indigo-600/10 bg-indigo-600/10 text-xs dark:border-indigo-400/10 dark:bg-indigo-400/10">
+          <SparklesIcon className="size-5 text-indigo-600 dark:text-indigo-400" />
         </div>
       );
   }
