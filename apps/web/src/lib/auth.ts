@@ -33,6 +33,7 @@ import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
 import { redis } from "@/lib/kv";
+import { deleteLocaleCookie, setLocaleCookie } from "@/lib/locale/cookie";
 import { posthog } from "@/lib/posthog";
 import { getValueByPath } from "@/lib/utils/get-value-by-path";
 
@@ -333,6 +334,27 @@ export const authLib = betterAuth({
       }
     }),
     after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === "/sign-out") {
+        const returned = ctx.context.returned as
+          | { success?: boolean }
+          | undefined;
+
+        // The locale cookie projects the signed-out user's preference;
+        // revert to accept-language for whoever uses this device next.
+        // Best-effort: a failure must not break sign-out.
+        if (returned?.success === true) {
+          try {
+            await deleteLocaleCookie();
+          } catch (error) {
+            logger.error(
+              { error },
+              "Failed to delete locale cookie on sign-out",
+            );
+          }
+        }
+        return;
+      }
+
       if (
         ctx.path !== "/email-otp/request-email-change" &&
         ctx.path !== "/email-otp/change-email"
@@ -458,7 +480,29 @@ export const authLib = betterAuth({
     },
     session: {
       create: {
-        after: async (session) => {
+        after: async (session, ctx) => {
+          // Adopt the user's saved language on this device. Must happen
+          // before the response is sent (not in `after`), and only in a
+          // request context where cookies can be written. Best-effort:
+          // a failure here must not break a sign-in whose session is
+          // already persisted.
+          if (ctx) {
+            try {
+              const user = await prisma.user.findUnique({
+                where: { id: session.userId },
+                select: { locale: true },
+              });
+              if (user?.locale) {
+                await setLocaleCookie(user.locale);
+              }
+            } catch (error) {
+              logger.error(
+                { error, userId: session.userId },
+                "Failed to set locale cookie on sign-in",
+              );
+            }
+          }
+
           after(async () => {
             const user = await prisma.user
               .update({

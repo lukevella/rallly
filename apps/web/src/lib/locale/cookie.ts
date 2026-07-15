@@ -16,3 +16,13 @@ export async function setLocaleCookie(locale: string) {
   const cookieStore = await cookies();
   cookieStore.set(LOCALE_COOKIE_NAME, locale, LOCALE_COOKIE_OPTIONS);
 }
+
+export async function deleteLocaleCookie() {
+  const cookieStore = await cookies();
+  // Expire via set() with the same attributes — a deletion only takes
+  // effect when path and domain match the original cookie.
+  cookieStore.set(LOCALE_COOKIE_NAME, "", {
+    ...LOCALE_COOKIE_OPTIONS,
+    maxAge: 0,
+  });
+}
