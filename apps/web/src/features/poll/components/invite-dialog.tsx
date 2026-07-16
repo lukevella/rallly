@@ -86,6 +86,7 @@ export const InviteDialog = () => {
               <Link
                 target="_blank"
                 href={`/invite/${poll.id}`}
+                prefetch={false}
                 className={buttonVariants()}
               >
                 <ArrowUpRightIcon className="size-4" />
