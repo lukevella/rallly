@@ -230,6 +230,7 @@ export const CreatePoll: React.FunctionComponent = () => {
 
             <Link
               href={`/invite/${createdPollId}`}
+              prefetch={false}
               className={buttonVariants()}
               onClick={() => {
                 posthog?.capture("poll_creation:view_button_click");

@@ -34,6 +34,7 @@ const GoToApp = () => {
             <Link
               className="inline-flex items-center gap-2 hover:underline"
               href={`/poll/${poll.id}`}
+              prefetch={false}
             >
               <Trans i18nKey="manage" defaults="Manage" />
               <ArrowUpRightIcon className="size-4" />
