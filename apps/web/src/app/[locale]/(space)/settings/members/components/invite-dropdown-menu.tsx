@@ -63,9 +63,9 @@ export function InviteDropdownMenu({ invite }: { invite: SpaceMemberInvite }) {
               cancelInviteDialog.trigger();
             }}
             disabled={!canCancelInvite}
-            className="text-destructive"
+            variant="destructive"
           >
-            <XIcon className="size-4" />
+            <XIcon />
             <Trans i18nKey="cancelInvite" defaults="Cancel invite" />
           </DropdownMenuItem>
         </DropdownMenuContent>

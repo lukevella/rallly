@@ -145,24 +145,24 @@ export function UserRow({
                 </DropdownMenuItem>
               ) : (
                 <DropdownMenuItem
-                  className="text-destructive"
+                  variant="destructive"
                   onClick={() => {
                     banDialog.trigger();
                   }}
                   disabled={!canBan}
                 >
-                  <BanIcon className="size-4" />
+                  <BanIcon />
                   <Trans i18nKey="banUser" defaults="Ban user" />
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem
-                className="text-destructive"
+                variant="destructive"
                 onClick={async () => {
                   deleteDialog.trigger();
                 }}
                 disabled={!canDelete}
               >
-                <TrashIcon className="size-4" />
+                <TrashIcon />
                 <Trans i18nKey="delete" defaults="Delete" />
               </DropdownMenuItem>
             </DropdownMenuContent>

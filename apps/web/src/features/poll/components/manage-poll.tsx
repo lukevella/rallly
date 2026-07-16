@@ -5,11 +5,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuItemIconLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import {
   CalendarCheck2Icon,
   ChevronDownIcon,
@@ -80,9 +78,7 @@ function OpenCloseToggle() {
           );
         }}
       >
-        <Icon>
-          <PlayIcon />
-        </Icon>
+        <PlayIcon />
         <Trans i18nKey="reopenPoll" defaults="Reopen" />
       </DropdownMenuItem>
     );
@@ -106,9 +102,7 @@ function OpenCloseToggle() {
           );
         }}
       >
-        <Icon>
-          <CircleStopIcon />
-        </Icon>
+        <CircleStopIcon />
         <Trans i18nKey="closePoll" defaults="Close" />
       </DropdownMenuItem>
     );
@@ -141,23 +135,20 @@ const ManagePoll: React.FunctionComponent<{
           <DropdownMenuItem
             render={<Link href={`/poll/${poll.id}/edit-details`} />}
           >
-            <DropdownMenuItemIconLabel icon={PencilIcon}>
-              <Trans i18nKey="editDetails" />
-            </DropdownMenuItemIconLabel>
+            <PencilIcon />
+            <Trans i18nKey="editDetails" />
           </DropdownMenuItem>
           <DropdownMenuItem
             render={<Link href={`/poll/${poll.id}/edit-options`} />}
           >
-            <DropdownMenuItemIconLabel icon={TableIcon}>
-              <Trans i18nKey="editOptions" />
-            </DropdownMenuItemIconLabel>
+            <TableIcon />
+            <Trans i18nKey="editOptions" />
           </DropdownMenuItem>
           <DropdownMenuItem
             render={<Link href={`/poll/${poll.id}/edit-settings`} />}
           >
-            <DropdownMenuItemIconLabel icon={Settings2Icon}>
-              <Trans i18nKey="editSettings" defaults="Edit settings" />
-            </DropdownMenuItemIconLabel>
+            <Settings2Icon />
+            <Trans i18nKey="editSettings" defaults="Edit settings" />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           {poll.status === "scheduled" || poll.status === "canceled" ? null : (
@@ -177,9 +168,7 @@ const ManagePoll: React.FunctionComponent<{
                   }
                 }}
               >
-                <Icon>
-                  <CalendarCheck2Icon />
-                </Icon>
+                <CalendarCheck2Icon />
                 <Trans i18nKey="schedulePoll" defaults="Schedule" />
                 {isFree ? <ProBadge /> : null}
               </DropdownMenuItem>
@@ -188,9 +177,8 @@ const ManagePoll: React.FunctionComponent<{
           )}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={exportToCsv}>
-            <DropdownMenuItemIconLabel icon={DownloadIcon}>
-              <Trans i18nKey="exportToCsv" />
-            </DropdownMenuItemIconLabel>
+            <DownloadIcon />
+            <Trans i18nKey="exportToCsv" />
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
@@ -206,10 +194,9 @@ const ManagePoll: React.FunctionComponent<{
               }
             }}
           >
-            <DropdownMenuItemIconLabel icon={CopyIcon}>
-              <Trans i18nKey="duplicate" defaults="Duplicate" />
-              {isFree ? <ProBadge /> : null}
-            </DropdownMenuItemIconLabel>
+            <CopyIcon />
+            <Trans i18nKey="duplicate" defaults="Duplicate" />
+            {isFree ? <ProBadge /> : null}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -218,7 +205,7 @@ const ManagePoll: React.FunctionComponent<{
               setShowDeletePollDialog(true);
             }}
           >
-            <TrashIcon className="size-4 opacity-75" />
+            <TrashIcon />
             <Trans i18nKey="delete" />
           </DropdownMenuItem>
         </DropdownMenuContent>
