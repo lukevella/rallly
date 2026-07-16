@@ -107,9 +107,9 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
               removeMemberDialog.trigger();
             }}
             disabled={!canDeleteMember}
-            className="text-destructive"
+            variant="destructive"
           >
-            <XIcon className="size-4" />
+            <XIcon />
             <Trans i18nKey="removeMember" defaults="Remove member" />
           </DropdownMenuItem>
         </DropdownMenuContent>

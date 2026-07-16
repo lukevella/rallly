@@ -222,7 +222,7 @@ function DiscussionInner() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">
                               <DropdownMenuItem
-                                className="text-destructive"
+                                variant="destructive"
                                 onClick={() => {
                                   deleteComment.mutate({
                                     commentId: comment.id,
@@ -230,7 +230,7 @@ function DiscussionInner() {
                                   });
                                 }}
                               >
-                                <TrashIcon className="size-4" />
+                                <TrashIcon />
                                 <Trans i18nKey="delete" />
                               </DropdownMenuItem>
                             </DropdownMenuContent>

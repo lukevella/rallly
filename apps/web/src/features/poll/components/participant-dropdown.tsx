@@ -12,7 +12,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuItemIconLabel,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -88,20 +87,18 @@ export const ParticipantDropdown = ({
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={onEdit}>
-            <DropdownMenuItemIconLabel icon={PencilIcon}>
-              <Trans i18nKey="editVotes" />
-            </DropdownMenuItemIconLabel>
+            <PencilIcon />
+            <Trans i18nKey="editVotes" />
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsChangeNameModalVisible(true)}>
-            <DropdownMenuItemIconLabel icon={TagIcon}>
-              <Trans i18nKey="changeName" />
-            </DropdownMenuItemIconLabel>
+            <TagIcon />
+            <Trans i18nKey="changeName" />
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="text-destructive"
+            variant="destructive"
             onClick={() => setIsDeleteParticipantModalVisible(true)}
           >
-            <TrashIcon className="size-4" />
+            <TrashIcon />
             <Trans i18nKey="delete" />
           </DropdownMenuItem>
         </DropdownMenuContent>

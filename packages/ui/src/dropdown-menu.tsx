@@ -52,12 +52,13 @@ function DropdownMenuContent({
 }
 
 const dropdownMenuItemVariants = cva(
-  "relative flex cursor-default select-none items-center gap-x-2.5 rounded-lg px-2 py-1.5 text-sm outline-hidden data-disabled:pointer-events-none data-highlighted:bg-popover-accent data-disabled:opacity-50 data-highlighted:ring-1 data-highlighted:ring-menu-item-outline data-highlighted:ring-inset",
+  "relative flex cursor-default select-none items-center gap-x-2.5 rounded-lg px-2 py-1.5 text-sm outline-hidden data-disabled:pointer-events-none data-highlighted:bg-popover-accent data-disabled:opacity-50 data-highlighted:ring-1 data-highlighted:ring-menu-item-outline data-highlighted:ring-inset [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "",
-        destructive: "text-destructive",
+        default: "[&_svg:not([class*='text-'])]:text-muted-foreground",
+        destructive:
+          "text-destructive [&_svg:not([class*='text-'])]:text-destructive",
       },
     },
     defaultVariants: {
@@ -193,26 +194,10 @@ function DropdownMenuSubContent({
   );
 }
 
-function DropdownMenuItemIconLabel({
-  icon: IconComponent,
-  children,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  children: React.ReactNode;
-}) {
-  return (
-    <span className="flex items-center gap-2.5">
-      <IconComponent className="size-4 text-muted-foreground" />
-      {children}
-    </span>
-  );
-}
-
 export {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuItemIconLabel,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,

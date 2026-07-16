@@ -63,9 +63,9 @@ export function RevokeApiKeyButton({
             onClick={() => {
               revokeDialog.trigger();
             }}
-            className="text-destructive"
+            variant="destructive"
           >
-            <BanIcon className="size-4" />
+            <BanIcon />
             <Trans i18nKey="revoke" defaults="Revoke" />
           </DropdownMenuItem>
         </DropdownMenuContent>
