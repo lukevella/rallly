@@ -10,7 +10,7 @@ import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { hasPollAdminAccess } from "@/features/poll/data";
-import { posthog } from "@/lib/posthog";
+import { track } from "@/lib/posthog";
 import { getGravatarUrl } from "@/lib/utils/gravatar";
 import {
   createRateLimitMiddleware,
@@ -210,14 +210,10 @@ export const participants = router({
         },
       });
 
-      posthog()?.capture({
-        distinctId: actor.id,
+      track(actor, {
         event: "poll_response_delete",
         properties: {
           participant_id: participant.id,
-          // Guests are transient and rarely convert, so don't create a
-          // PostHog person profile for them (keeps them as anonymous events).
-          $process_person_profile: !actor.isGuest,
         },
         groups: {
           poll: participant.pollId,
@@ -351,16 +347,12 @@ export const participants = router({
           }),
         );
 
-        posthog()?.capture({
-          distinctId: ctx.user.id,
+        track(ctx.user, {
           event: "poll_response_submit",
           properties: {
             participant_id: participant.id,
             has_email: !!email,
             total_responses: totalResponses,
-            // Guests are transient and rarely convert, so don't create a
-            // PostHog person profile for them (keeps them as anonymous events).
-            $process_person_profile: !ctx.user.isGuest,
           },
           groups: {
             poll: pollId,
@@ -474,14 +466,8 @@ export const participants = router({
         });
       });
 
-      posthog()?.capture({
-        distinctId: actor.id,
+      track(actor, {
         event: "poll_response_update",
-        properties: {
-          // Guests are transient and rarely convert, so don't create a
-          // PostHog person profile for them (keeps them as anonymous events).
-          $process_person_profile: !actor.isGuest,
-        },
         groups: {
           poll: pollId,
         },

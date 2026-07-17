@@ -37,7 +37,7 @@ import {
   LOCALE_COOKIE_NAME,
   LOCALE_COOKIE_OPTIONS,
 } from "@/lib/locale/constants";
-import { posthog } from "@/lib/posthog";
+import { identifyGroup, track } from "@/lib/posthog";
 import { getValueByPath } from "@/lib/utils/get-value-by-path";
 
 const kv = redis;
@@ -126,10 +126,8 @@ export const authLib = betterAuth({
       });
     },
     onPasswordReset: async ({ user }) => {
-      posthog()?.capture({
-        distinctId: user.id,
-        event: "password_reset",
-      });
+      // Guests have no credentials, so this is always an identified user.
+      track({ id: user.id, isGuest: false }, { event: "password_reset" });
     },
   },
   emailVerification: {
@@ -403,14 +401,17 @@ export const authLib = betterAuth({
           }
 
           if (path === "/email-otp/request-email-change") {
-            posthog()?.capture({
-              event: "account_email_change_request",
-              distinctId: session.user.id,
-              properties: {
-                fromEmail: session.user.email,
-                toEmail: newEmail,
+            // Email changes are only available to registered users.
+            track(
+              { id: session.user.id, isGuest: false },
+              {
+                event: "account_email_change_request",
+                properties: {
+                  fromEmail: session.user.email,
+                  toEmail: newEmail,
+                },
               },
-            });
+            );
             return;
           }
 
@@ -432,15 +433,17 @@ export const authLib = betterAuth({
             }
           }
 
-          posthog()?.capture({
-            event: "account_email_change_complete",
-            distinctId: session.user.id,
-            properties: {
-              $set: {
-                email: newEmail,
+          track(
+            { id: session.user.id, isGuest: false },
+            {
+              event: "account_email_change_complete",
+              properties: {
+                $set: {
+                  email: newEmail,
+                },
               },
             },
-          });
+          );
         } catch (error) {
           logger.error({ error }, "Failed to run email change side effects");
         }
@@ -468,7 +471,7 @@ export const authLib = betterAuth({
               ownerId: user.id,
             });
 
-            posthog()?.groupIdentify({
+            identifyGroup({
               groupType: "space",
               groupKey: space.id,
               properties: {
@@ -480,20 +483,22 @@ export const authLib = betterAuth({
             });
           }
 
-          posthog()?.capture({
-            distinctId: user.id,
-            event: "register",
-            properties: {
-              method: user.lastLoginMethod,
-              $set: {
-                name: user.name,
-                email: user.email,
-                tier: "hobby",
-                timeZone: user.timeZone ?? undefined,
-                locale: user.locale ?? undefined,
+          track(
+            { id: user.id, isGuest: false },
+            {
+              event: "register",
+              properties: {
+                method: user.lastLoginMethod,
+                $set: {
+                  name: user.name,
+                  email: user.email,
+                  tier: "hobby",
+                  timeZone: user.timeZone ?? undefined,
+                  locale: user.locale ?? undefined,
+                },
               },
             },
-          });
+          );
         },
       },
     },
@@ -511,11 +516,13 @@ export const authLib = betterAuth({
 
             // Anonymous users shouldn't trigger login events or create person profiles.
             if (user && !user.isAnonymous) {
-              posthog()?.capture({
-                distinctId: session.userId,
-                event: "login",
-                properties: { method: user.lastLoginMethod },
-              });
+              track(
+                { id: session.userId, isGuest: false },
+                {
+                  event: "login",
+                  properties: { method: user.lastLoginMethod },
+                },
+              );
             }
           });
         },

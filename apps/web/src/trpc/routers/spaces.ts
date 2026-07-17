@@ -24,7 +24,7 @@ import {
   toDBRole,
 } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
-import { posthog } from "@/lib/posthog";
+import { identifyGroup, track } from "@/lib/posthog";
 import {
   deleteImageFromS3,
   getImageUploadUrl,
@@ -164,7 +164,7 @@ export const spaces = router({
         ownerId: ctx.user.id,
       });
 
-      posthog()?.groupIdentify({
+      identifyGroup({
         groupType: "space",
         groupKey: space.id,
         properties: {
@@ -175,8 +175,7 @@ export const spaces = router({
         },
       });
 
-      posthog()?.capture({
-        distinctId: ctx.user.id,
+      track(ctx.user, {
         event: "space_create",
         properties: {
           space_name: space.name,
@@ -218,8 +217,7 @@ export const spaces = router({
       where: { id: ctx.space.id },
     });
 
-    posthog()?.capture({
-      distinctId: ctx.user.id,
+    track(ctx.user, {
       event: "space_delete",
       properties: {
         space_id: ctx.space.id,
@@ -264,8 +262,7 @@ export const spaces = router({
         },
       });
 
-      posthog()?.capture({
-        distinctId: ctx.user.id,
+      track(ctx.user, {
         event: "space_update",
         properties: {
           space_name: input.name,
@@ -303,8 +300,7 @@ export const spaces = router({
         data: { showBranding: input.showBranding },
       });
 
-      posthog()?.capture({
-        distinctId: ctx.user.id,
+      track(ctx.user, {
         event: "space_update_show_branding",
         properties: {
           showBranding: input.showBranding,
@@ -432,8 +428,7 @@ export const spaces = router({
         };
       }
 
-      posthog()?.capture({
-        distinctId: ctx.user.id,
+      track(ctx.user, {
         event: "space_member_invite",
         properties: {
           role: input.role,
@@ -506,8 +501,7 @@ export const spaces = router({
         logger.warn({ error }, "Failed to update user's active space");
       }
 
-      posthog()?.capture({
-        distinctId: ctx.user.id,
+      track(ctx.user, {
         event: "space_member_join",
         properties: {
           member_count: memberCount,
@@ -550,8 +544,7 @@ export const spaces = router({
         where: { spaceId: member.spaceId },
       });
 
-      posthog()?.capture({
-        distinctId: ctx.user.id,
+      track(ctx.user, {
         event: "space_member_remove",
         properties: {
           member_count: memberCount,
@@ -684,8 +677,7 @@ export const spaces = router({
       where: { spaceId: ctx.space.id },
     });
 
-    posthog()?.capture({
-      distinctId: ctx.user.id,
+    track(ctx.user, {
       event: "space_member_leave",
       properties: {
         member_count: memberCount,
@@ -763,8 +755,7 @@ export const spaces = router({
         where: { spaceId: input.spaceId },
       });
 
-      posthog()?.capture({
-        distinctId: ctx.user.id,
+      track(ctx.user, {
         event: "space_member_leave",
         properties: {
           member_count: memberCount,

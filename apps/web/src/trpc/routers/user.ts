@@ -6,7 +6,7 @@ import { defaultNotificationPreferences } from "@/features/notifications/constan
 import { getNotificationPreferences } from "@/features/notifications/data";
 import { activityEventTypes } from "@/features/notifications/schema";
 import { defineAbilityFor } from "@/features/user/ability";
-import { posthog } from "@/lib/posthog";
+import { track } from "@/lib/posthog";
 import { privateProcedure, publicProcedure, router } from "../trpc";
 
 export const user = router({
@@ -94,9 +94,8 @@ export const user = router({
         },
       });
 
-      posthog()?.capture({
+      track(ctx.user, {
         event: "notification_preference_update",
-        distinctId: ctx.user.id,
         properties: {
           eventType: input.eventType,
           enabled: input.enabled,
