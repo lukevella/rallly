@@ -234,10 +234,9 @@ async function verifyCanary() {
   }
 
   if (!canary) {
-    console.info(
-      "⚠️  No guest profile with events found — nothing to verify against.",
+    throw new Error(
+      "No guest profile with events found — the canary could not run, so deletion behavior is UNVERIFIED. Check the guest filter before running --apply.",
     );
-    return;
   }
 
   console.info(

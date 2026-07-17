@@ -77,61 +77,65 @@ function toGroupProperties(
 }
 
 (async function backfillSpaceGroupProperties() {
-  if (!API_KEY || !process.env.DATABASE_URL) {
+  const apply = process.argv.slice(2).includes("--apply");
+
+  if (!process.env.DATABASE_URL || (apply && !API_KEY)) {
     console.error(
-      "❌ NEXT_PUBLIC_POSTHOG_API_KEY and DATABASE_URL must be set — see packages/posthog/.env.sample",
+      apply
+        ? "❌ NEXT_PUBLIC_POSTHOG_API_KEY and DATABASE_URL must be set — see packages/posthog/.env.sample"
+        : "❌ DATABASE_URL must be set — see packages/posthog/.env.sample",
     );
     process.exit(1);
   }
 
-  const apply = process.argv.slice(2).includes("--apply");
   console.info(
     apply
       ? "⚠️  APPLY mode — group properties will be sent to PostHog.\n"
       : "🔍 DRY RUN — nothing will be sent. Pass --apply to send.\n",
   );
 
-  const posthog = apply
-    ? new PostHog(API_KEY, { host: API_HOST, flushAt: 100 })
-    : undefined;
+  const posthog =
+    apply && API_KEY
+      ? new PostHog(API_KEY, { host: API_HOST, flushAt: 100 })
+      : undefined;
 
   let processed = 0;
   let cursor: string | undefined;
 
-  for (;;) {
-    const page = await fetchSpacePage(cursor);
-    if (page.length === 0) {
-      break;
-    }
-    cursor = page[page.length - 1].id;
+  try {
+    for (;;) {
+      const page = await fetchSpacePage(cursor);
+      if (page.length === 0) {
+        break;
+      }
+      cursor = page[page.length - 1].id;
 
-    for (const space of page) {
-      const properties = toGroupProperties(space);
+      for (const space of page) {
+        const properties = toGroupProperties(space);
 
-      if (!apply && processed < SAMPLE_SIZE) {
-        console.info(`• ${space.id} ${JSON.stringify(properties)}`);
+        if (!apply && processed < SAMPLE_SIZE) {
+          console.info(`• ${space.id} ${JSON.stringify(properties)}`);
+        }
+
+        posthog?.groupIdentify({
+          groupType: "space",
+          groupKey: space.id,
+          properties,
+          distinctId: BACKFILL_DISTINCT_ID,
+        });
+        processed++;
       }
 
-      posthog?.groupIdentify({
-        groupType: "space",
-        groupKey: space.id,
-        properties,
-        distinctId: BACKFILL_DISTINCT_ID,
-      });
-      processed++;
+      if (apply) {
+        console.info(`• Sent ${processed} so far…`);
+      }
     }
-
-    if (apply) {
-      console.info(`• Sent ${processed} so far…`);
-    }
-  }
-
-  if (posthog) {
+  } finally {
     // shutdown flushes the queued events — without this the tail of the
-    // batch is dropped when the process exits
-    await posthog.shutdown();
+    // batch is dropped when the process exits, including on errors
+    await posthog?.shutdown();
+    await prisma.$disconnect();
   }
-  await prisma.$disconnect();
 
   console.info(
     apply
