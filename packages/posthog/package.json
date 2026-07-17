@@ -8,6 +8,8 @@
     "./utils": "./src/utils.ts"
   },
   "scripts": {
+    "backfill-space-group-properties": "dotenv -e .env -- pnpx tsx ./src/scripts/backfill-space-group-properties.ts",
+    "purge-guest-profiles": "dotenv -e .env -- pnpx tsx ./src/scripts/purge-guest-profiles.ts",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -17,6 +19,7 @@
     "react": "19.2.6"
   },
   "devDependencies": {
+    "@rallly/database": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
     "@types/js-cookie": "^3.0.1",
     "@types/node": "^24.1.0",
