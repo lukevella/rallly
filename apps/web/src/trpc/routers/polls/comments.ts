@@ -15,7 +15,7 @@ import {
   requireUserMiddleware,
   router,
 } from "../../trpc";
-import { resolveUserId } from "./utils";
+import { resolveActor } from "./utils";
 
 const logger = createLogger("comments");
 
@@ -171,6 +171,9 @@ export const comments = router({
         event: "poll_comment_add",
         properties: {
           is_guest: ctx.user.isGuest,
+          // Guests are transient and rarely convert, so don't create a
+          // PostHog person profile for them (keeps them as anonymous events).
+          $process_person_profile: !ctx.user.isGuest,
         },
         groups: {
           poll: pollId,
@@ -187,7 +190,7 @@ export const comments = router({
       }),
     )
     .mutation(async ({ input: { commentId, token }, ctx }) => {
-      const userId = await resolveUserId(token, ctx.user);
+      const actor = await resolveActor(token, ctx.user);
 
       const comment = await prisma.comment.findUnique({
         where: { id: commentId },
@@ -201,9 +204,9 @@ export const comments = router({
         });
       }
 
-      const isAuthor = comment.userId === userId;
+      const isAuthor = comment.userId === actor.id;
 
-      if (!isAuthor && !(await hasPollAdminAccess(comment.pollId, userId))) {
+      if (!isAuthor && !(await hasPollAdminAccess(comment.pollId, actor.id))) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You are not allowed to delete this comment",
@@ -217,14 +220,17 @@ export const comments = router({
       });
 
       // Track comment deletion analytics
-      if (comment) {
-        posthog()?.capture({
-          distinctId: userId,
-          event: "poll_comment_delete",
-          groups: {
-            poll: comment.pollId,
-          },
-        });
-      }
+      posthog()?.capture({
+        distinctId: actor.id,
+        event: "poll_comment_delete",
+        properties: {
+          // Guests are transient and rarely convert, so don't create a
+          // PostHog person profile for them (keeps them as anonymous events).
+          $process_person_profile: !actor.isGuest,
+        },
+        groups: {
+          poll: comment.pollId,
+        },
+      });
     }),
 });

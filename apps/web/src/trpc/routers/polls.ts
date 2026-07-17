@@ -165,6 +165,9 @@ export const polls = router({
             action: "create_poll",
             verdict: moderation.verdict,
             reason: moderation.reason,
+            // Guests are transient and rarely convert, so don't create a
+            // PostHog person profile for them.
+            $process_person_profile: !ctx.user.isGuest,
           },
         });
       }
@@ -293,6 +296,9 @@ export const polls = router({
           hideScores: poll.hideScores,
           requireParticipantEmail: poll.requireParticipantEmail,
           isGuest: ctx.user.isGuest,
+          // Guests are transient and rarely convert, so don't create a
+          // PostHog person profile for them (keeps them as anonymous events).
+          $process_person_profile: !ctx.user.isGuest,
         },
         groups: {
           poll: poll.id,
@@ -358,6 +364,9 @@ export const polls = router({
             action: "update_poll",
             verdict: moderation.verdict,
             reason: moderation.reason,
+            // Guests are transient and rarely convert, so don't create a
+            // PostHog person profile for them.
+            $process_person_profile: !ctx.user.isGuest,
           },
         });
       }
@@ -511,6 +520,9 @@ export const polls = router({
             has_location: !!updatedPoll.location,
             has_description: !!updatedPoll.description,
             is_guest: ctx.user.isGuest,
+            // Guests are transient and rarely convert, so don't create a
+            // PostHog person profile for them (keeps them as anonymous events).
+            $process_person_profile: !ctx.user.isGuest,
           },
           groups: {
             poll: pollId,
@@ -524,6 +536,9 @@ export const polls = router({
           distinctId: ctx.user.id,
           properties: {
             option_count: updatedPoll._count.options,
+            // Guests are transient and rarely convert, so don't create a
+            // PostHog person profile for them (keeps them as anonymous events).
+            $process_person_profile: !ctx.user.isGuest,
           },
           groups: {
             poll: pollId,
@@ -540,6 +555,9 @@ export const polls = router({
             hide_participants: !!updatedPoll.hideParticipants,
             hide_scores: !!updatedPoll.hideScores,
             require_participant_email: !!updatedPoll.requireParticipantEmail,
+            // Guests are transient and rarely convert, so don't create a
+            // PostHog person profile for them (keeps them as anonymous events).
+            $process_person_profile: !ctx.user.isGuest,
           },
           groups: {
             poll: pollId,
@@ -575,6 +593,11 @@ export const polls = router({
       posthog()?.capture({
         event: "poll_delete",
         distinctId: ctx.user.id,
+        properties: {
+          // Guests are transient and rarely convert, so don't create a
+          // PostHog person profile for them (keeps them as anonymous events).
+          $process_person_profile: !ctx.user.isGuest,
+        },
         groups: {
           poll: pollId,
         },
@@ -1168,6 +1191,11 @@ export const polls = router({
       posthog()?.capture({
         event: "poll_close",
         distinctId: ctx.user.id,
+        properties: {
+          // Guests are transient and rarely convert, so don't create a
+          // PostHog person profile for them (keeps them as anonymous events).
+          $process_person_profile: !ctx.user.isGuest,
+        },
         groups: {
           poll: input.pollId,
         },

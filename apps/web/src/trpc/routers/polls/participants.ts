@@ -20,7 +20,7 @@ import {
 } from "../../trpc";
 import {
   createParticipantEditToken,
-  resolveUserId,
+  resolveActor,
   tryResolveUserId,
 } from "./utils";
 
@@ -196,9 +196,9 @@ export const participants = router({
       }),
     )
     .mutation(async ({ input: { participantId, token }, ctx }) => {
-      const userId = await resolveUserId(token, ctx.user);
+      const actor = await resolveActor(token, ctx.user);
 
-      const participant = await canModifyParticipant(participantId, userId);
+      const participant = await canModifyParticipant(participantId, actor.id);
 
       await prisma.participant.update({
         where: {
@@ -211,10 +211,13 @@ export const participants = router({
       });
 
       posthog()?.capture({
-        distinctId: userId,
+        distinctId: actor.id,
         event: "poll_response_delete",
         properties: {
           participant_id: participant.id,
+          // Guests are transient and rarely convert, so don't create a
+          // PostHog person profile for them (keeps them as anonymous events).
+          $process_person_profile: !actor.isGuest,
         },
         groups: {
           poll: participant.pollId,
@@ -355,6 +358,9 @@ export const participants = router({
             participant_id: participant.id,
             has_email: !!email,
             total_responses: totalResponses,
+            // Guests are transient and rarely convert, so don't create a
+            // PostHog person profile for them (keeps them as anonymous events).
+            $process_person_profile: !ctx.user.isGuest,
           },
           groups: {
             poll: pollId,
@@ -373,7 +379,7 @@ export const participants = router({
       }),
     )
     .mutation(async ({ input: { participantId, newName, token }, ctx }) => {
-      const userId = await resolveUserId(token, ctx.user);
+      const { id: userId } = await resolveActor(token, ctx.user);
 
       await canModifyParticipant(participantId, userId);
 
@@ -402,11 +408,11 @@ export const participants = router({
       }),
     )
     .mutation(async ({ input: { participantId, votes, token }, ctx }) => {
-      const userId = await resolveUserId(token, ctx.user);
+      const actor = await resolveActor(token, ctx.user);
 
       const existingParticipant = await canModifyParticipant(
         participantId,
-        userId,
+        actor.id,
       );
 
       const pollId = existingParticipant.pollId;
@@ -469,8 +475,13 @@ export const participants = router({
       });
 
       posthog()?.capture({
-        distinctId: userId,
+        distinctId: actor.id,
         event: "poll_response_update",
+        properties: {
+          // Guests are transient and rarely convert, so don't create a
+          // PostHog person profile for them (keeps them as anonymous events).
+          $process_person_profile: !actor.isGuest,
+        },
         groups: {
           poll: pollId,
         },
