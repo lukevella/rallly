@@ -8,6 +8,7 @@
     "./utils": "./src/utils.ts"
   },
   "scripts": {
+    "purge-guest-profiles": "dotenv -e .env -- pnpx tsx ./src/scripts/purge-guest-profiles.ts",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
