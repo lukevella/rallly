@@ -300,6 +300,14 @@ export const spaces = router({
         data: { showBranding: input.showBranding },
       });
 
+      identifyGroup({
+        groupType: "space",
+        groupKey: ctx.space.id,
+        properties: {
+          custom_branding_enabled: input.showBranding,
+        },
+      });
+
       track(ctx.user, {
         event: "space_update_show_branding",
         properties: {
