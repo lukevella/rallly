@@ -304,7 +304,7 @@ export const spaces = router({
         groupType: "space",
         groupKey: ctx.space.id,
         properties: {
-          custom_branding_enabled: input.showBranding,
+          custom_branding: input.showBranding,
         },
       });
 
