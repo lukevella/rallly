@@ -476,8 +476,8 @@ export const authLib = betterAuth({
               groupKey: space.id,
               properties: {
                 name: space.name,
-                memberCount: 1,
-                seatCount: 1,
+                member_count: 1,
+                seat_count: 1,
                 tier: "hobby",
               },
             });

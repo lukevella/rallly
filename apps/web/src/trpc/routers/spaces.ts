@@ -169,8 +169,8 @@ export const spaces = router({
         groupKey: space.id,
         properties: {
           name: space.name,
-          memberCount: 1,
-          seatCount: 1,
+          member_count: 1,
+          seat_count: 1,
           tier: "hobby",
         },
       });
@@ -298,6 +298,14 @@ export const spaces = router({
       await prisma.space.update({
         where: { id: ctx.space.id },
         data: { showBranding: input.showBranding },
+      });
+
+      identifyGroup({
+        groupType: "space",
+        groupKey: ctx.space.id,
+        properties: {
+          custom_branding: input.showBranding,
+        },
       });
 
       track(ctx.user, {
