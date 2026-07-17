@@ -13,7 +13,11 @@
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
                 },
                 "patterns": [
                   {
@@ -42,7 +46,11 @@
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
                 },
                 "patterns": [
                   {
@@ -75,7 +83,11 @@
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
                 },
                 "patterns": [
                   {
@@ -108,7 +120,11 @@
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
                 },
                 "patterns": [
                   {
@@ -137,7 +153,11 @@
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
                 },
                 "patterns": [
                   {
@@ -174,7 +194,11 @@
               "options": {
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
                 },
                 "patterns": [
                   {
@@ -214,7 +238,11 @@
               "options": {
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
                 },
                 "patterns": [
                   {
@@ -270,7 +298,11 @@
               "options": {
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
                 },
                 "patterns": [
                   {
@@ -298,7 +330,11 @@
               "options": {
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
                 },
                 "patterns": [
                   {
@@ -334,7 +370,11 @@
               "options": {
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
                 },
                 "patterns": [
                   {
@@ -368,8 +408,44 @@
               "options": {
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/features/auth/mutations.ts",
+        "src/features/billing/webhook/mutations.ts",
+        "src/features/api-keys/data.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                },
+                "patterns": [
+                  {
+                    "group": ["@/app", "@/app/**"],
+                    "message": "Only files inside app/ may import from app/. Routes are thin adapters; shared code belongs in features/, components/, or lib/. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  },
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                  }
+                ]
               }
             }
           }

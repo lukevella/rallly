@@ -17,6 +17,47 @@ export function posthog() {
   return instance;
 }
 
+/**
+ * Capture a product event attributed to the acting user.
+ *
+ * This is the only sanctioned way to capture user-attributed events on the
+ * server — importing the raw `posthog` client is lint-restricted (see
+ * noRestrictedImports in apps/web/biome.json) so the guest decision cannot
+ * be forgotten at individual capture sites. Guests are captured as anonymous
+ * events (no person profile — they are transient and rarely convert);
+ * identified users get person processing as usual. Group analytics is
+ * unaffected either way.
+ */
+export function track(
+  user: { id: string; isGuest: boolean },
+  event: {
+    event: string;
+    properties?: Record<string, unknown>;
+    groups?: Record<string, string>;
+  },
+) {
+  posthog()?.capture({
+    ...event,
+    distinctId: user.id,
+    properties: {
+      ...event.properties,
+      $process_person_profile: !user.isGuest,
+    },
+  });
+}
+
+/**
+ * Update properties on a group (e.g. poll, space). Groups are independent
+ * of person profiles, so no guest handling is involved.
+ */
+export function identifyGroup(group: {
+  groupType: string;
+  groupKey: string;
+  properties?: Record<string, unknown>;
+}) {
+  posthog()?.groupIdentify(group);
+}
+
 export function withPostHog(
   handler: (req: NextRequest) => Promise<Response>,
 ): (req: NextRequest) => Promise<Response> {

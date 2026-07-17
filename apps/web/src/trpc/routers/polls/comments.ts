@@ -8,7 +8,7 @@ import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { hasPollAdminAccess } from "@/features/poll/data";
-import { posthog } from "@/lib/posthog";
+import { track } from "@/lib/posthog";
 import {
   createRateLimitMiddleware,
   publicProcedure,
@@ -166,14 +166,10 @@ export const comments = router({
       }
 
       // Track comment addition analytics
-      posthog()?.capture({
-        distinctId: ctx.user.id,
+      track(ctx.user, {
         event: "poll_comment_add",
         properties: {
           is_guest: ctx.user.isGuest,
-          // Guests are transient and rarely convert, so don't create a
-          // PostHog person profile for them (keeps them as anonymous events).
-          $process_person_profile: !ctx.user.isGuest,
         },
         groups: {
           poll: pollId,
@@ -220,14 +216,8 @@ export const comments = router({
       });
 
       // Track comment deletion analytics
-      posthog()?.capture({
-        distinctId: actor.id,
+      track(actor, {
         event: "poll_comment_delete",
-        properties: {
-          // Guests are transient and rarely convert, so don't create a
-          // PostHog person profile for them (keeps them as anonymous events).
-          $process_person_profile: !actor.isGuest,
-        },
         groups: {
           poll: comment.pollId,
         },

@@ -1,7 +1,7 @@
 import "server-only";
 
 import { sendRawEmail } from "@rallly/emails";
-import { posthog } from "@/lib/posthog";
+import { track } from "@/lib/posthog";
 
 export async function submitFeedback({
   userId,
@@ -21,8 +21,6 @@ export async function submitFeedback({
     text: `User: ${userName} (${userEmail})\n\n${content}`,
   });
 
-  posthog()?.capture({
-    event: "feedback_send",
-    distinctId: userId,
-  });
+  // Feedback is only reachable through authActionClient, which rejects guests.
+  track({ id: userId, isGuest: false }, { event: "feedback_send" });
 }

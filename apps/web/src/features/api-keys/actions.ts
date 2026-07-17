@@ -7,7 +7,7 @@ import {
   revokeApiKeySchema,
 } from "@/features/api-keys/schema";
 import { AppError } from "@/lib/errors/app-error";
-import { posthog } from "@/lib/posthog";
+import { track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
 
 // The UI never offers these actions to users without API access, so a
@@ -50,8 +50,7 @@ export const createApiKeyAction = authActionClient
     });
 
     if (result.ok) {
-      posthog()?.capture({
-        distinctId: ctx.user.id,
+      track(ctx.user, {
         event: "developer:api_key_create",
         groups: {
           space: space.id,
@@ -70,8 +69,7 @@ export const revokeApiKeyAction = authActionClient
 
     await revokeApiKey({ spaceId: space.id, id: parsedInput.id });
 
-    posthog()?.capture({
-      distinctId: ctx.user.id,
+    track(ctx.user, {
       event: "developer:api_key_revoke",
       groups: {
         space: space.id,

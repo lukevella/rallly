@@ -4,7 +4,7 @@ import { prisma } from "@rallly/database";
 import * as z from "zod";
 import { setActiveSpace } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors/app-error";
-import { posthog } from "@/lib/posthog";
+import { track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
 
 export const setActiveSpaceAction = authActionClient
@@ -32,8 +32,7 @@ export const setActiveSpaceAction = authActionClient
       spaceId: parsedInput.spaceId,
     });
 
-    posthog()?.capture({
-      distinctId: ctx.user.id,
+    track(ctx.user, {
       event: "space_set_active",
       properties: {
         space_id: parsedInput.spaceId,
