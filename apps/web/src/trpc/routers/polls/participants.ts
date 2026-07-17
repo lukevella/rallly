@@ -210,15 +210,18 @@ export const participants = router({
         },
       });
 
-      track(actor, {
-        event: "poll_response_delete",
-        properties: {
-          participant_id: participant.id,
+      track(
+        { ...actor, anonymousDistinctId: ctx.anonymousDistinctId },
+        {
+          event: "poll_response_delete",
+          properties: {
+            participant_id: participant.id,
+          },
+          groups: {
+            poll: participant.pollId,
+          },
         },
-        groups: {
-          poll: participant.pollId,
-        },
-      });
+      );
     }),
   add: publicProcedure
     .use(createRateLimitMiddleware("add_participant", 10, "1 h"))
@@ -347,17 +350,20 @@ export const participants = router({
           }),
         );
 
-        track(ctx.user, {
-          event: "poll_response_submit",
-          properties: {
-            participant_id: participant.id,
-            has_email: !!email,
-            total_responses: totalResponses,
+        track(
+          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+          {
+            event: "poll_response_submit",
+            properties: {
+              participant_id: participant.id,
+              has_email: !!email,
+              total_responses: totalResponses,
+            },
+            groups: {
+              poll: pollId,
+            },
           },
-          groups: {
-            poll: pollId,
-          },
-        });
+        );
 
         return createParticipantFullDTO(participant);
       },
@@ -466,12 +472,15 @@ export const participants = router({
         });
       });
 
-      track(actor, {
-        event: "poll_response_update",
-        groups: {
-          poll: pollId,
+      track(
+        { ...actor, anonymousDistinctId: ctx.anonymousDistinctId },
+        {
+          event: "poll_response_update",
+          groups: {
+            poll: pollId,
+          },
         },
-      });
+      );
 
       return createParticipantFullDTO(participant);
     }),

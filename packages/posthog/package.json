@@ -8,6 +8,7 @@
     "./utils": "./src/utils.ts"
   },
   "scripts": {
+    "test:unit": "vitest run",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "@rallly/tsconfig": "workspace:*",
     "@types/js-cookie": "^3.0.1",
     "@types/node": "^24.1.0",
-    "@types/react": "19.2.13"
+    "@types/react": "19.2.13",
+    "vitest": "^4.0.16"
   }
 }
