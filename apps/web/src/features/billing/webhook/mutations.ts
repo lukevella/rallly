@@ -285,7 +285,7 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
     groupType: "space",
     groupKey: spaceId,
     properties: {
-      seatCount: quantity,
+      seat_count: quantity,
       tier,
     },
   });
@@ -465,7 +465,7 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     groupType: "space",
     groupKey: spaceId,
     properties: {
-      seatCount: quantity,
+      seat_count: quantity,
       tier,
     },
   });
