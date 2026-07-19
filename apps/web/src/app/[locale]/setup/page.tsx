@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Logo } from "@/features/branding/components/logo";
-import { CreateSpaceForm } from "@/features/setup/components/create-space-form";
-import { SetupNameForm } from "@/features/setup/components/setup-name-form";
-import { userHasSpaces } from "@/features/setup/utils";
+import { SetupForm } from "@/features/setup/components/setup-form";
+import { getActiveSpaceForUser } from "@/features/space/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/lib/auth";
@@ -14,10 +13,11 @@ export default async function SetupPage(props: {
 }) {
   const user = await requireUser();
   const searchParams = await props.searchParams;
+  const { t } = await getTranslation();
 
-  const needsName = !user.name;
+  const space = await getActiveSpaceForUser(user.id);
 
-  if (!needsName && (await userHasSpaces(user.id))) {
+  if (user.name && space) {
     redirect(validateRedirectUrl(searchParams?.redirectTo) ?? "/");
   }
 
@@ -30,27 +30,23 @@ export default async function SetupPage(props: {
           </div>
           <header className="text-center">
             <h1 className="font-bold text-2xl">
-              {needsName ? (
-                <Trans i18nKey="setupNameTitle" defaults="What's your name?" />
-              ) : (
-                <Trans i18nKey="createSpace" defaults="Create Space" />
-              )}
+              <Trans i18nKey="setupTitle" defaults="Set Up Your Account" />
             </h1>
             <p className="mt-1 text-muted-foreground">
-              {needsName ? (
-                <Trans
-                  i18nKey="setupNameDescription"
-                  defaults="Your name appears on the polls and events you create."
-                />
-              ) : (
-                <Trans
-                  i18nKey="createSpaceDescription"
-                  defaults="Create a space to organize your polls and events."
-                />
-              )}
+              <Trans
+                i18nKey="setupDescription"
+                defaults="Tell us your name and what to call your space."
+              />
             </p>
           </header>
-          <div>{needsName ? <SetupNameForm /> : <CreateSpaceForm />}</div>
+          <div>
+            <SetupForm
+              defaultName={user.name}
+              defaultSpaceName={
+                space?.name ?? t("personal", { defaultValue: "Personal" })
+              }
+            />
+          </div>
         </article>
       </main>
     </div>
@@ -61,7 +57,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
     title: t("setupTitle", {
-      defaultValue: "Setup",
+      defaultValue: "Set Up Your Account",
     }),
   };
 }

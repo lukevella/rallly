@@ -31,9 +31,10 @@ export class RegisterPage {
       .waitFor();
     await this.page.getByLabel("Enter your 6-digit code").fill(code);
 
-    // New accounts have no name and go through onboarding
+    // New accounts have no name and go through onboarding. The space name
+    // is prefilled, so only the name needs to be entered.
     await this.page
-      .getByRole("heading", { name: "What's your name?" })
+      .getByRole("heading", { name: "Set Up Your Account" })
       .waitFor();
     await this.page.getByPlaceholder("Jessie Smith").fill(name);
     await this.page

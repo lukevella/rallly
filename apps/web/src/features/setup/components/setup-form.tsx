@@ -14,29 +14,40 @@ import { Input } from "@rallly/ui/input";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { setupSpaceAction } from "@/features/setup/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
-const setupNameFormSchema = z.object({
+const setupFormSchema = z.object({
   name: z.string().min(1).max(100),
+  spaceName: z.string().min(1).max(100),
 });
 
-export function SetupNameForm() {
+export function SetupForm({
+  defaultName,
+  defaultSpaceName,
+}: {
+  defaultName: string;
+  defaultSpaceName: string;
+}) {
   const { t } = useTranslation();
   const router = useRouter();
+  const setupSpace = useSafeAction(setupSpaceAction);
 
   const form = useForm({
-    resolver: zodResolver(setupNameFormSchema),
+    resolver: zodResolver(setupFormSchema),
     defaultValues: {
-      name: "",
+      name: defaultName,
+      spaceName: defaultSpaceName,
     },
   });
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(async ({ name }) => {
+        onSubmit={form.handleSubmit(async ({ name, spaceName }) => {
           // Accounts created through the OTP registration flow have no
           // timezone yet; capture it here the way the old signup form did.
           const res = await authClient.updateUser({
@@ -50,6 +61,8 @@ export function SetupNameForm() {
             });
             return;
           }
+
+          await setupSpace.executeAsync({ spaceName });
 
           router.refresh();
         })}
@@ -72,6 +85,29 @@ export function SetupNameForm() {
                   placeholder={t("namePlaceholder")}
                   disabled={form.formState.isSubmitting}
                   autoFocus={true}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="spaceName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Trans i18nKey="spaceName" defaults="Space Name" />
+              </FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  large
+                  data-1p-ignore
+                  placeholder={t("spaceNamePlaceholder", {
+                    defaultValue: "e.g. Acme Corp",
+                  })}
+                  disabled={form.formState.isSubmitting}
                 />
               </FormControl>
               <FormMessage />
