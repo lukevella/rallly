@@ -45,6 +45,7 @@ import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
 import { BillingPlan } from "./components/billing-plan";
+import { GrandfatheredPricingBanner } from "./components/grandfathered-pricing-banner";
 import { ManageSeatsDialog } from "./components/manage-seats-dialog";
 
 export function BillingPageClient() {
@@ -80,6 +81,8 @@ function BillingPageContent({ tier }: { tier: SpaceTier }) {
 
   const [subscription] = trpc.billing.getSubscription.useSuspenseQuery();
   const [seats] = trpc.spaces.getSeats.useSuspenseQuery();
+  const [grandfatheredPricing] =
+    trpc.billing.getGrandfatheredPricing.useSuspenseQuery();
 
   const didUpdateSeats = searchParams.has("seats_updated");
 
@@ -126,6 +129,15 @@ function BillingPageContent({ tier }: { tier: SpaceTier }) {
                 }
                 seats={seats.total}
               />
+              {grandfatheredPricing ? (
+                <GrandfatheredPricingBanner
+                  amount={grandfatheredPricing.amount}
+                  listAmount={grandfatheredPricing.listAmount}
+                  currency={grandfatheredPricing.currency}
+                  interval={grandfatheredPricing.interval}
+                  quantity={grandfatheredPricing.quantity}
+                />
+              ) : null}
               <div>
                 {subscription ? (
                   <div className="flex justify-between gap-2">

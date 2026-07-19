@@ -1,6 +1,8 @@
 import "server-only";
 
+import { getProPricing } from "@rallly/billing";
 import { prisma } from "@rallly/database";
+import { resolveGrandfatheredPricing } from "@/features/billing/utils";
 import type { SpaceTier } from "@/features/space/schema";
 
 export async function getSpaceSubscription(spaceId: string) {
@@ -34,5 +36,35 @@ export async function getSpaceSubscription(spaceId: string) {
     status: subscription.status,
     periodEnd: subscription.periodEnd,
     active: subscription.active,
+  };
+}
+
+export async function getGrandfatheredPricing(spaceId: string) {
+  const subscription = await getSpaceSubscription(spaceId);
+
+  if (!subscription) {
+    return null;
+  }
+
+  let listPrices: Awaited<ReturnType<typeof getProPricing>>;
+  try {
+    listPrices = await getProPricing();
+  } catch {
+    // The banner is informational — never fail the page over a Stripe outage
+    return null;
+  }
+
+  const grandfathered = resolveGrandfatheredPricing({
+    subscription,
+    listPrices,
+  });
+
+  if (!grandfathered) {
+    return null;
+  }
+
+  return {
+    ...grandfathered,
+    quantity: subscription.quantity,
   };
 }

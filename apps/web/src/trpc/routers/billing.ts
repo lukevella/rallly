@@ -1,7 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 
-import { getSpaceSubscription } from "@/features/billing/data";
+import {
+  getGrandfatheredPricing,
+  getSpaceSubscription,
+} from "@/features/billing/data";
 import { createStripeSubscriptionUpdateConfirmation } from "@/features/billing/mutations";
 import {
   getActiveSpaceForUser,
@@ -26,6 +29,13 @@ export const billing = router({
   }),
   getSubscription: spaceOwnerProcedure.query(async ({ ctx }) => {
     return await getSpaceSubscription(ctx.space.id);
+  }),
+  getGrandfatheredPricing: spaceOwnerProcedure.query(async ({ ctx }) => {
+    if (isSelfHosted) {
+      return null;
+    }
+
+    return await getGrandfatheredPricing(ctx.space.id);
   }),
   updateSeats: spaceOwnerProcedure
     .input(z.object({ seatDelta: z.int() }))

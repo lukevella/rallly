@@ -10,11 +10,16 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 export async function getProPricing() {
   const prices = await stripe.prices.list({
     lookup_keys: ["pro-monthly", "pro-yearly"],
+    active: true,
   });
 
-  const [monthly, yearly] = prices.data;
+  // prices.data is ordered by creation date, not by lookup key
+  const monthly = prices.data.find(
+    (price) => price.lookup_key === "pro-monthly",
+  );
+  const yearly = prices.data.find((price) => price.lookup_key === "pro-yearly");
 
-  if (monthly.unit_amount === null || yearly.unit_amount === null) {
+  if (monthly?.unit_amount == null || yearly?.unit_amount == null) {
     throw new Error("Price not found");
   }
 
