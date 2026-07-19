@@ -1,9 +1,9 @@
 import "server-only";
 
+import type { Stripe } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import { env } from "@/env";
-import { getStripe } from "@/features/billing/service";
 import type {
   CreateLicenseInput,
   LicenseCheckoutMetadata,
@@ -138,12 +138,13 @@ const licenseCheckoutProducts: Record<
 
 export async function createLicenseCheckoutSession({
   product,
+  stripe,
 }: {
   product: LicenseCheckoutProduct;
+  stripe: Stripe;
 }): Promise<{ url: string } | { error: string }> {
   const { lookupKey, type, seats } = licenseCheckoutProducts[product];
 
-  const stripe = getStripe();
   const prices = await stripe.prices.list({
     lookup_keys: [lookupKey],
   });
