@@ -2,12 +2,12 @@ import { createLogger } from "@rallly/logger";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
+import { removeDeletedUsers } from "@/features/account-deletion/mutations";
 import {
   autoClosePolls,
   deleteInactivePolls,
   removeDeletedPolls,
 } from "@/features/poll/mutations";
-import { removeDeletedUsers } from "@/features/user/mutations";
 
 const logger = createLogger("api/house-keeping");
 

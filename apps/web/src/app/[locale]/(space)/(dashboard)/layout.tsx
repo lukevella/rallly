@@ -14,11 +14,11 @@ import {
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { SettingsIcon } from "lucide-react";
 import Link from "next/link";
+import { AccountDeletionBanner } from "@/features/account-deletion/components/account-deletion-banner";
 import { CustomBrandingPrompt } from "@/features/branding/components/custom-branding-prompt";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
-import { AccountDeletionBanner } from "@/features/user/components/account-deletion-banner";
 import { NavUser } from "@/features/user/components/nav-user";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";

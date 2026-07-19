@@ -1,6 +1,6 @@
 "use client";
 import { toast } from "@rallly/ui/sonner";
-import { cancelAccountDeletionAction } from "@/features/user/actions";
+import { cancelAccountDeletionAction } from "@/features/account-deletion/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 

@@ -11,8 +11,8 @@ import {
   DialogTitle,
 } from "@rallly/ui/dialog";
 
-import { scheduleAccountDeletionAction } from "@/features/user/actions";
-import { ACCOUNT_DELETION_GRACE_DAYS } from "@/features/user/constants";
+import { scheduleAccountDeletionAction } from "@/features/account-deletion/actions";
+import { ACCOUNT_DELETION_GRACE_DAYS } from "@/features/account-deletion/constants";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 

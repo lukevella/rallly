@@ -3,7 +3,6 @@ import "server-only";
 import type { User } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { cache } from "react";
-import { upcomingScheduledEventWhere } from "@/features/scheduled-event/utils";
 import type { UserDTO } from "@/features/user/schema";
 import { getSession } from "@/lib/auth";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
@@ -65,35 +64,6 @@ export const getUserCount = async () => {
     },
   });
 };
-
-// Counts are limited to columns with a userId index. Vote and comment
-// counts would scan participants/comments on an unindexed user_id, so the
-// dialog mentions those without numbers.
-export async function getAccountDeletionSummary({
-  userId,
-  timeZone,
-}: {
-  userId: string;
-  timeZone: string;
-}) {
-  const [activePollCount, upcomingEventCount, activeSubscriptionCount] =
-    await Promise.all([
-      prisma.poll.count({ where: { userId, deleted: false, status: "open" } }),
-      prisma.scheduledEvent.count({
-        where: {
-          userId,
-          ...upcomingScheduledEventWhere({ now: new Date(), timeZone }),
-        },
-      }),
-      prisma.subscription.count({ where: { userId, active: true } }),
-    ]);
-
-  return {
-    activePollCount,
-    upcomingEventCount,
-    hasActiveSubscription: activeSubscriptionCount > 0,
-  };
-}
 
 export const getUserHasPassword = async (userId: string) => {
   const account = await prisma.account.findFirst({

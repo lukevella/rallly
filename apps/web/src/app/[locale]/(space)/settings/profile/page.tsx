@@ -5,7 +5,7 @@ import type { Params } from "@/app/[locale]/types";
 import {
   AccountDeletionSummary,
   AccountDeletionSummarySkeleton,
-} from "@/features/user/components/account-deletion-summary";
+} from "@/features/account-deletion/components/account-deletion-summary";
 import { getTranslation } from "@/i18n/server";
 import { ProfilePage } from "./profile-page";
 

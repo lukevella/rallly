@@ -18,7 +18,7 @@ import {
 import { ArrowLeftIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { AccountDeletionBanner } from "@/features/user/components/account-deletion-banner";
+import { AccountDeletionBanner } from "@/features/account-deletion/components/account-deletion-banner";
 import { NavUser } from "@/features/user/components/nav-user";
 import { Trans } from "@/i18n/client";
 import {
