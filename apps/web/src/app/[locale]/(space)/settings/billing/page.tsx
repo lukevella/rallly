@@ -130,7 +130,7 @@ export default async function BillingSettingsPage({
               </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
-              {subscription ? (
+              {subscription?.active ? (
                 <ProPlanCard
                   amount={subscription.amount}
                   currency={subscription.currency}

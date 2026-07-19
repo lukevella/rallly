@@ -48,7 +48,7 @@ export function HobbyPlanCard({ className }: { className?: string }) {
             posthog?.capture("space_billing:upgrade_button_click");
           }}
         >
-          <Trans i18nKey="upgradeToPro" />
+          <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />
         </Button>
       </PlanCardFooter>
     </PlanCard>
