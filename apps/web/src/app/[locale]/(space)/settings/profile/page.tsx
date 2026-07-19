@@ -4,16 +4,33 @@ import { Suspense } from "react";
 
 import type { Params } from "@/app/[locale]/types";
 import {
+  PageSection,
+  PageSectionContent,
+  PageSectionDescription,
+  PageSectionGroup,
+  PageSectionHeader,
+  PageSectionTitle,
+} from "@/components/page-layout";
+import {
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageDescription,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/components/settings-layout";
+import {
   AccountDeletionSummary,
   AccountDeletionSummarySkeleton,
 } from "@/features/account-deletion/components/account-deletion-summary";
 import { PendingDeletionNotice } from "@/features/account-deletion/components/pending-deletion-notice";
 import { getCurrentUser } from "@/features/user/data";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getPathname } from "@/lib/pathname";
 import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 import { DeleteAccountButton } from "./delete-account-button";
-import { ProfilePage } from "./profile-page";
+import { ProfileEmailAddress } from "./profile-email-address";
+import { ProfileSettings } from "./profile-settings";
 
 export default async function Page() {
   const user = await getCurrentUser();
@@ -28,24 +45,72 @@ export default async function Page() {
   }
 
   return (
-    <ProfilePage
-      name={user.name}
-      image={user.image}
-      email={user.email}
-      dangerZone={
-        user.deletedAt ? (
-          <PendingDeletionNotice deletedAt={user.deletedAt} />
-        ) : (
-          <DeleteAccountButton
-            summary={
-              <Suspense fallback={<AccountDeletionSummarySkeleton />}>
-                <AccountDeletionSummary />
-              </Suspense>
-            }
+    <SettingsPage>
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="profile" defaults="Profile" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
+          <Trans
+            i18nKey="profileDescription"
+            defaults="Set your public profile information"
           />
-        )
-      }
-    />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
+      <SettingsPageContent>
+        <PageSectionGroup>
+          <PageSection variant="card">
+            <PageSectionContent>
+              <ProfileSettings name={user.name} image={user.image} />
+            </PageSectionContent>
+          </PageSection>
+
+          <PageSection variant="card">
+            <PageSectionHeader>
+              <PageSectionTitle>
+                <Trans i18nKey="profileEmailAddress" defaults="Email Address" />
+              </PageSectionTitle>
+              <PageSectionDescription>
+                <Trans
+                  i18nKey="profileEmailAddressDescription"
+                  defaults="Your email address is used to log in to your account"
+                />
+              </PageSectionDescription>
+            </PageSectionHeader>
+            <PageSectionContent>
+              <ProfileEmailAddress email={user.email} />
+            </PageSectionContent>
+          </PageSection>
+
+          <PageSection variant="card">
+            <PageSectionHeader>
+              <PageSectionTitle>
+                <Trans i18nKey="dangerZone" defaults="Danger Zone" />
+              </PageSectionTitle>
+              <PageSectionDescription>
+                <Trans
+                  i18nKey="dangerZoneAccountDeletion"
+                  defaults="Delete your account and all data associated with it"
+                />
+              </PageSectionDescription>
+            </PageSectionHeader>
+            <PageSectionContent>
+              {user.deletedAt ? (
+                <PendingDeletionNotice deletedAt={user.deletedAt} />
+              ) : (
+                <DeleteAccountButton
+                  summary={
+                    <Suspense fallback={<AccountDeletionSummarySkeleton />}>
+                      <AccountDeletionSummary />
+                    </Suspense>
+                  }
+                />
+              )}
+            </PageSectionContent>
+          </PageSection>
+        </PageSectionGroup>
+      </SettingsPageContent>
+    </SettingsPage>
   );
 }
 
