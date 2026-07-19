@@ -110,6 +110,8 @@ export default async function BillingSettingsPage({
               {subscription?.active ? (
                 <ProPlanCard
                   amount={subscription.amount}
+                  discountPercentOff={subscription.discountPercentOff}
+                  discountAmountOff={subscription.discountAmountOff}
                   currency={subscription.currency}
                   interval={subscription.interval}
                   seats={subscription.quantity}
