@@ -269,7 +269,6 @@
         "src/trpc/routers/user.ts",
         "src/trpc/routers/polls/comments.ts",
         "src/trpc/routers/polls/participants.ts",
-        "src/features/billing/components/subscription-status-label.tsx",
         "src/features/licensing/actions.ts",
         "src/features/poll/components/desktop-poll/participant-row.tsx",
         "src/features/poll/components/mobile-poll/poll-option.tsx",

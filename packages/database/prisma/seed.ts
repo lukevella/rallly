@@ -6,6 +6,7 @@ import {
   scheduledEvents,
   spaceMembers,
   spaces,
+  subscriptions,
   users,
 } from "./seed/data";
 
@@ -32,7 +33,17 @@ async function main() {
   await prisma.spaceMember.createMany({ data: spaceMembers });
   console.info(`✓ ${spaceMembers.length} space members`);
 
-  // 4. Scheduled events + invites
+  // 4. Subscriptions
+  await prisma.subscription.createMany({
+    data: subscriptions.map((sub) => ({
+      ...sub,
+      periodStart: new Date(sub.periodStart),
+      periodEnd: new Date(sub.periodEnd),
+    })),
+  });
+  console.info(`✓ ${subscriptions.length} subscriptions`);
+
+  // 5. Scheduled events + invites
   let inviteCount = 0;
   for (const evt of scheduledEvents) {
     const eventId = evt.id ?? nextId();
@@ -78,7 +89,7 @@ async function main() {
     `✓ ${scheduledEvents.length} scheduled events, ${inviteCount} invites`,
   );
 
-  // 5. Polls + options + participants + votes + comments
+  // 6. Polls + options + participants + votes + comments
   let optionCount = 0;
   let participantCount = 0;
   let voteCount = 0;
@@ -175,7 +186,7 @@ async function main() {
     `✓ ${polls.length} polls, ${optionCount} options, ${participantCount} participants, ${voteCount} votes, ${commentCount} comments`,
   );
 
-  // 6. Event types
+  // 7. Event types
   const now = Date.now();
   await prisma.eventType.createMany({
     data: eventTypes.map((et, i) => ({
