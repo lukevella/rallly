@@ -9,7 +9,6 @@ import { getInstanceBranding } from "@/emails/branding";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import {
   createSpaceDTO,
-  getActiveSpaceForUser,
   getMember,
   getSpaceSeatCount,
 } from "@/features/space/data";
@@ -68,9 +67,6 @@ export const spaces = router({
         role: spaceMember.role,
       }),
     );
-  }),
-  getCurrent: privateProcedure.query(async ({ ctx }) => {
-    return await getActiveSpaceForUser(ctx.user.id);
   }),
   listMembers: spaceProcedure.query(async ({ ctx }) => {
     const [members, totalCount] = await Promise.all([

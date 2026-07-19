@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { setActiveSpaceAction } from "@/features/space/actions";
+import { useSpace } from "@/features/space/client";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -31,22 +32,12 @@ import { SpaceIcon } from "./space-icon";
 
 export function SpaceDropdown() {
   const { data: spaces = [] } = trpc.spaces.list.useQuery();
-  const { data: activeSpace } = trpc.spaces.getCurrent.useQuery();
+  const { data: activeSpace } = useSpace();
 
-  const utils = trpc.useUtils();
-  const setActiveSpace = useSafeAction(setActiveSpaceAction, {
-    onSuccess: () => {
-      utils.spaces.getCurrent.invalidate();
-    },
-  });
+  const setActiveSpace = useSafeAction(setActiveSpaceAction);
   const newSpaceDialog = useDialog();
 
-  if (!activeSpace) {
-    // This should never happen
-    return null;
-  }
-
-  const selectedSpaceId = activeSpace?.id;
+  const selectedSpaceId = activeSpace.id;
 
   return (
     <>
