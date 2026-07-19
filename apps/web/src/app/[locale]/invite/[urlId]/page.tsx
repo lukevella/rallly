@@ -6,7 +6,9 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
 import { PermissionProvider } from "@/features/poll/client";
+import { UserProvider } from "@/features/user/components/user-provider";
 import { getLocale } from "@/i18n/server/get-locale";
+import { getSession } from "@/lib/auth";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 import { decryptToken } from "@/lib/session";
@@ -48,9 +50,9 @@ export default async function Page(props: {
 
   const token = (await props.searchParams).token;
 
-  const [locale, user, deviceDateTimeConfig] = await Promise.all([
+  const [locale, session, deviceDateTimeConfig] = await Promise.all([
     getLocale(),
-    trpc.user.getMe.fetch(),
+    getSession(),
     getDeviceDateTimeConfig(),
     trpc.polls.get.prefetch({ urlId: params.urlId }),
     trpc.polls.participants.list.prefetch({ pollId: params.urlId, token }),
@@ -68,17 +70,19 @@ export default async function Page(props: {
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
       <SessionRefresher />
-      <DeviceDateTimeProvider
-        locale={locale}
-        timeZone={deviceDateTimeConfig.timeZone}
-        timeFormat={deviceDateTimeConfig.timeFormat}
-      >
-        <Providers>
-          <PermissionProvider impersonatedUserId={impersonatedUserId}>
-            <InvitePageLoader />
-          </PermissionProvider>
-        </Providers>
-      </DeviceDateTimeProvider>
+      <UserProvider user={session?.user ?? null}>
+        <DeviceDateTimeProvider
+          locale={locale}
+          timeZone={deviceDateTimeConfig.timeZone}
+          timeFormat={deviceDateTimeConfig.timeFormat}
+        >
+          <Providers>
+            <PermissionProvider impersonatedUserId={impersonatedUserId}>
+              <InvitePageLoader />
+            </PermissionProvider>
+          </Providers>
+        </DeviceDateTimeProvider>
+      </UserProvider>
     </HydrationBoundary>
   );
 }
