@@ -1,7 +1,12 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
-import { Alert, AlertAction, AlertDescription } from "@rallly/ui/alert";
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@rallly/ui/alert";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { InfoIcon, SparklesIcon } from "lucide-react";
@@ -97,6 +102,12 @@ export function MembersSettingsPageClient() {
           {!canInviteMembers ? (
             <Alert variant="primary">
               <SparklesIcon />
+              <AlertTitle>
+                <Trans
+                  i18nKey="pendingInvitesUpgradeTitle"
+                  defaults="Invite members"
+                />
+              </AlertTitle>
               <AlertDescription>
                 <Trans
                   i18nKey="pendingInvitesUpgradeDescription"
