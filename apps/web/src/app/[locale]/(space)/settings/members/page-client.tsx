@@ -106,6 +106,7 @@ export function MembersSettingsPageClient() {
               <AlertAction>
                 <Button
                   size="sm"
+                  variant="ghost"
                   onClick={() => {
                     posthog?.capture("members_settings:upgrade_button_click");
                     showPayWall();
