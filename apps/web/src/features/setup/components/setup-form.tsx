@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
+import { ButtonGroup, ButtonGroupItem } from "@rallly/ui/button-group";
 import {
   Form,
   FormControl,
@@ -17,9 +18,12 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { setupSpaceAction } from "@/features/setup/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
+import { getLocaleDefaults } from "@/lib/datetime/locales";
+import type { TimeFormat } from "@/lib/datetime/types";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
@@ -29,6 +33,8 @@ function useSetupFormSchema() {
     return z
       .object({
         name: z.string().min(1).max(100),
+        timeZone: z.string().min(1),
+        timeFormat: z.enum(["hours12", "hours24"]),
         spaceType: z.enum(["personal", "work"]),
         organizationName: z.string().max(100),
       })
@@ -70,7 +76,15 @@ function SpaceTypeOption({
   );
 }
 
-export function SetupForm({ defaultName }: { defaultName: string }) {
+export function SetupForm({
+  defaultName,
+  defaultTimeZone,
+  defaultTimeFormat,
+}: {
+  defaultName: string;
+  defaultTimeZone?: string;
+  defaultTimeFormat?: TimeFormat;
+}) {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const schema = useSetupFormSchema();
@@ -80,6 +94,9 @@ export function SetupForm({ defaultName }: { defaultName: string }) {
     resolver: zodResolver(schema),
     defaultValues: {
       name: defaultName,
+      timeZone: defaultTimeZone || getBrowserTimeZone(),
+      timeFormat:
+        defaultTimeFormat ?? getLocaleDefaults(i18n.language).timeFormat,
       spaceType: "personal" as const,
       organizationName: "",
     },
@@ -91,13 +108,17 @@ export function SetupForm({ defaultName }: { defaultName: string }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(
-          async ({ name, spaceType, organizationName }) => {
-            // Accounts created through the OTP registration flow have no
-            // timezone or locale yet; capture them here the way the old
-            // signup form did. Notification emails read the stored locale.
+          async ({
+            name,
+            timeZone,
+            timeFormat,
+            spaceType,
+            organizationName,
+          }) => {
             const res = await authClient.updateUser({
               name,
-              timeZone: getBrowserTimeZone(),
+              timeZone,
+              timeFormat,
               locale: i18n.language,
             });
 
@@ -151,6 +172,55 @@ export function SetupForm({ defaultName }: { defaultName: string }) {
             </FormItem>
           )}
         />
+        <div className="grid grid-cols-2 gap-2">
+          <FormField
+            control={form.control}
+            name="timeZone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans i18nKey="timeZone" defaults="Time zone" />
+                </FormLabel>
+                <FormControl>
+                  <TimeZoneSelect
+                    className="min-w-0"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    disabled={form.formState.isSubmitting}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="timeFormat"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans i18nKey="timeFormat" defaults="Time format" />
+                </FormLabel>
+                <FormControl>
+                  <ButtonGroup
+                    className="w-full"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    disabled={form.formState.isSubmitting}
+                  >
+                    <ButtonGroupItem value="hours12">
+                      <Trans i18nKey="12h" defaults="12-hour" />
+                    </ButtonGroupItem>
+                    <ButtonGroupItem value="hours24">
+                      <Trans i18nKey="24h" defaults="24-hour" />
+                    </ButtonGroupItem>
+                  </ButtonGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={form.control}
           name="spaceType"

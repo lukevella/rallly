@@ -6,6 +6,7 @@ import { getActiveSpaceForUser } from "@/features/space/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/lib/auth";
+import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
 
 export default async function SetupPage(props: {
@@ -16,9 +17,13 @@ export default async function SetupPage(props: {
 
   const space = await getActiveSpaceForUser(user.id);
 
-  if (user.name && space) {
+  if (user.name && user.timeZone && user.timeFormat && space) {
     redirect(validateRedirectUrl(searchParams?.redirectTo) ?? "/");
   }
+
+  // Prefill from the device: the timeZone cookie tracks the browser's zone
+  // on every visit, and the format cookie holds a per-device choice.
+  const device = await getDeviceDateTimeConfig();
 
   return (
     <div className="flex min-h-dvh justify-center bg-background p-4 sm:items-center">
@@ -42,7 +47,11 @@ export default async function SetupPage(props: {
             </p>
           </header>
           <div>
-            <SetupForm defaultName={user.name} />
+            <SetupForm
+              defaultName={user.name}
+              defaultTimeZone={user.timeZone ?? device.timeZone}
+              defaultTimeFormat={user.timeFormat ?? device.timeFormat}
+            />
           </div>
         </article>
       </main>
