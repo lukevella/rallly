@@ -19,7 +19,7 @@ import * as z from "zod";
 import { usePoll } from "@/features/poll/client";
 import { useAddParticipantMutation } from "@/features/poll/components/mutations";
 import VoteIcon from "@/features/poll/components/vote-icon";
-import { useUser } from "@/features/user/components/user-provider";
+import { useUser } from "@/features/user/client";
 import { useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 

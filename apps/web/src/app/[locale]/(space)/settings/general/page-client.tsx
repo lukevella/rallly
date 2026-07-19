@@ -19,7 +19,7 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { useSpace } from "@/features/space/client";
-import { useAuthedUser } from "@/features/user/components/user-provider";
+import { useAuthedUser } from "@/features/user/client";
 import { Trans } from "@/i18n/client";
 import { CustomBrandingSection } from "./components/custom-branding-section";
 import { DeleteSpaceButton } from "./components/delete-space-button";

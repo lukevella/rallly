@@ -8,7 +8,7 @@ import Link from "next/link";
 import React from "react";
 import { useLocalStorage } from "react-use";
 import { useSpace } from "@/features/space/client";
-import { useUser } from "@/features/user/components/user-provider";
+import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { isBusinessEmail } from "@/lib/utils/is-business-email";
 

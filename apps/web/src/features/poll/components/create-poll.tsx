@@ -36,7 +36,7 @@ import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-f
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { NewEventData } from "@/features/poll/components/forms/types";
-import { useUser } from "@/features/user/components/user-provider";
+import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 

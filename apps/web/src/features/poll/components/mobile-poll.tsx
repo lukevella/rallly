@@ -27,7 +27,7 @@ import { useOptions, usePoll } from "@/features/poll/components/poll-context";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { YouAvatar } from "@/features/poll/components/you-avatar";
-import { useUser } from "@/features/user/components/user-provider";
+import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import GroupedOptions from "./mobile-poll/grouped-options";
 

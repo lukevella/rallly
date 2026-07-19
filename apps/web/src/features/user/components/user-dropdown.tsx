@@ -30,7 +30,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { useUser } from "@/features/user/components/user-provider";
+import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";

@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { updateUserNameAction } from "@/features/user/actions";
-import { useAuthedUser } from "@/features/user/components/user-provider";
+import { useAuthedUser } from "@/features/user/client";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
