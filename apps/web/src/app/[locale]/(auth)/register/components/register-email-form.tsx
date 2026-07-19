@@ -1,5 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { TurnstileInstance } from "@marsidev/react-turnstile";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -14,10 +16,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
+import { sendRegistrationOtp } from "@/app/[locale]/(auth)/register/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
+
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+const isTurnstileEnabled = !!turnstileSiteKey;
 
 function useRegisterEmailFormSchema() {
   const { t } = useTranslation();
@@ -30,9 +34,13 @@ function useRegisterEmailFormSchema() {
 
 export function RegisterEmailForm() {
   const schema = useRegisterEmailFormSchema();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const turnstileRef = React.useRef<TurnstileInstance>(null);
+  const [turnstileToken, setTurnstileToken] = React.useState<string | null>(
+    null,
+  );
   const form = useForm({
     defaultValues: {
       email: "",
@@ -44,56 +52,67 @@ export function RegisterEmailForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async ({ email }) => {
-          // A "sign-in" OTP either creates an account on verification or
-          // logs into an existing one, so registering with an email that is
-          // already in use reveals nothing and still works.
-          const res = await authClient.emailOtp.sendVerificationOtp({
-            email,
-            type: "sign-in",
-          });
+          try {
+            const res = await sendRegistrationOtp({
+              email,
+              captchaToken: turnstileToken ?? undefined,
+            });
 
-          if (res.error) {
-            switch (res.error.code) {
-              case "EMAIL_BLOCKED":
-                form.setError("email", {
-                  message: t("emailNotAllowed"),
-                });
-                break;
-              case "TEMPORARY_EMAIL_NOT_ALLOWED":
-                form.setError("email", {
-                  message: t("temporaryEmailNotAllowed"),
-                });
-                break;
-              case "BANNED_USER":
-                form.setError("email", {
-                  message: t("authErrorsUserBanned", {
-                    defaultValue:
-                      "This account has been banned. Please contact support if you believe this is an error.",
-                  }),
-                });
-                break;
-              default:
-                form.setError("email", {
-                  message: res.error.message,
-                });
-                break;
+            if (!res.ok) {
+              switch (res.code) {
+                case "CAPTCHA_FAILED":
+                  form.setError("root", {
+                    message: t("captchaFailed", {
+                      defaultValue: "Verification failed. Please try again.",
+                    }),
+                  });
+                  break;
+                case "EMAIL_BLOCKED":
+                  form.setError("email", {
+                    message: t("emailNotAllowed"),
+                  });
+                  break;
+                case "TEMPORARY_EMAIL_NOT_ALLOWED":
+                  form.setError("email", {
+                    message: t("temporaryEmailNotAllowed"),
+                  });
+                  break;
+                case "BANNED_USER":
+                  form.setError("email", {
+                    message: t("authErrorsUserBanned", {
+                      defaultValue:
+                        "This account has been banned. Please contact support if you believe this is an error.",
+                    }),
+                  });
+                  break;
+                default:
+                  form.setError("email", {
+                    message: t("registerOtpSendError", {
+                      defaultValue: "Something went wrong. Please try again.",
+                    }),
+                  });
+                  break;
+              }
+              return;
             }
-            return;
+
+            const validatedRedirectTo = validateRedirectUrl(
+              searchParams.get("redirectTo"),
+            );
+
+            router.push(
+              `/register/verify${
+                validatedRedirectTo
+                  ? `?redirectTo=${encodeURIComponent(validatedRedirectTo)}`
+                  : ""
+              }`,
+            );
+          } finally {
+            if (isTurnstileEnabled) {
+              setTurnstileToken(null);
+              turnstileRef.current?.reset();
+            }
           }
-
-          await setVerificationEmail(email);
-
-          const validatedRedirectTo = validateRedirectUrl(
-            searchParams.get("redirectTo"),
-          );
-
-          router.push(
-            `/register/verify${
-              validatedRedirectTo
-                ? `?redirectTo=${encodeURIComponent(validatedRedirectTo)}`
-                : ""
-            }`,
-          );
         })}
       >
         <div className="space-y-4">
@@ -121,9 +140,35 @@ export function RegisterEmailForm() {
             )}
           />
         </div>
+        {form.formState.errors.root?.message ? (
+          <FormMessage>{form.formState.errors.root.message}</FormMessage>
+        ) : null}
+        {turnstileSiteKey ? (
+          <div className="mt-6">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={turnstileSiteKey}
+              options={{
+                language: i18n.language,
+                size: "flexible",
+              }}
+              onSuccess={(token) => {
+                setTurnstileToken(token);
+              }}
+              onError={() => {
+                setTurnstileToken(null);
+              }}
+              onExpire={() => {
+                setTurnstileToken(null);
+                turnstileRef.current?.reset();
+              }}
+            />
+          </div>
+        ) : null}
         <div className="mt-6">
           <Button
             loading={form.formState.isSubmitting}
+            disabled={isTurnstileEnabled && !turnstileToken}
             className="w-full"
             variant="primary"
             type="submit"
