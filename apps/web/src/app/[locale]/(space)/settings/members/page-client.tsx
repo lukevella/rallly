@@ -58,6 +58,19 @@ export function MembersSettingsPageClient() {
         <PageSectionGroup>
           <PageSection>
             <PageSectionContent>
+              {space.data.tier === "hobby" && members.total > 1 ? (
+                <Alert variant="info">
+                  <InfoIcon />
+                  <AlertDescription>
+                    <p>
+                      <Trans
+                        i18nKey="membersInactiveDescription"
+                        defaults="Members are inactive because this space does not have an active subscription. Upgrade to Pro to restore their access."
+                      />
+                    </p>
+                  </AlertDescription>
+                </Alert>
+              ) : null}
               <StackedList>
                 {members.data.map((member) => (
                   <StackedListItem key={member.id}>
@@ -76,6 +89,14 @@ export function MembersSettingsPageClient() {
                             {member.isOwner ? (
                               <Badge>
                                 <Trans i18nKey="owner" defaults="Owner" />
+                              </Badge>
+                            ) : null}
+                            {space.data.tier === "hobby" && !member.isOwner ? (
+                              <Badge>
+                                <Trans
+                                  i18nKey="memberInactive"
+                                  defaults="Inactive"
+                                />
                               </Badge>
                             ) : null}
                           </div>
