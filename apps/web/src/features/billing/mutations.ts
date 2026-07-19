@@ -6,7 +6,9 @@ import {
   SEAT_UPDATE_PORTAL_PURPOSE,
   SEAT_UPDATE_PORTAL_VERSION,
 } from "@rallly/billing/lib/portal";
+import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { isBillingEnabled } from "@/features/billing/constants";
 import { getStripe } from "@/features/billing/service";
 
 export async function createStripePortalSession({
@@ -154,4 +156,61 @@ export async function createStripeSubscriptionUpdateConfirmation({
   });
 
   return portalSession.url;
+}
+
+function isStripeResourceMissingError(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: unknown }).code === "resource_missing"
+  );
+}
+
+// Database state (subscription row, space tier) is synced by the
+// customer.subscription.deleted webhook, the same path portal
+// cancellations take.
+export async function cancelUserSubscriptions({ userId }: { userId: string }) {
+  if (!isBillingEnabled) {
+    return;
+  }
+
+  const subscriptions = await prisma.subscription.findMany({
+    where: { userId, active: true },
+    select: { id: true },
+  });
+
+  if (subscriptions.length === 0) {
+    return;
+  }
+
+  const stripe = getStripe();
+
+  for (const subscription of subscriptions) {
+    try {
+      await stripe.subscriptions.cancel(subscription.id);
+    } catch (error) {
+      if (!isStripeResourceMissingError(error)) {
+        throw error;
+      }
+    }
+  }
+}
+
+export async function deleteStripeCustomer({
+  customerId,
+}: {
+  customerId: string;
+}) {
+  if (!isBillingEnabled) {
+    return;
+  }
+
+  try {
+    await getStripe().customers.del(customerId);
+  } catch (error) {
+    if (!isStripeResourceMissingError(error)) {
+      throw error;
+    }
+  }
 }
