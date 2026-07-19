@@ -45,7 +45,7 @@ function defineAbilityForUser(
   builder: AbilityBuilder<UserAbility>,
   user: UserAbilityContext,
 ) {
-  const { can, cannot } = builder;
+  const { can } = builder;
 
   // Can update their own email and name
   can("update", "User", ["email", "name"], { id: user.id });
