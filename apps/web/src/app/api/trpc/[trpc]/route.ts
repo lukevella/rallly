@@ -6,7 +6,7 @@ import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 import { getSession } from "@/lib/auth";
 import { getLocaleFromRequest } from "@/lib/locale/server";
-import { withPostHog } from "@/lib/posthog";
+import { getClientAnonymousDistinctId, withPostHog } from "@/lib/posthog";
 import type { TRPCContext } from "@/trpc/context";
 import { appRouter } from "@/trpc/routers";
 
@@ -49,6 +49,7 @@ const handler = async (req: NextRequest) => {
           locale,
           identifier,
           event,
+          anonymousDistinctId: getClientAnonymousDistinctId(req),
         } satisfies TRPCContext;
       },
       onError: ({ error }) => {

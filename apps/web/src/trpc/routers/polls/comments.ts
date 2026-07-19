@@ -166,15 +166,18 @@ export const comments = router({
       }
 
       // Track comment addition analytics
-      track(ctx.user, {
-        event: "poll_comment_add",
-        properties: {
-          is_guest: ctx.user.isGuest,
+      track(
+        { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+        {
+          event: "poll_comment_add",
+          properties: {
+            is_guest: ctx.user.isGuest,
+          },
+          groups: {
+            poll: pollId,
+          },
         },
-        groups: {
-          poll: pollId,
-        },
-      });
+      );
 
       return newComment;
     }),
@@ -216,11 +219,14 @@ export const comments = router({
       });
 
       // Track comment deletion analytics
-      track(actor, {
-        event: "poll_comment_delete",
-        groups: {
-          poll: comment.pollId,
+      track(
+        { ...actor, anonymousDistinctId: ctx.anonymousDistinctId },
+        {
+          event: "poll_comment_delete",
+          groups: {
+            poll: comment.pollId,
+          },
         },
-      });
+      );
     }),
 });

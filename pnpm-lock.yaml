@@ -693,6 +693,9 @@ importers:
       '@types/react':
         specifier: 19.2.13
         version: 19.2.13
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.11)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0)
 
   packages/screenshots:
     dependencies:

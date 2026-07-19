@@ -1,5 +1,47 @@
 import type { CaptureResult } from "posthog-js";
 
+export function getPostHogCookieName(apiKey: string) {
+  return `ph_${apiKey}_posthog`;
+}
+
+/**
+ * Extract the client's distinct_id from the posthog-js persistence cookie
+ * (`persistence: "cookie"` in client.ts). The raw cookie value is URL-encoded
+ * JSON, but some runtimes hand it over already decoded — handle both. Returns
+ * null for a missing or malformed value.
+ */
+export function parsePostHogCookieDistinctId(
+  cookieValue: string | undefined,
+): string | null {
+  if (!cookieValue) {
+    return null;
+  }
+
+  let json = cookieValue;
+  try {
+    json = decodeURIComponent(cookieValue);
+  } catch {
+    // Not URL-encoded — parse as-is
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(json);
+    if (
+      typeof parsed === "object" &&
+      parsed !== null &&
+      "distinct_id" in parsed
+    ) {
+      const distinctId = (parsed as { distinct_id: unknown }).distinct_id;
+      if (typeof distinctId === "string" && distinctId.length > 0) {
+        return distinctId;
+      }
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 type NavigatorWithGlobalPrivacyControl = Navigator & {
   globalPrivacyControl?: boolean;
 };

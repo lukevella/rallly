@@ -158,14 +158,17 @@ export const polls = router({
       });
 
       if (moderation.verdict !== "safe") {
-        track(ctx.user, {
-          event: "flagged_content",
-          properties: {
-            action: "create_poll",
-            verdict: moderation.verdict,
-            reason: moderation.reason,
+        track(
+          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+          {
+            event: "flagged_content",
+            properties: {
+              action: "create_poll",
+              verdict: moderation.verdict,
+              reason: moderation.reason,
+            },
           },
-        });
+        );
       }
 
       if (moderation.verdict === "flagged") {
@@ -278,25 +281,28 @@ export const polls = router({
         },
       });
 
-      track(ctx.user, {
-        event: "poll_create",
-        properties: {
-          title: poll.title,
-          optionCount: poll.options.length,
-          hasLocation: !!location,
-          hasDescription: !!description,
-          timezone: input.timeZone,
-          disableComments: poll.disableComments,
-          hideParticipants: poll.hideParticipants,
-          hideScores: poll.hideScores,
-          requireParticipantEmail: poll.requireParticipantEmail,
-          isGuest: ctx.user.isGuest,
+      track(
+        { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+        {
+          event: "poll_create",
+          properties: {
+            title: poll.title,
+            optionCount: poll.options.length,
+            hasLocation: !!location,
+            hasDescription: !!description,
+            timezone: input.timeZone,
+            disableComments: poll.disableComments,
+            hideParticipants: poll.hideParticipants,
+            hideScores: poll.hideScores,
+            requireParticipantEmail: poll.requireParticipantEmail,
+            isGuest: ctx.user.isGuest,
+          },
+          groups: {
+            poll: poll.id,
+            ...(poll.spaceId ? { space: poll.spaceId } : {}),
+          },
         },
-        groups: {
-          poll: poll.id,
-          ...(poll.spaceId ? { space: poll.spaceId } : {}),
-        },
-      });
+      );
 
       return { ok: true as const, data: { id: poll.id } };
     }),
@@ -349,14 +355,17 @@ export const polls = router({
       });
 
       if (moderation.verdict !== "safe") {
-        track(ctx.user, {
-          event: "flagged_content",
-          properties: {
-            action: "update_poll",
-            verdict: moderation.verdict,
-            reason: moderation.reason,
+        track(
+          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+          {
+            event: "flagged_content",
+            properties: {
+              action: "update_poll",
+              verdict: moderation.verdict,
+              reason: moderation.reason,
+            },
           },
-        });
+        );
       }
 
       if (moderation.verdict === "flagged") {
@@ -500,45 +509,54 @@ export const polls = router({
         input.requireParticipantEmail !== undefined;
 
       if (hasDetailsUpdate) {
-        track(ctx.user, {
-          event: "poll_update_details",
-          properties: {
-            title: updatedPoll.title,
-            has_location: !!updatedPoll.location,
-            has_description: !!updatedPoll.description,
-            is_guest: ctx.user.isGuest,
+        track(
+          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+          {
+            event: "poll_update_details",
+            properties: {
+              title: updatedPoll.title,
+              has_location: !!updatedPoll.location,
+              has_description: !!updatedPoll.description,
+              is_guest: ctx.user.isGuest,
+            },
+            groups: {
+              poll: pollId,
+            },
           },
-          groups: {
-            poll: pollId,
-          },
-        });
+        );
       }
 
       if (hasOptionsUpdate) {
-        track(ctx.user, {
-          event: "poll_update_options",
-          properties: {
-            option_count: updatedPoll._count.options,
+        track(
+          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+          {
+            event: "poll_update_options",
+            properties: {
+              option_count: updatedPoll._count.options,
+            },
+            groups: {
+              poll: pollId,
+            },
           },
-          groups: {
-            poll: pollId,
-          },
-        });
+        );
       }
 
       if (hasSettingsUpdate) {
-        track(ctx.user, {
-          event: "poll_update_settings",
-          properties: {
-            disable_comments: !!updatedPoll.disableComments,
-            hide_participants: !!updatedPoll.hideParticipants,
-            hide_scores: !!updatedPoll.hideScores,
-            require_participant_email: !!updatedPoll.requireParticipantEmail,
+        track(
+          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+          {
+            event: "poll_update_settings",
+            properties: {
+              disable_comments: !!updatedPoll.disableComments,
+              hide_participants: !!updatedPoll.hideParticipants,
+              hide_scores: !!updatedPoll.hideScores,
+              require_participant_email: !!updatedPoll.requireParticipantEmail,
+            },
+            groups: {
+              poll: pollId,
+            },
           },
-          groups: {
-            poll: pollId,
-          },
-        });
+        );
       }
 
       return { ok: true as const };
@@ -566,12 +584,15 @@ export const polls = router({
       });
 
       // Track poll deletion analytics
-      track(ctx.user, {
-        event: "poll_delete",
-        groups: {
-          poll: pollId,
+      track(
+        { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+        {
+          event: "poll_delete",
+          groups: {
+            poll: pollId,
+          },
         },
-      });
+      );
     }),
   // END LEGACY ROUTES
   toggleMuted: privateProcedure
@@ -1073,17 +1094,20 @@ export const polls = router({
           );
         }
 
-        track(ctx.user, {
-          event: "poll_schedule",
-          properties: {
-            attendee_count: attendees.length,
-            days_since_created: dayjs().diff(poll.createdAt, "day"),
-            participant_count: poll.participants.length,
+        track(
+          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+          {
+            event: "poll_schedule",
+            properties: {
+              attendee_count: attendees.length,
+              days_since_created: dayjs().diff(poll.createdAt, "day"),
+              participant_count: poll.participants.length,
+            },
+            groups: {
+              poll: poll.id,
+            },
           },
-          groups: {
-            poll: poll.id,
-          },
-        });
+        );
       }
     }),
   reopen: privateProcedure
@@ -1122,12 +1146,15 @@ export const polls = router({
         }
       });
 
-      track(ctx.user, {
-        event: "poll_reopen",
-        groups: {
-          poll: input.pollId,
+      track(
+        { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+        {
+          event: "poll_reopen",
+          groups: {
+            poll: input.pollId,
+          },
         },
-      });
+      );
     }),
   close: possiblyPublicProcedure
     .input(
@@ -1156,12 +1183,15 @@ export const polls = router({
         },
       });
 
-      track(ctx.user, {
-        event: "poll_close",
-        groups: {
-          poll: input.pollId,
+      track(
+        { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+        {
+          event: "poll_close",
+          groups: {
+            poll: input.pollId,
+          },
         },
-      });
+      );
     }),
   duplicate: proProcedure
     .input(
