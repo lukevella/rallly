@@ -1,5 +1,10 @@
+"use client";
+
+import { posthog } from "@rallly/posthog/client";
+import { Button } from "@rallly/ui/button";
+import { showPayWall } from "@/features/billing/client";
 import { SpaceTierIcon } from "@/features/space/components/space-tier";
-import { getTranslation } from "@/i18n/server";
+import { Trans } from "@/i18n/client";
 import {
   PlanCard,
   PlanCardContent,
@@ -11,11 +16,8 @@ import {
   PlanCardPriceValue,
   PlanCardTitle,
 } from "./plan-card";
-import { UpgradePlanButton } from "./upgrade-plan-button";
 
-export async function HobbyPlanCard({ className }: { className?: string }) {
-  const { t } = await getTranslation();
-
+export function HobbyPlanCard({ className }: { className?: string }) {
   return (
     <PlanCard className={className}>
       <PlanCardHeader>
@@ -25,20 +27,29 @@ export async function HobbyPlanCard({ className }: { className?: string }) {
         <PlanCardContent>
           <PlanCardTitle>Hobby</PlanCardTitle>
           <PlanCardDescription>
-            {t("seatCount", {
-              count: 1,
-              defaultValue: "{count, plural, one {# seat} other {# seats}}",
-            })}
+            <Trans
+              i18nKey="seatCount"
+              defaults="{count, plural, one {# seat} other {# seats}}"
+              values={{ count: 1 }}
+            />
           </PlanCardDescription>
         </PlanCardContent>
         <PlanCardPrice>
           <PlanCardPriceValue>
-            {t("priceFree", { defaultValue: "Free" })}
+            <Trans i18nKey="priceFree" defaults="Free" />
           </PlanCardPriceValue>
         </PlanCardPrice>
       </PlanCardHeader>
       <PlanCardFooter>
-        <UpgradePlanButton />
+        <Button
+          variant="primary"
+          onClick={() => {
+            showPayWall();
+            posthog?.capture("space_billing:upgrade_button_click");
+          }}
+        >
+          <Trans i18nKey="upgradeToPro" />
+        </Button>
       </PlanCardFooter>
     </PlanCard>
   );

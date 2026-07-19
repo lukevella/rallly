@@ -1,13 +1,21 @@
+"use client";
+
+import { posthog } from "@rallly/posthog/client";
+import { Button } from "@rallly/ui/button";
+import { DialogTrigger } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
-import { DotIcon } from "lucide-react";
+import { ArmchairIcon, CreditCardIcon, DotIcon } from "lucide-react";
+import { openCustomerPortalAction } from "@/features/billing/actions";
 import { SubscriptionStatusBadge } from "@/features/billing/components/subscription-status-badge";
 import type {
   BillingInterval,
   SubscriptionStatus,
 } from "@/features/billing/schema";
 import { SpaceTierIcon } from "@/features/space/components/space-tier";
-import { getTranslation } from "@/i18n/server";
-import { getLocale } from "@/i18n/server/get-locale";
+import { Trans } from "@/i18n/client";
+import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
+import { useSafeAction } from "@/lib/safe-action/client";
+import { ManageSeatsDialog } from "./manage-seats-dialog";
 import {
   PlanCard,
   PlanCardContent,
@@ -20,10 +28,8 @@ import {
   PlanCardPriceValue,
   PlanCardTitle,
 } from "./plan-card";
-import { SubscriptionActions } from "./subscription-actions";
-import { SubscriptionPeriodEnd } from "./subscription-period-end";
 
-export async function ProPlanCard({
+export function ProPlanCard({
   amount,
   currency,
   interval,
@@ -44,13 +50,18 @@ export async function ProPlanCard({
   periodEnd: Date;
   className?: string;
 }) {
-  const [{ t }, locale] = await Promise.all([getTranslation(), getLocale()]);
+  const { locale } = useDateTimeConfig();
+  const { formatDateTime } = useDateTime();
+  const openCustomerPortal = useSafeAction(openCustomerPortalAction);
 
   // amount is the per-seat unit amount in the currency's minor unit
   const price = new Intl.NumberFormat(locale, {
     style: "currency",
     currency: currency.toUpperCase(),
   }).format((amount * seats) / 100);
+
+  const date = formatDateTime(periodEnd, "date");
+  const endsAtPeriodEnd = status === "canceled" || cancelAtPeriodEnd;
 
   return (
     <PlanCard className={className}>
@@ -64,31 +75,74 @@ export async function ProPlanCard({
             <SubscriptionStatusBadge status={status} />
           </div>
           <PlanCardDescription className="flex items-center">
-            {t("seatCount", {
-              count: seats,
-              defaultValue: "{count, plural, one {# seat} other {# seats}}",
-            })}
+            <Trans
+              i18nKey="seatCount"
+              defaults="{count, plural, one {# seat} other {# seats}}"
+              values={{ count: seats }}
+            />
             <Icon>
               <DotIcon />
             </Icon>
-            <SubscriptionPeriodEnd
-              status={status}
-              cancelAtPeriodEnd={cancelAtPeriodEnd}
-              periodEnd={periodEnd}
-            />
+            {endsAtPeriodEnd ? (
+              <Trans
+                i18nKey="subscriptionCardEndsOn"
+                defaults="Ends {date}"
+                values={{ date }}
+              />
+            ) : (
+              <Trans
+                i18nKey="subscriptionCardRenewsOn"
+                defaults="Renews {date}"
+                values={{ date }}
+              />
+            )}
           </PlanCardDescription>
         </PlanCardContent>
         <PlanCardPrice>
           <PlanCardPriceValue>{price}</PlanCardPriceValue>
           <PlanCardPriceDescription>
-            {interval === "month"
-              ? t("subscriptionCardPerMonth", { defaultValue: "per month" })
-              : t("subscriptionCardPerYear", { defaultValue: "per year" })}
+            {interval === "month" ? (
+              <Trans i18nKey="subscriptionCardPerMonth" defaults="per month" />
+            ) : (
+              <Trans i18nKey="subscriptionCardPerYear" defaults="per year" />
+            )}
           </PlanCardPriceDescription>
         </PlanCardPrice>
       </PlanCardHeader>
       <PlanCardFooter>
-        <SubscriptionActions usedSeats={usedSeats} totalSeats={seats} />
+        <div className="flex gap-2">
+          <Button
+            loading={openCustomerPortal.isExecuting}
+            onClick={() => {
+              posthog?.capture("space_billing:billing_portal_button_click");
+              openCustomerPortal.execute({});
+            }}
+          >
+            <Icon>
+              <CreditCardIcon />
+            </Icon>
+            <Trans
+              i18nKey="manageSubscription"
+              defaults="Manage Subscription"
+            />
+          </Button>
+          <ManageSeatsDialog usedSeats={usedSeats} currentSeats={seats}>
+            <DialogTrigger
+              render={
+                <Button
+                  onClick={() => {
+                    posthog?.capture("space_billing:manage_seats_button_click");
+                  }}
+                />
+              }
+            >
+              <Icon>
+                <ArmchairIcon />
+              </Icon>
+              <Trans i18nKey="manageSeats" defaults="Manage Seats" />
+            </DialogTrigger>
+          </ManageSeatsDialog>
+        </div>
       </PlanCardFooter>
     </PlanCard>
   );
