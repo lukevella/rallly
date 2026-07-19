@@ -25,10 +25,7 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getSpaceSubscription } from "@/features/billing/data";
-import {
-  getActiveSpaceForUser,
-  getSpaceSeatCount,
-} from "@/features/space/data";
+import { getActiveSpace, getSpaceSeatCount } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { getCurrentUser } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
@@ -60,16 +57,7 @@ export default async function BillingSettingsPage({
     );
   }
 
-  const space = await getActiveSpaceForUser(user.id);
-
-  if (!space) {
-    redirect(
-      buildSafeRedirectUrl({
-        destination: "/setup",
-        returnUrl: await getPathname(),
-      }),
-    );
-  }
+  const space = await getActiveSpace();
 
   const ability = defineAbilityForMember({
     user: { id: user.id },
