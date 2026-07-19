@@ -7,6 +7,7 @@ import {
   deleteInactivePolls,
   removeDeletedPolls,
 } from "@/features/poll/mutations";
+import { removeDeletedUsers } from "@/features/user/mutations";
 
 const logger = createLogger("api/house-keeping");
 
@@ -72,6 +73,24 @@ app.get("/remove-deleted-polls", async (c) => {
     summary: {
       deleted: {
         polls: totalDeletedPolls,
+      },
+    },
+  });
+});
+
+app.get("/remove-deleted-users", async (c) => {
+  const deletedUsers = await removeDeletedUsers();
+
+  logger.info(
+    { task: "remove-deleted-users", deletedUsers },
+    "Removed users whose scheduled deletion passed the recovery window",
+  );
+
+  return c.json({
+    success: true,
+    summary: {
+      deleted: {
+        users: deletedUsers,
       },
     },
   });

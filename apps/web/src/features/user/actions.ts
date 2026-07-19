@@ -8,7 +8,12 @@ import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
 import { cancelUserSubscriptions } from "@/features/billing/mutations";
-import { banUser, unbanUser, updateUserRole } from "@/features/user/mutations";
+import {
+  banUser,
+  hardDeleteUser,
+  unbanUser,
+  updateUserRole,
+} from "@/features/user/mutations";
 import { getScheduledDeletionDate } from "@/features/user/utils";
 import { getLocale } from "@/i18n/server/get-locale";
 import authLib from "@/lib/auth";
@@ -347,11 +352,7 @@ export const deleteUserAction = adminActionClient
       });
     }
 
-    await prisma.user.delete({
-      where: {
-        id: userId,
-      },
-    });
+    await hardDeleteUser({ userId, email: user.email });
 
     return {
       success: true,
