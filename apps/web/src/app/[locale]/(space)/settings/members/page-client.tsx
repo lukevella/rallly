@@ -1,7 +1,7 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
-import { Alert, AlertDescription } from "@rallly/ui/alert";
+import { Alert, AlertAction, AlertDescription } from "@rallly/ui/alert";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { InfoIcon, SparklesIcon } from "lucide-react";
@@ -112,13 +112,14 @@ export function MembersSettingsPageClient() {
                 <Alert variant="primary">
                   <SparklesIcon />
                   <AlertDescription>
-                    <p>
-                      <Trans
-                        i18nKey="pendingInvitesUpgradeDescription"
-                        defaults="Upgrade to Pro to invite members to your space."
-                      />
-                    </p>
+                    <Trans
+                      i18nKey="pendingInvitesUpgradeDescription"
+                      defaults="Upgrade to Pro to invite members to your space."
+                    />
+                  </AlertDescription>
+                  <AlertAction>
                     <Button
+                      size="sm"
                       onClick={() => {
                         posthog?.capture(
                           "members_settings:upgrade_button_click",
@@ -128,7 +129,7 @@ export function MembersSettingsPageClient() {
                     >
                       <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />
                     </Button>
-                  </AlertDescription>
+                  </AlertAction>
                 </Alert>
               ) : (
                 <>
