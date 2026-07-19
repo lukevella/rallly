@@ -5,6 +5,7 @@ import { prisma } from "@rallly/database";
 import * as z from "zod";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
+import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import {
   removeSpaceImage,
   updateSpace,
@@ -49,12 +50,10 @@ export const setActiveSpaceAction = authActionClient
   .metadata({ actionName: "set_active_space" })
   .inputSchema(z.object({ spaceId: z.string() }))
   .action(async ({ ctx, parsedInput }) => {
-    const member = await prisma.spaceMember.findUnique({
+    const member = await prisma.spaceMember.findFirst({
       where: {
-        spaceId_userId: {
-          spaceId: parsedInput.spaceId,
-          userId: ctx.user.id,
-        },
+        spaceId: parsedInput.spaceId,
+        ...effectiveSpaceMemberWhere({ userId: ctx.user.id }),
       },
     });
 

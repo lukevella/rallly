@@ -13,6 +13,7 @@ import {
   getSpaceSeatCount,
 } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
+import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import { createSpace } from "@/features/space/mutations";
 import { memberRoleSchema } from "@/features/space/schema";
 import type { SpaceDTO } from "@/features/space/types";
@@ -42,9 +43,7 @@ export const spaces = router({
     }
 
     const result = await prisma.spaceMember.findMany({
-      where: {
-        userId: user.id,
-      },
+      where: effectiveSpaceMemberWhere({ userId: user.id }),
       select: {
         role: true,
         space: {

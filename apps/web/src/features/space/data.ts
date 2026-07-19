@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { cache } from "react";
 
 import type { MemberDTO } from "@/features/space/member/types";
+import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type { AuthorizedSpaceId, SpaceDTO } from "@/features/space/types";
 import { fromDBRole } from "@/features/space/utils";
 import { getSessionState } from "@/lib/auth";
@@ -168,9 +169,7 @@ export const getActiveSpace = cache(async () => {
 
 export const getActiveSpaceForUser = cache(async (userId: string) => {
   const spaceMember = await prisma.spaceMember.findFirst({
-    where: {
-      userId,
-    },
+    where: effectiveSpaceMemberWhere({ userId }),
     orderBy: {
       lastSelectedAt: "desc",
     },
