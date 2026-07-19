@@ -1,6 +1,7 @@
+import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Icon } from "@rallly/ui/icon";
 import { Skeleton } from "@rallly/ui/skeleton";
-import { BarChart2Icon, CalendarIcon } from "lucide-react";
+import { BarChart2Icon, CalendarIcon, InfoIcon } from "lucide-react";
 import { getAccountDeletionSummary } from "@/features/user/account-deletion/data";
 import { Trans } from "@/i18n/client";
 import { requireUser } from "@/lib/auth";
@@ -24,7 +25,7 @@ export async function AccountDeletionSummary() {
   return (
     <>
       {hasResources ? (
-        <ul className="space-y-2 rounded-md border p-3">
+        <ul className="space-y-2">
           {activePollCount > 0 ? (
             <li className="flex items-center gap-x-2">
               <Icon>
@@ -52,12 +53,17 @@ export async function AccountDeletionSummary() {
         </ul>
       ) : null}
       {hasActiveSubscription ? (
-        <p>
-          <Trans
-            i18nKey="deleteAccountSubscriptionWarning"
-            defaults="Your Pro subscription will be cancelled immediately. You won't be refunded for remaining time, and cancelling the deletion will not restore your subscription."
-          />
-        </p>
+        <Alert>
+          <InfoIcon />
+          <AlertDescription>
+            <p>
+              <Trans
+                i18nKey="deleteAccountSubscriptionWarning"
+                defaults="Your Pro subscription will be cancelled immediately. You won't be refunded for remaining time, and cancelling the deletion will not restore your subscription."
+              />
+            </p>
+          </AlertDescription>
+        </Alert>
       ) : null}
     </>
   );
@@ -65,7 +71,7 @@ export async function AccountDeletionSummary() {
 
 export function AccountDeletionSummarySkeleton() {
   return (
-    <div className="space-y-2 rounded-md border p-3">
+    <div className="space-y-2">
       <Skeleton className="h-5 w-40" />
       <Skeleton className="h-5 w-48" />
     </div>

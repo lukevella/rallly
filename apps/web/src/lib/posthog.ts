@@ -126,7 +126,7 @@ export async function deletePostHogPerson({
 
   const lookupRes = await fetch(
     `${apiHost}/api/projects/${projectId}/persons/?distinct_id=${encodeURIComponent(distinctId)}`,
-    { headers },
+    { headers, signal: AbortSignal.timeout(10_000) },
   );
 
   if (!lookupRes.ok) {
@@ -144,7 +144,7 @@ export async function deletePostHogPerson({
 
   const deleteRes = await fetch(
     `${apiHost}/api/projects/${projectId}/persons/${person.id}/?delete_events=true`,
-    { method: "DELETE", headers },
+    { method: "DELETE", headers, signal: AbortSignal.timeout(10_000) },
   );
 
   if (!deleteRes.ok && deleteRes.status !== 404) {

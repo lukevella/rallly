@@ -44,7 +44,7 @@ export function DeleteAccountDialog({
             />
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-3 py-4 text-sm">
+        <div className="space-y-3 text-sm">
           <p>
             <Trans
               i18nKey="deleteAccountDataWarning"
