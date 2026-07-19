@@ -45,6 +45,9 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
                     <Icon>
                       <ArrowLeftIcon />
                     </Icon>
+                    <span className="sr-only">
+                      <Trans i18nKey="back" defaults="Back" />
+                    </span>
                   </Link>
                   <span className="font-medium text-sm">
                     <Trans i18nKey="settings" defaults="Settings" />
