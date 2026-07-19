@@ -1,7 +1,6 @@
 import { buttonVariants } from "@rallly/ui";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -15,6 +14,7 @@ import {
   AuthPageHeader,
   AuthPageTitle,
 } from "../../components/auth-page";
+import { LinkWithRedirectTo } from "../../components/link-with-redirect-to";
 import { RegisterOTPForm } from "./components/register-otp-form";
 
 export default async function RegisterVerifyPage() {
@@ -56,7 +56,7 @@ export default async function RegisterVerifyPage() {
       </AuthPageHeader>
       <AuthPageContent>
         <RegisterOTPForm email={email} />
-        <Link
+        <LinkWithRedirectTo
           href="/register"
           className={buttonVariants({
             size: "xl",
@@ -65,7 +65,7 @@ export default async function RegisterVerifyPage() {
           })}
         >
           <Trans t={t} ns="app" i18nKey="back" defaults="Back" />
-        </Link>
+        </LinkWithRedirectTo>
       </AuthPageContent>
     </AuthPageContainer>
   );
