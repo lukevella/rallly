@@ -1,7 +1,6 @@
 import "server-only";
 
 import type { Stripe } from "@rallly/billing";
-import { stripe } from "@rallly/billing";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { sendRawEmail } from "@rallly/emails";
@@ -14,6 +13,7 @@ import {
   customerMetadataSchema,
   subscriptionMetadataSchema,
 } from "@/features/billing/schema";
+import { getStripe } from "@/features/billing/service";
 import {
   getSubscriptionDetails,
   isSubscriptionActive,
@@ -24,7 +24,7 @@ import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
 import { identifyGroup, posthog } from "@/lib/posthog";
 
 async function getExpandedSubscription(subscriptionId: string) {
-  return stripe.subscriptions.retrieve(subscriptionId, {
+  return getStripe().subscriptions.retrieve(subscriptionId, {
     expand: ["items.data.price.currency_options"],
   });
 }
@@ -330,6 +330,7 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
 }
 
 async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
+  const stripe = getStripe();
   const subscription = await stripe.subscriptions.retrieve(
     (event.data.object as Stripe.Subscription).id,
   );

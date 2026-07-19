@@ -1,6 +1,6 @@
 "use server";
 
-import { getProPricing, stripe } from "@rallly/billing";
+import { getProPricing } from "@rallly/billing";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { redirect } from "next/navigation";
 import * as z from "zod";
@@ -10,6 +10,7 @@ import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
 } from "@/features/billing/schema";
+import { getStripe } from "@/features/billing/service";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { AppError } from "@/lib/errors/app-error";
 import { authActionClient } from "@/lib/safe-action/server";
@@ -63,6 +64,8 @@ export const upgradeToProAction = authActionClient
 
     const { period, returnPath } = parsedInput;
 
+    const stripe = getStripe();
+
     let customerId = ctx.user.customerId;
 
     if (!customerId) {
@@ -82,7 +85,7 @@ export const upgradeToProAction = authActionClient
       customerId = customer.id;
     }
 
-    const proPricingData = await getProPricing();
+    const proPricingData = await getProPricing({ stripe });
 
     const checkoutSession = await stripe.checkout.sessions.create({
       success_url: absoluteUrl(

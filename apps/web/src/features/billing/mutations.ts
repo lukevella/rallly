@@ -1,12 +1,13 @@
 import "server-only";
 
-import { getProPricing, stripe } from "@rallly/billing";
+import { getProPricing } from "@rallly/billing";
 import {
   SEAT_UPDATE_PORTAL_HEADLINE,
   SEAT_UPDATE_PORTAL_PURPOSE,
   SEAT_UPDATE_PORTAL_VERSION,
 } from "@rallly/billing/lib/portal";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { getStripe } from "@/features/billing/service";
 
 export async function createStripePortalSession({
   customerId,
@@ -15,7 +16,7 @@ export async function createStripePortalSession({
   customerId: string;
   returnPath?: string;
 }) {
-  const portalSession = await stripe.billingPortal.sessions.create({
+  const portalSession = await getStripe().billingPortal.sessions.create({
     customer: customerId,
     return_url: absoluteUrl(returnPath),
   });
@@ -23,7 +24,8 @@ export async function createStripePortalSession({
 }
 
 async function createSeatUpdateBillingConfig() {
-  const pricing = await getProPricing();
+  const stripe = getStripe();
+  const pricing = await getProPricing({ stripe });
 
   // Both monthly and yearly prices share the same product.
   const monthlyPrice = await stripe.prices.retrieve(pricing.monthly.id);
@@ -77,7 +79,7 @@ async function resolveConfigurationId(): Promise<string> {
   // Auto-paginate so a match isn't missed when many stale configs still exist
   // (pre-cleanup). The current-version config is the newest, so this returns on
   // the first page in practice.
-  const configs = stripe.billingPortal.configurations.list({
+  const configs = getStripe().billingPortal.configurations.list({
     active: true,
     limit: 100,
   });
@@ -125,7 +127,7 @@ export async function createStripeSubscriptionUpdateConfirmation({
 }) {
   const configurationId = await getSeatUpdatePortalConfigurationId();
 
-  const portalSession = await stripe.billingPortal.sessions.create({
+  const portalSession = await getStripe().billingPortal.sessions.create({
     customer: customerId,
     configuration: configurationId,
     return_url: absoluteUrl("/settings/billing"),

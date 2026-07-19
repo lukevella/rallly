@@ -1,7 +1,15 @@
-import { getProPricing, stripe } from "../lib/stripe";
+import { createStripeClient, getProPricing } from "../lib/stripe";
+
+const secretKey = process.env.STRIPE_SECRET_KEY;
+
+if (!secretKey) {
+  throw new Error("STRIPE_SECRET_KEY is not set");
+}
+
+const stripe = createStripeClient({ secretKey });
 
 async function createAndExpireCheckout() {
-  const pricingData = await getProPricing();
+  const pricingData = await getProPricing({ stripe });
   console.info("📝 Creating checkout session...");
   const session = await stripe.checkout.sessions.create({
     success_url: "http://localhost:3000/success",

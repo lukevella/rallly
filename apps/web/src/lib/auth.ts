@@ -1,4 +1,3 @@
-import { stripe } from "@rallly/billing";
 import type { TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { sendChangeEmailEmail } from "@rallly/emails/templates/change-email";
@@ -27,6 +26,7 @@ import { getInstanceBranding } from "@/emails/branding";
 import { env } from "@/env";
 import { linkAnonymousUser } from "@/features/auth/mutations";
 import { isEmailBlocked, isTemporaryEmail } from "@/features/auth/utils";
+import { getStripe } from "@/features/billing/service";
 import { createSpace } from "@/features/space/mutations";
 import type { UserDTO } from "@/features/user/schema";
 import { getTranslation } from "@/i18n/server";
@@ -425,7 +425,7 @@ export const authLib = betterAuth({
 
           if (user?.customerId) {
             try {
-              await stripe.customers.update(user.customerId, {
+              await getStripe().customers.update(user.customerId, {
                 email: newEmail,
               });
             } catch (error) {

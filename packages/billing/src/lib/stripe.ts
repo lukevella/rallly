@@ -2,12 +2,14 @@ import Stripe from "stripe";
 
 export type { Stripe } from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2023-08-16",
-  typescript: true,
-});
+export function createStripeClient({ secretKey }: { secretKey: string }) {
+  return new Stripe(secretKey, {
+    apiVersion: "2023-08-16",
+    typescript: true,
+  });
+}
 
-export async function getProPricing() {
+export async function getProPricing({ stripe }: { stripe: Stripe }) {
   const prices = await stripe.prices.list({
     lookup_keys: ["pro-monthly", "pro-yearly"],
   });

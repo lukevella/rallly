@@ -1,6 +1,14 @@
 import { prisma } from "@rallly/database";
 
-import { stripe } from "../lib/stripe";
+import { createStripeClient } from "../lib/stripe";
+
+const secretKey = process.env.STRIPE_SECRET_KEY;
+
+if (!secretKey) {
+  throw new Error("STRIPE_SECRET_KEY is not set");
+}
+
+const stripe = createStripeClient({ secretKey });
 
 (async function syncSubscriptionData() {
   let processed = 0;

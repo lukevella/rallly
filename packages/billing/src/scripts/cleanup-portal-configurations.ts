@@ -2,7 +2,15 @@ import {
   SEAT_UPDATE_PORTAL_HEADLINE,
   SEAT_UPDATE_PORTAL_VERSION,
 } from "../lib/portal";
-import { stripe } from "../lib/stripe";
+import { createStripeClient } from "../lib/stripe";
+
+const secretKey = process.env.STRIPE_SECRET_KEY;
+
+if (!secretKey) {
+  throw new Error("STRIPE_SECRET_KEY is not set");
+}
+
+const stripe = createStripeClient({ secretKey });
 
 /**
  * Before the seat-update flow reused a single billing portal configuration, it
