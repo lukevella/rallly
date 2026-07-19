@@ -3,6 +3,7 @@
 // https://nextjs.org/docs/api-reference/next.config.js/introduction
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
+import path from "node:path";
 import createBundleAnalyzer from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
@@ -38,6 +39,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   turbopack: {
+    root: path.join(__dirname, "../.."),
     rules: {
       "*.svg": {
         loaders: ["@svgr/webpack"],
