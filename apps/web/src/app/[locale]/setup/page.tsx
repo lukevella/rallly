@@ -2,16 +2,23 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Logo } from "@/features/branding/components/logo";
 import { CreateSpaceForm } from "@/features/setup/components/create-space-form";
+import { SetupNameForm } from "@/features/setup/components/setup-name-form";
 import { userHasSpaces } from "@/features/setup/utils";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/lib/auth";
+import { validateRedirectUrl } from "@/lib/utils/redirect";
 
-export default async function SetupPage() {
+export default async function SetupPage(props: {
+  searchParams?: Promise<{ redirectTo?: string }>;
+}) {
   const user = await requireUser();
+  const searchParams = await props.searchParams;
 
-  if (await userHasSpaces(user.id)) {
-    redirect("/");
+  const needsName = !user.name;
+
+  if (!needsName && (await userHasSpaces(user.id))) {
+    redirect(validateRedirectUrl(searchParams?.redirectTo) ?? "/");
   }
 
   return (
@@ -23,18 +30,27 @@ export default async function SetupPage() {
           </div>
           <header className="text-center">
             <h1 className="font-bold text-2xl">
-              <Trans i18nKey="createSpace" defaults="Create Space" />
+              {needsName ? (
+                <Trans i18nKey="setupNameTitle" defaults="What's your name?" />
+              ) : (
+                <Trans i18nKey="createSpace" defaults="Create Space" />
+              )}
             </h1>
             <p className="mt-1 text-muted-foreground">
-              <Trans
-                i18nKey="createSpaceDescription"
-                defaults="Create a space to organize your polls and events."
-              />
+              {needsName ? (
+                <Trans
+                  i18nKey="setupNameDescription"
+                  defaults="Your name appears on the polls and events you create."
+                />
+              ) : (
+                <Trans
+                  i18nKey="createSpaceDescription"
+                  defaults="Create a space to organize your polls and events."
+                />
+              )}
             </p>
           </header>
-          <div>
-            <CreateSpaceForm />
-          </div>
+          <div>{needsName ? <SetupNameForm /> : <CreateSpaceForm />}</div>
         </article>
       </main>
     </div>
@@ -44,8 +60,8 @@ export default async function SetupPage() {
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
-    title: t("createSpace", {
-      defaultValue: "Create Space",
+    title: t("setupTitle", {
+      defaultValue: "Setup",
     }),
   };
 }

@@ -13,20 +13,9 @@ export class RegisterPage {
       .waitFor();
   }
 
-  async register({
-    name,
-    email,
-    password,
-  }: {
-    name: string;
-    email: string;
-    password: string;
-  }) {
-    // Fill in registration form
-    await this.page.getByPlaceholder("Jessie Smith").fill(name);
+  async register({ name, email }: { name: string; email: string }) {
+    // Request a verification code
     await this.page.getByPlaceholder("jessie.smith@example.com").fill(email);
-    await this.page.getByPlaceholder("••••••••").fill(password);
-
     await this.page
       .getByRole("button", { name: "Continue", exact: true })
       .click();
@@ -34,9 +23,18 @@ export class RegisterPage {
     // Handle verification code
     const code = await getCode(email);
     await this.page
-      .getByRole("heading", { name: "Finish Logging In" })
+      .getByRole("heading", { name: "Finish Signing Up" })
       .waitFor();
     await this.page.getByLabel("Enter your 6-digit code").fill(code);
+
+    // New accounts have no name and go through onboarding
+    await this.page
+      .getByRole("heading", { name: "What's your name?" })
+      .waitFor();
+    await this.page.getByPlaceholder("Jessie Smith").fill(name);
+    await this.page
+      .getByRole("button", { name: "Continue", exact: true })
+      .click();
 
     // Verify successful registration
     await expect(this.page.getByText(name)).toBeVisible();

@@ -17,7 +17,7 @@ import {
   AuthPageTitle,
 } from "../components/auth-page";
 import { LinkWithRedirectTo } from "../components/link-with-redirect-to";
-import { RegisterNameForm } from "./components/register-name-form";
+import { RegisterEmailForm } from "./components/register-email-form";
 
 export default async function Register(props: {
   params: Promise<{ locale: string }>;
@@ -63,7 +63,7 @@ export default async function Register(props: {
         </AuthPageDescription>
       </AuthPageHeader>
       <AuthPageContent>
-        <RegisterNameForm />
+        <RegisterEmailForm />
         {hasAlternateSignUpMethods ? <OrDivider /> : null}
         {hasAlternateSignUpMethods ? (
           <div className="grid gap-3">

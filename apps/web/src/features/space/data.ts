@@ -120,7 +120,8 @@ export function getSpaceBranding(spaceId: string) {
 /**
  * The active space for the signed-in user, gated for server rendering:
  * redirects to /login when unauthenticated or a guest, redirects to /setup
- * when the user has no space, and throws InvalidSessionError when banned.
+ * when the user has no name or no space, and throws InvalidSessionError
+ * when banned.
  * React cached, so every page and layout that needs the space in a request
  * shares one gate and one query. Server component/page use only — the
  * redirects make it unsuitable for route handlers and tRPC procedures.
@@ -150,6 +151,17 @@ export const getActiveSpace = cache(async () => {
 
   if (user.banned) {
     throw new InvalidSessionError();
+  }
+
+  // Accounts created through the OTP registration flow start without a
+  // name; /setup collects it before they can use the app.
+  if (!user.name) {
+    redirect(
+      buildSafeRedirectUrl({
+        destination: "/setup",
+        returnUrl: await getPathname(),
+      }),
+    );
   }
 
   const space = await getActiveSpaceForUser(user.id);

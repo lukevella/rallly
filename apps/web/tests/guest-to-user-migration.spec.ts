@@ -8,7 +8,6 @@ import { RegisterPage } from "./register-page";
 const testUser = {
   name: "Test User",
   email: "testuser@example.com",
-  password: "TestPassword456!",
 };
 
 test.describe.serial(() => {
@@ -63,7 +62,6 @@ test.describe.serial(() => {
     const loginPage = new LoginPage(page);
     await loginPage.login({
       email: testUser.email,
-      password: testUser.password,
     });
 
     // Step 4: Verify the poll has been linked to the logged-in user
