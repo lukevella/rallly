@@ -78,16 +78,27 @@ export function getClientAnonymousDistinctId(req: NextRequest) {
   return parsePostHogCookieDistinctId(cookie?.value) ?? undefined;
 }
 
+// Without an explicit distinctId, groupIdentify defaults to
+// $<groupType>_<groupKey>, creating a dummy person profile per group
+// (PostHog/posthog#7921). A single shared id caps the junk at one person.
+// Sending the event personless is not an option — ingestion only applies
+// $group_set when person processing is enabled.
+const GROUP_IDENTIFY_DISTINCT_ID = "server_group_identify";
+
 /**
- * Update properties on a group (e.g. poll, space). Groups are independent
- * of person profiles, so no guest handling is involved.
+ * Update properties on a group (e.g. poll, space). Group identify events are
+ * not attributed to the acting user — actor attribution belongs on the
+ * accompanying track() event.
  */
 export function identifyGroup(group: {
   groupType: string;
   groupKey: string;
   properties?: Record<string, unknown>;
 }) {
-  posthog()?.groupIdentify(group);
+  posthog()?.groupIdentify({
+    ...group,
+    distinctId: GROUP_IDENTIFY_DISTINCT_ID,
+  });
 }
 
 export function withPostHog(
