@@ -1,3 +1,4 @@
+import { buttonVariants } from "@rallly/ui";
 import { Icon } from "@rallly/ui/icon";
 import {
   Sidebar,
@@ -9,7 +10,6 @@ import {
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
   SidebarSeparator,
@@ -34,10 +34,21 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
           <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu>
-                <SidebarMenuItem className="flex h-9 items-center gap-2 px-2">
-                  <Icon>
-                    <SettingsIcon />
-                  </Icon>
+                <SidebarMenuItem className="flex items-center gap-3">
+                  <Link
+                    href="/"
+                    className={buttonVariants({
+                      variant: "ghost",
+                      size: "icon",
+                    })}
+                  >
+                    <Icon>
+                      <ArrowLeftIcon />
+                    </Icon>
+                    <span className="sr-only">
+                      <Trans i18nKey="back" defaults="Back" />
+                    </span>
+                  </Link>
                   <span className="font-medium text-sm">
                     <Trans i18nKey="settings" defaults="Settings" />
                   </span>
@@ -67,19 +78,6 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
           <DeveloperSidebarMenu />
         </SidebarContent>
         <SidebarFooter>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton render={<Link href="/" />}>
-                    <ArrowLeftIcon />
-                    <Trans i18nKey="back" defaults="Back" />
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-          <SidebarSeparator className="my-1" />
           <NavUser />
         </SidebarFooter>
       </Sidebar>
