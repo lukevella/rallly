@@ -65,7 +65,7 @@ function SpaceTypeOption({
   return (
     <label
       htmlFor={id}
-      className="group flex cursor-pointer items-center gap-2 rounded-lg border border-input bg-card px-3 py-2.5 text-sm transition-colors hover:bg-accent has-data-checked:border-primary has-data-checked:bg-primary/5"
+      className="group flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-input bg-card px-3 text-sm transition-colors hover:bg-accent has-data-checked:border-primary has-data-checked:bg-primary/5"
     >
       <span className="text-muted-foreground group-has-data-checked:text-primary">
         {icon}
@@ -158,7 +158,6 @@ export function SetupForm({
               <FormControl>
                 <Input
                   {...field}
-                  large
                   autoComplete="name"
                   data-1p-ignore
                   placeholder={t("namePlaceholder", {
@@ -183,7 +182,9 @@ export function SetupForm({
                 </FormLabel>
                 <FormControl>
                   <TimeZoneSelect
-                    className="min-w-0"
+                    // The combobox input group is h-8 by default; match the
+                    // h-9 controls in the rest of the form
+                    className="min-w-0 [&_[data-slot=input-group]]:h-9"
                     value={field.value}
                     onValueChange={field.onChange}
                     disabled={form.formState.isSubmitting}
@@ -274,7 +275,6 @@ export function SetupForm({
                 <FormControl>
                   <Input
                     {...field}
-                    large
                     data-1p-ignore
                     placeholder={t("organizationNamePlaceholder", {
                       defaultValue: "e.g. Acme Corp",
@@ -293,7 +293,6 @@ export function SetupForm({
         <Button
           type="submit"
           variant="primary"
-          size="xl"
           loading={
             form.formState.isSubmitting || form.formState.isSubmitSuccessful
           }
