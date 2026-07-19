@@ -2,15 +2,14 @@ import "server-only";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import * as Sentry from "@sentry/nextjs";
+import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import { posthog } from "@/lib/posthog";
 
 const logger = createLogger("auth/merge-user");
 
 const getActiveSpaceForUser = async ({ userId }: { userId: string }) => {
   const spaceMember = await prisma.spaceMember.findFirst({
-    where: {
-      userId,
-    },
+    where: effectiveSpaceMemberWhere({ userId }),
     select: {
       spaceId: true,
     },

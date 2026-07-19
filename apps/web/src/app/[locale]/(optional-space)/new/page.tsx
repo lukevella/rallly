@@ -13,6 +13,7 @@ import Link from "next/link";
 import { BrandStyle } from "@/features/branding/components/brand-style";
 import { CreatePoll } from "@/features/poll/components/create-poll";
 import { createSpaceDTO } from "@/features/space/data";
+import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
@@ -26,9 +27,7 @@ const getActiveSpace = async () => {
   }
 
   const spaceMember = await prisma.spaceMember.findFirst({
-    where: {
-      userId: session?.user.id,
-    },
+    where: effectiveSpaceMemberWhere({ userId: session.user.id }),
     orderBy: {
       lastSelectedAt: "desc",
     },

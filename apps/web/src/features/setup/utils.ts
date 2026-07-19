@@ -1,6 +1,7 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
+import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 
 export function isInitialAdmin(email: string) {
   return (
@@ -11,9 +12,7 @@ export function isInitialAdmin(email: string) {
 
 export const userHasSpaces = async (userId: string): Promise<boolean> => {
   const spaceCount = await prisma.spaceMember.count({
-    where: {
-      userId: userId,
-    },
+    where: effectiveSpaceMemberWhere({ userId }),
   });
   return spaceCount > 0;
 };
