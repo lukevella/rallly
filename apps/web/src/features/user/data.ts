@@ -65,6 +65,23 @@ export const getUserCount = async () => {
   });
 };
 
+// Counts are limited to columns with a userId index. Vote and comment
+// counts would scan participants/comments on an unindexed user_id, so the
+// dialog mentions those without numbers.
+export async function getAccountDeletionSummary(userId: string) {
+  const [pollCount, eventCount, activeSubscriptionCount] = await Promise.all([
+    prisma.poll.count({ where: { userId, deleted: false } }),
+    prisma.scheduledEvent.count({ where: { userId, deletedAt: null } }),
+    prisma.subscription.count({ where: { userId, active: true } }),
+  ]);
+
+  return {
+    pollCount,
+    eventCount,
+    hasActiveSubscription: activeSubscriptionCount > 0,
+  };
+}
+
 export const getUserHasPassword = async (userId: string) => {
   const account = await prisma.account.findFirst({
     where: {

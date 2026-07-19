@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { DialogTrigger } from "@rallly/ui/dialog";
+import { useDialog } from "@rallly/ui/dialog";
 
 import {
   PageSection,
@@ -23,7 +23,16 @@ import { DeleteAccountDialog } from "./delete-account-dialog";
 import { ProfileEmailAddress } from "./profile-email-address";
 import { ProfileSettings } from "./profile-settings";
 
-export function ProfilePage() {
+export function ProfilePage({
+  pollCount,
+  eventCount,
+  hasActiveSubscription,
+}: {
+  pollCount: number;
+  eventCount: number;
+  hasActiveSubscription: boolean;
+}) {
+  const deleteAccountDialog = useDialog();
   return (
     <SettingsPage>
       <SettingsPageHeader>
@@ -69,17 +78,24 @@ export function ProfilePage() {
               </PageSectionTitle>
               <PageSectionDescription>
                 <Trans
-                  i18nKey="dangerZoneAccount"
-                  defaults="Delete your account permanently. This action cannot be undone."
+                  i18nKey="dangerZoneAccountDeletion"
+                  defaults="Delete your account and all data associated with it"
                 />
               </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
-              <DeleteAccountDialog>
-                <DialogTrigger render={<Button className="text-destructive" />}>
-                  <Trans i18nKey="deleteAccount" defaults="Delete Account" />
-                </DialogTrigger>
-              </DeleteAccountDialog>
+              <Button
+                className="text-destructive"
+                {...deleteAccountDialog.triggerProps}
+              >
+                <Trans i18nKey="deleteAccount" defaults="Delete Account" />
+              </Button>
+              <DeleteAccountDialog
+                {...deleteAccountDialog.dialogProps}
+                pollCount={pollCount}
+                eventCount={eventCount}
+                hasActiveSubscription={hasActiveSubscription}
+              />
             </PageSectionContent>
           </PageSection>
         </PageSectionGroup>

@@ -1,11 +1,23 @@
 import type { Metadata } from "next";
 
 import type { Params } from "@/app/[locale]/types";
+import { getAccountDeletionSummary } from "@/features/user/data";
 import { getTranslation } from "@/i18n/server";
+import { requireUser } from "@/lib/auth";
 import { ProfilePage } from "./profile-page";
 
-export default function Page() {
-  return <ProfilePage />;
+export default async function Page() {
+  const user = await requireUser();
+  const { pollCount, eventCount, hasActiveSubscription } =
+    await getAccountDeletionSummary(user.id);
+
+  return (
+    <ProfilePage
+      pollCount={pollCount}
+      eventCount={eventCount}
+      hasActiveSubscription={hasActiveSubscription}
+    />
+  );
 }
 
 export async function generateMetadata(props: {
