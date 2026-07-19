@@ -69,17 +69,18 @@ model Poll {
 }
 
 model Participant {
-  id        String    @id @default(cuid())
-  name      String
-  email     String?
-  userId    String?   @map("user_id")
-  pollId    String    @map("poll_id")
-  locale    String?
-  timeZone  String?   @map("time_zone")
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-  deleted   Boolean   @default(false)
-  deletedAt DateTime? @map("deleted_at")
+  id          String    @id @default(cuid())
+  name        String
+  email       String?
+  userId      String?   @map("user_id")
+  pollId      String    @map("poll_id")
+  locale      String?
+  timeZone    String?   @map("time_zone")
+  useGravatar Boolean   @default(true) @map("use_gravatar")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  deleted     Boolean   @default(false)
+  deletedAt   DateTime? @map("deleted_at")
 
   votes Vote[]
 

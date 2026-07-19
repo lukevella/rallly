@@ -7,7 +7,7 @@ export default async function PrivacyPolicy() {
   return (
     <div className="prose mx-auto max-w-3xl">
       <h1>Privacy Policy</h1>
-      <p>Last updated: 1 August 2023</p>
+      <p>Last updated: 19 July 2026</p>
       <p>
         At rallly.co, we take your privacy seriously. This privacy policy
         explains how we collect, use, and disclose your personal data, and your
@@ -75,6 +75,16 @@ export default async function PrivacyPolicy() {
         For example, we use Featurebase to make it easy for users to submit
         feedback. Your name and email may be shared with Featurbase to provide a
         seamless transition between the two services.
+      </p>
+
+      <p>
+        When you provide an email address as a poll participant, we may create a
+        hashed version of that email and send it to Gravatar (operated by
+        Automattic Inc.) to look up an associated profile picture. If a matching
+        Gravatar account exists, its avatar is displayed next to your response.
+        You can opt out of this lookup when submitting your response while still
+        providing an email address, and no email data is sent to Gravatar for
+        self-hosted instances of Rallly.
       </p>
 
       <h2>Your rights</h2>

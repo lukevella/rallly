@@ -36,7 +36,8 @@ function createParticipantFullDTO(
   const { votes, user, ...rest } = participant;
   return {
     ...rest,
-    image: user?.image ?? getGravatarUrl(rest.email),
+    image:
+      user?.image ?? (rest.useGravatar ? getGravatarUrl(rest.email) : null),
     votes,
     hidden: false,
   };
@@ -232,6 +233,7 @@ export const participants = router({
         name: z.string().trim().min(1, "Participant name is required").max(100),
         email: z.string().optional(),
         timeZone: z.string().optional(),
+        useGravatar: z.boolean().optional(),
         votes: z
           .object({
             optionId: z.string(),
@@ -241,7 +243,10 @@ export const participants = router({
       }),
     )
     .mutation(
-      async ({ ctx, input: { pollId, votes, name, email, timeZone } }) => {
+      async ({
+        ctx,
+        input: { pollId, votes, name, email, timeZone, useGravatar },
+      }) => {
         const participantCount = await prisma.participant.count({
           where: {
             pollId,
@@ -277,6 +282,9 @@ export const participants = router({
             name: name,
             email,
             timeZone,
+            // Only send the email to Gravatar when the participant hasn't
+            // opted out (defaults to enabled to preserve existing behaviour).
+            useGravatar: useGravatar ?? true,
             userId: ctx.user.id,
             locale: ctx.locale,
             votes: {
