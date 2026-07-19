@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import type { Params } from "@/app/[locale]/types";
@@ -7,21 +8,33 @@ import {
   AccountDeletionSummarySkeleton,
 } from "@/features/account-deletion/components/account-deletion-summary";
 import { PendingDeletionNotice } from "@/features/account-deletion/components/pending-deletion-notice";
-import { getPendingDeletion } from "@/features/account-deletion/data";
+import { getCurrentUser } from "@/features/user/data";
 import { getTranslation } from "@/i18n/server";
-import { requireUser } from "@/lib/auth";
+import { getPathname } from "@/lib/pathname";
+import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 import { DeleteAccountButton } from "./delete-account-button";
 import { ProfilePage } from "./profile-page";
 
 export default async function Page() {
-  const user = await requireUser();
-  const deletedAt = await getPendingDeletion(user.id);
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect(
+      buildSafeRedirectUrl({
+        destination: "/login",
+        returnUrl: await getPathname(),
+      }),
+    );
+  }
 
   return (
     <ProfilePage
+      name={user.name}
+      image={user.image}
+      email={user.email}
       dangerZone={
-        deletedAt ? (
-          <PendingDeletionNotice deletedAt={deletedAt} />
+        user.deletedAt ? (
+          <PendingDeletionNotice deletedAt={user.deletedAt} />
         ) : (
           <DeleteAccountButton
             summary={

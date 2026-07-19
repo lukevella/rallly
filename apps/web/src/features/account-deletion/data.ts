@@ -3,15 +3,6 @@ import "server-only";
 import { prisma } from "@rallly/database";
 import { upcomingScheduledEventWhere } from "@/features/scheduled-event/utils";
 
-export async function getPendingDeletion(userId: string) {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { deletedAt: true },
-  });
-
-  return user?.deletedAt ?? null;
-}
-
 // Counts are limited to columns with a userId index. Vote and comment
 // counts would scan participants/comments on an unindexed user_id, so the
 // dialog mentions those without numbers.

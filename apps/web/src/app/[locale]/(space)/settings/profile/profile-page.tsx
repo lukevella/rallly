@@ -19,7 +19,17 @@ import { Trans } from "@/i18n/client";
 import { ProfileEmailAddress } from "./profile-email-address";
 import { ProfileSettings } from "./profile-settings";
 
-export function ProfilePage({ dangerZone }: { dangerZone: React.ReactNode }) {
+export function ProfilePage({
+  name,
+  image,
+  email,
+  dangerZone,
+}: {
+  name: string;
+  image?: string;
+  email: string;
+  dangerZone: React.ReactNode;
+}) {
   return (
     <SettingsPage>
       <SettingsPageHeader>
@@ -37,7 +47,7 @@ export function ProfilePage({ dangerZone }: { dangerZone: React.ReactNode }) {
         <PageSectionGroup>
           <PageSection variant="card">
             <PageSectionContent>
-              <ProfileSettings />
+              <ProfileSettings name={name} image={image} />
             </PageSectionContent>
           </PageSection>
 
@@ -54,7 +64,7 @@ export function ProfilePage({ dangerZone }: { dangerZone: React.ReactNode }) {
               </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
-              <ProfileEmailAddress />
+              <ProfileEmailAddress email={email} />
             </PageSectionContent>
           </PageSection>
 

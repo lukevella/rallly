@@ -18,7 +18,6 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { InputOTP } from "@/components/input-otp";
-import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 
@@ -150,8 +149,7 @@ function VerifyEmailChangeForm({
   );
 }
 
-export const ProfileEmailAddress = () => {
-  const user = useAuthedUser();
+export const ProfileEmailAddress = ({ email }: { email: string }) => {
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -160,7 +158,7 @@ export const ProfileEmailAddress = () => {
 
   const form = useForm({
     defaultValues: {
-      email: user.email,
+      email,
     },
     resolver: zodResolver(emailChangeFormData),
   });
@@ -173,7 +171,7 @@ export const ProfileEmailAddress = () => {
         newEmail={pendingEmail}
         onCancel={() => {
           setPendingEmail(null);
-          reset({ email: user.email });
+          reset({ email });
         }}
         onSuccess={() => {
           reset({ email: pendingEmail });
@@ -192,7 +190,7 @@ export const ProfileEmailAddress = () => {
       <Form {...form}>
         <form
           onSubmit={handleSubmit(async (data) => {
-            if (data.email === user.email) {
+            if (data.email === email) {
               return;
             }
 

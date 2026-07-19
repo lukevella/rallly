@@ -14,7 +14,6 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { updateUserNameAction } from "@/features/user/actions";
-import { useAuthedUser } from "@/features/user/client";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
@@ -24,13 +23,17 @@ const profileSettingsFormData = z.object({
   name: z.string().min(1).max(100),
 });
 
-export const ProfileSettings = () => {
-  const user = useAuthedUser();
-
+export const ProfileSettings = ({
+  name,
+  image,
+}: {
+  name: string;
+  image?: string;
+}) => {
   const updateUserName = useSafeAction(updateUserNameAction);
   const form = useForm({
     defaultValues: {
-      name: user.name,
+      name,
     },
     resolver: zodResolver(profileSettingsFormData),
   });
@@ -41,14 +44,14 @@ export const ProfileSettings = () => {
       <Form {...form}>
         <form
           onSubmit={handleSubmit(async (data) => {
-            if (data.name !== user.name) {
+            if (data.name !== name) {
               await updateUserName.executeAsync({ name: data.name });
             }
             reset(data);
           })}
         >
           <div className="flex flex-col gap-y-4">
-            <ProfilePicture name={user.name} image={user.image} />
+            <ProfilePicture name={name} image={image} />
             <FormField
               control={control}
               name="name"
