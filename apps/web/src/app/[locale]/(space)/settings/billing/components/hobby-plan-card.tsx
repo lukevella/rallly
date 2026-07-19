@@ -3,7 +3,10 @@
 import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { showPayWall } from "@/features/billing/client";
-import { SpaceTierIcon } from "@/features/space/components/space-tier";
+import {
+  SpaceTierIcon,
+  SpaceTierLabel,
+} from "@/features/space/components/space-tier";
 import { Trans } from "@/i18n/client";
 import {
   PlanCard,
@@ -25,7 +28,9 @@ export function HobbyPlanCard({ className }: { className?: string }) {
           <SpaceTierIcon tier="hobby" />
         </PlanCardIcon>
         <PlanCardContent>
-          <PlanCardTitle>Hobby</PlanCardTitle>
+          <PlanCardTitle>
+            <SpaceTierLabel tier="hobby" />
+          </PlanCardTitle>
           <PlanCardDescription>
             <Trans
               i18nKey="seatCount"
