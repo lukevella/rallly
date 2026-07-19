@@ -29,11 +29,14 @@ export default async function SetupPage(props: {
           </div>
           <header className="text-center">
             <h1 className="font-bold text-2xl">
-              <Trans i18nKey="setupTitle" defaults="Set Up Your Account" />
+              <Trans
+                i18nKey="setupAccountTitle"
+                defaults="Set Up Your Account"
+              />
             </h1>
             <p className="mt-1 text-muted-foreground">
               <Trans
-                i18nKey="setupDescription"
+                i18nKey="setupAccountDescription"
                 defaults="Tell us a bit about yourself."
               />
             </p>
@@ -50,7 +53,7 @@ export default async function SetupPage(props: {
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
-    title: t("setupTitle", {
+    title: t("setupAccountTitle", {
       defaultValue: "Set Up Your Account",
     }),
   };
