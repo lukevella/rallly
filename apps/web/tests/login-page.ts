@@ -29,7 +29,7 @@ export class LoginPage {
       // Handle verification code for email OTP login
       const code = await getCode(email);
       await this.page
-        .getByRole("heading", { name: "Finish Logging In" })
+        .getByRole("heading", { name: "Verify Your Email" })
         .waitFor();
       await this.page.getByLabel("Enter your 6-digit code").fill(code);
     }

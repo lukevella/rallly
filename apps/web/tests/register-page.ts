@@ -3,27 +3,31 @@ import { expect } from "@playwright/test";
 
 import { getCode } from "@rallly/test-helpers";
 
+/**
+ * Registration happens through the combined login flow: an email that
+ * doesn't have an account gets one created on OTP verification, followed by
+ * name onboarding.
+ */
 export class RegisterPage {
   constructor(private readonly page: Page) {}
 
   async goto() {
+    // /register redirects to the combined login/sign up page
     await this.page.goto("/register");
-    await this.page
-      .getByRole("heading", { name: "Create Your Account" })
-      .waitFor();
+    await this.page.getByText("Welcome").waitFor();
   }
 
   async register({ name, email }: { name: string; email: string }) {
     // Request a verification code
     await this.page.getByPlaceholder("jessie.smith@example.com").fill(email);
     await this.page
-      .getByRole("button", { name: "Continue", exact: true })
+      .getByRole("button", { name: "Continue with email" })
       .click();
 
     // Handle verification code
     const code = await getCode(email);
     await this.page
-      .getByRole("heading", { name: "Finish Signing Up" })
+      .getByRole("heading", { name: "Verify Your Email" })
       .waitFor();
     await this.page.getByLabel("Enter your 6-digit code").fill(code);
 

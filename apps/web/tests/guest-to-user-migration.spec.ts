@@ -33,9 +33,9 @@ test.describe.serial(() => {
     const dialog = await newPollPage.create({ name: "Monthly Meetup" });
     await dialog.goToPollPage();
 
-    // Step 2: Navigate to registration
+    // Step 2: Navigate to registration (redirects to the combined login page)
     await page.click("text=Create an account");
-    await expect(page).toHaveURL(/register/);
+    await expect(page).toHaveURL(/login/);
 
     // Step 3: Complete registration
     const registerPage = new RegisterPage(page);

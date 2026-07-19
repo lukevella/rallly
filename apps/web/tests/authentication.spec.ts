@@ -41,18 +41,18 @@ test.describe.serial(() => {
     test("signs in existing user when registering with existing email", async ({
       page,
     }) => {
+      // /register redirects to the combined login/sign up page
       await page.goto("/register");
-
-      await page.getByText("Create Your Account").waitFor();
+      await expect(page).toHaveURL(/\/login/);
 
       await page
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testUserEmail);
 
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
+      await page.getByRole("button", { name: "Continue with email" }).click();
 
       // Should show the verification code prompt (not an error) to prevent email enumeration
-      await page.getByRole("heading", { name: "Finish Signing Up" }).waitFor();
+      await page.getByRole("heading", { name: "Verify Your Email" }).waitFor();
 
       // The existing user should have received a sign-in OTP
       const code = await getCode(testUserEmail);
@@ -71,7 +71,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with email" }).click();
 
-      await page.getByRole("heading", { name: "Finish Logging In" }).waitFor();
+      await page.getByRole("heading", { name: "Verify Your Email" }).waitFor();
 
       await page.getByLabel("Enter your 6-digit code").fill("000000");
 
@@ -89,7 +89,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with email" }).click();
 
-      await page.getByRole("heading", { name: "Finish Logging In" }).waitFor();
+      await page.getByRole("heading", { name: "Verify Your Email" }).waitFor();
 
       const code = await getCode(testUserEmail);
 
@@ -108,7 +108,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with email" }).click();
 
-      await page.getByRole("heading", { name: "Finish Logging In" }).waitFor();
+      await page.getByRole("heading", { name: "Verify Your Email" }).waitFor();
 
       const code = await getCode(testUserEmail);
 

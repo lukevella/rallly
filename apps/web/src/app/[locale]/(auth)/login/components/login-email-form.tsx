@@ -1,5 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { TurnstileInstance } from "@marsidev/react-turnstile";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -16,11 +18,14 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
+import { sendLoginOtp } from "@/app/[locale]/(auth)/login/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
 import { trpc } from "@/trpc/client";
+
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+const isTurnstileEnabled = !!turnstileSiteKey;
 
 function useLoginWithEmailSchema() {
   const { t } = useTranslation();
@@ -37,6 +42,11 @@ export function LoginWithEmailForm() {
   const loginWithEmailSchema = useLoginWithEmailSchema();
   const searchParams = useSearchParams();
   const [showPasswordField, setShowPasswordField] = React.useState(false);
+  const [showCaptcha, setShowCaptcha] = React.useState(false);
+  const turnstileRef = React.useRef<TurnstileInstance>(null);
+  const [turnstileToken, setTurnstileToken] = React.useState<string | null>(
+    null,
+  );
   const form = useForm({
     defaultValues: {
       identifier: "",
@@ -45,7 +55,7 @@ export function LoginWithEmailForm() {
     resolver: zodResolver(loginWithEmailSchema),
   });
   const { handleSubmit, formState } = form;
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const getLoginMethod = trpc.auth.getLoginMethod.useMutation();
   const isPasswordLogin = showPasswordField && !!form.watch("password");
@@ -94,29 +104,50 @@ export function LoginWithEmailForm() {
             window.location.href = validatedRedirectTo ?? "/";
 
             return;
-          } else {
-            if (!showPasswordField) {
-              const res = await getLoginMethod.mutateAsync({
-                email: identifier,
-              });
+          }
 
-              if (res.method === "credential") {
-                // show password field
-                setShowPasswordField(true);
-                return;
-              }
-            }
-
-            const res = await authClient.emailOtp.sendVerificationOtp({
+          if (!showPasswordField) {
+            const res = await getLoginMethod.mutateAsync({
               email: identifier,
-              type: "email-verification",
             });
 
-            if (res.error) {
-              switch (res.error.code) {
+            if (res.method === "credential") {
+              // show password field
+              setShowPasswordField(true);
+              return;
+            }
+          }
+
+          // The OTP send is captcha-gated. Reveal the widget on the first
+          // attempt and wait for a token before sending.
+          if (isTurnstileEnabled && !turnstileToken) {
+            setShowCaptcha(true);
+            return;
+          }
+
+          try {
+            const res = await sendLoginOtp({
+              email: identifier,
+              captchaToken: turnstileToken ?? undefined,
+            });
+
+            if (!res.ok) {
+              switch (res.code) {
+                case "CAPTCHA_FAILED":
+                  form.setError("root", {
+                    message: t("captchaFailed", {
+                      defaultValue: "Verification failed. Please try again.",
+                    }),
+                  });
+                  break;
                 case "EMAIL_BLOCKED":
                   form.setError("identifier", {
                     message: t("authErrorsEmailBlocked"),
+                  });
+                  break;
+                case "TEMPORARY_EMAIL_NOT_ALLOWED":
+                  form.setError("identifier", {
+                    message: t("temporaryEmailNotAllowed"),
                   });
                   break;
                 case "BANNED_USER":
@@ -129,15 +160,14 @@ export function LoginWithEmailForm() {
                   break;
                 default:
                   form.setError("identifier", {
-                    message: res.error.message,
+                    message: t("loginOtpSendError", {
+                      defaultValue: "Something went wrong. Please try again.",
+                    }),
                   });
                   break;
               }
               return;
             }
-
-            await setVerificationEmail(identifier);
-            // redirect to verify page with redirectTo
 
             router.push(
               `/login/verify${
@@ -146,6 +176,11 @@ export function LoginWithEmailForm() {
                   : ""
               }`,
             );
+          } finally {
+            if (isTurnstileEnabled) {
+              setTurnstileToken(null);
+              turnstileRef.current?.reset();
+            }
           }
         })}
       >
@@ -215,10 +250,31 @@ export function LoginWithEmailForm() {
         {form.formState.errors.root?.message ? (
           <FormMessage>{form.formState.errors.root.message}</FormMessage>
         ) : null}
+        {showCaptcha && turnstileSiteKey ? (
+          <Turnstile
+            ref={turnstileRef}
+            siteKey={turnstileSiteKey}
+            options={{
+              language: i18n.language,
+              size: "flexible",
+            }}
+            onSuccess={(token) => {
+              setTurnstileToken(token);
+            }}
+            onError={() => {
+              setTurnstileToken(null);
+            }}
+            onExpire={() => {
+              setTurnstileToken(null);
+              turnstileRef.current?.reset();
+            }}
+          />
+        ) : null}
         <div>
           <Button
             size="xl"
             loading={form.formState.isSubmitting}
+            disabled={showCaptcha && !isPasswordLogin && !turnstileToken}
             type="submit"
             className="w-full"
             variant="primary"
