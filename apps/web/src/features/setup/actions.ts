@@ -2,6 +2,7 @@
 
 import { subject } from "@casl/ability";
 import * as z from "zod";
+import { adoptOrphanedPolls } from "@/features/poll/mutations";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { createSpace, updateSpace } from "@/features/space/mutations";
@@ -39,6 +40,12 @@ export const setupSpaceAction = authActionClient
       const space = await createSpace({
         name,
         ownerId: ctx.user.id,
+      });
+      // Guest linking into an account without a space migrates polls with
+      // no space; pull them into the one just created.
+      await adoptOrphanedPolls({
+        userId: ctx.user.id,
+        spaceId: space.id,
       });
       spaceId = space.id;
     } else {

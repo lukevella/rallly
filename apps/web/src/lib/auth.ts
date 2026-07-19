@@ -27,6 +27,7 @@ import { env } from "@/env";
 import { linkAnonymousUser } from "@/features/auth/mutations";
 import { isEmailBlocked, isTemporaryEmail } from "@/features/auth/utils";
 import { getStripe } from "@/features/billing/service";
+import { adoptOrphanedPolls } from "@/features/poll/mutations";
 import { createSpace } from "@/features/space/mutations";
 import type { UserDTO } from "@/features/user/schema";
 import { getTranslation } from "@/i18n/server";
@@ -486,14 +487,9 @@ export const authLib = betterAuth({
             // Guest linking can run before this hook (a sign-in that
             // creates the account links the anonymous user first), leaving
             // migrated polls without a space. Adopt them now.
-            await prisma.poll.updateMany({
-              where: {
-                userId: user.id,
-                spaceId: null,
-              },
-              data: {
-                spaceId: space.id,
-              },
+            await adoptOrphanedPolls({
+              userId: user.id,
+              spaceId: space.id,
             });
 
             identifyGroup({
