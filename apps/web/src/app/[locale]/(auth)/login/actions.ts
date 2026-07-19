@@ -23,23 +23,31 @@ async function verifyCaptcha(token?: string) {
     return true;
   }
 
-  const res = await fetch(
-    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    {
-      method: "POST",
-      body: new URLSearchParams({
-        secret: env.TURNSTILE_SECRET_KEY,
-        response: token ?? "",
-      }),
-    },
-  );
+  // Fails closed: an unreachable or slow siteverify endpoint rejects the
+  // attempt instead of hanging the request or skipping the check.
+  try {
+    const res = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        body: new URLSearchParams({
+          secret: env.TURNSTILE_SECRET_KEY,
+          response: token ?? "",
+        }),
+        signal: AbortSignal.timeout(5000),
+      },
+    );
 
-  if (!res.ok) {
+    if (!res.ok) {
+      return false;
+    }
+
+    const outcome = (await res.json()) as { success: boolean };
+    return outcome.success;
+  } catch (error) {
+    console.error(error);
     return false;
   }
-
-  const outcome = (await res.json()) as { success: boolean };
-  return outcome.success;
 }
 
 /**

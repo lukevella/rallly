@@ -106,11 +106,18 @@ export function SetupForm({ defaultName }: { defaultName: string }) {
               return;
             }
 
-            await setupSpace.executeAsync(
+            const result = await setupSpace.executeAsync(
               spaceType === "work"
                 ? { spaceType, organizationName: organizationName.trim() }
                 : { spaceType },
             );
+
+            // Server errors surface through the global useSafeAction toast;
+            // stay on the form so the user can retry. On success the hook
+            // refreshes the router and the page redirects onward.
+            if (result?.serverError || result?.validationErrors) {
+              return;
+            }
 
             router.refresh();
           },
@@ -131,7 +138,9 @@ export function SetupForm({ defaultName }: { defaultName: string }) {
                   large
                   autoComplete="name"
                   data-1p-ignore
-                  placeholder={t("namePlaceholder")}
+                  placeholder={t("namePlaceholder", {
+                    defaultValue: "Jessie Smith",
+                  })}
                   disabled={form.formState.isSubmitting}
                   autoFocus={true}
                 />
