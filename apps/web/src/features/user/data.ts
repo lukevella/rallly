@@ -20,6 +20,7 @@ export const createUserDTO = (user: User): UserDTO => ({
   weekStart: user.weekStart ?? undefined,
   customerId: user.customerId ?? undefined,
   isGuest: user.isAnonymous,
+  deletedAt: user.deletedAt ?? undefined,
 });
 
 /**

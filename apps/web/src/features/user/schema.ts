@@ -18,4 +18,5 @@ export type UserDTO = {
   locale?: string;
   weekStart?: number;
   customerId?: string;
+  deletedAt?: Date;
 };
