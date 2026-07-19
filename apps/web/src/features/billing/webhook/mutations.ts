@@ -21,7 +21,7 @@ import {
 } from "@/features/billing/webhook/utils";
 import { licenseManager } from "@/features/licensing/mutations";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
-import { posthog } from "@/lib/posthog";
+import { identifyGroup, posthog } from "@/lib/posthog";
 
 async function getExpandedSubscription(subscriptionId: string) {
   return stripe.subscriptions.retrieve(subscriptionId, {
@@ -281,7 +281,7 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
     return syncSpaceTier(tx, spaceId);
   });
 
-  posthog()?.groupIdentify({
+  identifyGroup({
     groupType: "space",
     groupKey: spaceId,
     properties: {
@@ -368,7 +368,7 @@ async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     return syncSpaceTier(tx, spaceId);
   });
 
-  posthog()?.groupIdentify({
+  identifyGroup({
     groupType: "space",
     groupKey: spaceId,
     properties: {
@@ -461,7 +461,7 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     return syncSpaceTier(tx, spaceId);
   });
 
-  posthog()?.groupIdentify({
+  identifyGroup({
     groupType: "space",
     groupKey: spaceId,
     properties: {

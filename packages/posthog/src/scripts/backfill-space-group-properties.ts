@@ -34,9 +34,10 @@ const API_HOST = process.env.NEXT_PUBLIC_POSTHOG_API_HOST;
 const PAGE_SIZE = 500;
 const SAMPLE_SIZE = 10;
 // Without an explicit distinctId, groupIdentify defaults to $space_<groupKey>,
-// which creates a dummy person profile PER GROUP (PostHog/posthog#7921). A
-// single shared id caps the junk at one person for the whole run.
-const BACKFILL_DISTINCT_ID = "space_group_properties_backfill";
+// which creates a dummy person profile PER GROUP (PostHog/posthog#7921). Shares
+// the id used by identifyGroup in apps/web so all group identifies collapse
+// into a single dummy person.
+const BACKFILL_DISTINCT_ID = "server_group_identify";
 // Matches DEFAULT_SEAT_LIMIT in apps/web — spaces without an active
 // subscription have a single seat
 const DEFAULT_SEAT_COUNT = 1;
