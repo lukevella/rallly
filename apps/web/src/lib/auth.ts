@@ -483,6 +483,19 @@ export const authLib = betterAuth({
               ownerId: user.id,
             });
 
+            // Guest linking can run before this hook (a sign-in that
+            // creates the account links the anonymous user first), leaving
+            // migrated polls without a space. Adopt them now.
+            await prisma.poll.updateMany({
+              where: {
+                userId: user.id,
+                spaceId: null,
+              },
+              data: {
+                spaceId: space.id,
+              },
+            });
+
             identifyGroup({
               groupType: "space",
               groupKey: space.id,
