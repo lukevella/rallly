@@ -18,7 +18,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { sendLoginOtp } from "@/app/[locale]/(auth)/login/actions";
+import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
@@ -37,7 +37,11 @@ function useLoginWithEmailSchema() {
   }, [t]);
 }
 
-export function LoginWithEmailForm() {
+export function LoginWithEmailForm({
+  isRegistrationEnabled,
+}: {
+  isRegistrationEnabled: boolean;
+}) {
   const router = useRouter();
   const loginWithEmailSchema = useLoginWithEmailSchema();
   const searchParams = useSearchParams();
@@ -126,14 +130,26 @@ export function LoginWithEmailForm() {
           }
 
           try {
-            const res = await sendLoginOtp({
+            // When registration is enabled a "sign-in" OTP either signs
+            // into an existing account or creates one on verification, so
+            // known and unknown emails behave identically. When it's
+            // disabled, "email-verification" only reaches existing users.
+            const res = await authClient.emailOtp.sendVerificationOtp({
               email: identifier,
-              captchaToken: turnstileToken ?? undefined,
+              type: isRegistrationEnabled ? "sign-in" : "email-verification",
+              fetchOptions: turnstileToken
+                ? {
+                    headers: {
+                      "x-captcha-response": turnstileToken,
+                    },
+                  }
+                : undefined,
             });
 
-            if (!res.ok) {
-              switch (res.code) {
-                case "CAPTCHA_FAILED":
+            if (res.error) {
+              switch (res.error.code) {
+                case "MISSING_RESPONSE":
+                case "VERIFICATION_FAILED":
                   form.setError("root", {
                     message: t("captchaFailed", {
                       defaultValue: "Verification failed. Please try again.",
@@ -160,14 +176,14 @@ export function LoginWithEmailForm() {
                   break;
                 default:
                   form.setError("identifier", {
-                    message: t("loginOtpSendError", {
-                      defaultValue: "Something went wrong. Please try again.",
-                    }),
+                    message: res.error.message,
                   });
                   break;
               }
               return;
             }
+
+            await setVerificationEmail(identifier);
 
             router.push(
               `/login/verify${

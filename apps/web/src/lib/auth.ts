@@ -73,7 +73,10 @@ const conditionalPlugins: BetterAuthPlugin[] = [
         captcha({
           provider: "cloudflare-turnstile",
           secretKey: env.TURNSTILE_SECRET_KEY,
-          endpoints: ["/sign-up/email"],
+          // Every caller of the OTP send endpoint (combined login/signup
+          // page, event RSVP verification) renders the Turnstile widget and
+          // sends the token via the x-captcha-response header.
+          endpoints: ["/sign-up/email", "/email-otp/send-verification-otp"],
         }),
       ]
     : []),
