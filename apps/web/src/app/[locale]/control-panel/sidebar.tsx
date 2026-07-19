@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import type * as React from "react";
 
-import { NavUser } from "@/components/nav-user";
+import { NavUser } from "@/features/user/components/nav-user";
 import { Trans } from "@/i18n/client";
 
 import { NavItem } from "./nav-item";

@@ -18,9 +18,9 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { InputOTP } from "@/components/input-otp";
+import { useAuthedUser } from "@/features/user/components/user-provider";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
-import { trpc } from "@/trpc/client";
 
 const emailChangeFormData = z.object({
   email: z.email(),
@@ -151,8 +151,7 @@ function VerifyEmailChangeForm({
 }
 
 export const ProfileEmailAddress = () => {
-  const [user] = trpc.user.getAuthed.useSuspenseQuery();
-  const utils = trpc.useUtils();
+  const user = useAuthedUser();
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -176,11 +175,12 @@ export const ProfileEmailAddress = () => {
           setPendingEmail(null);
           reset({ email: user.email });
         }}
-        onSuccess={async () => {
+        onSuccess={() => {
           reset({ email: pendingEmail });
           setPendingEmail(null);
           setDidChangeEmail(true);
-          await utils.user.getAuthed.invalidate();
+          // The change-email endpoint refreshes the session snapshot, so a
+          // refresh re-renders the layouts with the new email.
           router.refresh();
         }}
       />

@@ -29,6 +29,25 @@ export function UserProvider({
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 }
 
+/**
+ * For components rendered on routes gated by a logged-in (non-guest) user
+ * (e.g. behind requireUser). Throws instead of returning null so consumers
+ * don't need to handle the unauthenticated case.
+ */
+export function useAuthedUser() {
+  const user = React.useContext(UserContext);
+
+  if (user === undefined) {
+    throw new Error("useAuthedUser must be used within a UserProvider");
+  }
+
+  if (!user || user.isGuest) {
+    throw new Error("useAuthedUser requires a logged in user");
+  }
+
+  return user;
+}
+
 export function useUser() {
   const user = React.useContext(UserContext);
   const router = useRouter();

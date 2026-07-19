@@ -14,9 +14,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { updateUserNameAction } from "@/features/user/actions";
+import { useAuthedUser } from "@/features/user/components/user-provider";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { trpc } from "@/trpc/client";
 
 import { ProfilePicture } from "./profile-picture";
 
@@ -25,7 +25,7 @@ const profileSettingsFormData = z.object({
 });
 
 export const ProfileSettings = () => {
-  const [user] = trpc.user.getAuthed.useSuspenseQuery();
+  const user = useAuthedUser();
 
   const updateUserName = useSafeAction(updateUserNameAction);
   const form = useForm({
