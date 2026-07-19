@@ -18,6 +18,7 @@ import { CustomBrandingPrompt } from "@/features/branding/components/custom-bran
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
+import { AccountDeletionBanner } from "@/features/user/components/account-deletion-banner";
 import { NavUser } from "@/features/user/components/nav-user";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
@@ -76,6 +77,7 @@ export default async function Layout({
           </SidebarFooter>
         </Sidebar>
         <SidebarInset id="main-content" tabIndex={-1} className="min-w-0">
+          <AccountDeletionBanner />
           <LicenseLimitWarning />
           <CustomBrandingPrompt />
           <div className="flex flex-1 flex-col">
