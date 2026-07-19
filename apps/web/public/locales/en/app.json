@@ -373,7 +373,6 @@
   "limitedPollLifetime": "Limited Poll Lifetime",
   "limitedPollLifetimeDescription": "Inactive polls are automatically deleted",
   "loading": "Loading...",
-  "localeSyncToast": "Your language preferences have changed",
   "location": "Location",
   "locationCustomLink": "Custom link",
   "locationDisplayText": "Display text",
