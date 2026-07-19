@@ -49,17 +49,9 @@ function defineAbilityForUser(
 
   // Can update their own email and name
   can("update", "User", ["email", "name"], { id: user.id });
-  // Can delete their own account
+  // Can delete their own account. An active subscription no longer blocks
+  // deletion — scheduling a deletion cancels the subscription instead.
   can("delete", "User", { id: user.id });
-
-  // Cannot delete user if they have active subscriptions
-  cannot("delete", "User", {
-    subscriptions: {
-      some: {
-        active: true,
-      },
-    },
-  });
 
   // Can read their own spaces
   can("read", "Space", { ownerId: user.id });
