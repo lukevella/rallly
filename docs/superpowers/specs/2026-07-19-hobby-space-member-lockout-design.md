@@ -89,6 +89,13 @@ Untouched. Polls created by locked members stay in the space and remain
 manageable by the owner and other active members — the same semantics as
 `removeMember` today.
 
+Guest merge: when a user links a guest session and has no effective space
+(their only membership is locked, or their space is not yet provisioned),
+their guest polls, participants, and comments still transfer to their
+account — polls just carry no `spaceId` until they have a space. Ownership
+via `poll.userId` keeps the content reachable; it must never stay stranded
+on the anonymous user.
+
 ## Re-upgrade
 
 Access restores instantly for all members (derived state). If the new seat
