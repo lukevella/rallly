@@ -13,7 +13,6 @@ export default async function SetupPage(props: {
 }) {
   const user = await requireUser();
   const searchParams = await props.searchParams;
-  const { t } = await getTranslation();
 
   const space = await getActiveSpaceForUser(user.id);
 
@@ -35,17 +34,12 @@ export default async function SetupPage(props: {
             <p className="mt-1 text-muted-foreground">
               <Trans
                 i18nKey="setupDescription"
-                defaults="Tell us your name and what to call your space."
+                defaults="Tell us a bit about yourself."
               />
             </p>
           </header>
           <div>
-            <SetupForm
-              defaultName={user.name}
-              defaultSpaceName={
-                space?.name ?? t("personal", { defaultValue: "Personal" })
-              }
-            />
+            <SetupForm defaultName={user.name} />
           </div>
         </article>
       </main>

@@ -5,34 +5,74 @@ import * as z from "zod";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { createSpace, updateSpace } from "@/features/space/mutations";
+import { identifyGroup, track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
+
+const setupSpaceSchema = z.discriminatedUnion("spaceType", [
+  z.object({ spaceType: z.literal("personal") }),
+  z.object({
+    spaceType: z.literal("work"),
+    organizationName: z.string().min(1).max(100),
+  }),
+]);
 
 /**
  * Names the user's space during onboarding: renames the active space when
  * they're allowed to (every new account owns an auto-created "Personal"
  * space), or creates one when they have none. A member of someone else's
- * space who owns no space of their own gets nothing renamed.
+ * space who owns no space of their own gets nothing renamed or relabeled.
  */
 export const setupSpaceAction = authActionClient
   .metadata({ actionName: "setup_space" })
-  .inputSchema(z.object({ spaceName: z.string().min(1).max(100) }))
+  .inputSchema(setupSpaceSchema)
   .action(async ({ ctx, parsedInput }) => {
-    const space = await getActiveSpaceForUser(ctx.user.id);
+    const name =
+      parsedInput.spaceType === "work"
+        ? parsedInput.organizationName
+        : "Personal";
 
-    if (!space) {
-      await createSpace({
-        name: parsedInput.spaceName,
+    const existingSpace = await getActiveSpaceForUser(ctx.user.id);
+
+    let spaceId: string | null = null;
+
+    if (!existingSpace) {
+      const space = await createSpace({
+        name,
         ownerId: ctx.user.id,
       });
-      return;
+      spaceId = space.id;
+    } else {
+      const ability = defineAbilityForMember({
+        user: ctx.user,
+        space: existingSpace,
+      });
+
+      if (ability.can("update", subject("Space", existingSpace))) {
+        await updateSpace({
+          spaceId: existingSpace.id,
+          name,
+        });
+        spaceId = existingSpace.id;
+      }
     }
 
-    const ability = defineAbilityForMember({ user: ctx.user, space });
+    if (spaceId) {
+      identifyGroup({
+        groupType: "space",
+        groupKey: spaceId,
+        properties: {
+          type: parsedInput.spaceType,
+        },
+      });
 
-    if (ability.can("update", subject("Space", space))) {
-      await updateSpace({
-        spaceId: space.id,
-        name: parsedInput.spaceName,
+      track(ctx.user, {
+        event: "space_setup",
+        properties: {
+          space_type: parsedInput.spaceType,
+        },
+        groups: {
+          space: spaceId,
+        },
       });
     }
   });
