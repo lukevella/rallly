@@ -2,6 +2,7 @@ import "server-only";
 
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 
 export async function getPollResults({
@@ -269,12 +270,10 @@ export async function canUserManagePoll(
   }
 
   if (poll.spaceId) {
-    const space = await prisma.spaceMember.findUnique({
+    const space = await prisma.spaceMember.findFirst({
       where: {
-        spaceId_userId: {
-          spaceId: poll.spaceId,
-          userId: user.id,
-        },
+        spaceId: poll.spaceId,
+        ...effectiveSpaceMemberWhere({ userId: user.id }),
       },
     });
 
@@ -292,7 +291,10 @@ export const hasPollAdminAccess = async (pollId: string, userId: string) => {
     where: {
       id: pollId,
       deleted: false,
-      OR: [{ userId: userId }, { space: { members: { some: { userId } } } }],
+      OR: [
+        { userId: userId },
+        { space: { members: { some: effectiveSpaceMemberWhere({ userId }) } } },
+      ],
     },
     select: {
       id: true,
