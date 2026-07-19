@@ -1,9 +1,9 @@
-import { stripe } from "@rallly/billing";
 import * as Sentry from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { createStripePortalSession } from "@/features/billing/mutations";
+import { getStripe } from "@/features/billing/service";
 
 /**
  * Checkout return endpoint. Stripe redirects the browser here after payment
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
   let customerId: string;
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const session = await getStripe().checkout.sessions.retrieve(sessionId);
     if (typeof session.customer !== "string") {
       Sentry.captureException(new Error("Invalid customer ID in session"));
       return NextResponse.json(

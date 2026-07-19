@@ -1,8 +1,8 @@
 import type { Stripe } from "@rallly/billing";
-import { stripe } from "@rallly/billing";
 import * as Sentry from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { getStripe } from "@/features/billing/service";
 import { handleStripeWebhookEvent } from "@/features/billing/webhook/mutations";
 import { isSelfHosted } from "@/lib/constants";
 import { withPostHog } from "@/lib/posthog";
@@ -30,7 +30,7 @@ const handler = async (request: NextRequest) => {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, sig, stripeSigningSecret);
+    event = getStripe().webhooks.constructEvent(body, sig, stripeSigningSecret);
   } catch (err) {
     Sentry.captureException(err);
     return NextResponse.json(
