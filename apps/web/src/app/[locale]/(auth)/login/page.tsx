@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { OIDCAutoSignIn } from "@/app/[locale]/(auth)/login/components/oidc-auto-sign-in";
 import { env } from "@/env";
+import { LoginWithOIDC } from "@/features/auth/components/login-with-oidc";
+import { OrDivider } from "@/features/auth/components/or-divider";
+import { SSOProvider } from "@/features/auth/components/sso-provider";
 import { getRegistrationEnabled } from "@/features/instance-settings/data";
 import { getTranslation } from "@/i18n/server";
 import { authLib, getSessionState } from "@/lib/auth";
@@ -18,9 +21,6 @@ import {
 import { LinkWithRedirectTo } from "../components/link-with-redirect-to";
 import { AuthErrors } from "./components/auth-errors";
 import { LoginWithEmailForm } from "./components/login-email-form";
-import { LoginWithOIDC } from "./components/login-with-oidc";
-import { OrDivider } from "./components/or-divider";
-import { SSOProvider } from "./components/sso-provider";
 
 async function loadData() {
   const [isRegistrationEnabled, { t }] = await Promise.all([
