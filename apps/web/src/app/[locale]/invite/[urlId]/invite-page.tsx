@@ -8,12 +8,12 @@ import { EventCard } from "@/features/poll/components/event-card";
 import { PollFooter } from "@/features/poll/components/poll-footer";
 import { ResponsiveResults } from "@/features/poll/components/responsive-results";
 import { VotingForm } from "@/features/poll/components/voting-form";
+import { useUser } from "@/features/user/components/user-provider";
 import { Trans } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
 
 const GoToApp = () => {
   const poll = usePoll();
-  const { data: user } = trpc.user.getMe.useQuery();
+  const { user } = useUser();
 
   if (!user || user.id !== poll.userId) {
     return null;

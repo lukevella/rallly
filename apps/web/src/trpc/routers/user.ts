@@ -7,16 +7,9 @@ import { getNotificationPreferences } from "@/features/notifications/data";
 import { activityEventTypes } from "@/features/notifications/schema";
 import { defineAbilityFor } from "@/features/user/ability";
 import { track } from "@/lib/posthog";
-import { privateProcedure, publicProcedure, router } from "../trpc";
+import { privateProcedure, router } from "../trpc";
 
 export const user = router({
-  getMe: publicProcedure.query(async ({ ctx }) => {
-    if (!ctx.user) {
-      return null;
-    }
-
-    return ctx.user;
-  }),
   getAuthed: privateProcedure.query(async ({ ctx }) => {
     return ctx.user;
   }),

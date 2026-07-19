@@ -4,14 +4,19 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import type { UserAbility } from "@/features/user/ability";
 import { defineAbilityFor } from "@/features/user/ability";
+import type { UserDTO } from "@/features/user/schema";
 import { authClient } from "@/lib/auth-client";
 import { isOwner } from "@/lib/utils/permissions";
-import { trpc } from "@/trpc/client";
 
-export function useUser() {
-  const [user] = trpc.user.getMe.useSuspenseQuery();
-  const router = useRouter();
+const UserContext = React.createContext<UserDTO | null | undefined>(undefined);
 
+export function UserProvider({
+  user,
+  children,
+}: {
+  user: UserDTO | null;
+  children: React.ReactNode;
+}) {
   const userId = user?.id;
   const isGuest = user?.isGuest;
 
@@ -20,6 +25,17 @@ export function useUser() {
       posthog.identify(userId);
     }
   }, [userId, isGuest]);
+
+  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+}
+
+export function useUser() {
+  const user = React.useContext(UserContext);
+  const router = useRouter();
+
+  if (user === undefined) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
 
   return React.useMemo(() => {
     return {

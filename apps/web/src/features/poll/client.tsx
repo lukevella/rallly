@@ -3,6 +3,7 @@ import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
 import { useParticipants } from "@/features/poll/components/participants-provider";
+import { useUser } from "@/features/user/components/user-provider";
 import { trpc } from "@/trpc/client";
 
 export const usePoll = () => {
@@ -42,7 +43,7 @@ export const PermissionProvider = ({
 export const usePermissions = () => {
   const poll = usePoll();
   const context = React.useContext(PermissionsContext);
-  const { data: user } = trpc.user.getMe.useQuery();
+  const { user } = useUser();
   const role = useRole();
   const { participants } = useParticipants();
   return {
