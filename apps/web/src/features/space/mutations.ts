@@ -103,6 +103,6 @@ export async function removeSpaceImage({ spaceId }: { spaceId: string }) {
   });
 
   if (oldImageKey) {
-    await deleteImageFromS3(oldImageKey);
+    after(() => deleteImageFromS3(oldImageKey));
   }
 }
