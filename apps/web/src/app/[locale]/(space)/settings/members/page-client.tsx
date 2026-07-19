@@ -4,7 +4,7 @@ import { posthog } from "@rallly/posthog/client";
 import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, SparklesIcon } from "lucide-react";
 import Link from "next/link";
 import { IfCloudHosted, IfSelfHosted } from "@/components/environment";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
@@ -109,8 +109,8 @@ export function MembersSettingsPageClient() {
             </PageSectionHeader>
             <PageSectionContent>
               {!canInviteMembers ? (
-                <Alert variant="info">
-                  <InfoIcon />
+                <Alert variant="primary">
+                  <SparklesIcon />
                   <AlertDescription>
                     <p>
                       <Trans
