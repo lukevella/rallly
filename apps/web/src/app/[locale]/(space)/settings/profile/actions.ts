@@ -3,12 +3,12 @@ import { subject } from "@casl/ability";
 import { sendAccountDeletionScheduledEmail } from "@rallly/emails/templates/account-deletion-scheduled";
 import { after } from "next/server";
 import { getInstanceBranding } from "@/emails/branding";
+import { cancelUserSubscriptions } from "@/features/billing/mutations";
 import {
   cancelAccountDeletion,
   scheduleAccountDeletion,
-} from "@/features/account-deletion/mutations";
-import { getScheduledDeletionDate } from "@/features/account-deletion/utils";
-import { cancelUserSubscriptions } from "@/features/billing/mutations";
+} from "@/features/user/account-deletion/mutations";
+import { getScheduledDeletionDate } from "@/features/user/account-deletion/utils";
 import { getLocale } from "@/i18n/server/get-locale";
 import { formatDateTime } from "@/lib/datetime/format";
 import { AppError } from "@/lib/errors/app-error";

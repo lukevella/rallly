@@ -2,12 +2,19 @@ import { createLogger } from "@rallly/logger";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
-import { removeDeletedUsers } from "@/features/account-deletion/mutations";
+import {
+  cancelUserSubscriptions,
+  deleteStripeCustomer,
+} from "@/features/billing/mutations";
 import {
   autoClosePolls,
   deleteInactivePolls,
   removeDeletedPolls,
 } from "@/features/poll/mutations";
+import { findUsersScheduledForRemoval } from "@/features/user/account-deletion/data";
+import { getAccountDeletionCutoff } from "@/features/user/account-deletion/utils";
+import { hardDeleteUser } from "@/features/user/mutations";
+import { deletePostHogPerson } from "@/lib/posthog";
 
 const logger = createLogger("api/house-keeping");
 
@@ -77,6 +84,55 @@ app.get("/remove-deleted-polls", async (c) => {
     },
   });
 });
+
+const REMOVE_DELETED_USERS_BATCH_SIZE = 50;
+
+// Reaper for accounts whose scheduled deletion passed the recovery window.
+// Composed here because it spans features: external stores go first — Stripe
+// (defensive subscription cancel, then the customer object; invoices are
+// lawfully retained by Stripe) and PostHog — so a failure there leaves the
+// user row in place for the next run to retry.
+async function removeDeletedUsers() {
+  const cutoff = getAccountDeletionCutoff();
+  const failedUserIds: string[] = [];
+  let deletedUsers = 0;
+
+  while (true) {
+    const users = await findUsersScheduledForRemoval({
+      cutoff,
+      excludeUserIds: failedUserIds,
+      limit: REMOVE_DELETED_USERS_BATCH_SIZE,
+    });
+
+    if (users.length === 0) {
+      break;
+    }
+
+    for (const user of users) {
+      try {
+        await cancelUserSubscriptions({ userId: user.id });
+
+        if (user.customerId) {
+          await deleteStripeCustomer({ customerId: user.customerId });
+        }
+
+        await deletePostHogPerson({ distinctId: user.id });
+
+        await hardDeleteUser({ userId: user.id, email: user.email });
+
+        deletedUsers++;
+      } catch (error) {
+        logger.error(
+          { userId: user.id, error },
+          "Failed to remove user scheduled for deletion",
+        );
+        failedUserIds.push(user.id);
+      }
+    }
+  }
+
+  return deletedUsers;
+}
 
 app.get("/remove-deleted-users", async (c) => {
   const deletedUsers = await removeDeletedUsers();

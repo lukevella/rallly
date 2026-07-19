@@ -1,4 +1,4 @@
-import { getScheduledDeletionDate } from "@/features/account-deletion/utils";
+import { getScheduledDeletionDate } from "@/features/user/account-deletion/utils";
 import { Trans } from "@/i18n/client";
 import { getSession } from "@/lib/auth";
 import { formatDateTime } from "@/lib/datetime/format";

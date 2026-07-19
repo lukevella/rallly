@@ -1,7 +1,7 @@
 import { Icon } from "@rallly/ui/icon";
 import { Skeleton } from "@rallly/ui/skeleton";
 import { BarChart2Icon, CalendarIcon } from "lucide-react";
-import { getAccountDeletionSummary } from "@/features/account-deletion/data";
+import { getAccountDeletionSummary } from "@/features/user/account-deletion/data";
 import { Trans } from "@/i18n/client";
 import { requireUser } from "@/lib/auth";
 

@@ -10,11 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
-
-import { scheduleAccountDeletionAction } from "@/features/account-deletion/actions";
-import { ACCOUNT_DELETION_GRACE_DAYS } from "@/features/account-deletion/constants";
+import { ACCOUNT_DELETION_GRACE_DAYS } from "@/features/user/account-deletion/constants";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
+import { scheduleAccountDeletionAction } from "../actions";
 
 export function DeleteAccountDialog({
   summary,

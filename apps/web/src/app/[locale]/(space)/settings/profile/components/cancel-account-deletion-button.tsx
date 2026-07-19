@@ -1,9 +1,9 @@
 "use client";
 import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
-import { cancelAccountDeletionAction } from "@/features/account-deletion/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
+import { cancelAccountDeletionAction } from "../actions";
 
 export function CancelAccountDeletionButton() {
   const { t } = useTranslation();

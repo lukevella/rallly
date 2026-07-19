@@ -18,19 +18,19 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import {
-  AccountDeletionSummary,
-  AccountDeletionSummarySkeleton,
-} from "@/features/account-deletion/components/account-deletion-summary";
-import { PendingDeletionNotice } from "@/features/account-deletion/components/pending-deletion-notice";
 import { getCurrentUser } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getPathname } from "@/lib/pathname";
 import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
-import { DeleteAccountButton } from "./delete-account-button";
-import { ProfileEmailAddress } from "./profile-email-address";
-import { ProfileSettings } from "./profile-settings";
+import {
+  AccountDeletionSummary,
+  AccountDeletionSummarySkeleton,
+} from "./components/account-deletion-summary";
+import { DeleteAccountButton } from "./components/delete-account-button";
+import { PendingDeletionNotice } from "./components/pending-deletion-notice";
+import { ProfileEmailAddress } from "./components/profile-email-address";
+import { ProfileSettings } from "./components/profile-settings";
 
 export default async function Page() {
   const user = await getCurrentUser();
