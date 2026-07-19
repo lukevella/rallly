@@ -14,7 +14,7 @@ import { Form, FormField, FormItem, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
 
-import { useAuthedUser } from "@/features/user/components/user-provider";
+import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 

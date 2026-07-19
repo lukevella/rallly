@@ -30,7 +30,7 @@ import {
 } from "@/features/poll/components/participant";
 import { useParticipants } from "@/features/poll/components/participants-provider";
 import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
-import { useUser } from "@/features/user/components/user-provider";
+import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { RelativeTime } from "@/lib/datetime/relative-time";
 import { requiredString } from "@/lib/utils/form-validation";

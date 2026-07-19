@@ -3,7 +3,7 @@
 import { SidebarMenuButton, SidebarMenuItem } from "@rallly/ui/sidebar";
 import { GaugeIcon } from "lucide-react";
 import Link from "next/link";
-import { useUser } from "@/features/user/components/user-provider";
+import { useUser } from "@/features/user/client";
 import { Trans } from "@/i18n/client";
 
 export function ControlPanelMenuItem() {
