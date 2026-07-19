@@ -71,7 +71,7 @@ function SpaceTypeOption({
 }
 
 export function SetupForm({ defaultName }: { defaultName: string }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const schema = useSetupFormSchema();
   const setupSpace = useSafeAction(setupSpaceAction);
@@ -93,10 +93,12 @@ export function SetupForm({ defaultName }: { defaultName: string }) {
         onSubmit={form.handleSubmit(
           async ({ name, spaceType, organizationName }) => {
             // Accounts created through the OTP registration flow have no
-            // timezone yet; capture it here the way the old signup form did.
+            // timezone or locale yet; capture them here the way the old
+            // signup form did. Notification emails read the stored locale.
             const res = await authClient.updateUser({
               name,
               timeZone: getBrowserTimeZone(),
+              locale: i18n.language,
             });
 
             if (res.error) {
