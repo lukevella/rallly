@@ -10,7 +10,10 @@ import { getLocale } from "@/i18n/server/get-locale";
 import authLib from "@/lib/auth";
 import { formatDateTime } from "@/lib/datetime/format";
 import { AppError } from "@/lib/errors/app-error";
-import { authActionClient } from "@/lib/safe-action/server";
+import {
+  authActionClient,
+  createRateLimitMiddleware,
+} from "@/lib/safe-action/server";
 
 // Cancelling the subscription happens first and is the one irreversible
 // part: waiting until reap time would let a renewal charge the user during
@@ -18,6 +21,8 @@ import { authActionClient } from "@/lib/safe-action/server";
 // the free tier.
 export const scheduleAccountDeletionAction = authActionClient
   .metadata({ actionName: "schedule_account_deletion" })
+  // Each call hits Stripe and sends an email — keep the ceiling low.
+  .use(createRateLimitMiddleware(3, "1 h"))
   .action(async ({ ctx }) => {
     if (ctx.ability.cannot("delete", subject("User", ctx.user))) {
       throw new AppError({
@@ -55,6 +60,7 @@ export const scheduleAccountDeletionAction = authActionClient
 
 export const cancelAccountDeletionAction = authActionClient
   .metadata({ actionName: "cancel_account_deletion" })
+  .use(createRateLimitMiddleware(10, "1 h"))
   .action(async () => {
     await authLib.api.updateUser({
       body: { deletedAt: null },
