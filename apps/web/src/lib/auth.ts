@@ -242,15 +242,6 @@ export const authLib = betterAuth({
         input: true,
         required: false,
       },
-      // input: true is required for the updateUser endpoint path used by the
-      // account deletion actions. The capability this exposes client-side —
-      // a user scheduling or cancelling their own deletion — is exactly what
-      // those actions grant, so it is not an escalation.
-      deletedAt: {
-        type: "date",
-        input: true,
-        required: false,
-      },
     },
   },
   secondaryStorage: kv
@@ -621,10 +612,6 @@ export const getSessionState = cache(async (): Promise<SessionState> => {
         timeZone: session.user.timeZone || undefined,
         timeFormat: parseTimeFormat(session.user.timeFormat),
         weekStart: session.user.weekStart ?? undefined,
-        // The cookie cache can deserialize dates as strings.
-        deletedAt: session.user.deletedAt
-          ? new Date(session.user.deletedAt)
-          : undefined,
       };
 
       return {

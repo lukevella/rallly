@@ -4,20 +4,16 @@ import { getSession } from "@/lib/auth";
 import { formatDateTime } from "@/lib/datetime/format";
 import { CancelAccountDeletionButton } from "./cancel-account-deletion-button";
 
-// Reads deletedAt from the session (cookie cache) — no database call per
-// render. Other devices pick the notice up when their session refreshes.
-export async function PendingDeletionNotice() {
+export async function PendingDeletionNotice({
+  deletedAt,
+}: {
+  deletedAt: Date;
+}) {
   const session = await getSession();
-  const deletedAt = session?.user.deletedAt;
-
-  if (!deletedAt) {
-    return null;
-  }
-
   const deletionDate = formatDateTime(getScheduledDeletionDate(deletedAt), {
     preset: "dateLong",
-    locale: session.user.locale ?? "en",
-    timeZone: session.user.timeZone,
+    locale: session?.user.locale ?? "en",
+    timeZone: session?.user.timeZone,
   });
 
   return (

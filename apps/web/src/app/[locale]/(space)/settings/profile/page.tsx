@@ -7,6 +7,7 @@ import {
   AccountDeletionSummarySkeleton,
 } from "@/features/account-deletion/components/account-deletion-summary";
 import { PendingDeletionNotice } from "@/features/account-deletion/components/pending-deletion-notice";
+import { getPendingDeletion } from "@/features/account-deletion/data";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/lib/auth";
 import { DeleteAccountButton } from "./delete-account-button";
@@ -14,12 +15,13 @@ import { ProfilePage } from "./profile-page";
 
 export default async function Page() {
   const user = await requireUser();
+  const deletedAt = await getPendingDeletion(user.id);
 
   return (
     <ProfilePage
       dangerZone={
-        user.deletedAt ? (
-          <PendingDeletionNotice />
+        deletedAt ? (
+          <PendingDeletionNotice deletedAt={deletedAt} />
         ) : (
           <DeleteAccountButton
             summary={

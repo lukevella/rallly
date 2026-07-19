@@ -1,13 +1,15 @@
 "use server";
 import { subject } from "@casl/ability";
 import { sendAccountDeletionScheduledEmail } from "@rallly/emails/templates/account-deletion-scheduled";
-import { headers } from "next/headers";
 import { after } from "next/server";
 import { getInstanceBranding } from "@/emails/branding";
+import {
+  cancelAccountDeletion,
+  scheduleAccountDeletion,
+} from "@/features/account-deletion/mutations";
 import { getScheduledDeletionDate } from "@/features/account-deletion/utils";
 import { cancelUserSubscriptions } from "@/features/billing/mutations";
 import { getLocale } from "@/i18n/server/get-locale";
-import authLib from "@/lib/auth";
 import { formatDateTime } from "@/lib/datetime/format";
 import { AppError } from "@/lib/errors/app-error";
 import {
@@ -33,12 +35,7 @@ export const scheduleAccountDeletionAction = authActionClient
 
     await cancelUserSubscriptions({ userId: ctx.user.id });
 
-    const deletedAt = new Date();
-
-    await authLib.api.updateUser({
-      body: { deletedAt },
-      headers: await headers(),
-    });
+    const deletedAt = await scheduleAccountDeletion({ userId: ctx.user.id });
 
     const locale = ctx.user.locale ?? (await getLocale());
     const branding = await getInstanceBranding();
@@ -61,9 +58,6 @@ export const scheduleAccountDeletionAction = authActionClient
 export const cancelAccountDeletionAction = authActionClient
   .metadata({ actionName: "cancel_account_deletion" })
   .use(createRateLimitMiddleware(10, "1 h"))
-  .action(async () => {
-    await authLib.api.updateUser({
-      body: { deletedAt: null },
-      headers: await headers(),
-    });
+  .action(async ({ ctx }) => {
+    await cancelAccountDeletion({ userId: ctx.user.id });
   });
