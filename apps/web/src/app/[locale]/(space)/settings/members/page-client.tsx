@@ -94,45 +94,46 @@ export function MembersSettingsPageClient() {
               </StackedList>
             </PageSectionContent>
           </PageSection>
-          <PageSectionDivider />
-          <PageSection>
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans i18nKey="pendingInvites" defaults="Pending Invites" />
-              </PageSectionTitle>
-              <PageSectionDescription>
+          {!canInviteMembers ? (
+            <Alert variant="primary">
+              <SparklesIcon />
+              <AlertDescription>
                 <Trans
-                  i18nKey="pendingInvitesDescription"
-                  defaults="Invite other users to share your space."
+                  i18nKey="pendingInvitesUpgradeDescription"
+                  defaults="Upgrade to Pro to invite members to your space."
                 />
-              </PageSectionDescription>
-            </PageSectionHeader>
-            <PageSectionContent>
-              {!canInviteMembers ? (
-                <Alert variant="primary">
-                  <SparklesIcon />
-                  <AlertDescription>
+              </AlertDescription>
+              <AlertAction>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    posthog?.capture("members_settings:upgrade_button_click");
+                    showPayWall();
+                  }}
+                >
+                  <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />
+                </Button>
+              </AlertAction>
+            </Alert>
+          ) : (
+            <>
+              <PageSectionDivider />
+              <PageSection>
+                <PageSectionHeader>
+                  <PageSectionTitle>
                     <Trans
-                      i18nKey="pendingInvitesUpgradeDescription"
-                      defaults="Upgrade to Pro to invite members to your space."
+                      i18nKey="pendingInvites"
+                      defaults="Pending Invites"
                     />
-                  </AlertDescription>
-                  <AlertAction>
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        posthog?.capture(
-                          "members_settings:upgrade_button_click",
-                        );
-                        showPayWall();
-                      }}
-                    >
-                      <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />
-                    </Button>
-                  </AlertAction>
-                </Alert>
-              ) : (
-                <>
+                  </PageSectionTitle>
+                  <PageSectionDescription>
+                    <Trans
+                      i18nKey="pendingInvitesDescription"
+                      defaults="Invite other users to share your space."
+                    />
+                  </PageSectionDescription>
+                </PageSectionHeader>
+                <PageSectionContent>
                   {invites.length > 0 ? (
                     <StackedList>
                       {invites.map((invite) => (
@@ -223,10 +224,10 @@ export function MembersSettingsPageClient() {
                       </AlertDescription>
                     </Alert>
                   ) : null}
-                </>
-              )}
-            </PageSectionContent>
-          </PageSection>
+                </PageSectionContent>
+              </PageSection>
+            </>
+          )}
         </PageSectionGroup>
       </SettingsPageContent>
     </SettingsPage>
