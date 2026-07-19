@@ -627,6 +627,7 @@
   "settings": "Settings",
   "setupAccountDescription": "Tell us a bit about yourself.",
   "setupAccountTitle": "Set Up Your Account",
+  "setupLoggedInAs": "Logged in as {email}",
   "setupPasswordAlertDesc": "Set up a password to make logging in faster and more convenient.",
   "setupPasswordAlertTitle": "Login quicker with a password",
   "setupPasswordButton": "Set up password",

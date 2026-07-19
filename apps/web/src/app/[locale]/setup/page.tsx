@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Logo } from "@/features/branding/components/logo";
+import { SetupFooter } from "@/features/setup/components/setup-footer";
 import { SetupForm } from "@/features/setup/components/setup-form";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { Trans } from "@/i18n/client";
@@ -26,12 +28,17 @@ export default async function SetupPage(props: {
   const device = await getDeviceDateTimeConfig();
 
   return (
-    <div className="flex min-h-dvh justify-center bg-background p-4 sm:items-center">
-      <main id="main-content" tabIndex={-1} className="w-full max-w-sm">
-        <article className="space-y-8">
-          <div className="flex justify-center py-8">
-            <Logo />
-          </div>
+    <div className="flex h-dvh flex-col bg-background">
+      <header className="flex items-center justify-between px-4 py-3">
+        <Logo />
+        <ThemeSwitcher />
+      </header>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex flex-1 overflow-y-auto p-4"
+      >
+        <article className="m-auto w-full max-w-sm space-y-8">
           <header className="text-center">
             <h1 className="font-bold text-2xl">
               <Trans
@@ -55,6 +62,9 @@ export default async function SetupPage(props: {
           </div>
         </article>
       </main>
+      <footer className="flex justify-center px-4 py-3">
+        <SetupFooter email={user.email} />
+      </footer>
     </div>
   );
 }
