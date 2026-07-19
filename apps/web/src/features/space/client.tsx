@@ -5,7 +5,7 @@ import React from "react";
 import { getPrimaryColorVars } from "@/features/branding/utils";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import type { SpaceDTO } from "@/features/space/types";
-import { useAuthedUser } from "@/features/user/components/user-provider";
+import { useAuthedUser } from "@/features/user/client";
 import { defineAbilityForSpace } from "./ability";
 
 const SpaceContext = React.createContext<SpaceDTO | null>(null);

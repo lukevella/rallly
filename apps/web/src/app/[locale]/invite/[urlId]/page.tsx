@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
 import { PermissionProvider } from "@/features/poll/client";
-import { UserProvider } from "@/features/user/components/user-provider";
+import { UserProvider } from "@/features/user/client";
 import { getLocale } from "@/i18n/server/get-locale";
 import { getSession } from "@/lib/auth";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";

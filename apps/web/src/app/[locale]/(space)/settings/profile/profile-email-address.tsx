@@ -18,7 +18,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { InputOTP } from "@/components/input-otp";
-import { useAuthedUser } from "@/features/user/components/user-provider";
+import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 

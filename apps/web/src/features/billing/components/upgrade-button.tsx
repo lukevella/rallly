@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import type React from "react";
 
 import { upgradeToProAction } from "@/features/billing/actions";
-import { useUser } from "@/features/user/components/user-provider";
+import { useUser } from "@/features/user/client";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
