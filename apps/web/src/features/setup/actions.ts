@@ -76,6 +76,14 @@ export const setupSpaceAction = authActionClient
         event: "space_setup",
         properties: {
           space_type: parsedInput.spaceType,
+          // The register event $sets these from the user row at creation
+          // time, which for OTP signups is an empty name and no timezone.
+          // The form updates both right before this action runs, so patch
+          // the person profile here.
+          $set: {
+            name: ctx.user.name,
+            timeZone: ctx.user.timeZone ?? undefined,
+          },
         },
         groups: {
           space: spaceId,
