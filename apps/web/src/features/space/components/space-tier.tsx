@@ -1,17 +1,7 @@
 "use client";
 
 import { HandHeartIcon, SparklesIcon } from "lucide-react";
-import { PLAN_NAMES } from "@/features/billing/constants";
 import type { SpaceTier } from "@/features/space/schema";
-
-export const SpaceTierLabel = ({ tier }: { tier: SpaceTier }) => {
-  switch (tier) {
-    case "hobby":
-      return <span className="text-muted-foreground">{PLAN_NAMES.HOBBY}</span>;
-    case "pro":
-      return <span className="text-muted-foreground">{PLAN_NAMES.PRO}</span>;
-  }
-};
 
 export const SpaceTierIcon = ({ tier }: { tier: SpaceTier }) => {
   switch (tier) {

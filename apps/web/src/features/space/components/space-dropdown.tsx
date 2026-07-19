@@ -21,9 +21,9 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { PLAN_NAMES } from "@/features/billing/constants";
 import { setActiveSpaceAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
-import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
@@ -61,8 +61,8 @@ export function SpaceDropdown() {
             <div className="truncate font-medium text-sm">
               {activeSpace.name}
             </div>
-            <div className="text-xs">
-              <SpaceTierLabel tier={activeSpace.tier} />
+            <div className="text-muted-foreground text-xs">
+              {activeSpace.tier === "pro" ? PLAN_NAMES.PRO : PLAN_NAMES.HOBBY}
             </div>
           </div>
           <Icon>
