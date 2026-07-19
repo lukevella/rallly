@@ -24,13 +24,9 @@ import { ProfileEmailAddress } from "./profile-email-address";
 import { ProfileSettings } from "./profile-settings";
 
 export function ProfilePage({
-  pollCount,
-  eventCount,
-  hasActiveSubscription,
+  deletionSummary,
 }: {
-  pollCount: number;
-  eventCount: number;
-  hasActiveSubscription: boolean;
+  deletionSummary: React.ReactNode;
 }) {
   const deleteAccountDialog = useDialog();
   return (
@@ -92,9 +88,7 @@ export function ProfilePage({
               </Button>
               <DeleteAccountDialog
                 {...deleteAccountDialog.dialogProps}
-                pollCount={pollCount}
-                eventCount={eventCount}
-                hasActiveSubscription={hasActiveSubscription}
+                summary={deletionSummary}
               />
             </PageSectionContent>
           </PageSection>

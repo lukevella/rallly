@@ -17,14 +17,10 @@ import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 export function DeleteAccountDialog({
-  pollCount,
-  eventCount,
-  hasActiveSubscription,
+  summary,
   ...rest
 }: DialogProps & {
-  pollCount: number;
-  eventCount: number;
-  hasActiveSubscription: boolean;
+  summary?: React.ReactNode;
 }) {
   const scheduleAccountDeletion = useSafeAction(scheduleAccountDeletionAction, {
     onSuccess: () => {
@@ -52,19 +48,11 @@ export function DeleteAccountDialog({
         <div className="space-y-3 py-4 text-sm">
           <p>
             <Trans
-              i18nKey="deleteAccountConsequences"
-              defaults="Your {pollCount, plural, one {# poll} other {# polls}} and {eventCount, plural, one {# event} other {# events}}, along with all your votes and comments, will be permanently deleted."
-              values={{ pollCount, eventCount }}
+              i18nKey="deleteAccountDataWarning"
+              defaults="All data associated with your account, including your polls, events, votes, and comments, will be permanently deleted."
             />
           </p>
-          {hasActiveSubscription ? (
-            <p>
-              <Trans
-                i18nKey="deleteAccountSubscriptionWarning"
-                defaults="Your Pro subscription will be cancelled immediately. You won't be refunded for remaining time, and cancelling the deletion will not restore your subscription."
-              />
-            </p>
-          ) : null}
+          {summary}
           <p>
             <Trans
               i18nKey="deleteAccountRecoveryWindow"

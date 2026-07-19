@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import type { Params } from "@/app/[locale]/types";
-import { getAccountDeletionSummary } from "@/features/user/data";
+import {
+  AccountDeletionSummary,
+  AccountDeletionSummarySkeleton,
+} from "@/features/user/components/account-deletion-summary";
 import { getTranslation } from "@/i18n/server";
-import { requireUser } from "@/lib/auth";
 import { ProfilePage } from "./profile-page";
 
-export default async function Page() {
-  const user = await requireUser();
-  const { pollCount, eventCount, hasActiveSubscription } =
-    await getAccountDeletionSummary(user.id);
-
+export default function Page() {
   return (
     <ProfilePage
-      pollCount={pollCount}
-      eventCount={eventCount}
-      hasActiveSubscription={hasActiveSubscription}
+      deletionSummary={
+        <Suspense fallback={<AccountDeletionSummarySkeleton />}>
+          <AccountDeletionSummary />
+        </Suspense>
+      }
     />
   );
 }
