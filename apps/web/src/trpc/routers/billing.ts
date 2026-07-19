@@ -24,9 +24,6 @@ export const billing = router({
 
     return space?.tier ?? ("hobby" as const);
   }),
-  getSubscription: spaceOwnerProcedure.query(async ({ ctx }) => {
-    return await getSpaceSubscription(ctx.space.id);
-  }),
   updateSeats: spaceOwnerProcedure
     .input(z.object({ seatDelta: z.int() }))
     .mutation(async ({ ctx, input }) => {

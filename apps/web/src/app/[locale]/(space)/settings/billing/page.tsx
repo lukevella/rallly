@@ -1,27 +1,188 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
+import { CheckCircleIcon, ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
+import {
+  PageSection,
+  PageSectionContent,
+  PageSectionDescription,
+  PageSectionDivider,
+  PageSectionGroup,
+  PageSectionHeader,
+  PageSectionTitle,
+} from "@/components/page-layout";
+import {
+  SettingsPage,
+  SettingsPageContent,
+  SettingsPageDescription,
+  SettingsPageHeader,
+  SettingsPageTitle,
+} from "@/components/settings-layout";
+import { getSpaceSubscription } from "@/features/billing/data";
+import {
+  getActiveSpaceForUser,
+  getSpaceSeatCount,
+} from "@/features/space/data";
+import { defineAbilityForMember } from "@/features/space/member/ability";
+import { getCurrentUser } from "@/features/user/data";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
-import { BillingPageClient } from "./page-client";
+import { getPathname } from "@/lib/pathname";
+import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
+import { ContactSupportLink } from "./components/contact-support-link";
+import { HobbyPlanCard } from "./components/hobby-plan-card";
+import { ProPlanCard } from "./components/pro-plan-card";
 
-export default async function BillingSettingsPage() {
+export default async function BillingSettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ seats_updated?: string }>;
+}) {
   if (!isFeatureEnabled("billing")) {
     notFound();
   }
 
-  const helpers = await createPrivateSSRHelper();
+  const user = await getCurrentUser();
 
-  await Promise.all([
-    helpers.billing.getSubscription.prefetch(),
-    helpers.spaces.getSeats.prefetch(),
-  ]);
+  if (!user) {
+    redirect(
+      buildSafeRedirectUrl({
+        destination: "/login",
+        returnUrl: await getPathname(),
+      }),
+    );
+  }
+
+  const space = await getActiveSpaceForUser(user.id);
+
+  if (!space) {
+    redirect(
+      buildSafeRedirectUrl({
+        destination: "/setup",
+        returnUrl: await getPathname(),
+      }),
+    );
+  }
+
+  const ability = defineAbilityForMember({
+    user: { id: user.id },
+    space: { id: space.id, ownerId: space.ownerId, role: space.role },
+  });
+
+  if (!ability.can("manage", "Billing")) {
+    return (
+      <EmptyState className="h-full">
+        <EmptyStateIcon>
+          <ShieldXIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans i18nKey="accessDenied" defaults="Access Denied" />
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            i18nKey="ownerPermissionsRequired"
+            defaults="Only space owners can access billing settings."
+          />
+        </EmptyStateDescription>
+      </EmptyState>
+    );
+  }
+
+  const [subscription, usedSeats, { seats_updated: didUpdateSeats }] =
+    await Promise.all([
+      getSpaceSubscription(space.id),
+      getSpaceSeatCount(space.id),
+      searchParams,
+    ]);
 
   return (
-    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
-      <BillingPageClient />
-    </HydrationBoundary>
+    <SettingsPage>
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="billing" defaults="Billing" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
+          <Trans
+            i18nKey="billingDescription"
+            defaults="Manage your billing information and subscription."
+          />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
+      <SettingsPageContent>
+        <PageSectionGroup>
+          <PageSection>
+            <PageSectionHeader>
+              <PageSectionTitle>
+                <Trans i18nKey="billingPlanTitle" defaults="Plan" />
+              </PageSectionTitle>
+              <PageSectionDescription>
+                <Trans
+                  i18nKey="billingSubscriptionDescription"
+                  defaults="Manage your current subscription plan"
+                />
+              </PageSectionDescription>
+            </PageSectionHeader>
+            <PageSectionContent>
+              {subscription?.active ? (
+                <ProPlanCard
+                  amount={subscription.amount}
+                  currency={subscription.currency}
+                  interval={subscription.interval}
+                  seats={subscription.quantity}
+                  usedSeats={usedSeats}
+                  status={subscription.status}
+                  cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
+                  periodEnd={subscription.periodEnd}
+                />
+              ) : (
+                <HobbyPlanCard />
+              )}
+              {didUpdateSeats !== undefined ? (
+                <Alert variant="success">
+                  <CheckCircleIcon />
+                  <AlertTitle>
+                    <Trans
+                      i18nKey="seatsUpdatedAlertTitle"
+                      defaults="Seats Updated"
+                    />
+                  </AlertTitle>
+                  <AlertDescription>
+                    <Trans
+                      i18nKey="seatsUpdatedAlertDescription"
+                      defaults="Your seat allocation has been successfully updated. The changes will be reflected in your next billing cycle."
+                    />
+                  </AlertDescription>
+                </Alert>
+              ) : null}
+            </PageSectionContent>
+          </PageSection>
+          <PageSectionDivider />
+          <PageSection>
+            <PageSectionHeader>
+              <PageSectionTitle>
+                <Trans i18nKey="support" defaults="Support" />
+              </PageSectionTitle>
+              <PageSectionDescription>
+                <Trans
+                  i18nKey="supportDescription"
+                  defaults="Need help with anything?"
+                />
+              </PageSectionDescription>
+            </PageSectionHeader>
+            <PageSectionContent>
+              <ContactSupportLink />
+            </PageSectionContent>
+          </PageSection>
+        </PageSectionGroup>
+      </SettingsPageContent>
+    </SettingsPage>
   );
 }
 

@@ -5,6 +5,8 @@ import type {
   ScheduledEventStatus,
   SpaceMemberRole,
   SpaceTier,
+  SubscriptionInterval,
+  SubscriptionStatus,
   VoteType,
 } from "../../generated/prisma/client";
 
@@ -77,6 +79,44 @@ export const spaceMembers: Array<{
   { id: "sm-4", spaceId: "space-2", userId: "user-3", role: "MEMBER" },
   { id: "sm-5", spaceId: "space-2", userId: "user-4", role: "MEMBER" },
   { id: "sm-6", spaceId: "space-2", userId: "user-5", role: "MEMBER" },
+];
+
+// ─── Subscriptions ───────────────────────────────────────────────────────────
+// Every pro space needs one so billing settings reflect a real subscription.
+// `amount` is the per-seat unit amount in the currency's minor unit.
+
+export const subscriptions: Array<{
+  id: string;
+  spaceId: string;
+  userId: string;
+  priceId: string;
+  subscriptionItemId: string;
+  quantity: number;
+  amount: number;
+  currency: string;
+  interval: SubscriptionInterval;
+  status: SubscriptionStatus;
+  active: boolean;
+  cancelAtPeriodEnd: boolean;
+  periodStart: string;
+  periodEnd: string;
+}> = [
+  {
+    id: "sub-1",
+    spaceId: "space-2",
+    userId: "user-1",
+    priceId: "price_seed_pro_monthly",
+    subscriptionItemId: "si_seed_pro_monthly",
+    quantity: 6,
+    amount: 700,
+    currency: "usd",
+    interval: "month",
+    status: "active",
+    active: true,
+    cancelAtPeriodEnd: false,
+    periodStart: d(-14),
+    periodEnd: d(16),
+  },
 ];
 
 // ─── Poll definitions ────────────────────────────────────────────────────────
