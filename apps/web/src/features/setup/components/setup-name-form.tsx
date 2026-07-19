@@ -84,6 +84,7 @@ export function SetupNameForm() {
         <Button
           type="submit"
           variant="primary"
+          size="xl"
           loading={
             form.formState.isSubmitting || form.formState.isSubmitSuccessful
           }

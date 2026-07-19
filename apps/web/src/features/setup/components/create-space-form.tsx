@@ -71,6 +71,7 @@ export function CreateSpaceForm() {
         <Button
           type="submit"
           variant="primary"
+          size="xl"
           loading={createSpace.isPending}
           className="w-full"
         >
