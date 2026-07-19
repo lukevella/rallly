@@ -57,6 +57,7 @@ model User {
   lastLoginMethod String?     @map("last_login_method")
   isAnonymous     Boolean     @default(false) @map("anonymous")
   lastSeenAt      DateTime    @default(now()) @map("last_seen_at")
+  deletedAt       DateTime?   @map("deleted_at")
 
   comments                Comment[]
   polls                   Poll[]
@@ -85,6 +86,7 @@ model User {
   sessions             Session[]
   impersonatedSessions Session[] @relation("ImpersonatedSessions")
 
+  @@index([deletedAt])
   @@map("users")
 }
 
