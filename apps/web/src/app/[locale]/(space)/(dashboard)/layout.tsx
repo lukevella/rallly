@@ -14,7 +14,6 @@ import {
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { SettingsIcon } from "lucide-react";
 import Link from "next/link";
-import { AccountDeletionBanner } from "@/features/account-deletion/components/account-deletion-banner";
 import { CustomBrandingPrompt } from "@/features/branding/components/custom-branding-prompt";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/components/command-menu";
@@ -77,7 +76,6 @@ export default async function Layout({
           </SidebarFooter>
         </Sidebar>
         <SidebarInset id="main-content" tabIndex={-1} className="min-w-0">
-          <AccountDeletionBanner />
           <LicenseLimitWarning />
           <CustomBrandingPrompt />
           <div className="flex flex-1 flex-col">

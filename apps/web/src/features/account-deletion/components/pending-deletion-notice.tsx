@@ -5,8 +5,8 @@ import { formatDateTime } from "@/lib/datetime/format";
 import { CancelAccountDeletionButton } from "./cancel-account-deletion-button";
 
 // Reads deletedAt from the session (cookie cache) — no database call per
-// render. Other devices pick the banner up when their session refreshes.
-export async function AccountDeletionBanner() {
+// render. Other devices pick the notice up when their session refreshes.
+export async function PendingDeletionNotice() {
   const session = await getSession();
   const deletedAt = session?.user.deletedAt;
 
@@ -21,12 +21,14 @@ export async function AccountDeletionBanner() {
   });
 
   return (
-    <div className="m-1 rounded-md bg-muted p-2 text-center text-muted-foreground text-sm">
-      <Trans
-        i18nKey="accountDeletionBanner"
-        defaults="Your account and data will be permanently deleted on {deletionDate}."
-        values={{ deletionDate }}
-      />{" "}
+    <div className="space-y-4">
+      <p className="text-sm">
+        <Trans
+          i18nKey="pendingDeletionNotice"
+          defaults="Your account and data will be permanently deleted on {deletionDate}."
+          values={{ deletionDate }}
+        />
+      </p>
       <CancelAccountDeletionButton />
     </div>
   );

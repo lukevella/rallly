@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
 import { cancelAccountDeletionAction } from "@/features/account-deletion/actions";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -17,13 +18,11 @@ export function CancelAccountDeletionButton() {
   });
 
   return (
-    <button
-      type="button"
-      className="text-link"
-      disabled={cancelAccountDeletion.isExecuting}
+    <Button
+      loading={cancelAccountDeletion.isExecuting}
       onClick={() => cancelAccountDeletion.executeAsync()}
     >
       <Trans i18nKey="cancelAccountDeletion" defaults="Cancel deletion" />
-    </button>
+    </Button>
   );
 }

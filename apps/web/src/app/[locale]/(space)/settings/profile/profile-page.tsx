@@ -1,8 +1,5 @@
 "use client";
 
-import { Button } from "@rallly/ui/button";
-import { useDialog } from "@rallly/ui/dialog";
-
 import {
   PageSection,
   PageSectionContent,
@@ -19,16 +16,10 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { Trans } from "@/i18n/client";
-import { DeleteAccountDialog } from "./delete-account-dialog";
 import { ProfileEmailAddress } from "./profile-email-address";
 import { ProfileSettings } from "./profile-settings";
 
-export function ProfilePage({
-  deletionSummary,
-}: {
-  deletionSummary: React.ReactNode;
-}) {
-  const deleteAccountDialog = useDialog();
+export function ProfilePage({ dangerZone }: { dangerZone: React.ReactNode }) {
   return (
     <SettingsPage>
       <SettingsPageHeader>
@@ -79,18 +70,7 @@ export function ProfilePage({
                 />
               </PageSectionDescription>
             </PageSectionHeader>
-            <PageSectionContent>
-              <Button
-                className="text-destructive"
-                {...deleteAccountDialog.triggerProps}
-              >
-                <Trans i18nKey="deleteAccount" defaults="Delete Account" />
-              </Button>
-              <DeleteAccountDialog
-                {...deleteAccountDialog.dialogProps}
-                summary={deletionSummary}
-              />
-            </PageSectionContent>
+            <PageSectionContent>{dangerZone}</PageSectionContent>
           </PageSection>
         </PageSectionGroup>
       </SettingsPageContent>

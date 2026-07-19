@@ -6,16 +6,29 @@ import {
   AccountDeletionSummary,
   AccountDeletionSummarySkeleton,
 } from "@/features/account-deletion/components/account-deletion-summary";
+import { PendingDeletionNotice } from "@/features/account-deletion/components/pending-deletion-notice";
 import { getTranslation } from "@/i18n/server";
+import { requireUser } from "@/lib/auth";
+import { DeleteAccountButton } from "./delete-account-button";
 import { ProfilePage } from "./profile-page";
 
-export default function Page() {
+export default async function Page() {
+  const user = await requireUser();
+
   return (
     <ProfilePage
-      deletionSummary={
-        <Suspense fallback={<AccountDeletionSummarySkeleton />}>
-          <AccountDeletionSummary />
-        </Suspense>
+      dangerZone={
+        user.deletedAt ? (
+          <PendingDeletionNotice />
+        ) : (
+          <DeleteAccountButton
+            summary={
+              <Suspense fallback={<AccountDeletionSummarySkeleton />}>
+                <AccountDeletionSummary />
+              </Suspense>
+            }
+          />
+        )
       }
     />
   );
