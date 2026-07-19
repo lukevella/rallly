@@ -1,59 +1,51 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
-import { useRouter } from "next/navigation";
 import React from "react";
-import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { getPrimaryColorVars } from "@/features/branding/utils";
 import { defineAbilityForMember } from "@/features/space/member/ability";
+import type { SpaceDTO } from "@/features/space/types";
 import { trpc } from "@/trpc/client";
 import { defineAbilityForSpace } from "./ability";
 
-export const useSpace = () => {
-  const [user] = trpc.user.getAuthed.useSuspenseQuery();
-  const [data] = trpc.spaces.getCurrent.useSuspenseQuery();
+const SpaceContext = React.createContext<SpaceDTO | null>(null);
 
-  if (!data) {
-    throw new Error("No active space found");
+export const useSpace = () => {
+  const space = React.useContext(SpaceContext);
+  const [user] = trpc.user.getAuthed.useSuspenseQuery();
+
+  if (!space) {
+    throw new Error("useSpace must be used within a SpaceProvider");
   }
 
   return React.useMemo(
     () => ({
-      data,
-      getAbility: () => defineAbilityForSpace(data),
+      data: space,
+      getAbility: () => defineAbilityForSpace(space),
       getMemberAbility: () =>
         defineAbilityForMember({
           user: { id: user.id },
           space: {
-            id: data.id,
-            ownerId: data.ownerId,
-            role: data.role,
+            id: space.id,
+            ownerId: space.ownerId,
+            role: space.role,
           },
         }),
     }),
-    [data, user.id],
+    [space, user.id],
   );
 };
 
-export function SpaceProvider({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const { data: space, isLoading } = trpc.spaces.getCurrent.useQuery();
-
+export function SpaceProvider({
+  space,
+  children,
+}: {
+  space: SpaceDTO;
+  children: React.ReactNode;
+}) {
   React.useEffect(() => {
-    if (!isLoading && !space) {
-      router.replace("/setup");
-    }
-  }, [isLoading, space, router]);
-
-  React.useEffect(() => {
-    if (space?.id) {
-      posthog?.group("space", space.id);
-    }
-  }, [space?.id]);
-
-  if (!space) {
-    return <RouterLoadingIndicator />;
-  }
+    posthog?.group("space", space.id);
+  }, [space.id]);
 
   const primaryColorVars =
     space.showBranding && space.primaryColor
@@ -61,9 +53,10 @@ export function SpaceProvider({ children }: { children: React.ReactNode }) {
       : null;
 
   return (
-    <div data-space-branding style={{ display: "contents" }}>
-      {primaryColorVars ? (
-        <style>{`
+    <SpaceContext.Provider value={space}>
+      <div data-space-branding style={{ display: "contents" }}>
+        {primaryColorVars ? (
+          <style>{`
           html.light [data-space-branding] {
             --primary: ${primaryColorVars.light};
             --primary-foreground: ${primaryColorVars.lightForeground};
@@ -73,8 +66,9 @@ export function SpaceProvider({ children }: { children: React.ReactNode }) {
             --primary-foreground: ${primaryColorVars.darkForeground};
           }
         `}</style>
-      ) : null}
-      {children}
-    </div>
+        ) : null}
+        {children}
+      </div>
+    </SpaceContext.Provider>
   );
 }
