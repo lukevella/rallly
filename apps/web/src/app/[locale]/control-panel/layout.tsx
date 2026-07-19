@@ -1,10 +1,10 @@
 import { Icon } from "@rallly/ui/icon";
 import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { GaugeIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/components/command-menu";
+import { UserProvider } from "@/features/user/components/user-provider";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -18,14 +18,13 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { helpers } = await createAdminSSRHelper();
-  const [locale, user] = await Promise.all([
+  const [locale, { user }] = await Promise.all([
     getLocale(),
-    helpers.user.getAuthed.fetch(),
+    createAdminSSRHelper(),
   ]);
 
   return (
-    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
+    <UserProvider user={user}>
       <DateTimeProvider
         locale={locale}
         timeZone={user.timeZone}
@@ -56,7 +55,7 @@ export default async function AdminLayout({
           </SidebarInset>
         </ControlPanelSidebarProvider>
       </DateTimeProvider>
-    </HydrationBoundary>
+    </UserProvider>
   );
 }
 

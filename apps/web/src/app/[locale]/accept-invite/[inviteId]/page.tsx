@@ -6,7 +6,7 @@ import { Logo } from "@/features/branding/components/logo";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { requireUser } from "@/lib/auth";
 import { AcceptInviteButton } from "./components/accept-invite-button";
 import { SignOutButton } from "./components/sign-out-button";
 
@@ -16,8 +16,7 @@ export default async function JoinPage({
   params: Promise<{ inviteId: string }>;
 }) {
   const { inviteId } = await params;
-  const helpers = await createPrivateSSRHelper();
-  const user = await helpers.user.getAuthed.fetch();
+  const user = await requireUser();
 
   const invite = await prisma.spaceMemberInvite.findUnique({
     where: {

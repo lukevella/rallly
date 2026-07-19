@@ -5,14 +5,14 @@ import React from "react";
 import { getPrimaryColorVars } from "@/features/branding/utils";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import type { SpaceDTO } from "@/features/space/types";
-import { trpc } from "@/trpc/client";
+import { useAuthedUser } from "@/features/user/components/user-provider";
 import { defineAbilityForSpace } from "./ability";
 
 const SpaceContext = React.createContext<SpaceDTO | null>(null);
 
 export const useSpace = () => {
   const space = React.useContext(SpaceContext);
-  const [user] = trpc.user.getAuthed.useSuspenseQuery();
+  const user = useAuthedUser();
 
   if (!space) {
     throw new Error("useSpace must be used within a SpaceProvider");

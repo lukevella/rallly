@@ -3,11 +3,11 @@
 import { SidebarMenuButton, SidebarMenuItem } from "@rallly/ui/sidebar";
 import { GaugeIcon } from "lucide-react";
 import Link from "next/link";
+import { useUser } from "@/features/user/components/user-provider";
 import { Trans } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
 
 export function ControlPanelMenuItem() {
-  const { data: user } = trpc.user.getAuthed.useQuery();
+  const { user } = useUser();
 
   if (user?.role !== "admin") {
     return null;

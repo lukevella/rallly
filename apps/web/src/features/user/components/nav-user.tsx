@@ -30,13 +30,13 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
+import { useUser } from "@/features/user/components/user-provider";
 import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 import { useTheme } from "@/lib/theme";
-import { trpc } from "@/trpc/client";
 
 export function NavUser() {
-  const { data: user } = trpc.user.getAuthed.useQuery();
+  const { user } = useUser();
   const [isPending, setIsPending] = React.useState(false);
   const { theme, setTheme } = useTheme();
   const router = useRouter();

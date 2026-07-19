@@ -15,103 +15,92 @@ import {
   SidebarSeparator,
   SidebarTrigger,
 } from "@rallly/ui/sidebar";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { ArrowLeftIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { NavUser } from "@/components/nav-user";
+import { NavUser } from "@/features/user/components/nav-user";
 import { Trans } from "@/i18n/client";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import {
   AccountSidebarMenu,
   DeveloperSidebarMenu,
   SpaceSidebarMenu,
 } from "./components/sidebar";
 
-export default async function Layout({
-  children,
-}: {
-  children?: React.ReactNode;
-}) {
-  const helpers = await createPrivateSSRHelper();
-  await helpers.user.getAuthed.prefetch();
-
+export default function Layout({ children }: { children?: React.ReactNode }) {
   return (
-    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
-      <SidebarProvider>
-        <Sidebar>
-          <SidebarHeader>
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem className="flex h-9 items-center gap-2 px-2">
-                    <Icon>
-                      <SettingsIcon />
-                    </Icon>
-                    <span className="font-medium text-sm">
-                      <Trans i18nKey="settings" defaults="Settings" />
-                    </span>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarHeader>
-          <SidebarSeparator />
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>
-                <Trans i18nKey="account" defaults="Account" />
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <AccountSidebarMenu />
-              </SidebarGroupContent>
-            </SidebarGroup>
-            <SidebarGroup>
-              <SidebarGroupLabel>
-                <Trans i18nKey="space" defaults="Space" />
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SpaceSidebarMenu />
-              </SidebarGroupContent>
-            </SidebarGroup>
-            <DeveloperSidebarMenu />
-          </SidebarContent>
-          <SidebarFooter>
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton render={<Link href="/" />}>
-                      <ArrowLeftIcon />
-                      <Trans i18nKey="back" defaults="Back" />
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-            <SidebarSeparator className="my-1" />
-            <NavUser />
-          </SidebarFooter>
-        </Sidebar>
-        <SidebarInset id="main-content" tabIndex={-1}>
-          <div className="flex flex-1 flex-col">
-            <header className="sticky top-0 z-10 border-b bg-background/90 p-3 backdrop-blur-xs md:hidden">
-              <div className="flex items-center gap-4">
-                <SidebarTrigger />
-                <div className="flex items-center gap-2">
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem className="flex h-9 items-center gap-2 px-2">
                   <Icon>
                     <SettingsIcon />
                   </Icon>
                   <span className="font-medium text-sm">
                     <Trans i18nKey="settings" defaults="Settings" />
                   </span>
-                </div>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarHeader>
+        <SidebarSeparator />
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>
+              <Trans i18nKey="account" defaults="Account" />
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <AccountSidebarMenu />
+            </SidebarGroupContent>
+          </SidebarGroup>
+          <SidebarGroup>
+            <SidebarGroupLabel>
+              <Trans i18nKey="space" defaults="Space" />
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SpaceSidebarMenu />
+            </SidebarGroupContent>
+          </SidebarGroup>
+          <DeveloperSidebarMenu />
+        </SidebarContent>
+        <SidebarFooter>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton render={<Link href="/" />}>
+                    <ArrowLeftIcon />
+                    <Trans i18nKey="back" defaults="Back" />
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+          <SidebarSeparator className="my-1" />
+          <NavUser />
+        </SidebarFooter>
+      </Sidebar>
+      <SidebarInset id="main-content" tabIndex={-1}>
+        <div className="flex flex-1 flex-col">
+          <header className="sticky top-0 z-10 border-b bg-background/90 p-3 backdrop-blur-xs md:hidden">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger />
+              <div className="flex items-center gap-2">
+                <Icon>
+                  <SettingsIcon />
+                </Icon>
+                <span className="font-medium text-sm">
+                  <Trans i18nKey="settings" defaults="Settings" />
+                </span>
               </div>
-            </header>
-            <div className="flex-1 p-4 lg:py-12">{children}</div>
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
-    </HydrationBoundary>
+            </div>
+          </header>
+          <div className="flex-1 p-4 lg:py-12">{children}</div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

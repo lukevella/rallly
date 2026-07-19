@@ -26,9 +26,9 @@ import {
 import { usePathname } from "next/navigation";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import { useSpace } from "@/features/space/client";
+import { useAuthedUser } from "@/features/user/components/user-provider";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
-import { trpc } from "@/trpc/client";
 
 export function AccountSidebarMenu() {
   const { t } = useTranslation();
@@ -163,7 +163,7 @@ export function SpaceSidebarMenu() {
 
 export function DeveloperSidebarMenu() {
   const { data: space } = useSpace();
-  const [user] = trpc.user.getAuthed.useSuspenseQuery();
+  const user = useAuthedUser();
   const isSpaceOwner = space.ownerId === user.id;
   const pathname = usePathname();
   const isDeveloperToolsEnabled = useFeatureFlagEnabled("developer-tools");

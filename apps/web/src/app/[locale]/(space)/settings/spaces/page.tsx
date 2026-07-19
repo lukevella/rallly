@@ -11,13 +11,14 @@ import {
 } from "@/components/settings-layout";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { requireUser } from "@/lib/auth";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { SpacesList } from "./components/spaces-list";
 
 export default async function Page() {
   const helpers = await createPrivateSSRHelper();
   const [user, spaces] = await Promise.all([
-    helpers.user.getAuthed.fetch(),
+    requireUser(),
     helpers.spaces.list.fetch(),
   ]);
 

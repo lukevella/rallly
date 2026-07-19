@@ -14,11 +14,11 @@ import {
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { SettingsIcon } from "lucide-react";
 import Link from "next/link";
-import { NavUser } from "@/components/nav-user";
 import { CustomBrandingPrompt } from "@/features/branding/components/custom-branding-prompt";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
+import { NavUser } from "@/features/user/components/nav-user";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
@@ -37,7 +37,6 @@ export default async function Layout({
 
   await Promise.all([
     helpers.billing.getTier.prefetch(),
-    helpers.user.getAuthed.prefetch(),
     helpers.spaces.list.prefetch(),
   ]);
 

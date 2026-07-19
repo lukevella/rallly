@@ -10,9 +10,6 @@ import { track } from "@/lib/posthog";
 import { privateProcedure, router } from "../trpc";
 
 export const user = router({
-  getAuthed: privateProcedure.query(async ({ ctx }) => {
-    return ctx.user;
-  }),
   deleteMe: privateProcedure.mutation(async ({ ctx }) => {
     const userId = ctx.user.id;
 

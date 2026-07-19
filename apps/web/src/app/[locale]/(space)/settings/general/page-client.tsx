@@ -19,8 +19,8 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { useSpace } from "@/features/space/client";
+import { useAuthedUser } from "@/features/user/components/user-provider";
 import { Trans } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
 import { CustomBrandingSection } from "./components/custom-branding-section";
 import { DeleteSpaceButton } from "./components/delete-space-button";
 import { LeaveSpaceButton } from "./components/leave-space-button";
@@ -28,7 +28,7 @@ import { SpaceSettingsForm } from "./components/space-settings-form";
 
 export function GeneralSettingsPageClient() {
   const { data: space, getMemberAbility } = useSpace();
-  const [user] = trpc.user.getAuthed.useSuspenseQuery();
+  const user = useAuthedUser();
   const ability = getMemberAbility();
   const isAdmin = space.role === "admin";
   const canDeleteSpace = ability.can("delete", subject("Space", { ...space }));

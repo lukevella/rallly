@@ -4,8 +4,7 @@ import { cache } from "react";
 import superjson from "superjson";
 import { isInitialAdmin } from "@/features/setup/utils";
 import { getCurrentUser } from "@/features/user/data";
-import { getSession, getSessionState } from "@/lib/auth";
-import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
+import { getSession, requireUser } from "@/lib/auth";
 import { getPathname } from "@/lib/pathname";
 import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 import type { TRPCContext } from "../context";
@@ -36,29 +35,7 @@ export const createPublicSSRHelper = cache(async () => {
  * Redirects to /login if the user is not authenticated or is a guest.
  */
 export const createPrivateSSRHelper = cache(async () => {
-  const state = await getSessionState();
-
-  // An unreadable session (store unreachable, transient failure) is not
-  // "logged out". Redirecting to /login on it is one leg of the / ↔ /login
-  // redirect loop — fail the render instead so the user gets
-  // the error boundary's retry page.
-  if (state.status === "error") {
-    throw new Error("Failed to read session");
-  }
-
-  const user =
-    state.status === "authenticated" ? state.session.user : undefined;
-
-  if (!user || user.isGuest) {
-    const pathname = await getPathname();
-    redirect(
-      buildSafeRedirectUrl({ destination: "/login", returnUrl: pathname }),
-    );
-  }
-
-  if (user.banned) {
-    throw new InvalidSessionError();
-  }
+  const user = await requireUser();
 
   return createServerSideHelpers({
     router: appRouter,

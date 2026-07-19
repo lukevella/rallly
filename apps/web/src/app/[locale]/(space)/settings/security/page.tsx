@@ -20,8 +20,8 @@ import {
 import { getUserHasPassword } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { requireUser } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { ChangePasswordForm } from "./components/change-password-form";
 import { SetupPasswordForm } from "./components/setup-password-form";
 
@@ -31,8 +31,7 @@ export default async function SecurityPage({
   searchParams: Promise<{ setupPassword?: string }>;
 }) {
   const { setupPassword } = await searchParams;
-  const helpers = await createPrivateSSRHelper();
-  const user = await helpers.user.getAuthed.fetch();
+  const user = await requireUser();
 
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
   const hasPassword = isEmailLoginEnabled
