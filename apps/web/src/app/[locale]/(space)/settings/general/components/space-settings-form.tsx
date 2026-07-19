@@ -18,10 +18,16 @@ import {
   ImageUploadControl,
   ImageUploadPreview,
 } from "@/components/image-upload";
+import {
+  getSpaceImageUploadUrlAction,
+  removeSpaceImageAction,
+  updateSpaceAction,
+  updateSpaceImageAction,
+} from "@/features/space/actions";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import type { SpaceDTO } from "@/features/space/types";
 import { Trans, useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 const spaceSettingsSchema = z.object({
   name: z
@@ -41,10 +47,9 @@ export function SpaceSettingsForm({
 }: SpaceSettingsFormProps) {
   const { t } = useTranslation();
 
-  const updateSpace = trpc.spaces.update.useMutation();
-  const getImageUploadUrl = trpc.spaces.getImageUploadUrl.useMutation();
-  const updateImage = trpc.spaces.updateImage.useMutation();
-  const removeImage = trpc.spaces.removeImage.useMutation();
+  const updateSpace = useSafeAction(updateSpaceAction);
+  const updateImage = useSafeAction(updateSpaceImageAction);
+  const removeImage = useSafeAction(removeSpaceImageAction);
 
   const form = useForm({
     resolver: zodResolver(spaceSettingsSchema),
@@ -53,37 +58,40 @@ export function SpaceSettingsForm({
     },
   });
 
+  const handleGetUploadUrl = async (input: {
+    fileType: "image/jpeg" | "image/png";
+    fileSize: number;
+  }) => {
+    const result = await getSpaceImageUploadUrlAction(input);
+
+    if (!result?.data) {
+      throw new Error("Failed to get upload URL");
+    }
+
+    return result.data;
+  };
+
   const handleImageUploadSuccess = async (imageKey: string) => {
-    await updateImage.mutateAsync({ imageKey });
+    await updateImage.executeAsync({ imageKey });
   };
 
   const handleImageRemoveSuccess = async () => {
-    await removeImage.mutateAsync();
+    await removeImage.executeAsync();
   };
 
   return (
     <form
       onSubmit={form.handleSubmit(async (data) => {
-        toast.promise(
-          updateSpace
-            .mutateAsync({
-              name: data.name,
-            })
-            .then(() => {
-              form.reset(data);
-            }),
-          {
-            loading: t("updatingSpace", {
-              defaultValue: "Updating space...",
-            }),
-            success: t("spaceUpdatedSuccess", {
+        const result = await updateSpace.executeAsync({ name: data.name });
+
+        if (!result?.serverError && !result?.validationErrors) {
+          form.reset(data);
+          toast.success(
+            t("spaceUpdatedSuccess", {
               defaultValue: "Space updated successfully",
             }),
-            error: t("spaceUpdatedError", {
-              defaultValue: "Failed to update space",
-            }),
-          },
-        );
+          );
+        }
       })}
     >
       <FieldGroup>
@@ -98,7 +106,7 @@ export function SpaceSettingsForm({
                   <SpaceIcon name={space.name} src={space.image} size="xl" />
                 </ImageUploadPreview>
                 <ImageUploadControl
-                  getUploadUrl={(input) => getImageUploadUrl.mutateAsync(input)}
+                  getUploadUrl={handleGetUploadUrl}
                   onUploadSuccess={handleImageUploadSuccess}
                   onRemoveSuccess={handleImageRemoveSuccess}
                   hasCurrentImage={!!space.image}
@@ -135,7 +143,7 @@ export function SpaceSettingsForm({
           <Button
             type="submit"
             disabled={
-              disabled || updateSpace.isPending || !form.formState.isDirty
+              disabled || updateSpace.isExecuting || !form.formState.isDirty
             }
           >
             <Trans i18nKey="save" defaults="Save" />

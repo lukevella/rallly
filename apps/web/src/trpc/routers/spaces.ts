@@ -4,7 +4,6 @@ import { sendSpaceInviteEmail } from "@rallly/emails/templates/space-invite";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
-import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
 import { defineAbilityForSpace } from "@/features/space/ability";
@@ -25,10 +24,6 @@ import {
 } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
 import { identifyGroup, track } from "@/lib/posthog";
-import {
-  deleteImageFromS3,
-  getImageUploadUrl,
-} from "@/lib/storage/image-upload";
 import {
   createRateLimitMiddleware,
   privateProcedure,
@@ -227,97 +222,6 @@ export const spaces = router({
       },
     });
   }),
-
-  update: spaceProcedure
-    .input(
-      z.object({
-        name: z.string().min(1).max(100).optional(),
-        primaryColor: z
-          .string()
-          .regex(/^#[0-9a-fA-F]{6}$/, "Invalid hex color")
-          .nullable()
-          .optional(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const memberAbility = defineAbilityForMember({
-        user: ctx.user,
-        space: ctx.space,
-      });
-
-      if (memberAbility.cannot("update", subject("Space", ctx.space))) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You do not have permission to update this space",
-        });
-      }
-
-      await prisma.space.update({
-        where: { id: ctx.space.id },
-        data: {
-          ...(input.name !== undefined && { name: input.name }),
-          ...(input.primaryColor !== undefined && {
-            primaryColor: input.primaryColor,
-          }),
-        },
-      });
-
-      track(ctx.user, {
-        event: "space_update",
-        properties: {
-          space_name: input.name,
-        },
-        groups: {
-          space: ctx.space.id,
-        },
-      });
-    }),
-
-  updateShowBranding: spaceProcedure
-    .input(z.object({ showBranding: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
-      const memberAbility = defineAbilityForMember({
-        user: ctx.user,
-        space: ctx.space,
-      });
-
-      if (memberAbility.cannot("update", subject("Space", ctx.space))) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You do not have permission to update this space",
-        });
-      }
-
-      if (input.showBranding && ctx.space.tier !== "pro") {
-        throw new TRPCError({
-          code: "PAYMENT_REQUIRED",
-          message: "You need a Pro subscription to enable custom branding",
-        });
-      }
-
-      await prisma.space.update({
-        where: { id: ctx.space.id },
-        data: { showBranding: input.showBranding },
-      });
-
-      identifyGroup({
-        groupType: "space",
-        groupKey: ctx.space.id,
-        properties: {
-          custom_branding: input.showBranding,
-        },
-      });
-
-      track(ctx.user, {
-        event: "space_update_show_branding",
-        properties: {
-          showBranding: input.showBranding,
-        },
-        groups: {
-          space: ctx.space.id,
-        },
-      });
-    }),
 
   inviteMember: spaceProcedure
     .input(z.object({ email: z.email(), role: memberRoleSchema }))
@@ -773,92 +677,4 @@ export const spaces = router({
         },
       });
     }),
-
-  getImageUploadUrl: spaceProcedure
-    .input(
-      z.object({
-        fileType: z.enum(["image/jpeg", "image/png"]),
-        fileSize: z.number(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const memberAbility = defineAbilityForMember({
-        user: ctx.user,
-        space: ctx.space,
-      });
-
-      if (memberAbility.cannot("update", subject("Space", ctx.space))) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You do not have permission to update this space",
-        });
-      }
-
-      return await getImageUploadUrl({
-        keyPrefix: "spaces",
-        entityId: ctx.space.id,
-        fileType: input.fileType,
-        fileSize: input.fileSize,
-      });
-    }),
-
-  updateImage: spaceProcedure
-    .input(z.object({ imageKey: z.string().max(255) }))
-    .mutation(async ({ ctx, input }) => {
-      const memberAbility = defineAbilityForMember({
-        user: ctx.user,
-        space: ctx.space,
-      });
-
-      if (memberAbility.cannot("update", subject("Space", ctx.space))) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You do not have permission to update this space",
-        });
-      }
-
-      const expectedPrefix = `spaces/${ctx.space.id}-`;
-      if (!input.imageKey.startsWith(expectedPrefix)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Invalid image key",
-        });
-      }
-
-      const oldImageKey = ctx.space.image;
-
-      await prisma.space.update({
-        where: { id: ctx.space.id },
-        data: { image: input.imageKey },
-      });
-
-      if (oldImageKey) {
-        after(() => deleteImageFromS3(oldImageKey));
-      }
-    }),
-
-  removeImage: spaceProcedure.mutation(async ({ ctx }) => {
-    const memberAbility = defineAbilityForMember({
-      user: ctx.user,
-      space: ctx.space,
-    });
-
-    if (memberAbility.cannot("update", subject("Space", ctx.space))) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "You do not have permission to update this space",
-      });
-    }
-
-    const oldImageKey = ctx.space.image;
-
-    await prisma.space.update({
-      where: { id: ctx.space.id },
-      data: { image: null },
-    });
-
-    if (oldImageKey) {
-      await deleteImageFromS3(oldImageKey);
-    }
-  }),
 });
