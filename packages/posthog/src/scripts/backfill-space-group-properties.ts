@@ -6,11 +6,11 @@ import { PostHog } from "posthog-node";
  *
  * Space group properties were renamed from camelCase to snake_case
  * (memberCount → member_count, seatCount → seat_count) and
- * custom_branding_enabled was added. New writes use the new names, but
+ * custom_branding was added. New writes use the new names, but
  * existing space groups only get them when they happen to be written again.
- * This sends a groupIdentify for every space with current values computed
- * from the database, and blanks the old camelCase keys (groups don't
- * support $unset, so they're set to null).
+ * This sends a groupIdentify with current values computed from the database
+ * for every space that has an active subscription with more than one seat
+ * or has custom branding enabled.
  *
  * Group properties are current-state, so the backfill is fully retroactive
  * for insights that break down by group property.
@@ -23,13 +23,13 @@ import { PostHog } from "posthog-node";
  *   pnpm --filter @rallly/posthog backfill-space-group-properties -- --apply
  *
  * Requires in packages/posthog/.env (see .env.sample):
- *   NEXT_PUBLIC_POSTHOG_API_KEY   project API key (ingestion)
- *   NEXT_PUBLIC_POSTHOG_API_HOST  optional
+ *   POSTHOG_PUBLIC_API_KEY   project API key (ingestion)
+ *   POSTHOG_API_HOST  optional
  *   DATABASE_URL
  */
 
-const API_KEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY;
-const API_HOST = process.env.NEXT_PUBLIC_POSTHOG_API_HOST;
+const API_KEY = process.env.POSTHOG_PUBLIC_API_KEY;
+const API_HOST = process.env.POSTHOG_API_HOST;
 
 const PAGE_SIZE = 500;
 const SAMPLE_SIZE = 10;
@@ -47,6 +47,12 @@ async function fetchSpacePage(cursor?: string) {
     take: PAGE_SIZE,
     ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
     orderBy: { id: "asc" },
+    where: {
+      OR: [
+        { subscriptions: { some: { active: true, quantity: { gt: 1 } } } },
+        { showBranding: true },
+      ],
+    },
     select: {
       id: true,
       name: true,
@@ -70,10 +76,7 @@ function toGroupProperties(
     tier: space.tier,
     member_count: space._count.members,
     seat_count: space.subscriptions[0]?.quantity ?? DEFAULT_SEAT_COUNT,
-    custom_branding_enabled: space.showBranding,
-    // blank the old camelCase keys
-    memberCount: null,
-    seatCount: null,
+    custom_branding: space.showBranding,
   };
 }
 
@@ -99,6 +102,16 @@ function toGroupProperties(
     apply && API_KEY
       ? new PostHog(API_KEY, { host: API_HOST, flushAt: 100 })
       : undefined;
+
+  // delivery failures (bad key, wrong host) are only surfaced through this
+  // event — without a listener the run reports success while sending nothing
+  let sendErrors = 0;
+  posthog?.on("error", (error) => {
+    sendErrors++;
+    console.error(
+      `❌ PostHog send failed: ${error instanceof Error ? error.message : error}`,
+    );
+  });
 
   let processed = 0;
   let cursor: string | undefined;
@@ -136,6 +149,13 @@ function toGroupProperties(
     // batch is dropped when the process exits, including on errors
     await posthog?.shutdown();
     await prisma.$disconnect();
+  }
+
+  if (sendErrors > 0) {
+    console.error(
+      `\n❌ ${sendErrors} batch(es) failed to send — data in PostHog is incomplete.`,
+    );
+    process.exit(1);
   }
 
   console.info(
