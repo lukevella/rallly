@@ -42,7 +42,9 @@ export function useAuthedUser() {
   }
 
   if (!user || user.isGuest) {
-    throw new Error("useAuthedUser requires a logged in user");
+    throw new Error(
+      "useAuthedUser was rendered on a route without a logged in user — components that call it belong on login-gated routes",
+    );
   }
 
   return user;
