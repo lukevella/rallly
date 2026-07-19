@@ -1,9 +1,9 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getEventTypes } from "@/features/event-types/data";
+import { getActiveSpace } from "@/features/space/data";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { EventTypesSettingsPage } from "./event-types-settings-page";
 
 export default async function Page() {
@@ -11,14 +11,10 @@ export default async function Page() {
     notFound();
   }
 
-  const helpers = await createPrivateSSRHelper();
-  await helpers.eventTypes.list.prefetch();
+  const space = await getActiveSpace();
+  const eventTypes = await getEventTypes(space.id);
 
-  return (
-    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
-      <EventTypesSettingsPage />
-    </HydrationBoundary>
-  );
+  return <EventTypesSettingsPage eventTypes={eventTypes} />;
 }
 
 export async function generateMetadata(): Promise<Metadata> {

@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
+import { useRouter } from "next/navigation";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
@@ -26,6 +27,7 @@ export function DeleteEventTypeDialog({
   eventTypeName: string;
 }) {
   const { t } = useTranslation();
+  const router = useRouter();
   const softDelete = trpc.eventTypes.softDelete.useMutation();
 
   const handleDelete = async () => {
@@ -40,6 +42,7 @@ export function DeleteEventTypeDialog({
       return;
     }
     posthog?.capture("event_type_deletion:confirm");
+    router.refresh();
     onOpenChange?.(false);
   };
 

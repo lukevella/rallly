@@ -48,7 +48,6 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { formatDuration } from "@/lib/datetime/format";
 import { useLocale } from "@/lib/locale/client";
 import type { LocationType } from "@/lib/location";
-import { trpc } from "@/trpc/client";
 
 function EventTypesEmptyState({ onCreate }: { onCreate: () => void }) {
   return (
@@ -165,8 +164,11 @@ function EventTypeCard({
   );
 }
 
-export function EventTypesSettingsPage() {
-  const [{ eventTypes }] = trpc.eventTypes.list.useSuspenseQuery();
+export function EventTypesSettingsPage({
+  eventTypes,
+}: {
+  eventTypes: EventTypeDTO[];
+}) {
   const createDialog = useDialog();
   const editDialog = useDialog();
   const deleteDialog = useDialog();

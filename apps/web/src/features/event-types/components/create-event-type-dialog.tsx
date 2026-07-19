@@ -15,6 +15,7 @@ import {
 } from "@rallly/ui/dialog";
 import { Form } from "@rallly/ui/form";
 import { toast } from "@rallly/ui/sonner";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -28,6 +29,7 @@ import { trpc } from "@/trpc/client";
 
 export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
   const { t } = useTranslation();
+  const router = useRouter();
   const createEventType = trpc.eventTypes.create.useMutation();
   const [showMaxAttendees, setShowMaxAttendees] = React.useState(false);
   const [showDescription, setShowDescription] = React.useState(false);
@@ -67,6 +69,7 @@ export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
       has_max_attendees: input.capacity !== null,
       has_description: input.description !== null,
     });
+    router.refresh();
     handleOpenChange(false);
   });
 

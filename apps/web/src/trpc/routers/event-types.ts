@@ -2,7 +2,7 @@ import { Prisma, prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 import { isEventTypesEnabled } from "@/features/event-types/constants";
-import { createEventTypeDTO, getEventTypes } from "@/features/event-types/data";
+import { createEventTypeDTO } from "@/features/event-types/data";
 import {
   eventTypeInputSchema,
   updateEventTypeInputSchema,
@@ -22,11 +22,6 @@ const requireEventTypesEnabled = middleware(async ({ next }) => {
 const eventTypeProcedure = spaceProcedure.use(requireEventTypesEnabled);
 
 export const eventTypes = router({
-  list: eventTypeProcedure.query(async ({ ctx }) => {
-    const eventTypes = await getEventTypes(ctx.space.id);
-    return { eventTypes };
-  }),
-
   create: eventTypeProcedure
     .input(eventTypeInputSchema)
     .mutation(async ({ ctx, input }) => {
