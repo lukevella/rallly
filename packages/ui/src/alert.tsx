@@ -10,7 +10,7 @@ const alertVariants = cva(
     variants: {
       variant: {
         primary:
-          "border-transparent bg-primary *:data-[slot=alert-description]:text-primary-foreground/90 [&>svg]:text-primary-foreground",
+          "border-indigo-500/20 bg-indigo-500/10 text-indigo-900 *:data-[slot=alert-description]:text-indigo-900/90 dark:text-indigo-100 dark:*:data-[slot=alert-description]:text-indigo-100/90 [&>svg]:text-indigo-900/75 dark:[&>svg]:text-indigo-100/75",
         info: "border-blue-500/20 bg-blue-500/10 text-blue-900 *:data-[slot=alert-description]:text-blue-900/90 dark:text-blue-100 dark:*:data-[slot=alert-description]:text-blue-100/90 [&>svg]:text-blue-900/75 dark:[&>svg]:text-blue-100/75",
         warning:
           "border-yellow-500/20 bg-yellow-500/10 text-yellow-900 *:data-[slot=alert-description]:text-yellow-900/90 dark:text-yellow-100 dark:*:data-[slot=alert-description]:text-yellow-100/90 [&>svg]:text-yellow-900/75 dark:[&>svg]:text-yellow-100/75",
