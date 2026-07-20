@@ -46,6 +46,7 @@ export function MembersSettingsPageClient() {
   const [invites] = trpc.spaces.listInvites.useSuspenseQuery();
   const [seats] = trpc.spaces.getSeats.useSuspenseQuery();
   const canInviteMembers = space.getAbility().can("invite", "Member");
+  const hasInactiveMembers = space.data.tier === "hobby" && members.total > 1;
 
   return (
     <SettingsPage>
@@ -65,7 +66,7 @@ export function MembersSettingsPageClient() {
           <PageSection>
             <PageSectionContent>
               <IfFeatureEnabled feature="billing">
-                {space.data.tier === "hobby" && members.total > 1 ? (
+                {hasInactiveMembers ? (
                   <Alert variant="info">
                     <InfoIcon />
                     <AlertTitle>
@@ -80,6 +81,23 @@ export function MembersSettingsPageClient() {
                         defaults="These members lost access when this space's Pro subscription ended. Their seats are kept and access is restored when the space is upgraded again."
                       />
                     </AlertDescription>
+                    <AlertAction>
+                      <Button
+                        size="sm"
+                        variant="link"
+                        onClick={() => {
+                          posthog?.capture(
+                            "members_settings:upgrade_button_click",
+                          );
+                          showPayWall();
+                        }}
+                      >
+                        <Trans
+                          i18nKey="upgradeToPro"
+                          defaults="Upgrade to Pro"
+                        />
+                      </Button>
+                    </AlertAction>
                   </Alert>
                 ) : null}
               </IfFeatureEnabled>
@@ -130,7 +148,7 @@ export function MembersSettingsPageClient() {
               </StackedList>
             </PageSectionContent>
           </PageSection>
-          {!canInviteMembers ? (
+          {!canInviteMembers && !hasInactiveMembers ? (
             <Alert variant="primary">
               <SparklesIcon />
               <AlertDescription>
@@ -152,7 +170,8 @@ export function MembersSettingsPageClient() {
                 </Button>
               </AlertAction>
             </Alert>
-          ) : (
+          ) : null}
+          {canInviteMembers ? (
             <>
               <PageSectionDivider />
               <PageSection>
@@ -264,7 +283,7 @@ export function MembersSettingsPageClient() {
                 </PageSectionContent>
               </PageSection>
             </>
-          )}
+          ) : null}
         </PageSectionGroup>
       </SettingsPageContent>
     </SettingsPage>
