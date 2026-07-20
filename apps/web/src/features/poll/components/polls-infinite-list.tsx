@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -28,6 +29,7 @@ import {
   StickerIcon,
   TrashIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
@@ -35,7 +37,7 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Spinner } from "@/components/spinner";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
-import type { PollStatus } from "@/features/poll/schema";
+import type { PollClosedReason, PollStatus } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
@@ -50,20 +52,26 @@ function PollListItem({
   id,
   title,
   status,
+  closedReason,
   participants,
   user,
 }: {
   id: string;
   title: string;
   status: PollStatus;
+  closedReason: PollClosedReason | null;
   participants: { id: string; name: string }[];
   user: { name: string; image: string | null } | null;
 }) {
   const { t } = useTranslation();
+  const router = useRouter();
   const deletePollDialog = useDialog();
-  const deletePoll = trpc.polls.markAsDeleted.useMutation();
-  const closePoll = trpc.polls.close.useMutation();
-  const reopenPoll = trpc.polls.reopen.useMutation();
+  // Refresh server components so server-fetched data that depends on poll
+  // status (e.g. the status tab counts) stays in sync with the list.
+  const refresh = { onSuccess: () => router.refresh() };
+  const deletePoll = trpc.polls.markAsDeleted.useMutation(refresh);
+  const closePoll = trpc.polls.close.useMutation(refresh);
+  const reopenPoll = trpc.polls.reopen.useMutation(refresh);
   return (
     <>
       <div className="grid w-full grid-cols-[1fr_auto] gap-2">
@@ -76,6 +84,26 @@ function PollListItem({
             <span className="absolute inset-0" />
             <span className="block truncate">{title}</span>
           </HoverPrefetchLink>
+          {status === "closed" && closedReason === "auto" && (
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Badge size="sm" className="relative cursor-help">
+                    <Trans
+                      i18nKey="pollAutoClosedBadge"
+                      defaults="Automatically closed"
+                    />
+                  </Badge>
+                }
+              />
+              <TooltipContent>
+                <Trans
+                  i18nKey="pollAutoClosedTooltip"
+                  defaults="This poll was closed automatically because all of its dates have passed. You can reopen it at any time."
+                />
+              </TooltipContent>
+            </Tooltip>
+          )}
         </div>
         <div className="hidden items-center justify-end gap-4 sm:flex">
           {participants.length > 0 ? (
@@ -300,12 +328,13 @@ export function PollsInfiniteList({
 
   return (
     <StackedList>
-      {polls.map(({ id, title, status, participants, user }) => (
+      {polls.map(({ id, title, status, closedReason, participants, user }) => (
         <StackedListItem key={id}>
           <PollListItem
             id={id}
             title={title}
             status={status}
+            closedReason={closedReason}
             participants={participants}
             user={user}
           />

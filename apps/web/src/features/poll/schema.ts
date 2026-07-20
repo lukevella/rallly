@@ -15,3 +15,7 @@ export const pollStatusSchema = z.enum([
 ]);
 
 export type PollStatus = z.infer<typeof pollStatusSchema>;
+
+export const pollClosedReasonSchema = z.enum(["auto", "manual"]);
+
+export type PollClosedReason = z.infer<typeof pollClosedReasonSchema>;

@@ -100,10 +100,17 @@ export function ResponsiveResults() {
             <Trans i18nKey="pollStatusClosed" defaults="Closed" />
           </EmptyStateTitle>
           <EmptyStateDescription>
-            <Trans
-              i18nKey="pollClosedDescription"
-              defaults="No more responses are being accepted."
-            />
+            {poll.closedReason === "auto" ? (
+              <Trans
+                i18nKey="pollAutoClosedDescription"
+                defaults="This poll was closed automatically because all of its dates have passed. No more responses are being accepted."
+              />
+            ) : (
+              <Trans
+                i18nKey="pollClosedDescription"
+                defaults="No more responses are being accepted."
+              />
+            )}
           </EmptyStateDescription>
           <EmptyStateFooter>
             <Button onClick={() => setDismissed(true)}>

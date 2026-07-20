@@ -1,7 +1,7 @@
 "use client";
 
 import { buttonVariants } from "@rallly/ui";
-import { InboxIcon, PlusIcon } from "lucide-react";
+import { CircleStopIcon, InboxIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -22,10 +22,42 @@ import {
 } from "@/components/page-layout";
 import { SearchInput } from "@/components/search-input";
 import { PollsInfiniteList } from "@/features/poll/components/polls-infinite-list";
+import type { PollStatus } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { PollsTabbedView } from "./polls-tabbed-view";
 import { searchParamsSchema } from "./schema";
+
+function NoOpenPollsEmptyState({ closedCount }: { closedCount: number }) {
+  return (
+    <EmptyState className="h-96">
+      <EmptyStateIcon>
+        <CircleStopIcon />
+      </EmptyStateIcon>
+      <EmptyStateTitle>
+        <Trans i18nKey="noOpenPolls" defaults="No open polls" />
+      </EmptyStateTitle>
+      <EmptyStateDescription>
+        <Trans
+          i18nKey="noOpenPollsDescription"
+          defaults="Polls close automatically once all of their dates have passed. You have {count, plural, one {1 closed poll} other {# closed polls}}."
+          values={{ count: closedCount }}
+        />
+      </EmptyStateDescription>
+      <EmptyStateFooter className="flex flex-wrap justify-center gap-2">
+        <Link
+          href="?status=closed"
+          className={buttonVariants({ variant: "primary" })}
+        >
+          <Trans i18nKey="viewClosedPolls" defaults="View closed polls" />
+        </Link>
+        <Link href="/new" className={buttonVariants()}>
+          <Trans i18nKey="createPoll" defaults="Create Poll" />
+        </Link>
+      </EmptyStateFooter>
+    </EmptyState>
+  );
+}
 
 function PollsEmptyState() {
   return (
@@ -51,7 +83,7 @@ function PollsEmptyState() {
   );
 }
 
-export function PollsPage() {
+export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
   const [{ data: members }] = trpc.spaces.listMembers.useSuspenseQuery();
@@ -59,6 +91,10 @@ export function PollsPage() {
   const { status, q, member } = searchParamsSchema.parse(
     Object.fromEntries(searchParams.entries()),
   );
+
+  const hasFilters = Boolean(q || member);
+  const showClosedPollsPointer =
+    status === "open" && !hasFilters && counts.closed > 0;
 
   return (
     <PageContainer>
@@ -76,7 +112,7 @@ export function PollsPage() {
         </PageHeaderActions>
       </PageHeader>
       <PageContent>
-        <PollsTabbedView>
+        <PollsTabbedView counts={counts}>
           <div className="mb-6 flex gap-x-2">
             <SearchInput
               placeholder={t("searchPollsPlaceholder", {
@@ -89,7 +125,13 @@ export function PollsPage() {
             status={status}
             search={q}
             member={member}
-            emptyState={<PollsEmptyState />}
+            emptyState={
+              showClosedPollsPointer ? (
+                <NoOpenPollsEmptyState closedCount={counts.closed} />
+              ) : (
+                <PollsEmptyState />
+              )
+            }
           />
         </PollsTabbedView>
       </PageContent>
