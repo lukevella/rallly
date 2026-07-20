@@ -287,9 +287,13 @@ export function LoginWithEmailForm({
               setTurnstileToken(token);
               // Finish the submit that was interrupted to solve the captcha.
               // One-shot so widget resets can't re-trigger sends on their own.
+              // Skipped if the user started typing a password meanwhile —
+              // auto-submitting would attempt a login with a partial password.
               if (pendingTokenSubmitRef.current) {
                 pendingTokenSubmitRef.current = false;
-                void handleSubmit((values) => submit(values, token))();
+                if (!form.getValues("password")) {
+                  void handleSubmit((values) => submit(values, token))();
+                }
               }
             }}
             onError={() => {
