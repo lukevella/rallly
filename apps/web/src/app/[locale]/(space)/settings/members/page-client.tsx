@@ -1,7 +1,12 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
-import { Alert, AlertAction, AlertDescription } from "@rallly/ui/alert";
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@rallly/ui/alert";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { InfoIcon, SparklesIcon } from "lucide-react";
@@ -41,6 +46,7 @@ export function MembersSettingsPageClient() {
   const [invites] = trpc.spaces.listInvites.useSuspenseQuery();
   const [seats] = trpc.spaces.getSeats.useSuspenseQuery();
   const canInviteMembers = space.getAbility().can("invite", "Member");
+  const hasInactiveMembers = space.data.tier === "hobby" && members.total > 1;
 
   return (
     <SettingsPage>
@@ -60,17 +66,37 @@ export function MembersSettingsPageClient() {
           <PageSection>
             <PageSectionContent>
               <IfFeatureEnabled feature="billing">
-                {space.data.tier === "hobby" && members.total > 1 ? (
-                  <Alert variant="info">
+                {hasInactiveMembers ? (
+                  <Alert>
                     <InfoIcon />
+                    <AlertTitle>
+                      <Trans
+                        i18nKey="membersInactiveAlertTitle"
+                        defaults="Members are inactive"
+                      />
+                    </AlertTitle>
                     <AlertDescription>
-                      <p>
-                        <Trans
-                          i18nKey="membersInactiveDescription"
-                          defaults="Members are inactive because this space does not have an active subscription. Upgrade to Pro to restore their access."
-                        />
-                      </p>
+                      <Trans
+                        i18nKey="membersInactiveAlertDescription"
+                        defaults="These members lost access when this space's Pro subscription ended. Their seats are kept and access is restored when the space is upgraded again."
+                      />
                     </AlertDescription>
+                    <AlertAction>
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          posthog?.capture(
+                            "members_settings:upgrade_button_click",
+                          );
+                          showPayWall();
+                        }}
+                      >
+                        <Trans
+                          i18nKey="upgradeToPro"
+                          defaults="Upgrade to Pro"
+                        />
+                      </Button>
+                    </AlertAction>
                   </Alert>
                 ) : null}
               </IfFeatureEnabled>
@@ -121,13 +147,13 @@ export function MembersSettingsPageClient() {
               </StackedList>
             </PageSectionContent>
           </PageSection>
-          {!canInviteMembers ? (
+          {!canInviteMembers && !hasInactiveMembers ? (
             <Alert variant="primary">
               <SparklesIcon />
               <AlertDescription>
                 <Trans
-                  i18nKey="pendingInvitesUpgradeDescription"
-                  defaults="Upgrade to Pro to invite members to your space."
+                  i18nKey="inviteMembersUpsellDescription"
+                  defaults="Invite members to manage polls and events together in this space."
                 />
               </AlertDescription>
               <AlertAction>
@@ -143,7 +169,8 @@ export function MembersSettingsPageClient() {
                 </Button>
               </AlertAction>
             </Alert>
-          ) : (
+          ) : null}
+          {canInviteMembers ? (
             <>
               <PageSectionDivider />
               <PageSection>
@@ -255,7 +282,7 @@ export function MembersSettingsPageClient() {
                 </PageSectionContent>
               </PageSection>
             </>
-          )}
+          ) : null}
         </PageSectionGroup>
       </SettingsPageContent>
     </SettingsPage>
