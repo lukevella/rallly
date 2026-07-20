@@ -51,6 +51,10 @@ async function syncSpaceTier(tx: Prisma.TransactionClient, spaceId: string) {
     },
   });
 
+  if (tier === "hobby") {
+    await tx.spaceMemberInvite.deleteMany({ where: { spaceId } });
+  }
+
   return tier;
 }
 

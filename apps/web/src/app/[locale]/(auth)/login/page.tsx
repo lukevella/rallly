@@ -14,11 +14,9 @@ import {
   AuthPageContainer,
   AuthPageContent,
   AuthPageDescription,
-  AuthPageExternal,
   AuthPageHeader,
   AuthPageTitle,
 } from "../components/auth-page";
-import { LinkWithRedirectTo } from "../components/link-with-redirect-to";
 import { AuthErrors } from "./components/auth-errors";
 import { LoginWithEmailForm } from "./components/login-email-form";
 
@@ -92,6 +90,13 @@ export default async function LoginPage(props: {
               i18nKey="loginNotConfigured"
               defaults="Login is currently not configured."
             />
+          ) : isRegistrationEnabled ? (
+            <Trans
+              t={t}
+              ns="app"
+              i18nKey="loginOrSignUpDescription"
+              defaults="Log in to your account or create a new one"
+            />
           ) : (
             <Trans
               t={t}
@@ -103,7 +108,9 @@ export default async function LoginPage(props: {
         </AuthPageDescription>
       </AuthPageHeader>
       <AuthPageContent>
-        {isEmailLoginEnabled && <LoginWithEmailForm />}
+        {isEmailLoginEnabled && (
+          <LoginWithEmailForm isRegistrationEnabled={isRegistrationEnabled} />
+        )}
         {isEmailLoginEnabled && hasAlternateLoginMethods ? <OrDivider /> : null}
         <div className="grid gap-3">
           {hasOidc ? (
@@ -129,18 +136,6 @@ export default async function LoginPage(props: {
         </div>
       </AuthPageContent>
       <AuthErrors />
-      {isRegistrationEnabled ? (
-        <AuthPageExternal>
-          <Trans
-            t={t}
-            i18nKey="loginFooter"
-            defaults="Don't have an account? <a>Sign up</a>"
-            components={{
-              a: <LinkWithRedirectTo className="text-link" href="/register" />,
-            }}
-          />
-        </AuthPageExternal>
-      ) : null}
     </AuthPageContainer>
   );
 }

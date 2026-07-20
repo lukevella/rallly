@@ -61,7 +61,7 @@ export function SpaceDropdown() {
             <div className="truncate font-medium text-sm">
               {activeSpace.name}
             </div>
-            <div className="text-xs">
+            <div className="text-muted-foreground text-xs">
               <SpaceTierLabel tier={activeSpace.tier} />
             </div>
           </div>

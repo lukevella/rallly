@@ -2,7 +2,7 @@ import { createServerSideHelpers } from "@trpc/react-query/server";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import superjson from "superjson";
-import { isInitialAdmin } from "@/features/setup/utils";
+import { isInitialAdmin } from "@/features/instance-settings/utils";
 import { getCurrentUser } from "@/features/user/data";
 import { getSession, requireUser } from "@/lib/auth";
 import { getPathname } from "@/lib/pathname";

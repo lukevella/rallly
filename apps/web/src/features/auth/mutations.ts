@@ -54,48 +54,53 @@ export const linkAnonymousUser = async (
       userId: authenticatedUserId,
     });
 
-    if (spaceId) {
-      await prisma.$transaction(async (tx) => {
-        // Transfer space-scoped data from anonymous user to authenticated user
-        await Promise.all([
-          // Transfer polls
-          tx.poll.updateMany({
-            where: {
-              userId: anonymousUserId,
-            },
-            data: {
-              userId: authenticatedUserId,
-              spaceId,
-            },
-          }),
-
-          // Transfer participants
-          tx.participant.updateMany({
-            where: {
-              userId: anonymousUserId,
-            },
-            data: {
-              userId: authenticatedUserId,
-            },
-          }),
-
-          // Transfer comments
-          tx.comment.updateMany({
-            where: {
-              userId: anonymousUserId,
-            },
-            data: {
-              userId: authenticatedUserId,
-            },
-          }),
-        ]);
-      });
-    } else {
-      logger.error(
+    if (!spaceId) {
+      // A sign-in that creates the account links the guest before the
+      // user-create hook has provisioned the space. Transfer ownership
+      // anyway — the anonymous user is deleted right after linking and
+      // polls cascade with it — and leave spaceId null for the hook to
+      // adopt once the space exists.
+      logger.info(
         { userId: authenticatedUserId },
-        "User has no active space; skipped poll/participant/comment migration",
+        "User has no active space yet; migrating polls without a space",
       );
     }
+
+    await prisma.$transaction(async (tx) => {
+      // Transfer space-scoped data from anonymous user to authenticated user
+      await Promise.all([
+        // Transfer polls
+        tx.poll.updateMany({
+          where: {
+            userId: anonymousUserId,
+          },
+          data: {
+            userId: authenticatedUserId,
+            ...(spaceId ? { spaceId } : {}),
+          },
+        }),
+
+        // Transfer participants
+        tx.participant.updateMany({
+          where: {
+            userId: anonymousUserId,
+          },
+          data: {
+            userId: authenticatedUserId,
+          },
+        }),
+
+        // Transfer comments
+        tx.comment.updateMany({
+          where: {
+            userId: anonymousUserId,
+          },
+          data: {
+            userId: authenticatedUserId,
+          },
+        }),
+      ]);
+    });
 
     // Merge user identities in PostHog
     posthog()?.capture({

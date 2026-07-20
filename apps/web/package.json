@@ -28,7 +28,7 @@
     "@hono/zod-openapi": "^1.2.0",
     "@hono/zod-validator": "^0.7.2",
     "@hookform/resolvers": "^5.2.2",
-    "@marsidev/react-turnstile": "^1.4.2",
+    "@marsidev/react-turnstile": "^1.5.3",
     "@next/env": "16.2.6",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",

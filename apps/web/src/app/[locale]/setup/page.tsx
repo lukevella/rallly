@@ -1,42 +1,70 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { SetupFooter } from "@/app/[locale]/setup/components/setup-footer";
+import { SetupForm } from "@/app/[locale]/setup/components/setup-form";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Logo } from "@/features/branding/components/logo";
-import { CreateSpaceForm } from "@/features/setup/components/create-space-form";
-import { userHasSpaces } from "@/features/setup/utils";
+import { getActiveSpaceForUser } from "@/features/space/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { requireUser } from "@/lib/auth";
+import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
+import { validateRedirectUrl } from "@/lib/utils/redirect";
 
-export default async function SetupPage() {
+export default async function SetupPage(props: {
+  searchParams?: Promise<{ redirectTo?: string }>;
+}) {
   const user = await requireUser();
+  const searchParams = await props.searchParams;
 
-  if (await userHasSpaces(user.id)) {
-    redirect("/");
+  const space = await getActiveSpaceForUser(user.id);
+
+  if (user.name && user.timeZone && user.timeFormat && space) {
+    redirect(validateRedirectUrl(searchParams?.redirectTo) ?? "/");
   }
 
+  // Prefill from the device: the timeZone cookie tracks the browser's zone
+  // on every visit, and the format cookie holds a per-device choice.
+  const device = await getDeviceDateTimeConfig();
+
   return (
-    <div className="flex min-h-dvh justify-center bg-background p-4 sm:items-center">
-      <main id="main-content" tabIndex={-1} className="w-full max-w-sm">
-        <article className="space-y-8">
-          <div className="flex justify-center py-8">
-            <Logo />
-          </div>
-          <header className="text-center">
+    <div className="flex min-h-dvh flex-col bg-background">
+      <header className="flex items-center justify-between px-4 py-3">
+        <Logo size="sm" />
+        <ThemeSwitcher />
+      </header>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex flex-1 overflow-y-auto p-4"
+      >
+        <article className="m-auto w-full max-w-sm space-y-8">
+          <header>
             <h1 className="font-bold text-2xl">
-              <Trans i18nKey="createSpace" defaults="Create Space" />
+              <Trans
+                i18nKey="setupAccountTitle"
+                defaults="Set Up Your Account"
+              />
             </h1>
             <p className="mt-1 text-muted-foreground">
               <Trans
-                i18nKey="createSpaceDescription"
-                defaults="Create a space to organize your polls and events."
+                i18nKey="setupAccountDescription"
+                defaults="Tell us a bit about yourself."
               />
             </p>
           </header>
           <div>
-            <CreateSpaceForm />
+            <SetupForm
+              defaultName={user.name}
+              defaultTimeZone={user.timeZone ?? device.timeZone}
+              defaultTimeFormat={user.timeFormat ?? device.timeFormat}
+            />
           </div>
         </article>
       </main>
+      <footer className="flex justify-center p-16">
+        <SetupFooter email={user.email} />
+      </footer>
     </div>
   );
 }
@@ -44,8 +72,8 @@ export default async function SetupPage() {
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
-    title: t("createSpace", {
-      defaultValue: "Create Space",
+    title: t("setupAccountTitle", {
+      defaultValue: "Set Up Your Account",
     }),
   };
 }

@@ -24,7 +24,18 @@ const otpFormSchema = z.object({
   otp: z.string().length(6),
 });
 
-export function OTPForm({ email }: { email: string }) {
+export function OTPForm({
+  email,
+  mode,
+}: {
+  email: string;
+  /**
+   * "sign-in" verifies with signIn.emailOtp, which creates an account when
+   * the email is new. "email-verification" only signs into existing
+   * accounts — used when registration is disabled.
+   */
+  mode: "sign-in" | "email-verification";
+}) {
   const { t } = useTranslation();
   const form = useForm({
     defaultValues: {
@@ -35,10 +46,16 @@ export function OTPForm({ email }: { email: string }) {
 
   const searchParams = useSearchParams();
   const handleSubmit = form.handleSubmit(async (data) => {
-    const res = await authClient.emailOtp.verifyEmail({
-      email,
-      otp: data.otp,
-    });
+    const res =
+      mode === "sign-in"
+        ? await authClient.signIn.emailOtp({
+            email,
+            otp: data.otp,
+          })
+        : await authClient.emailOtp.verifyEmail({
+            email,
+            otp: data.otp,
+          });
 
     if (res.error) {
       posthog?.capture("login:otp_verify_error", {
@@ -74,11 +91,22 @@ export function OTPForm({ email }: { email: string }) {
           form.setError("otp", {
             message: res.error.message,
           });
+          return;
       }
-    } else {
-      window.location.href =
-        validateRedirectUrl(searchParams?.get("redirectTo")) ?? "/";
     }
+
+    const redirectTo = validateRedirectUrl(searchParams?.get("redirectTo"));
+
+    // A freshly created account has no name yet; send it through onboarding
+    // to pick one up before continuing to its destination.
+    if (mode === "sign-in" && !res.data?.user?.name) {
+      window.location.href = redirectTo
+        ? `/setup?redirectTo=${encodeURIComponent(redirectTo)}`
+        : "/setup";
+      return;
+    }
+
+    window.location.href = redirectTo ?? "/";
   });
 
   return (
@@ -123,7 +151,7 @@ export function OTPForm({ email }: { email: string }) {
             form.formState.isSubmitting || form.formState.isSubmitSuccessful
           }
         >
-          <Trans i18nKey="login" defaults="Login" />
+          <Trans i18nKey="continue" defaults="Continue" />
         </Button>
       </form>
     </Form>

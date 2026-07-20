@@ -27,6 +27,7 @@ import { env } from "@/env";
 import { linkAnonymousUser } from "@/features/auth/mutations";
 import { isEmailBlocked, isTemporaryEmail } from "@/features/auth/utils";
 import { getStripe } from "@/features/billing/service";
+import { adoptOrphanedPolls } from "@/features/poll/mutations";
 import { createSpace } from "@/features/space/mutations";
 import type { UserDTO } from "@/features/user/schema";
 import { getTranslation } from "@/i18n/server";
@@ -55,15 +56,29 @@ if (env.OIDC_ISSUER_URL) {
   );
 }
 
+// The site key renders the widget and the secret key verifies its tokens;
+// captcha only works with both, so a half-configured pair disables it.
+const isCaptchaEnabled =
+  !!env.TURNSTILE_SECRET_KEY && !!env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+if (!!env.TURNSTILE_SECRET_KEY !== !!env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
+  logger.warn(
+    "Captcha is disabled: NEXT_PUBLIC_TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY must be set together",
+  );
+}
+
 // Conditional plugins are typed as BetterAuthPlugin[] — they don't add user
 // fields so losing their specific types doesn't affect session type inference.
 const conditionalPlugins: BetterAuthPlugin[] = [
-  ...(env.TURNSTILE_SECRET_KEY
+  ...(isCaptchaEnabled && env.TURNSTILE_SECRET_KEY
     ? [
         captcha({
           provider: "cloudflare-turnstile",
           secretKey: env.TURNSTILE_SECRET_KEY,
-          endpoints: ["/sign-up/email"],
+          // Every caller of the OTP send endpoint (combined login/signup
+          // page, event RSVP verification) renders the Turnstile widget and
+          // sends the token via the x-captcha-response header.
+          endpoints: ["/sign-up/email", "/email-otp/send-verification-otp"],
         }),
       ]
     : []),
@@ -472,6 +487,14 @@ export const authLib = betterAuth({
             const space = await createSpace({
               name: "Personal",
               ownerId: user.id,
+            });
+
+            // Guest linking can run before this hook (a sign-in that
+            // creates the account links the anonymous user first), leaving
+            // migrated polls without a space. Adopt them now.
+            await adoptOrphanedPolls({
+              userId: user.id,
+              spaceId: space.id,
             });
 
             identifyGroup({
