@@ -29,6 +29,7 @@ import {
   StickerIcon,
   TrashIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
@@ -63,10 +64,14 @@ function PollListItem({
   user: { name: string; image: string | null } | null;
 }) {
   const { t } = useTranslation();
+  const router = useRouter();
   const deletePollDialog = useDialog();
-  const deletePoll = trpc.polls.markAsDeleted.useMutation();
-  const closePoll = trpc.polls.close.useMutation();
-  const reopenPoll = trpc.polls.reopen.useMutation();
+  // Refresh server components so server-fetched data that depends on poll
+  // status (e.g. the status tab counts) stays in sync with the list.
+  const refresh = { onSuccess: () => router.refresh() };
+  const deletePoll = trpc.polls.markAsDeleted.useMutation(refresh);
+  const closePoll = trpc.polls.close.useMutation(refresh);
+  const reopenPoll = trpc.polls.reopen.useMutation(refresh);
   return (
     <>
       <div className="grid w-full grid-cols-[1fr_auto] gap-2">

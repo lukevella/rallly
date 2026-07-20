@@ -22,6 +22,7 @@ import {
 } from "@/components/page-layout";
 import { SearchInput } from "@/components/search-input";
 import { PollsInfiniteList } from "@/features/poll/components/polls-infinite-list";
+import type { PollStatus } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { PollsTabbedView } from "./polls-tabbed-view";
@@ -82,11 +83,10 @@ function PollsEmptyState() {
   );
 }
 
-export function PollsPage() {
+export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
   const [{ data: members }] = trpc.spaces.listMembers.useSuspenseQuery();
-  const [counts] = trpc.polls.statusCounts.useSuspenseQuery();
 
   const { status, q, member } = searchParamsSchema.parse(
     Object.fromEntries(searchParams.entries()),

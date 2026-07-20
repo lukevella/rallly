@@ -250,7 +250,11 @@ export const getPolls = async ({
   };
 };
 
-export const getPollStatusCounts = async ({ spaceId }: { spaceId: string }) => {
+export const getPollStatusCounts = async ({
+  spaceId,
+}: {
+  spaceId: AuthorizedSpaceId;
+}) => {
   const res = await prisma.poll.groupBy({
     by: ["status"],
     where: {

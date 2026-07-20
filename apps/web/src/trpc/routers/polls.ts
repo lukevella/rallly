@@ -11,7 +11,6 @@ import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { moderateContent } from "@/features/moderation/mutations";
 import {
   canUserManagePoll,
-  getPollStatusCounts,
   getPolls,
   hasPollAdminAccess,
 } from "@/features/poll/data";
@@ -85,10 +84,6 @@ export const polls = router({
         total: result.total,
       };
     }),
-  statusCounts: spaceProcedure.query(async ({ ctx }) => {
-    return getPollStatusCounts({ spaceId: ctx.space.id });
-  }),
-
   make: possiblyPublicProcedure
     .input(
       z.object({
