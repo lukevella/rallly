@@ -5,7 +5,7 @@ import type * as React from "react";
 import { cn } from "./lib/utils";
 
 const alertVariants = cva(
-  "group/alert relative grid w-full items-center gap-y-2 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-title]:items-start has-data-[slot=alert-action]:gap-x-2 sm:has-[>svg]:has-data-[slot=alert-action]:grid-cols-[auto_1fr_auto] sm:gap-0.5 sm:has-[>svg]:grid-cols-[auto_1fr] sm:has-data-[slot=alert-action]:grid-cols-[1fr_auto] sm:has-[>svg]:gap-x-2 *:[svg:not([class*='size-'])]:size-4 not-has-data-[slot=alert-action]:*:[svg]:self-start *:[svg]:text-current sm:not-has-data-[slot=alert-action]:*:[svg]:translate-y-0.5 sm:has-data-[slot=alert-title]:*:[svg]:row-span-2 sm:has-data-[slot=alert-title]:*:[svg]:translate-y-0.5",
+  "group/alert relative grid w-full items-center gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-[>svg]:has-data-[slot=alert-action]:grid-cols-[auto_1fr_auto] has-[>svg]:grid-cols-[auto_1fr] has-data-[slot=alert-action]:grid-cols-[1fr_auto] has-data-[slot=alert-title]:items-start has-[>svg]:gap-x-2 has-data-[slot=alert-action]:gap-x-2 *:[svg:not([class*='size-'])]:size-4 *:[svg]:text-current has-data-[slot=alert-title]:*:[svg]:row-span-2 has-data-[slot=alert-title]:*:[svg]:translate-y-0.5",
   {
     variants: {
       variant: {
@@ -47,7 +47,7 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="alert-title"
       className={cn(
-        "font-medium sm:group-has-[>svg]/alert:col-start-2 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
+        "font-medium group-has-[>svg]/alert:col-start-2 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
         className,
       )}
       {...props}
@@ -63,7 +63,7 @@ function AlertDescription({
     <div
       data-slot="alert-description"
       className={cn(
-        "col-start-1 text-balance text-muted-foreground text-sm sm:group-has-[>svg]/alert:col-start-2 md:text-pretty [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
+        "text-pretty text-muted-foreground text-sm [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
         className,
       )}
       {...props}
@@ -76,7 +76,7 @@ function AlertAction({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="alert-action"
       className={cn(
-        "col-start-1 justify-self-start sm:col-start-2 sm:justify-self-end sm:group-has-[>svg]/alert:col-start-3 sm:group-has-data-[slot=alert-title]/alert:row-span-2 sm:group-has-data-[slot=alert-title]/alert:row-start-1",
+        "col-start-2 justify-self-end group-has-[>svg]/alert:col-start-3 group-has-data-[slot=alert-title]/alert:row-span-2 group-has-data-[slot=alert-title]/alert:row-start-1",
         className,
       )}
       {...props}
