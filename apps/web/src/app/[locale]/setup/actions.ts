@@ -69,6 +69,12 @@ export const setupSpaceAction = authActionClient
         groupKey: spaceId,
         properties: {
           type: parsedInput.spaceType,
+          name,
+          // A space created here skipped the create-site identify that the
+          // auth hook does, so seed the creation-time properties too.
+          ...(existingSpace
+            ? {}
+            : { tier: "hobby", member_count: 1, seat_count: 1 }),
         },
       });
 
