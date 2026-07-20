@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import { adoptOrphanedPolls } from "@/features/poll/mutations";
-import { userOwnsSpace } from "@/features/space/data";
+import { getOwnedSpace } from "@/features/space/data";
 import { createSpace } from "@/features/space/mutations";
 import { identifyGroup, track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
@@ -19,14 +19,23 @@ const setupSpaceSchema = z.discriminatedUnion("spaceType", [
  * Creates the user's space at the end of onboarding — registration doesn't
  * create one, so this is where every account gets theirs. Accounts that
  * already own a space (pre-existing accounts sent through setup to backfill
- * profile fields, or a re-submit) are left alone: setup never renames or
- * duplicates an existing space.
+ * profile fields, or a re-submit) only retry poll adoption: setup never
+ * renames or duplicates an existing space.
  */
 export const setupSpaceAction = authActionClient
   .metadata({ actionName: "setup_space" })
   .inputSchema(setupSpaceSchema)
   .action(async ({ ctx, parsedInput }) => {
-    if (await userOwnsSpace(ctx.user.id)) {
+    const ownedSpace = await getOwnedSpace(ctx.user.id);
+
+    if (ownedSpace) {
+      // Create and adopt aren't atomic: a previous submit may have created
+      // the space and failed before adoption, so retries still pull
+      // orphaned polls in (a no-op when there are none).
+      await adoptOrphanedPolls({
+        userId: ctx.user.id,
+        spaceId: ownedSpace.id,
+      });
       return;
     }
 
