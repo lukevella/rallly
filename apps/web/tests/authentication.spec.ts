@@ -41,9 +41,8 @@ test.describe.serial(() => {
     test("signs in existing user when registering with existing email", async ({
       page,
     }) => {
-      // /register redirects to the combined login/sign up page
-      await page.goto("/register");
-      await expect(page).toHaveURL(/\/login/);
+      await page.goto("/login");
+      await page.getByText("Welcome").waitFor();
 
       await page
         .getByPlaceholder("jessie.smith@example.com")

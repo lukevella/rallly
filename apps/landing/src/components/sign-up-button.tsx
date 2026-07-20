@@ -9,7 +9,7 @@ import { linkToApp } from "@/lib/linkToApp";
 export function SignUpButton() {
   return (
     <Link
-      href={linkToApp("/register")}
+      href={linkToApp("/login")}
       className={buttonVariants({ variant: "primary" })}
       onClick={() => {
         posthog.capture("landing:sign_up_button_click");

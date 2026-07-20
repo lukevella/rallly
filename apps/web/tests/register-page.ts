@@ -12,8 +12,7 @@ export class RegisterPage {
   constructor(private readonly page: Page) {}
 
   async goto() {
-    // /register redirects to the combined login/sign up page
-    await this.page.goto("/register");
+    await this.page.goto("/login");
     await this.page.getByText("Welcome").waitFor();
   }
 
