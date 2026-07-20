@@ -3,6 +3,7 @@ export interface FeatureFlagConfig {
   billing: boolean;
   feedback: boolean;
   emailLogin: boolean;
+  captcha: boolean;
   registration: boolean;
   calendars: boolean;
   eventTypes: boolean;

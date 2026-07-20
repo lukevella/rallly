@@ -157,8 +157,8 @@ export default async function EventPage({
                   src={host.image ?? undefined}
                   size="sm"
                 />
-                {t("eventPageHostedBy", {
-                  defaultValue: "Hosted by {name}",
+                {t("organizedBy", {
+                  defaultValue: "Organized by {name}",
                   name: host.name,
                 })}
               </EventSubtitle>

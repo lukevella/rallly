@@ -18,4 +18,7 @@ export type UserDTO = {
   locale?: string;
   weekStart?: number;
   customerId?: string;
+  // Only populated on database-derived DTOs (createUserDTO); deletedAt is
+  // deliberately not part of the session user object.
+  deletedAt?: Date;
 };

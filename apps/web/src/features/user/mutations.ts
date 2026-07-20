@@ -3,6 +3,7 @@ import "server-only";
 import type { TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { authLib } from "@/lib/auth";
+import { deleteImageFromS3 } from "@/lib/storage/image-upload";
 
 export async function createUser({
   name,
@@ -115,6 +116,44 @@ export async function unbanUser({ userId }: { userId: string }) {
     where: { id: userId },
     data: { bannedAt: null },
   });
+}
+
+// Sessions are revoked through Better-Auth's internal adapter for the same
+// reason as bans: with secondary storage they live in Redis, and only
+// Better-Auth's own APIs delete those keys.
+export async function hardDeleteUser({
+  userId,
+  email,
+}: {
+  userId: string;
+  email: string;
+}) {
+  const { internalAdapter } = await authLib.$context;
+
+  await internalAdapter.deleteSessions(userId);
+
+  // The avatar lives in object storage, outside the cascade. External URLs
+  // (OAuth provider avatars) are not ours to delete.
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { image: true },
+  });
+
+  if (user?.image && !user.image.startsWith("https://")) {
+    await deleteImageFromS3(user.image);
+  }
+
+  // Cascades cover data the user owns, but their personal data also lives
+  // where they took part in other users' content: participant rows carry
+  // name/email (votes cascade off them, matching the promise in the delete
+  // dialog) and event invites carry invitee name/email. Both relations are
+  // SetNull, so the rows would otherwise outlive the account.
+  await prisma.participant.deleteMany({ where: { userId } });
+  await prisma.scheduledEventInvite.deleteMany({
+    where: { OR: [{ inviteeId: userId }, { inviteeEmail: email }] },
+  });
+
+  await prisma.user.delete({ where: { id: userId } });
 }
 
 export async function setActiveSpace({

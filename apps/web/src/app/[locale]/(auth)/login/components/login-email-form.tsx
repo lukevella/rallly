@@ -21,11 +21,11 @@ import * as z from "zod";
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
 import { trpc } from "@/trpc/client";
 
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-const isTurnstileEnabled = !!turnstileSiteKey;
 
 function useLoginWithEmailSchema() {
   const { t } = useTranslation();
@@ -42,6 +42,8 @@ export function LoginWithEmailForm({
 }: {
   isRegistrationEnabled: boolean;
 }) {
+  const isCaptchaEnabled = useFeatureFlag("captcha");
+  const isTurnstileEnabled = isCaptchaEnabled && !!turnstileSiteKey;
   const router = useRouter();
   const loginWithEmailSchema = useLoginWithEmailSchema();
   const searchParams = useSearchParams();
@@ -266,7 +268,7 @@ export function LoginWithEmailForm({
         {form.formState.errors.root?.message ? (
           <FormMessage>{form.formState.errors.root.message}</FormMessage>
         ) : null}
-        {showCaptcha && turnstileSiteKey ? (
+        {showCaptcha && isTurnstileEnabled && turnstileSiteKey ? (
           <Turnstile
             ref={turnstileRef}
             siteKey={turnstileSiteKey}

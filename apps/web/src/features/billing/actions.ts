@@ -32,6 +32,16 @@ export const upgradeToProAction = authActionClient
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
+    // The account stays fully usable during the deletion recovery window,
+    // but starting a new subscription that the reaper would cancel is not
+    // allowed. ctx.user is database state, not the session snapshot.
+    if (ctx.user.deletedAt) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "Cannot upgrade an account that is scheduled for deletion",
+      });
+    }
+
     const space = await getActiveSpaceForUser(ctx.user.id);
 
     if (!space) {

@@ -1,4 +1,11 @@
 {
+  "accountDeletionScheduled_button": "Manage Account",
+  "accountDeletionScheduled_cancel": "If you change your mind, you can cancel the deletion from your <a>account settings</a> before then.",
+  "accountDeletionScheduled_footer": "You're receiving this email because a request was made to delete an account on <domain />. If this wasn't you, sign in and cancel the deletion before then, or contact <a>{supportEmail}</a>.",
+  "accountDeletionScheduled_heading": "Your account is scheduled for deletion",
+  "accountDeletionScheduled_preview": "Your account will be deleted on {date}",
+  "accountDeletionScheduled_subject": "Your account is scheduled for deletion",
+  "accountDeletionScheduled_text": "Your {appName} account is scheduled for deletion on {date}. Your polls, events, votes, and comments will be permanently deleted.",
   "allDay": "All day",
   "changeEmail_codeValid": "This code is valid for 15 minutes",
   "changeEmail_content2": "You're receiving this email because a request was made to change the email address of an account on <domain />. If this wasn't you contact <a>{supportEmail}</a>.",

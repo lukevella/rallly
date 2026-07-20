@@ -1,56 +1,12 @@
-import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
-import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 import { defaultNotificationPreferences } from "@/features/notifications/constants";
 import { getNotificationPreferences } from "@/features/notifications/data";
 import { activityEventTypes } from "@/features/notifications/schema";
-import { defineAbilityFor } from "@/features/user/ability";
 import { track } from "@/lib/posthog";
 import { privateProcedure, router } from "../trpc";
 
 export const user = router({
-  deleteMe: privateProcedure.mutation(async ({ ctx }) => {
-    const userId = ctx.user.id;
-
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        subscriptions: {
-          select: {
-            active: true,
-          },
-        },
-      },
-    });
-
-    if (!user) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found",
-      });
-    }
-
-    const ability = defineAbilityFor(ctx.user);
-
-    if (ability.cannot("delete", subject("User", user))) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "You are not authorized to delete this user",
-      });
-    }
-
-    if (user.subscriptions.some((subscription) => subscription.active)) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "User has active subscriptions",
-      });
-    }
-
-    await prisma.user.delete({
-      where: { id: userId },
-    });
-  }),
   getNotificationPreferences: privateProcedure.query(async ({ ctx }) => {
     return getNotificationPreferences(ctx.user.id);
   }),

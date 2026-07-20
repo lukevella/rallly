@@ -43,21 +43,13 @@ function defineAbilityForUser(
   builder: AbilityBuilder<UserAbility>,
   user: UserAbilityContext,
 ) {
-  const { can, cannot } = builder;
+  const { can } = builder;
 
   // Can update their own email and name
   can("update", "User", ["email", "name"], { id: user.id });
-  // Can delete their own account
+  // Can delete their own account. An active subscription no longer blocks
+  // deletion — scheduling a deletion stops the renewal instead.
   can("delete", "User", { id: user.id });
-
-  // Cannot delete user if they have active subscriptions
-  cannot("delete", "User", {
-    subscriptions: {
-      some: {
-        active: true,
-      },
-    },
-  });
 }
 
 function defineAbilityForAdmin(

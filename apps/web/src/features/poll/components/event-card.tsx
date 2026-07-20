@@ -69,7 +69,11 @@ export function EventCard() {
           {poll.user ? (
             <EventMetaItem>
               <User2Icon />
-              {poll.user.name}
+              <Trans
+                i18nKey="organizedBy"
+                defaults="Organized by {name}"
+                values={{ name: poll.user.name }}
+              />
             </EventMetaItem>
           ) : null}
           {poll.location ? (

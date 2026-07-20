@@ -101,6 +101,87 @@ export function identifyGroup(group: {
   });
 }
 
+// System events report on flows where no person can stay attached — e.g.
+// the account deletion reaper erases the very person its event is about —
+// so they capture personless under a fixed server distinctId (same
+// dummy-person-avoidance trick as group identify above). Never put
+// user-identifying properties on these.
+const SYSTEM_EVENT_DISTINCT_ID = "server_system_event";
+
+export function trackSystemEvent(event: {
+  event: string;
+  properties?: Record<string, unknown>;
+}) {
+  posthog()?.capture({
+    ...event,
+    distinctId: SYSTEM_EVENT_DISTINCT_ID,
+    properties: {
+      ...event.properties,
+      $process_person_profile: false,
+    },
+  });
+}
+
+/**
+ * Flush buffered events before a short-lived invocation (cron) exits —
+ * the client batches (flushAt/flushInterval), so a serverless function can
+ * freeze before the buffer drains.
+ */
+export async function flushPostHog() {
+  await posthog()?.flush();
+}
+
+/**
+ * Erase a person from PostHog (profile plus their events) so analytics data
+ * keyed to a userId does not outlive the account. PostHog is optional config
+ * that can run in any deployment mode, so this guards on configuration
+ * presence and no-ops when the personal API key or project id is missing.
+ * Reads process.env directly (same pattern as features/billing/service.ts);
+ * the personal API key needs the person:write scope.
+ */
+export async function deletePostHogPerson({
+  distinctId,
+}: {
+  distinctId: string;
+}) {
+  const personalApiKey = process.env.POSTHOG_PERSONAL_API_KEY;
+  const projectId = process.env.POSTHOG_PROJECT_ID;
+
+  if (!personalApiKey || !projectId) {
+    return;
+  }
+
+  const apiHost = process.env.POSTHOG_API_HOST ?? "https://us.posthog.com";
+  const headers = { Authorization: `Bearer ${personalApiKey}` };
+
+  const lookupRes = await fetch(
+    `${apiHost}/api/projects/${projectId}/persons/?distinct_id=${encodeURIComponent(distinctId)}`,
+    { headers, signal: AbortSignal.timeout(10_000) },
+  );
+
+  if (!lookupRes.ok) {
+    throw new Error(`PostHog person lookup failed: ${lookupRes.status}`);
+  }
+
+  const { results } = (await lookupRes.json()) as {
+    results?: Array<{ id: string | number }>;
+  };
+  const person = results?.[0];
+
+  if (!person) {
+    return;
+  }
+
+  const deleteRes = await fetch(
+    `${apiHost}/api/projects/${projectId}/persons/${person.id}/?delete_events=true`,
+    { method: "DELETE", headers, signal: AbortSignal.timeout(10_000) },
+  );
+
+  if (!deleteRes.ok && deleteRes.status !== 404) {
+    throw new Error(`PostHog person deletion failed: ${deleteRes.status}`);
+  }
+}
+
 export function withPostHog(
   handler: (req: NextRequest) => Promise<Response>,
 ): (req: NextRequest) => Promise<Response> {
