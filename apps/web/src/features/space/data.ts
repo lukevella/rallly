@@ -181,6 +181,13 @@ export const getActiveSpace = cache(async () => {
   return space;
 });
 
+export const getOwnedSpace = cache(async (userId: string) => {
+  return prisma.space.findFirst({
+    where: { ownerId: userId },
+    select: { id: true },
+  });
+});
+
 export const getActiveSpaceForUser = cache(async (userId: string) => {
   const spaceMember = await prisma.spaceMember.findFirst({
     where: effectiveSpaceMemberWhere({ userId }),

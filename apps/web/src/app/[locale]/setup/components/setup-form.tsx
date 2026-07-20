@@ -14,7 +14,6 @@ import {
 import { Input } from "@rallly/ui/input";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { BriefcaseIcon, UserIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -24,6 +23,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { getLocaleDefaults } from "@/lib/datetime/locales";
 import type { TimeFormat } from "@/lib/datetime/types";
+import { useLocale } from "@/lib/locale/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
@@ -85,8 +85,8 @@ export function SetupForm({
   defaultTimeZone?: string;
   defaultTimeFormat?: TimeFormat;
 }) {
-  const { t, i18n } = useTranslation();
-  const router = useRouter();
+  const { t } = useTranslation();
+  const { locale } = useLocale();
   const schema = useSetupFormSchema();
   const setupSpace = useSafeAction(setupSpaceAction);
 
@@ -95,8 +95,7 @@ export function SetupForm({
     defaultValues: {
       name: defaultName,
       timeZone: defaultTimeZone || getBrowserTimeZone(),
-      timeFormat:
-        defaultTimeFormat ?? getLocaleDefaults(i18n.language).timeFormat,
+      timeFormat: defaultTimeFormat ?? getLocaleDefaults(locale).timeFormat,
       spaceType: "personal" as const,
       organizationName: "",
     },
@@ -119,7 +118,7 @@ export function SetupForm({
               name,
               timeZone,
               timeFormat,
-              locale: i18n.language,
+              locale,
             });
 
             if (res.error) {
@@ -129,20 +128,15 @@ export function SetupForm({
               return;
             }
 
-            const result = await setupSpace.executeAsync(
+            // Server errors surface through the global useSafeAction toast;
+            // the button unlocks (hasSucceeded stays false) so the user can
+            // retry. On success the hook refreshes the router and the page
+            // redirects onward while the button stays loading.
+            await setupSpace.executeAsync(
               spaceType === "work"
                 ? { spaceType, organizationName: organizationName.trim() }
                 : { spaceType },
             );
-
-            // Server errors surface through the global useSafeAction toast;
-            // stay on the form so the user can retry. On success the hook
-            // refreshes the router and the page redirects onward.
-            if (result?.serverError || result?.validationErrors) {
-              return;
-            }
-
-            router.refresh();
           },
         )}
         className="space-y-4"
@@ -296,9 +290,7 @@ export function SetupForm({
             type="submit"
             variant="primary"
             size="lg"
-            loading={
-              form.formState.isSubmitting || form.formState.isSubmitSuccessful
-            }
+            loading={form.formState.isSubmitting || setupSpace.hasSucceeded}
             className="w-full"
           >
             <Trans i18nKey="continue" defaults="Continue" />

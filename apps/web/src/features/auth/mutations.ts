@@ -54,8 +54,9 @@ export const linkAnonymousUser = async (
     });
 
     if (!spaceId) {
-      // Reached when the guest links before the user-create hook has
-      // provisioned the space, or when the user's only memberships are
+      // Reached when the guest links into a brand-new account that hasn't
+      // been through /setup yet (setup creates the space and adopts these
+      // orphaned polls), or when the user's only memberships are
       // ineffective (non-owner rows in hobby spaces). Transfer ownership
       // anyway — the anonymous user is deleted right after linking and
       // polls cascade with it — and leave spaceId null.

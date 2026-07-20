@@ -1,11 +1,9 @@
 "use server";
 
-import { subject } from "@casl/ability";
 import * as z from "zod";
 import { adoptOrphanedPolls } from "@/features/poll/mutations";
-import { getActiveSpaceForUser } from "@/features/space/data";
-import { defineAbilityForMember } from "@/features/space/member/ability";
-import { createSpace, updateSpace } from "@/features/space/mutations";
+import { getOwnedSpace } from "@/features/space/data";
+import { createSpace } from "@/features/space/mutations";
 import { identifyGroup, track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
 
@@ -18,76 +16,74 @@ const setupSpaceSchema = z.discriminatedUnion("spaceType", [
 ]);
 
 /**
- * Names the user's space during onboarding: renames the active space when
- * they're allowed to (every new account owns an auto-created "Personal"
- * space), or creates one when they have none. A member of someone else's
- * space who owns no space of their own gets nothing renamed or relabeled.
+ * Creates the user's space at the end of onboarding — registration doesn't
+ * create one, so this is where every account gets theirs. Accounts that
+ * already own a space (pre-existing accounts sent through setup to backfill
+ * profile fields, or a re-submit) only retry poll adoption: setup never
+ * renames or duplicates an existing space.
  */
 export const setupSpaceAction = authActionClient
   .metadata({ actionName: "setup_space" })
   .inputSchema(setupSpaceSchema)
   .action(async ({ ctx, parsedInput }) => {
+    const ownedSpace = await getOwnedSpace(ctx.user.id);
+
+    if (ownedSpace) {
+      // Create and adopt aren't atomic: a previous submit may have created
+      // the space and failed before adoption, so retries still pull
+      // orphaned polls in (a no-op when there are none).
+      await adoptOrphanedPolls({
+        userId: ctx.user.id,
+        spaceId: ownedSpace.id,
+      });
+      return;
+    }
+
     const name =
       parsedInput.spaceType === "work"
         ? parsedInput.organizationName
         : "Personal";
 
-    const existingSpace = await getActiveSpaceForUser(ctx.user.id);
+    const space = await createSpace({
+      name,
+      ownerId: ctx.user.id,
+    });
 
-    let spaceId: string | null = null;
+    // Guest linking migrates polls without a space; pull them into the one
+    // just created.
+    await adoptOrphanedPolls({
+      userId: ctx.user.id,
+      spaceId: space.id,
+    });
 
-    if (!existingSpace) {
-      const space = await createSpace({
+    identifyGroup({
+      distinctId: ctx.user.id,
+      groupType: "space",
+      groupKey: space.id,
+      properties: {
+        type: parsedInput.spaceType,
         name,
-        ownerId: ctx.user.id,
-      });
-      // Guest linking into an account without a space migrates polls with
-      // no space; pull them into the one just created.
-      await adoptOrphanedPolls({
-        userId: ctx.user.id,
-        spaceId: space.id,
-      });
-      spaceId = space.id;
-    } else {
-      const ability = defineAbilityForMember({
-        user: ctx.user,
-        space: existingSpace,
-      });
+        tier: space.tier,
+        member_count: 1,
+        seat_count: 1,
+      },
+    });
 
-      if (ability.can("update", subject("Space", existingSpace))) {
-        await updateSpace({
-          spaceId: existingSpace.id,
-          name,
-        });
-        spaceId = existingSpace.id;
-      }
-    }
-
-    if (spaceId) {
-      identifyGroup({
-        groupType: "space",
-        groupKey: spaceId,
-        properties: {
-          type: parsedInput.spaceType,
+    track(ctx.user, {
+      event: "space_setup",
+      properties: {
+        space_type: parsedInput.spaceType,
+        // The register event $sets these from the user row at creation
+        // time, which for OTP signups is an empty name and no timezone.
+        // The form updates both right before this action runs, so patch
+        // the person profile here.
+        $set: {
+          name: ctx.user.name,
+          timeZone: ctx.user.timeZone ?? undefined,
         },
-      });
-
-      track(ctx.user, {
-        event: "space_setup",
-        properties: {
-          space_type: parsedInput.spaceType,
-          // The register event $sets these from the user row at creation
-          // time, which for OTP signups is an empty name and no timezone.
-          // The form updates both right before this action runs, so patch
-          // the person profile here.
-          $set: {
-            name: ctx.user.name,
-            timeZone: ctx.user.timeZone ?? undefined,
-          },
-        },
-        groups: {
-          space: spaceId,
-        },
-      });
-    }
+      },
+      groups: {
+        space: space.id,
+      },
+    });
   });
