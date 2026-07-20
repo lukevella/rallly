@@ -31,7 +31,12 @@ export async function createSpace({
     },
   });
 
-  return createSpaceDTO({ ...space, role: "ADMIN" });
+  return createSpaceDTO({
+    ...space,
+    role: "ADMIN",
+    memberCount: 1,
+    seatCount: 1,
+  });
 }
 
 export async function updateSpace({
