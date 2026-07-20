@@ -27,8 +27,6 @@ import { env } from "@/env";
 import { linkAnonymousUser } from "@/features/auth/mutations";
 import { isEmailBlocked, isTemporaryEmail } from "@/features/auth/utils";
 import { getStripe } from "@/features/billing/service";
-import { adoptOrphanedPolls } from "@/features/poll/mutations";
-import { createSpace } from "@/features/space/mutations";
 import type { UserDTO } from "@/features/user/schema";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -40,7 +38,7 @@ import {
   LOCALE_COOKIE_OPTIONS,
 } from "@/lib/locale/constants";
 import { getPathname } from "@/lib/pathname";
-import { identifyGroup, track } from "@/lib/posthog";
+import { track } from "@/lib/posthog";
 import { getValueByPath } from "@/lib/utils/get-value-by-path";
 import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 
@@ -475,40 +473,8 @@ export const authLib = betterAuth({
           if (user.isAnonymous) {
             return;
           }
-          // check if user exists in prisma
-          const existingUser = await prisma.user.findUnique({
-            where: {
-              id: user.id,
-            },
-          });
-
-          if (existingUser) {
-            // create a space for the user
-            const space = await createSpace({
-              name: "Personal",
-              ownerId: user.id,
-            });
-
-            // Guest linking can run before this hook (a sign-in that
-            // creates the account links the anonymous user first), leaving
-            // migrated polls without a space. Adopt them now.
-            await adoptOrphanedPolls({
-              userId: user.id,
-              spaceId: space.id,
-            });
-
-            identifyGroup({
-              groupType: "space",
-              groupKey: space.id,
-              properties: {
-                name: space.name,
-                member_count: 1,
-                seat_count: 1,
-                tier: "hobby",
-              },
-            });
-          }
-
+          // No space is created here — /setup owns space creation, and the
+          // active-space gate keeps redirecting there until it happens.
           track(
             { id: user.id, isGuest: false },
             {
