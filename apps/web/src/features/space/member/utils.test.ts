@@ -1,20 +1,24 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-const loadModule = async ({ isSelfHosted }: { isSelfHosted: boolean }) => {
+const loadModule = async ({
+  isBillingEnabled,
+}: {
+  isBillingEnabled: boolean;
+}) => {
   vi.resetModules();
-  vi.doMock("@/lib/constants", () => ({ isSelfHosted }));
+  vi.doMock("@/features/billing/constants", () => ({ isBillingEnabled }));
   return await import("./utils");
 };
 
 afterEach(() => {
-  vi.doUnmock("@/lib/constants");
+  vi.doUnmock("@/features/billing/constants");
   vi.resetModules();
 });
 
 describe("effectiveSpaceMemberWhere", () => {
-  it("limits membership to pro spaces or owned spaces on cloud", async () => {
+  it("limits membership to pro spaces or owned spaces when billing is enabled", async () => {
     const { effectiveSpaceMemberWhere } = await loadModule({
-      isSelfHosted: false,
+      isBillingEnabled: true,
     });
 
     expect(effectiveSpaceMemberWhere({ userId: "user-1" })).toEqual({
@@ -23,9 +27,9 @@ describe("effectiveSpaceMemberWhere", () => {
     });
   });
 
-  it("does not limit membership on self hosted instances", async () => {
+  it("does not limit membership when billing is disabled", async () => {
     const { effectiveSpaceMemberWhere } = await loadModule({
-      isSelfHosted: true,
+      isBillingEnabled: false,
     });
 
     expect(effectiveSpaceMemberWhere({ userId: "user-1" })).toEqual({

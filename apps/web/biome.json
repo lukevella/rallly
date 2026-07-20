@@ -284,7 +284,6 @@
         "src/features/scheduled-event/utils.ts",
         "src/features/setup/utils.ts",
         "src/features/space/actions.ts",
-        "src/features/space/member/utils.ts",
         "src/features/space/utils.ts",
         "src/features/user/ability.ts",
         "src/features/user/actions.ts",
