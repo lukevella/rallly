@@ -9,6 +9,7 @@ import { getUserHasPassword } from "@/features/user/data";
 import { getLocale } from "@/i18n/server/get-locale";
 import authLib from "@/lib/auth";
 import { AppError } from "@/lib/errors/app-error";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { track } from "@/lib/posthog";
 import {
   authActionClient,
@@ -63,6 +64,16 @@ export const setPasswordAction = authActionClient
   .use(createRateLimitMiddleware(5, "1 h"))
   .inputSchema(z.object({ password: passwordSchema }))
   .action(async ({ ctx, parsedInput }) => {
+    // The UI hides this behind the emailLogin flag; gate the action too so a
+    // direct request can't set a password on an instance where password login
+    // is disabled.
+    if (!isFeatureEnabled("emailLogin")) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "Password login is not enabled",
+      });
+    }
+
     await setPasswordForUser({
       user: ctx.user,
       password: parsedInput.password,

@@ -29,6 +29,12 @@ vi.mock("next/headers", () => ({
 vi.mock("next/server", () => ({
   after: vi.fn((fn: () => unknown) => fn()),
 }));
+// The wrapped action reads this flag; its real module imports @/env at load
+// time. setPasswordForUser doesn't touch it, but importing actions.ts pulls
+// the module graph in, so stub it.
+vi.mock("@/lib/feature-flags/server", () => ({
+  isFeatureEnabled: vi.fn().mockReturnValue(true),
+}));
 // actions.ts also defines setPasswordAction at module scope, which chains
 // off authActionClient — that module transitively imports @/env via the
 // rate-limit/KV client. Stub it so importing the module for
