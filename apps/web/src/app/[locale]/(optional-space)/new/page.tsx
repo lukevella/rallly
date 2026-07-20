@@ -1,4 +1,3 @@
-import { prisma } from "@rallly/database";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,35 +12,18 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { BrandStyle } from "@/features/branding/components/brand-style";
 import { CreatePoll } from "@/features/poll/components/create-poll";
-import { createSpaceDTO } from "@/features/space/data";
-import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
+import { getActiveSpaceForUser } from "@/features/space/data";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getSession } from "@/lib/auth";
-
-const getActiveSpace = async ({ userId }: { userId: string }) => {
-  const spaceMember = await prisma.spaceMember.findFirst({
-    where: effectiveSpaceMemberWhere({ userId }),
-    orderBy: {
-      lastSelectedAt: "desc",
-    },
-    include: {
-      space: true,
-    },
-  });
-
-  return spaceMember?.space
-    ? createSpaceDTO({ ...spaceMember.space, role: spaceMember.role })
-    : null;
-};
 
 export default async function Page() {
   const session = await getSession();
   const userId =
     session?.user.id && !session.user.isGuest ? session.user.id : null;
 
-  const space = userId ? await getActiveSpace({ userId }) : null;
+  const space = userId ? await getActiveSpaceForUser(userId) : null;
 
   if (userId && !space) {
     redirect("/setup");
