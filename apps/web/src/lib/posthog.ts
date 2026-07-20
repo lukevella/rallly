@@ -86,18 +86,20 @@ export function getClientAnonymousDistinctId(req: NextRequest) {
 const GROUP_IDENTIFY_DISTINCT_ID = "server_group_identify";
 
 /**
- * Update properties on a group (e.g. poll, space). Group identify events are
- * not attributed to the acting user — actor attribution belongs on the
- * accompanying track() event.
+ * Update properties on a group (e.g. poll, space). Pass distinctId to
+ * attribute the group identify to the acting user; without it the event
+ * captures under a shared server id (see above — never a real person, so
+ * actor attribution then belongs on the accompanying track() event).
  */
 export function identifyGroup(group: {
   groupType: string;
   groupKey: string;
   properties?: Record<string, unknown>;
+  distinctId?: string;
 }) {
   posthog()?.groupIdentify({
     ...group,
-    distinctId: GROUP_IDENTIFY_DISTINCT_ID,
+    distinctId: group.distinctId ?? GROUP_IDENTIFY_DISTINCT_ID,
   });
 }
 

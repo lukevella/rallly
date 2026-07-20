@@ -65,6 +65,7 @@ export const setupSpaceAction = authActionClient
 
     if (spaceId) {
       identifyGroup({
+        distinctId: ctx.user.id,
         groupType: "space",
         groupKey: spaceId,
         properties: {
