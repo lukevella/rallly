@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { SetupFooter } from "@/app/[locale]/setup/components/setup-footer";
+import { SetupForm } from "@/app/[locale]/setup/components/setup-form";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Logo } from "@/features/branding/components/logo";
-import { SetupFooter } from "@/features/setup/components/setup-footer";
-import { SetupForm } from "@/features/setup/components/setup-form";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
@@ -28,9 +28,9 @@ export default async function SetupPage(props: {
   const device = await getDeviceDateTimeConfig();
 
   return (
-    <div className="flex h-dvh flex-col bg-background">
+    <div className="flex min-h-dvh flex-col bg-background">
       <header className="flex items-center justify-between px-4 py-3">
-        <Logo />
+        <Logo size="sm" />
         <ThemeSwitcher />
       </header>
       <main
@@ -39,7 +39,7 @@ export default async function SetupPage(props: {
         className="flex flex-1 overflow-y-auto p-4"
       >
         <article className="m-auto w-full max-w-sm space-y-8">
-          <header className="text-center">
+          <header>
             <h1 className="font-bold text-2xl">
               <Trans
                 i18nKey="setupAccountTitle"
@@ -62,7 +62,7 @@ export default async function SetupPage(props: {
           </div>
         </article>
       </main>
-      <footer className="flex justify-center px-4 py-3">
+      <footer className="flex justify-center p-16">
         <SetupFooter email={user.email} />
       </footer>
     </div>

@@ -18,8 +18,8 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { setupSpaceAction } from "@/app/[locale]/setup/actions";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
-import { setupSpaceAction } from "@/features/setup/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { getLocaleDefaults } from "@/lib/datetime/locales";
@@ -276,6 +276,7 @@ export function SetupForm({
                   <Input
                     {...field}
                     data-1p-ignore
+                    autoFocus={true}
                     placeholder={t("organizationNamePlaceholder", {
                       defaultValue: "e.g. Acme Corp",
                     })}
@@ -290,16 +291,19 @@ export function SetupForm({
         {form.formState.errors.root?.message ? (
           <FormMessage>{form.formState.errors.root.message}</FormMessage>
         ) : null}
-        <Button
-          type="submit"
-          variant="primary"
-          loading={
-            form.formState.isSubmitting || form.formState.isSubmitSuccessful
-          }
-          className="w-full"
-        >
-          <Trans i18nKey="continue" defaults="Continue" />
-        </Button>
+        <div className="mt-6">
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            loading={
+              form.formState.isSubmitting || form.formState.isSubmitSuccessful
+            }
+            className="w-full"
+          >
+            <Trans i18nKey="continue" defaults="Continue" />
+          </Button>
+        </div>
       </form>
     </Form>
   );
