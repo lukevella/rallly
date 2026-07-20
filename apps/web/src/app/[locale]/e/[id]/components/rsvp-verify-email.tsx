@@ -178,6 +178,9 @@ export function RsvpVerifyEmail({
               options={{
                 language: i18n.language,
                 size: "flexible",
+                // Solves invisibly in the background; only shows up when
+                // Cloudflare requires an interactive challenge.
+                appearance: "interaction-only",
               }}
               onSuccess={(token) => {
                 void sendOtp(token);

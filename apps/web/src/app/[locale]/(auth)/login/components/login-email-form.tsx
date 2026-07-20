@@ -48,12 +48,7 @@ export function LoginWithEmailForm({
   const loginWithEmailSchema = useLoginWithEmailSchema();
   const searchParams = useSearchParams();
   const [showPasswordField, setShowPasswordField] = React.useState(false);
-  const [showCaptcha, setShowCaptcha] = React.useState(false);
   const turnstileRef = React.useRef<TurnstileInstance>(null);
-  const pendingTokenSubmitRef = React.useRef(false);
-  const [turnstileToken, setTurnstileToken] = React.useState<string | null>(
-    null,
-  );
   const form = useForm({
     defaultValues: {
       identifier: "",
@@ -67,10 +62,13 @@ export function LoginWithEmailForm({
   const getLoginMethod = trpc.auth.getLoginMethod.useMutation();
   const isPasswordLogin = showPasswordField && !!form.watch("password");
 
-  const submit = async (
-    { identifier, password }: { identifier: string; password?: string },
-    captchaToken: string | null,
-  ) => {
+  const submit = async ({
+    identifier,
+    password,
+  }: {
+    identifier: string;
+    password?: string;
+  }) => {
     const validatedRedirectTo = validateRedirectUrl(
       searchParams?.get("redirectTo"),
     );
@@ -124,12 +122,23 @@ export function LoginWithEmailForm({
       }
     }
 
-    // The OTP send is captcha-gated. Reveal the widget on the first
-    // attempt; onSuccess finishes this submit with the fresh token.
-    if (isTurnstileEnabled && !captchaToken) {
-      pendingTokenSubmitRef.current = true;
-      setShowCaptcha(true);
-      return;
+    // The OTP send is captcha-gated. The widget starts solving in the
+    // background on mount, so this usually resolves instantly; if
+    // Cloudflare demands interaction the widget becomes visible and we
+    // wait here while the button shows its loading state.
+    let captchaToken: string | undefined;
+    if (isTurnstileEnabled) {
+      try {
+        captchaToken = await turnstileRef.current?.getResponsePromise(120_000);
+      } catch {
+        form.setError("root", {
+          message: t("captchaFailed", {
+            defaultValue: "Verification failed. Please try again.",
+          }),
+        });
+        turnstileRef.current?.reset();
+        return;
+      }
     }
 
     try {
@@ -196,8 +205,8 @@ export function LoginWithEmailForm({
         }`,
       );
     } finally {
+      // Tokens are single-use; start a fresh solve for any retry.
       if (isTurnstileEnabled) {
-        setTurnstileToken(null);
         turnstileRef.current?.reset();
       }
     }
@@ -205,10 +214,7 @@ export function LoginWithEmailForm({
 
   return (
     <Form {...form}>
-      <form
-        className="space-y-4"
-        onSubmit={handleSubmit((values) => submit(values, turnstileToken))}
-      >
+      <form className="space-y-4" onSubmit={handleSubmit(submit)}>
         <FormField
           control={form.control}
           name="identifier"
@@ -275,33 +281,16 @@ export function LoginWithEmailForm({
         {form.formState.errors.root?.message ? (
           <FormMessage>{form.formState.errors.root.message}</FormMessage>
         ) : null}
-        {showCaptcha && isTurnstileEnabled && turnstileSiteKey ? (
+        {isTurnstileEnabled && turnstileSiteKey ? (
           <Turnstile
             ref={turnstileRef}
             siteKey={turnstileSiteKey}
             options={{
               language: i18n.language,
               size: "flexible",
-            }}
-            onSuccess={(token) => {
-              setTurnstileToken(token);
-              // Finish the submit that was interrupted to solve the captcha.
-              // One-shot so widget resets can't re-trigger sends on their own.
-              // Skipped if the user started typing a password meanwhile —
-              // auto-submitting would attempt a login with a partial password.
-              if (pendingTokenSubmitRef.current) {
-                pendingTokenSubmitRef.current = false;
-                if (!form.getValues("password")) {
-                  void handleSubmit((values) => submit(values, token))();
-                }
-              }
-            }}
-            onError={() => {
-              setTurnstileToken(null);
-            }}
-            onExpire={() => {
-              setTurnstileToken(null);
-              turnstileRef.current?.reset();
+              // Solves invisibly in the background; only shows up when
+              // Cloudflare requires an interactive challenge.
+              appearance: "interaction-only",
             }}
           />
         ) : null}
@@ -309,7 +298,6 @@ export function LoginWithEmailForm({
           <Button
             size="xl"
             loading={form.formState.isSubmitting}
-            disabled={showCaptcha && !isPasswordLogin && !turnstileToken}
             type="submit"
             className="w-full"
             variant="primary"
