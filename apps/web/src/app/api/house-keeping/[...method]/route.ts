@@ -85,7 +85,14 @@ app.get("/remove-deleted-polls", async (c) => {
   });
 });
 
+// Each user's removal makes external API calls, so give the function room
+// beyond the serverless default.
+export const maxDuration = 300;
+
 const REMOVE_DELETED_USERS_BATCH_SIZE = 50;
+// Backlog beyond this spills to the next daily run instead of risking a
+// function timeout mid-user.
+const REMOVE_DELETED_USERS_MAX_PER_RUN = 500;
 
 // Reaper for accounts whose scheduled deletion passed the recovery window.
 // Composed here because it spans features: external stores go first — Stripe
@@ -97,7 +104,10 @@ async function removeDeletedUsers() {
   const failedUserIds: string[] = [];
   let deletedUsers = 0;
 
-  while (true) {
+  while (
+    deletedUsers + failedUserIds.length <
+    REMOVE_DELETED_USERS_MAX_PER_RUN
+  ) {
     const users = await findUsersScheduledForRemoval({
       cutoff,
       excludeUserIds: failedUserIds,
@@ -129,6 +139,13 @@ async function removeDeletedUsers() {
         failedUserIds.push(user.id);
       }
     }
+  }
+
+  if (deletedUsers + failedUserIds.length >= REMOVE_DELETED_USERS_MAX_PER_RUN) {
+    logger.warn(
+      { deletedUsers, failed: failedUserIds.length },
+      "Reached the per-run cap for removing deleted users; remaining backlog spills to the next run",
+    );
   }
 
   return deletedUsers;

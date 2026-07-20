@@ -3,6 +3,7 @@ import "server-only";
 import type { TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { authLib } from "@/lib/auth";
+import { deleteImageFromS3 } from "@/lib/storage/image-upload";
 
 export async function createUser({
   name,
@@ -130,6 +131,17 @@ export async function hardDeleteUser({
   const { internalAdapter } = await authLib.$context;
 
   await internalAdapter.deleteSessions(userId);
+
+  // The avatar lives in object storage, outside the cascade. External URLs
+  // (OAuth provider avatars) are not ours to delete.
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { image: true },
+  });
+
+  if (user?.image && !user.image.startsWith("https://")) {
+    await deleteImageFromS3(user.image);
+  }
 
   // Cascades cover data the user owns, but their personal data also lives
   // where they took part in other users' content: participant rows carry
