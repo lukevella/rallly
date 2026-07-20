@@ -50,6 +50,7 @@ export function LoginWithEmailForm({
   const [showPasswordField, setShowPasswordField] = React.useState(false);
   const [showCaptcha, setShowCaptcha] = React.useState(false);
   const turnstileRef = React.useRef<TurnstileInstance>(null);
+  const pendingTokenSubmitRef = React.useRef(false);
   const [turnstileToken, setTurnstileToken] = React.useState<string | null>(
     null,
   );
@@ -66,141 +67,147 @@ export function LoginWithEmailForm({
   const getLoginMethod = trpc.auth.getLoginMethod.useMutation();
   const isPasswordLogin = showPasswordField && !!form.watch("password");
 
+  const submit = async (
+    { identifier, password }: { identifier: string; password?: string },
+    captchaToken: string | null,
+  ) => {
+    const validatedRedirectTo = validateRedirectUrl(
+      searchParams?.get("redirectTo"),
+    );
+
+    if (password) {
+      const res = await authClient.signIn.email({
+        email: identifier,
+        password,
+      });
+
+      if (res.error) {
+        switch (res.error.code) {
+          case "INVALID_EMAIL_OR_PASSWORD":
+            form.setError("password", {
+              message: t("passwordOrEmailIncorrect", {
+                defaultValue: "Invalid email or password",
+              }),
+            });
+            break;
+          case "BANNED_USER":
+            form.setError("identifier", {
+              message: t("authErrorsUserBanned", {
+                defaultValue:
+                  "This account has been banned. Please contact support if you believe this is an error.",
+              }),
+            });
+            break;
+          default:
+            form.setError("password", {
+              message: res.error.message,
+            });
+            break;
+        }
+        return;
+      }
+
+      window.location.href = validatedRedirectTo ?? "/";
+
+      return;
+    }
+
+    if (!showPasswordField) {
+      const res = await getLoginMethod.mutateAsync({
+        email: identifier,
+      });
+
+      if (res.method === "credential") {
+        // show password field
+        setShowPasswordField(true);
+        return;
+      }
+    }
+
+    // The OTP send is captcha-gated. Reveal the widget on the first
+    // attempt; onSuccess finishes this submit with the fresh token.
+    if (isTurnstileEnabled && !captchaToken) {
+      pendingTokenSubmitRef.current = true;
+      setShowCaptcha(true);
+      return;
+    }
+
+    try {
+      // When registration is enabled a "sign-in" OTP either signs
+      // into an existing account or creates one on verification, so
+      // known and unknown emails behave identically. When it's
+      // disabled, "email-verification" only reaches existing users.
+      const res = await authClient.emailOtp.sendVerificationOtp({
+        email: identifier,
+        type: isRegistrationEnabled ? "sign-in" : "email-verification",
+        fetchOptions: captchaToken
+          ? {
+              headers: {
+                "x-captcha-response": captchaToken,
+              },
+            }
+          : undefined,
+      });
+
+      if (res.error) {
+        switch (res.error.code) {
+          case "MISSING_RESPONSE":
+          case "VERIFICATION_FAILED":
+            form.setError("root", {
+              message: t("captchaFailed", {
+                defaultValue: "Verification failed. Please try again.",
+              }),
+            });
+            break;
+          case "EMAIL_BLOCKED":
+            form.setError("identifier", {
+              message: t("authErrorsEmailBlocked"),
+            });
+            break;
+          case "TEMPORARY_EMAIL_NOT_ALLOWED":
+            form.setError("identifier", {
+              message: t("temporaryEmailNotAllowed"),
+            });
+            break;
+          case "BANNED_USER":
+            form.setError("identifier", {
+              message: t("authErrorsUserBanned", {
+                defaultValue:
+                  "This account has been banned. Please contact support if you believe this is an error.",
+              }),
+            });
+            break;
+          default:
+            form.setError("identifier", {
+              message: res.error.message,
+            });
+            break;
+        }
+        return;
+      }
+
+      await setVerificationEmail(identifier);
+
+      router.push(
+        `/login/verify${
+          validatedRedirectTo
+            ? `?redirectTo=${encodeURIComponent(validatedRedirectTo)}`
+            : ""
+        }`,
+      );
+    } finally {
+      if (isTurnstileEnabled) {
+        setTurnstileToken(null);
+        turnstileRef.current?.reset();
+      }
+    }
+  };
+
   return (
     <Form {...form}>
       <form
         className="space-y-4"
-        onSubmit={handleSubmit(async ({ identifier, password }) => {
-          const validatedRedirectTo = validateRedirectUrl(
-            searchParams?.get("redirectTo"),
-          );
-
-          if (password) {
-            const res = await authClient.signIn.email({
-              email: identifier,
-              password,
-            });
-
-            if (res.error) {
-              switch (res.error.code) {
-                case "INVALID_EMAIL_OR_PASSWORD":
-                  form.setError("password", {
-                    message: t("passwordOrEmailIncorrect", {
-                      defaultValue: "Invalid email or password",
-                    }),
-                  });
-                  break;
-                case "BANNED_USER":
-                  form.setError("identifier", {
-                    message: t("authErrorsUserBanned", {
-                      defaultValue:
-                        "This account has been banned. Please contact support if you believe this is an error.",
-                    }),
-                  });
-                  break;
-                default:
-                  form.setError("password", {
-                    message: res.error.message,
-                  });
-                  break;
-              }
-              return;
-            }
-
-            window.location.href = validatedRedirectTo ?? "/";
-
-            return;
-          }
-
-          if (!showPasswordField) {
-            const res = await getLoginMethod.mutateAsync({
-              email: identifier,
-            });
-
-            if (res.method === "credential") {
-              // show password field
-              setShowPasswordField(true);
-              return;
-            }
-          }
-
-          // The OTP send is captcha-gated. Reveal the widget on the first
-          // attempt and wait for a token before sending.
-          if (isTurnstileEnabled && !turnstileToken) {
-            setShowCaptcha(true);
-            return;
-          }
-
-          try {
-            // When registration is enabled a "sign-in" OTP either signs
-            // into an existing account or creates one on verification, so
-            // known and unknown emails behave identically. When it's
-            // disabled, "email-verification" only reaches existing users.
-            const res = await authClient.emailOtp.sendVerificationOtp({
-              email: identifier,
-              type: isRegistrationEnabled ? "sign-in" : "email-verification",
-              fetchOptions: turnstileToken
-                ? {
-                    headers: {
-                      "x-captcha-response": turnstileToken,
-                    },
-                  }
-                : undefined,
-            });
-
-            if (res.error) {
-              switch (res.error.code) {
-                case "MISSING_RESPONSE":
-                case "VERIFICATION_FAILED":
-                  form.setError("root", {
-                    message: t("captchaFailed", {
-                      defaultValue: "Verification failed. Please try again.",
-                    }),
-                  });
-                  break;
-                case "EMAIL_BLOCKED":
-                  form.setError("identifier", {
-                    message: t("authErrorsEmailBlocked"),
-                  });
-                  break;
-                case "TEMPORARY_EMAIL_NOT_ALLOWED":
-                  form.setError("identifier", {
-                    message: t("temporaryEmailNotAllowed"),
-                  });
-                  break;
-                case "BANNED_USER":
-                  form.setError("identifier", {
-                    message: t("authErrorsUserBanned", {
-                      defaultValue:
-                        "This account has been banned. Please contact support if you believe this is an error.",
-                    }),
-                  });
-                  break;
-                default:
-                  form.setError("identifier", {
-                    message: res.error.message,
-                  });
-                  break;
-              }
-              return;
-            }
-
-            await setVerificationEmail(identifier);
-
-            router.push(
-              `/login/verify${
-                validatedRedirectTo
-                  ? `?redirectTo=${encodeURIComponent(validatedRedirectTo)}`
-                  : ""
-              }`,
-            );
-          } finally {
-            if (isTurnstileEnabled) {
-              setTurnstileToken(null);
-              turnstileRef.current?.reset();
-            }
-          }
-        })}
+        onSubmit={handleSubmit((values) => submit(values, turnstileToken))}
       >
         <FormField
           control={form.control}
@@ -278,6 +285,12 @@ export function LoginWithEmailForm({
             }}
             onSuccess={(token) => {
               setTurnstileToken(token);
+              // Finish the submit that was interrupted to solve the captcha.
+              // One-shot so widget resets can't re-trigger sends on their own.
+              if (pendingTokenSubmitRef.current) {
+                pendingTokenSubmitRef.current = false;
+                void handleSubmit((values) => submit(values, token))();
+              }
             }}
             onError={() => {
               setTurnstileToken(null);
