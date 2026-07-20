@@ -5,7 +5,7 @@ import type * as React from "react";
 import { cn } from "./lib/utils";
 
 const alertVariants = cva(
-  "group/alert relative grid w-full items-center gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-[>svg]:has-data-[slot=alert-action]:grid-cols-[auto_1fr_auto] has-[>svg]:grid-cols-[auto_1fr] has-data-[slot=alert-action]:grid-cols-[1fr_auto] has-data-[slot=alert-title]:items-start has-[>svg]:gap-x-2 has-data-[slot=alert-action]:gap-x-2 *:[svg:not([class*='size-'])]:size-4 *:[svg]:translate-y-0.5 *:[svg]:self-start *:[svg]:text-current has-data-[slot=alert-title]:*:[svg]:row-span-2",
+  "group/alert relative grid w-full items-center gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-[>svg]:has-data-[slot=alert-action]:grid-cols-[auto_1fr_auto] has-[>svg]:grid-cols-[auto_1fr] has-data-[slot=alert-action]:grid-cols-[1fr_auto] has-data-[slot=alert-title]:items-start has-[>svg]:gap-x-2 has-data-[slot=alert-action]:gap-x-2 *:[svg:not([class*='size-'])]:size-4 not-has-data-[slot=alert-action]:*:[svg]:translate-y-0.5 not-has-data-[slot=alert-action]:*:[svg]:self-start *:[svg]:text-current has-data-[slot=alert-title]:*:[svg]:row-span-2 has-data-[slot=alert-title]:*:[svg]:translate-y-0.5",
   {
     variants: {
       variant: {
