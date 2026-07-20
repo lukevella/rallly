@@ -1,6 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { TurnstileInstance } from "@marsidev/react-turnstile";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -18,11 +20,15 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { useRouter } from "next/navigation";
+import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { InputOTP } from "@/components/input-otp";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
+
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+const isTurnstileEnabled = !!turnstileSiteKey;
 
 const otpSchema = z.object({ otp: z.string().regex(/^\d{6}$/) });
 
@@ -33,13 +39,40 @@ export function RsvpVerifyEmail({
   email: string;
   name: string;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const dialog = useDialog();
+  const turnstileRef = React.useRef<TurnstileInstance>(null);
+  const [otpSent, setOtpSent] = React.useState(false);
   const form = useForm({
     defaultValues: { otp: "" },
     resolver: zodResolver(otpSchema),
   });
+
+  const sendOtp = async (captchaToken?: string) => {
+    const res = await authClient.emailOtp.sendVerificationOtp({
+      email,
+      type: "sign-in",
+      fetchOptions: captchaToken
+        ? {
+            headers: {
+              "x-captcha-response": captchaToken,
+            },
+          }
+        : undefined,
+    });
+
+    if (res.error) {
+      form.setError("otp", {
+        message: t("rsvpVerifySendError", {
+          defaultValue: "We couldn't send a code. Please try again.",
+        }),
+      });
+      return;
+    }
+
+    setOtpSent(true);
+  };
 
   const handleSubmit = form.handleSubmit(async (data) => {
     // Verifying signs the guest in: into their existing account if the email
@@ -111,11 +144,13 @@ export function RsvpVerifyEmail({
         className="self-start"
         onClick={() => {
           form.reset();
+          setOtpSent(false);
           dialog.trigger();
-          void authClient.emailOtp.sendVerificationOtp({
-            email,
-            type: "sign-in",
-          });
+          // With Turnstile configured, the send waits for the widget in the
+          // dialog to produce a token.
+          if (!isTurnstileEnabled) {
+            void sendOtp();
+          }
         }}
       >
         <Trans i18nKey="rsvpVerifyCta" defaults="Verify your email" />
@@ -134,6 +169,19 @@ export function RsvpVerifyEmail({
               />
             </DialogDescription>
           </DialogHeader>
+          {turnstileSiteKey && !otpSent ? (
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={turnstileSiteKey}
+              options={{
+                language: i18n.language,
+                size: "flexible",
+              }}
+              onSuccess={(token) => {
+                void sendOtp(token);
+              }}
+            />
+          ) : null}
           <Form {...form}>
             <form onSubmit={handleSubmit}>
               <FormField
@@ -144,7 +192,10 @@ export function RsvpVerifyEmail({
                     <FormControl>
                       <InputOTP
                         autoFocus
-                        disabled={form.formState.isSubmitting}
+                        disabled={
+                          form.formState.isSubmitting ||
+                          (isTurnstileEnabled && !otpSent)
+                        }
                         onValidCode={() => handleSubmit()}
                         {...field}
                       />

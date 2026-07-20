@@ -73,6 +73,14 @@ const nextConfig: NextConfig = {
         destination: "/settings/profile",
         permanent: true,
       },
+      // Login and registration are a single flow on /login: entering an
+      // unknown email creates an account on OTP verification. redirectTo
+      // and other query params are passed through automatically.
+      {
+        source: "/register",
+        destination: "/login",
+        permanent: false,
+      },
       // Old email unsubscribe links pointed to these routes — redirect to the new settings page
       {
         source: "/auth/disable-notifications",

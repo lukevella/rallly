@@ -119,7 +119,7 @@ export default async function Root(props: {
                     <Trans t={t} i18nKey="login" defaults="Login" />
                   </LinkBase>
                   <LinkBase
-                    href={linkToApp("/register")}
+                    href={linkToApp("/login")}
                     className={buttonVariants({
                       variant: "primary",
                       className: "w-full",

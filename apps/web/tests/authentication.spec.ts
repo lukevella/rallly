@@ -10,7 +10,6 @@ import { createUserInDb, loginWithEmail } from "./test-utils";
 
 const testUserEmail = "test@example.com";
 const testExistingUserEmail = "existing-user-for-disabled-test@example.com";
-const testPassword = "TestPassword123!";
 
 test.describe.serial(() => {
   test.afterAll(async () => {
@@ -34,40 +33,16 @@ test.describe.serial(() => {
       await registerPage.register({
         name: "Test User",
         email: testUserEmail,
-        password: testPassword,
       });
     });
   });
 
   test.describe("Existing User", () => {
-    test("sends OTP to existing user when registering with existing email", async ({
+    test("signs in existing user when registering with existing email", async ({
       page,
     }) => {
-      await page.goto("/register");
-
-      await page.getByText("Create Your Account").waitFor();
-
-      await page.getByPlaceholder("Jessie Smith").fill("Test User");
-      await page
-        .getByPlaceholder("jessie.smith@example.com")
-        .fill(testUserEmail);
-      await page.getByPlaceholder("••••••••").fill(testPassword);
-
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
-
-      // Should show the verification code prompt (not an error) to prevent email enumeration
-      await page.getByRole("heading", { name: "Finish Logging In" }).waitFor();
-
-      // The existing user should have received a sign-in OTP
-      const code = await getCode(testUserEmail);
-      await page.getByLabel("Enter your 6-digit code").fill(code);
-
-      // Existing user should be signed in
-      await expect(page.getByText("Test User")).toBeVisible();
-    });
-
-    test("can login with password", async ({ page }) => {
       await page.goto("/login");
+      await page.getByText("Welcome").waitFor();
 
       await page
         .getByPlaceholder("jessie.smith@example.com")
@@ -75,12 +50,14 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with email" }).click();
 
-      // Password field should appear since user has a credential account
-      await page.getByPlaceholder("••••••••").waitFor();
-      await page.getByPlaceholder("••••••••").fill(testPassword);
+      // Should show the verification code prompt (not an error) to prevent email enumeration
+      await page.getByRole("heading", { name: "Verify Your Email" }).waitFor();
 
-      await page.getByRole("button", { name: "Login with password" }).click();
+      // The existing user should have received a sign-in OTP
+      const code = await getCode(testUserEmail);
+      await page.getByLabel("Enter your 6-digit code").fill(code);
 
+      // Existing user should be signed in
       await expect(page.getByText("Test User")).toBeVisible();
     });
 
@@ -93,9 +70,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with email" }).click();
 
-      expect(page.getByPlaceholder("••••••••")).toBeVisible();
-
-      await page.getByRole("button", { name: "Login with email" }).click();
+      await page.getByRole("heading", { name: "Verify Your Email" }).waitFor();
 
       await page.getByLabel("Enter your 6-digit code").fill("000000");
 
@@ -113,9 +88,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with email" }).click();
 
-      expect(page.getByPlaceholder("••••••••")).toBeVisible();
-
-      await page.getByRole("button", { name: "Login with email" }).click();
+      await page.getByRole("heading", { name: "Verify Your Email" }).waitFor();
 
       const code = await getCode(testUserEmail);
 
@@ -127,49 +100,23 @@ test.describe.serial(() => {
     test("allow using different case in email", async ({ page }) => {
       await page.goto("/login");
       const testDifferentCaseEmail = "Test@example.com"; // different case than the test user email
+
       await page
         .getByPlaceholder("jessie.smith@example.com")
         .fill(testDifferentCaseEmail);
 
       await page.getByRole("button", { name: "Continue with email" }).click();
 
-      await page.getByPlaceholder("••••••••").fill(testPassword);
+      await page.getByRole("heading", { name: "Verify Your Email" }).waitFor();
 
-      await page.getByRole("button", { name: "Login with password" }).click();
+      const code = await getCode(testUserEmail);
+
+      await page.getByLabel("Enter your 6-digit code").fill(code);
 
       await expect(page.getByText("Test User")).toBeVisible();
     });
 
     test.describe("Password Reset", () => {
-      test("can access forgot password page from login", async ({ page }) => {
-        await page.goto("/login");
-
-        // Wait for login page to load
-        await page.getByText("Welcome").waitFor();
-
-        // Enter email to trigger password field rendering
-        await page
-          .getByPlaceholder("jessie.smith@example.com")
-          .fill(testUserEmail);
-        await page.getByRole("button", { name: "Continue with email" }).click();
-
-        // Password field should now be visible since user has a credential account
-        await page.getByPlaceholder("••••••••").waitFor();
-
-        // Now click forgot password link
-        await page.getByRole("link", { name: "Forgot password?" }).click();
-
-        // Verify we're on the forgot password page
-        await expect(page).toHaveURL(/\/forgot-password/);
-        await expect(
-          page.getByRole("heading", { name: "Forgot Password" }),
-        ).toBeVisible();
-
-        // Verify email is pre-filled as a UX improvement
-        const emailInput = page.getByRole("textbox", { name: "Email" });
-        await expect(emailInput).toHaveValue(testUserEmail);
-      });
-
       test("can request password reset with email", async ({ page }) => {
         await page.goto("/forgot-password");
 
@@ -230,7 +177,8 @@ test.describe.serial(() => {
       });
 
       test("can reset password with valid token", async ({ page }) => {
-        // Request a password reset
+        // Request a password reset. The account was created without a
+        // password, so this doubles as the way to set one up.
         await page.goto("/forgot-password");
         await page
           .getByPlaceholder("jessie.smith@example.com")
@@ -257,6 +205,36 @@ test.describe.serial(() => {
 
         // Should be redirected to login
         await expect(page).toHaveURL(/\/login/);
+      });
+
+      test("can access forgot password page from login", async ({ page }) => {
+        await page.goto("/login");
+
+        // Wait for login page to load
+        await page.getByText("Welcome").waitFor();
+
+        // Enter email to trigger password field rendering
+        await page
+          .getByPlaceholder("jessie.smith@example.com")
+          .fill(testUserEmail);
+        await page.getByRole("button", { name: "Continue with email" }).click();
+
+        // Password field should now be visible since the reset gave the user
+        // a credential account
+        await page.getByPlaceholder("••••••••").waitFor();
+
+        // Now click forgot password link
+        await page.getByRole("link", { name: "Forgot password?" }).click();
+
+        // Verify we're on the forgot password page
+        await expect(page).toHaveURL(/\/forgot-password/);
+        await expect(
+          page.getByRole("heading", { name: "Forgot Password" }),
+        ).toBeVisible();
+
+        // Verify email is pre-filled as a UX improvement
+        const emailInput = page.getByRole("textbox", { name: "Email" });
+        await expect(emailInput).toHaveValue(testUserEmail);
       });
 
       test("shows error for invalid token", async ({ page }) => {

@@ -34,9 +34,18 @@ test.describe("accessibility (axe-core, WCAG 2.1 A/AA)", () => {
     expect(await scan(page)).toEqual([]);
   });
 
-  test("register page", async ({ page }) => {
-    await page.goto("/register");
-    await page.getByRole("heading", { name: "Create Your Account" }).waitFor();
+  test("login verify page", async ({ page }) => {
+    await page.goto("/login");
+    await page.getByText("Welcome").waitFor();
+    await expect(async () => {
+      await page
+        .getByPlaceholder("jessie.smith@example.com")
+        .fill("a11y-scan@example.com");
+      await page.getByRole("button", { name: "Continue with email" }).click();
+      await page
+        .getByRole("heading", { name: "Verify Your Email" })
+        .waitFor({ timeout: 5000 });
+    }).toPass();
     expect(await scan(page)).toEqual([]);
   });
 

@@ -2,7 +2,7 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { isInitialAdmin } from "@/features/setup/utils";
+import { isInitialAdmin } from "@/features/instance-settings/utils";
 import { updateUserRole } from "@/features/user/mutations";
 import { authLib } from "@/lib/auth";
 import { AppError } from "@/lib/errors/app-error";
