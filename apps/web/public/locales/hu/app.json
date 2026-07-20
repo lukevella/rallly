@@ -69,7 +69,7 @@
   "back": "Vissza",
   "banned": "Tiltva",
   "banUser": "Felhasználó kitiltása",
-  "banUserDesc": "Biztosan le szeretnéd tiltani <b>{email}</b>-t? Ki fogjuk jelentkeztetnj, és nem tud majd bejelentkezni.",
+  "banUserDesc": "Biztosan le szeretnéd tiltani <b>{email}</b>-t? Ki fogjuk jelentkeztetni, és nem tud majd bejelentkezni.",
   "banUserReason": "Indoklás (opcionális)",
   "banUserReasonTooLong": "Az indoklás csak 500 karakter vagy kevesebb lehet",
   "banUserTitle": "Felhasználó kitiltása",
