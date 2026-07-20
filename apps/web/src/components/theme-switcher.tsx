@@ -9,8 +9,10 @@ import { useTheme } from "@/lib/theme";
 export function ThemeSwitcher() {
   const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
-  // The theme is only known client-side; render without a selection until
-  // mounted so server and client markup agree.
+  // next-themes reads localStorage during the first client render, which
+  // the server can't know — show no selection until mounted so hydration
+  // matches. The empty string (not undefined) keeps the group controlled
+  // for its whole life.
   const [isMounted, setIsMounted] = React.useState(false);
   React.useEffect(() => {
     setIsMounted(true);
@@ -19,7 +21,7 @@ export function ThemeSwitcher() {
   return (
     <ButtonGroup
       aria-label={t("theme", { defaultValue: "Theme" })}
-      value={isMounted ? theme : undefined}
+      value={isMounted ? (theme ?? "") : ""}
       onValueChange={setTheme}
     >
       <ButtonGroupItem
