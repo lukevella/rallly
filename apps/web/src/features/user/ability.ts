@@ -2,16 +2,14 @@ import type { PureAbility } from "@casl/ability";
 import { AbilityBuilder } from "@casl/ability";
 import type { PrismaQuery, Subjects } from "@casl/prisma";
 import { createPrismaAbility } from "@casl/prisma";
-import type { Space } from "@rallly/database";
 import type { UserRole } from "@/features/user/schema";
 
-type Action = "read" | "update" | "delete";
+type Action = "update" | "delete";
 type Subject = Subjects<{
   User: {
     id: string;
     role: UserRole;
   };
-  Space: Space;
 }>;
 
 type UserAbilityContext = {
@@ -52,18 +50,6 @@ function defineAbilityForUser(
   // Can delete their own account. An active subscription no longer blocks
   // deletion — scheduling a deletion stops the renewal instead.
   can("delete", "User", { id: user.id });
-
-  // Can read their own spaces
-  can("read", "Space", { ownerId: user.id });
-
-  // Can read spaces they are a member of
-  can("read", "Space", {
-    members: {
-      some: {
-        userId: user.id,
-      },
-    },
-  });
 }
 
 function defineAbilityForAdmin(

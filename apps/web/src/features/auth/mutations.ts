@@ -2,15 +2,14 @@ import "server-only";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import * as Sentry from "@sentry/nextjs";
+import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import { posthog } from "@/lib/posthog";
 
 const logger = createLogger("auth/merge-user");
 
 const getActiveSpaceForUser = async ({ userId }: { userId: string }) => {
   const spaceMember = await prisma.spaceMember.findFirst({
-    where: {
-      userId,
-    },
+    where: effectiveSpaceMemberWhere({ userId }),
     select: {
       spaceId: true,
     },
@@ -55,14 +54,14 @@ export const linkAnonymousUser = async (
     });
 
     if (!spaceId) {
-      // A sign-in that creates the account links the guest before the
-      // user-create hook has provisioned the space. Transfer ownership
+      // Reached when the guest links before the user-create hook has
+      // provisioned the space, or when the user's only memberships are
+      // ineffective (non-owner rows in hobby spaces). Transfer ownership
       // anyway — the anonymous user is deleted right after linking and
-      // polls cascade with it — and leave spaceId null for the hook to
-      // adopt once the space exists.
+      // polls cascade with it — and leave spaceId null.
       logger.info(
         { userId: authenticatedUserId },
-        "User has no active space yet; migrating polls without a space",
+        "User has no effective space; migrating guest content without a space",
       );
     }
 

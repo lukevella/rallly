@@ -29,6 +29,7 @@ import { showPayWall } from "@/features/billing/client";
 import { useSpace } from "@/features/space/client";
 import { SpaceRole } from "@/features/space/components/space-role";
 import { Trans } from "@/i18n/client";
+import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { trpc } from "@/trpc/client";
 import { InviteDropdownMenu } from "./components/invite-dropdown-menu";
 import { InviteMemberButton } from "./components/invite-member-button";
@@ -58,6 +59,21 @@ export function MembersSettingsPageClient() {
         <PageSectionGroup>
           <PageSection>
             <PageSectionContent>
+              <IfFeatureEnabled feature="billing">
+                {space.data.tier === "hobby" && members.total > 1 ? (
+                  <Alert variant="info">
+                    <InfoIcon />
+                    <AlertDescription>
+                      <p>
+                        <Trans
+                          i18nKey="membersInactiveDescription"
+                          defaults="Members are inactive because this space does not have an active subscription. Upgrade to Pro to restore their access."
+                        />
+                      </p>
+                    </AlertDescription>
+                  </Alert>
+                ) : null}
+              </IfFeatureEnabled>
               <StackedList>
                 {members.data.map((member) => (
                   <StackedListItem key={member.id}>
@@ -78,6 +94,17 @@ export function MembersSettingsPageClient() {
                                 <Trans i18nKey="owner" defaults="Owner" />
                               </Badge>
                             ) : null}
+                            <IfFeatureEnabled feature="billing">
+                              {space.data.tier === "hobby" &&
+                              !member.isOwner ? (
+                                <Badge>
+                                  <Trans
+                                    i18nKey="memberInactive"
+                                    defaults="Inactive"
+                                  />
+                                </Badge>
+                              ) : null}
+                            </IfFeatureEnabled>
                           </div>
                         </div>
                         <div className="text-muted-foreground text-sm">

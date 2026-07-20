@@ -1,4 +1,3 @@
-import { prisma } from "@rallly/database";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,48 +9,28 @@ import {
 import { BarChart2Icon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { BrandStyle } from "@/features/branding/components/brand-style";
 import { CreatePoll } from "@/features/poll/components/create-poll";
-import { createSpaceDTO } from "@/features/space/data";
+import { getActiveSpaceForUser } from "@/features/space/data";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getSession } from "@/lib/auth";
 
-const getActiveSpace = async () => {
-  const session = await getSession();
-
-  if (session?.user.isGuest || !session?.user.id) {
-    return null;
-  }
-
-  const spaceMember = await prisma.spaceMember.findFirst({
-    where: {
-      userId: session?.user.id,
-    },
-    orderBy: {
-      lastSelectedAt: "desc",
-    },
-    include: {
-      space: true,
-    },
-  });
-
-  return spaceMember?.space
-    ? createSpaceDTO({ ...spaceMember.space, role: spaceMember.role })
-    : null;
-};
-
-async function getPrimaryColor() {
-  const space = await getActiveSpace();
-  if (space) {
-    return space.showBranding && space.primaryColor ? space.primaryColor : null;
-  }
-  return null;
-}
-
 export default async function Page() {
-  const primaryColor = await getPrimaryColor();
+  const session = await getSession();
+  const userId =
+    session?.user.id && !session.user.isGuest ? session.user.id : null;
+
+  const space = userId ? await getActiveSpaceForUser(userId) : null;
+
+  if (userId && !space) {
+    redirect("/setup");
+  }
+
+  const primaryColor =
+    space?.showBranding && space.primaryColor ? space.primaryColor : null;
 
   return (
     <div className="page-bg-gray-100 absolute inset-0 h-dvh overflow-auto dark:bg-gray-900">
