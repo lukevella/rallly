@@ -1,5 +1,5 @@
 import { Alert, AlertDescription } from "@rallly/ui/alert";
-import { InfoIcon, ShieldCheckIcon } from "lucide-react";
+import { InfoIcon } from "lucide-react";
 import type { Metadata } from "next";
 import type { Params } from "@/app/[locale]/types";
 import {
@@ -25,12 +25,7 @@ import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { ChangePasswordForm } from "./components/change-password-form";
 import { SetupPasswordForm } from "./components/setup-password-form";
 
-export default async function SecurityPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ setupPassword?: string }>;
-}) {
-  const { setupPassword } = await searchParams;
+export default async function SecurityPage() {
   const user = await requireUser();
 
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
@@ -53,64 +48,46 @@ export default async function SecurityPage({
       </SettingsPageHeader>
       <SettingsPageContent>
         {isEmailLoginEnabled ? (
-          <>
-            {setupPassword ? (
-              <Alert variant="success">
-                <ShieldCheckIcon />
-                <AlertDescription>
-                  <p>
+          <PageSectionGroup>
+            {hasPassword ? (
+              <PageSection variant="card">
+                <PageSectionHeader>
+                  <PageSectionTitle>
                     <Trans
-                      i18nKey="passwordSetupSuccessful"
-                      defaults="Password setup successful. You can now login with your email and password."
+                      i18nKey="changePassword"
+                      defaults="Change Password"
                     />
-                  </p>
-                </AlertDescription>
-              </Alert>
-            ) : null}
-            <PageSectionGroup>
-              {hasPassword ? (
-                <PageSection variant="card">
-                  <PageSectionHeader>
-                    <PageSectionTitle>
-                      <Trans
-                        i18nKey="changePassword"
-                        defaults="Change Password"
-                      />
-                    </PageSectionTitle>
-                    <PageSectionDescription>
-                      <Trans
-                        i18nKey="changePasswordDescription"
-                        defaults="Update your password to keep your account secure"
-                      />
-                    </PageSectionDescription>
-                  </PageSectionHeader>
-                  <PageSectionContent>
-                    <ChangePasswordForm />
-                  </PageSectionContent>
-                </PageSection>
-              ) : (
-                <PageSection variant="card">
-                  <PageSectionHeader>
-                    <PageSectionTitle>
-                      <Trans
-                        i18nKey="resetPasswordTitle"
-                        defaults="Reset Password"
-                      />
-                    </PageSectionTitle>
-                    <PageSectionDescription className="max-w-lg">
-                      <Trans
-                        i18nKey="setupPasswordDescription"
-                        defaults="Your account doesn't have a password yet. Click the button below to send a secure link to your email to set a password."
-                      />
-                    </PageSectionDescription>
-                  </PageSectionHeader>
-                  <PageSectionContent>
-                    <SetupPasswordForm email={user.email} />
-                  </PageSectionContent>
-                </PageSection>
-              )}
-            </PageSectionGroup>
-          </>
+                  </PageSectionTitle>
+                  <PageSectionDescription>
+                    <Trans
+                      i18nKey="changePasswordDescription"
+                      defaults="Update your password to keep your account secure"
+                    />
+                  </PageSectionDescription>
+                </PageSectionHeader>
+                <PageSectionContent>
+                  <ChangePasswordForm />
+                </PageSectionContent>
+              </PageSection>
+            ) : (
+              <PageSection variant="card">
+                <PageSectionHeader>
+                  <PageSectionTitle>
+                    <Trans i18nKey="setPasswordTitle" defaults="Set Password" />
+                  </PageSectionTitle>
+                  <PageSectionDescription className="max-w-lg">
+                    <Trans
+                      i18nKey="setPasswordSectionDescription"
+                      defaults="Your account doesn't have a password yet. Set one to sign in with your email address."
+                    />
+                  </PageSectionDescription>
+                </PageSectionHeader>
+                <PageSectionContent>
+                  <SetupPasswordForm />
+                </PageSectionContent>
+              </PageSection>
+            )}
+          </PageSectionGroup>
         ) : (
           <Alert>
             <InfoIcon />
