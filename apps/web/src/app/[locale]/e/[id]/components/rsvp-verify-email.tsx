@@ -26,9 +26,9 @@ import * as z from "zod";
 import { InputOTP } from "@/components/input-otp";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-const isTurnstileEnabled = !!turnstileSiteKey;
 
 const otpSchema = z.object({ otp: z.string().regex(/^\d{6}$/) });
 
@@ -39,6 +39,8 @@ export function RsvpVerifyEmail({
   email: string;
   name: string;
 }) {
+  const isCaptchaEnabled = useFeatureFlag("captcha");
+  const isTurnstileEnabled = isCaptchaEnabled && !!turnstileSiteKey;
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const dialog = useDialog();
@@ -169,7 +171,7 @@ export function RsvpVerifyEmail({
               />
             </DialogDescription>
           </DialogHeader>
-          {turnstileSiteKey && !otpSent ? (
+          {isTurnstileEnabled && turnstileSiteKey && !otpSent ? (
             <Turnstile
               ref={turnstileRef}
               siteKey={turnstileSiteKey}

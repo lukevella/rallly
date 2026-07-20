@@ -15,6 +15,10 @@ export const featureFlagConfig: FeatureFlagConfig = {
   billing: isBillingEnabled,
   feedback: isFeedbackEnabled,
   emailLogin: isEmailLoginEnabled,
+  // Both halves of the Turnstile pair are needed: the site key renders the
+  // widget and the secret verifies its tokens. With only one set, captcha
+  // is disabled rather than half working.
+  captcha: !!env.TURNSTILE_SECRET_KEY && !!env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   registration: isEmailLoginEnabled && isRegistrationEnabled,
   calendars: isCalendarsEnabled,
   eventTypes: isEventTypesEnabled,
