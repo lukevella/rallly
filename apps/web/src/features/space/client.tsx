@@ -44,8 +44,14 @@ export function SpaceProvider({
   children: React.ReactNode;
 }) {
   React.useEffect(() => {
-    posthog?.group("space", space.id);
-  }, [space.id]);
+    // Property names must match the server-side identifyGroup payloads.
+    // posthog-js only re-sends $groupidentify when these values change.
+    posthog?.group("space", space.id, {
+      name: space.name,
+      tier: space.tier,
+      custom_branding: space.showBranding,
+    });
+  }, [space.id, space.name, space.tier, space.showBranding]);
 
   const primaryColorVars =
     space.showBranding && space.primaryColor
