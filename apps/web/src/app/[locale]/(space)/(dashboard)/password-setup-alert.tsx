@@ -1,6 +1,11 @@
 "use client";
 import { buttonVariants } from "@rallly/ui";
-import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import { KeyRoundIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
@@ -38,24 +43,16 @@ function PasswordSetupAlertInner() {
               />
             </AlertTitle>
             <AlertDescription>
-              <p>
-                <Trans
-                  i18nKey="setupPasswordAlertDesc"
-                  defaults="Set up a password to make logging in faster and more convenient."
-                />
-              </p>
-              <div className="mt-4 flex items-center gap-2">
-                <Link
-                  href="/settings/security"
-                  className={buttonVariants({ variant: "primary" })}
-                >
-                  <Trans
-                    i18nKey="setupPasswordButton"
-                    defaults="Set up password"
-                  />
-                </Link>
+              <Trans
+                i18nKey="setupPasswordAlertDesc"
+                defaults="Set up a password to make logging in faster and more convenient."
+              />
+            </AlertDescription>
+            <AlertAction>
+              <div className="flex items-center gap-2">
                 <Button
                   variant="ghost"
+                  size="sm"
                   onClick={() => {
                     setDismissed("1");
                   }}
@@ -65,8 +62,17 @@ function PasswordSetupAlertInner() {
                     defaults="Don't show again"
                   />
                 </Button>
+                <Link
+                  href="/settings/security"
+                  className={buttonVariants({ variant: "primary", size: "sm" })}
+                >
+                  <Trans
+                    i18nKey="setupPasswordButton"
+                    defaults="Set up password"
+                  />
+                </Link>
               </div>
-            </AlertDescription>
+            </AlertAction>
           </Alert>
         </m.div>
       ) : null}
