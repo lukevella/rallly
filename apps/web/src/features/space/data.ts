@@ -61,6 +61,8 @@ export function createSpaceDTO(space: {
   tier: DBSpaceTier;
   primaryColor?: string | null;
   showBranding: boolean;
+  memberCount: number;
+  seatCount: number;
 }): SpaceDTO {
   return {
     id: space.id as AuthorizedSpaceId,
@@ -68,6 +70,8 @@ export function createSpaceDTO(space: {
     ownerId: space.ownerId,
     tier: isSelfHosted ? "pro" : space.tier,
     role: fromDBRole(space.role),
+    memberCount: space.memberCount,
+    seatCount: space.seatCount,
     image: space.image ?? undefined,
     primaryColor: space.primaryColor ?? undefined,
     showBranding: space.showBranding,
@@ -195,7 +199,16 @@ export const getActiveSpaceForUser = cache(async (userId: string) => {
       lastSelectedAt: "desc",
     },
     include: {
-      space: true,
+      space: {
+        include: {
+          _count: { select: { members: true } },
+          subscriptions: {
+            where: { active: true },
+            select: { quantity: true },
+            take: 1,
+          },
+        },
+      },
     },
   });
 
@@ -206,5 +219,7 @@ export const getActiveSpaceForUser = cache(async (userId: string) => {
   return createSpaceDTO({
     ...spaceMember.space,
     role: spaceMember.role,
+    memberCount: spaceMember.space._count.members,
+    seatCount: spaceMember.space.subscriptions[0]?.quantity ?? 1,
   });
 });

@@ -12,6 +12,8 @@ export type SpaceDTO = {
   ownerId: string;
   tier: "hobby" | "pro";
   role: MemberRole;
+  memberCount: number;
+  seatCount: number;
   image?: string;
   primaryColor?: string;
   showBranding: boolean;

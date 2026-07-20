@@ -50,8 +50,17 @@ export function SpaceProvider({
       name: space.name,
       tier: space.tier,
       custom_branding: space.showBranding,
+      member_count: space.memberCount,
+      seat_count: space.seatCount,
     });
-  }, [space.id, space.name, space.tier, space.showBranding]);
+  }, [
+    space.id,
+    space.name,
+    space.tier,
+    space.showBranding,
+    space.memberCount,
+    space.seatCount,
+  ]);
 
   const primaryColorVars =
     space.showBranding && space.primaryColor

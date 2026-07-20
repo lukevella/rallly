@@ -55,6 +55,12 @@ export const spaces = router({
             tier: true,
             primaryColor: true,
             showBranding: true,
+            _count: { select: { members: true } },
+            subscriptions: {
+              where: { active: true },
+              select: { quantity: true },
+              take: 1,
+            },
           },
         },
       },
@@ -64,6 +70,8 @@ export const spaces = router({
       createSpaceDTO({
         ...spaceMember.space,
         role: spaceMember.role,
+        memberCount: spaceMember.space._count.members,
+        seatCount: spaceMember.space.subscriptions[0]?.quantity ?? 1,
       }),
     );
   }),
