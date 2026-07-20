@@ -1,4 +1,5 @@
 {
+  "accountDeletionScheduled_button": "Manage Account",
   "accountDeletionScheduled_cancel": "If you change your mind, you can cancel the deletion from your <a>account settings</a> before then.",
   "accountDeletionScheduled_footer": "You're receiving this email because a request was made to delete an account on <domain />. If this wasn't you, sign in and cancel the deletion before then, or contact <a>{supportEmail}</a>.",
   "accountDeletionScheduled_heading": "Your account is scheduled for deletion",

@@ -6,6 +6,7 @@ import { PoweredBy } from "../components/powered-by";
 import { previewChrome } from "../components/preview-chrome";
 import {
   Body,
+  Button,
   Container,
   Heading,
   Link,
@@ -76,6 +77,14 @@ async function AccountDeletionScheduledEmail({
               }}
             />
           </Text>
+          <Button
+            href={`${chrome.baseUrl}/settings/profile`}
+            color={chrome.primaryColor}
+          >
+            {t("accountDeletionScheduled_button", {
+              defaultValue: "Manage Account",
+            })}
+          </Button>
           <Hr />
           <Text small light={true}>
             <Trans
