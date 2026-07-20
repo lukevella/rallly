@@ -57,18 +57,20 @@ if (env.OIDC_ISSUER_URL) {
 }
 
 // The site key renders the widget and the secret key verifies its tokens;
-// with only one of them set, captcha is either silently skipped or blocks
-// every OTP send. Fail at boot instead.
+// captcha only works with both, so a half-configured pair disables it.
+const isCaptchaEnabled =
+  !!env.TURNSTILE_SECRET_KEY && !!env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
 if (!!env.TURNSTILE_SECRET_KEY !== !!env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
-  throw new Error(
-    "NEXT_PUBLIC_TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY must be set together",
+  logger.warn(
+    "Captcha is disabled: NEXT_PUBLIC_TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY must be set together",
   );
 }
 
 // Conditional plugins are typed as BetterAuthPlugin[] — they don't add user
 // fields so losing their specific types doesn't affect session type inference.
 const conditionalPlugins: BetterAuthPlugin[] = [
-  ...(env.TURNSTILE_SECRET_KEY
+  ...(isCaptchaEnabled && env.TURNSTILE_SECRET_KEY
     ? [
         captcha({
           provider: "cloudflare-turnstile",
