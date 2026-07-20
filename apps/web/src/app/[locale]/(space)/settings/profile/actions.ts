@@ -3,7 +3,10 @@ import { subject } from "@casl/ability";
 import { sendAccountDeletionScheduledEmail } from "@rallly/emails/templates/account-deletion-scheduled";
 import { after } from "next/server";
 import { getInstanceBranding } from "@/emails/branding";
-import { cancelUserSubscriptions } from "@/features/billing/mutations";
+import {
+  resumeUserSubscriptionRenewals,
+  stopUserSubscriptionRenewals,
+} from "@/features/billing/mutations";
 import {
   cancelAccountDeletion,
   scheduleAccountDeletion,
@@ -17,10 +20,12 @@ import {
   createRateLimitMiddleware,
 } from "@/lib/safe-action/server";
 
-// Cancelling the subscription happens first and is the one irreversible
-// part: waiting until reap time would let a renewal charge the user during
-// the recovery window. An account that cancels its deletion comes back on
-// the free tier.
+// Renewals are stopped (cancel_at_period_end) rather than the subscription
+// cancelled, so nothing here is irreversible: no charge can land during the
+// recovery window, the user keeps the Pro time they paid for, and cancelling
+// the deletion restores the subscription. deletedAt is written first; if the
+// Stripe call fails, it is rolled back so the two never drift apart. The
+// reaper hard-cancels at the end of the window.
 export const scheduleAccountDeletionAction = authActionClient
   .metadata({ actionName: "schedule_account_deletion" })
   // Each call hits Stripe and sends an email — keep the ceiling low.
@@ -33,9 +38,14 @@ export const scheduleAccountDeletionAction = authActionClient
       });
     }
 
-    await cancelUserSubscriptions({ userId: ctx.user.id });
-
     const deletedAt = await scheduleAccountDeletion({ userId: ctx.user.id });
+
+    try {
+      await stopUserSubscriptionRenewals({ userId: ctx.user.id });
+    } catch (error) {
+      await cancelAccountDeletion({ userId: ctx.user.id });
+      throw error;
+    }
 
     const locale = ctx.user.locale ?? (await getLocale());
     const branding = await getInstanceBranding();
@@ -60,4 +70,5 @@ export const cancelAccountDeletionAction = authActionClient
   .use(createRateLimitMiddleware(10, "1 h"))
   .action(async ({ ctx }) => {
     await cancelAccountDeletion({ userId: ctx.user.id });
+    await resumeUserSubscriptionRenewals({ userId: ctx.user.id });
   });

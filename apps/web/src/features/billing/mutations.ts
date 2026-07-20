@@ -167,6 +167,61 @@ function isStripeResourceMissingError(error: unknown) {
   );
 }
 
+// Scheduling an account deletion must guarantee no further charges without
+// destroying anything: cancel_at_period_end stops the renewal while keeping
+// the paid-for time, and is reversible if the deletion is cancelled.
+// Database state syncs via the customer.subscription.updated webhook.
+async function setUserSubscriptionRenewals({
+  userId,
+  cancelAtPeriodEnd,
+}: {
+  userId: string;
+  cancelAtPeriodEnd: boolean;
+}) {
+  if (!isBillingEnabled) {
+    return;
+  }
+
+  const subscriptions = await prisma.subscription.findMany({
+    where: { userId, active: true },
+    select: { id: true },
+  });
+
+  if (subscriptions.length === 0) {
+    return;
+  }
+
+  const stripe = getStripe();
+
+  for (const subscription of subscriptions) {
+    try {
+      await stripe.subscriptions.update(subscription.id, {
+        cancel_at_period_end: cancelAtPeriodEnd,
+      });
+    } catch (error) {
+      if (!isStripeResourceMissingError(error)) {
+        throw error;
+      }
+    }
+  }
+}
+
+export async function stopUserSubscriptionRenewals({
+  userId,
+}: {
+  userId: string;
+}) {
+  await setUserSubscriptionRenewals({ userId, cancelAtPeriodEnd: true });
+}
+
+export async function resumeUserSubscriptionRenewals({
+  userId,
+}: {
+  userId: string;
+}) {
+  await setUserSubscriptionRenewals({ userId, cancelAtPeriodEnd: false });
+}
+
 // Database state (subscription row, space tier) is synced by the
 // customer.subscription.deleted webhook, the same path portal
 // cancellations take.

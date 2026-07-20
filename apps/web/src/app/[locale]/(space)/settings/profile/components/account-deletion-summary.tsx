@@ -58,8 +58,8 @@ export async function AccountDeletionSummary() {
           <AlertDescription>
             <p>
               <Trans
-                i18nKey="deleteAccountSubscriptionWarning"
-                defaults="Your Pro subscription will be cancelled immediately. You won't be refunded for remaining time, and cancelling the deletion will not restore your subscription."
+                i18nKey="deleteAccountSubscriptionNotice"
+                defaults="Your Pro subscription will not renew and will end with your current billing period. If you cancel the deletion, your subscription will continue as normal."
               />
             </p>
           </AlertDescription>
