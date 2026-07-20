@@ -26,9 +26,9 @@ export async function setPasswordForUser({
   password: string;
 }) {
   // Checked against the database, not the session: session snapshots are
-  // frozen in secondary storage. setPassword overwrites without complaint,
-  // so this guard is what keeps the set path from bypassing the
-  // current-password requirement on the change path.
+  // frozen in secondary storage. Better-Auth's setPassword already refuses
+  // to overwrite an existing credential (PASSWORD_ALREADY_SET); this guard is
+  // defense in depth and returns a clean FORBIDDEN for the expected case.
   if (await getUserHasPassword(user.id)) {
     throw new AppError({
       code: "FORBIDDEN",
