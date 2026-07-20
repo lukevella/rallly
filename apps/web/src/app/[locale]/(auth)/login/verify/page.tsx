@@ -1,10 +1,10 @@
 import { buttonVariants } from "@rallly/ui";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
 
+import { getRegistrationEnabled } from "@/features/instance-settings/data";
 import { getTranslation } from "@/i18n/server";
 import { redirectIfLoggedIn } from "@/lib/auth";
 import {
@@ -14,6 +14,7 @@ import {
   AuthPageHeader,
   AuthPageTitle,
 } from "../../components/auth-page";
+import { LinkWithRedirectTo } from "../../components/link-with-redirect-to";
 import { OTPForm } from "./components/otp-form";
 
 export default async function VerifyPage() {
@@ -23,33 +24,61 @@ export default async function VerifyPage() {
   if (!email) {
     redirect("/login");
   }
+
+  const isRegistrationEnabled = await getRegistrationEnabled();
+
   return (
     <AuthPageContainer>
       <AuthPageHeader>
         <AuthPageTitle>
-          <Trans
-            t={t}
-            ns="app"
-            i18nKey="loginVerifyTitle"
-            defaults="Finish Logging In"
-          />
+          {isRegistrationEnabled ? (
+            <Trans
+              t={t}
+              ns="app"
+              i18nKey="verifyEmailTitle"
+              defaults="Verify Your Email"
+            />
+          ) : (
+            <Trans
+              t={t}
+              ns="app"
+              i18nKey="loginVerifyTitle"
+              defaults="Finish Logging In"
+            />
+          )}
         </AuthPageTitle>
         <AuthPageDescription>
-          <Trans
-            t={t}
-            ns="app"
-            i18nKey="loginVerifyCheckEmail"
-            defaults="If an account exists with this email, you will receive a verification code at <b>{email}</b>"
-            values={{ email }}
-            components={{
-              b: <strong className="font-medium text-foreground" />,
-            }}
-          />
+          {isRegistrationEnabled ? (
+            <Trans
+              t={t}
+              ns="app"
+              i18nKey="verifyEmailDescription"
+              defaults="Enter the 6-digit code we sent to <b>{email}</b>"
+              values={{ email }}
+              components={{
+                b: <strong className="font-medium text-foreground" />,
+              }}
+            />
+          ) : (
+            <Trans
+              t={t}
+              ns="app"
+              i18nKey="loginVerifyCheckEmail"
+              defaults="If an account exists with this email, you will receive a verification code at <b>{email}</b>"
+              values={{ email }}
+              components={{
+                b: <strong className="font-medium text-foreground" />,
+              }}
+            />
+          )}
         </AuthPageDescription>
       </AuthPageHeader>
       <AuthPageContent>
-        <OTPForm email={email} />
-        <Link
+        <OTPForm
+          email={email}
+          mode={isRegistrationEnabled ? "sign-in" : "email-verification"}
+        />
+        <LinkWithRedirectTo
           href="/login"
           className={buttonVariants({
             size: "xl",
@@ -58,7 +87,7 @@ export default async function VerifyPage() {
           })}
         >
           <Trans t={t} ns="app" i18nKey="back" defaults="Back" />
-        </Link>
+        </LinkWithRedirectTo>
       </AuthPageContent>
     </AuthPageContainer>
   );

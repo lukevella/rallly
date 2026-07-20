@@ -96,6 +96,7 @@ async function seed() {
       name: "Cross TZ Host",
       locale: "en",
       timeZone: "Europe/London",
+      timeFormat: "hours24",
       emailVerified: true,
     },
   });

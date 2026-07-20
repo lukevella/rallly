@@ -10,7 +10,7 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { isInitialAdmin } from "@/features/setup/utils";
+import { isInitialAdmin } from "@/features/instance-settings/utils";
 import { getCurrentUser } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";

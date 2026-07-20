@@ -217,8 +217,8 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.1(react@19.2.6))(zod@4.3.6)
       '@marsidev/react-turnstile':
-        specifier: ^1.4.2
-        version: 1.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: ^1.5.3
+        version: 1.5.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@next/env':
         specifier: 16.2.6
         version: 16.2.6
@@ -3046,8 +3046,8 @@ packages:
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
 
-  '@marsidev/react-turnstile@1.4.2':
-    resolution: {integrity: sha512-xs1qOuyeMOz6t9BXXCXWiukC0/0+48vR08B7uwNdG05wCMnbcNgxiFmdFKDOFbM76qFYFRYlGeRfhfq1U/iZmA==}
+  '@marsidev/react-turnstile@1.5.3':
+    resolution: {integrity: sha512-8Dij2jiNGNczq1U4EKpO4do2XepcTPxSMc2ZzvHndO+gcp68tvMULm27z2P99rGkdB89hc3452NZeu2Rti4g6A==}
     peerDependencies:
       react: ^17.0.2 || ^18.0.0 || ^19.0
       react-dom: ^17.0.2 || ^18.0.0 || ^19.0
@@ -13946,7 +13946,7 @@ snapshots:
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 
-  '@marsidev/react-turnstile@1.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@marsidev/react-turnstile@1.5.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
