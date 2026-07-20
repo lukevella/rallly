@@ -129,8 +129,9 @@ export function SetupForm({
             }
 
             // Server errors surface through the global useSafeAction toast;
-            // stay on the form so the user can retry. On success the hook
-            // refreshes the router and the page redirects onward.
+            // the button unlocks (hasSucceeded stays false) so the user can
+            // retry. On success the hook refreshes the router and the page
+            // redirects onward while the button stays loading.
             await setupSpace.executeAsync(
               spaceType === "work"
                 ? { spaceType, organizationName: organizationName.trim() }
@@ -289,9 +290,7 @@ export function SetupForm({
             type="submit"
             variant="primary"
             size="lg"
-            loading={
-              form.formState.isSubmitting || form.formState.isSubmitSuccessful
-            }
+            loading={form.formState.isSubmitting || setupSpace.hasSucceeded}
             className="w-full"
           >
             <Trans i18nKey="continue" defaults="Continue" />
