@@ -1,7 +1,12 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
-import { Alert, AlertAction, AlertDescription } from "@rallly/ui/alert";
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@rallly/ui/alert";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { InfoIcon, SparklesIcon } from "lucide-react";
@@ -63,13 +68,17 @@ export function MembersSettingsPageClient() {
                 {space.data.tier === "hobby" && members.total > 1 ? (
                   <Alert variant="info">
                     <InfoIcon />
+                    <AlertTitle>
+                      <Trans
+                        i18nKey="membersInactiveAlertTitle"
+                        defaults="Members are inactive"
+                      />
+                    </AlertTitle>
                     <AlertDescription>
-                      <p>
-                        <Trans
-                          i18nKey="membersInactiveDescription"
-                          defaults="Members are inactive because this space does not have an active subscription. Upgrade to Pro to restore their access."
-                        />
-                      </p>
+                      <Trans
+                        i18nKey="membersInactiveAlertDescription"
+                        defaults="These members lost access when this space's Pro subscription ended. Their seats are kept and access is restored when the space is upgraded again."
+                      />
                     </AlertDescription>
                   </Alert>
                 ) : null}
@@ -126,8 +135,8 @@ export function MembersSettingsPageClient() {
               <SparklesIcon />
               <AlertDescription>
                 <Trans
-                  i18nKey="pendingInvitesUpgradeDescription"
-                  defaults="Upgrade to Pro to invite members to your space."
+                  i18nKey="inviteMembersUpsellDescription"
+                  defaults="Invite members to manage polls and events together in this space."
                 />
               </AlertDescription>
               <AlertAction>
