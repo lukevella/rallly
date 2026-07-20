@@ -1,5 +1,6 @@
 "use client";
-import { Alert, AlertDescription } from "@rallly/ui/alert";
+import { buttonVariants } from "@rallly/ui";
+import { Alert, AlertAction, AlertDescription } from "@rallly/ui/alert";
 import { ArrowUpRightIcon, CrownIcon } from "lucide-react";
 import Link from "next/link";
 import { usePoll } from "@/features/poll/client";
@@ -23,25 +24,23 @@ const GoToApp = () => {
     <Alert variant="primary">
       <CrownIcon />
       <AlertDescription>
-        <div className="flex w-full flex-1 items-center gap-2">
-          <p className="flex-1">
-            <Trans
-              i18nKey="eventHostDescription"
-              defaults="You are the creator of this poll"
-            />
-          </p>
-          <div>
-            <Link
-              className="inline-flex items-center gap-2 hover:underline"
-              href={`/poll/${poll.id}`}
-              prefetch={false}
-            >
-              <Trans i18nKey="manage" defaults="Manage" />
-              <ArrowUpRightIcon className="size-4" />
-            </Link>
-          </div>
-        </div>
+        <p>
+          <Trans
+            i18nKey="eventHostDescription"
+            defaults="You are the creator of this poll"
+          />
+        </p>
       </AlertDescription>
+      <AlertAction>
+        <Link
+          className={buttonVariants({ variant: "primary", size: "sm" })}
+          href={`/poll/${poll.id}`}
+          prefetch={false}
+        >
+          <Trans i18nKey="manage" defaults="Manage" />
+          <ArrowUpRightIcon className="size-4" />
+        </Link>
+      </AlertAction>
     </Alert>
   );
 };
