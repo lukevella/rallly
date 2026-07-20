@@ -1,4 +1,3 @@
-import type { PollStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { sendFinalizeHostEmail } from "@rallly/emails/templates/finalized-host";
 import { sendFinalizeParticipantEmail } from "@rallly/emails/templates/finalized-participant";
@@ -12,6 +11,7 @@ import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { moderateContent } from "@/features/moderation/mutations";
 import {
   canUserManagePoll,
+  getPollStatusCounts,
   getPolls,
   hasPollAdminAccess,
 } from "@/features/poll/data";
@@ -85,25 +85,8 @@ export const polls = router({
         total: result.total,
       };
     }),
-  getCountByStatus: privateProcedure.query(async ({ ctx }) => {
-    const res = await prisma.poll.groupBy({
-      by: ["status"],
-      where: {
-        userId: ctx.user.id,
-        deletedAt: null,
-      },
-      _count: {
-        status: true,
-      },
-    });
-
-    return res.reduce(
-      (acc, { status, _count }) => {
-        acc[status] = _count.status;
-        return acc;
-      },
-      {} as Record<PollStatus, number>,
-    );
+  statusCounts: spaceProcedure.query(async ({ ctx }) => {
+    return getPollStatusCounts({ spaceId: ctx.space.id });
   }),
 
   make: possiblyPublicProcedure
@@ -640,6 +623,7 @@ export const polls = router({
           createdAt: true,
           participantUrlId: true,
           status: true,
+          closedReason: true,
           hideParticipants: true,
           disableComments: true,
           hideScores: true,

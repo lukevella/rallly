@@ -15,6 +15,7 @@ export default async function Page(props: {
 
   await Promise.all([
     helpers.spaces.listMembers.prefetch(),
+    helpers.polls.statusCounts.prefetch(),
     helpers.polls.infiniteChronological.prefetchInfinite({
       status,
       search: q,
