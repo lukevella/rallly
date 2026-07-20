@@ -1,4 +1,3 @@
-import type { PollStatus } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { sendFinalizeHostEmail } from "@rallly/emails/templates/finalized-host";
 import { sendFinalizeParticipantEmail } from "@rallly/emails/templates/finalized-participant";
@@ -85,27 +84,6 @@ export const polls = router({
         total: result.total,
       };
     }),
-  getCountByStatus: privateProcedure.query(async ({ ctx }) => {
-    const res = await prisma.poll.groupBy({
-      by: ["status"],
-      where: {
-        userId: ctx.user.id,
-        deletedAt: null,
-      },
-      _count: {
-        status: true,
-      },
-    });
-
-    return res.reduce(
-      (acc, { status, _count }) => {
-        acc[status] = _count.status;
-        return acc;
-      },
-      {} as Record<PollStatus, number>,
-    );
-  }),
-
   make: possiblyPublicProcedure
     .input(
       z.object({
@@ -640,6 +618,7 @@ export const polls = router({
           createdAt: true,
           participantUrlId: true,
           status: true,
+          closedReason: true,
           hideParticipants: true,
           disableComments: true,
           hideScores: true,

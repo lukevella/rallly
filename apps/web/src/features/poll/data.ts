@@ -186,6 +186,7 @@ export const getPolls = async ({
         id: true,
         title: true,
         status: true,
+        closedReason: true,
         createdAt: true,
         updatedAt: true,
         user: {
@@ -220,6 +221,7 @@ export const getPolls = async ({
     id: poll.id,
     title: poll.title,
     status: poll.status,
+    closedReason: poll.closedReason,
     createdAt: poll.createdAt,
     updatedAt: poll.updatedAt,
     user: poll.user
@@ -246,6 +248,36 @@ export const getPolls = async ({
     hasNextPage,
     currentPage: page,
   };
+};
+
+export const getPollStatusCounts = async ({
+  spaceId,
+}: {
+  spaceId: AuthorizedSpaceId;
+}) => {
+  const res = await prisma.poll.groupBy({
+    by: ["status"],
+    where: {
+      spaceId,
+      deletedAt: null,
+    },
+    _count: {
+      status: true,
+    },
+  });
+
+  const counts: Record<PollStatus, number> = {
+    open: 0,
+    closed: 0,
+    scheduled: 0,
+    canceled: 0,
+  };
+
+  for (const { status, _count } of res) {
+    counts[status] = _count.status;
+  }
+
+  return counts;
 };
 
 export async function canUserManagePoll(
