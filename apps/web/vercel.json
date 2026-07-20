@@ -18,6 +18,10 @@
     {
       "path": "/api/house-keeping/remove-deleted-polls",
       "schedule": "30 6 * * *"
+    },
+    {
+      "path": "/api/house-keeping/remove-deleted-users",
+      "schedule": "0 7 * * *"
     }
   ]
 }

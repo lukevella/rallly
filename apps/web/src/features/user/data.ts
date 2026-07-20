@@ -20,6 +20,7 @@ export const createUserDTO = (user: User): UserDTO => ({
   weekStart: user.weekStart ?? undefined,
   customerId: user.customerId ?? undefined,
   isGuest: user.isAnonymous,
+  deletedAt: user.deletedAt ?? undefined,
 });
 
 /**
@@ -63,6 +64,29 @@ export const getUserCount = async () => {
     },
   });
 };
+
+export async function getUserDeletionDetails(userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      email: true,
+      customerId: true,
+      _count: {
+        select: { subscriptions: { where: { active: true } } },
+      },
+    },
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  return {
+    email: user.email,
+    customerId: user.customerId,
+    hasActiveSubscription: user._count.subscriptions > 0,
+  };
+}
 
 export const getUserHasPassword = async (userId: string) => {
   const account = await prisma.account.findFirst({
