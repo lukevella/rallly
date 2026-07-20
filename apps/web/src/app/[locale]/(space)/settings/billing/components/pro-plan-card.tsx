@@ -11,7 +11,10 @@ import type {
   BillingInterval,
   SubscriptionStatus,
 } from "@/features/billing/schema";
-import { SpaceTierIcon } from "@/features/space/components/space-tier";
+import {
+  SpaceTierIcon,
+  SpaceTierLabel,
+} from "@/features/space/components/space-tier";
 import { Trans } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -71,7 +74,9 @@ export function ProPlanCard({
         </PlanCardIcon>
         <PlanCardContent>
           <div className="flex items-center gap-x-2">
-            <PlanCardTitle>Pro</PlanCardTitle>
+            <PlanCardTitle>
+              <SpaceTierLabel tier="pro" />
+            </PlanCardTitle>
             <SubscriptionStatusBadge status={status} />
           </div>
           <PlanCardDescription className="flex items-center">

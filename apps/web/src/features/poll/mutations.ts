@@ -112,6 +112,30 @@ export const deletePoll = async (
 };
 
 /**
+ * Assigns a user's space-less polls to the given space. Guest linking can
+ * migrate polls before the user has a space (the linking runs ahead of
+ * space provisioning on sign-up, and an existing account may have lost all
+ * its spaces), so every place that creates a user's space adopts them.
+ */
+export async function adoptOrphanedPolls({
+  userId,
+  spaceId,
+}: {
+  userId: string;
+  spaceId: string;
+}) {
+  await prisma.poll.updateMany({
+    where: {
+      userId,
+      spaceId: null,
+    },
+    data: {
+      spaceId,
+    },
+  });
+}
+
+/**
  * Marks inactive polls as deleted. Polls are inactive if they have not been
  * updated in the last 30 days and all dates are in the past.
  * Only marks polls as deleted if they belong to users without an active subscription

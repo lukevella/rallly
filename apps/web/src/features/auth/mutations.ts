@@ -54,9 +54,14 @@ export const linkAnonymousUser = async (
     });
 
     if (!spaceId) {
-      logger.warn(
+      // Reached when the guest links before the user-create hook has
+      // provisioned the space, or when the user's only memberships are
+      // ineffective (non-owner rows in hobby spaces). Transfer ownership
+      // anyway — the anonymous user is deleted right after linking and
+      // polls cascade with it — and leave spaceId null.
+      logger.info(
         { userId: authenticatedUserId },
-        "User has no effective space; migrated guest content without a space",
+        "User has no effective space; migrating guest content without a space",
       );
     }
 

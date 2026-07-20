@@ -34,6 +34,7 @@ async function seed() {
       name: "RSVP Email Host",
       locale: "en",
       timeZone: "Europe/London",
+      timeFormat: "hours24",
       emailVerified: true,
     },
   });
