@@ -262,13 +262,29 @@ export const participants = router({
           },
           select: {
             id: true,
+            startTime: true,
           },
         });
 
-        const existingOptionIds = new Set(options.map((option) => option.id));
+        const now = new Date();
+        const futureOptions = options.filter(
+          (option) => option.startTime >= now,
+        );
+
+        if (options.length > 0 && futureOptions.length === 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message:
+              "Cannot respond to a poll where all options are in the past",
+          });
+        }
+
+        const validOptionIds = new Set(
+          futureOptions.map((option) => option.id),
+        );
 
         const validVotes = votes.filter(({ optionId }) =>
-          existingOptionIds.has(optionId),
+          validOptionIds.has(optionId),
         );
 
         const participant = await prisma.participant.create({
