@@ -179,7 +179,7 @@ async function setUserSubscriptionRenewals({
   cancelAtPeriodEnd: boolean;
 }) {
   if (!isBillingEnabled) {
-    return;
+    return 0;
   }
 
   const subscriptions = await prisma.subscription.findMany({
@@ -188,7 +188,7 @@ async function setUserSubscriptionRenewals({
   });
 
   if (subscriptions.length === 0) {
-    return;
+    return 0;
   }
 
   const stripe = getStripe();
@@ -204,6 +204,8 @@ async function setUserSubscriptionRenewals({
       }
     }
   }
+
+  return subscriptions.length;
 }
 
 export async function stopUserSubscriptionRenewals({
@@ -211,7 +213,7 @@ export async function stopUserSubscriptionRenewals({
 }: {
   userId: string;
 }) {
-  await setUserSubscriptionRenewals({ userId, cancelAtPeriodEnd: true });
+  return setUserSubscriptionRenewals({ userId, cancelAtPeriodEnd: true });
 }
 
 export async function resumeUserSubscriptionRenewals({
@@ -219,7 +221,7 @@ export async function resumeUserSubscriptionRenewals({
 }: {
   userId: string;
 }) {
-  await setUserSubscriptionRenewals({ userId, cancelAtPeriodEnd: false });
+  return setUserSubscriptionRenewals({ userId, cancelAtPeriodEnd: false });
 }
 
 // Database state (subscription row, space tier) is synced by the

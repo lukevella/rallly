@@ -14,7 +14,11 @@ import {
 import { findUsersScheduledForRemoval } from "@/features/user/account-deletion/data";
 import { getAccountDeletionCutoff } from "@/features/user/account-deletion/utils";
 import { hardDeleteUser } from "@/features/user/mutations";
-import { deletePostHogPerson } from "@/lib/posthog";
+import {
+  deletePostHogPerson,
+  flushPostHog,
+  trackSystemEvent,
+} from "@/lib/posthog";
 
 const logger = createLogger("api/house-keeping");
 
@@ -130,6 +134,10 @@ async function removeDeletedUsers() {
 
         await hardDeleteUser({ userId: user.id, email: user.email });
 
+        // Personless by design — the person this event is about was just
+        // erased, so it must not create or attach to a profile.
+        trackSystemEvent({ event: "account_deletion_complete" });
+
         deletedUsers++;
       } catch (error) {
         logger.error(
@@ -153,6 +161,8 @@ async function removeDeletedUsers() {
 
 app.get("/remove-deleted-users", async (c) => {
   const deletedUsers = await removeDeletedUsers();
+
+  await flushPostHog();
 
   logger.info(
     { task: "remove-deleted-users", deletedUsers },

@@ -101,6 +101,36 @@ export function identifyGroup(group: {
   });
 }
 
+// System events report on flows where no person can stay attached — e.g.
+// the account deletion reaper erases the very person its event is about —
+// so they capture personless under a fixed server distinctId (same
+// dummy-person-avoidance trick as group identify above). Never put
+// user-identifying properties on these.
+const SYSTEM_EVENT_DISTINCT_ID = "server_system_event";
+
+export function trackSystemEvent(event: {
+  event: string;
+  properties?: Record<string, unknown>;
+}) {
+  posthog()?.capture({
+    ...event,
+    distinctId: SYSTEM_EVENT_DISTINCT_ID,
+    properties: {
+      ...event.properties,
+      $process_person_profile: false,
+    },
+  });
+}
+
+/**
+ * Flush buffered events before a short-lived invocation (cron) exits —
+ * the client batches (flushAt/flushInterval), so a serverless function can
+ * freeze before the buffer drains.
+ */
+export async function flushPostHog() {
+  await posthog()?.flush();
+}
+
 /**
  * Erase a person from PostHog (profile plus their events) so analytics data
  * keyed to a userId does not outlive the account. PostHog is optional config
