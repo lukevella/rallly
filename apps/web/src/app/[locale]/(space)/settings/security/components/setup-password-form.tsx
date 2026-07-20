@@ -1,59 +1,88 @@
 "use client";
-import { Alert, AlertDescription } from "@rallly/ui/alert";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@rallly/ui/form";
 import { toast } from "@rallly/ui/sonner";
-import { MailWarningIcon } from "lucide-react";
-import React from "react";
-import { Trans } from "@/i18n/client";
-import { authClient } from "@/lib/auth-client";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { PasswordInput } from "@/components/password-input";
+import { setPasswordAction } from "@/features/auth/actions";
+import { PasswordStrengthMeter } from "@/features/auth/components/password-strength-meter";
+import { usePasswordValidationSchema } from "@/features/auth/schema";
+import { Trans, useTranslation } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
-export function SetupPasswordForm({ email }: { email: string }) {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [isSuccess, setIsSuccess] = React.useState(false);
+export function SetupPasswordForm() {
+  const { t } = useTranslation();
+  const passwordValidation = usePasswordValidationSchema();
+  const form = useForm({
+    defaultValues: { password: "" },
+    resolver: zodResolver(z.object({ password: passwordValidation })),
+  });
+  const { formState } = form;
 
-  const onSubmit = async () => {
-    setIsLoading(true);
-
-    // For users without passwords, we need to use the password reset flow
-    // First request a password reset
-    const resetRes = await authClient.requestPasswordReset({
-      email,
-      redirectTo: `/reset-password?redirectTo=${encodeURIComponent("/settings/security?setupPassword=true")}`,
-    });
-
-    setIsLoading(false);
-
-    if (resetRes.error) {
-      toast.error(resetRes.error.message);
-      return;
-    }
-
-    setIsSuccess(true);
-  };
+  const setPassword = useSafeAction(setPasswordAction, {
+    onSuccess: () => {
+      form.reset();
+      toast.success(
+        t("passwordSetSuccess", {
+          defaultValue: "Your password has been set successfully",
+        }),
+      );
+    },
+  });
 
   return (
-    <div className="space-y-4">
-      <Button
-        onClick={onSubmit}
-        loading={isLoading}
-        variant="primary"
-        disabled={isSuccess}
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(async (data) => {
+          await setPassword.executeAsync({ password: data.password });
+        })}
       >
-        <Trans i18nKey="sendResetLink" defaults="Send reset link" />
-      </Button>
-      {isSuccess ? (
-        <Alert variant="info">
-          <MailWarningIcon />
-          <AlertDescription>
-            <p>
-              <Trans
-                i18nKey="passwordSetupSuccess"
-                defaults="A password reset link has been sent to your email. Follow the link to set your password."
-              />
-            </p>
-          </AlertDescription>
-        </Alert>
-      ) : null}
-    </div>
+        <div className="grid grid-cols-1 gap-4">
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Trans i18nKey="newPassword" defaults="New Password" />
+                </FormLabel>
+                <FormControl>
+                  <PasswordInput
+                    {...field}
+                    autoComplete="new-password"
+                    disabled={formState.isSubmitting}
+                    placeholder="••••••••"
+                  />
+                </FormControl>
+                <PasswordStrengthMeter
+                  password={field.value}
+                  className="mt-2"
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="mt-6">
+          <Button
+            type="submit"
+            loading={formState.isSubmitting}
+            variant="primary"
+          >
+            <Trans i18nKey="setPassword" defaults="Set Password" />
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }
