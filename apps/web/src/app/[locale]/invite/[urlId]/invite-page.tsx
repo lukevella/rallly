@@ -24,10 +24,12 @@ const GoToApp = () => {
     <Alert variant="primary">
       <CrownIcon />
       <AlertDescription>
-        <Trans
-          i18nKey="eventHostDescription"
-          defaults="You are the creator of this poll"
-        />
+        <p>
+          <Trans
+            i18nKey="eventHostDescription"
+            defaults="You are the creator of this poll"
+          />
+        </p>
       </AlertDescription>
       <AlertAction>
         <Link
