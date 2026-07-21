@@ -58,7 +58,9 @@ vi.mock("@/lib/kv", () => ({
 import { prisma } from "@rallly/database";
 import { after } from "next/server";
 import { hashApiKey, verifyApiKey } from "@/features/api-keys/utils";
+import { createPollRequestExamples } from "../examples";
 import {
+  createPollInputSchema,
   createPollSuccessResponseSchema,
   deletePollSuccessResponseSchema,
   getPollParticipantsSuccessResponseSchema,
@@ -708,6 +710,26 @@ describe("Private API - /polls", () => {
       expect(res.status).toBe(200);
       const json = await res.json();
       expect(json.info.title).toBe("Rallly Private API");
+    });
+
+    it("should include create poll request examples that match the input schema", async () => {
+      const res = await app.request("/api/private/openapi");
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      const media =
+        json.paths["/api/private/polls"].post.requestBody.content[
+          "application/json"
+        ];
+      expect(Object.keys(media.examples)).toEqual(
+        Object.keys(createPollRequestExamples),
+      );
+
+      for (const example of Object.values(createPollRequestExamples)) {
+        const result = createPollInputSchema.safeParse(example.value);
+        expect(result.error).toBeUndefined();
+        expect(result.success).toBe(true);
+      }
     });
 
     it("should return docs page", async () => {
