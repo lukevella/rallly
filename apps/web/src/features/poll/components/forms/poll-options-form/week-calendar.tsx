@@ -116,6 +116,11 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   }, [options]);
 
   const handleSelectSlot = (slot: EventCalendarSlotDraft) => {
+    // The all-day lane is a timed picker's dead zone: it would commit
+    // midnight-to-midnight garbage slots. rbc hid this row entirely.
+    if (slot.allDay) {
+      return;
+    }
     const candidate = slotToTimeOption(slot.start, slot.end);
     const diff = durationMinutes(slot.start, slot.end);
     if (diff < DURATION_CAP_MINUTES) {
@@ -127,6 +132,9 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   };
 
   const handleSlotClick = (slot: EventCalendarSlotInfo) => {
+    if (slot.allDay) {
+      return;
+    }
     const start = slot.date;
     const end = new Date(start.getTime() + (duration || 60) * 60 * 1000);
     const candidate = slotToTimeOption(start, end);
