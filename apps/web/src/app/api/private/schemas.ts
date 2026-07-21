@@ -240,6 +240,11 @@ export const getPollResultsSuccessResponseSchema = z
   .object({
     data: z.object({
       pollId: z.string().openapi({ example: "p_123abc" }),
+      status: pollStatusSchema.openapi({
+        description:
+          "Current poll status. Polls close automatically when all options are in the past.",
+        example: "open",
+      }),
       participantCount: z.int().nonnegative().openapi({
         description: "Total number of participants",
         example: 8,

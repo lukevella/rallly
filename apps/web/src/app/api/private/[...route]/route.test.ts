@@ -960,6 +960,7 @@ describe("Private API - /polls", () => {
     it("should return aggregated vote results", async () => {
       mockGetPollResults.mockResolvedValue({
         pollId: "test-poll-id",
+        status: "open",
         participantCount: 5,
         highScore: 4003,
         options: [
@@ -1009,6 +1010,7 @@ describe("Private API - /polls", () => {
       expectMatchesContract(getPollResultsSuccessResponseSchema, json);
 
       expect(json.data.pollId).toBe("test-poll-id");
+      expect(json.data.status).toBe("open");
       expect(json.data.participantCount).toBe(5);
       expect(json.data.highScore).toBe(4003);
       expect(json.data.options).toHaveLength(3);
@@ -1019,9 +1021,41 @@ describe("Private API - /polls", () => {
       });
     });
 
+    it("should return the poll status for closed polls", async () => {
+      mockGetPollResults.mockResolvedValue({
+        pollId: "test-poll-id",
+        status: "closed",
+        participantCount: 1,
+        highScore: 1001,
+        options: [
+          {
+            id: "opt-1",
+            startTime: new Date("2025-01-15T09:00:00Z"),
+            duration: 30,
+            votes: [{ type: "yes", count: 1 }],
+            score: 1001,
+            isTopChoice: true,
+          },
+        ],
+      });
+
+      const res = await app.request("/api/private/polls/test-poll-id/results", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expectMatchesContract(getPollResultsSuccessResponseSchema, json);
+      expect(json.data.status).toBe("closed");
+    });
+
     it("should handle ties for top choice", async () => {
       mockGetPollResults.mockResolvedValue({
         pollId: "test-poll-id",
+        status: "open",
         participantCount: 2,
         highScore: 2002,
         options: [
@@ -1063,6 +1097,7 @@ describe("Private API - /polls", () => {
     it("should prioritize total availability over yes votes", async () => {
       mockGetPollResults.mockResolvedValue({
         pollId: "test-poll-id",
+        status: "open",
         participantCount: 5,
         highScore: 5003,
         options: [
@@ -1108,6 +1143,7 @@ describe("Private API - /polls", () => {
     it("should use yes votes as tiebreaker when availability is equal", async () => {
       mockGetPollResults.mockResolvedValue({
         pollId: "test-poll-id",
+        status: "open",
         participantCount: 4,
         highScore: 4004,
         options: [
