@@ -1,17 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { posthog } from "@rallly/posthog/client";
-import { buttonVariants } from "@rallly/ui";
-import { Button } from "@rallly/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@rallly/ui/dialog";
-import { CircleCheckIcon } from "lucide-react";
-import Link from "next/link";
+import { Dialog, DialogContent } from "@rallly/ui/dialog";
 import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import * as z from "zod";
@@ -23,7 +12,6 @@ import {
 } from "@/features/poll/components/mutations";
 import { NewParticipantForm } from "@/features/poll/components/new-participant-modal";
 import { useParticipants } from "@/features/poll/components/participants-provider";
-import { Trans } from "@/i18n/client";
 
 const formSchema = z.object({
   mode: z.enum(["new", "edit", "view"]),
@@ -99,9 +87,6 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
 
   const [isNewParticipantModalOpen, setIsNewParticipantModalOpen] =
     React.useState(false);
-  const [newParticipantModalView, setNewParticipantModalView] = React.useState<
-    "form" | "success"
-  >("form");
 
   const form = useForm<VotingFormValues>({
     defaultValues: {
@@ -144,7 +129,6 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
             });
           } else {
             // new participant
-            setNewParticipantModalView("form");
             setIsNewParticipantModalOpen(true);
           }
         })}
@@ -154,82 +138,24 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
         onOpenChange={setIsNewParticipantModalOpen}
       >
         <DialogContent size="sm">
-          {newParticipantModalView === "form" ? (
-            <>
-              <DialogHeader>
-                <DialogTitle>
-                  <Trans i18nKey="newParticipant" />
-                </DialogTitle>
-                <DialogDescription>
-                  <Trans i18nKey="newParticipantFormDescription" />
-                </DialogDescription>
-              </DialogHeader>
-              <NewParticipantForm
-                votes={normalizeVotes(optionIds, form.watch("votes"))}
-                onSubmit={(newParticipant) => {
-                  form.reset({
-                    mode: "view",
-                    participantId: newParticipant.id,
-                    votes: options.map((option) => ({
-                      optionId: option.id,
-                    })),
-                  });
-                  if (role === "participant") {
-                    setNewParticipantModalView("success");
-                    posthog?.capture("new_participant_dialog:success_view");
-                  } else {
-                    setIsNewParticipantModalOpen(false);
-                  }
-                }}
-                onCancel={() => setIsNewParticipantModalOpen(false)}
-              />
-            </>
-          ) : (
-            <>
-              <div className="flex flex-col items-center gap-4 py-4 text-center">
-                <CircleCheckIcon
-                  aria-hidden="true"
-                  className="size-12 text-green-500"
-                />
-                <DialogHeader>
-                  <DialogTitle>
-                    <Trans
-                      i18nKey="newParticipantDialogSuccessTitle"
-                      defaults="Your response has been saved"
-                    />
-                  </DialogTitle>
-                  <DialogDescription className="mt-2">
-                    <Trans
-                      i18nKey="newParticipantDialogSuccessInvite"
-                      defaults="Thanks for responding. Need to schedule something yourself? You can create a poll just like this one for free."
-                    />
-                  </DialogDescription>
-                </DialogHeader>
-              </div>
-              <DialogFooter className="sm:justify-center">
-                <Button onClick={() => setIsNewParticipantModalOpen(false)}>
-                  <Trans
-                    i18nKey="newParticipantDialogBackToPoll"
-                    defaults="Back to poll"
-                  />
-                </Button>
-                <Link
-                  href="/new"
-                  className={buttonVariants({ variant: "primary" })}
-                  onClick={() => {
-                    posthog?.capture(
-                      "new_participant_dialog:create_poll_button_click",
-                    );
-                  }}
-                >
-                  <Trans
-                    i18nKey="newParticipantDialogCreatePoll"
-                    defaults="Create your own poll"
-                  />
-                </Link>
-              </DialogFooter>
-            </>
-          )}
+          <NewParticipantForm
+            votes={normalizeVotes(optionIds, form.watch("votes"))}
+            onSubmit={(newParticipant) => {
+              form.reset({
+                mode: "view",
+                participantId: newParticipant.id,
+                votes: options.map((option) => ({
+                  optionId: option.id,
+                })),
+              });
+              if (role === "participant") {
+                posthog?.capture("new_participant_dialog:success_view");
+              } else {
+                setIsNewParticipantModalOpen(false);
+              }
+            }}
+            onCancel={() => setIsNewParticipantModalOpen(false)}
+          />
         </DialogContent>
       </Dialog>
       {children}
