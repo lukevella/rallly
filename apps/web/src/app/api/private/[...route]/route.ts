@@ -10,7 +10,11 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
-import { getPollParticipants, getPollResults } from "@/features/poll/data";
+import {
+  getPollParticipants,
+  getPollResults,
+  listPolls,
+} from "@/features/poll/data";
 import { createPoll, deletePoll } from "@/features/poll/mutations";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
@@ -23,6 +27,8 @@ import {
   getPollParticipantsSuccessResponseSchema,
   getPollResultsSuccessResponseSchema,
   getPollSuccessResponseSchema,
+  listPollsQuerySchema,
+  listPollsSuccessResponseSchema,
 } from "../schemas";
 import { spaceApiKeyAuth } from "../utils/api-key";
 import { apiError } from "../utils/poll";
@@ -363,6 +369,64 @@ app.post(
 
     return c.json(
       createPollSuccessResponseSchema.parse(toPollResponseBody(poll)),
+    );
+  },
+);
+
+app.get(
+  "/polls",
+  spaceApiKeyAuth,
+  rateLimit,
+  describeRoute({
+    tags: ["Polls"],
+    summary: "List polls",
+    description: [
+      "Lists the polls in the space associated with the API key, sorted by creation date (newest first).",
+      "",
+      "Use the `status` query parameter to only return polls in a given state — for example `status=open` to sweep polls that are still collecting responses. Results are paginated with a cursor: pass the `nextCursor` value from the previous response to fetch the next page.",
+    ].join("\n"),
+    security: [{ bearerAuth: [] }],
+    responses: {
+      200: {
+        description: "Successful response",
+        content: {
+          "application/json": {
+            schema: resolver(listPollsSuccessResponseSchema),
+          },
+        },
+      },
+      400: {
+        description: "Invalid query parameters",
+        content: {
+          "application/json": {
+            schema: resolver(errorResponseSchema),
+          },
+        },
+      },
+      403: spaceNotProResponse,
+      429: rateLimitExceededResponse,
+    },
+  }),
+  validator("query", listPollsQuerySchema),
+  async (c) => {
+    const { status, cursor, limit } = c.req.valid("query");
+    const { spaceId } = c.get("apiAuth");
+
+    const { polls, nextCursor } = await listPolls({
+      spaceId,
+      status,
+      cursor,
+      limit,
+    });
+
+    return c.json(
+      listPollsSuccessResponseSchema.parse({
+        data: polls.map((poll) => ({
+          ...toPollResponseBody(poll).data,
+          participantCount: poll.participantCount,
+        })),
+        nextCursor,
+      }),
     );
   },
 );
