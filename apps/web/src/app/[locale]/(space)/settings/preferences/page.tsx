@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { DateTimePreferences } from "@/app/[locale]/(space)/settings/preferences/components/date-time-preferences";
 import { LanguagePreference } from "@/app/[locale]/(space)/settings/preferences/components/language-preference";
 import { ThemePreference } from "@/app/[locale]/(space)/settings/preferences/components/theme-preference";
@@ -19,23 +18,12 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { getCurrentUser } from "@/features/user/data";
+import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { getPathname } from "@/lib/pathname";
-import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 
 export default async function Page() {
-  const user = await getCurrentUser();
-
-  if (!user) {
-    redirect(
-      buildSafeRedirectUrl({
-        destination: "/login",
-        returnUrl: await getPathname(),
-      }),
-    );
-  }
+  const user = await requireUser();
 
   return (
     <SettingsPage>

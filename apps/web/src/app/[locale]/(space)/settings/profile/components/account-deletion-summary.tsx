@@ -3,8 +3,8 @@ import { Icon } from "@rallly/ui/icon";
 import { Skeleton } from "@rallly/ui/skeleton";
 import { BarChart2Icon, CalendarIcon, InfoIcon } from "lucide-react";
 import { getAccountDeletionSummary } from "@/features/user/account-deletion/data";
+import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
-import { requireUser } from "@/lib/auth";
 
 // Streamed into the delete account dialog behind Suspense so opening the
 // settings page never waits on the counts.

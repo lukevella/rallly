@@ -5,7 +5,7 @@ import { APIError } from "better-auth/api";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import * as z from "zod";
 import { defineAbilityFor } from "@/features/user/ability";
-import { getCurrentUser } from "@/features/user/data";
+import { getCurrentUser } from "@/features/user/loaders";
 import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors/app-error";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";

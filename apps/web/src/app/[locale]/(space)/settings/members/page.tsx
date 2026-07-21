@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
-import { getSeatUsage } from "@/features/space/data";
+import { getSeatUsage } from "@/features/space/loaders";
 import { getTranslation } from "@/i18n/server";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { MembersSettingsPageClient } from "./page-client";

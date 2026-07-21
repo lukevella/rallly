@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
 import { CheckCircleIcon, ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -25,14 +25,12 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getSpaceSubscription } from "@/features/billing/data";
-import { getActiveSpace, getSeatUsage } from "@/features/space/data";
+import { getActiveSpace, getSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
-import { getCurrentUser } from "@/features/user/data";
+import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { getPathname } from "@/lib/pathname";
-import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 import { ContactSupportLink } from "./components/contact-support-link";
 import { HobbyPlanCard } from "./components/hobby-plan-card";
 import { ProPlanCard } from "./components/pro-plan-card";
@@ -46,16 +44,7 @@ export default async function BillingSettingsPage({
     notFound();
   }
 
-  const user = await getCurrentUser();
-
-  if (!user) {
-    redirect(
-      buildSafeRedirectUrl({
-        destination: "/login",
-        returnUrl: await getPathname(),
-      }),
-    );
-  }
+  const user = await requireUser();
 
   const space = await getActiveSpace();
 

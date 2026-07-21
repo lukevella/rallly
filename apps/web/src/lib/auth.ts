@@ -31,16 +31,13 @@ import type { UserDTO } from "@/features/user/schema";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
-import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { redis } from "@/lib/kv";
 import {
   LOCALE_COOKIE_NAME,
   LOCALE_COOKIE_OPTIONS,
 } from "@/lib/locale/constants";
-import { getPathname } from "@/lib/pathname";
 import { track } from "@/lib/posthog";
 import { getValueByPath } from "@/lib/utils/get-value-by-path";
-import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 
 const kv = redis;
 
@@ -629,36 +626,6 @@ export const getSession = async () => {
   const state = await getSessionState();
   return state.status === "authenticated" ? state.session : null;
 };
-
-/**
- * Gate for server pages that require a logged-in (non-guest) user.
- * Trusts the session cookie cache (no database read). Redirects to /login
- * when unauthenticated, fails the render on an unreadable session so a
- * transient session-store failure can't feed a / ↔ /login redirect loop.
- */
-export const requireUser = cache(async (): Promise<UserDTO> => {
-  const state = await getSessionState();
-
-  if (state.status === "error") {
-    throw new Error("Failed to read session");
-  }
-
-  const user =
-    state.status === "authenticated" ? state.session.user : undefined;
-
-  if (!user || user.isGuest) {
-    const pathname = await getPathname();
-    redirect(
-      buildSafeRedirectUrl({ destination: "/login", returnUrl: pathname }),
-    );
-  }
-
-  if (user.banned) {
-    throw new InvalidSessionError();
-  }
-
-  return user;
-});
 
 export const signOut = async () => {
   await authLib.api.signOut({

@@ -9,9 +9,9 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
+import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { requireUser } from "@/lib/auth";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { SpacesList } from "./components/spaces-list";
 
