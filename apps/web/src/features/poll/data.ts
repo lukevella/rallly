@@ -22,6 +22,7 @@ export async function getPollResults({
       },
       select: {
         id: true,
+        status: true,
         options: {
           select: {
             id: true,
@@ -105,6 +106,7 @@ export async function getPollResults({
 
   return {
     pollId: poll.id,
+    status: poll.status,
     participantCount: poll._count.participants,
     options,
     highScore,
