@@ -136,10 +136,13 @@ export async function adoptOrphanedPolls({
 }
 
 /**
- * Marks inactive polls as deleted. Polls are inactive if they have not been
- * updated in the last 30 days and all dates are in the past.
- * Only marks polls as deleted if they belong to users without an active subscription
- * or if they don't have a user associated with them.
+ * Marks inactive polls as deleted. A poll is inactive when every date has
+ * passed at least 30 days ago and there has been no activity (poll edits,
+ * participant responses, new comments) in the last 30 days. This guarantees
+ * polls are kept for at least 30 days after their final date, and activity
+ * extends that.
+ * Only marks polls as deleted if they belong to spaces without an active
+ * subscription or if they don't have a space associated with them.
  */
 export async function deleteInactivePolls() {
   // Define the 30-day threshold once
@@ -149,10 +152,10 @@ export async function deleteInactivePolls() {
   const { count: markedDeleted } = await prisma.poll.updateMany({
     where: {
       deleted: false,
-      // All poll dates are in the past
+      // All poll dates passed at least 30 days ago
       options: {
         none: {
-          startTime: { gt: new Date() },
+          startTime: { gt: thirtyDaysAgo },
         },
       },
       // We don't delete polls that belong to a space with an active subscription
