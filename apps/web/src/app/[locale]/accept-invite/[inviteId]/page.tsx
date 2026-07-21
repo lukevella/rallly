@@ -4,9 +4,9 @@ import { notFound } from "next/navigation";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Logo } from "@/features/branding/components/logo";
 import { SpaceIcon } from "@/features/space/components/space-icon";
+import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { requireUser } from "@/lib/auth";
 import { AcceptInviteButton } from "./components/accept-invite-button";
 import { SignOutButton } from "./components/sign-out-button";
 

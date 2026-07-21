@@ -5,9 +5,9 @@ import { SetupForm } from "@/app/[locale]/setup/components/setup-form";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Logo } from "@/features/branding/components/logo";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { requireUser } from "@/lib/auth";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
 

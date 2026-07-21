@@ -18,9 +18,9 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getUserHasPassword } from "@/features/user/data";
+import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { requireUser } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { ChangePasswordForm } from "./components/change-password-form";
 import { SetupPasswordForm } from "./components/setup-password-form";
