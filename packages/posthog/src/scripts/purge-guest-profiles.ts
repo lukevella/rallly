@@ -36,10 +36,16 @@ const SAMPLE_SIZE = 50;
 // CRUD endpoints are rate limited to 480/min org-wide
 const DELETE_INTERVAL_MS = 800;
 const MAX_RATE_LIMIT_RETRIES = 5;
+// The persons list endpoint (ClickHouse) lags behind bulk_delete. When it hands
+// back an empty page but the count still reports matches, back off and retry
+// before treating the filter as exhausted.
+const EMPTY_PAGE_BACKOFF_MS = 5000;
+const MAX_EMPTY_PAGE_RETRIES = 12;
 
 const GUEST_FILTERS = [
   {
     label: "email is not set",
+    countQuery: "SELECT count() FROM persons WHERE isNull(properties.email)",
     properties: [
       {
         key: "email",
@@ -51,6 +57,7 @@ const GUEST_FILTERS = [
   },
   {
     label: "email is empty string",
+    countQuery: "SELECT count() FROM persons WHERE properties.email = ''",
     properties: [
       { key: "email", operator: "exact", value: "", type: "person" },
     ],
@@ -282,21 +289,46 @@ async function verifyCanary() {
 
 async function purge({
   properties,
+  countQuery,
   label,
 }: {
   properties: unknown[];
+  countQuery: string;
   label: string;
 }) {
   console.info(`\n🗑️  Purging profiles where ${label}…`);
   let deleted = 0;
   let previousFirstId: string | number | undefined;
   let stuckCycles = 0;
+  // The persons list endpoint reads from ClickHouse and is eventually
+  // consistent: right after a bulk_delete it can briefly return a partial or
+  // empty page while the deletes propagate. A single empty page is therefore
+  // NOT proof the work is done — confirm against the authoritative count and
+  // retry a few times before concluding the filter is exhausted.
+  let emptyPages = 0;
 
   for (;;) {
     const page = await fetchGuestPage({ properties, limit: PAGE_SIZE });
+
     if (page.length === 0) {
-      break;
+      const remaining = await hogqlCount(countQuery);
+      if (remaining === 0) {
+        break;
+      }
+      emptyPages++;
+      if (emptyPages >= MAX_EMPTY_PAGE_RETRIES) {
+        throw new Error(
+          `Persons list returned empty ${emptyPages} times but the count still reports ${remaining} matching profile(s). Read replica may be lagging — aborting so the run isn't silently left incomplete.`,
+        );
+      }
+      console.info(
+        `• Empty page but ${remaining} still match — waiting for read replica (retry ${emptyPages}/${MAX_EMPTY_PAGE_RETRIES})`,
+      );
+      await sleep(EMPTY_PAGE_BACKOFF_MS);
+      continue;
     }
+
+    emptyPages = 0;
 
     if (page[0].id === previousFirstId) {
       stuckCycles++;
@@ -321,7 +353,10 @@ async function purge({
     await sleep(DELETE_INTERVAL_MS);
   }
 
-  console.info(`✅ Done — ${deleted} profile(s) deleted where ${label}.`);
+  const remaining = await hogqlCount(countQuery);
+  console.info(
+    `✅ Done — ${deleted} profile(s) deleted where ${label}. Count now reports ${remaining} matching.`,
+  );
   return deleted;
 }
 
