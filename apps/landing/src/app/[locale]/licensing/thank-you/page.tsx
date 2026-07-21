@@ -86,7 +86,7 @@ export default async function LicensingThankYouPage(props: {
             <Trans
               t={t}
               i18nKey="licensingThankYouSupportPrompt"
-              defaults="Need help or have questions? Visit our <0>self-hosted docs</0> or <1>contact us</1>."
+              defaults="Need help or have questions? Visit our <0>self-hosted docs</0> or email us at <1>support@rallly.co</1>."
               components={[
                 <a
                   key="self-hosted-docs"
@@ -96,7 +96,7 @@ export default async function LicensingThankYouPage(props: {
                 <a
                   key="contact-us"
                   href="mailto:support@rallly.co"
-                  className="underline"
+                  className="select-all underline"
                 />,
               ]}
             />
