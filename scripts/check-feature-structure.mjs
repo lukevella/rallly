@@ -21,6 +21,7 @@ const FEATURES_DIR = path.resolve(
 
 const ALLOWED_FILES = new Set([
   "data.ts",
+  "loaders.ts",
   "mutations.ts",
   "actions.ts",
   "schema.ts",
