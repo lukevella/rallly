@@ -6,7 +6,7 @@
   "accountDeletionScheduled_preview": "Din konto vil blive slettet den {date}",
   "accountDeletionScheduled_subject": "Din konto er planlagt til sletning",
   "accountDeletionScheduled_text": "Din {appName}-konto er planlagt til sletning den {date}. Dine afstemninger, begivenheder, stemmer og kommentarer vil blive slettet permanent.",
-  "allDay": "Hele dagen},{",
+  "allDay": "Hele dagen",
   "changeEmail_codeValid": "Denne kode er gyldig i 15 minutter",
   "changeEmail_content2": "Du modtager denne e-mail, fordi der blev anmodet om at ændre e-mailadressen på en konto på <domain />. Hvis det ikke var dig, kontakt <a>{supportEmail}</a>.",
   "changeEmail_heading": "Bekræft din nye e-mail adresse",

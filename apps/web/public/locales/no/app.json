@@ -561,7 +561,7 @@
   "removeMember": "Fjern medlem",
   "removeMemberConfirmation": "Er du sikker på at du vil fjerne dette medlemmet?",
   "removeMemberSuccess": "Medlemmet ble fjernet",
-  "removeSeats": "{count, plural, one {Remove # Seat} other {Remove # Seats}}",
+  "removeSeats": "{count, plural, one {Fjern # plass} other {Fjern # plasser}}",
   "removeTimeSlot": "Fjern tidsrom",
   "reopenPoll": "Gjenåpne avstemning",
   "requiredField": "Påkrevd",
