@@ -1,12 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { deleteInactivePolls } from "./mutations";
+import type { AuthorizedSpaceId } from "@/features/space/types";
+import { closePoll, deleteInactivePolls } from "./mutations";
 
-const { mockUpdateMany } = vi.hoisted(() => ({ mockUpdateMany: vi.fn() }));
+const { mockUpdateMany, mockFindFirst, mockUpdate } = vi.hoisted(() => ({
+  mockUpdateMany: vi.fn(),
+  mockFindFirst: vi.fn(),
+  mockUpdate: vi.fn(),
+}));
 
 vi.mock("@rallly/database", () => ({
   prisma: {
     poll: {
       updateMany: mockUpdateMany,
+      findFirst: mockFindFirst,
+      update: mockUpdate,
     },
   },
 }));
@@ -138,6 +145,60 @@ describe("deleteInactivePolls", () => {
     expect(mockUpdateMany).toHaveBeenCalledWith(
       expect.objectContaining({
         data: { deleted: true, deletedAt: NOW },
+      }),
+    );
+  });
+});
+
+describe("closePoll", () => {
+  const spaceId = "space-1" as AuthorizedSpaceId;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns null and does not update when the poll is not found", async () => {
+    mockFindFirst.mockResolvedValue(null);
+
+    const result = await closePoll({ pollId: "missing", spaceId });
+
+    expect(result).toBeNull();
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
+  it("closes an open poll with closedReason manual", async () => {
+    mockFindFirst.mockResolvedValue({ id: "p1", status: "open" });
+    mockUpdate.mockResolvedValue({ id: "p1", status: "closed" });
+
+    const result = await closePoll({ pollId: "p1", spaceId });
+
+    expect(mockUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: "p1" },
+        data: { status: "closed", closedReason: "manual" },
+      }),
+    );
+    expect(result).toEqual({ id: "p1", status: "closed" });
+  });
+
+  it("is idempotent and does not update an already-closed poll", async () => {
+    const closed = { id: "p1", status: "closed" };
+    mockFindFirst.mockResolvedValue(closed);
+
+    const result = await closePoll({ pollId: "p1", spaceId });
+
+    expect(mockUpdate).not.toHaveBeenCalled();
+    expect(result).toBe(closed);
+  });
+
+  it("scopes the lookup to the space and excludes deleted polls", async () => {
+    mockFindFirst.mockResolvedValue(null);
+
+    await closePoll({ pollId: "p1", spaceId });
+
+    expect(mockFindFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: "p1", spaceId, deletedAt: null },
       }),
     );
   });
