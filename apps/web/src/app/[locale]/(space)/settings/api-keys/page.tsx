@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
   PageSection,
   PageSectionContent,
@@ -15,27 +15,16 @@ import {
 } from "@/components/settings-layout";
 import { getSpaceApiKeys, isApiAccessEnabled } from "@/features/api-keys/data";
 import { getActiveSpace } from "@/features/space/loaders";
-import { getCurrentUser } from "@/features/user/loaders";
+import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { getPathname } from "@/lib/pathname";
-import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 import { ApiAccessUpgrade } from "./components/api-access-upgrade";
 import { ApiKeysList } from "./components/api-keys-list";
 import { ApiUsageLimits } from "./components/api-usage-limits";
 import { CreateApiKeyButton } from "./components/create-api-key-button";
 
 export default async function ApiKeysSettingsPage() {
-  const user = await getCurrentUser();
-
-  if (!user) {
-    redirect(
-      buildSafeRedirectUrl({
-        destination: "/login",
-        returnUrl: await getPathname(),
-      }),
-    );
-  }
+  const user = await requireUser();
 
   const space = await getActiveSpace();
   const enabled = await isApiAccessEnabled(user, space);

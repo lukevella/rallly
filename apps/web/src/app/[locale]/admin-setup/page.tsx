@@ -11,25 +11,15 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { isInitialAdmin } from "@/features/instance-settings/utils";
-import { getCurrentUser } from "@/features/user/loaders";
+import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 import { MakeMeAdminButton } from "./make-me-admin-button";
 
 export default async function AdminSetupPage() {
   // Read the role from the database — the session cookie cache can hold
   // a stale role.
-  const user = await getCurrentUser();
-
-  if (!user) {
-    redirect(
-      buildSafeRedirectUrl({
-        destination: "/login",
-        returnUrl: "/admin-setup",
-      }),
-    );
-  }
+  const user = await requireUser();
 
   if (user.role === "admin") {
     redirect("/control-panel");
