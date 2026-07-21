@@ -160,6 +160,15 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             onClick={() => {
               posthog?.capture(
                 "new_participant_dialog:create_poll_button_click",
+                {
+                  pollId: poll.id,
+                  spaceId: poll.spaceId,
+                  tier: poll.space?.tier,
+                  $groups: {
+                    poll: poll.id,
+                    ...(poll.spaceId ? { space: poll.spaceId } : {}),
+                  },
+                },
               );
             }}
           >
