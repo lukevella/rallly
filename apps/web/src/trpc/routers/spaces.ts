@@ -143,15 +143,6 @@ export const spaces = router({
       role: fromDBRole(invite.role),
     }));
   }),
-  getSeats: spaceProcedure.query(async ({ ctx }) => {
-    const [total, used] = await Promise.all([
-      getTotalSeatsForSpace(ctx.space.id),
-      getSpaceSeatCount(ctx.space.id),
-    ]);
-
-    return { total, used };
-  }),
-
   // ── Mutations ────────────────────────────────────────────────────────
   create: privateProcedure
     .use(createRateLimitMiddleware("space_create", 5, "1 m"))

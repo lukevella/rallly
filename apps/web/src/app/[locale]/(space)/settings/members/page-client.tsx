@@ -40,11 +40,16 @@ import { InviteDropdownMenu } from "./components/invite-dropdown-menu";
 import { InviteMemberButton } from "./components/invite-member-button";
 import { MemberDropdownMenu } from "./components/member-dropdown-menu";
 
-export function MembersSettingsPageClient() {
+export function MembersSettingsPageClient({
+  totalSeats,
+  usedSeats,
+}: {
+  totalSeats: number;
+  usedSeats: number;
+}) {
   const space = useSpace();
   const [members] = trpc.spaces.listMembers.useSuspenseQuery();
   const [invites] = trpc.spaces.listInvites.useSuspenseQuery();
-  const [seats] = trpc.spaces.getSeats.useSuspenseQuery();
   const canInviteMembers = space.getAbility().can("invite", "Member");
   const hasInactiveMembers = space.data.tier === "hobby" && members.total > 1;
 
@@ -225,21 +230,21 @@ export function MembersSettingsPageClient() {
                   ) : null}
                   <div className="flex items-center gap-4">
                     <InviteMemberButton
-                      usedSeats={seats.used}
-                      totalSeats={seats.total}
+                      usedSeats={usedSeats}
+                      totalSeats={totalSeats}
                     />
                     <p className="font-medium text-sm">
                       <Trans
                         i18nKey="seatUsage"
                         defaults="{usedSeats} of {totalSeats} seats used"
                         values={{
-                          usedSeats: seats.used,
-                          totalSeats: seats.total,
+                          usedSeats,
+                          totalSeats,
                         }}
                       />
                     </p>
                   </div>
-                  {seats.total - seats.used <= 0 ? (
+                  {totalSeats - usedSeats <= 0 ? (
                     <Alert variant="info">
                       <InfoIcon />
                       <AlertDescription>
