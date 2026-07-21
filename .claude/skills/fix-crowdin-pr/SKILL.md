@@ -88,9 +88,29 @@ Do **not** use `GET /api/v2/projects/527308/translations?stringId=...` for verif
 
 Commit to `l10n_main` with a `🌐` gitmoji message and push. `--no-verify` is acceptable in a fresh worktree (husky needs node_modules).
 
-### 7. Report
+### 7. Reply and resolve every comment
 
-Summarize: findings applied, findings skipped and why, Crowdin verification result, pushed commit sha.
+Crowdin syncs keep adding new translations, and each sync can bring new coderabbit comments. Unresolved threads must mean "not yet addressed" — so after pushing, reply to **every** finding and resolve its thread, applied or skipped:
+
+- Applied: cite the fix commit sha and note the Crowdin upload was verified.
+- Skipped: state the reason (e.g. matches the English source, contradicts the file's register).
+
+Reply to a review comment (comment ids come from the step 1 fetch):
+
+```
+gh api -X POST repos/lukevella/rallly/pulls/<PR>/comments/<comment-id>/replies -f body='...'
+```
+
+Resolving needs GraphQL — list thread ids, then resolve the ones still open (coderabbit auto-resolves some threads when it sees the fix commit; skip those):
+
+```
+gh api graphql -f query='query { repository(owner: "lukevella", name: "rallly") { pullRequest(number: <PR>) { reviewThreads(first: 50) { nodes { id isResolved comments(first: 1) { nodes { databaseId } } } } } } }'
+gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: "<thread-id>"}) { thread { isResolved } } }'
+```
+
+### 8. Report
+
+Summarize: findings applied, findings skipped and why, Crowdin verification result, pushed commit sha, and confirmation that all threads are replied to and resolved.
 
 ## Language id mapping
 
