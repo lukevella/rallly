@@ -206,7 +206,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
                   </DialogDescription>
                 </DialogHeader>
               </div>
-              <DialogFooter>
+              <DialogFooter className="sm:justify-center">
                 <Button onClick={() => setIsNewParticipantModalOpen(false)}>
                   <Trans
                     i18nKey="newParticipantDialogBackToPoll"
