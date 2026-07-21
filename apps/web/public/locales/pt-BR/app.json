@@ -351,8 +351,6 @@
   "licenseKeyGenericError": "Um erro ocorreu durante a validação da chave de licença",
   "licenseLimitWarning": "Você excedeu os limites da sua licença. Por gentileza, <a>faça o upgrade</a>.",
   "licenseType": "Tipo de Licença",
-  "limitedPollLifetime": "Duração Limitada da Enquete",
-  "limitedPollLifetimeDescription": "Enquetes inativas são automaticamente excluídas",
   "loading": "Carregando...",
   "location": "Local",
   "locationCustomLink": "Link personalizado",
