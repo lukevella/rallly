@@ -1,5 +1,6 @@
 import "server-only";
 
+import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { nanoid } from "@rallly/utils/nanoid";
 import type { AuthorizedSpaceId } from "@/features/space/types";
@@ -84,6 +85,69 @@ export const createPoll = async ({
   });
 
   return poll;
+};
+
+const pollResponseSelect = {
+  id: true,
+  title: true,
+  description: true,
+  location: true,
+  timeZone: true,
+  status: true,
+  createdAt: true,
+  user: {
+    select: {
+      name: true,
+      image: true,
+    },
+  },
+  options: {
+    select: {
+      id: true,
+      startTime: true,
+      duration: true,
+    },
+    orderBy: {
+      startTime: "asc",
+    },
+  },
+} satisfies Prisma.PollSelect;
+
+/**
+ * Closes a poll manually. Idempotent: closing an already-closed poll returns
+ * the poll unchanged without altering its `closedReason` (so a poll auto-closed
+ * by the cron job keeps `closedReason: "auto"`). Returns `null` when the poll
+ * does not exist in the space, letting the caller surface a 404.
+ */
+export const closePoll = async ({
+  pollId,
+  spaceId,
+}: {
+  pollId: string;
+  spaceId: AuthorizedSpaceId;
+}) => {
+  const poll = await prisma.poll.findFirst({
+    where: {
+      id: pollId,
+      spaceId,
+      deletedAt: null,
+    },
+    select: pollResponseSelect,
+  });
+
+  if (!poll) {
+    return null;
+  }
+
+  if (poll.status === "closed") {
+    return poll;
+  }
+
+  return prisma.poll.update({
+    where: { id: pollId },
+    data: { status: "closed", closedReason: "manual" },
+    select: pollResponseSelect,
+  });
 };
 
 export const deletePoll = async (

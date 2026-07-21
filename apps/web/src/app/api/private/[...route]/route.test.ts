@@ -5,6 +5,7 @@ vi.mock("server-only", () => ({}));
 
 const mockDeletePoll = vi.fn();
 const mockCreatePoll = vi.fn();
+const mockClosePoll = vi.fn();
 const mockGetPollResults = vi.fn();
 const mockGetPollParticipants = vi.fn();
 const mockListPolls = vi.fn();
@@ -12,6 +13,7 @@ const mockListPolls = vi.fn();
 vi.mock("@/features/poll/mutations", () => ({
   deletePoll: (...args: unknown[]) => mockDeletePoll(...args),
   createPoll: (...args: unknown[]) => mockCreatePoll(...args),
+  closePoll: (...args: unknown[]) => mockClosePoll(...args),
 }));
 
 vi.mock("@/features/poll/data", () => ({
@@ -60,7 +62,10 @@ vi.mock("@/lib/kv", () => ({
 import { prisma } from "@rallly/database";
 import { after } from "next/server";
 import { hashApiKey, verifyApiKey } from "@/features/api-keys/utils";
-import { createPollRequestExamples } from "../examples";
+import {
+  createPollRequestExamples,
+  patchPollRequestExamples,
+} from "../examples";
 import {
   createPollInputSchema,
   createPollSuccessResponseSchema,
@@ -69,6 +74,7 @@ import {
   getPollResultsSuccessResponseSchema,
   getPollSuccessResponseSchema,
   listPollsSuccessResponseSchema,
+  patchPollSuccessResponseSchema,
 } from "../schemas";
 import { RATE_LIMIT_PER_MINUTE } from "../utils/rate-limit";
 import { app } from "./route";
@@ -735,11 +741,150 @@ describe("Private API - /polls", () => {
       }
     });
 
+    it("should document the close poll transition on PATCH /polls/{pollId}", async () => {
+      const res = await app.request("/api/private/openapi");
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      const operation = json.paths["/api/private/polls/{pollId}"].patch;
+
+      expect(operation.summary).toBeDefined();
+      expect(operation.description).toContain("closed");
+      expect(Object.keys(operation.responses)).toEqual(
+        expect.arrayContaining(["200", "403", "404", "422", "429"]),
+      );
+
+      const media = operation.requestBody.content["application/json"];
+      expect(Object.keys(media.examples)).toEqual(
+        Object.keys(patchPollRequestExamples),
+      );
+    });
+
     it("should return docs page", async () => {
       const res = await app.request("/api/private/docs");
 
       expect(res.status).toBe(200);
       expect(res.headers.get("content-type")).toContain("text/html");
+    });
+  });
+
+  describe("Patch poll (close)", () => {
+    const closedPoll = {
+      id: "test-poll-id",
+      title: "Test Poll",
+      description: null,
+      location: null,
+      timeZone: null,
+      status: "closed",
+      createdAt: new Date("2025-01-10T12:00:00Z"),
+      user: { name: "Test User", image: null },
+      options: [],
+    };
+
+    it("should close an open poll", async () => {
+      mockClosePoll.mockResolvedValue(closedPoll);
+
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: "closed" }),
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expectMatchesContract(patchPollSuccessResponseSchema, json);
+      expect(json.data.id).toBe("test-poll-id");
+      expect(json.data.status).toBe("closed");
+
+      expect(mockClosePoll).toHaveBeenCalledWith({
+        pollId: "test-poll-id",
+        spaceId: "test-space-id",
+      });
+    });
+
+    it("should be idempotent when the poll is already closed", async () => {
+      mockClosePoll.mockResolvedValue(closedPoll);
+
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: "closed" }),
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.data.status).toBe("closed");
+    });
+
+    it("should return 404 when the poll is not found", async () => {
+      mockClosePoll.mockResolvedValue(null);
+
+      const res = await app.request("/api/private/polls/nonexistent-poll", {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: "closed" }),
+      });
+
+      expect(res.status).toBe(404);
+      const json = await res.json();
+      expect(json.error.code).toBe("POLL_NOT_FOUND");
+      expect(mockClosePoll).toHaveBeenCalled();
+    });
+
+    it.each([
+      "open",
+      "scheduled",
+      "canceled",
+    ])("should return 422 when transitioning to %s", async (status) => {
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      expect(res.status).toBe(422);
+      const json = await res.json();
+      expect(json.error.code).toBe("TRANSITION_NOT_AVAILABLE");
+      expect(mockClosePoll).not.toHaveBeenCalled();
+    });
+
+    it("should return 400 for an unknown status value", async () => {
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: "archived" }),
+      });
+
+      expect(res.status).toBe(400);
+      expect(mockClosePoll).not.toHaveBeenCalled();
+    });
+
+    it("should return 401 without authorization", async () => {
+      const res = await app.request("/api/private/polls/test-poll-id", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: "closed" }),
+      });
+
+      expect(res.status).toBe(401);
+      expect(mockClosePoll).not.toHaveBeenCalled();
     });
   });
 

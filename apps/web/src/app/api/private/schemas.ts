@@ -200,6 +200,20 @@ export const getPollSuccessResponseSchema = z
   })
   .openapi("GetPollResponse");
 
+export const patchPollInputSchema = z
+  .object({
+    status: pollStatusSchema.openapi({
+      description:
+        "The status to transition the poll to. Only `closed` is currently accepted; the other statuses are reserved for future transitions.",
+      example: "closed",
+    }),
+  })
+  .openapi("PatchPollInput");
+
+// Updating a poll returns the same shape as get poll
+export const patchPollSuccessResponseSchema =
+  getPollSuccessResponseSchema.openapi("PatchPollResponse");
+
 // Create poll returns the same shape as get poll
 export const createPollSuccessResponseSchema =
   getPollSuccessResponseSchema.openapi("CreatePollResponse");
