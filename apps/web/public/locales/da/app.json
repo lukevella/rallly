@@ -335,8 +335,6 @@
   "licenseKeyGenericError": "Der opstod en fejl under validering af licensnøglen",
   "licenseLimitWarning": "Du har overskredet grænserne for din licens. <a>opgradere</a>.",
   "licenseType": "Licenstype",
-  "limitedPollLifetime": "Begrænset Afstemning Levetid",
-  "limitedPollLifetimeDescription": "Inaktive afstemninger slettes automatisk",
   "loading": "Indlæser...",
   "location": "Placering",
   "locationCustomLink": "Brugerdefineret link",
