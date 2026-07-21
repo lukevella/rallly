@@ -84,5 +84,16 @@
   "spaceInvite_content": "{inviterName} har bjudit in dig att gå med i utrymmet {spaceName} som {role}.",
   "spaceInvite_heading": "Du är inbjuden!",
   "spaceInvite_preview": "Du har blivit inbjuden att gå med i {spaceName}",
-  "spaceInvite_subject": "Du är inbjuden att gå med i {spaceName}"
+  "spaceInvite_subject": "Du är inbjuden att gå med i {spaceName}",
+  "accountDeletionScheduled_cancel": "Om du ångrar dig kan du avbryta raderingen från dina <a>kontoinställningar</a> innan dess.",
+  "accountDeletionScheduled_footer": "Du får detta e-postmeddelande eftersom en begäran om att radera ett konto på <domain /> gjordes. Om det inte var du, logga in och avbryt raderingen innan dess, eller kontakta <a>{supportEmail}</a>.",
+  "accountDeletionScheduled_text": "Ditt {appName}-konto är schemalagt för radering den {date}. Dina förfrågningar, evenemang, röster och kommentarer kommer att raderas permanent.",
+  "changeEmail_content2": "Du får detta e-postmeddelande eftersom en begäran om att ändra e-postadressen för ett konto på <domain /> gjordes. Om det inte var du, kontakta <a>{supportEmail}</a>.",
+  "changeEmail_text": "Använd följande 6-siffriga verifieringskod för att bekräfta din nya e-postadress",
+  "eventRsvpConfirmationAcceptedContent": "Du accepterade inbjudan till <b>{title}</b> som arrangeras av <b>{hostName}</b>. Evenemanget är schemalagt till:",
+  "eventRsvpConfirmationAcceptedHeading": "Du deltar",
+  "eventRsvpConfirmationAttachmentNote": "En kalenderinbjudan för detta evenemang bifogas.",
+  "eventRsvpConfirmationDeclinedContent": "Du avböjde inbjudan till <b>{title}</b> som arrangeras av <b>{hostName}</b>. Evenemanget är schemalagt till:",
+  "finalizeParticipant_button": "Visa evenemang",
+  "passwordAdded_content2": "Du får detta e-postmeddelande eftersom ett lösenord har lagts till ditt konto på <domain />. Om det inte var du, återställ ditt lösenord omedelbart och kontakta <a>{supportEmail}</a>."
 }
