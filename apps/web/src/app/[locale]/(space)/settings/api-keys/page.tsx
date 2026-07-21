@@ -14,8 +14,7 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getSpaceApiKeys, isApiAccessEnabled } from "@/features/api-keys/data";
-import { getActiveSpaceForUser } from "@/features/space/data";
-import type { AuthorizedSpaceId } from "@/features/space/types";
+import { getActiveSpace } from "@/features/space/loaders";
 import { getCurrentUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
@@ -28,9 +27,8 @@ import { CreateApiKeyButton } from "./components/create-api-key-button";
 
 export default async function ApiKeysSettingsPage() {
   const user = await getCurrentUser();
-  const space = user ? await getActiveSpaceForUser(user.id) : null;
 
-  if (!user || !space) {
+  if (!user) {
     redirect(
       buildSafeRedirectUrl({
         destination: "/login",
@@ -39,6 +37,7 @@ export default async function ApiKeysSettingsPage() {
     );
   }
 
+  const space = await getActiveSpace();
   const enabled = await isApiAccessEnabled(user, space);
 
   // "Needs to upgrade" (hobby tier) gets its own screen; every other reason
@@ -66,14 +65,15 @@ export default async function ApiKeysSettingsPage() {
         ) : null}
       </SettingsPageHeader>
       <SettingsPageContent>
-        {enabled ? <ApiKeysContent spaceId={space.id} /> : <ApiAccessUpgrade />}
+        {enabled ? <ApiKeysContent /> : <ApiAccessUpgrade />}
       </SettingsPageContent>
     </SettingsPage>
   );
 }
 
-async function ApiKeysContent({ spaceId }: { spaceId: AuthorizedSpaceId }) {
-  const apiKeys = await getSpaceApiKeys({ spaceId });
+async function ApiKeysContent() {
+  const space = await getActiveSpace();
+  const apiKeys = await getSpaceApiKeys({ spaceId: space.id });
 
   return (
     <PageSectionGroup>
