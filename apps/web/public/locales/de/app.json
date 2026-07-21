@@ -372,8 +372,6 @@
   "licenseKeyGenericError": "Beim Überprüfen des Lizenzschlüssels ist ein Fehler aufgetreten",
   "licenseLimitWarning": "Du hast die Grenzen deiner Lizenz überschritten. Bitte <a>upgrade</a>.",
   "licenseType": "Lizenztyp",
-  "limitedPollLifetime": "Begrenzte Umfragedauer",
-  "limitedPollLifetimeDescription": "Inaktive Umfragen werden automatisch gelöscht",
   "loading": "Wird geladen...",
   "location": "Ort",
   "locationCustomLink": "Benutzerdefinierter Link",
