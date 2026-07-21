@@ -200,8 +200,8 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
                   </DialogTitle>
                   <DialogDescription className="mt-2">
                     <Trans
-                      i18nKey="newParticipantDialogSuccessDescription"
-                      defaults="Thanks for responding! Did you know you can create your own poll with Rallly for free?"
+                      i18nKey="newParticipantDialogSuccessInvite"
+                      defaults="Thanks for responding. Need to schedule something yourself? You can create a poll just like this one for free."
                     />
                   </DialogDescription>
                 </DialogHeader>
