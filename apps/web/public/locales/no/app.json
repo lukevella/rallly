@@ -293,8 +293,6 @@
   "licenseKeyGenericError": "En feil oppstod under valideringen av lisensnøkkelen",
   "licenseLimitWarning": "Du har overskredet grensene med din lisens. Vennligst <a>oppgrader</a>.",
   "licenseType": "Lisenstype",
-  "limitedPollLifetime": "Begrenset varighet for avstemninger",
-  "limitedPollLifetimeDescription": "Inaktive avstemninger slettes automatisk",
   "loading": "Laster ...",
   "location": "Sted",
   "locationPlaceholder": "Vippetangen konditori",
