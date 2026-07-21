@@ -280,7 +280,7 @@ export function PayWallDialog({
                     title={
                       <Trans
                         i18nKey="thirtyDayPollRetention"
-                        defaults="30 day poll retention"
+                        defaults="30 Day Poll Retention"
                       />
                     }
                     description={
