@@ -1,11 +1,11 @@
 {
   "accountDeletionScheduled_button": "Fiók kezelése",
   "accountDeletionScheduled_cancel": "Ha meggondolod magad, visszavonhatod a törlést a <a>fiók beállításaidnál</a> előtte.",
-  "accountDeletionScheduled_footer": "Ezt a levelet azért kapod, mert a fiókod törlését kezdeményezték itt: <domain />. Ha nem te voltál, jelentkezz be és vond vissza a törlést vagy írj ide: <a>{supportEmail}</a>.",
+  "accountDeletionScheduled_footer": "Ezt a levelet azért kapod, mert a fiókod törlését kezdeményezték itt: <domain />. Ha nem te voltál, jelentkezz be és vond vissza a törlést a megadott időpont előtt, vagy írj ide: <a>{supportEmail}</a>.",
   "accountDeletionScheduled_heading": "Fiókod törlése ütemezésre került",
   "accountDeletionScheduled_preview": "A fiókod törlésre kerül ekkor: {date}",
   "accountDeletionScheduled_subject": "Fiókod törlése ütemezésre került",
-  "accountDeletionScheduled_text": "{appName} fiókod törlése lett ütemezve ekkor: {date}. A szavazásaid, eseményeid és hozzászólásaid véglegesen törlésre fognak kerülni.",
+  "accountDeletionScheduled_text": "{appName} fiókod törlése lett ütemezve ekkor: {date}. A szavazásaid, eseményeid, szavazataid és hozzászólásaid véglegesen törlésre fognak kerülni.",
   "allDay": "Egész nap",
   "changeEmail_codeValid": "Ez a kód 15 percig érvényes",
   "changeEmail_content2": "Ezt az emailt azért kaptad, mert kérés érkezett a fiókod email címének megváltoztatására <domain /> címen. Ha ez nem te voltál, lépj kapcsolatba a(z) <a>{supportEmail}</a> címmel.",
