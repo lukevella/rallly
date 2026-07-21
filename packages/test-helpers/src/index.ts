@@ -1,4 +1,4 @@
-export { getCode, getPasswordResetLink } from "./email";
+export { getCode, getPasswordResetLink, getSpaceInviteLink } from "./email";
 export { loginWithEmail } from "./login";
 export {
   captureEmailHTML,
