@@ -1,21 +1,30 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
+import { getActiveSpace, getSpaceSeatCount } from "@/features/space/data";
+import { getTotalSeatsForSpace } from "@/features/space/utils";
 import { getTranslation } from "@/i18n/server";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { MembersSettingsPageClient } from "./page-client";
 
 export default async function MembersSettingsPage() {
-  const helpers = await createPrivateSSRHelper();
+  const [space, helpers] = await Promise.all([
+    getActiveSpace(),
+    createPrivateSSRHelper(),
+  ]);
 
-  await Promise.all([
+  const [totalSeats, usedSeats] = await Promise.all([
+    getTotalSeatsForSpace(space.id),
+    getSpaceSeatCount(space.id),
     helpers.spaces.listMembers.prefetch(),
     helpers.spaces.listInvites.prefetch(),
-    helpers.spaces.getSeats.prefetch(),
   ]);
 
   return (
     <HydrationBoundary state={dehydrate(helpers.queryClient)}>
-      <MembersSettingsPageClient />
+      <MembersSettingsPageClient
+        totalSeats={totalSeats}
+        usedSeats={usedSeats}
+      />
     </HydrationBoundary>
   );
 }
