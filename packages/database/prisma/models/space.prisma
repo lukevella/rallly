@@ -6,6 +6,7 @@ model Space {
   tier         SpaceTier @default(hobby)
   primaryColor String?   @map("primary_color")
   showBranding Boolean   @default(false) @map("show_branding")
+  hideCreatePollCta Boolean @default(false) @map("hide_create_poll_cta")
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt @map("updated_at")
 

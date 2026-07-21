@@ -17,4 +17,5 @@ export type SpaceDTO = {
   image?: string;
   primaryColor?: string;
   showBranding: boolean;
+  hideCreatePollCta: boolean;
 };

@@ -137,6 +137,7 @@ export function createSpaceDTO(space: {
   tier: DBSpaceTier;
   primaryColor?: string | null;
   showBranding: boolean;
+  hideCreatePollCta: boolean;
   memberCount: number;
   seatCount: number;
 }): SpaceDTO {
@@ -151,6 +152,7 @@ export function createSpaceDTO(space: {
     image: space.image ?? undefined,
     primaryColor: space.primaryColor ?? undefined,
     showBranding: space.showBranding,
+    hideCreatePollCta: space.hideCreatePollCta,
   };
 }
 

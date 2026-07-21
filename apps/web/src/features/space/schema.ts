@@ -19,6 +19,10 @@ export const updateSpaceShowBrandingSchema = z.object({
   showBranding: z.boolean(),
 });
 
+export const updateSpaceHideCreatePollCtaSchema = z.object({
+  hideCreatePollCta: z.boolean(),
+});
+
 export const spaceImageUploadSchema = z.object({
   fileType: z.enum(["image/jpeg", "image/png"]),
   fileSize: z.number(),

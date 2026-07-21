@@ -102,7 +102,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const { timeZone } = useDateTimeConfig();
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = user && !user.isGuest;
-  const isOrganizer = user?.id === poll.userId;
+  const showCreatePollCta = !poll.space?.hideCreatePollCta;
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -148,7 +148,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             defaults="Back to poll"
           />
         </Button>
-        {!isOrganizer ? (
+        {showCreatePollCta ? (
           <div className="flex flex-col items-center text-center">
             <p className="text-muted-foreground text-sm">
               <Trans
