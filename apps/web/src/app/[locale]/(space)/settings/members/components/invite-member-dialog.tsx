@@ -34,9 +34,10 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SpaceRole } from "@/features/space/components/space-role";
+import { inviteMemberAction } from "@/features/space/member/actions";
 import { memberRoleSchema } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 function useInviteMemberFormSchema() {
   const { t } = useTranslation();
@@ -65,8 +66,12 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
     resolver: zodResolver(formSchema),
   });
 
-  const inviteMember = trpc.spaces.inviteMember.useMutation({
-    onSuccess: (data) => {
+  const inviteMember = useSafeAction(inviteMemberAction, {
+    onSuccess: ({ data }) => {
+      if (!data) {
+        return;
+      }
+
       if (data.ok) {
         switch (data.code) {
           case "INVITE_SENT":
@@ -88,7 +93,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
         }
         onSuccess?.();
       } else {
-        switch (data.code) {
+        switch (data.reason) {
           case "ALREADY_MEMBER":
             form.setError("email", {
               type: "manual",
@@ -106,6 +111,15 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
               }),
             });
             break;
+          case "NOT_ENOUGH_SEATS":
+            form.setError("root", {
+              type: "manual",
+              message: t("inviteNotEnoughSeats", {
+                defaultValue:
+                  "There are not enough seats available to send this invite",
+              }),
+            });
+            break;
           case "INVITE_FAILED":
             form.setError("root", {
               type: "manual",
@@ -120,7 +134,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
   });
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => inviteMember.mutate(data))}>
+      <form onSubmit={form.handleSubmit((data) => inviteMember.execute(data))}>
         <fieldset className="space-y-4">
           <FormField
             control={form.control}
@@ -221,7 +235,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
         <div className="mt-4 flex">
           <Button
             variant="primary"
-            loading={inviteMember.isPending}
+            loading={inviteMember.isExecuting}
             type="submit"
           >
             <Trans i18nKey="inviteMemberFormSubmit" defaults="Send invite" />

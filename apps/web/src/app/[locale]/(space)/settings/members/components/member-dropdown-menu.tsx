@@ -23,17 +23,40 @@ import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { MoreVerticalIcon, ShieldIcon, UserIcon, XIcon } from "lucide-react";
 import { useSpace } from "@/features/space/client";
+import {
+  changeMemberRoleAction,
+  removeMemberAction,
+} from "@/features/space/member/actions";
 import type { MemberDTO } from "@/features/space/member/types";
 import type { MemberRole } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
   const space = useSpace();
   const removeMemberDialog = useDialog();
-  const removeMember = trpc.spaces.removeMember.useMutation();
-  const changeMemberRole = trpc.spaces.changeMemberRole.useMutation();
   const { t } = useTranslation();
+  const removeMember = useSafeAction(removeMemberAction, {
+    onSuccess: () => {
+      toast.success(
+        t("removeMemberSuccess", {
+          defaultValue: "Member removed successfully",
+        }),
+      );
+    },
+    onSettled: () => {
+      removeMemberDialog.dismiss();
+    },
+  });
+  const changeMemberRole = useSafeAction(changeMemberRoleAction, {
+    onSuccess: () => {
+      toast.success(
+        t("roleChangedSuccess", {
+          defaultValue: "Role changed successfully",
+        }),
+      );
+    },
+  });
 
   const canUpdateMember = space
     .getMemberAbility()
@@ -44,23 +67,10 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
     .can("delete", subject("SpaceMember", member));
 
   const handleRoleChange = (newRole: MemberRole) => {
-    toast.promise(
-      changeMemberRole.mutateAsync({
-        memberId: member.id,
-        role: newRole,
-      }),
-      {
-        loading: t("changingRole", {
-          defaultValue: "Changing role...",
-        }),
-        success: t("roleChangedSuccess", {
-          defaultValue: "Role changed successfully",
-        }),
-        error: t("roleChangedError", {
-          defaultValue: "Failed to change role",
-        }),
-      },
-    );
+    changeMemberRole.execute({
+      memberId: member.id,
+      role: newRole,
+    });
   };
 
   return (
@@ -130,24 +140,9 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
           <DialogFooter>
             <Button
               variant="destructive"
+              loading={removeMember.isExecuting}
               onClick={() => {
-                toast.promise(
-                  removeMember.mutateAsync({
-                    memberId: member.id,
-                  }),
-                  {
-                    loading: t("removeMemberLoading", {
-                      defaultValue: "Removing member...",
-                    }),
-                    success: t("removeMemberSuccess", {
-                      defaultValue: "Member removed successfully",
-                    }),
-                    error: t("removeMemberError", {
-                      defaultValue: "Failed to remove member",
-                    }),
-                  },
-                );
-                removeMemberDialog.dismiss();
+                removeMember.execute({ memberId: member.id });
               }}
             >
               <Trans i18nKey="confirm" defaults="Confirm" />

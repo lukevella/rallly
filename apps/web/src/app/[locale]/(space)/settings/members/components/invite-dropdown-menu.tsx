@@ -22,8 +22,9 @@ import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { MoreVerticalIcon, XIcon } from "lucide-react";
 import { useSpace } from "@/features/space/client";
+import { cancelInviteAction } from "@/features/space/member/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 type SpaceMemberInvite = {
   id: string;
@@ -34,8 +35,19 @@ type SpaceMemberInvite = {
 export function InviteDropdownMenu({ invite }: { invite: SpaceMemberInvite }) {
   const space = useSpace();
   const cancelInviteDialog = useDialog();
-  const cancelInvite = trpc.spaces.cancelInvite.useMutation();
   const { t } = useTranslation();
+  const cancelInvite = useSafeAction(cancelInviteAction, {
+    onSuccess: () => {
+      toast.success(
+        t("inviteCanceledSuccess", {
+          defaultValue: "Invite canceled successfully",
+        }),
+      );
+    },
+    onSettled: () => {
+      cancelInviteDialog.dismiss();
+    },
+  });
 
   const canCancelInvite = space
     .getMemberAbility()
@@ -87,24 +99,9 @@ export function InviteDropdownMenu({ invite }: { invite: SpaceMemberInvite }) {
           <DialogFooter>
             <Button
               variant="destructive"
+              loading={cancelInvite.isExecuting}
               onClick={() => {
-                toast.promise(
-                  cancelInvite.mutateAsync({
-                    inviteId: invite.id,
-                  }),
-                  {
-                    loading: t("cancelingInvite", {
-                      defaultValue: "Canceling invite...",
-                    }),
-                    success: t("inviteCanceledSuccess", {
-                      defaultValue: "Invite canceled successfully",
-                    }),
-                    error: t("inviteCanceledError", {
-                      defaultValue: "Failed to cancel invite",
-                    }),
-                  },
-                );
-                cancelInviteDialog.dismiss();
+                cancelInvite.execute({ inviteId: invite.id });
               }}
             >
               <Trans i18nKey="confirm" defaults="Confirm" />
