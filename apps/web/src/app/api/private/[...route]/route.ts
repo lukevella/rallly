@@ -6,7 +6,7 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import {
   describeRoute,
-  openAPIRouteHandler,
+  generateSpecs,
   resolver,
   validator,
 } from "hono-openapi";
@@ -14,6 +14,7 @@ import { getPollParticipants, getPollResults } from "@/features/poll/data";
 import { createPoll, deletePoll } from "@/features/poll/mutations";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
+import { createPollRequestExamples } from "../examples";
 import {
   createPollInputSchema,
   createPollSuccessResponseSchema,
@@ -119,9 +120,8 @@ const rateLimitExceededResponse = {
   },
 };
 
-app.get(
-  "/openapi",
-  openAPIRouteHandler(app, {
+async function buildOpenApiSpec() {
+  const spec = await generateSpecs(app, {
     documentation: {
       info: {
         title: "Rallly Private API",
@@ -143,8 +143,29 @@ app.get(
         },
       },
     },
-  }),
-);
+  });
+
+  // hono-openapi's validator middleware owns the request body schema and
+  // overwrites any content set via describeRoute, so named examples have to
+  // be attached to the generated spec instead.
+  const createPollRequestBody =
+    spec.paths["/api/private/polls"]?.post?.requestBody;
+  if (createPollRequestBody && "content" in createPollRequestBody) {
+    const media = createPollRequestBody.content?.["application/json"];
+    if (media) {
+      media.examples = createPollRequestExamples;
+    }
+  }
+
+  return spec;
+}
+
+let openApiSpec: Awaited<ReturnType<typeof buildOpenApiSpec>> | undefined;
+
+app.get("/openapi", async (c) => {
+  openApiSpec ??= await buildOpenApiSpec();
+  return c.json(openApiSpec);
+});
 
 app.get(
   "/docs",
@@ -162,8 +183,14 @@ app.post(
   describeRoute({
     tags: ["Polls"],
     summary: "Create a poll",
-    description:
-      "Creates a new poll with the specified options or slot generators.",
+    description: [
+      "Creates a new poll. Provide the poll options in one of two ways:",
+      "",
+      "- `dates` — a list of calendar dates. Each date becomes an all-day option (date poll).",
+      "- `slots` — time-based options that share a fixed `duration` in minutes. Each entry in `slots.times` is either an ISO datetime for an explicit slot, or a slot generator that expands into recurring slots within a time window across a date range. Generated slots start every `interval` minutes (defaults to `duration`) and must fit entirely between `startTime` and `endTime`.",
+      "",
+      "`dates` and `slots` are mutually exclusive, and a poll can have at most 100 options. See the request examples for common scenarios.",
+    ].join("\n"),
     security: [{ bearerAuth: [] }],
     responses: {
       200: {
