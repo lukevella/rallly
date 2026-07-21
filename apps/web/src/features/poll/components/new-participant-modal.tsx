@@ -24,7 +24,7 @@ import { CircleCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { usePoll, useRole } from "@/features/poll/client";
+import { usePoll } from "@/features/poll/client";
 import { useAddParticipantMutation } from "@/features/poll/components/mutations";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { useUser } from "@/features/user/client";
@@ -97,7 +97,6 @@ const VoteSummary = ({
 export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const { t } = useTranslation();
   const poll = usePoll();
-  const role = useRole();
 
   const isEmailRequired = poll.requireParticipantEmail;
   const { timeZone } = useDateTimeConfig();
@@ -119,7 +118,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const { setError, formState, handleSubmit } = form;
   const addParticipant = useAddParticipantMutation();
 
-  if (formState.isSubmitSuccessful && role === "participant") {
+  if (formState.isSubmitSuccessful) {
     return (
       <>
         <div className="flex flex-col items-center gap-4 py-4 text-center">

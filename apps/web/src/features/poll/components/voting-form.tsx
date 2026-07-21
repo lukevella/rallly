@@ -148,11 +148,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
                   optionId: option.id,
                 })),
               });
-              if (role === "participant") {
-                posthog?.capture("new_participant_dialog:success_view");
-              } else {
-                setIsNewParticipantModalOpen(false);
-              }
+              posthog?.capture("new_participant_dialog:success_view");
             }}
             onCancel={() => setIsNewParticipantModalOpen(false)}
           />
