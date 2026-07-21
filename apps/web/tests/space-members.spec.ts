@@ -93,9 +93,7 @@ test.describe("Space members", () => {
     await page.getByRole("button", { name: "Invite member" }).click();
     const dialog = page.getByRole("dialog");
     await dialog.getByLabel("Email").fill(inviteeEmail);
-    // The submit button's "Send invite" defaults are shadowed by the
-    // reused inviteMember key, so it renders "Invite member" too.
-    await dialog.getByRole("button", { name: "Invite member" }).click();
+    await dialog.getByRole("button", { name: "Send invite" }).click();
 
     await expect(page.getByText("Invitation sent")).toBeVisible();
     await expect(memberRow(page, inviteeEmail)).toBeVisible();
