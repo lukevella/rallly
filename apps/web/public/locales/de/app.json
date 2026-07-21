@@ -693,6 +693,8 @@
   "themeDescription": "Wähle dein bevorzugtes Erscheinungsbild",
   "themeLight": "Hell",
   "themeSystem": "System",
+  "thirtyDayPollRetention": "30-tägige Aufbewahrung von Umfragen",
+  "thirtyDayPollRetentionDescription": "Umfragen werden nach ihrem Enddatum 30 Tage lang aufbewahrt",
   "timeFormat": "Zeitformat",
   "timePickerSelectTime": "Zeit auswählen",
   "timeZone": "Zeitzone",
