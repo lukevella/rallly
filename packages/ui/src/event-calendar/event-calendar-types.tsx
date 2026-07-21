@@ -1,143 +1,143 @@
 // Title: Event Calendar Types
 // Description: Public TypeScript contract for the headless event calendar: events, occurrences, segments, state, and callbacks.
 
-type EventCalendarEventId = string
+type EventCalendarEventId = string;
 
-type CalendarView = "month" | "week" | "day" | "days" | "agenda" | "resource"
+type CalendarView = "month" | "week" | "day" | "days" | "agenda" | "resource";
 
 /**
  * A bookable resource (room, person, equipment). Nesting via children renders
  * with children; the resource day view shows leaves as booking columns.
  */
 interface EventCalendarResource {
-  id: string
-  title: string
+  id: string;
+  title: string;
   /** Token or css color used for subtle row/column accents. */
-  color?: string
-  children?: EventCalendarResource[]
+  color?: string;
+  children?: EventCalendarResource[];
 }
 
 interface EventCalendarDateRange {
   /** Inclusive instant. */
-  start: Date
+  start: Date;
   /** Exclusive instant. */
-  end: Date
+  end: Date;
 }
 
-type EventCalendarWeekday = "MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU"
+type EventCalendarWeekday = "MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU";
 
 interface EventCalendarRecurrenceRule {
-  freq: "daily" | "weekly" | "monthly" | "yearly"
-  interval?: number
-  count?: number
+  freq: "daily" | "weekly" | "monthly" | "yearly";
+  interval?: number;
+  count?: number;
   /** Inclusive instant. */
-  until?: Date
+  until?: Date;
   byWeekday?: Array<
     EventCalendarWeekday | { day: EventCalendarWeekday; ordinal: number }
-  >
-  byMonthDay?: number[]
-  byMonth?: number[]
-  weekStart?: EventCalendarWeekday
-  exDates?: Date[]
-  rDates?: Date[]
+  >;
+  byMonthDay?: number[];
+  byMonth?: number[];
+  weekStart?: EventCalendarWeekday;
+  exDates?: Date[];
+  rDates?: Date[];
 }
 
 interface CalendarEvent<TData = unknown> {
-  id: EventCalendarEventId
-  title: string
+  id: EventCalendarEventId;
+  title: string;
   /** Plain instant; consumers parse ISO strings themselves. */
-  start: Date
+  start: Date;
   /** Exclusive; must be >= start. */
-  end: Date
-  allDay?: boolean
+  end: Date;
+  allDay?: boolean;
   /** Structured rule or a raw "RRULE:..." line. */
-  recurrence?: EventCalendarRecurrenceRule | string
+  recurrence?: EventCalendarRecurrenceRule | string;
   /** This event is an edited single occurrence of that series. */
-  recurringEventId?: EventCalendarEventId
+  recurringEventId?: EventCalendarEventId;
   /** Which occurrence it replaces (RECURRENCE-ID semantics). */
-  originalStart?: Date
+  originalStart?: Date;
   /** Token or css color; flows to the --ec-event-color css var. */
-  color?: string
+  color?: string;
   /** Excluded from drag and resize regardless of interactions state. */
-  readOnly?: boolean
+  readOnly?: boolean;
   /** Per-event override; default comes from interactions.drag. */
-  draggable?: boolean
+  draggable?: boolean;
   /** Per-event override; default comes from interactions.resize. */
-  resizable?: boolean
+  resizable?: boolean;
   /** Packing prominence; feeds getEventPriority ordering. */
-  priority?: number
+  priority?: number;
   /** Explicit stacking override; wins over the computed z. */
-  zIndex?: number
+  zIndex?: number;
   /** Bookable resource this event belongs to (resource view). */
-  resourceId?: string
+  resourceId?: string;
   /** Consumer payload, fully generic. */
-  data?: TData
+  data?: TData;
 }
 
 interface EventCalendarOccurrence<TData = unknown> {
   /** Stable per instance: `${event.id}::${startISO}`. */
-  key: string
-  eventId: EventCalendarEventId
-  event: CalendarEvent<TData>
-  start: Date
-  end: Date
-  allDay: boolean
-  isRecurring: boolean
-  recurrenceIndex?: number
+  key: string;
+  eventId: EventCalendarEventId;
+  event: CalendarEvent<TData>;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  isRecurring: boolean;
+  recurrenceIndex?: number;
 }
 
 interface EventCalendarSegment<TData = unknown> {
-  occurrence: EventCalendarOccurrence<TData>
+  occurrence: EventCalendarOccurrence<TData>;
   /** Zoned day this segment belongs to. */
-  day: Date
-  isStart: boolean
-  isEnd: boolean
-  continuesBefore: boolean
-  continuesAfter: boolean
+  day: Date;
+  isStart: boolean;
+  isEnd: boolean;
+  continuesBefore: boolean;
+  continuesAfter: boolean;
   /** Timed only: minutes from the zoned day start. */
-  startMin?: number
-  endMin?: number
+  startMin?: number;
+  endMin?: number;
   /** Month / all-day lane index. */
-  lane?: number
+  lane?: number;
   /** Time-grid overlap packing. */
-  column?: number
-  columnCount?: number
-  columnSpan?: number
+  column?: number;
+  columnCount?: number;
+  columnSpan?: number;
   /** Week-row granularity (month bars / all-day lanes). */
-  rowIndex?: number
-  colStart?: number
-  colSpan?: number
+  rowIndex?: number;
+  colStart?: number;
+  colSpan?: number;
 }
 
 interface EventCalendarSelection {
-  eventKeys: string[]
+  eventKeys: string[];
   /** Committed slot selection; see EventCalendarSlotDraft for the in-gesture value. */
-  slot: { start: Date; end: Date; allDay: boolean } | null
+  slot: { start: Date; end: Date; allDay: boolean } | null;
 }
 
 interface EventCalendarInteractions {
-  drag: boolean
-  resize: boolean
-  selectSlot: boolean
+  drag: boolean;
+  resize: boolean;
+  selectSlot: boolean;
 }
 
 interface EventCalendarDragState<TData = unknown> {
-  kind: "move" | "resize-start" | "resize-end"
-  occurrence: EventCalendarOccurrence<TData>
-  proposedStart: Date
-  proposedEnd: Date
-  proposedAllDay: boolean
+  kind: "move" | "resize-start" | "resize-end";
+  occurrence: EventCalendarOccurrence<TData>;
+  proposedStart: Date;
+  proposedEnd: Date;
+  proposedAllDay: boolean;
   /**
    * True when the proposal was resolved on the day-granular surface (month
    * cells / the all-day lane) rather than minute columns - the all-day lane
    * ghost keys on this, covering timed MULTI-DAY bars whose proposals stay
    * timed (proposedAllDay alone misses them).
    */
-  proposedDayGranular: boolean
+  proposedDayGranular: boolean;
   /** Target resource when dragging across resource columns/rows. */
-  proposedResourceId?: string
+  proposedResourceId?: string;
   /** Last canDropEvent verdict; drives data-drop-invalid styling. */
-  valid: boolean
+  valid: boolean;
 }
 
 /**
@@ -145,12 +145,12 @@ interface EventCalendarDragState<TData = unknown> {
  * The committed slot selection lives in EventCalendarSelection.slot.
  */
 interface EventCalendarSlotDraft {
-  start: Date
-  end: Date
-  allDay: boolean
-  view: CalendarView
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  view: CalendarView;
   /** Present when the slot was selected inside a resource column/row. */
-  resourceId?: string
+  resourceId?: string;
 }
 
 /**
@@ -159,67 +159,67 @@ interface EventCalendarSlotDraft {
  */
 interface EventCalendarViewSettings {
   /** Show Saturday/Sunday columns in month, week, and N-day grids. */
-  weekends?: boolean
+  weekends?: boolean;
   /** Week-number gutter in the month view. */
-  weekNumbers?: boolean
-  nowIndicator?: boolean
+  weekNumbers?: boolean;
+  nowIndicator?: boolean;
   /** Off-day (non-working) background marking. */
-  offDays?: boolean
+  offDays?: boolean;
 }
 
 interface EventCalendarState<TData = unknown> {
-  view: CalendarView
+  view: CalendarView;
   /** Anchor date. */
-  date: Date
+  date: Date;
   /** For the "days" view. */
-  dayCount: number
+  dayCount: number;
   /** Full rendered grid incl. outside days - fetch remote data for THIS. */
-  visibleRange: EventCalendarDateRange
+  visibleRange: EventCalendarDateRange;
   /** The logical period (the month/week itself). */
-  activeRange: EventCalendarDateRange
-  events: CalendarEvent<TData>[]
-  selection: EventCalendarSelection
-  interactions: EventCalendarInteractions
-  loading: boolean
-  drag: EventCalendarDragState<TData> | null
-  slotDraft: EventCalendarSlotDraft | null
-  viewSettings: EventCalendarViewSettings
+  activeRange: EventCalendarDateRange;
+  events: CalendarEvent<TData>[];
+  selection: EventCalendarSelection;
+  interactions: EventCalendarInteractions;
+  loading: boolean;
+  drag: EventCalendarDragState<TData> | null;
+  slotDraft: EventCalendarSlotDraft | null;
+  viewSettings: EventCalendarViewSettings;
 }
 
 interface EventCalendarRangeInfo {
-  range: EventCalendarDateRange
-  activeRange: EventCalendarDateRange
-  view: CalendarView
-  date: Date
-  timeZone: string
+  range: EventCalendarDateRange;
+  activeRange: EventCalendarDateRange;
+  view: CalendarView;
+  date: Date;
+  timeZone: string;
 }
 
 interface EventCalendarProposedUpdate<TData = unknown> {
-  event: CalendarEvent<TData>
+  event: CalendarEvent<TData>;
   /** null when source === "api". */
-  occurrence: EventCalendarOccurrence<TData> | null
-  start: Date
-  end: Date
-  allDay: boolean
+  occurrence: EventCalendarOccurrence<TData> | null;
+  start: Date;
+  end: Date;
+  allDay: boolean;
   /** Proposed resource when the gesture crossed resource columns/rows. */
-  resourceId?: string
-  source: "drag" | "resize-start" | "resize-end" | "keyboard" | "api"
+  resourceId?: string;
+  source: "drag" | "resize-start" | "resize-end" | "keyboard" | "api";
 }
 
 /** false = reject/revert; void or true = accept; object = accept with adjustment. */
 type EventCalendarUpdateResult =
   | boolean
   | void
-  | { start?: Date; end?: Date; allDay?: boolean }
+  | { start?: Date; end?: Date; allDay?: boolean };
 
 /** A click is a point, not a range; `end` is present for timed slots. */
 interface EventCalendarSlotInfo {
-  date: Date
-  end?: Date
-  allDay: boolean
-  view: CalendarView
+  date: Date;
+  end?: Date;
+  allDay: boolean;
+  view: CalendarView;
   /** Present when the click happened inside a resource column/row. */
-  resourceId?: string
+  resourceId?: string;
 }
 
 /**
@@ -230,13 +230,13 @@ interface EventCalendarSlotInfo {
  */
 interface EventCalendarOffDaysConfig {
   /** Weekday numbers treated as off (0 = Sunday). Default [0, 6]. */
-  weekendDays?: number[]
+  weekendDays?: number[];
   /** Additional explicit off dates (compared by day in the display zone). */
-  dates?: Date[]
+  dates?: Date[];
   /** Full custom predicate; runs in addition to weekendDays/dates. */
-  isOffDay?: (day: Date) => boolean
+  isOffDay?: (day: Date) => boolean;
   /** Marker classes; default "bg-muted/25". */
-  className?: string
+  className?: string;
 }
 
 /**
@@ -247,8 +247,8 @@ interface EventCalendarOffDaysConfig {
 interface EventCalendarDataAdapter<TData = unknown> {
   getEvents(
     range: EventCalendarDateRange,
-    signal?: AbortSignal
-  ): Promise<CalendarEvent<TData>[]>
+    signal?: AbortSignal,
+  ): Promise<CalendarEvent<TData>[]>;
 }
 
 export type {
@@ -273,4 +273,4 @@ export type {
   EventCalendarViewSettings,
   EventCalendarUpdateResult,
   EventCalendarWeekday,
-}
+};

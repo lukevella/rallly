@@ -14,11 +14,13 @@
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*.tsx",
+    "./event-calendar": "./src/event-calendar/event-calendar.tsx",
     "./hooks/*": "./src/hooks/*.ts",
     "./style.css": "./src/style.css"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
+    "@date-fns/tz": "^1.5.0",
     "@rallly/languages": "workspace:*",
     "@rallly/tailwind-config": "workspace:*",
     "@react-aria/color": "^3.1.5",
@@ -52,6 +54,7 @@
   "devDependencies": {
     "@rallly/tsconfig": "workspace:*",
     "@testing-library/react": "^16.3.0",
+    "@types/node": "^24.1.0",
     "@types/react": "19.2.13",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "^5.0.0",

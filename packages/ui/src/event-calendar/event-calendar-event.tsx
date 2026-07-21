@@ -1,47 +1,41 @@
 // Title: Event Calendar Event
 // Description: The reusable event chip/bar/block - selection, clicks, drag + resize wiring, and the consumer render slot.
 
-"use client"
+"use client";
 
-import {
-  createContext,
-  useContext,
-  useMemo,
-  type CSSProperties,
-  type ReactNode,
-} from "react"
-import {
-  useEventCalendar,
-  useEventCalendarSelector,
-  useEventCalendarViewConfig,
-  useEventCalendarViewContext,
-} from "@/components/reui/event-calendar/event-calendar"
-import {
-  markChipPress,
-  useEventCalendarGestures,
-  wasRecentDrag,
-} from "@/components/reui/event-calendar/event-calendar-dnd"
-import {
-  spansMultipleDays,
-  toZoned,
-  zonedStartOfDay,
-} from "@/components/reui/event-calendar/event-calendar-lib"
-import type {
-  EventCalendarOccurrence,
-  EventCalendarSegment,
-} from "@/components/reui/event-calendar/event-calendar-types"
-import { mergeProps } from "@base-ui/react/merge-props"
-import { useRender } from "@base-ui/react/use-render"
-import { addDays, format } from "date-fns"
-
-import { cn } from "@/lib/utils"
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
+import { addDays, format } from "date-fns";
+import type { CSSProperties, ReactNode } from "react";
+import { createContext, useContext, useMemo } from "react";
+import { cn } from "../lib/utils";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
+} from "../tooltip";
+import {
+  useEventCalendar,
+  useEventCalendarSelector,
+  useEventCalendarViewConfig,
+  useEventCalendarViewContext,
+} from "./event-calendar";
+import {
+  markChipPress,
+  useEventCalendarGestures,
+  wasRecentDrag,
+} from "./event-calendar-dnd";
+import {
+  spansMultipleDays,
+  toZoned,
+  zonedStartOfDay,
+} from "./event-calendar-lib";
+import type {
+  EventCalendarOccurrence,
+  EventCalendarSegment,
+} from "./event-calendar-types";
+import { IconPlaceholder } from "./icon-placeholder";
 
 /**
  * Effective Tailwind palette presets for event colors; every entry works on
@@ -58,7 +52,7 @@ const EVENT_CALENDAR_COLORS: Array<{ name: string; value: string }> = [
   { name: "Pink", value: "var(--color-pink-500)" },
   { name: "Teal", value: "var(--color-teal-500)" },
   { name: "Indigo", value: "var(--color-indigo-500)" },
-]
+];
 
 /**
  * Standardized drag-ghost surface treatment, shared verbatim by every view
@@ -81,7 +75,7 @@ const EVENT_CALENDAR_GHOST = {
   invalidResize: "border-destructive/70",
   /** Applied to the clone inside an invalid resize ghost. */
   invalidContent: "opacity-60",
-} as const
+} as const;
 
 /**
  * Fade-out truncation for stacked timed blocks: squeezed cascade columns
@@ -94,45 +88,43 @@ const EVENT_CALENDAR_GHOST = {
  * can import and reuse it.
  */
 const EVENT_CALENDAR_FADE_TRUNCATE =
-  "w-full truncate @max-[10rem]:text-clip @max-[10rem]:[mask-image:linear-gradient(to_right,#000_calc(100%-0.75rem),transparent)] @max-[10rem]:rtl:[mask-image:linear-gradient(to_left,#000_calc(100%-0.75rem),transparent)]"
+  "w-full truncate @max-[10rem]:text-clip @max-[10rem]:[mask-image:linear-gradient(to_right,#000_calc(100%-0.75rem),transparent)] @max-[10rem]:rtl:[mask-image:linear-gradient(to_left,#000_calc(100%-0.75rem),transparent)]";
 
 interface EventCalendarChipContextValue<TData = unknown> {
-  occurrence: EventCalendarOccurrence<TData>
-  segment: EventCalendarSegment<TData>
-  isDragging: boolean
-  isSelected: boolean
+  occurrence: EventCalendarOccurrence<TData>;
+  segment: EventCalendarSegment<TData>;
+  isDragging: boolean;
+  isSelected: boolean;
 }
 
 const EventCalendarChipContext =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createContext<EventCalendarChipContextValue<any> | null>(null)
+  createContext<EventCalendarChipContextValue<any> | null>(null);
 
 /** The chip's subject; usable inside renderEvent content and chip children. */
 function useEventCalendarEventChip<
   TData = unknown,
 >(): EventCalendarChipContextValue<TData> {
-  const ctx = useContext(EventCalendarChipContext)
+  const ctx = useContext(EventCalendarChipContext);
   if (!ctx) {
     throw new Error(
-      "useEventCalendarEventChip must be used within <EventCalendarEvent>"
-    )
+      "useEventCalendarEventChip must be used within <EventCalendarEvent>",
+    );
   }
-  return ctx as EventCalendarChipContextValue<TData>
+  return ctx as EventCalendarChipContextValue<TData>;
 }
 
-interface EventCalendarEventProps<TData = unknown> extends Omit<
-  useRender.ComponentProps<"button">,
-  "children"
-> {
-  segment: EventCalendarSegment<TData>
+interface EventCalendarEventProps<TData = unknown>
+  extends Omit<useRender.ComponentProps<"button">, "children"> {
+  segment: EventCalendarSegment<TData>;
   /** Replaces the default chip CONTENT; the wrapper stays calendar-owned. */
-  children?: ReactNode
+  children?: ReactNode;
   /**
    * Static drag clone: renders the chip exactly as-is but inert - no gestures,
    * resize handles, selection/drag state, focus, or pointer events. Used for
    * the full-fidelity ghost that tracks the proposed slot during a move.
    */
-  preview?: boolean
+  preview?: boolean;
 }
 
 /**
@@ -149,46 +141,46 @@ function EventCalendarEvent<TData = unknown>({
   preview = false,
   ...props
 }: EventCalendarEventProps<TData>) {
-  const instance = useEventCalendar<TData>()
-  const viewConfig = useEventCalendarViewConfig<TData>()
-  const { view } = useEventCalendarViewContext()
-  const gestures = useEventCalendarGestures<TData>()
-  const { settings } = instance
-  const occurrence = segment.occurrence
-  const event = occurrence.event
+  const instance = useEventCalendar<TData>();
+  const viewConfig = useEventCalendarViewConfig<TData>();
+  const { view } = useEventCalendarViewContext();
+  const gestures = useEventCalendarGestures<TData>();
+  const { settings } = instance;
+  const occurrence = segment.occurrence;
+  const event = occurrence.event;
 
   const isSelectedRaw = useEventCalendarSelector<TData, boolean>(
     (state) => state.selection.eventKeys.includes(occurrence.key),
-    { calendar: instance }
-  )
+    { calendar: instance },
+  );
   const isDraggingRaw = useEventCalendarSelector<TData, boolean>(
     (state) => state.drag?.occurrence.key === occurrence.key,
-    { calendar: instance }
-  )
+    { calendar: instance },
+  );
   // reactive, unlike gestures.canResize: api.setInteractions({ resize })
   // must add/remove the handles without waiting for an unrelated re-render
   const resizeOn = useEventCalendarSelector<TData, boolean>(
     (state) => state.interactions.resize,
-    { calendar: instance }
-  )
+    { calendar: instance },
+  );
   // A preview clone must never inherit the source's selected/dragging state
   // (the drag key matches, which would dim the clone itself).
-  const isSelected = preview ? false : isSelectedRaw
-  const isDragging = preview ? false : isDraggingRaw
+  const isSelected = preview ? false : isSelectedRaw;
+  const isDragging = preview ? false : isDraggingRaw;
 
-  const isBar = occurrence.allDay || spansMultipleDays(occurrence)
+  const isBar = occurrence.allDay || spansMultipleDays(occurrence);
   const inTimeGrid =
-    view === "week" || view === "day" || view === "days" || view === "resource"
-  const interactive = view !== "agenda" && !preview
-  const timedBlock = inTimeGrid && !isBar
-  const horizontalBar = isBar && !inTimeGrid
+    view === "week" || view === "day" || view === "days" || view === "resource";
+  const interactive = view !== "agenda" && !preview;
+  const timedBlock = inTimeGrid && !isBar;
+  const horizontalBar = isBar && !inTimeGrid;
   // >= compactEventMinutes renders the stacked (title over time) layout;
   // squeezed cascade columns there fade-truncate instead of hard-clipping
   // into neighbors
   const stackedBlock =
     timedBlock &&
     (segment.endMin ?? 0) - (segment.startMin ?? 0) >=
-      viewConfig.compactEventMinutes
+      viewConfig.compactEventMinutes;
 
   const defaultContent = (
     <>
@@ -218,7 +210,7 @@ function EventCalendarEvent<TData = unknown>({
       <span
         className={cn(
           "font-medium",
-          stackedBlock ? EVENT_CALENDAR_FADE_TRUNCATE : "truncate"
+          stackedBlock ? EVENT_CALENDAR_FADE_TRUNCATE : "truncate",
         )}
       >
         {event.title}
@@ -228,71 +220,71 @@ function EventCalendarEvent<TData = unknown>({
       {!occurrence.allDay &&
         segment.isStart &&
         (view === "month" ? (
-          <span className="text-muted-foreground shrink-0">
+          <span className="shrink-0 text-muted-foreground">
             {format(
               toZoned(occurrence.start, settings.timeZone),
               settings.i18n.formats.eventTime,
-              { locale: settings.locale }
+              { locale: settings.locale },
             )}
           </span>
         ) : (
           <span
             className={cn(
-              "text-muted-foreground hidden @[8rem]:inline",
-              stackedBlock ? EVENT_CALENDAR_FADE_TRUNCATE : "truncate"
+              "@[8rem]:inline hidden text-muted-foreground",
+              stackedBlock ? EVENT_CALENDAR_FADE_TRUNCATE : "truncate",
             )}
           >
             {settings.i18n.functions.formatEventTime(
               toZoned(occurrence.start, settings.timeZone),
               toZoned(occurrence.end, settings.timeZone),
-              occurrence.allDay
+              occurrence.allDay,
             )}
           </span>
         ))}
     </>
-  )
+  );
 
   // Agenda time text is per-day for multi-day events: the first day reads
   // "From 9:00 AM", middle days "All day", the last day "Until 5:00 PM".
   // Boundaries derive from the occurrence vs segment.day (never the packing
   // flags - lane merging rewrites those on shared segment objects).
   const agendaTimeText = (() => {
-    if (view !== "agenda") return ""
-    if (occurrence.allDay) return settings.i18n.labels.allDay
-    const dayStart = zonedStartOfDay(segment.day, settings.timeZone)
-    const dayEnd = addDays(toZoned(dayStart, settings.timeZone), 1)
-    const startsBefore = occurrence.start < dayStart
-    const endsAfter = occurrence.end > dayEnd
-    if (startsBefore && endsAfter) return settings.i18n.labels.allDay
+    if (view !== "agenda") return "";
+    if (occurrence.allDay) return settings.i18n.labels.allDay;
+    const dayStart = zonedStartOfDay(segment.day, settings.timeZone);
+    const dayEnd = addDays(toZoned(dayStart, settings.timeZone), 1);
+    const startsBefore = occurrence.start < dayStart;
+    const endsAfter = occurrence.end > dayEnd;
+    if (startsBefore && endsAfter) return settings.i18n.labels.allDay;
     if (endsAfter) {
       return settings.i18n.labels.timeFrom(
         format(
           toZoned(occurrence.start, settings.timeZone),
           settings.i18n.formats.eventTime,
-          { locale: settings.locale }
-        )
-      )
+          { locale: settings.locale },
+        ),
+      );
     }
     if (startsBefore) {
       return settings.i18n.labels.timeUntil(
         format(
           toZoned(occurrence.end, settings.timeZone),
           settings.i18n.formats.eventTime,
-          { locale: settings.locale }
-        )
-      )
+          { locale: settings.locale },
+        ),
+      );
     }
     return settings.i18n.functions.formatEventTime(
       toZoned(occurrence.start, settings.timeZone),
       toZoned(occurrence.end, settings.timeZone),
-      false
-    )
-  })()
+      false,
+    );
+  })();
 
   // Agenda default row: time column, color-dot badge, plain title
   const agendaDefaultContent = (
     <>
-      <span className="text-muted-foreground w-40 shrink-0 truncate tabular-nums">
+      <span className="w-40 shrink-0 truncate text-muted-foreground tabular-nums">
         {agendaTimeText}
       </span>
       <span
@@ -308,12 +300,12 @@ function EventCalendarEvent<TData = unknown>({
           hugeicons="RepeatIcon"
           phosphor="RepeatIcon"
           remixicon="RiRepeatLine"
-          className="text-muted-foreground size-2.5 shrink-0"
+          className="size-2.5 shrink-0 text-muted-foreground"
           aria-hidden="true"
         />
       )}
     </>
-  )
+  );
 
   // Custom chip content is memoized so a drag - which re-renders the lane on
   // every pointer move - never re-invokes the consumer's renderEvent per frame.
@@ -322,10 +314,10 @@ function EventCalendarEvent<TData = unknown>({
   // chip's inputs change and recompute. Deps are exactly renderProps' inputs
   // plus the render fns (all stable during an internal drag).
   const customContent = useMemo(() => {
-    const renderProps = { occurrence, segment, view, isDragging, isSelected }
+    const renderProps = { occurrence, segment, view, isDragging, isSelected };
     return view === "agenda"
       ? viewConfig.renderAgendaEvent?.(renderProps)
-      : viewConfig.renderEvent?.(renderProps)
+      : viewConfig.renderEvent?.(renderProps);
   }, [
     occurrence,
     segment,
@@ -334,22 +326,22 @@ function EventCalendarEvent<TData = unknown>({
     isSelected,
     viewConfig.renderAgendaEvent,
     viewConfig.renderEvent,
-  ])
+  ]);
   const content =
     children ??
     customContent ??
-    (view === "agenda" ? agendaDefaultContent : defaultContent)
+    (view === "agenda" ? agendaDefaultContent : defaultContent);
 
   const timeLabel = settings.i18n.functions.formatEventTime(
     toZoned(occurrence.start, settings.timeZone),
     toZoned(occurrence.end, settings.timeZone),
-    occurrence.allDay
-  )
+    occurrence.allDay,
+  );
   // native hover tooltip text; a consumer formatter returning undefined
   // drops the title attribute entirely (e.g. when it renders its own tooltip)
   const label = settings.i18n.functions.formatEventLabel
     ? settings.i18n.functions.formatEventLabel(event.title, timeLabel)
-    : `${event.title}, ${timeLabel}`
+    : `${event.title}, ${timeLabel}`;
 
   // Optional styled tooltip on hover / keyboard focus (viewConfig.eventTooltip,
   // default off). When on, the native title is dropped so the two never stack;
@@ -358,7 +350,9 @@ function EventCalendarEvent<TData = unknown>({
   // the `false`/"" that `cond && <node>` yields) falls back to the label, and
   // an empty label (i18n opt-out) leaves no content so the tooltip is skipped.
   const tooltipOpts =
-    typeof viewConfig.eventTooltip === "object" ? viewConfig.eventTooltip : null
+    typeof viewConfig.eventTooltip === "object"
+      ? viewConfig.eventTooltip
+      : null;
   const tooltipContent =
     !preview && viewConfig.eventTooltip
       ? viewConfig.renderEventTooltip?.({
@@ -367,11 +361,11 @@ function EventCalendarEvent<TData = unknown>({
           view,
           label,
         }) || label
-      : null
-  const tooltipOn = Boolean(tooltipContent)
+      : null;
+  const tooltipOn = Boolean(tooltipContent);
 
   const showResize =
-    interactive && resizeOn && !event.readOnly && event.resizable !== false
+    interactive && resizeOn && !event.readOnly && event.resizable !== false;
   // Hover grip pill (mirrors the gantt bars): a tiny bar inside each resize
   // handle signals the direction. Shown on every resizable chip - compact
   // sub-compactEventMinutes timed blocks included - because the chip
@@ -382,12 +376,12 @@ function EventCalendarEvent<TData = unknown>({
       aria-hidden
       data-slot="event-calendar-resize-grip"
       className={cn(
-        "bg-foreground/40 rounded-full",
+        "rounded-full bg-foreground/40",
         timedBlock ? "h-0.5 w-2.5" : "h-2.5 w-0.5",
-        viewConfig.classNames?.resizeGrip
+        viewConfig.classNames?.resizeGrip,
       )}
     />
-  )
+  );
   const resizeHandles = showResize && (
     <>
       {timedBlock && segment.isStart && (
@@ -396,7 +390,7 @@ function EventCalendarEvent<TData = unknown>({
           data-edge="start"
           className={cn(
             "absolute inset-x-1 top-0 flex h-1.5 cursor-ns-resize items-center justify-center opacity-0 transition-opacity duration-150 group-hover/ec-event:opacity-100",
-            viewConfig.classNames?.resizeHandle
+            viewConfig.classNames?.resizeHandle,
           )}
           onPointerDown={(e) => gestures.beginResize(e, segment, "start")}
         >
@@ -409,7 +403,7 @@ function EventCalendarEvent<TData = unknown>({
           data-edge="end"
           className={cn(
             "absolute inset-x-1 bottom-0 flex h-1.5 cursor-ns-resize items-center justify-center opacity-0 transition-opacity duration-150 group-hover/ec-event:opacity-100",
-            viewConfig.classNames?.resizeHandle
+            viewConfig.classNames?.resizeHandle,
           )}
           onPointerDown={(e) => gestures.beginResize(e, segment, "end")}
         >
@@ -422,7 +416,7 @@ function EventCalendarEvent<TData = unknown>({
           data-edge="start"
           className={cn(
             "absolute inset-y-0 start-0 flex w-2 cursor-ew-resize items-center justify-center opacity-0 transition-opacity duration-150 group-hover/ec-event:opacity-100",
-            viewConfig.classNames?.resizeHandle
+            viewConfig.classNames?.resizeHandle,
           )}
           onPointerDown={(e) => gestures.beginResize(e, segment, "start")}
         >
@@ -435,7 +429,7 @@ function EventCalendarEvent<TData = unknown>({
           data-edge="end"
           className={cn(
             "absolute inset-y-0 end-0 flex w-2 cursor-ew-resize items-center justify-center opacity-0 transition-opacity duration-150 group-hover/ec-event:opacity-100",
-            viewConfig.classNames?.resizeHandle
+            viewConfig.classNames?.resizeHandle,
           )}
           onPointerDown={(e) => gestures.beginResize(e, segment, "end")}
         >
@@ -443,7 +437,7 @@ function EventCalendarEvent<TData = unknown>({
         </span>
       )}
     </>
-  )
+  );
 
   const defaultProps = {
     type: "button" as const,
@@ -462,7 +456,7 @@ function EventCalendarEvent<TData = unknown>({
       settings.i18n.functions.formatEventAriaLabel?.(
         event.title,
         timeLabel,
-        segment.continuesBefore || segment.continuesAfter
+        segment.continuesBefore || segment.continuesAfter,
       ) ??
       `${event.title}, ${timeLabel}${
         segment.continuesBefore || segment.continuesAfter
@@ -475,29 +469,29 @@ function EventCalendarEvent<TData = unknown>({
       "--ec-event-color": event.color ?? "var(--color-primary)",
     } as CSSProperties,
     onPointerDown: (e: React.PointerEvent) => {
-      e.stopPropagation()
+      e.stopPropagation();
       // suppress the trailing slot-create click if this press does not turn
       // into a drag (e.g. a locked chip) - see markChipPress
-      markChipPress()
-      if (interactive) gestures.beginMove(e, segment)
+      markChipPress();
+      if (interactive) gestures.beginMove(e, segment);
     },
     onClick: (e: React.MouseEvent) => {
-      e.stopPropagation()
-      if (wasRecentDrag()) return
+      e.stopPropagation();
+      if (wasRecentDrag()) return;
       // consumer first: e.preventDefault() opts out of built-in selection
       // (e.g. click = open dialog only, no selected tint)
-      settings.onEventClick?.(occurrence, e)
+      settings.onEventClick?.(occurrence, e);
       // the agenda is a read-only list: a click never selects/focuses a row
-      if (e.defaultPrevented || view === "agenda") return
-      instance.api.selectEvent(occurrence.key)
+      if (e.defaultPrevented || view === "agenda") return;
+      instance.api.selectEvent(occurrence.key);
     },
     onDoubleClick: (e: React.MouseEvent) => {
-      e.stopPropagation()
-      settings.onEventDoubleClick?.(occurrence, e)
+      e.stopPropagation();
+      settings.onEventDoubleClick?.(occurrence, e);
     },
     className: cn(
-      "group/ec-event text-foreground relative flex w-full min-w-0 cursor-pointer touch-none items-center overflow-hidden text-start select-none",
-      "focus-visible:ring-ring/50 outline-none focus-visible:ring-2",
+      "group/ec-event relative flex w-full min-w-0 cursor-pointer touch-none select-none items-center overflow-hidden text-start text-foreground",
+      "outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
       preview && "pointer-events-none",
       view === "agenda"
         ? // plain list row: color lives in the dot badge, not a tinted pill;
@@ -516,12 +510,12 @@ function EventCalendarEvent<TData = unknown>({
             "inset-ring inset-ring-(--ec-event-color)/15",
             "transition-[background-color,box-shadow] duration-150",
             "data-dragging:opacity-40",
-            "data-selected:bg-(--ec-event-color)/30 data-selected:inset-ring-(--ec-event-color)/40",
+            "data-selected:inset-ring-(--ec-event-color)/40 data-selected:bg-(--ec-event-color)/30",
             segment.continuesBefore && "rounded-s-none",
-            segment.continuesAfter && "rounded-e-none"
+            segment.continuesAfter && "rounded-e-none",
           ),
       viewConfig.classNames?.event,
-      className
+      className,
     ),
     children: (
       <>
@@ -529,13 +523,13 @@ function EventCalendarEvent<TData = unknown>({
         {resizeHandles}
       </>
     ),
-  }
+  };
 
   const chip = useRender({
     defaultTagName: "button",
     render,
     props: mergeProps<"button">(defaultProps, props),
-  })
+  });
 
   return (
     <EventCalendarChipContext.Provider
@@ -557,7 +551,7 @@ function EventCalendarEvent<TData = unknown>({
         chip
       )}
     </EventCalendarChipContext.Provider>
-  )
+  );
 }
 
 export {
@@ -566,5 +560,5 @@ export {
   EVENT_CALENDAR_GHOST,
   EventCalendarEvent,
   useEventCalendarEventChip,
-}
-export type { EventCalendarChipContextValue, EventCalendarEventProps }
+};
+export type { EventCalendarChipContextValue, EventCalendarEventProps };

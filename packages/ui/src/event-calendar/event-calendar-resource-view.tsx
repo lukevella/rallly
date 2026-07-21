@@ -1,9 +1,15 @@
 // Title: Event Calendar Resource View
 // Description: Resource-columns day grid for booking scenarios - one time axis, one column per resource, full drag, resize, and drag-create.
 
-"use client"
+"use client";
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
+import { addDays, addMinutes } from "date-fns";
+import type { CSSProperties } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { cn } from "../lib/utils";
+import { ScrollArea } from "../scroll-area";
 import {
   EventCalendarViewContext,
   useEventCalendar,
@@ -12,16 +18,16 @@ import {
   useEventCalendarSettings,
   useEventCalendarViewConfig,
   useEventCalendarViewSettings,
-} from "@/components/reui/event-calendar/event-calendar"
+} from "./event-calendar";
 import {
   useEventCalendarGestures,
   wasRecentChipPress,
   wasRecentDrag,
-} from "@/components/reui/event-calendar/event-calendar-dnd"
+} from "./event-calendar-dnd";
 import {
   EVENT_CALENDAR_GHOST,
   EventCalendarEvent,
-} from "@/components/reui/event-calendar/event-calendar-event"
+} from "./event-calendar-event";
 import {
   flattenResources,
   getDayKey,
@@ -31,31 +37,26 @@ import {
   snapMinutes,
   toZoned,
   zonedStartOfDay,
-} from "@/components/reui/event-calendar/event-calendar-lib"
+} from "./event-calendar-lib";
 import {
   EventCalendarNowIndicator,
   EventCalendarTimeGutter,
   minuteBlockStyle,
-} from "@/components/reui/event-calendar/event-calendar-time-grid"
+} from "./event-calendar-time-grid";
 import type {
   EventCalendarResource,
   EventCalendarSegment,
-} from "@/components/reui/event-calendar/event-calendar-types"
-import { mergeProps } from "@base-ui/react/merge-props"
-import { useRender } from "@base-ui/react/use-render"
-import { addDays, addMinutes } from "date-fns"
+} from "./event-calendar-types";
 
-import { cn } from "@/lib/utils"
-import { ScrollArea } from "@/components/ui/scroll-area"
+const EMPTY_ALL_DAY_SEGMENTS: EventCalendarSegment[] = [];
 
-const EMPTY_ALL_DAY_SEGMENTS: EventCalendarSegment[] = []
-
-interface EventCalendarResourceViewProps extends useRender.ComponentProps<"div"> {
-  dayStartHour?: number
-  dayEndHour?: number
-  showAllDay?: boolean
+interface EventCalendarResourceViewProps
+  extends useRender.ComponentProps<"div"> {
+  dayStartHour?: number;
+  dayEndHour?: number;
+  showAllDay?: boolean;
   /** Gutter/gridline interval in minutes; defaults to the interval view config. */
-  interval?: number
+  interval?: number;
 }
 
 /** Leaf resources become booking columns for the anchor day. */
@@ -68,83 +69,83 @@ function EventCalendarResourceView({
   interval: intervalProp,
   ...props
 }: EventCalendarResourceViewProps) {
-  const instance = useEventCalendar()
-  const settings = useEventCalendarSettings()
-  const viewConfig = useEventCalendarViewConfig()
-  const { effective } = useEventCalendarViewSettings()
+  const instance = useEventCalendar();
+  const settings = useEventCalendarSettings();
+  const viewConfig = useEventCalendarViewConfig();
+  const { effective } = useEventCalendarViewSettings();
   const anchorDate = useEventCalendarSelector((state) => state.date, {
     isEqual: (a, b) => a.getTime() === b.getTime(),
-  })
+  });
 
-  const startHour = dayStartHour ?? settings.dayStartHour
-  const endHour = dayEndHour ?? settings.dayEndHour
+  const startHour = dayStartHour ?? settings.dayStartHour;
+  const endHour = dayEndHour ?? settings.dayEndHour;
   const interval = Math.min(
     Math.max(intervalProp ?? viewConfig.interval, 5),
-    240
-  )
-  const contained = viewConfig.scrollMode !== "page"
-  const day = zonedStartOfDay(anchorDate, settings.timeZone)
+    240,
+  );
+  const contained = viewConfig.scrollMode !== "page";
+  const day = zonedStartOfDay(anchorDate, settings.timeZone);
 
   const resources = useMemo(
     () =>
       flattenResources(settings.resources)
         .filter(({ resource }) => !resource.children?.length)
         .map(({ resource }) => resource),
-    [settings.resources]
-  )
+    [settings.resources],
+  );
 
   // Initial scroll + api.scrollToTime (same contract as the time grid)
-  const scrollRef = useRef<HTMLDivElement | null>(null)
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (!contained) return
-    const el = scrollRef.current
-    if (!el) return
+    if (!contained) return;
+    const el = scrollRef.current;
+    if (!el) return;
     const viewport = el.querySelector<HTMLElement>(
-      "[data-slot=scroll-area-viewport]"
-    )
+      "[data-slot=scroll-area-viewport]",
+    );
     const slotRow = el.querySelector<HTMLElement>(
-      "[data-slot=event-calendar-time-gutter] > div"
-    )
-    const slotPx = slotRow?.getBoundingClientRect().height || 64
-    const pxPerMinute = slotPx / interval
+      "[data-slot=event-calendar-time-gutter] > div",
+    );
+    const slotPx = slotRow?.getBoundingClientRect().height || 64;
+    const pxPerMinute = slotPx / interval;
     const scrollTo = (minutes: number) => {
       // keep the hour label above the target line visible (it hangs -top-2)
       viewport?.scrollTo({
         top: Math.max(0, (minutes - startHour * 60) * pxPerMinute - 12),
-      })
-    }
-    scrollTo(viewConfig.scrollToHour * 60)
+      });
+    };
+    scrollTo(viewConfig.scrollToHour * 60);
     instance.internals.registerScrollHandler((time) => {
       const minutes =
         typeof time === "number"
           ? time
           : toZoned(time, settings.timeZone).getHours() * 60 +
-            toZoned(time, settings.timeZone).getMinutes()
-      scrollTo(minutes)
-    })
+            toZoned(time, settings.timeZone).getMinutes();
+      scrollTo(minutes);
+    });
     // Classic (width-consuming) scrollbars squeeze the scrolling track while
     // the header/all-day rows outside keep full width, drifting the column
     // borders. Mirror the measured gutter onto those rows via a CSS var -
     // 0px for overlay scrollbars and the custom ScrollArea, so both modes
     // lay out identically.
     const root = el.closest<HTMLElement>(
-      "[data-slot=event-calendar-time-grid], [data-slot=event-calendar-resource-view]"
-    )
+      "[data-slot=event-calendar-time-grid], [data-slot=event-calendar-resource-view]",
+    );
     const syncScrollbarGutter = () => {
       root?.style.setProperty(
         "--ec-scrollbar-w",
-        `${viewport ? viewport.offsetWidth - viewport.clientWidth : 0}px`
-      )
-    }
-    syncScrollbarGutter()
+        `${viewport ? viewport.offsetWidth - viewport.clientWidth : 0}px`,
+      );
+    };
+    syncScrollbarGutter();
     const gutterObserver = viewport
       ? new ResizeObserver(syncScrollbarGutter)
-      : null
-    if (viewport) gutterObserver?.observe(viewport)
+      : null;
+    if (viewport) gutterObserver?.observe(viewport);
     return () => {
-      instance.internals.registerScrollHandler(null)
-      gutterObserver?.disconnect()
-    }
+      instance.internals.registerScrollHandler(null);
+      gutterObserver?.disconnect();
+    };
   }, [
     contained,
     instance,
@@ -155,15 +156,15 @@ function EventCalendarResourceView({
     // scrollbars custom<->native swaps the scroller DOM: re-bind the
     // viewport, the scroll wiring, and the measured --ec-scrollbar-w
     viewConfig.scrollbars,
-  ])
+  ]);
 
   const slots = useMemo(() => {
-    const result: number[] = []
+    const result: number[] = [];
     for (let m = startHour * 60; m < endHour * 60; m += interval) {
-      result.push(m)
+      result.push(m);
     }
-    return result
-  }, [startHour, endHour, interval])
+    return result;
+  }, [startHour, endHour, interval]);
 
   // All-day segments for renderAllDaySection - the same index bucket the
   // cells read; inert (stable empty array, so the subscription never
@@ -183,10 +184,10 @@ function EventCalendarResourceView({
       isEqual: (a, b) =>
         a === b ||
         (a.length === b.length && a.every((segment, i) => segment === b[i])),
-    }
-  )
+    },
+  );
 
-  const gridTemplateColumns = `repeat(${resources.length || 1}, minmax(var(--ec-resource-col-min,8rem), 1fr))`
+  const gridTemplateColumns = `repeat(${resources.length || 1}, minmax(var(--ec-resource-col-min,8rem), 1fr))`;
 
   const track = (
     <div className="relative flex">
@@ -218,7 +219,7 @@ function EventCalendarResourceView({
         />
       )}
     </div>
-  )
+  );
 
   const defaultProps = {
     "data-slot": "event-calendar-resource-view",
@@ -227,7 +228,7 @@ function EventCalendarResourceView({
       "flex flex-col border-t",
       contained && "min-h-0 flex-1 overflow-hidden",
       viewConfig.classNames?.timeGrid,
-      className
+      className,
     ),
     style: { "--ec-hour-height": "4rem" } as CSSProperties,
     children: (
@@ -237,8 +238,8 @@ function EventCalendarResourceView({
           className={cn(
             "flex border-b pe-(--ec-scrollbar-w,0px)",
             !contained &&
-              "bg-background sticky top-(--ec-sticky-offset,0px) z-20",
-            viewConfig.classNames?.timeGridHeader
+              "sticky top-(--ec-sticky-offset,0px) z-20 bg-background",
+            viewConfig.classNames?.timeGridHeader,
           )}
         >
           <div className="w-(--ec-gutter-width,4.5rem) shrink-0 border-e" />
@@ -249,7 +250,7 @@ function EventCalendarResourceView({
                 data-slot="event-calendar-resource-header"
                 className={cn(
                   "min-w-0 truncate border-e px-2 py-1.5 text-center font-medium last:border-e-0",
-                  viewConfig.classNames?.resourceHeader
+                  viewConfig.classNames?.resourceHeader,
                 )}
               >
                 {viewConfig.renderResourceHeader?.({ resource }) ??
@@ -264,7 +265,7 @@ function EventCalendarResourceView({
             data-slot="event-calendar-all-day-section"
             className={cn(
               "flex border-b pe-(--ec-scrollbar-w,0px)",
-              viewConfig.classNames?.allDaySection
+              viewConfig.classNames?.allDaySection,
             )}
           >
             {viewConfig.renderAllDaySection?.({
@@ -278,8 +279,8 @@ function EventCalendarResourceView({
                     // one bar-row tall and centers the label so it sits on the SAME
                     // baseline as the first all-day chip and stays top-aligned when
                     // the chips wrap onto more lanes (mirrors the time-grid label)
-                    "text-muted-foreground w-(--ec-gutter-width,4.5rem) shrink-0 border-e ps-2 pe-2.5 pt-1.5",
-                    viewConfig.classNames?.allDayLabel
+                    "w-(--ec-gutter-width,4.5rem) shrink-0 border-e ps-2 pe-2.5 pt-1.5 text-muted-foreground",
+                    viewConfig.classNames?.allDayLabel,
                   )}
                 >
                   <span className="flex h-[calc(var(--ec-month-bar-h,1.625rem)-0.125rem)] items-center justify-end">
@@ -321,7 +322,7 @@ function EventCalendarResourceView({
         )}
       </>
     ),
-  }
+  };
 
   return (
     <EventCalendarViewContext.Provider value={{ view: "resource" }}>
@@ -331,26 +332,26 @@ function EventCalendarResourceView({
         props: mergeProps<"div">(defaultProps, props),
       })}
     </EventCalendarViewContext.Provider>
-  )
+  );
 }
 
 function EventCalendarResourceAllDayCell({
   resource,
   day,
 }: {
-  resource: EventCalendarResource
-  day: Date
+  resource: EventCalendarResource;
+  day: Date;
 }) {
-  const settings = useEventCalendarSettings()
-  const viewConfig = useEventCalendarViewConfig()
-  const { effective } = useEventCalendarViewSettings()
-  const gestures = useEventCalendarGestures()
-  const { segments } = useEventCalendarDay(day)
+  const settings = useEventCalendarSettings();
+  const viewConfig = useEventCalendarViewConfig();
+  const { effective } = useEventCalendarViewSettings();
+  const gestures = useEventCalendarGestures();
+  const { segments } = useEventCalendarDay(day);
   const mine = segments.allDay.filter(
-    (segment) => segment.occurrence.event.resourceId === resource.id
-  )
-  const dayStart = zonedStartOfDay(day, settings.timeZone)
-  const dayEnd = addDays(toZoned(dayStart, settings.timeZone), 1)
+    (segment) => segment.occurrence.event.resourceId === resource.id,
+  );
+  const dayStart = zonedStartOfDay(day, settings.timeZone);
+  const dayEnd = addDays(toZoned(dayStart, settings.timeZone), 1);
   const isOff = resolveOffDay(
     day,
     settings.timeZone,
@@ -358,29 +359,29 @@ function EventCalendarResourceAllDayCell({
       ? typeof viewConfig.offDays === "object"
         ? viewConfig.offDays
         : true
-      : false
-  )
+      : false,
+  );
   const offClassName =
     (typeof viewConfig.offDays === "object" && viewConfig.offDays.className) ||
-    "bg-muted/25"
+    "bg-muted/25";
   const isDropTarget = useEventCalendarSelector<
     unknown,
     "valid" | "invalid" | null
   >((state) => {
-    const drag = state.drag
-    if (!drag || !drag.proposedDayGranular) return null
-    const covered = drag.proposedStart < dayEnd && drag.proposedEnd > dayStart
-    if (!covered) return null
-    return drag.valid ? "valid" : "invalid"
-  })
+    const drag = state.drag;
+    if (!drag || !drag.proposedDayGranular) return null;
+    const covered = drag.proposedStart < dayEnd && drag.proposedEnd > dayStart;
+    if (!covered) return null;
+    return drag.valid ? "valid" : "invalid";
+  });
   // Slot-draft highlight, mirroring the time-grid all-day cell. The dnd
   // layer's all-day create branch does not plumb resourceId into the draft,
   // so every resource cell covering the day highlights together.
   const inDraft = useEventCalendarSelector<unknown, boolean>((state) => {
-    const draft = state.slotDraft
-    if (!draft || !draft.allDay) return false
-    return draft.start < dayEnd && draft.end > dayStart
-  })
+    const draft = state.slotDraft;
+    if (!draft || !draft.allDay) return false;
+    return draft.start < dayEnd && draft.end > dayStart;
+  });
   return (
     <div
       data-slot="event-calendar-all-day-cell"
@@ -398,10 +399,10 @@ function EventCalendarResourceAllDayCell({
         isOff && offClassName,
         viewConfig.dayClassName?.(day),
         inDraft && cn("bg-primary/10", viewConfig.classNames?.slotDraft),
-        viewConfig.classNames?.allDayCell
+        viewConfig.classNames?.allDayCell,
       )}
       onPointerDown={(e) => {
-        if (e.target === e.currentTarget) gestures.beginCreate(e, day, true)
+        if (e.target === e.currentTarget) gestures.beginCreate(e, day, true);
       }}
       onClick={(e) => {
         if (
@@ -416,8 +417,8 @@ function EventCalendarResourceAllDayCell({
               view: "resource",
               resourceId: resource.id,
             },
-            e
-          )
+            e,
+          );
         }
       }}
     >
@@ -440,12 +441,12 @@ function EventCalendarResourceAllDayCell({
             isDropTarget === "valid"
               ? "border-primary/50"
               : "border-destructive/60",
-            viewConfig.classNames?.dropIndicator
+            viewConfig.classNames?.dropIndicator,
           )}
         />
       )}
     </div>
-  )
+  );
 }
 
 function EventCalendarResourceColumn({
@@ -455,17 +456,17 @@ function EventCalendarResourceColumn({
   endHour,
   interval,
 }: {
-  resource: EventCalendarResource
-  day: Date
-  startHour: number
-  endHour: number
-  interval: number
+  resource: EventCalendarResource;
+  day: Date;
+  startHour: number;
+  endHour: number;
+  interval: number;
 }) {
-  const settings = useEventCalendarSettings()
-  const viewConfig = useEventCalendarViewConfig()
-  const { effective } = useEventCalendarViewSettings()
-  const gestures = useEventCalendarGestures()
-  const { segments, isToday } = useEventCalendarDay(day)
+  const settings = useEventCalendarSettings();
+  const viewConfig = useEventCalendarViewConfig();
+  const { effective } = useEventCalendarViewSettings();
+  const gestures = useEventCalendarGestures();
+  const { segments, isToday } = useEventCalendarDay(day);
   const isOff = resolveOffDay(
     day,
     settings.timeZone,
@@ -473,60 +474,60 @@ function EventCalendarResourceColumn({
       ? typeof viewConfig.offDays === "object"
         ? viewConfig.offDays
         : true
-      : false
-  )
+      : false,
+  );
   const offClassName =
     (typeof viewConfig.offDays === "object" && viewConfig.offDays.className) ||
-    "bg-muted/25"
+    "bg-muted/25";
 
-  const timeZone = settings.timeZone
-  const dayStart = zonedStartOfDay(day, timeZone)
-  const totalMinutes = getDayTotalMinutes(day, timeZone)
-  const boundsStartMin = startHour * 60
-  const boundsEndMin = Math.min(endHour * 60, totalMinutes)
-  const boundsMinutes = Math.max(60, boundsEndMin - boundsStartMin)
+  const timeZone = settings.timeZone;
+  const dayStart = zonedStartOfDay(day, timeZone);
+  const totalMinutes = getDayTotalMinutes(day, timeZone);
+  const boundsStartMin = startHour * 60;
+  const boundsEndMin = Math.min(endHour * 60, totalMinutes);
+  const boundsMinutes = Math.max(60, boundsEndMin - boundsStartMin);
 
   // Filter this resource's timed segments and repack per column.
   // Clones keep the shared index cache untouched.
   const packed = useMemo(() => {
     const mine = segments.timed
       .filter((segment) => segment.occurrence.event.resourceId === resource.id)
-      .map((segment) => ({ ...segment }) as EventCalendarSegment)
-    packTimedSegments(mine)
-    return mine
-  }, [segments.timed, resource.id])
+      .map((segment) => ({ ...segment }) as EventCalendarSegment);
+    packTimedSegments(mine);
+    return mine;
+  }, [segments.timed, resource.id]);
 
   const dragGhost = useEventCalendarSelector<
     unknown,
     {
-      window: [number, number]
-      valid: boolean
-      kind: string
-      color?: string
-      title: string
-      occurrence: EventCalendarSegment["occurrence"]
-      proposedStart: Date
-      proposedEnd: Date
+      window: [number, number];
+      valid: boolean;
+      kind: string;
+      color?: string;
+      title: string;
+      occurrence: EventCalendarSegment["occurrence"];
+      proposedStart: Date;
+      proposedEnd: Date;
     } | null
   >(
     (state) => {
-      const drag = state.drag
-      if (!drag || drag.proposedDayGranular) return null
+      const drag = state.drag;
+      if (!drag || drag.proposedDayGranular) return null;
       // Moves carry a proposedResourceId (they can cross columns); resizes stay
       // in place and leave it undefined, so fall back to the event's own
       // resource - otherwise the resize ghost is filtered out of every column.
       const targetResourceId =
-        drag.proposedResourceId ?? drag.occurrence.event.resourceId
-      if (targetResourceId !== resource.id) return null
+        drag.proposedResourceId ?? drag.occurrence.event.resourceId;
+      if (targetResourceId !== resource.id) return null;
       const from = Math.max(
         (drag.proposedStart.getTime() - dayStart.getTime()) / 60000,
-        boundsStartMin
-      )
+        boundsStartMin,
+      );
       const to = Math.min(
         (drag.proposedEnd.getTime() - dayStart.getTime()) / 60000,
-        boundsEndMin
-      )
-      if (to <= from) return null
+        boundsEndMin,
+      );
+      if (to <= from) return null;
       return {
         window: [from, to] as [number, number],
         valid: drag.valid,
@@ -536,7 +537,7 @@ function EventCalendarResourceColumn({
         occurrence: drag.occurrence,
         proposedStart: drag.proposedStart,
         proposedEnd: drag.proposedEnd,
-      }
+      };
     },
     {
       isEqual: (a, b) =>
@@ -548,33 +549,33 @@ function EventCalendarResourceColumn({
           a.valid === b.valid &&
           a.proposedStart.getTime() === b.proposedStart.getTime() &&
           a.proposedEnd.getTime() === b.proposedEnd.getTime()),
-    }
-  )
+    },
+  );
 
   const draftWindow = useEventCalendarSelector<
     unknown,
     [number, number] | null
   >(
     (state) => {
-      const draft = state.slotDraft
+      const draft = state.slotDraft;
       if (!draft || draft.allDay || draft.resourceId !== resource.id) {
-        return null
+        return null;
       }
       const from = Math.max(
         (draft.start.getTime() - dayStart.getTime()) / 60000,
-        boundsStartMin
-      )
+        boundsStartMin,
+      );
       const to = Math.min(
         (draft.end.getTime() - dayStart.getTime()) / 60000,
-        boundsEndMin
-      )
-      return to > from ? [from, to] : null
+        boundsEndMin,
+      );
+      return to > from ? [from, to] : null;
     },
     {
       isEqual: (a, b) =>
         a === b || (a !== null && b !== null && a[0] === b[0] && a[1] === b[1]),
-    }
-  )
+    },
+  );
 
   return (
     <div
@@ -597,14 +598,14 @@ function EventCalendarResourceColumn({
         // header marks it); only a consumer todayClassName can tint it
         isToday && viewConfig.todayClassName,
         viewConfig.dayClassName?.(day),
-        viewConfig.classNames?.dayColumn
+        viewConfig.classNames?.dayColumn,
       )}
       style={{
         height: `calc(var(--ec-hour-height) * ${boundsMinutes / 60})`,
         backgroundImage: `repeating-linear-gradient(to bottom, transparent, transparent calc(var(--ec-hour-height) * ${interval / 60} - var(--ec-slot-line-width, 1px)), var(--ec-slot-line-color, var(--color-border)) calc(var(--ec-hour-height) * ${interval / 60} - var(--ec-slot-line-width, 1px)), var(--ec-slot-line-color, var(--color-border)) calc(var(--ec-hour-height) * ${interval / 60}))`,
       }}
       onPointerDown={(e) => {
-        if (e.target === e.currentTarget) gestures.beginCreate(e, day, false)
+        if (e.target === e.currentTarget) gestures.beginCreate(e, day, false);
       }}
       onClick={(e) => {
         if (
@@ -612,17 +613,17 @@ function EventCalendarResourceColumn({
           wasRecentDrag() ||
           wasRecentChipPress()
         )
-          return
-        const rect = e.currentTarget.getBoundingClientRect()
-        const pxPerMinute = rect.height / boundsMinutes
+          return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const pxPerMinute = rect.height / boundsMinutes;
         const minutes = snapMinutes(
           boundsStartMin + (e.clientY - rect.top) / pxPerMinute,
-          settings.snapDuration
-        )
+          settings.snapDuration,
+        );
         const clamped = Math.min(
           Math.max(minutes, boundsStartMin),
-          boundsEndMin - settings.slotDuration
-        )
+          boundsEndMin - settings.slotDuration,
+        );
         settings.onSlotClick?.(
           {
             date: addMinutes(dayStart, clamped),
@@ -631,21 +632,21 @@ function EventCalendarResourceColumn({
             view: "resource",
             resourceId: resource.id,
           },
-          e
-        )
+          e,
+        );
       }}
     >
       {packed.map((segment) => {
-        const startMin = Math.max(segment.startMin ?? 0, boundsStartMin)
-        const endMin = Math.min(segment.endMin ?? startMin, boundsEndMin)
-        if (endMin <= boundsStartMin || startMin >= boundsEndMin) return null
-        const columnCount = segment.columnCount ?? 1
-        const column = segment.column ?? 0
-        const span = segment.columnSpan ?? 1
-        const zIndex = segment.occurrence.event.zIndex ?? 10 + column
+        const startMin = Math.max(segment.startMin ?? 0, boundsStartMin);
+        const endMin = Math.min(segment.endMin ?? startMin, boundsEndMin);
+        if (endMin <= boundsStartMin || startMin >= boundsEndMin) return null;
+        const columnCount = segment.columnCount ?? 1;
+        const column = segment.column ?? 0;
+        const span = segment.columnSpan ?? 1;
+        const zIndex = segment.occurrence.event.zIndex ?? 10 + column;
         // Strict side-by-side columns - no cascade overlap (fade-truncate +
         // hover reveal carry the legibility); the ring separates neighbors.
-        const colPct = 100 / columnCount
+        const colPct = 100 / columnCount;
         return (
           <div
             key={segment.occurrence.key}
@@ -665,17 +666,17 @@ function EventCalendarResourceColumn({
             <EventCalendarEvent
               segment={segment}
               className={cn(
-                columnCount > 1 && "ring-background ring-1",
+                columnCount > 1 && "ring-1 ring-background",
                 // short chips: single centered row, exact-fit line height so
                 // the title never slices mid-glyph
                 endMin - startMin < viewConfig.compactEventMinutes
                   ? "h-full gap-1 py-0 leading-4"
                   : "h-full flex-col items-start justify-start gap-0 py-1",
-                viewConfig.classNames?.timedChip
+                viewConfig.classNames?.timedChip,
               )}
             />
           </div>
-        )
+        );
       })}
       {/* Standardized ghost (EVENT_CALENDAR_GHOST): faint drop placeholder
           for moves (the cursor-attached carry clone owns the visual), dashed
@@ -690,20 +691,20 @@ function EventCalendarResourceColumn({
             dragGhost.kind === "move"
               ? cn(
                   EVENT_CALENDAR_GHOST.move,
-                  !dragGhost.valid && EVENT_CALENDAR_GHOST.invalid
+                  !dragGhost.valid && EVENT_CALENDAR_GHOST.invalid,
                 )
               : cn(
                   EVENT_CALENDAR_GHOST.resize,
-                  !dragGhost.valid && EVENT_CALENDAR_GHOST.invalidResize
+                  !dragGhost.valid && EVENT_CALENDAR_GHOST.invalidResize,
                 ),
-            viewConfig.classNames?.dragGhost
+            viewConfig.classNames?.dragGhost,
           )}
           style={
             {
               ...minuteBlockStyle(
                 dragGhost.window[0],
                 dragGhost.window[1],
-                boundsStartMin
+                boundsStartMin,
               ),
               "--ec-event-color": dragGhost.color ?? "var(--color-primary)",
             } as CSSProperties
@@ -734,7 +735,7 @@ function EventCalendarResourceColumn({
                   : "h-full flex-col items-start justify-start gap-0 py-1",
                 viewConfig.classNames?.timedChip,
                 "inset-ring-0",
-                !dragGhost.valid && EVENT_CALENDAR_GHOST.invalidContent
+                !dragGhost.valid && EVENT_CALENDAR_GHOST.invalidContent,
               )}
             />
           )}
@@ -744,19 +745,19 @@ function EventCalendarResourceColumn({
         <div
           data-slot="event-calendar-slot-draft"
           className={cn(
-            "border-primary/40 bg-primary/5 pointer-events-none absolute inset-x-0.5 z-40 rounded-sm border border-dashed",
-            viewConfig.classNames?.slotDraft
+            "pointer-events-none absolute inset-x-0.5 z-40 rounded-sm border border-primary/40 border-dashed bg-primary/5",
+            viewConfig.classNames?.slotDraft,
           )}
           style={minuteBlockStyle(
             draftWindow[0],
             draftWindow[1],
-            boundsStartMin
+            boundsStartMin,
           )}
         />
       )}
     </div>
-  )
+  );
 }
 
-export { EventCalendarResourceView }
-export type { EventCalendarResourceViewProps }
+export { EventCalendarResourceView };
+export type { EventCalendarResourceViewProps };
