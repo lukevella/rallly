@@ -1691,6 +1691,7 @@ function EventCalendar<TData = unknown>({
   );
 }
 
+export { EventCalendarContent } from "./event-calendar-content";
 export {
   ALL_VIEWS,
   BASE_VIEWS,
@@ -1715,6 +1716,15 @@ export {
   useEventCalendarViewContext,
   useEventCalendarViewSettings,
 };
+export type {
+  CalendarEvent,
+  CalendarView,
+  EventCalendarOccurrence,
+  EventCalendarProposedUpdate,
+  EventCalendarSlotDraft,
+  EventCalendarSlotInfo,
+  EventCalendarUpdateResult,
+} from "./event-calendar-types";
 export type {
   EventCalendarActivationConfig,
   EventCalendarApi,
