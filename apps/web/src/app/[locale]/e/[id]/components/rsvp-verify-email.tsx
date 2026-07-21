@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
-import { Turnstile } from "@marsidev/react-turnstile";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -24,6 +23,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { InputOTP } from "@/components/input-otp";
+import { Turnstile } from "@/components/turnstile";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
@@ -175,13 +175,7 @@ export function RsvpVerifyEmail({
             <Turnstile
               ref={turnstileRef}
               siteKey={turnstileSiteKey}
-              options={{
-                language: i18n.language,
-                size: "flexible",
-                // Solves invisibly in the background; only shows up when
-                // Cloudflare requires an interactive challenge.
-                appearance: "interaction-only",
-              }}
+              language={i18n.language}
               onSuccess={(token) => {
                 void sendOtp(token);
               }}
