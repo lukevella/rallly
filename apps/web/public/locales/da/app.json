@@ -335,7 +335,7 @@
   "invalidFileType": "Ugyldig filtype",
   "invalidFileTypeDescription": "Upload venligst en JPG- eller PNG-fil.",
   "invalidSessionDescription": "Log ud og log ind igen for at fortsætte.",
-  "invalidSessionLabel": "Sessionen},{",
+  "invalidSessionLabel": "Sessionen",
   "invalidSessionTitle": "Din session er ikke længere gyldig",
   "inviteCanceledSuccess": "Invitation annulleret med succes",
   "inviteFailed": "Kunne ikke sende invitation",
