@@ -190,9 +190,6 @@ test.describe("Space members", () => {
     await expect(page.getByText("Member removed successfully")).toBeVisible();
     await expect(row).toBeHidden();
 
-    // Seat usage is rendered from the server and doesn't update in place
-    // yet — assert the persisted state after a reload.
-    await page.reload();
     await expect(page.getByText("1 of 3 seats used")).toBeVisible();
   });
 

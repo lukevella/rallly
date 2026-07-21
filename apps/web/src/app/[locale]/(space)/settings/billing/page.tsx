@@ -25,7 +25,7 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getSpaceSubscription } from "@/features/billing/data";
-import { getActiveSpace, getSpaceSeatCount } from "@/features/space/data";
+import { getActiveSpace, getSeatUsage } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { getCurrentUser } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
@@ -83,10 +83,10 @@ export default async function BillingSettingsPage({
     );
   }
 
-  const [subscription, usedSeats, { seats_updated: didUpdateSeats }] =
+  const [subscription, seatUsage, { seats_updated: didUpdateSeats }] =
     await Promise.all([
       getSpaceSubscription(space.id),
-      getSpaceSeatCount(space.id),
+      getSeatUsage(),
       searchParams,
     ]);
 
@@ -124,7 +124,7 @@ export default async function BillingSettingsPage({
                   currency={subscription.currency}
                   interval={subscription.interval}
                   seats={subscription.quantity}
-                  usedSeats={usedSeats}
+                  usedSeats={seatUsage.used}
                   status={subscription.status}
                   cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
                   periodEnd={subscription.periodEnd}
