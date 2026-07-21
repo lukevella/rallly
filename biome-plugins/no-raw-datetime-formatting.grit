@@ -5,6 +5,10 @@
 // (which format independently of the app to act as an oracle, matching the
 // tests exemption in the biome.json overrides), and files still pending
 // migration. Shrink it as RAL-1247 proceeds.
+// packages/ui is exempt entirely: lib/datetime is an apps/web app-layer
+// concept, and a shared UI package cannot import it (wrong layering
+// direction). Shared primitives in packages/ui format dates only via a
+// caller-passed `locale` prop, which is a legitimate, narrower contract.
 language js
 
 or {
@@ -19,7 +23,8 @@ or {
     r".*/src/lib/utils/timezone-schema\.ts",
     r".*/src/components/time-zone-picker/timezone-utils\.ts",
     r".*/src/features/poll/components/manage-poll/use-csv-exporter\.ts",
-    r".*/tests/.*"
+    r".*/tests/.*",
+    r".*/packages/ui/.*"
   },
   register_diagnostic(span=$match, message="Do not format dates inline. Use the formatters in `@/lib/datetime` so locale, timezone, and hour-cycle preferences are applied consistently.")
 }
