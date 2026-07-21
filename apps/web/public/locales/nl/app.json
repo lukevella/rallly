@@ -293,8 +293,6 @@
   "licenseKeyGenericError": "Er is een fout opgetreden tijdens het valideren van de licentiesleutel",
   "licenseLimitWarning": "Je hebt de limiet van de licentie overschreden. Overweeg een <a>upgrade</a>.",
   "licenseType": "Licentietype",
-  "limitedPollLifetime": "Beperkte levensduur van poll",
-  "limitedPollLifetimeDescription": "Inactieve polls worden automatisch verwijderd",
   "loading": "Laden...",
   "location": "Locatie",
   "locationPlaceholder": "Koffiehuis Joe's",
