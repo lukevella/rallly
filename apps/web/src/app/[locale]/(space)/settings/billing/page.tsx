@@ -25,9 +25,9 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getSpaceSubscription } from "@/features/billing/data";
-import { getActiveSpace, getSeatUsage } from "@/features/space/data";
+import { getActiveSpace, getSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
-import { getCurrentUser } from "@/features/user/data";
+import { getCurrentUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";

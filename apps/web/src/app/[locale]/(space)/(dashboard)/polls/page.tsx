@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { getPollStatusCounts } from "@/features/poll/data";
-import { getActiveSpace } from "@/features/space/data";
+import { getActiveSpace } from "@/features/space/loaders";
 import { getTranslation } from "@/i18n/server";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { PollsPage } from "./polls-page";

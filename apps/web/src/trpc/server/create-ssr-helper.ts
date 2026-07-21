@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import superjson from "superjson";
 import { isInitialAdmin } from "@/features/instance-settings/utils";
-import { getCurrentUser } from "@/features/user/data";
+import { getCurrentUser } from "@/features/user/loaders";
 import { getSession, requireUser } from "@/lib/auth";
 import { getPathname } from "@/lib/pathname";
 import { buildSafeRedirectUrl } from "@/lib/utils/redirect";

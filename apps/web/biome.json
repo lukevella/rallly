@@ -161,11 +161,8 @@
                 },
                 "patterns": [
                   {
-                    "group": [
-                      "@/features/user/data",
-                      "@/features/api-keys/data"
-                    ],
-                    "message": "Session scoped DAL modules derive the actor from cookies and must not be used in API routes. Webhooks, cron and API key routes authenticate their own way and pass proven scope to parameterized reads."
+                    "group": ["@/features/**/loaders"],
+                    "message": "Loaders derive the actor from session cookies and must not be used in API routes. Webhooks, cron and API key routes authenticate their own way and pass proven scope to parameterized reads in data.ts."
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
@@ -202,11 +199,8 @@
                 },
                 "patterns": [
                   {
-                    "group": [
-                      "@/features/user/data",
-                      "@/features/api-keys/data"
-                    ],
-                    "message": "Session scoped DAL modules derive the actor from cookies and must not be used in API routes. Webhooks, cron and API key routes authenticate their own way and pass proven scope to parameterized reads."
+                    "group": ["@/features/**/loaders"],
+                    "message": "Loaders derive the actor from session cookies and must not be used in API routes. Webhooks, cron and API key routes authenticate their own way and pass proven scope to parameterized reads in data.ts."
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
@@ -370,6 +364,8 @@
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "next/headers": "The DAL core trusts its input: data.ts and mutations.ts take explicit parameters and never read the request. Session and request facing reads belong in loaders.ts, writes resolve their actor in actions.ts.",
+                  "next/navigation": "The DAL core trusts its input: data.ts and mutations.ts take explicit parameters and never redirect. Page semantics (redirects) belong in loaders.ts or the route.",
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
@@ -485,7 +481,7 @@
             "useFilenamingConvention": {
               "level": "warn",
               "options": {
-                "match": "(?:data|mutations|actions|schema|types|ability|constants|utils|service)[.]ts|client[.]tsx|.+[.]test[.]tsx?",
+                "match": "(?:data|loaders|mutations|actions|schema|types|ability|constants|utils|service)[.]ts|client[.]tsx|.+[.]test[.]tsx?",
                 "filenameCases": ["kebab-case"]
               }
             }

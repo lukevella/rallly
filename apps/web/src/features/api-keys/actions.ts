@@ -1,11 +1,13 @@
 "use server";
 
-import { getApiKeyAccessContext } from "@/features/api-keys/data";
+import { isApiAccessEnabled } from "@/features/api-keys/data";
 import { createApiKey, revokeApiKey } from "@/features/api-keys/mutations";
 import {
   createApiKeySchema,
   revokeApiKeySchema,
 } from "@/features/api-keys/schema";
+import { getActiveSpaceForUser } from "@/features/space/data";
+import { getCurrentUser } from "@/features/user/loaders";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
@@ -13,29 +15,32 @@ import { authActionClient } from "@/lib/safe-action/server";
 // The UI never offers these actions to users without API access, so a
 // failed gate is unexpected here — throw for the global error handler.
 async function requireApiAccess() {
-  const context = await getApiKeyAccessContext();
+  const user = await getCurrentUser();
 
-  if (!context.ok) {
-    switch (context.reason) {
-      case "unauthorized":
-        throw new AppError({
-          code: "UNAUTHORIZED",
-          message: "You are not authenticated.",
-        });
-      case "no_active_space":
-        throw new AppError({
-          code: "NOT_FOUND",
-          message: "Space not found",
-        });
-      case "api_access_not_enabled":
-        throw new AppError({
-          code: "FORBIDDEN",
-          message: "API access is not enabled for this user or space",
-        });
-    }
+  if (!user) {
+    throw new AppError({
+      code: "UNAUTHORIZED",
+      message: "You are not authenticated.",
+    });
   }
 
-  return context;
+  const space = await getActiveSpaceForUser(user.id);
+
+  if (!space) {
+    throw new AppError({
+      code: "NOT_FOUND",
+      message: "Space not found",
+    });
+  }
+
+  if (!(await isApiAccessEnabled(user, space))) {
+    throw new AppError({
+      code: "FORBIDDEN",
+      message: "API access is not enabled for this user or space",
+    });
+  }
+
+  return { user, space };
 }
 
 export const createApiKeyAction = authActionClient

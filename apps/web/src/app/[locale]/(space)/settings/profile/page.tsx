@@ -18,7 +18,7 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { getCurrentUser } from "@/features/user/data";
+import { getCurrentUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getPathname } from "@/lib/pathname";

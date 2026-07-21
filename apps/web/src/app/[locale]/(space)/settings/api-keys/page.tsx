@@ -13,7 +13,10 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { getApiKeysPageState, getSpaceApiKeys } from "@/features/api-keys/data";
+import { getSpaceApiKeys, isApiAccessEnabled } from "@/features/api-keys/data";
+import { getActiveSpaceForUser } from "@/features/space/data";
+import type { AuthorizedSpaceId } from "@/features/space/types";
+import { getCurrentUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getPathname } from "@/lib/pathname";
@@ -24,9 +27,10 @@ import { ApiUsageLimits } from "./components/api-usage-limits";
 import { CreateApiKeyButton } from "./components/create-api-key-button";
 
 export default async function ApiKeysSettingsPage() {
-  const pageState = await getApiKeysPageState();
+  const user = await getCurrentUser();
+  const space = user ? await getActiveSpaceForUser(user.id) : null;
 
-  if (pageState.state === "unauthorized") {
+  if (!user || !space) {
     redirect(
       buildSafeRedirectUrl({
         destination: "/login",
@@ -35,7 +39,11 @@ export default async function ApiKeysSettingsPage() {
     );
   }
 
-  if (pageState.state === "unavailable") {
+  const enabled = await isApiAccessEnabled(user, space);
+
+  // "Needs to upgrade" (hobby tier) gets its own screen; every other reason
+  // access is blocked (feature flag off, not the owner) is a 404.
+  if (!enabled && space.tier !== "hobby") {
     notFound();
   }
 
@@ -51,36 +59,28 @@ export default async function ApiKeysSettingsPage() {
             defaults="Manage API keys for programmatic access to your space"
           />
         </SettingsPageDescription>
-        {pageState.state === "enabled" ? (
+        {enabled ? (
           <SettingsPageAction>
             <CreateApiKeyButton />
           </SettingsPageAction>
         ) : null}
       </SettingsPageHeader>
       <SettingsPageContent>
-        {pageState.state === "upgrade_required" ? (
-          <ApiAccessUpgrade />
-        ) : (
-          <ApiKeysContent />
-        )}
+        {enabled ? <ApiKeysContent spaceId={space.id} /> : <ApiAccessUpgrade />}
       </SettingsPageContent>
     </SettingsPage>
   );
 }
 
-async function ApiKeysContent() {
-  const result = await getSpaceApiKeys();
-
-  if (!result.ok) {
-    notFound();
-  }
+async function ApiKeysContent({ spaceId }: { spaceId: AuthorizedSpaceId }) {
+  const apiKeys = await getSpaceApiKeys({ spaceId });
 
   return (
     <PageSectionGroup>
       <ApiUsageLimits />
       <PageSection>
         <PageSectionContent>
-          <ApiKeysList apiKeys={result.apiKeys} />
+          <ApiKeysList apiKeys={apiKeys} />
         </PageSectionContent>
       </PageSection>
     </PageSectionGroup>
