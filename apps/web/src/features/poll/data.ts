@@ -153,6 +153,73 @@ export async function getPollParticipants({
   };
 }
 
+export async function listPolls({
+  spaceId,
+  status,
+  cursor,
+  limit,
+}: {
+  spaceId: AuthorizedSpaceId;
+  status?: PollStatus;
+  cursor?: string;
+  limit: number;
+}) {
+  // Fetch one extra row to determine whether there is a next page
+  const polls = await prisma.poll.findMany({
+    where: {
+      spaceId,
+      deleted: false,
+      ...(status && { status }),
+    },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      location: true,
+      timeZone: true,
+      status: true,
+      createdAt: true,
+      user: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+      options: {
+        select: {
+          id: true,
+          startTime: true,
+          duration: true,
+        },
+        orderBy: {
+          startTime: "asc",
+        },
+      },
+      _count: {
+        select: {
+          participants: {
+            where: { deleted: false },
+          },
+        },
+      },
+    },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    take: limit + 1,
+    ...(cursor && { cursor: { id: cursor }, skip: 1 }),
+  });
+
+  const hasMore = polls.length > limit;
+  const page = hasMore ? polls.slice(0, limit) : polls;
+
+  return {
+    polls: page.map(({ _count, ...poll }) => ({
+      ...poll,
+      participantCount: _count.participants,
+    })),
+    nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null,
+  };
+}
+
 type PollFilters = {
   status?: PollStatus;
   page?: number;

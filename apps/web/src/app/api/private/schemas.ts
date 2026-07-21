@@ -167,38 +167,78 @@ export const pollUserSchema = z
   })
   .openapi("PollUser");
 
+const pollSchema = z
+  .object({
+    id: z.string().openapi({ example: "p_123abc" }),
+    title: z.string().openapi({ example: "Team sync" }),
+    description: z.string().nullable().openapi({
+      example: "Pick a time that works for everyone",
+    }),
+    location: z.string().nullable().openapi({ example: "Zoom" }),
+    timezone: z.string().nullable().openapi({ example: "Europe/London" }),
+    status: pollStatusSchema,
+    createdAt: z
+      .string()
+      .datetime()
+      .openapi({ example: "2025-01-10T12:00:00Z" }),
+    user: pollUserSchema.nullable().openapi({
+      description: "The poll organizer",
+    }),
+    options: z.array(pollOptionSchema),
+    adminUrl: z
+      .string()
+      .openapi({ example: "https://example.com/poll/p_123abc" }),
+    inviteUrl: z
+      .string()
+      .openapi({ example: "https://example.com/invite/p_123abc" }),
+  })
+  .openapi("Poll");
+
 export const getPollSuccessResponseSchema = z
   .object({
-    data: z.object({
-      id: z.string().openapi({ example: "p_123abc" }),
-      title: z.string().openapi({ example: "Team sync" }),
-      description: z.string().nullable().openapi({
-        example: "Pick a time that works for everyone",
-      }),
-      location: z.string().nullable().openapi({ example: "Zoom" }),
-      timezone: z.string().nullable().openapi({ example: "Europe/London" }),
-      status: pollStatusSchema,
-      createdAt: z
-        .string()
-        .datetime()
-        .openapi({ example: "2025-01-10T12:00:00Z" }),
-      user: pollUserSchema.nullable().openapi({
-        description: "The poll organizer",
-      }),
-      options: z.array(pollOptionSchema),
-      adminUrl: z
-        .string()
-        .openapi({ example: "https://example.com/poll/p_123abc" }),
-      inviteUrl: z
-        .string()
-        .openapi({ example: "https://example.com/invite/p_123abc" }),
-    }),
+    data: pollSchema,
   })
   .openapi("GetPollResponse");
 
 // Create poll returns the same shape as get poll
 export const createPollSuccessResponseSchema =
   getPollSuccessResponseSchema.openapi("CreatePollResponse");
+
+export const listPollsQuerySchema = z.object({
+  status: pollStatusSchema.optional().openapi({
+    description: "Filter polls by status. Omit to include all statuses.",
+    example: "open",
+  }),
+  cursor: z.string().optional().openapi({
+    description:
+      "Cursor for pagination. Pass the `nextCursor` value from the previous response to fetch the next page.",
+    example: "p_123abc",
+  }),
+  limit: z.coerce.number().int().min(1).max(100).default(20).openapi({
+    description: "Number of polls to return per page (1-100).",
+    example: 20,
+  }),
+});
+
+export const listPollItemSchema = pollSchema
+  .extend({
+    participantCount: z.int().nonnegative().openapi({
+      description: "Number of participants who have responded to the poll",
+      example: 3,
+    }),
+  })
+  .openapi("ListPollItem");
+
+export const listPollsSuccessResponseSchema = z
+  .object({
+    data: z.array(listPollItemSchema),
+    nextCursor: z.string().nullable().openapi({
+      description:
+        "Cursor to fetch the next page. `null` when there are no more results.",
+      example: "p_123abc",
+    }),
+  })
+  .openapi("ListPollsResponse");
 
 export const voteCountSchema = z
   .object({
