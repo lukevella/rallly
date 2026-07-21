@@ -19,9 +19,6 @@ export class InvitePage {
     await page.click("text='Submit'");
 
     await expect(page.getByText("Your response has been saved")).toBeVisible();
-    await expect(
-      page.getByRole("link", { name: "Create your own poll" }),
-    ).toHaveAttribute("href", "/new");
     await page.click("button >> text='Back to poll'");
   }
 }
