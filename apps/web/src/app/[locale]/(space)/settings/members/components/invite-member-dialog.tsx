@@ -224,7 +224,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
             loading={inviteMember.isPending}
             type="submit"
           >
-            <Trans i18nKey="inviteMember" defaults="Send invite" />
+            <Trans i18nKey="inviteMemberFormSubmit" defaults="Send invite" />
           </Button>
         </div>
       </form>
