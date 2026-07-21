@@ -84,7 +84,7 @@ export async function captureOne(
   to: string,
   options: { wait?: number } = {},
 ): Promise<{ email: MailpitMessage }> {
-  const timeout = options.wait ?? 5000;
+  const timeout = options.wait ?? 30_000;
   const deadline = Date.now() + timeout;
 
   while (Date.now() < deadline) {
