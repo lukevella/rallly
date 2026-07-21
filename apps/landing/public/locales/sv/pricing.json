@@ -25,6 +25,7 @@
   "upgrade": "Uppgradera",
   "upgradeNowSaveLater": "Uppgradera nu, spara senare",
   "whenPollInactive": "När blir en förfrågan inaktiv?",
+  "whenPollInactiveAnswer": "Förfrågningar blir inaktiva när alla datumalternativ ligger i det förflutna OCH det inte har varit någon aktivitet på över 30 dagar. Aktivitet inkluderar nya röster, kommentarer eller ändringar i förfrågan. Inaktiva förfrågningar raderas automatiskt om du inte har en betald prenumeration.",
   "whyUpgrade": "Varför ska jag uppgradera?",
   "whyUpgradeAnswer2": "Att uppgradera till ett abonnemang är vettigt om du använder Rallly ofta eller använder det i arbetet. Den nuvarande abonnemansavgiften är anpassad för tidiga användare och kommer att öka i framtiden. Genom att uppgradera nu får du tidig tillgång till nya, högkvalitativa schemaläggningsverktyg när de släpps och låser din abonnemanskostnad så att du inte påverkas av framtida prishöjningar.",
   "yearlyBillingDescription": "per år"

@@ -25,6 +25,7 @@
   "upgrade": "Upgraden",
   "upgradeNowSaveLater": "Upgrade nu, bespaar later",
   "whenPollInactive": "Wanneer krijgt een poll de status \"inactief\"?",
+  "whenPollInactiveAnswer": "Polls worden inactief wanneer alle datumopties in het verleden liggen en er meer dan 30 dagen geen activiteit is geweest. Activiteit omvat nieuwe stemmen, opmerkingen of wijzigingen in de poll. Inactieve polls worden automatisch verwijderd als je geen betaald abonnement hebt.",
   "whyUpgrade": "Waarom zou ik upgraden?",
   "whyUpgradeAnswer2": "Upgraden naar een betaald abonnement is zinvol als je Rallly vaak gebruikt of het voor je werk gebruikt. Het huidige abonnementstarief is speciaal voor early adopters en zal in de toekomst stijgen. Door nu te upgraden krijg je vroegtijdige toegang tot nieuwe planningshulpmiddelen van hoge kwaliteit zodra ze worden uitgebracht en kun je je abonnement vastzetten zodat je niet wordt beïnvloed door toekomstige prijsstijgingen.",
   "yearlyBillingDescription": "per jaar"
