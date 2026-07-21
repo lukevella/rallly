@@ -335,8 +335,6 @@
   "licenseKeyGenericError": "Při validaci licenčního klíče nastala chyba",
   "licenseLimitWarning": "Dosáhli jste limitů vaší licence. Proveďte prosím <a>upgrade</a>.",
   "licenseType": "Typ licence",
-  "limitedPollLifetime": "Ankety s omezenou dobou trvání",
-  "limitedPollLifetimeDescription": "Neaktivní ankety jsou automaticky mazány",
   "loading": "Načítání...",
   "location": "Místo",
   "locationCustomLink": "Vlastní odkaz",
