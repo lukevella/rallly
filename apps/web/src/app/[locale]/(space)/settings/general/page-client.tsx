@@ -23,6 +23,7 @@ import { useAuthedUser } from "@/features/user/client";
 import { Trans } from "@/i18n/client";
 import { CustomBrandingSection } from "./components/custom-branding-section";
 import { DeleteSpaceButton } from "./components/delete-space-button";
+import { HideCreatePollCtaSection } from "./components/hide-create-poll-cta-section";
 import { LeaveSpaceButton } from "./components/leave-space-button";
 import { SpaceSettingsForm } from "./components/space-settings-form";
 
@@ -66,6 +67,7 @@ export function GeneralSettingsPageClient() {
             </PageSectionContent>
           </PageSection>
           <CustomBrandingSection disabled={!isAdmin} />
+          <HideCreatePollCtaSection disabled={!isAdmin} />
           {!isOwner ? (
             <PageSection variant="card">
               <PageSectionHeader>

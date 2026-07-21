@@ -9,11 +9,13 @@ import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import {
   removeSpaceImage,
   updateSpace,
+  updateSpaceHideCreatePollCta,
   updateSpaceImage,
   updateSpaceShowBranding,
 } from "@/features/space/mutations";
 import {
   spaceImageUploadSchema,
+  updateSpaceHideCreatePollCtaSchema,
   updateSpaceImageSchema,
   updateSpaceSchema,
   updateSpaceShowBrandingSchema,
@@ -133,6 +135,44 @@ export const updateSpaceShowBrandingAction = authActionClient
       event: "space_update_show_branding",
       properties: {
         showBranding: parsedInput.showBranding,
+      },
+      groups: {
+        space: space.id,
+      },
+    });
+  });
+
+export const updateSpaceHideCreatePollCtaAction = authActionClient
+  .metadata({ actionName: "update_space_hide_create_poll_cta" })
+  .inputSchema(updateSpaceHideCreatePollCtaSchema)
+  .action(async ({ ctx, parsedInput }) => {
+    const space = await requireSpaceWithUpdateAbility(ctx.user);
+
+    if (parsedInput.hideCreatePollCta && space.tier !== "pro") {
+      throw new AppError({
+        code: "PAYMENT_REQUIRED",
+        message:
+          "You need a Pro subscription to hide the create poll prompt from your polls",
+      });
+    }
+
+    await updateSpaceHideCreatePollCta({
+      spaceId: space.id,
+      hideCreatePollCta: parsedInput.hideCreatePollCta,
+    });
+
+    identifyGroup({
+      groupType: "space",
+      groupKey: space.id,
+      properties: {
+        hide_create_poll_cta: parsedInput.hideCreatePollCta,
+      },
+    });
+
+    track(ctx.user, {
+      event: "space_update_hide_create_poll_cta",
+      properties: {
+        hideCreatePollCta: parsedInput.hideCreatePollCta,
       },
       groups: {
         space: space.id,

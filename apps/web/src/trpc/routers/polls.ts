@@ -650,6 +650,7 @@ export const polls = router({
               image: true,
               tier: true,
               showBranding: true,
+              hideCreatePollCta: true,
               primaryColor: true,
             },
           },
