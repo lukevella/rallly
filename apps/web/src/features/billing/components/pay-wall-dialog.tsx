@@ -279,14 +279,14 @@ export function PayWallDialog({
                     icon={<TimerResetIcon />}
                     title={
                       <Trans
-                        i18nKey="limitedPollLifetime"
-                        defaults="Limited Poll Lifetime"
+                        i18nKey="thirtyDayPollRetention"
+                        defaults="30 Day Poll Retention"
                       />
                     }
                     description={
                       <Trans
-                        i18nKey="limitedPollLifetimeDescription"
-                        defaults="Inactive polls are automatically deleted"
+                        i18nKey="thirtyDayPollRetentionDescription"
+                        defaults="Polls are kept for 30 days after their final date"
                       />
                     }
                   />
