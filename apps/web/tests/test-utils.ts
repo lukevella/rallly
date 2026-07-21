@@ -46,6 +46,45 @@ export async function createUserInDb({
   });
 }
 
+/**
+ * Upgrades a space to pro with an active subscription. Seat totals are
+ * derived from the subscription quantity in cloud-hosted mode, so tests
+ * that exercise seat limits must seed one.
+ */
+export async function upgradeSpaceToPro({
+  spaceId,
+  userId,
+  seats,
+}: {
+  spaceId: string;
+  userId: string;
+  seats: number;
+}) {
+  await prisma.$transaction([
+    prisma.space.update({
+      where: { id: spaceId },
+      data: { tier: "pro" },
+    }),
+    prisma.subscription.create({
+      data: {
+        id: `sub_test_${spaceId}`,
+        priceId: "price_test",
+        quantity: seats,
+        subscriptionItemId: `si_test_${spaceId}`,
+        amount: 700 * seats,
+        status: "active",
+        active: true,
+        currency: "USD",
+        interval: "month",
+        periodStart: new Date(),
+        periodEnd: dayjs().add(1, "month").toDate(),
+        userId,
+        spaceId,
+      },
+    }),
+  ]);
+}
+
 export async function createSpaceInDb({
   name,
   ownerId,
