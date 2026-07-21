@@ -68,7 +68,7 @@
   "newParticipantConfirmation_content2": "Während die Umfrage noch geöffnet ist, kannst du deine Antwort mit dem unten stehenden Link ändern.",
   "newParticipantConfirmation_footnote": "Sie erhalten diese E-Mail, weil eine Antwort auf <domain /> gesendet wurde. Falls dies nicht Sie waren, ignorieren Sie bitte diese E-Mail.",
   "newParticipantConfirmation_heading": "Bestätigung der Umfrageantwort",
-  "newParticipantConfirmation_preview": "Um deine Antwort zu bearbeiten, verwende den Link unten stehenden Link",
+  "newParticipantConfirmation_preview": "Um deine Antwort zu bearbeiten, verwende den unten stehenden Link",
   "newParticipantConfirmation_subject": "Vielen Dank für die Antwort auf {title}",
   "newPoll_button": "Umfrage verwalten",
   "newPoll_content": "Deine Umfrage mit dem Titel <b>{title}</b> ist bereit! Teile sie mit dem Link unten:",

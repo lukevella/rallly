@@ -335,7 +335,7 @@
   "instanceSettingsDescription": "Instanz-Einstellungen konfigurieren",
   "invalidEmailAddress": "Bitte gib eine gültige E-Mail-Adresse ein",
   "invalidFileType": "Ungültiger Dateityp",
-  "invalidFileTypeDescription": "Bitte laden Sie eine JPG oder PNG Datei hoch.",
+  "invalidFileTypeDescription": "Bitte laden Sie eine JPG- oder PNG-Datei hoch.",
   "invalidSessionDescription": "Abmelden und erneut anmelden, um fortzufahren.",
   "invalidSessionLabel": "Sitzung",
   "invalidSessionTitle": "Deine Sitzung ist nicht mehr gültig",
