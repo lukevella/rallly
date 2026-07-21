@@ -1,4 +1,5 @@
 import type { Page } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { EditOptionsPage } from "./edit-options-page";
 import { InvitePage } from "./invite-page";
 
@@ -74,6 +75,9 @@ export class PollPage {
     }
 
     await page.click("text='Submit'");
+
+    await expect(page.getByText("Your response has been saved")).toBeVisible();
+    await page.click("button >> text='Back to poll'");
   }
 
   async gotoInvitePage() {

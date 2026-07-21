@@ -1,11 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@rallly/ui/dialog";
+import { posthog } from "@rallly/posthog/client";
+import { Dialog, DialogContent } from "@rallly/ui/dialog";
 import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import * as z from "zod";
@@ -17,7 +12,6 @@ import {
 } from "@/features/poll/components/mutations";
 import { NewParticipantForm } from "@/features/poll/components/new-participant-modal";
 import { useParticipants } from "@/features/poll/components/participants-provider";
-import { Trans } from "@/i18n/client";
 
 const formSchema = z.object({
   mode: z.enum(["new", "edit", "view"]),
@@ -78,7 +72,7 @@ export const useVotingForm = () => {
 };
 
 export const VotingForm = ({ children }: React.PropsWithChildren) => {
-  const { id: pollId, options } = usePoll();
+  const { id: pollId, options, spaceId, space } = usePoll();
   const updateParticipant = useUpdateParticipantMutation();
   const token = useEditToken();
   const { participants } = useParticipants();
@@ -144,14 +138,6 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
         onOpenChange={setIsNewParticipantModalOpen}
       >
         <DialogContent size="sm">
-          <DialogHeader>
-            <DialogTitle>
-              <Trans i18nKey="newParticipant" />
-            </DialogTitle>
-            <DialogDescription>
-              <Trans i18nKey="newParticipantFormDescription" />
-            </DialogDescription>
-          </DialogHeader>
           <NewParticipantForm
             votes={normalizeVotes(optionIds, form.watch("votes"))}
             onSubmit={(newParticipant) => {
@@ -162,7 +148,15 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
                   optionId: option.id,
                 })),
               });
-              setIsNewParticipantModalOpen(false);
+              posthog?.capture("new_participant_dialog:success_view", {
+                pollId,
+                spaceId,
+                tier: space?.tier,
+                $groups: {
+                  poll: pollId,
+                  ...(spaceId ? { space: spaceId } : {}),
+                },
+              });
             }}
             onCancel={() => setIsNewParticipantModalOpen(false)}
           />
