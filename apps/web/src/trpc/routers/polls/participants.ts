@@ -7,6 +7,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
+import { getTranslations } from "@/i18n/server";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { hasPollAdminAccess } from "@/features/poll/data";
@@ -271,11 +272,17 @@ export const participants = router({
           (option) => option.startTime >= now,
         );
 
+        const t = await getTranslations({
+          locale: ctx.locale,
+        });
+
         if (options.length > 0 && futureOptions.length === 0) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message:
-              "Cannot respond to a poll where all options are in the past",
+            message: t("errors.allOptionsInPast", {
+              defaultValue:
+                "Cannot respond to a poll where all options are in the past",
+            }),
           });
         }
 
