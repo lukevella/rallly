@@ -44,9 +44,7 @@ test.describe(() => {
 
     await invitePage.addParticipant("Anne", "test@example.com");
 
-    const { email } = await captureOne("test@example.com", {
-      wait: 5000,
-    });
+    const { email } = await captureOne("test@example.com");
 
     await expect(page.locator("text='Anne'")).toBeVisible();
 
