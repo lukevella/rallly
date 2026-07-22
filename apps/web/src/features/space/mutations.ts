@@ -95,9 +95,15 @@ export async function updateSpaceImage({
 }
 
 export async function deleteSpace({ spaceId }: { spaceId: string }) {
-  await prisma.space.delete({
+  const deletedSpace = await prisma.space.delete({
     where: { id: spaceId },
   });
+
+  const imageKey = deletedSpace.image;
+
+  if (imageKey) {
+    after(() => deleteImageFromS3(imageKey));
+  }
 }
 
 export async function removeSpaceImage({ spaceId }: { spaceId: string }) {
