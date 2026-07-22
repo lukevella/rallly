@@ -12,6 +12,8 @@ import type {
 import {
   EventCalendar,
   EventCalendarContent,
+  EventCalendarDayView,
+  EventCalendarWeekView,
   useEventCalendarNavigation,
 } from "@rallly/ui/event-calendar";
 import { XIcon } from "lucide-react";
@@ -32,6 +34,13 @@ import {
 } from "./week-calendar-utils";
 
 const useDevice = createBreakpoint({ desktop: 720, mobile: 360 });
+
+// The week/day picker only creates timed slots; all-day (date) options are a
+// month-view concept. Hide the all-day lane so it isn't a dead interactive
+// surface (rbc hid it too, via CSS).
+const WeekViewNoAllDay = () => <EventCalendarWeekView showAllDay={false} />;
+const DayViewNoAllDay = () => <EventCalendarDayView showAllDay={false} />;
+const VIEW_COMPONENTS = { week: WeekViewNoAllDay, day: DayViewNoAllDay };
 
 // ReUI's grid needs a fixed IANA zone to lay out days/hours. The poll form
 // stores naive wall-clock strings with no zone of their own, so this zone is
@@ -243,7 +252,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         }}
       >
         <CalendarToolbar />
-        <EventCalendarContent />
+        <EventCalendarContent components={VIEW_COMPONENTS} />
       </EventCalendar>
     </div>
   );

@@ -1693,6 +1693,10 @@ function EventCalendar<TData = unknown>({
 
 export { EventCalendarContent } from "./event-calendar-content";
 export {
+  EventCalendarDayView,
+  EventCalendarWeekView,
+} from "./event-calendar-time-grid";
+export {
   ALL_VIEWS,
   BASE_VIEWS,
   DEFAULT_VIEW_CONFIG,
