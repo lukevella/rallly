@@ -13,7 +13,7 @@ export function PlanCardHeader({
   return (
     <div
       className={cn(
-        "flex @sm:flex-row flex-col items-start @sm:items-center gap-3 p-3",
+        "flex @sm:flex-row flex-col items-start gap-3 p-3",
         className,
       )}
       {...props}
