@@ -16,7 +16,10 @@ import {
 import { usePoll } from "@/features/poll/components/poll-context";
 import { Trans, useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
-import { encodeDateOption } from "@/lib/utils/date-time-utils";
+import {
+  encodeDateOption,
+  getBrowserTimeZone,
+} from "@/lib/utils/date-time-utils";
 
 const convertOptionToString = (
   option: { startTime: Date; duration: number },
@@ -86,6 +89,13 @@ const Page = () => {
             };
       }),
       timeZone: poll.timeZone ?? "",
+      // A timed poll with no stored zone was locked to a single wall-clock time.
+      // All-day polls are neutral (lock doesn't apply).
+      lockTimeZone:
+        !poll.timeZone && poll.options.some((option) => option.duration > 0),
+      allDay:
+        poll.options.length > 0 &&
+        poll.options.every((option) => option.duration === 0),
       duration: poll.options[0]?.duration || 60,
     },
   });
@@ -93,26 +103,46 @@ const Page = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((data) => {
-          const encodedOptions = data.options.map(encodeDateOption);
-          const optionsToDelete = poll.options.filter((option) => {
-            return !encodedOptions.includes(
-              convertOptionToString(option, data.timeZone),
-            );
-          });
+          // The submitted timeZone frame for the options: null when locked or
+          // all-day (floating), else the organizer's zone.
+          const submittedTimeZone =
+            !data.lockTimeZone && !data.allDay
+              ? data.timeZone || getBrowserTimeZone()
+              : null;
 
-          const optionsToAdd = encodedOptions.filter(
-            (encodedOption) =>
-              !poll.options.find(
-                (o) =>
-                  convertOptionToString(o, data.timeZone) === encodedOption,
-              ),
-          );
+          const encodedOptions = data.options.map(encodeDateOption);
+
+          // When the timezone frame changes (e.g. the organizer toggled the
+          // lock), the stored instants no longer match the frame, so re-store
+          // every option from the form's wall-clock under the new frame — this
+          // keeps the displayed times put (3pm stays 3pm). When the frame is
+          // unchanged, diff normally so we only touch what the user edited.
+          const frameChanged = submittedTimeZone !== poll.timeZone;
+
+          const optionsToDelete = frameChanged
+            ? poll.options
+            : poll.options.filter(
+                (option) =>
+                  !encodedOptions.includes(
+                    convertOptionToString(option, poll.timeZone),
+                  ),
+              );
+
+          const optionsToAdd = frameChanged
+            ? encodedOptions
+            : encodedOptions.filter(
+                (encodedOption) =>
+                  !poll.options.find(
+                    (o) =>
+                      convertOptionToString(o, poll.timeZone) === encodedOption,
+                  ),
+              );
 
           const onOk = () => {
             updatePollMutation(
               {
                 pollId: poll.id,
-                timeZone: data.timeZone || null,
+                timeZone: submittedTimeZone,
                 optionsToDelete: optionsToDelete.map(({ id }) => id),
                 optionsToAdd,
               },

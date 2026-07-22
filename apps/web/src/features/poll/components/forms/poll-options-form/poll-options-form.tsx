@@ -33,7 +33,7 @@ const PollOptionsForm = ({
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();
 
-  const { watch, setValue, getValues, formState } = form;
+  const { watch, setValue, formState } = form;
 
   const views = React.useMemo(() => {
     const res = [
@@ -62,11 +62,6 @@ const PollOptionsForm = ({
   const watchDuration = watch("duration");
   const watchTimeZone = watch("timeZone");
 
-  const options = getValues("options");
-  const datesOnly =
-    options.length === 0 ||
-    options.some((option) => option.type !== "timeSlot");
-
   const dateOrTimeRangeDialog = useDialog();
 
   React.useEffect(() => {
@@ -78,6 +73,17 @@ const PollOptionsForm = ({
       }
     }
   }, [watchOptions, dateOrTimeRangeDialog]);
+
+  // Keep the derived allDay flag in sync: a poll is all-day when every option
+  // is a whole-day date rather than a time slot. Consumed at submit to decide
+  // whether a time zone is attached.
+  const allDay =
+    watchOptions.length > 0 &&
+    watchOptions.every((option) => option.type === "date");
+
+  React.useEffect(() => {
+    setValue("allDay", allDay);
+  }, [allDay, setValue]);
 
   const watchNavigationDate = watch("navigationDate");
   const navigationDate = new Date(watchNavigationDate ?? Date.now());
@@ -198,70 +204,79 @@ const PollOptionsForm = ({
           )}
         />
       </div>
-      {!datesOnly ? (
-        <FormField
-          control={form.control}
-          name="timeZone"
-          render={({ field }) => (
+      <FormField
+        control={form.control}
+        name="lockTimeZone"
+        render={({ field }) => {
+          // Locking is inert for all-day polls (no time to convert) and after
+          // votes are cast. Always render the row so the layout is stable.
+          const switchDisabled = disableTimeZoneChange || allDay;
+          // The zone selector matters only when times DO convert: not locked and
+          // not all-day.
+          const showTimeZoneSelect = !field.value && !allDay;
+          return (
             <div
               className={cn(
-                "grid items-center justify-between gap-2.5 border-t p-4 md:flex",
+                "grid items-center justify-between gap-2.5 border-t p-3 md:flex",
               )}
             >
               <div className="flex h-9 items-center gap-x-2.5 p-2">
                 <Switch
-                  id="timeZone"
-                  disabled={disableTimeZoneChange}
+                  id="lockTimeZone"
+                  disabled={switchDisabled}
                   checked={!!field.value}
                   onCheckedChange={(checked) => {
-                    if (checked) {
-                      field.onChange(getBrowserTimeZone());
-                    } else {
-                      field.onChange("");
+                    field.onChange(checked);
+                    // Unlocking turns conversion back on; seed the organizer's
+                    // zone so the selector has a value.
+                    if (!checked && !watchTimeZone) {
+                      setValue("timeZone", getBrowserTimeZone());
                     }
                   }}
                 />
                 <Label
-                  htmlFor="timeZone"
+                  htmlFor="lockTimeZone"
                   className={
-                    disableTimeZoneChange ? "text-muted-foreground" : undefined
+                    switchDisabled ? "text-muted-foreground" : undefined
                   }
                 >
-                  <Trans
-                    i18nKey="autoTimeZone"
-                    defaults="Automatic Time Zone Conversion"
-                  />
+                  <Trans i18nKey="lockTimeZone" defaults="Lock timezone" />
                 </Label>
                 <Tooltip>
-                  <TooltipTrigger type="button">
+                  <TooltipTrigger type="button" delay={0}>
                     <InfoIcon className="size-4 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent className="w-72">
                     {disableTimeZoneChange ? (
                       <Trans
-                        i18nKey="autoTimeZoneDisabledHelp"
+                        i18nKey="lockTimeZoneDisabledHelp"
                         defaults="The time zone can't be changed after votes have been cast."
+                      />
+                    ) : allDay ? (
+                      <Trans
+                        i18nKey="lockTimeZoneAllDayHelp"
+                        defaults="All-day options already show the same date to everyone."
                       />
                     ) : (
                       <Trans
-                        i18nKey="autoTimeZoneHelp"
-                        defaults="Enable this setting to automatically adjust event times to each participant's local time zone."
+                        i18nKey="lockTimeZoneHelp"
+                        defaults="Everyone sees the same time, instead of it converting to each participant's time zone."
                       />
                     )}
                   </TooltipContent>
                 </Tooltip>
               </div>
-              {field.value ? (
+              {showTimeZoneSelect ? (
                 <TimeZoneSelect
                   disabled={disableTimeZoneChange}
-                  value={field.value}
-                  onValueChange={field.onChange}
+                  value={watchTimeZone || getBrowserTimeZone()}
+                  onValueChange={(value) => setValue("timeZone", value)}
                 />
               ) : null}
             </div>
-          )}
-        />
-      ) : null}
+          );
+        }}
+      />
       {children}
     </Card>
   );
