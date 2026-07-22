@@ -86,7 +86,10 @@ const Page = () => {
             };
       }),
       timeZone: poll.timeZone ?? "",
-      autoTimeZone: !!poll.timeZone,
+      // A timed poll with no stored zone was locked to a single wall-clock time.
+      // All-day polls are neutral (lock doesn't apply).
+      lockTimeZone:
+        !poll.timeZone && poll.options.some((option) => option.duration > 0),
       allDay:
         poll.options.length > 0 &&
         poll.options.every((option) => option.duration === 0),
@@ -116,10 +119,10 @@ const Page = () => {
             updatePollMutation(
               {
                 pollId: poll.id,
-                // Store a zone only when auto conversion is on and the poll
-                // isn't all-day (mirrors the create flow).
+                // Store a zone (times convert per viewer) unless the organizer
+                // locked it or the poll is all-day (mirrors the create flow).
                 timeZone:
-                  data.autoTimeZone && !data.allDay
+                  !data.lockTimeZone && !data.allDay
                     ? data.timeZone || null
                     : null,
                 optionsToDelete: optionsToDelete.map(({ id }) => id),

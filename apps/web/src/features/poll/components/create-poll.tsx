@@ -74,7 +74,7 @@ export const CreatePoll: React.FunctionComponent = () => {
       hideParticipants: false,
       disableComments: false,
       duration: 60,
-      autoTimeZone: true,
+      lockTimeZone: false,
       allDay: false,
     },
   });
@@ -98,11 +98,12 @@ export const CreatePoll: React.FunctionComponent = () => {
             title: title,
             location: formData?.location?.trim(),
             description: formData?.description?.trim(),
-            // Attach a time zone only when auto conversion is on and the poll
-            // isn't all-day; fall back to the organizer's zone so a default-on
-            // timed poll is always anchored to a concrete zone.
+            // Attach a time zone (times convert per viewer) unless the organizer
+            // locked it to a single wall-clock time or the poll is all-day.
+            // Fall back to the organizer's zone so a converting poll is always
+            // anchored to a concrete zone.
             timeZone:
-              formData?.autoTimeZone && !formData?.allDay
+              !formData?.lockTimeZone && !formData?.allDay
                 ? formData?.timeZone || getBrowserTimeZone()
                 : null,
             hideParticipants: formData?.hideParticipants,
