@@ -174,7 +174,7 @@ const PollOptionsForm = ({
             },
           }}
           render={({ field }) => (
-            <div className="relative min-h-150">
+            <div>
               <selectedView.Component
                 options={field.value}
                 date={navigationDate}

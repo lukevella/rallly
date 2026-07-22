@@ -205,53 +205,55 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   };
 
   return (
-    <EventCalendar
-      className="absolute inset-0"
-      apiRef={apiRef}
-      events={events}
-      date={date}
-      onDateChange={onNavigate}
-      defaultView={defaultView}
-      views={["week", "day"]}
-      timeZone={RENDER_TIME_ZONE}
-      weekStartsOn={weekStart as 0 | 1 | 2 | 3 | 4 | 5 | 6}
-      slotDuration={15}
-      snapDuration={30}
-      i18n={i18n}
-      renderTimeGutterSlot={({ time, hour, minute }) =>
-        // The engine's default gutter uses date-fns with its own format
-        // string, ignoring our 12h/24h preference. Render the hour label with
-        // our Intl formatter instead. Suppress the day-start label (hour 0),
-        // matching the default's top-edge suppression.
-        hour === 0 && minute === 0 ? null : formatTime(time)
-      }
-      onSelectSlot={handleSelectSlot}
-      onSlotClick={handleSlotClick}
-      onEventClick={handleEventClick}
-      onEventUpdate={handleEventUpdate}
-      renderEvent={({ occurrence }) => {
-        const start = occurrence.start;
-        const end = occurrence.end;
-        return (
-          // A poll option is a PROPOSED time, not a confirmed event: a dotted
-          // outline over a soft accent tint reads as "tentative". Kept visually
-          // distinct from ReUI's dashed drag/resize ghost (which is fainter and
-          // dashed, not dotted). Color flows from --ec-event-color.
-          <div>
+    <div key={defaultView} className="relative h-150">
+      <EventCalendar
+        className="absolute inset-0"
+        apiRef={apiRef}
+        events={events}
+        date={date}
+        onDateChange={onNavigate}
+        defaultView={defaultView}
+        views={["week", "day"]}
+        timeZone={RENDER_TIME_ZONE}
+        weekStartsOn={weekStart as 0 | 1 | 2 | 3 | 4 | 5 | 6}
+        slotDuration={15}
+        snapDuration={30}
+        i18n={i18n}
+        renderTimeGutterSlot={({ time, hour, minute }) =>
+          // The engine's default gutter uses date-fns with its own format
+          // string, ignoring our 12h/24h preference. Render the hour label with
+          // our Intl formatter instead. Suppress the day-start label (hour 0),
+          // matching the default's top-edge suppression.
+          hour === 0 && minute === 0 ? null : formatTime(time)
+        }
+        onSelectSlot={handleSelectSlot}
+        onSlotClick={handleSlotClick}
+        onEventClick={handleEventClick}
+        onEventUpdate={handleEventUpdate}
+        renderEvent={({ occurrence }) => {
+          const start = occurrence.start;
+          const end = occurrence.end;
+          return (
+            // A poll option is a PROPOSED time, not a confirmed event: a dotted
+            // outline over a soft accent tint reads as "tentative". Kept visually
+            // distinct from ReUI's dashed drag/resize ghost (which is fainter and
+            // dashed, not dotted). Color flows from --ec-event-color.
             <div>
               <div>
-                {formatDateTimeRange(start, end, "time", {
-                  timeZone: RENDER_TIME_ZONE,
-                })}
+                <div>
+                  {formatDateTimeRange(start, end, "time", {
+                    timeZone: RENDER_TIME_ZONE,
+                  })}
+                </div>
               </div>
             </div>
-          </div>
-        );
-      }}
-    >
-      <CalendarToolbar />
-      <EventCalendarContent components={VIEW_COMPONENTS} />
-    </EventCalendar>
+          );
+        }}
+      >
+        <CalendarToolbar />
+        <EventCalendarContent components={VIEW_COMPONENTS} />
+      </EventCalendar>
+    </div>
   );
 };
 

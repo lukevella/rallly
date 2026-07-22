@@ -363,7 +363,7 @@ function EventCalendarDayHeader({
       data-slot="event-calendar-day-header"
       data-today={isToday || undefined}
       className={cn(
-        "min-w-0 truncate border-e px-2 py-1.5 font-medium last:border-e-0 data-today:text-primary",
+        "min-w-0 truncate border-e px-2 py-1.5 font-medium last:border-e-0",
         isToday && viewConfig.todayClassName,
       )}
     >
