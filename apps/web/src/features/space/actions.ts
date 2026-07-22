@@ -14,6 +14,7 @@ import {
   updateSpaceShowBranding,
 } from "@/features/space/mutations";
 import {
+  createSpaceSchema,
   spaceImageUploadSchema,
   updateSpaceImageSchema,
   updateSpaceSchema,
@@ -87,7 +88,7 @@ export const setActiveSpaceAction = authActionClient
 export const createSpaceAction = authActionClient
   .metadata({ actionName: "create_space" })
   .use(createRateLimitMiddleware(5, "1 m"))
-  .inputSchema(z.object({ name: z.string().min(1).max(100) }))
+  .inputSchema(createSpaceSchema)
   .action(async ({ ctx, parsedInput }) => {
     const space = await createSpace({
       name: parsedInput.name,
@@ -101,7 +102,7 @@ export const createSpaceAction = authActionClient
         name: space.name,
         member_count: 1,
         seat_count: 1,
-        tier: "hobby",
+        tier: space.tier,
       },
     });
 

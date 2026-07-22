@@ -20,18 +20,14 @@ import {
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { createSpaceAction } from "@/features/space/actions";
+import { createSpaceSchema } from "@/features/space/schema";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
-const createSpaceFormSchema = z.object({
-  name: z.string().min(1).max(100),
-});
-
 export function CreateSpaceDialog(props: DialogProps) {
   const form = useForm({
-    resolver: zodResolver(createSpaceFormSchema),
+    resolver: zodResolver(createSpaceSchema),
     defaultValues: {
       name: "",
     },
