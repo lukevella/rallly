@@ -5,16 +5,10 @@ import * as z from "zod";
 import { createSpaceDTO } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
-import { createSpace } from "@/features/space/mutations";
 import type { SpaceDTO } from "@/features/space/types";
 import { fromDBRole } from "@/features/space/utils";
-import { identifyGroup, track } from "@/lib/posthog";
-import {
-  createRateLimitMiddleware,
-  privateProcedure,
-  router,
-  spaceProcedure,
-} from "../trpc";
+import { track } from "@/lib/posthog";
+import { privateProcedure, router, spaceProcedure } from "../trpc";
 
 export const spaces = router({
   // ── Queries ──────────────────────────────────────────────────────────
@@ -127,39 +121,6 @@ export const spaces = router({
     }));
   }),
   // ── Mutations ────────────────────────────────────────────────────────
-  create: privateProcedure
-    .use(createRateLimitMiddleware("space_create", 5, "1 m"))
-    .input(z.object({ name: z.string().min(1).max(100) }))
-    .mutation(async ({ ctx, input }) => {
-      const space = await createSpace({
-        name: input.name,
-        ownerId: ctx.user.id,
-      });
-
-      identifyGroup({
-        groupType: "space",
-        groupKey: space.id,
-        properties: {
-          name: space.name,
-          member_count: 1,
-          seat_count: 1,
-          tier: "hobby",
-        },
-      });
-
-      track(ctx.user, {
-        event: "space_create",
-        properties: {
-          space_name: space.name,
-        },
-        groups: {
-          space: space.id,
-        },
-      });
-
-      return space;
-    }),
-
   delete: spaceProcedure.mutation(async ({ ctx }) => {
     const memberAbility = defineAbilityForMember({
       user: ctx.user,

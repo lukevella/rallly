@@ -34,6 +34,8 @@ import {
 
 export function ProPlanCard({
   amount,
+  discountPercentOff,
+  discountAmountOff,
   currency,
   interval,
   seats,
@@ -44,6 +46,8 @@ export function ProPlanCard({
   className,
 }: {
   amount: number;
+  discountPercentOff?: number | null;
+  discountAmountOff?: number | null;
   currency: string;
   interval: BillingInterval;
   seats: number;
@@ -57,11 +61,29 @@ export function ProPlanCard({
   const { formatDateTime } = useDateTime();
   const openCustomerPortal = useSafeAction(openCustomerPortalAction);
 
-  // amount is the per-seat unit amount in the currency's minor unit
-  const price = new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency: currency.toUpperCase(),
-  }).format((amount * seats) / 100);
+  const formatCurrency = (minorUnitAmount: number) =>
+    new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: currency.toUpperCase(),
+    }).format(minorUnitAmount / 100);
+
+  // amount is the per-seat unit amount in the currency's minor unit. Coupons
+  // and promotion codes are applied by Stripe at the invoice level, so we apply
+  // the stored discount here to reflect what the customer is actually charged.
+  const subtotal = amount * seats;
+  let discountedTotal = subtotal;
+  if (discountPercentOff) {
+    discountedTotal = Math.round(
+      discountedTotal * (1 - discountPercentOff / 100),
+    );
+  }
+  if (discountAmountOff) {
+    discountedTotal = Math.max(0, discountedTotal - discountAmountOff);
+  }
+  const hasDiscount = discountedTotal !== subtotal;
+
+  const price = formatCurrency(discountedTotal);
+  const originalPrice = formatCurrency(subtotal);
 
   const date = formatDateTime(periodEnd, "date");
   const endsAtPeriodEnd = status === "canceled" || cancelAtPeriodEnd;
@@ -104,7 +126,14 @@ export function ProPlanCard({
           </PlanCardDescription>
         </PlanCardContent>
         <PlanCardPrice>
-          <PlanCardPriceValue>{price}</PlanCardPriceValue>
+          <PlanCardPriceValue className="flex items-center @sm:justify-end gap-x-1.5">
+            {hasDiscount ? (
+              <span className="font-normal text-muted-foreground line-through">
+                {originalPrice}
+              </span>
+            ) : null}
+            <span>{price}</span>
+          </PlanCardPriceValue>
           <PlanCardPriceDescription>
             {interval === "month" ? (
               <Trans i18nKey="subscriptionCardPerMonth" defaults="per month" />
@@ -112,6 +141,23 @@ export function ProPlanCard({
               <Trans i18nKey="subscriptionCardPerYear" defaults="per year" />
             )}
           </PlanCardPriceDescription>
+          {hasDiscount ? (
+            <PlanCardPriceDescription className="text-green-600">
+              {discountPercentOff ? (
+                <Trans
+                  i18nKey="subscriptionCardPercentDiscount"
+                  defaults="{percent}% discount applied"
+                  values={{ percent: discountPercentOff }}
+                />
+              ) : (
+                <Trans
+                  i18nKey="subscriptionCardAmountDiscount"
+                  defaults="{amount} discount applied"
+                  values={{ amount: formatCurrency(discountAmountOff ?? 0) }}
+                />
+              )}
+            </PlanCardPriceDescription>
+          ) : null}
         </PlanCardPrice>
       </PlanCardHeader>
       <PlanCardFooter>

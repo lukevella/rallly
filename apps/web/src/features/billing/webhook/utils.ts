@@ -43,10 +43,18 @@ export function getSubscriptionDetails(subscription: Stripe.Subscription) {
     throw new Error(`Invalid interval: ${interval}`);
   }
 
+  // Coupons and promotion codes are applied at the invoice level, so they are
+  // not reflected in the price's unit_amount. Capture the discount here so the
+  // billing UI can show the actual amount the customer is charged. Defaults to
+  // null so an ended discount clears the stored values on the next webhook.
+  const coupon = subscription.discount?.coupon;
+
   return {
     interval: intervalResult.data,
     currency,
     amount,
     priceId: subscriptionItem.price.id,
+    discountPercentOff: coupon?.percent_off ?? null,
+    discountAmountOff: coupon?.amount_off ?? null,
   };
 }

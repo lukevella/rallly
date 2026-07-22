@@ -19,31 +19,21 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { toast } from "@rallly/ui/sonner";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Trans, useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
-
-const createSpaceFormSchema = z.object({
-  name: z.string().min(1).max(100),
-});
+import { createSpaceAction } from "@/features/space/actions";
+import { createSpaceSchema } from "@/features/space/schema";
+import { Trans } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 export function CreateSpaceDialog(props: DialogProps) {
-  const { t } = useTranslation();
-
   const form = useForm({
-    resolver: zodResolver(createSpaceFormSchema),
+    resolver: zodResolver(createSpaceSchema),
     defaultValues: {
       name: "",
     },
   });
 
-  const createSpace = trpc.spaces.create.useMutation({
-    onSuccess: () => {
-      form.reset();
-    },
-  });
+  const createSpace = useSafeAction(createSpaceAction);
 
   return (
     <Dialog {...props}>
@@ -61,24 +51,12 @@ export function CreateSpaceDialog(props: DialogProps) {
             </DialogDescription>
           </DialogHeader>
           <form
-            onSubmit={form.handleSubmit(({ name }) => {
-              props.onOpenChange?.(false);
-              toast.promise(
-                createSpace.mutateAsync({
-                  name,
-                }),
-                {
-                  loading: t("createSpaceLoading", {
-                    defaultValue: "Creating space...",
-                  }),
-                  success: t("createSpaceSuccess", {
-                    defaultValue: "Space created successfully",
-                  }),
-                  error: t("createSpaceError", {
-                    defaultValue: "Failed to create space",
-                  }),
-                },
-              );
+            onSubmit={form.handleSubmit(async ({ name }) => {
+              const result = await createSpace.executeAsync({ name });
+              if (result?.data) {
+                props.onOpenChange?.(false);
+                form.reset();
+              }
             })}
           >
             <FormField

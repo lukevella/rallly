@@ -28,6 +28,8 @@ export async function getSpaceSubscription(spaceId: string) {
     quantity: subscription.quantity,
     subscriptionItemId: subscription.subscriptionItemId,
     amount: subscription.amount,
+    discountPercentOff: subscription.discountPercentOff,
+    discountAmountOff: subscription.discountAmountOff,
     cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
     currency: subscription.currency,
     interval: subscription.interval,

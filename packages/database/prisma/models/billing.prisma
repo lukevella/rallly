@@ -4,6 +4,8 @@ model Subscription {
   quantity           Int                  @default(1)
   subscriptionItemId String               @map("subscription_item_id")
   amount             Int
+  discountPercentOff Float?               @map("discount_percent_off")
+  discountAmountOff  Int?                 @map("discount_amount_off")
   status             SubscriptionStatus
   active             Boolean
   currency           String
