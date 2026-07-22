@@ -22,7 +22,7 @@ import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 import DateNavigationToolbar from "./date-navigation-toolbar";
-import type { DateTimePickerProps } from "./types";
+import type { DateTimePickerProps, TimeOption } from "./types";
 import {
   DURATION_CAP_MINUTES,
   durationMinutes,
@@ -110,14 +110,28 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
     [formatDateTimeRange, formatTime],
   );
 
+  // Scroll to the earliest pre-existing slot exactly once, on mount, so the
+  // calendar opens on the user's existing options. Slots the user adds
+  // interactively must NOT trigger this — otherwise the first slot they select
+  // gets yanked to the top of the viewport.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: mount-only, reads latest options
   React.useEffect(() => {
-    if (hasScrolledRef.current) return;
-    const firstSlot = options.find((option) => option.type === "timeSlot");
-    if (firstSlot) {
-      hasScrolledRef.current = true;
-      apiRef.current?.scrollToTime(new Date(firstSlot.start));
+    hasScrolledRef.current = true;
+    // `options` is in selection order, not chronological, so pick the earliest
+    // slot by start time. The naive `YYYY-MM-DDTHH:mm:ss` strings are
+    // fixed-width, so lexicographic min equals chronological min.
+    const earliestSlot = options.reduce<TimeOption | undefined>(
+      (earliest, option) =>
+        option.type === "timeSlot" &&
+        (!earliest || option.start < earliest.start)
+          ? option
+          : earliest,
+      undefined,
+    );
+    if (earliestSlot) {
+      apiRef.current?.scrollToTime(new Date(earliestSlot.start));
     }
-  }, [options]);
+  }, []);
 
   const handleSelectSlot = (slot: EventCalendarSlotDraft) => {
     // The all-day lane is a timed picker's dead zone: it would commit
