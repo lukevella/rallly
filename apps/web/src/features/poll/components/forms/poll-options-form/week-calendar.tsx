@@ -50,10 +50,9 @@ const VIEW_COMPONENTS = { week: WeekViewNoAllDay, day: DayViewNoAllDay };
 const RENDER_TIME_ZONE = getBrowserTimeZone();
 
 function CalendarToolbar() {
-  const { date, title, next, prev, today } = useEventCalendarNavigation();
+  const { title, next, prev, today } = useEventCalendarNavigation();
   return (
     <DateNavigationToolbar
-      year={date.getFullYear()}
       label={title}
       onPrevious={prev}
       onNext={next}
@@ -100,7 +99,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           ctx: { activeRange: { start: Date; end: Date } },
         ) =>
           formatDateTimeRange(ctx.activeRange.start, ctx.activeRange.end, {
-            preset: "monthDay",
+            preset: "date",
             locale,
           }),
         formatEventTime: (start: Date, _end: Date, allDay: boolean) =>
@@ -210,7 +209,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   };
 
   return (
-    <div className="relative flex h-[600px]">
+    <div className="relative flex h-150">
       <EventCalendar
         className="absolute inset-0"
         apiRef={apiRef}
@@ -232,7 +231,11 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           const start = occurrence.start;
           const end = occurrence.end;
           return (
-            <div className="group absolute inset-0 flex max-h-full flex-col justify-between overflow-hidden rounded-lg border border-popover-border bg-popover p-1 text-foreground text-xs shadow-xs backdrop-blur-sm hover:cursor-pointer">
+            // A poll option is a PROPOSED time, not a confirmed event: a dotted
+            // outline over a soft accent tint reads as "tentative". Kept visually
+            // distinct from ReUI's dashed drag/resize ghost (which is fainter and
+            // dashed, not dotted). Color flows from --ec-event-color.
+            <div className="group absolute inset-0 flex max-h-full flex-col justify-between overflow-hidden rounded-sm border border-(--ec-event-color)/60 border-dotted bg-(--ec-event-color)/10 p-1 text-foreground text-xs transition-colors hover:cursor-pointer hover:bg-(--ec-event-color)/20 dark:bg-(--ec-event-color)/15 dark:hover:bg-(--ec-event-color)/25">
               <div className="absolute top-1.5 right-1.5 flex justify-end opacity-0 group-focus-within:opacity-100 group-hover:opacity-100">
                 <XIcon className="size-3" />
               </div>
