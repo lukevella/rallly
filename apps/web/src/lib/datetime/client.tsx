@@ -5,6 +5,7 @@ import React from "react";
 import type { DateTimePreset } from "@/lib/datetime/format";
 import {
   formatDateTime as baseFormatDateTime,
+  formatDateTimeRange as baseFormatDateTimeRange,
   formatDuration as baseFormatDuration,
   formatRelativeTime,
 } from "@/lib/datetime/format";
@@ -90,6 +91,19 @@ export function useDateTime() {
         opts?: { timeZone?: string; showTimeZone?: boolean },
       ) =>
         baseFormatDateTime(value, {
+          preset,
+          locale,
+          timeFormat,
+          timeZone: opts?.timeZone ?? timeZone ?? "UTC",
+          showTimeZone: opts?.showTimeZone,
+        }),
+      formatDateTimeRange: (
+        start: DateInput,
+        end: DateInput,
+        preset?: DateTimePreset,
+        opts?: { timeZone?: string; showTimeZone?: boolean },
+      ) =>
+        baseFormatDateTimeRange(start, end, {
           preset,
           locale,
           timeFormat,
