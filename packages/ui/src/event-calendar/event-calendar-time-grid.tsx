@@ -825,6 +825,37 @@ function EventCalendarTimeGutter({
   );
 }
 
+/**
+ * Horizontal gridlines for a day column, as a stacked background-image.
+ *
+ * The primary line sits at each `interval` boundary (`--ec-slot-line-*`). When
+ * the interval spans multiple half-hours we also lay a fainter helper line at
+ * every 30-minute mark (`--ec-half-slot-line-*`) so a 1-hour grid still reads a
+ * half-hour subdivision. The primary layer is listed FIRST so it paints on top
+ * where the two coincide (e.g. the top of each hour), keeping the hour line at
+ * full weight.
+ */
+function gridlineBackgroundImage(interval: number): string {
+  const line = (period: string, color: string) =>
+    `repeating-linear-gradient(to bottom, transparent, transparent calc(${period} - var(--ec-slot-line-width, 1px)), ${color} calc(${period} - var(--ec-slot-line-width, 1px)), ${color} ${period})`;
+
+  const intervalPeriod = `calc(var(--ec-hour-height) * ${interval / 60})`;
+  const primary = line(
+    intervalPeriod,
+    "var(--ec-slot-line-color, var(--color-border))",
+  );
+
+  // Only worth a helper line when the interval is wider than 30 minutes.
+  if (interval <= 30) return primary;
+
+  const halfPeriod = "calc(var(--ec-hour-height) * 0.5)";
+  const helper = line(
+    halfPeriod,
+    "var(--ec-half-slot-line-color, color-mix(in oklch, var(--color-border) 40%, transparent))",
+  );
+  return `${primary}, ${helper}`;
+}
+
 /** Absolute overlay block positioned by minutes (ghosts + drafts). */
 function minuteBlockStyle(
   startMin: number,
@@ -990,7 +1021,7 @@ function EventCalendarDayColumn({
       )}
       style={{
         height: `calc(var(--ec-hour-height) * ${boundsMinutes / 60})`,
-        backgroundImage: `repeating-linear-gradient(to bottom, transparent, transparent calc(var(--ec-hour-height) * ${interval / 60} - var(--ec-slot-line-width, 1px)), var(--ec-slot-line-color, var(--color-border)) calc(var(--ec-hour-height) * ${interval / 60} - var(--ec-slot-line-width, 1px)), var(--ec-slot-line-color, var(--color-border)) calc(var(--ec-hour-height) * ${interval / 60}))`,
+        backgroundImage: gridlineBackgroundImage(interval),
       }}
       onPointerDown={(e) => {
         if (e.target === e.currentTarget) gestures.beginCreate(e, day, false);
