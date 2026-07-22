@@ -500,7 +500,7 @@ function EventCalendarEvent<TData = unknown>({
         : cn(
             // @container removes intrinsic sizing; only grid chips are containers
             // py-1: room above/below inline badges (attendee pill etc.)
-            "@container gap-1.5 rounded-sm px-1.5 py-1 leading-normal",
+            "@container gap-1.5 rounded px-1.5 py-1 leading-normal",
             // soft tint + hairline inset ring: color reads from the surface
             // itself (no accent border), stays legible in light and dark
             "bg-(--ec-event-color)/15 hover:bg-(--ec-event-color)/25",

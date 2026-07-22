@@ -16,11 +16,9 @@ import {
   EventCalendarWeekView,
   useEventCalendarNavigation,
 } from "@rallly/ui/event-calendar";
-import { XIcon } from "lucide-react";
 import React from "react";
 import { createBreakpoint } from "react-use";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
-import { formatDateTime, formatDateTimeRange } from "@/lib/datetime/format";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 import DateNavigationToolbar from "./date-navigation-toolbar";
@@ -69,8 +67,8 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   duration = 60,
   onChangeDuration,
 }) => {
-  const { locale, timeFormat, weekStart } = useDateTimeConfig();
-  const { formatDuration } = useDateTime();
+  const { weekStart } = useDateTimeConfig();
+  const { formatDateTime, formatDateTimeRange } = useDateTime();
 
   const apiRef = React.useRef<EventCalendarApi | null>(null);
   const hasScrolledRef = React.useRef(false);
@@ -82,13 +80,8 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   // The form works in naive local times; format in the render-frame zone.
   const formatTime = React.useCallback(
     (time: Date) =>
-      formatDateTime(time, {
-        preset: "time",
-        locale,
-        timeFormat,
-        timeZone: RENDER_TIME_ZONE,
-      }),
-    [locale, timeFormat],
+      formatDateTime(time, "time", { timeZone: RENDER_TIME_ZONE }),
+    [formatDateTime],
   );
 
   const i18n = React.useMemo(
@@ -98,20 +91,23 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           _view: CalendarView,
           ctx: { activeRange: { start: Date; end: Date } },
         ) =>
-          formatDateTimeRange(ctx.activeRange.start, ctx.activeRange.end, {
-            preset: "date",
-            locale,
-          }),
+          formatDateTimeRange(
+            ctx.activeRange.start,
+            ctx.activeRange.end,
+            "date",
+            {
+              timeZone: RENDER_TIME_ZONE,
+            },
+          ),
         formatEventTime: (start: Date, _end: Date, allDay: boolean) =>
           allDay ? "" : formatTime(start),
         formatDayRange: (range: { start: Date; end: Date }) =>
-          formatDateTimeRange(range.start, range.end, {
-            preset: "monthDay",
-            locale,
+          formatDateTimeRange(range.start, range.end, "monthDay", {
+            timeZone: RENDER_TIME_ZONE,
           }),
       },
     }),
-    [locale, formatTime],
+    [formatDateTimeRange, formatTime],
   );
 
   React.useEffect(() => {
@@ -209,55 +205,53 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   };
 
   return (
-    <div className="relative flex h-150">
-      <EventCalendar
-        className="absolute inset-0"
-        apiRef={apiRef}
-        events={events}
-        date={date}
-        onDateChange={onNavigate}
-        defaultView={defaultView}
-        views={["week", "day"]}
-        timeZone={RENDER_TIME_ZONE}
-        weekStartsOn={weekStart as 0 | 1 | 2 | 3 | 4 | 5 | 6}
-        slotDuration={15}
-        snapDuration={15}
-        i18n={i18n}
-        onSelectSlot={handleSelectSlot}
-        onSlotClick={handleSlotClick}
-        onEventClick={handleEventClick}
-        onEventUpdate={handleEventUpdate}
-        renderEvent={({ occurrence }) => {
-          const start = occurrence.start;
-          const end = occurrence.end;
-          return (
-            // A poll option is a PROPOSED time, not a confirmed event: a dotted
-            // outline over a soft accent tint reads as "tentative". Kept visually
-            // distinct from ReUI's dashed drag/resize ghost (which is fainter and
-            // dashed, not dotted). Color flows from --ec-event-color.
-            <div className="group absolute inset-0 flex max-h-full flex-col justify-between overflow-hidden rounded-sm border border-(--ec-event-color)/60 border-dotted bg-(--ec-event-color)/10 p-1 text-foreground text-xs transition-colors hover:cursor-pointer hover:bg-(--ec-event-color)/20 dark:bg-(--ec-event-color)/15 dark:hover:bg-(--ec-event-color)/25">
-              <div className="absolute top-1.5 right-1.5 flex justify-end opacity-0 group-focus-within:opacity-100 group-hover:opacity-100">
-                <XIcon className="size-3" />
-              </div>
+    <EventCalendar
+      className="absolute inset-0"
+      apiRef={apiRef}
+      events={events}
+      date={date}
+      onDateChange={onNavigate}
+      defaultView={defaultView}
+      views={["week", "day"]}
+      timeZone={RENDER_TIME_ZONE}
+      weekStartsOn={weekStart as 0 | 1 | 2 | 3 | 4 | 5 | 6}
+      slotDuration={15}
+      snapDuration={30}
+      i18n={i18n}
+      renderTimeGutterSlot={({ time, hour, minute }) =>
+        // The engine's default gutter uses date-fns with its own format
+        // string, ignoring our 12h/24h preference. Render the hour label with
+        // our Intl formatter instead. Suppress the day-start label (hour 0),
+        // matching the default's top-edge suppression.
+        hour === 0 && minute === 0 ? null : formatTime(time)
+      }
+      onSelectSlot={handleSelectSlot}
+      onSlotClick={handleSlotClick}
+      onEventClick={handleEventClick}
+      onEventUpdate={handleEventUpdate}
+      renderEvent={({ occurrence }) => {
+        const start = occurrence.start;
+        const end = occurrence.end;
+        return (
+          // A poll option is a PROPOSED time, not a confirmed event: a dotted
+          // outline over a soft accent tint reads as "tentative". Kept visually
+          // distinct from ReUI's dashed drag/resize ghost (which is fainter and
+          // dashed, not dotted). Color flows from --ec-event-color.
+          <div>
+            <div>
               <div>
-                <div className="font-semibold">{formatTime(start)}</div>
-                <div className="opacity-50">
-                  {formatDuration(
-                    Math.round((end.getTime() - start.getTime()) / 60000),
-                  )}
-                </div>
-              </div>
-              <div>
-                <div className="opacity-50">{formatTime(end)}</div>
+                {formatDateTimeRange(start, end, "time", {
+                  timeZone: RENDER_TIME_ZONE,
+                })}
               </div>
             </div>
-          );
-        }}
-      >
-        <CalendarToolbar />
-        <EventCalendarContent components={VIEW_COMPONENTS} />
-      </EventCalendar>
-    </div>
+          </div>
+        );
+      }}
+    >
+      <CalendarToolbar />
+      <EventCalendarContent components={VIEW_COMPONENTS} />
+    </EventCalendar>
   );
 };
 

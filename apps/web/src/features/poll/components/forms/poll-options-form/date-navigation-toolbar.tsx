@@ -5,7 +5,6 @@ import type * as React from "react";
 import { useTranslation } from "@/i18n/client";
 
 export interface DateNavigationToolbarProps {
-  year: number;
   label: string;
   onPrevious: () => void;
   onNext: () => void;
@@ -14,26 +13,38 @@ export interface DateNavigationToolbarProps {
 
 const DateNavigationToolbar: React.FunctionComponent<
   DateNavigationToolbarProps
-> = ({ year, label, onPrevious, onToday, onNext }) => {
+> = ({ label, onPrevious, onToday, onNext }) => {
   const { t } = useTranslation();
   return (
-    <div className="flex h-14 w-full shrink-0 items-center px-4">
-      <div className="grow font-semibold tracking-tight">
-        <span className="mr-2 font-normal text-muted-foreground text-sm">
-          {year}
-        </span>
-        <span className="font-semibold">{label}</span>
+    <div className="flex w-full shrink-0 items-center gap-4 px-4 py-3">
+      <div className="grow">
+        <span className="text-sm">{label}</span>
       </div>
-      <div className="flex items-center space-x-2">
-        <div className="flex items-center gap-x-2">
-          <Button type="button" onClick={onPrevious}>
-            <ChevronLeftIcon className="size-4" />
-          </Button>
-          <Button onClick={onToday}>{t("today")}</Button>
-          <Button onClick={onNext}>
-            <ChevronRightIcon className="size-4" />
-          </Button>
-        </div>
+      <div className="flex items-center gap-1">
+        <Button variant="ghost" size="sm" onClick={onToday}>
+          {t("today")}
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          type="button"
+          onClick={onPrevious}
+        >
+          <ChevronLeftIcon className="size-4" />
+          <span className="sr-only">
+            {t("previousWeek", {
+              defaultValue: "Previous week",
+            })}
+          </span>
+        </Button>
+        <Button variant="ghost" size="icon-sm" onClick={onNext}>
+          <ChevronRightIcon className="size-4" />
+          <span className="sr-only">
+            {t("nextWeek", {
+              defaultValue: "Next week",
+            })}
+          </span>
+        </Button>
       </div>
     </div>
   );
