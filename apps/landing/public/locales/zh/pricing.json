@@ -25,6 +25,7 @@
   "upgrade": "升级",
   "upgradeNowSaveLater": "立即升级，节省更多",
   "whenPollInactive": "投票何时不活跃？",
+  "whenPollInactiveAnswer": "当所有日期选项都已过去，且超过 30 天没有任何活动时，投票将变为不活动状态。活动包括新的投票、评论或对投票的更改。如果您没有付费订阅，不活动的投票将被自动删除。",
   "whyUpgrade": "我为什么要升级？",
   "whyUpgradeAnswer2": "如果您经常使用 Rallly 或将其用于工作，升级到付费计划是有意义的。当前的订阅费率是一种特殊的早期支持者费率，未来将会涨价。通过立即升级，您将在发布时获得新的高质量调度工具的早期访问权限，并锁定您的订阅费率，以免受到未来价格上涨的影响。",
   "yearlyBillingDescription": "每年"
