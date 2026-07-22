@@ -14,7 +14,7 @@ test.skip("should be able to vote and comment on a poll", async ({ page }) => {
   await page.getByText("Continue").click();
 
   await page.getByPlaceholder("Jessie Smith").type("Test user");
-  await page.getByText(/^Submit$/).click();
+  await page.getByText(/^Save availability$/).click();
 
   await expect(page.locator("data-testid=user")).toBeVisible();
   await expect(
