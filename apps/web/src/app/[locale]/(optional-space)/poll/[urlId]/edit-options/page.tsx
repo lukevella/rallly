@@ -16,7 +16,10 @@ import {
 import { usePoll } from "@/features/poll/components/poll-context";
 import { Trans, useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";
-import { encodeDateOption } from "@/lib/utils/date-time-utils";
+import {
+  encodeDateOption,
+  getBrowserTimeZone,
+} from "@/lib/utils/date-time-utils";
 
 const convertOptionToString = (
   option: { startTime: Date; duration: number },
@@ -120,10 +123,11 @@ const Page = () => {
               {
                 pollId: poll.id,
                 // Store a zone (times convert per viewer) unless the organizer
-                // locked it or the poll is all-day (mirrors the create flow).
+                // locked it or the poll is all-day. Fall back to the organizer's
+                // zone so a converting poll is always anchored (mirrors create).
                 timeZone:
                   !data.lockTimeZone && !data.allDay
-                    ? data.timeZone || null
+                    ? data.timeZone || getBrowserTimeZone()
                     : null,
                 optionsToDelete: optionsToDelete.map(({ id }) => id),
                 optionsToAdd,
