@@ -10,6 +10,7 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
+import { after } from "next/server";
 import {
   getPollParticipants,
   getPollResults,
@@ -18,6 +19,7 @@ import {
 import { closePoll, createPoll, deletePoll } from "@/features/poll/mutations";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
+import { flushPostHog, identifyGroup, track } from "@/lib/posthog";
 import {
   createPollRequestExamples,
   patchPollRequestExamples,
@@ -269,6 +271,54 @@ app.post(
       organizerUserId = spaceMember.user.id;
     }
 
+    const trackPollCreated = (poll: Awaited<ReturnType<typeof createPoll>>) => {
+      const kind = poll.options.some((o) => o.duration > 0) ? "time" : "date";
+
+      identifyGroup({
+        groupType: "poll",
+        groupKey: poll.id,
+        properties: {
+          name: poll.title,
+          status: poll.status,
+          kind,
+          created_at: poll.createdAt,
+          comment_count: 0,
+          option_count: poll.options.length,
+          has_location: !!poll.location,
+          has_description: !!poll.description,
+          timezone: poll.timeZone,
+          muted: false,
+        },
+      });
+
+      track(
+        { id: organizerUserId, isGuest: false },
+        {
+          event: "poll_create",
+          properties: {
+            title: poll.title,
+            kind,
+            source: "api",
+            optionCount: poll.options.length,
+            hasLocation: !!poll.location,
+            hasDescription: !!poll.description,
+            timezone: poll.timeZone,
+            requireParticipantEmail: input.requireEmail,
+            hideParticipants: input.hideParticipants,
+            hideScores: input.hideScores,
+            disableComments: input.disableComments,
+            isGuest: false,
+          },
+          groups: {
+            poll: poll.id,
+            space: spaceId,
+          },
+        },
+      );
+
+      after(() => flushPostHog());
+    };
+
     // Process dates (all-day options)
     if (input.dates) {
       if (input.dates.length > MAX_OPTIONS) {
@@ -310,6 +360,8 @@ app.post(
         options,
         spaceId,
       });
+
+      trackPollCreated(poll);
 
       return c.json(
         createPollSuccessResponseSchema.parse(toPollResponseBody(poll)),
@@ -380,6 +432,8 @@ app.post(
       options,
       spaceId,
     });
+
+    trackPollCreated(poll);
 
     return c.json(
       createPollSuccessResponseSchema.parse(toPollResponseBody(poll)),

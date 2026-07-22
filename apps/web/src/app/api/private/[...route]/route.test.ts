@@ -9,6 +9,8 @@ const mockClosePoll = vi.fn();
 const mockGetPollResults = vi.fn();
 const mockGetPollParticipants = vi.fn();
 const mockListPolls = vi.fn();
+const mockTrack = vi.fn();
+const mockIdentifyGroup = vi.fn();
 
 vi.mock("@/features/poll/mutations", () => ({
   deletePoll: (...args: unknown[]) => mockDeletePoll(...args),
@@ -57,6 +59,12 @@ vi.mock("next/server", () => ({
 
 vi.mock("@/lib/kv", () => ({
   redis: null,
+}));
+
+vi.mock("@/lib/posthog", () => ({
+  track: (...args: unknown[]) => mockTrack(...args),
+  identifyGroup: (...args: unknown[]) => mockIdentifyGroup(...args),
+  flushPostHog: vi.fn(),
 }));
 
 import { prisma } from "@rallly/database";
@@ -472,6 +480,40 @@ describe("Private API - /polls", () => {
       );
     });
 
+    it("should track poll creation with source api and kind date", async () => {
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team offsite",
+          dates: ["2025-01-15"],
+        }),
+      });
+
+      expect(res.status).toBe(200);
+      expect(mockTrack).toHaveBeenCalledWith(
+        { id: "test-user-id", isGuest: false },
+        expect.objectContaining({
+          event: "poll_create",
+          properties: expect.objectContaining({
+            kind: "date",
+            source: "api",
+          }),
+          groups: { poll: "test-poll-id", space: "test-space-id" },
+        }),
+      );
+      expect(mockIdentifyGroup).toHaveBeenCalledWith(
+        expect.objectContaining({
+          groupType: "poll",
+          groupKey: "test-poll-id",
+          properties: expect.objectContaining({ kind: "date" }),
+        }),
+      );
+    });
+
     it("should save location when provided", async () => {
       const res = await app.request("/api/private/polls", {
         method: "POST",
@@ -565,6 +607,59 @@ describe("Private API - /polls", () => {
         expect.objectContaining({
           title: "Team sync",
           timeZone: "Europe/London",
+        }),
+      );
+    });
+
+    it("should track poll creation with source api and kind time", async () => {
+      mockCreatePoll.mockResolvedValueOnce({
+        id: "test-poll-id",
+        title: "Team sync",
+        description: null,
+        location: null,
+        timeZone: "Europe/London",
+        status: "open",
+        createdAt: new Date("2025-01-10T12:00:00Z"),
+        user: { name: "Test User", image: null },
+        options: [
+          {
+            id: "opt-1",
+            startTime: new Date("2025-01-15T09:00:00Z"),
+            duration: 30,
+          },
+        ],
+      });
+
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team sync",
+          slots: {
+            duration: 30,
+            timezone: "Europe/London",
+            times: ["2025-01-15T09:00:00Z"],
+          },
+        }),
+      });
+
+      expect(res.status).toBe(200);
+      expect(mockTrack).toHaveBeenCalledWith(
+        { id: "test-user-id", isGuest: false },
+        expect.objectContaining({
+          event: "poll_create",
+          properties: expect.objectContaining({
+            kind: "time",
+            source: "api",
+          }),
+        }),
+      );
+      expect(mockIdentifyGroup).toHaveBeenCalledWith(
+        expect.objectContaining({
+          properties: expect.objectContaining({ kind: "time" }),
         }),
       );
     });
