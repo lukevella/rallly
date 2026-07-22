@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { VoteType } from "@rallly/database";
 import { posthog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
-import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   DialogDescription,
@@ -58,38 +57,58 @@ const VoteSummary = ({
   className?: string;
   votes: { optionId: string; type: VoteType }[];
 }) => {
-  const { t } = useTranslation();
-  const voteByType = votes.reduce<Record<VoteType, string[]>>(
+  const counts = votes.reduce(
     (acc, vote) => {
-      acc[vote.type] = [...acc[vote.type], vote.optionId];
+      acc[vote.type] += 1;
       return acc;
     },
-    { yes: [], ifNeedBe: [], no: [] },
+    { yes: 0, ifNeedBe: 0, no: 0 },
   );
 
-  const voteTypes = Object.keys(voteByType) as VoteType[];
+  const total = votes.length;
+  const availableCount = counts.yes;
+  const ifNeedBeCount = counts.ifNeedBe;
 
   return (
-    <div className={cn("flex flex-wrap gap-1", className)}>
-      {voteTypes.map((voteType) => {
-        const votes = voteByType[voteType];
-        const count = votes.length;
-        if (count === 0) {
-          return null;
-        }
-        return (
-          <div
-            key={voteType}
-            className="flex h-8 select-none gap-2.5 rounded-lg border p-1 text-sm dark:border-gray-600 dark:bg-gray-700"
-          >
-            <div className="flex items-center gap-2">
-              <VoteIcon type={voteType} />
-              <div className="text-xs">{t(voteType)}</div>
-            </div>
-            <Badge>{voteByType[voteType].length}</Badge>
-          </div>
-        );
-      })}
+    <div
+      className={cn(
+        "flex h-9 w-full items-center gap-3 rounded-lg border border-input bg-background/80 px-2.5 dark:bg-foreground/5",
+        className,
+      )}
+    >
+      {availableCount > 0 ? (
+        <span className="flex items-center gap-1.5 text-foreground text-sm">
+          <VoteIcon type="yes" className="size-4" />
+          <Trans
+            i18nKey="voteSummaryAvailable"
+            defaults="{availableCount} of {total} available"
+            values={{ availableCount, total }}
+          />
+        </span>
+      ) : ifNeedBeCount === 0 ? (
+        <span className="flex items-center gap-1.5 text-foreground text-sm">
+          <VoteIcon type="no" className="size-4" />
+          <Trans
+            i18nKey="voteSummaryNotAvailable"
+            defaults="You're not available"
+          />
+        </span>
+      ) : null}
+      {ifNeedBeCount > 0 ? (
+        <>
+          {availableCount > 0 ? (
+            <span aria-hidden="true" className="h-4 w-px bg-input" />
+          ) : null}
+          <span className="flex items-center gap-1.5 text-foreground text-sm">
+            <VoteIcon type="ifNeedBe" className="size-4" />
+            <Trans
+              i18nKey="voteSummaryIfNeedBe"
+              defaults="{count} if need be"
+              values={{ count: ifNeedBeCount }}
+            />
+          </span>
+        </>
+      ) : null}
     </div>
   );
 };
@@ -102,7 +121,6 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const { timeZone } = useDateTimeConfig();
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = user && !user.isGuest;
-  const isOrganizer = user?.id === poll.userId;
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -148,39 +166,37 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             defaults="Back to poll"
           />
         </Button>
-        {!isOrganizer ? (
-          <div className="flex flex-col items-center text-center">
-            <p className="text-muted-foreground text-sm">
-              <Trans
-                i18nKey="newParticipantDialogCreatePollPrompt"
-                defaults="Need to schedule something yourself?"
-              />
-            </p>
-            <Link
-              href="/new"
-              className={buttonVariants({ variant: "link" })}
-              onClick={() => {
-                posthog?.capture(
-                  "new_participant_dialog:create_poll_button_click",
-                  {
-                    pollId: poll.id,
-                    spaceId: poll.spaceId,
-                    tier: poll.space?.tier,
-                    $groups: {
-                      poll: poll.id,
-                      ...(poll.spaceId ? { space: poll.spaceId } : {}),
-                    },
+        <div className="flex flex-col items-center text-center">
+          <p className="text-muted-foreground text-sm">
+            <Trans
+              i18nKey="newParticipantDialogCreatePollPrompt"
+              defaults="Need to schedule something yourself?"
+            />
+          </p>
+          <Link
+            href="/new"
+            className={buttonVariants({ variant: "link" })}
+            onClick={() => {
+              posthog?.capture(
+                "new_participant_dialog:create_poll_button_click",
+                {
+                  pollId: poll.id,
+                  spaceId: poll.spaceId,
+                  tier: poll.space?.tier,
+                  $groups: {
+                    poll: poll.id,
+                    ...(poll.spaceId ? { space: poll.spaceId } : {}),
                   },
-                );
-              }}
-            >
-              <Trans
-                i18nKey="newParticipantDialogCreatePoll"
-                defaults="Create your own poll"
-              />
-            </Link>
-          </div>
-        ) : null}
+                },
+              );
+            }}
+          >
+            <Trans
+              i18nKey="newParticipantDialogCreatePoll"
+              defaults="Create your own poll"
+            />
+          </Link>
+        </div>
       </>
     );
   }
@@ -272,13 +288,25 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             <FormMessage>{formState.errors.root.message}</FormMessage>
           ) : null}
           <div className="mt-6 flex gap-2">
-            <Button onClick={props.onCancel}>{t("cancel")}</Button>
             <Button
+              className="flex-1"
+              type="button"
+              size="lg"
+              onClick={props.onCancel}
+            >
+              {t("back")}
+            </Button>
+            <Button
+              className="flex-1"
               type="submit"
+              size="lg"
               variant="primary"
               loading={formState.isSubmitting}
             >
-              {t("submit")}
+              <Trans
+                i18nKey="newParticipantFormSubmit"
+                defaults="Save availability"
+              />
             </Button>
           </div>
         </form>
