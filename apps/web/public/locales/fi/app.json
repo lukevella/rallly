@@ -660,7 +660,6 @@
   "spaceUpdatedSuccess": "Tilan päivittäminen onnistui",
   "ssoAuthenticationOnly": "Tunnistautumista hallitaan kertakirjautumisen (SSO) kautta. Salasanan hallinta ei ole käytettävissä.",
   "startOfWeek": "Viikon aloituspäivä",
-  "submit": "Lähetä",
   "subscriptionCardEndsOn": "Päättyy {date}",
   "subscriptionCardPerMonth": "kuukaudessa",
   "subscriptionCardPerYear": "vuodessa",
