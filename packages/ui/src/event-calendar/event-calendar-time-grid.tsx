@@ -320,12 +320,14 @@ function EventCalendarTimeGrid({
               <div
                 data-slot="scroll-area-viewport"
                 data-ec-native-scroll=""
-                className="h-full overflow-y-auto"
+                className="h-full overflow-y-auto overscroll-none"
               >
                 {track}
               </div>
             ) : (
-              <ScrollArea className="h-full">{track}</ScrollArea>
+              <ScrollArea className="h-full [&_[data-slot=scroll-area-viewport]]:overscroll-none">
+                {track}
+              </ScrollArea>
             )}
           </div>
         ) : (
