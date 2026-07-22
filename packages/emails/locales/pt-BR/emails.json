@@ -1,11 +1,11 @@
 {
   "accountDeletionScheduled_button": "Gerenciar Conta",
-  "accountDeletionScheduled_cancel": "Se mudar de ideia, você pode cancelar a exclusão das suas <a>configurações de conta</a> antes disso.",
+  "accountDeletionScheduled_cancel": "Se mudar de ideia, você pode cancelar a exclusão nas <a>configurações da sua conta</a> antes disso.",
   "accountDeletionScheduled_footer": "Você está recebendo este e-mail porque foi feito um pedido para excluir uma conta em <domain />. Se não foi você, faça login e cancele a exclusão antes disso, ou entre em contato com <a>{supportEmail}</a>.",
   "accountDeletionScheduled_heading": "Sua conta está programada para exclusão",
   "accountDeletionScheduled_preview": "Sua conta será excluída em {date}",
   "accountDeletionScheduled_subject": "Sua conta está programada para exclusão",
-  "accountDeletionScheduled_text": "Sua conta {appName} está programada para exclusão em {date}. Suas enquetes, eventos, votos e comentários serão permanentemente excluídos.",
+  "accountDeletionScheduled_text": "Sua conta do {appName} está programada para exclusão em {date}. Suas enquetes, eventos, votos e comentários serão permanentemente excluídos.",
   "allDay": "Dia inteiro",
   "changeEmail_codeValid": "Este código é válido por 15 minutos",
   "changeEmail_content2": "Você está recebendo este e-mail porque foi feito um pedido para mudar o endereço de e-mail de uma conta em <domain />. Se não foi você, entre em contato com <a>{supportEmail}</a>.",
