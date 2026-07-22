@@ -5,7 +5,7 @@
   "accountDeletionScheduled_heading": "Váš účet je naplánován ke smazání",
   "accountDeletionScheduled_preview": "Váš účet bude smazán dne {date}.",
   "accountDeletionScheduled_subject": "Váš účet je naplánován ke smazání",
-  "accountDeletionScheduled_text": "Váš účet v {appName} je naplánován ke smazání dne {date}. Vaše Hlasování, události, hlasy a komentáře budou trvale smazány.",
+  "accountDeletionScheduled_text": "Váš účet v {appName} je naplánován ke smazání dne {date}. Vaše hlasování, události, hlasy a komentáře budou trvale smazány.",
   "allDay": "Celý den",
   "changeEmail_codeValid": "Tento kód platí po dobu 15 minut",
   "changeEmail_content2": "Tento e-mail jste obdrželi, protože byl proveden požadavek na změnu e-mailové adresy účtu na <domain />. Pokud jste to nebyli vy, kontaktujte <a>{supportEmail}</a>.",
