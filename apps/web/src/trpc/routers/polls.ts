@@ -256,6 +256,7 @@ export const polls = router({
           has_description: !!description,
           timezone: input.timeZone,
           muted: poll.muted,
+          kind,
         },
       });
 
@@ -265,6 +266,8 @@ export const polls = router({
           event: "poll_create",
           properties: {
             title: poll.title,
+            kind,
+            source: "web",
             optionCount: poll.options.length,
             hasLocation: !!location,
             hasDescription: !!description,
@@ -445,6 +448,7 @@ export const polls = router({
         select: {
           title: true,
           status: true,
+          kind: true,
           createdAt: true,
           location: true,
           description: true,
@@ -453,6 +457,7 @@ export const polls = router({
           hideParticipants: true,
           hideScores: true,
           timeZone: true,
+          muted: true,
           _count: {
             select: {
               participants: {
@@ -470,6 +475,23 @@ export const polls = router({
           code: "NOT_FOUND",
         });
       }
+
+      identifyGroup({
+        groupType: "poll",
+        groupKey: pollId,
+        properties: {
+          name: updatedPoll.title,
+          status: updatedPoll.status,
+          kind: updatedPoll.kind,
+          created_at: updatedPoll.createdAt,
+          comment_count: updatedPoll._count.comments,
+          option_count: updatedPoll._count.options,
+          has_location: !!updatedPoll.location,
+          has_description: !!updatedPoll.description,
+          timezone: updatedPoll.timeZone,
+          muted: updatedPoll.muted,
+        },
+      });
 
       // Track specific poll update events based on what was changed
       const hasDetailsUpdate =
