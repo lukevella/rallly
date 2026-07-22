@@ -437,7 +437,7 @@
   "new": "Ny",
   "newEventType": "Ny arrangementstype",
   "newParticipant": "Ny deltaker",
-  "newParticipantDialogBackToPoll": "Tilbake til avstemningen},{",
+  "newParticipantDialogBackToPoll": "Tilbake til avstemningen",
   "newParticipantDialogCreatePoll": "Opprett din egen avstemning",
   "newParticipantDialogCreatePollPrompt": "Trenger du å planlegge noe selv?",
   "newParticipantDialogSuccessDescription": "Arrangøren kan nå se når du er tilgjengelig.",
