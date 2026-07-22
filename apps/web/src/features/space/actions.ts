@@ -7,6 +7,7 @@ import { getActiveSpaceForUser } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import {
+  createSpace,
   removeSpaceImage,
   updateSpace,
   updateSpaceImage,
@@ -21,7 +22,10 @@ import {
 import { setActiveSpace } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors/app-error";
 import { identifyGroup, track } from "@/lib/posthog";
-import { authActionClient } from "@/lib/safe-action/server";
+import {
+  authActionClient,
+  createRateLimitMiddleware,
+} from "@/lib/safe-action/server";
 import { getImageUploadUrl } from "@/lib/storage/image-upload";
 
 async function requireSpaceWithUpdateAbility(user: { id: string }) {
@@ -78,6 +82,40 @@ export const setActiveSpaceAction = authActionClient
         space: parsedInput.spaceId,
       },
     });
+  });
+
+export const createSpaceAction = authActionClient
+  .metadata({ actionName: "create_space" })
+  .use(createRateLimitMiddleware(5, "1 m"))
+  .inputSchema(z.object({ name: z.string().min(1).max(100) }))
+  .action(async ({ ctx, parsedInput }) => {
+    const space = await createSpace({
+      name: parsedInput.name,
+      ownerId: ctx.user.id,
+    });
+
+    identifyGroup({
+      groupType: "space",
+      groupKey: space.id,
+      properties: {
+        name: space.name,
+        member_count: 1,
+        seat_count: 1,
+        tier: "hobby",
+      },
+    });
+
+    track(ctx.user, {
+      event: "space_create",
+      properties: {
+        space_name: space.name,
+      },
+      groups: {
+        space: space.id,
+      },
+    });
+
+    return space;
   });
 
 export const updateSpaceAction = authActionClient
