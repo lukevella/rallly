@@ -110,14 +110,18 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
     [formatDateTimeRange, formatTime],
   );
 
+  // Scroll to the earliest pre-existing slot exactly once, on mount, so the
+  // calendar opens on the user's existing options. Slots the user adds
+  // interactively must NOT trigger this — otherwise the first slot they select
+  // gets yanked to the top of the viewport.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: mount-only, reads latest options
   React.useEffect(() => {
-    if (hasScrolledRef.current) return;
+    hasScrolledRef.current = true;
     const firstSlot = options.find((option) => option.type === "timeSlot");
     if (firstSlot) {
-      hasScrolledRef.current = true;
       apiRef.current?.scrollToTime(new Date(firstSlot.start));
     }
-  }, [options]);
+  }, []);
 
   const handleSelectSlot = (slot: EventCalendarSlotDraft) => {
     // The all-day lane is a timed picker's dead zone: it would commit
