@@ -25,6 +25,7 @@
   "upgrade": "Ulepsz",
   "upgradeNowSaveLater": "Ulepsz teraz, oszczędzaj później",
   "whenPollInactive": "Kiedy ankieta staje się nieaktywna?",
+  "whenPollInactiveAnswer": "Ankiety stają się nieaktywne, gdy wszystkie opcje dat znajdują się w przeszłości ORAZ nie było żadnej aktywności przez ponad 30 dni. Aktywność obejmuje nowe głosy, komentarze lub zmiany w ankiecie. Nieaktywne ankiety są automatycznie usuwane, jeśli nie masz płatnej subskrypcji.",
   "whyUpgrade": "Dlaczego warto ulepszyć?",
   "whyUpgradeAnswer2": "Przejście do płatnego planu ma sens, jeśli często korzystasz z Rallly lub używasz go do pracy. Obecna cena subskrypcji jest specjalną ceną dla wczesnych użytkowników i wzrośnie w przyszłości. Ulepszając teraz, uzyskasz wczesny dostęp do nowych, wysokiej jakości narzędzi do planowania harmonogramów w miarę ich wydawania i zablokujesz swoją cenę subskrypcji, dzięki czemu nie wpłyną na ciebie przyszłe podwyżki cen.",
   "yearlyBillingDescription": "rocznie"
