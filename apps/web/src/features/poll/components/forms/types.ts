@@ -10,6 +10,8 @@ export type PollOptionsData = {
   navigationDate: string; // used to navigate to the right part of the calendar
   duration: number; // duration of the event in minutes
   timeZone: string;
+  autoTimeZone: boolean; // convert times to each participant's zone; user opt-out only
+  allDay: boolean; // derived: options are whole-day dates rather than time slots
   view: string;
   options: DateTimeOption[];
 };

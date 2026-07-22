@@ -38,6 +38,7 @@ import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings
 import type { NewEventData } from "@/features/poll/components/forms/types";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
 
 const required = <T,>(v: T | undefined): T => {
@@ -73,6 +74,8 @@ export const CreatePoll: React.FunctionComponent = () => {
       hideParticipants: false,
       disableComments: false,
       duration: 60,
+      autoTimeZone: true,
+      allDay: false,
     },
   });
 
@@ -95,7 +98,13 @@ export const CreatePoll: React.FunctionComponent = () => {
             title: title,
             location: formData?.location?.trim(),
             description: formData?.description?.trim(),
-            timeZone: formData?.timeZone || null,
+            // Attach a time zone only when auto conversion is on and the poll
+            // isn't all-day; fall back to the organizer's zone so a default-on
+            // timed poll is always anchored to a concrete zone.
+            timeZone:
+              formData?.autoTimeZone && !formData?.allDay
+                ? formData?.timeZone || getBrowserTimeZone()
+                : null,
             hideParticipants: formData?.hideParticipants,
             disableComments: formData?.disableComments,
             hideScores: formData?.hideScores,

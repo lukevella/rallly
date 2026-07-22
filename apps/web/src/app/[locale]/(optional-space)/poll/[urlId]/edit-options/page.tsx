@@ -86,6 +86,10 @@ const Page = () => {
             };
       }),
       timeZone: poll.timeZone ?? "",
+      autoTimeZone: !!poll.timeZone,
+      allDay:
+        poll.options.length > 0 &&
+        poll.options.every((option) => option.duration === 0),
       duration: poll.options[0]?.duration || 60,
     },
   });
@@ -112,7 +116,12 @@ const Page = () => {
             updatePollMutation(
               {
                 pollId: poll.id,
-                timeZone: data.timeZone || null,
+                // Store a zone only when auto conversion is on and the poll
+                // isn't all-day (mirrors the create flow).
+                timeZone:
+                  data.autoTimeZone && !data.allDay
+                    ? data.timeZone || null
+                    : null,
                 optionsToDelete: optionsToDelete.map(({ id }) => id),
                 optionsToAdd,
               },

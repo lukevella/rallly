@@ -79,6 +79,17 @@ const PollOptionsForm = ({
     }
   }, [watchOptions, dateOrTimeRangeDialog]);
 
+  // Keep the derived allDay flag in sync: a poll is all-day when every option
+  // is a whole-day date rather than a time slot. Consumed at submit to decide
+  // whether a time zone is attached.
+  const allDay =
+    watchOptions.length > 0 &&
+    watchOptions.every((option) => option.type === "date");
+
+  React.useEffect(() => {
+    setValue("allDay", allDay);
+  }, [allDay, setValue]);
+
   const watchNavigationDate = watch("navigationDate");
   const navigationDate = new Date(watchNavigationDate ?? Date.now());
 
@@ -201,7 +212,7 @@ const PollOptionsForm = ({
       {!datesOnly ? (
         <FormField
           control={form.control}
-          name="timeZone"
+          name="autoTimeZone"
           render={({ field }) => (
             <div
               className={cn(
@@ -210,19 +221,20 @@ const PollOptionsForm = ({
             >
               <div className="flex h-9 items-center gap-x-2.5 p-2">
                 <Switch
-                  id="timeZone"
+                  id="autoTimeZone"
                   disabled={disableTimeZoneChange}
                   checked={!!field.value}
                   onCheckedChange={(checked) => {
-                    if (checked) {
-                      field.onChange(getBrowserTimeZone());
-                    } else {
-                      field.onChange("");
+                    field.onChange(checked);
+                    // Seed the zone with the organizer's on first enable so the
+                    // selector has a value; the zone string itself persists.
+                    if (checked && !watchTimeZone) {
+                      setValue("timeZone", getBrowserTimeZone());
                     }
                   }}
                 />
                 <Label
-                  htmlFor="timeZone"
+                  htmlFor="autoTimeZone"
                   className={
                     disableTimeZoneChange ? "text-muted-foreground" : undefined
                   }
@@ -254,8 +266,8 @@ const PollOptionsForm = ({
               {field.value ? (
                 <TimeZoneSelect
                   disabled={disableTimeZoneChange}
-                  value={field.value}
-                  onValueChange={field.onChange}
+                  value={watchTimeZone || getBrowserTimeZone()}
+                  onValueChange={(value) => setValue("timeZone", value)}
                 />
               ) : null}
             </div>
