@@ -217,7 +217,6 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         timeZone={RENDER_TIME_ZONE}
         weekStartsOn={weekStart as 0 | 1 | 2 | 3 | 4 | 5 | 6}
         slotDuration={15}
-        snapDuration={30}
         i18n={i18n}
         renderTimeGutterSlot={({ time, hour, minute }) =>
           // The engine's default gutter uses date-fns with its own format
