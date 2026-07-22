@@ -267,6 +267,7 @@ export const polls = router({
           properties: {
             title: poll.title,
             kind,
+            source: "web",
             optionCount: poll.options.length,
             hasLocation: !!location,
             hasDescription: !!description,
