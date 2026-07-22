@@ -94,6 +94,12 @@ export async function updateSpaceImage({
   }
 }
 
+export async function deleteSpace({ spaceId }: { spaceId: string }) {
+  await prisma.space.delete({
+    where: { id: spaceId },
+  });
+}
+
 export async function removeSpaceImage({ spaceId }: { spaceId: string }) {
   const space = await prisma.space.findUnique({
     where: { id: spaceId },

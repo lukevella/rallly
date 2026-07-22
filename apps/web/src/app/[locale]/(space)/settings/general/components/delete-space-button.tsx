@@ -18,8 +18,9 @@ import { toast } from "@rallly/ui/sonner";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
+import { deleteSpaceAction } from "@/features/space/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 interface DeleteSpaceDialogProps extends DialogProps {
   spaceName: string;
@@ -39,7 +40,7 @@ function DeleteSpaceDialog({
   const router = useRouter();
   const { t } = useTranslation();
 
-  const deleteSpace = trpc.spaces.delete.useMutation({
+  const deleteSpace = useSafeAction(deleteSpaceAction, {
     onSuccess: () => {
       toast.success(
         t("deletedSpaceSuccess", {
@@ -57,7 +58,7 @@ function DeleteSpaceDialog({
         <DialogContent>
           <form
             onSubmit={form.handleSubmit(() => {
-              deleteSpace.mutate();
+              deleteSpace.execute();
             })}
           >
             <DialogHeader>
@@ -114,7 +115,7 @@ function DeleteSpaceDialog({
               </DialogClose>
               <Button
                 type="submit"
-                loading={deleteSpace.isPending}
+                loading={deleteSpace.isExecuting}
                 variant="destructive"
               >
                 <Trans
