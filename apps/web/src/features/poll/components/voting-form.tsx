@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { posthog } from "@rallly/posthog/client";
 import { Dialog, DialogContent } from "@rallly/ui/dialog";
 import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
@@ -72,7 +71,7 @@ export const useVotingForm = () => {
 };
 
 export const VotingForm = ({ children }: React.PropsWithChildren) => {
-  const { id: pollId, options, spaceId, space } = usePoll();
+  const { id: pollId, options } = usePoll();
   const updateParticipant = useUpdateParticipantMutation();
   const token = useEditToken();
   const { participants } = useParticipants();
@@ -147,15 +146,6 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
                 votes: options.map((option) => ({
                   optionId: option.id,
                 })),
-              });
-              posthog?.capture("new_participant_dialog:success_view", {
-                pollId,
-                spaceId,
-                tier: space?.tier,
-                $groups: {
-                  poll: pollId,
-                  ...(spaceId ? { space: spaceId } : {}),
-                },
               });
             }}
             onCancel={() => setIsNewParticipantModalOpen(false)}
