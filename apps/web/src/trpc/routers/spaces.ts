@@ -1,9 +1,7 @@
-import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 import { createSpaceDTO } from "@/features/space/data";
-import { defineAbilityForMember } from "@/features/space/member/ability";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type { SpaceDTO } from "@/features/space/types";
 import { fromDBRole } from "@/features/space/utils";
@@ -121,46 +119,6 @@ export const spaces = router({
     }));
   }),
   // ── Mutations ────────────────────────────────────────────────────────
-  delete: spaceProcedure.mutation(async ({ ctx }) => {
-    const memberAbility = defineAbilityForMember({
-      user: ctx.user,
-      space: ctx.space,
-    });
-
-    if (memberAbility.cannot("delete", subject("Space", ctx.space))) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "You do not have permission to delete this space",
-      });
-    }
-
-    const activeSubscriptionCount = await prisma.subscription.count({
-      where: { spaceId: ctx.space.id, active: true },
-    });
-
-    if (activeSubscriptionCount > 0) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message:
-          "Cannot delete space with an active subscription. Please cancel the subscription first.",
-      });
-    }
-
-    await prisma.space.delete({
-      where: { id: ctx.space.id },
-    });
-
-    track(ctx.user, {
-      event: "space_delete",
-      properties: {
-        space_id: ctx.space.id,
-      },
-      groups: {
-        space: ctx.space.id,
-      },
-    });
-  }),
-
   leave: spaceProcedure.mutation(async ({ ctx }) => {
     if (ctx.space.ownerId === ctx.user.id) {
       throw new TRPCError({

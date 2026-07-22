@@ -8,6 +8,7 @@ import { defineAbilityForMember } from "@/features/space/member/ability";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import {
   createSpace,
+  deleteSpace,
   removeSpaceImage,
   updateSpace,
   updateSpaceImage,
@@ -117,6 +118,52 @@ export const createSpaceAction = authActionClient
     });
 
     return space;
+  });
+
+export const deleteSpaceAction = authActionClient
+  .metadata({ actionName: "delete_space" })
+  .action(async ({ ctx }) => {
+    const space = await getActiveSpaceForUser(ctx.user.id);
+
+    if (!space) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: "No active space found",
+      });
+    }
+
+    const ability = defineAbilityForMember({ user: ctx.user, space });
+
+    if (ability.cannot("delete", subject("Space", space))) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "You do not have permission to delete this space",
+      });
+    }
+
+    const activeSubscriptionCount = await prisma.subscription.count({
+      where: { spaceId: space.id, active: true },
+    });
+
+    if (activeSubscriptionCount > 0) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message:
+          "Cannot delete space with an active subscription. Please cancel the subscription first.",
+      });
+    }
+
+    await deleteSpace({ spaceId: space.id });
+
+    track(ctx.user, {
+      event: "space_delete",
+      properties: {
+        space_id: space.id,
+      },
+      groups: {
+        space: space.id,
+      },
+    });
   });
 
 export const updateSpaceAction = authActionClient
