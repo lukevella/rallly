@@ -22,7 +22,7 @@ import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 import DateNavigationToolbar from "./date-navigation-toolbar";
-import type { DateTimePickerProps } from "./types";
+import type { DateTimePickerProps, TimeOption } from "./types";
 import {
   DURATION_CAP_MINUTES,
   durationMinutes,
@@ -117,9 +117,19 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   // biome-ignore lint/correctness/useExhaustiveDependencies: mount-only, reads latest options
   React.useEffect(() => {
     hasScrolledRef.current = true;
-    const firstSlot = options.find((option) => option.type === "timeSlot");
-    if (firstSlot) {
-      apiRef.current?.scrollToTime(new Date(firstSlot.start));
+    // `options` is in selection order, not chronological, so pick the earliest
+    // slot by start time. The naive `YYYY-MM-DDTHH:mm:ss` strings are
+    // fixed-width, so lexicographic min equals chronological min.
+    const earliestSlot = options.reduce<TimeOption | undefined>(
+      (earliest, option) =>
+        option.type === "timeSlot" &&
+        (!earliest || option.start < earliest.start)
+          ? option
+          : earliest,
+      undefined,
+    );
+    if (earliestSlot) {
+      apiRef.current?.scrollToTime(new Date(earliestSlot.start));
     }
   }, []);
 
