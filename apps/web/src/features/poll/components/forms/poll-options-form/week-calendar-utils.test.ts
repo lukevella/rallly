@@ -40,9 +40,13 @@ describe("optionsToEvents", () => {
     expect(events[0].end).toEqual(d("2026-07-21T15:00:00"));
   });
 
-  it("maps a date option to an all-day event", () => {
+  it("maps a date option to a local, next-day-exclusive all-day event", () => {
     const events = optionsToEvents([{ type: "date", date: "2026-07-21" }]);
     expect(events[0].allDay).toBe(true);
+    // Local midnight, not UTC (new Date("2026-07-21") would be UTC midnight).
+    expect(events[0].start).toEqual(d("2026-07-21T00:00:00"));
+    // Exclusive end at the next local day boundary, never zero-length.
+    expect(events[0].end).toEqual(d("2026-07-22T00:00:00"));
   });
 });
 

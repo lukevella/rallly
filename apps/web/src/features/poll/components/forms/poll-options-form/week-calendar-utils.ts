@@ -14,11 +14,15 @@ export function eventId(option: DateTimeOption): string {
 export function optionsToEvents(options: DateTimeOption[]): CalendarEvent[] {
   return options.map((option) => {
     if (option.type === "date") {
+      // Parse the date-only value as LOCAL midnight (new Date("YYYY-MM-DD")
+      // would parse as UTC), and give the all-day event an exclusive end at the
+      // next local day boundary rather than a zero-length span.
+      const start = dayjs(option.date).startOf("day");
       return {
         id: eventId(option),
         title: "",
-        start: new Date(option.date),
-        end: new Date(option.date),
+        start: start.toDate(),
+        end: start.add(1, "day").toDate(),
         allDay: true,
       };
     }
