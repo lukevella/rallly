@@ -34,7 +34,6 @@ import {
   getDayTotalMinutes,
   getRangeKey,
   resolveOffDay,
-  snapMinutes,
   toZoned,
   zonedStartOfDay,
 } from "./event-calendar-lib";
@@ -982,10 +981,14 @@ function EventCalendarDayColumn({
   const slotFromPointer = (e: React.MouseEvent): { date: Date; end: Date } => {
     const rect = e.currentTarget.getBoundingClientRect();
     const pxPerMinute = rect.height / boundsMinutes;
-    const minutes = snapMinutes(
-      boundsStartMin + (e.clientY - rect.top) / pxPerMinute,
-      settings.snapDuration,
-    );
+    const pointerMin = boundsStartMin + (e.clientY - rect.top) / pxPerMinute;
+    // Click (not drag): start at the gridline the click lands *under* - floor,
+    // not round-to-nearest. Rounding pushes a click past a line's midpoint down
+    // to the NEXT line, so a click just below 9:00 resolves to 9:15, landing the
+    // event a snap-step below where the user aimed. Drag-create still rounds
+    // (correct there - the swept edge should track the nearest line).
+    const snap = settings.snapDuration;
+    const minutes = Math.floor(pointerMin / snap) * snap;
     const clamped = Math.min(
       Math.max(minutes, boundsStartMin),
       boundsEndMin - settings.slotDuration,
