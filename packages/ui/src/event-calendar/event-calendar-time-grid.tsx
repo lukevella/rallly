@@ -34,7 +34,6 @@ import {
   getDayTotalMinutes,
   getRangeKey,
   resolveOffDay,
-  snapMinutes,
   toZoned,
   zonedStartOfDay,
 } from "./event-calendar-lib";
@@ -825,6 +824,37 @@ function EventCalendarTimeGutter({
   );
 }
 
+/**
+ * Horizontal gridlines for a day column, as a stacked background-image.
+ *
+ * The primary line sits at each `interval` boundary (`--ec-slot-line-*`). When
+ * the interval spans multiple half-hours we also lay a fainter helper line at
+ * every 30-minute mark (`--ec-half-slot-line-*`) so a 1-hour grid still reads a
+ * half-hour subdivision. The primary layer is listed FIRST so it paints on top
+ * where the two coincide (e.g. the top of each hour), keeping the hour line at
+ * full weight.
+ */
+function gridlineBackgroundImage(interval: number): string {
+  const line = (period: string, color: string) =>
+    `repeating-linear-gradient(to bottom, transparent, transparent calc(${period} - var(--ec-slot-line-width, 1px)), ${color} calc(${period} - var(--ec-slot-line-width, 1px)), ${color} ${period})`;
+
+  const intervalPeriod = `calc(var(--ec-hour-height) * ${interval / 60})`;
+  const primary = line(
+    intervalPeriod,
+    "var(--ec-slot-line-color, var(--color-border))",
+  );
+
+  // Only worth a helper line when the interval is wider than 30 minutes.
+  if (interval <= 30) return primary;
+
+  const halfPeriod = "calc(var(--ec-hour-height) * 0.5)";
+  const helper = line(
+    halfPeriod,
+    "var(--ec-half-slot-line-color, color-mix(in oklch, var(--color-border) 40%, transparent))",
+  );
+  return `${primary}, ${helper}`;
+}
+
 /** Absolute overlay block positioned by minutes (ghosts + drafts). */
 function minuteBlockStyle(
   startMin: number,
@@ -951,10 +981,14 @@ function EventCalendarDayColumn({
   const slotFromPointer = (e: React.MouseEvent): { date: Date; end: Date } => {
     const rect = e.currentTarget.getBoundingClientRect();
     const pxPerMinute = rect.height / boundsMinutes;
-    const minutes = snapMinutes(
-      boundsStartMin + (e.clientY - rect.top) / pxPerMinute,
-      settings.snapDuration,
-    );
+    const pointerMin = boundsStartMin + (e.clientY - rect.top) / pxPerMinute;
+    // Click (not drag): start at the gridline the click lands *under* - floor,
+    // not round-to-nearest. Rounding pushes a click past a line's midpoint down
+    // to the NEXT line, so a click just below 9:00 resolves to 9:15, landing the
+    // event a snap-step below where the user aimed. Drag-create still rounds
+    // (correct there - the swept edge should track the nearest line).
+    const snap = settings.snapDuration;
+    const minutes = Math.floor(pointerMin / snap) * snap;
     const clamped = Math.min(
       Math.max(minutes, boundsStartMin),
       boundsEndMin - settings.slotDuration,
@@ -990,7 +1024,7 @@ function EventCalendarDayColumn({
       )}
       style={{
         height: `calc(var(--ec-hour-height) * ${boundsMinutes / 60})`,
-        backgroundImage: `repeating-linear-gradient(to bottom, transparent, transparent calc(var(--ec-hour-height) * ${interval / 60} - var(--ec-slot-line-width, 1px)), var(--ec-slot-line-color, var(--color-border)) calc(var(--ec-hour-height) * ${interval / 60} - var(--ec-slot-line-width, 1px)), var(--ec-slot-line-color, var(--color-border)) calc(var(--ec-hour-height) * ${interval / 60}))`,
+        backgroundImage: gridlineBackgroundImage(interval),
       }}
       onPointerDown={(e) => {
         if (e.target === e.currentTarget) gestures.beginCreate(e, day, false);
