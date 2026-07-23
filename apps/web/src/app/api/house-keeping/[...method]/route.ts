@@ -13,7 +13,10 @@ import {
 } from "@/features/poll/mutations";
 import { findUsersScheduledForRemoval } from "@/features/user/account-deletion/data";
 import { getAccountDeletionCutoff } from "@/features/user/account-deletion/utils";
-import { hardDeleteUser } from "@/features/user/mutations";
+import {
+  deleteOrphanedAnonymousUsers,
+  hardDeleteUser,
+} from "@/features/user/mutations";
 import {
   deletePostHogPerson,
   flushPostHog,
@@ -174,6 +177,24 @@ app.get("/remove-deleted-users", async (c) => {
     summary: {
       deleted: {
         users: deletedUsers,
+      },
+    },
+  });
+});
+
+app.get("/delete-orphaned-anonymous-users", async (c) => {
+  const deleted = await deleteOrphanedAnonymousUsers();
+
+  logger.info(
+    { task: "delete-orphaned-anonymous-users", deleted },
+    "Deleted orphaned anonymous guest users idle longer than the session length",
+  );
+
+  return c.json({
+    success: true,
+    summary: {
+      deleted: {
+        anonymousUsers: deleted,
       },
     },
   });
