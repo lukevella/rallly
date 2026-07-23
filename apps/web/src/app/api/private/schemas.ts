@@ -33,7 +33,7 @@ const slotsInputSchema = z
     }),
     timezone: timezoneSchema.optional().openapi({
       description:
-        "IANA timezone. Datetime strings without an offset are interpreted in this timezone. If omitted, offset-less datetimes are treated as floating times (UTC).",
+        "IANA timezone. Datetime strings without an offset are interpreted in this timezone. If omitted, offset-less datetimes are treated as floating times (no timezone conversion) and the poll has no timezone set.",
       example: "Europe/London",
     }),
     times: z
