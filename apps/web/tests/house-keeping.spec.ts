@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
+import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
 import { createSpaceInDb, createTestPoll, createUserInDb } from "./test-utils";
 
 /**
@@ -12,7 +13,8 @@ import { createSpaceInDb, createTestPoll, createUserInDb } from "./test-utils";
  */
 
 // Session length; anything below now - this cutoff is provably session-less.
-const SESSION_TTL_DAYS = 60;
+// Derived from the production constant so the boundary can't silently drift.
+const SESSION_TTL_DAYS = SESSION_TTL_SECONDS / (60 * 60 * 24);
 test.describe("House-keeping API", () => {
   // Store created poll IDs for cleanup
   const createdPollIds: string[] = [];
