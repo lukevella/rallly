@@ -33,15 +33,16 @@ const slotsInputSchema = z
     }),
     timezone: timezoneSchema.optional().openapi({
       description:
-        "IANA timezone. If not provided, times will be stored as UTC and no timezone will be set on the poll (indicating floating times).",
+        "IANA timezone. Datetime strings without an offset are interpreted in this timezone. If omitted, offset-less datetimes are treated as floating times (no timezone conversion) and the poll has no timezone set.",
       example: "Europe/London",
     }),
     times: z
       .array(
         z.union([
-          z.iso.datetime().openapi({
-            description: "ISO datetime start time",
-            example: "2025-01-15T09:00:00Z",
+          z.iso.datetime({ local: true, offset: true }).openapi({
+            description:
+              "ISO datetime start time. Strings without an offset are interpreted as wall-clock in `timezone` (e.g. `2025-01-15T09:00:00` with `timezone: Europe/London` means 09:00 in London). Strings with an offset or `Z` are treated as absolute instants.",
+            example: "2025-01-15T09:00:00",
           }),
           slotGeneratorSchema,
         ]),
