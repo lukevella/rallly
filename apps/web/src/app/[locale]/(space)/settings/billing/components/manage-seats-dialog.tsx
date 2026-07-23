@@ -16,7 +16,7 @@ import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { useCallback, useState } from "react";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 interface ManageSeatsButtonProps {
@@ -37,6 +37,7 @@ function SeatCountSelector({
   currentSeats,
   minSeats,
 }: SeatCountSelectorProps) {
+  const { t } = useTranslation();
   const handleIncrement = useCallback(() => {
     onChange(value + 1);
   }, [value, onChange]);
@@ -93,6 +94,7 @@ function SeatCountSelector({
 
         <Input
           type="number"
+          aria-label={t("numberOfSeats", { defaultValue: "Number of seats" })}
           value={value}
           onChange={handleInputChange}
           onBlur={handleInputBlur}

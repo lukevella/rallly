@@ -61,7 +61,7 @@ export const ProfileSettings = ({
                     <Trans i18nKey="name" />
                   </FormLabel>
                   <FormControl>
-                    <Input id="name" {...field} />
+                    <Input id="name" autoComplete="name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

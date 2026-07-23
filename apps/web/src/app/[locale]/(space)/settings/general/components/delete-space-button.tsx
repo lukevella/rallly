@@ -12,7 +12,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@rallly/ui/dialog";
-import { Form, FormField, FormItem, FormMessage } from "@rallly/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
 import { useRouter } from "next/navigation";
@@ -98,12 +104,17 @@ function DeleteSpaceDialog({
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <Input
-                      autoComplete="off"
-                      data-1p-ignore
-                      placeholder={spaceName}
-                      {...field}
-                    />
+                    <FormControl>
+                      <Input
+                        autoComplete="off"
+                        aria-label={t("deleteSpaceConfirmLabel", {
+                          defaultValue: "Confirm space name",
+                        })}
+                        data-1p-ignore
+                        placeholder={spaceName}
+                        {...field}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

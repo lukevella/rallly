@@ -70,10 +70,14 @@ export function PollsTabbedView({
         tabIndex={-1}
         value={tab}
         key={tab}
+        aria-busy={isPending}
         className={cn(isPending ? "pointer-events-none opacity-50" : "")}
       >
         {children}
       </TabsContent>
+      <output aria-live="polite" className="sr-only">
+        {isPending ? <Trans i18nKey="loading" defaults="Loading…" /> : null}
+      </output>
     </Tabs>
   );
 }

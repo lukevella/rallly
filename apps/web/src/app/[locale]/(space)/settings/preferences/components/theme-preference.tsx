@@ -3,7 +3,7 @@
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 import React from "react";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useTheme } from "@/lib/theme";
 
 function ThemeOption({
@@ -30,6 +30,7 @@ function ThemeOptionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export function ThemePreference() {
+  const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
@@ -42,6 +43,7 @@ export function ThemePreference() {
     // render, so remount the group once the theme is known after hydration
     <RadioGroup
       key={mounted ? "mounted" : "ssr"}
+      aria-label={t("theme", { defaultValue: "Theme" })}
       value={mounted ? theme : undefined}
       onValueChange={setTheme}
       className="flex flex-wrap gap-2"
