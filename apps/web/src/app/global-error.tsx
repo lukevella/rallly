@@ -23,8 +23,10 @@ export default function GlobalError({
         does not expose status codes for errors, we simply pass 0 to render a
         generic error message. */}
         <NextError statusCode={0} />
-        {/* global-error replaces the root layout, so app UI/providers are
-        unavailable here. Offer a bare retry that re-attempts the render. */}
+        {/* global-error replaces the root layout, so it renders above the
+        [locale] segment that mounts I18nProvider. There is no locale and no
+        i18n instance to read here, which is why `NextError` above is also
+        untranslated. The retry label stays hardcoded to match. */}
         <div style={{ textAlign: "center", marginTop: 16 }}>
           <button type="button" onClick={() => reset()}>
             Try again

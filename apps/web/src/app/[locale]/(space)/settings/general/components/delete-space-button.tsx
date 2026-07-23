@@ -15,8 +15,10 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
@@ -82,13 +84,6 @@ function DeleteSpaceDialog({
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
-              <p className="text-sm">
-                <Trans
-                  i18nKey="deleteSpaceInstruction"
-                  defaults="Please type the space name to confirm: {{spaceName}}"
-                  values={{ spaceName }}
-                />
-              </p>
               <FormField
                 control={form.control}
                 name="spaceName"
@@ -104,12 +99,22 @@ function DeleteSpaceDialog({
                 }}
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>
+                      <Trans
+                        i18nKey="deleteSpaceConfirmLabel"
+                        defaults="Confirm space name"
+                      />
+                    </FormLabel>
+                    <FormDescription>
+                      <Trans
+                        i18nKey="deleteSpaceInstruction"
+                        defaults="Please type the space name to confirm: {{spaceName}}"
+                        values={{ spaceName }}
+                      />
+                    </FormDescription>
                     <FormControl>
                       <Input
                         autoComplete="off"
-                        aria-label={t("deleteSpaceConfirmLabel", {
-                          defaultValue: "Confirm space name",
-                        })}
                         data-1p-ignore
                         placeholder={spaceName}
                         {...field}
