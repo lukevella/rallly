@@ -2,10 +2,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
+  FormControl,
   FormDescription,
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { useForm } from "react-hook-form";
@@ -48,13 +50,16 @@ export function DuplicateForm({
                 <FormLabel>
                   <Trans i18nKey="duplicateTitleLabel" defaults="Title" />
                 </FormLabel>
-                <Input {...field} className="w-full" />
+                <FormControl>
+                  <Input {...field} className="w-full" />
+                </FormControl>
                 <FormDescription>
                   <Trans
                     i18nKey="duplicateTitleDescription"
                     defaults="Hint: Give your new poll a unique title"
                   />
                 </FormDescription>
+                <FormMessage />
               </FormItem>
             );
           }}

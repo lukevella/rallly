@@ -12,7 +12,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@rallly/ui/dialog";
-import { Form, FormField, FormItem, FormMessage } from "@rallly/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
 import { useRouter } from "next/navigation";
@@ -76,13 +84,6 @@ function DeleteSpaceDialog({
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
-              <p className="text-sm">
-                <Trans
-                  i18nKey="deleteSpaceInstruction"
-                  defaults="Please type the space name to confirm: {{spaceName}}"
-                  values={{ spaceName }}
-                />
-              </p>
               <FormField
                 control={form.control}
                 name="spaceName"
@@ -98,12 +99,27 @@ function DeleteSpaceDialog({
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <Input
-                      autoComplete="off"
-                      data-1p-ignore
-                      placeholder={spaceName}
-                      {...field}
-                    />
+                    <FormLabel>
+                      <Trans
+                        i18nKey="deleteSpaceConfirmLabel"
+                        defaults="Confirm space name"
+                      />
+                    </FormLabel>
+                    <FormDescription>
+                      <Trans
+                        i18nKey="deleteSpaceInstruction"
+                        defaults="Please type the space name to confirm: {{spaceName}}"
+                        values={{ spaceName }}
+                      />
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        autoComplete="off"
+                        data-1p-ignore
+                        placeholder={spaceName}
+                        {...field}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

@@ -135,7 +135,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit((data) => inviteMember.execute(data))}>
-        <fieldset className="space-y-4">
+        <div className="space-y-4">
           <FormField
             control={form.control}
             name="email"
@@ -231,7 +231,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
             )}
           />
           <FormMessage />
-        </fieldset>
+        </div>
         <div className="mt-4 flex">
           <Button
             variant="primary"
