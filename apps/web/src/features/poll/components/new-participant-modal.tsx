@@ -23,6 +23,7 @@ import { CircleCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { IfCloudHosted } from "@/components/environment";
 import { usePoll } from "@/features/poll/client";
 import { useAddParticipantMutation } from "@/features/poll/components/mutations";
 import VoteIcon from "@/features/poll/components/vote-icon";
@@ -166,37 +167,39 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             defaults="Back to poll"
           />
         </Button>
-        <div className="flex flex-col items-center text-center">
-          <p className="text-muted-foreground text-sm">
-            <Trans
-              i18nKey="newParticipantDialogCreatePollPrompt"
-              defaults="Need to schedule something yourself?"
-            />
-          </p>
-          <Link
-            href="/new"
-            className={buttonVariants({ variant: "link" })}
-            onClick={() => {
-              posthog?.capture(
-                "new_participant_dialog:create_poll_button_click",
-                {
-                  pollId: poll.id,
-                  spaceId: poll.spaceId,
-                  tier: poll.space?.tier,
-                  $groups: {
-                    poll: poll.id,
-                    ...(poll.spaceId ? { space: poll.spaceId } : {}),
+        <IfCloudHosted>
+          <div className="flex flex-col items-center text-center">
+            <p className="text-muted-foreground text-sm">
+              <Trans
+                i18nKey="newParticipantDialogCreatePollPrompt"
+                defaults="Need to schedule something yourself?"
+              />
+            </p>
+            <Link
+              href="/new"
+              className={buttonVariants({ variant: "link" })}
+              onClick={() => {
+                posthog?.capture(
+                  "new_participant_dialog:create_poll_button_click",
+                  {
+                    pollId: poll.id,
+                    spaceId: poll.spaceId,
+                    tier: poll.space?.tier,
+                    $groups: {
+                      poll: poll.id,
+                      ...(poll.spaceId ? { space: poll.spaceId } : {}),
+                    },
                   },
-                },
-              );
-            }}
-          >
-            <Trans
-              i18nKey="newParticipantDialogCreatePoll"
-              defaults="Create your own poll"
-            />
-          </Link>
-        </div>
+                );
+              }}
+            >
+              <Trans
+                i18nKey="newParticipantDialogCreatePoll"
+                defaults="Create your own poll"
+              />
+            </Link>
+          </div>
+        </IfCloudHosted>
       </>
     );
   }
