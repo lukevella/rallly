@@ -11,6 +11,11 @@ import {
 } from "@/features/poll/components/mutations";
 import { NewParticipantForm } from "@/features/poll/components/new-participant-modal";
 import { useParticipants } from "@/features/poll/components/participants-provider";
+import { useTranslation } from "@/i18n/client";
+
+const voteTypeSchema = z.enum(["yes", "no", "ifNeedBe"]);
+
+type VoteType = z.infer<typeof voteTypeSchema>;
 
 const formSchema = z.object({
   mode: z.enum(["new", "edit", "view"]),
@@ -19,7 +24,7 @@ const formSchema = z.object({
     z
       .object({
         optionId: z.string(),
-        type: z.enum(["yes", "no", "ifNeedBe"]).optional(),
+        type: voteTypeSchema.optional(),
       })
       .optional(),
   ),
@@ -27,13 +32,19 @@ const formSchema = z.object({
 
 type VotingFormValues = z.infer<typeof formSchema>;
 
+type AnnounceVote = (optionLabel: string, vote: VoteType) => void;
+
+const AnnounceContext = React.createContext<AnnounceVote>(() => {});
+
 export const useVotingForm = () => {
   const { options } = usePoll();
   const { participants } = useParticipants();
   const form = useFormContext<VotingFormValues>();
+  const announce = React.useContext(AnnounceContext);
 
   return {
     ...form,
+    announce,
     newParticipant: () => {
       form.reset({
         mode: "new",
@@ -75,6 +86,21 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
   const updateParticipant = useUpdateParticipantMutation();
   const token = useEditToken();
   const { participants } = useParticipants();
+  const { t } = useTranslation();
+
+  const [announcement, setAnnouncement] = React.useState("");
+
+  const announce = React.useCallback<AnnounceVote>(
+    (optionLabel, vote) => {
+      const voteLabels: Record<VoteType, string> = {
+        yes: t("yes", { defaultValue: "Yes" }),
+        ifNeedBe: t("ifNeedBe", { defaultValue: "If need be" }),
+        no: t("no", { defaultValue: "No" }),
+      };
+      setAnnouncement(`${optionLabel}: ${voteLabels[vote]}`);
+    },
+    [t],
+  );
 
   const { canAddNewParticipant, canEditParticipant } = usePermissions();
   const userAlreadyVoted = participants.some((participant) =>
@@ -106,53 +132,58 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
 
   return (
     <FormProvider {...form}>
-      <form
-        id="voting-form"
-        onSubmit={form.handleSubmit(async (data) => {
-          if (data.participantId) {
-            // update participant
+      <AnnounceContext.Provider value={announce}>
+        <form
+          id="voting-form"
+          onSubmit={form.handleSubmit(async (data) => {
+            if (data.participantId) {
+              // update participant
 
-            await updateParticipant.mutateAsync({
-              participantId: data.participantId,
-              pollId,
-              votes: normalizeVotes(optionIds, data.votes),
-              token,
-            });
+              await updateParticipant.mutateAsync({
+                participantId: data.participantId,
+                pollId,
+                votes: normalizeVotes(optionIds, data.votes),
+                token,
+              });
 
-            form.reset({
-              mode: "view",
-              participantId: data.participantId,
-              votes: options.map((option) => ({
-                optionId: option.id,
-              })),
-            });
-          } else {
-            // new participant
-            setIsNewParticipantModalOpen(true);
-          }
-        })}
-      />
-      <Dialog
-        open={isNewParticipantModalOpen}
-        onOpenChange={setIsNewParticipantModalOpen}
-      >
-        <DialogContent size="sm">
-          <NewParticipantForm
-            votes={normalizeVotes(optionIds, form.watch("votes"))}
-            onSubmit={(newParticipant) => {
               form.reset({
                 mode: "view",
-                participantId: newParticipant.id,
+                participantId: data.participantId,
                 votes: options.map((option) => ({
                   optionId: option.id,
                 })),
               });
-            }}
-            onCancel={() => setIsNewParticipantModalOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
-      {children}
+            } else {
+              // new participant
+              setIsNewParticipantModalOpen(true);
+            }
+          })}
+        />
+        <Dialog
+          open={isNewParticipantModalOpen}
+          onOpenChange={setIsNewParticipantModalOpen}
+        >
+          <DialogContent size="sm">
+            <NewParticipantForm
+              votes={normalizeVotes(optionIds, form.watch("votes"))}
+              onSubmit={(newParticipant) => {
+                form.reset({
+                  mode: "view",
+                  participantId: newParticipant.id,
+                  votes: options.map((option) => ({
+                    optionId: option.id,
+                  })),
+                });
+              }}
+              onCancel={() => setIsNewParticipantModalOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
+        {children}
+        <div aria-live="polite" className="sr-only">
+          {announcement}
+        </div>
+      </AnnounceContext.Provider>
     </FormProvider>
   );
 };
