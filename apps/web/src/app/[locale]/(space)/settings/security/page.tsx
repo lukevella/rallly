@@ -75,7 +75,7 @@ export default async function SecurityPage() {
                   <PageSectionTitle>
                     <Trans i18nKey="setPasswordTitle" defaults="Set Password" />
                   </PageSectionTitle>
-                  <PageSectionDescription className="max-w-lg">
+                  <PageSectionDescription>
                     <Trans
                       i18nKey="setPasswordSectionDescription"
                       defaults="Your account doesn't have a password yet. Set one to sign in with your email address."
