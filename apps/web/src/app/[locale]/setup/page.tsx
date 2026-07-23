@@ -23,7 +23,10 @@ export default async function SetupPage(props: {
   // and had them create a second space.
   const space = await getOwnedSpace(user.id);
 
-  if (user.name && user.timeZone && user.timeFormat && space) {
+  // Mirrors the gate in features/space/loaders.ts: name and a space are
+  // required, timezone and time format are not. The two conditions have to
+  // agree or the user ping-pongs between here and the app.
+  if (user.name && space) {
     redirect(validateRedirectUrl(searchParams?.redirectTo) ?? "/");
   }
 
