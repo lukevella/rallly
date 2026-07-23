@@ -1,6 +1,6 @@
 import "server-only";
 
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 
 import {
@@ -10,7 +10,6 @@ import {
   getTotalSeatsForSpace,
 } from "@/features/space/data";
 import { getSessionState } from "@/lib/auth";
-import { AppError } from "@/lib/errors/app-error";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { getPathname } from "@/lib/pathname";
 import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
@@ -71,12 +70,12 @@ export const getActiveSpace = cache(async () => {
     // A user can resolve to no *active* space while still owning one
     // (their only other memberships are ineffective, or their own
     // membership row is gone) — /setup would bounce them straight back,
-    // so fail the render instead of looping.
+    // so render the not-found page instead of looping. notFound() rather
+    // than a thrown AppError: nothing adapts AppError for server
+    // components, so it would reach the error boundary as an unexpected
+    // error, showing "Something went wrong" and reporting to Sentry.
     if (await getOwnedSpace(user.id)) {
-      throw new AppError({
-        code: "NOT_FOUND",
-        message: "No accessible space for user",
-      });
+      notFound();
     }
 
     redirect(
