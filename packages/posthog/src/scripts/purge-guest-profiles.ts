@@ -1,11 +1,19 @@
 /**
  * Deletes guest person profiles (no email property) from PostHog.
  *
- * Guests are matched in two passes: email property not set, then email set to
- * an empty string. Selection uses the persons REST endpoint rather than HogQL
- * so the ids we fetch are exactly what bulk_delete expects. Each cycle
- * re-fetches the first page (no offset pagination — offsets drift as rows are
- * deleted) until the filter returns nothing.
+ * Two-phase design so the delete loop never paginates a table it is mutating:
+ *
+ *   1. SNAPSHOT — page through HogQL once, up front, collecting every guest
+ *      person id into memory (keyset pagination on `id`; OFFSET is rejected for
+ *      personal API keys). HogQL `persons.id` is the person UUID, which is
+ *      exactly what bulk_delete expects.
+ *   2. DRAIN — delete the snapshot ids in fixed batches. Deleting an id that is
+ *      already gone is a no-op, so the eventually-consistent persons replica
+ *      lagging behind bulk_delete no longer matters: we drain a frozen list, we
+ *      never re-read the mutating table for the next cursor. This removes the
+ *      empty-page / read-replica-lag failure mode of the old first-page-refetch
+ *      loop, which stalled at ~1.2M rows because the list replica fell more than
+ *      a minute behind under sustained delete load.
  *
  * Events are preserved (delete_events: false) — only the person profiles are
  * removed; guest page views and events remain as historical data.
@@ -31,41 +39,33 @@ const API_HOST = process.env.POSTHOG_API_HOST ?? "https://us.posthog.com";
 const PROJECT_ID = process.env.POSTHOG_PROJECT_ID;
 const API_KEY = process.env.POSTHOG_PERSONAL_API_KEY;
 
-const PAGE_SIZE = 1000;
 const SAMPLE_SIZE = 50;
+// HogQL rows fetched per keyset page while building the id snapshot.
+const SNAPSHOT_PAGE_SIZE = 10000;
+// bulk_delete accepts at most 1000 ids per call (PostHog validates this).
+const DELETE_BATCH_SIZE = 1000;
 // CRUD endpoints are rate limited to 480/min org-wide
 const DELETE_INTERVAL_MS = 800;
 const MAX_RATE_LIMIT_RETRIES = 5;
-// The persons list endpoint (ClickHouse) lags behind bulk_delete. When it hands
-// back an empty page but the count still reports matches, back off and retry
-// before treating the filter as exhausted.
-const EMPTY_PAGE_BACKOFF_MS = 5000;
-const MAX_EMPTY_PAGE_RETRIES = 12;
 
-const GUEST_FILTERS = [
-  {
-    label: "email is not set",
-    countQuery: "SELECT count() FROM persons WHERE isNull(properties.email)",
-    properties: [
-      {
-        key: "email",
-        operator: "is_not_set",
-        value: "is_not_set",
-        type: "person",
-      },
-    ],
-  },
-  {
-    label: "email is empty string",
-    countQuery: "SELECT count() FROM persons WHERE properties.email = ''",
-    properties: [
-      { key: "email", operator: "exact", value: "", type: "person" },
-    ],
-  },
+// Guests are persons with no usable email. `email = ''` matched 0 rows in
+// production, but keep it in the predicate for correctness.
+const GUEST_PREDICATE = "isNull(properties.email) OR properties.email = ''";
+const GUEST_COUNT_QUERY = `SELECT count() FROM persons WHERE ${GUEST_PREDICATE}`;
+
+// Persons REST filter for the sample/canary reads (that endpoint uses property
+// filters, not HogQL). Matches the "email not set" pass of the predicate.
+const GUEST_REST_PROPERTIES = [
+  { key: "email", operator: "is_not_set", value: "is_not_set", type: "person" },
 ];
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// Thousands separators for log readability (avoids Intl date-format lint rule).
+function fmt(n: number): string {
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 async function apiRequest({
@@ -105,13 +105,57 @@ async function apiRequest({
   }
 }
 
-async function hogqlCount(query: string): Promise<number> {
+async function hogqlQuery(query: string): Promise<unknown[][]> {
   const data = await apiRequest({
     path: `/api/projects/${PROJECT_ID}/query/`,
     method: "POST",
     body: { query: { kind: "HogQLQuery", query } },
   });
-  return Number(data.results?.[0]?.[0] ?? 0);
+  return data.results ?? [];
+}
+
+async function hogqlCount(query: string): Promise<number> {
+  const results = await hogqlQuery(query);
+  return Number(results?.[0]?.[0] ?? 0);
+}
+
+// Escape a UUID for safe interpolation into a HogQL string literal. The values
+// come from PostHog itself and are always well-formed UUIDs, but keep the escape
+// so a malformed value can't break out of the toUUID('…') literal.
+function quoteUuid(id: string): string {
+  return id.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+}
+
+// Page through the guest filter once, up front, collecting every id into memory.
+// Keyset pagination on `id` (OFFSET is rejected for personal API keys). Returns
+// the full frozen list the drain loop consumes.
+async function snapshotGuestIds(): Promise<string[]> {
+  console.info(
+    `\n📸 Snapshotting guest person ids (HogQL, ${fmt(SNAPSHOT_PAGE_SIZE)}/page)…`,
+  );
+  const ids: string[] = [];
+  let cursor: string | undefined;
+
+  for (;;) {
+    const where = cursor
+      ? `(${GUEST_PREDICATE}) AND id > toUUID('${quoteUuid(cursor)}')`
+      : GUEST_PREDICATE;
+    const query = `SELECT id FROM persons WHERE ${where} ORDER BY id LIMIT ${SNAPSHOT_PAGE_SIZE}`;
+
+    const rows = await hogqlQuery(query);
+    if (rows.length === 0) break;
+
+    for (const row of rows) {
+      ids.push(String(row[0]));
+    }
+    cursor = String(rows[rows.length - 1][0]);
+    console.info(`• Snapshotted ${fmt(ids.length)} id(s) so far…`);
+
+    if (rows.length < SNAPSHOT_PAGE_SIZE) break;
+  }
+
+  console.info(`📸 Snapshot complete — ${fmt(ids.length)} guest id(s).`);
+  return ids;
 }
 
 async function fetchGuestPage({
@@ -164,7 +208,7 @@ async function preflight() {
 
 async function printSample() {
   const sample = await fetchGuestPage({
-    properties: GUEST_FILTERS[0].properties,
+    properties: GUEST_REST_PROPERTIES,
     limit: SAMPLE_SIZE,
   });
 
@@ -213,7 +257,7 @@ async function verifyCanary() {
   );
 
   const sample = await fetchGuestPage({
-    properties: GUEST_FILTERS[0].properties,
+    properties: GUEST_REST_PROPERTIES,
     limit: SAMPLE_SIZE,
   });
 
@@ -287,76 +331,30 @@ async function verifyCanary() {
   );
 }
 
-async function purge({
-  properties,
-  countQuery,
-  label,
-}: {
-  properties: unknown[];
-  countQuery: string;
-  label: string;
-}) {
-  console.info(`\n🗑️  Purging profiles where ${label}…`);
+// Drains the frozen id snapshot in fixed batches. Deleting an already-deleted id
+// is a no-op, so replica lag never stalls the loop and offsets never drift.
+async function purge(ids: string[]) {
+  console.info(
+    `\n🗑️  Deleting ${fmt(ids.length)} guest profile(s) in batches of ${DELETE_BATCH_SIZE}…`,
+  );
   let deleted = 0;
-  let previousFirstId: string | number | undefined;
-  let stuckCycles = 0;
-  // The persons list endpoint reads from ClickHouse and is eventually
-  // consistent: right after a bulk_delete it can briefly return a partial or
-  // empty page while the deletes propagate. A single empty page is therefore
-  // NOT proof the work is done — confirm against the authoritative count and
-  // retry a few times before concluding the filter is exhausted.
-  let emptyPages = 0;
 
-  for (;;) {
-    const page = await fetchGuestPage({ properties, limit: PAGE_SIZE });
-
-    if (page.length === 0) {
-      const remaining = await hogqlCount(countQuery);
-      if (remaining === 0) {
-        break;
-      }
-      emptyPages++;
-      if (emptyPages >= MAX_EMPTY_PAGE_RETRIES) {
-        throw new Error(
-          `Persons list returned empty ${emptyPages} times but the count still reports ${remaining} matching profile(s). Read replica may be lagging — aborting so the run isn't silently left incomplete.`,
-        );
-      }
-      console.info(
-        `• Empty page but ${remaining} still match — waiting for read replica (retry ${emptyPages}/${MAX_EMPTY_PAGE_RETRIES})`,
-      );
-      await sleep(EMPTY_PAGE_BACKOFF_MS);
-      continue;
-    }
-
-    emptyPages = 0;
-
-    if (page[0].id === previousFirstId) {
-      stuckCycles++;
-      if (stuckCycles >= 3) {
-        throw new Error(
-          `Deletes are not taking effect — the same page keeps coming back (first id ${page[0].id}). Aborting.`,
-        );
-      }
-    } else {
-      stuckCycles = 0;
-    }
-    previousFirstId = page[0].id;
+  for (let i = 0; i < ids.length; i += DELETE_BATCH_SIZE) {
+    const batch = ids.slice(i, i + DELETE_BATCH_SIZE);
 
     await apiRequest({
       path: `/api/projects/${PROJECT_ID}/persons/bulk_delete/`,
       method: "POST",
-      body: { ids: page.map((person) => person.id), delete_events: false },
+      body: { ids: batch, delete_events: false },
     });
 
-    deleted += page.length;
-    console.info(`• Deleted ${page.length} (running total: ${deleted})`);
+    deleted += batch.length;
+    console.info(
+      `• Deleted ${batch.length} (running total: ${fmt(deleted)}/${fmt(ids.length)})`,
+    );
     await sleep(DELETE_INTERVAL_MS);
   }
 
-  const remaining = await hogqlCount(countQuery);
-  console.info(
-    `✅ Done — ${deleted} profile(s) deleted where ${label}. Count now reports ${remaining} matching.`,
-  );
   return deleted;
 }
 
@@ -396,14 +394,18 @@ async function purge({
     return;
   }
 
-  let total = 0;
-  for (const filter of GUEST_FILTERS) {
-    total += await purge(filter);
-  }
+  const ids = await snapshotGuestIds();
+  const deleted = await purge(ids);
 
+  const remaining = await hogqlCount(GUEST_COUNT_QUERY);
   console.info(
-    `\n📊 Done: ${total} guest profile(s) deleted. Their events were preserved.`,
+    `\n📊 Done: ${fmt(deleted)} guest profile(s) deleted. Their events were preserved. Count now reports ${fmt(remaining)} matching.`,
   );
+  if (remaining > 0) {
+    console.info(
+      "ℹ️  A non-zero remaining count right after the run is usually replica lag or profiles created since the snapshot — re-run to sweep any stragglers.",
+    );
+  }
 })().catch((error) => {
   console.error(`❌ ${error instanceof Error ? error.message : error}`);
   process.exit(1);
