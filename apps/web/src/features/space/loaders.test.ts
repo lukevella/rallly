@@ -105,8 +105,8 @@ describe("getActiveSpace", () => {
     expect(mockRedirect).not.toHaveBeenCalled();
   });
 
-  it("redirects to /setup when profile fields are missing, before reading spaces", async () => {
-    authenticatedAs({ ...completeUser, timeFormat: undefined });
+  it("redirects to /setup when the name is missing, before reading spaces", async () => {
+    authenticatedAs({ ...completeUser, name: "" });
 
     const gate = await loadGate();
 
@@ -115,6 +115,23 @@ describe("getActiveSpace", () => {
       expect.stringContaining("/setup"),
     );
     expect(mockGetActiveSpaceForUser).not.toHaveBeenCalled();
+  });
+
+  // Long-standing accounts predate the timeZone/timeFormat columns. Both
+  // resolve without a stored value, so a null must not force onboarding.
+  it.each([
+    ["timeZone", { timeZone: undefined }],
+    ["timeFormat", { timeFormat: undefined }],
+    ["both", { timeZone: undefined, timeFormat: undefined }],
+  ])("does not redirect to /setup when %s is missing", async (_label, patch) => {
+    const space = { id: "space-1", name: "Personal" };
+    authenticatedAs({ ...completeUser, ...patch });
+    mockGetActiveSpaceForUser.mockResolvedValue(space);
+
+    const gate = await loadGate();
+
+    await expect(gate()).resolves.toEqual(space);
+    expect(mockRedirect).not.toHaveBeenCalled();
   });
 
   it("redirects to /login for a guest", async () => {

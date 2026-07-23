@@ -51,10 +51,12 @@ export const getActiveSpace = cache(async () => {
   }
 
   // Accounts created through the OTP registration flow start without a
-  // name, timezone, or time format; /setup collects them before they can
-  // use the app. Pre-existing accounts missing any of these go through
-  // the same (prefilled) form once.
-  if (!user.name || !user.timeZone || !user.timeFormat) {
+  // name; /setup collects one before they can use the app. Timezone and
+  // time format are deliberately NOT gated on: both resolve without a
+  // stored value (zone from the per-visit cookie, format from
+  // getLocaleDefaults), and gating on them dragged long-standing accounts
+  // that predate those columns back through onboarding.
+  if (!user.name) {
     redirect(
       buildSafeRedirectUrl({
         destination: "/setup",
