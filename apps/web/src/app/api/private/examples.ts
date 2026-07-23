@@ -18,7 +18,7 @@ export const createPollRequestExamples = {
   timePoll: {
     summary: "Time poll (explicit times)",
     description:
-      "Use `slots` with ISO datetime strings to offer specific time slots. Times are UTC and displayed to participants in the poll's `timezone`.",
+      "Use `slots` with ISO datetime strings to offer specific time slots. Datetimes without an offset are interpreted as wall-clock in the poll's `timezone` — the example below offers 09:00 and 14:00 in London. Append `Z` or an offset to specify an absolute instant instead.",
     value: {
       title: "Project kickoff",
       location: "Zoom",
@@ -26,9 +26,9 @@ export const createPollRequestExamples = {
         duration: 60,
         timezone: "Europe/London",
         times: [
-          "2026-08-03T09:00:00Z",
-          "2026-08-03T14:00:00Z",
-          "2026-08-04T09:00:00Z",
+          "2026-08-03T09:00:00",
+          "2026-08-03T14:00:00",
+          "2026-08-04T09:00:00",
         ],
       },
     } satisfies CreatePollInput,
@@ -65,7 +65,7 @@ export const createPollRequestExamples = {
         duration: 90,
         timezone: "Europe/Berlin",
         times: [
-          "2026-08-01T10:00:00Z",
+          "2026-08-01T10:00:00",
           {
             startDate: "2026-08-03",
             endDate: "2026-08-05",
