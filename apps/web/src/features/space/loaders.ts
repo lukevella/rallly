@@ -1,10 +1,11 @@
 import "server-only";
 
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 
 import {
   getActiveSpaceForUser,
+  getOwnedSpace,
   getSpaceSeatCount,
   getTotalSeatsForSpace,
 } from "@/features/space/data";
@@ -16,8 +17,8 @@ import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 /**
  * The active space for the signed-in user, gated for server rendering:
  * redirects to /login when unauthenticated or a guest, redirects to /setup
- * when the user has no name, timezone, time format, or space, and throws
- * InvalidSessionError when banned.
+ * when the user has no name, timezone, time format, or space at all, and
+ * throws InvalidSessionError when banned.
  * React cached, so every page and layout that needs the space in a request
  * shares one gate and one query. Server component/page use only — the
  * redirects make it unsuitable for route handlers and tRPC procedures.
@@ -65,6 +66,18 @@ export const getActiveSpace = cache(async () => {
   const space = await getActiveSpaceForUser(user.id);
 
   if (!space) {
+    // Only send them to onboarding when they genuinely have no space.
+    // A user can resolve to no *active* space while still owning one
+    // (their only other memberships are ineffective, or their own
+    // membership row is gone) — /setup would bounce them straight back,
+    // so render the not-found page instead of looping. notFound() rather
+    // than a thrown AppError: nothing adapts AppError for server
+    // components, so it would reach the error boundary as an unexpected
+    // error, showing "Something went wrong" and reporting to Sentry.
+    if (await getOwnedSpace(user.id)) {
+      notFound();
+    }
+
     redirect(
       buildSafeRedirectUrl({
         destination: "/setup",
