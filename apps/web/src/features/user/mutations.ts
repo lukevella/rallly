@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { TimeFormat } from "@rallly/database";
+import type { Prisma, TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { authLib } from "@/lib/auth";
 import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
@@ -177,19 +177,23 @@ const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 100;
  */
 export async function deleteOrphanedAnonymousUsers() {
   const cutoff = new Date(Date.now() - SESSION_TTL_SECONDS * 1000);
+
+  // Both guards live here so read and delete share exactly one predicate.
+  const orphanedAnonymousFilter = {
+    isAnonymous: true,
+    lastSeenAt: { lt: cutoff },
+    polls: { none: {} },
+    comments: { none: {} },
+    participants: { none: {} },
+    scheduledEventInvites: { none: {} },
+  } satisfies Prisma.UserWhereInput;
+
   let deleted = 0;
   let hasMore = true;
 
   while (hasMore) {
     const batch = await prisma.user.findMany({
-      where: {
-        isAnonymous: true,
-        lastSeenAt: { lt: cutoff },
-        polls: { none: {} },
-        comments: { none: {} },
-        participants: { none: {} },
-        scheduledEventInvites: { none: {} },
-      },
+      where: orphanedAnonymousFilter,
       select: { id: true },
       take: DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE,
     });
@@ -199,11 +203,14 @@ export async function deleteOrphanedAnonymousUsers() {
       break;
     }
 
-    // Cascades cover the matched users' accounts and any Postgres sessions;
-    // the filter guarantees there are no polls/comments/participants/invites
-    // to cascade or orphan.
+    // Re-apply the guards at delete time, not just id: a poll/comment/invite
+    // created — or an account linked out of anonymous — between this snapshot
+    // and the delete would otherwise be cascaded away. Any batched id that
+    // fails the re-check is simply left for the next findMany to exclude.
     const { count } = await prisma.user.deleteMany({
-      where: { id: { in: batch.map((user) => user.id) } },
+      where: {
+        AND: [orphanedAnonymousFilter, { id: { in: batch.map((u) => u.id) } }],
+      },
     });
 
     deleted += count;

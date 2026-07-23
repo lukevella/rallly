@@ -87,6 +87,9 @@ model User {
   impersonatedSessions Session[] @relation("ImpersonatedSessions")
 
   @@index([deletedAt])
+  // Supports the orphaned-anonymous-guest cleanup: filters anonymous users by
+  // last-seen time before checking they own no resources.
+  @@index([isAnonymous, lastSeenAt])
   @@map("users")
 }
 
