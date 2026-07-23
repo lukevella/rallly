@@ -17,7 +17,7 @@ import * as z from "zod";
 import { LanguageSelect } from "@/components/language-selector";
 import { updateLocalizationAction } from "@/features/user/actions";
 import { Trans } from "@/i18n/client";
-import { useLocale } from "@/lib/locale/client";
+import { setLocaleCookie, useLocale } from "@/lib/locale/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 const formSchema = z.object({
@@ -48,12 +48,33 @@ export const LanguagePreference = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
-          const result = await updateLocalization.executeAsync({
-            locale: data.language,
-          });
-          if (!result?.serverError && !result?.validationErrors) {
-            form.reset({ language: data.language });
+          // Set the cookie before executing: useSafeAction refreshes the router
+          // on success, and that refresh must read the new locale. Writing the
+          // cookie server-side would collide with updateUser's session cookie
+          // and drop it. Nothing reconciles the cookie against the saved value
+          // on load, so roll it back to the locale this page is rendered in if
+          // the save doesn't land.
+          const previousLocale = locale;
+          setLocaleCookie(data.language);
+
+          let result: Awaited<
+            ReturnType<typeof updateLocalization.executeAsync>
+          >;
+          try {
+            result = await updateLocalization.executeAsync({
+              locale: data.language,
+            });
+          } catch (error) {
+            setLocaleCookie(previousLocale);
+            throw error;
           }
+
+          if (result?.serverError || result?.validationErrors) {
+            setLocaleCookie(previousLocale);
+            return;
+          }
+
+          form.reset({ language: data.language });
         })}
       >
         <FormField
