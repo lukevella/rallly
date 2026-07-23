@@ -20,7 +20,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
   editable,
   selectedParticipantId,
 }) => {
-  const { control } = useVotingForm();
+  const { control, announce } = useVotingForm();
   const { getScore, getVote, optionIds } = usePoll();
   const { participants: allParticipants } = useParticipants();
   const selectedParticipant = selectedParticipantId
@@ -52,6 +52,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                 const newValue = [...field.value];
                 newValue[index] = { optionId: option.optionId, type: newVote };
                 field.onChange(newValue);
+                announce(getOptionDateTimeLabel(option), newVote);
               };
 
               switch (option.type) {
