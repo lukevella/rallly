@@ -5,7 +5,12 @@ import { SearchIcon } from "lucide-react";
 import * as React from "react";
 
 import type { DialogProps } from "./dialog";
-import { Dialog, DialogContent } from "./dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "./dialog";
 import { usePlatform } from "./hooks/use-platform";
 import { Icon } from "./icon";
 import { cn } from "./lib/utils";
@@ -25,12 +30,30 @@ const Command = React.forwardRef<
 ));
 Command.displayName = CommandPrimitive.displayName;
 
-type CommandDialogProps = DialogProps;
+type CommandDialogProps = DialogProps & {
+  /** Accessible name for the dialog. Rendered visually hidden by default so the
+   *  dialog always has a name; pass `null` to supply your own `DialogTitle`. */
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+};
 
-const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
+const CommandDialog = ({
+  children,
+  title = "Command Menu",
+  description,
+  ...props
+}: CommandDialogProps) => {
   return (
     <Dialog {...props}>
       <DialogContent showCloseButton={false} size="xl" className="p-0">
+        {title != null && (
+          <DialogTitle className="sr-only">{title}</DialogTitle>
+        )}
+        {description != null && (
+          <DialogDescription className="sr-only">
+            {description}
+          </DialogDescription>
+        )}
         <Command className="[&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:size-4 [&_[cmdk-item]_svg]:size-4 [[cmdk-group-heading]]:**:px-2 [[cmdk-group-heading]]:**:font-medium [[cmdk-group-heading]]:**:text-muted-foreground [[cmdk-group]]:**:px-2 [[cmdk-input]]:**:h-12 [[cmdk-item]]:**:p-2">
           {children}
         </Command>
