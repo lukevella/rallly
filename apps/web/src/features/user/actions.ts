@@ -8,7 +8,6 @@ import { banUser, unbanUser, updateUserRole } from "@/features/user/mutations";
 import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
 import { AppError } from "@/lib/errors/app-error";
-import { setLocaleCookie } from "@/lib/locale/cookie";
 import {
   adminActionClient,
   authActionClient,
@@ -55,6 +54,9 @@ export const updateLocalizationAction = authActionClient
     }),
   )
   .action(async ({ parsedInput }) => {
+    // The locale cookie is written client-side (see language-preference.tsx).
+    // Writing it here via next/headers would collide with updateUser's session
+    // cookie and drop it.
     await authLib.api.updateUser({
       body: {
         locale: parsedInput.locale,
@@ -64,10 +66,6 @@ export const updateLocalizationAction = authActionClient
       },
       headers: await headers(),
     });
-
-    if (parsedInput.locale) {
-      await setLocaleCookie(parsedInput.locale);
-    }
   });
 
 export const getAvatarUploadUrlAction = authActionClient

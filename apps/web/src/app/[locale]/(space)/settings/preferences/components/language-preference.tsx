@@ -17,7 +17,7 @@ import * as z from "zod";
 import { LanguageSelect } from "@/components/language-selector";
 import { updateLocalizationAction } from "@/features/user/actions";
 import { Trans } from "@/i18n/client";
-import { useLocale } from "@/lib/locale/client";
+import { setLocaleCookie, useLocale } from "@/lib/locale/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
 const formSchema = z.object({
@@ -48,6 +48,12 @@ export const LanguagePreference = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
+          // Set the cookie before executing: useSafeAction refreshes the router
+          // on success, and that refresh must read the new locale. Writing the
+          // cookie server-side would collide with updateUser's session cookie
+          // and drop it. If the action fails the cookie is briefly ahead of the
+          // saved value, which self-corrects on the next load.
+          setLocaleCookie(data.language);
           const result = await updateLocalization.executeAsync({
             locale: data.language,
           });
