@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   dedupeTimeSlots,
   generateTimeSlots,
+  MAX_SLOT_GENERATION_DAYS,
   parseStartTime,
 } from "./slot-generator";
 
@@ -253,6 +254,64 @@ describe("time-slots utilities", () => {
       expect(result[0].startTime).toEqual(new Date("2025-01-15T09:00:00Z"));
       expect(result[1].startTime).toEqual(new Date("2025-01-15T09:30:00Z"));
       expect(result[0].duration).toBe(30);
+    });
+
+    // The generator is a pure function that never throws — it self-bounds and
+    // returns []. Rejecting an oversized range is the API layer's job (see the
+    // slotGeneratorSchema refine + route.test.ts); here we lock the primitive's
+    // own behaviour so it can't run unbounded or loop on bad input.
+    describe("bounds and invalid input", () => {
+      it("caps iteration at MAX_SLOT_GENERATION_DAYS instead of running unbounded", () => {
+        // Every day allowed, one slot per day, over a multi-year range: without
+        // the cap this would produce thousands of slots. It stops at the cap.
+        const result = generateTimeSlots(
+          {
+            startDate: "2025-01-01",
+            endDate: "2099-12-31",
+            daysOfWeek: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+            fromTime: "09:00",
+            toTime: "09:30",
+          },
+          "UTC",
+          30,
+        );
+
+        expect(result.length).toBeLessThanOrEqual(MAX_SLOT_GENERATION_DAYS);
+      });
+
+      it("returns no slots for non-positive or NaN duration", () => {
+        const input = {
+          startDate: "2025-01-15",
+          endDate: "2025-01-15",
+          daysOfWeek: ["wed"] as const,
+          fromTime: "09:00",
+          toTime: "17:00",
+        };
+
+        expect(generateTimeSlots(input, "UTC", 0)).toEqual([]);
+        expect(generateTimeSlots(input, "UTC", -30)).toEqual([]);
+        expect(generateTimeSlots(input, "UTC", Number.NaN)).toEqual([]);
+      });
+
+      it("returns no slots for non-positive or NaN interval", () => {
+        const base = {
+          startDate: "2025-01-15",
+          endDate: "2025-01-15",
+          daysOfWeek: ["wed"] as const,
+          fromTime: "09:00",
+          toTime: "17:00",
+        };
+
+        expect(generateTimeSlots({ ...base, interval: 0 }, "UTC", 30)).toEqual(
+          [],
+        );
+        expect(
+          generateTimeSlots({ ...base, interval: -30 }, "UTC", 30),
+        ).toEqual([]);
+        expect(
+          generateTimeSlots({ ...base, interval: Number.NaN }, "UTC", 30),
+        ).toEqual([]);
+      });
     });
   });
 });

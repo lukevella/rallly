@@ -70,6 +70,7 @@ vi.mock("@/lib/posthog", () => ({
 import { prisma } from "@rallly/database";
 import { after } from "next/server";
 import { hashApiKey, verifyApiKey } from "@/features/api-keys/utils";
+import { MAX_SLOT_GENERATION_DAYS } from "@/lib/datetime/slot-generator";
 import {
   createPollRequestExamples,
   patchPollRequestExamples,
@@ -767,6 +768,83 @@ describe("Private API - /polls", () => {
       });
 
       // Rejected up front by validation, not silently truncated into a poll.
+      // Assert the error targets endDate + names the limit so an unrelated 400
+      // (e.g. TOO_MANY_OPTIONS) can't mask a regression.
+      expect(res.status).toBe(400);
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+      const json = await res.json();
+      const issue = json.error.find((e: { path: (string | number)[] }) =>
+        e.path.includes("endDate"),
+      );
+      expect(issue).toBeDefined();
+      expect(issue.message).toContain(String(MAX_SLOT_GENERATION_DAYS));
+    });
+
+    it("should reject a slot generator range where endDate precedes startDate", async () => {
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Reversed range",
+          slots: {
+            duration: 30,
+            timezone: "Europe/London",
+            times: [
+              {
+                startDate: "2025-06-01",
+                endDate: "2025-01-01",
+                days: ["mon"],
+                startTime: "09:00",
+                endTime: "10:00",
+              },
+            ],
+          },
+        }),
+      });
+
+      expect(res.status).toBe(400);
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+      const json = await res.json();
+      const issue = json.error.find((e: { path: (string | number)[] }) =>
+        e.path.includes("endDate"),
+      );
+      expect(issue).toBeDefined();
+    });
+
+    it("should reject a range spanning exactly MAX_SLOT_GENERATION_DAYS", async () => {
+      // The generator processes days inclusively, so a span equal to the cap is
+      // one day too many — the boundary must reject, not truncate.
+      const start = new Date(Date.UTC(2025, 0, 1));
+      const end = new Date(start);
+      end.setUTCDate(end.getUTCDate() + MAX_SLOT_GENERATION_DAYS);
+      const toIsoDate = (d: Date) => d.toISOString().slice(0, 10);
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Boundary range",
+          slots: {
+            duration: 30,
+            timezone: "Europe/London",
+            times: [
+              {
+                startDate: toIsoDate(start),
+                endDate: toIsoDate(end),
+                days: ["sun"],
+                startTime: "09:00",
+                endTime: "09:30",
+              },
+            ],
+          },
+        }),
+      });
+
       expect(res.status).toBe(400);
       expect(mockCreatePoll).not.toHaveBeenCalled();
     });
