@@ -50,6 +50,10 @@ export const parseStartTime = (
   duration,
 });
 
+// Safety bound against unbounded input: the API accepts any two valid dates, so
+// without this a range like 1900-9999 would iterate millions of days.
+export const MAX_SLOT_GENERATION_DAYS = 366;
+
 export const generateTimeSlots = (
   generator: SlotGeneratorInput,
   timeZone: string | undefined,
@@ -72,12 +76,17 @@ export const generateTimeSlots = (
   const endDay = dayjs.utc(generator.endDate).startOf("day");
 
   const results: Array<TimeSlot> = [];
+  let daysVisited = 0;
 
   for (
     let cursor = startDay;
     cursor.isSameOrBefore(endDay, "day");
     cursor = cursor.add(1, "day")
   ) {
+    if (daysVisited >= MAX_SLOT_GENERATION_DAYS) {
+      break;
+    }
+    daysVisited++;
     const date = cursor.format("YYYY-MM-DD");
     // Get day of week in the target timezone
     const dayInTz = timeZone ? dayjs.tz(date, timeZone).day() : cursor.day();
@@ -101,6 +110,11 @@ export const generateTimeSlots = (
     const duration = durationMinutes;
     const interval = generator.interval ?? durationMinutes;
     const totalMinutes = windowEnd.diff(windowStart, "minute");
+
+    // A non-positive (or NaN) interval would never advance the loop below.
+    if (!(duration > 0) || !(interval > 0)) {
+      continue;
+    }
 
     for (
       let offset = 0;

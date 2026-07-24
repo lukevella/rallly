@@ -16,7 +16,7 @@ function getWeekInfo(locale: string): WeekInfo {
   return l.getWeekInfo?.() ?? l.weekInfo ?? { firstDay: 1 };
 }
 
-type Weekday = { day: number; label: string };
+type Weekday = { day: number; label: string; short: string };
 
 const weekdayCache = new Map<string, Weekday[]>();
 
@@ -30,12 +30,20 @@ export function getWeekdayNames(locale: string): Weekday[] {
       weekday: "long",
       timeZone: "UTC",
     });
+    // The abbreviated form for compact controls; the long form stays the
+    // accessible name so screen readers hear "Monday", not "Mon".
+    const shortFormatter = new Intl.DateTimeFormat(locale, {
+      weekday: "short",
+      timeZone: "UTC",
+    });
     const { weekStart } = getLocaleDefaults(locale);
     weekdays = Array.from({ length: 7 }, (_, index) => {
       const day = (weekStart + index) % 7;
+      const date = new Date(Date.UTC(2024, 0, 7 + day));
       return {
         day,
-        label: formatter.format(new Date(Date.UTC(2024, 0, 7 + day))),
+        label: formatter.format(date),
+        short: shortFormatter.format(date),
       };
     });
     weekdayCache.set(locale, weekdays);

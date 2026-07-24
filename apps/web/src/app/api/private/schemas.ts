@@ -1,4 +1,5 @@
 import { z } from "@hono/zod-openapi";
+import { MAX_SLOT_GENERATION_DAYS } from "@/lib/datetime/slot-generator";
 import { timezoneSchema } from "@/lib/utils/timezone-schema";
 
 export const dateSchema = z.iso.date().openapi({
@@ -23,6 +24,20 @@ export const slotGeneratorSchema = z
       example: 30,
     }),
   })
+  // Reject over-long ranges up front rather than silently truncating at the
+  // generator's MAX_SLOT_GENERATION_DAYS cap.
+  .refine(
+    (data) => {
+      const start = Date.parse(data.startDate);
+      const end = Date.parse(data.endDate);
+      const spanDays = (end - start) / (1000 * 60 * 60 * 24);
+      return spanDays >= 0 && spanDays < MAX_SLOT_GENERATION_DAYS;
+    },
+    {
+      message: `The date range must span fewer than ${MAX_SLOT_GENERATION_DAYS} days, with endDate on or after startDate.`,
+      path: ["endDate"],
+    },
+  )
   .openapi("SlotGenerator");
 
 const slotsInputSchema = z

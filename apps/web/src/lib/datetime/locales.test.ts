@@ -38,19 +38,24 @@ describe("getLocaleDefaults", () => {
 describe("getWeekdayNames", () => {
   it("starts with Sunday for en", () => {
     expect(getWeekdayNames("en")).toEqual([
-      { day: 0, label: "Sunday" },
-      { day: 1, label: "Monday" },
-      { day: 2, label: "Tuesday" },
-      { day: 3, label: "Wednesday" },
-      { day: 4, label: "Thursday" },
-      { day: 5, label: "Friday" },
-      { day: 6, label: "Saturday" },
+      { day: 0, label: "Sunday", short: "Sun" },
+      { day: 1, label: "Monday", short: "Mon" },
+      { day: 2, label: "Tuesday", short: "Tue" },
+      { day: 3, label: "Wednesday", short: "Wed" },
+      { day: 4, label: "Thursday", short: "Thu" },
+      { day: 5, label: "Friday", short: "Fri" },
+      { day: 6, label: "Saturday", short: "Sat" },
     ]);
   });
 
   it("starts with Monday for de, keeping canonical day numbers", () => {
     const weekdays = getWeekdayNames("de");
-    expect(weekdays[0]).toEqual({ day: 1, label: "Montag" });
-    expect(weekdays[6]).toEqual({ day: 0, label: "Sonntag" });
+    expect(weekdays[0]).toEqual({ day: 1, label: "Montag", short: "Mo" });
+    expect(weekdays[6]).toEqual({ day: 0, label: "Sonntag", short: "So" });
+  });
+
+  it("localizes the abbreviated names", () => {
+    expect(getWeekdayNames("fr").map((day) => day.short)).toContain("lun.");
+    expect(getWeekdayNames("es").map((day) => day.short)).toContain("lun");
   });
 });

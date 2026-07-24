@@ -1,5 +1,6 @@
 "use client";
 
+import { LocaleProvider } from "@rallly/ui/locale-provider";
 import type { Resource } from "i18next";
 import { createInstance } from "i18next";
 import ICU from "i18next-icu";
@@ -38,7 +39,9 @@ export function I18nProvider({
 
   return (
     <I18nextProvider i18n={i18n} defaultNS={defaultNS}>
-      {children}
+      {/* Feeds the locale to react-aria date/time components app-wide, so they
+          don't each wrap their own provider. */}
+      <LocaleProvider locale={locale}>{children}</LocaleProvider>
     </I18nextProvider>
   );
 }
