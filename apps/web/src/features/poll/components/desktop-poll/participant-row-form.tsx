@@ -130,9 +130,6 @@ const ParticipantRowForm = ({
                     value={field.value?.type}
                     onChange={(vote) => {
                       field.onChange({ optionId, type: vote });
-                      if (option) {
-                        form.announce(getOptionAnnouncementLabel(option), vote);
-                      }
                     }}
                   />
                 </div>

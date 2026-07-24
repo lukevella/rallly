@@ -11,21 +11,15 @@ import {
 } from "@/features/poll/components/mutations";
 import { NewParticipantForm } from "@/features/poll/components/new-participant-modal";
 import { useParticipants } from "@/features/poll/components/participants-provider";
-import { useTranslation } from "@/i18n/client";
-
-const voteTypeSchema = z.enum(["yes", "no", "ifNeedBe"]);
-
-type VoteType = z.infer<typeof voteTypeSchema>;
 
 const formSchema = z.object({
   mode: z.enum(["new", "edit", "view"]),
   participantId: z.string().optional(),
-  announcement: z.string().optional(),
   votes: z.array(
     z
       .object({
         optionId: z.string(),
-        type: voteTypeSchema.optional(),
+        type: z.enum(["yes", "no", "ifNeedBe"]).optional(),
       })
       .optional(),
   ),
@@ -37,18 +31,9 @@ export const useVotingForm = () => {
   const { options } = usePoll();
   const { participants } = useParticipants();
   const form = useFormContext<VotingFormValues>();
-  const { t } = useTranslation();
 
   return {
     ...form,
-    announce: (optionLabel: string, vote: VoteType) => {
-      const voteLabels: Record<VoteType, string> = {
-        yes: t("yes", { defaultValue: "Yes" }),
-        ifNeedBe: t("ifNeedBe", { defaultValue: "If need be" }),
-        no: t("no", { defaultValue: "No" }),
-      };
-      form.setValue("announcement", `${optionLabel}: ${voteLabels[vote]}`);
-    },
     newParticipant: () => {
       form.reset({
         mode: "new",
@@ -168,9 +153,6 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
         </DialogContent>
       </Dialog>
       {children}
-      <div aria-live="assertive" aria-atomic="true" className="sr-only">
-        {form.watch("announcement")}
-      </div>
     </FormProvider>
   );
 };
