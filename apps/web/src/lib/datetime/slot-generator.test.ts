@@ -3,7 +3,7 @@ import {
   dedupeTimeSlots,
   generateTimeSlots,
   parseStartTime,
-} from "./time-slots";
+} from "./slot-generator";
 
 describe("time-slots utilities", () => {
   describe("parseStartTime", () => {

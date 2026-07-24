@@ -11,6 +11,7 @@ import {
   validator,
 } from "hono-openapi";
 import { after } from "next/server";
+import { MAX_POLL_OPTIONS } from "@/features/poll/components/forms/poll-options-form/constants";
 import {
   getPollParticipants,
   getPollResults,
@@ -18,6 +19,12 @@ import {
 } from "@/features/poll/data";
 import { closePoll, createPoll, deletePoll } from "@/features/poll/mutations";
 import type { AuthorizedSpaceId } from "@/features/space/types";
+import type { SlotGeneratorInput } from "@/lib/datetime/slot-generator";
+import {
+  dedupeTimeSlots,
+  generateTimeSlots,
+  parseStartTime,
+} from "@/lib/datetime/slot-generator";
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import { flushPostHog, identifyGroup, track } from "@/lib/posthog";
 import {
@@ -40,12 +47,6 @@ import {
 import { spaceApiKeyAuth } from "../utils/api-key";
 import { apiError } from "../utils/poll";
 import { RATE_LIMIT_PER_MINUTE, rateLimit } from "../utils/rate-limit";
-import type { SlotGeneratorInput } from "../utils/time-slots";
-import {
-  dedupeTimeSlots,
-  generateTimeSlots,
-  parseStartTime,
-} from "../utils/time-slots";
 import { wideEvent } from "../utils/wide-event";
 
 type Env = {
@@ -110,8 +111,6 @@ app.use("*", async (c, next) => {
   }
   await next();
 });
-
-const MAX_OPTIONS = 100;
 
 const spaceNotProResponse = {
   description:
@@ -321,11 +320,11 @@ app.post(
 
     // Process dates (all-day options)
     if (input.dates) {
-      if (input.dates.length > MAX_OPTIONS) {
+      if (input.dates.length > MAX_POLL_OPTIONS) {
         return c.json(
           apiError(
             "TOO_MANY_OPTIONS",
-            `Too many options (${input.dates.length}). Maximum allowed is ${MAX_OPTIONS}.`,
+            `Too many options (${input.dates.length}). Maximum allowed is ${MAX_POLL_OPTIONS}.`,
           ),
           400,
         );
@@ -409,11 +408,11 @@ app.post(
       );
     }
 
-    if (options.length > MAX_OPTIONS) {
+    if (options.length > MAX_POLL_OPTIONS) {
       return c.json(
         apiError(
           "TOO_MANY_OPTIONS",
-          `Too many options generated (${options.length}). Maximum allowed is ${MAX_OPTIONS}.`,
+          `Too many options generated (${options.length}). Maximum allowed is ${MAX_POLL_OPTIONS}.`,
         ),
         400,
       );
