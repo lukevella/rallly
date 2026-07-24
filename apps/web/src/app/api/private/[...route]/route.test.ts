@@ -736,6 +736,40 @@ describe("Private API - /polls", () => {
       expect(res.status).toBe(200);
       expect(mockCreatePoll).toHaveBeenCalled();
     });
+
+    it("should reject a slot generator range longer than the supported limit", async () => {
+      // A 516-day range, one Sunday slot each week (~74 slots). Deliberately
+      // under MAX_POLL_OPTIONS so TOO_MANY_OPTIONS can't mask it: only the
+      // range check rejects this. The old code silently truncated to ~52 slots
+      // and returned them as a successful poll.
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Way too long",
+          slots: {
+            duration: 30,
+            timezone: "Europe/London",
+            times: [
+              {
+                startDate: "2025-01-01",
+                endDate: "2026-06-01",
+                days: ["sun"],
+                startTime: "09:00",
+                endTime: "09:30",
+              },
+            ],
+          },
+        }),
+      });
+
+      // Rejected up front by validation, not silently truncated into a poll.
+      expect(res.status).toBe(400);
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
   });
 
   describe("Validation", () => {
