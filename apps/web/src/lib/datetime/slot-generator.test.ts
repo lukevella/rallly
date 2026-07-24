@@ -263,8 +263,10 @@ describe("time-slots utilities", () => {
     // own behaviour so it can't run unbounded or loop on bad input.
     describe("bounds and invalid input", () => {
       it("caps iteration at MAX_SLOT_GENERATION_DAYS instead of running unbounded", () => {
-        // Every day allowed, one slot per day, over a multi-year range: without
-        // the cap this would produce thousands of slots. It stops at the cap.
+        // Every day allowed, exactly one slot per day, over a multi-year range:
+        // without the cap this would produce thousands of slots. It stops at
+        // the cap, so the count is exactly MAX_SLOT_GENERATION_DAYS — asserting
+        // the exact value also catches under-generation and off-by-one.
         const result = generateTimeSlots(
           {
             startDate: "2025-01-01",
@@ -277,7 +279,7 @@ describe("time-slots utilities", () => {
           30,
         );
 
-        expect(result.length).toBeLessThanOrEqual(MAX_SLOT_GENERATION_DAYS);
+        expect(result).toHaveLength(MAX_SLOT_GENERATION_DAYS);
       });
 
       it("returns no slots for non-positive or NaN duration", () => {
