@@ -744,7 +744,7 @@
   "users": "Użytkownicy",
   "usersDescription": "Zarządzaj użytkownikami na tej instancji",
   "validEmail": "Wprowadź prawidłowy adres e-mail",
-  "verificationCodeHelp": "Nie otrzymałeś wiadomości e-mail? Sprawdź spam/śmieci.",
+  "verificationCodeHelp": "Nie otrzymałeś wiadomości e-mail? Sprawdź spam.",
   "verificationCodePlaceholder": "Wpisz 6-cyfrowy kod",
   "verify": "Zweryfikuj",
   "verifyEmail": "Zweryfikuj swój e-mail",
