@@ -21,7 +21,15 @@ const TimeRange: React.FunctionComponent<{
     >
       <span data-testid="option-start-time">{start}</span>
       <Tooltip>
-        <TooltipTrigger delay={0} className="flex items-center gap-x-1">
+        <TooltipTrigger
+          delay={0}
+          // Display-only: the duration is not an interactive control, so keep
+          // it out of the tab order — otherwise every option header is a tab
+          // stop that only reads the duration.
+          tabIndex={-1}
+          render={<span />}
+          className="flex items-center gap-x-1"
+        >
           <ClockIcon className="size-3" />
           {duration}
         </TooltipTrigger>
