@@ -7,7 +7,6 @@ import type {
 import {
   DateInput,
   DateSegment,
-  I18nProvider,
   TimeField as TimeFieldPrimitive,
 } from "react-aria-components";
 import {
@@ -30,20 +29,16 @@ export type TimeFieldProps = Pick<
   | "aria-labelledby"
 > & {
   className?: string;
-  /**
-   * BCP-47 locale for segment order and the AM/PM field. Without it react-aria
-   * falls back to the browser locale, ignoring the app's chosen language.
-   */
-  locale?: string;
 };
 
 /**
  * Accessible time input with segmented, fully styleable fields — each part is
  * its own spinbutton (arrow keys, typeahead), so no native time picker UI is
- * involved. Segment order and the AM/PM field follow the resolved locale.
+ * involved. Segment order and the AM/PM field follow the locale from context
+ * (a LocaleProvider near the app root).
  */
-function TimeField({ className, locale, ...props }: TimeFieldProps) {
-  const field = (
+function TimeField({ className, ...props }: TimeFieldProps) {
+  return (
     <TimeFieldPrimitive {...props}>
       {/* pr-2 balances the group's pr-1, which is sized for the date picker's
           trailing button; the left inset stays shared so both fields line up. */}
@@ -60,9 +55,6 @@ function TimeField({ className, locale, ...props }: TimeFieldProps) {
       </DateInput>
     </TimeFieldPrimitive>
   );
-
-  // react-aria reads locale from context, so wrap rather than prop-drill.
-  return locale ? <I18nProvider locale={locale}>{field}</I18nProvider> : field;
 }
 
 export type { TimeValue };

@@ -17,7 +17,6 @@ import {
   Dialog,
   Group,
   Heading,
-  I18nProvider,
   Popover,
   Button as RAButton,
   RangeCalendar,
@@ -48,11 +47,6 @@ export type DateRangePickerProps = Pick<
   className?: string;
   /** Months shown side by side in the popover. */
   visibleMonths?: number;
-  /**
-   * BCP-47 locale for the calendar and segments. Without it react-aria falls
-   * back to the browser locale, ignoring the app's chosen language.
-   */
-  locale?: string;
 };
 
 const cellClassName = cn(
@@ -85,11 +79,10 @@ const navButtonClassName = cn(
 function DateRangePicker({
   className,
   visibleMonths = 1,
-  locale,
   firstDayOfWeek,
   ...props
 }: DateRangePickerProps) {
-  const picker = (
+  return (
     <DateRangePickerPrimitive
       {...props}
       firstDayOfWeek={firstDayOfWeek}
@@ -175,13 +168,6 @@ function DateRangePicker({
         </Dialog>
       </Popover>
     </DateRangePickerPrimitive>
-  );
-
-  // react-aria reads locale from context, so wrap rather than prop-drill.
-  return locale ? (
-    <I18nProvider locale={locale}>{picker}</I18nProvider>
-  ) : (
-    picker
   );
 }
 
