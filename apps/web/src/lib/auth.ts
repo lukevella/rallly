@@ -30,6 +30,7 @@ import { getStripe } from "@/features/billing/service";
 import type { UserDTO } from "@/features/user/schema";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
+import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
 import { redis } from "@/lib/kv";
 import {
@@ -537,7 +538,7 @@ export const authLib = betterAuth({
     },
   },
   session: {
-    expiresIn: 60 * 60 * 24 * 60, // 60 days
+    expiresIn: SESSION_TTL_SECONDS,
     updateAge: 60 * 60 * 24, // 1 day
     cookieCache: {
       enabled: true,

@@ -8,10 +8,14 @@ export async function createUserInDb({
   email,
   name,
   role = "user",
+  isAnonymous = false,
+  lastSeenAt,
 }: {
   email: string;
   name: string;
   role?: UserRole;
+  isAnonymous?: boolean;
+  lastSeenAt?: Date;
 }) {
   return await prisma.$transaction(async (tx) => {
     const user = await tx.user.create({
@@ -23,24 +27,29 @@ export async function createUserInDb({
         timeZone: "Europe/London",
         timeFormat: "hours24",
         emailVerified: true,
+        isAnonymous,
+        ...(lastSeenAt && { lastSeenAt }),
       },
     });
 
-    const space = await tx.space.create({
-      data: {
-        name: "Personal",
-        ownerId: user.id,
-        tier: "hobby",
-      },
-    });
+    // Anonymous guests own no space; only registered users get one.
+    if (!isAnonymous) {
+      const space = await tx.space.create({
+        data: {
+          name: "Personal",
+          ownerId: user.id,
+          tier: "hobby",
+        },
+      });
 
-    await tx.spaceMember.create({
-      data: {
-        spaceId: space.id,
-        userId: user.id,
-        role: "ADMIN",
-      },
-    });
+      await tx.spaceMember.create({
+        data: {
+          spaceId: space.id,
+          userId: user.id,
+          role: "ADMIN",
+        },
+      });
+    }
 
     return user;
   });

@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
+import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
 import { createSpaceInDb, createTestPoll, createUserInDb } from "./test-utils";
 
 /**
@@ -8,11 +9,17 @@ import { createSpaceInDb, createTestPoll, createUserInDb } from "./test-utils";
  * 1. delete-inactive-polls: Marks inactive polls as deleted
  * 2. remove-deleted-polls: Permanently removes polls that have been marked as deleted for more than 7 days
  * 3. auto-close-polls: Closes open polls whose options have all ended
+ * 4. delete-orphaned-anonymous-users: Deletes idle guests that own no resources
  */
+
+// Session length; anything below now - this cutoff is provably session-less.
+// Derived from the production constant so the boundary can't silently drift.
+const SESSION_TTL_DAYS = SESSION_TTL_SECONDS / (60 * 60 * 24);
 test.describe("House-keeping API", () => {
   // Store created poll IDs for cleanup
   const createdPollIds: string[] = [];
   const createdUserIds: string[] = [];
+  const createdScheduledEventIds: string[] = [];
 
   // API Secret for authentication
   const CRON_SECRET = process.env.CRON_SECRET;
@@ -28,6 +35,19 @@ test.describe("House-keeping API", () => {
   });
 
   async function cleanup() {
+    // Scheduled events (and their invites, via cascade) must go before their
+    // host users are deleted, since the host relation is the cascade root.
+    if (createdScheduledEventIds.length > 0) {
+      await prisma.scheduledEvent.deleteMany({
+        where: {
+          id: {
+            in: createdScheduledEventIds,
+          },
+        },
+      });
+      createdScheduledEventIds.length = 0;
+    }
+
     // Delete test users - related polls will be deleted automatically due to cascade
     if (createdUserIds.length > 0) {
       await prisma.user.deleteMany({
@@ -432,5 +452,142 @@ test.describe("House-keeping API", () => {
     expect(await statusOf(stillRunning.id)).toBe("open");
     expect(await statusOf(noOptions.id)).toBe("open");
     expect(await statusOf(scheduled.id)).toBe("scheduled");
+  });
+
+  test("should delete only orphaned anonymous guests idle longer than the session length", async ({
+    request,
+    baseURL,
+  }) => {
+    const stale = dayjs()
+      .subtract(SESSION_TTL_DAYS + 1, "day")
+      .toDate();
+    const recent = dayjs()
+      .subtract(SESSION_TTL_DAYS - 1, "day")
+      .toDate();
+
+    // Should be deleted: stale guest with no resources.
+    const orphanedGuest = await createUserInDb({
+      name: "Orphaned Guest",
+      email: "orphaned-guest@example.com",
+      isAnonymous: true,
+      lastSeenAt: stale,
+    });
+    createdUserIds.push(orphanedGuest.id);
+
+    // Retained (window): guest seen within the session length.
+    const recentGuest = await createUserInDb({
+      name: "Recent Guest",
+      email: "recent-guest@example.com",
+      isAnonymous: true,
+      lastSeenAt: recent,
+    });
+    createdUserIds.push(recentGuest.id);
+
+    // Retained (cascade guard): stale guest who still owns a poll.
+    const guestWithPoll = await createUserInDb({
+      name: "Guest With Poll",
+      email: "guest-with-poll@example.com",
+      isAnonymous: true,
+      lastSeenAt: stale,
+    });
+    createdUserIds.push(guestWithPoll.id);
+    const guestPoll = await createTestPoll({
+      id: "orphaned-guest-poll",
+      title: "Guest Poll",
+      userId: guestWithPoll.id,
+      updatedAt: stale,
+    });
+    createdPollIds.push(guestPoll.id);
+
+    // Retained (resource guard): stale guest who is a participant on a poll.
+    const guestParticipant = await createUserInDb({
+      name: "Guest Participant",
+      email: "guest-participant@example.com",
+      isAnonymous: true,
+      lastSeenAt: stale,
+    });
+    createdUserIds.push(guestParticipant.id);
+    const hostedPoll = await createTestPoll({
+      id: "orphaned-guest-host-poll",
+      title: "Host Poll",
+      updatedAt: stale,
+    });
+    createdPollIds.push(hostedPoll.id);
+    await prisma.participant.create({
+      data: {
+        name: "Guest Participant",
+        pollId: hostedPoll.id,
+        userId: guestParticipant.id,
+      },
+    });
+
+    // Retained (resource guard): stale guest linked via a scheduled event
+    // invite (invitee_id). Needs a registered host to own the event + space.
+    const eventHost = await createUserInDb({
+      name: "Event Host",
+      email: "orphaned-guest-event-host@example.com",
+    });
+    createdUserIds.push(eventHost.id);
+    const hostSpace = await prisma.space.findFirstOrThrow({
+      where: { ownerId: eventHost.id },
+    });
+    const guestInvitee = await createUserInDb({
+      name: "Guest Invitee",
+      email: "guest-invitee@example.com",
+      isAnonymous: true,
+      lastSeenAt: stale,
+    });
+    createdUserIds.push(guestInvitee.id);
+    const scheduledEvent = await prisma.scheduledEvent.create({
+      data: {
+        userId: eventHost.id,
+        spaceId: hostSpace.id,
+        title: "Orphaned Guest Event",
+        uid: "orphaned-guest-event-uid",
+        start: dayjs().add(1, "day").toDate(),
+        end: dayjs().add(1, "day").add(1, "hour").toDate(),
+        invites: {
+          create: {
+            uid: "orphaned-guest-invite-uid",
+            inviteeName: "Guest Invitee",
+            inviteeEmail: guestInvitee.email,
+            inviteeId: guestInvitee.id,
+          },
+        },
+      },
+    });
+    createdScheduledEventIds.push(scheduledEvent.id);
+
+    // Critical: a stale registered user with no resources must never be reaped.
+    const staleRealUser = await createUserInDb({
+      name: "Stale Real User",
+      email: "orphaned-stale-real-user@example.com",
+      lastSeenAt: stale,
+    });
+    createdUserIds.push(staleRealUser.id);
+
+    const response = await request.get(
+      `${baseURL}/api/house-keeping/delete-orphaned-anonymous-users`,
+      {
+        headers: {
+          Authorization: `Bearer ${CRON_SECRET}`,
+        },
+      },
+    );
+
+    expect(response.ok()).toBeTruthy();
+    const responseData = await response.json();
+    expect(responseData.success).toBeTruthy();
+    expect(responseData.summary.deleted.anonymousUsers).toBe(1);
+
+    const exists = async (id: string) =>
+      (await prisma.user.findUnique({ where: { id } })) !== null;
+
+    expect(await exists(orphanedGuest.id)).toBe(false);
+    expect(await exists(recentGuest.id)).toBe(true);
+    expect(await exists(guestWithPoll.id)).toBe(true);
+    expect(await exists(guestParticipant.id)).toBe(true);
+    expect(await exists(guestInvitee.id)).toBe(true);
+    expect(await exists(staleRealUser.id)).toBe(true);
   });
 });
