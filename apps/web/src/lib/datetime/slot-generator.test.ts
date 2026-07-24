@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { SlotGeneratorInput } from "./slot-generator";
 import {
   dedupeTimeSlots,
   generateTimeSlots,
@@ -280,10 +281,10 @@ describe("time-slots utilities", () => {
       });
 
       it("returns no slots for non-positive or NaN duration", () => {
-        const input = {
+        const input: SlotGeneratorInput = {
           startDate: "2025-01-15",
           endDate: "2025-01-15",
-          daysOfWeek: ["wed"] as const,
+          daysOfWeek: ["wed"],
           fromTime: "09:00",
           toTime: "17:00",
         };
@@ -294,10 +295,10 @@ describe("time-slots utilities", () => {
       });
 
       it("returns no slots for non-positive or NaN interval", () => {
-        const base = {
+        const base: SlotGeneratorInput = {
           startDate: "2025-01-15",
           endDate: "2025-01-15",
-          daysOfWeek: ["wed"] as const,
+          daysOfWeek: ["wed"],
           fromTime: "09:00",
           toTime: "17:00",
         };
