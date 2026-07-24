@@ -11,7 +11,7 @@ import {
   validator,
 } from "hono-openapi";
 import { after } from "next/server";
-import { MAX_POLL_OPTIONS } from "@/features/poll/components/forms/poll-options-form/constants";
+import { MAX_POLL_OPTIONS } from "@/features/poll/constants";
 import {
   getPollParticipants,
   getPollResults,
