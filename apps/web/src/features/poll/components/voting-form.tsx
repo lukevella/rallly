@@ -168,7 +168,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
         </DialogContent>
       </Dialog>
       {children}
-      <div aria-live="polite" className="sr-only">
+      <div aria-live="assertive" aria-atomic="true" className="sr-only">
         {form.watch("announcement")}
       </div>
     </FormProvider>

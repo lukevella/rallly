@@ -14,10 +14,7 @@ import { useOptions, usePoll } from "@/features/poll/components/poll-context";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { YouAvatar } from "@/features/poll/components/you-avatar";
 import { Trans, useTranslation } from "@/i18n/client";
-import {
-  getOptionAnnouncementLabel,
-  getOptionDateTimeLabel,
-} from "@/lib/utils/date-time-utils";
+import { getOptionAnnouncementLabel } from "@/lib/utils/date-time-utils";
 import { VoteSelector } from "../vote-selector";
 
 export interface ParticipantRowFormProps {
@@ -128,7 +125,7 @@ const ParticipantRowForm = ({
                   <VoteSelector
                     className="after:absolute after:inset-0"
                     optionLabel={
-                      option ? getOptionDateTimeLabel(option) : undefined
+                      option ? getOptionAnnouncementLabel(option) : undefined
                     }
                     value={field.value?.type}
                     onChange={(vote) => {

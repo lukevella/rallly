@@ -40,17 +40,11 @@ export interface ParsedTimeSlotOption {
 
 export type ParsedDateTimeOpton = ParsedDateOption | ParsedTimeSlotOption;
 
-export const getOptionDateTimeLabel = (option: ParsedDateTimeOpton) => {
-  const date = `${option.dow} ${option.day} ${option.month} ${option.year}`;
-  return option.type === "timeSlot"
-    ? `${date}, ${option.startTime} – ${option.endTime}`
-    : date;
-};
-
 /**
- * Terser label for screen-reader announcements: drops the year (usually
- * inferable from context) and uses speech-friendly times ("1pm" rather than
- * the literal "1:00 PM", which reads as "one zero zero P M").
+ * Screen-reader label for a vote control and its change announcement. Drops
+ * the year (usually inferable from context) and uses speech-friendly times
+ * ("1 PM" rather than the literal "1:00 PM", which reads as "one zero zero P
+ * M").
  */
 export const getOptionAnnouncementLabel = (option: ParsedDateTimeOpton) => {
   const date = `${option.dow} ${option.day} ${option.month}`;
