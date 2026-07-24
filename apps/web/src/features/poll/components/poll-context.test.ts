@@ -73,6 +73,11 @@ describe("createOptionsContextValue — time slots", () => {
       month: "Jul",
       year: "2026",
     });
+    // Normalize whitespace: the meridiem separator varies by ICU version.
+    const option = result.options[0];
+    if (option.type !== "timeSlot") throw new Error("expected a time slot");
+    expect(option.speechStartTime.replace(/\s+/g, " ")).toBe("2 PM");
+    expect(option.speechEndTime.replace(/\s+/g, " ")).toBe("3 PM");
   });
 
   it("shows floating times as stored, ignoring the viewer's zone", () => {

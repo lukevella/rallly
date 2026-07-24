@@ -31,6 +31,9 @@ export interface ParsedTimeSlotOption {
   month: string;
   startTime: string;
   endTime: string;
+  /** Speech-friendly times (minutes dropped when zero) for screen readers. */
+  speechStartTime: string;
+  speechEndTime: string;
   duration: string;
   year: string;
 }
@@ -41,6 +44,18 @@ export const getOptionDateTimeLabel = (option: ParsedDateTimeOpton) => {
   const date = `${option.dow} ${option.day} ${option.month} ${option.year}`;
   return option.type === "timeSlot"
     ? `${date}, ${option.startTime} – ${option.endTime}`
+    : date;
+};
+
+/**
+ * Terser label for screen-reader announcements: drops the year (usually
+ * inferable from context) and uses speech-friendly times ("1pm" rather than
+ * the literal "1:00 PM", which reads as "one zero zero P M").
+ */
+export const getOptionAnnouncementLabel = (option: ParsedDateTimeOpton) => {
+  const date = `${option.dow} ${option.day} ${option.month}`;
+  return option.type === "timeSlot"
+    ? `${date}, ${option.speechStartTime} – ${option.speechEndTime}`
     : date;
 };
 

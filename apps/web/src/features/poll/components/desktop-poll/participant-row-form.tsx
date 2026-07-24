@@ -14,7 +14,10 @@ import { useOptions, usePoll } from "@/features/poll/components/poll-context";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { YouAvatar } from "@/features/poll/components/you-avatar";
 import { Trans, useTranslation } from "@/i18n/client";
-import { getOptionDateTimeLabel } from "@/lib/utils/date-time-utils";
+import {
+  getOptionAnnouncementLabel,
+  getOptionDateTimeLabel,
+} from "@/lib/utils/date-time-utils";
 import { VoteSelector } from "../vote-selector";
 
 export interface ParticipantRowFormProps {
@@ -131,7 +134,7 @@ const ParticipantRowForm = ({
                     onChange={(vote) => {
                       field.onChange({ optionId, type: vote });
                       if (option) {
-                        form.announce(getOptionDateTimeLabel(option), vote);
+                        form.announce(getOptionAnnouncementLabel(option), vote);
                       }
                     }}
                   />

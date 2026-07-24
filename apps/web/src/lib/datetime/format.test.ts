@@ -4,6 +4,7 @@ import {
   formatDateTime,
   formatDateTimeRange,
   formatRelativeTime,
+  formatSpeechTime,
 } from "@/lib/datetime/format";
 import type { TimeFormat } from "@/lib/datetime/types";
 
@@ -130,6 +131,38 @@ describe("formatDateTime", () => {
         ...ctx("en", "hours24"),
       }),
     ).toBe("13:00");
+  });
+});
+
+describe("formatSpeechTime", () => {
+  // The meridiem separator varies by ICU version (regular vs narrow no-break
+  // space), so normalize whitespace before asserting rather than hardcode it.
+  const speech = (...args: Parameters<typeof formatSpeechTime>) =>
+    formatSpeechTime(...args).replace(/\s+/g, " ");
+
+  it("drops the zero minute for 12-hour time", () => {
+    expect(speech(at(13), ctx("en", "hours12"))).toBe("1 PM");
+  });
+
+  it("keeps a non-zero minute", () => {
+    expect(speech(at(13, 30), ctx("en", "hours12"))).toBe("1:30 PM");
+  });
+
+  it("drops the zero minute for 24-hour time, leaving just the hour", () => {
+    expect(speech(at(13), ctx("en", "hours24"))).toBe("13");
+  });
+
+  it("keeps a non-zero minute for 24-hour time", () => {
+    expect(speech(at(13, 30), ctx("en", "hours24"))).toBe("13:30");
+  });
+
+  it("preserves meridiem-first order without inserting a space (zh)", () => {
+    expect(speech(at(13), ctx("zh", "hours12"))).toBe("下午1");
+  });
+
+  it("honors the timezone", () => {
+    // 13:00 UTC = 09:00 America/New_York (EDT) in June.
+    expect(speech(at(13), ctx("en", "hours24", "America/New_York"))).toBe("09");
   });
 });
 

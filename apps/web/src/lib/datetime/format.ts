@@ -112,6 +112,40 @@ export function formatDateTime(
   return getCachedIntlDateFormatter(options).format(toDate(value));
 }
 
+/**
+ * A time formatted for speech: when the minute is zero it is dropped, so a
+ * screen reader reads "1 PM" rather than "1:00 PM" (which is voiced digit by
+ * digit as "one zero zero P M"). Locale/format aware via Intl — 24h and
+ * non-English output are handled by the same formatToParts pass.
+ */
+export function formatSpeechTime(
+  value: DateInput,
+  options: Omit<FormatDateTimeOptions, "preset" | "showTimeZone">,
+): string {
+  const parts = getCachedIntlDateFormatter({
+    ...options,
+    preset: "time",
+  }).formatToParts(toDate(value));
+
+  const minuteIndex = parts.findIndex((part) => part.type === "minute");
+  if (minuteIndex === -1 || Number(parts[minuteIndex].value) !== 0) {
+    return parts.map((part) => part.value).join("");
+  }
+
+  // Drop the zero minute and the hour:minute separator literal that precedes
+  // it, but keep every other literal (e.g. the space before "PM") so the
+  // result stays correct across locales.
+  const separatorIndex =
+    minuteIndex > 0 && parts[minuteIndex - 1].type === "literal"
+      ? minuteIndex - 1
+      : -1;
+  return parts
+    .filter((_, index) => index !== minuteIndex && index !== separatorIndex)
+    .map((part) => part.value)
+    .join("")
+    .trim();
+}
+
 export function formatDateTimeRange(
   start: DateInput,
   end: DateInput,

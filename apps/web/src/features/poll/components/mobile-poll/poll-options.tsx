@@ -5,7 +5,10 @@ import { useParticipants } from "@/features/poll/components/participants-provide
 import { usePoll } from "@/features/poll/components/poll-context";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import type { ParsedDateTimeOpton } from "@/lib/utils/date-time-utils";
-import { getOptionDateTimeLabel } from "@/lib/utils/date-time-utils";
+import {
+  getOptionAnnouncementLabel,
+  getOptionDateTimeLabel,
+} from "@/lib/utils/date-time-utils";
 import DateOption from "./date-option";
 import TimeSlotOption from "./time-slot-option";
 
@@ -52,7 +55,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                 const newValue = [...field.value];
                 newValue[index] = { optionId: option.optionId, type: newVote };
                 field.onChange(newValue);
-                announce(getOptionDateTimeLabel(option), newVote);
+                announce(getOptionAnnouncementLabel(option), newVote);
               };
 
               switch (option.type) {

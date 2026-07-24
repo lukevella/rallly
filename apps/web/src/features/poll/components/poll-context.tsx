@@ -7,6 +7,7 @@ import {
   formatDateParts,
   formatDateTime,
   formatDuration,
+  formatSpeechTime,
 } from "@/lib/datetime/format";
 import type {
   ParsedDateOption,
@@ -166,6 +167,16 @@ export function createOptionsContextValue({
           }),
           endTime: formatDateTime(endTime, {
             preset: "time",
+            locale,
+            timeFormat,
+            timeZone: displayTimeZone,
+          }),
+          speechStartTime: formatSpeechTime(option.startTime, {
+            locale,
+            timeFormat,
+            timeZone: displayTimeZone,
+          }),
+          speechEndTime: formatSpeechTime(endTime, {
             locale,
             timeFormat,
             timeZone: displayTimeZone,
