@@ -87,6 +87,7 @@ model Participant {
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([pollId], type: Hash)
+  @@index([userId])
   @@map("participants")
 }
 
@@ -145,5 +146,6 @@ model Comment {
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([pollId])
+  @@index([userId])
   @@map("comments")
 }

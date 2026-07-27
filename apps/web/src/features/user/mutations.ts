@@ -1,8 +1,9 @@
 import "server-only";
 
-import type { TimeFormat } from "@rallly/database";
+import type { Prisma, TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { authLib } from "@/lib/auth";
+import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
 import { deleteImageFromS3 } from "@/lib/storage/image-upload";
 
 export async function createUser({
@@ -154,6 +155,68 @@ export async function hardDeleteUser({
   });
 
   await prisma.user.delete({ where: { id: userId } });
+}
+
+const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 100;
+
+/**
+ * Delete orphaned anonymous guest users: guests that own no resources and
+ * haven't been seen for longer than the session length.
+ *
+ * Two guards, both required:
+ *  - The `lastSeenAt` window IS the liveness check. Prod sessions live in
+ *    Redis, so we can't probe them at delete time; but session TTL equals
+ *    this window and every session refresh bumps `lastSeenAt`, so a guest
+ *    below the cutoff provably has no live session left to orphan.
+ *  - The resource filter guards the cascade. A guest's polls/comments are
+ *    onDelete: Cascade, so deleting one who still owns a live poll would
+ *    destroy everyone's votes/comments.
+ *
+ * `scheduledEventInvites` is the invitee link (invitee_id, SetNull); a guest
+ * on that relation is a live participant elsewhere and must be retained.
+ */
+export async function deleteOrphanedAnonymousUsers() {
+  const cutoff = new Date(Date.now() - SESSION_TTL_SECONDS * 1000);
+
+  // Both guards live here so read and delete share exactly one predicate.
+  const orphanedAnonymousFilter = {
+    isAnonymous: true,
+    lastSeenAt: { lt: cutoff },
+    polls: { none: {} },
+    comments: { none: {} },
+    participants: { none: {} },
+    scheduledEventInvites: { none: {} },
+  } satisfies Prisma.UserWhereInput;
+
+  let deleted = 0;
+  let hasMore = true;
+
+  while (hasMore) {
+    const batch = await prisma.user.findMany({
+      where: orphanedAnonymousFilter,
+      select: { id: true },
+      take: DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE,
+    });
+
+    if (batch.length === 0) {
+      hasMore = false;
+      break;
+    }
+
+    // Re-apply the guards at delete time, not just id: a poll/comment/invite
+    // created — or an account linked out of anonymous — between this snapshot
+    // and the delete would otherwise be cascaded away. Any batched id that
+    // fails the re-check is simply left for the next findMany to exclude.
+    const { count } = await prisma.user.deleteMany({
+      where: {
+        AND: [orphanedAnonymousFilter, { id: { in: batch.map((u) => u.id) } }],
+      },
+    });
+
+    deleted += count;
+  }
+
+  return deleted;
 }
 
 export async function setActiveSpace({
