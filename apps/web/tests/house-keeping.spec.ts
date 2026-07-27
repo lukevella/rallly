@@ -19,7 +19,6 @@ test.describe("House-keeping API", () => {
   // Store created poll IDs for cleanup
   const createdPollIds: string[] = [];
   const createdUserIds: string[] = [];
-  const createdScheduledEventIds: string[] = [];
 
   // API Secret for authentication
   const CRON_SECRET = process.env.CRON_SECRET;
@@ -35,19 +34,6 @@ test.describe("House-keeping API", () => {
   });
 
   async function cleanup() {
-    // Scheduled events (and their invites, via cascade) must go before their
-    // host users are deleted, since the host relation is the cascade root.
-    if (createdScheduledEventIds.length > 0) {
-      await prisma.scheduledEvent.deleteMany({
-        where: {
-          id: {
-            in: createdScheduledEventIds,
-          },
-        },
-      });
-      createdScheduledEventIds.length = 0;
-    }
-
     // Delete test users - related polls will be deleted automatically due to cascade
     if (createdUserIds.length > 0) {
       await prisma.user.deleteMany({
@@ -538,7 +524,7 @@ test.describe("House-keeping API", () => {
       lastSeenAt: stale,
     });
     createdUserIds.push(guestInvitee.id);
-    const scheduledEvent = await prisma.scheduledEvent.create({
+    await prisma.scheduledEvent.create({
       data: {
         userId: eventHost.id,
         spaceId: hostSpace.id,
@@ -556,7 +542,6 @@ test.describe("House-keeping API", () => {
         },
       },
     });
-    createdScheduledEventIds.push(scheduledEvent.id);
 
     // Critical: a stale registered user with no resources must never be reaped.
     const staleRealUser = await createUserInDb({
