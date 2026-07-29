@@ -8,6 +8,10 @@ import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { hasPollAdminAccess } from "@/features/poll/data";
+import {
+  MAX_COMMENT_AUTHOR_NAME_LENGTH,
+  MAX_COMMENT_LENGTH,
+} from "@/features/poll/schema";
 import { track } from "@/lib/posthog";
 import {
   createRateLimitMiddleware,
@@ -84,8 +88,12 @@ export const comments = router({
     .input(
       z.object({
         pollId: z.string(),
-        authorName: z.string().trim().min(1),
-        content: z.string().trim().min(1),
+        authorName: z
+          .string()
+          .trim()
+          .min(1)
+          .max(MAX_COMMENT_AUTHOR_NAME_LENGTH),
+        content: z.string().trim().min(1).max(MAX_COMMENT_LENGTH),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -108,7 +116,9 @@ export const comments = router({
           });
         }
 
-        authorName = user.name;
+        // Stored names (e.g. from OAuth sign-up) aren't guaranteed to satisfy
+        // the schema cap, so bound them here too.
+        authorName = user.name.trim().slice(0, MAX_COMMENT_AUTHOR_NAME_LENGTH);
       }
 
       const { content, pollId } = input;

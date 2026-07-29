@@ -116,6 +116,7 @@
   "changePassword": "Change Password",
   "changePasswordDescription": "Update your password to keep your account secure",
   "changeRole": "Change role",
+  "charactersRemaining": "{count, plural, one {# character remaining} other {# characters remaining}}",
   "checkForConflicts": "Toggle which calendars to check for conflicts",
   "cityTime": "{city} Time",
   "clockPreferences": "Clock Preferences",
