@@ -134,8 +134,6 @@ export async function createTestPoll({
   const pollData = {
     id,
     title,
-    participantUrlId: `${id}-participant`,
-    adminUrlId: `${id}-admin`,
     userId,
     spaceId,
     updatedAt,

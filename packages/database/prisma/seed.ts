@@ -97,8 +97,6 @@ async function main() {
 
   for (const poll of polls) {
     const pollId = nextId();
-    const adminUrlId = nextId();
-    const participantUrlId = nextId();
 
     const kind = poll.options.some((opt) => opt.duration > 0) ? "time" : "date";
 
@@ -114,8 +112,6 @@ async function main() {
         deadline: poll.deadline ? new Date(poll.deadline) : undefined,
         userId: poll.userId,
         spaceId: poll.spaceId,
-        adminUrlId,
-        participantUrlId,
         scheduledEventId: poll.scheduledEventId,
         hideParticipants: poll.hideParticipants,
         hideScores: poll.hideScores,

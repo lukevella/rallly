@@ -113,8 +113,6 @@ async function seed() {
     data: {
       id: ZONED_POLL_ID,
       title: "Cross TZ Zoned Poll",
-      participantUrlId: `${ZONED_POLL_ID}-participant`,
-      adminUrlId: `${ZONED_POLL_ID}-admin`,
       kind: "time",
       timeZone: "Europe/London",
       options: {
@@ -127,8 +125,6 @@ async function seed() {
     data: {
       id: FLOATING_POLL_ID,
       title: "Cross TZ Floating Poll",
-      participantUrlId: `${FLOATING_POLL_ID}-participant`,
-      adminUrlId: `${FLOATING_POLL_ID}-admin`,
       kind: "time",
       timeZone: null,
       options: {
@@ -141,8 +137,6 @@ async function seed() {
     data: {
       id: DATE_POLL_ID,
       title: "Cross TZ Date Poll",
-      participantUrlId: `${DATE_POLL_ID}-participant`,
-      adminUrlId: `${DATE_POLL_ID}-admin`,
       kind: "date",
       timeZone: null,
       options: {

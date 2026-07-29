@@ -28,8 +28,6 @@ test.beforeAll(async () => {
       spaceId: "space-2",
       status: "open",
       timeZone: "America/New_York",
-      adminUrlId: "screenshot-admin",
-      participantUrlId: "screenshot-participant",
       options: {
         create: [
           {

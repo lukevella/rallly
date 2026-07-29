@@ -44,8 +44,6 @@ model Poll {
   kind                    PollKind          @default(date)
   deleted                 Boolean           @default(false)
   deletedAt               DateTime?         @map("deleted_at")
-  participantUrlId        String            @unique @map("participant_url_id")
-  adminUrlId              String            @unique @map("admin_url_id")
   eventId                 String?           @unique @map("event_id")
   scheduledEventId        String?           @map("scheduled_event_id")
   hideParticipants        Boolean           @default(false) @map("hide_participants")

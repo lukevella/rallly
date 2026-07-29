@@ -159,8 +159,6 @@ export const polls = router({
       const title = input.title;
       const location = input.location || undefined;
       const description = input.description || undefined;
-      const adminToken = nanoid();
-      const participantUrlId = nanoid();
       const pollId = nanoid();
       const spaceId = activeSpace?.id;
 
@@ -198,8 +196,6 @@ export const polls = router({
           timeZone,
           location,
           description,
-          adminUrlId: adminToken,
-          participantUrlId,
           userId: ctx.user.id,
           kind,
           options: {
@@ -638,7 +634,6 @@ export const polls = router({
           location: true,
           description: true,
           createdAt: true,
-          participantUrlId: true,
           status: true,
           closedReason: true,
           hideParticipants: true,
@@ -1254,8 +1249,6 @@ export const polls = router({
           hideParticipants: poll.hideParticipants,
           hideScores: poll.hideScores,
           disableComments: poll.disableComments,
-          adminUrlId: nanoid(),
-          participantUrlId: nanoid(),
           kind: poll.kind,
           options: {
             create: poll.options,
