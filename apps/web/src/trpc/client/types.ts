@@ -15,7 +15,6 @@ export type GetPollApiResponse = {
   timeZone: string | null;
   canManage: boolean;
   status: PollStatus;
-  participantUrlId: string;
   createdAt: Date;
   deleted: boolean;
   event: {

@@ -50,8 +50,6 @@ export const createPoll = async ({
       hideParticipants,
       hideScores,
       disableComments,
-      adminUrlId: nanoid(),
-      participantUrlId: nanoid(),
       userId,
       spaceId,
       kind,

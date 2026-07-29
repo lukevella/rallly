@@ -241,8 +241,6 @@ test.describe("House-keeping API", () => {
       data: {
         id: "old-deleted-poll",
         title: "Old Deleted Poll",
-        participantUrlId: "old-deleted-poll-participant",
-        adminUrlId: "old-deleted-poll-admin",
         deleted: true,
         deletedAt: dayjs().subtract(8, "day").toDate(), // Deleted 8 days ago
       },
@@ -254,8 +252,6 @@ test.describe("House-keeping API", () => {
       data: {
         id: "recent-deleted-poll",
         title: "Recent Deleted Poll",
-        participantUrlId: "recent-deleted-poll-participant",
-        adminUrlId: "recent-deleted-poll-admin",
         deleted: true,
         deletedAt: dayjs().subtract(3, "day").toDate(), // Deleted 3 days ago
       },
@@ -302,8 +298,6 @@ test.describe("House-keeping API", () => {
       data: {
         id: "ac-all-past",
         title: "Auto-close: all options in the past",
-        participantUrlId: "ac-all-past-participant",
-        adminUrlId: "ac-all-past-admin",
         options: {
           create: {
             startTime: dayjs().subtract(10, "day").toDate(),
@@ -320,8 +314,6 @@ test.describe("House-keeping API", () => {
       data: {
         id: "ac-allday-past",
         title: "Auto-close: past all-day option",
-        participantUrlId: "ac-allday-past-participant",
-        adminUrlId: "ac-allday-past-admin",
         options: {
           create: {
             startTime: dayjs().subtract(5, "day").toDate(),
@@ -337,8 +329,6 @@ test.describe("House-keeping API", () => {
       data: {
         id: "ac-future",
         title: "Auto-close: has a future option",
-        participantUrlId: "ac-future-participant",
-        adminUrlId: "ac-future-admin",
         options: {
           create: {
             startTime: dayjs().add(10, "day").toDate(),
@@ -354,8 +344,6 @@ test.describe("House-keeping API", () => {
       data: {
         id: "ac-mixed",
         title: "Auto-close: past and future options",
-        participantUrlId: "ac-mixed-participant",
-        adminUrlId: "ac-mixed-admin",
         options: {
           create: [
             { startTime: dayjs().subtract(10, "day").toDate(), duration: 60 },
@@ -372,8 +360,6 @@ test.describe("House-keeping API", () => {
       data: {
         id: "ac-running",
         title: "Auto-close: option still running",
-        participantUrlId: "ac-running-participant",
-        adminUrlId: "ac-running-admin",
         options: {
           create: {
             startTime: dayjs().subtract(30, "minute").toDate(),
@@ -390,8 +376,6 @@ test.describe("House-keeping API", () => {
       data: {
         id: "ac-no-options",
         title: "Auto-close: no options",
-        participantUrlId: "ac-no-options-participant",
-        adminUrlId: "ac-no-options-admin",
       },
     });
     createdPollIds.push(noOptions.id);
@@ -401,8 +385,6 @@ test.describe("House-keeping API", () => {
       data: {
         id: "ac-scheduled",
         title: "Auto-close: already scheduled",
-        participantUrlId: "ac-scheduled-participant",
-        adminUrlId: "ac-scheduled-admin",
         status: "scheduled",
         options: {
           create: {
