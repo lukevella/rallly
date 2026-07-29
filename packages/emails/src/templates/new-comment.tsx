@@ -7,9 +7,11 @@ import { previewChrome } from "../components/preview-chrome";
 import {
   Body,
   Button,
+  borderColor,
   Container,
   Heading,
   Link,
+  Section,
   Text,
 } from "../components/styled-components";
 import { createEmailI18n } from "../i18n";
@@ -22,27 +24,31 @@ type NewCommentEmailProps = {
   chrome: EmailChrome;
   title: string;
   authorName: string;
+  content: string;
   pollUrl: string;
   disableNotificationsUrl: string;
 };
 
+const PREVIEW_LENGTH = 140;
+
 async function NewCommentEmail({
   title,
   authorName,
+  content,
   pollUrl,
   disableNotificationsUrl,
   locale = "en",
   chrome,
 }: NewCommentEmailProps) {
   const { t, i18n } = await createEmailI18n(locale);
+  const previewText =
+    content.length > PREVIEW_LENGTH
+      ? `${content.slice(0, PREVIEW_LENGTH)}…`
+      : content;
   return (
     <Html>
       <Head />
-      <Preview>
-        {t("newComment_preview", {
-          defaultValue: "Go to your poll to see what they said.",
-        })}
-      </Preview>
+      <Preview>{previewText}</Preview>
       <Body>
         <Container>
           <Img
@@ -69,6 +75,29 @@ async function NewCommentEmail({
               defaults="<b>{authorName}</b> has commented on <b>{title}</b>."
               components={{ b: <strong /> }}
               values={{ authorName, title }}
+            />
+          </Text>
+          <Section
+            style={{
+              borderLeft: `3px solid ${borderColor}`,
+              paddingLeft: "16px",
+            }}
+          >
+            <Text style={{ margin: 0, fontWeight: "bold" }} small>
+              {authorName}
+            </Text>
+            <Text style={{ margin: "8px 0 0", whiteSpace: "pre-wrap" }}>
+              {content}
+            </Text>
+          </Section>
+          <Text small light={true}>
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="emails"
+              i18nKey="newComment_replyGuidance"
+              defaults="Replying to this email will not reach {authorName}. To respond, add a comment on the poll."
+              values={{ authorName }}
             />
           </Text>
           <Button href={pollUrl} color={chrome.primaryColor}>
@@ -110,6 +139,8 @@ async function NewCommentEmail({
 NewCommentEmail.PreviewProps = {
   title: "Untitled Poll",
   authorName: "Someone",
+  content:
+    "Hi everyone! I can make most of these times work, but Tuesday afternoon would be best for me.\nLooking forward to it!",
   pollUrl: "https://rallly.co",
   disableNotificationsUrl: "https://rallly.co",
   locale: "en",
