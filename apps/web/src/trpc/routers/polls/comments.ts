@@ -116,7 +116,9 @@ export const comments = router({
           });
         }
 
-        authorName = user.name;
+        // Stored names (e.g. from OAuth sign-up) aren't guaranteed to satisfy
+        // the schema cap, so bound them here too.
+        authorName = user.name.trim().slice(0, MAX_COMMENT_AUTHOR_NAME_LENGTH);
       }
 
       const { content, pollId } = input;
