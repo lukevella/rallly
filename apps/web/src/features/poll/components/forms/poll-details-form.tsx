@@ -153,6 +153,12 @@ const DescriptionField = () => {
                 linkVisit: t("richTextLinkVisit", {
                   defaultValue: "Open link in new tab",
                 }),
+                charactersRemaining: (count) =>
+                  t("charactersRemaining", {
+                    defaultValue:
+                      "{count, plural, one {# character remaining} other {# characters remaining}}",
+                    count,
+                  }),
               }}
             />
             {fieldState.error ? (

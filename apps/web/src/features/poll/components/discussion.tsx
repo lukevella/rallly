@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Input } from "@rallly/ui/input";
+import { MaxCharLength } from "@rallly/ui/max-char-length";
 import { toast } from "@rallly/ui/sonner";
 import { Textarea } from "@rallly/ui/textarea";
 import { MoreHorizontalIcon, TrashIcon } from "lucide-react";
@@ -30,6 +31,10 @@ import {
 } from "@/features/poll/components/participant";
 import { useParticipants } from "@/features/poll/components/participants-provider";
 import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
+import {
+  MAX_COMMENT_AUTHOR_NAME_LENGTH,
+  MAX_COMMENT_LENGTH,
+} from "@/features/poll/schema";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { RelativeTime } from "@/lib/datetime/relative-time";
@@ -66,13 +71,15 @@ function NewCommentForm({
 
   const pollId = poll.id;
 
-  const { register, reset, control, handleSubmit, formState } =
+  const { register, reset, control, handleSubmit, formState, watch } =
     useForm<CommentForm>({
       defaultValues: {
         authorName,
         content: "",
       },
     });
+
+  const contentLength = watch("content").length;
 
   const addComment = trpc.polls.comments.add.useMutation({
     onError: (error) => {
@@ -94,8 +101,19 @@ function NewCommentForm({
           id="comment"
           className="w-full"
           autoFocus={true}
+          maxLength={MAX_COMMENT_LENGTH}
           placeholder={t("commentPlaceholder")}
           {...register("content", { validate: requiredString })}
+        />
+        <MaxCharLength
+          className="mt-1 flex justify-end"
+          length={contentLength}
+          maxLength={MAX_COMMENT_LENGTH}
+          label={t("charactersRemaining", {
+            defaultValue:
+              "{count, plural, one {# character remaining} other {# characters remaining}}",
+            count: MAX_COMMENT_LENGTH - contentLength,
+          })}
         />
       </div>
       <div
@@ -112,6 +130,7 @@ function NewCommentForm({
             <Input
               placeholder={t("yourName")}
               className="lg:w-48"
+              maxLength={MAX_COMMENT_AUTHOR_NAME_LENGTH}
               data-1p-ignore="true"
               aria-invalid={!!formState.errors.authorName}
               {...field}

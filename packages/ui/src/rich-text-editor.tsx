@@ -25,6 +25,7 @@ import {
   InputGroupInput,
 } from "./input-group";
 import { cn } from "./lib/utils";
+import { MaxCharLength } from "./max-char-length";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 // Exported so tests exercise the exact extension set — including the
@@ -88,6 +89,9 @@ export function RichTextEditor({
     linkApply: string;
     linkRemove: string;
     linkVisit: string;
+    /** Localized remaining-count text for the character limit indicator,
+     * e.g. (12) => "12 characters remaining". */
+    charactersRemaining: (remaining: number) => string;
   };
 }) {
   const editor = useEditor({
@@ -144,7 +148,11 @@ export function RichTextEditor({
       <EditorContent editor={editor} />
       {maxLength ? (
         <InputGroupAddon align="block-end" className="justify-end">
-          <CharacterCount editor={editor} maxLength={maxLength} />
+          <CharacterLimit
+            editor={editor}
+            maxLength={maxLength}
+            charactersRemaining={labels.charactersRemaining}
+          />
         </InputGroupAddon>
       ) : null}
       <LinkBubbleMenu editor={editor} labels={labels} />
@@ -152,12 +160,14 @@ export function RichTextEditor({
   );
 }
 
-function CharacterCount({
+function CharacterLimit({
   editor,
   maxLength,
+  charactersRemaining,
 }: {
   editor: TiptapEditor;
   maxLength: number;
+  charactersRemaining: (remaining: number) => string;
 }) {
   const { length } = useEditorState({
     editor,
@@ -166,22 +176,12 @@ function CharacterCount({
     selector: (ctx) => ({ length: ctx.editor.getMarkdown().length }),
   });
 
-  const over = length > maxLength;
-  // Stay out of the way until the user is within ~15% of the cap.
-  if (!over && length < maxLength * 0.85) {
-    return null;
-  }
-
   return (
-    <span
-      aria-live="polite"
-      className={cn(
-        "text-xs tabular-nums",
-        over ? "font-medium text-destructive" : "text-muted-foreground",
-      )}
-    >
-      {length}/{maxLength}
-    </span>
+    <MaxCharLength
+      length={length}
+      maxLength={maxLength}
+      label={charactersRemaining(maxLength - length)}
+    />
   );
 }
 
