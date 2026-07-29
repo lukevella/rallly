@@ -11,7 +11,6 @@ import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { hasPollAdminAccess } from "@/features/poll/data";
 import { track } from "@/lib/posthog";
-import { getGravatarUrl } from "@/lib/utils/gravatar";
 import {
   createRateLimitMiddleware,
   publicProcedure,
@@ -36,7 +35,7 @@ function createParticipantFullDTO(
   const { votes, user, ...rest } = participant;
   return {
     ...rest,
-    image: user?.image ?? getGravatarUrl(rest.email),
+    image: user?.image ?? null,
     votes,
     hidden: false,
   };
