@@ -161,6 +161,7 @@ export const comments = router({
               branding: await getInstanceBranding(),
               props: {
                 authorName,
+                content: newComment.content,
                 pollUrl: absoluteUrl(`/poll/${poll.id}`),
                 disableNotificationsUrl: absoluteUrl("/settings/notifications"),
                 title: poll.title,
