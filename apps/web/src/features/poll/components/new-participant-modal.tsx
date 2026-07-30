@@ -344,9 +344,8 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             />
           ) : (
             <Button
-              variant="link"
+              size="chip"
               type="button"
-              className="h-auto self-start p-0"
               disabled={formState.isSubmitting}
               onClick={() => setShowNote(true)}
             >
