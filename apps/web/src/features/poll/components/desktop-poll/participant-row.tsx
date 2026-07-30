@@ -8,7 +8,7 @@ import { MoreHorizontalIcon } from "lucide-react";
 import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { usePermissions } from "@/features/poll/client";
+import { usePermissions, useRole } from "@/features/poll/client";
 import {
   Participant,
   ParticipantName,
@@ -117,6 +117,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   const { t } = useTranslation();
   const { ownsObject } = useUser();
   const { getVote, optionIds } = usePoll();
+  const role = useRole();
 
   const isYou = ownsObject(participant);
 
@@ -140,7 +141,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
       className={className}
       name={participant.name}
       image={participant.image}
-      note={participant.note}
+      note={role === "admin" ? participant.note : undefined}
       votes={optionIds.map((optionId) => {
         return getVote(participant.id, optionId);
       })}
