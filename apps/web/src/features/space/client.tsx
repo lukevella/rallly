@@ -44,23 +44,13 @@ export function SpaceProvider({
   children: React.ReactNode;
 }) {
   React.useEffect(() => {
-    // Property names must match the server-side identifyGroup payloads.
-    // posthog-js only re-sends $groupidentify when these values change.
-    posthog?.group("space", space.id, {
-      name: space.name,
-      tier: space.tier,
-      custom_branding: space.showBranding,
-      member_count: space.memberCount,
-      seat_count: space.seatCount,
-    });
-  }, [
-    space.id,
-    space.name,
-    space.tier,
-    space.showBranding,
-    space.memberCount,
-    space.seatCount,
-  ]);
+    // No properties here — posthog-js captures $groupidentify on EVERY
+    // group() call that passes properties (no diffing), which fired one
+    // event per page load. Without properties it only fires when the
+    // group key changes. Group properties are maintained by the
+    // server-side identifyGroup calls on the mutations that change them.
+    posthog?.group("space", space.id);
+  }, [space.id]);
 
   const primaryColorVars =
     space.showBranding && space.primaryColor

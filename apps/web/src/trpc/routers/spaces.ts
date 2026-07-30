@@ -5,7 +5,7 @@ import { createSpaceDTO } from "@/features/space/data";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type { SpaceDTO } from "@/features/space/types";
 import { fromDBRole } from "@/features/space/utils";
-import { track } from "@/lib/posthog";
+import { identifyGroup, track } from "@/lib/posthog";
 import { privateProcedure, router, spaceProcedure } from "../trpc";
 
 export const spaces = router({
@@ -172,6 +172,14 @@ export const spaces = router({
       where: { spaceId: ctx.space.id },
     });
 
+    identifyGroup({
+      groupType: "space",
+      groupKey: ctx.space.id,
+      properties: {
+        member_count: memberCount,
+      },
+    });
+
     track(ctx.user, {
       event: "space_member_leave",
       properties: {
@@ -248,6 +256,14 @@ export const spaces = router({
 
       const memberCount = await prisma.spaceMember.count({
         where: { spaceId: input.spaceId },
+      });
+
+      identifyGroup({
+        groupType: "space",
+        groupKey: input.spaceId,
+        properties: {
+          member_count: memberCount,
+        },
       });
 
       track(ctx.user, {

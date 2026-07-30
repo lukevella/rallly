@@ -178,6 +178,16 @@ export const updateSpaceAction = authActionClient
       primaryColor: parsedInput.primaryColor,
     });
 
+    if (parsedInput.name) {
+      identifyGroup({
+        groupType: "space",
+        groupKey: space.id,
+        properties: {
+          name: parsedInput.name,
+        },
+      });
+    }
+
     track(ctx.user, {
       event: "space_update",
       properties: {
