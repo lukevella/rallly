@@ -13,8 +13,7 @@ import {
   Participant,
   ParticipantName,
 } from "@/features/poll/components/participant";
-import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
-import { ParticipantNote } from "@/features/poll/components/participant-note";
+import { ParticipantPopover } from "@/features/poll/components/participant-popover";
 import { usePoll } from "@/features/poll/components/poll-context";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -45,18 +44,8 @@ export const ParticipantRowView: React.FunctionComponent<{
   votes: Array<VoteType | undefined>;
   className?: string;
   isYou?: boolean;
-  note?: string | null;
   participantId: string;
-}> = ({
-  name,
-  image,
-  action,
-  votes,
-  className,
-  isYou,
-  note,
-  participantId,
-}) => {
+}> = ({ name, image, action, votes, className, isYou, participantId }) => {
   return (
     <tr
       data-testid="participant-row"
@@ -77,9 +66,6 @@ export const ParticipantRowView: React.FunctionComponent<{
             <ParticipantName>{name}</ParticipantName>
           </Participant>
           <div className="flex items-center gap-x-2">
-            {note ? (
-              <ParticipantNote note={note} participantName={name} />
-            ) : null}
             {isYou ? (
               <Badge variant="secondary" className="shrink-0">
                 <Trans i18nKey="you" />
@@ -123,6 +109,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
 
   const { canEditParticipant } = usePermissions();
   const canEdit = canEditParticipant(participant.id);
+  const note = role === "admin" ? (participant.note ?? undefined) : undefined;
 
   if (editMode) {
     return (
@@ -141,15 +128,15 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
       className={className}
       name={participant.name}
       image={participant.image}
-      note={role === "admin" ? participant.note : undefined}
       votes={optionIds.map((optionId) => {
         return getVote(participant.id, optionId);
       })}
       participantId={participant.id}
       action={
-        canEdit ? (
-          <ParticipantDropdown
-            participant={participant}
+        canEdit || note ? (
+          <ParticipantPopover
+            participant={{ ...participant, note }}
+            disabled={!canEdit}
             align="start"
             onEdit={() => onChangeEditMode?.(true)}
           >
@@ -160,7 +147,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
             >
               <MoreHorizontalIcon />
             </Button>
-          </ParticipantDropdown>
+          </ParticipantPopover>
         ) : null
       }
       isYou={isYou}
