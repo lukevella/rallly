@@ -80,9 +80,8 @@ const DescriptionField = () => {
       <div>
         <Button
           type="button"
-          variant="link"
           size="sm"
-          className="h-auto p-0 text-muted-foreground hover:text-foreground"
+          className="rounded-full"
           onClick={() => setOpened(true)}
         >
           <PlusIcon data-icon="inline-start" />
