@@ -478,7 +478,7 @@
   "noUsers": "Käyttäjiä ei löytynyt",
   "noUsersDescription": "Kokeile muuttaa hakuasi",
   "noVotes": "Kukaan ei ole äänestänyt tätä vaihtoehtoa",
-  "numberOfSeats": "Lisenssien määrä",
+  "numberOfSeats": "Paikkojen määrä",
   "oidcAutoSignInDescription": "Sinut ohjataan kirjautumissivulle...",
   "openPollCount": "{count, plural, one {# avoin} other {# avointa}}",
   "optional": "valinnainen",
