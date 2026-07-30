@@ -78,12 +78,12 @@ export const ParticipantRowView: React.FunctionComponent<{
             <ParticipantName>{name}</ParticipantName>
           </Participant>
           <div className="flex items-center gap-x-2">
-            {note}
             {isYou ? (
               <Badge variant="secondary" className="shrink-0">
                 <Trans i18nKey="you" />
               </Badge>
             ) : null}
+            {note}
             {action}
           </div>
         </div>
