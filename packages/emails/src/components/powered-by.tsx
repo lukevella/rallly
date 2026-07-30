@@ -30,7 +30,7 @@ export async function PoweredBy({
           a: (
             <Link
               color={chrome.primaryColor}
-              href="https://rallly.co?utm_source=email&utm_medium=transactional"
+              href="https://rallly.co?utm_source=email&utm_medium=powered_by"
             />
           ),
         }}
