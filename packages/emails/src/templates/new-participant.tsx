@@ -7,9 +7,11 @@ import { previewChrome } from "../components/preview-chrome";
 import {
   Body,
   Button,
+  borderColor,
   Container,
   Heading,
   Link,
+  Section,
   Text,
 } from "../components/styled-components";
 import { createEmailI18n } from "../i18n";
@@ -22,27 +24,36 @@ type NewParticipantEmailProps = {
   chrome: EmailChrome;
   title: string;
   participantName: string;
+  note?: string;
+  canReply?: boolean;
   pollUrl: string;
   disableNotificationsUrl: string;
 };
 
+const PREVIEW_LENGTH = 140;
+
 async function NewParticipantEmail({
   title,
   participantName,
+  note,
+  canReply,
   pollUrl,
   disableNotificationsUrl,
   locale = "en",
   chrome,
 }: NewParticipantEmailProps) {
   const { t, i18n } = await createEmailI18n(locale);
+  const previewText = note
+    ? note.length > PREVIEW_LENGTH
+      ? `${note.slice(0, PREVIEW_LENGTH)}…`
+      : note
+    : t("newParticipant_preview", {
+        defaultValue: "Go to your poll to see the new response.",
+      });
   return (
     <Html>
       <Head />
-      <Preview>
-        {t("newParticipant_preview", {
-          defaultValue: "Go to your poll to see the new response.",
-        })}
-      </Preview>
+      <Preview>{previewText}</Preview>
       <Body>
         <Container>
           <Img
@@ -71,6 +82,28 @@ async function NewParticipantEmail({
               values={{ name: participantName, title }}
             />
           </Text>
+          {note ? (
+            <Section
+              style={{
+                borderLeft: `3px solid ${borderColor}`,
+                paddingLeft: "16px",
+              }}
+            >
+              <Text style={{ margin: 0, whiteSpace: "pre-wrap" }}>{note}</Text>
+            </Section>
+          ) : null}
+          {note && canReply ? (
+            <Text small light={true}>
+              <Trans
+                t={t}
+                i18n={i18n}
+                ns="emails"
+                i18nKey="newParticipant_replyGuidance"
+                defaults="You can reply to this email to respond to {name}."
+                values={{ name: participantName }}
+              />
+            </Text>
+          ) : null}
           <Text>
             <Trans
               t={t}
@@ -118,6 +151,8 @@ async function NewParticipantEmail({
 
 NewParticipantEmail.PreviewProps = {
   participantName: "John Doe",
+  note: "I can only make it after 2pm on Tuesday.\nLooking forward to it!",
+  canReply: true,
   title: "Untitled Poll",
   pollUrl: "https://rallly.co",
   disableNotificationsUrl: "https://rallly.co",

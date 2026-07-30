@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "email dev --dir ./src/templates",
     "type-check": "tsc --pretty --noEmit",
+    "test:unit": "vitest run",
     "i18n:scan": "i18next-cli extract"
   },
   "exports": {
@@ -34,7 +35,10 @@
     "@types/nodemailer": "^6.4.14",
     "@types/react": "19.2.13",
     "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "^5.0.0",
     "i18next-cli": "^1.58.1",
-    "react-email": "^6.6.3"
+    "jsdom": "^26.1.0",
+    "react-email": "^6.6.3",
+    "vitest": "^4.0.16"
   }
 }

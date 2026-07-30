@@ -5,12 +5,14 @@ import { buttonVariants, cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,15 +20,19 @@ import {
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
+import { MaxCharLength } from "@rallly/ui/max-char-length";
+import { Textarea } from "@rallly/ui/textarea";
 import { TRPCClientError } from "@trpc/client";
-import { CircleCheckIcon } from "lucide-react";
+import { CircleCheckIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
+import * as React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { IfCloudHosted } from "@/components/environment";
 import { usePoll } from "@/features/poll/client";
 import { useAddParticipantMutation } from "@/features/poll/components/mutations";
 import VoteIcon from "@/features/poll/components/vote-icon";
+import { MAX_RESPONSE_NOTE_LENGTH } from "@/features/poll/schema";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
@@ -35,12 +41,14 @@ const requiredEmailSchema = z.object({
   requireEmail: z.literal(true),
   name: z.string().trim().min(1).max(100),
   email: z.email(),
+  note: z.string().max(MAX_RESPONSE_NOTE_LENGTH).optional(),
 });
 
 const optionalEmailSchema = z.object({
   requireEmail: z.literal(false),
   name: z.string().trim().min(1).max(100),
   email: z.email().or(z.literal("")),
+  note: z.string().max(MAX_RESPONSE_NOTE_LENGTH).optional(),
 });
 
 const schema = z.union([requiredEmailSchema, optionalEmailSchema]);
@@ -126,6 +134,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
     resolver: zodResolver(schema),
     defaultValues: {
       requireEmail: isEmailRequired,
+      note: "",
       ...(isLoggedIn
         ? { name: user.name, email: user.email ?? "" }
         : {
@@ -135,7 +144,9 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
     },
   });
 
-  const { setError, formState, handleSubmit } = form;
+  const { setError, formState, handleSubmit, watch } = form;
+  const noteLength = watch("note")?.length ?? 0;
+  const [showNote, setShowNote] = React.useState(false);
   const addParticipant = useAddParticipantMutation();
 
   if (formState.isSubmitSuccessful) {
@@ -219,6 +230,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
       </DialogHeader>
       <Form {...form}>
         <form
+          id="new-participant-form"
           onSubmit={handleSubmit(async (data) => {
             try {
               await createGuestIfNeeded();
@@ -226,6 +238,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                 name: data.name,
                 votes: props.votes,
                 email: data.email,
+                note: data.note,
                 pollId: poll.id,
                 timeZone,
               });
@@ -287,33 +300,113 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             <VoteSummary votes={props.votes} />
           </div>
 
+          {showNote ? (
+            <FormField
+              control={form.control}
+              name="note"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>
+                      {t("newParticipantFormNoteLabel", {
+                        defaultValue: "Note for the organizer",
+                      })}
+                    </FormLabel>
+                    <Button
+                      type="button"
+                      variant="link"
+                      size="sm"
+                      className="h-auto p-0 text-muted-foreground hover:text-foreground"
+                      disabled={formState.isSubmitting}
+                      onClick={() => {
+                        form.setValue("note", "");
+                        setShowNote(false);
+                      }}
+                    >
+                      <Trans i18nKey="remove" defaults="Remove" />
+                    </Button>
+                  </div>
+                  <FormControl>
+                    <Textarea
+                      className="w-full"
+                      autoFocus={true}
+                      disabled={formState.isSubmitting}
+                      maxLength={MAX_RESPONSE_NOTE_LENGTH}
+                      {...field}
+                    />
+                  </FormControl>
+                  <div className="flex items-center justify-between gap-2">
+                    <FormDescription>
+                      <Trans
+                        i18nKey="newParticipantFormNoteDescription"
+                        defaults="Only the organizer will see this note."
+                      />
+                    </FormDescription>
+                    <MaxCharLength
+                      length={noteLength}
+                      maxLength={MAX_RESPONSE_NOTE_LENGTH}
+                      label={t("charactersRemaining", {
+                        defaultValue:
+                          "{count, plural, one {# character remaining} other {# characters remaining}}",
+                        count: MAX_RESPONSE_NOTE_LENGTH - noteLength,
+                      })}
+                    />
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : (
+            <Button
+              size="sm"
+              className="rounded-full"
+              type="button"
+              disabled={formState.isSubmitting}
+              onClick={() => {
+                setShowNote(true);
+                posthog?.capture(
+                  "new_participant_dialog:add_note_button_click",
+                  {
+                    pollId: poll.id,
+                    spaceId: poll.spaceId,
+                    tier: poll.space?.tier,
+                    $groups: {
+                      poll: poll.id,
+                      ...(poll.spaceId ? { space: poll.spaceId } : {}),
+                    },
+                  },
+                );
+              }}
+            >
+              <PlusIcon data-icon="inline-start" />
+              <Trans
+                i18nKey="newParticipantFormAddNote"
+                defaults="Add a note"
+              />
+            </Button>
+          )}
+
           {formState.errors.root?.message ? (
             <FormMessage>{formState.errors.root.message}</FormMessage>
           ) : null}
-          <div className="mt-6 flex gap-2">
-            <Button
-              className="flex-1"
-              type="button"
-              size="lg"
-              onClick={props.onCancel}
-            >
-              {t("back")}
-            </Button>
-            <Button
-              className="flex-1"
-              type="submit"
-              size="lg"
-              variant="primary"
-              loading={formState.isSubmitting}
-            >
-              <Trans
-                i18nKey="newParticipantFormSubmit"
-                defaults="Save availability"
-              />
-            </Button>
-          </div>
         </form>
       </Form>
+      <DialogFooter>
+        <Button type="button" onClick={props.onCancel}>
+          {t("back")}
+        </Button>
+        <Button
+          type="submit"
+          form="new-participant-form"
+          variant="primary"
+          loading={formState.isSubmitting}
+        >
+          <Trans
+            i18nKey="newParticipantFormSubmit"
+            defaults="Save availability"
+          />
+        </Button>
+      </DialogFooter>
     </>
   );
 };

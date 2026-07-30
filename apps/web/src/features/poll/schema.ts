@@ -14,6 +14,10 @@ export const MAX_COMMENT_LENGTH = 2000;
 // Flows into the email subject line.
 export const MAX_COMMENT_AUTHOR_NAME_LENGTH = 100;
 
+// Response notes ship in the new-participant notification email, so they must
+// be bounded. A note is short context alongside a response, not discussion.
+export const MAX_RESPONSE_NOTE_LENGTH = 500;
+
 export const pollStatusSchema = z.enum([
   "open",
   "closed",

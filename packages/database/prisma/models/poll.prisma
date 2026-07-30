@@ -70,6 +70,7 @@ model Participant {
   id        String    @id @default(cuid())
   name      String
   email     String?
+  note      String?
   userId    String?   @map("user_id")
   pollId    String    @map("poll_id")
   locale    String?
