@@ -20,7 +20,7 @@ import {
   removeMemberSchema,
 } from "@/features/space/member/schema";
 import { AppError } from "@/lib/errors/app-error";
-import { track } from "@/lib/posthog";
+import { identifyGroup, track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
 
 async function requireActiveSpace(user: { id: string }) {
@@ -97,6 +97,14 @@ export const acceptInviteAction = authActionClient
     });
 
     if (result.ok) {
+      identifyGroup({
+        groupType: "space",
+        groupKey: parsedInput.spaceId,
+        properties: {
+          member_count: result.memberCount,
+        },
+      });
+
       track(ctx.user, {
         event: "space_member_join",
         properties: {
@@ -171,6 +179,14 @@ export const removeMemberAction = authActionClient
 
     const { removedUserId, memberCount } = await removeMember({
       memberId: parsedInput.memberId,
+    });
+
+    identifyGroup({
+      groupType: "space",
+      groupKey: member.spaceId,
+      properties: {
+        member_count: memberCount,
+      },
     });
 
     track(ctx.user, {
