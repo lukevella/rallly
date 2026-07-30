@@ -24,6 +24,7 @@ import { Textarea } from "@rallly/ui/textarea";
 import { TRPCClientError } from "@trpc/client";
 import { CircleCheckIcon } from "lucide-react";
 import Link from "next/link";
+import * as React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { IfCloudHosted } from "@/components/environment";
@@ -144,6 +145,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
 
   const { setError, formState, handleSubmit, watch } = form;
   const noteLength = watch("note")?.length ?? 0;
+  const [showNote, setShowNote] = React.useState(false);
   const addParticipant = useAddParticipantMutation();
 
   if (formState.isSubmitSuccessful) {
@@ -291,51 +293,66 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="note"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  {t("newParticipantFormNoteLabel", {
-                    defaultValue: "Note for the organizer",
-                  })}
-                  {` (${t("optional")})`}
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    className="w-full"
-                    disabled={formState.isSubmitting}
-                    maxLength={MAX_RESPONSE_NOTE_LENGTH}
-                    {...field}
-                  />
-                </FormControl>
-                <div className="flex items-center justify-between gap-2">
-                  <FormDescription>
-                    <Trans
-                      i18nKey="newParticipantFormNoteDescription"
-                      defaults="Only the organizer will see this note."
-                    />
-                  </FormDescription>
-                  <MaxCharLength
-                    length={noteLength}
-                    maxLength={MAX_RESPONSE_NOTE_LENGTH}
-                    label={t("charactersRemaining", {
-                      defaultValue:
-                        "{count, plural, one {# character remaining} other {# characters remaining}}",
-                      count: MAX_RESPONSE_NOTE_LENGTH - noteLength,
-                    })}
-                  />
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <div className="flex flex-col gap-2">
             <Label>{t("response")}</Label>
             <VoteSummary votes={props.votes} />
           </div>
+
+          {showNote ? (
+            <FormField
+              control={form.control}
+              name="note"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t("newParticipantFormNoteLabel", {
+                      defaultValue: "Note for the organizer",
+                    })}
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      className="w-full"
+                      autoFocus={true}
+                      disabled={formState.isSubmitting}
+                      maxLength={MAX_RESPONSE_NOTE_LENGTH}
+                      {...field}
+                    />
+                  </FormControl>
+                  <div className="flex items-center justify-between gap-2">
+                    <FormDescription>
+                      <Trans
+                        i18nKey="newParticipantFormNoteDescription"
+                        defaults="Only the organizer will see this note."
+                      />
+                    </FormDescription>
+                    <MaxCharLength
+                      length={noteLength}
+                      maxLength={MAX_RESPONSE_NOTE_LENGTH}
+                      label={t("charactersRemaining", {
+                        defaultValue:
+                          "{count, plural, one {# character remaining} other {# characters remaining}}",
+                        count: MAX_RESPONSE_NOTE_LENGTH - noteLength,
+                      })}
+                    />
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : (
+            <Button
+              variant="link"
+              type="button"
+              className="h-auto self-start p-0"
+              disabled={formState.isSubmitting}
+              onClick={() => setShowNote(true)}
+            >
+              <Trans
+                i18nKey="newParticipantFormAddNote"
+                defaults="Add a note"
+              />
+            </Button>
+          )}
 
           {formState.errors.root?.message ? (
             <FormMessage>{formState.errors.root.message}</FormMessage>
