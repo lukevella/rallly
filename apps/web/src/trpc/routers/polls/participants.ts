@@ -386,6 +386,7 @@ export const participants = router({
               participant_id: participant.id,
               has_email: !!email,
               has_note: !!participant.note,
+              note_length: participant.note?.length,
               total_responses: totalResponses,
             },
             groups: {
@@ -393,22 +394,6 @@ export const participants = router({
             },
           },
         );
-
-        if (participant.note) {
-          track(
-            { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
-            {
-              event: "poll_response:note_submit",
-              properties: {
-                participant_id: participant.id,
-                note_length: participant.note.length,
-              },
-              groups: {
-                poll: pollId,
-              },
-            },
-          );
-        }
 
         return createParticipantFullDTO(participant);
       },
