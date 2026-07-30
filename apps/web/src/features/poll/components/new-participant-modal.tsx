@@ -347,7 +347,21 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
               className="rounded-full"
               type="button"
               disabled={formState.isSubmitting}
-              onClick={() => setShowNote(true)}
+              onClick={() => {
+                setShowNote(true);
+                posthog?.capture(
+                  "new_participant_dialog:add_note_button_click",
+                  {
+                    pollId: poll.id,
+                    spaceId: poll.spaceId,
+                    tier: poll.space?.tier,
+                    $groups: {
+                      poll: poll.id,
+                      ...(poll.spaceId ? { space: poll.spaceId } : {}),
+                    },
+                  },
+                );
+              }}
             >
               <PlusIcon data-icon="inline-start" />
               <Trans
