@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
-import { MoreVerticalIcon, PlusIcon, UsersIcon } from "lucide-react";
+import { MoreHorizontalIcon, PlusIcon, UsersIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import type * as React from "react";
@@ -177,7 +177,7 @@ const MobilePoll: React.FunctionComponent = () => {
                   })}
                   size="icon"
                 >
-                  <MoreVerticalIcon />
+                  <MoreHorizontalIcon />
                 </Button>
               </ParticipantDropdown>
             </>
