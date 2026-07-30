@@ -24,7 +24,7 @@ export function PollFooter() {
             <Link
               prefetch={false}
               className="rounded-none border-b border-b-gray-500 font-semibold hover:text-primary"
-              href="https://rallly.co?utm_source=poll&utm_medium=powered_by"
+              href="https://rallly.co?utm_source=rallly&utm_medium=poll&utm_campaign=powered_by"
               onClick={() => {
                 posthog?.capture("poll_footer:powered_by_link_click", {
                   pollId: poll.id,
