@@ -29,8 +29,10 @@ export function posthog() {
  * noRestrictedImports in apps/web/biome.json) so the guest decision cannot
  * be forgotten at individual capture sites. Guests are captured as anonymous
  * events (no person profile — they are transient and rarely convert);
- * identified users get person processing as usual. Group analytics is
- * unaffected either way.
+ * identified users get person processing as usual. Note: PostHog drops
+ * group associations on personless events, so `groups` passed here only
+ * take effect for identified users — put poll/space/tier on plain
+ * properties when guest events need them.
  *
  * When a guest's client-side anonymous distinct_id is known (read from the
  * posthog-js persistence cookie via getClientAnonymousDistinctId), guest

@@ -333,6 +333,8 @@ export const participants = router({
                 title: true,
                 space: {
                   select: {
+                    id: true,
+                    tier: true,
                     showBranding: true,
                     primaryColor: true,
                     image: true,
@@ -384,6 +386,11 @@ export const participants = router({
             event: "poll_response_submit",
             properties: {
               participant_id: participant.id,
+              // plain properties, not groups: guest events are personless and
+              // PostHog drops group associations without person processing
+              poll_id: pollId,
+              space_id: participant.poll.space?.id,
+              tier: participant.poll.space?.tier,
               has_email: !!email,
               has_note: !!participant.note,
               note_length: participant.note?.length,
