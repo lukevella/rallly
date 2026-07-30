@@ -18,7 +18,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
-import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { MaxCharLength } from "@rallly/ui/max-char-length";
@@ -344,14 +343,13 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             />
           ) : (
             <Button
-              size="chip"
+              size="sm"
+              className="rounded-full"
               type="button"
               disabled={formState.isSubmitting}
               onClick={() => setShowNote(true)}
             >
-              <Icon>
-                <PlusIcon />
-              </Icon>
+              <PlusIcon data-icon="inline-start" />
               <Trans
                 i18nKey="newParticipantFormAddNote"
                 defaults="Add a note"
