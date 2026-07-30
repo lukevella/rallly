@@ -23,6 +23,7 @@ import {
   ParticipantName,
 } from "@/features/poll/components/participant";
 import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
+import { ParticipantNote } from "@/features/poll/components/participant-note";
 import { useOptions, usePoll } from "@/features/poll/components/poll-context";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
 import { useVotingForm } from "@/features/poll/components/voting-form";
@@ -148,26 +149,37 @@ const MobilePoll: React.FunctionComponent = () => {
               {t("cancel")}
             </Button>
           ) : selectedParticipant ? (
-            <ParticipantDropdown
-              align="end"
-              disabled={!canEditParticipant(selectedParticipant.id)}
-              participant={{
-                name: selectedParticipant.name,
-                userId: selectedParticipant.userId ?? undefined,
-                email: selectedParticipant.email ?? undefined,
-                id: selectedParticipant.id,
-              }}
-              onEdit={() => {
-                votingForm.setEditingParticipantId(selectedParticipant.id);
-              }}
-            >
-              <Button
-                aria-label={t("moreOptions", { defaultValue: "More options" })}
-                size="icon"
+            <>
+              {selectedParticipant.note ? (
+                <ParticipantNote
+                  note={selectedParticipant.note}
+                  participantName={selectedParticipant.name}
+                  size="icon"
+                />
+              ) : null}
+              <ParticipantDropdown
+                align="end"
+                disabled={!canEditParticipant(selectedParticipant.id)}
+                participant={{
+                  name: selectedParticipant.name,
+                  userId: selectedParticipant.userId ?? undefined,
+                  email: selectedParticipant.email ?? undefined,
+                  id: selectedParticipant.id,
+                }}
+                onEdit={() => {
+                  votingForm.setEditingParticipantId(selectedParticipant.id);
+                }}
               >
-                <MoreVerticalIcon />
-              </Button>
-            </ParticipantDropdown>
+                <Button
+                  aria-label={t("moreOptions", {
+                    defaultValue: "More options",
+                  })}
+                  size="icon"
+                >
+                  <MoreVerticalIcon />
+                </Button>
+              </ParticipantDropdown>
+            </>
           ) : canAddNewParticipant ? (
             <Button
               aria-label={t("addParticipant", {

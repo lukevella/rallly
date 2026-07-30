@@ -359,6 +359,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                                     name: participant.name,
                                     userId: participant.userId ?? undefined,
                                     email: participant.email ?? undefined,
+                                    note: participant.note,
                                     image: participant.image,
                                     votes: participant.votes,
                                   }}

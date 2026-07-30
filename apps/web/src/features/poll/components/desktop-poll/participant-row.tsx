@@ -14,6 +14,7 @@ import {
   ParticipantName,
 } from "@/features/poll/components/participant";
 import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
+import { ParticipantNote } from "@/features/poll/components/participant-note";
 import { usePoll } from "@/features/poll/components/poll-context";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -28,6 +29,7 @@ export interface ParticipantRowProps {
     name: string;
     userId?: string;
     email?: string;
+    note?: string | null;
     image?: string | null;
     votes: Vote[];
   };
@@ -43,8 +45,18 @@ export const ParticipantRowView: React.FunctionComponent<{
   votes: Array<VoteType | undefined>;
   className?: string;
   isYou?: boolean;
+  note?: string | null;
   participantId: string;
-}> = ({ name, image, action, votes, className, isYou, participantId }) => {
+}> = ({
+  name,
+  image,
+  action,
+  votes,
+  className,
+  isYou,
+  note,
+  participantId,
+}) => {
   return (
     <tr
       data-testid="participant-row"
@@ -65,6 +77,9 @@ export const ParticipantRowView: React.FunctionComponent<{
             <ParticipantName>{name}</ParticipantName>
           </Participant>
           <div className="flex items-center gap-x-2">
+            {note ? (
+              <ParticipantNote note={note} participantName={name} />
+            ) : null}
             {isYou ? (
               <Badge variant="secondary" className="shrink-0">
                 <Trans i18nKey="you" />
@@ -125,6 +140,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
       className={className}
       name={participant.name}
       image={participant.image}
+      note={participant.note}
       votes={optionIds.map((optionId) => {
         return getVote(participant.id, optionId);
       })}
