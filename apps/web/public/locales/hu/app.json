@@ -116,6 +116,7 @@
   "changePassword": "Jelszó módosítása",
   "changePasswordDescription": "Frissítsd a jelszavad, hogy fiókja biztonságban legyen",
   "changeRole": "Szerepkör módosítása",
+  "charactersRemaining": "{count, plural, one {# karakter maradt} other {# karakter maradt}}",
   "checkForConflicts": "Válaszd ki, melyik naptárakat ellenőrizzük az ütközések szempontjából",
   "cityTime": "{city} idő",
   "clockPreferences": "Óra beállítások",
