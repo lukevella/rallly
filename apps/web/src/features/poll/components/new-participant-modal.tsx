@@ -306,11 +306,26 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
               name="note"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    {t("newParticipantFormNoteLabel", {
-                      defaultValue: "Note for the organizer",
-                    })}
-                  </FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>
+                      {t("newParticipantFormNoteLabel", {
+                        defaultValue: "Note for the organizer",
+                      })}
+                    </FormLabel>
+                    <Button
+                      type="button"
+                      variant="link"
+                      size="sm"
+                      className="h-auto p-0 text-muted-foreground hover:text-foreground"
+                      disabled={formState.isSubmitting}
+                      onClick={() => {
+                        form.setValue("note", "");
+                        setShowNote(false);
+                      }}
+                    >
+                      <Trans i18nKey="remove" defaults="Remove" />
+                    </Button>
+                  </div>
                   <FormControl>
                     <Textarea
                       className="w-full"
