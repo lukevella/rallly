@@ -62,6 +62,7 @@
   "newParticipant_content2": "Irány a szavazás, hogy láthasd az új szavazatokat.",
   "newParticipant_heading": "Új szavazat",
   "newParticipant_preview": "Irány a szavazás, hogy láthasd az új szavazatokat.",
+  "newParticipant_replyGuidance": "Erre az e-mailre válaszolva üzenhetsz {name} részére.",
   "newParticipant_subject": "{name} szavazott erre: {title}",
   "newParticipantConfirmation_button": "Válasz megtekintése: {domain}",
   "newParticipantConfirmation_content": "Rögzítettük válaszod a(z) <b>{title}</b> szavazásnál.",
