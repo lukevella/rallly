@@ -150,18 +150,25 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const addParticipant = useAddParticipantMutation();
 
   const { isSubmitSuccessful } = formState;
+  const successTracked = React.useRef(false);
   React.useEffect(() => {
-    if (isSubmitSuccessful) {
-      posthog?.capture("new_participant_dialog:success_view", {
-        pollId: poll.id,
-        spaceId: poll.spaceId,
-        tier: poll.space?.tier,
-        $groups: {
-          poll: poll.id,
-          ...(poll.spaceId ? { space: poll.spaceId } : {}),
-        },
-      });
+    if (!isSubmitSuccessful) {
+      successTracked.current = false;
+      return;
     }
+    if (successTracked.current) {
+      return;
+    }
+    successTracked.current = true;
+    posthog?.capture("new_participant_dialog:success_view", {
+      pollId: poll.id,
+      spaceId: poll.spaceId,
+      tier: poll.space?.tier,
+      $groups: {
+        poll: poll.id,
+        ...(poll.spaceId ? { space: poll.spaceId } : {}),
+      },
+    });
   }, [isSubmitSuccessful, poll.id, poll.spaceId, poll.space?.tier]);
 
   if (formState.isSubmitSuccessful) {
