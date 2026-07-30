@@ -94,4 +94,7 @@ function defineSpaceAdminRules(
   cannot(["delete", "update"], "SpaceMember", {
     userId: ctx.user.id,
   });
+  cannot(["delete", "update"], "SpaceMember", {
+    userId: ctx.space.ownerId,
+  });
 }
