@@ -10,6 +10,7 @@ import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { hasPollAdminAccess } from "@/features/poll/data";
+import { MAX_RESPONSE_NOTE_LENGTH } from "@/features/poll/schema";
 import { track } from "@/lib/posthog";
 import {
   createRateLimitMiddleware,
@@ -70,11 +71,15 @@ async function sendNewResponseNotificationEmail({
   pollId,
   pollTitle,
   participantName,
+  participantEmail,
+  note,
   excludeUserId,
 }: {
   pollId: string;
   pollTitle: string;
   participantName: string;
+  participantEmail: string | null;
+  note: string | null;
   excludeUserId: string;
 }) {
   try {
@@ -92,8 +97,11 @@ async function sendNewResponseNotificationEmail({
       to: recipient.email,
       locale: recipient.locale ?? undefined,
       branding: await getInstanceBranding(),
+      replyTo: participantEmail ?? undefined,
       props: {
         participantName,
+        note: note ?? undefined,
+        canReply: !!participantEmail,
         pollUrl: absoluteUrl(`/poll/${pollId}`),
         disableNotificationsUrl: absoluteUrl("/settings/notifications"),
         title: pollTitle,
@@ -155,15 +163,22 @@ export const participants = router({
         ],
       });
 
-      const participants = rawParticipants.map(createParticipantFullDTO);
+      // Admin check is intentionally bound to ctx.user only — an edit
+      // token must never unlock the admin view of other participants.
+      const isAdmin = ctx.user
+        ? await hasPollAdminAccess(pollId, ctx.user.id)
+        : false;
+
+      // Response notes are host only: strip them from every non-admin
+      // payload rather than hiding them in the UI.
+      const participants = rawParticipants.map((participant) => {
+        const dto = createParticipantFullDTO(participant);
+        return isAdmin ? dto : { ...dto, note: null };
+      });
 
       // Hide participants if the poll has hideParticipants enabled
       // and the current user is not an admin
       if (poll.hideParticipants) {
-        // Admin check is intentionally bound to ctx.user only — an edit
-        // token must never unlock the admin view of other participants.
-        const isAdmin =
-          ctx.user && (await hasPollAdminAccess(pollId, ctx.user.id));
         if (!isAdmin) {
           // Fall back to the edit token so a guest can still see their own
           // response when opening the email link in a fresh browser.
@@ -230,6 +245,12 @@ export const participants = router({
         pollId: z.string(),
         name: z.string().trim().min(1, "Participant name is required").max(100),
         email: z.string().optional(),
+        note: z
+          .string()
+          .trim()
+          .max(MAX_RESPONSE_NOTE_LENGTH)
+          .optional()
+          .transform((value) => value || undefined),
         timeZone: z.string().optional(),
         votes: z
           .object({
@@ -240,7 +261,10 @@ export const participants = router({
       }),
     )
     .mutation(
-      async ({ ctx, input: { pollId, votes, name, email, timeZone } }) => {
+      async ({
+        ctx,
+        input: { pollId, votes, name, email, note, timeZone },
+      }) => {
         const participantCount = await prisma.participant.count({
           where: {
             pollId,
@@ -275,6 +299,7 @@ export const participants = router({
             pollId: pollId,
             name: name,
             email,
+            note,
             timeZone,
             userId: ctx.user.id,
             locale: ctx.locale,
@@ -345,6 +370,8 @@ export const participants = router({
             pollId,
             pollTitle: participant.poll.title,
             participantName: participant.name,
+            participantEmail: participant.email,
+            note: participant.note,
             excludeUserId: ctx.user.id,
           }),
         );
@@ -356,6 +383,7 @@ export const participants = router({
             properties: {
               participant_id: participant.id,
               has_email: !!email,
+              has_note: !!participant.note,
               total_responses: totalResponses,
             },
             groups: {
@@ -363,6 +391,22 @@ export const participants = router({
             },
           },
         );
+
+        if (participant.note) {
+          track(
+            { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
+            {
+              event: "poll_response:note_submit",
+              properties: {
+                participant_id: participant.id,
+                note_length: participant.note.length,
+              },
+              groups: {
+                poll: pollId,
+              },
+            },
+          );
+        }
 
         return createParticipantFullDTO(participant);
       },
