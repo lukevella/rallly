@@ -18,6 +18,7 @@ export type SendArgs<P> = {
   branding: EmailBranding;
   props: Omit<P, "locale" | "chrome">;
   from?: From;
+  replyTo?: string;
   attachments?: EmailAttachments;
   icalEvent?: IcalEvent;
 };
@@ -80,6 +81,7 @@ export async function sendRenderedEmail(options: {
   element: React.ReactNode;
   subject: string;
   from?: From;
+  replyTo?: string;
   attachments?: EmailAttachments;
   icalEvent?: IcalEvent;
 }) {
@@ -91,6 +93,7 @@ export async function sendRenderedEmail(options: {
   await dispatch({
     to: options.to,
     from: options.from,
+    replyTo: options.replyTo,
     subject: options.subject,
     html,
     text,
