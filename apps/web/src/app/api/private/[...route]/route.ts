@@ -305,7 +305,7 @@ app.post(
             requireParticipantEmail: input.requireEmail,
             hideParticipants: input.hideParticipants,
             hideScores: input.hideScores,
-            disableComments: input.disableComments,
+            disableComments: poll.disableComments,
             isGuest: false,
           },
           groups: {

@@ -48,7 +48,7 @@ model Poll {
   scheduledEventId        String?           @map("scheduled_event_id")
   hideParticipants        Boolean           @default(false) @map("hide_participants")
   hideScores              Boolean           @default(false) @map("hide_scores")
-  disableComments         Boolean           @default(false) @map("disable_comments")
+  disableComments         Boolean           @default(true) @map("disable_comments")
   requireParticipantEmail Boolean           @default(false) @map("require_participant_email")
   muted                   Boolean           @default(false)
 
