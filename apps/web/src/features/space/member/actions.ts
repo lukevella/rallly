@@ -168,6 +168,13 @@ export const removeMemberAction = authActionClient
       });
     }
 
+    if (member.isOwner) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "The space owner cannot be removed",
+      });
+    }
+
     const ability = defineAbilityForMember({ user: ctx.user, space });
 
     if (ability.cannot("delete", subject("SpaceMember", member))) {
@@ -213,6 +220,13 @@ export const changeMemberRoleAction = authActionClient
       throw new AppError({
         code: "NOT_FOUND",
         message: "Member not found",
+      });
+    }
+
+    if (member.isOwner) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "The space owner's role cannot be changed",
       });
     }
 
