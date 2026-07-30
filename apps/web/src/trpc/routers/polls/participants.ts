@@ -169,20 +169,27 @@ export const participants = router({
         ? await hasPollAdminAccess(pollId, ctx.user.id)
         : false;
 
-      // Response notes are host only: strip them from every non-admin
-      // payload rather than hiding them in the UI.
+      // Fall back to the edit token so a guest can still see their own
+      // response when opening the email link in a fresh browser.
+      const viewerId = isAdmin ? null : await tryResolveUserId(token, ctx.user);
+
+      // Response notes are visible to the host and their author only: strip
+      // them from every other payload rather than hiding them in the UI.
       const participants = rawParticipants.map((participant) => {
         const dto = createParticipantFullDTO(participant);
-        return isAdmin ? dto : { ...dto, note: null };
+        if (
+          isAdmin ||
+          (participant.userId && participant.userId === viewerId)
+        ) {
+          return dto;
+        }
+        return { ...dto, note: null };
       });
 
       // Hide participants if the poll has hideParticipants enabled
       // and the current user is not an admin
       if (poll.hideParticipants) {
         if (!isAdmin) {
-          // Fall back to the edit token so a guest can still see their own
-          // response when opening the email link in a fresh browser.
-          const viewerId = await tryResolveUserId(token, ctx.user);
           return participants.map((participant) => {
             if (viewerId && participant.userId === viewerId) {
               return participant;

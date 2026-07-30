@@ -17,7 +17,7 @@ import smoothscroll from "smoothscroll-polyfill";
 
 import { TimesShownIn } from "@/components/clock";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { usePermissions, useRole } from "@/features/poll/client";
+import { usePermissions } from "@/features/poll/client";
 import {
   Participant,
   ParticipantName,
@@ -57,7 +57,6 @@ const MobilePoll: React.FunctionComponent = () => {
     : undefined;
 
   const { canEditParticipant, canAddNewParticipant } = usePermissions();
-  const role = useRole();
 
   const { t } = useTranslation();
 
@@ -156,10 +155,7 @@ const MobilePoll: React.FunctionComponent = () => {
                 name: selectedParticipant.name,
                 userId: selectedParticipant.userId ?? undefined,
                 email: selectedParticipant.email ?? undefined,
-                note:
-                  role === "admin"
-                    ? (selectedParticipant.note ?? undefined)
-                    : undefined,
+                note: selectedParticipant.note ?? undefined,
                 id: selectedParticipant.id,
               }}
               onEdit={() => {

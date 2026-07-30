@@ -8,7 +8,7 @@ import { MoreHorizontalIcon } from "lucide-react";
 import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { usePermissions, useRole } from "@/features/poll/client";
+import { usePermissions } from "@/features/poll/client";
 import {
   Participant,
   ParticipantName,
@@ -103,13 +103,13 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   const { t } = useTranslation();
   const { ownsObject } = useUser();
   const { getVote, optionIds } = usePoll();
-  const role = useRole();
 
   const isYou = ownsObject(participant);
 
   const { canEditParticipant } = usePermissions();
   const canEdit = canEditParticipant(participant.id);
-  const note = role === "admin" ? (participant.note ?? undefined) : undefined;
+  // The server only includes notes the viewer may see (host or author).
+  const note = participant.note ?? undefined;
 
   if (editMode) {
     return (
