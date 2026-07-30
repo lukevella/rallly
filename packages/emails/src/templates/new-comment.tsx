@@ -83,12 +83,7 @@ async function NewCommentEmail({
               paddingLeft: "16px",
             }}
           >
-            <Text style={{ margin: 0, fontWeight: "bold" }} small>
-              {authorName}
-            </Text>
-            <Text style={{ margin: "8px 0 0", whiteSpace: "pre-wrap" }}>
-              {content}
-            </Text>
+            <Text style={{ margin: 0, whiteSpace: "pre-wrap" }}>{content}</Text>
           </Section>
           <Text small light={true}>
             <Trans
