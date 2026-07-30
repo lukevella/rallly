@@ -5,6 +5,7 @@ import { buttonVariants, cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
@@ -17,12 +18,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
+import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { MaxCharLength } from "@rallly/ui/max-char-length";
 import { Textarea } from "@rallly/ui/textarea";
 import { TRPCClientError } from "@trpc/client";
-import { CircleCheckIcon } from "lucide-react";
+import { CircleCheckIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -229,6 +231,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
       </DialogHeader>
       <Form {...form}>
         <form
+          id="new-participant-form"
           onSubmit={handleSubmit(async (data) => {
             try {
               await createGuestIfNeeded();
@@ -347,6 +350,9 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
               disabled={formState.isSubmitting}
               onClick={() => setShowNote(true)}
             >
+              <Icon>
+                <PlusIcon />
+              </Icon>
               <Trans
                 i18nKey="newParticipantFormAddNote"
                 defaults="Add a note"
@@ -357,30 +363,24 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
           {formState.errors.root?.message ? (
             <FormMessage>{formState.errors.root.message}</FormMessage>
           ) : null}
-          <div className="mt-6 flex gap-2">
-            <Button
-              className="flex-1"
-              type="button"
-              size="lg"
-              onClick={props.onCancel}
-            >
-              {t("back")}
-            </Button>
-            <Button
-              className="flex-1"
-              type="submit"
-              size="lg"
-              variant="primary"
-              loading={formState.isSubmitting}
-            >
-              <Trans
-                i18nKey="newParticipantFormSubmit"
-                defaults="Save availability"
-              />
-            </Button>
-          </div>
         </form>
       </Form>
+      <DialogFooter>
+        <Button type="button" onClick={props.onCancel}>
+          {t("back")}
+        </Button>
+        <Button
+          type="submit"
+          form="new-participant-form"
+          variant="primary"
+          loading={formState.isSubmitting}
+        >
+          <Trans
+            i18nKey="newParticipantFormSubmit"
+            defaults="Save availability"
+          />
+        </Button>
+      </DialogFooter>
     </>
   );
 };
