@@ -149,28 +149,6 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const [showNote, setShowNote] = React.useState(false);
   const addParticipant = useAddParticipantMutation();
 
-  const { isSubmitSuccessful } = formState;
-  const successTracked = React.useRef(false);
-  React.useEffect(() => {
-    if (!isSubmitSuccessful) {
-      successTracked.current = false;
-      return;
-    }
-    if (successTracked.current) {
-      return;
-    }
-    successTracked.current = true;
-    posthog?.capture("new_participant_dialog:success_view", {
-      pollId: poll.id,
-      spaceId: poll.spaceId,
-      tier: poll.space?.tier,
-      $groups: {
-        poll: poll.id,
-        ...(poll.spaceId ? { space: poll.spaceId } : {}),
-      },
-    });
-  }, [isSubmitSuccessful, poll.id, poll.spaceId, poll.space?.tier]);
-
   if (formState.isSubmitSuccessful) {
     return (
       <>
@@ -263,6 +241,15 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                 note: data.note,
                 pollId: poll.id,
                 timeZone,
+              });
+              posthog?.capture("new_participant_dialog:success_view", {
+                pollId: poll.id,
+                spaceId: poll.spaceId,
+                tier: poll.space?.tier,
+                $groups: {
+                  poll: poll.id,
+                  ...(poll.spaceId ? { space: poll.spaceId } : {}),
+                },
               });
               props.onSubmit?.(newParticipant);
             } catch (error) {
