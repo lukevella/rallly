@@ -10,7 +10,6 @@ import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { hasPollAdminAccess } from "@/features/poll/data";
-import { MAX_RESPONSE_NOTE_LENGTH } from "@/features/poll/schema";
 import { track } from "@/lib/posthog";
 import {
   createRateLimitMiddleware,
@@ -18,6 +17,7 @@ import {
   requireUserMiddleware,
   router,
 } from "../../trpc";
+import { responseNoteInput } from "./schema";
 import {
   createParticipantEditToken,
   resolveActor,
@@ -245,12 +245,7 @@ export const participants = router({
         pollId: z.string(),
         name: z.string().trim().min(1, "Participant name is required").max(100),
         email: z.string().optional(),
-        note: z
-          .string()
-          .trim()
-          .max(MAX_RESPONSE_NOTE_LENGTH)
-          .optional()
-          .transform((value) => value || undefined),
+        note: responseNoteInput,
         timeZone: z.string().optional(),
         votes: z
           .object({
