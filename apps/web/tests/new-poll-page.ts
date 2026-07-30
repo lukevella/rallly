@@ -23,7 +23,13 @@ export class NewPollPage {
     await this.page.goto("/new");
   }
 
-  async create({ name }: { name: string }): Promise<CreatePollSuccessDialog> {
+  async create({
+    name,
+    enableComments,
+  }: {
+    name: string;
+    enableComments?: boolean;
+  }): Promise<CreatePollSuccessDialog> {
     const page = this.page;
 
     await page.getByLabel(/title|event/i).fill(name);
@@ -44,6 +50,11 @@ export class NewPollPage {
     await page.getByText("7", { exact: true }).first().click();
     await page.getByText("10", { exact: true }).first().click();
     await page.getByText("15", { exact: true }).first().click();
+
+    if (enableComments) {
+      // Comments are off by default; turn the "Disable comments" setting off
+      await page.getByRole("switch", { name: /disable comments/i }).click();
+    }
 
     await page.getByRole("button", { name: /create poll/i }).click();
 

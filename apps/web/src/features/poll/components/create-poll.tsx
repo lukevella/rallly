@@ -72,7 +72,7 @@ export const CreatePoll: React.FunctionComponent = () => {
       options: [],
       hideScores: false,
       hideParticipants: false,
-      disableComments: false,
+      disableComments: true,
       duration: 60,
       lockTimeZone: false,
       allDay: false,

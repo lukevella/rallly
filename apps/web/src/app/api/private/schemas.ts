@@ -106,7 +106,8 @@ export const createPollInputSchema = z
       example: false,
     }),
     disableComments: z.boolean().optional().openapi({
-      description: "Disable the comments section",
+      description:
+        "Disable the comments section. Defaults to true: new polls have comments disabled unless this is set to false.",
       example: false,
     }),
     spaceId: z.string().optional().openapi({

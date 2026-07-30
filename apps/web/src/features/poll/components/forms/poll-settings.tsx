@@ -9,7 +9,7 @@ import {
 import { FormField } from "@rallly/ui/form";
 import { Switch } from "@rallly/ui/switch";
 import { AtSignIcon, EyeIcon, MessageCircleIcon, VoteIcon } from "lucide-react";
-import type React from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
@@ -31,6 +31,8 @@ const PollSetting = ({
 }) => {
   const form = useFormContext<PollSettingsFormData>();
   const isFree = useIsFree();
+  const titleId = React.useId();
+  const descriptionId = React.useId();
 
   return (
     <FormField
@@ -41,15 +43,23 @@ const PollSetting = ({
         <label className="flex cursor-pointer select-none items-start gap-x-3 rounded-xl border bg-card p-3 hover:bg-card-accent">
           <Icon className="size-4 shrink-0 translate-y-0.5 text-muted-foreground" />
           <div className="grow">
-            <div className="flex items-center gap-x-2 font-medium text-sm">
+            <div
+              id={titleId}
+              className="flex items-center gap-x-2 font-medium text-sm"
+            >
               {title}
               {pro && isFree ? <ProBadge /> : null}
             </div>
-            <div className="mt-1 text-muted-foreground text-xs">
+            <div
+              id={descriptionId}
+              className="mt-1 text-muted-foreground text-xs"
+            >
               {description}
             </div>
           </div>
           <Switch
+            aria-labelledby={titleId}
+            aria-describedby={descriptionId}
             checked={!!field.value}
             onCheckedChange={(checked) => {
               if (checked && pro && isFree) {
@@ -60,6 +70,11 @@ const PollSetting = ({
                 });
               } else {
                 field.onChange(checked);
+                if (name === "disableComments") {
+                  posthog?.capture("poll_settings:comments_toggle_click", {
+                    enabled: !checked,
+                  });
+                }
               }
             }}
           />

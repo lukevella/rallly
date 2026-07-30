@@ -16,7 +16,10 @@ test.describe(() => {
 
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    const dialog = await newPollPage.create({ name: "Monthly Meetup" });
+    const dialog = await newPollPage.create({
+      name: "Monthly Meetup",
+      enableComments: true,
+    });
     pollPage = await dialog.goToPollPage();
 
     // Extract the poll ID from the URL
