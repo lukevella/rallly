@@ -56,6 +56,7 @@
   "login_content2": "Ezt az emailt azért kaptad, mert bejelentkezési kísérlet történt a(z) <domain /> címre. Ha ez nem te voltál, lépj kapcsolatba a(z) <a>{supportEmail}</a> címmel.",
   "newComment_content": "<b>{authorName}</b> hozzászólt ehhez: <b>{title}</b>.",
   "newComment_heading": "Új hozzászólás",
+  "newComment_replyGuidance": "Ha válasz emailed nem fog megérkezni hozzá: {authorName}. Ha válaszolni szeretnél, írj hozzászolást a szavazáshoz.",
   "newComment_subject": "{authorName} hozzászólt ehhez: {title}",
   "newParticipant_content": "<b>{name}</b> szavazott erre: <b>{title}</b>.",
   "newParticipant_content2": "Irány a szavazás, hogy láthasd az új szavazatokat.",
