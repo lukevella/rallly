@@ -500,6 +500,8 @@
   "paginationPage": "Page {currentPage, number} of {totalPages, number}",
   "paginationPrevious": "Previous",
   "participantCount": "{count, plural, =0 {No participants} one {1 participant} other {# participants}}",
+  "participantNoteButton": "Read note from {name}",
+  "participantNoteTitle": "{name} said:",
   "participants": "Participants",
   "password": "Password",
   "passwordChangedSuccess": "Your password has been changed successfully",

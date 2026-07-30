@@ -13,7 +13,8 @@ import {
   Participant,
   ParticipantName,
 } from "@/features/poll/components/participant";
-import { ParticipantPopover } from "@/features/poll/components/participant-popover";
+import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
+import { ParticipantNote } from "@/features/poll/components/participant-note";
 import { usePoll } from "@/features/poll/components/poll-context";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -29,6 +30,7 @@ export interface ParticipantRowProps {
     userId?: string;
     email?: string;
     note?: string | null;
+    createdAt: Date;
     image?: string | null;
     votes: Vote[];
   };
@@ -41,11 +43,21 @@ export const ParticipantRowView: React.FunctionComponent<{
   name: string;
   image?: string | null;
   action?: React.ReactNode;
+  note?: React.ReactNode;
   votes: Array<VoteType | undefined>;
   className?: string;
   isYou?: boolean;
   participantId: string;
-}> = ({ name, image, action, votes, className, isYou, participantId }) => {
+}> = ({
+  name,
+  image,
+  action,
+  note,
+  votes,
+  className,
+  isYou,
+  participantId,
+}) => {
   return (
     <tr
       data-testid="participant-row"
@@ -66,6 +78,7 @@ export const ParticipantRowView: React.FunctionComponent<{
             <ParticipantName>{name}</ParticipantName>
           </Participant>
           <div className="flex items-center gap-x-2">
+            {note}
             {isYou ? (
               <Badge variant="secondary" className="shrink-0">
                 <Trans i18nKey="you" />
@@ -108,8 +121,6 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
 
   const { canEditParticipant } = usePermissions();
   const canEdit = canEditParticipant(participant.id);
-  // The server only includes notes the viewer may see (host or author).
-  const note = participant.note ?? undefined;
 
   if (editMode) {
     return (
@@ -132,11 +143,20 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
         return getVote(participant.id, optionId);
       })}
       participantId={participant.id}
+      note={
+        // The server only includes notes the viewer may see (host or author).
+        participant.note ? (
+          <ParticipantNote
+            note={participant.note}
+            participantName={participant.name}
+            createdAt={participant.createdAt}
+          />
+        ) : null
+      }
       action={
-        canEdit || note ? (
-          <ParticipantPopover
-            participant={{ ...participant, note }}
-            disabled={!canEdit}
+        canEdit ? (
+          <ParticipantDropdown
+            participant={participant}
             align="start"
             onEdit={() => onChangeEditMode?.(true)}
           >
@@ -147,7 +167,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
             >
               <MoreHorizontalIcon />
             </Button>
-          </ParticipantPopover>
+          </ParticipantDropdown>
         ) : null
       }
       isYou={isYou}

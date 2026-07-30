@@ -9,6 +9,14 @@ import {
   DialogTitle,
 } from "@rallly/ui/dialog";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
+import {
   Form,
   FormControl,
   FormDescription,
@@ -17,9 +25,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
-import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { PencilIcon, TagIcon, TrashIcon } from "lucide-react";
 import React from "react";
 import type { SubmitHandler } from "react-hook-form";
@@ -31,32 +37,28 @@ import {
   useDeleteParticipantMutation,
   useEditToken,
 } from "@/features/poll/components/mutations";
-import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFormValidation } from "@/lib/utils/form-validation";
 import { trpc } from "@/trpc/client";
 
-export const ParticipantPopover = ({
+export const ParticipantDropdown = ({
   participant,
   onEdit,
   children,
   disabled,
   align,
 }: {
-  /** Hides the actions; the popover still opens to show details and the note. */
   disabled?: boolean;
   participant: {
     name: string;
     userId?: string;
     email?: string;
-    note?: string;
     id: string;
   };
   align?: "start" | "end";
   onEdit: () => void;
   children: React.ReactElement;
 }) => {
-  const [open, setOpen] = React.useState(false);
   const [isChangeNameModalVisible, setIsChangeNameModalVisible] =
     React.useState(false);
   const [isDeleteParticipantModalVisible, setIsDeleteParticipantModalVisible] =
@@ -64,79 +66,43 @@ export const ParticipantPopover = ({
 
   return (
     <>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger
-          disabled={disabled && !participant.note}
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger
+          disabled={disabled}
           data-testid="participant-menu"
           render={children}
         />
-        <PopoverContent align={align} className="gap-2 p-2">
-          <div className="grid gap-0.5 px-2 pt-1.5">
-            <div className="font-medium text-foreground text-sm">
-              {participant.name}
-            </div>
-            {participant.email ? (
-              <div className="text-muted-foreground text-xs">
-                {participant.email}
+        <DropdownMenuContent align={align}>
+          <DropdownMenuLabel>
+            <div className="grid gap-0.5">
+              <div className="font-medium text-foreground">
+                {participant.name}
               </div>
-            ) : null}
-          </div>
-          {participant.note ? (
-            <div className="max-h-48 overflow-y-auto whitespace-pre-wrap break-words px-2 pb-0.5 text-sm">
-              <TruncatedLinkify>{participant.note}</TruncatedLinkify>
+              {participant.email ? (
+                <div className="font-normal text-muted-foreground text-xs">
+                  {participant.email}
+                </div>
+              ) : null}
             </div>
-          ) : null}
-          {!disabled ? (
-            <>
-              <div className="-mx-2 h-px bg-border" />
-              <div className="grid gap-0.5">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="justify-start"
-                  onClick={() => {
-                    setOpen(false);
-                    onEdit();
-                  }}
-                >
-                  <Icon>
-                    <PencilIcon />
-                  </Icon>
-                  <Trans i18nKey="editVotes" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="justify-start"
-                  onClick={() => {
-                    setOpen(false);
-                    setIsChangeNameModalVisible(true);
-                  }}
-                >
-                  <Icon>
-                    <TagIcon />
-                  </Icon>
-                  <Trans i18nKey="changeName" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="justify-start text-destructive hover:text-destructive"
-                  onClick={() => {
-                    setOpen(false);
-                    setIsDeleteParticipantModalVisible(true);
-                  }}
-                >
-                  <Icon>
-                    <TrashIcon />
-                  </Icon>
-                  <Trans i18nKey="delete" />
-                </Button>
-              </div>
-            </>
-          ) : null}
-        </PopoverContent>
-      </Popover>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={onEdit}>
+            <PencilIcon />
+            <Trans i18nKey="editVotes" />
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsChangeNameModalVisible(true)}>
+            <TagIcon />
+            <Trans i18nKey="changeName" />
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => setIsDeleteParticipantModalVisible(true)}
+          >
+            <TrashIcon />
+            <Trans i18nKey="delete" />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <ChangeNameModal
         open={isChangeNameModalVisible}
