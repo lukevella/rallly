@@ -242,6 +242,15 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                 pollId: poll.id,
                 timeZone,
               });
+              posthog?.capture("new_participant_dialog:success_view", {
+                pollId: poll.id,
+                spaceId: poll.spaceId,
+                tier: poll.space?.tier,
+                $groups: {
+                  poll: poll.id,
+                  ...(poll.spaceId ? { space: poll.spaceId } : {}),
+                },
+              });
               props.onSubmit?.(newParticipant);
             } catch (error) {
               if (error instanceof TRPCClientError) {
