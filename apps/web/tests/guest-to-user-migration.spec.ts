@@ -17,7 +17,7 @@ test.describe.serial(() => {
 
   test.afterAll(async () => {
     // Clean up the test user
-    await prisma.user.delete({
+    await prisma.user.deleteMany({
       where: {
         email: testUser.email,
       },
