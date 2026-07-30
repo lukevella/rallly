@@ -62,6 +62,7 @@
   "newParticipant_content2": "Siirry kyselyysi nähdäksesi uusi vastaus.",
   "newParticipant_heading": "Uusi vastaus",
   "newParticipant_preview": "Siirry kyselyysi nähdäksesi uusi vastaus.",
+  "newParticipant_replyGuidance": "Vastaa tähän sähköpostiin vastataksesi käyttäjälle {name}.",
   "newParticipant_subject": "{name} on vastannut {title}",
   "newParticipantConfirmation_button": "Tarkista vastaus osoitteessa {domain}",
   "newParticipantConfirmation_content": "Vastauksesi <b>{title}</b> on lähetetty.",
