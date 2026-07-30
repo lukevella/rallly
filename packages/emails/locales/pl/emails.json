@@ -56,7 +56,6 @@
   "login_content2": "Otrzymujesz tę wiadomość, ponieważ wysłano prośbę o zalogowanie do <domain />. Jeśli to nie Ty, skontaktuj się z <a>{supportEmail}</a>.",
   "newComment_content": "<b>{authorName}</b> skomentował <b>{title}</b>.",
   "newComment_heading": "Nowy komentarz",
-  "newComment_preview": "Przejdź do swojej ankiety, aby zobaczyć, co powiedzieli.",
   "newComment_subject": "{authorName} skomentował {title}",
   "newParticipant_content": "<b>{name}</b> odpowiedział na <b>{title}</b>.",
   "newParticipant_content2": "Przejdź do swojej ankiety, aby zobaczyć nową odpowiedź.",
