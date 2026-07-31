@@ -66,6 +66,7 @@ export function NotificationToggle() {
         render={
           <Button
             variant="ghost"
+            size="icon"
             aria-pressed={poll.muted}
             aria-label={
               poll.muted
