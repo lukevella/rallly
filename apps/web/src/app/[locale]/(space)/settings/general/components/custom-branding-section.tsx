@@ -97,6 +97,7 @@ export function CustomBrandingSection({
       <PageSectionHeader>
         <PageSectionTitle>
           <Trans i18nKey="branding" defaults="Branding" />
+          {space.tier !== "pro" && <ProBadge className="ml-2 align-middle" />}
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans
@@ -113,7 +114,6 @@ export function CustomBrandingSection({
                 i18nKey="useCustomBranding"
                 defaults="Enable Custom Branding"
               />
-              {space.tier !== "pro" && <ProBadge />}
             </FieldLabel>
             <Switch
               id="show-branding-switch"

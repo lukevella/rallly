@@ -69,6 +69,7 @@ export function AttributionSection({
       <PageSectionHeader>
         <PageSectionTitle>
           <Trans i18nKey="attribution" defaults="Attribution" />
+          {space.tier !== "pro" && <ProBadge className="ml-2 align-middle" />}
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans
@@ -81,7 +82,6 @@ export function AttributionSection({
         <Field orientation="horizontal">
           <FieldLabel htmlFor="hide-attribution-switch">
             <Trans i18nKey="removeAttribution" defaults="Remove Attribution" />
-            {space.tier !== "pro" && <ProBadge />}
           </FieldLabel>
           <Switch
             id="hide-attribution-switch"
