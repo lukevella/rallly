@@ -3,7 +3,13 @@
 import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
-import { Field, FieldGroup, FieldLabel } from "@rallly/ui/field";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
 import React from "react";
@@ -19,6 +25,7 @@ import { ProBadge } from "@/features/billing/components/pro-badge";
 import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
 import {
   updateSpaceAction,
+  updateSpaceHideAttributionAction,
   updateSpaceShowBrandingAction,
 } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
@@ -40,6 +47,7 @@ export function CustomBrandingSection({
   const isDirty = hexColor !== currentColor;
 
   const updateShowBranding = useSafeAction(updateSpaceShowBrandingAction);
+  const updateHideAttribution = useSafeAction(updateSpaceHideAttributionAction);
   const updateSpace = useSafeAction(updateSpaceAction);
 
   // Holds the toggled value until the post-action router refresh
@@ -60,7 +68,9 @@ export function CustomBrandingSection({
 
   const handleToggle = async (newChecked: boolean) => {
     if (isFree) {
-      posthog?.capture("branding_settings:paywall_trigger");
+      posthog?.capture("branding_settings:paywall_trigger", {
+        setting: "custom_branding",
+      });
       showPayWall();
       return;
     }
@@ -73,6 +83,40 @@ export function CustomBrandingSection({
 
     if (result?.serverError || result?.validationErrors) {
       setPendingShowBranding(null);
+    }
+  };
+
+  const [pendingHideAttribution, setPendingHideAttribution] = React.useState<
+    boolean | null
+  >(null);
+  const hideAttribution = pendingHideAttribution ?? space.hideAttribution;
+
+  React.useEffect(() => {
+    if (
+      pendingHideAttribution !== null &&
+      space.hideAttribution === pendingHideAttribution
+    ) {
+      setPendingHideAttribution(null);
+    }
+  }, [space.hideAttribution, pendingHideAttribution]);
+
+  const handleToggleHideAttribution = async (newChecked: boolean) => {
+    if (isFree) {
+      posthog?.capture("branding_settings:paywall_trigger", {
+        setting: "hide_attribution",
+      });
+      showPayWall();
+      return;
+    }
+
+    setPendingHideAttribution(newChecked);
+
+    const result = await updateHideAttribution.executeAsync({
+      hideAttribution: newChecked,
+    });
+
+    if (result?.serverError || result?.validationErrors) {
+      setPendingHideAttribution(null);
     }
   };
 
@@ -102,11 +146,12 @@ export function CustomBrandingSection({
         <FieldGroup>
           <Field orientation="horizontal">
             <Switch
+              id="show-branding-switch"
               checked={showBranding}
               onCheckedChange={handleToggle}
               disabled={disabled || updateShowBranding.isExecuting}
             />
-            <FieldLabel>
+            <FieldLabel htmlFor="show-branding-switch">
               <Trans
                 i18nKey="useCustomBranding"
                 defaults="Enable Custom Branding"
@@ -139,6 +184,29 @@ export function CustomBrandingSection({
               </Field>
             </FieldGroup>
           </div>
+          <Field orientation="horizontal">
+            <Switch
+              id="hide-attribution-switch"
+              checked={hideAttribution}
+              onCheckedChange={handleToggleHideAttribution}
+              disabled={disabled || updateHideAttribution.isExecuting}
+            />
+            <FieldContent>
+              <FieldLabel htmlFor="hide-attribution-switch">
+                <Trans
+                  i18nKey="removeRalllyBranding"
+                  defaults="Remove Rallly Branding"
+                />
+                {space.tier !== "pro" && <ProBadge />}
+              </FieldLabel>
+              <FieldDescription>
+                <Trans
+                  i18nKey="removeRalllyBrandingDescription"
+                  defaults='Hide "Powered by Rallly" on invite pages and participant emails'
+                />
+              </FieldDescription>
+            </FieldContent>
+          </Field>
         </FieldGroup>
       </PageSectionContent>
     </PageSection>

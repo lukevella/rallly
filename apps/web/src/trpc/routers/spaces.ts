@@ -30,6 +30,7 @@ export const spaces = router({
             tier: true,
             primaryColor: true,
             showBranding: true,
+            hideAttribution: true,
             _count: { select: { members: true } },
             subscriptions: {
               where: { active: true },

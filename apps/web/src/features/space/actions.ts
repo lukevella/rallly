@@ -11,12 +11,14 @@ import {
   deleteSpace,
   removeSpaceImage,
   updateSpace,
+  updateSpaceHideAttribution,
   updateSpaceImage,
   updateSpaceShowBranding,
 } from "@/features/space/mutations";
 import {
   createSpaceSchema,
   spaceImageUploadSchema,
+  updateSpaceHideAttributionSchema,
   updateSpaceImageSchema,
   updateSpaceSchema,
   updateSpaceShowBrandingSchema,
@@ -229,6 +231,43 @@ export const updateSpaceShowBrandingAction = authActionClient
       event: "space_update_show_branding",
       properties: {
         showBranding: parsedInput.showBranding,
+      },
+      groups: {
+        space: space.id,
+      },
+    });
+  });
+
+export const updateSpaceHideAttributionAction = authActionClient
+  .metadata({ actionName: "update_space_hide_attribution" })
+  .inputSchema(updateSpaceHideAttributionSchema)
+  .action(async ({ ctx, parsedInput }) => {
+    const space = await requireSpaceWithUpdateAbility(ctx.user);
+
+    if (parsedInput.hideAttribution && space.tier !== "pro") {
+      throw new AppError({
+        code: "PAYMENT_REQUIRED",
+        message: "You need a Pro subscription to remove attribution",
+      });
+    }
+
+    await updateSpaceHideAttribution({
+      spaceId: space.id,
+      hideAttribution: parsedInput.hideAttribution,
+    });
+
+    identifyGroup({
+      groupType: "space",
+      groupKey: space.id,
+      properties: {
+        hide_attribution: parsedInput.hideAttribution,
+      },
+    });
+
+    track(ctx.user, {
+      event: "space_update_hide_attribution",
+      properties: {
+        hideAttribution: parsedInput.hideAttribution,
       },
       groups: {
         space: space.id,

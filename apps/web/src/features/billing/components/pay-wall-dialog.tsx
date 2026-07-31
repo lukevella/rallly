@@ -20,6 +20,7 @@ import {
   CalendarSearchIcon,
   ClockIcon,
   CopyIcon,
+  EyeOffIcon,
   LifeBuoyIcon,
   PaletteIcon,
   SettingsIcon,
@@ -320,6 +321,21 @@ export function PayWallDialog({
                       <Trans
                         i18nKey="customBrandingDescription"
                         defaults="Show your logo and brand colors to your participants"
+                      />
+                    }
+                  />
+                  <KeyBenefitsItem
+                    icon={<EyeOffIcon />}
+                    title={
+                      <Trans
+                        i18nKey="removeRalllyBranding"
+                        defaults="Remove Rallly Branding"
+                      />
+                    }
+                    description={
+                      <Trans
+                        i18nKey="removeRalllyBrandingDescription"
+                        defaults='Hide "Powered by Rallly" on invite pages and participant emails'
                       />
                     }
                   />

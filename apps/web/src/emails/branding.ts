@@ -23,16 +23,21 @@ export async function getInstanceBranding(): Promise<EmailBranding> {
  */
 export async function getSpaceBranding(space: {
   showBranding: boolean;
+  hideAttribution: boolean;
   primaryColor: string | null;
   image: string | null;
 }): Promise<EmailBranding> {
   const instance = await getInstanceBranding();
-  if (!space.showBranding) {
-    return instance;
-  }
   return {
     ...instance,
-    primaryColor: space.primaryColor ?? instance.primaryColor,
-    logoUrl: space.image ? resolveStorageUrl(space.image) : instance.logoUrl,
+    hideAttribution: instance.hideAttribution || space.hideAttribution,
+    ...(space.showBranding
+      ? {
+          primaryColor: space.primaryColor ?? instance.primaryColor,
+          logoUrl: space.image
+            ? resolveStorageUrl(space.image)
+            : instance.logoUrl,
+        }
+      : {}),
   };
 }

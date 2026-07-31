@@ -336,6 +336,7 @@ export const participants = router({
                     id: true,
                     tier: true,
                     showBranding: true,
+                    hideAttribution: true,
                     primaryColor: true,
                     image: true,
                   },
