@@ -27,9 +27,5 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ szavazás létrehozva",
   "statsUsersRegistered": "{count, number, ::compact-short}+ regisztrált felhasználó",
   "subheading": "Szervezz csoportos találkozókat email adok-kapok nélkül",
-  "viaTrustpilot": "Trustpilot által",
-  "when2meetAlternative": "Még mindig When2Meet-et használsz?",
-  "when2meetAlternativeDescription": "Hozz létre profi, hirdetésmentes találkozó szavazásokat ingyen a Rallly segítségével.",
-  "when2meetAlternativeMetaDescription": "Találj jobb módot a találkozók időpontjainak megszervezésére a Rallly segítségével, a When2Meet legjobb ingyenes alternatívájával. Könnyen használható és ingyenes.",
-  "when2meetAlternativeMetaTitle": "Legjobb When2Meet alternatíva: Rallly"
+  "viaTrustpilot": "Trustpilot által"
 }
