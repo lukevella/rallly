@@ -27,5 +27,9 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ szavazás létrehozva",
   "statsUsersRegistered": "{count, number, ::compact-short}+ regisztrált felhasználó",
   "subheading": "Szervezz csoportos találkozókat email adok-kapok nélkül",
-  "viaTrustpilot": "Trustpilot által"
+  "viaTrustpilot": "Trustpilot által",
+  "when2meetAlternative": "Egy modern When2Meet alternatíva",
+  "when2meetAlternativeDescription": "A Rallly mindent tud, amiért a When2Meet-et használod, a nehézkes részen nélkül. Hozz létre egyszerű ütemező szavazásokat, amik telefonról is jól kitölthetőek, értesülj, ha a résztvevők szavaznak és kezeld egy helyen az összes szavazásod. Ingyenes, reklámmentes és nem szükséges fiók a szavazáshoz. When2Meet-ről vagy WhenIsGood?-ról váltassz? A Rallly azonnal ismerős lesz számodra.",
+  "when2meetAlternativeMetaDescription": "A Rallly egy ingyenes When2Meet alternatíva letisztült felülettel, kiváló telefonos támogatással, kitöltés értesítésekkel és reklámok nélkül. Nincs szükség fiókra a szavazáshoz.",
+  "when2meetAlternativeMetaTitle": "Legjobb ingyenes When2Meet alternatíva | Rallly"
 }
