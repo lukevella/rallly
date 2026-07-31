@@ -1,6 +1,5 @@
 "use client";
 
-import { posthog } from "@rallly/posthog/client";
 import {
   Alert,
   AlertAction,
@@ -90,10 +89,10 @@ export function MembersSettingsPageClient({
                       <Button
                         size="sm"
                         onClick={() => {
-                          posthog?.capture(
-                            "members_settings:upgrade_button_click",
-                          );
-                          showPayWall();
+                          showPayWall({
+                            from: "space-members",
+                            action: "reactivate",
+                          });
                         }}
                       >
                         <Trans
@@ -166,8 +165,7 @@ export function MembersSettingsPageClient({
                   size="sm"
                   variant="link"
                   onClick={() => {
-                    posthog?.capture("members_settings:upgrade_button_click");
-                    showPayWall();
+                    showPayWall({ from: "space-members", action: "invite" });
                   }}
                 >
                   <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />

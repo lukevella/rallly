@@ -1,6 +1,5 @@
 "use client";
 
-import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { TerminalIcon } from "lucide-react";
 import {
@@ -37,8 +36,7 @@ export function ApiAccessUpgrade() {
         <Button
           variant="primary"
           onClick={() => {
-            posthog?.capture("api_keys:upgrade_button_click");
-            showPayWall();
+            showPayWall({ from: "api-keys" });
           }}
         >
           <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />

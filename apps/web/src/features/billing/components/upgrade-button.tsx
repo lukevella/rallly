@@ -12,9 +12,11 @@ export const UpgradeButton = ({
   children,
   annual,
   className,
+  onClick,
 }: React.PropsWithChildren<{
   annual?: boolean;
   className?: string;
+  onClick?: () => void;
 }>) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -29,6 +31,7 @@ export const UpgradeButton = ({
       variant="primary"
       loading={upgradeToPro.isExecuting}
       onClick={() => {
+        onClick?.();
         if (!user || user.isGuest) {
           router.push(`/register?redirectTo=${encodeURIComponent(pathname)}`);
           return;

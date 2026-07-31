@@ -1,6 +1,5 @@
 "use client";
 
-import { posthog } from "@rallly/posthog/client";
 import { SidebarMenuButton, SidebarMenuItem } from "@rallly/ui/sidebar";
 import { SparklesIcon } from "lucide-react";
 import { showPayWall, useIsFree } from "@/features/billing/client";
@@ -18,8 +17,7 @@ export function UpgradeMenuItem() {
       <SidebarMenuButton
         variant="primary"
         onClick={() => {
-          posthog?.capture("space_sidebar:upgrade_button_click");
-          showPayWall();
+          showPayWall({ from: "sidebar" });
         }}
       >
         <SparklesIcon />
