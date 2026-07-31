@@ -205,7 +205,7 @@
   "deletePollDescription": "Alle data relateret til denne afstemning vil blive slettet. Denne handling kan ikke fortrydes.",
   "deletePollPrompt": "Er du sikker på, at du vil slette <b>{title}</b>?",
   "deleteSpace": "Slet rum",
-  "deleteSpaceConfirmLabel": "Bekræft rummets navn},{",
+  "deleteSpaceConfirmLabel": "Bekræft rummets navn",
   "deleteSpaceDescription": "Slet dette rum og alt dets indhold permanent. Denne handling kan ikke fortrydes.",
   "deleteSpaceDialogDescription": "Dette vil permanent slette rummet og alle afstemninger indeni det. Denne handling kan ikke fortrydes.",
   "deleteSpaceDialogTitle": "Slet rum",

@@ -116,7 +116,7 @@
   "changePassword": "Cambia Password",
   "changePasswordDescription": "Aggiorna la tua password per mantenere sicuro il tuo account",
   "changeRole": "Cambia ruolo",
-  "charactersRemaining": "{count, plural, one {# carattere rimanente} other {# caratteri rimanenti}}},{",
+  "charactersRemaining": "{count, plural, one {# carattere rimanente} other {# caratteri rimanenti}}",
   "checkForConflicts": "Attiva/disattiva i calendari da controllare per i conflitti",
   "cityTime": "Orario {city}",
   "clockPreferences": "Preferenze Orologio",

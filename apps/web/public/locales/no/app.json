@@ -205,7 +205,7 @@
   "deletePollDescription": "Alle data knyttet til denne avstemningen, blir slettet. Denne handlingen kan ikke angres.",
   "deletePollPrompt": "Er du sikker på at du vil slette <b>{title}</b>?",
   "deleteSpace": "Slett område",
-  "deleteSpaceConfirmLabel": "Bekreft områdenavn},{",
+  "deleteSpaceConfirmLabel": "Bekreft områdenavn",
   "deleteSpaceDescription": "Slett dette området og alt innholdet permanent. Denne handlingen kan ikke angres.",
   "deleteSpaceDialogDescription": "Dette vil permanent slette området og alle avstemningene i det. Denne handlingen kan ikke angres.",
   "deleteSpaceDialogTitle": "Slett område",
