@@ -88,9 +88,18 @@ export default async function Page(props: {
       <BigTestimonial />
       <MentionedBy />
       <Faq
+        eyebrow={t("doodleAlternativeFaqEyebrow", {
+          ns: "home",
+          defaultValue: "Questions",
+        })}
         title={t("doodleAlternativeFaqTitle", {
           ns: "home",
           defaultValue: "Frequently asked questions",
+        })}
+        description={t("doodleAlternativeFaqDescription", {
+          ns: "home",
+          defaultValue:
+            "What people want to know about Doodle's free plan and switching to Rallly.",
         })}
         items={faqItems}
       />
