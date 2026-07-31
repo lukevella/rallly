@@ -570,6 +570,7 @@
   "register": "Register",
   "remove": "Remove",
   "removeAttribution": "Remove Attribution",
+  "removeAttributionBenefitDescription": "Hide \"Powered by Rallly\" from your participants",
   "removeAttributionDescription": "Hide \"Powered by Rallly\" on invite pages and participant emails",
   "removeImage": "Remove",
   "removeLicense": "Remove License",

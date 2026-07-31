@@ -334,8 +334,8 @@ export function PayWallDialog({
                     }
                     description={
                       <Trans
-                        i18nKey="removeAttributionDescription"
-                        defaults='Hide "Powered by Rallly" on invite pages and participant emails'
+                        i18nKey="removeAttributionBenefitDescription"
+                        defaults='Hide "Powered by Rallly" from your participants'
                       />
                     }
                   />
