@@ -275,7 +275,7 @@ export const updateSpaceHideAttributionAction = authActionClient
     track(ctx.user, {
       event: "space_update_hide_attribution",
       properties: {
-        hideAttribution: parsedInput.hideAttribution,
+        hide_attribution: parsedInput.hideAttribution,
       },
       groups: {
         space: space.id,
