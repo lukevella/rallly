@@ -4,9 +4,11 @@ import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { BellIcon, BellOffIcon } from "lucide-react";
+import { setPollMutedAction } from "@/features/poll/actions";
 import { usePoll } from "@/features/poll/client";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
 
 export function NotificationToggle() {
@@ -14,16 +16,19 @@ export function NotificationToggle() {
   const { user, ownsObject } = useUser();
   const { t } = useTranslation();
   const queryClient = trpc.useUtils();
-  const toggleMuted = trpc.polls.toggleMuted.useMutation({
-    onSuccess: (_data, vars) => {
-      queryClient.polls.get.setData({ urlId: vars.pollId }, (oldData) => {
+  const setPollMuted = useSafeAction(setPollMutedAction, {
+    onSuccess: ({ data, input }) => {
+      if (!data?.ok) {
+        return;
+      }
+      queryClient.polls.get.setData({ urlId: input.pollId }, (oldData) => {
         if (!oldData) return oldData;
         return {
           ...oldData,
-          muted: vars.muted,
+          muted: input.muted,
         };
       });
-      if (vars.muted) {
+      if (input.muted) {
         toast(
           t("notificationToggleMutedToast", {
             defaultValue: "Notifications are off for this poll",
@@ -33,7 +38,7 @@ export function NotificationToggle() {
             action: {
               label: t("undo", { defaultValue: "Undo" }),
               onClick: () => {
-                toggleMuted.mutate({ pollId: vars.pollId, muted: false });
+                setPollMuted.execute({ pollId: input.pollId, muted: false });
               },
             },
           },
@@ -69,9 +74,9 @@ export function NotificationToggle() {
                   })
                 : t("muteNotifications", { defaultValue: "Mute notifications" })
             }
-            loading={toggleMuted.isPending}
+            loading={setPollMuted.isExecuting}
             onClick={() => {
-              toggleMuted.mutate({ pollId: poll.id, muted: !poll.muted });
+              setPollMuted.execute({ pollId: poll.id, muted: !poll.muted });
             }}
           >
             {poll.muted ? <BellOffIcon /> : <BellIcon />}

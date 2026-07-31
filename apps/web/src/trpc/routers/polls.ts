@@ -591,34 +591,6 @@ export const polls = router({
       );
     }),
   // END LEGACY ROUTES
-  toggleMuted: privateProcedure
-    .input(z.object({ pollId: z.string(), muted: z.boolean() }))
-    .mutation(async ({ input, ctx }) => {
-      const poll = await prisma.poll.findUnique({
-        where: { id: input.pollId },
-        select: { userId: true },
-      });
-
-      if (!poll || poll.userId !== ctx.user.id) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Only the poll owner can mute notifications",
-        });
-      }
-
-      await prisma.poll.update({
-        where: { id: input.pollId },
-        data: { muted: input.muted },
-      });
-
-      identifyGroup({
-        groupType: "poll",
-        groupKey: input.pollId,
-        properties: {
-          muted: input.muted,
-        },
-      });
-    }),
   get: publicProcedure
     .input(
       z.object({
