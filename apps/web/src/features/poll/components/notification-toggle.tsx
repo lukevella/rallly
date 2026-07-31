@@ -29,6 +29,7 @@ export function NotificationToggle() {
             defaultValue: "Notifications are off for this poll",
           }),
           {
+            icon: <BellOffIcon className="size-4" />,
             action: {
               label: t("undo", { defaultValue: "Undo" }),
               onClick: () => {
@@ -42,6 +43,9 @@ export function NotificationToggle() {
           t("notificationToggleUnmutedToast", {
             defaultValue: "Notifications are on for this poll",
           }),
+          {
+            icon: <BellIcon className="size-4" />,
+          },
         );
       }
     },
