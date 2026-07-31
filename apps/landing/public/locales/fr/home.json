@@ -4,9 +4,9 @@
   "createPageLikeThis": "Créez une page comme celle-ci en quelques secondes !",
   "customBrandingBlog": "Présentation de la personnalisation de l'image de marque",
   "doodleAlternative": "La meilleure alternative gratuite à Doodle",
-  "doodleAlternativeDescription": "Rallly est l'alternative Doodle que tout le monde cherche. Des milliers d'utilisateurs ont déjà fait ce changement et profitent maintenant de sondages professionnels sans publicité dans une interface intuitive et facile à utiliser.        ",
-  "doodleAlternativeMetaDescription": "À la recherche d'une alternative à Doodle ? Essayez Rallly ! C'est gratuit, facile à utiliser et ne requiert pas de compte.",
-  "doodleAlternativeMetaTitle": "La meilleure alternative libre à Doodle | Rallly",
+  "doodleAlternativeDescription": "Rallly est l'équivalent gratuit de Doodle que tout le monde cherche. Des milliers d'utilisateurs ont déjà fait ce changement et profitent maintenant de sondages professionnels sans publicité dans une interface intuitive et facile à utiliser.",
+  "doodleAlternativeMetaDescription": "À la recherche d'une alternative à Doodle ? Rallly est l'équivalent gratuit : facile à utiliser, sans compte requis et sans publicité.",
+  "doodleAlternativeMetaTitle": "La meilleure alternative gratuite à Doodle | Rallly",
   "ericJobTitle": "Assistant exécutif au MIT",
   "ericQuote": "« Si votre travail de planification se fait via emails, fe vous encourage vivement à essayer Rallly \n et laisser le logiciel simplifier ce travail pour une journée de travail plus organisée et moins stressante.»",
   "freeSchedulingPollDescription": "Rallly vous permet de créer de jolis sondages de planification, faciles à utiliser, pour trouver le meilleur moment pour votre prochain événement.",
@@ -28,8 +28,8 @@
   "statsUsersRegistered": "{count, number, ::compact-short}+ utilisateurs enregistrés",
   "subheading": "Coordonner les réunions de groupe sans allers-retours par e-mails",
   "viaTrustpilot": "via Trustpilot",
-  "when2meetAlternative": "Vous utilisez toujours When2Meet ?",
-  "when2meetAlternativeDescription": "Créez des sondages de réunions professionnels et sans publicité gratuitement avec Rallly.",
-  "when2meetAlternativeMetaDescription": "Trouvez une meilleure façon de planifier des réunions avec Rallly, la meilleure alternative gratuite à When2Meet. Facile à utiliser et gratuit.",
-  "when2meetAlternativeMetaTitle": "Meilleure Alternative à When2Meet : Rallly"
+  "when2meetAlternative": "Une alternative moderne à When2Meet",
+  "when2meetAlternativeDescription": "Rallly fait tout ce que vous faites avec When2Meet, sans les aspects fastidieux. Créez des sondages de planification clairs et adaptés au mobile, recevez une notification quand les participants répondent et gérez tous vos sondages au même endroit. Gratuit, sans publicité et sans compte pour voter. Vous venez de When2Meet ou de WhenIsGood ? Vous serez tout de suite à l'aise avec Rallly.",
+  "when2meetAlternativeMetaDescription": "Rallly est une alternative gratuite à When2Meet avec une interface claire, une excellente prise en charge mobile, des notifications de réponse et aucune publicité. Aucun compte requis pour voter.",
+  "when2meetAlternativeMetaTitle": "Meilleure alternative gratuite à When2Meet | Rallly"
 }

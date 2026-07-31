@@ -62,6 +62,7 @@
   "newParticipant_content2": "Gehe zu deiner Umfrage, um die neue Antwort zu sehen.",
   "newParticipant_heading": "Neue Antwort",
   "newParticipant_preview": "Gehe zu deiner Umfrage, um die neue Antwort zu sehen.",
+  "newParticipant_replyGuidance": "Du kannst auf diese E-Mail antworten, um {name} zu antworten.",
   "newParticipant_subject": "{name} hat auf {title} geantwortet",
   "newParticipantConfirmation_button": "Antwort auf {domain} prüfen",
   "newParticipantConfirmation_content": "Deine Antwort auf <b>{title}</b> wurde abgeschickt.",
