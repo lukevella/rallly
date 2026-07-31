@@ -4,6 +4,7 @@ import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { createMiddleware } from "next-safe-action";
 import * as z from "zod";
+import { isBillingEnabled } from "@/features/billing/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
@@ -251,6 +252,16 @@ export const updateSpaceHideAttributionAction = authActionClient
   .inputSchema(updateSpaceHideAttributionSchema)
   .action(async ({ ctx, parsedInput }) => {
     const { space } = ctx;
+
+    // Space-level attribution removal is a cloud feature. On self-hosted
+    // instances attribution is licensed at instance level (white label
+    // addon + HIDE_ATTRIBUTION), where every space reports as "pro".
+    if (!isBillingEnabled) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "Attribution removal is not available on this instance",
+      });
+    }
 
     if (parsedInput.hideAttribution && space.tier !== "pro") {
       throw new AppError({

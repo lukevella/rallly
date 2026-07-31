@@ -8,6 +8,7 @@ import { Switch } from "@rallly/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { CheckIcon, RotateCcwIcon } from "lucide-react";
 import React from "react";
+import { IfCloudHosted } from "@/components/environment";
 import {
   PageSection,
   PageSectionContent,
@@ -174,7 +175,9 @@ export function CustomBrandingSection({
               />
             </SettingHint>
           </Setting>
-          <RemoveAttributionSetting disabled={disabled} />
+          <IfCloudHosted>
+            <RemoveAttributionSetting disabled={disabled} />
+          </IfCloudHosted>
         </SettingsGroup>
       </PageSectionContent>
     </PageSection>

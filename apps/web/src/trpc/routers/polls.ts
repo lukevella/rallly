@@ -8,6 +8,7 @@ import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
+import { isBillingEnabled } from "@/features/billing/constants";
 import { moderateContent } from "@/features/moderation/mutations";
 import {
   canUserManagePoll,
@@ -708,6 +709,15 @@ export const polls = router({
 
       return {
         ...res,
+        // Space-level attribution removal is cloud-only; self-hosted
+        // attribution is licensed at instance level via the white label
+        // addon.
+        space: res.space
+          ? {
+              ...res.space,
+              hideAttribution: isBillingEnabled && res.space.hideAttribution,
+            }
+          : null,
         canManage,
         inviteLink,
         event,

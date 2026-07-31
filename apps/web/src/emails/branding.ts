@@ -1,5 +1,6 @@
 import type { EmailBranding } from "@rallly/emails";
 
+import { isBillingEnabled } from "@/features/billing/constants";
 import { getInstanceBrandingConfig } from "@/features/branding/data";
 import { resolveStorageUrl } from "@/lib/storage/resolve-storage-url";
 
@@ -30,7 +31,11 @@ export async function getSpaceBranding(space: {
   const instance = await getInstanceBranding();
   return {
     ...instance,
-    hideAttribution: instance.hideAttribution || space.hideAttribution,
+    // Space-level attribution removal is cloud-only; self-hosted attribution
+    // is licensed at instance level and already reflected in the instance
+    // branding.
+    hideAttribution:
+      instance.hideAttribution || (isBillingEnabled && space.hideAttribution),
     ...(space.showBranding
       ? {
           primaryColor: space.primaryColor ?? instance.primaryColor,
