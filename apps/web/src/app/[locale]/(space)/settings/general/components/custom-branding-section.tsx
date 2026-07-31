@@ -37,6 +37,7 @@ import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { BrandingPreview } from "./branding-preview";
+import { RemoveAttributionSetting } from "./remove-attribution-setting";
 import { SpaceSettingsForm } from "./space-settings-form";
 
 export function CustomBrandingSection({
@@ -185,6 +186,7 @@ export function CustomBrandingSection({
               />
             </SettingHint>
           </Setting>
+          <RemoveAttributionSetting disabled={disabled} />
         </SettingsGroup>
       </PageSectionContent>
     </PageSection>

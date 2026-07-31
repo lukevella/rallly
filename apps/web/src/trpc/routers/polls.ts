@@ -639,6 +639,7 @@ export const polls = router({
               image: true,
               tier: true,
               showBranding: true,
+              hideAttribution: true,
               primaryColor: true,
             },
           },
@@ -746,6 +747,7 @@ export const polls = router({
           space: {
             select: {
               showBranding: true,
+              hideAttribution: true,
               primaryColor: true,
               image: true,
             },
