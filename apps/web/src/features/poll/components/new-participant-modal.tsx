@@ -358,7 +358,6 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             />
           ) : (
             <Button
-              size="sm"
               className="rounded-full"
               type="button"
               disabled={formState.isSubmitting}

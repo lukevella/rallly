@@ -80,7 +80,6 @@ const DescriptionField = () => {
       <div>
         <Button
           type="button"
-          size="sm"
           className="rounded-full"
           onClick={() => setOpened(true)}
         >
