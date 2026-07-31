@@ -3,7 +3,7 @@
 import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import { BellIcon, BellOffIcon, Loader2Icon } from "lucide-react";
+import { BellIcon, BellOffIcon } from "lucide-react";
 import { usePoll } from "@/features/poll/client";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -69,18 +69,12 @@ export function NotificationToggle() {
                   })
                 : t("muteNotifications", { defaultValue: "Mute notifications" })
             }
-            disabled={toggleMuted.isPending}
+            loading={toggleMuted.isPending}
             onClick={() => {
               toggleMuted.mutate({ pollId: poll.id, muted: !poll.muted });
             }}
           >
-            {toggleMuted.isPending ? (
-              <Loader2Icon className="animate-spin opacity-75" />
-            ) : poll.muted ? (
-              <BellOffIcon />
-            ) : (
-              <BellIcon />
-            )}
+            {poll.muted ? <BellOffIcon /> : <BellIcon />}
             <span className="sr-only">
               {poll.muted
                 ? t("unmuteNotifications", {
