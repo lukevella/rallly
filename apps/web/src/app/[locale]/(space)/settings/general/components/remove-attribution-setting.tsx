@@ -27,40 +27,28 @@ export function RemoveAttributionSetting({
 
   const updateHideAttribution = useSafeAction(updateSpaceHideAttributionAction);
 
-  // Holds the toggled value until the post-action router refresh
-  // delivers the updated space data, then defers to it.
-  const [pendingHideAttribution, setPendingHideAttribution] = React.useState<
-    boolean | null
-  >(null);
-  const hideAttribution = pendingHideAttribution ?? space.hideAttribution;
+  // Optimistic value shown until the post-action router refresh delivers
+  // the updated space data; reverts automatically if the action fails.
+  const [hideAttribution, setOptimisticHideAttribution] = React.useOptimistic(
+    space.hideAttribution,
+  );
 
-  React.useEffect(() => {
-    if (
-      pendingHideAttribution !== null &&
-      space.hideAttribution === pendingHideAttribution
-    ) {
-      setPendingHideAttribution(null);
-    }
-  }, [space.hideAttribution, pendingHideAttribution]);
-
-  const handleToggle = async (newChecked: boolean) => {
+  const handleToggle = (newChecked: boolean) => {
     if (isFree) {
       showPayWall({ from: "custom-branding", setting: "hide_attribution" });
       return;
     }
 
-    setPendingHideAttribution(newChecked);
+    React.startTransition(async () => {
+      setOptimisticHideAttribution(newChecked);
+      const result = await updateHideAttribution.executeAsync({
+        hideAttribution: newChecked,
+      });
 
-    const result = await updateHideAttribution.executeAsync({
-      hideAttribution: newChecked,
+      if (!result?.serverError && !result?.validationErrors) {
+        toast.success(t("saved", { defaultValue: "Saved" }));
+      }
     });
-
-    if (result?.serverError || result?.validationErrors) {
-      setPendingHideAttribution(null);
-      return;
-    }
-
-    toast.success(t("saved", { defaultValue: "Saved" }));
   };
 
   return (
