@@ -1,12 +1,10 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
-import { Field, FieldLabel } from "@rallly/ui/field";
 import { Switch } from "@rallly/ui/switch";
 import React from "react";
 import {
   PageSection,
-  PageSectionContent,
   PageSectionDescription,
   PageSectionHeader,
   PageSectionTitle,
@@ -66,31 +64,27 @@ export function AttributionSection({
 
   return (
     <PageSection variant="card">
-      <PageSectionHeader>
-        <PageSectionTitle>
-          <Trans i18nKey="attribution" defaults="Attribution" />
-          {space.tier !== "pro" && <ProBadge className="ml-2 align-middle" />}
-        </PageSectionTitle>
-        <PageSectionDescription>
-          <Trans
-            i18nKey="attributionSectionDescription"
-            defaults='Control whether "Powered by Rallly" appears on your public pages and emails'
-          />
-        </PageSectionDescription>
-      </PageSectionHeader>
-      <PageSectionContent>
-        <Field orientation="horizontal">
-          <FieldLabel htmlFor="hide-attribution-switch">
+      <PageSectionHeader className="flex items-start justify-between gap-4">
+        <div>
+          <PageSectionTitle id="remove-attribution-section-title">
             <Trans i18nKey="removeAttribution" defaults="Remove Attribution" />
-          </FieldLabel>
-          <Switch
-            id="hide-attribution-switch"
-            checked={hideAttribution}
-            onCheckedChange={handleToggle}
-            disabled={disabled || updateHideAttribution.isExecuting}
-          />
-        </Field>
-      </PageSectionContent>
+            {space.tier !== "pro" && <ProBadge className="ml-2 align-middle" />}
+          </PageSectionTitle>
+          <PageSectionDescription id="remove-attribution-section-description">
+            <Trans
+              i18nKey="removeAttributionDescription"
+              defaults='Hide "Powered by Rallly" on invite pages and participant emails'
+            />
+          </PageSectionDescription>
+        </div>
+        <Switch
+          aria-labelledby="remove-attribution-section-title"
+          aria-describedby="remove-attribution-section-description"
+          checked={hideAttribution}
+          onCheckedChange={handleToggle}
+          disabled={disabled || updateHideAttribution.isExecuting}
+        />
+      </PageSectionHeader>
     </PageSection>
   );
 }

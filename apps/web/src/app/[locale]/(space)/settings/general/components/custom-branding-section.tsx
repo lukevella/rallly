@@ -3,12 +3,7 @@
 import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-  FieldSeparator,
-} from "@rallly/ui/field";
+import { Field, FieldLabel } from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
 import React from "react";
@@ -94,58 +89,50 @@ export function CustomBrandingSection({
 
   return (
     <PageSection variant="card">
-      <PageSectionHeader>
-        <PageSectionTitle>
-          <Trans i18nKey="branding" defaults="Branding" />
-          {space.tier !== "pro" && <ProBadge className="ml-2 align-middle" />}
-        </PageSectionTitle>
-        <PageSectionDescription>
-          <Trans
-            i18nKey="showBrandingDescription"
-            defaults="Show your brand identity on your public pages and emails"
-          />
-        </PageSectionDescription>
+      <PageSectionHeader className="flex items-start justify-between gap-4">
+        <div>
+          <PageSectionTitle id="branding-section-title">
+            <Trans i18nKey="branding" defaults="Branding" />
+            {space.tier !== "pro" && <ProBadge className="ml-2 align-middle" />}
+          </PageSectionTitle>
+          <PageSectionDescription id="branding-section-description">
+            <Trans
+              i18nKey="showBrandingDescription"
+              defaults="Show your brand identity on your public pages and emails"
+            />
+          </PageSectionDescription>
+        </div>
+        <Switch
+          aria-labelledby="branding-section-title"
+          aria-describedby="branding-section-description"
+          checked={showBranding}
+          onCheckedChange={handleToggle}
+          disabled={disabled || updateShowBranding.isExecuting}
+        />
       </PageSectionHeader>
       <PageSectionContent>
-        <FieldGroup>
-          <Field orientation="horizontal">
-            <FieldLabel htmlFor="show-branding-switch">
-              <Trans
-                i18nKey="useCustomBranding"
-                defaults="Enable Custom Branding"
-              />
-            </FieldLabel>
-            <Switch
-              id="show-branding-switch"
-              checked={showBranding}
-              onCheckedChange={handleToggle}
-              disabled={disabled || updateShowBranding.isExecuting}
-            />
-          </Field>
-          <FieldSeparator />
-          <Field
-            orientation="horizontal"
-            className={
-              !showBranding || disabled
-                ? "pointer-events-none opacity-50"
-                : undefined
-            }
-          >
-            <FieldLabel>
-              <Trans i18nKey="primaryColor" defaults="Primary Color" />
-            </FieldLabel>
-            <div className="flex items-center gap-2">
-              <ColorPicker value={color} onChange={setColor} />
-              <Button
-                onClick={handleSave}
-                disabled={!showBranding || !isDirty || disabled}
-                loading={updateSpace.isExecuting}
-              >
-                <Trans i18nKey="save" defaults="Save" />
-              </Button>
-            </div>
-          </Field>
-        </FieldGroup>
+        <Field
+          orientation="horizontal"
+          className={
+            !showBranding || disabled
+              ? "pointer-events-none opacity-50"
+              : undefined
+          }
+        >
+          <FieldLabel>
+            <Trans i18nKey="primaryColor" defaults="Primary Color" />
+          </FieldLabel>
+          <div className="flex items-center gap-2">
+            <ColorPicker value={color} onChange={setColor} />
+            <Button
+              onClick={handleSave}
+              disabled={!showBranding || !isDirty || disabled}
+              loading={updateSpace.isExecuting}
+            >
+              <Trans i18nKey="save" defaults="Save" />
+            </Button>
+          </div>
+        </Field>
       </PageSectionContent>
     </PageSection>
   );

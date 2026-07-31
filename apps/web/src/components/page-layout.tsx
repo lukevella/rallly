@@ -165,12 +165,13 @@ export function PageSectionHeader({
 export function PageSectionTitle({
   children,
   className,
-}: {
-  children?: React.ReactNode;
-  className?: string;
-}) {
+  ...props
+}: React.ComponentProps<"h2">) {
   return (
-    <h2 className={cn("font-medium text-base text-foreground", className)}>
+    <h2
+      className={cn("font-medium text-base text-foreground", className)}
+      {...props}
+    >
       {children}
     </h2>
   );
@@ -179,16 +180,15 @@ export function PageSectionTitle({
 export function PageSectionDescription({
   children,
   className,
-}: {
-  children?: React.ReactNode;
-  className?: string;
-}) {
+  ...props
+}: React.ComponentProps<"p">) {
   return (
     <p
       className={cn(
         "mt-0.5 text-pretty text-muted-foreground text-sm leading-normal",
         className,
       )}
+      {...props}
     >
       {children}
     </p>
