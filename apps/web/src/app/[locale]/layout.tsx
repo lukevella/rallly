@@ -19,7 +19,6 @@ import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
 import { featureFlagConfig } from "@/lib/feature-flags/config";
 import { ThemeProvider } from "@/lib/theme";
 import { TRPCProvider } from "@/trpc/client/provider";
-import { PostHogPageView } from "../posthog-page-view";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -81,7 +80,6 @@ export default async function Root({
                 <TRPCProvider>
                   <LazyMotion features={domAnimation}>
                     <SkipNavLink />
-                    <PostHogPageView />
                     <TimeZoneSync>
                       <TooltipProvider>{children}</TooltipProvider>
                     </TimeZoneSync>
