@@ -188,8 +188,8 @@ export function PriceTables() {
               <Trans
                 t={t}
                 ns="pricing"
-                i18nKey="removeRalllyBranding"
-                defaults="Remove Rallly branding"
+                i18nKey="removeAttribution"
+                defaults="Remove attribution"
               />
             </BillingPlanPerk>
             <BillingPlanPerk pro={true}>

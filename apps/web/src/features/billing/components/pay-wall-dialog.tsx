@@ -344,14 +344,14 @@ export function PayWallDialog({
                     icon={<EyeOffIcon />}
                     title={
                       <Trans
-                        i18nKey="removeRalllyBranding"
-                        defaults="Remove Rallly Branding"
+                        i18nKey="removeAttribution"
+                        defaults="Remove Attribution"
                       />
                     }
                     description={
                       <Trans
-                        i18nKey="removeRalllyBrandingDescription"
-                        defaults='Hide "Powered by Rallly" on invite pages and participant emails'
+                        i18nKey="removeAttributionBenefitDescription"
+                        defaults='Hide "Powered by Rallly" from your participants'
                       />
                     }
                   />
