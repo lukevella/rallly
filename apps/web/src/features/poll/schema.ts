@@ -30,3 +30,8 @@ export type PollStatus = z.infer<typeof pollStatusSchema>;
 export const pollClosedReasonSchema = z.enum(["auto", "manual"]);
 
 export type PollClosedReason = z.infer<typeof pollClosedReasonSchema>;
+
+export const setPollMutedSchema = z.object({
+  pollId: z.string(),
+  muted: z.boolean(),
+});

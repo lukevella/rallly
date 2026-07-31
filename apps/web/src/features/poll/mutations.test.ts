@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AuthorizedSpaceId } from "@/features/space/types";
-import { closePoll, deleteInactivePolls } from "./mutations";
+import { closePoll, deleteInactivePolls, setPollMuted } from "./mutations";
 
 const { mockUpdateMany, mockFindFirst, mockUpdate } = vi.hoisted(() => ({
   mockUpdateMany: vi.fn(),
@@ -201,5 +201,39 @@ describe("closePoll", () => {
         where: { id: "p1", spaceId, deletedAt: null },
       }),
     );
+  });
+});
+
+describe("setPollMuted", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("scopes the update to the owner and excludes deleted polls", async () => {
+    mockUpdateMany.mockResolvedValue({ count: 1 });
+
+    const result = await setPollMuted({
+      pollId: "p1",
+      userId: "u1",
+      muted: true,
+    });
+
+    expect(mockUpdateMany).toHaveBeenCalledWith({
+      where: { id: "p1", userId: "u1", deletedAt: null },
+      data: { muted: true },
+    });
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("returns notFound when no poll matches the owner scope", async () => {
+    mockUpdateMany.mockResolvedValue({ count: 0 });
+
+    const result = await setPollMuted({
+      pollId: "p1",
+      userId: "not-the-owner",
+      muted: true,
+    });
+
+    expect(result).toEqual({ ok: false, reason: "notFound" });
   });
 });

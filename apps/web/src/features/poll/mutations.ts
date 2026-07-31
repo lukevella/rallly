@@ -149,6 +149,35 @@ export const closePoll = async ({
   });
 };
 
+/**
+ * Muting is a per-owner notification preference, so the scope is the owner's
+ * userId rather than a space.
+ */
+export const setPollMuted = async ({
+  pollId,
+  userId,
+  muted,
+}: {
+  pollId: string;
+  userId: string;
+  muted: boolean;
+}) => {
+  const { count } = await prisma.poll.updateMany({
+    where: {
+      id: pollId,
+      userId,
+      deletedAt: null,
+    },
+    data: { muted },
+  });
+
+  if (count === 0) {
+    return { ok: false as const, reason: "notFound" as const };
+  }
+
+  return { ok: true as const };
+};
+
 export const deletePoll = async (
   pollId: string,
   spaceId: AuthorizedSpaceId,
