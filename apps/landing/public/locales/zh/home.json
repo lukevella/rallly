@@ -27,9 +27,5 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ 投票已创建",
   "statsUsersRegistered": "{count, number, ::compact-short}+ 已注册用户",
   "subheading": "协调分组会议，而无需发送往来电子邮件",
-  "viaTrustpilot": "前往 Trustpilot",
-  "when2meetAlternative": "仍在使用 When2Meet？",
-  "when2meetAlternativeDescription": "创建免费专业的、无广告的会议投票。",
-  "when2meetAlternativeMetaDescription": "找到更好的方法来安排会议与Rallly，Rallly是When2Meet的替代品。简单、易用且免费。",
-  "when2meetAlternativeMetaTitle": "最好的 When2Meet 替代品：Rallly"
+  "viaTrustpilot": "前往 Trustpilot"
 }
