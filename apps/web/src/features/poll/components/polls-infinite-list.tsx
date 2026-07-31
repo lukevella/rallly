@@ -24,7 +24,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import {
   CircleStopIcon,
-  MoreVerticalIcon,
+  MoreHorizontalIcon,
   PlayIcon,
   StickerIcon,
   TrashIcon,
@@ -157,69 +157,75 @@ function PollListItem({
               <TooltipContent>{user.name}</TooltipContent>
             </Tooltip>
           )}
-          <CopyLinkButton href={shortUrl(`/invite/${id}`)} />
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <Button
-                  aria-label={t("moreOptions", {
-                    defaultValue: "More options",
-                  })}
-                  variant="ghost"
-                  size="icon"
-                />
-              }
-            >
-              <MoreVerticalIcon />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {status === "open" && (
-                <DropdownMenuItem
-                  onClick={() => {
-                    toast.promise(closePoll.mutateAsync({ pollId: id }), {
-                      loading: <Trans i18nKey="loading" defaults="Loading…" />,
-                      success: (
-                        <Trans i18nKey="pollClosed" defaults="Poll closed" />
-                      ),
-                    });
-                  }}
-                >
+          <div className="flex items-center gap-x-1">
+            <CopyLinkButton href={shortUrl(`/invite/${id}`)} />
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button
+                    aria-label={t("moreOptions", {
+                      defaultValue: "More options",
+                    })}
+                    variant="ghost"
+                    size="icon"
+                  />
+                }
+              >
+                <MoreHorizontalIcon />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {status === "open" && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      toast.promise(closePoll.mutateAsync({ pollId: id }), {
+                        loading: (
+                          <Trans i18nKey="loading" defaults="Loading…" />
+                        ),
+                        success: (
+                          <Trans i18nKey="pollClosed" defaults="Poll closed" />
+                        ),
+                      });
+                    }}
+                  >
+                    <Icon>
+                      <CircleStopIcon />
+                    </Icon>
+                    <Trans i18nKey="closePoll" defaults="Close" />
+                  </DropdownMenuItem>
+                )}
+                {status === "closed" && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      toast.promise(reopenPoll.mutateAsync({ pollId: id }), {
+                        loading: (
+                          <Trans i18nKey="loading" defaults="Loading…" />
+                        ),
+                        success: (
+                          <Trans
+                            i18nKey="pollReopened"
+                            defaults="Poll Reopened"
+                          />
+                        ),
+                      });
+                    }}
+                  >
+                    <Icon>
+                      <PlayIcon />
+                    </Icon>
+                    <Trans i18nKey="reopenPoll" defaults="Reopen" />
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem onClick={() => deletePollDialog.trigger()}>
                   <Icon>
-                    <CircleStopIcon />
+                    <TrashIcon />
                   </Icon>
-                  <Trans i18nKey="closePoll" defaults="Close" />
+                  <span>
+                    <Trans i18nKey="deleteMenuItem" defaults="Delete" />
+                  </span>
                 </DropdownMenuItem>
-              )}
-              {status === "closed" && (
-                <DropdownMenuItem
-                  onClick={() => {
-                    toast.promise(reopenPoll.mutateAsync({ pollId: id }), {
-                      loading: <Trans i18nKey="loading" defaults="Loading…" />,
-                      success: (
-                        <Trans
-                          i18nKey="pollReopened"
-                          defaults="Poll Reopened"
-                        />
-                      ),
-                    });
-                  }}
-                >
-                  <Icon>
-                    <PlayIcon />
-                  </Icon>
-                  <Trans i18nKey="reopenPoll" defaults="Reopen" />
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuItem onClick={() => deletePollDialog.trigger()}>
-                <Icon>
-                  <TrashIcon />
-                </Icon>
-                <span>
-                  <Trans i18nKey="deleteMenuItem" defaults="Delete" />
-                </span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
       <Dialog {...deletePollDialog.dialogProps}>
