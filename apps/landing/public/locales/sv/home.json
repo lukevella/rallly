@@ -27,9 +27,5 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ förfrågningar skapade",
   "statsUsersRegistered": "{count, number, ::compact-short}+ registrerade användare",
   "subheading": "Samordna gruppmöten utan mejl fram och tillbaka",
-  "viaTrustpilot": "via Trustpilot",
-  "when2meetAlternative": "Använder du fortfarande When2Meet?",
-  "when2meetAlternativeDescription": "Skapa professionella, reklamfria mötes-förfrågningar gratis med Rallly.",
-  "when2meetAlternativeMetaDescription": "Hitta ett bättre sätt att schemalägga möten med Rallly, det bästa fria alternativet till When2Meet. Lätt att använda och gratis.",
-  "when2meetAlternativeMetaTitle": "Bästa alternativet till When2Meet: Rallly"
+  "viaTrustpilot": "via Trustpilot"
 }
