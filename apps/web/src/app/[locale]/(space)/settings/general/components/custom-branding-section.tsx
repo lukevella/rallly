@@ -9,6 +9,7 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
+  FieldSeparator,
 } from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
@@ -159,6 +160,7 @@ export function CustomBrandingSection({
               disabled={disabled || updateShowBranding.isExecuting}
             />
           </Field>
+          <FieldSeparator />
           <Field
             orientation="horizontal"
             className={
@@ -181,6 +183,7 @@ export function CustomBrandingSection({
               </Button>
             </div>
           </Field>
+          <FieldSeparator />
           <Field orientation="horizontal">
             <FieldContent>
               <FieldLabel htmlFor="hide-attribution-switch">
