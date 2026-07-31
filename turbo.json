@@ -65,6 +65,7 @@
   "globalEnv": [
     "ALLOWED_EMAILS",
     "ANALYZE",
+    "API_BASE_URL",
     "AWS_ACCESS_KEY_ID",
     "AWS_REGION",
     "AWS_SECRET_ACCESS_KEY",
