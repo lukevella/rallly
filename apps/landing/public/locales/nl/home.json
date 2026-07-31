@@ -27,9 +27,5 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ polls aangemaakt",
   "statsUsersRegistered": "{count, number, ::compact-short}+ geregistreerde gebruikers",
   "subheading": "Coördineer groepsbijeenkomsten zonder al die e-mails heen en weer",
-  "viaTrustpilot": "via Trustpilot",
-  "when2meetAlternative": "Gebruik je nog steeds When2Meet?",
-  "when2meetAlternativeDescription": "Maak gratis professionele, advertentievrije polls voor vergaderingen met Rallly.",
-  "when2meetAlternativeMetaDescription": "Vind een betere manier om vergaderingen in te plannen met Rallly, het beste alternatief voor When2Meet. Makkelijk te gebruiken en gratis.",
-  "when2meetAlternativeMetaTitle": "Het beste alternatief voor When2Meet: Rallly"
+  "viaTrustpilot": "via Trustpilot"
 }
