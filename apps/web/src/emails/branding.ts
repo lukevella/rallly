@@ -1,7 +1,7 @@
 import type { EmailBranding } from "@rallly/emails";
 
-import { isBillingEnabled } from "@/features/billing/constants";
 import { getInstanceBrandingConfig } from "@/features/branding/data";
+import { isSelfHosted } from "@/lib/constants";
 import { resolveStorageUrl } from "@/lib/storage/resolve-storage-url";
 
 /**
@@ -35,7 +35,7 @@ export async function getSpaceBranding(space: {
     // is licensed at instance level and already reflected in the instance
     // branding.
     hideAttribution:
-      instance.hideAttribution || (isBillingEnabled && space.hideAttribution),
+      instance.hideAttribution || (!isSelfHosted && space.hideAttribution),
     ...(space.showBranding
       ? {
           primaryColor: space.primaryColor ?? instance.primaryColor,
