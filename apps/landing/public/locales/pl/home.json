@@ -27,9 +27,5 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ ankiety utworzone",
   "statsUsersRegistered": "{count, number, ::compact-short}+ zarejestrowani użytkownicy",
   "subheading": "Koordynuj spotkania grupowe bez wysyłania maili",
-  "viaTrustpilot": "via Trustpilot",
-  "when2meetAlternative": "Nadal używasz When2Meet?",
-  "when2meetAlternativeDescription": "Twórz profesjonalne, wolne od reklam ankiety na spotkania za darmo dzięki Rallly.",
-  "when2meetAlternativeMetaDescription": "Znajdź lepszy sposób na planowanie spotkań z Rallly, najlepszą darmową alternatywą dla When2Meet. Łatwa w użyciu i darmowa.",
-  "when2meetAlternativeMetaTitle": "Najlepsza alternatywa dla When2Meet: Rallly"
+  "viaTrustpilot": "via Trustpilot"
 }
