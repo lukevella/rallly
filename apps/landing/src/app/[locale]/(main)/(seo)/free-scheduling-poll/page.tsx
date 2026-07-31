@@ -7,6 +7,12 @@ import Bonus from "@/components/home/bonus";
 import { MarketingHero } from "@/components/home/hero";
 import { BigTestimonial, Marketing, MentionedBy } from "@/components/marketing";
 import { getTranslation } from "@/i18n/server";
+import { ClosingCta } from "./components/closing-cta";
+import { Compare } from "./components/compare";
+import { Faq } from "./components/faq";
+import { Features } from "./components/features";
+import { HowItWorks } from "./components/how-it-works";
+import { UseCases } from "./components/use-cases";
 
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
@@ -26,8 +32,14 @@ export default async function Page(props: {
         callToAction={<Trans t={t} ns="home" i18nKey="createASchedulingPoll" />}
       />
       <Bonus locale={locale} />
+      <HowItWorks locale={locale} />
+      <Features locale={locale} />
+      <UseCases locale={locale} />
+      <Compare locale={locale} />
       <BigTestimonial />
       <MentionedBy />
+      <Faq locale={locale} />
+      <ClosingCta locale={locale} />
     </Marketing>
   );
 }
