@@ -33,7 +33,7 @@ export function InviteMemberButton({
               }),
             );
           } else if (space.getAbility().cannot("invite", "Member")) {
-            showPayWall();
+            showPayWall({ from: "space-members", action: "invite" });
           } else {
             inviteMemberDialog.trigger();
           }

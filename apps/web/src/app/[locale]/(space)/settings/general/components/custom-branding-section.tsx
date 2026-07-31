@@ -1,6 +1,5 @@
 "use client";
 
-import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
 import { Field, FieldGroup, FieldLabel } from "@rallly/ui/field";
@@ -60,8 +59,7 @@ export function CustomBrandingSection({
 
   const handleToggle = async (newChecked: boolean) => {
     if (isFree) {
-      posthog?.capture("branding_settings:paywall_trigger");
-      showPayWall();
+      showPayWall({ from: "custom-branding" });
       return;
     }
 

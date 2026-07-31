@@ -1,6 +1,7 @@
 "use client";
 
 import { pricingData } from "@rallly/billing/pricing";
+import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -33,6 +34,7 @@ import { UpgradeButton } from "@/features/billing/components/upgrade-button";
 import type { SpaceTier } from "@/features/space/schema";
 import { spaceTierSchema } from "@/features/space/schema";
 import { Trans } from "@/i18n/client";
+import { usePayWallStore } from "../client";
 import { PLAN_NAMES } from "../constants";
 
 function KeyBenefits({ children }: { children?: React.ReactNode }) {
@@ -117,6 +119,7 @@ export function PayWallDialog({
 }) {
   const [selectedPlan, setSelectedPlan] = React.useState<SpaceTier>("pro");
   const [isAnnual, setIsAnnual] = React.useState(false);
+  const trigger = usePayWallStore((state) => state.trigger);
 
   const handleChangePlan = (value: string) => {
     setSelectedPlan(spaceTierSchema.parse(value));
@@ -234,7 +237,20 @@ export function PayWallDialog({
               )}
               {selectedPlan === "pro" ? (
                 <TabsContent value="pro">
-                  <UpgradeButton className="w-full" annual={isAnnual}>
+                  <UpgradeButton
+                    className="w-full"
+                    annual={isAnnual}
+                    onClick={() => {
+                      posthog?.capture("paywall:upgrade_button_click", {
+                        from: trigger?.from,
+                        setting: trigger?.setting,
+                        action: trigger?.action,
+                        poll_id: trigger?.pollId,
+                        plan: selectedPlan,
+                        interval: isAnnual ? "year" : "month",
+                      });
+                    }}
+                  >
                     <Trans i18nKey="upgrade" defaults="Upgrade" />
                   </UpgradeButton>
                 </TabsContent>

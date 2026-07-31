@@ -1,4 +1,3 @@
-import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
 import {
@@ -157,11 +156,10 @@ const ManagePoll: React.FunctionComponent<{
                 disabled={!!poll.event}
                 onClick={() => {
                   if (isFree) {
-                    showPayWall();
-                    posthog?.capture("trigger paywall", {
-                      poll_id: poll.id,
+                    showPayWall({
                       from: "manage-poll",
                       action: "schedule",
+                      pollId: poll.id,
                     });
                   } else {
                     scheduleDialog.trigger();
@@ -183,11 +181,10 @@ const ManagePoll: React.FunctionComponent<{
           <DropdownMenuItem
             onClick={() => {
               if (isFree) {
-                showPayWall();
-                posthog?.capture("trigger paywall", {
-                  poll_id: poll.id,
-                  action: "duplicate",
+                showPayWall({
                   from: "manage-poll",
+                  action: "duplicate",
+                  pollId: poll.id,
                 });
               } else {
                 duplicateDialog.trigger();

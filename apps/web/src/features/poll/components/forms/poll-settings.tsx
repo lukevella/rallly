@@ -63,11 +63,7 @@ const PollSetting = ({
             checked={!!field.value}
             onCheckedChange={(checked) => {
               if (checked && pro && isFree) {
-                showPayWall();
-                posthog?.capture("trigger paywall", {
-                  setting: name,
-                  from: "poll-settings",
-                });
+                showPayWall({ from: "poll-settings", setting: name });
               } else {
                 field.onChange(checked);
                 if (name === "disableComments") {

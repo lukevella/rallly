@@ -13,6 +13,7 @@ import type {
 import { getStripe } from "@/features/billing/service";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { AppError } from "@/lib/errors/app-error";
+import { track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
 
@@ -150,6 +151,16 @@ export const upgradeToProAction = authActionClient
         message: "Something went wrong while creating a checkout session",
       });
     }
+
+    track(ctx.user, {
+      event: "billing:checkout_start",
+      properties: {
+        interval: period === "yearly" ? "year" : "month",
+      },
+      groups: {
+        space: space.id,
+      },
+    });
 
     redirect(checkoutSession.url);
   });
