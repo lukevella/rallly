@@ -42,23 +42,13 @@ export function CustomBrandingSection({
   const updateShowBranding = useSafeAction(updateSpaceShowBrandingAction);
   const updateSpace = useSafeAction(updateSpaceAction);
 
-  // Holds the toggled value until the post-action router refresh
-  // delivers the updated space data, then defers to it.
-  const [pendingShowBranding, setPendingShowBranding] = React.useState<
-    boolean | null
-  >(null);
-  const showBranding = pendingShowBranding ?? space.showBranding;
+  // Optimistic value shown until the post-action router refresh delivers
+  // the updated space data; reverts automatically if the action fails.
+  const [showBranding, setOptimisticShowBranding] = React.useOptimistic(
+    space.showBranding,
+  );
 
-  React.useEffect(() => {
-    if (
-      pendingShowBranding !== null &&
-      space.showBranding === pendingShowBranding
-    ) {
-      setPendingShowBranding(null);
-    }
-  }, [space.showBranding, pendingShowBranding]);
-
-  const handleToggle = async (newChecked: boolean) => {
+  const handleToggle = (newChecked: boolean) => {
     if (isFree) {
       posthog?.capture("branding_settings:paywall_trigger", {
         setting: "custom_branding",
@@ -67,15 +57,10 @@ export function CustomBrandingSection({
       return;
     }
 
-    setPendingShowBranding(newChecked);
-
-    const result = await updateShowBranding.executeAsync({
-      showBranding: newChecked,
+    React.startTransition(async () => {
+      setOptimisticShowBranding(newChecked);
+      await updateShowBranding.executeAsync({ showBranding: newChecked });
     });
-
-    if (result?.serverError || result?.validationErrors) {
-      setPendingShowBranding(null);
-    }
   };
 
   const handleSave = async () => {
