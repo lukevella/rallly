@@ -145,12 +145,6 @@ export function CustomBrandingSection({
       <PageSectionContent>
         <FieldGroup>
           <Field orientation="horizontal">
-            <Switch
-              id="show-branding-switch"
-              checked={showBranding}
-              onCheckedChange={handleToggle}
-              disabled={disabled || updateShowBranding.isExecuting}
-            />
             <FieldLabel htmlFor="show-branding-switch">
               <Trans
                 i18nKey="useCustomBranding"
@@ -158,54 +152,57 @@ export function CustomBrandingSection({
               />
               {space.tier !== "pro" && <ProBadge />}
             </FieldLabel>
+            <Switch
+              id="show-branding-switch"
+              checked={showBranding}
+              onCheckedChange={handleToggle}
+              disabled={disabled || updateShowBranding.isExecuting}
+            />
           </Field>
-          <div
+          <Field
+            orientation="horizontal"
             className={
               !showBranding || disabled
                 ? "pointer-events-none opacity-50"
                 : undefined
             }
           >
-            <FieldGroup>
-              <Field>
-                <FieldLabel>
-                  <Trans i18nKey="primaryColor" defaults="Primary Color" />
-                </FieldLabel>
-                <ColorPicker value={color} onChange={setColor} />
-              </Field>
-              <Field orientation="horizontal">
-                <Button
-                  onClick={handleSave}
-                  disabled={!showBranding || !isDirty || disabled}
-                  loading={updateSpace.isExecuting}
-                >
-                  <Trans i18nKey="save" defaults="Save" />
-                </Button>
-              </Field>
-            </FieldGroup>
-          </div>
+            <FieldLabel>
+              <Trans i18nKey="primaryColor" defaults="Primary Color" />
+            </FieldLabel>
+            <div className="flex items-center gap-2">
+              <ColorPicker value={color} onChange={setColor} />
+              <Button
+                onClick={handleSave}
+                disabled={!showBranding || !isDirty || disabled}
+                loading={updateSpace.isExecuting}
+              >
+                <Trans i18nKey="save" defaults="Save" />
+              </Button>
+            </div>
+          </Field>
           <Field orientation="horizontal">
+            <FieldContent>
+              <FieldLabel htmlFor="hide-attribution-switch">
+                <Trans
+                  i18nKey="removeAttribution"
+                  defaults="Remove Attribution"
+                />
+                {space.tier !== "pro" && <ProBadge />}
+              </FieldLabel>
+              <FieldDescription>
+                <Trans
+                  i18nKey="removeAttributionDescription"
+                  defaults='Hide "Powered by Rallly" on invite pages and participant emails'
+                />
+              </FieldDescription>
+            </FieldContent>
             <Switch
               id="hide-attribution-switch"
               checked={hideAttribution}
               onCheckedChange={handleToggleHideAttribution}
               disabled={disabled || updateHideAttribution.isExecuting}
             />
-            <FieldContent>
-              <FieldLabel htmlFor="hide-attribution-switch">
-                <Trans
-                  i18nKey="removeRalllyBranding"
-                  defaults="Remove Rallly Branding"
-                />
-                {space.tier !== "pro" && <ProBadge />}
-              </FieldLabel>
-              <FieldDescription>
-                <Trans
-                  i18nKey="removeRalllyBrandingDescription"
-                  defaults='Hide "Powered by Rallly" on invite pages and participant emails'
-                />
-              </FieldDescription>
-            </FieldContent>
           </Field>
         </FieldGroup>
       </PageSectionContent>
