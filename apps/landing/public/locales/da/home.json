@@ -27,9 +27,5 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ oprettede afstemninger",
   "statsUsersRegistered": "{count, number, ::compact-short}+ registrerede brugere",
   "subheading": "Koordinere gruppemøder uden frem-og-tilbage e-mails",
-  "viaTrustpilot": "via Trustpilot",
-  "when2meetAlternative": "Bruger du stadig When2Meet?",
-  "when2meetAlternativeDescription": "Opret professionelle, annoncefri mødeafstemninger gratis med Rallly.",
-  "when2meetAlternativeMetaDescription": "Find en bedre måde at planlægge møder med Rallly, det bedste gratis alternativ til When2Meet. Let at bruge og gratis.",
-  "when2meetAlternativeMetaTitle": "Bedste When2Meet alternativ: Rallly"
+  "viaTrustpilot": "via Trustpilot"
 }
