@@ -27,5 +27,6 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ Umfragen erstellt",
   "statsUsersRegistered": "{count, number, ::compact-short}+ registrierte Benutzer",
   "subheading": "Koordiniere Gruppenmeetings ohne ewiges E-Mail-Hin-und-Her",
-  "viaTrustpilot": "via Trustpilot"
+  "viaTrustpilot": "via Trustpilot",
+  "when2meetAlternative": "Eine moderne Alternative zu When2Meet"
 }
