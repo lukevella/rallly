@@ -24,6 +24,7 @@ const Button = ({
   ...props
 }: ButtonPrimitive.Props &
   VariantProps<typeof buttonVariants> & { loading?: boolean }) => {
+  const isIconButton = size?.startsWith("icon");
   return (
     <ButtonPrimitive
       className={cn(
@@ -31,6 +32,7 @@ const Button = ({
         buttonVariants({ variant, size }),
         {
           "pointer-events-none": loading,
+          "[&_svg:not([data-slot=spinner])]:hidden": loading && isIconButton,
         },
         className,
       )}
@@ -38,7 +40,8 @@ const Button = ({
     >
       {loading ? (
         <Loader2Icon
-          data-icon="inline-start"
+          data-slot="spinner"
+          data-icon={isIconButton ? undefined : "inline-start"}
           className="size-4 animate-spin opacity-75"
         />
       ) : null}
