@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
+import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { BellIcon, BellOffIcon } from "lucide-react";
 import { usePoll } from "@/features/poll/client";
@@ -22,6 +23,27 @@ export function NotificationToggle() {
           muted: vars.muted,
         };
       });
+      if (vars.muted) {
+        toast(
+          t("notificationToggleMutedToast", {
+            defaultValue: "Notifications are off for this poll",
+          }),
+          {
+            action: {
+              label: t("undo", { defaultValue: "Undo" }),
+              onClick: () => {
+                toggleMuted.mutate({ pollId: vars.pollId, muted: false });
+              },
+            },
+          },
+        );
+      } else {
+        toast(
+          t("notificationToggleUnmutedToast", {
+            defaultValue: "Notifications are on for this poll",
+          }),
+        );
+      }
     },
   });
 
@@ -47,7 +69,11 @@ export function NotificationToggle() {
               toggleMuted.mutate({ pollId: poll.id, muted: !poll.muted });
             }}
           >
-            {poll.muted ? <BellOffIcon /> : <BellIcon />}
+            {poll.muted ? (
+              <BellOffIcon className="text-destructive" />
+            ) : (
+              <BellIcon />
+            )}
             <span className="sr-only">
               {poll.muted
                 ? t("unmuteNotifications", {
