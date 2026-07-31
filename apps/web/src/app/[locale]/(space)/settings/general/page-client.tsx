@@ -3,6 +3,7 @@
 import { subject } from "@casl/ability";
 import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { EyeIcon } from "lucide-react";
+import { IfCloudHosted } from "@/components/environment";
 import {
   PageSection,
   PageSectionContent,
@@ -21,7 +22,6 @@ import {
 import { useSpace } from "@/features/space/client";
 import { useAuthedUser } from "@/features/user/client";
 import { Trans } from "@/i18n/client";
-import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { AttributionSection } from "./components/attribution-section";
 import { CustomBrandingSection } from "./components/custom-branding-section";
 import { DeleteSpaceButton } from "./components/delete-space-button";
@@ -68,9 +68,9 @@ export function GeneralSettingsPageClient() {
             </PageSectionContent>
           </PageSection>
           <CustomBrandingSection disabled={!isAdmin} />
-          <IfFeatureEnabled feature="billing">
+          <IfCloudHosted>
             <AttributionSection disabled={!isAdmin} />
-          </IfFeatureEnabled>
+          </IfCloudHosted>
           {!isOwner ? (
             <PageSection variant="card">
               <PageSectionHeader>

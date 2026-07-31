@@ -8,7 +8,6 @@ import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
-import { isBillingEnabled } from "@/features/billing/constants";
 import { moderateContent } from "@/features/moderation/mutations";
 import {
   canUserManagePoll,
@@ -18,6 +17,7 @@ import {
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import { isSelfHosted } from "@/lib/constants";
 import { dayjs } from "@/lib/dayjs";
 import { identifyGroup, track } from "@/lib/posthog";
 import { createIcsEvent } from "@/lib/utils/ics";
@@ -743,7 +743,7 @@ export const polls = router({
         space: res.space
           ? {
               ...res.space,
-              hideAttribution: isBillingEnabled && res.space.hideAttribution,
+              hideAttribution: !isSelfHosted && res.space.hideAttribution,
             }
           : null,
         canManage,
