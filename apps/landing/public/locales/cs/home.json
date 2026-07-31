@@ -27,9 +27,5 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ vytvořených anket",
   "statsUsersRegistered": "{count, number, ::compact-short}+ registrovaných uživatelů",
   "subheading": "Domlouvejte skupinové schůzky bez zdlouhavého přeposílání e-mailů",
-  "viaTrustpilot": "skrze Trustpilot",
-  "when2meetAlternative": "Stále používáte When2Meet?",
-  "when2meetAlternativeDescription": "Vytvářejte profesionální ankety pro schůzky bez reklam zdarma s Rallly.",
-  "when2meetAlternativeMetaDescription": "Najděte jednodušší způsob, jak plánovat schůzky – s Rallly, nejlepší bezplatnou alternativou k When2Meet. Snadné použití a zcela zdarma.",
-  "when2meetAlternativeMetaTitle": "Nejlepší alternativa k When2Meet: Rallly"
+  "viaTrustpilot": "skrze Trustpilot"
 }
