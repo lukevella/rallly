@@ -77,7 +77,7 @@ export function NotificationToggle() {
             {toggleMuted.isPending ? (
               <Loader2Icon className="animate-spin opacity-75" />
             ) : poll.muted ? (
-              <BellOffIcon className="text-destructive" />
+              <BellOffIcon />
             ) : (
               <BellIcon />
             )}
