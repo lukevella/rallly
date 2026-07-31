@@ -27,5 +27,9 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ опросов создано",
   "statsUsersRegistered": "{count, number, ::compact-short}+ зарегистрированных пользователей",
   "subheading": "Координируйте собрания группы без бесконечной переписки по электронной почте",
-  "viaTrustpilot": "на Trustpilot"
+  "viaTrustpilot": "на Trustpilot",
+  "when2meetAlternative": "Современная альтернатива When2Meet",
+  "when2meetAlternativeDescription": "Rallly делает всё то, для чего вы используете When2Meet, но без неудобных моментов. Создавайте понятные опросы для планирования встреч, которые отлично работают на мобильных устройствах, получайте уведомления, когда участники отвечают, и управляйте всеми опросами в одном месте. Бесплатно, без рекламы, а для голосования не нужен аккаунт. Переходите с When2Meet или WhenIsGood? Rallly сразу покажется вам знакомым.",
+  "when2meetAlternativeMetaDescription": "Rallly — бесплатная альтернатива When2Meet с понятным интерфейсом, отличной поддержкой мобильных устройств, уведомлениями об ответах и без рекламы. Для голосования аккаунт не нужен.",
+  "when2meetAlternativeMetaTitle": "Лучшая бесплатная альтернатива When2Meet | Rallly"
 }

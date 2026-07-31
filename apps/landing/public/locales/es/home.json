@@ -27,5 +27,9 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ encuestas creadas",
   "statsUsersRegistered": "{count, number, ::compact-short}+ usuarios registrados",
   "subheading": "Organiza reuniones de grupo sin interminables correos electrónicos",
-  "viaTrustpilot": "con Trustpilot"
+  "viaTrustpilot": "con Trustpilot",
+  "when2meetAlternative": "Una alternativa moderna a When2Meet",
+  "when2meetAlternativeDescription": "Rallly hace todo aquello para lo que usas When2Meet, sin las partes engorrosas. Crea encuestas de planificación claras que funcionan muy bien en el móvil, recibe notificaciones cuando los participantes respondan y gestiona todas tus encuestas en un solo lugar. Gratis, sin anuncios y sin necesidad de cuenta para votar. ¿Vienes de When2Meet o WhenIsGood? Rallly te resultará familiar desde el primer momento.",
+  "when2meetAlternativeMetaDescription": "Rallly es una alternativa gratuita a When2Meet con una interfaz clara, excelente compatibilidad móvil, notificaciones de respuestas y sin anuncios. No se necesita cuenta para votar.",
+  "when2meetAlternativeMetaTitle": "La mejor alternativa gratuita a When2Meet | Rallly"
 }

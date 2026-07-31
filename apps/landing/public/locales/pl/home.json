@@ -27,5 +27,9 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ ankiety utworzone",
   "statsUsersRegistered": "{count, number, ::compact-short}+ zarejestrowani użytkownicy",
   "subheading": "Koordynuj spotkania grupowe bez wysyłania maili",
-  "viaTrustpilot": "via Trustpilot"
+  "viaTrustpilot": "via Trustpilot",
+  "when2meetAlternative": "Nowoczesna alternatywa dla When2Meet",
+  "when2meetAlternativeDescription": "Rallly robi wszystko, do czego używasz When2Meet, bez uciążliwych elementów. Twórz przejrzyste ankiety terminów, które świetnie działają na telefonie, otrzymuj powiadomienia, gdy uczestnicy odpowiadają, i zarządzaj wszystkimi ankietami w jednym miejscu. Za darmo, bez reklam i bez konta, aby głosować. Przechodzisz z When2Meet lub WhenIsGood? Rallly od razu będzie Ci znajome.",
+  "when2meetAlternativeMetaDescription": "Rallly to darmowa alternatywa dla When2Meet z przejrzystym interfejsem, świetną obsługą urządzeń mobilnych, powiadomieniami o odpowiedziach i bez reklam. Do głosowania nie jest potrzebne konto.",
+  "when2meetAlternativeMetaTitle": "Najlepsza darmowa alternatywa dla When2Meet | Rallly"
 }

@@ -27,5 +27,9 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ förfrågningar skapade",
   "statsUsersRegistered": "{count, number, ::compact-short}+ registrerade användare",
   "subheading": "Samordna gruppmöten utan mejl fram och tillbaka",
-  "viaTrustpilot": "via Trustpilot"
+  "viaTrustpilot": "via Trustpilot",
+  "when2meetAlternative": "Ett modernt alternativ till When2Meet",
+  "when2meetAlternativeDescription": "Rallly gör allt det du använder When2Meet till, utan de krångliga delarna. Skapa tydliga schemaläggningsomröstningar som fungerar utmärkt på mobilen, få aviseringar när deltagare svarar och hantera alla dina omröstningar på ett ställe. Gratis, utan reklam och inget konto krävs för att rösta. Kommer du från When2Meet eller WhenIsGood? Rallly känns direkt bekant.",
+  "when2meetAlternativeMetaDescription": "Rallly är ett gratis alternativ till When2Meet med ett tydligt gränssnitt, utmärkt mobilstöd, aviseringar vid svar och ingen reklam. Inget konto krävs för att rösta.",
+  "when2meetAlternativeMetaTitle": "Bästa gratis alternativet till When2Meet | Rallly"
 }
