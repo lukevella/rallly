@@ -67,6 +67,7 @@
   "attendeeCount": "{count, plural, =0 {No attendees} one {1 attendee} other {# attendees}}",
   "attribution": "Attribution",
   "attributionDescription": "Control the visibility of the attribution text",
+  "attributionSectionDescription": "Control whether \"Powered by Rallly\" appears on your public pages and emails",
   "authenticationAndSecurity": "Authentication & Security",
   "authenticationAndSecurityDescription": "Manage authentication and security settings",
   "authErrorsEmailBlocked": "This email address is not allowed. Please use a different email or contact support.",

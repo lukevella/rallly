@@ -5,8 +5,6 @@ import { Button } from "@rallly/ui/button";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
 import {
   Field,
-  FieldContent,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
@@ -26,7 +24,6 @@ import { ProBadge } from "@/features/billing/components/pro-badge";
 import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
 import {
   updateSpaceAction,
-  updateSpaceHideAttributionAction,
   updateSpaceShowBrandingAction,
 } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
@@ -48,7 +45,6 @@ export function CustomBrandingSection({
   const isDirty = hexColor !== currentColor;
 
   const updateShowBranding = useSafeAction(updateSpaceShowBrandingAction);
-  const updateHideAttribution = useSafeAction(updateSpaceHideAttributionAction);
   const updateSpace = useSafeAction(updateSpaceAction);
 
   // Holds the toggled value until the post-action router refresh
@@ -84,40 +80,6 @@ export function CustomBrandingSection({
 
     if (result?.serverError || result?.validationErrors) {
       setPendingShowBranding(null);
-    }
-  };
-
-  const [pendingHideAttribution, setPendingHideAttribution] = React.useState<
-    boolean | null
-  >(null);
-  const hideAttribution = pendingHideAttribution ?? space.hideAttribution;
-
-  React.useEffect(() => {
-    if (
-      pendingHideAttribution !== null &&
-      space.hideAttribution === pendingHideAttribution
-    ) {
-      setPendingHideAttribution(null);
-    }
-  }, [space.hideAttribution, pendingHideAttribution]);
-
-  const handleToggleHideAttribution = async (newChecked: boolean) => {
-    if (isFree) {
-      posthog?.capture("branding_settings:paywall_trigger", {
-        setting: "hide_attribution",
-      });
-      showPayWall();
-      return;
-    }
-
-    setPendingHideAttribution(newChecked);
-
-    const result = await updateHideAttribution.executeAsync({
-      hideAttribution: newChecked,
-    });
-
-    if (result?.serverError || result?.validationErrors) {
-      setPendingHideAttribution(null);
     }
   };
 
@@ -182,30 +144,6 @@ export function CustomBrandingSection({
                 <Trans i18nKey="save" defaults="Save" />
               </Button>
             </div>
-          </Field>
-          <FieldSeparator />
-          <Field orientation="horizontal">
-            <FieldContent>
-              <FieldLabel htmlFor="hide-attribution-switch">
-                <Trans
-                  i18nKey="removeAttribution"
-                  defaults="Remove Attribution"
-                />
-                {space.tier !== "pro" && <ProBadge />}
-              </FieldLabel>
-              <FieldDescription>
-                <Trans
-                  i18nKey="removeAttributionDescription"
-                  defaults='Hide "Powered by Rallly" on invite pages and participant emails'
-                />
-              </FieldDescription>
-            </FieldContent>
-            <Switch
-              id="hide-attribution-switch"
-              checked={hideAttribution}
-              onCheckedChange={handleToggleHideAttribution}
-              disabled={disabled || updateHideAttribution.isExecuting}
-            />
           </Field>
         </FieldGroup>
       </PageSectionContent>
