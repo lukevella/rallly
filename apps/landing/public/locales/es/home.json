@@ -27,9 +27,5 @@
   "statsPollsCreated": "{count, number, ::compact-short}+ encuestas creadas",
   "statsUsersRegistered": "{count, number, ::compact-short}+ usuarios registrados",
   "subheading": "Organiza reuniones de grupo sin interminables correos electrónicos",
-  "viaTrustpilot": "con Trustpilot",
-  "when2meetAlternative": "¿Aún estás usando When2Meet?",
-  "when2meetAlternativeDescription": "Crea encuestas profesionales y sin anuncios con Rallly.",
-  "when2meetAlternativeMetaDescription": "Encuentra una mejor manera de programar reuniones con Rallly, la mejor alternativa gratuita a When2Meet. Fácil de usar y gratis.",
-  "when2meetAlternativeMetaTitle": "Mejor alternativa a When2Meet: Rallly"
+  "viaTrustpilot": "con Trustpilot"
 }
