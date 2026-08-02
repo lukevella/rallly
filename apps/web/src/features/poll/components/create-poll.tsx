@@ -1,6 +1,6 @@
 "use client";
 import { posthog } from "@rallly/posthog/client";
-import { buttonVariants, cn } from "@rallly/ui";
+import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   Card,
@@ -26,7 +26,7 @@ import {
 } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
 import { shortUrl } from "@rallly/utils/absolute-url";
-import { CalendarCheckIcon, CheckIcon, CopyIcon } from "lucide-react";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useForm, useFormContext } from "react-hook-form";
@@ -55,44 +55,29 @@ const CreatePollActions = ({
   createdPollId: string | null;
 }) => {
   const form = useFormContext<NewEventData>();
-  const optionCount = form.watch("options")?.length ?? 0;
+
+  if (createdPollId) {
+    return (
+      <output className="flex h-9 items-center gap-x-1.5 rounded-lg bg-green-600/10 px-2.5 font-medium text-green-600 text-sm dark:bg-green-500/10 dark:text-green-500">
+        <CheckIcon className="size-4 shrink-0" />
+        <Trans i18nKey="createPollFooterCreated" defaults="Created" />
+      </output>
+    );
+  }
 
   return (
-    <div className="flex items-center justify-between gap-x-3">
-      {createdPollId ? (
-        <div />
+    <Button
+      form="create-poll"
+      loading={form.formState.isSubmitting}
+      type="submit"
+      variant="primary"
+    >
+      {form.formState.isSubmitting ? (
+        <Trans i18nKey="createPollFooterCreating" defaults="Creating…" />
       ) : (
-        <div className="flex min-w-0 items-center gap-x-2 px-2 text-muted-foreground text-sm tabular-nums">
-          <CalendarCheckIcon className="size-4 shrink-0" />
-          <Trans
-            i18nKey="createPollFooterOptionCount"
-            defaults="{count, plural, =0 {No options selected} one {# option selected} other {# options selected}}"
-            values={{ count: optionCount }}
-          />
-        </div>
+        <Trans i18nKey="create" defaults="Create" />
       )}
-      <div className="flex shrink-0 items-center gap-x-2">
-        {createdPollId ? (
-          <output className="flex h-9 items-center gap-x-1.5 rounded-lg bg-green-600/10 px-2.5 font-medium text-green-600 text-sm dark:bg-green-500/10 dark:text-green-500">
-            <CheckIcon className="size-4 shrink-0" />
-            <Trans i18nKey="createPollFooterCreated" defaults="Created" />
-          </output>
-        ) : (
-          <Button
-            form="create-poll"
-            loading={form.formState.isSubmitting}
-            type="submit"
-            variant="primary"
-          >
-            {form.formState.isSubmitting ? (
-              <Trans i18nKey="createPollFooterCreating" defaults="Creating…" />
-            ) : (
-              <Trans i18nKey="create" defaults="Create" />
-            )}
-          </Button>
-        )}
-      </div>
-    </div>
+    </Button>
   );
 };
 
@@ -134,7 +119,7 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
       <div className="pointer-events-none sticky top-0 z-20 bg-linear-to-b from-gray-100 via-gray-100/90 to-gray-100/0 p-3 pb-8 dark:from-gray-900 dark:via-gray-900/90 dark:to-gray-900/0">
         <div className="pointer-events-auto flex items-center justify-between gap-x-4">
           <div className="flex min-w-0 flex-1 items-center">{nav}</div>
-          <div className="shrink-0 max-sm:hidden">
+          <div className="shrink-0">
             <CreatePollActions createdPollId={createdPollId} />
           </div>
         </div>
@@ -215,17 +200,12 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
 
             <PollSettingsForm />
           </div>
-          <div
-            className={cn(
-              "pointer-events-none sticky bottom-0 z-10 -mx-3 flex flex-col gap-y-3 bg-linear-to-t from-gray-100 via-gray-100/90 to-gray-100/0 px-3 pt-8 pb-3 dark:from-gray-900 dark:via-gray-900/90 dark:to-gray-900/0",
-              isLoggedIn && "sm:hidden",
-            )}
-          >
-            {!isLoggedIn ? (
+          {!isLoggedIn ? (
+            <div className="pointer-events-none sticky bottom-0 z-10 -mx-3 bg-linear-to-t from-gray-100 via-gray-100/90 to-gray-100/0 px-3 pt-8 pb-3 dark:from-gray-900 dark:via-gray-900/90 dark:to-gray-900/0">
               <div className="pointer-events-auto flex items-center justify-center gap-x-2 text-muted-foreground text-sm">
                 <Trans
                   i18nKey="createPollGuestFooterMessage"
-                  defaults="Want to find your polls later?"
+                  defaults="Want to manage your polls from any device?"
                 />
                 <Link
                   href="/login?redirectTo=/new"
@@ -237,11 +217,8 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
                   />
                 </Link>
               </div>
-            ) : null}
-            <div className="pointer-events-auto sm:hidden">
-              <CreatePollActions createdPollId={createdPollId} />
             </div>
-          </div>
+          ) : null}
         </form>
       </main>
       <Dialog open={!!createdPollId}>
