@@ -17,17 +17,22 @@ export class RegisterPage {
   }
 
   async register({ name, email }: { name: string; email: string }) {
-    // Request a verification code
-    await this.page.getByPlaceholder("jessie.smith@example.com").fill(email);
-    await this.page
-      .getByRole("button", { name: "Continue with email" })
-      .click();
+    // The login form is visible before React has hydrated it, so input that
+    // lands too early can be silently lost. Retry until the next screen
+    // appears. The OTP is reused across resends (resendStrategy: "reuse"),
+    // so submitting more than once is safe.
+    await expect(async () => {
+      await this.page.getByPlaceholder("jessie.smith@example.com").fill(email);
+      await this.page
+        .getByRole("button", { name: "Continue with email" })
+        .click();
+      await this.page
+        .getByRole("heading", { name: "Verify Your Email" })
+        .waitFor({ timeout: 5000 });
+    }).toPass();
 
     // Handle verification code
     const code = await getCode(email);
-    await this.page
-      .getByRole("heading", { name: "Verify Your Email" })
-      .waitFor();
     await this.page.getByLabel("Enter your 6-digit code").fill(code);
 
     // New accounts have no name and go through onboarding. The space name
