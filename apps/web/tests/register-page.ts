@@ -47,10 +47,24 @@ export class RegisterPage {
     await this.page
       .getByRole("heading", { name: "Set Up Your Account" })
       .waitFor();
-    await this.page.getByPlaceholder("Jessie Smith").fill(name);
-    await this.page
-      .getByRole("button", { name: "Continue", exact: true })
-      .click();
+
+    // The setup page is reached via a full page load, so like the login
+    // form it is visible before React hydrates it: a fill can be wiped when
+    // the controlled input hydrates and a click can land before the submit
+    // handler is attached. Retry until we navigate away. The setup action
+    // is idempotent, so re-submitting is safe.
+    await expect(async () => {
+      if (!new URL(this.page.url()).pathname.includes("/setup")) {
+        return;
+      }
+      await this.page.getByPlaceholder("Jessie Smith").fill(name);
+      await this.page
+        .getByRole("button", { name: "Continue", exact: true })
+        .click();
+      await this.page.waitForURL((url) => !url.pathname.includes("/setup"), {
+        timeout: 5000,
+      });
+    }).toPass();
 
     // Verify successful registration
     await expect(this.page.getByText(name)).toBeVisible();
