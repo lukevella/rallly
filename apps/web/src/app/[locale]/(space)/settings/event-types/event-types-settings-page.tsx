@@ -45,8 +45,7 @@ import { DeleteEventTypeDialog } from "@/features/event-types/components/delete-
 import { EditEventTypeDialog } from "@/features/event-types/components/edit-event-type-dialog";
 import type { EventTypeDTO } from "@/features/event-types/types";
 import { Trans, useTranslation } from "@/i18n/client";
-import { formatDuration } from "@/lib/datetime/format";
-import { useLocale } from "@/lib/locale/client";
+import { Duration } from "@/lib/datetime/duration";
 import type { LocationType } from "@/lib/location";
 import { trpc } from "@/trpc/client";
 
@@ -96,7 +95,6 @@ function EventTypeCard({
   onEdit: () => void;
   onDelete: () => void;
 }) {
-  const { locale } = useLocale();
   const { t } = useTranslation();
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-card-border bg-card">
@@ -141,7 +139,7 @@ function EventTypeCard({
         <div className="flex flex-wrap gap-1">
           <Badge>
             <ClockIcon className="mr-1 -ml-0.5 size-4" />
-            <span>{formatDuration(duration, locale)}</span>
+            <Duration minutes={duration} />
           </Badge>
           {capacity !== null ? (
             <Badge>
