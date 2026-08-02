@@ -60,7 +60,7 @@ const GuestModeBadge = () => {
             type="button"
             className={cn(
               badgeVariants(),
-              "cursor-pointer hover:bg-card-accent",
+              "cursor-pointer hover:bg-card-accent focus:ring-0 focus:ring-offset-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             )}
           />
         }
