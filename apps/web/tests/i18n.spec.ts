@@ -13,8 +13,13 @@ test("should show correct language if supported", async ({ browser }) => {
   });
   await page.goto("/new");
   await expect(page.locator("text=Titel")).toBeVisible();
-  // "1 Std." only renders client-side, so it doubles as a hydration barrier.
-  await expect(page.getByText("1 Std.", { exact: true })).toBeVisible();
+  // A pill only reacts to clicks once hydration is done, so a successful
+  // selection proves the page hydrated before we assert on errors.
+  await page.getByTestId("all-day-option").click();
+  await expect(page.getByTestId("all-day-option")).toHaveAttribute(
+    "data-checked",
+    "",
+  );
   expect(hydrationErrors).toEqual([]);
 });
 

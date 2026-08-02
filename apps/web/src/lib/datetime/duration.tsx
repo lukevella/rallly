@@ -1,9 +1,10 @@
 "use client";
 
-import { useDateTimeConfig } from "@/lib/datetime/client";
-import { formatDuration } from "@/lib/datetime/format";
-import { useHydrated } from "@/lib/datetime/use-hydrated";
+import { Trans } from "@/i18n/client";
 
+// Durations render from translation keys rather than Intl.DurationFormat:
+// Intl output varies with the engine's ICU build, which desyncs server and
+// client HTML, and emails need translated duration strings anyway.
 export function Duration({
   minutes,
   className,
@@ -11,15 +12,40 @@ export function Duration({
   minutes: number;
   className?: string;
 }) {
-  const hydrated = useHydrated();
-  const { locale } = useDateTimeConfig();
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
 
-  // Intl output isn't stable across engines, so it can't be rendered on the
-  // server; render a non-breaking space (preserves the line height) until
-  // hydration.
-  if (!hydrated) {
-    return <span className={className}> </span>;
+  if (hours && mins) {
+    return (
+      <span className={className}>
+        <Trans
+          i18nKey="durationHoursMinutes"
+          defaults="{hours, plural, one {#h} other {#h}} {minutes, plural, one {#m} other {#m}}"
+          values={{ hours, minutes: mins }}
+        />
+      </span>
+    );
   }
 
-  return <span className={className}>{formatDuration(minutes, locale)}</span>;
+  if (hours) {
+    return (
+      <span className={className}>
+        <Trans
+          i18nKey="durationHours"
+          defaults="{count, plural, one {#h} other {#h}}"
+          values={{ count: hours }}
+        />
+      </span>
+    );
+  }
+
+  return (
+    <span className={className}>
+      <Trans
+        i18nKey="durationMinutes"
+        defaults="{count, plural, one {#m} other {#m}}"
+        values={{ count: mins }}
+      />
+    </span>
+  );
 }

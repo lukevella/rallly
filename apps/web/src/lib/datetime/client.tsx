@@ -6,7 +6,6 @@ import type { DateTimePreset } from "@/lib/datetime/format";
 import {
   formatDateTime as baseFormatDateTime,
   formatDateTimeRange as baseFormatDateTimeRange,
-  formatDuration as baseFormatDuration,
   formatRelativeTime,
 } from "@/lib/datetime/format";
 import { getLocaleDefaults, getWeekdayNames } from "@/lib/datetime/locales";
@@ -111,7 +110,6 @@ export function useDateTime() {
           showTimeZone: opts?.showTimeZone,
         }),
       toRelativeTime: (value: DateInput) => formatRelativeTime(value, locale),
-      formatDuration: (minutes: number) => baseFormatDuration(minutes, locale),
       weekdays: () => getWeekdayNames(locale),
     }),
     [locale, timeZone, timeFormat],
