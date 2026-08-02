@@ -205,7 +205,7 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
               <div className="pointer-events-auto flex items-center justify-center gap-x-2 text-muted-foreground text-sm">
                 <Trans
                   i18nKey="createPollGuestFooterMessage"
-                  defaults="Want to manage your polls from any device?"
+                  defaults="You're not logged in. Admin access to your polls will be tied to this browser."
                 />
                 <Link
                   href="/login?redirectTo=/new"

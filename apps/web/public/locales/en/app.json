@@ -166,7 +166,7 @@
   "createPollFooterCreated": "Created",
   "createPollFooterCreating": "Creating…",
   "createPollGuestFooterLogin": "Log in",
-  "createPollGuestFooterMessage": "Want to manage your polls from any device?",
+  "createPollGuestFooterMessage": "You're not logged in. Admin access to your polls will be tied to this browser.",
   "createPollPollCreated": "Poll created",
   "createSpace": "Create Space",
   "createSpaceDescription": "Create a new space to organize your polls and events.",
