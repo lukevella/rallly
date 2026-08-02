@@ -8,8 +8,8 @@ import {
   Body,
   Button,
   Container,
+  CopyableUrl,
   Heading,
-  Link,
   Text,
 } from "../components/styled-components";
 import { createEmailI18n } from "../i18n";
@@ -36,7 +36,12 @@ async function NewPollEmail({
   const { t, i18n } = await createEmailI18n(locale);
   return (
     <Html>
-      <Head />
+      <Head>
+        <meta
+          name="format-detection"
+          content="telephone=no, date=no, address=no, email=no, url=no"
+        />
+      </Head>
       <Preview>
         {t("newPoll_preview", {
           defaultValue:
@@ -69,11 +74,7 @@ async function NewPollEmail({
               defaults="Your meeting poll titled <b>{title}</b> is ready! Share it using the link below:"
             />
           </Text>
-          <Text>
-            <Link color={chrome.primaryColor} href={participantLink}>
-              {participantLink}
-            </Link>
-          </Text>
+          <CopyableUrl url={participantLink} />
           <Button href={adminLink} color={chrome.primaryColor}>
             {t("newPoll_button", {
               defaultValue: "Manage Poll",

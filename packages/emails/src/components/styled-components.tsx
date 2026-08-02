@@ -148,6 +148,40 @@ export const SmallText = (props: TextProps) => {
   );
 };
 
+export const CopyableUrl = ({ url }: { url: string }) => {
+  // Split before every delimiter and wrap each chunk in its own span so no
+  // single text node matches a URL pattern — this stops mail clients (Gmail,
+  // Outlook) from auto-linking the text. Unlike invisible-character tricks,
+  // span boundaries survive copy/paste with the URL intact.
+  let offset = 0;
+  const segments = url.split(/(?=[/.:])/).map((text) => {
+    const segment = { text, offset };
+    offset += text.length;
+    return segment;
+  });
+  return (
+    <pre
+      style={{
+        margin: "16px 0",
+        padding: "12px 16px",
+        borderRadius: "6px",
+        backgroundColor: "#F9FAFB",
+        border: `1px solid ${borderColor}`,
+        fontFamily:
+          "SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace",
+        fontSize: "14px",
+        color: darkTextColor,
+        whiteSpace: "pre-wrap",
+        wordBreak: "break-all",
+      }}
+    >
+      {segments.map((segment) => (
+        <span key={segment.offset}>{segment.text}</span>
+      ))}
+    </pre>
+  );
+};
+
 export const Card = (props: SectionProps) => {
   return (
     <Section
