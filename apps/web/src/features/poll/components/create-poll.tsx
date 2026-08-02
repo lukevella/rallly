@@ -65,15 +65,20 @@ const GuestModeBadge = () => {
           />
         }
       >
-        <Trans i18nKey="createPollGuestModeBadge" defaults="Guest mode" />
+        <Trans i18nKey="guest" defaults="Guest" />
       </PopoverTrigger>
       <PopoverContent align="end" className="max-w-xs">
-        <p className="text-sm">
-          <Trans
-            i18nKey="createPollGuestModeDescription"
-            defaults="You're not logged in. Polls you create will be tied to this browser. Log in to manage them from any device."
-          />
-        </p>
+        <div>
+          <h3 className="font-medium text-sm">
+            <Trans i18nKey="createPollGuestModeTitle" defaults="Guest mode" />
+          </h3>
+          <p className="mt-1 text-pretty text-muted-foreground text-sm">
+            <Trans
+              i18nKey="createPollGuestModeDescription"
+              defaults="Guest polls can only be managed from the browser they were created in. Log in to manage them from any device."
+            />
+          </p>
+        </div>
         <Link
           href="/login?redirectTo=/new"
           className={cn(buttonVariants(), "mt-3 w-full")}
@@ -117,13 +122,7 @@ const CreatePollActions = ({
   );
 };
 
-export const CreatePoll = ({
-  nav,
-  userMenu,
-}: {
-  nav?: React.ReactNode;
-  userMenu?: React.ReactNode;
-}) => {
+export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
   const { t } = useTranslation();
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = !!user && !user.isGuest;
@@ -156,11 +155,11 @@ export const CreatePoll = ({
 
   return (
     <Form {...form}>
-      <header className="sticky top-0 z-20 border-b bg-gray-100/90 p-3 backdrop-blur-md dark:bg-gray-900/90">
+      <header className="sticky top-0 z-20 bg-gray-100/90 p-3 backdrop-blur-md dark:bg-gray-900/90">
         <div className="flex items-center justify-between gap-x-4">
           <div className="flex min-w-0 flex-1 items-center">{nav}</div>
           <div className="flex shrink-0 items-center gap-x-4">
-            {isLoggedIn ? userMenu : <GuestModeBadge />}
+            {!isLoggedIn ? <GuestModeBadge /> : null}
             <CreatePollActions createdPollId={createdPollId} />
           </div>
         </div>
@@ -168,7 +167,7 @@ export const CreatePoll = ({
       <main
         id="main-content"
         tabIndex={-1}
-        className="mx-auto max-w-4xl p-3 lg:py-6"
+        className="mx-auto max-w-4xl px-3 pb-8 lg:pt-6"
       >
         <form
           id="create-poll"
@@ -223,7 +222,7 @@ export const CreatePoll = ({
             }
           })}
         >
-          <div className="space-y-4 pb-8">
+          <div className="space-y-4">
             <Card>
               <CardHeader>
                 <CardTitle>
