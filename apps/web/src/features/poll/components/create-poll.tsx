@@ -222,18 +222,20 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
             )}
           >
             {!isLoggedIn ? (
-              <div className="pointer-events-auto text-center text-muted-foreground text-sm">
+              <div className="pointer-events-auto flex items-center justify-center gap-x-2 text-muted-foreground text-sm">
                 <Trans
-                  i18nKey="createPollGuestFooter"
-                  defaults="You are not logged in. <0>Login?</0>"
-                  components={[
-                    <Link
-                      key="login"
-                      href="/login?redirectTo=/new"
-                      className="text-foreground underline hover:no-underline"
-                    />,
-                  ]}
+                  i18nKey="createPollGuestFooterMessage"
+                  defaults="Want to find your polls later?"
                 />
+                <Link
+                  href="/login?redirectTo=/new"
+                  className={buttonVariants({ variant: "ghost", size: "sm" })}
+                >
+                  <Trans
+                    i18nKey="createPollGuestFooterLogin"
+                    defaults="Log in"
+                  />
+                </Link>
               </div>
             ) : null}
             <div className="pointer-events-auto sm:hidden">
