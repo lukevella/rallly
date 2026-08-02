@@ -22,13 +22,20 @@ export class RegisterPage {
     // appears. The OTP is reused across resends (resendStrategy: "reuse"),
     // so submitting more than once is safe.
     await expect(async () => {
+      const verifyHeading = this.page.getByRole("heading", {
+        name: "Verify Your Email",
+      });
+      // A previous attempt may have submitted successfully with the
+      // navigation landing only after its wait expired — the login form is
+      // gone at that point, so don't try to fill it again.
+      if (await verifyHeading.isVisible()) {
+        return;
+      }
       await this.page.getByPlaceholder("jessie.smith@example.com").fill(email);
       await this.page
         .getByRole("button", { name: "Continue with email" })
         .click();
-      await this.page
-        .getByRole("heading", { name: "Verify Your Email" })
-        .waitFor({ timeout: 5000 });
+      await verifyHeading.waitFor({ timeout: 5000 });
     }).toPass();
 
     // Handle verification code
