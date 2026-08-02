@@ -158,7 +158,7 @@ export const CreatePoll = ({
 
   return (
     <Form {...form}>
-      <div className="pointer-events-none sticky top-0 z-20 bg-linear-to-b from-gray-100 via-gray-100/90 to-gray-100/0 p-3 pb-8 dark:from-gray-900 dark:via-gray-900/90 dark:to-gray-900/0">
+      <header className="pointer-events-none sticky top-0 z-20 bg-linear-to-b from-gray-100 via-gray-100/90 to-gray-100/0 p-3 pb-8 dark:from-gray-900 dark:via-gray-900/90 dark:to-gray-900/0">
         <div className="pointer-events-auto flex items-center justify-between gap-x-4">
           <div className="flex min-w-0 flex-1 items-center">{nav}</div>
           <div className="flex shrink-0 items-center gap-x-4">
@@ -166,7 +166,7 @@ export const CreatePoll = ({
             <CreatePollActions createdPollId={createdPollId} />
           </div>
         </div>
-      </div>
+      </header>
       <main id="main-content" tabIndex={-1} className="mx-auto max-w-4xl px-3">
         <form
           id="create-poll"

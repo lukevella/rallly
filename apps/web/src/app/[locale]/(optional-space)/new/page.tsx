@@ -33,7 +33,7 @@ export default async function Page() {
     space?.showBranding && space.primaryColor ? space.primaryColor : null;
 
   return (
-    <div className="page-bg-gray-100 absolute inset-0 h-dvh overflow-auto dark:bg-gray-900">
+    <div className="page-bg-gray-100 absolute inset-0 h-dvh scroll-pt-16 overflow-auto dark:bg-gray-900">
       {primaryColor ? <BrandStyle primaryColor={primaryColor} /> : null}
       <CreatePoll
         nav={
