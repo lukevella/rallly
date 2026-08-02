@@ -41,16 +41,16 @@ export function AccountSidebarMenu() {
       href: "/settings/profile",
     },
     {
-      id: "security",
-      label: t("security", { defaultValue: "Security" }),
-      icon: <LockIcon />,
-      href: "/settings/security",
-    },
-    {
       id: "preferences",
       label: t("preferences", { defaultValue: "Preferences" }),
       icon: <Settings2Icon />,
       href: "/settings/preferences",
+    },
+    {
+      id: "security",
+      label: t("security", { defaultValue: "Security" }),
+      icon: <LockIcon />,
+      href: "/settings/security",
     },
     {
       id: "notifications",
