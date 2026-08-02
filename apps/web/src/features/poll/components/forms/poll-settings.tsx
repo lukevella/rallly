@@ -1,4 +1,5 @@
 import { posthog } from "@rallly/posthog/client";
+import { Badge } from "@rallly/ui/badge";
 import {
   Card,
   CardContent,
@@ -8,7 +9,13 @@ import {
 } from "@rallly/ui/card";
 import { FormField } from "@rallly/ui/form";
 import { Switch } from "@rallly/ui/switch";
-import { AtSignIcon, EyeIcon, MessageCircleIcon, VoteIcon } from "lucide-react";
+import {
+  AtSignIcon,
+  EyeIcon,
+  InfoIcon,
+  MessageCircleIcon,
+  VoteIcon,
+} from "lucide-react";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { showPayWall, useIsFree } from "@/features/billing/client";
@@ -66,12 +73,74 @@ const PollSetting = ({
                 showPayWall({ from: "poll-settings", setting: name });
               } else {
                 field.onChange(checked);
-                if (name === "disableComments") {
-                  posthog?.capture("poll_settings:comments_toggle_click", {
-                    enabled: !checked,
-                  });
-                }
               }
+            }}
+          />
+        </label>
+      )}
+    />
+  );
+};
+
+const CommentsSetting = () => {
+  const form = useFormContext<PollSettingsFormData>();
+  const titleId = React.useId();
+  const descriptionId = React.useId();
+  const hintId = React.useId();
+
+  return (
+    <FormField
+      control={form.control}
+      name="enableComments"
+      render={({ field }) => (
+        // biome-ignore lint/a11y/noLabelWithoutControl: switch is rendered inside
+        <label className="flex cursor-pointer select-none items-start gap-x-3 rounded-xl border bg-card p-3 hover:bg-card-accent">
+          <MessageCircleIcon className="size-4 shrink-0 translate-y-0.5 text-muted-foreground" />
+          <div className="grow">
+            <div
+              id={titleId}
+              className="flex items-center gap-x-2 font-medium text-sm"
+            >
+              <Trans i18nKey="commentsSettingTitle" defaults="Comments" />
+              <Badge size="sm">
+                <Trans i18nKey="commentsSettingLegacyBadge" defaults="Legacy" />
+              </Badge>
+            </div>
+            <div
+              id={descriptionId}
+              className="mt-1 text-muted-foreground text-xs"
+            >
+              <Trans
+                i18nKey="commentsSettingDescription"
+                defaults="Let participants post public comments on the poll."
+              />
+            </div>
+            {field.value ? (
+              <div
+                id={hintId}
+                className="mt-2 flex items-start gap-x-1.5 text-muted-foreground text-xs"
+              >
+                <InfoIcon className="size-3.5 shrink-0 translate-y-px" />
+                <span>
+                  <Trans
+                    i18nKey="commentsSettingPhaseOutHint"
+                    defaults="Comments are being phased out. Participants can include a note with their response instead."
+                  />
+                </span>
+              </div>
+            ) : null}
+          </div>
+          <Switch
+            aria-labelledby={titleId}
+            aria-describedby={
+              field.value ? `${descriptionId} ${hintId}` : descriptionId
+            }
+            checked={!!field.value}
+            onCheckedChange={(checked) => {
+              field.onChange(checked);
+              posthog?.capture("poll_settings:comments_toggle_click", {
+                enabled: checked,
+              });
             }}
           />
         </label>
@@ -102,22 +171,6 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
       </CardHeader>
       <CardContent>
         <div className="grid gap-2.5">
-          <PollSetting
-            name="disableComments"
-            icon={MessageCircleIcon}
-            title={
-              <Trans
-                i18nKey="disableCommentsTitle"
-                defaults="Disable comments"
-              />
-            }
-            description={
-              <Trans
-                i18nKey="disableCommentsDescription"
-                defaults="Remove the option to leave comments on the poll."
-              />
-            }
-          />
           <PollSetting
             name="requireParticipantEmail"
             icon={AtSignIcon}
@@ -164,6 +217,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
               />
             }
           />
+          <CommentsSetting />
         </div>
       </CardContent>
       {children}

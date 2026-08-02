@@ -72,7 +72,7 @@ export const CreatePoll: React.FunctionComponent = () => {
       options: [],
       hideScores: false,
       hideParticipants: false,
-      disableComments: true,
+      enableComments: false,
       duration: 60,
       lockTimeZone: false,
       allDay: false,
@@ -107,7 +107,7 @@ export const CreatePoll: React.FunctionComponent = () => {
                 ? formData?.timeZone || getBrowserTimeZone()
                 : null,
             hideParticipants: formData?.hideParticipants,
-            disableComments: formData?.disableComments,
+            disableComments: !formData?.enableComments,
             hideScores: formData?.hideScores,
             requireParticipantEmail: formData?.requireParticipantEmail,
             options: required(formData?.options).map((option) => ({
