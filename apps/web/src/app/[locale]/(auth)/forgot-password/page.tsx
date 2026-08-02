@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Trans } from "react-i18next/TransWithoutContext";
 import { env } from "@/env";
-import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { redirectIfLoggedIn } from "@/lib/auth";
 import {
@@ -20,15 +20,23 @@ export default async function ForgotPasswordPage() {
     notFound();
   }
   await redirectIfLoggedIn();
+  const { t } = await getTranslation();
 
   return (
     <AuthPageContainer>
       <AuthPageHeader>
         <AuthPageTitle>
-          <Trans i18nKey="forgotPasswordTitle" defaults="Forgot Password" />
+          <Trans
+            t={t}
+            ns="app"
+            i18nKey="forgotPasswordTitle"
+            defaults="Forgot Password"
+          />
         </AuthPageTitle>
         <AuthPageDescription>
           <Trans
+            t={t}
+            ns="app"
             i18nKey="forgotPasswordDescription"
             defaults="Enter your email address and we'll send you a link to reset your password."
           />
@@ -39,6 +47,8 @@ export default async function ForgotPasswordPage() {
       </AuthPageContent>
       <AuthPageExternal>
         <Trans
+          t={t}
+          ns="app"
           i18nKey="forgotPasswordFooter"
           defaults="Remember your password? <a>Back to login</a>"
           components={{
