@@ -167,7 +167,7 @@ export function ImageUploadControl({
               fileInputRef.current?.click();
             }}
           >
-            <Trans i18nKey="uploadImage" defaults="Upload" />
+            <Trans i18nKey="chooseImage" defaults="Choose…" />
           </Button>
           {hasCurrentImage ? (
             <Button loading={isRemoving} variant="ghost" onClick={handleRemove}>

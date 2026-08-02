@@ -118,6 +118,7 @@
   "changeRole": "Change role",
   "charactersRemaining": "{count, plural, one {# character remaining} other {# characters remaining}}",
   "checkForConflicts": "Toggle which calendars to check for conflicts",
+  "chooseImage": "Choose…",
   "cityTime": "{city} Time",
   "clockPreferences": "Clock Preferences",
   "clockPreferencesDescription": "Set your preferred time zone and time format.",
