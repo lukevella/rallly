@@ -1,223 +1,295 @@
+"use client";
+
 import { posthog } from "@rallly/posthog/client";
 import { Badge } from "@rallly/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@rallly/ui/card";
+import { Card, CardContent, CardTitle } from "@rallly/ui/card";
 import { FormField } from "@rallly/ui/form";
 import { Switch } from "@rallly/ui/switch";
 import {
-  AtSignIcon,
-  EyeIcon,
+  BarChart2Icon,
   InfoIcon,
+  MailIcon,
   MessageCircleIcon,
-  VoteIcon,
+  VenetianMaskIcon,
 } from "lucide-react";
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { PageIcon } from "@/components/page-icons";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import type { PollSettingsFormData } from "@/features/poll/components/forms/types";
 import { Trans } from "@/i18n/client";
 
-const PollSetting = ({
-  name,
-  icon: Icon,
-  pro = false,
-  title,
-  description,
-}: {
-  name: keyof PollSettingsFormData;
-  icon: React.ComponentType<{ className?: string }>;
-  pro?: boolean;
-  title: React.ReactNode;
-  description: React.ReactNode;
-}) => {
-  const form = useFormContext<PollSettingsFormData>();
-  const isFree = useIsFree();
-  const titleId = React.useId();
-  const descriptionId = React.useId();
+const PollSettingContext = React.createContext<{
+  titleId: string;
+  descriptionId: string;
+  hintId: string;
+} | null>(null);
 
-  return (
-    <FormField
-      control={form.control}
-      name={name}
-      render={({ field }) => (
-        // biome-ignore lint/a11y/noLabelWithoutControl: switch is rendered inside
-        <label className="flex cursor-pointer select-none items-start gap-x-3 rounded-xl border bg-card p-3 hover:bg-card-accent">
-          <Icon className="size-4 shrink-0 translate-y-0.5 text-muted-foreground" />
-          <div className="grow">
-            <div
-              id={titleId}
-              className="flex items-center gap-x-2 font-medium text-sm"
-            >
-              {title}
-              {pro && isFree ? <ProBadge /> : null}
-            </div>
-            <div
-              id={descriptionId}
-              className="mt-1 text-muted-foreground text-xs"
-            >
-              {description}
-            </div>
-          </div>
-          <Switch
-            aria-labelledby={titleId}
-            aria-describedby={descriptionId}
-            checked={!!field.value}
-            onCheckedChange={(checked) => {
-              if (checked && pro && isFree) {
-                showPayWall({ from: "poll-settings", setting: name });
-              } else {
-                field.onChange(checked);
-              }
-            }}
-          />
-        </label>
-      )}
-    />
-  );
+const usePollSetting = () => {
+  const context = React.useContext(PollSettingContext);
+  if (!context) {
+    throw new Error("PollSetting components must be used within <PollSetting>");
+  }
+  return context;
 };
 
-const CommentsSetting = () => {
-  const form = useFormContext<PollSettingsFormData>();
+const PollSetting = ({ children }: React.PropsWithChildren) => {
   const titleId = React.useId();
   const descriptionId = React.useId();
   const hintId = React.useId();
+  const value = React.useMemo(
+    () => ({ titleId, descriptionId, hintId }),
+    [titleId, descriptionId, hintId],
+  );
 
   return (
-    <FormField
-      control={form.control}
-      name="enableComments"
-      render={({ field }) => (
-        // biome-ignore lint/a11y/noLabelWithoutControl: switch is rendered inside
-        <label className="flex cursor-pointer select-none items-start gap-x-3 rounded-xl border bg-card p-3 hover:bg-card-accent">
-          <MessageCircleIcon className="size-4 shrink-0 translate-y-0.5 text-muted-foreground" />
-          <div className="grow">
-            <div
-              id={titleId}
-              className="flex items-center gap-x-2 font-medium text-sm"
-            >
-              <Trans i18nKey="commentsSettingTitle" defaults="Comments" />
-              <Badge size="sm">
-                <Trans i18nKey="commentsSettingLegacyBadge" defaults="Legacy" />
-              </Badge>
-            </div>
-            <div
-              id={descriptionId}
-              className="mt-1 text-muted-foreground text-xs"
-            >
-              <Trans
-                i18nKey="commentsSettingDescription"
-                defaults="Let participants post public comments on the poll."
-              />
-            </div>
-            {field.value ? (
-              <div
-                id={hintId}
-                className="mt-2 flex items-start gap-x-1.5 text-muted-foreground text-xs"
-              >
-                <InfoIcon className="size-3.5 shrink-0 translate-y-px" />
-                <span>
-                  <Trans
-                    i18nKey="commentsSettingPhaseOutHint"
-                    defaults="Comments are being phased out. Participants can include a note with their response instead."
-                  />
-                </span>
-              </div>
-            ) : null}
-          </div>
-          <Switch
-            aria-labelledby={titleId}
-            aria-describedby={
-              field.value ? `${descriptionId} ${hintId}` : descriptionId
-            }
-            checked={!!field.value}
-            onCheckedChange={(checked) => {
-              field.onChange(checked);
-              posthog?.capture("poll_settings:comments_toggle_click", {
-                enabled: checked,
-              });
-            }}
-          />
-        </label>
-      )}
-    />
+    <PollSettingContext.Provider value={value}>
+      {/* biome-ignore lint/a11y/noLabelWithoutControl: switch is rendered inside */}
+      <label className="grid cursor-pointer select-none grid-cols-[1fr_auto] gap-x-3 py-4 [grid-template-areas:'title_control'_'description_control'_'hint_hint'] first:pt-0 last:pb-0 sm:grid-cols-[auto_1fr_auto] sm:[grid-template-areas:'icon_title_control'_'icon_description_control'_'icon_hint_hint']">
+        {children}
+      </label>
+    </PollSettingContext.Provider>
+  );
+};
+
+const PollSettingIcon = ({ children }: React.PropsWithChildren) => {
+  return (
+    <div className="hidden self-start [grid-area:icon] sm:block">
+      <PageIcon size="lg">{children}</PageIcon>
+    </div>
+  );
+};
+
+const PollSettingTitle = ({ children }: React.PropsWithChildren) => {
+  const { titleId } = usePollSetting();
+  return (
+    <div
+      id={titleId}
+      className="flex items-center gap-x-2 text-sm [grid-area:title]"
+    >
+      {children}
+    </div>
+  );
+};
+
+const PollSettingDescription = ({ children }: React.PropsWithChildren) => {
+  const { descriptionId } = usePollSetting();
+  return (
+    <div
+      id={descriptionId}
+      className="mt-0.5 text-muted-foreground text-xs [grid-area:description]"
+    >
+      {children}
+    </div>
+  );
+};
+
+const PollSettingControl = ({
+  children,
+}: {
+  children: React.ReactElement<{
+    "aria-labelledby"?: string;
+    "aria-describedby"?: string;
+  }>;
+}) => {
+  const { titleId, descriptionId, hintId } = usePollSetting();
+  return (
+    <div className="self-start justify-self-end [grid-area:control]">
+      {/* A dangling hint id is ignored by assistive tech while no hint is rendered */}
+      {React.cloneElement(children, {
+        "aria-labelledby": titleId,
+        "aria-describedby": `${descriptionId} ${hintId}`,
+      })}
+    </div>
+  );
+};
+
+const PollSettingHint = ({ children }: React.PropsWithChildren) => {
+  const { hintId } = usePollSetting();
+  return (
+    <div
+      id={hintId}
+      className="mt-4 flex items-start gap-x-1.5 text-muted-foreground text-xs [grid-area:hint]"
+    >
+      <InfoIcon className="size-3.5 shrink-0 translate-y-px" />
+      <span>{children}</span>
+    </div>
   );
 };
 
 export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
+  const form = useFormContext<PollSettingsFormData>();
+  const isFree = useIsFree();
+
   return (
     <Card>
-      <CardHeader>
-        <div className="flex justify-between gap-x-4">
-          <div>
-            <div className="flex items-center gap-x-2">
-              <CardTitle>
-                <Trans i18nKey="settings" />
-              </CardTitle>
-            </div>
-            <CardDescription>
-              <Trans
-                i18nKey="pollSettingsDescription"
-                defaults="Customize the behaviour of your poll"
-              />
-            </CardDescription>
-          </div>
-        </div>
-      </CardHeader>
+      <div className="px-3 pt-3 sm:px-4 sm:pt-4">
+        <CardTitle>
+          <Trans i18nKey="settings" />
+        </CardTitle>
+      </div>
       <CardContent>
-        <div className="grid gap-2.5">
-          <PollSetting
+        <div className="divide-y">
+          <FormField
+            control={form.control}
             name="requireParticipantEmail"
-            icon={AtSignIcon}
-            pro
-            title={
-              <Trans
-                i18nKey="requireParticipantEmailTitle"
-                defaults="Require email"
-              />
-            }
-            description={
-              <Trans
-                i18nKey="requireParticipantEmailDescription"
-                defaults="Participants must provide an email address to respond."
-              />
-            }
+            render={({ field }) => (
+              <PollSetting>
+                <PollSettingIcon>
+                  <MailIcon />
+                </PollSettingIcon>
+                <PollSettingTitle>
+                  <Trans
+                    i18nKey="requireParticipantEmailTitle"
+                    defaults="Require email"
+                  />
+                  {isFree ? <ProBadge /> : null}
+                </PollSettingTitle>
+                <PollSettingDescription>
+                  <Trans
+                    i18nKey="requireParticipantEmailDescription"
+                    defaults="Participants must provide an email address to respond."
+                  />
+                </PollSettingDescription>
+                <PollSettingControl>
+                  <Switch
+                    checked={!!field.value}
+                    onCheckedChange={(checked) => {
+                      if (checked && isFree) {
+                        showPayWall({
+                          from: "poll-settings",
+                          setting: "requireParticipantEmail",
+                        });
+                      } else {
+                        field.onChange(checked);
+                      }
+                    }}
+                  />
+                </PollSettingControl>
+              </PollSetting>
+            )}
           />
-          <PollSetting
+          <FormField
+            control={form.control}
             name="hideParticipants"
-            icon={EyeIcon}
-            pro
-            title={
-              <Trans
-                i18nKey="hideParticipantsTitle"
-                defaults="Hide participant names"
-              />
-            }
-            description={
-              <Trans
-                i18nKey="hideParticipantsDescription"
-                defaults="Participants will not be able to see the names of other respondents."
-              />
-            }
+            render={({ field }) => (
+              <PollSetting>
+                <PollSettingIcon>
+                  <VenetianMaskIcon />
+                </PollSettingIcon>
+                <PollSettingTitle>
+                  <Trans
+                    i18nKey="hideParticipantsTitle"
+                    defaults="Hide participant names"
+                  />
+                  {isFree ? <ProBadge /> : null}
+                </PollSettingTitle>
+                <PollSettingDescription>
+                  <Trans
+                    i18nKey="hideParticipantsDescription"
+                    defaults="Participants will not be able to see the names of other respondents."
+                  />
+                </PollSettingDescription>
+                <PollSettingControl>
+                  <Switch
+                    checked={!!field.value}
+                    onCheckedChange={(checked) => {
+                      if (checked && isFree) {
+                        showPayWall({
+                          from: "poll-settings",
+                          setting: "hideParticipants",
+                        });
+                      } else {
+                        field.onChange(checked);
+                      }
+                    }}
+                  />
+                </PollSettingControl>
+              </PollSetting>
+            )}
           />
-          <PollSetting
+          <FormField
+            control={form.control}
             name="hideScores"
-            icon={VoteIcon}
-            pro
-            title={<Trans i18nKey="hideScoresTitle" defaults="Hide votes" />}
-            description={
-              <Trans
-                i18nKey="hideScoresDescription"
-                defaults="Hide everyone's votes from a participant until they cast their own."
-              />
-            }
+            render={({ field }) => (
+              <PollSetting>
+                <PollSettingIcon>
+                  <BarChart2Icon />
+                </PollSettingIcon>
+                <PollSettingTitle>
+                  <Trans i18nKey="hideScoresTitle" defaults="Hide votes" />
+                  {isFree ? <ProBadge /> : null}
+                </PollSettingTitle>
+                <PollSettingDescription>
+                  <Trans
+                    i18nKey="hideScoresDescription"
+                    defaults="Hide everyone's votes from a participant until they cast their own."
+                  />
+                </PollSettingDescription>
+                <PollSettingControl>
+                  <Switch
+                    checked={!!field.value}
+                    onCheckedChange={(checked) => {
+                      if (checked && isFree) {
+                        showPayWall({
+                          from: "poll-settings",
+                          setting: "hideScores",
+                        });
+                      } else {
+                        field.onChange(checked);
+                      }
+                    }}
+                  />
+                </PollSettingControl>
+              </PollSetting>
+            )}
           />
-          <CommentsSetting />
+          <FormField
+            control={form.control}
+            name="enableComments"
+            render={({ field }) => (
+              <PollSetting>
+                <PollSettingIcon>
+                  <MessageCircleIcon />
+                </PollSettingIcon>
+                <PollSettingTitle>
+                  <Trans i18nKey="commentsSettingTitle" defaults="Comments" />
+                  <Badge size="sm">
+                    <Trans
+                      i18nKey="commentsSettingLegacyBadge"
+                      defaults="Legacy"
+                    />
+                  </Badge>
+                </PollSettingTitle>
+                <PollSettingDescription>
+                  <Trans
+                    i18nKey="commentsSettingDescription"
+                    defaults="Allow participants to post comments on the poll."
+                  />
+                </PollSettingDescription>
+                <PollSettingControl>
+                  <Switch
+                    checked={!!field.value}
+                    onCheckedChange={(checked) => {
+                      field.onChange(checked);
+                      posthog?.capture("poll_settings:comments_toggle_click", {
+                        enabled: checked,
+                      });
+                    }}
+                  />
+                </PollSettingControl>
+                {field.value ? (
+                  <PollSettingHint>
+                    <Trans
+                      i18nKey="commentsSettingPhaseOutHint"
+                      defaults="Comments are being phased out. Participants can include a note with their response instead."
+                    />
+                  </PollSettingHint>
+                ) : null}
+              </PollSetting>
+            )}
+          />
         </div>
       </CardContent>
       {children}
