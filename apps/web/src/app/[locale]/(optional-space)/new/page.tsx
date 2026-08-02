@@ -13,7 +13,6 @@ import { redirect } from "next/navigation";
 import { BrandStyle } from "@/features/branding/components/brand-style";
 import { CreatePoll } from "@/features/poll/components/create-poll";
 import { getActiveSpaceForUser } from "@/features/space/data";
-import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getSession } from "@/lib/auth";
@@ -35,41 +34,29 @@ export default async function Page() {
   return (
     <div className="page-bg-gray-100 absolute inset-0 h-dvh overflow-auto dark:bg-gray-900">
       {primaryColor ? <BrandStyle primaryColor={primaryColor} /> : null}
-      <div className="sticky top-0 z-20 border-b bg-gray-100/90 p-3 backdrop-blur-md sm:grid-cols-3 dark:bg-gray-900/90">
-        <div className="mx-auto flex items-center justify-between gap-x-2">
-          <div className="sm:flex-1">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink
-                    render={<Link href="/polls" />}
-                    className="flex items-center gap-x-2"
-                  >
-                    <BarChart2Icon className="size-4" />
-                    <Trans i18nKey="polls" defaults="Polls" />
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>
-                    <Trans i18nKey="newPoll" defaults="New Poll" />
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-          <div className="flex flex-1 justify-end">
-            <UserDropdown />
-          </div>
-        </div>
-      </div>
-      <main
-        id="main-content"
-        tabIndex={-1}
-        className="mx-auto max-w-4xl p-3 sm:px-6 sm:py-5"
-      >
-        <CreatePoll />
-      </main>
+      <CreatePoll
+        nav={
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink
+                  render={<Link href="/polls" />}
+                  className="flex items-center gap-x-2"
+                >
+                  <BarChart2Icon className="size-4" />
+                  <Trans i18nKey="polls" defaults="Polls" />
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>
+                  <Trans i18nKey="newPoll" defaults="New Poll" />
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        }
+      />
     </div>
   );
 }

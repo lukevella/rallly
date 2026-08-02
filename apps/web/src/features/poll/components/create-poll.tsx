@@ -1,6 +1,6 @@
 "use client";
 import { posthog } from "@rallly/posthog/client";
-import { buttonVariants } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   Card,
@@ -26,10 +26,10 @@ import {
 } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
 import { shortUrl } from "@rallly/utils/absolute-url";
-import { CheckIcon, CopyIcon } from "lucide-react";
+import { CalendarCheckIcon, CheckIcon, CopyIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useCopyToClipboard, useUnmount } from "react-use";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
@@ -49,16 +49,57 @@ const required = <T,>(v: T | undefined): T => {
   return v;
 };
 
-export interface CreatePollPageProps {
-  title?: string;
-  location?: string;
-  description?: string;
-  view?: "week" | "month";
-}
+const CreatePollActions = ({
+  createdPollId,
+}: {
+  createdPollId: string | null;
+}) => {
+  const form = useFormContext<NewEventData>();
+  const optionCount = form.watch("options")?.length ?? 0;
 
-export const CreatePoll: React.FunctionComponent = () => {
+  return (
+    <div className="flex items-center justify-between gap-x-3">
+      {createdPollId ? (
+        <div />
+      ) : (
+        <div className="flex min-w-0 items-center gap-x-2 px-2 text-muted-foreground text-sm tabular-nums">
+          <CalendarCheckIcon className="size-4 shrink-0" />
+          <Trans
+            i18nKey="createPollFooterOptionCount"
+            defaults="{count, plural, =0 {No options selected} one {# option selected} other {# options selected}}"
+            values={{ count: optionCount }}
+          />
+        </div>
+      )}
+      <div className="flex shrink-0 items-center gap-x-2">
+        {createdPollId ? (
+          <output className="flex h-9 items-center gap-x-1.5 rounded-lg bg-green-600/10 px-2.5 font-medium text-green-600 text-sm dark:bg-green-500/10 dark:text-green-500">
+            <CheckIcon className="size-4 shrink-0" />
+            <Trans i18nKey="createPollFooterCreated" defaults="Created" />
+          </output>
+        ) : (
+          <Button
+            form="create-poll"
+            loading={form.formState.isSubmitting}
+            type="submit"
+            variant="primary"
+          >
+            {form.formState.isSubmitting ? (
+              <Trans i18nKey="createPollFooterCreating" defaults="Creating…" />
+            ) : (
+              <Trans i18nKey="create" defaults="Create" />
+            )}
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
   const { t } = useTranslation();
-  const { createGuestIfNeeded } = useUser();
+  const { user, createGuestIfNeeded } = useUser();
+  const isLoggedIn = !!user && !user.isGuest;
   const [createdPollId, setCreatedPollId] = React.useState<string | null>(null);
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
@@ -90,91 +131,117 @@ export const CreatePoll: React.FunctionComponent = () => {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(async (formData) => {
-          const title = required(formData?.title.trim());
-          await createGuestIfNeeded();
-          const res = await makePoll.mutateAsync({
-            title: title,
-            location: formData?.location?.trim(),
-            description: formData?.description?.trim(),
-            // Attach a time zone (times convert per viewer) unless the organizer
-            // locked it to a single wall-clock time or the poll is all-day.
-            // Fall back to the organizer's zone so a converting poll is always
-            // anchored to a concrete zone.
-            timeZone:
-              !formData?.lockTimeZone && !formData?.allDay
-                ? formData?.timeZone || getBrowserTimeZone()
-                : null,
-            hideParticipants: formData?.hideParticipants,
-            disableComments: !formData?.enableComments,
-            hideScores: formData?.hideScores,
-            requireParticipantEmail: formData?.requireParticipantEmail,
-            options: required(formData?.options).map((option) => ({
-              startDate: option.type === "date" ? option.date : option.start,
-              endDate: option.type === "timeSlot" ? option.end : undefined,
-            })),
-          });
+      <div className="pointer-events-none sticky top-0 z-20 bg-linear-to-b from-gray-100 via-gray-100/90 to-gray-100/0 p-3 pb-8 dark:from-gray-900 dark:via-gray-900/90 dark:to-gray-900/0">
+        <div className="pointer-events-auto flex items-center justify-between gap-x-4">
+          <div className="flex min-w-0 flex-1 items-center">{nav}</div>
+          <div className="shrink-0 max-sm:hidden">
+            <CreatePollActions createdPollId={createdPollId} />
+          </div>
+        </div>
+      </div>
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-4xl px-3">
+        <form
+          id="create-poll"
+          onSubmit={form.handleSubmit(async (formData) => {
+            const title = required(formData?.title.trim());
+            await createGuestIfNeeded();
+            const res = await makePoll.mutateAsync({
+              title: title,
+              location: formData?.location?.trim(),
+              description: formData?.description?.trim(),
+              // Attach a time zone (times convert per viewer) unless the organizer
+              // locked it to a single wall-clock time or the poll is all-day.
+              // Fall back to the organizer's zone so a converting poll is always
+              // anchored to a concrete zone.
+              timeZone:
+                !formData?.lockTimeZone && !formData?.allDay
+                  ? formData?.timeZone || getBrowserTimeZone()
+                  : null,
+              hideParticipants: formData?.hideParticipants,
+              disableComments: !formData?.enableComments,
+              hideScores: formData?.hideScores,
+              requireParticipantEmail: formData?.requireParticipantEmail,
+              options: required(formData?.options).map((option) => ({
+                startDate: option.type === "date" ? option.date : option.start,
+                endDate: option.type === "timeSlot" ? option.end : undefined,
+              })),
+            });
 
-          if (res.ok) {
-            setCreatedPollId(res.data.id);
-          } else {
-            toast.error(
-              t("inappropriateContent", {
-                defaultValue: "Inappropriate content",
-              }),
-              {
-                action: {
-                  label: t("learnMore", { defaultValue: "Learn more" }),
-                  onClick: () => {
-                    window.open(
-                      "https://support.rallly.co/guide/content-moderation",
-                      "_blank",
-                    );
+            if (res.ok) {
+              // The persist hook re-saves on every render, so clearing storage
+              // alone is not enough — reset the form so defaults get persisted
+              clear();
+              form.reset();
+              setCreatedPollId(res.data.id);
+            } else {
+              toast.error(
+                t("inappropriateContent", {
+                  defaultValue: "Inappropriate content",
+                }),
+                {
+                  action: {
+                    label: t("learnMore", { defaultValue: "Learn more" }),
+                    onClick: () => {
+                      window.open(
+                        "https://support.rallly.co/guide/content-moderation",
+                        "_blank",
+                      );
+                    },
                   },
                 },
-              },
-            );
-          }
-        })}
-      >
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <Trans i18nKey="event" defaults="Event" />
-              </CardTitle>
-              <CardDescription>
-                <Trans
-                  i18nKey="describeYourEvent"
-                  defaults="Describe what your event is about"
-                />
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <PollDetailsForm />
-            </CardContent>
-          </Card>
+              );
+            }
+          })}
+        >
+          <div className="space-y-4 pb-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  <Trans i18nKey="event" defaults="Event" />
+                </CardTitle>
+                <CardDescription>
+                  <Trans
+                    i18nKey="describeYourEvent"
+                    defaults="Describe what your event is about"
+                  />
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <PollDetailsForm />
+              </CardContent>
+            </Card>
 
-          <PollOptionsForm />
+            <PollOptionsForm />
 
-          <PollSettingsForm />
-          <hr />
-          <Button
-            loading={form.formState.isSubmitting}
-            size="xl"
-            type="submit"
-            className="w-full"
-            variant="primary"
-          >
-            {form.formState.isSubmitting ? (
-              <Trans i18nKey="creatingPoll" defaults="Creating poll..." />
-            ) : (
-              <Trans i18nKey="createPoll" defaults="Create poll" />
+            <PollSettingsForm />
+          </div>
+          <div
+            className={cn(
+              "pointer-events-none sticky bottom-0 z-10 -mx-3 flex flex-col gap-y-3 bg-linear-to-t from-gray-100 via-gray-100/90 to-gray-100/0 px-3 pt-8 pb-3 dark:from-gray-900 dark:via-gray-900/90 dark:to-gray-900/0",
+              isLoggedIn && "sm:hidden",
             )}
-          </Button>
-        </div>
-      </form>
+          >
+            {!isLoggedIn ? (
+              <div className="pointer-events-auto text-center text-muted-foreground text-sm">
+                <Trans
+                  i18nKey="createPollGuestFooter"
+                  defaults="You are not logged in. <0>Login?</0>"
+                  components={[
+                    <Link
+                      key="login"
+                      href="/login?redirectTo=/new"
+                      className="text-foreground underline hover:no-underline"
+                    />,
+                  ]}
+                />
+              </div>
+            ) : null}
+            <div className="pointer-events-auto sm:hidden">
+              <CreatePollActions createdPollId={createdPollId} />
+            </div>
+          </div>
+        </form>
+      </main>
       <Dialog open={!!createdPollId}>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
