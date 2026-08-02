@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
+import { toast } from "@rallly/ui/sonner";
 import {
   ArrowUpRight,
   CalendarIcon,
@@ -72,7 +73,11 @@ export const LocalizationPreferences = ({
     weekStart?: number;
   }) => {
     const result = await updateLocalization.executeAsync(input);
-    return !result?.serverError && !result?.validationErrors;
+    const saved = !result?.serverError && !result?.validationErrors;
+    if (saved) {
+      toast.success(t("saved", { defaultValue: "Saved" }));
+    }
+    return saved;
   };
 
   const weekStartOptions = weekdays().map(({ day, label }) => ({
