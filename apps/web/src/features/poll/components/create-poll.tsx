@@ -1,6 +1,7 @@
 "use client";
 import { posthog } from "@rallly/posthog/client";
-import { buttonVariants } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
+import { badgeVariants } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   Card,
@@ -24,6 +25,7 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@rallly/ui/input-group";
+import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { toast } from "@rallly/ui/sonner";
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { CheckIcon, CopyIcon } from "lucide-react";
@@ -47,6 +49,40 @@ const required = <T,>(v: T | undefined): T => {
   }
 
   return v;
+};
+
+const GuestModeBadge = () => {
+  return (
+    <Popover>
+      <PopoverTrigger
+        render={
+          <button
+            type="button"
+            className={cn(
+              badgeVariants(),
+              "cursor-pointer hover:bg-card-accent",
+            )}
+          />
+        }
+      >
+        <Trans i18nKey="createPollGuestModeBadge" defaults="Guest mode" />
+      </PopoverTrigger>
+      <PopoverContent align="end" className="max-w-xs">
+        <p className="text-sm">
+          <Trans
+            i18nKey="createPollGuestModeDescription"
+            defaults="You're not logged in. Polls you create will be tied to this browser. Log in to manage them from any device."
+          />
+        </p>
+        <Link
+          href="/login?redirectTo=/new"
+          className={cn(buttonVariants(), "mt-3 w-full")}
+        >
+          <Trans i18nKey="createPollGuestModeLogin" defaults="Log in" />
+        </Link>
+      </PopoverContent>
+    </Popover>
+  );
 };
 
 const CreatePollActions = ({
@@ -81,7 +117,13 @@ const CreatePollActions = ({
   );
 };
 
-export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
+export const CreatePoll = ({
+  nav,
+  userMenu,
+}: {
+  nav?: React.ReactNode;
+  userMenu?: React.ReactNode;
+}) => {
   const { t } = useTranslation();
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = !!user && !user.isGuest;
@@ -119,7 +161,8 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
       <div className="pointer-events-none sticky top-0 z-20 bg-linear-to-b from-gray-100 via-gray-100/90 to-gray-100/0 p-3 pb-8 dark:from-gray-900 dark:via-gray-900/90 dark:to-gray-900/0">
         <div className="pointer-events-auto flex items-center justify-between gap-x-4">
           <div className="flex min-w-0 flex-1 items-center">{nav}</div>
-          <div className="shrink-0">
+          <div className="flex shrink-0 items-center gap-x-2">
+            {isLoggedIn ? userMenu : <GuestModeBadge />}
             <CreatePollActions createdPollId={createdPollId} />
           </div>
         </div>
@@ -200,25 +243,6 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
 
             <PollSettingsForm />
           </div>
-          {!isLoggedIn ? (
-            <div className="pointer-events-none sticky bottom-0 z-10 -mx-3 bg-linear-to-t from-gray-100 via-gray-100/90 to-gray-100/0 px-3 pt-8 pb-3 dark:from-gray-900 dark:via-gray-900/90 dark:to-gray-900/0">
-              <div className="pointer-events-auto flex items-center justify-center gap-x-2 text-muted-foreground text-sm">
-                <Trans
-                  i18nKey="createPollGuestFooterMessage"
-                  defaults="You're not logged in. Admin access to your polls will be tied to this browser."
-                />
-                <Link
-                  href="/login?redirectTo=/new"
-                  className={buttonVariants({ variant: "ghost", size: "sm" })}
-                >
-                  <Trans
-                    i18nKey="createPollGuestFooterLogin"
-                    defaults="Log in"
-                  />
-                </Link>
-              </div>
-            </div>
-          ) : null}
         </form>
       </main>
       <Dialog open={!!createdPollId}>

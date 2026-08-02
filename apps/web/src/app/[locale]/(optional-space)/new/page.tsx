@@ -13,6 +13,7 @@ import { redirect } from "next/navigation";
 import { BrandStyle } from "@/features/branding/components/brand-style";
 import { CreatePoll } from "@/features/poll/components/create-poll";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getSession } from "@/lib/auth";
@@ -56,6 +57,7 @@ export default async function Page() {
             </BreadcrumbList>
           </Breadcrumb>
         }
+        userMenu={<UserDropdown />}
       />
     </div>
   );
