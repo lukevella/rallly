@@ -13,6 +13,10 @@ const baseURL = `http://localhost:${port}`;
 export default defineConfig({
   // Artifacts folder where screenshots, videos, and traces are stored.
   outputDir: "test-results/",
+  // Local runs use `next dev`, where on-demand route compilation during a
+  // full-suite run can eat most of the default 30s budget before a test's
+  // final assertion. CI runs a production build and keeps the default.
+  timeout: ci ? 30_000 : 60_000,
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   use: {
     viewport: { width: 1280, height: 720 },
@@ -22,7 +26,15 @@ export default defineConfig({
   },
   testDir: "./tests",
   webServer: {
-    command: ci ? `next start --port ${port}` : `next dev --port ${port}`,
+    // Local runs clear .next first: Turbopack's persistent dev cache
+    // (default on since Next 16.1) is shared across dev sessions, and a
+    // server killed mid-write — which is how every Playwright run ends —
+    // can leave it in a state that deadlocks on-demand route compiles in
+    // the next run. That surfaces as tests timing out on pages no earlier
+    // test has visited, while already-compiled routes keep working.
+    command: ci
+      ? `next start --port ${port}`
+      : `rm -rf .next && next dev --port ${port}`,
     url: baseURL,
     reuseExistingServer: !ci,
     env: {

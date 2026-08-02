@@ -33,6 +33,10 @@ test.describe.serial(() => {
 
     await deletePollDialog.getByRole("button", { name: "delete" }).click();
 
-    await expect(page).toHaveURL("/login?redirectTo=%2Fpolls");
+    // Delete → invalidate → navigate to /polls → bounce to /login is a
+    // long chain for the dev server; give it more than the 5s default.
+    await expect(page).toHaveURL("/login?redirectTo=%2Fpolls", {
+      timeout: 15_000,
+    });
   });
 });
