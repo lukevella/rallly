@@ -167,7 +167,11 @@ export const CreatePoll = ({
           </div>
         </div>
       </header>
-      <main id="main-content" tabIndex={-1} className="mx-auto max-w-4xl px-3">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="mx-auto max-w-4xl p-3 lg:py-6"
+      >
         <form
           id="create-poll"
           onSubmit={form.handleSubmit(async (formData) => {

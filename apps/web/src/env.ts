@@ -74,6 +74,13 @@ export const env = createEnv({
     NOREPLY_EMAIL_NAME: z.string().default("Rallly Notifications"),
 
     /**
+     * Optional URLs for legal pages linked from public pages. Links are only
+     * shown when a URL is available; cloud defaults to the rallly.co pages.
+     */
+    PRIVACY_POLICY_URL: z.url().optional(),
+    TERMS_OF_USE_URL: z.url().optional(),
+
+    /**
      * S3 Configuration
      */
     S3_BUCKET_NAME: z.string().optional(),
@@ -264,6 +271,8 @@ export const env = createEnv({
     SUPPORT_EMAIL: process.env.SUPPORT_EMAIL,
     NOREPLY_EMAIL: process.env.NOREPLY_EMAIL,
     NOREPLY_EMAIL_NAME: process.env.NOREPLY_EMAIL_NAME,
+    PRIVACY_POLICY_URL: process.env.PRIVACY_POLICY_URL,
+    TERMS_OF_USE_URL: process.env.TERMS_OF_USE_URL,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     MODERATION_ENABLED: process.env.MODERATION_ENABLED,
     BANNED_DOMAINS: process.env.BANNED_DOMAINS,
