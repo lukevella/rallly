@@ -162,7 +162,6 @@
   "createPollPollCreated": "Kysely luotu",
   "createSpace": "Luo tila",
   "createSpaceDescription": "Luo uusi tila kyselyiden ja tapahtumien järjestämiseksi.",
-  "creatingPoll": "Luodaan kyselyä...",
   "cropPreview": "Rajauksen esikatselu",
   "currentlyUsing": "Lisenssejä käytössä {usedSeats} / {currentSeats}",
   "currentPassword": "Nykyinen salasana",
