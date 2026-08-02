@@ -22,12 +22,13 @@ export async function LicenseLimitWarning() {
     return null;
   }
 
-  const { t } = await getTranslation();
+  const { t, i18n } = await getTranslation();
 
   return (
     <div className="m-1 rounded-md bg-muted p-2 text-center text-muted-foreground text-sm">
       <Trans
         t={t}
+        i18n={i18n}
         ns="app"
         i18nKey="licenseLimitWarning"
         defaults="You have exceeded the limits of your license. Please <a>upgrade</a>."

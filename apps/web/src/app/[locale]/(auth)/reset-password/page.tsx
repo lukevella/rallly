@@ -18,13 +18,14 @@ export default async function ResetPasswordPage() {
   if (env.EMAIL_LOGIN_ENABLED === "false") {
     notFound();
   }
-  const { t } = await getTranslation();
+  const { t, i18n } = await getTranslation();
   return (
     <AuthPageContainer>
       <AuthPageHeader>
         <AuthPageTitle>
           <Trans
             t={t}
+            i18n={i18n}
             ns="app"
             i18nKey="resetPasswordTitle"
             defaults="Reset Password"
@@ -33,6 +34,7 @@ export default async function ResetPasswordPage() {
         <AuthPageDescription>
           <Trans
             t={t}
+            i18n={i18n}
             ns="app"
             i18nKey="resetPasswordDescription"
             defaults="Enter your new password below"
@@ -45,6 +47,7 @@ export default async function ResetPasswordPage() {
       <AuthPageExternal>
         <Trans
           t={t}
+          i18n={i18n}
           ns="app"
           i18nKey="resetPasswordFooter"
           defaults="<a>Back to login</a>"
