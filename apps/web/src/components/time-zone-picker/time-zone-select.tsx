@@ -35,11 +35,14 @@ export function TimeZoneSelect({
   onValueChange,
   className,
   disabled,
+  ...ariaProps
 }: {
   value?: string;
   onValueChange?: (value: string) => void;
   className?: string;
   disabled?: boolean;
+  "aria-labelledby"?: string;
+  "aria-describedby"?: string;
 }) {
   const { t } = useTranslation();
 
@@ -75,6 +78,7 @@ export function TimeZoneSelect({
           placeholder={t("timezoneInputPlaceholder", {
             defaultValue: "Search timezone…",
           })}
+          {...ariaProps}
         >
           <InputGroupAddon>
             <GlobeIcon />

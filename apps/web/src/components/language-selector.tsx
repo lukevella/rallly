@@ -13,7 +13,9 @@ export const LanguageSelect: React.FunctionComponent<{
   className?: string;
   value?: string;
   onChange?: (language: string) => void;
-}> = ({ className, value, onChange }) => {
+  "aria-labelledby"?: string;
+  "aria-describedby"?: string;
+}> = ({ className, value, onChange, ...ariaProps }) => {
   return (
     <Select
       items={languages}
@@ -24,7 +26,7 @@ export const LanguageSelect: React.FunctionComponent<{
         }
       }}
     >
-      <SelectTrigger className={className}>
+      <SelectTrigger className={className} {...ariaProps}>
         <Icon>
           <LanguagesIcon />
         </Icon>
