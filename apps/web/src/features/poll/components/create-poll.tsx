@@ -33,7 +33,7 @@ import Link from "next/link";
 import React from "react";
 import { useForm, useFormContext } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
-import { useCopyToClipboard, useUnmount } from "react-use";
+import { useCopyToClipboard } from "react-use";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
@@ -151,8 +151,6 @@ export const CreatePoll = ({
     watch: form.watch,
     setValue: form.setValue,
   });
-
-  useUnmount(clear);
 
   const makePoll = trpc.polls.make.useMutation();
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { LanguageSelect } from "@/components/language-selector";
 import { Trans } from "@/i18n/client";
 import { setLocaleCookie, useLocale } from "@/lib/locale/client";
@@ -14,7 +13,6 @@ export function CreatePollFooter({
   termsOfUseUrl?: string;
   supportEmail: string;
 }) {
-  const router = useRouter();
   const { locale } = useLocale();
 
   return (
@@ -24,7 +22,11 @@ export function CreatePollFooter({
         value={locale}
         onChange={(language) => {
           setLocaleCookie(language);
-          router.refresh();
+          // A soft refresh remounts the page across the route's streaming
+          // Suspense boundary, which makes React regenerate the client tree
+          // and lose the draft mid-restore. A full reload takes the proven
+          // hard refresh restore path instead.
+          window.location.reload();
         }}
       />
       <div className="flex items-center gap-x-4 text-muted-foreground text-xs">
