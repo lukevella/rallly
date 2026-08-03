@@ -28,12 +28,25 @@ import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 export type ColorPickerProps = Pick<
   RAColorPickerProps,
   "value" | "onChange" | "defaultValue"
->;
+> & {
+  /** Rendered as an inline-end addon, for actions such as save or reset. */
+  actions?: React.ReactNode;
+  className?: string;
+  /** Applied to the hex input, which is the control an external label names. */
+  "aria-labelledby"?: string;
+  "aria-describedby"?: string;
+};
 
 export type { Color };
 export { parseColor } from "react-aria-components";
 
-function HexColorInput() {
+function HexColorInput({
+  "aria-labelledby": labelledBy,
+  "aria-describedby": describedBy,
+}: {
+  "aria-labelledby"?: string;
+  "aria-describedby"?: string;
+}) {
   const pickerState = React.useContext(ColorPickerStateContext);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -45,7 +58,11 @@ function HexColorInput() {
   });
 
   const { inputProps } = useColorField(
-    { "aria-label": "Hex color" },
+    // An external label wins; the generic fallback only applies when the
+    // picker is used without one.
+    labelledBy
+      ? { "aria-labelledby": labelledBy, "aria-describedby": describedBy }
+      : { "aria-label": "Hex color", "aria-describedby": describedBy },
     state,
     inputRef,
   );
@@ -60,17 +77,29 @@ function HexColorInput() {
   );
 }
 
-export function ColorPicker(props: ColorPickerProps) {
+export function ColorPicker({
+  actions,
+  className,
+  "aria-labelledby": labelledBy,
+  "aria-describedby": describedBy,
+  ...props
+}: ColorPickerProps) {
   return (
     <ColorPickerPrimitive {...props}>
       <Popover>
-        <InputGroup className="w-32">
+        <InputGroup className={cn("w-32", className)}>
           <InputGroupAddon align="inline-start">
             <PopoverTrigger render={<InputGroupButton />}>
               <ColorSwatch className="size-4 rounded-sm border border-black/10" />
             </PopoverTrigger>
           </InputGroupAddon>
-          <HexColorInput />
+          <HexColorInput
+            aria-labelledby={labelledBy}
+            aria-describedby={describedBy}
+          />
+          {actions ? (
+            <InputGroupAddon align="inline-end">{actions}</InputGroupAddon>
+          ) : null}
         </InputGroup>
         <PopoverContent align="start" className="w-48">
           <ColorArea
