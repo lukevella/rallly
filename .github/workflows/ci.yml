@@ -76,6 +76,26 @@ jobs:
           NEXT_PUBLIC_BASE_URL=http://localhost:3000 \
           docker compose up -d --build --wait --wait-timeout 60
 
+      # The image healthcheck hits /api/status, but that endpoint returns
+      # 200 even when the database is unreachable — assert the connection
+      # explicitly so a booted-but-broken stack fails here.
+      - name: Check status endpoint reports a connected database
+        run: |
+          status=$(curl -fsS http://localhost:3000/api/status)
+          echo "$status"
+          echo "$status" | grep -q '"database":"connected"'
+
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/pnpm-install
+
+      - name: Install Playwright browser
+        run: pnpm --filter @rallly/web exec playwright install --with-deps chromium
+
+      # A crashed client bundle still serves 200s; only a browser loading
+      # the page catches that class of failure.
+      - name: Run browser smoke test against the image
+        run: pnpm --filter @rallly/web exec playwright test --config playwright.smoke.config.ts
+
       - name: Show logs on failure
         if: failure()
         run: docker compose logs
