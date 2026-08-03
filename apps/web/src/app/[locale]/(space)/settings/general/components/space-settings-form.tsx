@@ -97,10 +97,7 @@ export function SpaceSettingsForm({
           <Trans i18nKey="logo" defaults="Logo" />
         </SettingTitle>
         <SettingDescription>
-          <Trans
-            i18nKey="spaceLogoSettingDescription"
-            defaults="Shown next to your space name."
-          />
+          <Trans i18nKey="spaceLogoSettingHint" defaults="Your space's logo." />
         </SettingDescription>
         <SettingControl>
           <ImageUpload>
@@ -122,8 +119,8 @@ export function SpaceSettingsForm({
         </SettingTitle>
         <SettingDescription>
           <Trans
-            i18nKey="spaceNameSettingHint"
-            defaults="Shown to anyone you invite."
+            i18nKey="spaceNameSettingLabel"
+            defaults="What this space is called."
           />
         </SettingDescription>
         <SettingControl>
