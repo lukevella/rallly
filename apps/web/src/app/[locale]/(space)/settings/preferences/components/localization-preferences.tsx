@@ -111,6 +111,9 @@ export const LocalizationPreferences = ({
               className="min-w-32"
               value={language}
               onChange={async (nextLanguage) => {
+                if (nextLanguage === language) {
+                  return;
+                }
                 const previousLanguage = language;
                 setLanguage(nextLanguage);
                 // Set the cookie before executing: useSafeAction refreshes the
@@ -150,6 +153,9 @@ export const LocalizationPreferences = ({
               className="min-w-56"
               value={timeZone}
               onValueChange={async (nextTimeZone) => {
+                if (nextTimeZone === timeZone) {
+                  return;
+                }
                 const previousTimeZone = timeZone;
                 setTimeZone(nextTimeZone);
                 if (!(await save({ timeZone: nextTimeZone }))) {
