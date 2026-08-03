@@ -203,7 +203,7 @@
   "deleteAccountDialogImmediateWarning": "Il tuo account e i dati verranno eliminati immediatamente. Questa operazione è irreversibile.",
   "deleteAccountDialogScheduleDescription": "Il tuo account verrà programmato per la cancellazione.",
   "deleteAccountDialogTitle": "Elimina Account",
-  "deleteAccountInstruction": "Conferma il tuo indirizzo email per eliminare il tuo account},{",
+  "deleteAccountInstruction": "Conferma il tuo indirizzo email per eliminare il tuo account",
   "deleteAccountRecoveryWindow": "Puoi annullare la cancellazione entro {count, plural, one {# giorno} other {# giorni}}. Dopodiché il tuo account e i tuoi dati saranno eliminati definitivamente.",
   "deleteAccountSubscriptionNotice": "Il tuo abbonamento Pro non verrà rinnovato e terminerà con il periodo di fatturazione corrente. Se annulli la cancellazione, il tuo abbonamento continuerà normalmente.",
   "deleteAccountUpcomingEvents": "{count, plural, one {# evento imminente} other {# eventi imminenti}}",
