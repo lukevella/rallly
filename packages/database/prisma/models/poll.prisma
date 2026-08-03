@@ -73,7 +73,7 @@ model Participant {
   name      String
   email     String?
   note      String?
-  /// Per person edit link: grants edit access to this response without a session. App minted crypto random (never a DB default), nullable because it's only minted when a link is issued
+  /// Per person edit link: grants edit access to this response without a session. App minted, CSPRNG alphanumeric ≥32 chars (nanoid customAlphabet — url safe with no linkifier edge cases, unlike base64url); never a DB default, nullable because it's only minted when a link is issued
   token     String?   @unique
   userId    String?   @map("user_id")
   pollId    String    @map("poll_id")
@@ -99,7 +99,7 @@ model PollInvite {
   id     String @id @default(cuid())
   pollId String @map("poll_id")
   email  String @db.Citext
-  /// Per invitee link. App minted crypto random — no schema default, so forgetting to mint fails loudly. Rotated on reactivation so a revoked (possibly leaked) token never regains access
+  /// Per invitee link. App minted, CSPRNG alphanumeric ≥32 chars (nanoid customAlphabet) — no schema default, so forgetting to mint fails loudly. Rotated on reactivation so a revoked (possibly leaked) token never regains access
   token  String @unique
 
   openedAt   DateTime? @map("opened_at")
