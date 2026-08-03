@@ -1,6 +1,8 @@
 "use client";
 
+import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { InboxIcon, MessageCircleIcon } from "lucide-react";
 import {
   PageSection,
   PageSectionContent,
@@ -9,10 +11,19 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
-import { Trans } from "@/i18n/client";
+import {
+  Setting,
+  SettingControl,
+  SettingDescription,
+  SettingIcon,
+  SettingsGroup,
+  SettingTitle,
+} from "@/components/setting";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 export function NotificationsPage() {
+  const { t } = useTranslation();
   const utils = trpc.useUtils();
   const [preferences] = trpc.user.getNotificationPreferences.useSuspenseQuery();
   const updatePreference = trpc.user.updateNotificationPreference.useMutation({
@@ -24,6 +35,9 @@ export function NotificationsPage() {
       );
       return { previous };
     },
+    onSuccess: () => {
+      toast.success(t("saved", { defaultValue: "Saved" }));
+    },
     onError: (_err, _vars, context) => {
       if (context?.previous) {
         utils.user.getNotificationPreferences.setData(
@@ -31,6 +45,11 @@ export function NotificationsPage() {
           context.previous,
         );
       }
+      toast.error(
+        t("notificationPreferenceSaveError", {
+          defaultValue: "Failed to save your notification preference",
+        }),
+      );
     },
   });
 
@@ -49,36 +68,58 @@ export function NotificationsPage() {
           </PageSectionDescription>
         </PageSectionHeader>
         <PageSectionContent>
-          <div className="grid gap-4">
-            <div className="flex items-center justify-between gap-4">
-              <span className="font-medium text-sm">
+          <SettingsGroup>
+            <Setting>
+              <SettingIcon>
+                <InboxIcon />
+              </SettingIcon>
+              <SettingTitle>
                 <Trans i18nKey="notifyNewResponse" defaults="New response" />
-              </span>
-              <Switch
-                checked={preferences["poll.response.submitted"]}
-                onCheckedChange={(enabled) => {
-                  updatePreference.mutate({
-                    eventType: "poll.response.submitted",
-                    enabled,
-                  });
-                }}
-              />
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span className="font-medium text-sm">
+              </SettingTitle>
+              <SettingDescription>
+                <Trans
+                  i18nKey="notifyNewResponseDescription"
+                  defaults="Receive an email when a participant submits a response."
+                />
+              </SettingDescription>
+              <SettingControl>
+                <Switch
+                  checked={preferences["poll.response.submitted"]}
+                  onCheckedChange={(enabled) => {
+                    updatePreference.mutate({
+                      eventType: "poll.response.submitted",
+                      enabled,
+                    });
+                  }}
+                />
+              </SettingControl>
+            </Setting>
+            <Setting>
+              <SettingIcon>
+                <MessageCircleIcon />
+              </SettingIcon>
+              <SettingTitle>
                 <Trans i18nKey="notifyNewComment" defaults="New comment" />
-              </span>
-              <Switch
-                checked={preferences["poll.comment.added"]}
-                onCheckedChange={(enabled) => {
-                  updatePreference.mutate({
-                    eventType: "poll.comment.added",
-                    enabled,
-                  });
-                }}
-              />
-            </div>
-          </div>
+              </SettingTitle>
+              <SettingDescription>
+                <Trans
+                  i18nKey="notifyNewCommentDescription"
+                  defaults="Receive an email when someone comments on your poll."
+                />
+              </SettingDescription>
+              <SettingControl>
+                <Switch
+                  checked={preferences["poll.comment.added"]}
+                  onCheckedChange={(enabled) => {
+                    updatePreference.mutate({
+                      eventType: "poll.comment.added",
+                      enabled,
+                    });
+                  }}
+                />
+              </SettingControl>
+            </Setting>
+          </SettingsGroup>
         </PageSectionContent>
       </PageSection>
     </PageSectionGroup>

@@ -12,10 +12,17 @@ import {
   scheduleAccountDeletion,
 } from "@/features/user/account-deletion/mutations";
 import { getScheduledDeletionDate } from "@/features/user/account-deletion/utils";
+import { hardDeleteUser } from "@/features/user/mutations";
 import { getLocale } from "@/i18n/server/get-locale";
+import { isSelfHosted } from "@/lib/constants";
 import { formatDateTime } from "@/lib/datetime/format";
 import { AppError } from "@/lib/errors/app-error";
-import { track } from "@/lib/posthog";
+import {
+  deletePostHogPerson,
+  flushPostHog,
+  track,
+  trackSystemEvent,
+} from "@/lib/posthog";
 import {
   authActionClient,
   createRateLimitMiddleware,
@@ -32,6 +39,14 @@ export const scheduleAccountDeletionAction = authActionClient
   // Each call hits Stripe and sends an email — keep the ceiling low.
   .use(createRateLimitMiddleware(3, "1 h"))
   .action(async ({ ctx }) => {
+    if (isSelfHosted) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message:
+          "Self-hosted instances delete accounts immediately instead of scheduling them",
+      });
+    }
+
     if (ctx.ability.cannot("delete", subject("User", ctx.user))) {
       throw new AppError({
         code: "FORBIDDEN",
@@ -74,6 +89,36 @@ export const scheduleAccountDeletionAction = authActionClient
         props: { deletionDate },
       }),
     );
+  });
+
+// Self-hosted instances have no scheduler running the remove-deleted-users
+// reaper, so scheduling a deletion would promise a date that never comes.
+// Deletion happens immediately instead; there is no recovery window.
+export const deleteAccountAction = authActionClient
+  .metadata({ actionName: "delete_account" })
+  .use(createRateLimitMiddleware(3, "1 h"))
+  .action(async ({ ctx }) => {
+    if (!isSelfHosted) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message:
+          "Immediate account deletion is only available on self-hosted instances",
+      });
+    }
+
+    if (ctx.ability.cannot("delete", subject("User", ctx.user))) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "You are not authorized to delete this account",
+      });
+    }
+
+    await deletePostHogPerson({ distinctId: ctx.user.id });
+    await hardDeleteUser({ userId: ctx.user.id });
+
+    // Personless by design — the person this event is about was just erased.
+    trackSystemEvent({ event: "account_deletion_complete" });
+    after(() => flushPostHog());
   });
 
 export const cancelAccountDeletionAction = authActionClient

@@ -52,11 +52,11 @@ export class NewPollPage {
     await page.getByText("15", { exact: true }).first().click();
 
     if (enableComments) {
-      // Comments are off by default; turn the "Disable comments" setting off
-      await page.getByRole("switch", { name: /disable comments/i }).click();
+      // Comments are off by default; opt in to the legacy comments setting
+      await page.getByRole("switch", { name: /comments/i }).click();
     }
 
-    await page.getByRole("button", { name: /create poll/i }).click();
+    await page.getByRole("button", { name: /^create$/i }).click();
 
     const successDialog = new CreatePollSuccessDialog(page);
     await successDialog.dialog.waitFor({ state: "visible" });

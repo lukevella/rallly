@@ -28,7 +28,7 @@ const Page = () => {
     defaultValues: {
       hideParticipants: poll.hideParticipants,
       hideScores: poll.hideScores,
-      disableComments: poll.disableComments,
+      enableComments: !poll.disableComments,
       requireParticipantEmail: poll.requireParticipantEmail,
     },
   });
@@ -36,11 +36,11 @@ const Page = () => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(async (data) => {
-          //submit
+        onSubmit={form.handleSubmit(async ({ enableComments, ...data }) => {
           const res = await update.mutateAsync({
             pollId: poll.id,
             ...data,
+            disableComments: !enableComments,
           });
           if (res.ok) {
             redirectBackToPoll();

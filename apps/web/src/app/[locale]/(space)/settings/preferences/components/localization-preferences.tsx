@@ -1,0 +1,268 @@
+"use client";
+
+import { buttonVariants } from "@rallly/ui";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@rallly/ui/select";
+import { toast } from "@rallly/ui/sonner";
+import {
+  ArrowUpRight,
+  CalendarIcon,
+  ClockIcon,
+  GlobeIcon,
+  LanguagesIcon,
+} from "lucide-react";
+import Link from "next/link";
+import React from "react";
+import { LanguageSelect } from "@/components/language-selector";
+import {
+  Setting,
+  SettingControl,
+  SettingDescription,
+  SettingIcon,
+  SettingsGroup,
+  SettingTitle,
+} from "@/components/setting";
+import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
+import { updateLocalizationAction } from "@/features/user/actions";
+import { Trans, useTranslation } from "@/i18n/client";
+import { useDateTime } from "@/lib/datetime/client";
+import { getLocaleDefaults } from "@/lib/datetime/locales";
+import type { TimeFormat } from "@/lib/datetime/types";
+import { setLocaleCookie, useLocale } from "@/lib/locale/client";
+import { useSafeAction } from "@/lib/safe-action/client";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
+
+export const LocalizationPreferences = ({
+  initialValues,
+}: {
+  initialValues: {
+    locale?: string;
+    timeFormat?: TimeFormat;
+    timeZone?: string;
+    weekStart?: number;
+  };
+}) => {
+  const { t } = useTranslation();
+  const { locale } = useLocale();
+  const localeDefaults = getLocaleDefaults(locale);
+  const { weekdays } = useDateTime();
+  const updateLocalization = useSafeAction(updateLocalizationAction);
+
+  const [language, setLanguage] = React.useState(
+    initialValues.locale ?? locale,
+  );
+  const [timeZone, setTimeZone] = React.useState(
+    initialValues.timeZone ?? getBrowserTimeZone(),
+  );
+  const [timeFormat, setTimeFormat] = React.useState(
+    initialValues.timeFormat ?? localeDefaults.timeFormat,
+  );
+  const [weekStart, setWeekStart] = React.useState(
+    initialValues.weekStart ?? localeDefaults.weekStart,
+  );
+
+  const save = async (input: {
+    locale?: string;
+    timeZone?: string;
+    timeFormat?: TimeFormat;
+    weekStart?: number;
+  }) => {
+    const result = await updateLocalization.executeAsync(input);
+    const saved = !result?.serverError && !result?.validationErrors;
+    if (saved) {
+      toast.success(t("saved", { defaultValue: "Saved" }));
+    }
+    return saved;
+  };
+
+  const weekStartOptions = weekdays().map(({ day, label }) => ({
+    value: day.toString(),
+    label,
+  }));
+
+  const timeFormatOptions = [
+    { value: "hours12", label: t("12h") },
+    { value: "hours24", label: t("24h") },
+  ];
+
+  return (
+    <div>
+      <SettingsGroup>
+        <Setting>
+          <SettingIcon>
+            <LanguagesIcon />
+          </SettingIcon>
+          <SettingTitle>
+            <Trans i18nKey="language" defaults="Language" />
+          </SettingTitle>
+          <SettingDescription>
+            <Trans
+              i18nKey="languageSettingDescription"
+              defaults="The language the app is displayed in."
+            />
+          </SettingDescription>
+          <SettingControl>
+            <LanguageSelect
+              className="min-w-32"
+              value={language}
+              onChange={async (nextLanguage) => {
+                if (nextLanguage === language) {
+                  return;
+                }
+                const previousLanguage = language;
+                setLanguage(nextLanguage);
+                // Set the cookie before executing: useSafeAction refreshes the
+                // router on success, and that refresh must read the new locale.
+                // Writing the cookie server-side would collide with
+                // updateUser's session cookie and drop it. Roll it back to the
+                // locale this page is rendered in if the save doesn't land.
+                setLocaleCookie(nextLanguage);
+                let saved = false;
+                try {
+                  saved = await save({ locale: nextLanguage });
+                } finally {
+                  if (!saved) {
+                    setLocaleCookie(locale);
+                    setLanguage(previousLanguage);
+                  }
+                }
+              }}
+            />
+          </SettingControl>
+        </Setting>
+        <Setting>
+          <SettingIcon>
+            <GlobeIcon />
+          </SettingIcon>
+          <SettingTitle>
+            <Trans i18nKey="timeZone" defaults="Time Zone" />
+          </SettingTitle>
+          <SettingDescription>
+            <Trans
+              i18nKey="timeZoneSettingDescription"
+              defaults="Dates and times are shown in this time zone."
+            />
+          </SettingDescription>
+          <SettingControl>
+            <TimeZoneSelect
+              className="min-w-56"
+              value={timeZone}
+              onValueChange={async (nextTimeZone) => {
+                if (nextTimeZone === timeZone) {
+                  return;
+                }
+                const previousTimeZone = timeZone;
+                setTimeZone(nextTimeZone);
+                if (!(await save({ timeZone: nextTimeZone }))) {
+                  setTimeZone(previousTimeZone);
+                }
+              }}
+            />
+          </SettingControl>
+        </Setting>
+        <Setting>
+          <SettingIcon>
+            <ClockIcon />
+          </SettingIcon>
+          <SettingTitle>
+            <Trans i18nKey="timeFormat" defaults="Time Format" />
+          </SettingTitle>
+          <SettingDescription>
+            <Trans
+              i18nKey="timeFormatSettingDescription"
+              defaults="Show times in 12-hour or 24-hour format."
+            />
+          </SettingDescription>
+          <SettingControl>
+            <Select
+              items={timeFormatOptions}
+              value={timeFormat}
+              onValueChange={async (value) => {
+                if (!value || value === timeFormat) {
+                  return;
+                }
+                const previousTimeFormat = timeFormat;
+                const nextTimeFormat = value as TimeFormat;
+                setTimeFormat(nextTimeFormat);
+                if (!(await save({ timeFormat: nextTimeFormat }))) {
+                  setTimeFormat(previousTimeFormat);
+                }
+              }}
+            >
+              <SelectTrigger className="min-w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {timeFormatOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </SettingControl>
+        </Setting>
+        <Setting>
+          <SettingIcon>
+            <CalendarIcon />
+          </SettingIcon>
+          <SettingTitle>
+            <Trans i18nKey="startOfWeek" defaults="Start of Week" />
+          </SettingTitle>
+          <SettingDescription>
+            <Trans
+              i18nKey="startOfWeekSettingDescription"
+              defaults="The day calendars start the week on."
+            />
+          </SettingDescription>
+          <SettingControl>
+            <Select
+              items={weekStartOptions}
+              value={weekStart.toString()}
+              onValueChange={async (value) => {
+                if (!value) {
+                  return;
+                }
+                const previousWeekStart = weekStart;
+                const nextWeekStart = Number.parseInt(value, 10);
+                if (nextWeekStart === previousWeekStart) {
+                  return;
+                }
+                setWeekStart(nextWeekStart);
+                if (!(await save({ weekStart: nextWeekStart }))) {
+                  setWeekStart(previousWeekStart);
+                }
+              }}
+            >
+              <SelectTrigger className="min-w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {weekStartOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </SettingControl>
+        </Setting>
+      </SettingsGroup>
+      <div className="mt-4 border-t pt-4">
+        <Link
+          target="_blank"
+          href="https://support.rallly.co/contribute/translations"
+          className={buttonVariants({ variant: "ghost" })}
+        >
+          <Trans i18nKey="becomeATranslator" defaults="Help translate" />
+          <ArrowUpRight className="size-4" />
+        </Link>
+      </div>
+    </div>
+  );
+};

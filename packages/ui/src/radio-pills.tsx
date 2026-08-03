@@ -20,7 +20,7 @@ function RadioPillsItem({ className, ...props }: RadioPrimitive.Root.Props) {
     <RadioPrimitive.Root
       data-slot="radio-pills-item"
       className={cn(
-        "inline-flex h-8 cursor-pointer items-center rounded-full border px-3 font-medium text-muted-foreground text-sm data-checked:border-primary data-checked:text-primary data-unchecked:hover:text-foreground",
+        "inline-flex h-8 cursor-pointer items-center rounded-full border px-3 font-medium text-muted-foreground text-sm data-checked:border-primary data-checked:bg-primary/10 data-checked:text-primary data-unchecked:hover:text-foreground",
         className,
       )}
       {...props}

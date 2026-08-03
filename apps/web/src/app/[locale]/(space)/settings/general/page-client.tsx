@@ -2,7 +2,7 @@
 
 import { subject } from "@casl/ability";
 import { Alert, AlertDescription } from "@rallly/ui/alert";
-import { EyeIcon } from "lucide-react";
+import { EyeIcon, LogOutIcon, TrashIcon } from "lucide-react";
 import {
   PageSection,
   PageSectionContent,
@@ -11,6 +11,14 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
+import {
+  SettingControl,
+  SettingDescription,
+  SettingIcon,
+  SettingRow,
+  SettingsGroup,
+  SettingTitle,
+} from "@/components/setting";
 import {
   SettingsPage,
   SettingsPageContent,
@@ -24,7 +32,6 @@ import { Trans } from "@/i18n/client";
 import { CustomBrandingSection } from "./components/custom-branding-section";
 import { DeleteSpaceButton } from "./components/delete-space-button";
 import { LeaveSpaceButton } from "./components/leave-space-button";
-import { SpaceSettingsForm } from "./components/space-settings-form";
 
 export function GeneralSettingsPageClient() {
   const { data: space, getMemberAbility } = useSpace();
@@ -60,45 +67,64 @@ export function GeneralSettingsPageClient() {
               </AlertDescription>
             </Alert>
           ) : null}
-          <PageSection variant="card">
-            <PageSectionContent>
-              <SpaceSettingsForm space={space} disabled={!isAdmin} />
-            </PageSectionContent>
-          </PageSection>
           <CustomBrandingSection disabled={!isAdmin} />
-          {!isOwner ? (
+          {!isOwner || canDeleteSpace ? (
             <PageSection variant="card">
               <PageSectionHeader>
                 <PageSectionTitle>
-                  <Trans i18nKey="leaveSpace" defaults="Leave Space" />
+                  <Trans i18nKey="dangerZone" defaults="Danger Zone" />
                 </PageSectionTitle>
                 <PageSectionDescription>
                   <Trans
-                    i18nKey="leaveSpaceDescription"
-                    defaults="Remove yourself from this space. You'll lose access to all polls in this space."
+                    i18nKey="spaceDangerZoneDescription"
+                    defaults="These actions cannot be undone"
                   />
                 </PageSectionDescription>
               </PageSectionHeader>
               <PageSectionContent>
-                <LeaveSpaceButton spaceName={space.name} spaceId={space.id} />
-              </PageSectionContent>
-            </PageSection>
-          ) : null}
-          {canDeleteSpace ? (
-            <PageSection variant="card">
-              <PageSectionHeader>
-                <PageSectionTitle>
-                  <Trans i18nKey="deleteSpace" defaults="Delete Space" />
-                </PageSectionTitle>
-                <PageSectionDescription>
-                  <Trans
-                    i18nKey="deleteSpaceDescription"
-                    defaults="Permanently delete this space and all its content. This action cannot be undone."
-                  />
-                </PageSectionDescription>
-              </PageSectionHeader>
-              <PageSectionContent>
-                <DeleteSpaceButton spaceName={space.name} />
+                <SettingsGroup>
+                  {!isOwner ? (
+                    <SettingRow>
+                      <SettingIcon>
+                        <LogOutIcon />
+                      </SettingIcon>
+                      <SettingTitle>
+                        <Trans i18nKey="leaveSpace" defaults="Leave Space" />
+                      </SettingTitle>
+                      <SettingDescription>
+                        <Trans
+                          i18nKey="leaveSpaceSettingHint"
+                          defaults="Remove yourself from this space and lose access to its polls."
+                        />
+                      </SettingDescription>
+                      <SettingControl>
+                        <LeaveSpaceButton
+                          spaceName={space.name}
+                          spaceId={space.id}
+                        />
+                      </SettingControl>
+                    </SettingRow>
+                  ) : null}
+                  {canDeleteSpace ? (
+                    <SettingRow>
+                      <SettingIcon>
+                        <TrashIcon />
+                      </SettingIcon>
+                      <SettingTitle>
+                        <Trans i18nKey="deleteSpace" defaults="Delete Space" />
+                      </SettingTitle>
+                      <SettingDescription>
+                        <Trans
+                          i18nKey="deleteSpaceSettingHint"
+                          defaults="Permanently delete this space and everything in it."
+                        />
+                      </SettingDescription>
+                      <SettingControl>
+                        <DeleteSpaceButton spaceName={space.name} />
+                      </SettingControl>
+                    </SettingRow>
+                  ) : null}
+                </SettingsGroup>
               </PageSectionContent>
             </PageSection>
           ) : null}

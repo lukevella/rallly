@@ -8,7 +8,8 @@ import {
 import * as React from "react";
 
 import { useTranslation } from "@/i18n/client";
-import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
+import { useDateTimeConfig } from "@/lib/datetime/client";
+import { Duration } from "@/lib/datetime/duration";
 import { formatDateTime } from "@/lib/datetime/format";
 import { dayjs } from "@/lib/dayjs";
 
@@ -26,7 +27,6 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
   after,
 }) => {
   const { locale, timeFormat } = useDateTimeConfig();
-  const { formatDuration } = useDateTime();
   const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
 
@@ -82,9 +82,10 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
               <div className="flex items-center gap-2">
                 <span>{formatTime(selected)}</span>
                 {after ? (
-                  <span className="text-muted-foreground text-sm">
-                    {formatDuration(dayjs(selected).diff(after, "minute"))}
-                  </span>
+                  <Duration
+                    className="text-muted-foreground text-sm"
+                    minutes={dayjs(selected).diff(after, "minute")}
+                  />
                 ) : null}
               </div>
             ) : (
@@ -101,9 +102,10 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
                 <div className="flex items-center gap-2">
                   <span>{formatTime(option)}</span>
                   {after ? (
-                    <span className="text-muted-foreground text-sm">
-                      {formatDuration(dayjs(option).diff(after, "minute"))}
-                    </span>
+                    <Duration
+                      className="text-muted-foreground text-sm"
+                      minutes={dayjs(option).diff(after, "minute")}
+                    />
                   ) : null}
                 </div>
               </SelectItem>
@@ -114,9 +116,10 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
             <div className="flex items-center gap-2">
               <span>{formatTime(dayjs(value).toDate())}</span>
               {after ? (
-                <span className="text-muted-foreground text-sm">
-                  {formatDuration(dayjs(value).diff(after, "minute"))}
-                </span>
+                <Duration
+                  className="text-muted-foreground text-sm"
+                  minutes={dayjs(value).diff(after, "minute")}
+                />
               ) : null}
             </div>
           </SelectItem>

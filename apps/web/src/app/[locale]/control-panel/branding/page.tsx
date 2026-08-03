@@ -3,6 +3,7 @@ import { Input } from "@rallly/ui/input";
 import { Switch } from "@rallly/ui/switch";
 import { CodeIcon, GemIcon } from "lucide-react";
 import type { Metadata } from "next";
+import { Trans } from "react-i18next/TransWithoutContext";
 import {
   PageSection,
   PageSectionContent,
@@ -20,7 +21,6 @@ import {
 } from "@/components/settings-layout";
 import { getCustomBrandingConfig } from "@/features/branding/data";
 import { loadInstanceLicense } from "@/features/licensing/data";
-import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 
 async function loadData() {
@@ -41,13 +41,17 @@ async function loadData() {
   };
 }
 
-function SetEnvironmentVariableAlert({ variable }: { variable: string }) {
+async function SetEnvironmentVariableAlert({ variable }: { variable: string }) {
+  const { t, i18n } = await getTranslation();
   return (
     <Alert>
       <CodeIcon />
       <AlertDescription>
         <p>
           <Trans
+            t={t}
+            i18n={i18n}
+            ns="app"
             i18nKey="setEnvironmentVariable"
             defaults="This value can be changed by setting the <env /> environment variable."
             components={{
@@ -71,15 +75,25 @@ export default async function BrandingPage() {
     hideAttribution,
     appName,
   } = await loadData();
+  const { t, i18n } = await getTranslation();
 
   return (
     <SettingsPage>
       <SettingsPageHeader>
         <SettingsPageTitle>
-          <Trans i18nKey="branding" defaults="Branding" />
+          <Trans
+            t={t}
+            i18n={i18n}
+            ns="app"
+            i18nKey="branding"
+            defaults="Branding"
+          />
         </SettingsPageTitle>
         <SettingsPageDescription>
           <Trans
+            t={t}
+            i18n={i18n}
+            ns="app"
             i18nKey="brandingDescription"
             defaults="View your instance branding configuration"
           />
@@ -92,6 +106,9 @@ export default async function BrandingPage() {
             <AlertDescription className="flex gap-2">
               <p className="flex-1">
                 <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
                   i18nKey="customBrandingAlertDescription"
                   defaults="Custom branding is available to Enterprise license holders as a paid add-on."
                 />
@@ -103,7 +120,13 @@ export default async function BrandingPage() {
                   className="underline"
                   rel="noreferrer"
                 >
-                  <Trans i18nKey="learnMore" defaults="Learn more" />
+                  <Trans
+                    t={t}
+                    i18n={i18n}
+                    ns="app"
+                    i18nKey="learnMore"
+                    defaults="Learn more"
+                  />
                 </a>
               </p>
             </AlertDescription>
@@ -113,10 +136,19 @@ export default async function BrandingPage() {
           <PageSection variant="card">
             <PageSectionHeader>
               <PageSectionTitle>
-                <Trans i18nKey="general" defaults="General" />
+                <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
+                  i18nKey="general"
+                  defaults="General"
+                />
               </PageSectionTitle>
               <PageSectionDescription>
                 <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
                   i18nKey="brandingDescription"
                   defaults="View your instance branding configuration"
                 />
@@ -125,7 +157,13 @@ export default async function BrandingPage() {
             <PageSectionContent>
               <div className="space-y-2">
                 <div className="text-muted-foreground text-xs">
-                  <Trans i18nKey="name" defaults="App Name" />
+                  <Trans
+                    t={t}
+                    i18n={i18n}
+                    ns="app"
+                    i18nKey="name"
+                    defaults="App Name"
+                  />
                 </div>
                 <Input value={appName} readOnly />
                 <SetEnvironmentVariableAlert variable="APP_NAME" />
@@ -135,10 +173,19 @@ export default async function BrandingPage() {
           <PageSection variant="card">
             <PageSectionHeader>
               <PageSectionTitle>
-                <Trans i18nKey="colors" defaults="Colors" />
+                <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
+                  i18nKey="colors"
+                  defaults="Colors"
+                />
               </PageSectionTitle>
               <PageSectionDescription>
                 <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
                   i18nKey="colorsDescription"
                   defaults="Primary colors used for theming"
                 />
@@ -148,7 +195,13 @@ export default async function BrandingPage() {
               <div className="space-y-6">
                 <div className="space-y-2">
                   <div className="text-muted-foreground text-xs">
-                    <Trans i18nKey="primaryColor" defaults="Primary Color" />
+                    <Trans
+                      t={t}
+                      i18n={i18n}
+                      ns="app"
+                      i18nKey="primaryColor"
+                      defaults="Primary Color"
+                    />
                   </div>
                   <div className="flex items-center gap-2">
                     <div
@@ -164,6 +217,9 @@ export default async function BrandingPage() {
                 <div className="space-y-2">
                   <div className="text-muted-foreground text-xs">
                     <Trans
+                      t={t}
+                      i18n={i18n}
+                      ns="app"
                       i18nKey="primaryColorDark"
                       defaults="Primary Color (Dark Mode)"
                     />
@@ -185,10 +241,19 @@ export default async function BrandingPage() {
           <PageSection variant="card">
             <PageSectionHeader>
               <PageSectionTitle>
-                <Trans i18nKey="logos" defaults="Logos" />
+                <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
+                  i18nKey="logos"
+                  defaults="Logos"
+                />
               </PageSectionTitle>
               <PageSectionDescription>
                 <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
                   i18nKey="logosDescription"
                   defaults="Logo images used throughout the application"
                 />
@@ -198,7 +263,13 @@ export default async function BrandingPage() {
               <div className="space-y-6">
                 <div className="space-y-2">
                   <div className="text-muted-foreground text-xs">
-                    <Trans i18nKey="logo" defaults="Logo" />
+                    <Trans
+                      t={t}
+                      i18n={i18n}
+                      ns="app"
+                      i18nKey="logo"
+                      defaults="Logo"
+                    />
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="flex w-48 items-center justify-center overflow-hidden rounded border bg-white">
@@ -214,7 +285,13 @@ export default async function BrandingPage() {
                 </div>
                 <div className="space-y-2">
                   <div className="text-muted-foreground text-xs">
-                    <Trans i18nKey="logoDark" defaults="Logo (Dark Mode)" />
+                    <Trans
+                      t={t}
+                      i18n={i18n}
+                      ns="app"
+                      i18nKey="logoDark"
+                      defaults="Logo (Dark Mode)"
+                    />
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="flex w-48 items-center justify-center overflow-hidden rounded border bg-gray-900">
@@ -230,7 +307,13 @@ export default async function BrandingPage() {
                 </div>
                 <div className="space-y-2">
                   <div className="text-muted-foreground text-xs">
-                    <Trans i18nKey="logoIcon" defaults="Logo Icon" />
+                    <Trans
+                      t={t}
+                      i18n={i18n}
+                      ns="app"
+                      i18nKey="logoIcon"
+                      defaults="Logo Icon"
+                    />
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="flex size-16 items-center justify-center overflow-hidden rounded border bg-white">
@@ -250,10 +333,19 @@ export default async function BrandingPage() {
           <PageSection variant="card">
             <PageSectionHeader>
               <PageSectionTitle>
-                <Trans i18nKey="attribution" defaults="Attribution" />
+                <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
+                  i18nKey="attribution"
+                  defaults="Attribution"
+                />
               </PageSectionTitle>
               <PageSectionDescription>
                 <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
                   i18nKey="attributionDescription"
                   defaults="Control the visibility of the attribution text"
                 />
@@ -263,6 +355,9 @@ export default async function BrandingPage() {
               <div className="space-y-2">
                 <div className="text-muted-foreground text-xs">
                   <Trans
+                    t={t}
+                    i18n={i18n}
+                    ns="app"
                     i18nKey="hideAttribution"
                     defaults="Hide Attribution"
                   />
