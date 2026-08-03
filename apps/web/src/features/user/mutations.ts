@@ -139,11 +139,11 @@ export async function hardDeleteUser({ userId }: { userId: string }) {
   }
 
   // Cascades cover content the user owns. Everything on other people's polls
-  // and events (participants, votes, invites, poll events) is that record's
+  // and events (participants, votes, invites, activity log) is that record's
   // data, not the account's — deletion never mutates it, so finalized
   // outcomes, attendance, and activity history can't change when an account
   // disappears. The FK SetNulls unlink participants and event invites;
-  // PollEvent's soft refs persist as inert identity that resolves to nothing.
+  // PollActivity's soft refs persist as inert identity that resolves to nothing.
   await prisma.user.delete({ where: { id: userId } });
 }
 

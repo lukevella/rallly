@@ -59,7 +59,7 @@ model Poll {
   comments       Comment[]
   votes          Vote[]
   invites        PollInvite[]
-  events         PollEvent[]
+  activities     PollActivity[]
   space          Space?          @relation(fields: [spaceId], references: [id], onDelete: SetNull)
   spaceId        String?         @map("space_id")
 
@@ -120,13 +120,13 @@ model PollInvite {
   @@map("poll_invites")
 }
 
-model PollEvent {
+model PollActivity {
   id     String @id @default(cuid())
   pollId String @map("poll_id")
-  /// Validated by a zod union in the feature, not a DB enum: the event vocabulary grows without migrations
+  /// Validated by a zod union in the feature, not a DB enum: the activity vocabulary grows without migrations
   type   String
 
-  /// Subject ids are soft references (no FKs): events must outlive their subjects — including account deletion — so refs persist as identity and the payload carries the display snapshot; whether a ref still resolves is the renderer's question
+  /// Subject ids are soft references (no FKs): activity must outlive its subjects — including account deletion — so refs persist as identity and the payload carries the display snapshot; whether a ref still resolves is the renderer's question
   userId        String? @map("user_id")
   participantId String? @map("participant_id")
   inviteId      String? @map("invite_id")
@@ -141,7 +141,7 @@ model PollEvent {
   @@index([pollId, participantId])
   @@index([pollId, optionId])
   @@index([pollId, inviteId])
-  @@map("poll_events")
+  @@map("poll_activities")
 }
 
 model Option {

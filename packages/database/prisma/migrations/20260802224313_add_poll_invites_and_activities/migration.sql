@@ -18,7 +18,7 @@ CREATE TABLE "poll_invites" (
 );
 
 -- CreateTable
-CREATE TABLE "poll_events" (
+CREATE TABLE "poll_activities" (
     "id" TEXT NOT NULL,
     "poll_id" TEXT NOT NULL,
     "type" TEXT NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE "poll_events" (
     "payload" JSONB NOT NULL DEFAULT '{}',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "poll_events_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "poll_activities_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -42,16 +42,16 @@ CREATE UNIQUE INDEX "poll_invites_participant_id_key" ON "poll_invites"("partici
 CREATE UNIQUE INDEX "poll_invites_poll_id_email_key" ON "poll_invites"("poll_id", "email");
 
 -- CreateIndex
-CREATE INDEX "poll_events_poll_id_created_at_idx" ON "poll_events"("poll_id", "created_at" DESC);
+CREATE INDEX "poll_activities_poll_id_created_at_idx" ON "poll_activities"("poll_id", "created_at" DESC);
 
 -- CreateIndex
-CREATE INDEX "poll_events_poll_id_participant_id_idx" ON "poll_events"("poll_id", "participant_id");
+CREATE INDEX "poll_activities_poll_id_participant_id_idx" ON "poll_activities"("poll_id", "participant_id");
 
 -- CreateIndex
-CREATE INDEX "poll_events_poll_id_option_id_idx" ON "poll_events"("poll_id", "option_id");
+CREATE INDEX "poll_activities_poll_id_option_id_idx" ON "poll_activities"("poll_id", "option_id");
 
 -- CreateIndex
-CREATE INDEX "poll_events_poll_id_invite_id_idx" ON "poll_events"("poll_id", "invite_id");
+CREATE INDEX "poll_activities_poll_id_invite_id_idx" ON "poll_activities"("poll_id", "invite_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "participants_token_key" ON "participants"("token");
@@ -63,5 +63,5 @@ ALTER TABLE "poll_invites" ADD CONSTRAINT "poll_invites_poll_id_fkey" FOREIGN KE
 ALTER TABLE "poll_invites" ADD CONSTRAINT "poll_invites_participant_id_fkey" FOREIGN KEY ("participant_id") REFERENCES "participants"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "poll_events" ADD CONSTRAINT "poll_events_poll_id_fkey" FOREIGN KEY ("poll_id") REFERENCES "polls"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "poll_activities" ADD CONSTRAINT "poll_activities_poll_id_fkey" FOREIGN KEY ("poll_id") REFERENCES "polls"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
