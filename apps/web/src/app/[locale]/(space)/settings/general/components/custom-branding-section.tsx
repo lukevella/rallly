@@ -20,6 +20,7 @@ import {
   SettingControl,
   SettingDescription,
   SettingHint,
+  SettingRow,
   SettingsGroup,
   SettingTitle,
   useSettingLabels,
@@ -128,7 +129,7 @@ export function CustomBrandingSection({
       <PageSectionContent>
         <SettingsGroup>
           <SpaceSettingsForm space={space} disabled={disabled} />
-          <Setting labelable={false}>
+          <SettingRow>
             <SettingTitle>
               <Trans
                 i18nKey="primaryColorSettingTitle"
@@ -141,7 +142,7 @@ export function CustomBrandingSection({
                 defaults="Used for buttons and highlights."
               />
             </SettingDescription>
-            <SettingControl labelled={false}>
+            <SettingControl>
               <PrimaryColorField
                 value={color}
                 onChange={setColor}
@@ -153,7 +154,7 @@ export function CustomBrandingSection({
                 onReset={handleReset}
               />
             </SettingControl>
-          </Setting>
+          </SettingRow>
           <Setting>
             <SettingTitle>
               <Trans

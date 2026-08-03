@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@rallly/ui";
+import { cva } from "class-variance-authority";
 import { InfoIcon } from "lucide-react";
 import React from "react";
 import { PageIcon } from "@/components/page-icons";
@@ -9,6 +9,8 @@ const SettingContext = React.createContext<{
   titleId: string;
   descriptionId: string;
   hintId: string;
+  /** Whether SettingControl labels its child, or the control names itself. */
+  labelsControl: boolean;
 } | null>(null);
 
 const useSetting = () => {
@@ -23,45 +25,72 @@ export const SettingsGroup = ({ children }: React.PropsWithChildren) => {
   return <div className="divide-y">{children}</div>;
 };
 
-// A uniform `gap-x` would indent iconless rows, because the collapsed icon
-// column still contributes its gap. The gap is zero here; SettingIcon and
-// SettingControl supply their own margins, so rows without an icon sit flush
-// against the card edge.
-// On mobile everything stacks in one column so wide controls (pickers, input
-// groups) get the full width instead of being squeezed beside the title. From
-// `sm` up the control moves to its own column on the right.
-const settingLayout =
-  "grid grid-cols-1 py-4 [column-gap:0] [grid-template-areas:'title'_'description'_'control'_'hint'] first:pt-0 last:pb-0 sm:grid-cols-[auto_1fr_auto] sm:[grid-template-areas:'icon_title_control'_'icon_description_control'_'icon_hint_hint']";
+const settingVariants = cva(
+  // The icon column is `auto`, so it collapses to zero width without a
+  // SettingIcon; a uniform `gap-x` would still indent iconless rows, so the
+  // gap is zero and SettingIcon/SettingControl carry their own margins.
+  // Below `sm` everything stacks in one column so wide controls (pickers,
+  // input groups) get the full width rather than being squeezed beside the
+  // title; from `sm` up the control moves to its own column on the right.
+  "grid grid-cols-1 py-4 [column-gap:0] [grid-template-areas:'title'_'description'_'control'_'hint'] first:pt-0 last:pb-0 sm:grid-cols-[auto_1fr_auto] sm:[grid-template-areas:'icon_title_control'_'icon_description_control'_'icon_hint_hint']",
+  {
+    variants: {
+      interactive: {
+        true: "cursor-pointer select-none",
+        false: "",
+      },
+    },
+    defaultVariants: { interactive: false },
+  },
+);
 
-/**
- * Clicking anywhere on the row activates the control, so it renders as a label
- * only when the control is a single labelable element (switch, select). Rows
- * whose control is an input, a button or a picker must set `labelable={false}`
- * to render a plain div instead.
- */
-export const Setting = ({
+const SettingProvider = ({
   children,
-  labelable = true,
-}: React.PropsWithChildren<{ labelable?: boolean }>) => {
+  labelsControl,
+}: React.PropsWithChildren<{ labelsControl: boolean }>) => {
   const titleId = React.useId();
   const descriptionId = React.useId();
   const hintId = React.useId();
   const value = React.useMemo(
-    () => ({ titleId, descriptionId, hintId }),
-    [titleId, descriptionId, hintId],
+    () => ({ titleId, descriptionId, hintId, labelsControl }),
+    [titleId, descriptionId, hintId, labelsControl],
   );
-
   return (
-    <SettingContext.Provider value={value}>
-      {labelable ? (
-        // biome-ignore lint/a11y/noLabelWithoutControl: control is rendered inside
-        <label className={cn(settingLayout, "cursor-pointer select-none")}>
-          {children}
-        </label>
-      ) : (
-        <div className={settingLayout}>{children}</div>
-      )}
-    </SettingContext.Provider>
+    <SettingContext.Provider value={value}>{children}</SettingContext.Provider>
+  );
+};
+
+/**
+ * A setting whose control is a single labelable element — a switch, a select.
+ * The row renders as a label, so clicking anywhere on it activates the
+ * control, and SettingControl labels the control automatically.
+ *
+ * For a control made of several elements (an input with a button, a picker, a
+ * dialog trigger) use SettingRow instead: there is no single element for a
+ * label to point at, and wrapping several controls in one label is invalid.
+ */
+export const Setting = ({ children }: React.PropsWithChildren) => {
+  return (
+    <SettingProvider labelsControl>
+      {/* biome-ignore lint/a11y/noLabelWithoutControl: control is rendered inside */}
+      <label className={settingVariants({ interactive: true })}>
+        {children}
+      </label>
+    </SettingProvider>
+  );
+};
+
+/**
+ * A setting whose control is not a single labelable element — a button, an
+ * input with its own actions, a picker. Renders a plain row, so the control has
+ * to name itself: spread `useSettingLabels()` onto whichever element is the
+ * real control.
+ */
+export const SettingRow = ({ children }: React.PropsWithChildren) => {
+  return (
+    <SettingProvider labelsControl={false}>
+      <div className={settingVariants()}>{children}</div>
+    </SettingProvider>
   );
 };
 
@@ -98,26 +127,24 @@ export const SettingDescription = ({ children }: React.PropsWithChildren) => {
 };
 
 /**
- * Labels the control with the row's title and description. A control made up of
- * more than one focusable element (a form, an upload widget) has no single
- * element to label, so it sets `labelled={false}` and wires up
- * `useSettingLabels()` on whichever element is the real control.
+ * Holds the row's control. Inside `Setting` the control is a single labelable
+ * element, so the row's title and description are applied to it directly.
+ * Inside `SettingRow` there is no single element to label — the control names
+ * itself with `useSettingLabels()` — so the child is rendered untouched.
  */
 export const SettingControl = ({
   children,
-  labelled = true,
 }: {
   children: React.ReactElement<{
     "aria-labelledby"?: string;
     "aria-describedby"?: string;
   }>;
-  labelled?: boolean;
 }) => {
-  const { titleId, descriptionId, hintId } = useSetting();
+  const { titleId, descriptionId, hintId, labelsControl } = useSetting();
   return (
     <div className="mt-3 self-start justify-self-start [grid-area:control] sm:mt-0 sm:ml-3 sm:justify-self-end">
       {/* A dangling hint id is ignored by assistive tech while no hint is rendered */}
-      {labelled
+      {labelsControl
         ? React.cloneElement(children, {
             "aria-labelledby": titleId,
             "aria-describedby": `${descriptionId} ${hintId}`,

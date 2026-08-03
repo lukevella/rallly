@@ -12,10 +12,10 @@ import {
   PageSectionTitle,
 } from "@/components/page-layout";
 import {
-  Setting,
   SettingControl,
   SettingDescription,
   SettingIcon,
+  SettingRow,
   SettingsGroup,
   SettingTitle,
 } from "@/components/setting";
@@ -84,7 +84,7 @@ export function GeneralSettingsPageClient() {
               <PageSectionContent>
                 <SettingsGroup>
                   {!isOwner ? (
-                    <Setting labelable={false}>
+                    <SettingRow>
                       <SettingIcon>
                         <LogOutIcon />
                       </SettingIcon>
@@ -97,16 +97,16 @@ export function GeneralSettingsPageClient() {
                           defaults="Remove yourself from this space. You'll lose access to all polls in this space."
                         />
                       </SettingDescription>
-                      <SettingControl labelled={false}>
+                      <SettingControl>
                         <LeaveSpaceButton
                           spaceName={space.name}
                           spaceId={space.id}
                         />
                       </SettingControl>
-                    </Setting>
+                    </SettingRow>
                   ) : null}
                   {canDeleteSpace ? (
-                    <Setting labelable={false}>
+                    <SettingRow>
                       <SettingIcon>
                         <TrashIcon />
                       </SettingIcon>
@@ -119,10 +119,10 @@ export function GeneralSettingsPageClient() {
                           defaults="Permanently delete this space and all its content. This action cannot be undone."
                         />
                       </SettingDescription>
-                      <SettingControl labelled={false}>
+                      <SettingControl>
                         <DeleteSpaceButton spaceName={space.name} />
                       </SettingControl>
-                    </Setting>
+                    </SettingRow>
                   ) : null}
                 </SettingsGroup>
               </PageSectionContent>

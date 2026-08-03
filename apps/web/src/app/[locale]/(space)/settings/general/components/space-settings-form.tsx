@@ -21,9 +21,9 @@ import {
   ImageUploadPreview,
 } from "@/components/image-upload";
 import {
-  Setting,
   SettingControl,
   SettingDescription,
+  SettingRow,
   SettingTitle,
   useSettingLabels,
 } from "@/components/setting";
@@ -92,7 +92,7 @@ export function SpaceSettingsForm({
 
   return (
     <>
-      <Setting labelable={false}>
+      <SettingRow>
         <SettingTitle>
           <Trans i18nKey="logo" defaults="Logo" />
         </SettingTitle>
@@ -102,7 +102,7 @@ export function SpaceSettingsForm({
             defaults="Shown next to your space name."
           />
         </SettingDescription>
-        <SettingControl labelled={false}>
+        <SettingControl>
           <ImageUpload>
             <ImageUploadPreview>
               <SpaceIcon name={space.name} src={space.image} size="xl" />
@@ -115,8 +115,8 @@ export function SpaceSettingsForm({
             />
           </ImageUpload>
         </SettingControl>
-      </Setting>
-      <Setting labelable={false}>
+      </SettingRow>
+      <SettingRow>
         <SettingTitle>
           <Trans i18nKey="name" defaults="Name" />
         </SettingTitle>
@@ -126,7 +126,7 @@ export function SpaceSettingsForm({
             defaults="The name this space is known by."
           />
         </SettingDescription>
-        <SettingControl labelled={false}>
+        <SettingControl>
           <SpaceNameField
             control={form.control}
             disabled={disabled}
@@ -148,7 +148,7 @@ export function SpaceSettingsForm({
             })}
           />
         </SettingControl>
-      </Setting>
+      </SettingRow>
     </>
   );
 }
