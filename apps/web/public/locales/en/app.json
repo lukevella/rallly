@@ -184,7 +184,7 @@
   "customBrandingPromptCta": "Set Up Now",
   "customBrandingPromptDescription": "Get professional scheduling polls with your own logo and colors.",
   "customBrandingPromptTitle": "Custom Branding",
-  "customBrandingSettingDescription": "Show your logo and colors instead of Rallly's on polls, invites and emails.",
+  "customBrandingSettingHint": "Show your brand color and logos to your participants",
   "customBrandingSettingTitle": "Custom branding",
   "dangerZone": "Danger Zone",
   "dangerZoneAccountDeletion": "Delete your account and all data associated with it",
