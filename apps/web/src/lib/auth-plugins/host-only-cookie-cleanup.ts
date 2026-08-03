@@ -56,7 +56,18 @@ export const hostOnlyCookieCleanup: BetterAuthPlugin = {
             ctx.context.authCookies.sessionData,
           ]) {
             const { domain: _, ...attributes } = cookie.attributes;
-            ctx.setCookie(cookie.name, "", { ...attributes, maxAge: 0 });
+            // maxAge: 0 alone is not a reliable deletion: Next.js
+            // re-serializes Set-Cookie headers on the cookies() merge path
+            // and drops the falsy zero, turning the "deletion" into an
+            // empty host-only *session* cookie — a shadow that outlives
+            // every later deletion attempt and wedges the login redirect
+            // loop this plugin exists to prevent. Expires survives that
+            // pipeline, so send both.
+            ctx.setCookie(cookie.name, "", {
+              ...attributes,
+              maxAge: 0,
+              expires: new Date(0),
+            });
           }
         }),
       },

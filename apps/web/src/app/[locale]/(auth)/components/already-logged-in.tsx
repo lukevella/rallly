@@ -1,5 +1,4 @@
 import { buttonVariants } from "@rallly/ui";
-import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { getTranslation } from "@/i18n/server";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
@@ -10,6 +9,7 @@ import {
   AuthPageHeader,
   AuthPageTitle,
 } from "./auth-page";
+import { SessionCookieCleanup } from "./session-cookie-cleanup";
 import { SignOutButton } from "./sign-out-button";
 
 /**
@@ -27,6 +27,7 @@ export async function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
 
   return (
     <AuthPageContainer>
+      <SessionCookieCleanup />
       <AuthPageHeader>
         <AuthPageTitle>
           <Trans
@@ -47,7 +48,12 @@ export async function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
       </AuthPageHeader>
       <AuthPageContent>
         <div className="grid gap-3">
-          <Link
+          {/* Plain anchor, not <Link>: the router cache can hold a stale
+              redirect for the destination (the / → /login bounce that
+              brought the user here), which a soft navigation replays
+              without consulting the server. A document navigation always
+              sends the current cookies. */}
+          <a
             className={buttonVariants({ variant: "primary", size: "xl" })}
             href={validateRedirectUrl(redirectTo) ?? "/"}
           >
@@ -57,7 +63,7 @@ export async function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
               i18nKey="alreadyLoggedInContinue"
               defaults="Continue"
             />
-          </Link>
+          </a>
           <SignOutButton />
         </div>
       </AuthPageContent>
