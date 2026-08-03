@@ -28,15 +28,22 @@ async function scan(page: Page) {
 }
 
 test.describe("accessibility (axe-core, WCAG 2.1 A/AA)", () => {
+  // React 19.2 reveals streamed Suspense content paint-aligned, so during
+  // hydration the page can transiently hold two hidden copies of the heading.
+  // A text locator strict-fails on that window; getByRole ignores hidden
+  // elements and .first() tolerates the duplicate.
+  const welcomeHeading = (page: Page) =>
+    page.getByRole("heading", { name: "Welcome" }).first();
+
   test("login page", async ({ page }) => {
     await page.goto("/login");
-    await page.getByText("Welcome").waitFor();
+    await welcomeHeading(page).waitFor();
     expect(await scan(page)).toEqual([]);
   });
 
   test("login verify page", async ({ page }) => {
     await page.goto("/login");
-    await page.getByText("Welcome").waitFor();
+    await welcomeHeading(page).waitFor();
     await expect(async () => {
       await page
         .getByPlaceholder("jessie.smith@example.com")
