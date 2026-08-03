@@ -117,8 +117,6 @@ model PollInvite {
   participant Participant? @relation(fields: [participantId], references: [id], onDelete: SetNull)
 
   @@unique([pollId, email])
-  /// Account erasure sweeps invites by address, same as ScheduledEventInvite.inviteeEmail
-  @@index([email])
   @@map("poll_invites")
 }
 
@@ -143,7 +141,7 @@ model PollEvent {
   @@index([pollId, participantId])
   @@index([pollId, optionId])
   @@index([pollId, inviteId])
-  /// Account erasure scrubs events by actor
+  /// Account deletion severs the actor link (userId is a soft ref, no FK SetNull)
   @@index([userId])
   @@map("poll_events")
 }

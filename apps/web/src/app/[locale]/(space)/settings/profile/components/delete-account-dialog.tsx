@@ -47,8 +47,8 @@ export function DeleteAccountDialog({
         <div className="space-y-3 text-sm">
           <p>
             <Trans
-              i18nKey="deleteAccountDataWarning"
-              defaults="All data associated with your account, including your polls, events, votes, and comments, will be permanently deleted."
+              i18nKey="deleteAccountDialogDataScope"
+              defaults="Your polls, events, and comments will be permanently deleted. Responses you have submitted to other people's polls will remain."
             />
           </p>
           {summary}

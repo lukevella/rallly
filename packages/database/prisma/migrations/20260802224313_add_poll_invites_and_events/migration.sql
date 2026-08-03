@@ -39,9 +39,6 @@ CREATE UNIQUE INDEX "poll_invites_token_key" ON "poll_invites"("token");
 CREATE UNIQUE INDEX "poll_invites_participant_id_key" ON "poll_invites"("participant_id");
 
 -- CreateIndex
-CREATE INDEX "poll_invites_email_idx" ON "poll_invites"("email");
-
--- CreateIndex
 CREATE UNIQUE INDEX "poll_invites_poll_id_email_key" ON "poll_invites"("poll_id", "email");
 
 -- CreateIndex

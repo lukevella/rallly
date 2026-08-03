@@ -187,7 +187,7 @@
   "delete": "Delete",
   "deleteAccount": "Delete Account",
   "deleteAccountActivePolls": "{count, plural, one {# active poll} other {# active polls}}",
-  "deleteAccountDataWarning": "All data associated with your account, including your polls, events, votes, and comments, will be permanently deleted.",
+  "deleteAccountDialogDataScope": "Your polls, events, and comments will be permanently deleted. Responses you have submitted to other people's polls will remain.",
   "deleteAccountDialogScheduleDescription": "Your account will be scheduled for deletion.",
   "deleteAccountDialogTitle": "Delete Account",
   "deleteAccountRecoveryWindow": "You can cancel the deletion within {count, plural, one {# day} other {# days}}. After that, your account and data will be permanently deleted.",

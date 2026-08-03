@@ -122,13 +122,7 @@ export async function unbanUser({ userId }: { userId: string }) {
 // Sessions are revoked through Better-Auth's internal adapter for the same
 // reason as bans: with secondary storage they live in Redis, and only
 // Better-Auth's own APIs delete those keys.
-export async function hardDeleteUser({
-  userId,
-  email,
-}: {
-  userId: string;
-  email: string;
-}) {
+export async function hardDeleteUser({ userId }: { userId: string }) {
   const { internalAdapter } = await authLib.$context;
 
   await internalAdapter.deleteSessions(userId);
@@ -144,51 +138,19 @@ export async function hardDeleteUser({
     await deleteImageFromS3(user.image);
   }
 
-  // Cascades cover data the user owns, but their personal data also lives
-  // where they took part in other users' content: participant rows carry
-  // name/email (votes cascade off them, matching the promise in the delete
-  // dialog) and event/poll invites carry invitee emails. Poll invites are
-  // deleted outright rather than left to the participant SetNull, which would
-  // revert them to pending with a still-valid token. Poll events keep their
-  // timeline entry but lose the actor ref and the payload snapshot, which
-  // carries name/email.
-  // Reads live inside the transaction and the deletes are predicate based
-  // (re-evaluated at execution), so rows created while the erasure runs
-  // cannot slip through on a stale id list.
-  const invitesWhere = { OR: [{ email }, { participant: { userId } }] };
-  await prisma.$transaction(async (tx) => {
-    const participants = await tx.participant.findMany({
+  // Cascades cover content the user owns. Rows on other people's polls and
+  // events (participants, votes, poll/event invites, event payloads) are
+  // snapshots submitted to that record — deletion severs account links but
+  // never mutates them, so finalized outcomes and attendance can't change
+  // when an account disappears. The FK SetNulls unlink participants and
+  // event invites; PollEvent.userId is a soft ref, so it's nulled here.
+  await prisma.$transaction([
+    prisma.pollEvent.updateMany({
       where: { userId },
-      select: { id: true, pollId: true },
-    });
-    const invites = await tx.pollInvite.findMany({
-      where: invitesWhere,
-      select: { id: true, pollId: true },
-    });
-
-    await tx.pollEvent.updateMany({
-      where: {
-        OR: [
-          { userId },
-          {
-            pollId: { in: participants.map((p) => p.pollId) },
-            participantId: { in: participants.map((p) => p.id) },
-          },
-          {
-            pollId: { in: invites.map((i) => i.pollId) },
-            inviteId: { in: invites.map((i) => i.id) },
-          },
-        ],
-      },
-      data: { userId: null, payload: {} },
-    });
-    await tx.pollInvite.deleteMany({ where: invitesWhere });
-    await tx.participant.deleteMany({ where: { userId } });
-    await tx.scheduledEventInvite.deleteMany({
-      where: { OR: [{ inviteeId: userId }, { inviteeEmail: email }] },
-    });
-    await tx.user.delete({ where: { id: userId } });
-  });
+      data: { userId: null },
+    }),
+    prisma.user.delete({ where: { id: userId } }),
+  ]);
 }
 
 const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 100;
