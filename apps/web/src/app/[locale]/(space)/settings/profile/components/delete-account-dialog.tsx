@@ -66,7 +66,7 @@ function ScheduleAccountDeletionDialog({
           <p>
             <Trans
               i18nKey="deleteAccountDialogDataScope"
-              defaults="Your polls, events, and comments will be permanently deleted. Responses you have submitted to other people's polls will remain."
+              defaults="All data associated with your account will be permanently deleted."
             />
           </p>
           {summary}
@@ -150,7 +150,7 @@ function InstantDeleteAccountDialog({
               <p>
                 <Trans
                   i18nKey="deleteAccountDialogDataScope"
-                  defaults="Your polls, events, and comments will be permanently deleted. Responses you have submitted to other people's polls will remain."
+                  defaults="All data associated with your account will be permanently deleted."
                 />
               </p>
               {summary}
