@@ -142,6 +142,7 @@ export type PollDef = {
     name: string;
     email?: string;
     userId?: string;
+    note?: string;
     votes: VoteType[];
   }>;
   comments?: Array<{
@@ -229,6 +230,7 @@ const personalPolls: PollDef[] = [
       {
         name: "Priya Patel",
         email: "priya.p@gmail.com",
+        note: "Still recovering from a knee injury, so I'd prefer a slower pace if that's ok.",
         votes: ["no", "yes", "yes", "ifNeedBe"],
       },
       {
@@ -314,6 +316,7 @@ const personalPolls: PollDef[] = [
       {
         name: "David Chen",
         email: "d.chen@outlook.com",
+        note: "Traveling for work the week of the 15th, so the earlier dates suit me best.",
         votes: ["yes", "ifNeedBe", "no", "no"],
       },
       {
@@ -509,6 +512,7 @@ const acmePolls: PollDef[] = [
         name: "Emily Nakamura",
         userId: "user-4",
         email: "emily@rallly.co",
+        note: "I'm out Monday but flexible otherwise. Can join remotely if needed.",
         votes: ["no", "yes", "yes", "yes"],
       },
       {

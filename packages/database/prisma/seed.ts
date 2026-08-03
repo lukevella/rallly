@@ -146,6 +146,7 @@ async function main() {
           pollId,
           name: part.name,
           email: part.email,
+          note: part.note,
           userId: part.userId,
         },
       });
