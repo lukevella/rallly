@@ -29,7 +29,6 @@ import {
 } from "./components/account-deletion-summary";
 import { DeleteAccountButton } from "./components/delete-account-button";
 import { PendingDeletionNotice } from "./components/pending-deletion-notice";
-import { ProfileEmailAddress } from "./components/profile-email-address";
 import { ProfileSettings } from "./components/profile-settings";
 
 export default async function Page() {
@@ -63,24 +62,11 @@ export default async function Page() {
         <PageSectionGroup>
           <PageSection variant="card">
             <PageSectionContent>
-              <ProfileSettings name={user.name} image={user.image} />
-            </PageSectionContent>
-          </PageSection>
-
-          <PageSection variant="card">
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans i18nKey="profileEmailAddress" defaults="Email Address" />
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  i18nKey="profileEmailAddressDescription"
-                  defaults="Your email address is used to log in to your account"
-                />
-              </PageSectionDescription>
-            </PageSectionHeader>
-            <PageSectionContent>
-              <ProfileEmailAddress email={user.email} />
+              <ProfileSettings
+                name={user.name}
+                image={user.image}
+                email={user.email}
+              />
             </PageSectionContent>
           </PageSection>
 

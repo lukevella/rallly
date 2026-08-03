@@ -57,15 +57,22 @@ function ProfilePictureUpload({
 export function ProfilePicture({
   name,
   image,
+  ...rest
 }: {
   name: string;
   image?: string;
+  "aria-labelledby"?: string;
+  "aria-describedby"?: string;
 }) {
   const isStorageEnabled = useFeatureFlag("storage");
 
-  if (isStorageEnabled) {
-    return <ProfilePictureUpload image={image} name={name} />;
-  }
-
-  return <OptimizedAvatarImage src={image} name={name} size="lg" />;
+  return (
+    <div {...rest}>
+      {isStorageEnabled ? (
+        <ProfilePictureUpload image={image} name={name} />
+      ) : (
+        <OptimizedAvatarImage src={image} name={name} size="lg" />
+      )}
+    </div>
+  );
 }
