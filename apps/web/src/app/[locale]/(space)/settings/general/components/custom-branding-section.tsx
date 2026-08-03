@@ -1,10 +1,11 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
-import { Field, FieldGroup, FieldLabel } from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { PaletteIcon, SparklesIcon } from "lucide-react";
 import React from "react";
 import {
   PageSection,
@@ -13,6 +14,14 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
+import {
+  Setting,
+  SettingControl,
+  SettingDescription,
+  SettingIcon,
+  SettingsGroup,
+  SettingTitle,
+} from "@/components/setting";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
@@ -97,47 +106,67 @@ export function CustomBrandingSection({
         </PageSectionDescription>
       </PageSectionHeader>
       <PageSectionContent>
-        <FieldGroup>
-          <Field orientation="horizontal">
-            <Switch
-              checked={showBranding}
-              onCheckedChange={handleToggle}
-              disabled={disabled || updateShowBranding.isExecuting}
-            />
-            <FieldLabel>
+        <SettingsGroup>
+          <Setting>
+            <SettingIcon>
+              <SparklesIcon />
+            </SettingIcon>
+            <SettingTitle>
               <Trans
                 i18nKey="useCustomBranding"
                 defaults="Enable Custom Branding"
               />
               {space.tier !== "pro" && <ProBadge />}
-            </FieldLabel>
-          </Field>
-          <div
-            className={
-              !showBranding || disabled
-                ? "pointer-events-none opacity-50"
-                : undefined
-            }
-          >
-            <FieldGroup>
-              <Field>
-                <FieldLabel>
-                  <Trans i18nKey="primaryColor" defaults="Primary Color" />
-                </FieldLabel>
+            </SettingTitle>
+            <SettingDescription>
+              <Trans
+                i18nKey="useCustomBrandingSettingDescription"
+                defaults="Replace Rallly's colors with your own on public pages and emails."
+              />
+            </SettingDescription>
+            <SettingControl>
+              <Switch
+                checked={showBranding}
+                onCheckedChange={handleToggle}
+                disabled={disabled || updateShowBranding.isExecuting}
+              />
+            </SettingControl>
+          </Setting>
+          <Setting labelable={false}>
+            <SettingIcon>
+              <PaletteIcon />
+            </SettingIcon>
+            <SettingTitle>
+              <Trans i18nKey="primaryColor" defaults="Primary Color" />
+            </SettingTitle>
+            <SettingDescription>
+              <Trans
+                i18nKey="primaryColorSettingDescription"
+                defaults="Used for buttons and highlights on your public pages."
+              />
+            </SettingDescription>
+            <SettingControl labelled={false}>
+              <div
+                className={cn(
+                  "flex items-center gap-x-2",
+                  !showBranding || disabled
+                    ? "pointer-events-none opacity-50"
+                    : undefined,
+                )}
+              >
                 <ColorPicker value={color} onChange={setColor} />
-              </Field>
-              <Field orientation="horizontal">
                 <Button
                   onClick={handleSave}
+                  size="sm"
                   disabled={!showBranding || !isDirty || disabled}
                   loading={updateSpace.isExecuting}
                 >
                   <Trans i18nKey="save" defaults="Save" />
                 </Button>
-              </Field>
-            </FieldGroup>
-          </div>
-        </FieldGroup>
+              </div>
+            </SettingControl>
+          </Setting>
+        </SettingsGroup>
       </PageSectionContent>
     </PageSection>
   );

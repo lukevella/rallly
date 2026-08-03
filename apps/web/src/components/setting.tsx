@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import { InfoIcon } from "lucide-react";
 import React from "react";
 import { PageIcon } from "@/components/page-icons";
@@ -22,7 +23,19 @@ export const SettingsGroup = ({ children }: React.PropsWithChildren) => {
   return <div className="divide-y">{children}</div>;
 };
 
-export const Setting = ({ children }: React.PropsWithChildren) => {
+const settingLayout =
+  "grid grid-cols-[1fr_auto] gap-x-3 py-4 [grid-template-areas:'title_control'_'description_control'_'hint_hint'] first:pt-0 last:pb-0 sm:grid-cols-[auto_1fr_auto] sm:[grid-template-areas:'icon_title_control'_'icon_description_control'_'icon_hint_hint']";
+
+/**
+ * Clicking anywhere on the row activates the control, so it renders as a label
+ * only when the control is a single labelable element (switch, select). Rows
+ * whose control is an input, a button or a picker must set `labelable={false}`
+ * to render a plain div instead.
+ */
+export const Setting = ({
+  children,
+  labelable = true,
+}: React.PropsWithChildren<{ labelable?: boolean }>) => {
   const titleId = React.useId();
   const descriptionId = React.useId();
   const hintId = React.useId();
@@ -33,10 +46,14 @@ export const Setting = ({ children }: React.PropsWithChildren) => {
 
   return (
     <SettingContext.Provider value={value}>
-      {/* biome-ignore lint/a11y/noLabelWithoutControl: control is rendered inside */}
-      <label className="grid cursor-pointer select-none grid-cols-[1fr_auto] gap-x-3 py-4 [grid-template-areas:'title_control'_'description_control'_'hint_hint'] first:pt-0 last:pb-0 sm:grid-cols-[auto_1fr_auto] sm:[grid-template-areas:'icon_title_control'_'icon_description_control'_'icon_hint_hint']">
-        {children}
-      </label>
+      {labelable ? (
+        // biome-ignore lint/a11y/noLabelWithoutControl: control is rendered inside
+        <label className={cn(settingLayout, "cursor-pointer select-none")}>
+          {children}
+        </label>
+      ) : (
+        <div className={settingLayout}>{children}</div>
+      )}
     </SettingContext.Provider>
   );
 };
@@ -73,24 +90,42 @@ export const SettingDescription = ({ children }: React.PropsWithChildren) => {
   );
 };
 
+/**
+ * Labels the control with the row's title and description. A control made up of
+ * more than one focusable element (a form, an upload widget) has no single
+ * element to label, so it sets `labelled={false}` and wires up
+ * `useSettingLabels()` on whichever element is the real control.
+ */
 export const SettingControl = ({
   children,
+  labelled = true,
 }: {
   children: React.ReactElement<{
     "aria-labelledby"?: string;
     "aria-describedby"?: string;
   }>;
+  labelled?: boolean;
 }) => {
   const { titleId, descriptionId, hintId } = useSetting();
   return (
     <div className="self-start justify-self-end [grid-area:control]">
       {/* A dangling hint id is ignored by assistive tech while no hint is rendered */}
-      {React.cloneElement(children, {
-        "aria-labelledby": titleId,
-        "aria-describedby": `${descriptionId} ${hintId}`,
-      })}
+      {labelled
+        ? React.cloneElement(children, {
+            "aria-labelledby": titleId,
+            "aria-describedby": `${descriptionId} ${hintId}`,
+          })
+        : children}
     </div>
   );
+};
+
+export const useSettingLabels = () => {
+  const { titleId, descriptionId, hintId } = useSetting();
+  return {
+    "aria-labelledby": titleId,
+    "aria-describedby": `${descriptionId} ${hintId}`,
+  };
 };
 
 export const SettingHint = ({ children }: React.PropsWithChildren) => {

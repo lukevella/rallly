@@ -23,7 +23,6 @@ import {
 
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
-import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -149,8 +148,7 @@ export function LeaveSpaceButton({
 }: LeaveSpaceButtonProps) {
   return (
     <LeaveSpaceDialog spaceName={spaceName} spaceId={spaceId}>
-      <DialogTrigger render={<Button />}>
-        <LogOutIcon data-icon="inline-start" />
+      <DialogTrigger render={<Button className="text-destructive" />}>
         <Trans i18nKey="leaveSpace" defaults="Leave Space" />
       </DialogTrigger>
     </LeaveSpaceDialog>
