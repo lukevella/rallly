@@ -27,6 +27,18 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
         return;
       }
 
+      // No response data means the request never reached the server
+      if (!error.data) {
+        toast.error(
+          t("actionErrorNetwork", {
+            defaultValue:
+              "Unable to reach the server. Please check your connection and try again.",
+          }),
+          { id: "network-error" },
+        );
+        return;
+      }
+
       switch (error.data?.code) {
         case "UNAUTHORIZED":
           // Never sign out automatically — a failed sign out turns this

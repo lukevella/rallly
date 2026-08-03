@@ -145,6 +145,32 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   });
 
   const { setError, formState, handleSubmit, watch } = form;
+
+  const getSubmitErrorMessage = (error: unknown) => {
+    if (error instanceof TRPCClientError && error.data) {
+      if (error.data.appError === "POLL_FULL") {
+        return t("newParticipantFormErrorPollFull", {
+          defaultValue: "This poll is no longer accepting responses.",
+        });
+      }
+      switch (error.data.code) {
+        case "TOO_MANY_REQUESTS":
+          return t("newParticipantFormErrorTooManyRequests", {
+            defaultValue:
+              "You have made too many attempts. Please wait a while and try again.",
+          });
+        case "UNAUTHORIZED":
+          return t("newParticipantFormErrorUnauthorized", {
+            defaultValue:
+              "We couldn't verify your session. Please refresh the page and try again.",
+          });
+      }
+    }
+    return t("newParticipantFormSubmitError", {
+      defaultValue:
+        "Your response could not be saved. Please check your connection and try again.",
+    });
+  };
   const noteLength = watch("note")?.length ?? 0;
   const [showNote, setShowNote] = React.useState(false);
   const addParticipant = useAddParticipantMutation();
@@ -244,15 +270,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
               });
               props.onSubmit?.(newParticipant);
             } catch (error) {
-              setError("root", {
-                message:
-                  error instanceof TRPCClientError
-                    ? error.message
-                    : t("newParticipantFormSubmitError", {
-                        defaultValue:
-                          "Your response could not be saved. Please check your connection and try again.",
-                      }),
-              });
+              setError("root", { message: getSubmitErrorMessage(error) });
             }
           })}
           className="space-y-4"
