@@ -27,7 +27,9 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
         return;
       }
 
-      // No response data means the request never reached the server
+      // Missing error data means no usable server response: the request
+      // failed in transit or the response was not a tRPC error envelope
+      // (e.g. an HTML error page from a proxy)
       if (!error.data) {
         toast.error(
           t("actionErrorNetwork", {
