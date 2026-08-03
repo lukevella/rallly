@@ -10,8 +10,11 @@ test("unauthenticated visitor gets a working, hydrated login page", async ({
   const clientErrors: Error[] = [];
   page.on("pageerror", (error) => clientErrors.push(error));
 
-  await page.goto("/");
-  await expect(page).toHaveURL(/\/login/);
+  // Straight to /login rather than asserting redirect behavior from "/" —
+  // what "/" serves depends on auth and instance state (fresh instances
+  // serve guests a page directly), and routing policy isn't what this
+  // spec guards.
+  await page.goto("/login");
 
   await expect(page.getByText("Welcome")).toBeVisible();
 

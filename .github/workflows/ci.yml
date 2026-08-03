@@ -70,20 +70,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Shell exports don't reach the container — compose only forwards
+      # DATABASE_URL. The env_file (apps/web/.env) is how the stack reads
+      # config, so write the documented-required variables there.
       - name: Start services
         run: |
-          SECRET_PASSWORD=test-secret \
-          NEXT_PUBLIC_BASE_URL=http://localhost:3000 \
+          cat > apps/web/.env <<'EOF'
+          SECRET_PASSWORD=0123456789abcdef0123456789abcdef
+          SUPPORT_EMAIL=support@example.com
+          NEXT_PUBLIC_BASE_URL=http://localhost:3000
+          EOF
           docker compose up -d --build --wait --wait-timeout 60
 
       # The image healthcheck hits /api/status, but that endpoint returns
-      # 200 even when the database is unreachable — assert the connection
-      # explicitly so a booted-but-broken stack fails here.
-      - name: Check status endpoint reports a connected database
+      # 200 even when the database is unreachable and doesn't touch env
+      # validation — assert both explicitly so a booted-but-broken stack
+      # fails here.
+      - name: Check status endpoint and login page respond
         run: |
           status=$(curl -fsS http://localhost:3000/api/status)
           echo "$status"
           echo "$status" | grep -q '"database":"connected"'
+          curl -fsSL -o /dev/null http://localhost:3000/login
 
       - uses: ./.github/actions/setup-node
       - uses: ./.github/actions/pnpm-install
