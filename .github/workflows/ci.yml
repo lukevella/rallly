@@ -88,10 +88,12 @@ jobs:
       # fails here.
       - name: Check status endpoint and login page respond
         run: |
-          status=$(curl -fsS http://localhost:3000/api/status)
+          status=$(curl -fsS --connect-timeout 5 --max-time 15 \
+            http://localhost:3000/api/status)
           echo "$status"
-          echo "$status" | grep -q '"database":"connected"'
-          curl -fsSL -o /dev/null http://localhost:3000/login
+          echo "$status" | jq -e '.database == "connected"'
+          curl -fsSL --connect-timeout 5 --max-time 15 \
+            -o /dev/null http://localhost:3000/login
 
       - uses: ./.github/actions/setup-node
       - uses: ./.github/actions/pnpm-install
