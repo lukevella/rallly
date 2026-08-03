@@ -1,23 +1,38 @@
 "use client";
 
+import { Card, CardContent } from "@rallly/ui/card";
+import { MapPinIcon, User2Icon } from "lucide-react";
 import React from "react";
 import { getPrimaryColorVars } from "@/features/branding/utils";
+import {
+  EventMetaItem,
+  EventMetaList,
+  EventMetaTitle,
+} from "@/features/poll/components/event-meta";
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 
+const PREVIEW_HEIGHT = 220;
+
 /**
- * Approximates the public event page so the chosen color can be judged against
- * the surfaces it actually lands on. The branded variables are scoped to this
+ * Approximates the poll invite card so the chosen color can be judged against
+ * the surface it actually lands on. The branded variables are scoped to this
  * container rather than :root so they can't bleed into the settings chrome.
+ *
+ * The card is deliberately taller than the frame and cropped, with a fade at
+ * the bottom edge, to read as a window onto a longer page rather than a
+ * complete card whose content happens to be sparse.
  */
 export function BrandingPreview({
   spaceName,
   spaceImage,
   primaryColor,
+  hostName,
 }: {
   spaceName: string;
   spaceImage?: string | null;
   primaryColor: string;
+  hostName: string;
 }) {
   const vars = React.useMemo(
     () => getPrimaryColorVars(primaryColor),
@@ -26,38 +41,63 @@ export function BrandingPreview({
 
   return (
     <div
-      // The preview mirrors the public page, which follows the viewer's theme,
-      // so both light and dark values are supplied and CSS picks per scheme.
+      // The public page follows the viewer's theme, so both sets of values are
+      // supplied and the dark variants swap them in.
       style={
         {
           "--primary": vars.light,
           "--primary-foreground": vars.lightForeground,
           "--preview-primary-dark": vars.dark,
           "--preview-primary-dark-foreground": vars.darkForeground,
+          height: PREVIEW_HEIGHT,
         } as React.CSSProperties
       }
-      className="rounded-lg border bg-gray-50 p-4 dark:bg-gray-900 dark:[--primary-foreground:var(--preview-primary-dark-foreground)] dark:[--primary:var(--preview-primary-dark)]"
+      className="relative overflow-hidden rounded-lg border bg-gray-100 px-4 pt-4 dark:bg-gray-900 dark:[--primary-foreground:var(--preview-primary-dark-foreground)] dark:[--primary:var(--preview-primary-dark)]"
+      aria-hidden="true"
     >
-      <div className="mx-auto max-w-sm rounded-lg border bg-background p-4 shadow-sm">
-        <div className="flex items-center gap-x-2">
-          <SpaceIcon name={spaceName} src={spaceImage ?? undefined} size="sm" />
-          <span className="truncate font-medium text-sm">{spaceName}</span>
-        </div>
-        <div className="mt-3 font-semibold text-base">
-          <Trans i18nKey="brandingPreviewEventTitle" defaults="Team Offsite" />
-        </div>
-        <div className="mt-0.5 text-muted-foreground text-xs">
-          <Trans
-            i18nKey="brandingPreviewEventDate"
-            defaults="Friday, November 14 at 2:00 PM"
-          />
-        </div>
-        {/* Styled to match a primary button without being focusable — the
-            preview is illustrative, not interactive. */}
-        <div className="mt-4 w-full rounded-lg bg-primary py-2 text-center font-medium text-primary-foreground text-sm">
-          <Trans i18nKey="brandingPreviewCta" defaults="Register" />
-        </div>
+      <div className="mx-auto max-w-sm">
+        <Card>
+          {/* The branded bar, mirroring RandomGradientBar on the real card */}
+          <div className="-mx-px -mt-px h-2 rounded-t-2xl bg-linear-to-r from-primary to-primary/75" />
+          <CardContent>
+            <div className="mb-2">
+              <SpaceIcon
+                name={spaceName}
+                src={spaceImage ?? undefined}
+                size="xl"
+              />
+              <p className="mt-2 truncate font-medium text-muted-foreground text-sm">
+                {spaceName}
+              </p>
+            </div>
+            <EventMetaTitle>
+              <Trans
+                i18nKey="brandingPreviewEventTitle"
+                defaults="Team Offsite"
+              />
+            </EventMetaTitle>
+            <EventMetaList className="mt-4">
+              <EventMetaItem>
+                <User2Icon />
+                <Trans
+                  i18nKey="organizedBy"
+                  defaults="Organized by {name}"
+                  values={{ name: hostName }}
+                />
+              </EventMetaItem>
+              <EventMetaItem>
+                <MapPinIcon />
+                <Trans
+                  i18nKey="brandingPreviewLocation"
+                  defaults="The Old Fire Station"
+                />
+              </EventMetaItem>
+            </EventMetaList>
+          </CardContent>
+        </Card>
       </div>
+      {/* Fades the cropped edge so the card reads as continuing below */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-b from-transparent to-gray-100 dark:to-gray-900" />
     </div>
   );
 }

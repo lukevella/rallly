@@ -23,7 +23,6 @@ import {
   Setting,
   SettingControl,
   SettingDescription,
-  SettingsGroup,
   SettingTitle,
   useSettingLabels,
 } from "@/components/setting";
@@ -91,7 +90,7 @@ export function SpaceSettingsForm({
   };
 
   return (
-    <SettingsGroup>
+    <>
       <Setting labelable={false}>
         <SettingTitle>
           <Trans i18nKey="logo" defaults="Logo" />
@@ -149,7 +148,7 @@ export function SpaceSettingsForm({
           />
         </SettingControl>
       </Setting>
-    </SettingsGroup>
+    </>
   );
 }
 
@@ -186,16 +185,21 @@ function SpaceNameField({
                 })}
                 aria-invalid={fieldState.invalid}
               />
-              <InputGroupAddon align="inline-end">
-                <InputGroupButton
-                  type="submit"
-                  size="icon-xs"
-                  disabled={disabled || isSaving || !isDirty}
-                  aria-label={t("save", { defaultValue: "Save" })}
-                >
-                  <CheckIcon />
-                </InputGroupButton>
-              </InputGroupAddon>
+              {/* Rendered only when there is something to save. A disabled
+                  button here would trip InputGroup's `has-disabled:` styles
+                  and grey out the whole field. */}
+              {isDirty && !disabled ? (
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton
+                    type="submit"
+                    size="icon-xs"
+                    loading={isSaving}
+                    aria-label={t("save", { defaultValue: "Save" })}
+                  >
+                    <CheckIcon />
+                  </InputGroupButton>
+                </InputGroupAddon>
+              ) : null}
             </InputGroup>
             {fieldState.invalid ? (
               <FieldError className="mt-1.5" errors={[fieldState.error]} />

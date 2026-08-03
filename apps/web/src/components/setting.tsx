@@ -23,8 +23,12 @@ export const SettingsGroup = ({ children }: React.PropsWithChildren) => {
   return <div className="divide-y">{children}</div>;
 };
 
+// A uniform `gap-x` would indent iconless rows, because the collapsed icon
+// column still contributes its gap. The gap is zero here; SettingIcon and
+// SettingControl supply their own margins, so rows without an icon sit flush
+// against the card edge.
 const settingLayout =
-  "grid grid-cols-[1fr_auto] gap-x-3 py-4 [grid-template-areas:'title_control'_'description_control'_'hint_hint'] first:pt-0 last:pb-0 sm:grid-cols-[auto_1fr_auto] sm:[grid-template-areas:'icon_title_control'_'icon_description_control'_'icon_hint_hint']";
+  "grid grid-cols-[1fr_auto] py-4 [column-gap:0] [grid-template-areas:'title_control'_'description_control'_'hint_hint'] first:pt-0 last:pb-0 sm:grid-cols-[auto_1fr_auto] sm:[grid-template-areas:'icon_title_control'_'icon_description_control'_'icon_hint_hint']";
 
 /**
  * Clicking anywhere on the row activates the control, so it renders as a label
@@ -60,7 +64,7 @@ export const Setting = ({
 
 export const SettingIcon = ({ children }: React.PropsWithChildren) => {
   return (
-    <div className="hidden self-start [grid-area:icon] sm:block">
+    <div className="mr-3 hidden self-start [grid-area:icon] sm:block">
       <PageIcon size="lg">{children}</PageIcon>
     </div>
   );
@@ -108,7 +112,7 @@ export const SettingControl = ({
 }) => {
   const { titleId, descriptionId, hintId } = useSetting();
   return (
-    <div className="self-start justify-self-end [grid-area:control]">
+    <div className="ml-3 self-start justify-self-end [grid-area:control]">
       {/* A dangling hint id is ignored by assistive tech while no hint is rendered */}
       {labelled
         ? React.cloneElement(children, {

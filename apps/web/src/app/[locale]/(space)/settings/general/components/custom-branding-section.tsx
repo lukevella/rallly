@@ -4,6 +4,7 @@ import { Button } from "@rallly/ui/button";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { GlobeIcon } from "lucide-react";
 import React from "react";
 import {
   PageSection,
@@ -16,6 +17,7 @@ import {
   Setting,
   SettingControl,
   SettingDescription,
+  SettingIcon,
   SettingsGroup,
   SettingTitle,
 } from "@/components/setting";
@@ -27,9 +29,11 @@ import {
   updateSpaceShowBrandingAction,
 } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
+import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { BrandingPreview } from "./branding-preview";
+import { SpaceSettingsForm } from "./space-settings-form";
 
 export function CustomBrandingSection({
   disabled = false,
@@ -37,6 +41,7 @@ export function CustomBrandingSection({
   disabled?: boolean;
 }) {
   const { data: space } = useSpace();
+  const user = useAuthedUser();
   const isFree = useIsFree();
   const { t } = useTranslation();
 
@@ -98,35 +103,22 @@ export function CustomBrandingSection({
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans
-            i18nKey="showBrandingDescription"
-            defaults="Show your brand identity on your public pages and emails"
+            i18nKey="brandingSectionDescription"
+            defaults="Your space name, logo and colors, and where they appear"
           />
         </PageSectionDescription>
       </PageSectionHeader>
       <PageSectionContent>
+        <div className="mb-4">
+          <BrandingPreview
+            spaceName={space.name}
+            spaceImage={space.image}
+            primaryColor={hexColor}
+            hostName={user.name}
+          />
+        </div>
         <SettingsGroup>
-          <Setting>
-            <SettingTitle>
-              <Trans
-                i18nKey="applyCustomBranding"
-                defaults="Apply to public pages"
-              />
-              {space.tier !== "pro" && <ProBadge />}
-            </SettingTitle>
-            <SettingDescription>
-              <Trans
-                i18nKey="applyCustomBrandingSettingDescription"
-                defaults="Show your logo and colors instead of Rallly's."
-              />
-            </SettingDescription>
-            <SettingControl>
-              <Switch
-                checked={showBranding}
-                onCheckedChange={handleToggle}
-                disabled={disabled || updateShowBranding.isExecuting}
-              />
-            </SettingControl>
-          </Setting>
+          <SpaceSettingsForm space={space} disabled={disabled} />
           <Setting labelable={false}>
             <SettingTitle>
               <Trans i18nKey="primaryColor" defaults="Primary Color" />
@@ -151,22 +143,32 @@ export function CustomBrandingSection({
               </div>
             </SettingControl>
           </Setting>
-        </SettingsGroup>
-        <div className="mt-4 border-t pt-4">
-          <BrandingPreview
-            spaceName={space.name}
-            spaceImage={space.image}
-            primaryColor={hexColor}
-          />
-          {!showBranding ? (
-            <p className="mt-3 text-muted-foreground text-xs">
+          <Setting>
+            <SettingIcon>
+              <GlobeIcon />
+            </SettingIcon>
+            <SettingTitle>
               <Trans
-                i18nKey="brandingPreviewInactiveHint"
-                defaults="Your branding goes live on public pages once you turn on the setting above."
+                i18nKey="applyCustomBranding"
+                defaults="Apply to public pages"
               />
-            </p>
-          ) : null}
-        </div>
+              {space.tier !== "pro" && <ProBadge />}
+            </SettingTitle>
+            <SettingDescription>
+              <Trans
+                i18nKey="applyCustomBrandingSettingDescription"
+                defaults="Show your logo and colors instead of Rallly's."
+              />
+            </SettingDescription>
+            <SettingControl>
+              <Switch
+                checked={showBranding}
+                onCheckedChange={handleToggle}
+                disabled={disabled || updateShowBranding.isExecuting}
+              />
+            </SettingControl>
+          </Setting>
+        </SettingsGroup>
       </PageSectionContent>
     </PageSection>
   );

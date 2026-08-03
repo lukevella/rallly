@@ -32,7 +32,6 @@ import { Trans } from "@/i18n/client";
 import { CustomBrandingSection } from "./components/custom-branding-section";
 import { DeleteSpaceButton } from "./components/delete-space-button";
 import { LeaveSpaceButton } from "./components/leave-space-button";
-import { SpaceSettingsForm } from "./components/space-settings-form";
 
 export function GeneralSettingsPageClient() {
   const { data: space, getMemberAbility } = useSpace();
@@ -68,11 +67,6 @@ export function GeneralSettingsPageClient() {
               </AlertDescription>
             </Alert>
           ) : null}
-          <PageSection variant="card">
-            <PageSectionContent>
-              <SpaceSettingsForm space={space} disabled={!isAdmin} />
-            </PageSectionContent>
-          </PageSection>
           <CustomBrandingSection disabled={!isAdmin} />
           {!isOwner || canDeleteSpace ? (
             <PageSection variant="card">
