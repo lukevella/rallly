@@ -93,8 +93,8 @@ export function GeneralSettingsPageClient() {
                       </SettingTitle>
                       <SettingDescription>
                         <Trans
-                          i18nKey="leaveSpaceDescription"
-                          defaults="Remove yourself from this space. You'll lose access to all polls in this space."
+                          i18nKey="leaveSpaceSettingHint"
+                          defaults="Remove yourself from this space and lose access to its polls."
                         />
                       </SettingDescription>
                       <SettingControl>
@@ -115,8 +115,8 @@ export function GeneralSettingsPageClient() {
                       </SettingTitle>
                       <SettingDescription>
                         <Trans
-                          i18nKey="deleteSpaceDescription"
-                          defaults="Permanently delete this space and all its content. This action cannot be undone."
+                          i18nKey="deleteSpaceSettingHint"
+                          defaults="Permanently delete this space and everything in it."
                         />
                       </SettingDescription>
                       <SettingControl>

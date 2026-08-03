@@ -122,8 +122,8 @@ export function SpaceSettingsForm({
         </SettingTitle>
         <SettingDescription>
           <Trans
-            i18nKey="spaceNameSettingDescription"
-            defaults="The name this space is known by."
+            i18nKey="spaceNameSettingHint"
+            defaults="Shown to anyone you invite."
           />
         </SettingDescription>
         <SettingControl>

@@ -165,8 +165,8 @@ export function CustomBrandingSection({
             </SettingTitle>
             <SettingDescription>
               <Trans
-                i18nKey="customBrandingSettingHint"
-                defaults="Show your brand color and logos to your participants"
+                i18nKey="customBrandingSettingText"
+                defaults="Show your logo and colors to participants instead of Rallly's."
               />
             </SettingDescription>
             <SettingControl>
