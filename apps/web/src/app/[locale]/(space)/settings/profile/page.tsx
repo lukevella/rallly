@@ -11,6 +11,7 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
+import { SettingsGroup } from "@/components/setting";
 import {
   SettingsPage,
   SettingsPageContent,
@@ -28,7 +29,10 @@ import {
   AccountDeletionSummarySkeleton,
 } from "./components/account-deletion-summary";
 import { DeleteAccountButton } from "./components/delete-account-button";
-import { PendingDeletionNotice } from "./components/pending-deletion-notice";
+import {
+  DeleteAccountSetting,
+  PendingDeletionSetting,
+} from "./components/delete-account-setting";
 import { ProfileEmailAddress } from "./components/profile-email-address";
 import { ProfileSettings } from "./components/profile-settings";
 
@@ -89,25 +93,23 @@ export default async function Page() {
               <PageSectionTitle>
                 <Trans i18nKey="dangerZone" defaults="Danger Zone" />
               </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  i18nKey="dangerZoneAccountDeletion"
-                  defaults="Delete your account and all data associated with it"
-                />
-              </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
-              {user.deletedAt ? (
-                <PendingDeletionNotice deletedAt={user.deletedAt} />
-              ) : (
-                <DeleteAccountButton
-                  summary={
-                    <Suspense fallback={<AccountDeletionSummarySkeleton />}>
-                      <AccountDeletionSummary />
-                    </Suspense>
-                  }
-                />
-              )}
+              <SettingsGroup>
+                {user.deletedAt ? (
+                  <PendingDeletionSetting deletedAt={user.deletedAt} />
+                ) : (
+                  <DeleteAccountSetting>
+                    <DeleteAccountButton
+                      summary={
+                        <Suspense fallback={<AccountDeletionSummarySkeleton />}>
+                          <AccountDeletionSummary />
+                        </Suspense>
+                      }
+                    />
+                  </DeleteAccountSetting>
+                )}
+              </SettingsGroup>
             </PageSectionContent>
           </PageSection>
         </PageSectionGroup>

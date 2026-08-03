@@ -8,13 +8,16 @@ import { DeleteAccountDialog } from "./delete-account-dialog";
 
 export function DeleteAccountButton({
   summary,
+  ...rest
 }: {
   summary?: React.ReactNode;
+  "aria-labelledby"?: string;
+  "aria-describedby"?: string;
 }) {
   const dialog = useDialog();
   return (
     <>
-      <Button className="text-destructive" {...dialog.triggerProps}>
+      <Button className="text-destructive" {...dialog.triggerProps} {...rest}>
         <Trans i18nKey="deleteAccount" defaults="Delete Account" />
       </Button>
       <DeleteAccountDialog {...dialog.dialogProps} summary={summary} />
