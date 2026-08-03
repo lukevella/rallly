@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
 import { InboxIcon, MessageCircleIcon } from "lucide-react";
 import {
@@ -18,10 +19,11 @@ import {
   SettingsGroup,
   SettingTitle,
 } from "@/components/setting";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 export function NotificationsPage() {
+  const { t } = useTranslation();
   const utils = trpc.useUtils();
   const [preferences] = trpc.user.getNotificationPreferences.useSuspenseQuery();
   const updatePreference = trpc.user.updateNotificationPreference.useMutation({
@@ -33,6 +35,9 @@ export function NotificationsPage() {
       );
       return { previous };
     },
+    onSuccess: () => {
+      toast.success(t("saved", { defaultValue: "Saved" }));
+    },
     onError: (_err, _vars, context) => {
       if (context?.previous) {
         utils.user.getNotificationPreferences.setData(
@@ -40,6 +45,11 @@ export function NotificationsPage() {
           context.previous,
         );
       }
+      toast.error(
+        t("notificationPreferenceSaveError", {
+          defaultValue: "Failed to save your notification preference",
+        }),
+      );
     },
   });
 

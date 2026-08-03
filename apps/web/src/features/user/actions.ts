@@ -54,7 +54,7 @@ export const updateLocalizationAction = authActionClient
     }),
   )
   .action(async ({ parsedInput }) => {
-    // The locale cookie is written client-side (see language-preference.tsx).
+    // The locale cookie is written client-side (see localization-preferences.tsx).
     // Writing it here via next/headers would collide with updateUser's session
     // cookie and drop it.
     await authLib.api.updateUser({
