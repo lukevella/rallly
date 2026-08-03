@@ -27,6 +27,20 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
         return;
       }
 
+      // Missing error data means no usable server response: the request
+      // failed in transit or the response was not a tRPC error envelope
+      // (e.g. an HTML error page from a proxy)
+      if (!error.data) {
+        toast.error(
+          t("actionErrorNetwork", {
+            defaultValue:
+              "Unable to reach the server. Please check your connection and try again.",
+          }),
+          { id: "network-error" },
+        );
+        return;
+      }
+
       switch (error.data?.code) {
         case "UNAUTHORIZED":
           // Never sign out automatically — a failed sign out turns this
