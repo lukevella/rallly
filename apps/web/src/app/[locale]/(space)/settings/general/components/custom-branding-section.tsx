@@ -1,5 +1,6 @@
 "use client";
 
+import type { Color } from "@rallly/ui/color-picker";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
 import { InputGroupButton } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
@@ -21,6 +22,7 @@ import {
   SettingHint,
   SettingsGroup,
   SettingTitle,
+  useSettingLabels,
 } from "@/components/setting";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
@@ -140,58 +142,15 @@ export function CustomBrandingSection({
               />
             </SettingDescription>
             <SettingControl labelled={false}>
-              <ColorPicker
-                className="w-44"
+              <PrimaryColorField
                 value={color}
                 onChange={setColor}
-                actions={
-                  disabled ? null : (
-                    <>
-                      {!isDefault ? (
-                        <Tooltip>
-                          <TooltipTrigger
-                            render={
-                              <InputGroupButton
-                                size="icon-xs"
-                                onClick={handleReset}
-                                aria-label={t("resetToDefault", {
-                                  defaultValue: "Reset to default",
-                                })}
-                              >
-                                <RotateCcwIcon />
-                              </InputGroupButton>
-                            }
-                          />
-                          <TooltipContent>
-                            <Trans
-                              i18nKey="resetToDefault"
-                              defaults="Reset to default"
-                            />
-                          </TooltipContent>
-                        </Tooltip>
-                      ) : null}
-                      {isDirty ? (
-                        <Tooltip>
-                          <TooltipTrigger
-                            render={
-                              <InputGroupButton
-                                size="icon-xs"
-                                onClick={handleSave}
-                                loading={updateSpace.isExecuting}
-                                aria-label={t("save", { defaultValue: "Save" })}
-                              >
-                                <CheckIcon />
-                              </InputGroupButton>
-                            }
-                          />
-                          <TooltipContent>
-                            <Trans i18nKey="save" defaults="Save" />
-                          </TooltipContent>
-                        </Tooltip>
-                      ) : null}
-                    </>
-                  )
-                }
+                disabled={disabled}
+                isDefault={isDefault}
+                isDirty={isDirty}
+                isSaving={updateSpace.isExecuting}
+                onSave={handleSave}
+                onReset={handleReset}
               />
             </SettingControl>
           </Setting>
@@ -228,5 +187,87 @@ export function CustomBrandingSection({
         </SettingsGroup>
       </PageSectionContent>
     </PageSection>
+  );
+}
+
+/**
+ * Split out so `useSettingLabels()` runs inside the Setting provider. The
+ * picker is a composite control, so `SettingControl` cannot label it directly
+ * — the row's title and description are forwarded to the hex input instead.
+ */
+function PrimaryColorField({
+  value,
+  onChange,
+  disabled,
+  isDefault,
+  isDirty,
+  isSaving,
+  onSave,
+  onReset,
+}: {
+  value: Color;
+  onChange: (color: Color) => void;
+  disabled: boolean;
+  isDefault: boolean;
+  isDirty: boolean;
+  isSaving: boolean;
+  onSave: () => void;
+  onReset: () => void;
+}) {
+  const { t } = useTranslation();
+  const labels = useSettingLabels();
+
+  return (
+    <ColorPicker
+      className="w-44"
+      value={value}
+      onChange={onChange}
+      {...labels}
+      actions={
+        disabled ? null : (
+          <>
+            {!isDefault ? (
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <InputGroupButton
+                      size="icon-xs"
+                      onClick={onReset}
+                      aria-label={t("resetToDefault", {
+                        defaultValue: "Reset to default",
+                      })}
+                    >
+                      <RotateCcwIcon />
+                    </InputGroupButton>
+                  }
+                />
+                <TooltipContent>
+                  <Trans i18nKey="resetToDefault" defaults="Reset to default" />
+                </TooltipContent>
+              </Tooltip>
+            ) : null}
+            {isDirty ? (
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <InputGroupButton
+                      size="icon-xs"
+                      onClick={onSave}
+                      loading={isSaving}
+                      aria-label={t("save", { defaultValue: "Save" })}
+                    >
+                      <CheckIcon />
+                    </InputGroupButton>
+                  }
+                />
+                <TooltipContent>
+                  <Trans i18nKey="save" defaults="Save" />
+                </TooltipContent>
+              </Tooltip>
+            ) : null}
+          </>
+        )
+      }
+    />
   );
 }

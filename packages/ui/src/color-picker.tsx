@@ -32,12 +32,21 @@ export type ColorPickerProps = Pick<
   /** Rendered as an inline-end addon, for actions such as save or reset. */
   actions?: React.ReactNode;
   className?: string;
+  /** Applied to the hex input, which is the control an external label names. */
+  "aria-labelledby"?: string;
+  "aria-describedby"?: string;
 };
 
 export type { Color };
 export { parseColor } from "react-aria-components";
 
-function HexColorInput() {
+function HexColorInput({
+  "aria-labelledby": labelledBy,
+  "aria-describedby": describedBy,
+}: {
+  "aria-labelledby"?: string;
+  "aria-describedby"?: string;
+}) {
   const pickerState = React.useContext(ColorPickerStateContext);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -49,7 +58,11 @@ function HexColorInput() {
   });
 
   const { inputProps } = useColorField(
-    { "aria-label": "Hex color" },
+    // An external label wins; the generic fallback only applies when the
+    // picker is used without one.
+    labelledBy
+      ? { "aria-labelledby": labelledBy, "aria-describedby": describedBy }
+      : { "aria-label": "Hex color", "aria-describedby": describedBy },
     state,
     inputRef,
   );
@@ -67,6 +80,8 @@ function HexColorInput() {
 export function ColorPicker({
   actions,
   className,
+  "aria-labelledby": labelledBy,
+  "aria-describedby": describedBy,
   ...props
 }: ColorPickerProps) {
   return (
@@ -78,7 +93,10 @@ export function ColorPicker({
               <ColorSwatch className="size-4 rounded-sm border border-black/10" />
             </PopoverTrigger>
           </InputGroupAddon>
-          <HexColorInput />
+          <HexColorInput
+            aria-labelledby={labelledBy}
+            aria-describedby={describedBy}
+          />
           {actions ? (
             <InputGroupAddon align="inline-end">{actions}</InputGroupAddon>
           ) : null}
