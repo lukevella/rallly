@@ -10,6 +10,7 @@ import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { hasPollAdminAccess } from "@/features/poll/data";
+import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
 import {
   createRateLimitMiddleware,
@@ -278,6 +279,10 @@ export const participants = router({
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: `This poll has reached its maximum limit of ${MAX_PARTICIPANTS} participants`,
+            cause: new AppError({
+              code: "POLL_FULL",
+              message: "Poll has reached the maximum number of participants",
+            }),
           });
         }
 
