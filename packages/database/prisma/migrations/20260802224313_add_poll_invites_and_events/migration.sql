@@ -54,6 +54,9 @@ CREATE INDEX "poll_events_poll_id_participant_id_idx" ON "poll_events"("poll_id"
 CREATE INDEX "poll_events_poll_id_option_id_idx" ON "poll_events"("poll_id", "option_id");
 
 -- CreateIndex
+CREATE INDEX "poll_events_poll_id_invite_id_idx" ON "poll_events"("poll_id", "invite_id");
+
+-- CreateIndex
 CREATE INDEX "poll_events_user_id_idx" ON "poll_events"("user_id");
 
 -- CreateIndex

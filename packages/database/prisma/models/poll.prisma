@@ -142,6 +142,7 @@ model PollEvent {
   @@index([pollId, createdAt(sort: Desc)])
   @@index([pollId, participantId])
   @@index([pollId, optionId])
+  @@index([pollId, inviteId])
   /// Account erasure scrubs events by actor
   @@index([userId])
   @@map("poll_events")

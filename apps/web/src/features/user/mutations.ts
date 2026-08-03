@@ -152,19 +152,21 @@ export async function hardDeleteUser({
   // revert them to pending with a still-valid token. Poll events keep their
   // timeline entry but lose the actor ref and the payload snapshot, which
   // carries name/email.
-  const participants = await prisma.participant.findMany({
-    where: { userId },
-    select: { id: true, pollId: true },
-  });
-  const invites = await prisma.pollInvite.findMany({
-    where: {
-      OR: [{ email }, { participantId: { in: participants.map((p) => p.id) } }],
-    },
-    select: { id: true, pollId: true },
-  });
+  // Reads live inside the transaction and the deletes are predicate based
+  // (re-evaluated at execution), so rows created while the erasure runs
+  // cannot slip through on a stale id list.
+  const invitesWhere = { OR: [{ email }, { participant: { userId } }] };
+  await prisma.$transaction(async (tx) => {
+    const participants = await tx.participant.findMany({
+      where: { userId },
+      select: { id: true, pollId: true },
+    });
+    const invites = await tx.pollInvite.findMany({
+      where: invitesWhere,
+      select: { id: true, pollId: true },
+    });
 
-  await prisma.$transaction([
-    prisma.pollEvent.updateMany({
+    await tx.pollEvent.updateMany({
       where: {
         OR: [
           { userId },
@@ -179,16 +181,14 @@ export async function hardDeleteUser({
         ],
       },
       data: { userId: null, payload: {} },
-    }),
-    prisma.pollInvite.deleteMany({
-      where: { id: { in: invites.map((i) => i.id) } },
-    }),
-    prisma.participant.deleteMany({ where: { userId } }),
-    prisma.scheduledEventInvite.deleteMany({
+    });
+    await tx.pollInvite.deleteMany({ where: invitesWhere });
+    await tx.participant.deleteMany({ where: { userId } });
+    await tx.scheduledEventInvite.deleteMany({
       where: { OR: [{ inviteeId: userId }, { inviteeEmail: email }] },
-    }),
-    prisma.user.delete({ where: { id: userId } }),
-  ]);
+    });
+    await tx.user.delete({ where: { id: userId } });
+  });
 }
 
 const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 100;
