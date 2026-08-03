@@ -244,11 +244,15 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
               });
               props.onSubmit?.(newParticipant);
             } catch (error) {
-              if (error instanceof TRPCClientError) {
-                setError("root", {
-                  message: error.message,
-                });
-              }
+              setError("root", {
+                message:
+                  error instanceof TRPCClientError
+                    ? error.message
+                    : t("newParticipantFormSubmitError", {
+                        defaultValue:
+                          "Your response could not be saved. Please check your connection and try again.",
+                      }),
+              });
             }
           })}
           className="space-y-4"
