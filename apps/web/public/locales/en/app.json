@@ -465,6 +465,7 @@
   "newParticipantFormNoteDescription": "Only the organizer will see this note.",
   "newParticipantFormNoteLabel": "Note for the organizer",
   "newParticipantFormSubmit": "Save availability",
+  "newParticipantFormSubmitError": "Your response could not be saved. Please check your connection and try again.",
   "newPassword": "New Password",
   "newPoll": "New Poll",
   "nextMonth": "Next month",
