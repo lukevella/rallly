@@ -173,7 +173,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                 <SettingDescription>
                   <Trans
                     i18nKey="commentsSettingDescription"
-                    defaults="Allow participants to post comments on the poll."
+                    defaults="Allow participants to post public comments on the poll."
                   />
                 </SettingDescription>
                 <SettingControl>

@@ -133,7 +133,7 @@
   "commandMenuSearchPlaceholder": "Type a command or search...",
   "commentPlaceholder": "Leave a comment on this poll (visible to everyone)",
   "comments": "Comments",
-  "commentsSettingDescription": "Allow participants to post comments on the poll.",
+  "commentsSettingDescription": "Allow participants to post public comments on the poll.",
   "commentsSettingLegacyBadge": "Legacy",
   "commentsSettingPhaseOutHint": "Comments are being phased out. Participants can include a note with their response instead.",
   "commentsSettingTitle": "Comments",
