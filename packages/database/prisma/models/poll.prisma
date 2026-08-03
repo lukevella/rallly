@@ -126,7 +126,7 @@ model PollEvent {
   /// Validated by a zod union in the feature, not a DB enum: the event vocabulary grows without migrations
   type   String
 
-  /// Subject ids are soft references (no FKs): events must outlive their subjects, payload carries the display snapshot
+  /// Subject ids are soft references (no FKs): events must outlive their subjects — including account deletion — so refs persist as identity and the payload carries the display snapshot; whether a ref still resolves is the renderer's question
   userId        String? @map("user_id")
   participantId String? @map("participant_id")
   inviteId      String? @map("invite_id")
@@ -141,8 +141,6 @@ model PollEvent {
   @@index([pollId, participantId])
   @@index([pollId, optionId])
   @@index([pollId, inviteId])
-  /// Account deletion severs the actor link (userId is a soft ref, no FK SetNull)
-  @@index([userId])
   @@map("poll_events")
 }
 

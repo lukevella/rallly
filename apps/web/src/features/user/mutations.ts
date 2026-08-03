@@ -138,19 +138,13 @@ export async function hardDeleteUser({ userId }: { userId: string }) {
     await deleteImageFromS3(user.image);
   }
 
-  // Cascades cover content the user owns. Rows on other people's polls and
-  // events (participants, votes, poll/event invites, event payloads) are
-  // snapshots submitted to that record — deletion severs account links but
-  // never mutates them, so finalized outcomes and attendance can't change
-  // when an account disappears. The FK SetNulls unlink participants and
-  // event invites; PollEvent.userId is a soft ref, so it's nulled here.
-  await prisma.$transaction([
-    prisma.pollEvent.updateMany({
-      where: { userId },
-      data: { userId: null },
-    }),
-    prisma.user.delete({ where: { id: userId } }),
-  ]);
+  // Cascades cover content the user owns. Everything on other people's polls
+  // and events (participants, votes, invites, poll events) is that record's
+  // data, not the account's — deletion never mutates it, so finalized
+  // outcomes, attendance, and activity history can't change when an account
+  // disappears. The FK SetNulls unlink participants and event invites;
+  // PollEvent's soft refs persist as inert identity that resolves to nothing.
+  await prisma.user.delete({ where: { id: userId } });
 }
 
 const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 100;

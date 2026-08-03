@@ -54,9 +54,6 @@ CREATE INDEX "poll_events_poll_id_option_id_idx" ON "poll_events"("poll_id", "op
 CREATE INDEX "poll_events_poll_id_invite_id_idx" ON "poll_events"("poll_id", "invite_id");
 
 -- CreateIndex
-CREATE INDEX "poll_events_user_id_idx" ON "poll_events"("user_id");
-
--- CreateIndex
 CREATE UNIQUE INDEX "participants_token_key" ON "participants"("token");
 
 -- AddForeignKey
