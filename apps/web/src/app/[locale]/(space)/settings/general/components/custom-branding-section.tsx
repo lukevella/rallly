@@ -4,6 +4,7 @@ import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
 import { InputGroupButton } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { CheckIcon, RotateCcwIcon } from "lucide-react";
 import React from "react";
 import {
@@ -86,7 +87,10 @@ export function CustomBrandingSection({
 
     if (result?.serverError || result?.validationErrors) {
       setPendingShowBranding(null);
+      return;
     }
+
+    toast.success(t("saved", { defaultValue: "Saved" }));
   };
 
   const persistColor = async (value: string | null) => {
@@ -144,25 +148,46 @@ export function CustomBrandingSection({
                   disabled ? null : (
                     <>
                       {!isDefault ? (
-                        <InputGroupButton
-                          size="icon-xs"
-                          onClick={handleReset}
-                          aria-label={t("resetToDefault", {
-                            defaultValue: "Reset to default",
-                          })}
-                        >
-                          <RotateCcwIcon />
-                        </InputGroupButton>
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={
+                              <InputGroupButton
+                                size="icon-xs"
+                                onClick={handleReset}
+                                aria-label={t("resetToDefault", {
+                                  defaultValue: "Reset to default",
+                                })}
+                              >
+                                <RotateCcwIcon />
+                              </InputGroupButton>
+                            }
+                          />
+                          <TooltipContent>
+                            <Trans
+                              i18nKey="resetToDefault"
+                              defaults="Reset to default"
+                            />
+                          </TooltipContent>
+                        </Tooltip>
                       ) : null}
                       {isDirty ? (
-                        <InputGroupButton
-                          size="icon-xs"
-                          onClick={handleSave}
-                          loading={updateSpace.isExecuting}
-                          aria-label={t("save", { defaultValue: "Save" })}
-                        >
-                          <CheckIcon />
-                        </InputGroupButton>
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={
+                              <InputGroupButton
+                                size="icon-xs"
+                                onClick={handleSave}
+                                loading={updateSpace.isExecuting}
+                                aria-label={t("save", { defaultValue: "Save" })}
+                              >
+                                <CheckIcon />
+                              </InputGroupButton>
+                            }
+                          />
+                          <TooltipContent>
+                            <Trans i18nKey="save" defaults="Save" />
+                          </TooltipContent>
+                        </Tooltip>
                       ) : null}
                     </>
                   )

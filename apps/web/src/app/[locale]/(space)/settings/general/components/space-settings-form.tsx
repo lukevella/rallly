@@ -9,6 +9,7 @@ import {
   InputGroupInput,
 } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { CheckIcon } from "lucide-react";
 import type React from "react";
 import type { Control } from "react-hook-form";
@@ -190,14 +191,23 @@ function SpaceNameField({
                   and grey out the whole field. */}
               {isDirty && !disabled ? (
                 <InputGroupAddon align="inline-end">
-                  <InputGroupButton
-                    type="submit"
-                    size="icon-xs"
-                    loading={isSaving}
-                    aria-label={t("save", { defaultValue: "Save" })}
-                  >
-                    <CheckIcon />
-                  </InputGroupButton>
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={
+                        <InputGroupButton
+                          type="submit"
+                          size="icon-xs"
+                          loading={isSaving}
+                          aria-label={t("save", { defaultValue: "Save" })}
+                        >
+                          <CheckIcon />
+                        </InputGroupButton>
+                      }
+                    />
+                    <TooltipContent>
+                      <Trans i18nKey="save" defaults="Save" />
+                    </TooltipContent>
+                  </Tooltip>
                 </InputGroupAddon>
               ) : null}
             </InputGroup>

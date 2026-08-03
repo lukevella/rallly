@@ -13,7 +13,11 @@ import {
 import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 
-const PREVIEW_HEIGHT = 220;
+// Taller than the card it frames: the card runs past the bottom edge and is
+// cropped, which is what makes it read as a window onto a longer page. The
+// extra height over the original 220 is top padding, so the same amount of
+// card stays visible before the crop.
+const PREVIEW_HEIGHT = 252;
 
 /**
  * Approximates the poll invite card so the chosen color can be judged against
@@ -56,7 +60,7 @@ export function BrandingPreview({
           height: PREVIEW_HEIGHT,
         } as React.CSSProperties
       }
-      className="relative overflow-hidden rounded-lg border bg-gray-100 px-4 pt-4 dark:bg-gray-900 dark:[--primary-foreground:var(--preview-primary-dark-foreground)] dark:[--primary:var(--preview-primary-dark)]"
+      className="relative overflow-hidden rounded-lg border bg-gray-100 px-4 pt-12 dark:bg-gray-900 dark:[--primary-foreground:var(--preview-primary-dark-foreground)] dark:[--primary:var(--preview-primary-dark)]"
     >
       <Badge className="absolute top-2.5 right-3 z-10" size="sm">
         <Trans i18nKey="preview" defaults="Preview" />

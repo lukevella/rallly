@@ -27,8 +27,11 @@ export const SettingsGroup = ({ children }: React.PropsWithChildren) => {
 // column still contributes its gap. The gap is zero here; SettingIcon and
 // SettingControl supply their own margins, so rows without an icon sit flush
 // against the card edge.
+// On mobile everything stacks in one column so wide controls (pickers, input
+// groups) get the full width instead of being squeezed beside the title. From
+// `sm` up the control moves to its own column on the right.
 const settingLayout =
-  "grid grid-cols-[1fr_auto] py-4 [column-gap:0] [grid-template-areas:'title_control'_'description_control'_'hint_hint'] first:pt-0 last:pb-0 sm:grid-cols-[auto_1fr_auto] sm:[grid-template-areas:'icon_title_control'_'icon_description_control'_'icon_hint_hint']";
+  "grid grid-cols-1 py-4 [column-gap:0] [grid-template-areas:'title'_'description'_'control'_'hint'] first:pt-0 last:pb-0 sm:grid-cols-[auto_1fr_auto] sm:[grid-template-areas:'icon_title_control'_'icon_description_control'_'icon_hint_hint']";
 
 /**
  * Clicking anywhere on the row activates the control, so it renders as a label
@@ -112,7 +115,7 @@ export const SettingControl = ({
 }) => {
   const { titleId, descriptionId, hintId } = useSetting();
   return (
-    <div className="ml-3 self-start justify-self-end [grid-area:control]">
+    <div className="mt-3 self-start justify-self-start [grid-area:control] sm:mt-0 sm:ml-3 sm:justify-self-end">
       {/* A dangling hint id is ignored by assistive tech while no hint is rendered */}
       {labelled
         ? React.cloneElement(children, {

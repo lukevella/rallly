@@ -123,7 +123,7 @@ export function PageSectionGroup({ children }: { children?: React.ReactNode }) {
   return <div className="space-y-6">{children}</div>;
 }
 
-const pageSectionVariants = cva("flex flex-col gap-4", {
+const pageSectionVariants = cva("flex flex-col gap-6", {
   variants: {
     variant: {
       card: "rounded-2xl border border-card-border bg-card p-4",
