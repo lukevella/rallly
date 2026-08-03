@@ -147,14 +147,48 @@ export async function hardDeleteUser({
   // Cascades cover data the user owns, but their personal data also lives
   // where they took part in other users' content: participant rows carry
   // name/email (votes cascade off them, matching the promise in the delete
-  // dialog) and event invites carry invitee name/email. Both relations are
-  // SetNull, so the rows would otherwise outlive the account.
-  await prisma.participant.deleteMany({ where: { userId } });
-  await prisma.scheduledEventInvite.deleteMany({
-    where: { OR: [{ inviteeId: userId }, { inviteeEmail: email }] },
+  // dialog) and event/poll invites carry invitee emails. Poll invites are
+  // deleted outright rather than left to the participant SetNull, which would
+  // revert them to pending with a still-valid token. Poll events keep their
+  // timeline entry but lose the actor ref and the payload snapshot, which
+  // carries name/email.
+  const participants = await prisma.participant.findMany({
+    where: { userId },
+    select: { id: true, pollId: true },
+  });
+  const invites = await prisma.pollInvite.findMany({
+    where: {
+      OR: [{ email }, { participantId: { in: participants.map((p) => p.id) } }],
+    },
+    select: { id: true, pollId: true },
   });
 
-  await prisma.user.delete({ where: { id: userId } });
+  await prisma.$transaction([
+    prisma.pollEvent.updateMany({
+      where: {
+        OR: [
+          { userId },
+          {
+            pollId: { in: participants.map((p) => p.pollId) },
+            participantId: { in: participants.map((p) => p.id) },
+          },
+          {
+            pollId: { in: invites.map((i) => i.pollId) },
+            inviteId: { in: invites.map((i) => i.id) },
+          },
+        ],
+      },
+      data: { userId: null, payload: {} },
+    }),
+    prisma.pollInvite.deleteMany({
+      where: { id: { in: invites.map((i) => i.id) } },
+    }),
+    prisma.participant.deleteMany({ where: { userId } }),
+    prisma.scheduledEventInvite.deleteMany({
+      where: { OR: [{ inviteeId: userId }, { inviteeEmail: email }] },
+    }),
+    prisma.user.delete({ where: { id: userId } }),
+  ]);
 }
 
 const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 100;
