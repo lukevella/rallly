@@ -4,7 +4,6 @@ import { Button } from "@rallly/ui/button";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
-import { GlobeIcon } from "lucide-react";
 import React from "react";
 import {
   PageSection,
@@ -17,7 +16,7 @@ import {
   Setting,
   SettingControl,
   SettingDescription,
-  SettingIcon,
+  SettingHint,
   SettingsGroup,
   SettingTitle,
 } from "@/components/setting";
@@ -103,20 +102,12 @@ export function CustomBrandingSection({
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans
-            i18nKey="brandingSectionDescription"
-            defaults="Your space name, logo and colors, and where they appear"
+            i18nKey="brandingCardDescription"
+            defaults="How your space appears to you and the people you invite"
           />
         </PageSectionDescription>
       </PageSectionHeader>
       <PageSectionContent>
-        <div className="mb-4">
-          <BrandingPreview
-            spaceName={space.name}
-            spaceImage={space.image}
-            primaryColor={hexColor}
-            hostName={user.name}
-          />
-        </div>
         <SettingsGroup>
           <SpaceSettingsForm space={space} disabled={disabled} />
           <Setting labelable={false}>
@@ -125,8 +116,8 @@ export function CustomBrandingSection({
             </SettingTitle>
             <SettingDescription>
               <Trans
-                i18nKey="primaryColorSettingDescription"
-                defaults="Used for buttons and highlights on your public pages."
+                i18nKey="primaryColorSettingHint"
+                defaults="Used for buttons and highlights."
               />
             </SettingDescription>
             <SettingControl labelled={false}>
@@ -144,20 +135,17 @@ export function CustomBrandingSection({
             </SettingControl>
           </Setting>
           <Setting>
-            <SettingIcon>
-              <GlobeIcon />
-            </SettingIcon>
             <SettingTitle>
               <Trans
-                i18nKey="applyCustomBranding"
-                defaults="Apply to public pages"
+                i18nKey="customBrandingSettingTitle"
+                defaults="Custom branding"
               />
               {space.tier !== "pro" && <ProBadge />}
             </SettingTitle>
             <SettingDescription>
               <Trans
-                i18nKey="applyCustomBrandingSettingDescription"
-                defaults="Show your logo and colors instead of Rallly's."
+                i18nKey="customBrandingSettingDescription"
+                defaults="Show your logo and colors instead of Rallly's on polls, invites and emails."
               />
             </SettingDescription>
             <SettingControl>
@@ -167,6 +155,14 @@ export function CustomBrandingSection({
                 disabled={disabled || updateShowBranding.isExecuting}
               />
             </SettingControl>
+            <SettingHint plain>
+              <BrandingPreview
+                spaceName={space.name}
+                spaceImage={space.image}
+                primaryColor={hexColor}
+                hostName={user.name}
+              />
+            </SettingHint>
           </Setting>
         </SettingsGroup>
       </PageSectionContent>

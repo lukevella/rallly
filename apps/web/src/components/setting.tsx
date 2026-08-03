@@ -132,8 +132,25 @@ export const useSettingLabels = () => {
   };
 };
 
-export const SettingHint = ({ children }: React.PropsWithChildren) => {
+/**
+ * Supplementary content spanning the full row width, below the title and
+ * control. Text hints get an info icon; `plain` drops the icon and the text
+ * styling for rich content such as an embedded preview.
+ */
+export const SettingHint = ({
+  children,
+  plain = false,
+}: React.PropsWithChildren<{ plain?: boolean }>) => {
   const { hintId } = useSetting();
+
+  if (plain) {
+    return (
+      <div id={hintId} className="mt-4 [grid-area:hint]">
+        {children}
+      </div>
+    );
+  }
+
   return (
     <div
       id={hintId}
