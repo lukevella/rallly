@@ -9,7 +9,7 @@ import {
   InputGroupInput,
 } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
-import { CheckIcon, ImageIcon, TypeIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 import type React from "react";
 import type { Control } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
@@ -23,7 +23,6 @@ import {
   Setting,
   SettingControl,
   SettingDescription,
-  SettingIcon,
   SettingsGroup,
   SettingTitle,
   useSettingLabels,
@@ -94,9 +93,6 @@ export function SpaceSettingsForm({
   return (
     <SettingsGroup>
       <Setting labelable={false}>
-        <SettingIcon>
-          <ImageIcon />
-        </SettingIcon>
         <SettingTitle>
           <Trans i18nKey="logo" defaults="Logo" />
         </SettingTitle>
@@ -121,9 +117,6 @@ export function SpaceSettingsForm({
         </SettingControl>
       </Setting>
       <Setting labelable={false}>
-        <SettingIcon>
-          <TypeIcon />
-        </SettingIcon>
         <SettingTitle>
           <Trans i18nKey="name" defaults="Name" />
         </SettingTitle>

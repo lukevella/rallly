@@ -1,11 +1,9 @@
 "use client";
 
-import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
-import { PaletteIcon, SparklesIcon } from "lucide-react";
 import React from "react";
 import {
   PageSection,
@@ -18,7 +16,6 @@ import {
   Setting,
   SettingControl,
   SettingDescription,
-  SettingIcon,
   SettingsGroup,
   SettingTitle,
 } from "@/components/setting";
@@ -32,6 +29,7 @@ import {
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
+import { BrandingPreview } from "./branding-preview";
 
 export function CustomBrandingSection({
   disabled = false,
@@ -108,20 +106,17 @@ export function CustomBrandingSection({
       <PageSectionContent>
         <SettingsGroup>
           <Setting>
-            <SettingIcon>
-              <SparklesIcon />
-            </SettingIcon>
             <SettingTitle>
               <Trans
-                i18nKey="useCustomBranding"
-                defaults="Enable Custom Branding"
+                i18nKey="applyCustomBranding"
+                defaults="Apply to public pages"
               />
               {space.tier !== "pro" && <ProBadge />}
             </SettingTitle>
             <SettingDescription>
               <Trans
-                i18nKey="useCustomBrandingSettingDescription"
-                defaults="Replace Rallly's colors with your own on public pages and emails."
+                i18nKey="applyCustomBrandingSettingDescription"
+                defaults="Show your logo and colors instead of Rallly's."
               />
             </SettingDescription>
             <SettingControl>
@@ -133,9 +128,6 @@ export function CustomBrandingSection({
             </SettingControl>
           </Setting>
           <Setting labelable={false}>
-            <SettingIcon>
-              <PaletteIcon />
-            </SettingIcon>
             <SettingTitle>
               <Trans i18nKey="primaryColor" defaults="Primary Color" />
             </SettingTitle>
@@ -146,19 +138,12 @@ export function CustomBrandingSection({
               />
             </SettingDescription>
             <SettingControl labelled={false}>
-              <div
-                className={cn(
-                  "flex items-center gap-x-2",
-                  !showBranding || disabled
-                    ? "pointer-events-none opacity-50"
-                    : undefined,
-                )}
-              >
+              <div className="flex items-center gap-x-2">
                 <ColorPicker value={color} onChange={setColor} />
                 <Button
                   onClick={handleSave}
                   size="sm"
-                  disabled={!showBranding || !isDirty || disabled}
+                  disabled={!isDirty || disabled}
                   loading={updateSpace.isExecuting}
                 >
                   <Trans i18nKey="save" defaults="Save" />
@@ -167,6 +152,21 @@ export function CustomBrandingSection({
             </SettingControl>
           </Setting>
         </SettingsGroup>
+        <div className="mt-4 border-t pt-4">
+          <BrandingPreview
+            spaceName={space.name}
+            spaceImage={space.image}
+            primaryColor={hexColor}
+          />
+          {!showBranding ? (
+            <p className="mt-3 text-muted-foreground text-xs">
+              <Trans
+                i18nKey="brandingPreviewInactiveHint"
+                defaults="Your branding goes live on public pages once you turn on the setting above."
+              />
+            </p>
+          ) : null}
+        </div>
       </PageSectionContent>
     </PageSection>
   );
