@@ -1,9 +1,10 @@
 "use client";
 
-import { Button } from "@rallly/ui/button";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
+import { InputGroupButton } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { CheckIcon, RotateCcwIcon } from "lucide-react";
 import React from "react";
 import {
   PageSection,
@@ -47,7 +48,10 @@ export function CustomBrandingSection({
   const currentColor = space.primaryColor ?? DEFAULT_PRIMARY_COLOR;
   const [color, setColor] = React.useState(() => parseColor(currentColor));
   const hexColor = color.toString("hex");
-  const isDirty = hexColor !== currentColor;
+  // Stored values may differ in case from what the picker emits
+  const isDirty = hexColor.toLowerCase() !== currentColor.toLowerCase();
+  const isDefault =
+    hexColor.toLowerCase() === DEFAULT_PRIMARY_COLOR.toLowerCase();
 
   const updateShowBranding = useSafeAction(updateSpaceShowBrandingAction);
   const updateSpace = useSafeAction(updateSpaceAction);
@@ -85,13 +89,21 @@ export function CustomBrandingSection({
     }
   };
 
-  const handleSave = async () => {
-    const value = hexColor === DEFAULT_PRIMARY_COLOR ? null : hexColor;
+  const persistColor = async (value: string | null) => {
     const result = await updateSpace.executeAsync({ primaryColor: value });
 
     if (!result?.serverError && !result?.validationErrors) {
       toast.success(t("saved", { defaultValue: "Saved" }));
     }
+  };
+
+  const handleSave = () => persistColor(isDefault ? null : hexColor);
+
+  // Clearing the column is what "default" means in the database, so reset
+  // writes null rather than storing the default value literally.
+  const handleReset = async () => {
+    setColor(parseColor(DEFAULT_PRIMARY_COLOR));
+    await persistColor(null);
   };
 
   return (
@@ -112,7 +124,10 @@ export function CustomBrandingSection({
           <SpaceSettingsForm space={space} disabled={disabled} />
           <Setting labelable={false}>
             <SettingTitle>
-              <Trans i18nKey="primaryColor" defaults="Primary Color" />
+              <Trans
+                i18nKey="primaryColorSettingTitle"
+                defaults="Primary color"
+              />
             </SettingTitle>
             <SettingDescription>
               <Trans
@@ -121,17 +136,38 @@ export function CustomBrandingSection({
               />
             </SettingDescription>
             <SettingControl labelled={false}>
-              <div className="flex items-center gap-x-2">
-                <ColorPicker value={color} onChange={setColor} />
-                <Button
-                  onClick={handleSave}
-                  size="sm"
-                  disabled={!isDirty || disabled}
-                  loading={updateSpace.isExecuting}
-                >
-                  <Trans i18nKey="save" defaults="Save" />
-                </Button>
-              </div>
+              <ColorPicker
+                className="w-44"
+                value={color}
+                onChange={setColor}
+                actions={
+                  disabled ? null : (
+                    <>
+                      {!isDefault ? (
+                        <InputGroupButton
+                          size="icon-xs"
+                          onClick={handleReset}
+                          aria-label={t("resetToDefault", {
+                            defaultValue: "Reset to default",
+                          })}
+                        >
+                          <RotateCcwIcon />
+                        </InputGroupButton>
+                      ) : null}
+                      {isDirty ? (
+                        <InputGroupButton
+                          size="icon-xs"
+                          onClick={handleSave}
+                          loading={updateSpace.isExecuting}
+                          aria-label={t("save", { defaultValue: "Save" })}
+                        >
+                          <CheckIcon />
+                        </InputGroupButton>
+                      ) : null}
+                    </>
+                  )
+                }
+              />
             </SettingControl>
           </Setting>
           <Setting>
