@@ -1,5 +1,7 @@
+import { Skeleton } from "@rallly/ui/skeleton";
 import { Tile, TileDescription, TileTitle } from "@rallly/ui/tile";
 import { DownloadIcon } from "lucide-react";
+import { Suspense } from "react";
 import { PageIcon } from "@/components/page-icons";
 import { getInstanceSettings } from "@/features/instance-settings/data";
 import { getUpdateStatus } from "@/features/instance-settings/service";
@@ -8,42 +10,37 @@ import { appVersion } from "@/lib/constants";
 
 const RELEASES_URL = "https://github.com/lukevella/rallly/releases";
 
-function VersionTileView({
-  url,
-  updateAvailable,
-}: {
-  url: string;
-  updateAvailable?: boolean;
-}) {
+async function UpdateStatus() {
+  const { instanceId } = await getInstanceSettings();
+  const update = instanceId ? await getUpdateStatus({ instanceId }) : null;
+
+  if (!update) {
+    return null;
+  }
+
   return (
-    <Tile render={<a href={url} target="_blank" rel="noreferrer noopener" />}>
+    <span className="text-primary text-sm">
+      <Trans i18nKey="updateAvailable" defaults="Update available" />
+    </span>
+  );
+}
+
+export function VersionTile() {
+  return (
+    <Tile
+      render={
+        <a href={RELEASES_URL} target="_blank" rel="noreferrer noopener" />
+      }
+    >
       <PageIcon>
         <DownloadIcon />
       </PageIcon>
       <TileTitle>{`v${appVersion ?? "unknown"}`}</TileTitle>
       <TileDescription>
-        {updateAvailable ? (
-          <span className="text-primary text-sm">
-            <Trans i18nKey="updateAvailable" defaults="Update available" />
-          </span>
-        ) : null}
+        <Suspense fallback={<Skeleton className="h-4 w-24" />}>
+          <UpdateStatus />
+        </Suspense>
       </TileDescription>
     </Tile>
-  );
-}
-
-export function VersionTileFallback() {
-  return <VersionTileView url={RELEASES_URL} />;
-}
-
-export async function VersionTile() {
-  const { instanceId } = await getInstanceSettings();
-  const update = instanceId ? await getUpdateStatus({ instanceId }) : null;
-
-  return (
-    <VersionTileView
-      url={update?.url ?? RELEASES_URL}
-      updateAvailable={Boolean(update)}
-    />
   );
 }
