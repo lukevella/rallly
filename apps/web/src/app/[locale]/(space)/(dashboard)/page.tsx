@@ -1,31 +1,22 @@
 import type { Metadata } from "next";
-import { getPollStatusCounts } from "@/features/poll/data";
-import { getUpcomingEventCount } from "@/features/scheduled-event/data";
-import { getActiveSpace } from "@/features/space/loaders";
+import { loadPollStatusCounts } from "@/features/poll/loaders";
+import {
+  getActiveSpace,
+  loadUpcomingEventCount,
+} from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
-import { getUserHasNoAccounts } from "@/features/user/data";
-import { requireUser } from "@/features/user/loaders";
+import { loadUserHasNoAccounts, requireUser } from "@/features/user/loaders";
 import { getTranslation } from "@/i18n/server";
-import { getDeviceTimeZone } from "@/lib/datetime/server";
-import { normalizeTimeZone } from "@/lib/datetime/utils";
 import { DashboardHome } from "./dashboard-home";
 
 export default async function Page() {
-  const [user, space, deviceTimeZone] = await Promise.all([
-    requireUser(),
-    getActiveSpace(),
-    getDeviceTimeZone(),
-  ]);
-
-  // The device zone is the viewer's present; the stored preference is a
-  // fallback for devices whose zone cookie hasn't been set yet.
-  const timeZone = deviceTimeZone ?? normalizeTimeZone(user.timeZone) ?? "UTC";
-
-  const [pollStatusCounts, upcomingEventCount, hasNoAccounts] =
+  const [user, space, pollStatusCounts, upcomingEventCount, hasNoAccounts] =
     await Promise.all([
-      getPollStatusCounts({ spaceId: space.id }),
-      getUpcomingEventCount({ spaceId: space.id, timeZone }),
-      getUserHasNoAccounts(user.id),
+      requireUser(),
+      getActiveSpace(),
+      loadPollStatusCounts(),
+      loadUpcomingEventCount(),
+      loadUserHasNoAccounts(),
     ]);
 
   const ability = defineAbilityForMember({ user: { id: user.id }, space });
