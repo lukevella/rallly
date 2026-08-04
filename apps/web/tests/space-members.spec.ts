@@ -60,6 +60,14 @@ function memberRow(page: Page, text: string) {
   return page.getByRole("listitem").filter({ hasText: text });
 }
 
+// After a page load, React briefly keeps a second hidden copy of the
+// streamed page content in a staging <div hidden> under <body>. Text
+// locators strict-fail against it, so page text assertions scope to
+// #main-content, which only ever holds the live copy.
+function mainContent(page: Page) {
+  return page.locator("#main-content");
+}
+
 async function gotoMembersSettings(page: Page, email: string) {
   await loginWithEmail(page, { email });
   await page.goto("/settings/members");
@@ -88,7 +96,9 @@ test.describe("Space members", () => {
     const inviteeEmail = `invitee-${runId}@example.com`;
 
     await gotoMembersSettings(page, owner.email);
-    await expect(page.getByText("1 of 3 seats used")).toBeVisible();
+    await expect(
+      mainContent(page).getByText("1 of 3 seats used"),
+    ).toBeVisible();
 
     await page.getByRole("button", { name: "Invite member" }).click();
     const dialog = page.getByRole("dialog");
@@ -126,7 +136,9 @@ test.describe("Space members", () => {
     await expect(
       memberRow(page, inviteeEmail).getByText(`Invited by ${owner.user.name}`),
     ).toBeHidden();
-    await expect(page.getByText("2 of 3 seats used")).toBeVisible();
+    await expect(
+      mainContent(page).getByText("2 of 3 seats used"),
+    ).toBeVisible();
   });
 
   test("admin can cancel a pending invite", async ({ page }) => {
@@ -180,7 +192,9 @@ test.describe("Space members", () => {
     });
 
     await gotoMembersSettings(page, owner.email);
-    await expect(page.getByText("2 of 3 seats used")).toBeVisible();
+    await expect(
+      mainContent(page).getByText("2 of 3 seats used"),
+    ).toBeVisible();
 
     const row = memberRow(page, member.email);
     await row.getByRole("button", { name: "More options" }).click();
@@ -190,7 +204,9 @@ test.describe("Space members", () => {
     await expect(page.getByText("Member removed successfully")).toBeVisible();
     await expect(row).toBeHidden();
 
-    await expect(page.getByText("1 of 3 seats used")).toBeVisible();
+    await expect(
+      mainContent(page).getByText("1 of 3 seats used"),
+    ).toBeVisible();
   });
 
   test("invite button is disabled when all seats are used", async ({
@@ -200,12 +216,14 @@ test.describe("Space members", () => {
 
     await gotoMembersSettings(page, owner.email);
 
-    await expect(page.getByText("1 of 1 seats used")).toBeVisible();
+    await expect(
+      mainContent(page).getByText("1 of 1 seats used"),
+    ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Invite member" }),
     ).toBeDisabled();
     await expect(
-      page.getByText(
+      mainContent(page).getByText(
         "Increase the number of seats in this space from the billing page.",
       ),
     ).toBeVisible();
