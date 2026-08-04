@@ -7,7 +7,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { getTranslation } from "@/i18n/server";
 
 export async function QuickCreateButton() {
-  const { t } = await getTranslation();
+  const { t, i18n } = await getTranslation();
   return (
     <Link
       href="/quick-create"
@@ -16,7 +16,13 @@ export async function QuickCreateButton() {
       <Icon>
         <ZapIcon className="size-4" />
       </Icon>
-      <Trans t={t} ns="app" i18nKey="quickCreate" defaults="Quick Create" />
+      <Trans
+        t={t}
+        i18n={i18n}
+        ns="app"
+        i18nKey="quickCreate"
+        defaults="Quick Create"
+      />
     </Link>
   );
 }
