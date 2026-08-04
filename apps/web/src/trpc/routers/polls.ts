@@ -127,6 +127,7 @@ export const polls = router({
 
       const moderation = await moderateContent({
         userId: ctx.user.id,
+        userEmail: ctx.user.email,
         content: {
           Title: input.title,
           Description: input.description || "",
@@ -323,6 +324,7 @@ export const polls = router({
 
       const moderation = await moderateContent({
         userId: ctx.user.id,
+        userEmail: ctx.user.email,
         content: {
           Title: input.title || "",
           Description: input.description || "",
