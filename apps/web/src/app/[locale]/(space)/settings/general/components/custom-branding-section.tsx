@@ -38,7 +38,7 @@ import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { BrandingPreview } from "./branding-preview";
-import { ShowAttributionSetting } from "./show-attribution-setting";
+import { RemoveAttributionSetting } from "./remove-attribution-setting";
 import { SpaceSettingsForm } from "./space-settings-form";
 
 export function CustomBrandingSection({
@@ -146,7 +146,7 @@ export function CustomBrandingSection({
             </SettingControl>
           </SettingRow>
           <IfCloudHosted>
-            <ShowAttributionSetting disabled={disabled} />
+            <RemoveAttributionSetting disabled={disabled} />
           </IfCloudHosted>
           <Setting>
             <SettingTitle>
