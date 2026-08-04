@@ -16,6 +16,7 @@ import {
   CreditCardIcon,
   KeyIcon,
   LockIcon,
+  PaletteIcon,
   PanelsTopLeftIcon,
   Settings2Icon,
   ShapesIcon,
@@ -109,6 +110,12 @@ export function SpaceSidebarMenu() {
       label: t("general", { defaultValue: "General" }),
       icon: <BoltIcon />,
       href: "/settings/general",
+    },
+    {
+      id: "branding",
+      label: t("branding", { defaultValue: "Branding" }),
+      icon: <PaletteIcon />,
+      href: "/settings/branding",
     },
     {
       id: "members",

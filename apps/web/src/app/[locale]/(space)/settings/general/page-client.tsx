@@ -29,9 +29,9 @@ import {
 import { useSpace } from "@/features/space/client";
 import { useAuthedUser } from "@/features/user/client";
 import { Trans } from "@/i18n/client";
-import { CustomBrandingSection } from "./components/custom-branding-section";
 import { DeleteSpaceButton } from "./components/delete-space-button";
 import { LeaveSpaceButton } from "./components/leave-space-button";
+import { SpaceSettingsForm } from "./components/space-settings-form";
 
 export function GeneralSettingsPageClient() {
   const { data: space, getMemberAbility } = useSpace();
@@ -67,7 +67,21 @@ export function GeneralSettingsPageClient() {
               </AlertDescription>
             </Alert>
           ) : null}
-          <CustomBrandingSection disabled={!isAdmin} />
+          <PageSection variant="card">
+            <PageSectionHeader>
+              <PageSectionTitle>
+                <Trans
+                  i18nKey="spaceDetailsCardTitle"
+                  defaults="Space details"
+                />
+              </PageSectionTitle>
+            </PageSectionHeader>
+            <PageSectionContent>
+              <SettingsGroup>
+                <SpaceSettingsForm space={space} disabled={!isAdmin} />
+              </SettingsGroup>
+            </PageSectionContent>
+          </PageSection>
           {!isOwner || canDeleteSpace ? (
             <PageSection variant="card">
               <PageSectionHeader>

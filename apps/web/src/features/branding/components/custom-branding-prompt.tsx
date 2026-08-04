@@ -78,7 +78,7 @@ export function CustomBrandingPrompt() {
             variant="primary"
             className="flex-1"
             nativeButton={false}
-            render={<Link href="/settings/general" />}
+            render={<Link href="/settings/branding" />}
             onClick={() =>
               posthog?.capture("custom_branding_prompt:setup_click")
             }

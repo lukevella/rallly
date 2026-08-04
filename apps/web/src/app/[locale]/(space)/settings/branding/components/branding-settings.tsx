@@ -1,20 +1,19 @@
 "use client";
 
+import { Alert, AlertDescription } from "@rallly/ui/alert";
 import type { Color } from "@rallly/ui/color-picker";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
 import { InputGroupButton } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import { CheckIcon, RotateCcwIcon } from "lucide-react";
+import { CheckIcon, EyeIcon, RotateCcwIcon } from "lucide-react";
 import React from "react";
 import { IfCloudHosted } from "@/components/environment";
 import {
   PageSection,
   PageSectionContent,
-  PageSectionDescription,
-  PageSectionHeader,
-  PageSectionTitle,
+  PageSectionGroup,
 } from "@/components/page-layout";
 import {
   Setting,
@@ -39,17 +38,14 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { BrandingPreview } from "./branding-preview";
 import { RemoveAttributionSetting } from "./remove-attribution-setting";
-import { SpaceSettingsForm } from "./space-settings-form";
 
-export function CustomBrandingSection({
-  disabled = false,
-}: {
-  disabled?: boolean;
-}) {
+export function BrandingSettings() {
   const { data: space } = useSpace();
   const user = useAuthedUser();
   const isFree = useIsFree();
   const { t } = useTranslation();
+  const isAdmin = space.role === "admin";
+  const disabled = !isAdmin;
 
   const currentColor = space.primaryColor ?? DEFAULT_PRIMARY_COLOR;
   const [color, setColor] = React.useState(() => parseColor(currentColor));
@@ -104,83 +100,84 @@ export function CustomBrandingSection({
   };
 
   return (
-    <PageSection variant="card">
-      <PageSectionHeader>
-        <PageSectionTitle>
-          <Trans i18nKey="branding" defaults="Branding" />
-        </PageSectionTitle>
-        <PageSectionDescription>
-          <Trans
-            i18nKey="brandingCardDescription"
-            defaults="How your space appears to you and the people you invite"
-          />
-        </PageSectionDescription>
-      </PageSectionHeader>
-      <PageSectionContent>
-        <SettingsGroup>
-          <SpaceSettingsForm space={space} disabled={disabled} />
-          <SettingRow>
-            <SettingTitle>
-              <Trans
-                i18nKey="primaryColorSettingTitle"
-                defaults="Primary color"
-              />
-            </SettingTitle>
-            <SettingDescription>
-              <Trans
-                i18nKey="primaryColorSettingHint"
-                defaults="Used for buttons and highlights."
-              />
-            </SettingDescription>
-            <SettingControl>
-              <PrimaryColorField
-                value={color}
-                onChange={setColor}
-                disabled={disabled}
-                isDefault={isDefault}
-                isDirty={isDirty}
-                isSaving={updateSpace.isExecuting}
-                onSave={handleSave}
-                onReset={handleReset}
-              />
-            </SettingControl>
-          </SettingRow>
-          <IfCloudHosted>
-            <RemoveAttributionSetting disabled={disabled} />
-          </IfCloudHosted>
-          <Setting>
-            <SettingTitle>
-              <Trans
-                i18nKey="customBrandingSettingTitle"
-                defaults="Custom branding"
-              />
-              {space.tier !== "pro" && <ProBadge />}
-            </SettingTitle>
-            <SettingDescription>
-              <Trans
-                i18nKey="customBrandingSettingLabel"
-                defaults="Show your logo and colors to participants."
-              />
-            </SettingDescription>
-            <SettingControl>
-              <Switch
-                checked={showBranding}
-                onCheckedChange={handleToggle}
-                disabled={disabled || updateShowBranding.isExecuting}
-              />
-            </SettingControl>
-            <SettingHint plain>
-              <BrandingPreview
-                spaceName={space.name}
-                spaceImage={space.image}
-                primaryColor={hexColor}
-                hostName={user.name}
-              />
-            </SettingHint>
-          </Setting>
-        </SettingsGroup>
-      </PageSectionContent>
-    </PageSection>
+    <PageSectionGroup>
+      {!isAdmin ? (
+        <Alert variant="note">
+          <EyeIcon />
+          <AlertDescription>
+            <Trans
+              i18nKey="generalSettingsAdminRoleRequired"
+              defaults="You need to be an admin to make changes to this space."
+            />
+          </AlertDescription>
+        </Alert>
+      ) : null}
+      <PageSection variant="card">
+        <PageSectionContent>
+          <SettingsGroup>
+            <SettingRow>
+              <SettingTitle>
+                <Trans
+                  i18nKey="primaryColorSettingTitle"
+                  defaults="Primary color"
+                />
+              </SettingTitle>
+              <SettingDescription>
+                <Trans
+                  i18nKey="primaryColorSettingHint"
+                  defaults="Used for buttons and highlights."
+                />
+              </SettingDescription>
+              <SettingControl>
+                <PrimaryColorField
+                  value={color}
+                  onChange={setColor}
+                  disabled={disabled}
+                  isDefault={isDefault}
+                  isDirty={isDirty}
+                  isSaving={updateSpace.isExecuting}
+                  onSave={handleSave}
+                  onReset={handleReset}
+                />
+              </SettingControl>
+            </SettingRow>
+            <IfCloudHosted>
+              <RemoveAttributionSetting disabled={disabled} />
+            </IfCloudHosted>
+            <Setting>
+              <SettingTitle>
+                <Trans
+                  i18nKey="customBrandingSettingTitle"
+                  defaults="Custom branding"
+                />
+                {space.tier !== "pro" && <ProBadge />}
+              </SettingTitle>
+              <SettingDescription>
+                <Trans
+                  i18nKey="customBrandingSettingLabel"
+                  defaults="Show your logo and colors to participants."
+                />
+              </SettingDescription>
+              <SettingControl>
+                <Switch
+                  checked={showBranding}
+                  onCheckedChange={handleToggle}
+                  disabled={disabled || updateShowBranding.isExecuting}
+                />
+              </SettingControl>
+              <SettingHint plain>
+                <BrandingPreview
+                  spaceName={space.name}
+                  spaceImage={space.image}
+                  primaryColor={hexColor}
+                  hostName={user.name}
+                />
+              </SettingHint>
+            </Setting>
+          </SettingsGroup>
+        </PageSectionContent>
+      </PageSection>
+    </PageSectionGroup>
   );
 }
 
