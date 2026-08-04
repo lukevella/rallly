@@ -47,9 +47,21 @@ export async function getUpdateStatus({ instanceId }: { instanceId: string }) {
       signal: AbortSignal.timeout(3000),
       next: { revalidate: 3600 },
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      logger.warn(
+        { instanceId, version: appVersion, status: res.status },
+        "Update check returned a non-success status",
+      );
+      return null;
+    }
     const parsed = updateStatusSchema.safeParse(await res.json());
-    if (!parsed.success) return null;
+    if (!parsed.success) {
+      logger.warn(
+        { instanceId, version: appVersion, issues: parsed.error.issues },
+        "Update check returned an invalid response",
+      );
+      return null;
+    }
     if (!isOutdated(appVersion, parsed.data.latest)) return null;
     return parsed.data;
   } catch (error) {
