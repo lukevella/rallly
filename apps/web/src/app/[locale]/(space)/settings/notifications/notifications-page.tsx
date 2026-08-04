@@ -41,11 +41,13 @@ export function NotificationsPage({
     eventType: ActivityEventType,
     enabled: boolean,
   ) => {
-    const previous = preferences;
+    const previous = preferences[eventType];
     setPreferences((old) => ({ ...old, [eventType]: enabled }));
     const result = await updatePreference.executeAsync({ eventType, enabled });
     if (result?.serverError || result?.validationErrors) {
-      setPreferences(previous);
+      // Roll back only the toggled field — a full-snapshot restore could
+      // clobber another toggle that succeeded while this one was in flight.
+      setPreferences((old) => ({ ...old, [eventType]: previous }));
     } else {
       toast.success(t("saved", { defaultValue: "Saved" }));
     }
