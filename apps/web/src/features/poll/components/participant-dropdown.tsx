@@ -44,6 +44,7 @@ import { trpc } from "@/trpc/client";
 export const ParticipantDropdown = ({
   participant,
   onEdit,
+  onDelete,
   children,
   disabled,
   align,
@@ -57,6 +58,7 @@ export const ParticipantDropdown = ({
   };
   align?: "start" | "end";
   onEdit: () => void;
+  onDelete?: () => void;
   children: React.ReactElement;
 }) => {
   const [isChangeNameModalVisible, setIsChangeNameModalVisible] =
@@ -115,6 +117,7 @@ export const ParticipantDropdown = ({
         onOpenChange={setIsDeleteParticipantModalVisible}
         participantId={participant.id}
         participantName={participant.name}
+        onDelete={onDelete}
       />
     </>
   );
@@ -125,11 +128,13 @@ const DeleteParticipantModal = ({
   onOpenChange,
   participantId,
   participantName,
+  onDelete,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   participantId: string;
   participantName: string;
+  onDelete?: () => void;
 }) => {
   const deleteParticipant = useDeleteParticipantMutation();
   const token = useEditToken();
@@ -163,6 +168,7 @@ const DeleteParticipantModal = ({
                 participantId,
                 token,
               });
+              onDelete?.();
               onOpenChange(false);
             }}
           >

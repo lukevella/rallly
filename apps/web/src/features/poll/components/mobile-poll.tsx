@@ -59,9 +59,9 @@ const MobilePoll: React.FunctionComponent = () => {
 
   const { canEditParticipant, canAddNewParticipant } = usePermissions();
 
-  const { t } = useTranslation();
-
   const isEditing = votingForm.watch("mode") !== "view";
+
+  const { t } = useTranslation();
 
   const participantOptions = [
     {
@@ -117,7 +117,10 @@ const MobilePoll: React.FunctionComponent = () => {
               }}
               disabled={isEditing}
             >
-              <SelectTrigger className="flex-1">
+              <SelectTrigger
+                className="flex-1"
+                data-testid="participant-selector"
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -169,6 +172,9 @@ const MobilePoll: React.FunctionComponent = () => {
                 }}
                 onEdit={() => {
                   votingForm.setEditingParticipantId(selectedParticipant.id);
+                }}
+                onDelete={() => {
+                  votingForm.setValue("participantId", "all");
                 }}
               >
                 <Button
