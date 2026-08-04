@@ -1,6 +1,5 @@
-"use client";
-
 import { Tile, TileDescription, TileGrid, TileTitle } from "@rallly/ui/tile";
+import { Trans } from "react-i18next/TransWithoutContext";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import {
   BillingPageIcon,
@@ -16,11 +15,11 @@ import {
   PageHeader,
   PageTitle,
 } from "@/components/page-layout";
-import { Trans } from "@/i18n/client";
-import { IfFeatureEnabled, useFeatureFlag } from "@/lib/feature-flags/client";
+import { getTranslation } from "@/i18n/server";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { PasswordSetupAlert } from "./password-setup-alert";
 
-export function DashboardHome({
+export async function DashboardHome({
   openPollCount,
   upcomingEventCount,
   memberCount,
@@ -35,42 +34,51 @@ export function DashboardHome({
   hasNoAccounts: boolean;
   canManageBilling: boolean;
 }) {
-  const isEmailLoginEnabled = useFeatureFlag("emailLogin");
+  const { t } = await getTranslation();
 
   return (
     <PageContainer>
       <PageHeader>
         <PageTitle>
-          <Trans i18nKey="home" defaults="Home" />
+          <Trans t={t} ns="app" i18nKey="home" defaults="Home" />
         </PageTitle>
       </PageHeader>
       <PageContent className="space-y-8">
-        {hasNoAccounts && isEmailLoginEnabled ? <PasswordSetupAlert /> : null}
+        {hasNoAccounts && isFeatureEnabled("emailLogin") ? (
+          <PasswordSetupAlert />
+        ) : null}
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
-            <Trans i18nKey="homeActionsTitle" defaults="Actions" />
+            <Trans
+              t={t}
+              ns="app"
+              i18nKey="homeActionsTitle"
+              defaults="Actions"
+            />
           </h2>
           <TileGrid>
             <Tile render={<HoverPrefetchLink href="/new" />}>
               <CreatePageIcon />
               <TileTitle>
-                <Trans i18nKey="create" defaults="Create" />
+                <Trans t={t} ns="app" i18nKey="create" defaults="Create" />
               </TileTitle>
             </Tile>
           </TileGrid>
         </div>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
-            <Trans i18nKey="content" defaults="Content" />
+            <Trans t={t} ns="app" i18nKey="content" defaults="Content" />
           </h2>
           <TileGrid>
             <Tile render={<HoverPrefetchLink href="/polls" />}>
               <PollPageIcon />
               <TileTitle>
-                <Trans i18nKey="polls" defaults="Polls" />
+                <Trans t={t} ns="app" i18nKey="polls" defaults="Polls" />
               </TileTitle>
               <TileDescription>
                 <Trans
+                  t={t}
+                  ns="app"
                   i18nKey="openPollCount"
                   defaults="{count} open"
                   values={{ count: openPollCount }}
@@ -81,10 +89,12 @@ export function DashboardHome({
             <Tile render={<HoverPrefetchLink href="/events" />}>
               <EventPageIcon />
               <TileTitle>
-                <Trans i18nKey="events" defaults="Events" />
+                <Trans t={t} ns="app" i18nKey="events" defaults="Events" />
               </TileTitle>
               <TileDescription>
                 <Trans
+                  t={t}
+                  ns="app"
                   i18nKey="upcomingEventCount"
                   defaults="{count} upcoming"
                   values={{ count: upcomingEventCount }}
@@ -95,23 +105,25 @@ export function DashboardHome({
         </div>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
-            <Trans i18nKey="manage" defaults="Manage" />
+            <Trans t={t} ns="app" i18nKey="manage" defaults="Manage" />
           </h2>
           <TileGrid>
             <Tile render={<HoverPrefetchLink href="/settings/general" />}>
               <SettingsPageIcon />
               <TileTitle>
-                <Trans i18nKey="settings" defaults="Settings" />
+                <Trans t={t} ns="app" i18nKey="settings" defaults="Settings" />
               </TileTitle>
             </Tile>
 
             <Tile render={<HoverPrefetchLink href="/settings/members" />}>
               <MembersPageIcon />
               <TileTitle>
-                <Trans i18nKey="members" defaults="Members" />
+                <Trans t={t} ns="app" i18nKey="members" defaults="Members" />
               </TileTitle>
               <TileDescription>
                 <Trans
+                  t={t}
+                  ns="app"
                   i18nKey="memberCount"
                   defaults="{count, plural, =0 {No members} one {1 member} other {# members}}"
                   values={{ count: memberCount }}
@@ -119,23 +131,23 @@ export function DashboardHome({
               </TileDescription>
             </Tile>
 
-            <IfFeatureEnabled feature="billing">
-              {canManageBilling && (
-                <Tile render={<HoverPrefetchLink href="/settings/billing" />}>
-                  <BillingPageIcon />
-                  <TileTitle>
-                    <Trans i18nKey="billing" defaults="Billing" />
-                  </TileTitle>
-                  <TileDescription>
-                    <Trans
-                      i18nKey="seatCount"
-                      defaults="{count, plural, =0 {No seats} one {1 seat} other {# seats}}"
-                      values={{ count: seatCount }}
-                    />
-                  </TileDescription>
-                </Tile>
-              )}
-            </IfFeatureEnabled>
+            {isFeatureEnabled("billing") && canManageBilling ? (
+              <Tile render={<HoverPrefetchLink href="/settings/billing" />}>
+                <BillingPageIcon />
+                <TileTitle>
+                  <Trans t={t} ns="app" i18nKey="billing" defaults="Billing" />
+                </TileTitle>
+                <TileDescription>
+                  <Trans
+                    t={t}
+                    ns="app"
+                    i18nKey="seatCount"
+                    defaults="{count, plural, =0 {No seats} one {1 seat} other {# seats}}"
+                    values={{ count: seatCount }}
+                  />
+                </TileDescription>
+              </Tile>
+            ) : null}
           </TileGrid>
         </div>
       </PageContent>
