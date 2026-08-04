@@ -8,6 +8,7 @@ import { Switch } from "@rallly/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { CheckIcon, RotateCcwIcon } from "lucide-react";
 import React from "react";
+import { IfCloudHosted } from "@/components/environment";
 import {
   PageSection,
   PageSectionContent,
@@ -37,6 +38,7 @@ import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { BrandingPreview } from "./branding-preview";
+import { RemoveAttributionSetting } from "./remove-attribution-setting";
 import { SpaceSettingsForm } from "./space-settings-form";
 
 export function CustomBrandingSection({
@@ -60,40 +62,28 @@ export function CustomBrandingSection({
   const updateShowBranding = useSafeAction(updateSpaceShowBrandingAction);
   const updateSpace = useSafeAction(updateSpaceAction);
 
-  // Holds the toggled value until the post-action router refresh
-  // delivers the updated space data, then defers to it.
-  const [pendingShowBranding, setPendingShowBranding] = React.useState<
-    boolean | null
-  >(null);
-  const showBranding = pendingShowBranding ?? space.showBranding;
+  // Optimistic value shown until the post-action router refresh delivers
+  // the updated space data; reverts automatically if the action fails.
+  const [showBranding, setOptimisticShowBranding] = React.useOptimistic(
+    space.showBranding,
+  );
 
-  React.useEffect(() => {
-    if (
-      pendingShowBranding !== null &&
-      space.showBranding === pendingShowBranding
-    ) {
-      setPendingShowBranding(null);
-    }
-  }, [space.showBranding, pendingShowBranding]);
-
-  const handleToggle = async (newChecked: boolean) => {
+  const handleToggle = (newChecked: boolean) => {
     if (isFree) {
       showPayWall({ from: "custom-branding" });
       return;
     }
 
-    setPendingShowBranding(newChecked);
+    React.startTransition(async () => {
+      setOptimisticShowBranding(newChecked);
+      const result = await updateShowBranding.executeAsync({
+        showBranding: newChecked,
+      });
 
-    const result = await updateShowBranding.executeAsync({
-      showBranding: newChecked,
+      if (!result?.serverError && !result?.validationErrors) {
+        toast.success(t("saved", { defaultValue: "Saved" }));
+      }
     });
-
-    if (result?.serverError || result?.validationErrors) {
-      setPendingShowBranding(null);
-      return;
-    }
-
-    toast.success(t("saved", { defaultValue: "Saved" }));
   };
 
   const persistColor = async (value: string | null) => {
@@ -155,6 +145,9 @@ export function CustomBrandingSection({
               />
             </SettingControl>
           </SettingRow>
+          <IfCloudHosted>
+            <RemoveAttributionSetting disabled={disabled} />
+          </IfCloudHosted>
           <Setting>
             <SettingTitle>
               <Trans

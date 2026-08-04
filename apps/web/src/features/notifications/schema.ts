@@ -15,4 +15,9 @@ export const notificationPreferencesSchema = z.record(
   z.boolean(),
 );
 
+export const updateNotificationPreferenceSchema = z.object({
+  eventType: z.enum(activityEventTypes),
+  enabled: z.boolean(),
+});
+
 export type NotificationPreferences = Record<ActivityEventType, boolean>;

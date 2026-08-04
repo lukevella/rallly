@@ -9,7 +9,7 @@ export function PollFooter() {
   const { hideAttribution } = useBranding();
   const poll = usePoll();
 
-  if (hideAttribution) {
+  if (hideAttribution || poll.space?.hideAttribution) {
     return null;
   }
 

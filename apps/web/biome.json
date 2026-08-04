@@ -259,7 +259,6 @@
         "src/trpc/routers/event-types.ts",
         "src/trpc/routers/events.ts",
         "src/trpc/routers/spaces.ts",
-        "src/trpc/routers/user.ts",
         "src/trpc/routers/polls/comments.ts",
         "src/trpc/routers/polls/participants.ts",
         "src/features/licensing/actions.ts",

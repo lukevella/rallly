@@ -17,6 +17,7 @@ import {
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import { isSelfHosted } from "@/lib/constants";
 import { dayjs } from "@/lib/dayjs";
 import { identifyGroup, track } from "@/lib/posthog";
 import { createIcsEvent } from "@/lib/utils/ics";
@@ -639,6 +640,7 @@ export const polls = router({
               image: true,
               tier: true,
               showBranding: true,
+              hideAttribution: true,
               primaryColor: true,
             },
           },
@@ -707,6 +709,15 @@ export const polls = router({
 
       return {
         ...res,
+        // Space-level attribution removal is cloud-only; self-hosted
+        // attribution is licensed at instance level via the white label
+        // addon.
+        space: res.space
+          ? {
+              ...res.space,
+              hideAttribution: !isSelfHosted && res.space.hideAttribution,
+            }
+          : null,
         canManage,
         inviteLink,
         event,
@@ -746,6 +757,7 @@ export const polls = router({
           space: {
             select: {
               showBranding: true,
+              hideAttribution: true,
               primaryColor: true,
               image: true,
             },

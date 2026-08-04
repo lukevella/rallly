@@ -188,6 +188,14 @@ export function PriceTables() {
               <Trans
                 t={t}
                 ns="pricing"
+                i18nKey="removeAttribution"
+                defaults="Remove attribution"
+              />
+            </BillingPlanPerk>
+            <BillingPlanPerk pro={true}>
+              <Trans
+                t={t}
+                ns="pricing"
                 i18nKey="getEarlyAccess"
                 defaults="Get early access to new features"
               />

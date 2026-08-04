@@ -2,6 +2,7 @@
 
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { createMiddleware } from "next-safe-action";
 import * as z from "zod";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
@@ -11,17 +12,20 @@ import {
   deleteSpace,
   removeSpaceImage,
   updateSpace,
+  updateSpaceHideAttribution,
   updateSpaceImage,
   updateSpaceShowBranding,
 } from "@/features/space/mutations";
 import {
   createSpaceSchema,
   spaceImageUploadSchema,
+  updateSpaceHideAttributionSchema,
   updateSpaceImageSchema,
   updateSpaceSchema,
   updateSpaceShowBrandingSchema,
 } from "@/features/space/schema";
 import { setActiveSpace } from "@/features/user/mutations";
+import { isSelfHosted } from "@/lib/constants";
 import { AppError } from "@/lib/errors/app-error";
 import { identifyGroup, track } from "@/lib/posthog";
 import {
@@ -30,8 +34,12 @@ import {
 } from "@/lib/safe-action/server";
 import { getImageUploadUrl } from "@/lib/storage/image-upload";
 
-async function requireSpaceWithUpdateAbility(user: { id: string }) {
-  const space = await getActiveSpaceForUser(user.id);
+// Resolves the actor's active space, verifies they can update it, and
+// injects it into ctx as `space`.
+const spaceUpdateAbilityMiddleware = createMiddleware<{
+  ctx: { user: { id: string } };
+}>().define(async ({ ctx, next }) => {
+  const space = await getActiveSpaceForUser(ctx.user.id);
 
   if (!space) {
     throw new AppError({
@@ -40,7 +48,7 @@ async function requireSpaceWithUpdateAbility(user: { id: string }) {
     });
   }
 
-  const ability = defineAbilityForMember({ user, space });
+  const ability = defineAbilityForMember({ user: ctx.user, space });
 
   if (ability.cannot("update", subject("Space", space))) {
     throw new AppError({
@@ -49,8 +57,8 @@ async function requireSpaceWithUpdateAbility(user: { id: string }) {
     });
   }
 
-  return space;
-}
+  return next({ ctx: { space } });
+});
 
 export const setActiveSpaceAction = authActionClient
   .metadata({ actionName: "set_active_space" })
@@ -168,9 +176,10 @@ export const deleteSpaceAction = authActionClient
 
 export const updateSpaceAction = authActionClient
   .metadata({ actionName: "update_space" })
+  .use(spaceUpdateAbilityMiddleware)
   .inputSchema(updateSpaceSchema)
   .action(async ({ ctx, parsedInput }) => {
-    const space = await requireSpaceWithUpdateAbility(ctx.user);
+    const { space } = ctx;
 
     await updateSpace({
       spaceId: space.id,
@@ -201,9 +210,10 @@ export const updateSpaceAction = authActionClient
 
 export const updateSpaceShowBrandingAction = authActionClient
   .metadata({ actionName: "update_space_show_branding" })
+  .use(spaceUpdateAbilityMiddleware)
   .inputSchema(updateSpaceShowBrandingSchema)
   .action(async ({ ctx, parsedInput }) => {
-    const space = await requireSpaceWithUpdateAbility(ctx.user);
+    const { space } = ctx;
 
     if (parsedInput.showBranding && space.tier !== "pro") {
       throw new AppError({
@@ -236,15 +246,62 @@ export const updateSpaceShowBrandingAction = authActionClient
     });
   });
 
+export const updateSpaceHideAttributionAction = authActionClient
+  .metadata({ actionName: "update_space_hide_attribution" })
+  .use(spaceUpdateAbilityMiddleware)
+  .inputSchema(updateSpaceHideAttributionSchema)
+  .action(async ({ ctx, parsedInput }) => {
+    const { space } = ctx;
+
+    // Space-level attribution removal is a cloud feature. On self-hosted
+    // instances attribution is licensed at instance level (white label
+    // addon + HIDE_ATTRIBUTION), where every space reports as "pro".
+    if (isSelfHosted) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "Attribution removal is not available on this instance",
+      });
+    }
+
+    if (parsedInput.hideAttribution && space.tier !== "pro") {
+      throw new AppError({
+        code: "PAYMENT_REQUIRED",
+        message: "You need a Pro subscription to remove attribution",
+      });
+    }
+
+    await updateSpaceHideAttribution({
+      spaceId: space.id,
+      hideAttribution: parsedInput.hideAttribution,
+    });
+
+    identifyGroup({
+      groupType: "space",
+      groupKey: space.id,
+      properties: {
+        hide_attribution: parsedInput.hideAttribution,
+      },
+    });
+
+    track(ctx.user, {
+      event: "space_update_hide_attribution",
+      properties: {
+        hide_attribution: parsedInput.hideAttribution,
+      },
+      groups: {
+        space: space.id,
+      },
+    });
+  });
+
 export const getSpaceImageUploadUrlAction = authActionClient
   .metadata({ actionName: "get_space_image_upload_url" })
+  .use(spaceUpdateAbilityMiddleware)
   .inputSchema(spaceImageUploadSchema)
   .action(async ({ ctx, parsedInput }) => {
-    const space = await requireSpaceWithUpdateAbility(ctx.user);
-
     return await getImageUploadUrl({
       keyPrefix: "spaces",
-      entityId: space.id,
+      entityId: ctx.space.id,
       fileType: parsedInput.fileType,
       fileSize: parsedInput.fileSize,
     });
@@ -252,9 +309,10 @@ export const getSpaceImageUploadUrlAction = authActionClient
 
 export const updateSpaceImageAction = authActionClient
   .metadata({ actionName: "update_space_image" })
+  .use(spaceUpdateAbilityMiddleware)
   .inputSchema(updateSpaceImageSchema)
   .action(async ({ ctx, parsedInput }) => {
-    const space = await requireSpaceWithUpdateAbility(ctx.user);
+    const { space } = ctx;
 
     if (!parsedInput.imageKey.startsWith(`spaces/${space.id}-`)) {
       throw new AppError({
@@ -271,8 +329,7 @@ export const updateSpaceImageAction = authActionClient
 
 export const removeSpaceImageAction = authActionClient
   .metadata({ actionName: "remove_space_image" })
+  .use(spaceUpdateAbilityMiddleware)
   .action(async ({ ctx }) => {
-    const space = await requireSpaceWithUpdateAbility(ctx.user);
-
-    await removeSpaceImage({ spaceId: space.id });
+    await removeSpaceImage({ spaceId: ctx.space.id });
   });
