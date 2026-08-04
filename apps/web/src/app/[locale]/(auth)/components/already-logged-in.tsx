@@ -23,7 +23,7 @@ import { SignOutButton } from "./sign-out-button";
  * so this must not be a client module.
  */
 export async function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
-  const { t } = await getTranslation();
+  const { t, i18n } = await getTranslation();
 
   return (
     <AuthPageContainer>
@@ -32,6 +32,7 @@ export async function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
         <AuthPageTitle>
           <Trans
             t={t}
+            i18n={i18n}
             ns="app"
             i18nKey="alreadyLoggedInTitle"
             defaults="You're already signed in"
@@ -40,6 +41,7 @@ export async function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
         <AuthPageDescription>
           <Trans
             t={t}
+            i18n={i18n}
             ns="app"
             i18nKey="alreadyLoggedInDescription"
             defaults="Continue to your dashboard or sign out to use a different account."
@@ -59,6 +61,7 @@ export async function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
           >
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="alreadyLoggedInContinue"
               defaults="Continue"
