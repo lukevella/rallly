@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { PageIcon } from "@/components/page-icons";
 import { getInstanceSettings } from "@/features/instance-settings/data";
 import { getUpdateStatus } from "@/features/instance-settings/service";
-import { Trans } from "@/i18n/client";
+import { getTranslation } from "@/i18n/server";
 import { appVersion } from "@/lib/constants";
 
 const RELEASES_URL = "https://github.com/lukevella/rallly/releases";
@@ -18,9 +18,11 @@ async function UpdateStatus() {
     return null;
   }
 
+  const { t } = await getTranslation();
+
   return (
     <span className="text-primary text-sm">
-      <Trans i18nKey="updateAvailable" defaults="Update available" />
+      {t("updateAvailable", { defaultValue: "Update available" })}
     </span>
   );
 }
