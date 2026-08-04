@@ -19,7 +19,6 @@ import {
   Setting,
   SettingControl,
   SettingDescription,
-  SettingHint,
   SettingRow,
   SettingsGroup,
   SettingTitle,
@@ -112,9 +111,37 @@ export function BrandingSettings() {
           </AlertDescription>
         </Alert>
       ) : null}
+      <BrandingPreview
+        spaceName={space.name}
+        spaceImage={space.image}
+        primaryColor={hexColor}
+        hostName={user.name}
+      />
       <PageSection variant="card">
         <PageSectionContent>
           <SettingsGroup>
+            <Setting>
+              <SettingTitle>
+                <Trans
+                  i18nKey="customBrandingSettingTitle"
+                  defaults="Custom branding"
+                />
+                {space.tier !== "pro" && <ProBadge />}
+              </SettingTitle>
+              <SettingDescription>
+                <Trans
+                  i18nKey="customBrandingSettingLabel"
+                  defaults="Show your logo and colors to participants."
+                />
+              </SettingDescription>
+              <SettingControl>
+                <Switch
+                  checked={showBranding}
+                  onCheckedChange={handleToggle}
+                  disabled={disabled || updateShowBranding.isExecuting}
+                />
+              </SettingControl>
+            </Setting>
             <SettingRow>
               <SettingTitle>
                 <Trans
@@ -141,42 +168,18 @@ export function BrandingSettings() {
                 />
               </SettingControl>
             </SettingRow>
-            <IfCloudHosted>
-              <RemoveAttributionSetting disabled={disabled} />
-            </IfCloudHosted>
-            <Setting>
-              <SettingTitle>
-                <Trans
-                  i18nKey="customBrandingSettingTitle"
-                  defaults="Custom branding"
-                />
-                {space.tier !== "pro" && <ProBadge />}
-              </SettingTitle>
-              <SettingDescription>
-                <Trans
-                  i18nKey="customBrandingSettingLabel"
-                  defaults="Show your logo and colors to participants."
-                />
-              </SettingDescription>
-              <SettingControl>
-                <Switch
-                  checked={showBranding}
-                  onCheckedChange={handleToggle}
-                  disabled={disabled || updateShowBranding.isExecuting}
-                />
-              </SettingControl>
-              <SettingHint plain>
-                <BrandingPreview
-                  spaceName={space.name}
-                  spaceImage={space.image}
-                  primaryColor={hexColor}
-                  hostName={user.name}
-                />
-              </SettingHint>
-            </Setting>
           </SettingsGroup>
         </PageSectionContent>
       </PageSection>
+      <IfCloudHosted>
+        <PageSection variant="card">
+          <PageSectionContent>
+            <SettingsGroup>
+              <RemoveAttributionSetting disabled={disabled} />
+            </SettingsGroup>
+          </PageSectionContent>
+        </PageSection>
+      </IfCloudHosted>
     </PageSectionGroup>
   );
 }
