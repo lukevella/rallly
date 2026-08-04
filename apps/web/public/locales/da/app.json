@@ -489,7 +489,6 @@
   "notFoundDescription": "Beklager, vi kunne ikke finde den side, du leder efter. Her er nogle nyttige links i stedet.",
   "notFoundLabel": "404",
   "notFoundTitle": "Siden blev ikke fundet",
-  "notificationPreferenceSaveError": "Kunne ikke gemme din notifikationsindstilling",
   "notifications": "Notifikationer",
   "notificationsDescription": "Vælg hvilke e-mail-notifikationer du modtager",
   "notificationToggleMutedToast": "Notifikationer er slået fra for denne afstemning.",
