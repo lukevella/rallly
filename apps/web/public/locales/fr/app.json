@@ -489,7 +489,6 @@
   "notFoundDescription": "Désolé, nous n'avons pas pu trouver la page que vous recherchez. Voici quelques liens utiles à la place.",
   "notFoundLabel": "404",
   "notFoundTitle": "Page introuvable",
-  "notificationPreferenceSaveError": "Impossible d’enregistrer votre préférence de notification",
   "notifications": "Notifications",
   "notificationsDescription": "Choisissez les notifications que vous recevez par e-mail",
   "notificationToggleMutedToast": "Les notifications sont désactivées pour ce sondage",
