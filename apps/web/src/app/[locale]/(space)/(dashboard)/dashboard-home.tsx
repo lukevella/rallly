@@ -18,14 +18,23 @@ import {
 } from "@/components/page-layout";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled, useFeatureFlag } from "@/lib/feature-flags/client";
-import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
-import { trpc } from "@/trpc/client";
 import { PasswordSetupAlert } from "./password-setup-alert";
 
-export function DashboardHome() {
-  const [stats] = trpc.dashboard.stats.useSuspenseQuery({
-    timeZone: getBrowserTimeZone(),
-  });
+export function DashboardHome({
+  openPollCount,
+  upcomingEventCount,
+  memberCount,
+  seatCount,
+  hasNoAccounts,
+  canManageBilling,
+}: {
+  openPollCount: number;
+  upcomingEventCount: number;
+  memberCount: number;
+  seatCount: number;
+  hasNoAccounts: boolean;
+  canManageBilling: boolean;
+}) {
   const isEmailLoginEnabled = useFeatureFlag("emailLogin");
 
   return (
@@ -36,9 +45,7 @@ export function DashboardHome() {
         </PageTitle>
       </PageHeader>
       <PageContent className="space-y-8">
-        {stats.hasNoAccounts && isEmailLoginEnabled ? (
-          <PasswordSetupAlert />
-        ) : null}
+        {hasNoAccounts && isEmailLoginEnabled ? <PasswordSetupAlert /> : null}
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
             <Trans i18nKey="homeActionsTitle" defaults="Actions" />
@@ -66,7 +73,7 @@ export function DashboardHome() {
                 <Trans
                   i18nKey="openPollCount"
                   defaults="{count} open"
-                  values={{ count: stats.openPollCount }}
+                  values={{ count: openPollCount }}
                 />
               </TileDescription>
             </Tile>
@@ -80,7 +87,7 @@ export function DashboardHome() {
                 <Trans
                   i18nKey="upcomingEventCount"
                   defaults="{count} upcoming"
-                  values={{ count: stats.upcomingEventCount }}
+                  values={{ count: upcomingEventCount }}
                 />
               </TileDescription>
             </Tile>
@@ -107,13 +114,13 @@ export function DashboardHome() {
                 <Trans
                   i18nKey="memberCount"
                   defaults="{count, plural, =0 {No members} one {1 member} other {# members}}"
-                  values={{ count: stats.memberCount }}
+                  values={{ count: memberCount }}
                 />
               </TileDescription>
             </Tile>
 
             <IfFeatureEnabled feature="billing">
-              {stats.canManageBilling && (
+              {canManageBilling && (
                 <Tile render={<HoverPrefetchLink href="/settings/billing" />}>
                   <BillingPageIcon />
                   <TileTitle>
@@ -123,7 +130,7 @@ export function DashboardHome() {
                     <Trans
                       i18nKey="seatCount"
                       defaults="{count, plural, =0 {No seats} one {1 seat} other {# seats}}"
-                      values={{ count: stats.seatCount }}
+                      values={{ count: seatCount }}
                     />
                   </TileDescription>
                 </Tile>

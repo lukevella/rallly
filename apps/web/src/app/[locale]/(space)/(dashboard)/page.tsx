@@ -1,23 +1,43 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
+import { getPollStatusCounts } from "@/features/poll/data";
+import { getUpcomingEventCount } from "@/features/scheduled-event/data";
+import { getActiveSpace } from "@/features/space/loaders";
+import { defineAbilityForMember } from "@/features/space/member/ability";
+import { getUserHasNoAccounts } from "@/features/user/data";
+import { requireUser } from "@/features/user/loaders";
 import { getTranslation } from "@/i18n/server";
-import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
+import { normalizeTimeZone } from "@/lib/datetime/utils";
 import { DashboardHome } from "./dashboard-home";
 
 export default async function Page() {
-  const helpers = await createPrivateSSRHelper();
+  const [user, space, deviceDateTime] = await Promise.all([
+    requireUser(),
+    getActiveSpace(),
+    getDeviceDateTimeConfig(),
+  ]);
 
-  // On the server this resolves to the server's zone — the same value the SSR
-  // pass of DashboardHome computes — so the suspense query hits the prefetched
-  // cache instead of fetching during SSR. The client refetches with the real
-  // browser zone after hydration when it differs.
-  await helpers.dashboard.stats.prefetch({ timeZone: getBrowserTimeZone() });
+  const timeZone =
+    normalizeTimeZone(user.timeZone) ?? deviceDateTime.timeZone ?? "UTC";
+
+  const [pollStatusCounts, upcomingEventCount, hasNoAccounts] =
+    await Promise.all([
+      getPollStatusCounts({ spaceId: space.id }),
+      getUpcomingEventCount({ spaceId: space.id, timeZone }),
+      getUserHasNoAccounts(user.id),
+    ]);
+
+  const ability = defineAbilityForMember({ user: { id: user.id }, space });
 
   return (
-    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
-      <DashboardHome />
-    </HydrationBoundary>
+    <DashboardHome
+      openPollCount={pollStatusCounts.open}
+      upcomingEventCount={upcomingEventCount}
+      memberCount={space.memberCount}
+      seatCount={space.seatCount}
+      hasNoAccounts={hasNoAccounts}
+      canManageBilling={ability.can("manage", "Billing")}
+    />
   );
 }
 
