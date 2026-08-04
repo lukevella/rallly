@@ -3,27 +3,10 @@ import * as z from "zod";
 
 import { getSpaceSubscription } from "@/features/billing/data";
 import { createStripeSubscriptionUpdateConfirmation } from "@/features/billing/mutations";
-import {
-  getActiveSpaceForUser,
-  getSpaceSeatCount,
-} from "@/features/space/data";
-import { isSelfHosted } from "@/lib/constants";
-import { publicProcedure, router, spaceOwnerProcedure } from "../trpc";
+import { getSpaceSeatCount } from "@/features/space/data";
+import { router, spaceOwnerProcedure } from "../trpc";
 
 export const billing = router({
-  getTier: publicProcedure.query(async ({ ctx }) => {
-    if (isSelfHosted) {
-      return "pro" as const;
-    }
-
-    if (!ctx.user || ctx.user.isGuest) {
-      return "hobby" as const;
-    }
-
-    const space = await getActiveSpaceForUser(ctx.user.id);
-
-    return space?.tier ?? ("hobby" as const);
-  }),
   updateSeats: spaceOwnerProcedure
     .input(z.object({ seatDelta: z.int() }))
     .mutation(async ({ ctx, input }) => {

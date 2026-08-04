@@ -9,18 +9,15 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
+import { listSpacesForUser } from "@/features/space/data";
 import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { SpacesList } from "./components/spaces-list";
 
 export default async function Page() {
-  const helpers = await createPrivateSSRHelper();
-  const [user, spaces] = await Promise.all([
-    requireUser(),
-    helpers.spaces.list.fetch(),
-  ]);
+  const user = await requireUser();
+  const spaces = await listSpacesForUser(user.id);
 
   return (
     <SettingsPage>

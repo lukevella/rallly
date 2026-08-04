@@ -205,6 +205,41 @@ export const getOwnedSpace = cache(async (userId: string) => {
   });
 });
 
+export const listSpacesForUser = cache(async (userId: string) => {
+  const result = await prisma.spaceMember.findMany({
+    where: effectiveSpaceMemberWhere({ userId }),
+    select: {
+      role: true,
+      space: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          ownerId: true,
+          tier: true,
+          primaryColor: true,
+          showBranding: true,
+          _count: { select: { members: true } },
+          subscriptions: {
+            where: { active: true },
+            select: { quantity: true },
+            take: 1,
+          },
+        },
+      },
+    },
+  });
+
+  return result.map((spaceMember) =>
+    createSpaceDTO({
+      ...spaceMember.space,
+      role: spaceMember.role,
+      memberCount: spaceMember.space._count.members,
+      seatCount: spaceMember.space.subscriptions[0]?.quantity ?? 1,
+    }),
+  );
+});
+
 export const getActiveSpaceForUser = cache(async (userId: string) => {
   const spaceMember = await prisma.spaceMember.findFirst({
     where: effectiveSpaceMemberWhere({ userId }),
