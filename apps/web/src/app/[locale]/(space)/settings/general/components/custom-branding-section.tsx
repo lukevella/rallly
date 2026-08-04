@@ -145,6 +145,9 @@ export function CustomBrandingSection({
               />
             </SettingControl>
           </SettingRow>
+          <IfCloudHosted>
+            <RemoveAttributionSetting disabled={disabled} />
+          </IfCloudHosted>
           <Setting>
             <SettingTitle>
               <Trans
@@ -175,9 +178,6 @@ export function CustomBrandingSection({
               />
             </SettingHint>
           </Setting>
-          <IfCloudHosted>
-            <RemoveAttributionSetting disabled={disabled} />
-          </IfCloudHosted>
         </SettingsGroup>
       </PageSectionContent>
     </PageSection>
