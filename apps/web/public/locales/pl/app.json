@@ -489,7 +489,6 @@
   "notFoundDescription": "Przepraszamy, nie mogliśmy znaleźć szukanej strony. Zamiast tego oto kilka pomocnych linków.",
   "notFoundLabel": "404",
   "notFoundTitle": "Strona nie znaleziona",
-  "notificationPreferenceSaveError": "Nie udało się zapisać preferencji powiadomień",
   "notifications": "Powiadomienia",
   "notificationsDescription": "Wybierz, które powiadomienia e-mail chcesz otrzymywać",
   "notificationToggleMutedToast": "Powiadomienia wyłączone dla tej ankiety",
