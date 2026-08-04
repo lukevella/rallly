@@ -489,7 +489,6 @@
   "notFoundDescription": "Spiacenti, non siamo riusciti a trovare la pagina che stai cercando. Ecco alcuni link utili.",
   "notFoundLabel": "404",
   "notFoundTitle": "Pagina non trovata",
-  "notificationPreferenceSaveError": "Impossibile salvare la preferenza di notifica.",
   "notifications": "Notifiche",
   "notificationsDescription": "Scegli quali notifiche email ricevere",
   "notificationToggleMutedToast": "Le notifiche sono disattivate per questo sondaggio",
