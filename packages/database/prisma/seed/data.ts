@@ -173,6 +173,7 @@ const personalPolls: PollDef[] = [
       {
         name: "Alex Rivera",
         email: "alex.rivera@gmail.com",
+        note: "Mornings work best for me, my afternoons are usually packed.",
         votes: ["yes", "no", "yes"],
       },
       {
@@ -236,6 +237,7 @@ const personalPolls: PollDef[] = [
       {
         name: "Marcus Johnson",
         email: "marcusj@yahoo.com",
+        note: "I'm away the following weekend so only the first two dates work for me.",
         votes: ["yes", "yes", "no", "no"],
       },
       {
@@ -277,6 +279,7 @@ const personalPolls: PollDef[] = [
       {
         name: "Karen Johnson",
         email: "karen.j@gmail.com",
+        note: "We have a school event on the first evening, anything after that is fine.",
         votes: ["no", "yes", "yes"],
       },
       {
@@ -322,6 +325,7 @@ const personalPolls: PollDef[] = [
       {
         name: "Rachel Green",
         email: "rachelg@gmail.com",
+        note: "Still catching up on the reading, so the later dates give me more time.",
         votes: ["no", "yes", "yes", "ifNeedBe"],
       },
       {
@@ -396,6 +400,7 @@ const personalPolls: PollDef[] = [
       {
         name: "Chris Anderson",
         email: "c.anderson@outlook.com",
+        note: "I'm on a work trip for the first date, either of the others suits me.",
         votes: ["no", "yes", "yes"],
       },
     ],
@@ -427,6 +432,7 @@ const personalPolls: PollDef[] = [
       {
         name: "Tyler Brooks",
         email: "tyler.b@outlook.com",
+        note: "I coach on Saturday mornings so Sundays are much easier for me.",
         votes: ["no", "yes", "no", "yes"],
       },
       {
@@ -452,6 +458,7 @@ const personalPolls: PollDef[] = [
       {
         name: "Nina Fernandez",
         email: "nina.f@outlook.com",
+        note: "Happy to come early and help set up whichever date we pick.",
         votes: ["yes", "no", "yes", "yes"],
       },
     ],
@@ -506,6 +513,7 @@ const acmePolls: PollDef[] = [
         name: "Michael Torres",
         userId: "user-3",
         email: "michael@rallly.co",
+        note: "The last slot clashes with our release window but I can shuffle things if needed.",
         votes: ["yes", "yes", "no", "ifNeedBe"],
       },
       {
@@ -564,6 +572,7 @@ const acmePolls: PollDef[] = [
       {
         name: "Andrea Walsh",
         email: "andrea.w@acme.co",
+        note: "I'm at a client site on the last day, either afternoon slot works for me.",
         votes: ["yes", "yes", "no"],
       },
     ],
@@ -598,12 +607,14 @@ const acmePolls: PollDef[] = [
         name: "Sarah Chen",
         userId: "user-2",
         email: "sarah@rallly.co",
+        note: "The 4pm slot overlaps with a meeting I can't move.",
         votes: ["yes", "no", "yes"],
       },
       {
         name: "James Okonkwo",
         userId: "user-5",
         email: "james@rallly.co",
+        note: "I'm on support rotation the first day, the later date is safest for me.",
         votes: ["ifNeedBe", "no", "yes"],
       },
       {
@@ -652,6 +663,7 @@ const acmePolls: PollDef[] = [
         name: "James Okonkwo",
         userId: "user-5",
         email: "james@rallly.co",
+        note: "I fly out midweek so the earlier sessions suit me much better.",
         votes: ["yes", "ifNeedBe", "yes", "no", "no"],
       },
     ],
@@ -691,6 +703,7 @@ const acmePolls: PollDef[] = [
         name: "Emily Nakamura",
         userId: "user-4",
         email: "emily@rallly.co",
+        note: "If we pick the last date I may need to leave early for a flight.",
         votes: ["no", "yes", "yes", "ifNeedBe"],
       },
       {
@@ -702,6 +715,7 @@ const acmePolls: PollDef[] = [
       {
         name: "Raj Gupta",
         email: "raj.g@acme.co",
+        note: "Any date except the second works, I have a wedding that day.",
         votes: ["yes", "no", "yes", "yes"],
       },
     ],
@@ -740,6 +754,7 @@ const acmePolls: PollDef[] = [
         name: "Sarah Chen",
         userId: "user-2",
         email: "sarah@rallly.co",
+        note: "The first slot lands right after another sync, the later two are better.",
         votes: ["no", "yes", "yes"],
       },
     ],
@@ -775,6 +790,7 @@ const acmePolls: PollDef[] = [
         name: "Emily Nakamura",
         userId: "user-4",
         email: "emily@rallly.co",
+        note: "The earlier slots land at a rough hour in Tokyo, the later two are doable.",
         votes: ["no", "no", "yes", "yes"],
       },
       {
@@ -786,6 +802,7 @@ const acmePolls: PollDef[] = [
       {
         name: "Ana Costa",
         email: "ana.costa@acme.co",
+        note: "I do the school pickup, so the last slot doesn't work for me.",
         votes: ["ifNeedBe", "yes", "yes", "no"],
       },
     ],
@@ -819,6 +836,7 @@ const acmePolls: PollDef[] = [
         name: "Michael Torres",
         userId: "user-3",
         email: "michael@rallly.co",
+        note: "I'm on leave the last day, the first two are wide open for me.",
         votes: ["yes", "yes", "no"],
       },
       {
@@ -831,6 +849,7 @@ const acmePolls: PollDef[] = [
         name: "James Okonkwo",
         userId: "user-5",
         email: "james@rallly.co",
+        note: "I can move a review on the second day if that's the one that wins.",
         votes: ["yes", "ifNeedBe", "yes"],
       },
     ],
@@ -871,11 +890,13 @@ const acmePolls: PollDef[] = [
       {
         name: "Carla Mendez",
         email: "carla.m@acme.co",
+        note: "Finance close runs into the first date, later gives us time to finish the slides.",
         votes: ["ifNeedBe", "yes", "no", "yes"],
       },
       {
         name: "Owen Bradley",
         email: "owen.b@acme.co",
+        note: "I'm at a conference for the last two dates, earlier works much better.",
         votes: ["yes", "yes", "no", "no"],
       },
     ],
@@ -922,11 +943,13 @@ const acmePolls: PollDef[] = [
         name: "Emily Nakamura",
         userId: "user-4",
         email: "emily@rallly.co",
+        note: "I'm out of office the week of the last option.",
         votes: ["yes", "ifNeedBe", "no"],
       },
       {
         name: "Derek Hoffman",
         email: "derek.h@acme.co",
+        note: "I have a standing call over the first slot but could join late if needed.",
         votes: ["ifNeedBe", "yes", "yes"],
       },
     ],
@@ -981,6 +1004,7 @@ const acmePolls: PollDef[] = [
       {
         name: "Lena Novak",
         email: "lena.n@acme.co",
+        note: "I'm out on the third day, and I'd need to move a workshop for the last one.",
         votes: ["yes", "yes", "no", "ifNeedBe"],
       },
     ],
@@ -1031,11 +1055,13 @@ const acmePolls: PollDef[] = [
       {
         name: "Raj Gupta",
         email: "raj.g@acme.co",
+        note: "I'll be booking December travel soon, so an early decision helps me.",
         votes: ["yes", "yes", "no", "yes"],
       },
       {
         name: "Ana Costa",
         email: "ana.costa@acme.co",
+        note: "I might be traveling the first weekend but will know closer to the date.",
         votes: ["ifNeedBe", "yes", "yes", "yes"],
       },
     ],
