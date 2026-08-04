@@ -168,6 +168,12 @@ These rules prepare the app for Next.js `cacheComponents` (static shell + stream
 - Pass `params`/`searchParams` promises down into Suspense-wrapped children and await them there, instead of awaiting at the top of the page.
 - Don't call argless `dayjs()`, `new Date()`, `Date.now()`, or `Math.random()` during server render outside request-bound components — synchronous IO fails prerendering once `cacheComponents` is enabled. Compute "now" on the client or behind a Suspense boundary after `connection()`.
 
+### Clock-Classified Reads (upcoming/past/relative-to-now)
+Reads filtered or grouped by the viewer's present ("upcoming", "past", agenda groupings) have no cacheable answer: the classification depends on the viewer's clock and timezone. All-day events are floating calendar dates (RFC 5545), so classifying them requires the viewer's current calendar date — never drop the timezone from such a query; that silently substitutes UTC as the viewer's zone. Choose the transport by what the data is to the surface:
+- **Content of a long-lived surface** (events list, agenda/calendar): fetch on the client — server renders the shell, the client queries with `getBrowserTimeZone()` and revalidates (refetch on focus). This gives the fastest paint and keeps the data fresh while the page stays open.
+- **Passing annotation on navigation chrome** (a count badge on a tile): a server snapshot is correct. Resolve the zone device-cookie-first via `getDeviceTimeZone()` from `@/lib/datetime/server` (falls back to the stored `user.timeZone`, then UTC). The session zone override is a poll-viewing aid and must not affect classification; `getDeviceDateTimeConfig` (which honors it) is for display on public pages.
+- **Never server-prefetch a client query with a zone the client will disagree with** (e.g. prefetching with the server's own zone and refetching after hydration). Seed `initialData` from the device cookie zone or render a skeleton until the client fetch lands.
+
 ### File Organization
 - Route handlers follow Next.js App Router conventions
 - Always use kebab-case for file names
