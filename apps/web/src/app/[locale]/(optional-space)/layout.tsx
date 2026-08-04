@@ -1,37 +1,40 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { SessionRefresher } from "@/components/session-refresher";
+import { TierProvider } from "@/features/billing/client";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
+import { getActiveSpaceForUser } from "@/features/space/data";
 import { UserProvider } from "@/features/user/client";
+import { requireUser } from "@/features/user/loaders";
 import { getLocale } from "@/i18n/server/get-locale";
 import { getSession } from "@/lib/auth";
+import { isSelfHosted } from "@/lib/constants";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
-import {
-  createPrivateSSRHelper,
-  createPublicSSRHelper,
-} from "@/trpc/server/create-ssr-helper";
 
-// The session and tRPC prefetch awaits sit below the Suspense boundary in
-// the default export so the document shell can flush before they resolve.
+// The session awaits sit below the Suspense boundary in the default export
+// so the document shell can flush before they resolve.
 async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
-  const helpers = isQuickCreateEnabled
-    ? await createPublicSSRHelper()
-    : await createPrivateSSRHelper();
+  // Guests may only enter when quick create is enabled.
+  if (!isQuickCreateEnabled) {
+    await requireUser();
+  }
 
   const [locale, deviceDateTimeConfig, session] = await Promise.all([
     getLocale(),
     getDeviceDateTimeConfig(),
     getSession(),
-    helpers.billing.getTier.prefetch(),
   ]);
 
   const user = session?.user;
 
+  const space =
+    user && !user.isGuest ? await getActiveSpaceForUser(user.id) : null;
+  const tier = space?.tier ?? (isSelfHosted ? "pro" : "hobby");
+
   return (
-    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
+    <>
       <SessionRefresher />
       <UserProvider user={user ?? null}>
         <DeviceDateTimeProvider
@@ -44,11 +47,13 @@ async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
           }
           weekStart={user?.weekStart ?? undefined}
         >
-          {children}
-          <PayWall />
+          <TierProvider tier={tier}>
+            {children}
+            <PayWall />
+          </TierProvider>
         </DeviceDateTimeProvider>
       </UserProvider>
-    </HydrationBoundary>
+    </>
   );
 }
 

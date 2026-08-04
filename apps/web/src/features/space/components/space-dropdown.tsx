@@ -26,12 +26,14 @@ import { useSpace } from "@/features/space/client";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { trpc } from "@/trpc/client";
 import { CreateSpaceDialog } from "./create-space-dialog";
 import { SpaceIcon } from "./space-icon";
 
-export function SpaceDropdown() {
-  const { data: spaces = [] } = trpc.spaces.list.useQuery();
+export function SpaceDropdown({
+  spaces,
+}: {
+  spaces: { id: string; name: string; image?: string }[];
+}) {
   const { data: activeSpace } = useSpace();
 
   const setActiveSpace = useSafeAction(setActiveSpaceAction);

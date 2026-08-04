@@ -1,14 +1,30 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
+import React from "react";
 import { create } from "zustand";
 import type { SpaceTier } from "@/features/space/schema";
-import { trpc } from "@/trpc/client";
+
+const TierContext = React.createContext<SpaceTier | null>(null);
+
+export function TierProvider({
+  tier,
+  children,
+}: {
+  tier: SpaceTier;
+  children: React.ReactNode;
+}) {
+  return <TierContext.Provider value={tier}>{children}</TierContext.Provider>;
+}
 
 export function useTier(): SpaceTier {
-  const { data: tier } = trpc.billing.getTier.useQuery();
+  const tier = React.useContext(TierContext);
 
-  return tier ?? "hobby";
+  if (tier === null) {
+    throw new Error("useTier must be used within a TierProvider");
+  }
+
+  return tier;
 }
 
 export function useIsFree() {

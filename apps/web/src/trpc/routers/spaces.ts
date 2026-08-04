@@ -1,55 +1,12 @@
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
-import { createSpaceDTO } from "@/features/space/data";
-import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
-import type { SpaceDTO } from "@/features/space/types";
 import { fromDBRole } from "@/features/space/utils";
 import { identifyGroup, track } from "@/lib/posthog";
 import { privateProcedure, router, spaceProcedure } from "../trpc";
 
 export const spaces = router({
   // ── Queries ──────────────────────────────────────────────────────────
-  list: privateProcedure.query(async ({ ctx }) => {
-    const { user } = ctx;
-
-    if (!user) {
-      return [];
-    }
-
-    const result = await prisma.spaceMember.findMany({
-      where: effectiveSpaceMemberWhere({ userId: user.id }),
-      select: {
-        role: true,
-        space: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-            ownerId: true,
-            tier: true,
-            primaryColor: true,
-            showBranding: true,
-            _count: { select: { members: true } },
-            subscriptions: {
-              where: { active: true },
-              select: { quantity: true },
-              take: 1,
-            },
-          },
-        },
-      },
-    });
-
-    return result.map<SpaceDTO>((spaceMember) =>
-      createSpaceDTO({
-        ...spaceMember.space,
-        role: spaceMember.role,
-        memberCount: spaceMember.space._count.members,
-        seatCount: spaceMember.space.subscriptions[0]?.quantity ?? 1,
-      }),
-    );
-  }),
   listMembers: spaceProcedure.query(async ({ ctx }) => {
     const [members, totalCount] = await Promise.all([
       prisma.spaceMember.findMany({
