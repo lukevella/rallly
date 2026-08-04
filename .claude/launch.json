@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "DEV_DOMAIN=ral1477.rallly.test",
+        "pnpm",
+        "--filter",
+        "@rallly/web",
+        "dev"
+      ],
+      "url": "https://ral1477.rallly.test",
+      "autoPort": true
+    }
+  ]
+}

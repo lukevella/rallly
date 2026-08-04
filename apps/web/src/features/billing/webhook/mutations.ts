@@ -47,7 +47,9 @@ async function syncSpaceTier(tx: Prisma.TransactionClient, spaceId: string) {
     where: { id: spaceId },
     data: {
       tier,
-      ...(tier === "hobby" ? { showBranding: false } : {}),
+      ...(tier === "hobby"
+        ? { showBranding: false, hideAttribution: false }
+        : {}),
     },
   });
 
