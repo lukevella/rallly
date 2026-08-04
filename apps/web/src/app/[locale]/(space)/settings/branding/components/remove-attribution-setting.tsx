@@ -2,11 +2,13 @@
 
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { EyeOffIcon } from "lucide-react";
 import React from "react";
 import {
   Setting,
   SettingControl,
   SettingDescription,
+  SettingIcon,
   SettingTitle,
 } from "@/components/setting";
 import { showPayWall, useIsFree } from "@/features/billing/client";
@@ -53,6 +55,9 @@ export function RemoveAttributionSetting({
 
   return (
     <Setting>
+      <SettingIcon>
+        <EyeOffIcon />
+      </SettingIcon>
       <SettingTitle>
         <Trans
           i18nKey="removeAttributionSettingTitle"

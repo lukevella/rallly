@@ -7,7 +7,13 @@ import { InputGroupButton } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import { CheckIcon, EyeIcon, RotateCcwIcon } from "lucide-react";
+import {
+  CheckIcon,
+  EyeIcon,
+  PaintbrushIcon,
+  PipetteIcon,
+  RotateCcwIcon,
+} from "lucide-react";
 import React from "react";
 import { IfCloudHosted } from "@/components/environment";
 import {
@@ -19,6 +25,7 @@ import {
   Setting,
   SettingControl,
   SettingDescription,
+  SettingIcon,
   SettingRow,
   SettingsGroup,
   SettingTitle,
@@ -121,6 +128,9 @@ export function BrandingSettings() {
         <PageSectionContent>
           <SettingsGroup>
             <Setting>
+              <SettingIcon>
+                <PaintbrushIcon />
+              </SettingIcon>
               <SettingTitle>
                 <Trans
                   i18nKey="customBrandingSettingTitle"
@@ -143,6 +153,9 @@ export function BrandingSettings() {
               </SettingControl>
             </Setting>
             <SettingRow>
+              <SettingIcon>
+                <PipetteIcon />
+              </SettingIcon>
               <SettingTitle>
                 <Trans
                   i18nKey="primaryColorSettingTitle"
