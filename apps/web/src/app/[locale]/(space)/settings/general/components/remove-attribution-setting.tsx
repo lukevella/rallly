@@ -4,11 +4,11 @@ import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
 import React from "react";
 import {
-  Setting,
-  SettingControl,
-  SettingDescription,
-  SettingTitle,
-} from "@/components/setting";
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldLabel,
+} from "@rallly/ui/field";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { updateSpaceHideAttributionAction } from "@/features/space/actions";
@@ -52,27 +52,28 @@ export function RemoveAttributionSetting({
   };
 
   return (
-    <Setting>
-      <SettingTitle>
-        <Trans
-          i18nKey="removeAttributionSettingTitle"
-          defaults="Remove attribution"
-        />
-        {space.tier !== "pro" && <ProBadge />}
-      </SettingTitle>
-      <SettingDescription>
-        <Trans
-          i18nKey="removeAttributionSettingDescription"
-          defaults='Hide "Powered by Rallly" on invite pages and participant emails.'
-        />
-      </SettingDescription>
-      <SettingControl>
-        <Switch
-          checked={hideAttribution}
-          onCheckedChange={handleToggle}
-          disabled={disabled || updateHideAttribution.isExecuting}
-        />
-      </SettingControl>
-    </Setting>
+    <Field orientation="horizontal">
+      <FieldContent>
+        <FieldLabel htmlFor="hide-attribution">
+          <Trans
+            i18nKey="removeAttributionSettingTitle"
+            defaults="Remove attribution"
+          />
+          {space.tier !== "pro" && <ProBadge />}
+        </FieldLabel>
+        <FieldDescription>
+          <Trans
+            i18nKey="removeAttributionSettingDescription"
+            defaults='Hide "Powered by Rallly" on invite pages and participant emails.'
+          />
+        </FieldDescription>
+      </FieldContent>
+      <Switch
+        id="hide-attribution"
+        checked={hideAttribution}
+        onCheckedChange={handleToggle}
+        disabled={disabled || updateHideAttribution.isExecuting}
+      />
+    </Field>
   );
 }

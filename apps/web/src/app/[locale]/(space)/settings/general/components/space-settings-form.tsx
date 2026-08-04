@@ -1,7 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldError } from "@rallly/ui/field";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+  FieldTitle,
+} from "@rallly/ui/field";
 import {
   InputGroup,
   InputGroupAddon,
@@ -20,13 +27,6 @@ import {
   ImageUploadControl,
   ImageUploadPreview,
 } from "@/components/image-upload";
-import {
-  SettingControl,
-  SettingDescription,
-  SettingRow,
-  SettingTitle,
-  useSettingLabels,
-} from "@/components/setting";
 import {
   getSpaceImageUploadUrlAction,
   removeSpaceImageAction,
@@ -92,60 +92,63 @@ export function SpaceSettingsForm({
 
   return (
     <>
-      <SettingRow>
-        <SettingTitle>
-          <Trans i18nKey="logo" defaults="Logo" />
-        </SettingTitle>
-        <SettingDescription>
-          <Trans i18nKey="spaceLogoSettingHint" defaults="Your space's logo." />
-        </SettingDescription>
-        <SettingControl>
-          <ImageUpload>
-            <ImageUploadPreview>
-              <SpaceIcon name={space.name} src={space.image} size="xl" />
-            </ImageUploadPreview>
-            <ImageUploadControl
-              getUploadUrl={handleGetUploadUrl}
-              onUploadSuccess={handleImageUploadSuccess}
-              onRemoveSuccess={handleImageRemoveSuccess}
-              hasCurrentImage={!!space.image}
+      <Field orientation="responsive">
+        <FieldContent>
+          <FieldTitle>
+            <Trans i18nKey="logo" defaults="Logo" />
+          </FieldTitle>
+          <FieldDescription>
+            <Trans
+              i18nKey="spaceLogoSettingHint"
+              defaults="Your space's logo."
             />
-          </ImageUpload>
-        </SettingControl>
-      </SettingRow>
-      <SettingRow>
-        <SettingTitle>
-          <Trans i18nKey="name" defaults="Name" />
-        </SettingTitle>
-        <SettingDescription>
-          <Trans
-            i18nKey="spaceNameSettingLabel"
-            defaults="What this space is called."
+          </FieldDescription>
+        </FieldContent>
+        <ImageUpload>
+          <ImageUploadPreview>
+            <SpaceIcon name={space.name} src={space.image} size="xl" />
+          </ImageUploadPreview>
+          <ImageUploadControl
+            getUploadUrl={handleGetUploadUrl}
+            onUploadSuccess={handleImageUploadSuccess}
+            onRemoveSuccess={handleImageRemoveSuccess}
+            hasCurrentImage={!!space.image}
           />
-        </SettingDescription>
-        <SettingControl>
-          <SpaceNameField
-            control={form.control}
-            disabled={disabled}
-            isSaving={updateSpace.isExecuting}
-            isDirty={form.formState.isDirty}
-            onSubmit={form.handleSubmit(async (data) => {
-              const result = await updateSpace.executeAsync({
-                name: data.name,
-              });
+        </ImageUpload>
+      </Field>
+      <Field orientation="responsive">
+        <FieldContent>
+          <FieldLabel htmlFor="space-name">
+            <Trans i18nKey="name" defaults="Name" />
+          </FieldLabel>
+          <FieldDescription>
+            <Trans
+              i18nKey="spaceNameSettingLabel"
+              defaults="What this space is called."
+            />
+          </FieldDescription>
+        </FieldContent>
+        <SpaceNameField
+          control={form.control}
+          disabled={disabled}
+          isSaving={updateSpace.isExecuting}
+          isDirty={form.formState.isDirty}
+          onSubmit={form.handleSubmit(async (data) => {
+            const result = await updateSpace.executeAsync({
+              name: data.name,
+            });
 
-              if (!result?.serverError && !result?.validationErrors) {
-                form.reset(data);
-                toast.success(
-                  t("spaceUpdatedSuccess", {
-                    defaultValue: "Space updated successfully",
-                  }),
-                );
-              }
-            })}
-          />
-        </SettingControl>
-      </SettingRow>
+            if (!result?.serverError && !result?.validationErrors) {
+              form.reset(data);
+              toast.success(
+                t("spaceUpdatedSuccess", {
+                  defaultValue: "Space updated successfully",
+                }),
+              );
+            }
+          })}
+        />
+      </Field>
     </>
   );
 }
@@ -164,7 +167,6 @@ function SpaceNameField({
   onSubmit: React.FormEventHandler<HTMLFormElement>;
 }) {
   const { t } = useTranslation();
-  const labels = useSettingLabels();
 
   return (
     <form onSubmit={onSubmit}>
@@ -176,7 +178,7 @@ function SpaceNameField({
             <InputGroup className="w-56">
               <InputGroupInput
                 {...field}
-                {...labels}
+                id="space-name"
                 disabled={disabled}
                 placeholder={t("spaceNamePlaceholder", {
                   defaultValue: "My Team",
