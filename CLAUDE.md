@@ -239,8 +239,9 @@ These rules prepare the app for Next.js `cacheComponents` (static shell + stream
   import { Trans } from "@/i18n/client";
   <Trans i18nKey="menu" defaults="Menu" />
   ```
-- On the server, use `getTranslations` from `@/i18n/server`:
+- On the server, use `getTranslation` from `@/i18n/server`:
   ```ts
-  const { t } = await getTranslations();
+  const { t } = await getTranslation();
   t("menu", { defaultValue: "Menu" });
   ```
+  For JSX on the server, use `Trans` from `react-i18next/TransWithoutContext` with `t={t}` and `ns="app"` (the context-ful `Trans` from `@/i18n/client` needs React context and cannot render in a server component).
