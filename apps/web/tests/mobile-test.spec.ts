@@ -1,34 +1,51 @@
+import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
+import { NewPollPage } from "./new-poll-page";
 
-test.skip("should be able to vote and comment on a poll", async ({ page }) => {
-  await page.setViewportSize({ width: 375, height: 667 });
-  await page.goto("/demo");
+test.describe(() => {
+  let inviteUrl: string;
 
-  await expect(page.locator('text="Lunch Meeting"')).toBeVisible();
+  test.beforeAll(async ({ browser }) => {
+    const page = await browser.newPage();
+    const newPollPage = new NewPollPage(page);
+    await newPollPage.goto();
+    const dialog = await newPollPage.create({ name: "Mobile Meetup" });
+    const pollPage = await dialog.goToPollPage();
+    inviteUrl = await pollPage.copyInviteLink();
+    await page.close();
+  });
 
-  await page.click('text="New"');
-  await page.click("data-testid=poll-option >> nth=0");
-  await page.click("data-testid=poll-option >> nth=1");
-  await page.click("data-testid=poll-option >> nth=3");
+  const voteAsNewParticipant = async (page: Page, name: string) => {
+    await page.getByTestId("poll-option").first().click();
+    await page.getByRole("button", { name: "Continue" }).click();
+    await page.getByPlaceholder("Jessie Smith").fill(name);
+    await page.getByRole("button", { name: "Save availability" }).click();
+    await page.getByRole("button", { name: "Back to poll" }).click();
+  };
 
-  await page.getByText("Continue").click();
+  test("deleting a participant resets the participant selector", async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      viewport: { width: 375, height: 667 },
+    });
+    const page = await context.newPage();
+    await page.goto(inviteUrl);
 
-  await page.getByPlaceholder("Jessie Smith").type("Test user");
-  await page.getByText(/^Save availability$/).click();
+    await voteAsNewParticipant(page, "Test user");
 
-  await expect(page.locator("data-testid=user")).toBeVisible();
-  await expect(
-    page.locator("data-testid=participant-selector").locator("text=You"),
-  ).toBeVisible();
+    const selector = page.getByTestId("participant-selector");
+    await expect(selector).toContainText("Test user");
 
-  await page.getByTestId("participant-menu").click();
-  await page.getByText("Edit votes").click();
-  await page.click("data-testid=poll-option >> nth=1");
-  await page.click("text=Save");
+    await page.getByTestId("participant-menu").click();
+    await page.getByRole("menuitem", { name: "Delete" }).click();
+    await page
+      .getByRole("dialog")
+      .getByRole("button", { name: "Delete" })
+      .click();
 
-  await page.getByTestId("participant-menu").click();
-  await page.locator("button", { hasText: "Delete" }).click();
-  const modal = page.getByTestId("modal");
-  await modal.locator("button", { hasText: "Delete" }).click();
-  await expect(page.locator("text='Test user'")).not.toBeVisible();
+    await expect(selector).toContainText("All Participants");
+
+    await context.close();
+  });
 });
