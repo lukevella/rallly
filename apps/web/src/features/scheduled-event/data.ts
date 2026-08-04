@@ -6,7 +6,6 @@ import { parseConferencing } from "@/features/conferencing/data";
 import type { Conferencing } from "@/features/conferencing/schema";
 import { parseLocation } from "@/features/location/data";
 import type { Location } from "@/features/location/schema";
-import type { AuthorizedSpaceId } from "@/features/space/types";
 import type { Status } from "./schema";
 import { pastScheduledEventWhere, upcomingScheduledEventWhere } from "./utils";
 
@@ -269,7 +268,7 @@ export async function getUpcomingEventCount({
   spaceId,
   timeZone,
 }: {
-  spaceId: AuthorizedSpaceId;
+  spaceId: string;
   timeZone: string;
 }) {
   return prisma.scheduledEvent.count({
