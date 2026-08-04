@@ -494,7 +494,6 @@
   "notFoundDescription": "Valitettavasti emme löydä etsimääsi sivua. Tässä on joitakin hyödyllisiä linkkejä sen sijaan.",
   "notFoundLabel": "404",
   "notFoundTitle": "Sivua ei löydy",
-  "notificationPreferenceSaveError": "Ilmoitusasetuksen tallentaminen epäonnistui",
   "notifications": "Ilmoitukset",
   "notificationsDescription": "Valitse, mitä sähköposti-ilmoituksia vastaanotat",
   "notificationToggleMutedToast": "Tämän kyselyn ilmoitukset ovat pois päältä",
