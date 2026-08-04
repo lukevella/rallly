@@ -489,7 +489,6 @@
   "notFoundDescription": "Извините, мы не смогли найти нужную страницу. Вот несколько полезных ссылок.",
   "notFoundLabel": "404",
   "notFoundTitle": "Страница не найдена",
-  "notificationPreferenceSaveError": "Не удалось сохранить настройку уведомлений",
   "notifications": "Уведомления",
   "notificationsDescription": "Выберите, какие уведомления по электронной почте получать",
   "notificationToggleMutedToast": "Уведомления отключены для этого опроса",
