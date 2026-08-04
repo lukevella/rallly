@@ -162,6 +162,12 @@ Always use gitmoji prefixes in commit messages. Follow the gitmoji convention (h
 - Keep component props minimal — pass only the bare minimum information needed
 - Add `"use client"` directive to the top of any `.tsx` file that requires client-side JavaScript
 
+### Streaming & Server Data Access
+These rules prepare the app for Next.js `cacheComponents` (static shell + streamed dynamic content). Follow them in all new and touched server code:
+- Never await runtime data (session, `cookies()`, `headers()`, tRPC prefetches) at the top of a layout or page. Extract the awaits into a private async component rendered under a `<Suspense>` boundary (see the gate pattern in `app/[locale]/(space)/layout.tsx`) so the shell streams immediately.
+- Pass `params`/`searchParams` promises down into Suspense-wrapped children and await them there, instead of awaiting at the top of the page.
+- Don't call argless `dayjs()`, `new Date()`, `Date.now()`, or `Math.random()` during server render outside request-bound components — synchronous IO fails prerendering once `cacheComponents` is enabled. Compute "now" on the client or behind a Suspense boundary after `connection()`.
+
 ### File Organization
 - Route handlers follow Next.js App Router conventions
 - Always use kebab-case for file names

@@ -1,4 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { Suspense } from "react";
+import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { SessionRefresher } from "@/components/session-refresher";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
@@ -12,11 +14,9 @@ import {
   createPublicSSRHelper,
 } from "@/trpc/server/create-ssr-helper";
 
-export default async function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+// The session and tRPC prefetch awaits sit below the Suspense boundary in
+// the default export so the document shell can flush before they resolve.
+async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
   const helpers = isQuickCreateEnabled
     ? await createPublicSSRHelper()
     : await createPrivateSSRHelper();
@@ -49,5 +49,13 @@ export default async function Layout({
         </DeviceDateTimeProvider>
       </UserProvider>
     </HydrationBoundary>
+  );
+}
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<RouterLoadingIndicator />}>
+      <OptionalSpaceGate>{children}</OptionalSpaceGate>
+    </Suspense>
   );
 }

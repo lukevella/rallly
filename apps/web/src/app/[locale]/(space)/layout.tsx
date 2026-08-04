@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { SessionRefresher } from "@/components/session-refresher";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { SpaceProvider } from "@/features/space/client";
@@ -8,11 +10,10 @@ import { getLocale } from "@/i18n/server/get-locale";
 import { getSession } from "@/lib/auth";
 import { DateTimeProvider } from "@/lib/datetime/client";
 
-export default async function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+// The session gate awaits below this boundary so the document shell can
+// flush before the session store responds; without it, every hard load of
+// a space route streams nothing until getActiveSpace resolves.
+async function SpaceGate({ children }: { children: React.ReactNode }) {
   const [locale, session, space] = await Promise.all([
     getLocale(),
     getSession(),
@@ -39,5 +40,13 @@ export default async function Layout({
         </DateTimeProvider>
       </UserProvider>
     </>
+  );
+}
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<RouterLoadingIndicator />}>
+      <SpaceGate>{children}</SpaceGate>
+    </Suspense>
   );
 }
