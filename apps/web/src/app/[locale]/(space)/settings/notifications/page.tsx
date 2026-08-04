@@ -7,15 +7,13 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { getNotificationPreferences } from "@/features/notifications/data";
-import { requireUser } from "@/features/user/loaders";
+import { loadNotificationPreferences } from "@/features/notifications/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { NotificationsPage } from "./notifications-page";
 
 export default async function Page() {
-  const user = await requireUser();
-  const preferences = await getNotificationPreferences(user.id);
+  const preferences = await loadNotificationPreferences();
 
   return (
     <SettingsPage>
