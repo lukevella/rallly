@@ -128,6 +128,10 @@
                 },
                 "patterns": [
                   {
+                    "group": ["@/features/**/data"],
+                    "message": "Pages, layouts and route components read through feature loaders (features/<domain>/loaders.ts), never data.ts directly — the loader owns the session gate that proves scope. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  },
+                  {
                     "group": ["@/utils", "@/utils/**"],
                     "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
                   }
@@ -214,6 +218,35 @@
       }
     },
     {
+      "includes": ["src/app/**/actions.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
+                },
+                "patterns": [
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
       "includes": [
         "src/app/*/(optional-space)/new/page.tsx",
         "src/app/*/(optional-space)/poll/*/layout.tsx",
@@ -233,6 +266,54 @@
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
                   "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
+                },
+                "patterns": [
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/app/*/(auth)/login/page.tsx",
+        "src/app/*/(auth)/login/verify/page.tsx",
+        "src/app/*/(optional-space)/layout.tsx",
+        "src/app/*/(space)/(dashboard)/layout.tsx",
+        "src/app/*/(space)/(dashboard)/polls/page.tsx",
+        "src/app/*/(space)/settings/api-keys/components/api-keys-list.tsx",
+        "src/app/*/(space)/settings/api-keys/page.tsx",
+        "src/app/*/(space)/settings/billing/page.tsx",
+        "src/app/*/(space)/settings/profile/components/account-deletion-summary.tsx",
+        "src/app/*/(space)/settings/security/page.tsx",
+        "src/app/*/(space)/settings/spaces/page.tsx",
+        "src/app/*/control-panel/branding/page.tsx",
+        "src/app/*/control-panel/license/page.tsx",
+        "src/app/*/control-panel/page.tsx",
+        "src/app/*/control-panel/settings/page.tsx",
+        "src/app/*/e/*/page.tsx",
+        "src/app/*/layout.tsx",
+        "src/app/*/setup/page.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json).",
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
