@@ -1,7 +1,6 @@
 "use client";
 
 import { useFeatureFlagEnabled } from "@rallly/posthog/client";
-import { Icon } from "@rallly/ui/icon";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -152,7 +151,7 @@ export function SpaceSidebarMenu() {
             }
             isActive={pathname.startsWith(item.href)}
           >
-            <Icon>{item.icon}</Icon>
+            {item.icon}
             {item.label}
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -189,9 +188,7 @@ export function DeveloperSidebarMenu() {
               }
               isActive={pathname.startsWith("/settings/api-keys")}
             >
-              <Icon>
-                <KeyIcon />
-              </Icon>
+              <KeyIcon />
               <Trans i18nKey="apiKeys" defaults="API Keys" />
             </SidebarMenuButton>
           </SidebarMenuItem>
