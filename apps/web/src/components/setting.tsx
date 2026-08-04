@@ -102,11 +102,14 @@ export const SettingIcon = ({ children }: React.PropsWithChildren) => {
   );
 };
 
-export const SettingTitle = ({ children }: React.PropsWithChildren) => {
+export const SettingTitle = ({
+  children,
+  id,
+}: React.PropsWithChildren<{ id?: string }>) => {
   const { titleId } = useSetting();
   return (
     <div
-      id={titleId}
+      id={id ?? titleId}
       className="flex items-center gap-x-2 text-sm [grid-area:title]"
     >
       {children}
@@ -114,11 +117,14 @@ export const SettingTitle = ({ children }: React.PropsWithChildren) => {
   );
 };
 
-export const SettingDescription = ({ children }: React.PropsWithChildren) => {
+export const SettingDescription = ({
+  children,
+  id,
+}: React.PropsWithChildren<{ id?: string }>) => {
   const { descriptionId } = useSetting();
   return (
     <div
-      id={descriptionId}
+      id={id ?? descriptionId}
       className="mt-0.5 text-muted-foreground text-xs [grid-area:description]"
     >
       {children}
@@ -131,6 +137,10 @@ export const SettingDescription = ({ children }: React.PropsWithChildren) => {
  * element, so the row's title and description are applied to it directly.
  * Inside `SettingRow` there is no single element to label — the control names
  * itself with `useSettingLabels()` — so the child is rendered untouched.
+ *
+ * Inside `Setting` the child must be created in client code: cloneElement
+ * corrupts elements streamed from server components (dev SSR bails out with
+ * "Element type is invalid"). Server-composed controls go in `SettingRow`.
  */
 export const SettingControl = ({
   children,
