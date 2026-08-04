@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { PageIcon } from "@/components/page-icons";
 import {
   SettingsPage,
@@ -21,7 +22,7 @@ import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getUserCount } from "@/features/user/data";
 import { Trans } from "@/i18n/client";
-import { VersionTile } from "./version-tile";
+import { VersionTile, VersionTileFallback } from "./version-tile";
 
 async function loadData() {
   const [userCount, license] = await Promise.all([
@@ -129,7 +130,9 @@ export default async function AdminPage() {
               </TileTitle>
             </Tile>
             {/* VERSION */}
-            <VersionTile />
+            <Suspense fallback={<VersionTileFallback />}>
+              <VersionTile />
+            </Suspense>
           </TileGrid>
         </div>
       </SettingsPageContent>
