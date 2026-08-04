@@ -34,13 +34,13 @@ export async function DashboardHome({
   hasNoAccounts: boolean;
   canManageBilling: boolean;
 }) {
-  const { t } = await getTranslation();
+  const { t, i18n } = await getTranslation();
 
   return (
     <PageContainer>
       <PageHeader>
         <PageTitle>
-          <Trans t={t} ns="app" i18nKey="home" defaults="Home" />
+          <Trans t={t} i18n={i18n} ns="app" i18nKey="home" defaults="Home" />
         </PageTitle>
       </PageHeader>
       <PageContent className="space-y-8">
@@ -51,6 +51,7 @@ export async function DashboardHome({
           <h2 className="text-muted-foreground text-sm">
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="homeActionsTitle"
               defaults="Actions"
@@ -60,24 +61,43 @@ export async function DashboardHome({
             <Tile render={<HoverPrefetchLink href="/new" />}>
               <CreatePageIcon />
               <TileTitle>
-                <Trans t={t} ns="app" i18nKey="create" defaults="Create" />
+                <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
+                  i18nKey="create"
+                  defaults="Create"
+                />
               </TileTitle>
             </Tile>
           </TileGrid>
         </div>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
-            <Trans t={t} ns="app" i18nKey="content" defaults="Content" />
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="app"
+              i18nKey="content"
+              defaults="Content"
+            />
           </h2>
           <TileGrid>
             <Tile render={<HoverPrefetchLink href="/polls" />}>
               <PollPageIcon />
               <TileTitle>
-                <Trans t={t} ns="app" i18nKey="polls" defaults="Polls" />
+                <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
+                  i18nKey="polls"
+                  defaults="Polls"
+                />
               </TileTitle>
               <TileDescription>
                 <Trans
                   t={t}
+                  i18n={i18n}
                   ns="app"
                   i18nKey="openPollCount"
                   defaults="{count} open"
@@ -89,11 +109,18 @@ export async function DashboardHome({
             <Tile render={<HoverPrefetchLink href="/events" />}>
               <EventPageIcon />
               <TileTitle>
-                <Trans t={t} ns="app" i18nKey="events" defaults="Events" />
+                <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
+                  i18nKey="events"
+                  defaults="Events"
+                />
               </TileTitle>
               <TileDescription>
                 <Trans
                   t={t}
+                  i18n={i18n}
                   ns="app"
                   i18nKey="upcomingEventCount"
                   defaults="{count} upcoming"
@@ -105,24 +132,43 @@ export async function DashboardHome({
         </div>
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
-            <Trans t={t} ns="app" i18nKey="manage" defaults="Manage" />
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="app"
+              i18nKey="manage"
+              defaults="Manage"
+            />
           </h2>
           <TileGrid>
             <Tile render={<HoverPrefetchLink href="/settings/general" />}>
               <SettingsPageIcon />
               <TileTitle>
-                <Trans t={t} ns="app" i18nKey="settings" defaults="Settings" />
+                <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
+                  i18nKey="settings"
+                  defaults="Settings"
+                />
               </TileTitle>
             </Tile>
 
             <Tile render={<HoverPrefetchLink href="/settings/members" />}>
               <MembersPageIcon />
               <TileTitle>
-                <Trans t={t} ns="app" i18nKey="members" defaults="Members" />
+                <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
+                  i18nKey="members"
+                  defaults="Members"
+                />
               </TileTitle>
               <TileDescription>
                 <Trans
                   t={t}
+                  i18n={i18n}
                   ns="app"
                   i18nKey="memberCount"
                   defaults="{count, plural, =0 {No members} one {1 member} other {# members}}"
@@ -135,11 +181,18 @@ export async function DashboardHome({
               <Tile render={<HoverPrefetchLink href="/settings/billing" />}>
                 <BillingPageIcon />
                 <TileTitle>
-                  <Trans t={t} ns="app" i18nKey="billing" defaults="Billing" />
+                  <Trans
+                    t={t}
+                    i18n={i18n}
+                    ns="app"
+                    i18nKey="billing"
+                    defaults="Billing"
+                  />
                 </TileTitle>
                 <TileDescription>
                   <Trans
                     t={t}
+                    i18n={i18n}
                     ns="app"
                     i18nKey="seatCount"
                     defaults="{count, plural, =0 {No seats} one {1 seat} other {# seats}}"
