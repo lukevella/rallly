@@ -51,7 +51,12 @@ export function getScheduledEventRsvpEmailData(eventId: string) {
       timeZone: true,
       user: { select: { name: true, email: true } },
       space: {
-        select: { showBranding: true, primaryColor: true, image: true },
+        select: {
+          showBranding: true,
+          hideAttribution: true,
+          primaryColor: true,
+          image: true,
+        },
       },
     },
   });

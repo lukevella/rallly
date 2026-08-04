@@ -1,4 +1,3 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import type { Params } from "@/app/[locale]/types";
 import {
@@ -8,34 +7,31 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
+import { loadNotificationPreferences } from "@/features/notifications/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { NotificationsPage } from "./notifications-page";
 
 export default async function Page() {
-  const helpers = await createPrivateSSRHelper();
-  await helpers.user.getNotificationPreferences.prefetch();
+  const preferences = await loadNotificationPreferences();
 
   return (
-    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
-      <SettingsPage>
-        <SettingsPageHeader>
-          <SettingsPageTitle>
-            <Trans i18nKey="notifications" defaults="Notifications" />
-          </SettingsPageTitle>
-          <SettingsPageDescription>
-            <Trans
-              i18nKey="notificationsDescription"
-              defaults="Choose which email notifications you receive"
-            />
-          </SettingsPageDescription>
-        </SettingsPageHeader>
-        <SettingsPageContent>
-          <NotificationsPage />
-        </SettingsPageContent>
-      </SettingsPage>
-    </HydrationBoundary>
+    <SettingsPage>
+      <SettingsPageHeader>
+        <SettingsPageTitle>
+          <Trans i18nKey="notifications" defaults="Notifications" />
+        </SettingsPageTitle>
+        <SettingsPageDescription>
+          <Trans
+            i18nKey="notificationsDescription"
+            defaults="Choose which email notifications you receive"
+          />
+        </SettingsPageDescription>
+      </SettingsPageHeader>
+      <SettingsPageContent>
+        <NotificationsPage initialPreferences={preferences} />
+      </SettingsPageContent>
+    </SettingsPage>
   );
 }
 

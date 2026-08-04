@@ -70,6 +70,19 @@ export async function updateSpaceShowBranding({
   });
 }
 
+export async function updateSpaceHideAttribution({
+  spaceId,
+  hideAttribution,
+}: {
+  spaceId: string;
+  hideAttribution: boolean;
+}) {
+  await prisma.space.update({
+    where: { id: spaceId },
+    data: { hideAttribution },
+  });
+}
+
 export async function updateSpaceImage({
   spaceId,
   imageKey,

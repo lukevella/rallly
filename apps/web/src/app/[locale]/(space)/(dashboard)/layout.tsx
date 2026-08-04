@@ -46,6 +46,7 @@ export default async function Layout({
               id: space.id,
               name: space.name,
               image: space.image,
+              tier: space.tier,
             }))}
           />
         </SidebarHeader>

@@ -3,6 +3,7 @@
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
 import { InboxIcon, MessageCircleIcon } from "lucide-react";
+import React from "react";
 import {
   PageSection,
   PageSectionContent,
@@ -19,39 +20,38 @@ import {
   SettingsGroup,
   SettingTitle,
 } from "@/components/setting";
+import { updateNotificationPreferenceAction } from "@/features/notifications/actions";
+import type {
+  ActivityEventType,
+  NotificationPreferences,
+} from "@/features/notifications/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
-export function NotificationsPage() {
+export function NotificationsPage({
+  initialPreferences,
+}: {
+  initialPreferences: NotificationPreferences;
+}) {
   const { t } = useTranslation();
-  const utils = trpc.useUtils();
-  const [preferences] = trpc.user.getNotificationPreferences.useSuspenseQuery();
-  const updatePreference = trpc.user.updateNotificationPreference.useMutation({
-    onMutate: async ({ eventType, enabled }) => {
-      await utils.user.getNotificationPreferences.cancel();
-      const previous = utils.user.getNotificationPreferences.getData();
-      utils.user.getNotificationPreferences.setData(undefined, (old) =>
-        old ? { ...old, [eventType]: enabled } : old,
-      );
-      return { previous };
-    },
-    onSuccess: () => {
+  const [preferences, setPreferences] = React.useState(initialPreferences);
+  const updatePreference = useSafeAction(updateNotificationPreferenceAction);
+
+  const setPreference = async (
+    eventType: ActivityEventType,
+    enabled: boolean,
+  ) => {
+    const previous = preferences[eventType];
+    setPreferences((old) => ({ ...old, [eventType]: enabled }));
+    const result = await updatePreference.executeAsync({ eventType, enabled });
+    if (result?.serverError || result?.validationErrors) {
+      // Roll back only the toggled field — a full-snapshot restore could
+      // clobber another toggle that succeeded while this one was in flight.
+      setPreferences((old) => ({ ...old, [eventType]: previous }));
+    } else {
       toast.success(t("saved", { defaultValue: "Saved" }));
-    },
-    onError: (_err, _vars, context) => {
-      if (context?.previous) {
-        utils.user.getNotificationPreferences.setData(
-          undefined,
-          context.previous,
-        );
-      }
-      toast.error(
-        t("notificationPreferenceSaveError", {
-          defaultValue: "Failed to save your notification preference",
-        }),
-      );
-    },
-  });
+    }
+  };
 
   return (
     <PageSectionGroup>
@@ -86,10 +86,7 @@ export function NotificationsPage() {
                 <Switch
                   checked={preferences["poll.response.submitted"]}
                   onCheckedChange={(enabled) => {
-                    updatePreference.mutate({
-                      eventType: "poll.response.submitted",
-                      enabled,
-                    });
+                    setPreference("poll.response.submitted", enabled);
                   }}
                 />
               </SettingControl>
@@ -111,10 +108,7 @@ export function NotificationsPage() {
                 <Switch
                   checked={preferences["poll.comment.added"]}
                   onCheckedChange={(enabled) => {
-                    updatePreference.mutate({
-                      eventType: "poll.comment.added",
-                      enabled,
-                    });
+                    setPreference("poll.comment.added", enabled);
                   }}
                 />
               </SettingControl>

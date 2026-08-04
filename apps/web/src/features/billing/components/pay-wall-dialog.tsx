@@ -20,10 +20,9 @@ import {
   CalendarCheckIcon,
   CalendarSearchIcon,
   ClockIcon,
-  CopyIcon,
+  EyeOffIcon,
   LifeBuoyIcon,
   PaletteIcon,
-  SettingsIcon,
   SparklesIcon,
   TimerResetIcon,
   UserPlusIcon,
@@ -340,6 +339,21 @@ export function PayWallDialog({
                     }
                   />
                   <KeyBenefitsItem
+                    icon={<EyeOffIcon />}
+                    title={
+                      <Trans
+                        i18nKey="removeAttribution"
+                        defaults="Remove Attribution"
+                      />
+                    }
+                    description={
+                      <Trans
+                        i18nKey="removeAttributionBenefitDescription"
+                        defaults='Hide "Powered by Rallly" from your participants'
+                      />
+                    }
+                  />
+                  <KeyBenefitsItem
                     icon={<CalendarCheckIcon />}
                     title={
                       <Trans
@@ -351,36 +365,6 @@ export function PayWallDialog({
                       <Trans
                         i18nKey="schedulePollDescription"
                         defaults="Lock in the final meeting time and notify participants"
-                      />
-                    }
-                  />
-                  <KeyBenefitsItem
-                    icon={<CopyIcon />}
-                    title={
-                      <Trans
-                        i18nKey="featureNameDuplicate"
-                        defaults="Duplicate Poll"
-                      />
-                    }
-                    description={
-                      <Trans
-                        i18nKey="duplicatePollDescription"
-                        defaults="Quickly create similar polls from existing ones"
-                      />
-                    }
-                  />
-                  <KeyBenefitsItem
-                    icon={<SettingsIcon />}
-                    title={
-                      <Trans
-                        i18nKey="featureNameAdvancedSettings"
-                        defaults="Advanced Settings"
-                      />
-                    }
-                    description={
-                      <Trans
-                        i18nKey="advancedSettingsDescription"
-                        defaults="Customize poll behavior and participant permissions"
                       />
                     }
                   />
