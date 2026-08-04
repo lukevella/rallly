@@ -487,7 +487,6 @@
   "notFoundDescription": "抱歉，我们无法找到您要查找的页面。以下是一些有用的链接。",
   "notFoundLabel": "404",
   "notFoundTitle": "页面不存在",
-  "notificationPreferenceSaveError": "无法保存您的通知偏好设置",
   "notifications": "通知",
   "notificationsDescription": "选择要接收的电子邮件通知",
   "notificationToggleMutedToast": "此投票的通知已关闭",
