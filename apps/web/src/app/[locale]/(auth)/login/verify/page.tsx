@@ -19,7 +19,7 @@ import { OTPForm } from "./components/otp-form";
 
 export default async function VerifyPage() {
   await redirectIfLoggedIn();
-  const { t } = await getTranslation();
+  const { t, i18n } = await getTranslation();
   const email = (await cookies()).get("verification-email")?.value;
   if (!email) {
     redirect("/login");
@@ -34,6 +34,7 @@ export default async function VerifyPage() {
           {isRegistrationEnabled ? (
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="verifyEmailTitle"
               defaults="Verify Your Email"
@@ -41,6 +42,7 @@ export default async function VerifyPage() {
           ) : (
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="loginVerifyTitle"
               defaults="Finish Logging In"
@@ -51,6 +53,7 @@ export default async function VerifyPage() {
           {isRegistrationEnabled ? (
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="verifyEmailDescription"
               defaults="Enter the 6-digit code we sent to <b>{email}</b>"
@@ -62,6 +65,7 @@ export default async function VerifyPage() {
           ) : (
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="loginVerifyCheckEmail"
               defaults="If an account exists with this email, you will receive a verification code at <b>{email}</b>"
@@ -86,7 +90,7 @@ export default async function VerifyPage() {
             className: "w-full",
           })}
         >
-          <Trans t={t} ns="app" i18nKey="back" defaults="Back" />
+          <Trans t={t} i18n={i18n} ns="app" i18nKey="back" defaults="Back" />
         </LinkWithRedirectTo>
       </AuthPageContent>
     </AuthPageContainer>

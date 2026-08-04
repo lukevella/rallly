@@ -21,9 +21,12 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 import Link from "next/link";
+import React from "react";
+import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { setActiveSpaceAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
+import type { SpaceTier } from "@/features/space/schema";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { CreateSpaceDialog } from "./create-space-dialog";
@@ -32,14 +35,20 @@ import { SpaceIcon } from "./space-icon";
 export function SpaceDropdown({
   spaces,
 }: {
-  spaces: { id: string; name: string; image?: string }[];
+  spaces: { id: string; name: string; image?: string; tier: SpaceTier }[];
 }) {
   const { data: activeSpace } = useSpace();
+  const [pendingSpaceId, setPendingSpaceId] = React.useState<string>();
 
-  const setActiveSpace = useSafeAction(setActiveSpaceAction);
+  const setActiveSpace = useSafeAction(setActiveSpaceAction, {
+    onError: () => setPendingSpaceId(undefined),
+  });
   const newSpaceDialog = useDialog();
 
-  const selectedSpaceId = activeSpace.id;
+  const pendingSpace = spaces.find((space) => space.id === pendingSpaceId);
+  const isSwitching = !!pendingSpace && pendingSpace.id !== activeSpace.id;
+  const displayedSpace = isSwitching ? pendingSpace : activeSpace;
+  const selectedSpaceId = displayedSpace.id;
 
   return (
     <>
@@ -48,23 +57,23 @@ export function SpaceDropdown({
           render={
             <Button
               className={cn("flex h-auto w-full gap-2.5 p-2", {
-                "pointer-events-none animate-pulse": setActiveSpace.isExecuting,
+                "pointer-events-none": isSwitching,
               })}
               variant="ghost"
             />
           }
         >
           <SpaceIcon
-            src={activeSpace.image}
-            name={activeSpace.name}
+            src={displayedSpace.image}
+            name={displayedSpace.name}
             size="lg"
           />
           <div className="min-w-0 flex-1 px-0.5 text-left">
             <div className="truncate font-medium text-sm">
-              {activeSpace.name}
+              {displayedSpace.name}
             </div>
             <div className="text-muted-foreground text-xs">
-              <SpaceTierLabel tier={activeSpace.tier} />
+              <SpaceTierLabel tier={displayedSpace.tier} />
             </div>
           </div>
           <Icon>
@@ -82,6 +91,7 @@ export function SpaceDropdown({
             value={selectedSpaceId}
             onValueChange={(value) => {
               if (value === selectedSpaceId) return;
+              setPendingSpaceId(value);
               setActiveSpace.execute({ spaceId: value });
             }}
           >
@@ -118,6 +128,7 @@ export function SpaceDropdown({
         </DropdownMenuContent>
       </DropdownMenu>
       <CreateSpaceDialog {...newSpaceDialog.dialogProps} />
+      {isSwitching ? <RouterLoadingIndicator /> : null}
     </>
   );
 }

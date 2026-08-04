@@ -14,7 +14,8 @@ export const useSafeAction: typeof useAction = (action, options) => {
       router.refresh();
       options?.onSuccess?.(args);
     },
-    onError: ({ error }) => {
+    onError: (args) => {
+      const { error } = args;
       if (error.serverError) {
         let translatedDescription = "An unexpected error occurred";
 
@@ -65,6 +66,7 @@ export const useSafeAction: typeof useAction = (action, options) => {
 
         toast.error(translatedDescription);
       }
+      options?.onError?.(args);
     },
   });
 };

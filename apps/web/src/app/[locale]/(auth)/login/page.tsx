@@ -21,7 +21,7 @@ import { AuthErrors } from "./components/auth-errors";
 import { LoginWithEmailForm } from "./components/login-email-form";
 
 async function loadData() {
-  const [isRegistrationEnabled, { t }] = await Promise.all([
+  const [isRegistrationEnabled, { t, i18n }] = await Promise.all([
     getRegistrationEnabled(),
     getTranslation(),
   ]);
@@ -29,6 +29,7 @@ async function loadData() {
   return {
     isRegistrationEnabled,
     t,
+    i18n,
   };
 }
 
@@ -52,7 +53,7 @@ export default async function LoginPage(props: {
     return <AlreadyLoggedIn redirectTo={searchParams?.redirectTo} />;
   }
 
-  const { isRegistrationEnabled, t } = await loadData();
+  const { isRegistrationEnabled, t, i18n } = await loadData();
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
 
   const hasGoogleProvider = !!authLib.options.socialProviders.google;
@@ -80,12 +81,19 @@ export default async function LoginPage(props: {
     <AuthPageContainer>
       <AuthPageHeader>
         <AuthPageTitle>
-          <Trans t={t} ns="app" i18nKey="loginTitle" defaults="Welcome" />
+          <Trans
+            t={t}
+            i18n={i18n}
+            ns="app"
+            i18nKey="loginTitle"
+            defaults="Welcome"
+          />
         </AuthPageTitle>
         <AuthPageDescription>
           {!isEmailLoginEnabled && !hasAlternateLoginMethods ? (
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="loginNotConfigured"
               defaults="Login is currently not configured."
@@ -93,6 +101,7 @@ export default async function LoginPage(props: {
           ) : isRegistrationEnabled ? (
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="loginOrSignUpDescription"
               defaults="Log in to your account or create a new one"
@@ -100,6 +109,7 @@ export default async function LoginPage(props: {
           ) : (
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="loginDescription"
               defaults="Login to your account to continue"
