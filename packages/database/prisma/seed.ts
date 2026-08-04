@@ -115,8 +115,7 @@ async function main() {
         scheduledEventId: poll.scheduledEventId,
         hideParticipants: poll.hideParticipants,
         hideScores: poll.hideScores,
-        // Seed polls model pre-existing data, which predates the comments-off default
-        disableComments: poll.disableComments ?? false,
+        disableComments: poll.disableComments ?? !poll.comments?.length,
         requireParticipantEmail: poll.requireParticipantEmail,
         kind,
       },
@@ -146,6 +145,7 @@ async function main() {
           pollId,
           name: part.name,
           email: part.email,
+          note: part.note,
           userId: part.userId,
         },
       });
