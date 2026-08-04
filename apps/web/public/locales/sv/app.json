@@ -489,7 +489,6 @@
   "notFoundDescription": "Tyvärr hittade vi inte sidan du söker. Här är några användbara länkar istället.",
   "notFoundLabel": "404",
   "notFoundTitle": "Sidan hittades inte",
-  "notificationPreferenceSaveError": "Kunde inte spara din inställning för aviseringar",
   "notifications": "Aviseringar",
   "notificationsDescription": "Välj vilka e-postaviseringar du vill ta emot",
   "notificationToggleMutedToast": "Aviseringar är avstängda för den här förfrågan",
