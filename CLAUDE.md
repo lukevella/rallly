@@ -240,8 +240,12 @@ These rules prepare the app for Next.js `cacheComponents` (static shell + stream
   <Trans i18nKey="menu" defaults="Menu" />
   ```
 - On the server, use `getTranslation` from `@/i18n/server`:
-  ```ts
-  const { t } = await getTranslation();
+  ```tsx
+  import { Trans } from "react-i18next/TransWithoutContext";
+  import { getTranslation } from "@/i18n/server";
+
+  const { t, i18n } = await getTranslation();
   t("menu", { defaultValue: "Menu" });
+  <Trans t={t} i18n={i18n} ns="app" i18nKey="menu" defaults="Menu" />;
   ```
-  For JSX on the server, use `Trans` from `react-i18next/TransWithoutContext` with `t={t}`, `i18n={i18n}`, and `ns="app"` (the context-ful `Trans` from `@/i18n/client` needs React context and cannot render in a server component; omitting `i18n` falls back to the module-global instance, which can carry another request's language under concurrency).
+  Server JSX must use `Trans` from `react-i18next/TransWithoutContext` (the context-ful `Trans` from `@/i18n/client` needs React context and cannot render in a server component) and must pass both `t` and `i18n` — omitting `i18n` falls back to the module-global instance, which can carry another request's language under concurrency.
