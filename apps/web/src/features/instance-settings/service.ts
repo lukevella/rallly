@@ -62,8 +62,10 @@ export async function getUpdateStatus({ instanceId }: { instanceId: string }) {
       );
       return null;
     }
-    if (!isOutdated(appVersion, parsed.data.latest)) return null;
-    return parsed.data;
+    if (!isOutdated(appVersion, parsed.data.latest)) {
+      return { status: "up-to-date" as const };
+    }
+    return { status: "update-available" as const, ...parsed.data };
   } catch (error) {
     logger.warn(
       { error, instanceId, version: appVersion },

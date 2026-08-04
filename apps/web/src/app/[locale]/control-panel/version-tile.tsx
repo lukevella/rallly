@@ -20,6 +20,14 @@ async function UpdateStatus() {
 
   const { t } = await getTranslation();
 
+  if (update.status === "up-to-date") {
+    return (
+      <span className="text-green-600 text-sm">
+        {t("upToDate", { defaultValue: "Up to date" })}
+      </span>
+    );
+  }
+
   return (
     <span className="text-primary text-sm">
       {t("updateAvailable", { defaultValue: "Update available" })}
