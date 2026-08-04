@@ -489,7 +489,6 @@
   "notFoundDescription": "Beklager, vi fant ikke siden du leter etter. Her er noen nyttige lenker i stedet.",
   "notFoundLabel": "404",
   "notFoundTitle": "Side ikke funnet",
-  "notificationPreferenceSaveError": "Kunne ikke lagre varslingsinnstillingen din",
   "notifications": "Varsler",
   "notificationsDescription": "Velg hvilke e-postvarsler du vil motta",
   "notificationToggleMutedToast": "Varsler er av for denne avstemningen",
