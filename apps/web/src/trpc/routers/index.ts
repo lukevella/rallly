@@ -4,7 +4,6 @@ import { mergeRouters, router } from "../trpc";
 import { auth } from "./auth";
 import { billing } from "./billing";
 import { calendars } from "./calendars";
-import { dashboard } from "./dashboard";
 import { eventTypes } from "./event-types";
 import { events } from "./events";
 import { polls } from "./polls";
@@ -14,7 +13,6 @@ export const appRouter = mergeRouters(
   router({
     auth,
     billing,
-    dashboard,
     eventTypes,
     events,
     polls,

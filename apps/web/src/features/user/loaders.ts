@@ -3,7 +3,7 @@ import "server-only";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { isInitialAdmin } from "@/features/instance-settings/utils";
-import { getUser } from "@/features/user/data";
+import { getUser, getUserHasNoAccounts } from "@/features/user/data";
 import type { UserDTO } from "@/features/user/schema";
 import { getSession, getSessionState } from "@/lib/auth";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
@@ -90,4 +90,13 @@ export const requireAdmin = cache(async () => {
   }
 
   return user;
+});
+
+/**
+ * Whether the signed-in user has no auth accounts (no password, no OAuth
+ * link) — OTP-only accounts that should be nudged to set up a password.
+ */
+export const loadUserHasNoAccounts = cache(async () => {
+  const user = await requireUser();
+  return getUserHasNoAccounts(user.id);
 });

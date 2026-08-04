@@ -16,6 +16,18 @@ import { normalizeTimeFormat, normalizeTimeZone } from "@/lib/datetime/utils";
  * preferences instead. No zone means the viewer's first ever request —
  * components render times client-side once the zone is known.
  */
+/**
+ * The viewer's current zone as reported by the device cookie, ignoring the
+ * session zone override — the override is a poll-viewing aid ("see what
+ * other participants see"), not a statement about where the viewer is now.
+ * Use for classifying moments against the viewer's present (e.g. upcoming
+ * counts); use getDeviceDateTimeConfig for display on public pages.
+ */
+export async function getDeviceTimeZone() {
+  const cookieStore = await cookies();
+  return normalizeTimeZone(cookieStore.get(TIME_ZONE_COOKIE_NAME)?.value);
+}
+
 export async function getDeviceDateTimeConfig() {
   const cookieStore = await cookies();
 
