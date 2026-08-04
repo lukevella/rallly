@@ -103,10 +103,12 @@ const safeResult: ModerationResult = {
  */
 export async function moderateContent({
   userId,
+  userEmail,
   content,
   trusted = false,
 }: {
   userId: string;
+  userEmail: string;
   content: Record<string, string>;
   trusted?: boolean;
 }): Promise<ModerationResult> {
@@ -163,6 +165,7 @@ export async function moderateContent({
             subject: `Content ${result.verdict} by moderation`,
             text: [
               `User ID: ${userId}`,
+              `User Email: ${userEmail}`,
               `Trusted: ${trusted ? "Yes" : "No"}`,
               `Verdict: ${result.verdict}`,
               `Reason: ${result.reason}`,
