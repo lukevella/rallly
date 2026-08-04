@@ -12,11 +12,13 @@ export const getInstanceSettings = unstable_cache(
         id: 1,
       },
       select: {
+        instanceId: true,
         disableUserRegistration: true,
       },
     });
 
     return {
+      instanceId: instanceSettings?.instanceId ?? null,
       disableUserRegistration:
         instanceSettings?.disableUserRegistration ?? false,
     };
