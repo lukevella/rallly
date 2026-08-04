@@ -498,7 +498,6 @@
   "notFoundDescription": "Sorry, we couldn't find the page you're looking for. Here are some helpful links instead.",
   "notFoundLabel": "404",
   "notFoundTitle": "Page not found",
-  "notificationPreferenceSaveError": "Failed to save your notification preference",
   "notifications": "Notifications",
   "notificationsDescription": "Choose which email notifications you receive",
   "notificationToggleMutedToast": "Notifications are off for this poll",
