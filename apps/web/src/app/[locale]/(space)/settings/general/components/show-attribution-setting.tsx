@@ -16,7 +16,10 @@ import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
-export function RemoveAttributionSetting({
+// The switch describes participant-visible state, so it is the inverse of
+// the stored hideAttribution flag. Turning attribution off is the Pro
+// feature; showing it is free.
+export function ShowAttributionSetting({
   disabled = false,
 }: {
   disabled?: boolean;
@@ -34,15 +37,15 @@ export function RemoveAttributionSetting({
   );
 
   const handleToggle = (newChecked: boolean) => {
-    if (isFree) {
+    if (isFree && !newChecked) {
       showPayWall({ from: "custom-branding", setting: "hide_attribution" });
       return;
     }
 
     React.startTransition(async () => {
-      setOptimisticHideAttribution(newChecked);
+      setOptimisticHideAttribution(!newChecked);
       const result = await updateHideAttribution.executeAsync({
-        hideAttribution: newChecked,
+        hideAttribution: !newChecked,
       });
 
       if (!result?.serverError && !result?.validationErrors) {
@@ -54,18 +57,21 @@ export function RemoveAttributionSetting({
   return (
     <Setting>
       <SettingTitle>
-        <Trans i18nKey="removeAttribution" defaults="Remove Attribution" />
+        <Trans
+          i18nKey="showAttributionSettingTitle"
+          defaults="Show attribution"
+        />
         {space.tier !== "pro" && <ProBadge />}
       </SettingTitle>
       <SettingDescription>
         <Trans
-          i18nKey="removeAttributionDescription"
-          defaults='Hide "Powered by Rallly" on invite pages and participant emails'
+          i18nKey="showAttributionSettingDescription"
+          defaults='Display "Powered by Rallly" on invite pages and participant emails.'
         />
       </SettingDescription>
       <SettingControl>
         <Switch
-          checked={hideAttribution}
+          checked={!hideAttribution}
           onCheckedChange={handleToggle}
           disabled={disabled || updateHideAttribution.isExecuting}
         />
