@@ -3,16 +3,14 @@ import { Tile, TileDescription, TileTitle } from "@rallly/ui/tile";
 import { DownloadIcon } from "lucide-react";
 import { Suspense } from "react";
 import { PageIcon } from "@/components/page-icons";
-import { getInstanceSettings } from "@/features/instance-settings/data";
-import { getUpdateStatus } from "@/features/instance-settings/service";
+import { loadUpdateStatus } from "@/features/instance-settings/loaders";
 import { getTranslation } from "@/i18n/server";
 import { appVersion } from "@/lib/constants";
 
 const RELEASES_URL = "https://github.com/lukevella/rallly/releases";
 
 async function UpdateStatus() {
-  const { instanceId } = await getInstanceSettings();
-  const update = instanceId ? await getUpdateStatus({ instanceId }) : null;
+  const update = await loadUpdateStatus();
 
   if (!update) {
     return null;
