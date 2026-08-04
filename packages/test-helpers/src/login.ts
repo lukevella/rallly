@@ -8,7 +8,11 @@ export async function loginWithEmail(
   { email, password }: { email: string; password?: string },
 ) {
   await page.goto("/login");
-  await page.getByText("Welcome").waitFor();
+  // React reveals streamed Suspense content paint-aligned, so the page can
+  // briefly hold a second hidden copy of the heading. A text locator
+  // strict-fails on that window; getByRole ignores hidden elements and
+  // .first() tolerates the duplicate.
+  await page.getByRole("heading", { name: "Welcome" }).first().waitFor();
 
   // The login form is visible before React has hydrated it, so input that
   // lands too early can be silently lost. Retry until the next screen
