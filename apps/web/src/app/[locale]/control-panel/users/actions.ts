@@ -48,7 +48,7 @@ export const deleteUserAction = adminActionClient
 
     await deletePostHogPerson({ distinctId: userId });
 
-    await hardDeleteUser({ userId, email: user.email });
+    await hardDeleteUser({ userId });
 
     return {
       success: true,

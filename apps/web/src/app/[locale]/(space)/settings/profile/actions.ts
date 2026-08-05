@@ -114,7 +114,7 @@ export const deleteAccountAction = authActionClient
     }
 
     await deletePostHogPerson({ distinctId: ctx.user.id });
-    await hardDeleteUser({ userId: ctx.user.id, email: ctx.user.email });
+    await hardDeleteUser({ userId: ctx.user.id });
 
     // Personless by design — the person this event is about was just erased.
     trackSystemEvent({ event: "account_deletion_complete" });

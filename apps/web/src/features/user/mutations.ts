@@ -122,13 +122,7 @@ export async function unbanUser({ userId }: { userId: string }) {
 // Sessions are revoked through Better-Auth's internal adapter for the same
 // reason as bans: with secondary storage they live in Redis, and only
 // Better-Auth's own APIs delete those keys.
-export async function hardDeleteUser({
-  userId,
-  email,
-}: {
-  userId: string;
-  email: string;
-}) {
+export async function hardDeleteUser({ userId }: { userId: string }) {
   const { internalAdapter } = await authLib.$context;
 
   await internalAdapter.deleteSessions(userId);
@@ -144,16 +138,12 @@ export async function hardDeleteUser({
     await deleteImageFromS3(user.image);
   }
 
-  // Cascades cover data the user owns, but their personal data also lives
-  // where they took part in other users' content: participant rows carry
-  // name/email (votes cascade off them, matching the promise in the delete
-  // dialog) and event invites carry invitee name/email. Both relations are
-  // SetNull, so the rows would otherwise outlive the account.
-  await prisma.participant.deleteMany({ where: { userId } });
-  await prisma.scheduledEventInvite.deleteMany({
-    where: { OR: [{ inviteeId: userId }, { inviteeEmail: email }] },
-  });
-
+  // Cascades cover content the user owns. Everything on other people's polls
+  // and events (participants, votes, invites, activity log) is that record's
+  // data, not the account's — deletion never mutates it, so finalized
+  // outcomes, attendance, and activity history can't change when an account
+  // disappears. The FK SetNulls unlink participants and event invites;
+  // PollActivity's soft refs persist as inert identity that resolves to nothing.
   await prisma.user.delete({ where: { id: userId } });
 }
 

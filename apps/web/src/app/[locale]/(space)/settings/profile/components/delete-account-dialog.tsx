@@ -69,8 +69,8 @@ function ScheduleAccountDeletionDialog({
         <div className="space-y-3 text-sm">
           <p>
             <Trans
-              i18nKey="deleteAccountDataWarning"
-              defaults="All data associated with your account, including your polls, events, votes, and comments, will be permanently deleted."
+              i18nKey="deleteAccountDialogDataWarning"
+              defaults="All data associated with your account will be permanently deleted."
             />
           </p>
           {summary}
@@ -156,8 +156,8 @@ function InstantDeleteAccountDialog({
             <div className="space-y-3 py-4 text-sm">
               <p>
                 <Trans
-                  i18nKey="deleteAccountDataWarning"
-                  defaults="All data associated with your account, including your polls, events, votes, and comments, will be permanently deleted."
+                  i18nKey="deleteAccountDialogDataWarning"
+                  defaults="All data associated with your account will be permanently deleted."
                 />
               </p>
               {summary}

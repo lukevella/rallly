@@ -135,7 +135,7 @@ async function removeDeletedUsers() {
 
         await deletePostHogPerson({ distinctId: user.id });
 
-        await hardDeleteUser({ userId: user.id, email: user.email });
+        await hardDeleteUser({ userId: user.id });
 
         // Personless by design — the person this event is about was just
         // erased, so it must not create or attach to a profile.

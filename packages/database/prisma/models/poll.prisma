@@ -58,6 +58,8 @@ model Poll {
   participants   Participant[]
   comments       Comment[]
   votes          Vote[]
+  invites        PollInvite[]
+  activities     PollActivity[]
   space          Space?          @relation(fields: [spaceId], references: [id], onDelete: SetNull)
   spaceId        String?         @map("space_id")
 
@@ -71,6 +73,8 @@ model Participant {
   name      String
   email     String?
   note      String?
+  /// Per person edit link: grants edit access to this response without a session. App minted, CSPRNG alphanumeric ≥32 chars (nanoid customAlphabet — url safe with no linkifier edge cases, unlike base64url); never a DB default, nullable because it's only minted when a link is issued
+  token     String?   @unique
   userId    String?   @map("user_id")
   pollId    String    @map("poll_id")
   locale    String?
@@ -80,7 +84,8 @@ model Participant {
   deleted   Boolean   @default(false)
   deletedAt DateTime? @map("deleted_at")
 
-  votes Vote[]
+  votes  Vote[]
+  invite PollInvite?
 
   poll Poll  @relation(fields: [pollId], references: [id], onDelete: Cascade)
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -88,6 +93,55 @@ model Participant {
   @@index([pollId], type: Hash)
   @@index([userId])
   @@map("participants")
+}
+
+model PollInvite {
+  id     String @id @default(cuid())
+  pollId String @map("poll_id")
+  email  String @db.Citext
+  /// Per invitee link. App minted, CSPRNG alphanumeric ≥32 chars (nanoid customAlphabet) — no schema default, so forgetting to mint fails loudly. Rotated on reactivation so a revoked (possibly leaked) token never regains access
+  token  String @unique
+
+  openedAt   DateTime? @map("opened_at")
+  remindedAt DateTime? @map("reminded_at")
+  /// Revocation is always explicit: set on host revoke and on close/schedule, never as a side effect. Deleting a response (by anyone) clears participantId instead, reverting the invite to pending with its token intact. Never cleared by reopen; cleared only by re-inviting (reactivation)
+  revokedAt  DateTime? @map("revoked_at")
+
+  /// Conversion join, merges invite history into the response timeline. Set when the invitee responds via their token, or when a generic link response's email matches a pending invite (citext) — responding always consumes the invite
+  participantId String? @unique @map("participant_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  poll        Poll         @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  participant Participant? @relation(fields: [participantId], references: [id], onDelete: SetNull)
+
+  @@unique([pollId, email])
+  @@map("poll_invites")
+}
+
+model PollActivity {
+  id     String @id @default(cuid())
+  pollId String @map("poll_id")
+  /// Validated by a zod union in the feature, not a DB enum: the activity vocabulary grows without migrations
+  type   String
+
+  /// Subject ids are soft references (no FKs): activity must outlive its subjects — including account deletion — so refs persist as identity and the payload carries the display snapshot; whether a ref still resolves is the renderer's question
+  userId        String? @map("user_id")
+  participantId String? @map("participant_id")
+  inviteId      String? @map("invite_id")
+  optionId      String? @map("option_id")
+  payload       Json    @default("{}")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+
+  @@index([pollId, createdAt(sort: Desc)])
+  @@index([pollId, participantId])
+  @@index([pollId, optionId])
+  @@index([pollId, inviteId])
+  @@map("poll_activities")
 }
 
 model Option {
