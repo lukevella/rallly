@@ -164,7 +164,7 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
             <InputGroupButton
               type="submit"
               size="icon-sm"
-              aria-label={t("addComment", { defaultValue: "Add Comment" })}
+              aria-label={t("addComment", { defaultValue: "Add comment" })}
               loading={formState.isSubmitting}
             >
               <CornerDownLeftIcon />
