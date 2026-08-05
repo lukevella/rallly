@@ -70,7 +70,7 @@ const ClockPreferences = ({ children }: { children: React.ReactElement }) => {
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey="clockPreferences" defaults="Clock Preferences" />
+            <Trans i18nKey="clockPreferences" defaults="Clock preferences" />
           </DialogTitle>
           <DialogDescription>
             <Trans

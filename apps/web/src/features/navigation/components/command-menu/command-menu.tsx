@@ -51,7 +51,7 @@ export function CommandMenu() {
       <CommandGlobalShortcut trigger={trigger} />
       <CommandDialog
         {...dialogProps}
-        title={<Trans i18nKey="commandMenu" defaults="Command Menu" />}
+        title={<Trans i18nKey="commandMenu" defaults="Command menu" />}
         description={
           <Trans i18nKey="commandMenuDescription" defaults="Select a command" />
         }

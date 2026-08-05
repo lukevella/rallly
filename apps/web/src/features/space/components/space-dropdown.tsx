@@ -110,20 +110,20 @@ export function SpaceDropdown({
             <Icon>
               <PlusIcon />
             </Icon>
-            <Trans i18nKey="createSpace" defaults="Create Space" />
+            <Trans i18nKey="createSpace" defaults="Create space" />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem render={<Link href="/settings/general" />}>
             <Icon>
               <SettingsIcon />
             </Icon>
-            <Trans i18nKey="spaceSettings" defaults="Space Settings" />
+            <Trans i18nKey="spaceSettings" defaults="Space settings" />
           </DropdownMenuItem>
           <DropdownMenuItem render={<Link href="/settings/members" />}>
             <Icon>
               <UserPlusIcon />
             </Icon>
-            <Trans i18nKey="spaceInviteMember" defaults="Invite Member" />
+            <Trans i18nKey="spaceInviteMember" defaults="Invite member" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

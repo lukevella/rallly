@@ -36,19 +36,19 @@ export function RemoveLicenseButton() {
             >
               <XIcon data-icon="inline-start" />
               <span className="sr-only">
-                <Trans i18nKey="removeLicense" defaults="Remove License" />
+                <Trans i18nKey="removeLicense" defaults="Remove license" />
               </span>
             </DialogTrigger>
           }
         />
         <TooltipContent>
-          <Trans i18nKey="removeLicense" defaults="Remove License" />
+          <Trans i18nKey="removeLicense" defaults="Remove license" />
         </TooltipContent>
       </Tooltip>
       <DialogContent size="sm">
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey="removeLicense" defaults="Remove License" />
+            <Trans i18nKey="removeLicense" defaults="Remove license" />
           </DialogTitle>
           <DialogDescription>
             <Trans
@@ -71,7 +71,7 @@ export function RemoveLicenseButton() {
               })
             }
           >
-            <Trans i18nKey="removeLicense" defaults="Remove License" />
+            <Trans i18nKey="removeLicense" defaults="Remove license" />
           </Button>
         </DialogFooter>
       </DialogContent>

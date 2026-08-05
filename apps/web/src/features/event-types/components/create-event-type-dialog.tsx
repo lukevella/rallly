@@ -77,7 +77,7 @@ export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
           <DialogTitle>
             <Trans
               i18nKey="createEventTypeTitle"
-              defaults="Create Event Type"
+              defaults="Create event type"
             />
           </DialogTitle>
           <DialogDescription>

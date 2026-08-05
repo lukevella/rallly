@@ -91,7 +91,7 @@ export function AddToCalendarButton({
           <Icon>
             <DownloadIcon />
           </Icon>
-          <Trans i18nKey="downloadICSFile" defaults="Download ICS File" />
+          <Trans i18nKey="downloadICSFile" defaults="Download ICS file" />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

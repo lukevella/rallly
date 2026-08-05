@@ -92,7 +92,7 @@ export function ImageCropDialog({
       <DialogContent className="w-fit">
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey="imageCropDialogTitle" defaults="Crop Image" />
+            <Trans i18nKey="imageCropDialogTitle" defaults="Crop image" />
           </DialogTitle>
         </DialogHeader>
 

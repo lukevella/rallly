@@ -175,7 +175,7 @@ export function ScheduledEventListItem({
                 variant="destructive"
                 onClick={() => dialog.trigger()}
               >
-                <Trans i18nKey="cancelEvent" defaults="Cancel Event" />
+                <Trans i18nKey="cancelEvent" defaults="Cancel event" />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -189,7 +189,7 @@ export function ScheduledEventListItem({
         <DialogContent size="sm">
           <DialogHeader>
             <DialogTitle>
-              <Trans i18nKey="cancelEvent" defaults="Cancel Event" />
+              <Trans i18nKey="cancelEvent" defaults="Cancel event" />
             </DialogTitle>
             <DialogDescription>
               <Trans
@@ -211,7 +211,7 @@ export function ScheduledEventListItem({
                 })
               }
             >
-              <Trans i18nKey="cancelEvent" defaults="Cancel Event" />
+              <Trans i18nKey="cancelEvent" defaults="Cancel event" />
             </Button>
           </DialogFooter>
         </DialogContent>

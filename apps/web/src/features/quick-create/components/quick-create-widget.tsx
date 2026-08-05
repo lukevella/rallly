@@ -44,7 +44,7 @@ export async function QuickCreateWidget() {
                 i18n={i18n}
                 ns="app"
                 i18nKey="quickCreateRecentlyCreated"
-                defaults="Recently Created"
+                defaults="Recently created"
               />
             </h3>
             <ul className="space-y-2">
@@ -80,7 +80,7 @@ export async function QuickCreateWidget() {
               i18n={i18n}
               ns="app"
               i18nKey="quickCreateGroupPoll"
-              defaults="Create Group Poll"
+              defaults="Create group poll"
             />
           </Link>
         </div>
