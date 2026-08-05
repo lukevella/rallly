@@ -92,7 +92,7 @@ export default async function LicensePage() {
                     ) : null}
                   </DescriptionListValue>
                   <DescriptionListTitle>
-                    <Trans i18nKey="licenseKey" defaults="License Key" />
+                    <Trans i18nKey="licenseKey" defaults="License key" />
                   </DescriptionListTitle>
                   <DescriptionListValue>
                     <span className="select-all font-mono text-sm">

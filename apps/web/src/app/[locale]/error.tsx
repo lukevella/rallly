@@ -58,7 +58,7 @@ export default function LocaleErrorBoundary({
               });
             }}
           >
-            <Trans i18nKey="signOut" defaults="Sign Out" />
+            <Trans i18nKey="signOut" defaults="Sign out" />
           </Button>
         }
       >

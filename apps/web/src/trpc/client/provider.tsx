@@ -54,7 +54,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
                 id: "invalid-session",
                 duration: Number.POSITIVE_INFINITY,
                 action: {
-                  label: t("signOut", { defaultValue: "Sign Out" }),
+                  label: t("signOut", { defaultValue: "Sign out" }),
                   onClick: () => {
                     signOut().finally(() => {
                       window.location.href = "/login";

@@ -107,7 +107,7 @@ export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
         <PageHeaderActions>
           <Link href="/new" className={buttonVariants({ variant: "primary" })}>
             <PlusIcon data-icon="inline-start" />
-            <Trans i18nKey="newPoll" defaults="New Poll" />
+            <Trans i18nKey="newPoll" defaults="New poll" />
           </Link>
         </PageHeaderActions>
       </PageHeader>
