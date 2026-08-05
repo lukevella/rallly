@@ -198,7 +198,6 @@
   "delete": "Elimina",
   "deleteAccount": "Elimina Account",
   "deleteAccountActivePolls": "{count, plural, one {# sondaggio attivo} other {# sondaggi attivi}}",
-  "deleteAccountDataWarning": "Tutti i dati associati al tuo account, inclusi i tuoi sondaggi, eventi, voti e commenti, saranno eliminati definitivamente.",
   "deleteAccountDialogDescription": "Sei sicuro di voler eliminare il tuo account?",
   "deleteAccountDialogImmediateWarning": "Il tuo account e i dati verranno eliminati immediatamente. Questa operazione è irreversibile.",
   "deleteAccountDialogScheduleDescription": "Il tuo account verrà programmato per la cancellazione.",
