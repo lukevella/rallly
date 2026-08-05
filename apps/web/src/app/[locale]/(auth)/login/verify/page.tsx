@@ -37,7 +37,7 @@ export default async function VerifyPage() {
               i18n={i18n}
               ns="app"
               i18nKey="verifyEmailTitle"
-              defaults="Verify Your Email"
+              defaults="Verify your email"
             />
           ) : (
             <Trans
@@ -45,7 +45,7 @@ export default async function VerifyPage() {
               i18n={i18n}
               ns="app"
               i18nKey="loginVerifyTitle"
-              defaults="Finish Logging In"
+              defaults="Finish logging in"
             />
           )}
         </AuthPageTitle>

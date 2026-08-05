@@ -31,7 +31,7 @@ export default async function ForgotPasswordPage() {
             i18n={i18n}
             ns="app"
             i18nKey="forgotPasswordTitle"
-            defaults="Forgot Password"
+            defaults="Forgot password"
           />
         </AuthPageTitle>
         <AuthPageDescription>
