@@ -198,7 +198,6 @@
   "delete": "Törlés",
   "deleteAccount": "Fiók törlése",
   "deleteAccountActivePolls": "{count, plural,one {# aktív szavazás} other {# aktív szavazás}}",
-  "deleteAccountDataWarning": "Minden fiókhoz tartozó adat, beleértve a szavazásokat, eseményeket, kommenteket, véglegesen törlödni fog.",
   "deleteAccountDialogDescription": "Biztos vagy benne, hogy törölni szeretnéd a fiókod?",
   "deleteAccountDialogImmediateWarning": "A fiókod és minden adatot véglegesen törlődik azonnal. Ez a művelet nem visszafordítható.",
   "deleteAccountDialogScheduleDescription": "A fiókod törlése ütemezésre került.",
