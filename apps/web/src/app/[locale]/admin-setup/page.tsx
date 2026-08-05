@@ -130,6 +130,6 @@ export async function generateMetadata({
   const { locale } = await params;
   const { t } = await getTranslation(locale);
   return {
-    title: t("adminSetup", { defaultValue: "Admin setup" }),
+    title: t("adminSetup"),
   };
 }
