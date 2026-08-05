@@ -130,6 +130,16 @@ Always use gitmoji prefixes in commit messages. Follow the gitmoji convention (h
 - Biome for code formatting (indent: 2 spaces, double quotes)
 - Custom UI components in `packages/ui/src/` (shadcn-ui components go here)
 
+### UI Copy
+- **Sentence case** for all UI copy: capitalize the first word and proper nouns only. Applies to buttons, dialog titles, page and section headings, setting row titles, empty states, form labels, menu items and toast titles.
+- Exceptions — the test is **"does the string name a thing?"**, not "is it a heading?":
+  - Proper nouns and brands: "Google Calendar", "Microsoft Calendar"
+  - Initialisms stay uppercase, the rest lowercases: "API keys", "Download ICS file"
+  - Product feature names: "Event Types", "Quick Create", "Control Panel"
+  - Sample/placeholder data standing in for user content: "Jessie Smith", "My Team"
+- **Headings and dialog titles are not exempt.** Title Case has no single agreed rule (Chicago, AP and APA disagree), so it cannot be applied consistently; it degrades screen reader pronunciation and removes word-shape cues used by readers with dyslexia and low vision; and the same string often serves as both a button label and a dialog title, so a position-based rule would force two strings for one concept.
+- **Changing `defaults` alone is not enough.** `pnpm i18n:scan` will not overwrite an existing key's value — the UI keeps rendering the old copy. Run `pnpm i18n:sync` (`--sync-primary`) to push changed English values through. Never run `--sync-all`; it clears other locales' translations.
+
 ### State Management
 - tRPC with TanStack Query for server state
 - React Context for client state (auth, preferences, etc.)
