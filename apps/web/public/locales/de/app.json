@@ -198,7 +198,6 @@
   "delete": "Löschen",
   "deleteAccount": "Konto löschen",
   "deleteAccountActivePolls": "{count, plural, one {# aktive Umfrage} other {# aktive Umfragen}}",
-  "deleteAccountDataWarning": "Alle mit deinem Konto verbundenen Daten, einschließlich deiner Umfragen, Termine, abgegebenen Stimmen und Kommentare, werden endgültig gelöscht.",
   "deleteAccountDialogDescription": "Bist du sicher, dass du dein Konto löschen möchtest?",
   "deleteAccountDialogImmediateWarning": "Dein Konto und deine Daten werden sofort gelöscht. Das lässt sich nicht rückgängig machen.",
   "deleteAccountDialogScheduleDescription": "Dein Konto wird zur Löschung vorgemerkt.",
