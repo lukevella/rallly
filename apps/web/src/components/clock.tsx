@@ -101,7 +101,7 @@ export const TimesShownIn = () => {
         <GlobeIcon data-icon="inline-start" />
         <Trans
           i18nKey="cityTime"
-          defaults="{city} Time"
+          defaults="{city} time"
           values={{ city: getCityFromTimezoneId(timeZone) }}
         />
       </Button>

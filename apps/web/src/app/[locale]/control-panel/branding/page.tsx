@@ -221,7 +221,7 @@ export default async function BrandingPage() {
                       i18n={i18n}
                       ns="app"
                       i18nKey="primaryColorDark"
-                      defaults="Primary Color (Dark Mode)"
+                      defaults="Primary color (dark mode)"
                     />
                   </div>
                   <div className="flex items-center gap-2">
@@ -290,7 +290,7 @@ export default async function BrandingPage() {
                       i18n={i18n}
                       ns="app"
                       i18nKey="logoDark"
-                      defaults="Logo (Dark Mode)"
+                      defaults="Logo (dark mode)"
                     />
                   </div>
                   <div className="flex items-center gap-4">

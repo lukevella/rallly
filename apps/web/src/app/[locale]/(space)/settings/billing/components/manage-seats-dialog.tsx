@@ -188,13 +188,13 @@ export function ManageSeatsDialog({
             {isAdding ? (
               <Trans
                 i18nKey="addSeats"
-                defaults="{count, plural, one {Add # Seat} other {Add # Seats}}"
+                defaults="{count, plural, one {Add # seat} other {Add # seats}}"
                 values={{ count: seatDelta }}
               />
             ) : isRemoving ? (
               <Trans
                 i18nKey="removeSeats"
-                defaults="{count, plural, one {Remove # Seat} other {Remove # Seats}}"
+                defaults="{count, plural, one {Remove # seat} other {Remove # seats}}"
                 values={{ count: Math.abs(seatDelta) }}
               />
             ) : (

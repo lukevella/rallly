@@ -248,7 +248,7 @@ Reads filtered or grouped by the viewer's present ("upcoming", "past", agenda gr
 - **IMPORTANT**: When TypeScript errors occur for missing i18n keys, run `pnpm i18n:scan` instead of manually adding keys. This command automatically scans the codebase for `Trans` components and generates the necessary translation entries.
 - **IMPORTANT**: Never manually add translations to `.json` files. This is handled by tooling.
 - **Pluralization**: Always use ICU message format for plurals. Example: `{count, plural, =0 {No items} one {1 item} other {# items}}` instead of separate singular/plural translation keys.
-- i18n keys are in camelCase and should describe the message (e.g. `"lastUpdated": "Last Updated"`)
+- i18n keys are in camelCase and should describe the message (e.g. `"lastUpdated": "Last updated"`)
 - If an i18n key is not intended to be reused, prefix it with the component name in camelCase
 - In client components, use the `<Trans>` component from `@/i18n/client` with the `defaults` prop:
   ```tsx

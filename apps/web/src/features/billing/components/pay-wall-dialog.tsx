@@ -168,7 +168,7 @@ export function PayWallDialog({
             </DialogHeader>
             <div className="mt-6 flex flex-1 flex-col gap-4">
               <Label htmlFor="plan">
-                <Trans i18nKey="selectPlan" defaults="Select Plan:" />
+                <Trans i18nKey="selectPlan" defaults="Select plan:" />
               </Label>
               <RadioGroup
                 id="plan"
@@ -295,7 +295,7 @@ export function PayWallDialog({
                     title={
                       <Trans
                         i18nKey="thirtyDayPollRetention"
-                        defaults="30 Day Poll Retention"
+                        defaults="30 day poll retention"
                       />
                     }
                     description={
