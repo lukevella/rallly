@@ -69,7 +69,7 @@ export function BanUserDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey="banUserTitle" defaults="Ban User" />
+            <Trans i18nKey="banUserTitle" defaults="Ban user" />
           </DialogTitle>
           <DialogDescription>
             <Trans

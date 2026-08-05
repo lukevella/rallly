@@ -69,7 +69,7 @@ export function DeleteUserDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey="deleteUserTitle" defaults="Delete User" />
+            <Trans i18nKey="deleteUserTitle" defaults="Delete user" />
           </DialogTitle>
           <DialogDescription>
             <Trans

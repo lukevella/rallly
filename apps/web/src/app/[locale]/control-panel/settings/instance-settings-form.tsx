@@ -51,7 +51,7 @@ export function InstanceSettingsForm({
       <div className="flex items-center justify-between gap-4">
         <div className="space-y-1">
           <Label htmlFor="userRegistration">
-            <Trans i18nKey="userRegistration" defaults="User Registration" />
+            <Trans i18nKey="userRegistration" defaults="User registration" />
           </Label>
           <p className="text-muted-foreground text-sm">
             <Trans

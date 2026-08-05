@@ -200,7 +200,7 @@ export default async function BrandingPage() {
                       i18n={i18n}
                       ns="app"
                       i18nKey="primaryColor"
-                      defaults="Primary Color"
+                      defaults="Primary color"
                     />
                   </div>
                   <div className="flex items-center gap-2">
@@ -312,7 +312,7 @@ export default async function BrandingPage() {
                       i18n={i18n}
                       ns="app"
                       i18nKey="logoIcon"
-                      defaults="Logo Icon"
+                      defaults="Logo icon"
                     />
                   </div>
                   <div className="flex items-center gap-4">
@@ -359,7 +359,7 @@ export default async function BrandingPage() {
                     i18n={i18n}
                     ns="app"
                     i18nKey="hideAttribution"
-                    defaults="Hide Attribution"
+                    defaults="Hide attribution"
                   />
                 </div>
                 <div className="flex items-center gap-2">
