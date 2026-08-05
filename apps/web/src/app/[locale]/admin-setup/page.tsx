@@ -10,7 +10,7 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { IfSelfHosted } from "@/components/environment";
+import { IfCloudHosted, IfSelfHosted } from "@/components/environment";
 import { isInitialAdmin } from "@/features/instance-settings/utils";
 import { getCurrentUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
@@ -52,12 +52,13 @@ export default async function AdminSetupPage() {
             />
           </EmptyStateTitle>
           <EmptyStateDescription>
-            <Trans
-              i18nKey="adminAccessRequiredDescription"
-              defaults="You need administrator access to view this page."
-            />
+            <IfCloudHosted>
+              <Trans
+                i18nKey="adminAccessRequiredDescription"
+                defaults="You need administrator access to view this page."
+              />
+            </IfCloudHosted>
             <IfSelfHosted>
-              {" "}
               <Trans
                 i18nKey="adminAccessRequiredSelfHostedHint"
                 defaults="If you are the owner of this instance, check that INITIAL_ADMIN_EMAIL is set to the email address of the administrator account."
