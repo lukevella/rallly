@@ -34,6 +34,11 @@ test.describe(() => {
     const comment = page.locator("data-testid=comment");
     await expect(comment.locator("text='This is a comment!'")).toBeVisible();
     await expect(comment.locator("text=You")).toBeVisible();
+
+    // The comments sheet is modal; close it so later tests can reach the page.
+    const sheet = page.getByRole("dialog", { name: "Comments" });
+    await sheet.getByRole("button", { name: "Close" }).click();
+    await expect(sheet).toBeHidden();
   });
 
   test("copy participant link", async () => {
