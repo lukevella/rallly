@@ -1,8 +1,7 @@
 import "server-only";
 
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { cache } from "react";
-import { isInitialAdmin } from "@/features/instance-settings/utils";
 import { getUser, getUserHasNoAccounts } from "@/features/user/data";
 import type { UserDTO } from "@/features/user/schema";
 import { getSession, getSessionState } from "@/lib/auth";
@@ -67,9 +66,9 @@ export const requireUser = cache(async (): Promise<UserDTO> => {
 /**
  * Gate for server pages that require an admin user. Authorized against
  * the database — the session cookie cache can hold a stale role.
- * Redirects to /login when unauthenticated, to /admin-setup when the
- * user is the initial admin but not yet promoted, and returns 404 for
- * everyone else.
+ * Redirects to /login when unauthenticated and to /admin-setup for
+ * everyone else — that page either offers the initial admin promotion
+ * or explains that administrator access is missing.
  */
 export const requireAdmin = cache(async () => {
   const user = await getCurrentUser();
@@ -82,11 +81,7 @@ export const requireAdmin = cache(async () => {
   }
 
   if (user.role !== "admin") {
-    if (isInitialAdmin(user.email)) {
-      redirect("/admin-setup");
-    }
-
-    notFound();
+    redirect("/admin-setup");
   }
 
   return user;
