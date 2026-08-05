@@ -2,6 +2,14 @@
 
 import type { Color } from "@rallly/ui/color-picker";
 import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldTitle,
+} from "@rallly/ui/field";
 import { InputGroupButton } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
@@ -16,16 +24,6 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
-import {
-  Setting,
-  SettingControl,
-  SettingDescription,
-  SettingHint,
-  SettingRow,
-  SettingsGroup,
-  SettingTitle,
-  useSettingLabels,
-} from "@/components/setting";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
@@ -117,78 +115,74 @@ export function CustomBrandingSection({
         </PageSectionDescription>
       </PageSectionHeader>
       <PageSectionContent>
-        <SettingsGroup>
+        <FieldGroup variant="divided">
           <SpaceSettingsForm space={space} disabled={disabled} />
-          <SettingRow>
-            <SettingTitle>
-              <Trans
-                i18nKey="primaryColorSettingTitle"
-                defaults="Primary color"
-              />
-            </SettingTitle>
-            <SettingDescription>
-              <Trans
-                i18nKey="primaryColorSettingHint"
-                defaults="Used for buttons and highlights."
-              />
-            </SettingDescription>
-            <SettingControl>
-              <PrimaryColorField
-                value={color}
-                onChange={setColor}
-                disabled={disabled}
-                isDefault={isDefault}
-                isDirty={isDirty}
-                isSaving={updateSpace.isExecuting}
-                onSave={handleSave}
-                onReset={handleReset}
-              />
-            </SettingControl>
-          </SettingRow>
+          <Field orientation="responsive">
+            <FieldContent>
+              <FieldTitle>
+                <Trans
+                  i18nKey="primaryColorSettingTitle"
+                  defaults="Primary color"
+                />
+              </FieldTitle>
+              <FieldDescription>
+                <Trans
+                  i18nKey="primaryColorSettingHint"
+                  defaults="Used for buttons and highlights."
+                />
+              </FieldDescription>
+            </FieldContent>
+            <PrimaryColorField
+              value={color}
+              onChange={setColor}
+              disabled={disabled}
+              isDefault={isDefault}
+              isDirty={isDirty}
+              isSaving={updateSpace.isExecuting}
+              onSave={handleSave}
+              onReset={handleReset}
+            />
+          </Field>
           <IfCloudHosted>
             <RemoveAttributionSetting disabled={disabled} />
           </IfCloudHosted>
-          <Setting>
-            <SettingTitle>
-              <Trans
-                i18nKey="customBrandingSettingTitle"
-                defaults="Custom branding"
-              />
-              {space.tier !== "pro" && <ProBadge />}
-            </SettingTitle>
-            <SettingDescription>
-              <Trans
-                i18nKey="customBrandingSettingLabel"
-                defaults="Show your logo and colors to participants."
-              />
-            </SettingDescription>
-            <SettingControl>
+          <Field>
+            <Field orientation="horizontal">
+              <FieldContent>
+                <FieldLabel htmlFor="show-branding">
+                  <Trans
+                    i18nKey="customBrandingSettingTitle"
+                    defaults="Custom branding"
+                  />
+                  {space.tier !== "pro" && <ProBadge />}
+                </FieldLabel>
+                <FieldDescription>
+                  <Trans
+                    i18nKey="customBrandingSettingLabel"
+                    defaults="Show your logo and colors to participants."
+                  />
+                </FieldDescription>
+              </FieldContent>
               <Switch
+                id="show-branding"
                 checked={showBranding}
                 onCheckedChange={handleToggle}
                 disabled={disabled || updateShowBranding.isExecuting}
               />
-            </SettingControl>
-            <SettingHint plain>
-              <BrandingPreview
-                spaceName={space.name}
-                spaceImage={space.image}
-                primaryColor={hexColor}
-                hostName={user.name}
-              />
-            </SettingHint>
-          </Setting>
-        </SettingsGroup>
+            </Field>
+            <BrandingPreview
+              spaceName={space.name}
+              spaceImage={space.image}
+              primaryColor={hexColor}
+              hostName={user.name}
+            />
+          </Field>
+        </FieldGroup>
       </PageSectionContent>
     </PageSection>
   );
 }
 
-/**
- * Split out so `useSettingLabels()` runs inside the Setting provider. The
- * picker is a composite control, so `SettingControl` cannot label it directly
- * — the row's title and description are forwarded to the hex input instead.
- */
 function PrimaryColorField({
   value,
   onChange,
@@ -209,14 +203,12 @@ function PrimaryColorField({
   onReset: () => void;
 }) {
   const { t } = useTranslation();
-  const labels = useSettingLabels();
 
   return (
     <ColorPicker
       className="w-44"
       value={value}
       onChange={onChange}
-      {...labels}
       actions={
         disabled ? null : (
           <>

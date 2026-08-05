@@ -1,9 +1,17 @@
 "use client";
 
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
 import { InboxIcon, MessageCircleIcon } from "lucide-react";
 import React from "react";
+import { PageIcon } from "@/components/page-icons";
 import {
   PageSection,
   PageSectionContent,
@@ -12,14 +20,6 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
-import {
-  Setting,
-  SettingControl,
-  SettingDescription,
-  SettingIcon,
-  SettingsGroup,
-  SettingTitle,
-} from "@/components/setting";
 import { updateNotificationPreferenceAction } from "@/features/notifications/actions";
 import type {
   ActivityEventType,
@@ -68,52 +68,58 @@ export function NotificationsPage({
           </PageSectionDescription>
         </PageSectionHeader>
         <PageSectionContent>
-          <SettingsGroup>
-            <Setting>
-              <SettingIcon>
-                <InboxIcon />
-              </SettingIcon>
-              <SettingTitle>
-                <Trans i18nKey="notifyNewResponse" defaults="New response" />
-              </SettingTitle>
-              <SettingDescription>
-                <Trans
-                  i18nKey="notifyNewResponseDescription"
-                  defaults="Receive an email when a participant submits a response."
-                />
-              </SettingDescription>
-              <SettingControl>
-                <Switch
-                  checked={preferences["poll.response.submitted"]}
-                  onCheckedChange={(enabled) => {
-                    setPreference("poll.response.submitted", enabled);
-                  }}
-                />
-              </SettingControl>
-            </Setting>
-            <Setting>
-              <SettingIcon>
-                <MessageCircleIcon />
-              </SettingIcon>
-              <SettingTitle>
-                <Trans i18nKey="notifyNewComment" defaults="New comment" />
-              </SettingTitle>
-              <SettingDescription>
-                <Trans
-                  i18nKey="notifyNewCommentDescription"
-                  defaults="Receive an email when someone comments on your poll."
-                />
-              </SettingDescription>
-              <SettingControl>
-                <Switch
-                  checked={preferences["poll.comment.added"]}
-                  onCheckedChange={(enabled) => {
-                    setPreference("poll.comment.added", enabled);
-                  }}
-                />
-              </SettingControl>
-            </Setting>
-          </SettingsGroup>
+          <FieldGroup variant="divided">
+            <Field orientation="horizontal">
+              <div className="@md/field-group:block hidden">
+                <PageIcon size="lg">
+                  <InboxIcon />
+                </PageIcon>
+              </div>
+              <FieldContent>
+                <FieldLabel htmlFor="notify-new-response">
+                  <Trans i18nKey="notifyNewResponse" defaults="New response" />
+                </FieldLabel>
+                <FieldDescription>
+                  <Trans
+                    i18nKey="notifyNewResponseDescription"
+                    defaults="Receive an email when a participant submits a response."
+                  />
+                </FieldDescription>
+              </FieldContent>
+              <Switch
+                id="notify-new-response"
+                checked={preferences["poll.response.submitted"]}
+                onCheckedChange={(enabled) => {
+                  setPreference("poll.response.submitted", enabled);
+                }}
+              />
+            </Field>
+            <Field orientation="horizontal">
+              <div className="@md/field-group:block hidden">
+                <PageIcon size="lg">
+                  <MessageCircleIcon />
+                </PageIcon>
+              </div>
+              <FieldContent>
+                <FieldLabel htmlFor="notify-new-comment">
+                  <Trans i18nKey="notifyNewComment" defaults="New comment" />
+                </FieldLabel>
+                <FieldDescription>
+                  <Trans
+                    i18nKey="notifyNewCommentDescription"
+                    defaults="Receive an email when someone comments on your poll."
+                  />
+                </FieldDescription>
+              </FieldContent>
+              <Switch
+                id="notify-new-comment"
+                checked={preferences["poll.comment.added"]}
+                onCheckedChange={(enabled) => {
+                  setPreference("poll.comment.added", enabled);
+                }}
+              />
+            </Field>
+          </FieldGroup>
         </PageSectionContent>
       </PageSection>
     </PageSectionGroup>

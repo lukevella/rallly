@@ -5,12 +5,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { cancelAccountDeletionAction } from "../actions";
 
-export function CancelAccountDeletionButton({
-  ...rest
-}: {
-  "aria-labelledby"?: string;
-  "aria-describedby"?: string;
-}) {
+export function CancelAccountDeletionButton() {
   const { t } = useTranslation();
   const cancelAccountDeletion = useSafeAction(cancelAccountDeletionAction, {
     onSuccess: () => {
@@ -26,7 +21,6 @@ export function CancelAccountDeletionButton({
     <Button
       loading={cancelAccountDeletion.isExecuting}
       onClick={() => cancelAccountDeletion.executeAsync()}
-      {...rest}
     >
       <Trans i18nKey="cancelAccountDeletion" defaults="Cancel deletion" />
     </Button>

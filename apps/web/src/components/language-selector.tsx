@@ -10,12 +10,13 @@ import {
 import { LanguagesIcon } from "lucide-react";
 
 export const LanguageSelect: React.FunctionComponent<{
+  id?: string;
   className?: string;
   value?: string;
   onChange?: (language: string) => void;
   "aria-labelledby"?: string;
   "aria-describedby"?: string;
-}> = ({ className, value, onChange, ...ariaProps }) => {
+}> = ({ id, className, value, onChange, ...ariaProps }) => {
   return (
     <Select
       items={languages}
@@ -26,7 +27,7 @@ export const LanguageSelect: React.FunctionComponent<{
         }
       }}
     >
-      <SelectTrigger className={className} {...ariaProps}>
+      <SelectTrigger id={id} className={className} {...ariaProps}>
         <Icon>
           <LanguagesIcon />
         </Icon>

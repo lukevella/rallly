@@ -3,24 +3,24 @@
 import { posthog } from "@rallly/posthog/client";
 import { Badge } from "@rallly/ui/badge";
 import { Card, CardContent, CardTitle } from "@rallly/ui/card";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@rallly/ui/field";
 import { FormField } from "@rallly/ui/form";
 import { Switch } from "@rallly/ui/switch";
 import {
   BarChart2Icon,
+  InfoIcon,
   MailIcon,
   MessageCircleIcon,
   VenetianMaskIcon,
 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import {
-  Setting,
-  SettingControl,
-  SettingDescription,
-  SettingHint,
-  SettingIcon,
-  SettingsGroup,
-  SettingTitle,
-} from "@/components/setting";
+import { PageIcon } from "@/components/page-icons";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import type { PollSettingsFormData } from "@/features/poll/components/forms/types";
@@ -38,146 +38,163 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
         </CardTitle>
       </div>
       <CardContent>
-        <SettingsGroup>
+        <FieldGroup variant="divided">
           <FormField
             control={form.control}
             name="requireParticipantEmail"
             render={({ field }) => (
-              <Setting>
-                <SettingIcon>
-                  <MailIcon />
-                </SettingIcon>
-                <SettingTitle>
-                  <Trans
-                    i18nKey="requireParticipantEmailTitle"
-                    defaults="Require email"
-                  />
-                  {isFree ? <ProBadge /> : null}
-                </SettingTitle>
-                <SettingDescription>
-                  <Trans
-                    i18nKey="requireParticipantEmailDescription"
-                    defaults="Participants must provide an email address to respond."
-                  />
-                </SettingDescription>
-                <SettingControl>
-                  <Switch
-                    checked={!!field.value}
-                    onCheckedChange={(checked) => {
-                      if (checked && isFree) {
-                        showPayWall({
-                          from: "poll-settings",
-                          setting: "requireParticipantEmail",
-                        });
-                      } else {
-                        field.onChange(checked);
-                      }
-                    }}
-                  />
-                </SettingControl>
-              </Setting>
+              <Field orientation="horizontal">
+                <div className="@md/field-group:block hidden">
+                  <PageIcon size="lg">
+                    <MailIcon />
+                  </PageIcon>
+                </div>
+                <FieldContent>
+                  <FieldLabel htmlFor="require-participant-email">
+                    <Trans
+                      i18nKey="requireParticipantEmailTitle"
+                      defaults="Require email"
+                    />
+                    {isFree ? <ProBadge /> : null}
+                  </FieldLabel>
+                  <FieldDescription>
+                    <Trans
+                      i18nKey="requireParticipantEmailDescription"
+                      defaults="Participants must provide an email address to respond."
+                    />
+                  </FieldDescription>
+                </FieldContent>
+                <Switch
+                  id="require-participant-email"
+                  checked={!!field.value}
+                  onCheckedChange={(checked) => {
+                    if (checked && isFree) {
+                      showPayWall({
+                        from: "poll-settings",
+                        setting: "requireParticipantEmail",
+                      });
+                    } else {
+                      field.onChange(checked);
+                    }
+                  }}
+                />
+              </Field>
             )}
           />
           <FormField
             control={form.control}
             name="hideParticipants"
             render={({ field }) => (
-              <Setting>
-                <SettingIcon>
-                  <VenetianMaskIcon />
-                </SettingIcon>
-                <SettingTitle>
-                  <Trans
-                    i18nKey="hideParticipantsTitle"
-                    defaults="Hide participant names"
-                  />
-                  {isFree ? <ProBadge /> : null}
-                </SettingTitle>
-                <SettingDescription>
-                  <Trans
-                    i18nKey="hideParticipantsDescription"
-                    defaults="Participants will not be able to see the names of other respondents."
-                  />
-                </SettingDescription>
-                <SettingControl>
-                  <Switch
-                    checked={!!field.value}
-                    onCheckedChange={(checked) => {
-                      if (checked && isFree) {
-                        showPayWall({
-                          from: "poll-settings",
-                          setting: "hideParticipants",
-                        });
-                      } else {
-                        field.onChange(checked);
-                      }
-                    }}
-                  />
-                </SettingControl>
-              </Setting>
+              <Field orientation="horizontal">
+                <div className="@md/field-group:block hidden">
+                  <PageIcon size="lg">
+                    <VenetianMaskIcon />
+                  </PageIcon>
+                </div>
+                <FieldContent>
+                  <FieldLabel htmlFor="hide-participants">
+                    <Trans
+                      i18nKey="hideParticipantsTitle"
+                      defaults="Hide participant names"
+                    />
+                    {isFree ? <ProBadge /> : null}
+                  </FieldLabel>
+                  <FieldDescription>
+                    <Trans
+                      i18nKey="hideParticipantsDescription"
+                      defaults="Participants will not be able to see the names of other respondents."
+                    />
+                  </FieldDescription>
+                </FieldContent>
+                <Switch
+                  id="hide-participants"
+                  checked={!!field.value}
+                  onCheckedChange={(checked) => {
+                    if (checked && isFree) {
+                      showPayWall({
+                        from: "poll-settings",
+                        setting: "hideParticipants",
+                      });
+                    } else {
+                      field.onChange(checked);
+                    }
+                  }}
+                />
+              </Field>
             )}
           />
           <FormField
             control={form.control}
             name="hideScores"
             render={({ field }) => (
-              <Setting>
-                <SettingIcon>
-                  <BarChart2Icon />
-                </SettingIcon>
-                <SettingTitle>
-                  <Trans i18nKey="hideScoresTitle" defaults="Hide votes" />
-                  {isFree ? <ProBadge /> : null}
-                </SettingTitle>
-                <SettingDescription>
-                  <Trans
-                    i18nKey="hideScoresDescription"
-                    defaults="Hide everyone's votes from a participant until they cast their own."
-                  />
-                </SettingDescription>
-                <SettingControl>
-                  <Switch
-                    checked={!!field.value}
-                    onCheckedChange={(checked) => {
-                      if (checked && isFree) {
-                        showPayWall({
-                          from: "poll-settings",
-                          setting: "hideScores",
-                        });
-                      } else {
-                        field.onChange(checked);
-                      }
-                    }}
-                  />
-                </SettingControl>
-              </Setting>
+              <Field orientation="horizontal">
+                <div className="@md/field-group:block hidden">
+                  <PageIcon size="lg">
+                    <BarChart2Icon />
+                  </PageIcon>
+                </div>
+                <FieldContent>
+                  <FieldLabel htmlFor="hide-scores">
+                    <Trans i18nKey="hideScoresTitle" defaults="Hide votes" />
+                    {isFree ? <ProBadge /> : null}
+                  </FieldLabel>
+                  <FieldDescription>
+                    <Trans
+                      i18nKey="hideScoresDescription"
+                      defaults="Hide everyone's votes from a participant until they cast their own."
+                    />
+                  </FieldDescription>
+                </FieldContent>
+                <Switch
+                  id="hide-scores"
+                  checked={!!field.value}
+                  onCheckedChange={(checked) => {
+                    if (checked && isFree) {
+                      showPayWall({
+                        from: "poll-settings",
+                        setting: "hideScores",
+                      });
+                    } else {
+                      field.onChange(checked);
+                    }
+                  }}
+                />
+              </Field>
             )}
           />
           <FormField
             control={form.control}
             name="enableComments"
             render={({ field }) => (
-              <Setting>
-                <SettingIcon>
-                  <MessageCircleIcon />
-                </SettingIcon>
-                <SettingTitle>
-                  <Trans i18nKey="commentsSettingTitle" defaults="Comments" />
-                  <Badge size="sm">
-                    <Trans
-                      i18nKey="commentsSettingLegacyBadge"
-                      defaults="Legacy"
-                    />
-                  </Badge>
-                </SettingTitle>
-                <SettingDescription>
-                  <Trans
-                    i18nKey="commentsSettingDescription"
-                    defaults="Allow participants to post public comments on the poll."
-                  />
-                </SettingDescription>
-                <SettingControl>
+              <Field>
+                <Field orientation="horizontal">
+                  <div className="@md/field-group:block hidden">
+                    <PageIcon size="lg">
+                      <MessageCircleIcon />
+                    </PageIcon>
+                  </div>
+                  <FieldContent>
+                    <FieldLabel htmlFor="enable-comments">
+                      <Trans
+                        i18nKey="commentsSettingTitle"
+                        defaults="Comments"
+                      />
+                      <Badge size="sm">
+                        <Trans
+                          i18nKey="commentsSettingLegacyBadge"
+                          defaults="Legacy"
+                        />
+                      </Badge>
+                    </FieldLabel>
+                    <FieldDescription>
+                      <Trans
+                        i18nKey="commentsSettingDescription"
+                        defaults="Allow participants to post public comments on the poll."
+                      />
+                    </FieldDescription>
+                  </FieldContent>
                   <Switch
+                    id="enable-comments"
                     checked={!!field.value}
                     onCheckedChange={(checked) => {
                       field.onChange(checked);
@@ -186,19 +203,22 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                       });
                     }}
                   />
-                </SettingControl>
+                </Field>
                 {field.value ? (
-                  <SettingHint>
-                    <Trans
-                      i18nKey="commentsSettingPhaseOutHint"
-                      defaults="Comments are being phased out. Participants can include a note with their response instead."
-                    />
-                  </SettingHint>
+                  <FieldDescription className="flex items-start gap-x-1.5">
+                    <InfoIcon className="size-3.5 shrink-0 translate-y-px" />
+                    <span>
+                      <Trans
+                        i18nKey="commentsSettingPhaseOutHint"
+                        defaults="Comments are being phased out. Participants can include a note with their response instead."
+                      />
+                    </span>
+                  </FieldDescription>
                 ) : null}
-              </Setting>
+              </Field>
             )}
           />
-        </SettingsGroup>
+        </FieldGroup>
       </CardContent>
       {children}
     </Card>
