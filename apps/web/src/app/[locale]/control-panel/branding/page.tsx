@@ -276,7 +276,7 @@ export default async function BrandingPage() {
                       {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
                       <img
                         src={logoUrlLight}
-                        alt="Logo"
+                        alt={t("logo", { ns: "app", defaultValue: "Logo" })}
                         className="max-h-full max-w-full object-contain p-2"
                       />
                     </div>
@@ -298,7 +298,10 @@ export default async function BrandingPage() {
                       {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
                       <img
                         src={logoUrlDark}
-                        alt="Logo (Dark Mode)"
+                        alt={t("logoDark", {
+                          ns: "app",
+                          defaultValue: "Logo (dark mode)",
+                        })}
                         className="max-h-full max-w-full object-contain p-2"
                       />
                     </div>
@@ -320,7 +323,10 @@ export default async function BrandingPage() {
                       {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
                       <img
                         src={logoIconUrl}
-                        alt="Logo icon"
+                        alt={t("logoIcon", {
+                          ns: "app",
+                          defaultValue: "Logo icon",
+                        })}
                         className="max-h-full max-w-full object-contain p-2"
                       />
                     </div>
