@@ -93,7 +93,7 @@ export default async function Page() {
               </PageSectionTitle>
             </PageSectionHeader>
             <PageSectionContent>
-              <FieldGroup>
+              <FieldGroup variant="divided">
                 {user.deletedAt ? (
                   <PendingDeletionSetting deletedAt={user.deletedAt} />
                 ) : (

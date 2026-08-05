@@ -115,7 +115,7 @@ export function CustomBrandingSection({
         </PageSectionDescription>
       </PageSectionHeader>
       <PageSectionContent>
-        <FieldGroup>
+        <FieldGroup variant="divided">
           <SpaceSettingsForm space={space} disabled={disabled} />
           <Field orientation="responsive">
             <FieldContent>

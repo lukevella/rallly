@@ -82,7 +82,7 @@ export function GeneralSettingsPageClient() {
                 </PageSectionDescription>
               </PageSectionHeader>
               <PageSectionContent>
-                <FieldGroup>
+                <FieldGroup variant="divided">
                   {!isOwner ? (
                     <Field orientation="responsive">
                       <div className="@md/field-group:block hidden">

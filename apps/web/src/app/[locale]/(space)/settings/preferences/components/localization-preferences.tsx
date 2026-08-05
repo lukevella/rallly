@@ -92,7 +92,7 @@ export const LocalizationPreferences = ({
 
   return (
     <div>
-      <FieldGroup>
+      <FieldGroup variant="divided">
         <Field orientation="responsive">
           <div className="@md/field-group:block hidden">
             <PageIcon size="lg">

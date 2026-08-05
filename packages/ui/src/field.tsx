@@ -38,14 +38,30 @@ function FieldLegend({
   );
 }
 
-function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
+const fieldGroupVariants = cva(
+  "group/field-group @container/field-group flex w-full flex-col data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4",
+  {
+    variants: {
+      variant: {
+        default: "gap-5",
+        // Spacing comes from per-child padding instead of gap so the
+        // divider sits centered between rows rather than hugging the next.
+        divided: "gap-0 divide-y *:not-first:pt-4 *:not-last:pb-4",
+      },
+    },
+    defaultVariants: { variant: "default" },
+  },
+);
+
+function FieldGroup({
+  className,
+  variant = "default",
+  ...props
+}: React.ComponentProps<"div"> & VariantProps<typeof fieldGroupVariants>) {
   return (
     <div
       data-slot="field-group"
-      className={cn(
-        "group/field-group @container/field-group flex w-full flex-col gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4",
-        className,
-      )}
+      className={cn(fieldGroupVariants({ variant }), className)}
       {...props}
     />
   );

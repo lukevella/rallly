@@ -68,7 +68,7 @@ export function NotificationsPage({
           </PageSectionDescription>
         </PageSectionHeader>
         <PageSectionContent>
-          <FieldGroup>
+          <FieldGroup variant="divided">
             <Field orientation="horizontal">
               <div className="@md/field-group:block hidden">
                 <PageIcon size="lg">

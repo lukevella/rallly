@@ -38,7 +38,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
         </CardTitle>
       </div>
       <CardContent>
-        <FieldGroup>
+        <FieldGroup variant="divided">
           <FormField
             control={form.control}
             name="requireParticipantEmail"
