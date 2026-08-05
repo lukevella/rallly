@@ -87,6 +87,8 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
 
   const contentLength = watch("content").length;
 
+  const queryClient = trpc.useUtils();
+
   const addComment = trpc.polls.comments.add.useMutation({
     onError: (error) => {
       toast.error(error.message);
@@ -98,6 +100,7 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
       onSubmit={handleSubmit(async ({ authorName, content }) => {
         await createGuestIfNeeded();
         await addComment.mutateAsync({ authorName, content, pollId });
+        await queryClient.polls.comments.list.invalidate({ pollId });
         reset({ authorName, content: "" });
         onSubmitted();
       })}
@@ -187,12 +190,25 @@ function CommentsSheetInner({ className }: { className?: string }) {
 
   const deleteComment = trpc.polls.comments.delete.useMutation({
     onMutate: ({ commentId }) => {
+      const previousComments = queryClient.polls.comments.list.getData({
+        pollId,
+      });
       queryClient.polls.comments.list.setData(
         { pollId },
         (existingComments = []) => {
-          return [...existingComments].filter(({ id }) => id !== commentId);
+          return existingComments.filter(({ id }) => id !== commentId);
         },
       );
+      return { previousComments };
+    },
+    onError: (_error, _variables, context) => {
+      queryClient.polls.comments.list.setData(
+        { pollId },
+        context?.previousComments,
+      );
+    },
+    onSettled: () => {
+      queryClient.polls.comments.list.invalidate({ pollId });
     },
   });
 
