@@ -69,7 +69,7 @@ function LeaveSpaceDialog({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              <Trans i18nKey="leaveSpaceDialogTitle" defaults="Leave Space" />
+              <Trans i18nKey="leaveSpaceDialogTitle" defaults="Leave space" />
             </DialogTitle>
             <DialogDescription>
               <Trans
@@ -128,7 +128,7 @@ function LeaveSpaceDialog({
               loading={leaveSpace.isPending}
               variant="destructive"
             >
-              <Trans i18nKey="leaveSpace" defaults="Leave Space" />
+              <Trans i18nKey="leaveSpace" defaults="Leave space" />
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -149,7 +149,7 @@ export function LeaveSpaceButton({
   return (
     <LeaveSpaceDialog spaceName={spaceName} spaceId={spaceId}>
       <DialogTrigger render={<Button className="text-destructive" />}>
-        <Trans i18nKey="leaveSpace" defaults="Leave Space" />
+        <Trans i18nKey="leaveSpace" defaults="Leave space" />
       </DialogTrigger>
     </LeaveSpaceDialog>
   );

@@ -181,7 +181,7 @@ export function MembersSettingsPageClient({
                   <PageSectionTitle>
                     <Trans
                       i18nKey="pendingInvites"
-                      defaults="Pending Invites"
+                      defaults="Pending invites"
                     />
                   </PageSectionTitle>
                   <PageSectionDescription>

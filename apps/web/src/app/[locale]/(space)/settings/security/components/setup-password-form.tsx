@@ -53,7 +53,7 @@ export function SetupPasswordForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  <Trans i18nKey="newPassword" defaults="New Password" />
+                  <Trans i18nKey="newPassword" defaults="New password" />
                 </FormLabel>
                 <FormControl>
                   <PasswordInput
@@ -79,7 +79,7 @@ export function SetupPasswordForm() {
             loading={formState.isSubmitting}
             variant="primary"
           >
-            <Trans i18nKey="setPassword" defaults="Set Password" />
+            <Trans i18nKey="setPassword" defaults="Set password" />
           </Button>
         </div>
       </form>

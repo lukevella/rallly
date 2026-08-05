@@ -174,7 +174,7 @@ export function ProPlanCard({
             </Icon>
             <Trans
               i18nKey="manageSubscription"
-              defaults="Manage Subscription"
+              defaults="Manage subscription"
             />
           </Button>
           <ManageSeatsDialog usedSeats={usedSeats} currentSeats={seats}>
@@ -190,7 +190,7 @@ export function ProPlanCard({
               <Icon>
                 <ArmchairIcon />
               </Icon>
-              <Trans i18nKey="manageSeats" defaults="Manage Seats" />
+              <Trans i18nKey="manageSeats" defaults="Manage seats" />
             </DialogTrigger>
           </ManageSeatsDialog>
         </div>

@@ -73,7 +73,7 @@ function DeleteSpaceDialog({
               <DialogTitle>
                 <Trans
                   i18nKey="deleteSpaceDialogTitle"
-                  defaults="Delete Space"
+                  defaults="Delete space"
                 />
               </DialogTitle>
               <DialogDescription>
@@ -136,7 +136,7 @@ function DeleteSpaceDialog({
               >
                 <Trans
                   i18nKey="deleteSpacePermanently"
-                  defaults="Delete Space Permanently"
+                  defaults="Delete space permanently"
                 />
               </Button>
             </DialogFooter>
@@ -155,7 +155,7 @@ export function DeleteSpaceButton({ spaceName }: DeleteSpaceButtonProps) {
   return (
     <DeleteSpaceDialog spaceName={spaceName}>
       <DialogTrigger render={<Button className="text-destructive" />}>
-        <Trans i18nKey="deleteSpace" defaults="Delete Space" />
+        <Trans i18nKey="deleteSpace" defaults="Delete space" />
       </DialogTrigger>
     </DeleteSpaceDialog>
   );

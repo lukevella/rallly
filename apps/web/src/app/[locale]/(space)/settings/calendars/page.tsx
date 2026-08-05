@@ -60,7 +60,7 @@ export default async function CalendarsPage() {
           <PageSection variant="card">
             <PageSectionHeader>
               <PageSectionTitle>
-                <Trans i18nKey="defaultCalendar" defaults="Default Calendar" />
+                <Trans i18nKey="defaultCalendar" defaults="Default calendar" />
               </PageSectionTitle>
               <PageSectionDescription>
                 <Trans

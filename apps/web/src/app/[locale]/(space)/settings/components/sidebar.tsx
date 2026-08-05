@@ -189,7 +189,7 @@ export function DeveloperSidebarMenu() {
               isActive={pathname.startsWith("/settings/api-keys")}
             >
               <KeyIcon />
-              <Trans i18nKey="apiKeys" defaults="API Keys" />
+              <Trans i18nKey="apiKeys" defaults="API keys" />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

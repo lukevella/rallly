@@ -39,7 +39,7 @@ export default async function ApiKeysSettingsPage() {
     <SettingsPage>
       <SettingsPageHeader>
         <SettingsPageTitle>
-          <Trans i18nKey="apiKeys" defaults="API Keys" />
+          <Trans i18nKey="apiKeys" defaults="API keys" />
         </SettingsPageTitle>
         <SettingsPageDescription>
           <Trans
@@ -80,7 +80,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
     title: t("apiKeys", {
-      defaultValue: "API Keys",
+      defaultValue: "API keys",
     }),
     description: t("apiKeysSettingsDescription", {
       defaultValue:

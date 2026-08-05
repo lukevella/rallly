@@ -145,7 +145,7 @@ export function ManageSeatsDialog({
       <DialogContent size="md">
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey="manageSeats" defaults="Manage Seats" />
+            <Trans i18nKey="manageSeats" defaults="Manage seats" />
           </DialogTitle>
           <DialogDescription>
             <Trans
@@ -157,7 +157,7 @@ export function ManageSeatsDialog({
         <div className="flex items-end justify-between gap-4">
           <div>
             <Label className="mb-2">
-              <Trans i18nKey="totalSeats" defaults="Total Seats" />
+              <Trans i18nKey="totalSeats" defaults="Total seats" />
             </Label>
 
             <p className="mt-1 text-muted-foreground text-sm">
@@ -198,7 +198,7 @@ export function ManageSeatsDialog({
                 values={{ count: Math.abs(seatDelta) }}
               />
             ) : (
-              <Trans i18nKey="noChanges" defaults="No Changes" />
+              <Trans i18nKey="noChanges" defaults="No changes" />
             )}
           </Button>
         </DialogFooter>

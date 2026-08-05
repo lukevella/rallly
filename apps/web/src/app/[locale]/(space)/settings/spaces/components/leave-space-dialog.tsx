@@ -67,7 +67,7 @@ export function LeaveSpaceDialog({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              <Trans i18nKey="leaveSpace" defaults="Leave Space" />
+              <Trans i18nKey="leaveSpace" defaults="Leave space" />
             </DialogTitle>
             <DialogDescription>
               <Trans
@@ -115,7 +115,7 @@ export function LeaveSpaceDialog({
                 loading={form.formState.isSubmitting}
                 variant="destructive"
               >
-                <Trans i18nKey="leaveSpace" defaults="Leave Space" />
+                <Trans i18nKey="leaveSpace" defaults="Leave space" />
               </Button>
             </DialogFooter>
           </form>

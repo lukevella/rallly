@@ -56,7 +56,7 @@ function ScheduleAccountDeletionDialog({
           <DialogTitle>
             <Trans
               i18nKey="deleteAccountDialogTitle"
-              defaults="Delete Account"
+              defaults="Delete account"
             />
           </DialogTitle>
           <DialogDescription>
@@ -91,7 +91,7 @@ function ScheduleAccountDeletionDialog({
             loading={scheduleAccountDeletion.isExecuting}
             onClick={() => scheduleAccountDeletion.executeAsync()}
           >
-            <Trans i18nKey="deleteAccount" defaults="Delete Account" />
+            <Trans i18nKey="deleteAccount" defaults="Delete account" />
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -143,7 +143,7 @@ function InstantDeleteAccountDialog({
               <DialogTitle>
                 <Trans
                   i18nKey="deleteAccountDialogTitle"
-                  defaults="Delete Account"
+                  defaults="Delete account"
                 />
               </DialogTitle>
               <DialogDescription>
@@ -208,7 +208,7 @@ function InstantDeleteAccountDialog({
                 variant="destructive"
                 loading={deleteAccount.isExecuting}
               >
-                <Trans i18nKey="deleteAccount" defaults="Delete Account" />
+                <Trans i18nKey="deleteAccount" defaults="Delete account" />
               </Button>
             </DialogFooter>
           </form>
