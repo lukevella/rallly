@@ -1,9 +1,10 @@
+import { Button } from "@rallly/ui/button";
 import { TriangleAlertIcon } from "lucide-react";
 import {
-  Setting,
   SettingControl,
   SettingDescription,
   SettingIcon,
+  SettingRow,
   SettingTitle,
 } from "@/components/setting";
 import { getScheduledDeletionDate } from "@/features/user/account-deletion/utils";
@@ -11,6 +12,10 @@ import { Trans } from "@/i18n/client";
 import { getSession } from "@/lib/auth";
 import { formatDateTime } from "@/lib/datetime/format";
 import { CancelAccountDeletionButton } from "./cancel-account-deletion-button";
+import { DeleteAccountDialog } from "./delete-account-dialog";
+
+const pendingDeletionTitleId = "pending-deletion-title";
+const pendingDeletionDescriptionId = "pending-deletion-description";
 
 export async function PendingDeletionSetting({
   deletedAt,
@@ -25,14 +30,14 @@ export async function PendingDeletionSetting({
   });
 
   return (
-    <Setting>
+    <SettingRow>
       <SettingIcon>
         <TriangleAlertIcon />
       </SettingIcon>
-      <SettingTitle>
+      <SettingTitle id={pendingDeletionTitleId}>
         <Trans i18nKey="deleteAccount" defaults="Delete Account" />
       </SettingTitle>
-      <SettingDescription>
+      <SettingDescription id={pendingDeletionDescriptionId}>
         <Trans
           i18nKey="pendingDeletionNotice"
           defaults="Your account and data will be permanently deleted on {deletionDate}."
@@ -40,35 +45,51 @@ export async function PendingDeletionSetting({
         />
       </SettingDescription>
       <SettingControl>
-        <CancelAccountDeletionButton />
+        <CancelAccountDeletionButton
+          aria-labelledby={pendingDeletionTitleId}
+          aria-describedby={pendingDeletionDescriptionId}
+        />
       </SettingControl>
-    </Setting>
+    </SettingRow>
   );
 }
 
+const deleteAccountTitleId = "delete-account-title";
+const deleteAccountDescriptionId = "delete-account-description";
+
 export function DeleteAccountSetting({
-  children,
+  summary,
 }: {
-  children: React.ReactElement<{
-    "aria-labelledby"?: string;
-    "aria-describedby"?: string;
-  }>;
+  summary?: React.ReactNode;
 }) {
   return (
-    <Setting>
+    <SettingRow>
       <SettingIcon>
         <TriangleAlertIcon />
       </SettingIcon>
-      <SettingTitle>
+      <SettingTitle id={deleteAccountTitleId}>
         <Trans i18nKey="deleteAccount" defaults="Delete Account" />
       </SettingTitle>
-      <SettingDescription>
+      <SettingDescription id={deleteAccountDescriptionId}>
         <Trans
           i18nKey="dangerZoneAccountDeletion"
           defaults="Delete your account and all data associated with it"
         />
       </SettingDescription>
-      <SettingControl>{children}</SettingControl>
-    </Setting>
+      <SettingControl>
+        <DeleteAccountDialog
+          trigger={
+            <Button
+              className="text-destructive"
+              aria-labelledby={deleteAccountTitleId}
+              aria-describedby={deleteAccountDescriptionId}
+            >
+              <Trans i18nKey="deleteAccount" defaults="Delete Account" />
+            </Button>
+          }
+          summary={summary}
+        />
+      </SettingControl>
+    </SettingRow>
   );
 }

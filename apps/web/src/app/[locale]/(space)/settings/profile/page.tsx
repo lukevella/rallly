@@ -28,7 +28,6 @@ import {
   AccountDeletionSummary,
   AccountDeletionSummarySkeleton,
 } from "./components/account-deletion-summary";
-import { DeleteAccountButton } from "./components/delete-account-button";
 import {
   DeleteAccountSetting,
   PendingDeletionSetting,
@@ -99,15 +98,13 @@ export default async function Page() {
                 {user.deletedAt ? (
                   <PendingDeletionSetting deletedAt={user.deletedAt} />
                 ) : (
-                  <DeleteAccountSetting>
-                    <DeleteAccountButton
-                      summary={
-                        <Suspense fallback={<AccountDeletionSummarySkeleton />}>
-                          <AccountDeletionSummary />
-                        </Suspense>
-                      }
-                    />
-                  </DeleteAccountSetting>
+                  <DeleteAccountSetting
+                    summary={
+                      <Suspense fallback={<AccountDeletionSummarySkeleton />}>
+                        <AccountDeletionSummary />
+                      </Suspense>
+                    }
+                  />
                 )}
               </SettingsGroup>
             </PageSectionContent>
