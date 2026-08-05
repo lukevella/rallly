@@ -39,7 +39,7 @@
   "adminAccessRequiredSelfHostedHint": "If you are the owner of this instance, check that INITIAL_ADMIN_EMAIL is set to the email address of the administrator account.",
   "adminRoleDescription": "Full member access plus space management and member permissions",
   "adminRoleRequired": "You need to be an admin to perform this action",
-  "adminSetup": "Admin Setup",
+  "adminSetup": "Admin setup",
   "adminSetupCta": "Make me an admin",
   "adminSetupDescription": "Click the button below to make yourself an admin user.",
   "adminSetupTitle": "Are you the admin?",
