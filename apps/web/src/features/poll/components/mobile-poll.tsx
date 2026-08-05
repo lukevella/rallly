@@ -75,7 +75,7 @@ const MobilePoll: React.FunctionComponent = () => {
           </div>
           <span>
             {t("allParticipants", {
-              defaultValue: "All Participants",
+              defaultValue: "All participants",
             })}
           </span>
         </div>

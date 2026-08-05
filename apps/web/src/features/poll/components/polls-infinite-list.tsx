@@ -203,7 +203,7 @@ function PollListItem({
                         success: (
                           <Trans
                             i18nKey="pollReopened"
-                            defaults="Poll Reopened"
+                            defaults="Poll reopened"
                           />
                         ),
                       });

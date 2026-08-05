@@ -98,7 +98,7 @@ function TableControls({
                 render={
                   <Button
                     aria-label={t("scrollLeft", {
-                      defaultValue: "Scroll Left",
+                      defaultValue: "Scroll left",
                     })}
                     variant="ghost"
                     size="icon"
@@ -112,7 +112,7 @@ function TableControls({
                 }
               />
               <TooltipContent>
-                <Trans i18nKey="scrollLeft" defaults="Scroll Left" />
+                <Trans i18nKey="scrollLeft" defaults="Scroll left" />
               </TooltipContent>
             </Tooltip>
             <Tooltip>
@@ -120,7 +120,7 @@ function TableControls({
                 render={
                   <Button
                     aria-label={t("scrollRight", {
-                      defaultValue: "Scroll Right",
+                      defaultValue: "Scroll right",
                     })}
                     className="relative"
                     variant="ghost"
@@ -141,7 +141,7 @@ function TableControls({
                 }
               />
               <TooltipContent>
-                <Trans i18nKey="scrollRight" defaults="Scroll Right" />
+                <Trans i18nKey="scrollRight" defaults="Scroll right" />
               </TooltipContent>
             </Tooltip>
           </>

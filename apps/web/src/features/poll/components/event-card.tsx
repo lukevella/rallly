@@ -84,7 +84,7 @@ export function EventCard() {
           ) : null}
         </EventMetaList>
         <h2 className="mt-4 mb-2 font-medium text-sm">
-          <Trans i18nKey="responseOptions" defaults="Response Options" />
+          <Trans i18nKey="responseOptions" defaults="Response options" />
         </h2>
         <IconDescriptionList aria-label="Response Options">
           <IconDescription
