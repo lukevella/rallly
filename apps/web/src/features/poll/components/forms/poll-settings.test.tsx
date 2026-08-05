@@ -60,4 +60,11 @@ describe("PollSettingsForm comments setting", () => {
       screen.getByText(/comments are being phased out/i),
     ).toBeInTheDocument();
   });
+
+  it("renders the phase out hint as an alert", () => {
+    render(<TestForm enableComments={true} />);
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      /comments are being phased out/i,
+    );
+  });
 });
