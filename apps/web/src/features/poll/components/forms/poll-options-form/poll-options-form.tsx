@@ -38,12 +38,12 @@ const PollOptionsForm = ({
   const views = React.useMemo(() => {
     const res = [
       {
-        label: t("monthView"),
+        label: t("monthView", { defaultValue: "Month view" }),
         value: "month",
         Component: MonthCalendar,
       },
       {
-        label: t("weekView"),
+        label: t("weekView", { defaultValue: "Week view" }),
         value: "week",
         Component: WeekCalendar,
       },
@@ -97,7 +97,10 @@ const PollOptionsForm = ({
               <Trans i18nKey="calendar">Calendar</Trans>
             </CardTitle>
             <CardDescription>
-              <Trans i18nKey="selectPotentialDates">
+              <Trans
+                i18nKey="selectPotentialDates"
+                defaults="Select potential dates or times for your event"
+              >
                 Select potential dates or times for your event
               </Trans>
             </CardDescription>
@@ -111,11 +114,11 @@ const PollOptionsForm = ({
                   <TabsList className="w-full">
                     <TabsTrigger className="grow" value="month">
                       <CalendarIcon className="mr-2 size-4" />
-                      <Trans i18nKey="monthView" />
+                      <Trans i18nKey="monthView" defaults="Month view" />
                     </TabsTrigger>
                     <TabsTrigger className="grow" value="week">
                       <TableIcon className="mr-2 size-4" />
-                      <Trans i18nKey="weekView" />
+                      <Trans i18nKey="weekView" defaults="Week view" />
                     </TabsTrigger>
                   </TabsList>
                 </Tabs>
@@ -128,11 +131,14 @@ const PollOptionsForm = ({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              <Trans i18nKey="mixedOptionsTitle" />
+              <Trans i18nKey="mixedOptionsTitle" defaults="Wait a minute… 🤔" />
             </DialogTitle>
           </DialogHeader>
           <p className="text-sm">
-            <Trans i18nKey="mixedOptionsDescription" />
+            <Trans
+              i18nKey="mixedOptionsDescription"
+              defaults="You can't have both time and date options in the same poll. Which would you like to keep?"
+            />
           </p>
           <DialogFooter>
             <Button
@@ -145,7 +151,10 @@ const PollOptionsForm = ({
                 dateOrTimeRangeDialog.dismiss();
               }}
             >
-              <Trans i18nKey="mixedOptionsKeepDates" />
+              <Trans
+                i18nKey="mixedOptionsKeepDates"
+                defaults="Keep date options"
+              />
             </Button>
             <Button
               onClick={() => {
@@ -160,7 +169,10 @@ const PollOptionsForm = ({
               }}
               variant="primary"
             >
-              <Trans i18nKey="mixedOptionsKeepTimes" />
+              <Trans
+                i18nKey="mixedOptionsKeepTimes"
+                defaults="Keep time options"
+              />
             </Button>
           </DialogFooter>
         </DialogContent>

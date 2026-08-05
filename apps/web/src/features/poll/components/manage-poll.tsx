@@ -176,7 +176,7 @@ const ManagePoll: React.FunctionComponent<{
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={exportToCsv}>
             <DownloadIcon />
-            <Trans i18nKey="exportToCsv" />
+            <Trans i18nKey="exportToCsv" defaults="Export to CSV" />
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {

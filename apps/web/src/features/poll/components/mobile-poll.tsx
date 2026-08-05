@@ -93,7 +93,7 @@ const MobilePoll: React.FunctionComponent = () => {
           <ParticipantName>{participant.name}</ParticipantName>
           {session.ownsObject(participant) && (
             <Badge>
-              <Trans i18nKey="you" />
+              <Trans i18nKey="you" defaults="You" />
             </Badge>
           )}
         </Participant>
@@ -135,7 +135,9 @@ const MobilePoll: React.FunctionComponent = () => {
             <div className="flex h-9 grow items-center px-1">
               <Participant>
                 <YouAvatar />
-                <ParticipantName>{t("you")}</ParticipantName>
+                <ParticipantName>
+                  {t("you", { defaultValue: "You" })}
+                </ParticipantName>
               </Participant>
             </div>
           )}

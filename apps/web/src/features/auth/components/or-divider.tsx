@@ -5,7 +5,9 @@ export async function OrDivider() {
   return (
     <div className="flex items-center gap-x-2.5">
       <hr className="grow border-gray-100 dark:border-gray-700" />
-      <div className="text-muted-foreground lowercase">{t("or")}</div>
+      <div className="text-muted-foreground lowercase">
+        {t("or", { defaultValue: "Or" })}
+      </div>
       <hr className="grow border-gray-100 dark:border-gray-700" />
     </div>
   );

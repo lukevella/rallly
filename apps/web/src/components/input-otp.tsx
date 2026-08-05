@@ -23,7 +23,9 @@ function InputOTP({ onValidCode, ...props }: InputOTPProps) {
       maxLength={6}
       inputMode="numeric"
       pattern={REGEXP_ONLY_DIGITS}
-      aria-label={t("verificationCodePlaceholder")}
+      aria-label={t("verificationCodePlaceholder", {
+        defaultValue: "Enter your 6-digit code",
+      })}
       onComplete={onValidCode}
       {...props}
     >

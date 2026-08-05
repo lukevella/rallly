@@ -88,7 +88,11 @@ function TableControls({
         </>
       ) : null}
       <div className="text-muted-foreground text-sm">
-        <Trans i18nKey="optionCount" values={{ count: optionCount }} />
+        <Trans
+          i18nKey="optionCount"
+          defaults="{count, plural, one {# option} other {# options}}"
+          values={{ count: optionCount }}
+        />
       </div>
       <div className="flex gap-x-1">
         {showScrollControls ? (
@@ -421,6 +425,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                   <p className="hidden min-w-0 truncate text-sm md:block">
                     <Trans
                       i18nKey="saveInstruction"
+                      defaults="Select your availability and click <b>{action}</b>"
                       values={{
                         action: mode === "new" ? t("continue") : t("save"),
                       }}

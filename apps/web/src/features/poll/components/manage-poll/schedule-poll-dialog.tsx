@@ -144,7 +144,7 @@ export const SchedulePollForm = ({
             return (
               <FormItem className="relative">
                 <FormLabel htmlFor={field.name}>
-                  <Trans i18nKey="dates" />
+                  <Trans i18nKey="dates" defaults="Dates" />
                 </FormLabel>
                 <FormControl>
                   <RadioGroup

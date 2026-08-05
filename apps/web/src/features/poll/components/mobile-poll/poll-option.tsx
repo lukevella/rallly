@@ -56,7 +56,9 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
     <div>
       {noVotes ? (
         <p className="rounded-lg bg-muted p-2 text-center text-muted-foreground text-sm">
-          {t("noVotes")}
+          {t("noVotes", {
+            defaultValue: "No one has voted for this option",
+          })}
         </p>
       ) : (
         <div className="grid grid-cols-2 gap-2">

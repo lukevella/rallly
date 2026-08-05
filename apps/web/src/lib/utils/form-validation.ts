@@ -13,13 +13,16 @@ export const useFormValidation = () => {
   return {
     requiredString: (name?: string) => (value: string) => {
       if (!value || !value.trim()) {
-        return t("requiredString", { name });
+        return t("requiredString", {
+          name,
+          defaultValue: "“{name}” is required",
+        });
       }
     },
 
     validEmail: (value: string) => {
       if (!emailRegex.test(value)) {
-        return t("validEmail");
+        return t("validEmail", { defaultValue: "Please enter a valid email" });
       }
     },
   };
