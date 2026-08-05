@@ -198,7 +198,6 @@
   "delete": "Poista",
   "deleteAccount": "Poista tili",
   "deleteAccountActivePolls": "{count, plural, one {# aktiivinen kysely} other {# aktiivista kyselyä}}",
-  "deleteAccountDataWarning": "Kaikki tiliin liittyvät tiedot, mukaan lukien kyselysi, tapahtumat, äänet ja kommentit, poistetaan pysyvästi.",
   "deleteAccountDialogDescription": "Haluatko varmasti poistaa tilisi?",
   "deleteAccountDialogImmediateWarning": "Tilisi ja tietosi poistetaan välittömästi. Tätä ei voi perua.",
   "deleteAccountDialogScheduleDescription": "Tilisi merkitään poistettavaksi.",
