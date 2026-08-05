@@ -320,7 +320,7 @@ export default async function BrandingPage() {
                       {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
                       <img
                         src={logoIconUrl}
-                        alt="Logo Icon"
+                        alt="Logo icon"
                         className="max-h-full max-w-full object-contain p-2"
                       />
                     </div>
