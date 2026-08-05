@@ -50,7 +50,7 @@ test.describe("accessibility (axe-core, WCAG 2.1 A/AA)", () => {
         .fill("a11y-scan@example.com");
       await page.getByRole("button", { name: "Continue with email" }).click();
       await page
-        .getByRole("heading", { name: "Verify Your Email" })
+        .getByRole("heading", { name: "Verify your email" })
         .waitFor({ timeout: 5000 });
     }).toPass();
     expect(await scan(page)).toEqual([]);

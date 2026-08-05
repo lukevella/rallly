@@ -44,7 +44,7 @@ test.describe(() => {
       .getByRole("button", { name: "Delete" })
       .click();
 
-    await expect(selector).toContainText("All Participants");
+    await expect(selector).toContainText("All participants");
 
     await context.close();
   });

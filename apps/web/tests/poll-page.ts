@@ -31,7 +31,7 @@ export class PollPage {
       .fill("This is a comment!");
     await sheet.getByPlaceholder("Your name…").fill("Test user");
 
-    await sheet.getByRole("button", { name: "Add Comment" }).click();
+    await sheet.getByRole("button", { name: "Add comment" }).click();
   }
 
   async openShareDialog() {
