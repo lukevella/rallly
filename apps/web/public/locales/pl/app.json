@@ -198,7 +198,6 @@
   "delete": "Usuń",
   "deleteAccount": "Usuń konto",
   "deleteAccountActivePolls": "{count, plural, one {# aktywna ankieta} few {# aktywne ankiety} many {# aktywnych ankiet} other {# aktywnych ankiet}}",
-  "deleteAccountDataWarning": "Wszystkie dane powiązane z Twoim kontem, w tym Twoje ankiety, wydarzenia, głosy i komentarze, zostaną trwale usunięte.",
   "deleteAccountDialogDescription": "Czy na pewno chcesz usunąć swoje konto?",
   "deleteAccountDialogImmediateWarning": "Twoje konto i dane zostaną usunięte natychmiast. Operacji nie można cofnąć.",
   "deleteAccountDialogScheduleDescription": "Twoje konto zostanie zaplanowane do usunięcia.",
