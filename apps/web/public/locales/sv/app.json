@@ -198,7 +198,6 @@
   "delete": "Radera",
   "deleteAccount": "Radera konto",
   "deleteAccountActivePolls": "{count, plural, one {# aktiv förfrågan} other {# aktiva förfrågningar}}",
-  "deleteAccountDataWarning": "All data som är kopplad till ditt konto, inklusive dina förfrågningar, evenemang, röster och kommentarer, kommer att raderas permanent.",
   "deleteAccountDialogDescription": "Är du säker på att du vill radera ditt konto?",
   "deleteAccountDialogImmediateWarning": "Ditt konto och dina uppgifter raderas omedelbart. Detta kan inte återställas.",
   "deleteAccountDialogScheduleDescription": "Ditt konto kommer att schemaläggas för radering.",
