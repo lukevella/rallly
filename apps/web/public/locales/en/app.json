@@ -36,7 +36,7 @@
   "admin": "Admin",
   "adminAccessRequired": "Administrator access required",
   "adminAccessRequiredDescription": "You need administrator access to view this page.",
-  "adminAccessRequiredSelfHostedHint": "If you are the owner of this instance, check that it is configured with the correct administrator email.",
+  "adminAccessRequiredSelfHostedHint": "If you are the owner of this instance, check that INITIAL_ADMIN_EMAIL is set to the email address of the administrator account.",
   "adminRoleDescription": "Full member access plus space management and member permissions",
   "adminRoleRequired": "You need to be an admin to perform this action",
   "adminSetup": "Admin Setup",

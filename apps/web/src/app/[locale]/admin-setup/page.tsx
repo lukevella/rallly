@@ -60,7 +60,7 @@ export default async function AdminSetupPage() {
               {" "}
               <Trans
                 i18nKey="adminAccessRequiredSelfHostedHint"
-                defaults="If you are the owner of this instance, check that it is configured with the correct administrator email."
+                defaults="If you are the owner of this instance, check that INITIAL_ADMIN_EMAIL is set to the email address of the administrator account."
               />
             </IfSelfHosted>
           </EmptyStateDescription>
