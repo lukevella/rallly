@@ -20,7 +20,7 @@ export default async function ForgotPasswordPage() {
     notFound();
   }
   await redirectIfLoggedIn();
-  const { t } = await getTranslation();
+  const { t, i18n } = await getTranslation();
 
   return (
     <AuthPageContainer>
@@ -28,6 +28,7 @@ export default async function ForgotPasswordPage() {
         <AuthPageTitle>
           <Trans
             t={t}
+            i18n={i18n}
             ns="app"
             i18nKey="forgotPasswordTitle"
             defaults="Forgot Password"
@@ -36,6 +37,7 @@ export default async function ForgotPasswordPage() {
         <AuthPageDescription>
           <Trans
             t={t}
+            i18n={i18n}
             ns="app"
             i18nKey="forgotPasswordDescription"
             defaults="Enter your email address and we'll send you a link to reset your password."
@@ -48,6 +50,7 @@ export default async function ForgotPasswordPage() {
       <AuthPageExternal>
         <Trans
           t={t}
+          i18n={i18n}
           ns="app"
           i18nKey="forgotPasswordFooter"
           defaults="Remember your password? <a>Back to login</a>"

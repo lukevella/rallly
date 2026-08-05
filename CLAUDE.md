@@ -168,6 +168,12 @@ These rules prepare the app for Next.js `cacheComponents` (static shell + stream
 - Pass `params`/`searchParams` promises down into Suspense-wrapped children and await them there, instead of awaiting at the top of the page.
 - Don't call argless `dayjs()`, `new Date()`, `Date.now()`, or `Math.random()` during server render outside request-bound components — synchronous IO fails prerendering once `cacheComponents` is enabled. Compute "now" on the client or behind a Suspense boundary after `connection()`.
 
+### Clock-Classified Reads (upcoming/past/relative-to-now)
+Reads filtered or grouped by the viewer's present ("upcoming", "past", agenda groupings) have no cacheable answer: the classification depends on the viewer's clock and timezone. All-day events are floating calendar dates (RFC 5545), so classifying them requires the viewer's current calendar date — never drop the timezone from such a query; that silently substitutes UTC as the viewer's zone. Choose the transport by what the data is to the surface:
+- **Content of a long-lived surface** (events list, agenda/calendar): fetch on the client — server renders the shell, the client queries with `getBrowserTimeZone()` and revalidates (refetch on focus). This gives the fastest paint and keeps the data fresh while the page stays open.
+- **Passing annotation on navigation chrome** (a count badge on a tile): a server snapshot is correct. Resolve the zone device-cookie-first via `getDeviceTimeZone()` from `@/lib/datetime/server` (falls back to the stored `user.timeZone`, then UTC). The session zone override is a poll-viewing aid and must not affect classification; `getDeviceDateTimeConfig` (which honors it) is for display on public pages.
+- **Never server-prefetch a client query with a zone the client will disagree with** (e.g. prefetching with the server's own zone and refetching after hydration). Seed `initialData` from the device cookie zone or render a skeleton until the client fetch lands.
+
 ### File Organization
 - Route handlers follow Next.js App Router conventions
 - Always use kebab-case for file names
@@ -207,9 +213,9 @@ These rules prepare the app for Next.js `cacheComponents` (static shell + stream
 | Reads | `loaders.ts` | `data.ts` |
 | Writes | `actions.ts` | `mutations.ts` |
 
-**Loader placement** — route by default, promote on the second consumer. Page data needs are view shaped, so the server component composes in the route: it calls the session gate loaders (`getActiveSpace()`, `requireUser()` — both trust the session cookie cache, no database read; `getCurrentUser()` is the database-verified read for pages that need DB-fresh user state) and passes proven scope to `data.ts` reads; extract to a route private file only when the page gets long. Never import another route's loader. Promote to `features/<domain>/loaders.ts` only when a second route segment needs the same read — that is evidence of a domain concept, not a view shape. The test: a loader belongs in the feature when its contract is stated in domain terms and every consumer wants exactly that contract; it stays in the route when its shape is "what this page happens to display." Most features never have a `loaders.ts` (today: `space`, `user`).
+**Loader placement** — pages, layouts and route-private components never call `data.ts` directly: every read they consume goes through a loader in `features/<domain>/loaders.ts`, so the session gate that proves scope cannot be forgotten at the call site (lint-enforced: `@/features/**/data` is banned in `app/**`; existing violations sit on a shrinking migration allowlist in `apps/web/biome.json`). A loader bundles the gate and the read: `import "server-only"`, named with a `load*` prefix, wrapped in React `cache()` so every consumer in a request shares one read, resolves the actor via the session gates (`requireUser()`, `getActiveSpace()` — both trust the session cookie cache; `getCurrentUser()` is the database-verified read for pages that need DB-fresh user state) and delegates to `data.ts` with proven scope. Reference shape: `features/notifications/loaders.ts` (`loadNotificationPreferences`). Route-private `actions.ts` files are the write side, not pages — they keep calling `data.ts`/`mutations.ts` with proven scope from their safe-action gate (loaders' page semantics, redirects, don't belong in actions) and are exempt from the lint ban.
 
-**DAL enforcement** — `@rallly/database` may only be imported from `features/**/data.ts` and `features/**/mutations.ts` (lint-enforced via `noRestrictedImports`; existing violations sit on a shrinking migration allowlist in `apps/web/biome.json`; `loaders.ts` is absent from the allowlist, so database imports are banned there by default). Parameterized reads take their tenant scope as `spaceId: AuthorizedSpaceId` (from `@/features/space/types`); only the session gate (`createSpaceDTO`) and the API key middleware may cast to it. API routes under `app/api/**` (except tRPC and better-auth) must not import `@/features/**/loaders` — they authenticate their own way and pass proven scope to parameterized reads. `api/private` handlers own serialization and must parse response bodies through their zod schemas.
+**DAL enforcement** — `@rallly/database` may only be imported from `features/**/data.ts` and `features/**/mutations.ts` (lint-enforced via `noRestrictedImports`; existing violations sit on a shrinking migration allowlist in `apps/web/biome.json`; `loaders.ts` is absent from the allowlist, so database imports are banned there by default). Parameterized reads take their tenant scope as `spaceId: AuthorizedSpaceId` (from `@/features/space/types`); only the session gate (`createSpaceDTO`) and the API key middleware may cast to it. API routes under `app/api/**` (except tRPC and better-auth) must not import `@/features/**/loaders` — they authenticate their own way and pass proven scope to parameterized reads. The inverse holds for pages: `app/**` (outside `app/api/**` and route-private `actions.ts`) must not import `@/features/**/data` — reads reach pages only through loaders. `api/private` handlers own serialization and must parse response bodies through their zod schemas.
 
 **Cross-feature imports** — allowed, public surface only (the vocabulary files above); never reach into another feature's internals. No cycles between features (CI-enforced). For UI, prefer composing multiple features at the page level in `app/` over feature-to-feature component imports.
 
@@ -239,8 +245,13 @@ These rules prepare the app for Next.js `cacheComponents` (static shell + stream
   import { Trans } from "@/i18n/client";
   <Trans i18nKey="menu" defaults="Menu" />
   ```
-- On the server, use `getTranslations` from `@/i18n/server`:
-  ```ts
-  const { t } = await getTranslations();
+- On the server, use `getTranslation` from `@/i18n/server`:
+  ```tsx
+  import { Trans } from "react-i18next/TransWithoutContext";
+  import { getTranslation } from "@/i18n/server";
+
+  const { t, i18n } = await getTranslation();
   t("menu", { defaultValue: "Menu" });
+  <Trans t={t} i18n={i18n} ns="app" i18nKey="menu" defaults="Menu" />;
   ```
+  Server JSX must use `Trans` from `react-i18next/TransWithoutContext` (the context-ful `Trans` from `@/i18n/client` needs React context and cannot render in a server component) and must pass both `t` and `i18n` — omitting `i18n` falls back to the module-global instance, which can carry another request's language under concurrency.

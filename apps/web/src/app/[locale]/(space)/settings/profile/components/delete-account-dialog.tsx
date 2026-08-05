@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import type { DialogProps } from "@rallly/ui/dialog";
 import {
   Dialog,
   DialogClose,
@@ -9,6 +8,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
+  useDialog,
 } from "@rallly/ui/dialog";
 import { Form, FormField, FormItem, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
@@ -21,11 +22,11 @@ import { isSelfHosted } from "@/lib/constants";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { deleteAccountAction, scheduleAccountDeletionAction } from "../actions";
 
-export function DeleteAccountDialog(
-  props: DialogProps & {
-    summary?: React.ReactNode;
-  },
-) {
+export function DeleteAccountDialog(props: {
+  /** Rendered as the dialog trigger; the caller styles it and wires aria labels. */
+  trigger: React.ReactElement;
+  summary?: React.ReactNode;
+}) {
   if (isSelfHosted) {
     return <InstantDeleteAccountDialog {...props} />;
   }
@@ -34,19 +35,22 @@ export function DeleteAccountDialog(
 }
 
 function ScheduleAccountDeletionDialog({
+  trigger,
   summary,
-  ...rest
-}: DialogProps & {
+}: {
+  trigger: React.ReactElement;
   summary?: React.ReactNode;
 }) {
+  const dialog = useDialog();
   const scheduleAccountDeletion = useSafeAction(scheduleAccountDeletionAction, {
     onSuccess: () => {
-      rest.onOpenChange?.(false);
+      dialog.dismiss();
     },
   });
 
   return (
-    <Dialog {...rest}>
+    <Dialog {...dialog.dialogProps}>
+      <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -98,11 +102,13 @@ function ScheduleAccountDeletionDialog({
 // Self-hosted instances delete immediately — no reaper, no recovery window —
 // so the email confirmation step guards against an irreversible mistake.
 function InstantDeleteAccountDialog({
+  trigger,
   summary,
-  ...rest
-}: DialogProps & {
+}: {
+  trigger: React.ReactElement;
   summary?: React.ReactNode;
 }) {
+  const dialog = useDialog();
   const user = useAuthedUser();
   const { t } = useTranslation();
   const form = useForm<{ email: string }>({
@@ -125,7 +131,8 @@ function InstantDeleteAccountDialog({
 
   return (
     <Form {...form}>
-      <Dialog {...rest}>
+      <Dialog {...dialog.dialogProps}>
+        <DialogTrigger render={trigger} />
         <DialogContent>
           <form
             onSubmit={form.handleSubmit(async () => {

@@ -269,6 +269,21 @@ function buildBaseWhere(
 }
 
 // Get upcoming events (confirmed events in the future)
+export async function getUpcomingEventCount({
+  spaceId,
+  timeZone,
+}: {
+  spaceId: string;
+  timeZone: string;
+}) {
+  return prisma.scheduledEvent.count({
+    where: {
+      spaceId,
+      ...upcomingScheduledEventWhere({ now: new Date(), timeZone }),
+    },
+  });
+}
+
 export const getUpcomingEvents = async ({
   search,
   member,

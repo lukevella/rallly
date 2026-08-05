@@ -1,16 +1,18 @@
-import { TriangleAlertIcon } from "lucide-react";
+import { Button } from "@rallly/ui/button";
 import {
-  Setting,
-  SettingControl,
-  SettingDescription,
-  SettingIcon,
-  SettingTitle,
-} from "@/components/setting";
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldTitle,
+} from "@rallly/ui/field";
+import { TriangleAlertIcon } from "lucide-react";
+import { PageIcon } from "@/components/page-icons";
 import { getScheduledDeletionDate } from "@/features/user/account-deletion/utils";
 import { Trans } from "@/i18n/client";
 import { getSession } from "@/lib/auth";
 import { formatDateTime } from "@/lib/datetime/format";
 import { CancelAccountDeletionButton } from "./cancel-account-deletion-button";
+import { DeleteAccountDialog } from "./delete-account-dialog";
 
 export async function PendingDeletionSetting({
   deletedAt,
@@ -25,50 +27,60 @@ export async function PendingDeletionSetting({
   });
 
   return (
-    <Setting>
-      <SettingIcon>
-        <TriangleAlertIcon />
-      </SettingIcon>
-      <SettingTitle>
-        <Trans i18nKey="deleteAccount" defaults="Delete Account" />
-      </SettingTitle>
-      <SettingDescription>
-        <Trans
-          i18nKey="pendingDeletionNotice"
-          defaults="Your account and data will be permanently deleted on {deletionDate}."
-          values={{ deletionDate }}
-        />
-      </SettingDescription>
-      <SettingControl>
-        <CancelAccountDeletionButton />
-      </SettingControl>
-    </Setting>
+    <Field orientation="responsive">
+      <div className="@md/field-group:block hidden">
+        <PageIcon size="lg">
+          <TriangleAlertIcon />
+        </PageIcon>
+      </div>
+      <FieldContent>
+        <FieldTitle>
+          <Trans i18nKey="deleteAccount" defaults="Delete Account" />
+        </FieldTitle>
+        <FieldDescription>
+          <Trans
+            i18nKey="pendingDeletionNotice"
+            defaults="Your account and data will be permanently deleted on {deletionDate}."
+            values={{ deletionDate }}
+          />
+        </FieldDescription>
+      </FieldContent>
+      <CancelAccountDeletionButton />
+    </Field>
   );
 }
 
 export function DeleteAccountSetting({
-  children,
+  summary,
 }: {
-  children: React.ReactElement<{
-    "aria-labelledby"?: string;
-    "aria-describedby"?: string;
-  }>;
+  summary?: React.ReactNode;
 }) {
   return (
-    <Setting>
-      <SettingIcon>
-        <TriangleAlertIcon />
-      </SettingIcon>
-      <SettingTitle>
-        <Trans i18nKey="deleteAccount" defaults="Delete Account" />
-      </SettingTitle>
-      <SettingDescription>
-        <Trans
-          i18nKey="dangerZoneAccountDeletion"
-          defaults="Delete your account and all data associated with it"
-        />
-      </SettingDescription>
-      <SettingControl>{children}</SettingControl>
-    </Setting>
+    <Field orientation="responsive">
+      <div className="@md/field-group:block hidden">
+        <PageIcon size="lg">
+          <TriangleAlertIcon />
+        </PageIcon>
+      </div>
+      <FieldContent>
+        <FieldTitle>
+          <Trans i18nKey="deleteAccount" defaults="Delete Account" />
+        </FieldTitle>
+        <FieldDescription>
+          <Trans
+            i18nKey="dangerZoneAccountDeletion"
+            defaults="Delete your account and all data associated with it"
+          />
+        </FieldDescription>
+      </FieldContent>
+      <DeleteAccountDialog
+        trigger={
+          <Button className="text-destructive">
+            <Trans i18nKey="deleteAccount" defaults="Delete Account" />
+          </Button>
+        }
+        summary={summary}
+      />
+    </Field>
   );
 }

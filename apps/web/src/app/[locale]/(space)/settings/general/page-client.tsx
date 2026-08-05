@@ -2,7 +2,15 @@
 
 import { subject } from "@casl/ability";
 import { Alert, AlertDescription } from "@rallly/ui/alert";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldTitle,
+} from "@rallly/ui/field";
 import { EyeIcon, LogOutIcon, TrashIcon } from "lucide-react";
+import { PageIcon } from "@/components/page-icons";
 import {
   PageSection,
   PageSectionContent,
@@ -11,14 +19,6 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
-import {
-  SettingControl,
-  SettingDescription,
-  SettingIcon,
-  SettingRow,
-  SettingsGroup,
-  SettingTitle,
-} from "@/components/setting";
 import {
   SettingsPage,
   SettingsPageContent,
@@ -77,9 +77,9 @@ export function GeneralSettingsPageClient() {
               </PageSectionTitle>
             </PageSectionHeader>
             <PageSectionContent>
-              <SettingsGroup>
+              <FieldGroup variant="divided">
                 <SpaceSettingsForm space={space} disabled={!isAdmin} />
-              </SettingsGroup>
+              </FieldGroup>
             </PageSectionContent>
           </PageSection>
           {!isOwner || canDeleteSpace ? (
@@ -96,49 +96,56 @@ export function GeneralSettingsPageClient() {
                 </PageSectionDescription>
               </PageSectionHeader>
               <PageSectionContent>
-                <SettingsGroup>
+                <FieldGroup variant="divided">
                   {!isOwner ? (
-                    <SettingRow>
-                      <SettingIcon>
-                        <LogOutIcon />
-                      </SettingIcon>
-                      <SettingTitle>
-                        <Trans i18nKey="leaveSpace" defaults="Leave Space" />
-                      </SettingTitle>
-                      <SettingDescription>
-                        <Trans
-                          i18nKey="leaveSpaceSettingHint"
-                          defaults="Remove yourself from this space and lose access to its polls."
-                        />
-                      </SettingDescription>
-                      <SettingControl>
-                        <LeaveSpaceButton
-                          spaceName={space.name}
-                          spaceId={space.id}
-                        />
-                      </SettingControl>
-                    </SettingRow>
+                    <Field orientation="responsive">
+                      <div className="@md/field-group:block hidden">
+                        <PageIcon size="lg">
+                          <LogOutIcon />
+                        </PageIcon>
+                      </div>
+                      <FieldContent>
+                        <FieldTitle>
+                          <Trans i18nKey="leaveSpace" defaults="Leave Space" />
+                        </FieldTitle>
+                        <FieldDescription>
+                          <Trans
+                            i18nKey="leaveSpaceSettingHint"
+                            defaults="Remove yourself from this space and lose access to its polls."
+                          />
+                        </FieldDescription>
+                      </FieldContent>
+                      <LeaveSpaceButton
+                        spaceName={space.name}
+                        spaceId={space.id}
+                      />
+                    </Field>
                   ) : null}
                   {canDeleteSpace ? (
-                    <SettingRow>
-                      <SettingIcon>
-                        <TrashIcon />
-                      </SettingIcon>
-                      <SettingTitle>
-                        <Trans i18nKey="deleteSpace" defaults="Delete Space" />
-                      </SettingTitle>
-                      <SettingDescription>
-                        <Trans
-                          i18nKey="deleteSpaceSettingHint"
-                          defaults="Permanently delete this space and everything in it."
-                        />
-                      </SettingDescription>
-                      <SettingControl>
-                        <DeleteSpaceButton spaceName={space.name} />
-                      </SettingControl>
-                    </SettingRow>
+                    <Field orientation="responsive">
+                      <div className="@md/field-group:block hidden">
+                        <PageIcon size="lg">
+                          <TrashIcon />
+                        </PageIcon>
+                      </div>
+                      <FieldContent>
+                        <FieldTitle>
+                          <Trans
+                            i18nKey="deleteSpace"
+                            defaults="Delete Space"
+                          />
+                        </FieldTitle>
+                        <FieldDescription>
+                          <Trans
+                            i18nKey="deleteSpaceSettingHint"
+                            defaults="Permanently delete this space and everything in it."
+                          />
+                        </FieldDescription>
+                      </FieldContent>
+                      <DeleteSpaceButton spaceName={space.name} />
+                    </Field>
                   ) : null}
-                </SettingsGroup>
+                </FieldGroup>
               </PageSectionContent>
             </PageSection>
           ) : null}

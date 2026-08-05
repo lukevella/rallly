@@ -1,7 +1,7 @@
+import { FieldGroup } from "@rallly/ui/field";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-
 import type { Params } from "@/app/[locale]/types";
 import {
   PageSection,
@@ -11,7 +11,6 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
-import { SettingsGroup } from "@/components/setting";
 import {
   SettingsPage,
   SettingsPageContent,
@@ -28,7 +27,6 @@ import {
   AccountDeletionSummary,
   AccountDeletionSummarySkeleton,
 } from "./components/account-deletion-summary";
-import { DeleteAccountButton } from "./components/delete-account-button";
 import {
   DeleteAccountSetting,
   PendingDeletionSetting,
@@ -95,21 +93,19 @@ export default async function Page() {
               </PageSectionTitle>
             </PageSectionHeader>
             <PageSectionContent>
-              <SettingsGroup>
+              <FieldGroup variant="divided">
                 {user.deletedAt ? (
                   <PendingDeletionSetting deletedAt={user.deletedAt} />
                 ) : (
-                  <DeleteAccountSetting>
-                    <DeleteAccountButton
-                      summary={
-                        <Suspense fallback={<AccountDeletionSummarySkeleton />}>
-                          <AccountDeletionSummary />
-                        </Suspense>
-                      }
-                    />
-                  </DeleteAccountSetting>
+                  <DeleteAccountSetting
+                    summary={
+                      <Suspense fallback={<AccountDeletionSummarySkeleton />}>
+                        <AccountDeletionSummary />
+                      </Suspense>
+                    }
+                  />
                 )}
-              </SettingsGroup>
+              </FieldGroup>
             </PageSectionContent>
           </PageSection>
         </PageSectionGroup>

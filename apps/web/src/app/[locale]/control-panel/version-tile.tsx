@@ -1,29 +1,43 @@
-"use client";
-
+import { Skeleton } from "@rallly/ui/skeleton";
 import { Tile, TileDescription, TileTitle } from "@rallly/ui/tile";
 import { DownloadIcon } from "lucide-react";
+import { Suspense } from "react";
 import { PageIcon } from "@/components/page-icons";
-import { Spinner } from "@/components/spinner";
-import { Trans } from "@/i18n/client";
+import { loadUpdateStatus } from "@/features/instance-settings/loaders";
+import { getTranslation } from "@/i18n/server";
 import { appVersion } from "@/lib/constants";
-import { trpc } from "@/trpc/client";
 
 const RELEASES_URL = "https://github.com/lukevella/rallly/releases";
 
-export function VersionTile() {
-  const { data, isFetching } = trpc.system.getUpdateStatus.useQuery(undefined, {
-    staleTime: 60 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
+async function UpdateStatus() {
+  const update = await loadUpdateStatus();
 
+  if (!update) {
+    return null;
+  }
+
+  const { t } = await getTranslation();
+
+  if (update.status === "up-to-date") {
+    return (
+      <span className="text-green-600 text-sm">
+        {t("upToDate", { defaultValue: "Up to date" })}
+      </span>
+    );
+  }
+
+  return (
+    <span className="text-primary text-sm">
+      {t("updateAvailable", { defaultValue: "Update available" })}
+    </span>
+  );
+}
+
+export function VersionTile() {
   return (
     <Tile
       render={
-        <a
-          href={data?.url ?? RELEASES_URL}
-          target="_blank"
-          rel="noreferrer noopener"
-        />
+        <a href={RELEASES_URL} target="_blank" rel="noreferrer noopener" />
       }
     >
       <PageIcon>
@@ -31,13 +45,9 @@ export function VersionTile() {
       </PageIcon>
       <TileTitle>{`v${appVersion ?? "unknown"}`}</TileTitle>
       <TileDescription>
-        {isFetching ? (
-          <Spinner />
-        ) : data ? (
-          <span className="text-primary text-sm">
-            <Trans i18nKey="updateAvailable" defaults="Update available" />
-          </span>
-        ) : null}
+        <Suspense fallback={<Skeleton className="h-4 w-24" />}>
+          <UpdateStatus />
+        </Suspense>
       </TileDescription>
     </Tile>
   );

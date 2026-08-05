@@ -31,12 +31,14 @@ function filterTimezone(id: string, query: string): boolean {
 }
 
 export function TimeZoneSelect({
+  id,
   value,
   onValueChange,
   className,
   disabled,
   ...ariaProps
 }: {
+  id?: string;
   value?: string;
   onValueChange?: (value: string) => void;
   className?: string;
@@ -74,6 +76,7 @@ export function TimeZoneSelect({
     >
       <div ref={anchorRef} className={cn("min-w-64", className)}>
         <ComboboxInput
+          id={id}
           disabled={disabled}
           placeholder={t("timezoneInputPlaceholder", {
             defaultValue: "Search timezone…",

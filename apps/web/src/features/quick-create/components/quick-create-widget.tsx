@@ -11,7 +11,7 @@ import { RelativeDate } from "./relative-date";
 
 export async function QuickCreateWidget() {
   const polls = await getGuestPolls();
-  const { t } = await getTranslation();
+  const { t, i18n } = await getTranslation();
   return (
     <div className="space-y-8">
       <div className="space-y-6">
@@ -20,6 +20,7 @@ export async function QuickCreateWidget() {
           <h2>
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="quickCreate"
               defaults="Quick Create"
@@ -29,6 +30,7 @@ export async function QuickCreateWidget() {
         <p className="text-pretty text-muted-foreground">
           <Trans
             t={t}
+            i18n={i18n}
             ns="app"
             i18nKey="quickActionsDescription"
             defaults="Create a group poll without signing in. Login later to link it to your account."
@@ -39,6 +41,7 @@ export async function QuickCreateWidget() {
             <h3 className="font-semibold">
               <Trans
                 t={t}
+                i18n={i18n}
                 ns="app"
                 i18nKey="quickCreateRecentlyCreated"
                 defaults="Recently Created"
@@ -74,6 +77,7 @@ export async function QuickCreateWidget() {
             <PlusIcon data-icon="inline-start" />
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="quickCreateGroupPoll"
               defaults="Create Group Poll"
@@ -86,6 +90,7 @@ export async function QuickCreateWidget() {
           <h3 className="font-semibold">
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="quickCreateWhyCreateAnAccount"
               defaults="Why create an account?"
@@ -97,6 +102,7 @@ export async function QuickCreateWidget() {
             <CheckIcon className="size-5 text-green-600 dark:text-green-500" />
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="quickCreateSecurePolls"
               defaults="Store polls securely in your account"
@@ -106,6 +112,7 @@ export async function QuickCreateWidget() {
             <CheckIcon className="size-5 text-green-600 dark:text-green-500" />
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="quickCreateGetNotifications"
               defaults="Get email notifications"
@@ -115,6 +122,7 @@ export async function QuickCreateWidget() {
             <CheckIcon className="size-5 text-green-600 dark:text-green-500" />
             <Trans
               t={t}
+              i18n={i18n}
               ns="app"
               i18nKey="quickCreateManagePollsFromAnyDevice"
               defaults="Manage your polls from any device"

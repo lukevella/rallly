@@ -3,13 +3,17 @@ import "server-only";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 
+import { getUpcomingEventCount } from "@/features/scheduled-event/data";
 import {
   getActiveSpaceForUser,
   getOwnedSpace,
   getSpaceSeatCount,
   getTotalSeatsForSpace,
 } from "@/features/space/data";
+import { requireUser } from "@/features/user/loaders";
 import { getSessionState } from "@/lib/auth";
+import { getDeviceTimeZone } from "@/lib/datetime/server";
+import { normalizeTimeZone } from "@/lib/datetime/utils";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { getPathname } from "@/lib/pathname";
 import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
@@ -89,6 +93,27 @@ export const getActiveSpace = cache(async () => {
   }
 
   return space;
+});
+
+/**
+ * Upcoming event count for the signed-in user's active space. Lives here
+ * rather than in scheduled-event/loaders.ts because account-deletion (user)
+ * imports scheduled-event, so a scheduled-event → space/user loader would
+ * close a feature import cycle; space → scheduled-event is a forward edge.
+ */
+export const loadUpcomingEventCount = cache(async () => {
+  const [user, space, deviceTimeZone] = await Promise.all([
+    requireUser(),
+    getActiveSpace(),
+    getDeviceTimeZone(),
+  ]);
+
+  // Upcoming is measured against the viewer's present, so the device zone
+  // wins; the stored preference is a fallback for devices whose zone cookie
+  // hasn't been set yet.
+  const timeZone = deviceTimeZone ?? normalizeTimeZone(user.timeZone) ?? "UTC";
+
+  return getUpcomingEventCount({ spaceId: space.id, timeZone });
 });
 
 /**

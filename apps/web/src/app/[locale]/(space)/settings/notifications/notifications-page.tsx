@@ -1,8 +1,17 @@
 "use client";
 
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
 import { InboxIcon, MessageCircleIcon } from "lucide-react";
+import React from "react";
+import { PageIcon } from "@/components/page-icons";
 import {
   PageSection,
   PageSectionContent,
@@ -11,47 +20,38 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
-import {
-  Setting,
-  SettingControl,
-  SettingDescription,
-  SettingIcon,
-  SettingsGroup,
-  SettingTitle,
-} from "@/components/setting";
+import { updateNotificationPreferenceAction } from "@/features/notifications/actions";
+import type {
+  ActivityEventType,
+  NotificationPreferences,
+} from "@/features/notifications/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
-export function NotificationsPage() {
+export function NotificationsPage({
+  initialPreferences,
+}: {
+  initialPreferences: NotificationPreferences;
+}) {
   const { t } = useTranslation();
-  const utils = trpc.useUtils();
-  const [preferences] = trpc.user.getNotificationPreferences.useSuspenseQuery();
-  const updatePreference = trpc.user.updateNotificationPreference.useMutation({
-    onMutate: async ({ eventType, enabled }) => {
-      await utils.user.getNotificationPreferences.cancel();
-      const previous = utils.user.getNotificationPreferences.getData();
-      utils.user.getNotificationPreferences.setData(undefined, (old) =>
-        old ? { ...old, [eventType]: enabled } : old,
-      );
-      return { previous };
-    },
-    onSuccess: () => {
+  const [preferences, setPreferences] = React.useState(initialPreferences);
+  const updatePreference = useSafeAction(updateNotificationPreferenceAction);
+
+  const setPreference = async (
+    eventType: ActivityEventType,
+    enabled: boolean,
+  ) => {
+    const previous = preferences[eventType];
+    setPreferences((old) => ({ ...old, [eventType]: enabled }));
+    const result = await updatePreference.executeAsync({ eventType, enabled });
+    if (result?.serverError || result?.validationErrors) {
+      // Roll back only the toggled field — a full-snapshot restore could
+      // clobber another toggle that succeeded while this one was in flight.
+      setPreferences((old) => ({ ...old, [eventType]: previous }));
+    } else {
       toast.success(t("saved", { defaultValue: "Saved" }));
-    },
-    onError: (_err, _vars, context) => {
-      if (context?.previous) {
-        utils.user.getNotificationPreferences.setData(
-          undefined,
-          context.previous,
-        );
-      }
-      toast.error(
-        t("notificationPreferenceSaveError", {
-          defaultValue: "Failed to save your notification preference",
-        }),
-      );
-    },
-  });
+    }
+  };
 
   return (
     <PageSectionGroup>
@@ -68,58 +68,58 @@ export function NotificationsPage() {
           </PageSectionDescription>
         </PageSectionHeader>
         <PageSectionContent>
-          <SettingsGroup>
-            <Setting>
-              <SettingIcon>
-                <InboxIcon />
-              </SettingIcon>
-              <SettingTitle>
-                <Trans i18nKey="notifyNewResponse" defaults="New response" />
-              </SettingTitle>
-              <SettingDescription>
-                <Trans
-                  i18nKey="notifyNewResponseDescription"
-                  defaults="Receive an email when a participant submits a response."
-                />
-              </SettingDescription>
-              <SettingControl>
-                <Switch
-                  checked={preferences["poll.response.submitted"]}
-                  onCheckedChange={(enabled) => {
-                    updatePreference.mutate({
-                      eventType: "poll.response.submitted",
-                      enabled,
-                    });
-                  }}
-                />
-              </SettingControl>
-            </Setting>
-            <Setting>
-              <SettingIcon>
-                <MessageCircleIcon />
-              </SettingIcon>
-              <SettingTitle>
-                <Trans i18nKey="notifyNewComment" defaults="New comment" />
-              </SettingTitle>
-              <SettingDescription>
-                <Trans
-                  i18nKey="notifyNewCommentDescription"
-                  defaults="Receive an email when someone comments on your poll."
-                />
-              </SettingDescription>
-              <SettingControl>
-                <Switch
-                  checked={preferences["poll.comment.added"]}
-                  onCheckedChange={(enabled) => {
-                    updatePreference.mutate({
-                      eventType: "poll.comment.added",
-                      enabled,
-                    });
-                  }}
-                />
-              </SettingControl>
-            </Setting>
-          </SettingsGroup>
+          <FieldGroup variant="divided">
+            <Field orientation="horizontal">
+              <div className="@md/field-group:block hidden">
+                <PageIcon size="lg">
+                  <InboxIcon />
+                </PageIcon>
+              </div>
+              <FieldContent>
+                <FieldLabel htmlFor="notify-new-response">
+                  <Trans i18nKey="notifyNewResponse" defaults="New response" />
+                </FieldLabel>
+                <FieldDescription>
+                  <Trans
+                    i18nKey="notifyNewResponseDescription"
+                    defaults="Receive an email when a participant submits a response."
+                  />
+                </FieldDescription>
+              </FieldContent>
+              <Switch
+                id="notify-new-response"
+                checked={preferences["poll.response.submitted"]}
+                onCheckedChange={(enabled) => {
+                  setPreference("poll.response.submitted", enabled);
+                }}
+              />
+            </Field>
+            <Field orientation="horizontal">
+              <div className="@md/field-group:block hidden">
+                <PageIcon size="lg">
+                  <MessageCircleIcon />
+                </PageIcon>
+              </div>
+              <FieldContent>
+                <FieldLabel htmlFor="notify-new-comment">
+                  <Trans i18nKey="notifyNewComment" defaults="New comment" />
+                </FieldLabel>
+                <FieldDescription>
+                  <Trans
+                    i18nKey="notifyNewCommentDescription"
+                    defaults="Receive an email when someone comments on your poll."
+                  />
+                </FieldDescription>
+              </FieldContent>
+              <Switch
+                id="notify-new-comment"
+                checked={preferences["poll.comment.added"]}
+                onCheckedChange={(enabled) => {
+                  setPreference("poll.comment.added", enabled);
+                }}
+              />
+            </Field>
+          </FieldGroup>
         </PageSectionContent>
       </PageSection>
     </PageSectionGroup>
