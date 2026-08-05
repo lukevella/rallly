@@ -128,7 +128,7 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
         <DialogContent size="sm">
           <DialogHeader>
             <DialogTitle>
-              <Trans i18nKey="removeMember" defaults="Remove Member" />
+              <Trans i18nKey="removeMember" defaults="Remove member" />
             </DialogTitle>
             <DialogDescription>
               <Trans

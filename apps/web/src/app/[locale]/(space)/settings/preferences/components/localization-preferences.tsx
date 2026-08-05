@@ -146,7 +146,7 @@ export const LocalizationPreferences = ({
           </div>
           <FieldContent>
             <FieldLabel htmlFor="time-zone-select">
-              <Trans i18nKey="timeZone" defaults="Time Zone" />
+              <Trans i18nKey="timeZone" defaults="Time zone" />
             </FieldLabel>
             <FieldDescription>
               <Trans
@@ -179,7 +179,7 @@ export const LocalizationPreferences = ({
           </div>
           <FieldContent>
             <FieldLabel htmlFor="time-format-select">
-              <Trans i18nKey="timeFormat" defaults="Time Format" />
+              <Trans i18nKey="timeFormat" defaults="Time format" />
             </FieldLabel>
             <FieldDescription>
               <Trans

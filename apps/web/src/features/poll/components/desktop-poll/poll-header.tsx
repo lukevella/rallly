@@ -159,7 +159,7 @@ const PollHeader = () => {
                   />
                 ) : (
                   <p className="whitespace-nowrap font-normal text-muted-foreground text-xs">
-                    <Trans i18nKey="allDay" defaults="All-Day" />
+                    <Trans i18nKey="allDay" defaults="All day" />
                   </p>
                 )}
                 <ConnectedScoreSummary optionId={option.optionId} />
