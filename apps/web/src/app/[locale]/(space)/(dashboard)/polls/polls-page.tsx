@@ -52,7 +52,7 @@ function NoOpenPollsEmptyState({ closedCount }: { closedCount: number }) {
           <Trans i18nKey="viewClosedPolls" defaults="View closed polls" />
         </Link>
         <Link href="/new" className={buttonVariants()}>
-          <Trans i18nKey="createPoll" defaults="Create Poll" />
+          <Trans i18nKey="createPoll" defaults="Create poll" />
         </Link>
       </EmptyStateFooter>
     </EmptyState>
@@ -76,7 +76,7 @@ function PollsEmptyState() {
       </EmptyStateDescription>
       <EmptyStateFooter>
         <Link href="/new" className={buttonVariants()}>
-          <Trans i18nKey="createPoll" defaults="Create Poll" />
+          <Trans i18nKey="createPoll" defaults="Create poll" />
         </Link>
       </EmptyStateFooter>
     </EmptyState>
