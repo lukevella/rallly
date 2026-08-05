@@ -113,7 +113,7 @@ function PollListItem({
                   <span className="cursor-help text-muted-foreground text-sm">
                     <Trans
                       i18nKey="participantCount"
-                      defaults="{count, plural, =0 {No participants} =1 {1 participant} other {# participants}}"
+                      defaults="{count, plural, =0 {No participants} one {1 participant} other {# participants}}"
                       values={{ count: participants.length }}
                     />
                   </span>
@@ -129,7 +129,7 @@ function PollListItem({
                       <Trans
                         i18nKey="moreParticipants"
                         values={{ count: participants.length - 10 }}
-                        defaults="{count} more…"
+                        defaults="{count, plural, other {# more…}}"
                       />
                     </li>
                   )}
@@ -140,7 +140,7 @@ function PollListItem({
             <span className="text-muted-foreground text-sm">
               <Trans
                 i18nKey="participantCount"
-                defaults="{count, plural, =0 {No participants} =1 {1 participant} other {# participants}}"
+                defaults="{count, plural, =0 {No participants} one {1 participant} other {# participants}}"
                 values={{ count: participants.length }}
               />
             </span>
@@ -179,7 +179,7 @@ function PollListItem({
                     onClick={() => {
                       toast.promise(closePoll.mutateAsync({ pollId: id }), {
                         loading: (
-                          <Trans i18nKey="loading" defaults="Loading…" />
+                          <Trans i18nKey="loading" defaults="Loading..." />
                         ),
                         success: (
                           <Trans i18nKey="pollClosed" defaults="Poll closed" />
@@ -198,7 +198,7 @@ function PollListItem({
                     onClick={() => {
                       toast.promise(reopenPoll.mutateAsync({ pollId: id }), {
                         loading: (
-                          <Trans i18nKey="loading" defaults="Loading…" />
+                          <Trans i18nKey="loading" defaults="Loading..." />
                         ),
                         success: (
                           <Trans
@@ -212,7 +212,7 @@ function PollListItem({
                     <Icon>
                       <PlayIcon />
                     </Icon>
-                    <Trans i18nKey="reopenPoll" defaults="Reopen" />
+                    <Trans i18nKey="reopenPoll" defaults="Reopen poll" />
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={() => deletePollDialog.trigger()}>
@@ -254,7 +254,7 @@ function PollListItem({
               onClick={() => {
                 deletePollDialog.dismiss();
                 toast.promise(deletePoll.mutateAsync({ pollId: id }), {
-                  loading: <Trans i18nKey="loading" defaults="Loading…" />,
+                  loading: <Trans i18nKey="loading" defaults="Loading..." />,
                   success: (
                     <Trans i18nKey="pollDeleted" defaults="Poll deleted" />
                   ),

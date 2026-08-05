@@ -72,7 +72,7 @@ export function LeaveSpaceDialog({
             <DialogDescription>
               <Trans
                 i18nKey="leaveSpaceDescription"
-                defaults="Are you sure you want to leave this space? You will no longer have access to its polls and data."
+                defaults="Remove yourself from this space."
               />
             </DialogDescription>
           </DialogHeader>

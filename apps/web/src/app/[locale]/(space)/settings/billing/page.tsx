@@ -102,7 +102,7 @@ export default async function BillingSettingsPage({
               <PageSectionDescription>
                 <Trans
                   i18nKey="billingSubscriptionDescription"
-                  defaults="Manage your current subscription plan"
+                  defaults="Manage your current subscription plan."
                 />
               </PageSectionDescription>
             </PageSectionHeader>

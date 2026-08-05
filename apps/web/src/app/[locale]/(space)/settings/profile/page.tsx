@@ -57,7 +57,7 @@ export default async function Page() {
         <SettingsPageDescription>
           <Trans
             i18nKey="profileDescription"
-            defaults="Set your public profile information"
+            defaults="Change your profile settings"
           />
         </SettingsPageDescription>
       </SettingsPageHeader>

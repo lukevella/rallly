@@ -66,12 +66,12 @@ function PollsEmptyState() {
         <InboxIcon />
       </EmptyStateIcon>
       <EmptyStateTitle>
-        <Trans i18nKey="noPolls" defaults="No polls found" />
+        <Trans i18nKey="noPolls" defaults="No polls" />
       </EmptyStateTitle>
       <EmptyStateDescription>
         <Trans
           i18nKey="noPollsDescription"
-          defaults="Try adjusting your search or create a new poll"
+          defaults="Get started by creating a new poll."
         />
       </EmptyStateDescription>
       <EmptyStateFooter>

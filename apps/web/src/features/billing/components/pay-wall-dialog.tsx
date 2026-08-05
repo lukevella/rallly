@@ -364,7 +364,7 @@ export function PayWallDialog({
                     description={
                       <Trans
                         i18nKey="schedulePollDescription"
-                        defaults="Lock in the final meeting time and notify participants"
+                        defaults="Select a final date for your event."
                       />
                     }
                   />

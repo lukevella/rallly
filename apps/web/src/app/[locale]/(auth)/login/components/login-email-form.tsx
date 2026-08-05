@@ -257,7 +257,7 @@ export function LoginWithEmailForm({
                   >
                     <Trans
                       i18nKey="forgotPassword"
-                      defaults="Forgot password?"
+                      defaults="Forgot Password?"
                     />
                   </Link>
                 </div>

@@ -103,7 +103,7 @@ export function ScheduledEventListItem({
                             <Trans
                               i18nKey="moreParticipants"
                               values={{ count: invites.length - 10 }}
-                              defaults="{count} more…"
+                              defaults="{count, plural, other {# more…}}"
                             />
                           </li>
                         )}

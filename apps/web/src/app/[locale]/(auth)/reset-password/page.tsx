@@ -50,7 +50,7 @@ export default async function ResetPasswordPage() {
           i18n={i18n}
           ns="app"
           i18nKey="resetPasswordFooter"
-          defaults="<a>Back to login</a>"
+          defaults="Don't need to reset? <a>Back to login</a>"
           components={{
             a: <LinkWithRedirectTo className="text-link" href="/login" />,
           }}

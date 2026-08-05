@@ -78,7 +78,7 @@ function OpenCloseToggle() {
         }}
       >
         <PlayIcon />
-        <Trans i18nKey="reopenPoll" defaults="Reopen" />
+        <Trans i18nKey="reopenPoll" defaults="Reopen poll" />
       </DropdownMenuItem>
     );
   } else {

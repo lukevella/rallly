@@ -51,7 +51,7 @@ export function MemberSelector({ members }: MemberSelectorProps) {
             <UsersIcon />
           </Icon>
           <span>
-            <Trans i18nKey="allMembers" defaults="All Members" />
+            <Trans i18nKey="allMembers" defaults="All" />
           </span>
         </div>
       ),

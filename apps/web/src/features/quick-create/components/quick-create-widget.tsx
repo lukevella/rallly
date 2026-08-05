@@ -105,7 +105,7 @@ export async function QuickCreateWidget() {
               i18n={i18n}
               ns="app"
               i18nKey="quickCreateSecurePolls"
-              defaults="Store polls securely in your account"
+              defaults="Secure access through your account"
             />
           </li>
           <li className="flex items-center gap-2">

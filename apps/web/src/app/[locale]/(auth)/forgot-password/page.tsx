@@ -69,6 +69,6 @@ export async function generateMetadata(props: {
   const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {
-    title: t("forgotPassword", { defaultValue: "Forgot Password" }),
+    title: t("forgotPassword", { defaultValue: "Forgot Password?" }),
   };
 }

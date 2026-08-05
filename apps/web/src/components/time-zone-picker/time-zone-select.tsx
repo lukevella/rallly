@@ -91,7 +91,7 @@ export function TimeZoneSelect({
       <ComboboxContent align="end" anchor={anchorRef.current}>
         <ComboboxEmpty>
           {t("timeZoneSelect__noOption", {
-            defaultValue: "No timezone found",
+            defaultValue: "No option found",
           })}
         </ComboboxEmpty>
         <ComboboxList>

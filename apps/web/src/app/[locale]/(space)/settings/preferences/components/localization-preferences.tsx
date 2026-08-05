@@ -223,7 +223,7 @@ export const LocalizationPreferences = ({
           </div>
           <FieldContent>
             <FieldLabel htmlFor="week-start-select">
-              <Trans i18nKey="startOfWeek" defaults="Start of Week" />
+              <Trans i18nKey="startOfWeek" defaults="Start of week" />
             </FieldLabel>
             <FieldDescription>
               <Trans

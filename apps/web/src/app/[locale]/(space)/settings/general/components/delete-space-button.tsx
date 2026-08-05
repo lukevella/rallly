@@ -79,7 +79,7 @@ function DeleteSpaceDialog({
               <DialogDescription>
                 <Trans
                   i18nKey="deleteSpaceDialogDescription"
-                  defaults="This will permanently delete the space. This action cannot be undone."
+                  defaults="This will permanently delete the space and all polls inside it. This action cannot be undone."
                 />
               </DialogDescription>
             </DialogHeader>
@@ -108,7 +108,7 @@ function DeleteSpaceDialog({
                     <FormDescription>
                       <Trans
                         i18nKey="deleteSpaceInstruction"
-                        defaults="Please type the space name to confirm: {{spaceName}}"
+                        defaults="Please type the space name to confirm:"
                         values={{ spaceName }}
                       />
                     </FormDescription>

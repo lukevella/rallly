@@ -131,7 +131,7 @@ export function ImageCropDialog({
             onClick={handleCropComplete}
             disabled={!completedCrop}
           >
-            <Trans i18nKey="uploadImage" defaults="Crop & Upload" />
+            <Trans i18nKey="uploadImage" defaults="Upload" />
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -100,7 +100,7 @@ export async function DashboardHome({
                   i18n={i18n}
                   ns="app"
                   i18nKey="openPollCount"
-                  defaults="{count} open"
+                  defaults="{count, plural, other {# open}}"
                   values={{ count: openPollCount }}
                 />
               </TileDescription>
@@ -123,7 +123,7 @@ export async function DashboardHome({
                   i18n={i18n}
                   ns="app"
                   i18nKey="upcomingEventCount"
-                  defaults="{count} upcoming"
+                  defaults="{count, plural, other {# upcoming}}"
                   values={{ count: upcomingEventCount }}
                 />
               </TileDescription>

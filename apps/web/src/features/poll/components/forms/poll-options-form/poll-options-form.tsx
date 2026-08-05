@@ -98,7 +98,7 @@ const PollOptionsForm = ({
             </CardTitle>
             <CardDescription>
               <Trans i18nKey="selectPotentialDates">
-                Select potential dates for your event
+                Select potential dates or times for your event
               </Trans>
             </CardDescription>
           </div>

@@ -180,7 +180,7 @@ export default async function LicensePage() {
             <EmptyStateDescription>
               <Trans
                 i18nKey="noLicenseKeyDescription"
-                defaults="This instance doesn't have a license key yet."
+                defaults="This instance doesn’t have a license key yet."
               />
             </EmptyStateDescription>
             <EmptyStateFooter className="flex gap-2">
