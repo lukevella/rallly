@@ -1,6 +1,7 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
+import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Badge } from "@rallly/ui/badge";
 import { Card, CardContent, CardTitle } from "@rallly/ui/card";
 import {
@@ -166,7 +167,7 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             control={form.control}
             name="enableComments"
             render={({ field }) => (
-              <Field>
+              <div className="flex flex-col gap-3">
                 <Field orientation="horizontal">
                   <div className="@md/field-group:block hidden">
                     <PageIcon size="lg">
@@ -205,17 +206,17 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                   />
                 </Field>
                 {field.value ? (
-                  <FieldDescription className="flex items-start gap-x-1.5">
-                    <InfoIcon className="size-3.5 shrink-0 translate-y-px" />
-                    <span>
+                  <Alert variant="info">
+                    <InfoIcon />
+                    <AlertDescription>
                       <Trans
                         i18nKey="commentsSettingPhaseOutHint"
                         defaults="Comments are being phased out. Participants can include a note with their response instead."
                       />
-                    </span>
-                  </FieldDescription>
+                    </AlertDescription>
+                  </Alert>
                 ) : null}
-              </Field>
+              </div>
             )}
           />
         </FieldGroup>
