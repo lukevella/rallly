@@ -23,13 +23,15 @@ export class PollPage {
   async addComment() {
     const page = this.page;
 
-    await page.getByText("Leave a comment on this poll").click();
-    await page
+    await page.getByRole("button", { name: "Comments" }).click();
+
+    const sheet = page.getByRole("dialog", { name: "Comments" });
+    await sheet
       .getByPlaceholder("Leave a comment on this poll")
       .fill("This is a comment!");
-    await page.getByPlaceholder("Your name…").fill("Test user");
+    await sheet.getByPlaceholder("Your name…").fill("Test user");
 
-    await page.getByRole("button", { name: "Add Comment" }).click();
+    await sheet.getByRole("button", { name: "Add Comment" }).click();
   }
 
   async openShareDialog() {

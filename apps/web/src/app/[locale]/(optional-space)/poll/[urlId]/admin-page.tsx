@@ -1,5 +1,5 @@
 "use client";
-import Discussion from "@/features/poll/components/discussion";
+import { CommentsSheet } from "@/features/poll/components/comments-sheet";
 import { EventCard } from "@/features/poll/components/event-card";
 import { PollFooter } from "@/features/poll/components/poll-footer";
 import { ResponsiveResults } from "@/features/poll/components/responsive-results";
@@ -14,8 +14,11 @@ export function AdminPage() {
       <VotingForm>
         <ResponsiveResults />
       </VotingForm>
-      <Discussion />
+      <div className="fixed right-4 bottom-4 z-40 lg:right-6 lg:bottom-6">
+        <CommentsSheet className="rounded-full shadow-lg" />
+      </div>
       <PollFooter />
+      <div className="h-12 lg:hidden" />
     </div>
   );
 }
