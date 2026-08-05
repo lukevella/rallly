@@ -66,6 +66,7 @@
   "apiRateLimitValue": "{count} requests / minute",
   "apiViewDocs": "View API docs",
   "applyToAllDates": "Apply to all dates",
+  "appName": "App name",
   "areYouSure": "Are you sure?",
   "attendeeCount": "{count, plural, =0 {No attendees} one {1 attendee} other {# attendees}}",
   "attribution": "Attribution",

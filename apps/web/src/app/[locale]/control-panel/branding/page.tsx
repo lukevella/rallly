@@ -161,8 +161,8 @@ export default async function BrandingPage() {
                     t={t}
                     i18n={i18n}
                     ns="app"
-                    i18nKey="name"
-                    defaults="App Name"
+                    i18nKey="appName"
+                    defaults="App name"
                   />
                 </div>
                 <Input value={appName} readOnly />
