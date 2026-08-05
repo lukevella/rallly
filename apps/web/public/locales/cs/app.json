@@ -198,7 +198,6 @@
   "delete": "Smazat",
   "deleteAccount": "Smazat účet",
   "deleteAccountActivePolls": "{count, plural, one {# aktivní Hlasování} few {# aktivní Hlasování} many {# aktivních Hlasování} other {# aktivních Hlasování}}",
-  "deleteAccountDataWarning": "Všechna data spojená s vaším účtem, včetně vašich Hlasování, událostí, hlasů a komentářů, budou trvale smazána.",
   "deleteAccountDialogDescription": "Opravdu chcete smazat svůj účet?",
   "deleteAccountDialogImmediateWarning": "Váš účet a data budou okamžitě smazána. Tuto akci nelze vrátit zpět.",
   "deleteAccountDialogScheduleDescription": "Váš účet bude naplánován ke smazání.",
