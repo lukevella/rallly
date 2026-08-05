@@ -27,7 +27,9 @@ test.describe
       await expect(page).toHaveURL("/login?redirectTo=%2Fcontrol-panel");
     });
 
-    test("should show not found for a non-admin user", async ({ page }) => {
+    test("should explain missing admin access to a non-admin user", async ({
+      page,
+    }) => {
       await createUserInDb({
         email: CONTROL_PANEL_NON_ADMIN_EMAIL,
         name: "Control Panel Non-Admin",
@@ -37,7 +39,10 @@ test.describe
 
       await page.goto("/control-panel");
 
-      await expect(page.getByText("Page not found")).toBeVisible();
+      await expect(page).toHaveURL(/.*\/admin-setup/);
+      await expect(
+        page.getByText("Administrator access required"),
+      ).toBeVisible();
     });
 
     test("should allow an admin user to access the control panel", async ({

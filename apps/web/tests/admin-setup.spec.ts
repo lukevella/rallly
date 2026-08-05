@@ -51,7 +51,7 @@ test.describe("Admin Setup Page Access", () => {
     ).toBeVisible();
   });
 
-  test("should show 'not found' for a regular user (not initial admin, not admin role)", async ({
+  test("should explain missing admin access to a regular user (not initial admin, not admin role)", async ({
     page,
   }) => {
     await createUserInDb({
@@ -62,7 +62,8 @@ test.describe("Admin Setup Page Access", () => {
     await loginWithEmail(page, { email: REGULAR_USER_EMAIL });
 
     await page.goto("/admin-setup");
-    await expect(page.getByText("Page not found")).toBeVisible();
+    await expect(page.getByText("Administrator access required")).toBeVisible();
+    await expect(page.getByText(REGULAR_USER_EMAIL)).toBeVisible();
   });
 
   test("should redirect an existing admin user to control-panel", async ({
@@ -79,7 +80,7 @@ test.describe("Admin Setup Page Access", () => {
     await expect(page).toHaveURL("/control-panel");
   });
 
-  test("should show 'not found' if INITIAL_ADMIN_EMAIL in env is different from user's email", async ({
+  test("should explain missing admin access if INITIAL_ADMIN_EMAIL in env is different from user's email", async ({
     page,
   }) => {
     await createUserInDb({
@@ -90,7 +91,7 @@ test.describe("Admin Setup Page Access", () => {
     await loginWithEmail(page, { email: OTHER_USER_EMAIL });
 
     await page.goto("/admin-setup");
-    await expect(page.getByText("Page not found")).toBeVisible();
+    await expect(page.getByText("Administrator access required")).toBeVisible();
   });
 
   test("initial admin can make themselves admin using the button", async ({
