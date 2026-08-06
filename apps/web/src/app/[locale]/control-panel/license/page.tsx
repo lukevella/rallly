@@ -73,7 +73,7 @@ export default async function LicensePage() {
               <div className="flex justify-between">
                 <DescriptionList>
                   <DescriptionListTitle>
-                    <Trans i18nKey="licenseType" defaults="License Type" />
+                    <Trans i18nKey="licenseType" defaults="License type" />
                   </DescriptionListTitle>
                   <DescriptionListValue>
                     <span className="text-primary capitalize">
@@ -92,7 +92,7 @@ export default async function LicensePage() {
                     ) : null}
                   </DescriptionListValue>
                   <DescriptionListTitle>
-                    <Trans i18nKey="licenseKey" defaults="License Key" />
+                    <Trans i18nKey="licenseKey" defaults="License key" />
                   </DescriptionListTitle>
                   <DescriptionListValue>
                     <span className="select-all font-mono text-sm">
@@ -100,19 +100,19 @@ export default async function LicensePage() {
                     </span>
                   </DescriptionListValue>
                   <DescriptionListTitle>
-                    <Trans i18nKey="licenseeName" defaults="Licensee Name" />
+                    <Trans i18nKey="licenseeName" defaults="Licensee name" />
                   </DescriptionListTitle>
                   <DescriptionListValue>
                     {license.licenseeName ?? "-"}
                   </DescriptionListValue>
                   <DescriptionListTitle>
-                    <Trans i18nKey="licenseeEmail" defaults="Licensee Email" />
+                    <Trans i18nKey="licenseeEmail" defaults="Licensee email" />
                   </DescriptionListTitle>
                   <DescriptionListValue>
                     {license.licenseeEmail ?? "-"}
                   </DescriptionListValue>
                   <DescriptionListTitle>
-                    <Trans i18nKey="purchaseDate" defaults="Purchase Date" />
+                    <Trans i18nKey="purchaseDate" defaults="Purchase date" />
                   </DescriptionListTitle>
                   <DescriptionListValue>
                     <Time value={license.issuedAt} preset="date" />
@@ -180,7 +180,7 @@ export default async function LicensePage() {
             <EmptyStateDescription>
               <Trans
                 i18nKey="noLicenseKeyDescription"
-                defaults="This instance doesn't have a license key yet."
+                defaults="This instance doesn’t have a license key yet."
               />
             </EmptyStateDescription>
             <EmptyStateFooter className="flex gap-2">

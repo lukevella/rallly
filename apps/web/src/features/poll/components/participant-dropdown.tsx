@@ -90,11 +90,11 @@ export const ParticipantDropdown = ({
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={onEdit}>
             <PencilIcon />
-            <Trans i18nKey="editVotes" />
+            <Trans i18nKey="editVotes" defaults="Edit votes" />
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsChangeNameModalVisible(true)}>
             <TagIcon />
-            <Trans i18nKey="changeName" />
+            <Trans i18nKey="changeName" defaults="Change name" />
           </DropdownMenuItem>
           <DropdownMenuItem
             variant="destructive"
@@ -145,11 +145,15 @@ const DeleteParticipantModal = ({
           <DialogTitle>
             <Trans
               i18nKey="deleteParticipant"
+              defaults="Delete {name}?"
               values={{ name: participantName }}
             />
           </DialogTitle>
           <DialogDescription>
-            <Trans i18nKey="deleteParticipantDescription" />
+            <Trans
+              i18nKey="deleteParticipantDescription"
+              defaults="Are you sure you want to delete this participant? This action cannot be undone."
+            />
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -235,8 +239,14 @@ const ChangeNameModal = (props: {
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("changeName")}</DialogTitle>
-          <DialogDescription>{t("changeNameDescription")}</DialogDescription>
+          <DialogTitle>
+            {t("changeName", { defaultValue: "Change name" })}
+          </DialogTitle>
+          <DialogDescription>
+            {t("changeNameDescription", {
+              defaultValue: "Enter a new name for this participant.",
+            })}
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form id={formName} onSubmit={handleSubmit(handler)}>
@@ -256,7 +266,12 @@ const ChangeNameModal = (props: {
                       disabled={formState.isSubmitting}
                     />
                   </FormControl>
-                  <FormDescription>{t("changeNameInfo")}</FormDescription>
+                  <FormDescription>
+                    {t("changeNameInfo", {
+                      defaultValue:
+                        "This will not affect any votes you have already made.",
+                    })}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

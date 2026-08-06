@@ -31,7 +31,10 @@ export function DuplicateDialog({
             <Trans i18nKey="duplicate" />
           </DialogTitle>
           <DialogDescription>
-            <Trans i18nKey="duplicateDescription" />
+            <Trans
+              i18nKey="duplicateDescription"
+              defaults="Create a new poll based on this one"
+            />
           </DialogDescription>
         </DialogHeader>
         <DuplicateForm

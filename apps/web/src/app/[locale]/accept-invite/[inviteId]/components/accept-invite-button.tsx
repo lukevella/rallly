@@ -55,7 +55,7 @@ export const AcceptInviteButton = ({ spaceId }: { spaceId: string }) => {
       onClick={handleClick}
       loading={acceptInvite.isExecuting}
     >
-      <Trans i18nKey="acceptInvite" defaults="Accept Invite" />
+      <Trans i18nKey="acceptInvite" defaults="Accept invite" />
     </Button>
   );
 };

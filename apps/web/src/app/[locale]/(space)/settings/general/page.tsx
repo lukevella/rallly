@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
     title: t("generalSettings", {
-      defaultValue: "General Settings",
+      defaultValue: "General settings",
     }),
     description: t("generalSettingsDescription", {
       defaultValue:

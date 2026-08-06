@@ -98,7 +98,7 @@ export function EditEventTypeDialog({
       <DialogContent size="lg">
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey="editEventTypeTitle" defaults="Edit Event Type" />
+            <Trans i18nKey="editEventTypeTitle" defaults="Edit event type" />
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>

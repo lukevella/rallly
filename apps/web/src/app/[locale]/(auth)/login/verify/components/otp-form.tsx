@@ -135,7 +135,10 @@ export function OTPForm({
                   />
                 </FormControl>
                 <FormDescription className="mt-4">
-                  <Trans i18nKey="verificationCodeHelp" />
+                  <Trans
+                    i18nKey="verificationCodeHelp"
+                    defaults="Didn't get the email? Check your spam/junk."
+                  />
                 </FormDescription>
                 <FormMessage />
               </FormItem>

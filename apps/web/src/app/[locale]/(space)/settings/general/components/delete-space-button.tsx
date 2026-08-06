@@ -73,13 +73,13 @@ function DeleteSpaceDialog({
               <DialogTitle>
                 <Trans
                   i18nKey="deleteSpaceDialogTitle"
-                  defaults="Delete Space"
+                  defaults="Delete space"
                 />
               </DialogTitle>
               <DialogDescription>
                 <Trans
                   i18nKey="deleteSpaceDialogDescription"
-                  defaults="This will permanently delete the space. This action cannot be undone."
+                  defaults="This will permanently delete the space and all polls inside it. This action cannot be undone."
                 />
               </DialogDescription>
             </DialogHeader>
@@ -108,7 +108,7 @@ function DeleteSpaceDialog({
                     <FormDescription>
                       <Trans
                         i18nKey="deleteSpaceInstruction"
-                        defaults="Please type the space name to confirm: {{spaceName}}"
+                        defaults="Please type the space name to confirm:"
                         values={{ spaceName }}
                       />
                     </FormDescription>
@@ -136,7 +136,7 @@ function DeleteSpaceDialog({
               >
                 <Trans
                   i18nKey="deleteSpacePermanently"
-                  defaults="Delete Space Permanently"
+                  defaults="Delete space permanently"
                 />
               </Button>
             </DialogFooter>
@@ -155,7 +155,7 @@ export function DeleteSpaceButton({ spaceName }: DeleteSpaceButtonProps) {
   return (
     <DeleteSpaceDialog spaceName={spaceName}>
       <DialogTrigger render={<Button className="text-destructive" />}>
-        <Trans i18nKey="deleteSpace" defaults="Delete Space" />
+        <Trans i18nKey="deleteSpace" defaults="Delete space" />
       </DialogTrigger>
     </DeleteSpaceDialog>
   );

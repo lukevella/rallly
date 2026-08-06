@@ -209,7 +209,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             <div className="flex w-full flex-col">
               <div className="mb-3 flex items-center justify-center space-x-4">
                 <Button
-                  title={t("previousMonth")}
+                  title={t("previousMonth", { defaultValue: "Previous month" })}
                   size="icon"
                   onClick={datepicker.prev}
                 >
@@ -219,7 +219,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                   {datepicker.label}
                 </div>
                 <Button
-                  title={t("nextMonth")}
+                  title={t("nextMonth", { defaultValue: "Next month" })}
                   size="icon"
                   onClick={datepicker.next}
                 >
@@ -324,7 +324,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                 })}
               </div>
               <Button className="mt-3" onClick={datepicker.today}>
-                {t("today")}
+                {t("today", { defaultValue: "Today" })}
               </Button>
             </div>
           </div>
@@ -472,7 +472,9 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                               }}
                             >
                               <PlusIcon data-icon="inline-start" />
-                              {t("addTimeOption")}
+                              {t("addTimeOption", {
+                                defaultValue: "Add time option",
+                              })}
                             </Button>
                             <DropdownMenu>
                               <DropdownMenuTrigger
@@ -531,7 +533,10 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                   <Icon>
                                     <SparklesIcon />
                                   </Icon>
-                                  <Trans i18nKey="applyToAllDates" />
+                                  <Trans
+                                    i18nKey="applyToAllDates"
+                                    defaults="Apply to all dates"
+                                  />
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => {
@@ -546,7 +551,10 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                   <Icon>
                                     <CalendarXIcon />
                                   </Icon>
-                                  <Trans i18nKey="deleteDate" />
+                                  <Trans
+                                    i18nKey="deleteDate"
+                                    defaults="Delete date"
+                                  />
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>

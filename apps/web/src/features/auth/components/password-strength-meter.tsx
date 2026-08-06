@@ -51,7 +51,7 @@ export function PasswordStrengthMeter({
       </div>
       <div className="flex items-center justify-between text-xs">
         <span className="text-muted-foreground text-xs">
-          <Trans i18nKey="passwordStrength" defaults="Password Strength" />
+          <Trans i18nKey="passwordStrength" defaults="Password strength" />
         </span>
         <span
           className={cn("font-medium", {

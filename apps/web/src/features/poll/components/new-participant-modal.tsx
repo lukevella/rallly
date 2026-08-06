@@ -302,7 +302,9 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
               <FormItem>
                 <FormLabel>
                   {t("email")}
-                  {!isEmailRequired ? ` (${t("optional")})` : null}
+                  {!isEmailRequired
+                    ? ` (${t("optional", { defaultValue: "optional" })})`
+                    : null}
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -318,7 +320,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
           />
 
           <div className="flex flex-col gap-2">
-            <Label>{t("response")}</Label>
+            <Label>{t("response", { defaultValue: "Response" })}</Label>
             <VoteSummary votes={props.votes} />
           </div>
 

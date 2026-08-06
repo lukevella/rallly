@@ -51,7 +51,7 @@ test.describe.serial(() => {
       await page.getByRole("button", { name: "Continue with email" }).click();
 
       // Should show the verification code prompt (not an error) to prevent email enumeration
-      await page.getByRole("heading", { name: "Verify Your Email" }).waitFor();
+      await page.getByRole("heading", { name: "Verify your email" }).waitFor();
 
       // The existing user should have received a sign-in OTP
       const code = await getCode(testUserEmail);
@@ -70,7 +70,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with email" }).click();
 
-      await page.getByRole("heading", { name: "Verify Your Email" }).waitFor();
+      await page.getByRole("heading", { name: "Verify your email" }).waitFor();
 
       await page.getByLabel("Enter your 6-digit code").fill("000000");
 
@@ -88,7 +88,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with email" }).click();
 
-      await page.getByRole("heading", { name: "Verify Your Email" }).waitFor();
+      await page.getByRole("heading", { name: "Verify your email" }).waitFor();
 
       const code = await getCode(testUserEmail);
 
@@ -107,7 +107,7 @@ test.describe.serial(() => {
 
       await page.getByRole("button", { name: "Continue with email" }).click();
 
-      await page.getByRole("heading", { name: "Verify Your Email" }).waitFor();
+      await page.getByRole("heading", { name: "Verify your email" }).waitFor();
 
       const code = await getCode(testUserEmail);
 
@@ -121,7 +121,7 @@ test.describe.serial(() => {
         await page.goto("/forgot-password");
 
         // Wait for forgot password page to load
-        await page.getByRole("heading", { name: "Forgot Password" }).waitFor();
+        await page.getByRole("heading", { name: "Forgot password" }).waitFor();
 
         // Fill in email
         await page
@@ -193,7 +193,7 @@ test.describe.serial(() => {
 
         // Verify we're on the reset password page
         await expect(
-          page.getByRole("heading", { name: "Reset Password" }),
+          page.getByRole("heading", { name: "Reset password" }),
         ).toBeVisible();
 
         // Fill in new password
@@ -229,7 +229,7 @@ test.describe.serial(() => {
         // Verify we're on the forgot password page
         await expect(page).toHaveURL(/\/forgot-password/);
         await expect(
-          page.getByRole("heading", { name: "Forgot Password" }),
+          page.getByRole("heading", { name: "Forgot password" }),
         ).toBeVisible();
 
         // Verify email is pre-filled as a UX improvement

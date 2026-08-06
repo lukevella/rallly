@@ -92,7 +92,7 @@ export function ImageCropDialog({
       <DialogContent className="w-fit">
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey="imageCropDialogTitle" defaults="Crop Image" />
+            <Trans i18nKey="imageCropDialogTitle" defaults="Crop image" />
           </DialogTitle>
         </DialogHeader>
 
@@ -131,7 +131,7 @@ export function ImageCropDialog({
             onClick={handleCropComplete}
             disabled={!completedCrop}
           >
-            <Trans i18nKey="uploadImage" defaults="Crop & Upload" />
+            <Trans i18nKey="uploadImage" defaults="Upload" />
           </Button>
         </DialogFooter>
       </DialogContent>

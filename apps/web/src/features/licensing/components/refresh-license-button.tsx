@@ -24,13 +24,13 @@ export function RefreshLicenseButton() {
               <RefreshCwIcon />
             </Icon>
             <span className="sr-only">
-              <Trans i18nKey="refreshLicense" defaults="Refresh License" />
+              <Trans i18nKey="refreshLicense" defaults="Refresh license" />
             </span>
           </Button>
         }
       />
       <TooltipContent>
-        <Trans i18nKey="refreshLicense" defaults="Refresh License" />
+        <Trans i18nKey="refreshLicense" defaults="Refresh license" />
       </TooltipContent>
     </Tooltip>
   );

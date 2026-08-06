@@ -34,7 +34,10 @@ export const DeletePollDialog: React.FunctionComponent<{
             <Trans i18nKey="deletePoll" />
           </DialogTitle>
           <DialogDescription>
-            <Trans i18nKey="deletePollDescription" />
+            <Trans
+              i18nKey="deletePollDescription"
+              defaults="All data related to this poll will be deleted. This action cannot be undone."
+            />
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

@@ -15,10 +15,13 @@ export default function NotFound() {
           <FileSearchIcon />
         </EmptyStateIcon>
         <EmptyStateTitle>
-          <Trans i18nKey="errors_notFoundTitle" />
+          <Trans i18nKey="errors_notFoundTitle" defaults="404 not found" />
         </EmptyStateTitle>
         <EmptyStateDescription>
-          <Trans i18nKey="errors_notFoundDescription" />
+          <Trans
+            i18nKey="errors_notFoundDescription"
+            defaults="We couldn't find the page you're looking for."
+          />
         </EmptyStateDescription>
       </EmptyState>
     </div>

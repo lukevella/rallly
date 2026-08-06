@@ -263,7 +263,7 @@ export function SetupForm({
                 <FormLabel>
                   <Trans
                     i18nKey="organizationName"
-                    defaults="Organization Name"
+                    defaults="Organization name"
                   />
                 </FormLabel>
                 <FormControl>

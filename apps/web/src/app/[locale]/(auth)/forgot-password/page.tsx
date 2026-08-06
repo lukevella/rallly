@@ -31,7 +31,7 @@ export default async function ForgotPasswordPage() {
             i18n={i18n}
             ns="app"
             i18nKey="forgotPasswordTitle"
-            defaults="Forgot Password"
+            defaults="Forgot password"
           />
         </AuthPageTitle>
         <AuthPageDescription>
@@ -69,6 +69,6 @@ export async function generateMetadata(props: {
   const params = await props.params;
   const { t } = await getTranslation(params.locale);
   return {
-    title: t("forgotPassword", { defaultValue: "Forgot Password" }),
+    title: t("forgotPassword", { defaultValue: "Forgot password?" }),
   };
 }

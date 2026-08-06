@@ -161,8 +161,8 @@ export default async function BrandingPage() {
                     t={t}
                     i18n={i18n}
                     ns="app"
-                    i18nKey="name"
-                    defaults="App Name"
+                    i18nKey="appName"
+                    defaults="App name"
                   />
                 </div>
                 <Input value={appName} readOnly />
@@ -200,7 +200,7 @@ export default async function BrandingPage() {
                       i18n={i18n}
                       ns="app"
                       i18nKey="primaryColor"
-                      defaults="Primary Color"
+                      defaults="Primary color"
                     />
                   </div>
                   <div className="flex items-center gap-2">
@@ -221,7 +221,7 @@ export default async function BrandingPage() {
                       i18n={i18n}
                       ns="app"
                       i18nKey="primaryColorDark"
-                      defaults="Primary Color (Dark Mode)"
+                      defaults="Primary color (dark mode)"
                     />
                   </div>
                   <div className="flex items-center gap-2">
@@ -276,7 +276,7 @@ export default async function BrandingPage() {
                       {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
                       <img
                         src={logoUrlLight}
-                        alt="Logo"
+                        alt={t("logo", { ns: "app", defaultValue: "Logo" })}
                         className="max-h-full max-w-full object-contain p-2"
                       />
                     </div>
@@ -290,7 +290,7 @@ export default async function BrandingPage() {
                       i18n={i18n}
                       ns="app"
                       i18nKey="logoDark"
-                      defaults="Logo (Dark Mode)"
+                      defaults="Logo (dark mode)"
                     />
                   </div>
                   <div className="flex items-center gap-4">
@@ -298,7 +298,10 @@ export default async function BrandingPage() {
                       {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
                       <img
                         src={logoUrlDark}
-                        alt="Logo (Dark Mode)"
+                        alt={t("logoDark", {
+                          ns: "app",
+                          defaultValue: "Logo (dark mode)",
+                        })}
                         className="max-h-full max-w-full object-contain p-2"
                       />
                     </div>
@@ -312,7 +315,7 @@ export default async function BrandingPage() {
                       i18n={i18n}
                       ns="app"
                       i18nKey="logoIcon"
-                      defaults="Logo Icon"
+                      defaults="Logo icon"
                     />
                   </div>
                   <div className="flex items-center gap-4">
@@ -320,7 +323,10 @@ export default async function BrandingPage() {
                       {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
                       <img
                         src={logoIconUrl}
-                        alt="Logo Icon"
+                        alt={t("logoIcon", {
+                          ns: "app",
+                          defaultValue: "Logo icon",
+                        })}
                         className="max-h-full max-w-full object-contain p-2"
                       />
                     </div>
@@ -359,7 +365,7 @@ export default async function BrandingPage() {
                     i18n={i18n}
                     ns="app"
                     i18nKey="hideAttribution"
-                    defaults="Hide Attribution"
+                    defaults="Hide attribution"
                   />
                 </div>
                 <div className="flex items-center gap-2">

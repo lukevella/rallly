@@ -78,7 +78,7 @@ function OpenCloseToggle() {
         }}
       >
         <PlayIcon />
-        <Trans i18nKey="reopenPoll" defaults="Reopen" />
+        <Trans i18nKey="reopenPoll" defaults="Reopen poll" />
       </DropdownMenuItem>
     );
   } else {
@@ -176,7 +176,7 @@ const ManagePoll: React.FunctionComponent<{
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={exportToCsv}>
             <DownloadIcon />
-            <Trans i18nKey="exportToCsv" />
+            <Trans i18nKey="exportToCsv" defaults="Export to CSV" />
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {

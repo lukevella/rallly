@@ -86,7 +86,7 @@ export function InviteDropdownMenu({ invite }: { invite: SpaceMemberInvite }) {
         <DialogContent size="sm">
           <DialogHeader>
             <DialogTitle>
-              <Trans i18nKey="cancelInvite" defaults="Cancel Invite" />
+              <Trans i18nKey="cancelInvite" defaults="Cancel invite" />
             </DialogTitle>
             <DialogDescription>
               <Trans

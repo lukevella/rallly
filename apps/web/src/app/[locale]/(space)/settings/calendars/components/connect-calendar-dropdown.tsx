@@ -18,7 +18,7 @@ export function ConnectCalendarDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger render={<Button />}>
         <PlusIcon data-icon="inline-start" />
-        <Trans i18nKey="connectCalendar" defaults="Connect Calendar" />
+        <Trans i18nKey="connectCalendar" defaults="Connect calendar" />
         <ChevronDownIcon data-icon="inline-end" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

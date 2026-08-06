@@ -21,10 +21,10 @@ describe("LeaveSpaceDialog", () => {
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Leave Space" }),
+      screen.getByRole("heading", { name: "Leave space" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Are you sure you want to leave this space/),
+      screen.getByText(/Remove yourself from this space/),
     ).toBeInTheDocument();
   });
 
@@ -44,7 +44,7 @@ describe("LeaveSpaceDialog", () => {
 
     expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Leave Space" }),
+      screen.getByRole("button", { name: "Leave space" }),
     ).toBeInTheDocument();
   });
 
@@ -71,7 +71,7 @@ describe("LeaveSpaceDialog", () => {
     render(<LeaveSpaceDialog {...defaultProps} />);
 
     const input = screen.getByPlaceholderText("Test Space");
-    const submitButton = screen.getByRole("button", { name: "Leave Space" });
+    const submitButton = screen.getByRole("button", { name: "Leave space" });
 
     // Type incorrect space name
     await user.type(input, "Wrong Space Name");
@@ -93,7 +93,7 @@ describe("LeaveSpaceDialog", () => {
     render(<LeaveSpaceDialog {...defaultProps} onConfirm={onConfirm} />);
 
     const input = screen.getByPlaceholderText("Test Space");
-    const submitButton = screen.getByRole("button", { name: "Leave Space" });
+    const submitButton = screen.getByRole("button", { name: "Leave space" });
 
     // Type space name with leading/trailing whitespace
     await user.type(input, "  Test Space  ");
@@ -111,7 +111,7 @@ describe("LeaveSpaceDialog", () => {
     render(<LeaveSpaceDialog {...defaultProps} onConfirm={onConfirm} />);
 
     const input = screen.getByPlaceholderText("Test Space");
-    const submitButton = screen.getByRole("button", { name: "Leave Space" });
+    const submitButton = screen.getByRole("button", { name: "Leave space" });
 
     await user.type(input, "Test Space");
     await user.click(submitButton);
@@ -134,7 +134,7 @@ describe("LeaveSpaceDialog", () => {
     render(<LeaveSpaceDialog {...defaultProps} onConfirm={onConfirm} />);
 
     const input = screen.getByPlaceholderText("Test Space");
-    const submitButton = screen.getByRole("button", { name: "Leave Space" });
+    const submitButton = screen.getByRole("button", { name: "Leave space" });
 
     await user.type(input, "Test Space");
     await user.click(submitButton);
@@ -225,7 +225,7 @@ describe("LeaveSpaceDialog", () => {
       );
 
       const input = screen.getByPlaceholderText("Exact Match Required");
-      const submitButton = screen.getByRole("button", { name: "Leave Space" });
+      const submitButton = screen.getByRole("button", { name: "Leave space" });
 
       // Test partial match fails
       await user.type(input, "Exact Match");
@@ -252,7 +252,7 @@ describe("LeaveSpaceDialog", () => {
       const user = userEvent.setup();
       render(<LeaveSpaceDialog {...defaultProps} />);
 
-      const submitButton = screen.getByRole("button", { name: "Leave Space" });
+      const submitButton = screen.getByRole("button", { name: "Leave space" });
 
       // Try to submit without typing anything
       await user.click(submitButton);

@@ -45,7 +45,7 @@ export function CustomBrandingPrompt() {
         <Image
           src="/images/branded-poll.webp"
           alt={t("customBrandingPromptTitle", {
-            defaultValue: "Custom Branding",
+            defaultValue: "Custom branding",
           })}
           fill
           sizes="384px"
@@ -60,7 +60,7 @@ export function CustomBrandingPrompt() {
           <h2 className="font-semibold text-sm">
             <Trans
               i18nKey="customBrandingPromptTitle"
-              defaults="Custom Branding"
+              defaults="Custom branding"
             />
           </h2>
           <Badge size="sm" variant="secondary">
@@ -83,7 +83,7 @@ export function CustomBrandingPrompt() {
               posthog?.capture("custom_branding_prompt:setup_click")
             }
           >
-            <Trans i18nKey="customBrandingPromptCta" defaults="Set Up Now" />
+            <Trans i18nKey="customBrandingPromptCta" defaults="Set up now" />
           </Button>
           <Button
             className="flex-1"

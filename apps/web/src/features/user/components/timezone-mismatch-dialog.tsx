@@ -57,7 +57,7 @@ export function TimeZoneMismatchDialog({
           <DialogTitle>
             <Trans
               i18nKey="timeZoneMismatchDialogTitle"
-              defaults="Timezone Mismatch Detected"
+              defaults="Timezone mismatch detected"
             />
           </DialogTitle>
         </DialogHeader>

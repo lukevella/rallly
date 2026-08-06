@@ -23,7 +23,7 @@ export class RegisterPage {
     // so submitting more than once is safe.
     await expect(async () => {
       const verifyHeading = this.page.getByRole("heading", {
-        name: "Verify Your Email",
+        name: "Verify your email",
       });
       // A previous attempt may have submitted successfully with the
       // navigation landing only after its wait expired — the login form is
@@ -45,7 +45,7 @@ export class RegisterPage {
     // New accounts have no name and go through onboarding. The space name
     // is prefilled, so only the name needs to be entered.
     await this.page
-      .getByRole("heading", { name: "Set Up Your Account" })
+      .getByRole("heading", { name: "Set up your account" })
       .waitFor();
 
     // The setup page is reached via a full page load, so like the login

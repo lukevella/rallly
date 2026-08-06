@@ -67,7 +67,7 @@ function EventTypesEmptyState({ onCreate }: { onCreate: () => void }) {
       <EmptyStateFooter>
         <Button variant="primary" onClick={onCreate}>
           <PlusIcon data-icon="inline-start" />
-          <Trans i18nKey="newEventType" defaults="New Event Type" />
+          <Trans i18nKey="newEventType" defaults="New event type" />
         </Button>
       </EmptyStateFooter>
     </EmptyState>
@@ -186,7 +186,7 @@ export function EventTypesSettingsPage() {
         <SettingsPageAction>
           <Button variant="primary" onClick={() => createDialog.trigger()}>
             <PlusIcon data-icon="inline-start" />
-            <Trans i18nKey="newEventType" defaults="New Event Type" />
+            <Trans i18nKey="newEventType" defaults="New event type" />
           </Button>
         </SettingsPageAction>
       </SettingsPageHeader>

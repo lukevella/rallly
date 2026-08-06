@@ -125,7 +125,7 @@ test.describe("Space members", () => {
     const inviteePage = await inviteeContext.newPage();
     await loginWithEmail(inviteePage, { email: inviteeEmail });
     await inviteePage.goto(inviteLink);
-    await inviteePage.getByRole("button", { name: "Accept Invite" }).click();
+    await inviteePage.getByRole("button", { name: "Accept invite" }).click();
     await expect(
       inviteePage.getByText("Successfully joined the space!"),
     ).toBeVisible();

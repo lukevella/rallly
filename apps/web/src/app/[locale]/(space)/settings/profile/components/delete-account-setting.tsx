@@ -35,7 +35,7 @@ export async function PendingDeletionSetting({
       </div>
       <FieldContent>
         <FieldTitle>
-          <Trans i18nKey="deleteAccount" defaults="Delete Account" />
+          <Trans i18nKey="deleteAccount" defaults="Delete account" />
         </FieldTitle>
         <FieldDescription>
           <Trans
@@ -64,7 +64,7 @@ export function DeleteAccountSetting({
       </div>
       <FieldContent>
         <FieldTitle>
-          <Trans i18nKey="deleteAccount" defaults="Delete Account" />
+          <Trans i18nKey="deleteAccount" defaults="Delete account" />
         </FieldTitle>
         <FieldDescription>
           <Trans
@@ -76,7 +76,7 @@ export function DeleteAccountSetting({
       <DeleteAccountDialog
         trigger={
           <Button className="text-destructive">
-            <Trans i18nKey="deleteAccount" defaults="Delete Account" />
+            <Trans i18nKey="deleteAccount" defaults="Delete account" />
           </Button>
         }
         summary={summary}

@@ -31,7 +31,9 @@ function useLoginWithEmailSchema() {
   const { t } = useTranslation();
   return React.useMemo(() => {
     return z.object({
-      identifier: z.email(t("validEmail")),
+      identifier: z.email(
+        t("validEmail", { defaultValue: "Please enter a valid email" }),
+      ),
       password: z.string().optional(),
     });
   }, [t]);

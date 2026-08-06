@@ -57,7 +57,7 @@ export default async function Page() {
         <SettingsPageDescription>
           <Trans
             i18nKey="profileDescription"
-            defaults="Set your public profile information"
+            defaults="Change your profile settings"
           />
         </SettingsPageDescription>
       </SettingsPageHeader>
@@ -72,7 +72,7 @@ export default async function Page() {
           <PageSection variant="card">
             <PageSectionHeader>
               <PageSectionTitle>
-                <Trans i18nKey="profileEmailAddress" defaults="Email Address" />
+                <Trans i18nKey="profileEmailAddress" defaults="Email address" />
               </PageSectionTitle>
               <PageSectionDescription>
                 <Trans
@@ -89,7 +89,7 @@ export default async function Page() {
           <PageSection variant="card">
             <PageSectionHeader>
               <PageSectionTitle>
-                <Trans i18nKey="dangerZone" defaults="Danger Zone" />
+                <Trans i18nKey="dangerZone" defaults="Danger zone" />
               </PageSectionTitle>
             </PageSectionHeader>
             <PageSectionContent>

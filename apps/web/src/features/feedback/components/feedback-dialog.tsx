@@ -79,7 +79,7 @@ export function FeedbackDialog(props: DialogProps) {
                   className="mt-6"
                   variant="primary"
                 >
-                  <Trans i18nKey="sendFeedback" defaults="Send Feedback" />
+                  <Trans i18nKey="sendFeedback" defaults="Send feedback" />
                 </Button>
               </form>
             </Form>

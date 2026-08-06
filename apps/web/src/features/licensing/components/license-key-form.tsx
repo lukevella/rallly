@@ -71,7 +71,7 @@ export function LicenseKeyForm() {
             return (
               <FormItem>
                 <FormLabel>
-                  <Trans i18nKey="licenseKey" defaults="License Key" />
+                  <Trans i18nKey="licenseKey" defaults="License key" />
                 </FormLabel>
                 <FormControl>
                   <Input

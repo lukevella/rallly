@@ -39,7 +39,7 @@ type CommandDialogProps = DialogProps & {
 
 const CommandDialog = ({
   children,
-  title = "Command Menu",
+  title = "Command menu",
   description,
   ...props
 }: CommandDialogProps) => {

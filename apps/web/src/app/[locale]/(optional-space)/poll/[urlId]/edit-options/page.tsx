@@ -164,10 +164,11 @@ const Page = () => {
 
           if (optionsToDeleteThatHaveVotes.length > 0) {
             modalContext.render({
-              title: t("areYouSure"),
+              title: t("areYouSure", { defaultValue: "Are you sure?" }),
               content: (
                 <Trans
                   i18nKey="deletingOptionsWarning"
+                  defaults="You are deleting options that participants have voted for. Their votes will also be deleted."
                   components={{ b: <strong /> }}
                 />
               ),

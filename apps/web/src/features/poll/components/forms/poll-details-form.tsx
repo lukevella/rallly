@@ -34,7 +34,9 @@ export const PollDetailsForm = () => {
               type="text"
               id="title"
               className="w-full"
-              placeholder={t("titlePlaceholder")}
+              placeholder={t("titlePlaceholder", {
+                defaultValue: "Monthly Meetup",
+              })}
             />
             <FormMessage />
           </FormItem>

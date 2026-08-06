@@ -52,7 +52,7 @@ function NoOpenPollsEmptyState({ closedCount }: { closedCount: number }) {
           <Trans i18nKey="viewClosedPolls" defaults="View closed polls" />
         </Link>
         <Link href="/new" className={buttonVariants()}>
-          <Trans i18nKey="createPoll" defaults="Create Poll" />
+          <Trans i18nKey="createPoll" defaults="Create poll" />
         </Link>
       </EmptyStateFooter>
     </EmptyState>
@@ -66,17 +66,17 @@ function PollsEmptyState() {
         <InboxIcon />
       </EmptyStateIcon>
       <EmptyStateTitle>
-        <Trans i18nKey="noPolls" defaults="No polls found" />
+        <Trans i18nKey="noPolls" defaults="No polls" />
       </EmptyStateTitle>
       <EmptyStateDescription>
         <Trans
           i18nKey="noPollsDescription"
-          defaults="Try adjusting your search or create a new poll"
+          defaults="Get started by creating a new poll."
         />
       </EmptyStateDescription>
       <EmptyStateFooter>
         <Link href="/new" className={buttonVariants()}>
-          <Trans i18nKey="createPoll" defaults="Create Poll" />
+          <Trans i18nKey="createPoll" defaults="Create poll" />
         </Link>
       </EmptyStateFooter>
     </EmptyState>
@@ -107,7 +107,7 @@ export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
         <PageHeaderActions>
           <Link href="/new" className={buttonVariants({ variant: "primary" })}>
             <PlusIcon data-icon="inline-start" />
-            <Trans i18nKey="newPoll" defaults="New Poll" />
+            <Trans i18nKey="newPoll" defaults="New poll" />
           </Link>
         </PageHeaderActions>
       </PageHeader>

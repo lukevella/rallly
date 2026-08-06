@@ -39,7 +39,7 @@ describe("TimeZoneMismatchDialog", () => {
   it("does not show on a first visit (no cookie), but records the zone", () => {
     renderDialog({ homeTimeZone: "Europe/Malta" });
     expect(
-      screen.queryByText("Timezone Mismatch Detected"),
+      screen.queryByText("Timezone mismatch detected"),
     ).not.toBeInTheDocument();
     expect(Cookies.get(TIME_ZONE_COOKIE_NAME)).toBe("America/New_York");
   });
@@ -49,14 +49,14 @@ describe("TimeZoneMismatchDialog", () => {
     Cookies.set(TIME_ZONE_COOKIE_NAME, "America/New_York");
     renderDialog({ homeTimeZone: "Europe/Malta" });
     expect(
-      screen.queryByText("Timezone Mismatch Detected"),
+      screen.queryByText("Timezone mismatch detected"),
     ).not.toBeInTheDocument();
   });
 
   it("shows when the viewer moved to a zone that is not their home zone", () => {
     Cookies.set(TIME_ZONE_COOKIE_NAME, "Asia/Tokyo");
     renderDialog({ homeTimeZone: "Europe/Malta" });
-    expect(screen.getByText("Timezone Mismatch Detected")).toBeInTheDocument();
+    expect(screen.getByText("Timezone mismatch detected")).toBeInTheDocument();
     expect(Cookies.get(TIME_ZONE_COOKIE_NAME)).toBe("America/New_York");
   });
 
@@ -64,7 +64,7 @@ describe("TimeZoneMismatchDialog", () => {
     Cookies.set(TIME_ZONE_COOKIE_NAME, "Asia/Tokyo");
     renderDialog({ homeTimeZone: "America/New_York" });
     expect(
-      screen.queryByText("Timezone Mismatch Detected"),
+      screen.queryByText("Timezone mismatch detected"),
     ).not.toBeInTheDocument();
   });
 
@@ -72,7 +72,7 @@ describe("TimeZoneMismatchDialog", () => {
     Cookies.set(TIME_ZONE_COOKIE_NAME, "Asia/Tokyo");
     renderDialog();
     expect(
-      screen.queryByText("Timezone Mismatch Detected"),
+      screen.queryByText("Timezone mismatch detected"),
     ).not.toBeInTheDocument();
   });
 
@@ -90,7 +90,7 @@ describe("TimeZoneMismatchDialog", () => {
     Cookies.set(TIME_ZONE_COOKIE_NAME, "America/New_York");
     renderDialog({ homeTimeZone: "America/New_York" });
     expect(
-      screen.queryByText("Timezone Mismatch Detected"),
+      screen.queryByText("Timezone mismatch detected"),
     ).not.toBeInTheDocument();
 
     // Laptop reopened in a new zone: no remount, just a focus event.
@@ -100,7 +100,7 @@ describe("TimeZoneMismatchDialog", () => {
     });
 
     expect(
-      await screen.findByText("Timezone Mismatch Detected"),
+      await screen.findByText("Timezone mismatch detected"),
     ).toBeInTheDocument();
     expect(Cookies.get(TIME_ZONE_COOKIE_NAME)).toBe("Asia/Tokyo");
   });
@@ -114,7 +114,7 @@ describe("TimeZoneMismatchDialog", () => {
 
     expect(mockExecute).not.toHaveBeenCalled();
     expect(
-      screen.queryByText("Timezone Mismatch Detected"),
+      screen.queryByText("Timezone mismatch detected"),
     ).not.toBeInTheDocument();
   });
 });

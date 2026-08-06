@@ -70,7 +70,7 @@ const ClockPreferences = ({ children }: { children: React.ReactElement }) => {
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey="clockPreferences" defaults="Clock Preferences" />
+            <Trans i18nKey="clockPreferences" defaults="Clock preferences" />
           </DialogTitle>
           <DialogDescription>
             <Trans
@@ -101,7 +101,7 @@ export const TimesShownIn = () => {
         <GlobeIcon data-icon="inline-start" />
         <Trans
           i18nKey="cityTime"
-          defaults="{city} Time"
+          defaults="{city} time"
           values={{ city: getCityFromTimezoneId(timeZone) }}
         />
       </Button>

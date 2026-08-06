@@ -44,7 +44,7 @@ export default async function Page() {
               <PageSectionTitle>
                 <Trans
                   i18nKey="languageAndRegion"
-                  defaults="Language & Region"
+                  defaults="Language & region"
                 />
               </PageSectionTitle>
               <PageSectionDescription>

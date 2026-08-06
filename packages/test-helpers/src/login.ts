@@ -22,7 +22,7 @@ export async function loginWithEmail(
     await page.getByPlaceholder("jessie.smith@example.com").fill(email);
     await page.getByRole("button", { name: "Continue with email" }).click();
     await page
-      .getByRole("heading", { name: /Verify Your Email|Finish Logging In/ })
+      .getByRole("heading", { name: /Verify your email|Finish logging in/ })
       .or(page.getByLabel("Password"))
       .first()
       .waitFor({ timeout: 5000 });

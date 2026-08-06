@@ -10,6 +10,7 @@
     "start": "next start",
     "type-check": "tsc --pretty --noEmit",
     "i18n:scan": "i18next-cli extract",
+    "i18n:sync": "i18next-cli extract --sync-primary",
     "test:integration": "playwright test",
     "test:unit": "vitest run",
     "test:codegen": "playwright codegen http://localhost:3000",

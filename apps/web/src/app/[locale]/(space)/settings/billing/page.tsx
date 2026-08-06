@@ -60,7 +60,7 @@ export default async function BillingSettingsPage({
           <ShieldXIcon />
         </EmptyStateIcon>
         <EmptyStateTitle>
-          <Trans i18nKey="accessDenied" defaults="Access Denied" />
+          <Trans i18nKey="accessDenied" defaults="Access denied" />
         </EmptyStateTitle>
         <EmptyStateDescription>
           <Trans
@@ -102,7 +102,7 @@ export default async function BillingSettingsPage({
               <PageSectionDescription>
                 <Trans
                   i18nKey="billingSubscriptionDescription"
-                  defaults="Manage your current subscription plan"
+                  defaults="Manage your current subscription plan."
                 />
               </PageSectionDescription>
             </PageSectionHeader>
@@ -129,7 +129,7 @@ export default async function BillingSettingsPage({
                   <AlertTitle>
                     <Trans
                       i18nKey="seatsUpdatedAlertTitle"
-                      defaults="Seats Updated"
+                      defaults="Seats updated"
                     />
                   </AlertTitle>
                   <AlertDescription>
@@ -169,7 +169,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslation();
   return {
     title: t("billingSettings", {
-      defaultValue: "Billing Settings",
+      defaultValue: "Billing settings",
     }),
     description: t("billingSettingsDescription", {
       defaultValue:

@@ -168,7 +168,7 @@ export function PayWallDialog({
             </DialogHeader>
             <div className="mt-6 flex flex-1 flex-col gap-4">
               <Label htmlFor="plan">
-                <Trans i18nKey="selectPlan" defaults="Select Plan:" />
+                <Trans i18nKey="selectPlan" defaults="Select plan:" />
               </Label>
               <RadioGroup
                 id="plan"
@@ -255,7 +255,7 @@ export function PayWallDialog({
                 </TabsContent>
               ) : (
                 <Button disabled={true} size="xl" className="w-full">
-                  <Trans i18nKey="currentPlan" defaults="Current Plan" />
+                  <Trans i18nKey="currentPlan" defaults="Current plan" />
                 </Button>
               )}
             </div>
@@ -275,7 +275,7 @@ export function PayWallDialog({
               </DialogHeader>
               <div className="space-y-3">
                 <SubHeading>
-                  <Trans i18nKey="keyBenefits" defaults="Key Benefits" />
+                  <Trans i18nKey="keyBenefits" defaults="Key benefits" />
                 </SubHeading>
                 <KeyBenefits>
                   <KeyBenefitsItem
@@ -295,7 +295,7 @@ export function PayWallDialog({
                     title={
                       <Trans
                         i18nKey="thirtyDayPollRetention"
-                        defaults="30 Day Poll Retention"
+                        defaults="30 day poll retention"
                       />
                     }
                     description={
@@ -320,7 +320,7 @@ export function PayWallDialog({
               </DialogHeader>
               <div className="space-y-3">
                 <SubHeading>
-                  <Trans i18nKey="keyBenefits" defaults="Key Benefits" />
+                  <Trans i18nKey="keyBenefits" defaults="Key benefits" />
                 </SubHeading>
                 <KeyBenefits>
                   <KeyBenefitsItem
@@ -328,7 +328,7 @@ export function PayWallDialog({
                     title={
                       <Trans
                         i18nKey="customBranding"
-                        defaults="Custom Branding"
+                        defaults="Custom branding"
                       />
                     }
                     description={
@@ -343,7 +343,7 @@ export function PayWallDialog({
                     title={
                       <Trans
                         i18nKey="removeAttribution"
-                        defaults="Remove Attribution"
+                        defaults="Remove attribution"
                       />
                     }
                     description={
@@ -358,13 +358,13 @@ export function PayWallDialog({
                     title={
                       <Trans
                         i18nKey="featureNameSchedule"
-                        defaults="Schedule Poll"
+                        defaults="Schedule poll"
                       />
                     }
                     description={
                       <Trans
                         i18nKey="schedulePollDescription"
-                        defaults="Lock in the final meeting time and notify participants"
+                        defaults="Select a final date for your event."
                       />
                     }
                   />
@@ -373,7 +373,7 @@ export function PayWallDialog({
                     title={
                       <Trans
                         i18nKey="featureNameExtendedPollLifetime"
-                        defaults="Extended Poll Lifetime"
+                        defaults="Extended poll lifetime"
                       />
                     }
                     description={

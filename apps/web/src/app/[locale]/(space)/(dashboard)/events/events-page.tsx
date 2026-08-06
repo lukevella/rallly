@@ -35,7 +35,7 @@ function EventsEmptyState({ status }: { status: Status }) {
       title: (
         <Trans
           i18nKey="upcomingEventsEmptyStateTitle"
-          defaults="No Upcoming Events"
+          defaults="No upcoming events"
         />
       ),
       description: (
@@ -47,7 +47,7 @@ function EventsEmptyState({ status }: { status: Status }) {
     },
     past: {
       title: (
-        <Trans i18nKey="pastEventsEmptyStateTitle" defaults="No Past Events" />
+        <Trans i18nKey="pastEventsEmptyStateTitle" defaults="No past events" />
       ),
       description: (
         <Trans
@@ -60,7 +60,7 @@ function EventsEmptyState({ status }: { status: Status }) {
       title: (
         <Trans
           i18nKey="unconfirmedEventsEmptyStateTitle"
-          defaults="No Unconfirmed Events"
+          defaults="No unconfirmed events"
         />
       ),
       description: (
@@ -74,7 +74,7 @@ function EventsEmptyState({ status }: { status: Status }) {
       title: (
         <Trans
           i18nKey="canceledEventsEmptyStateTitle"
-          defaults="No Canceled Events"
+          defaults="No canceled events"
         />
       ),
       description: (

@@ -50,7 +50,7 @@ const ParticipantRowForm = ({
     };
   }, [form]);
 
-  const participantName = name ?? t("you");
+  const participantName = name ?? t("you", { defaultValue: "You" });
 
   return (
     <tr className={cn("group", className)}>

@@ -19,7 +19,7 @@ export function ContactSupportLink() {
         <Icon>
           <SendIcon />
         </Icon>
-        <Trans i18nKey="contactSupport" defaults="Contact Support" />
+        <Trans i18nKey="contactSupport" defaults="Contact support" />
       </a>
       <p className="text-muted-foreground text-sm">
         <Trans

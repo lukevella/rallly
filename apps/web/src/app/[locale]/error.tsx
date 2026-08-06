@@ -58,7 +58,7 @@ export default function LocaleErrorBoundary({
               });
             }}
           >
-            <Trans i18nKey="signOut" defaults="Sign Out" />
+            <Trans i18nKey="signOut" defaults="Sign out" />
           </Button>
         }
       >
@@ -102,7 +102,7 @@ export default function LocaleErrorBoundary({
       <ErrorPageLinkItem
         href="/new"
         icon={<PlusIcon className="size-4 text-muted-foreground" />}
-        title={<Trans i18nKey="errorLinkCreatePoll" defaults="Create a Poll" />}
+        title={<Trans i18nKey="errorLinkCreatePoll" defaults="Create a poll" />}
         description={
           <Trans
             i18nKey="errorLinkCreatePollDescription"

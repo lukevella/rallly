@@ -76,7 +76,7 @@ export function PollsTabbedView({
         {children}
       </TabsContent>
       <output aria-live="polite" className="sr-only">
-        {isPending ? <Trans i18nKey="loading" defaults="Loading…" /> : null}
+        {isPending ? <Trans i18nKey="loading" defaults="Loading..." /> : null}
       </output>
     </Tabs>
   );

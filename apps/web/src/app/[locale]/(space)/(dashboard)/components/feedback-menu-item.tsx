@@ -18,7 +18,7 @@ export function FeedbackMenuItem() {
           }}
         >
           <MegaphoneIcon />
-          <Trans i18nKey="sendFeedback" defaults="Send Feedback" />
+          <Trans i18nKey="sendFeedback" defaults="Send feedback" />
         </SidebarMenuButton>
       </SidebarMenuItem>
       <FeedbackDialog {...dialog.dialogProps} />

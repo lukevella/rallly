@@ -22,7 +22,7 @@ const DateNavigationToolbar: React.FunctionComponent<
       </div>
       <div className="flex items-center gap-1">
         <Button variant="ghost" size="sm" onClick={onToday}>
-          {t("today")}
+          {t("today", { defaultValue: "Today" })}
         </Button>
         <Button
           variant="ghost"

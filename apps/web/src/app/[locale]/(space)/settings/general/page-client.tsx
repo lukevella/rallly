@@ -72,7 +72,7 @@ export function GeneralSettingsPageClient() {
             <PageSection variant="card">
               <PageSectionHeader>
                 <PageSectionTitle>
-                  <Trans i18nKey="dangerZone" defaults="Danger Zone" />
+                  <Trans i18nKey="dangerZone" defaults="Danger zone" />
                 </PageSectionTitle>
                 <PageSectionDescription>
                   <Trans
@@ -92,7 +92,7 @@ export function GeneralSettingsPageClient() {
                       </div>
                       <FieldContent>
                         <FieldTitle>
-                          <Trans i18nKey="leaveSpace" defaults="Leave Space" />
+                          <Trans i18nKey="leaveSpace" defaults="Leave space" />
                         </FieldTitle>
                         <FieldDescription>
                           <Trans
@@ -118,7 +118,7 @@ export function GeneralSettingsPageClient() {
                         <FieldTitle>
                           <Trans
                             i18nKey="deleteSpace"
-                            defaults="Delete Space"
+                            defaults="Delete space"
                           />
                         </FieldTitle>
                         <FieldDescription>

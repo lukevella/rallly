@@ -9,6 +9,6 @@ export function useToastProgress() {
     toast.promise(promise, {
       loading: t("saving", { defaultValue: "Saving..." }),
       success: t("saved", { defaultValue: "Saved" }),
-      error: t("unexpectedError", { defaultValue: "Unexpected Error" }),
+      error: t("unexpectedError", { defaultValue: "Unexpected error" }),
     });
 }

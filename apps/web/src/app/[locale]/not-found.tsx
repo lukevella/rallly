@@ -38,7 +38,7 @@ export default async function NotFoundPage() {
       <ErrorPageLinkItem
         href="/new"
         icon={<PlusIcon className="size-4 text-muted-foreground" />}
-        title={t("errorLinkCreatePoll", { defaultValue: "Create a Poll" })}
+        title={t("errorLinkCreatePoll", { defaultValue: "Create a poll" })}
         description={t("errorLinkCreatePollDescription", {
           defaultValue: "Start scheduling a new meeting.",
         })}

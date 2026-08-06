@@ -41,7 +41,7 @@ export function CreateSpaceDialog(props: DialogProps) {
         <DialogContent size="sm">
           <DialogHeader>
             <DialogTitle>
-              <Trans i18nKey="createSpace" defaults="Create Space" />
+              <Trans i18nKey="createSpace" defaults="Create space" />
             </DialogTitle>
             <DialogDescription>
               <Trans
@@ -84,7 +84,7 @@ export function CreateSpaceDialog(props: DialogProps) {
                 type="submit"
                 variant="primary"
               >
-                <Trans i18nKey="createSpace" defaults="Create Space" />
+                <Trans i18nKey="createSpace" defaults="Create space" />
               </Button>
             </DialogFooter>
           </form>
