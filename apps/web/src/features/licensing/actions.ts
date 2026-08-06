@@ -7,7 +7,7 @@ import { INSTANCE_LICENSE_TAG } from "@/features/licensing/constants";
 import { validateLicenseKeyInputSchema } from "@/features/licensing/schema";
 import { AppError } from "@/lib/errors/app-error";
 import { adminActionClient } from "@/lib/safe-action/server";
-import { licenseManager } from "./mutations";
+import { licenseManager, setInstanceLicense } from "./mutations";
 
 const logger = createLogger("licensing/actions");
 
@@ -107,18 +107,7 @@ export const validateLicenseKeyAction = adminActionClient
       });
     }
 
-    await prisma.instanceLicense.create({
-      data: {
-        licenseKey: data.key,
-        licenseeName: data.licenseeName,
-        licenseeEmail: data.licenseeEmail,
-        issuedAt: data.issuedAt,
-        expiresAt: data.expiresAt,
-        seats: data.seats,
-        type: data.type,
-        whiteLabelAddon: data.whiteLabelAddon,
-      },
-    });
+    await setInstanceLicense(data);
 
     updateTag(INSTANCE_LICENSE_TAG);
 
