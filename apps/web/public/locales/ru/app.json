@@ -198,7 +198,6 @@
   "delete": "Удалить",
   "deleteAccount": "Удалить аккаунт",
   "deleteAccountActivePolls": "{count, plural, one {# активный опрос} few {# активных опроса} many {# активных опросов} other {# активных опросов}}",
-  "deleteAccountDataWarning": "Все данные, связанные с вашим аккаунтом, включая ваши опросы, события, голоса и комментарии, будут безвозвратно удалены.",
   "deleteAccountDialogDescription": "Вы уверены, что хотите удалить свою учетную запись?",
   "deleteAccountDialogImmediateWarning": "Ваша учетная запись и данные будут удалены немедленно. Это действие нельзя отменить.",
   "deleteAccountDialogScheduleDescription": "Удаление вашего аккаунта будет запланировано.",

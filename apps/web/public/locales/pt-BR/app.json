@@ -198,7 +198,6 @@
   "delete": "Excluir",
   "deleteAccount": "Excluir conta",
   "deleteAccountActivePolls": "{count, plural, one {# enquete ativa} other {# enquetes ativas}}",
-  "deleteAccountDataWarning": "Todos os dados associados à sua conta, incluindo suas enquetes, eventos, votos e comentários, serão permanentemente excluídos.",
   "deleteAccountDialogDescription": "Tem certeza de que deseja excluir sua conta?",
   "deleteAccountDialogImmediateWarning": "Sua conta e os dados serão excluídos imediatamente. Esta ação não pode ser desfeita.",
   "deleteAccountDialogScheduleDescription": "Sua conta será programada para exclusão.",

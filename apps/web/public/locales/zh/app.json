@@ -197,7 +197,6 @@
   "delete": "删除",
   "deleteAccount": "删除账户",
   "deleteAccountActivePolls": "{count, plural, other {# 个活跃投票}}",
-  "deleteAccountDataWarning": "与您的账户相关的所有数据，包括您的投票、活动、投票记录和评论，将被永久删除。",
   "deleteAccountDialogDescription": "确定要删除您的账户吗？",
   "deleteAccountDialogImmediateWarning": "您的账户和数据将被立即删除，此操作不可撤销。",
   "deleteAccountDialogScheduleDescription": "您的账户将被安排删除。",

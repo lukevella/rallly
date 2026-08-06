@@ -198,7 +198,6 @@
   "delete": "Verwijderen",
   "deleteAccount": "Account verwijderen",
   "deleteAccountActivePolls": "{count, plural, one {# actieve poll} other {# actieve polls}}",
-  "deleteAccountDataWarning": "Alle gegevens die bij je account horen, inclusief je polls, evenementen, stemmen en opmerkingen, worden permanent verwijderd.",
   "deleteAccountDialogDescription": "Weet je zeker dat je je account wilt verwijderen?",
   "deleteAccountDialogImmediateWarning": "Je account en gegevens worden onmiddellijk verwijderd. Dit kan niet ongedaan worden gemaakt.",
   "deleteAccountDialogScheduleDescription": "Je account wordt ingepland voor verwijdering.",

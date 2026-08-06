@@ -198,7 +198,6 @@
   "delete": "Slet",
   "deleteAccount": "Slet konto",
   "deleteAccountActivePolls": "{count, plural, one {# aktiv Afstemning} other {# aktive Afstemninger}}",
-  "deleteAccountDataWarning": "Alle data, der er tilknyttet din konto, herunder dine Afstemninger, begivenheder, stemmer og kommentarer, vil blive slettet permanent.",
   "deleteAccountDialogDescription": "Er du sikker på, at du vil slette din konto?",
   "deleteAccountDialogImmediateWarning": "Din konto og dine data slettes straks. Dette kan ikke fortrydes.",
   "deleteAccountDialogScheduleDescription": "Din konto vil blive planlagt til sletning.",
