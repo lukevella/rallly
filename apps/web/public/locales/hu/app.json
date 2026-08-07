@@ -66,6 +66,7 @@
   "apiRateLimitValue": "{count} kérés / perc",
   "apiViewDocs": "API dokumentáció megtekintése",
   "applyToAllDates": "Beállítás minden dátumhoz",
+  "appName": "Alkalmazás neve",
   "areYouSure": "Biztos vagy benne?",
   "attendeeCount": "{count, plural, =0 {Nincsenek résztvevők} one {1 résztvevő} other {# résztvevő}}",
   "attribution": "Készítő megjelölés",
