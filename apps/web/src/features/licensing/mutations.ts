@@ -214,6 +214,43 @@ export async function createLicenseCheckoutSession({
   }
 }
 
+/**
+ * Installs a validated license as the instance's license.
+ *
+ * An instance holds exactly one license, so this replaces whatever is
+ * currently installed rather than inserting alongside it. A plain create
+ * fails with a unique-constraint violation when the same key is re-entered,
+ * and silently accumulates rows when a different one is — loadInstanceLicense
+ * only ever reads the first by id, so the extras would be invisible but
+ * authoritative.
+ */
+export async function setInstanceLicense(license: {
+  key: string;
+  licenseeName: string | null;
+  licenseeEmail: string | null;
+  issuedAt: Date;
+  expiresAt: Date | null;
+  seats: number | null;
+  type: LicenseType;
+  whiteLabelAddon: boolean;
+}) {
+  await prisma.$transaction([
+    prisma.instanceLicense.deleteMany(),
+    prisma.instanceLicense.create({
+      data: {
+        licenseKey: license.key,
+        licenseeName: license.licenseeName,
+        licenseeEmail: license.licenseeEmail,
+        issuedAt: license.issuedAt,
+        expiresAt: license.expiresAt,
+        seats: license.seats,
+        type: license.type,
+        whiteLabelAddon: license.whiteLabelAddon,
+      },
+    }),
+  ]);
+}
+
 export async function validateLicenseKey({
   key,
   fingerprint,
