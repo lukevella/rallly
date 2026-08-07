@@ -138,4 +138,17 @@ describe("validateLicenseKey network failures", () => {
 
     expect(error).toBe(bug);
   });
+
+  it("rethrows a TypeError that isn't a transport failure", async () => {
+    // A malformed LICENSE_API_URL throws this exact shape. Treating it as a
+    // network failure would send an operator to debug connectivity when the
+    // problem is their configuration.
+    const badUrl = Object.assign(
+      new TypeError("Failed to parse URL from not-a-url/v1"),
+      { cause: { code: "ERR_INVALID_URL" } },
+    );
+    const error = await attempt(badUrl);
+
+    expect(error).toBe(badUrl);
+  });
 });

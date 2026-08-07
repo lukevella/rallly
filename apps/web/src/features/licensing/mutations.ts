@@ -41,7 +41,11 @@ function describeFetchFailure(error: unknown) {
     };
   }
 
-  if (error instanceof TypeError) {
+  // Only "fetch failed" carries a transport fault. Other TypeErrors are
+  // programming or configuration faults — a malformed LICENSE_API_URL throws
+  // "Failed to parse URL from ..." — and reporting those as connectivity would
+  // send an operator to debug a network that is working fine.
+  if (error instanceof TypeError && error.message === "fetch failed") {
     const code = (error.cause as { code?: string } | undefined)?.code;
 
     if (code && TLS_ERROR_CODE_PATTERN.test(code)) {
