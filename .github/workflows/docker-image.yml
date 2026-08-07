@@ -87,6 +87,16 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # -----------------------------------------------------------------
+      # Resolve App Version
+      # Purpose: Strip the leading "v" from the release tag so the app
+      #          reports an unprefixed version, matching the value
+      #          produced by scripts/inject-version.js.
+      # -----------------------------------------------------------------
+      - name: Resolve App Version
+        id: version
+        run: echo "app_version=${GITHUB_REF_NAME#v}" | tee -a $GITHUB_OUTPUT
+
       - name: Build and Push Multi-Arch Image
         id: build
         uses: docker/build-push-action@v5
@@ -98,7 +108,7 @@ jobs:
             type=image,"name=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}",
             push-by-digest=true,name-canonical=true,push=true
           build-args: |
-            APP_VERSION=${{ github.ref_name }}
+            APP_VERSION=${{ steps.version.outputs.app_version }}
             SELF_HOSTED=true
 
       # -----------------------------------------------------------------
