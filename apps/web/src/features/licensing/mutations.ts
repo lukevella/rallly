@@ -22,6 +22,49 @@ const logger = createLogger("licensing/manager");
 
 const REQUEST_TIMEOUT_MS = 30_000;
 
+/**
+ * TLS failures reach us as `TypeError: fetch failed` with the real reason on
+ * `cause.code` — the same shape DNS and connection-refused failures take. The
+ * message alone is identical in every case, so the code is the only signal
+ * worth logging: a self-hosted instance behind a TLS-intercepting proxy is
+ * indistinguishable from a dead DNS entry without it.
+ */
+const TLS_ERROR_CODE_PATTERN =
+  /^(CERT_|DEPTH_ZERO_|SELF_SIGNED_|UNABLE_TO_(GET|VERIFY)_|ERR_TLS_)/;
+
+function describeFetchFailure(error: unknown) {
+  if (error instanceof DOMException && error.name === "TimeoutError") {
+    return {
+      reason: "timeout" as const,
+      code: "TIMEOUT",
+      message: `Licensing service did not respond within ${REQUEST_TIMEOUT_MS}ms.`,
+    };
+  }
+
+  if (error instanceof TypeError) {
+    const code = (error.cause as { code?: string } | undefined)?.code;
+
+    if (code && TLS_ERROR_CODE_PATTERN.test(code)) {
+      return {
+        reason: "tls" as const,
+        code,
+        message:
+          "TLS verification failed when contacting the licensing service. " +
+          "If this instance is behind a proxy that intercepts HTTPS, point " +
+          "NODE_EXTRA_CA_CERTS at your root CA certificate and restart.",
+      };
+    }
+
+    return {
+      reason: "network" as const,
+      code: code ?? "UNKNOWN",
+      message: "Could not reach the licensing service.",
+    };
+  }
+
+  return null;
+}
+
 export class LicenseManager {
   apiUrl: string;
   authToken?: string;
@@ -57,14 +100,37 @@ export class LicenseManager {
     return createLicenseResponseSchema.parse(await res.json());
   }
   async validateLicenseKey(input: ValidateLicenseInputKeySchema) {
-    const res = await fetch(`${this.apiUrl}/licenses/actions/validate-key`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(input),
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-    });
+    let res: Response;
+    try {
+      res = await fetch(`${this.apiUrl}/licenses/actions/validate-key`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(input),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      });
+    } catch (error) {
+      // A thrown fetch never reaches the !res.ok branch below, so without this
+      // the request failed with nothing logged at all and the operator saw a
+      // bare "internal server error".
+      const failure = describeFetchFailure(error);
+
+      if (!failure) {
+        throw error;
+      }
+
+      logger.error(
+        { reason: failure.reason, code: failure.code, apiUrl: this.apiUrl },
+        failure.message,
+      );
+
+      throw new AppError({
+        code: "INTERNAL_SERVER_ERROR",
+        cause: error,
+        message: failure.message,
+      });
+    }
 
     if (!res.ok) {
       const text = await res.text();
