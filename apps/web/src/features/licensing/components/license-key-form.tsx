@@ -25,7 +25,7 @@ const formSchema = z.object({
   }),
 });
 
-export function LicenseKeyForm() {
+export function LicenseKeyForm({ onSuccess }: { onSuccess?: () => void }) {
   const { t } = useTranslation();
   const router = useRouter();
   const form = useForm({
@@ -53,6 +53,7 @@ export function LicenseKeyForm() {
                   defaultValue: "Invalid license key",
                 }),
               });
+              return;
             }
           } catch (_error) {
             form.setError("licenseKey", {
@@ -61,7 +62,13 @@ export function LicenseKeyForm() {
                   "An error occurred while validating the license key",
               }),
             });
+            return;
           }
+
+          // Refreshing swaps the page to the installed-license branch, which
+          // unmounts this form. Notify the owner first so closing the dialog
+          // doesn't depend on that re-render winning a race.
+          onSuccess?.();
           router.refresh();
         })}
       >

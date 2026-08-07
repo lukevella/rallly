@@ -1,21 +1,8 @@
 import { buttonVariants } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
-import { Button } from "@rallly/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@rallly/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@rallly/ui/dialog";
 
-import {
-  KeySquareIcon,
-  PaletteIcon,
-  PlusIcon,
-  ShoppingBagIcon,
-} from "lucide-react";
+import { KeySquareIcon, PaletteIcon, ShoppingBagIcon } from "lucide-react";
 import type { Metadata } from "next";
 import {
   DescriptionList,
@@ -37,7 +24,7 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { LicenseKeyForm } from "@/features/licensing/components/license-key-form";
+import { AddLicenseKeyButton } from "@/features/licensing/components/add-license-key-button";
 import { RefreshLicenseButton } from "@/features/licensing/components/refresh-license-button";
 import { RemoveLicenseButton } from "@/features/licensing/components/remove-license-button";
 import { loadInstanceLicense } from "@/features/licensing/data";
@@ -193,23 +180,7 @@ export default async function LicensePage() {
                 <ShoppingBagIcon data-icon="inline-start" />
                 <Trans i18nKey="purchaseLicense" defaults="Purchase license" />
               </a>
-              <Dialog>
-                <DialogTrigger render={<Button variant="primary" />}>
-                  <PlusIcon data-icon="inline-start" />
-                  <Trans i18nKey="addLicenseKey" defaults="Add license key" />
-                </DialogTrigger>
-                <DialogContent size="sm">
-                  <DialogHeader>
-                    <DialogTitle>
-                      <Trans
-                        i18nKey="addLicenseKey"
-                        defaults="Add license key"
-                      />
-                    </DialogTitle>
-                  </DialogHeader>
-                  <LicenseKeyForm />
-                </DialogContent>
-              </Dialog>
+              <AddLicenseKeyButton />
             </EmptyStateFooter>
           </EmptyState>
         )}
