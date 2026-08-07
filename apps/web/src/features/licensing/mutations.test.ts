@@ -75,3 +75,80 @@ describe("setInstanceLicense", () => {
     });
   });
 });
+
+/**
+ * A thrown fetch skips the response-status branch entirely, so before this was
+ * handled a TLS failure behind a corporate proxy logged nothing and surfaced as
+ * a bare "internal server error" — indistinguishable from the licensing service
+ * being down. The codes below are the real ones Node reports; they were
+ * captured by calling the corresponding badssl.com endpoints.
+ */
+describe("validateLicenseKey network failures", () => {
+  const fetchError = (code: string) =>
+    Object.assign(new TypeError("fetch failed"), { cause: { code } });
+
+  async function attempt(thrown: unknown) {
+    const { LicenseManager } = await import("./mutations");
+    vi.spyOn(globalThis, "fetch").mockRejectedValue(thrown);
+    const manager = new LicenseManager({ apiUrl: "https://example.test/v1" });
+
+    return manager
+      .validateLicenseKey({ key: "RLYV4-AAAA-BBBB-CCCC-DDDD-00199" })
+      .then(
+        () => null,
+        (error: Error) => error,
+      );
+  }
+
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it.each([
+    ["DEPTH_ZERO_SELF_SIGNED_CERT"],
+    ["SELF_SIGNED_CERT_IN_CHAIN"],
+    ["CERT_HAS_EXPIRED"],
+    ["ERR_TLS_CERT_ALTNAME_INVALID"],
+  ])("names the certificate as the cause for %s", async (code) => {
+    const error = await attempt(fetchError(code));
+
+    // The remedy has to reach the operator: the toast is generic, so the
+    // message is the only place the CA hint can live.
+    expect(error?.message).toContain("NODE_EXTRA_CA_CERTS");
+  });
+
+  it("does not blame certificates for a DNS failure", async () => {
+    const error = await attempt(fetchError("ENOTFOUND"));
+
+    expect(error?.message).toContain("Could not reach");
+    expect(error?.message).not.toContain("NODE_EXTRA_CA_CERTS");
+  });
+
+  it("reports a timeout distinctly", async () => {
+    const timeout = new DOMException("aborted due to timeout", "TimeoutError");
+    const error = await attempt(timeout);
+
+    expect(error?.message).toContain("did not respond");
+    expect(error?.message).not.toContain("NODE_EXTRA_CA_CERTS");
+  });
+
+  it("rethrows errors it cannot classify rather than mislabelling them", async () => {
+    const bug = new RangeError("something else entirely");
+    const error = await attempt(bug);
+
+    expect(error).toBe(bug);
+  });
+
+  it("rethrows a TypeError that isn't a transport failure", async () => {
+    // A malformed LICENSE_API_URL throws this exact shape. Treating it as a
+    // network failure would send an operator to debug connectivity when the
+    // problem is their configuration.
+    const badUrl = Object.assign(
+      new TypeError("Failed to parse URL from not-a-url/v1"),
+      { cause: { code: "ERR_INVALID_URL" } },
+    );
+    const error = await attempt(badUrl);
+
+    expect(error).toBe(badUrl);
+  });
+});
