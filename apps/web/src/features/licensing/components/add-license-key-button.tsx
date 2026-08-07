@@ -15,6 +15,18 @@ import { Trans } from "@/i18n/client";
 export function AddLicenseKeyButton() {
   const dialog = useDialog();
 
+  // On success the page swaps to the installed-license view, which unmounts
+  // this trigger, so dismiss()'s focus restore targets a detached node and
+  // focus falls to <body>. Send it to the main content region instead, which
+  // survives the swap. Deferred so it lands after the dialog's own focus
+  // handling rather than being overwritten by it.
+  const handleSuccess = () => {
+    dialog.dismiss();
+    requestAnimationFrame(() => {
+      document.getElementById("main-content")?.focus();
+    });
+  };
+
   return (
     <>
       <Button variant="primary" {...dialog.triggerProps}>
@@ -28,7 +40,7 @@ export function AddLicenseKeyButton() {
               <Trans i18nKey="addLicenseKey" defaults="Add license key" />
             </DialogTitle>
           </DialogHeader>
-          <LicenseKeyForm onSuccess={dialog.dismiss} />
+          <LicenseKeyForm onSuccess={handleSuccess} />
         </DialogContent>
       </Dialog>
     </>
