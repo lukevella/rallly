@@ -43,7 +43,9 @@ export function VersionTile() {
       <PageIcon>
         <DownloadIcon />
       </PageIcon>
-      <TileTitle>{`v${appVersion ?? "unknown"}`}</TileTitle>
+      <TileTitle>
+        {appVersion ? `v${appVersion.replace(/^v/, "")}` : "unknown"}
+      </TileTitle>
       <TileDescription>
         <Suspense fallback={<Skeleton className="h-4 w-24" />}>
           <UpdateStatus />
