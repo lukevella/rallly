@@ -66,6 +66,7 @@
   "apiRateLimitValue": "{count} Anfragen / Minute",
   "apiViewDocs": "API-Dokumentation anzeigen",
   "applyToAllDates": "Auf alle Termine anwenden",
+  "appName": "Anwendungsname",
   "areYouSure": "Bist du sicher?",
   "attendeeCount": "{count, plural, =0 {Keine Teilnehmer} one {1 Teilnehmer} other {# Teilnehmer}}",
   "attribution": "Namensnennung (Attribution)",
