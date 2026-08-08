@@ -15,7 +15,6 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from "@rallly/ui/field";
 import { Form } from "@rallly/ui/form";
 import { toast } from "@rallly/ui/sonner";
-import { useRouter } from "next/navigation";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -32,7 +31,6 @@ export function SetupPasswordDialog({
   trigger: React.ReactElement;
 }) {
   const dialog = useDialog();
-  const router = useRouter();
   const passwordId = React.useId();
   const { t } = useTranslation();
   const passwordValidation = usePasswordValidationSchema();
@@ -46,9 +44,6 @@ export function SetupPasswordDialog({
     onSuccess: () => {
       form.reset();
       dialog.dismiss();
-      // The page reads hasPassword on the server, so without this the row
-      // keeps offering "Set password" until a full reload.
-      router.refresh();
       toast.success(
         t("passwordSetSuccess", {
           defaultValue: "Your password has been set successfully",
