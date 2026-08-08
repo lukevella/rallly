@@ -11,7 +11,6 @@ import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
 import { InboxIcon, MessageCircleIcon } from "lucide-react";
 import React from "react";
-import { PageIcon } from "@/components/page-icons";
 import {
   PageSection,
   PageSectionContent,
@@ -20,6 +19,7 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
+import { SettingIcon } from "@/components/setting-icon";
 import { updateNotificationPreferenceAction } from "@/features/notifications/actions";
 import type {
   ActivityEventType,
@@ -70,11 +70,9 @@ export function NotificationsPage({
         <PageSectionContent>
           <FieldGroup variant="divided">
             <Field orientation="horizontal">
-              <div className="@md/field-group:block hidden">
-                <PageIcon size="lg">
-                  <InboxIcon />
-                </PageIcon>
-              </div>
+              <SettingIcon>
+                <InboxIcon />
+              </SettingIcon>
               <FieldContent>
                 <FieldLabel htmlFor="notify-new-response">
                   <Trans i18nKey="notifyNewResponse" defaults="New response" />
@@ -95,11 +93,9 @@ export function NotificationsPage({
               />
             </Field>
             <Field orientation="horizontal">
-              <div className="@md/field-group:block hidden">
-                <PageIcon size="lg">
-                  <MessageCircleIcon />
-                </PageIcon>
-              </div>
+              <SettingIcon>
+                <MessageCircleIcon />
+              </SettingIcon>
               <FieldContent>
                 <FieldLabel htmlFor="notify-new-comment">
                   <Trans i18nKey="notifyNewComment" defaults="New comment" />

@@ -10,7 +10,6 @@ import {
   FieldTitle,
 } from "@rallly/ui/field";
 import { EyeIcon, LogOutIcon, TrashIcon } from "lucide-react";
-import { PageIcon } from "@/components/page-icons";
 import {
   PageSection,
   PageSectionContent,
@@ -19,6 +18,7 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
+import { SettingIcon } from "@/components/setting-icon";
 import {
   SettingsPage,
   SettingsPageContent,
@@ -85,11 +85,9 @@ export function GeneralSettingsPageClient() {
                 <FieldGroup variant="divided">
                   {!isOwner ? (
                     <Field orientation="responsive">
-                      <div className="@md/field-group:block hidden">
-                        <PageIcon size="lg">
-                          <LogOutIcon />
-                        </PageIcon>
-                      </div>
+                      <SettingIcon>
+                        <LogOutIcon />
+                      </SettingIcon>
                       <FieldContent>
                         <FieldTitle>
                           <Trans i18nKey="leaveSpace" defaults="Leave space" />
@@ -109,11 +107,9 @@ export function GeneralSettingsPageClient() {
                   ) : null}
                   {canDeleteSpace ? (
                     <Field orientation="responsive">
-                      <div className="@md/field-group:block hidden">
-                        <PageIcon size="lg">
-                          <TrashIcon />
-                        </PageIcon>
-                      </div>
+                      <SettingIcon>
+                        <TrashIcon />
+                      </SettingIcon>
                       <FieldContent>
                         <FieldTitle>
                           <Trans

@@ -21,7 +21,7 @@ import {
   VenetianMaskIcon,
 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import { PageIcon } from "@/components/page-icons";
+import { SettingIcon } from "@/components/setting-icon";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import type { PollSettingsFormData } from "@/features/poll/components/forms/types";
@@ -45,11 +45,9 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             name="requireParticipantEmail"
             render={({ field }) => (
               <Field orientation="horizontal">
-                <div className="@md/field-group:block hidden">
-                  <PageIcon size="lg">
-                    <MailIcon />
-                  </PageIcon>
-                </div>
+                <SettingIcon>
+                  <MailIcon />
+                </SettingIcon>
                 <FieldContent>
                   <FieldLabel htmlFor="require-participant-email">
                     <Trans
@@ -87,11 +85,9 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             name="hideParticipants"
             render={({ field }) => (
               <Field orientation="horizontal">
-                <div className="@md/field-group:block hidden">
-                  <PageIcon size="lg">
-                    <VenetianMaskIcon />
-                  </PageIcon>
-                </div>
+                <SettingIcon>
+                  <VenetianMaskIcon />
+                </SettingIcon>
                 <FieldContent>
                   <FieldLabel htmlFor="hide-participants">
                     <Trans
@@ -129,11 +125,9 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             name="hideScores"
             render={({ field }) => (
               <Field orientation="horizontal">
-                <div className="@md/field-group:block hidden">
-                  <PageIcon size="lg">
-                    <BarChart2Icon />
-                  </PageIcon>
-                </div>
+                <SettingIcon>
+                  <BarChart2Icon />
+                </SettingIcon>
                 <FieldContent>
                   <FieldLabel htmlFor="hide-scores">
                     <Trans i18nKey="hideScoresTitle" defaults="Hide votes" />
@@ -169,11 +163,9 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             render={({ field }) => (
               <div className="flex flex-col gap-3">
                 <Field orientation="horizontal">
-                  <div className="@md/field-group:block hidden">
-                    <PageIcon size="lg">
-                      <MessageCircleIcon />
-                    </PageIcon>
-                  </div>
+                  <SettingIcon>
+                    <MessageCircleIcon />
+                  </SettingIcon>
                   <FieldContent>
                     <FieldLabel htmlFor="enable-comments">
                       <Trans
