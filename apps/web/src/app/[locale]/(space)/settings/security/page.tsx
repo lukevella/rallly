@@ -7,9 +7,10 @@ import {
   FieldGroup,
   FieldTitle,
 } from "@rallly/ui/field";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, KeyRoundIcon } from "lucide-react";
 import type { Metadata } from "next";
 import type { Params } from "@/app/[locale]/types";
+import { PageIcon } from "@/components/page-icons";
 import {
   PageSection,
   PageSectionContent,
@@ -75,6 +76,11 @@ export default async function SecurityPage() {
               <PageSectionContent>
                 <FieldGroup variant="divided">
                   <Field orientation="responsive">
+                    <div className="@md/field-group:block hidden">
+                      <PageIcon size="lg">
+                        <KeyRoundIcon />
+                      </PageIcon>
+                    </div>
                     <FieldContent>
                       <FieldTitle>
                         <Trans i18nKey="password" defaults="Password" />
