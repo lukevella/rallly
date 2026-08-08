@@ -29,7 +29,9 @@ export function VersionTile() {
       <PageIcon>
         <DownloadIcon />
       </PageIcon>
-      <TileTitle>{`v${appVersion ?? "unknown"}`}</TileTitle>
+      <TileTitle>
+        {appVersion ? `v${appVersion.replace(/^v/, "")}` : "unknown"}
+      </TileTitle>
       <TileDescription>
         {isFetching ? (
           <Spinner />
