@@ -1,4 +1,12 @@
 import { Alert, AlertDescription } from "@rallly/ui/alert";
+import { Button } from "@rallly/ui/button";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldTitle,
+} from "@rallly/ui/field";
 import { InfoIcon } from "lucide-react";
 import type { Metadata } from "next";
 import type { Params } from "@/app/[locale]/types";
@@ -22,8 +30,8 @@ import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { ChangePasswordForm } from "./components/change-password-form";
-import { SetupPasswordForm } from "./components/setup-password-form";
+import { ChangePasswordDialog } from "./components/change-password-dialog";
+import { SetupPasswordDialog } from "./components/setup-password-dialog";
 
 export default async function SecurityPage() {
   const user = await requireUser();
@@ -49,44 +57,69 @@ export default async function SecurityPage() {
       <SettingsPageContent>
         {isEmailLoginEnabled ? (
           <PageSectionGroup>
-            {hasPassword ? (
-              <PageSection variant="card">
-                <PageSectionHeader>
-                  <PageSectionTitle>
-                    <Trans
-                      i18nKey="changePassword"
-                      defaults="Change password"
-                    />
-                  </PageSectionTitle>
-                  <PageSectionDescription>
-                    <Trans
-                      i18nKey="changePasswordDescription"
-                      defaults="Update your password to keep your account secure"
-                    />
-                  </PageSectionDescription>
-                </PageSectionHeader>
-                <PageSectionContent>
-                  <ChangePasswordForm />
-                </PageSectionContent>
-              </PageSection>
-            ) : (
-              <PageSection variant="card">
-                <PageSectionHeader>
-                  <PageSectionTitle>
-                    <Trans i18nKey="setPasswordTitle" defaults="Set password" />
-                  </PageSectionTitle>
-                  <PageSectionDescription>
-                    <Trans
-                      i18nKey="setPasswordSectionDescription"
-                      defaults="Your account doesn't have a password yet. Set one to sign in with your email address."
-                    />
-                  </PageSectionDescription>
-                </PageSectionHeader>
-                <PageSectionContent>
-                  <SetupPasswordForm />
-                </PageSectionContent>
-              </PageSection>
-            )}
+            <PageSection variant="card">
+              <PageSectionHeader>
+                <PageSectionTitle>
+                  <Trans
+                    i18nKey="securityAuthentication"
+                    defaults="Authentication"
+                  />
+                </PageSectionTitle>
+                <PageSectionDescription>
+                  <Trans
+                    i18nKey="securityAuthenticationDescription"
+                    defaults="Manage how you sign in to your account"
+                  />
+                </PageSectionDescription>
+              </PageSectionHeader>
+              <PageSectionContent>
+                <FieldGroup variant="divided">
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldTitle>
+                        <Trans i18nKey="password" defaults="Password" />
+                      </FieldTitle>
+                      <FieldDescription>
+                        {hasPassword ? (
+                          <Trans
+                            i18nKey="changePasswordSettingHint"
+                            defaults="Update your password to keep your account secure."
+                          />
+                        ) : (
+                          <Trans
+                            i18nKey="setPasswordSettingHint"
+                            defaults="Your account doesn't have a password yet. Set one to sign in with your email address."
+                          />
+                        )}
+                      </FieldDescription>
+                    </FieldContent>
+                    {hasPassword ? (
+                      <ChangePasswordDialog
+                        trigger={
+                          <Button>
+                            <Trans
+                              i18nKey="changePassword"
+                              defaults="Change password"
+                            />
+                          </Button>
+                        }
+                      />
+                    ) : (
+                      <SetupPasswordDialog
+                        trigger={
+                          <Button>
+                            <Trans
+                              i18nKey="setPassword"
+                              defaults="Set password"
+                            />
+                          </Button>
+                        }
+                      />
+                    )}
+                  </Field>
+                </FieldGroup>
+              </PageSectionContent>
+            </PageSection>
           </PageSectionGroup>
         ) : (
           <Alert>
