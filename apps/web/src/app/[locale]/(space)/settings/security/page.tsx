@@ -10,7 +10,6 @@ import {
 import { InfoIcon, KeyRoundIcon } from "lucide-react";
 import type { Metadata } from "next";
 import type { Params } from "@/app/[locale]/types";
-import { PageIcon } from "@/components/page-icons";
 import {
   PageSection,
   PageSectionContent,
@@ -19,6 +18,7 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
+import { SettingIcon } from "@/components/setting-icon";
 import {
   SettingsPage,
   SettingsPageContent,
@@ -76,11 +76,9 @@ export default async function SecurityPage() {
               <PageSectionContent>
                 <FieldGroup variant="divided">
                   <Field orientation="responsive">
-                    <div className="@md/field-group:block hidden">
-                      <PageIcon size="lg">
-                        <KeyRoundIcon />
-                      </PageIcon>
-                    </div>
+                    <SettingIcon>
+                      <KeyRoundIcon />
+                    </SettingIcon>
                     <FieldContent>
                       <FieldTitle>
                         <Trans i18nKey="password" defaults="Password" />
