@@ -26,7 +26,7 @@ import {
 import Link from "next/link";
 import React from "react";
 import { LanguageSelect } from "@/components/language-selector";
-import { PageIcon } from "@/components/page-icons";
+import { SettingIcon } from "@/components/setting-icon";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { updateLocalizationAction } from "@/features/user/actions";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -94,11 +94,9 @@ export const LocalizationPreferences = ({
     <div>
       <FieldGroup variant="divided">
         <Field orientation="responsive">
-          <div className="@md/field-group:block hidden">
-            <PageIcon size="lg">
-              <LanguagesIcon />
-            </PageIcon>
-          </div>
+          <SettingIcon>
+            <LanguagesIcon />
+          </SettingIcon>
           <FieldContent>
             <FieldLabel htmlFor="language-select">
               <Trans i18nKey="language" defaults="Language" />
@@ -139,11 +137,9 @@ export const LocalizationPreferences = ({
           />
         </Field>
         <Field orientation="responsive">
-          <div className="@md/field-group:block hidden">
-            <PageIcon size="lg">
-              <GlobeIcon />
-            </PageIcon>
-          </div>
+          <SettingIcon>
+            <GlobeIcon />
+          </SettingIcon>
           <FieldContent>
             <FieldLabel htmlFor="time-zone-select">
               <Trans i18nKey="timeZone" defaults="Time zone" />
@@ -172,11 +168,9 @@ export const LocalizationPreferences = ({
           />
         </Field>
         <Field orientation="responsive">
-          <div className="@md/field-group:block hidden">
-            <PageIcon size="lg">
-              <ClockIcon />
-            </PageIcon>
-          </div>
+          <SettingIcon>
+            <ClockIcon />
+          </SettingIcon>
           <FieldContent>
             <FieldLabel htmlFor="time-format-select">
               <Trans i18nKey="timeFormat" defaults="Time format" />
@@ -216,11 +210,9 @@ export const LocalizationPreferences = ({
           </Select>
         </Field>
         <Field orientation="responsive">
-          <div className="@md/field-group:block hidden">
-            <PageIcon size="lg">
-              <CalendarIcon />
-            </PageIcon>
-          </div>
+          <SettingIcon>
+            <CalendarIcon />
+          </SettingIcon>
           <FieldContent>
             <FieldLabel htmlFor="week-start-select">
               <Trans i18nKey="startOfWeek" defaults="Start of week" />

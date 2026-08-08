@@ -6,7 +6,7 @@ import {
   FieldTitle,
 } from "@rallly/ui/field";
 import { TriangleAlertIcon } from "lucide-react";
-import { PageIcon } from "@/components/page-icons";
+import { SettingIcon } from "@/components/setting-icon";
 import { getScheduledDeletionDate } from "@/features/user/account-deletion/utils";
 import { Trans } from "@/i18n/client";
 import { getSession } from "@/lib/auth";
@@ -28,11 +28,9 @@ export async function PendingDeletionSetting({
 
   return (
     <Field orientation="responsive">
-      <div className="@md/field-group:block hidden">
-        <PageIcon size="lg">
-          <TriangleAlertIcon />
-        </PageIcon>
-      </div>
+      <SettingIcon>
+        <TriangleAlertIcon />
+      </SettingIcon>
       <FieldContent>
         <FieldTitle>
           <Trans i18nKey="deleteAccount" defaults="Delete account" />
@@ -57,11 +55,9 @@ export function DeleteAccountSetting({
 }) {
   return (
     <Field orientation="responsive">
-      <div className="@md/field-group:block hidden">
-        <PageIcon size="lg">
-          <TriangleAlertIcon />
-        </PageIcon>
-      </div>
+      <SettingIcon>
+        <TriangleAlertIcon />
+      </SettingIcon>
       <FieldContent>
         <FieldTitle>
           <Trans i18nKey="deleteAccount" defaults="Delete account" />
