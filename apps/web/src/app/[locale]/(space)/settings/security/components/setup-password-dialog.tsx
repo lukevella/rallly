@@ -12,16 +12,12 @@ import {
   DialogTrigger,
   useDialog,
 } from "@rallly/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@rallly/ui/form";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@rallly/ui/field";
+import { Form } from "@rallly/ui/form";
 import { toast } from "@rallly/ui/sonner";
-import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 import { PasswordInput } from "@/components/password-input";
 import { setPasswordAction } from "@/features/auth/actions";
@@ -36,6 +32,8 @@ export function SetupPasswordDialog({
   trigger: React.ReactElement;
 }) {
   const dialog = useDialog();
+  const router = useRouter();
+  const passwordId = React.useId();
   const { t } = useTranslation();
   const passwordValidation = usePasswordValidationSchema();
   const form = useForm({
@@ -48,6 +46,9 @@ export function SetupPasswordDialog({
     onSuccess: () => {
       form.reset();
       dialog.dismiss();
+      // The page reads hasPassword on the server, so without this the row
+      // keeps offering "Set password" until a full reload.
+      router.refresh();
       toast.success(
         t("passwordSetSuccess", {
           defaultValue: "Your password has been set successfully",
@@ -86,32 +87,32 @@ export function SetupPasswordDialog({
               </DialogDescription>
             </DialogHeader>
 
-            <div className="grid grid-cols-1 gap-4 py-4">
-              <FormField
+            <FieldGroup className="py-4">
+              <Controller
                 control={form.control}
                 name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor={passwordId}>
                       <Trans i18nKey="newPassword" defaults="New password" />
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        {...field}
-                        autoComplete="new-password"
-                        disabled={formState.isSubmitting}
-                        placeholder="••••••••"
-                      />
-                    </FormControl>
+                    </FieldLabel>
+                    <PasswordInput
+                      {...field}
+                      id={passwordId}
+                      autoComplete="new-password"
+                      disabled={formState.isSubmitting}
+                      placeholder="••••••••"
+                      aria-invalid={fieldState.invalid}
+                    />
                     <PasswordStrengthMeter
                       password={field.value}
                       className="mt-2"
                     />
-                    <FormMessage />
-                  </FormItem>
+                    <FieldError errors={[fieldState.error]} />
+                  </Field>
                 )}
               />
-            </div>
+            </FieldGroup>
 
             <DialogFooter>
               <DialogClose render={<Button />}>

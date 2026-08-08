@@ -123,6 +123,7 @@
   "changeNameInfo": "This will not affect any votes you have already made.",
   "changePassword": "Change password",
   "changePasswordDescription": "Update your password to keep your account secure",
+  "changePasswordError": "Something went wrong. Please try again.",
   "changePasswordSettingHint": "Update your password to keep your account secure.",
   "changeRole": "Change role",
   "charactersRemaining": "{count, plural, one {# character remaining} other {# characters remaining}}",

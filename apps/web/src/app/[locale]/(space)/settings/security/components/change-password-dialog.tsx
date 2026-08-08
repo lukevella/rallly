@@ -12,16 +12,11 @@ import {
   DialogTrigger,
   useDialog,
 } from "@rallly/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@rallly/ui/form";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@rallly/ui/field";
+import { Form } from "@rallly/ui/form";
 import { toast } from "@rallly/ui/sonner";
-import { useForm } from "react-hook-form";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 import { PasswordInput } from "@/components/password-input";
 import { PasswordStrengthMeter } from "@/features/auth/components/password-strength-meter";
@@ -57,6 +52,8 @@ export function ChangePasswordDialog({
   trigger: React.ReactElement;
 }) {
   const dialog = useDialog();
+  const currentPasswordId = React.useId();
+  const newPasswordId = React.useId();
   const changePasswordSchema = useChangePasswordSchema();
   const form = useForm({
     defaultValues: {
@@ -100,7 +97,12 @@ export function ChangePasswordDialog({
                     break;
                   default:
                     form.setError("root", {
-                      message: res.error.message,
+                      message:
+                        res.error.message ??
+                        t("changePasswordError", {
+                          defaultValue:
+                            "Something went wrong. Please try again.",
+                        }),
                     });
                     break;
                 }
@@ -128,60 +130,60 @@ export function ChangePasswordDialog({
               </DialogDescription>
             </DialogHeader>
 
-            <div className="grid grid-cols-1 gap-4 py-4">
+            <FieldGroup className="py-4">
               {formState.errors.root?.message ? (
-                <FormMessage>{formState.errors.root.message}</FormMessage>
+                <FieldError>{formState.errors.root.message}</FieldError>
               ) : null}
 
-              <FormField
+              <Controller
                 control={form.control}
                 name="currentPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor={currentPasswordId}>
                       <Trans
                         i18nKey="currentPassword"
                         defaults="Current password"
                       />
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        {...field}
-                        autoComplete="current-password"
-                        disabled={formState.isSubmitting}
-                        placeholder="••••••••"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                    </FieldLabel>
+                    <PasswordInput
+                      {...field}
+                      id={currentPasswordId}
+                      autoComplete="current-password"
+                      disabled={formState.isSubmitting}
+                      placeholder="••••••••"
+                      aria-invalid={fieldState.invalid}
+                    />
+                    <FieldError errors={[fieldState.error]} />
+                  </Field>
                 )}
               />
 
-              <FormField
+              <Controller
                 control={form.control}
                 name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor={newPasswordId}>
                       <Trans i18nKey="newPassword" defaults="New password" />
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        {...field}
-                        autoComplete="new-password"
-                        disabled={formState.isSubmitting}
-                        placeholder="••••••••"
-                      />
-                    </FormControl>
+                    </FieldLabel>
+                    <PasswordInput
+                      {...field}
+                      id={newPasswordId}
+                      autoComplete="new-password"
+                      disabled={formState.isSubmitting}
+                      placeholder="••••••••"
+                      aria-invalid={fieldState.invalid}
+                    />
                     <PasswordStrengthMeter
                       password={field.value}
                       className="mt-2"
                     />
-                    <FormMessage />
-                  </FormItem>
+                    <FieldError errors={[fieldState.error]} />
+                  </Field>
                 )}
               />
-            </div>
+            </FieldGroup>
 
             <DialogFooter>
               <DialogClose render={<Button />}>
