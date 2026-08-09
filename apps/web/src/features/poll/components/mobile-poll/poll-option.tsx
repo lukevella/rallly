@@ -1,6 +1,6 @@
 "use client";
 import type { VoteType } from "@rallly/database";
-import { buttonVariants, cn } from "@rallly/ui";
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -20,7 +20,7 @@ import {
 import { IfScoresVisible } from "@/features/poll/components/visibility";
 import { Trans, useTranslation } from "@/i18n/client";
 import VoteIcon from "../vote-icon";
-import { toggleVote } from "../vote-selector";
+import { VoteSegmentedControl } from "../vote-segmented-control";
 
 export interface PollOptionProps {
   children?: React.ReactNode;
@@ -191,22 +191,9 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   const { t } = useTranslation();
   const dialog = useDialog();
 
-  const voteLabel = (() => {
-    switch (vote) {
-      case "yes":
-        return t("yes", { defaultValue: "Yes" });
-      case "ifNeedBe":
-        return t("ifNeedBe", { defaultValue: "If need be" });
-      case "no":
-        return t("no", { defaultValue: "No" });
-      default:
-        return t("pending", { defaultValue: "Pending" });
-    }
-  })();
-
   const optionSummary = (
     <>
-      {editable || selectedParticipantId ? (
+      {!editable && selectedParticipantId ? (
         <VoteIcon type={vote} />
       ) : (
         <span aria-hidden="true" />
@@ -220,21 +207,14 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
 
   return (
     <div className="flex items-center gap-x-1" data-testid="poll-option">
+      <div className={cn(optionGrid, "h-11")}>{optionSummary}</div>
       {editable ? (
-        <button
-          type="button"
-          data-testid="vote-selector"
-          aria-label={`${optionLabel}, ${voteLabel}`}
-          onClick={() => {
-            onChange(toggleVote(vote));
-          }}
-          className={cn(buttonVariants(), optionGrid, "h-11")}
-        >
-          {optionSummary}
-        </button>
-      ) : (
-        <div className={cn(optionGrid, "h-11")}>{optionSummary}</div>
-      )}
+        <VoteSegmentedControl
+          value={vote}
+          onChange={onChange}
+          optionLabel={optionLabel}
+        />
+      ) : null}
       <Button
         aria-label={`${t("optionVoteBreakdown", {
           defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
