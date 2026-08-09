@@ -160,13 +160,20 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
 
   const optionSummary = (
     <>
-      <span className="flex min-w-0 items-center gap-x-2.5">
-        {editable || selectedParticipantId ? <VoteIcon type={vote} /> : null}
-        {children}
+      {editable || selectedParticipantId ? (
+        <VoteIcon type={vote} />
+      ) : (
+        <span aria-hidden="true" />
+      )}
+      {children}
+      <span className="col-start-4 justify-self-end">
+        <ConnectedScoreSummary optionId={optionId} />
       </span>
-      <ConnectedScoreSummary optionId={optionId} />
     </>
   );
+
+  const optionGrid =
+    "grid min-w-0 flex-1 grid-cols-[1.25rem_4.5rem_1fr_auto] items-center gap-x-2.5 px-3 text-left";
 
   return (
     <div className="flex items-center gap-x-1" data-testid="poll-option">
@@ -178,17 +185,12 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           onClick={() => {
             onChange(toggleVote(vote));
           }}
-          className={cn(
-            buttonVariants(),
-            "h-11 min-w-0 flex-1 justify-between px-3",
-          )}
+          className={cn(buttonVariants(), optionGrid, "h-11")}
         >
           {optionSummary}
         </button>
       ) : (
-        <div className="flex h-9 min-w-0 flex-1 items-center justify-between px-3">
-          {optionSummary}
-        </div>
+        <div className={cn(optionGrid, "h-9")}>{optionSummary}</div>
       )}
       <Button
         aria-label={t("showParticipantVotes", {
