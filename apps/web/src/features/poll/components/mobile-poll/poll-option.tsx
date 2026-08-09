@@ -19,9 +19,8 @@ import {
   filterParticipantsByVote,
   useParticipants,
 } from "@/features/poll/components/participants-provider";
+import { IfScoresVisible } from "@/features/poll/components/visibility";
 import { Trans, useTranslation } from "@/i18n/client";
-
-import { ConnectedScoreSummary } from "../score-summary";
 import VoteIcon from "../vote-icon";
 import { toggleVote } from "../vote-selector";
 
@@ -133,6 +132,59 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
   );
 };
 
+const OptionScoreDonut = ({
+  yesScore,
+  ifNeedBeScore,
+}: {
+  yesScore: number;
+  ifNeedBeScore: number;
+}) => {
+  const { t } = useTranslation();
+  const { participants } = useParticipants();
+  const total = participants.length;
+  const stroke = 4;
+  const radius = (20 - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const yesLength = total > 0 ? (yesScore / total) * circumference : 0;
+  const ifNeedBeLength =
+    total > 0 ? (ifNeedBeScore / total) * circumference : 0;
+  const segment = (className: string, length: number, offset: number) => (
+    <circle
+      cx="10"
+      cy="10"
+      r={radius}
+      fill="none"
+      strokeWidth={stroke}
+      strokeDasharray={`${length} ${circumference}`}
+      strokeDashoffset={-offset}
+      className={className}
+    />
+  );
+  return (
+    <svg
+      role="img"
+      aria-label={t("optionVoteBreakdown", {
+        defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
+        yesScore,
+        ifNeedBeScore,
+      })}
+      viewBox="0 0 20 20"
+      className="size-5 -rotate-90"
+    >
+      <circle
+        cx="10"
+        cy="10"
+        r={radius}
+        fill="none"
+        strokeWidth={stroke}
+        className="stroke-muted"
+      />
+      {segment("stroke-[#00C950]", yesLength, 0)}
+      {segment("stroke-[#FFB900]", ifNeedBeLength, yesLength)}
+    </svg>
+  );
+};
+
 const PollOption: React.FunctionComponent<PollOptionProps> = ({
   children,
   selectedParticipantId,
@@ -141,6 +193,8 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   editable = false,
   optionId,
   optionLabel,
+  yesScore,
+  ifNeedBeScore,
 }) => {
   const { t } = useTranslation();
   const dialog = useDialog();
@@ -167,7 +221,9 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
       )}
       {children}
       <span className="col-start-4 justify-self-end">
-        <ConnectedScoreSummary optionId={optionId} />
+        <IfScoresVisible>
+          <OptionScoreDonut yesScore={yesScore} ifNeedBeScore={ifNeedBeScore} />
+        </IfScoresVisible>
       </span>
     </>
   );
