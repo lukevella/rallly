@@ -255,7 +255,7 @@ Reads filtered or grouped by the viewer's present ("upcoming", "past", agenda gr
   import { Trans } from "@/i18n/client";
   <Trans i18nKey="menu" defaults="Menu" />
   ```
-- On the server, use `getTranslation` from `@/i18n/server`:
+- When a server component needs `t` or `i18n` itself — for a string outside JSX, or to render `TransWithoutContext` — get them from `getTranslation` in `@/i18n/server` (rendering the client `Trans` instead needs neither; see below):
   ```tsx
   import { Trans } from "react-i18next/TransWithoutContext";
   import { getTranslation } from "@/i18n/server";
