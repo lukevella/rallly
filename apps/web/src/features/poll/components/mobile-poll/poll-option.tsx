@@ -5,6 +5,7 @@ import { Button } from "@rallly/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   useDialog,
@@ -18,7 +19,7 @@ import {
   filterParticipantsByVote,
   useParticipants,
 } from "@/features/poll/components/participants-provider";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 
 import { ConnectedScoreSummary } from "../score-summary";
 import VoteIcon from "../vote-icon";
@@ -196,7 +197,9 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
         aria-label={t("showParticipantVotes", {
           defaultValue: "Show participant votes",
         })}
+        variant="ghost"
         size="icon-lg"
+        className="size-12"
         onClick={() => {
           dialog.trigger();
         }}
@@ -208,7 +211,10 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
       <Dialog {...dialog.dialogProps}>
         <DialogContent size="sm">
           <DialogHeader>
-            <DialogTitle>{optionLabel}</DialogTitle>
+            <DialogTitle>
+              <Trans i18nKey="participants" defaults="Participants" />
+            </DialogTitle>
+            <DialogDescription>{optionLabel}</DialogDescription>
           </DialogHeader>
           <PollOptionVoteSummary optionId={optionId} />
         </DialogContent>
