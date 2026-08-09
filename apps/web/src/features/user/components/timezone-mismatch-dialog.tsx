@@ -57,14 +57,14 @@ export function TimeZoneMismatchDialog({
           <DialogTitle>
             <Trans
               i18nKey="timeZoneMismatchDialogTitle"
-              defaults="Timezone mismatch detected"
+              defaults="Time zone mismatch detected"
             />
           </DialogTitle>
         </DialogHeader>
         <p className="text-muted-foreground text-sm leading-relaxed">
           <Trans
             i18nKey="timeZoneMismatchDialogMessage"
-            defaults="It looks like you are in <b>{currentTimeZone}</b> but your timezone is set to <b>{homeTimeZone}</b>. Do you want to update it?"
+            defaults="It looks like you are in <b>{currentTimeZone}</b> but your time zone is set to <b>{homeTimeZone}</b>. Do you want to update it?"
             components={{ b: <b className="font-medium text-foreground" /> }}
             values={{ currentTimeZone: prompt.currentTimeZone, homeTimeZone }}
           />
@@ -81,7 +81,7 @@ export function TimeZoneMismatchDialog({
           >
             <Trans
               i18nKey="yesUpdateTimezone"
-              defaults="Yes, update my timezone"
+              defaults="Yes, update my time zone"
             />
           </Button>
           <Button
@@ -91,7 +91,7 @@ export function TimeZoneMismatchDialog({
           >
             <Trans
               i18nKey="noKeepCurrentTimezone"
-              defaults="No, keep the current timezone"
+              defaults="No, keep the current time zone"
             />
           </Button>
         </DialogFooter>
