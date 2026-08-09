@@ -427,18 +427,6 @@ const DesktopPoll: React.FunctionComponent = () => {
                   >
                     <Trans i18nKey="cancel" />
                   </Button>
-                  <p className="hidden min-w-0 truncate text-sm md:block">
-                    <Trans
-                      i18nKey="saveInstruction"
-                      defaults="Select your availability and click <b>{action}</b>"
-                      values={{
-                        action: mode === "new" ? t("continue") : t("save"),
-                      }}
-                      components={{
-                        b: <strong className="font-semibold" />,
-                      }}
-                    />
-                  </p>
                   <div className="flex items-center gap-2.5">
                     <p
                       aria-live="polite"
