@@ -1,4 +1,3 @@
-import { ClockIcon } from "lucide-react";
 import type * as React from "react";
 
 import type { PollOptionProps } from "./poll-option";
@@ -19,10 +18,7 @@ const TimeSlotOption: React.FunctionComponent<TimeSlotOptionProps> = ({
     <PollOption {...rest}>
       <div className="contents text-sm">
         <div>{startTime}</div>
-        <div className="flex items-center gap-x-1.5 text-muted-foreground">
-          <ClockIcon className="size-4" />
-          {duration}
-        </div>
+        <div className="text-muted-foreground">{duration}</div>
       </div>
     </PollOption>
   );
