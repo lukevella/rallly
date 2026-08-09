@@ -56,7 +56,7 @@ const ParticipantRowForm = ({
     <tr className={cn("group", className)}>
       <td
         style={{ minWidth: 235, maxWidth: 235 }}
-        className="sticky left-0 z-10 h-12 border-b border-b-border-muted bg-background px-3 group-[.last-row]:border-b-0"
+        className="sticky left-0 z-10 h-12 border-b border-b-border-muted bg-card px-3 group-[.last-row]:border-b-0"
       >
         <div className="flex items-center justify-between gap-x-2.5">
           <Participant>
@@ -110,7 +110,7 @@ const ParticipantRowForm = ({
         return (
           <td
             key={optionId}
-            className="relative h-12 border-b border-b-border-muted border-l bg-background group-[.last-row]:border-b-0"
+            className="relative h-12 border-b border-b-border-muted border-l bg-card group-[.last-row]:border-b-0"
           >
             <Controller
               control={form.control}

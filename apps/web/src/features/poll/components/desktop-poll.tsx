@@ -271,7 +271,7 @@ const DesktopPoll: React.FunctionComponent = () => {
             className={cn(
               "flex max-h-full flex-col overflow-hidden rounded-2xl",
               {
-                "w-full max-w-7xl border border-popover-border bg-background shadow-2xl":
+                "w-full max-w-7xl border border-popover-border bg-card shadow-2xl":
                   expanded,
               },
             )}
