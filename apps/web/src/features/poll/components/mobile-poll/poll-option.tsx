@@ -160,11 +160,11 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
 
   const optionSummary = (
     <>
-      {children}
-      <span className="flex items-center gap-x-2.5">
-        <ConnectedScoreSummary optionId={optionId} />
+      <span className="flex min-w-0 items-center gap-x-2.5">
         {editable || selectedParticipantId ? <VoteIcon type={vote} /> : null}
+        {children}
       </span>
+      <ConnectedScoreSummary optionId={optionId} />
     </>
   );
 
