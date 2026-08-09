@@ -246,15 +246,15 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           {optionSummary}
         </button>
       ) : (
-        <div className={cn(optionGrid, "h-9")}>{optionSummary}</div>
+        <div className={cn(optionGrid, "h-11")}>{optionSummary}</div>
       )}
       <Button
         aria-label={t("showParticipantVotes", {
           defaultValue: "Show participant votes",
         })}
         variant="ghost"
-        size={editable ? "icon-lg" : "icon"}
-        className={editable ? "size-11" : undefined}
+        size="icon-lg"
+        className="size-11"
         onClick={() => {
           dialog.trigger();
         }}
