@@ -11,7 +11,7 @@ import {
   useDialog,
 } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
-import { UsersIcon } from "lucide-react";
+import { InfoIcon } from "lucide-react";
 import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
@@ -205,7 +205,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
         }}
       >
         <Icon>
-          <UsersIcon />
+          <InfoIcon />
         </Icon>
       </Button>
       <Dialog {...dialog.dialogProps}>
