@@ -116,12 +116,7 @@ const ParticipantRowForm = ({
               control={form.control}
               name={`votes.${i}`}
               render={({ field }) => (
-                <div
-                  className={cn(
-                    "absolute inset-0 flex items-center justify-center transition-colors",
-                    "hover:bg-gray-50 active:bg-gray-100 active:ring-1 active:ring-gray-200 active:ring-inset dark:active:bg-gray-700/50 dark:active:ring-gray-700 dark:active:ring-inset dark:hover:bg-gray-800",
-                  )}
-                >
+                <div className={cn("flex justify-center gap-2")}>
                   <VoteSelector
                     className="after:absolute after:inset-0"
                     optionLabel={

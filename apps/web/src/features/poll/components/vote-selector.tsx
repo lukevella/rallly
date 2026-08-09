@@ -1,5 +1,5 @@
 import type { VoteType } from "@rallly/database";
-import { cn } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import * as React from "react";
 
 import { useTranslation } from "@/i18n/client";
@@ -61,7 +61,13 @@ export const VoteSelector = React.forwardRef<
       onBlur={onBlur}
       onKeyDown={onKeyDown}
       className={cn(
-        "flex size-7 cursor-pointer items-center justify-center rounded-lg border border-input bg-background ring-ring focus-visible:ring-2",
+        buttonVariants({
+          size: "icon-sm",
+        }),
+        // The default variant's backdrop-blur makes this button a containing
+        // block, which would trap the after:inset-0 overlay callers use to
+        // extend the tap target to the whole cell/row.
+        "backdrop-blur-none",
         className,
       )}
       onClick={() => {
