@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
+import { toast } from "@rallly/ui/sonner";
 import { MoreHorizontalIcon, PlusIcon, UsersIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
@@ -241,6 +242,20 @@ const MobilePoll: React.FunctionComponent = () => {
             }}
           >
             <CardFooter className="items-center justify-between gap-2.5 border-t">
+              <p
+                aria-live="polite"
+                className={
+                  selectedCount === 0
+                    ? "sr-only"
+                    : "text-muted-foreground text-sm"
+                }
+              >
+                <Trans
+                  i18nKey="optionsSelected"
+                  defaults="{count, plural, =0 {No options selected} one {# option selected} other {# options selected}}"
+                  values={{ count: selectedCount }}
+                />
+              </p>
               {selectedCount === 0 ? (
                 <Button
                   form="voting-form"
@@ -250,22 +265,26 @@ const MobilePoll: React.FunctionComponent = () => {
                 >
                   <Trans i18nKey="cantMakeIt" defaults="Can't make it" />
                 </Button>
-              ) : (
-                <p className="text-muted-foreground text-sm">
-                  <Trans
-                    i18nKey="optionsSelected"
-                    defaults="{count, plural, one {# option selected} other {# options selected}}"
-                    values={{ count: selectedCount }}
-                  />
-                </p>
-              )}
+              ) : null}
               <Button
                 form="voting-form"
-                className="flex-1"
+                className="flex-1 aria-disabled:opacity-50"
                 type="submit"
                 variant="primary"
                 size="lg"
                 loading={formState.isSubmitting}
+                aria-disabled={!selectedParticipantId && selectedCount === 0}
+                onClick={(event) => {
+                  if (!selectedParticipantId && selectedCount === 0) {
+                    event.preventDefault();
+                    toast(
+                      t("selectAtLeastOneOption", {
+                        defaultValue:
+                          "Select at least one option, or choose Can't make it",
+                      }),
+                    );
+                  }
+                }}
               >
                 {selectedParticipantId ? t("save") : t("continue")}
               </Button>

@@ -5,6 +5,7 @@ import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
+import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   ArrowLeftIcon,
@@ -439,20 +440,43 @@ const DesktopPoll: React.FunctionComponent = () => {
                     />
                   </p>
                   <div className="flex items-center gap-2.5">
+                    <p
+                      aria-live="polite"
+                      className={
+                        selectedCount === 0
+                          ? "sr-only"
+                          : "text-muted-foreground text-sm"
+                      }
+                    >
+                      <Trans
+                        i18nKey="optionsSelected"
+                        defaults="{count, plural, =0 {No options selected} one {# option selected} other {# options selected}}"
+                        values={{ count: selectedCount }}
+                      />
+                    </p>
                     {selectedCount === 0 ? (
                       <Button type="submit" form="voting-form">
                         <Trans i18nKey="cantMakeIt" defaults="Can't make it" />
                       </Button>
-                    ) : (
-                      <p className="text-muted-foreground text-sm">
-                        <Trans
-                          i18nKey="optionsSelected"
-                          defaults="{count, plural, one {# option selected} other {# options selected}}"
-                          values={{ count: selectedCount }}
-                        />
-                      </p>
-                    )}
-                    <Button type="submit" variant="primary" form="voting-form">
+                    ) : null}
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      form="voting-form"
+                      className="aria-disabled:opacity-50"
+                      aria-disabled={selectedCount === 0}
+                      onClick={(event) => {
+                        if (selectedCount === 0) {
+                          event.preventDefault();
+                          toast(
+                            t("selectAtLeastOneOption", {
+                              defaultValue:
+                                "Select at least one option, or choose Can't make it",
+                            }),
+                          );
+                        }
+                      }}
+                    >
                       <Trans i18nKey="continue" />
                     </Button>
                   </div>
