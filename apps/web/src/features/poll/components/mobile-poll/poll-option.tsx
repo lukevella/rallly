@@ -1,11 +1,17 @@
 "use client";
 import type { VoteType } from "@rallly/database";
-import { cn } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  useDialog,
+} from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { UsersIcon } from "lucide-react";
 import type * as React from "react";
-import { useToggle } from "react-use";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import {
@@ -16,7 +22,7 @@ import { useTranslation } from "@/i18n/client";
 
 import { ConnectedScoreSummary } from "../score-summary";
 import VoteIcon from "../vote-icon";
-import { VoteSelector } from "../vote-selector";
+import { toggleVote } from "../vote-selector";
 
 export interface PollOptionProps {
   children?: React.ReactNode;
@@ -135,51 +141,78 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   optionId,
   optionLabel,
 }) => {
-  const showVotes = !!(selectedParticipantId || editable);
-  const [isExpanded, toggle] = useToggle(false);
+  const { t } = useTranslation();
+  const dialog = useDialog();
+
+  const voteLabel = (() => {
+    switch (vote) {
+      case "yes":
+        return t("yes", { defaultValue: "Yes" });
+      case "ifNeedBe":
+        return t("ifNeedBe", { defaultValue: "If need be" });
+      case "no":
+        return t("no", { defaultValue: "No" });
+      default:
+        return t("pending", { defaultValue: "Pending" });
+    }
+  })();
+
+  const optionSummary = (
+    <>
+      {children}
+      <span className="flex items-center gap-x-2.5">
+        <ConnectedScoreSummary optionId={optionId} />
+        {editable || selectedParticipantId ? <VoteIcon type={vote} /> : null}
+      </span>
+    </>
+  );
+
   return (
     <div
-      className={cn(
-        "relative space-y-4 bg-background p-4 transition-colors",
-        editable && "active:bg-accent/50",
-      )}
+      className="flex items-center gap-x-2.5 bg-background p-3"
       data-testid="poll-option"
     >
-      <div className="flex h-7 items-center justify-between gap-x-4">
-        <div className="shrink-0">{children}</div>
-        <div className="flex items-center gap-x-4">
-          <Button
-            size="sm"
-            variant="ghost"
-            className="relative z-10"
-            onClick={() => toggle()}
-          >
-            <ConnectedScoreSummary optionId={optionId} />
-            <Icon>{isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}</Icon>
-          </Button>
-
-          {showVotes ? (
-            <div className="flex size-7 items-center justify-center">
-              {editable ? (
-                <VoteSelector
-                  className="after:absolute after:inset-0"
-                  optionLabel={optionLabel}
-                  value={vote}
-                  onChange={onChange}
-                />
-              ) : (
-                <div
-                  key={vote}
-                  className="flex h-full items-center justify-center"
-                >
-                  <VoteIcon type={vote} />
-                </div>
-              )}
-            </div>
-          ) : null}
+      {editable ? (
+        <button
+          type="button"
+          data-testid="vote-selector"
+          aria-label={`${optionLabel}, ${voteLabel}`}
+          onClick={() => {
+            onChange(toggleVote(vote));
+          }}
+          className={cn(
+            buttonVariants(),
+            "h-12 min-w-0 flex-1 justify-between px-3",
+          )}
+        >
+          {optionSummary}
+        </button>
+      ) : (
+        <div className="flex h-12 min-w-0 flex-1 items-center justify-between px-3">
+          {optionSummary}
         </div>
-      </div>
-      {isExpanded ? <PollOptionVoteSummary optionId={optionId} /> : null}
+      )}
+      <Button
+        aria-label={t("showParticipantVotes", {
+          defaultValue: "Show participant votes",
+        })}
+        size="icon-lg"
+        onClick={() => {
+          dialog.trigger();
+        }}
+      >
+        <Icon>
+          <UsersIcon />
+        </Icon>
+      </Button>
+      <Dialog {...dialog.dialogProps}>
+        <DialogContent size="sm">
+          <DialogHeader>
+            <DialogTitle>{optionLabel}</DialogTitle>
+          </DialogHeader>
+          <PollOptionVoteSummary optionId={optionId} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
