@@ -1,4 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { PollPage } from "./poll-page";
 
 export class CreatePollSuccessDialog {
@@ -37,8 +38,15 @@ export class NewPollPage {
 
     // The description is a rich text editor revealed on demand, so open it, then
     // type into its contenteditable (fill() doesn't work on contenteditable).
-    await page.getByRole("button", { name: /add description/i }).click();
+    // A click that lands before React hydrates focuses the button natively but
+    // drops the onClick, so retry until the editor actually mounts.
     const description = page.locator('#description[contenteditable="true"]');
+    await expect(async () => {
+      await page
+        .getByRole("button", { name: /add description/i })
+        .click({ timeout: 2000 });
+      await expect(description).toBeVisible({ timeout: 2000 });
+    }).toPass();
     await description.click();
     await description.pressSequentially(
       "Hey everyone, what time can you meet?",
