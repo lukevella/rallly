@@ -252,7 +252,7 @@ const PollOptionsForm = ({
                     switchDisabled ? "text-muted-foreground" : undefined
                   }
                 >
-                  <Trans i18nKey="lockTimeZone" defaults="Lock timezone" />
+                  <Trans i18nKey="lockTimeZone" defaults="Lock time zone" />
                 </Label>
                 <Tooltip>
                   <TooltipTrigger type="button" delay={0}>

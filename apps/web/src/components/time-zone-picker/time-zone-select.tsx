@@ -79,7 +79,7 @@ export function TimeZoneSelect({
           id={id}
           disabled={disabled}
           placeholder={t("timezoneInputPlaceholder", {
-            defaultValue: "Search timezone…",
+            defaultValue: "Search time zone…",
           })}
           {...ariaProps}
         >
