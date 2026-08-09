@@ -222,6 +222,10 @@ const DesktopPoll: React.FunctionComponent = () => {
   const { t } = useTranslation();
   const votingForm = useVotingForm();
   const mode = votingForm.watch("mode");
+  const votes = votingForm.watch("votes");
+  const selectedCount = votes.filter(
+    (vote) => vote?.type === "yes" || vote?.type === "ifNeedBe",
+  ).length;
 
   const { participants } = useParticipants();
   const visibleParticipants = useVisibleParticipants();
@@ -434,9 +438,24 @@ const DesktopPoll: React.FunctionComponent = () => {
                       }}
                     />
                   </p>
-                  <Button type="submit" variant="primary" form="voting-form">
-                    <Trans i18nKey="continue" />
-                  </Button>
+                  <div className="flex items-center gap-2.5">
+                    {selectedCount === 0 ? (
+                      <Button type="submit" form="voting-form">
+                        <Trans i18nKey="cantMakeIt" defaults="Can't make it" />
+                      </Button>
+                    ) : (
+                      <p className="text-muted-foreground text-sm">
+                        <Trans
+                          i18nKey="optionsSelected"
+                          defaults="{count, plural, one {# option selected} other {# options selected}}"
+                          values={{ count: selectedCount }}
+                        />
+                      </p>
+                    )}
+                    <Button type="submit" variant="primary" form="voting-form">
+                      <Trans i18nKey="continue" />
+                    </Button>
+                  </div>
                 </div>
               ) : null}
             </div>

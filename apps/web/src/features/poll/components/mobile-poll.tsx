@@ -49,6 +49,10 @@ const MobilePoll: React.FunctionComponent = () => {
   const { formState } = votingForm;
 
   const selectedParticipantId = votingForm.watch("participantId");
+  const votes = votingForm.watch("votes");
+  const selectedCount = votes.filter(
+    (vote) => vote?.type === "yes" || vote?.type === "ifNeedBe",
+  ).length;
 
   const visibleParticipants = useVisibleParticipants();
   const selectedParticipant = selectedParticipantId
@@ -236,10 +240,28 @@ const MobilePoll: React.FunctionComponent = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <CardFooter className="border-t">
+            <CardFooter className="items-center justify-between gap-2.5 border-t">
+              {selectedCount === 0 ? (
+                <Button
+                  form="voting-form"
+                  className="flex-1"
+                  type="submit"
+                  size="lg"
+                >
+                  <Trans i18nKey="cantMakeIt" defaults="Can't make it" />
+                </Button>
+              ) : (
+                <p className="text-muted-foreground text-sm">
+                  <Trans
+                    i18nKey="optionsSelected"
+                    defaults="{count, plural, one {# option selected} other {# options selected}}"
+                    values={{ count: selectedCount }}
+                  />
+                </p>
+              )}
               <Button
                 form="voting-form"
-                className="w-full"
+                className="flex-1"
                 type="submit"
                 variant="primary"
                 size="lg"
