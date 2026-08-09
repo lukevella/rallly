@@ -10,8 +10,6 @@ import {
   DialogTitle,
   useDialog,
 } from "@rallly/ui/dialog";
-import { Icon } from "@rallly/ui/icon";
-import { InfoIcon } from "lucide-react";
 import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
@@ -139,7 +137,6 @@ const OptionScoreDonut = ({
   yesScore: number;
   ifNeedBeScore: number;
 }) => {
-  const { t } = useTranslation();
   const { participants } = useParticipants();
   const total = participants.length;
   const stroke = 4;
@@ -162,14 +159,9 @@ const OptionScoreDonut = ({
   );
   return (
     <svg
-      role="img"
-      aria-label={t("optionVoteBreakdown", {
-        defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
-        yesScore,
-        ifNeedBeScore,
-      })}
+      aria-hidden="true"
       viewBox="0 0 20 20"
-      className="size-5 -rotate-90"
+      className="size-5 -rotate-90 opacity-100"
     >
       <circle
         cx="10"
@@ -220,16 +212,11 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
         <span aria-hidden="true" />
       )}
       {children}
-      <span className="col-start-4 justify-self-end">
-        <IfScoresVisible>
-          <OptionScoreDonut yesScore={yesScore} ifNeedBeScore={ifNeedBeScore} />
-        </IfScoresVisible>
-      </span>
     </>
   );
 
   const optionGrid =
-    "grid min-w-0 flex-1 grid-cols-[1.25rem_4.5rem_1fr_auto] items-center gap-x-2.5 px-3 text-left";
+    "grid min-w-0 flex-1 grid-cols-[1.25rem_4.5rem_1fr] items-center gap-x-2.5 px-3 text-left";
 
   return (
     <div className="flex items-center gap-x-1" data-testid="poll-option">
@@ -249,9 +236,13 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
         <div className={cn(optionGrid, "h-11")}>{optionSummary}</div>
       )}
       <Button
-        aria-label={t("showParticipantVotes", {
+        aria-label={`${t("optionVoteBreakdown", {
+          defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
+          yesScore,
+          ifNeedBeScore,
+        })}. ${t("showParticipantVotes", {
           defaultValue: "Show participant votes",
-        })}
+        })}`}
         variant="ghost"
         size="icon-lg"
         className="size-11"
@@ -259,9 +250,9 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           dialog.trigger();
         }}
       >
-        <Icon>
-          <InfoIcon />
-        </Icon>
+        <IfScoresVisible>
+          <OptionScoreDonut yesScore={yesScore} ifNeedBeScore={ifNeedBeScore} />
+        </IfScoresVisible>
       </Button>
       <Dialog {...dialog.dialogProps}>
         <DialogContent size="sm">
