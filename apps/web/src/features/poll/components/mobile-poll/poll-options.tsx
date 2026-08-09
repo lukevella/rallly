@@ -1,4 +1,5 @@
 import type { VoteType } from "@rallly/database";
+import { cn } from "@rallly/ui";
 import type * as React from "react";
 import { Controller } from "react-hook-form";
 import { useParticipants } from "@/features/poll/components/participants-provider";
@@ -30,7 +31,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
     : undefined;
 
   return (
-    <div>
+    <div className={cn("px-2 py-2", editable && "space-y-1.5")}>
       {options.map((option) => {
         const score = getScore(option.optionId);
         const index = optionIds.indexOf(option.optionId);

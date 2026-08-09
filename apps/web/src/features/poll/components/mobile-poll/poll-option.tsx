@@ -169,10 +169,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   );
 
   return (
-    <div
-      className="flex items-center gap-x-2.5 bg-background p-3"
-      data-testid="poll-option"
-    >
+    <div className="flex items-center gap-x-1" data-testid="poll-option">
       {editable ? (
         <button
           type="button"
@@ -183,13 +180,13 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           }}
           className={cn(
             buttonVariants(),
-            "h-12 min-w-0 flex-1 justify-between px-3",
+            "h-11 min-w-0 flex-1 justify-between px-3",
           )}
         >
           {optionSummary}
         </button>
       ) : (
-        <div className="flex h-12 min-w-0 flex-1 items-center justify-between px-3">
+        <div className="flex h-9 min-w-0 flex-1 items-center justify-between px-3">
           {optionSummary}
         </div>
       )}
@@ -198,8 +195,8 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           defaultValue: "Show participant votes",
         })}
         variant="ghost"
-        size="icon-lg"
-        className="size-12"
+        size={editable ? "icon-lg" : "icon"}
+        className={editable ? "size-11" : undefined}
         onClick={() => {
           dialog.trigger();
         }}
