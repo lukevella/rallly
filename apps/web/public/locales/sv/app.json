@@ -147,7 +147,7 @@
   "commentsSettingLegacyBadge": "Utfasat",
   "commentsSettingPhaseOutHint": "Kommentarer fasas ut. Deltagare kan istället lägga till en anteckning i sitt svar.",
   "commentsSettingTitle": "Kommentarer",
-  "commentsSheetDescription": "Visa och lägg till kommentarer i den här förfrågan",
+  "commentsSheetDescription": "Visa och lägg till kommentarer i den här omröstningen",
   "commentsSheetEmpty": "Inga kommentarer än",
   "commentsSheetSubmitted": "Din kommentar har lagts till",
   "configuredByEnvironmentVariable": "Den här inställningen har konfigurerats av en miljövariabel.",
