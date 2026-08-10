@@ -99,7 +99,7 @@ const ParticipantRowForm = ({
                   }
                 />
                 <TooltipContent>
-                  <Trans i18nKey="cancel" />
+                  <Trans i18nKey="cancel" defaults="Cancel" />
                 </TooltipContent>
               </Tooltip>
               <Button

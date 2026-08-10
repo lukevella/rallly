@@ -58,6 +58,7 @@ export const VotingFooter = ({ className }: { className?: string }) => {
       <Button
         type="button"
         className="flex-1 md:flex-none"
+        disabled={votingForm.formState.isSubmitting}
         onClick={() => {
           if (selectedCount > 0) {
             confirmDialog.trigger();
@@ -116,6 +117,7 @@ export const VotingFooter = ({ className }: { className?: string }) => {
             </Button>
             <Button
               variant="destructive"
+              disabled={votingForm.formState.isSubmitting}
               onClick={() => {
                 confirmDialog.dismiss();
                 submitAllNo();
