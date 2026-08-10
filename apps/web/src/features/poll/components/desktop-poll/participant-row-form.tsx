@@ -1,7 +1,7 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import { UndoIcon, XIcon } from "lucide-react";
+import { UndoIcon } from "lucide-react";
 import * as React from "react";
 import { Controller } from "react-hook-form";
 
@@ -72,25 +72,15 @@ const ParticipantRowForm = ({
             <ParticipantName>{participantName}</ParticipantName>
           </Participant>
           {isNew ? (
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <Button
-                    aria-label={t("cancel", { defaultValue: "Cancel" })}
-                    variant="ghost"
-                    onClick={() => {
-                      form.cancel();
-                    }}
-                    size="icon-xs"
-                  >
-                    <XIcon />
-                  </Button>
-                }
-              />
-              <TooltipContent>
-                <Trans i18nKey="cancel" />
-              </TooltipContent>
-            </Tooltip>
+            <Button
+              variant="ghost"
+              size="xs"
+              onClick={() => {
+                form.cancel();
+              }}
+            >
+              <Trans i18nKey="cancel" defaults="Cancel" />
+            </Button>
           ) : (
             <div className="flex items-center gap-1">
               <Tooltip>
