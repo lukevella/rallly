@@ -46,10 +46,15 @@ describe("getCalendarDate", () => {
     // Small-ICU Node builds (e.g. Alpine's icu-data-en) silently resolve any
     // requested locale to "en", whose date pattern is MM/DD/YYYY.
     const RealDateTimeFormat = Intl.DateTimeFormat;
-    Intl.DateTimeFormat = ((
-      _locale?: string | string[],
-      options?: Intl.DateTimeFormatOptions,
-    ) => new RealDateTimeFormat("en", options)) as typeof Intl.DateTimeFormat;
+    class EnOnlyDateTimeFormat extends RealDateTimeFormat {
+      constructor(
+        _locales?: string | string[],
+        options?: Intl.DateTimeFormatOptions,
+      ) {
+        super("en", options);
+      }
+    }
+    Intl.DateTimeFormat = EnOnlyDateTimeFormat as typeof Intl.DateTimeFormat;
     try {
       expect(getCalendarDate(instant, "UTC")).toBe("2025-07-02");
     } finally {
