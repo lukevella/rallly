@@ -415,15 +415,8 @@ const DesktopPoll: React.FunctionComponent = () => {
                 </EmptyState>
               )}
               {mode === "new" ? (
-                <div className="flex items-center justify-between gap-4 border-t p-3">
-                  <Button
-                    onClick={() => {
-                      votingForm.cancel();
-                    }}
-                  >
-                    <Trans i18nKey="cancel" />
-                  </Button>
-                  <VotingFooter className="flex-1" />
+                <div className="border-t p-3">
+                  <VotingFooter />
                 </div>
               ) : null}
             </div>
