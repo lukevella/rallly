@@ -83,7 +83,7 @@ const ParticipantRowForm = ({
                     }}
                     size="icon-sm"
                   >
-                    <XIcon />
+                    <XIcon className="size-3 text-muted-foreground" />
                   </Button>
                 }
               />
