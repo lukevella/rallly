@@ -87,6 +87,8 @@ ENV NEXT_PUBLIC_SELF_HOSTED=$SELF_HOSTED
 
 EXPOSE 3000
 
-HEALTHCHECK CMD curl --fail http://localhost:${PORT}/api/status || exit 1
+# --noproxy '*': curl honors http_proxy/no_proxy env, and a probe of our own
+# loopback must never depend on the host's proxy policy.
+HEALTHCHECK CMD curl --fail --noproxy '*' http://localhost:${PORT}/api/status || exit 1
 
 CMD ["./docker-start.sh"]

@@ -25,6 +25,17 @@ function sanitize(value: string) {
 }
 
 /**
+ * Loopback traffic is never proxied, regardless of NO_PROXY: a CONNECT to
+ * "localhost" through a remote proxy reaches the proxy's loopback, never this
+ * container's, so proxying it is categorically wrong. Go's
+ * ProxyFromEnvironment applies the same rule. The undici matcher compares
+ * entries literally (no CIDR, no name/IP resolution), so both name and
+ * address forms are listed. "localhost" also covers *.localhost via the
+ * matcher's subdomain rule.
+ */
+const LOOPBACK_NO_PROXY = "localhost,127.0.0.1,[::1]";
+
+/**
  * Node's built-in fetch ignores proxy environment variables, so on networks
  * with no direct egress (self-hosted behind a corporate proxy) outbound calls
  * never reach the proxy at all. EnvHttpProxyAgent honors HTTP_PROXY /
@@ -42,14 +53,21 @@ export function setupOutboundProxy() {
     return;
   }
 
-  setGlobalDispatcher(new EnvHttpProxyAgent());
+  const noProxy = [
+    process.env.no_proxy ?? process.env.NO_PROXY,
+    LOOPBACK_NO_PROXY,
+  ]
+    .filter(Boolean)
+    .join(",");
+
+  setGlobalDispatcher(new EnvHttpProxyAgent({ noProxy }));
 
   logger.info(
     {
       proxies: Object.fromEntries(
         configured.map((name) => [name, sanitize(process.env[name] as string)]),
       ),
-      noProxy: process.env.NO_PROXY ?? process.env.no_proxy ?? null,
+      noProxy,
     },
     "Outbound proxy enabled: fetch will route through the configured proxy",
   );

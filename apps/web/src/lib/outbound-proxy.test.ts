@@ -20,7 +20,7 @@ const PROXY_ENV_VARS = [
 
 const savedEnv: Record<string, string | undefined> = {};
 const originalDispatcher = getGlobalDispatcher();
-let server: Server | undefined;
+const servers: Server[] = [];
 
 beforeEach(() => {
   for (const name of PROXY_ENV_VARS) {
@@ -38,11 +38,21 @@ afterEach(async () => {
     }
   }
   setGlobalDispatcher(originalDispatcher);
-  if (server) {
-    await new Promise((resolve) => server?.close(resolve));
-    server = undefined;
-  }
+  await Promise.all(
+    servers
+      .splice(0)
+      .map((server) => new Promise((resolve) => server.close(resolve))),
+  );
 });
+
+function listen(server: Server, host = "127.0.0.1") {
+  servers.push(server);
+  return new Promise<number>((resolve) => {
+    server.listen(0, host, () => {
+      resolve((server.address() as AddressInfo).port);
+    });
+  });
+}
 
 /**
  * A local server that behaves as a forward proxy for both proxying styles:
@@ -51,7 +61,7 @@ afterEach(async () => {
  * changes mechanics across majors. Every request is answered with "proxied"
  * and the target host is recorded.
  */
-function startProxyServer() {
+async function startProxyServer() {
   const targets: string[] = [];
 
   const proxy = createServer((req, res) => {
@@ -71,13 +81,16 @@ function startProxyServer() {
     clientSocket.on("error", () => {});
   });
 
-  server = proxy;
+  return { port: await listen(proxy), targets };
+}
 
-  return new Promise<{ port: number; targets: string[] }>((resolve) => {
-    proxy.listen(0, "127.0.0.1", () => {
-      resolve({ port: (proxy.address() as AddressInfo).port, targets });
-    });
+async function startOriginServer(host: string) {
+  const origin = createServer((_req, res) => {
+    res.setHeader("connection", "close");
+    res.end("direct");
   });
+
+  return { port: await listen(origin, host) };
 }
 
 /**
@@ -104,6 +117,41 @@ test("Node's global fetch routes through the proxy from HTTP_PROXY", async () =>
   expect(targets).toContainEqual(
     expect.stringContaining("rallly-proxy-contract-check.invalid"),
   );
+});
+
+test.each([
+  "localhost",
+  "127.0.0.1",
+])("loopback host %s bypasses the proxy even without NO_PROXY", async (host) => {
+  const { port: proxyPort, targets } = await startProxyServer();
+  const { port: originPort } = await startOriginServer(host);
+  process.env.HTTP_PROXY = `http://127.0.0.1:${proxyPort}`;
+
+  setupOutboundProxy();
+
+  const res = await fetch(`http://${host}:${originPort}/ping`, {
+    signal: AbortSignal.timeout(5000),
+  });
+
+  expect(await res.text()).toBe("direct");
+  expect(targets).toEqual([]);
+});
+
+test("lowercase no_proxy entries are honored", async () => {
+  const { port, targets } = await startProxyServer();
+  process.env.http_proxy = `http://127.0.0.1:${port}`;
+  process.env.no_proxy = "proxy-exempt.invalid";
+
+  setupOutboundProxy();
+
+  // Exempt from the proxy, the unresolvable host can only fail DNS — reaching
+  // the proxy would have succeeded, which is what the last assertion rules out.
+  await expect(
+    fetch("http://proxy-exempt.invalid/ping", {
+      signal: AbortSignal.timeout(5000),
+    }),
+  ).rejects.toThrow("fetch failed");
+  expect(targets).toEqual([]);
 });
 
 test("leaves the global dispatcher untouched when no proxy variables are set", () => {
