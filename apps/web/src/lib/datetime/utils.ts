@@ -14,15 +14,20 @@ export function toISODate(value: DateInput) {
 
 /**
  * The calendar date (YYYY-MM-DD) at the given instant in the given zone.
- * en-CA is the locale whose date format is ISO 8601.
+ * Assembled from formatToParts rather than a locale's date pattern: small-ICU
+ * Node builds (e.g. Alpine's icu-data-en) resolve unavailable locales to "en",
+ * whose pattern is MM/DD/YYYY, so no locale can be trusted to format ISO 8601.
  */
 export function getCalendarDate(now: Date, timeZone: string): string {
-  return new Intl.DateTimeFormat("en-CA", {
+  const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).format(now);
+  }).formatToParts(now);
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value;
+  return `${get("year")}-${get("month")}-${get("day")}`;
 }
 
 /**
