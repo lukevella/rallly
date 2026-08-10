@@ -17,10 +17,9 @@ import { Trans, useTranslation } from "@/i18n/client";
 
 /**
  * Shared footer for the desktop and mobile voting forms. Shows a live count
- * of selected options, an explicit "Can't make it" path for an all-no
- * response (confirming first if it would discard selections), and the
- * Continue/Save submit which is gated until a new participant selects at
- * least one option.
+ * of selected options, an explicit decline path for an all-no response
+ * (confirming first if it would discard selections), and the Continue/Save
+ * submit which is gated until a new participant selects at least one option.
  */
 export const VotingFooter = ({ className }: { className?: string }) => {
   const { t } = useTranslation();
@@ -66,7 +65,7 @@ export const VotingFooter = ({ className }: { className?: string }) => {
             }
           }}
         >
-          <Trans i18nKey="cantMakeIt" defaults="Can't make it" />
+          <Trans i18nKey="decline" defaults="Decline" />
         </Button>
         <Button
           form="voting-form"
@@ -79,9 +78,8 @@ export const VotingFooter = ({ className }: { className?: string }) => {
             if (isBlocked) {
               event.preventDefault();
               toast(
-                t("selectAtLeastOneOption", {
-                  defaultValue:
-                    "Select at least one option, or choose Can't make it",
+                t("selectAtLeastOneOptionOrDecline", {
+                  defaultValue: "Select at least one option, or decline",
                 }),
               );
             }
@@ -98,14 +96,11 @@ export const VotingFooter = ({ className }: { className?: string }) => {
         <DialogContent size="sm">
           <DialogHeader>
             <DialogTitle>
-              <Trans
-                i18nKey="cantMakeItConfirmTitle"
-                defaults="Can't make it?"
-              />
+              <Trans i18nKey="declineConfirmTitle" defaults="Decline?" />
             </DialogTitle>
             <DialogDescription>
               <Trans
-                i18nKey="cantMakeItConfirmDescription"
+                i18nKey="declineConfirmDescription"
                 defaults="{count, plural, one {This will discard your selected option and respond no to everything.} other {This will discard your # selected options and respond no to everything.}}"
                 values={{ count: selectedCount }}
               />
@@ -126,7 +121,7 @@ export const VotingFooter = ({ className }: { className?: string }) => {
                 submitAllNo();
               }}
             >
-              <Trans i18nKey="cantMakeIt" defaults="Can't make it" />
+              <Trans i18nKey="decline" defaults="Decline" />
             </Button>
           </DialogFooter>
         </DialogContent>
