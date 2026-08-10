@@ -41,6 +41,21 @@ describe("getCalendarDate", () => {
       getCalendarDate(new Date("2025-07-01T20:00:00Z"), "Asia/Tokyo"),
     ).toBe("2025-07-02");
   });
+
+  it("returns an ISO date on ICU builds without the requested locale", () => {
+    // Small-ICU Node builds (e.g. Alpine's icu-data-en) silently resolve any
+    // requested locale to "en", whose date pattern is MM/DD/YYYY.
+    const RealDateTimeFormat = Intl.DateTimeFormat;
+    Intl.DateTimeFormat = ((
+      _locale?: string | string[],
+      options?: Intl.DateTimeFormatOptions,
+    ) => new RealDateTimeFormat("en", options)) as typeof Intl.DateTimeFormat;
+    try {
+      expect(getCalendarDate(instant, "UTC")).toBe("2025-07-02");
+    } finally {
+      Intl.DateTimeFormat = RealDateTimeFormat;
+    }
+  });
 });
 
 describe("calendarDateToUTCMidnight", () => {
