@@ -16,10 +16,11 @@ import { useVotingForm } from "@/features/poll/components/voting-form";
 import { Trans, useTranslation } from "@/i18n/client";
 
 /**
- * Shared footer for the desktop and mobile voting forms. Shows a live count
- * of selected options, an explicit decline path for an all-no response
- * (confirming first if it would discard selections), and the Continue/Save
- * submit which is gated until a new participant selects at least one option.
+ * Shared footer for the desktop and mobile voting forms. Announces the
+ * selection count to screen readers, offers an explicit decline path for an
+ * all-no response (confirming first if it would discard selections), and the
+ * Continue/Save submit which is gated until a new participant selects at
+ * least one option.
  */
 export const VotingFooter = ({ className }: { className?: string }) => {
   const { t } = useTranslation();
@@ -44,7 +45,7 @@ export const VotingFooter = ({ className }: { className?: string }) => {
 
   return (
     <div
-      className={cn("flex items-center justify-between gap-x-2.5", className)}
+      className={cn("flex items-center gap-x-2.5 md:justify-end", className)}
     >
       {/* Invisible, but keeps vote taps audible for screen readers. */}
       <p aria-live="polite" className="sr-only">
