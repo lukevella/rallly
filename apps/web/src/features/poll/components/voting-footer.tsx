@@ -43,55 +43,54 @@ export const VotingFooter = ({ className }: { className?: string }) => {
   };
 
   return (
-    <div className={cn("flex min-w-0 items-center gap-x-2.5", className)}>
-      <p
-        aria-live="polite"
-        className="min-w-0 truncate text-muted-foreground text-sm"
-      >
+    <div
+      className={cn("flex items-center justify-between gap-x-2.5", className)}
+    >
+      {/* Invisible, but keeps vote taps audible for screen readers. */}
+      <p aria-live="polite" className="sr-only">
         <Trans
           i18nKey="optionsSelected"
           defaults="{count, plural, =0 {None selected} one {# option selected} other {# options selected}}"
           values={{ count: selectedCount }}
         />
       </p>
-      <div className="ml-auto flex shrink-0 items-center gap-x-2.5">
-        <Button
-          type="button"
-          onClick={() => {
-            if (selectedCount > 0) {
-              confirmDialog.trigger();
-            } else {
-              submitAllNo();
-            }
-          }}
-        >
-          <Trans i18nKey="decline" defaults="Decline" />
-        </Button>
-        <Button
-          form="voting-form"
-          type="submit"
-          variant="primary"
-          className="aria-disabled:opacity-50"
-          aria-disabled={isBlocked}
-          loading={votingForm.formState.isSubmitting}
-          onClick={(event) => {
-            if (isBlocked) {
-              event.preventDefault();
-              toast(
-                t("selectAtLeastOneOptionOrDecline", {
-                  defaultValue: "Select at least one option, or decline",
-                }),
-              );
-            }
-          }}
-        >
-          {isNewResponse ? (
-            <Trans i18nKey="continue" defaults="Continue" />
-          ) : (
-            <Trans i18nKey="save" defaults="Save" />
-          )}
-        </Button>
-      </div>
+      <Button
+        type="button"
+        className="flex-1 md:flex-none"
+        onClick={() => {
+          if (selectedCount > 0) {
+            confirmDialog.trigger();
+          } else {
+            submitAllNo();
+          }
+        }}
+      >
+        <Trans i18nKey="decline" defaults="Decline" />
+      </Button>
+      <Button
+        form="voting-form"
+        type="submit"
+        variant="primary"
+        className="flex-[2] aria-disabled:opacity-50 md:flex-none"
+        aria-disabled={isBlocked}
+        loading={votingForm.formState.isSubmitting}
+        onClick={(event) => {
+          if (isBlocked) {
+            event.preventDefault();
+            toast(
+              t("selectAtLeastOneOptionOrDecline", {
+                defaultValue: "Select at least one option, or decline",
+              }),
+            );
+          }
+        }}
+      >
+        {isNewResponse ? (
+          <Trans i18nKey="continue" defaults="Continue" />
+        ) : (
+          <Trans i18nKey="save" defaults="Save" />
+        )}
+      </Button>
       <Dialog {...confirmDialog.dialogProps}>
         <DialogContent size="sm">
           <DialogHeader>
