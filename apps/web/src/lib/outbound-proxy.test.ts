@@ -45,10 +45,10 @@ afterEach(async () => {
   );
 });
 
-function listen(server: Server) {
+function listen(server: Server, host = "127.0.0.1") {
   servers.push(server);
   return new Promise<number>((resolve) => {
-    server.listen(0, "127.0.0.1", () => {
+    server.listen(0, host, () => {
       resolve((server.address() as AddressInfo).port);
     });
   });
@@ -84,13 +84,13 @@ async function startProxyServer() {
   return { port: await listen(proxy), targets };
 }
 
-async function startOriginServer() {
+async function startOriginServer(host: string) {
   const origin = createServer((_req, res) => {
     res.setHeader("connection", "close");
     res.end("direct");
   });
 
-  return { port: await listen(origin) };
+  return { port: await listen(origin, host) };
 }
 
 /**
@@ -124,7 +124,7 @@ test.each([
   "127.0.0.1",
 ])("loopback host %s bypasses the proxy even without NO_PROXY", async (host) => {
   const { port: proxyPort, targets } = await startProxyServer();
-  const { port: originPort } = await startOriginServer();
+  const { port: originPort } = await startOriginServer(host);
   process.env.HTTP_PROXY = `http://127.0.0.1:${proxyPort}`;
 
   setupOutboundProxy();
