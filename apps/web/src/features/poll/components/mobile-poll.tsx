@@ -1,6 +1,6 @@
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { Card, CardContent, CardFooter } from "@rallly/ui/card";
+import { Card, CardFooter } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import {
   Select,
@@ -26,6 +26,7 @@ import { ParticipantDropdown } from "@/features/poll/components/participant-drop
 import { ParticipantNote } from "@/features/poll/components/participant-note";
 import { useOptions, usePoll } from "@/features/poll/components/poll-context";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
+import { VotingFooter } from "@/features/poll/components/voting-footer";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { YouAvatar } from "@/features/poll/components/you-avatar";
 import { useUser } from "@/features/user/client";
@@ -46,7 +47,6 @@ const MobilePoll: React.FunctionComponent = () => {
   const session = useUser();
 
   const votingForm = useVotingForm();
-  const { formState } = votingForm;
 
   const selectedParticipantId = votingForm.watch("participantId");
 
@@ -205,9 +205,9 @@ const MobilePoll: React.FunctionComponent = () => {
         </div>
       </div>
       {poll.options[0]?.duration !== 0 && poll.timeZone ? (
-        <CardContent className="border-b">
+        <div className="border-b p-2">
           <TimesShownIn />
-        </CardContent>
+        </div>
       ) : null}
       <GroupedOptions
         selectedParticipantId={selectedParticipantId}
@@ -237,16 +237,7 @@ const MobilePoll: React.FunctionComponent = () => {
             }}
           >
             <CardFooter className="border-t">
-              <Button
-                form="voting-form"
-                className="w-full"
-                type="submit"
-                variant="primary"
-                size="lg"
-                loading={formState.isSubmitting}
-              >
-                {selectedParticipantId ? t("save") : t("continue")}
-              </Button>
+              <VotingFooter className="flex-1" />
             </CardFooter>
           </m.div>
         ) : null}

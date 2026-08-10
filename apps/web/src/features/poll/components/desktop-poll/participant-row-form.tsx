@@ -71,7 +71,17 @@ const ParticipantRowForm = ({
             )}
             <ParticipantName>{participantName}</ParticipantName>
           </Participant>
-          {!isNew ? (
+          {isNew ? (
+            <Button
+              variant="ghost"
+              size="xs"
+              onClick={() => {
+                form.cancel();
+              }}
+            >
+              <Trans i18nKey="cancel" defaults="Cancel" />
+            </Button>
+          ) : (
             <div className="flex items-center gap-1">
               <Tooltip>
                 <TooltipTrigger
@@ -82,27 +92,27 @@ const ParticipantRowForm = ({
                       onClick={() => {
                         form.cancel();
                       }}
-                      size="icon-sm"
+                      size="icon-xs"
                     >
                       <UndoIcon />
                     </Button>
                   }
                 />
                 <TooltipContent>
-                  <Trans i18nKey="cancel" />
+                  <Trans i18nKey="cancel" defaults="Cancel" />
                 </TooltipContent>
               </Tooltip>
               <Button
                 variant="primary"
                 loading={form.formState.isSubmitting}
-                size="sm"
+                size="xs"
                 form="voting-form"
                 type="submit"
               >
                 <Trans i18nKey="save" />
               </Button>
             </div>
-          ) : null}
+          )}
         </div>
       </td>
       {optionIds.map((optionId, i) => {

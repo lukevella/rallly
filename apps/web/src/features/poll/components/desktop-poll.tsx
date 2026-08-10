@@ -29,6 +29,7 @@ import { ScrollContainer } from "@/components/scroll-container";
 import { usePermissions, usePoll } from "@/features/poll/client";
 import { useParticipants } from "@/features/poll/components/participants-provider";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
+import { VotingFooter } from "@/features/poll/components/voting-footer";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { Trans, useTranslation } from "@/i18n/client";
 import ParticipantRow from "./desktop-poll/participant-row";
@@ -414,29 +415,8 @@ const DesktopPoll: React.FunctionComponent = () => {
                 </EmptyState>
               )}
               {mode === "new" ? (
-                <div className="flex items-center justify-between gap-4 border-t p-3">
-                  <Button
-                    onClick={() => {
-                      votingForm.cancel();
-                    }}
-                  >
-                    <Trans i18nKey="cancel" />
-                  </Button>
-                  <p className="hidden min-w-0 truncate text-sm md:block">
-                    <Trans
-                      i18nKey="saveInstruction"
-                      defaults="Select your availability and click <b>{action}</b>"
-                      values={{
-                        action: mode === "new" ? t("continue") : t("save"),
-                      }}
-                      components={{
-                        b: <strong className="font-semibold" />,
-                      }}
-                    />
-                  </p>
-                  <Button type="submit" variant="primary" form="voting-form">
-                    <Trans i18nKey="continue" />
-                  </Button>
+                <div className="border-t p-3">
+                  <VotingFooter />
                 </div>
               ) : null}
             </div>
