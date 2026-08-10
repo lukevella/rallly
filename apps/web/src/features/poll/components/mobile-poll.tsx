@@ -1,6 +1,6 @@
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { Card, CardContent, CardFooter } from "@rallly/ui/card";
+import { Card, CardFooter } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import {
   Select,
@@ -205,9 +205,9 @@ const MobilePoll: React.FunctionComponent = () => {
         </div>
       </div>
       {poll.options[0]?.duration !== 0 && poll.timeZone ? (
-        <CardContent className="border-b">
+        <div className="border-b p-2">
           <TimesShownIn />
-        </CardContent>
+        </div>
       ) : null}
       <GroupedOptions
         selectedParticipantId={selectedParticipantId}

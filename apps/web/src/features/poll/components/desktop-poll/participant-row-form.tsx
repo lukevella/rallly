@@ -81,7 +81,7 @@ const ParticipantRowForm = ({
                     onClick={() => {
                       form.cancel();
                     }}
-                    size="icon-sm"
+                    size="icon-xs"
                   >
                     <XIcon />
                   </Button>
@@ -102,7 +102,7 @@ const ParticipantRowForm = ({
                       onClick={() => {
                         form.cancel();
                       }}
-                      size="icon-sm"
+                      size="icon-xs"
                     >
                       <UndoIcon />
                     </Button>
@@ -115,7 +115,7 @@ const ParticipantRowForm = ({
               <Button
                 variant="primary"
                 loading={form.formState.isSubmitting}
-                size="sm"
+                size="xs"
                 form="voting-form"
                 type="submit"
               >

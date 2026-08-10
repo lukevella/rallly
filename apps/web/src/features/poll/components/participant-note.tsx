@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { Icon } from "@rallly/ui/icon";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { MessageSquareTextIcon } from "lucide-react";
 import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
@@ -32,9 +31,7 @@ export function ParticipantNote({
             size={size}
             variant="ghost"
           >
-            <Icon>
-              <MessageSquareTextIcon />
-            </Icon>
+            <MessageSquareTextIcon />
           </Button>
         }
       />
