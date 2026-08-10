@@ -44,7 +44,7 @@ const TimelineRow = ({
         <th
           rowSpan={rowSpan}
           style={{ minWidth: 235, width: 235, top }}
-          className={cn("sticky left-0 z-30 border-b bg-background px-4 py-2")}
+          className={cn("sticky left-0 z-30 border-b bg-card px-4 py-2")}
         />
       ) : null}
       {children}
@@ -108,7 +108,7 @@ const PollHeader = () => {
             colSpan={group.count}
             style={{ height: monthRowHeight }}
             className={cn(
-              "sticky top-0 z-10 border-b border-l bg-background text-left",
+              "sticky top-0 z-10 border-b border-l bg-card text-left",
             )}
           >
             <div className="sticky right-0 left-[236px] inline-flex h-5 gap-1 px-2 py-0.5 font-medium text-xs uppercase">
@@ -125,7 +125,7 @@ const PollHeader = () => {
             scope="colgroup"
             colSpan={group.count}
             style={{ height: dayRowHeight, top: monthRowHeight }}
-            className="sticky z-10 border-l bg-background"
+            className="sticky z-10 border-l bg-card"
           >
             <div
               style={{ width: `calc(100% / ${group.count})` }}
@@ -148,7 +148,7 @@ const PollHeader = () => {
               key={option.optionId}
               scope="col"
               style={{ minWidth: 80, top: scoreRowTop }}
-              className="sticky z-20 border-b border-l bg-background px-2 pb-2.5 align-top"
+              className="sticky z-20 border-b border-l bg-card px-2 pb-2.5 align-top"
             >
               <div className="flex flex-col items-center gap-3">
                 {option.type === "timeSlot" ? (

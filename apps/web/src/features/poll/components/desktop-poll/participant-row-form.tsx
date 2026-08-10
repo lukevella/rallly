@@ -56,7 +56,7 @@ const ParticipantRowForm = ({
     <tr className={cn("group", className)}>
       <td
         style={{ minWidth: 235, maxWidth: 235 }}
-        className="sticky left-0 z-10 h-12 border-b border-b-border-muted bg-background px-3 group-[.last-row]:border-b-0"
+        className="sticky left-0 z-10 h-12 border-b border-b-border-muted bg-card px-3 group-[.last-row]:border-b-0"
       >
         <div className="flex items-center justify-between gap-x-2.5">
           <Participant>
@@ -110,18 +110,13 @@ const ParticipantRowForm = ({
         return (
           <td
             key={optionId}
-            className="relative h-12 border-b border-b-border-muted border-l bg-background group-[.last-row]:border-b-0"
+            className="relative h-12 border-b border-b-border-muted border-l bg-card group-[.last-row]:border-b-0"
           >
             <Controller
               control={form.control}
               name={`votes.${i}`}
               render={({ field }) => (
-                <div
-                  className={cn(
-                    "absolute inset-0 flex items-center justify-center transition-colors",
-                    "hover:bg-gray-50 active:bg-gray-100 active:ring-1 active:ring-gray-200 active:ring-inset dark:active:bg-gray-700/50 dark:active:ring-gray-700 dark:active:ring-inset dark:hover:bg-gray-800",
-                  )}
-                >
+                <div className={cn("flex justify-center gap-2")}>
                   <VoteSelector
                     className="after:absolute after:inset-0"
                     optionLabel={

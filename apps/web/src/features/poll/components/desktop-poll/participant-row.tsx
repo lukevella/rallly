@@ -66,7 +66,7 @@ export const ParticipantRowView: React.FunctionComponent<{
     >
       <td
         style={{ minWidth: 235, maxWidth: 235 }}
-        className="sticky left-0 z-10 h-12 border-border-muted border-b bg-background px-3 group-[.last-row]:border-b-0"
+        className="sticky left-0 z-10 h-12 border-border-muted border-b bg-card px-3 group-[.last-row]:border-b-0"
       >
         <div className="flex max-w-full items-center justify-between gap-x-1">
           <Participant>
@@ -94,7 +94,7 @@ export const ParticipantRowView: React.FunctionComponent<{
             // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
             key={i}
             className={cn(
-              "h-12 border-b border-b-border-muted border-l bg-background group-[.last-row]:border-b-0",
+              "h-12 border-b border-b-border-muted border-l bg-card group-[.last-row]:border-b-0",
             )}
           >
             <div className={cn("flex items-center justify-center")}>
