@@ -8,6 +8,9 @@ name: Create Release
 jobs:
   build:
     name: Create Release
+    # Pre-release tags (v4.12.3-rc.1) exist to publish a pinned Docker image
+    # for validation — they must not deploy production or draft a release.
+    if: ${{ !contains(github.ref_name, '-') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
