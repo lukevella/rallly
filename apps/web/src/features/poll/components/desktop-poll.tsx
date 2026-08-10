@@ -5,7 +5,6 @@ import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
-import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   ArrowLeftIcon,
@@ -30,6 +29,7 @@ import { ScrollContainer } from "@/components/scroll-container";
 import { usePermissions, usePoll } from "@/features/poll/client";
 import { useParticipants } from "@/features/poll/components/participants-provider";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
+import { VotingFooter } from "@/features/poll/components/voting-footer";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { Trans, useTranslation } from "@/i18n/client";
 import ParticipantRow from "./desktop-poll/participant-row";
@@ -223,10 +223,6 @@ const DesktopPoll: React.FunctionComponent = () => {
   const { t } = useTranslation();
   const votingForm = useVotingForm();
   const mode = votingForm.watch("mode");
-  const votes = votingForm.watch("votes");
-  const selectedCount = votes.filter(
-    (vote) => vote?.type === "yes" || vote?.type === "ifNeedBe",
-  ).length;
 
   const { participants } = useParticipants();
   const visibleParticipants = useVisibleParticipants();
@@ -427,47 +423,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                   >
                     <Trans i18nKey="cancel" />
                   </Button>
-                  <div className="flex items-center gap-2.5">
-                    <p
-                      aria-live="polite"
-                      className={
-                        selectedCount === 0
-                          ? "sr-only"
-                          : "text-muted-foreground text-sm"
-                      }
-                    >
-                      <Trans
-                        i18nKey="optionsSelected"
-                        defaults="{count, plural, =0 {No options selected} one {# option selected} other {# options selected}}"
-                        values={{ count: selectedCount }}
-                      />
-                    </p>
-                    {selectedCount === 0 ? (
-                      <Button type="submit" form="voting-form">
-                        <Trans i18nKey="cantMakeIt" defaults="Can't make it" />
-                      </Button>
-                    ) : null}
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      form="voting-form"
-                      className="aria-disabled:opacity-50"
-                      aria-disabled={selectedCount === 0}
-                      onClick={(event) => {
-                        if (selectedCount === 0) {
-                          event.preventDefault();
-                          toast(
-                            t("selectAtLeastOneOption", {
-                              defaultValue:
-                                "Select at least one option, or choose Can't make it",
-                            }),
-                          );
-                        }
-                      }}
-                    >
-                      <Trans i18nKey="continue" />
-                    </Button>
-                  </div>
+                  <VotingFooter className="flex-1" />
                 </div>
               ) : null}
             </div>

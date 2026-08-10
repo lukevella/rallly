@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
-import { toast } from "@rallly/ui/sonner";
 import { MoreHorizontalIcon, PlusIcon, UsersIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
@@ -27,6 +26,7 @@ import { ParticipantDropdown } from "@/features/poll/components/participant-drop
 import { ParticipantNote } from "@/features/poll/components/participant-note";
 import { useOptions, usePoll } from "@/features/poll/components/poll-context";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
+import { VotingFooter } from "@/features/poll/components/voting-footer";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { YouAvatar } from "@/features/poll/components/you-avatar";
 import { useUser } from "@/features/user/client";
@@ -47,13 +47,8 @@ const MobilePoll: React.FunctionComponent = () => {
   const session = useUser();
 
   const votingForm = useVotingForm();
-  const { formState } = votingForm;
 
   const selectedParticipantId = votingForm.watch("participantId");
-  const votes = votingForm.watch("votes");
-  const selectedCount = votes.filter(
-    (vote) => vote?.type === "yes" || vote?.type === "ifNeedBe",
-  ).length;
 
   const visibleParticipants = useVisibleParticipants();
   const selectedParticipant = selectedParticipantId
@@ -241,53 +236,8 @@ const MobilePoll: React.FunctionComponent = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <CardFooter className="items-center justify-between gap-2.5 border-t">
-              <p
-                aria-live="polite"
-                className={
-                  selectedCount === 0
-                    ? "sr-only"
-                    : "text-muted-foreground text-sm"
-                }
-              >
-                <Trans
-                  i18nKey="optionsSelected"
-                  defaults="{count, plural, =0 {No options selected} one {# option selected} other {# options selected}}"
-                  values={{ count: selectedCount }}
-                />
-              </p>
-              {selectedCount === 0 ? (
-                <Button
-                  form="voting-form"
-                  className="flex-1"
-                  type="submit"
-                  size="lg"
-                >
-                  <Trans i18nKey="cantMakeIt" defaults="Can't make it" />
-                </Button>
-              ) : null}
-              <Button
-                form="voting-form"
-                className="flex-1 aria-disabled:opacity-50"
-                type="submit"
-                variant="primary"
-                size="lg"
-                loading={formState.isSubmitting}
-                aria-disabled={!selectedParticipantId && selectedCount === 0}
-                onClick={(event) => {
-                  if (!selectedParticipantId && selectedCount === 0) {
-                    event.preventDefault();
-                    toast(
-                      t("selectAtLeastOneOption", {
-                        defaultValue:
-                          "Select at least one option, or choose Can't make it",
-                      }),
-                    );
-                  }
-                }}
-              >
-                {selectedParticipantId ? t("save") : t("continue")}
-              </Button>
+            <CardFooter className="border-t">
+              <VotingFooter className="flex-1" />
             </CardFooter>
           </m.div>
         ) : null}
