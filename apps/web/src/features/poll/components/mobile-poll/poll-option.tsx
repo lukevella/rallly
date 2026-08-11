@@ -139,16 +139,17 @@ const OptionScoreDonut = ({
 }) => {
   const { participants } = useParticipants();
   const total = participants.length;
-  const stroke = 4;
-  const radius = (20 - stroke) / 2;
+  const score = yesScore + ifNeedBeScore;
+  const stroke = 2.5;
+  const radius = (24 - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const yesLength = total > 0 ? (yesScore / total) * circumference : 0;
   const ifNeedBeLength =
     total > 0 ? (ifNeedBeScore / total) * circumference : 0;
   const segment = (className: string, length: number, offset: number) => (
     <circle
-      cx="10"
-      cy="10"
+      cx="12"
+      cy="12"
       r={radius}
       fill="none"
       strokeWidth={stroke}
@@ -158,21 +159,30 @@ const OptionScoreDonut = ({
     />
   );
   return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 20 20"
-      className="size-5 -rotate-90 opacity-100"
-    >
-      <circle
-        cx="10"
-        cy="10"
-        r={radius}
-        fill="none"
-        strokeWidth={stroke}
-        className="stroke-muted"
-      />
-      {segment("stroke-[#00C950]", yesLength, 0)}
-      {segment("stroke-[#FFB900]", ifNeedBeLength, yesLength)}
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="size-6 opacity-100">
+      {/* Segments start at 12 o'clock; only the ring rotates so the score stays upright. */}
+      <g transform="rotate(-90 12 12)">
+        <circle
+          cx="12"
+          cy="12"
+          r={radius}
+          fill="none"
+          strokeWidth={stroke}
+          className="stroke-muted"
+        />
+        {segment("stroke-[#00C950]", yesLength, 0)}
+        {segment("stroke-[#FFB900]", ifNeedBeLength, yesLength)}
+      </g>
+      <text
+        x="12"
+        y="12.5"
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize="9"
+        className="fill-foreground font-medium"
+      >
+        {score}
+      </text>
     </svg>
   );
 };
