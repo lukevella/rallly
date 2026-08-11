@@ -524,6 +524,7 @@
   "optional": "opzionale",
   "optionalLabel": "(Opzionale)",
   "optionCount": "{count, plural, one {# opzione} other {# opzioni}}",
+  "optionsSelected": "{count, plural, =0 {Nessuno ha selezionato} one {# opzione selezionata} other {# opzioni selezionate}}",
   "or": "Oppure",
   "organizationName": "Nome dell'organizzazione",
   "organizationNamePlaceholder": "es. Acme Corp",
