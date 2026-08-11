@@ -524,7 +524,7 @@
   "optional": "volitelné",
   "optionalLabel": "(Volitelné)",
   "optionCount": "{count, plural, one {# možnost} other {# možností}}",
-  "optionsSelected": "{count, plural, =0 {Žádné vybrané možnosti} one {# vybraná možnost} few {# vybrané možnosti} many {# vybraných možností} other {# vybraných možností}}}]}]}]}]}]}]}]}]}]}]}]}]}]",
+  "optionsSelected": "{count, plural, =0 {Žádné vybrané možnosti} one {# vybraná možnost} few {# vybrané možnosti} many {# vybraných možností} other {# vybraných možností}}",
   "or": "nebo",
   "organizationName": "Název organizace",
   "organizationNamePlaceholder": "např. Acme Corp",

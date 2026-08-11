@@ -406,7 +406,7 @@
   "locationDisplayTextPlaceholder": "Lien de la réunion",
   "locationInPerson": "En personne",
   "locationPlaceholder": "Le café de Joe",
-  "lockTimeZone": "Verrouiller le fuseau horaire},{",
+  "lockTimeZone": "Verrouiller le fuseau horaire",
   "lockTimeZoneAllDayHelp": "Les options « toute la journée » affichent déjà la même date pour tout le monde.",
   "lockTimeZoneDisabledHelp": "Le fuseau horaire ne peut pas être modifié après que des votes ont été exprimés.",
   "lockTimeZoneHelp": "Tout le monde voit la même heure, au lieu qu'elle soit convertie dans le fuseau horaire de chaque Participant.",

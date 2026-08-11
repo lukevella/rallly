@@ -406,7 +406,7 @@
   "locationDisplayTextPlaceholder": "Link della riunione",
   "locationInPerson": "Di persona",
   "locationPlaceholder": "Bar di Joe",
-  "lockTimeZone": "Blocca fuso orario},{",
+  "lockTimeZone": "Blocca fuso orario",
   "lockTimeZoneAllDayHelp": "Le opzioni per l'intera giornata mostrano già la stessa data a tutti.",
   "lockTimeZoneDisabledHelp": "Il fuso orario non può essere modificato dopo che sono stati espressi i voti.",
   "lockTimeZoneHelp": "Tutti vedono la stessa ora, invece di convertirla nel fuso orario di ciascun Partecipante.",

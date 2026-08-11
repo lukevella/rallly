@@ -524,7 +524,7 @@
   "optional": "opcional",
   "optionalLabel": "(Opcional)",
   "optionCount": "{count, plural, one {# opção} other {# opções}}",
-  "optionsSelected": "{count, plural, =0 {Nenhuma opção selecionada} one {# opção selecionada} other {# opções selecionadas}}\"}]}]}",
+  "optionsSelected": "{count, plural, =0 {Nenhuma opção selecionada} one {# opção selecionada} other {# opções selecionadas}}",
   "or": "Ou",
   "organizationName": "Nome da Organização",
   "organizationNamePlaceholder": "ex.: Acme Corp",

@@ -406,7 +406,7 @@
   "locationDisplayTextPlaceholder": "Kokouslinkki",
   "locationInPerson": "Paikan päällä",
   "locationPlaceholder": "Maijan kahvila",
-  "lockTimeZone": "Lukitse aikavyöhyke},{",
+  "lockTimeZone": "Lukitse aikavyöhyke",
   "lockTimeZoneAllDayHelp": "Koko päivän vaihtoehdot näyttävät jo kaikille saman päivämäärän.",
   "lockTimeZoneDisabledHelp": "Aikavyöhykettä ei voi muuttaa sen jälkeen, kun ääniä on annettu.",
   "lockTimeZoneHelp": "Kaikki näkevät saman kellonajan sen sijaan, että se muuntuu kunkin osallistujan aikavyöhykkeeksi.",
