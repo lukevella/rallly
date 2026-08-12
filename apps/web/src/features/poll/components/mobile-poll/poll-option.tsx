@@ -166,7 +166,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   );
 
   return (
-    <div className="flex items-center gap-x-1" data-testid="poll-option">
+    <div className="flex items-center gap-x-2" data-testid="poll-option">
       <div className={cn(optionGrid, "h-11")}>{optionSummary}</div>
       {editable ? (
         <VoteSegmentedControl
@@ -184,7 +184,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           defaultValue: "Show participant votes",
         })}`}
         variant="ghost"
-        className="h-11 min-w-11 px-1.5"
+        className="w-14"
         onClick={() => {
           dialog.trigger();
         }}

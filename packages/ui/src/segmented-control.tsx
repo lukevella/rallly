@@ -26,7 +26,7 @@ function SegmentedControlItem({
     <RadioPrimitive.Root
       data-slot="segmented-control-item"
       className={cn(
-        "inline-flex size-9 cursor-pointer items-center justify-center rounded-md ring-ring transition-colors focus-visible:ring-2 data-checked:bg-background data-checked:shadow-sm",
+        "inline-flex size-8 cursor-pointer items-center justify-center rounded-md ring-ring transition-colors focus-visible:ring-2 data-checked:bg-card",
         className,
       )}
       {...props}
