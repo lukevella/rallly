@@ -144,19 +144,26 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   const { t } = useTranslation();
   const dialog = useDialog();
 
+  const showVote = !editable && !!selectedParticipantId;
+
   const optionSummary = (
     <>
-      {!editable && selectedParticipantId ? (
-        <VoteIcon type={vote} />
-      ) : (
-        <span aria-hidden="true" />
-      )}
+      <span
+        aria-hidden={showVote ? undefined : true}
+        className="overflow-hidden"
+      >
+        {showVote ? <VoteIcon type={vote} /> : null}
+      </span>
       {children}
     </>
   );
 
-  const optionGrid =
-    "grid min-w-0 flex-1 grid-cols-[1.25rem_4.5rem_1fr] items-center gap-x-2.5 px-3 text-left";
+  const optionGrid = cn(
+    "grid min-w-0 flex-1 items-center px-2 text-left transition-[grid-template-columns] duration-300",
+    showVote
+      ? "grid-cols-[1.875rem_4.5rem_1fr]"
+      : "grid-cols-[0rem_4.5rem_1fr]",
+  );
 
   return (
     <div className="flex items-center gap-x-1" data-testid="poll-option">

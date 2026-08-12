@@ -30,66 +30,71 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
     : undefined;
 
   return (
-    <div className="space-y-1.5 px-2 py-2">
+    <div className="divide-y">
       {options.map((option) => {
         const score = getScore(option.optionId);
         const index = optionIds.indexOf(option.optionId);
         return (
-          <Controller
-            key={option.optionId}
-            control={control}
-            name="votes"
-            render={({ field }) => {
-              const vote =
-                !editable && selectedParticipant
-                  ? getVote(selectedParticipant.id, option.optionId)
-                  : field.value[index]?.type;
+          <div key={option.optionId} className="p-2">
+            <Controller
+              key={option.optionId}
+              control={control}
+              name="votes"
+              render={({ field }) => {
+                const vote =
+                  !editable && selectedParticipant
+                    ? getVote(selectedParticipant.id, option.optionId)
+                    : field.value[index]?.type;
 
-              const handleChange = (newVote: VoteType) => {
-                if (!editable) {
-                  return;
+                const handleChange = (newVote: VoteType) => {
+                  if (!editable) {
+                    return;
+                  }
+                  const newValue = [...field.value];
+                  newValue[index] = {
+                    optionId: option.optionId,
+                    type: newVote,
+                  };
+                  field.onChange(newValue);
+                };
+
+                switch (option.type) {
+                  case "timeSlot":
+                    return (
+                      <TimeSlotOption
+                        onChange={handleChange}
+                        optionId={option.optionId}
+                        optionLabel={getOptionDateTimeLabel(option)}
+                        yesScore={score.yes}
+                        ifNeedBeScore={score.ifNeedBe}
+                        vote={vote}
+                        startTime={option.startTime}
+                        endTime={option.endTime}
+                        duration={option.duration}
+                        editable={editable}
+                        selectedParticipantId={selectedParticipant?.id}
+                      />
+                    );
+                  case "date":
+                    return (
+                      <DateOption
+                        onChange={handleChange}
+                        optionId={option.optionId}
+                        optionLabel={getOptionDateTimeLabel(option)}
+                        yesScore={score.yes}
+                        ifNeedBeScore={score.ifNeedBe}
+                        vote={vote}
+                        dow={option.dow}
+                        day={option.day}
+                        month={option.month}
+                        editable={editable}
+                        selectedParticipantId={selectedParticipant?.id}
+                      />
+                    );
                 }
-                const newValue = [...field.value];
-                newValue[index] = { optionId: option.optionId, type: newVote };
-                field.onChange(newValue);
-              };
-
-              switch (option.type) {
-                case "timeSlot":
-                  return (
-                    <TimeSlotOption
-                      onChange={handleChange}
-                      optionId={option.optionId}
-                      optionLabel={getOptionDateTimeLabel(option)}
-                      yesScore={score.yes}
-                      ifNeedBeScore={score.ifNeedBe}
-                      vote={vote}
-                      startTime={option.startTime}
-                      endTime={option.endTime}
-                      duration={option.duration}
-                      editable={editable}
-                      selectedParticipantId={selectedParticipant?.id}
-                    />
-                  );
-                case "date":
-                  return (
-                    <DateOption
-                      onChange={handleChange}
-                      optionId={option.optionId}
-                      optionLabel={getOptionDateTimeLabel(option)}
-                      yesScore={score.yes}
-                      ifNeedBeScore={score.ifNeedBe}
-                      vote={vote}
-                      dow={option.dow}
-                      day={option.day}
-                      month={option.month}
-                      editable={editable}
-                      selectedParticipantId={selectedParticipant?.id}
-                    />
-                  );
-              }
-            }}
-          />
+              }}
+            />
+          </div>
         );
       })}
     </div>
