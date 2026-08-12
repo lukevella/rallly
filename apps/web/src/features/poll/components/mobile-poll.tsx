@@ -108,8 +108,7 @@ const MobilePoll: React.FunctionComponent = () => {
           {selectedParticipantId || !isEditing ? (
             <Select
               items={participantOptions}
-              defaultValue="all"
-              value={selectedParticipantId}
+              value={selectedParticipantId ?? "all"}
               onValueChange={(participantId) => {
                 if (participantId) {
                   votingForm.setValue("participantId", participantId);
@@ -183,6 +182,7 @@ const MobilePoll: React.FunctionComponent = () => {
                   aria-label={t("moreOptions", {
                     defaultValue: "More options",
                   })}
+                  variant="ghost"
                   size="icon"
                 >
                   <MoreHorizontalIcon />
