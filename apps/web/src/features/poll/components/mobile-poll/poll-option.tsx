@@ -17,6 +17,7 @@ import {
   filterParticipantsByVote,
   useParticipants,
 } from "@/features/poll/components/participants-provider";
+import { IfScoresVisible } from "@/features/poll/components/visibility";
 import { Trans, useTranslation } from "@/i18n/client";
 import { ConnectedScoreSummary } from "../score-summary";
 import VoteIcon from "../vote-icon";
@@ -175,33 +176,33 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           optionLabel={optionLabel}
         />
       ) : null}
-      <Button
-        aria-label={`${t("optionVoteBreakdown", {
-          defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
-          yesScore,
-          ifNeedBeScore,
-        })}. ${t("showParticipantVotes", {
-          defaultValue: "Show participant votes",
-        })}`}
-        variant="ghost"
-        className="w-14"
-        onClick={() => {
-          dialog.trigger();
-        }}
-      >
-        <ConnectedScoreSummary optionId={optionId} />
-      </Button>
-      <Dialog {...dialog.dialogProps}>
-        <DialogContent size="sm">
-          <DialogHeader>
-            <DialogTitle>
-              <Trans i18nKey="participants" defaults="Participants" />
-            </DialogTitle>
-            <DialogDescription>{optionLabel}</DialogDescription>
-          </DialogHeader>
-          <PollOptionVoteSummary optionId={optionId} />
-        </DialogContent>
-      </Dialog>
+      <IfScoresVisible>
+        <Button
+          {...dialog.triggerProps}
+          aria-label={`${t("optionVoteBreakdown", {
+            defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
+            yesScore,
+            ifNeedBeScore,
+          })}. ${t("showParticipantVotes", {
+            defaultValue: "Show participant votes",
+          })}`}
+          variant="ghost"
+          className="w-14"
+        >
+          <ConnectedScoreSummary optionId={optionId} />
+        </Button>
+        <Dialog {...dialog.dialogProps}>
+          <DialogContent size="sm">
+            <DialogHeader>
+              <DialogTitle>
+                <Trans i18nKey="participants" defaults="Participants" />
+              </DialogTitle>
+              <DialogDescription>{optionLabel}</DialogDescription>
+            </DialogHeader>
+            <PollOptionVoteSummary optionId={optionId} />
+          </DialogContent>
+        </Dialog>
+      </IfScoresVisible>
     </div>
   );
 };
