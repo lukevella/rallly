@@ -21,9 +21,7 @@ const DateOption: React.FunctionComponent<DateOptionProps> = ({
        * until we update this component.
        */}
       <div className="text-sm">
-        <span className="font-semibold">
-          {day} {dow}
-        </span>
+        {day} {dow}
       </div>
     </PollOption>
   );

@@ -104,7 +104,7 @@ const MobilePoll: React.FunctionComponent = () => {
   return (
     <Card>
       <div className="flex flex-col space-y-2 border-b p-2">
-        <div className="flex gap-x-2.5">
+        <div className="flex gap-x-2">
           {selectedParticipantId || !isEditing ? (
             <Select
               items={participantOptions}
