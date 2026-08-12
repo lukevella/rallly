@@ -17,8 +17,8 @@ import {
   filterParticipantsByVote,
   useParticipants,
 } from "@/features/poll/components/participants-provider";
-import { IfScoresVisible } from "@/features/poll/components/visibility";
 import { Trans, useTranslation } from "@/i18n/client";
+import { ConnectedScoreSummary } from "../score-summary";
 import VoteIcon from "../vote-icon";
 import { VoteSegmentedControl } from "../vote-segmented-control";
 
@@ -130,63 +130,6 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
   );
 };
 
-const OptionScoreDonut = ({
-  yesScore,
-  ifNeedBeScore,
-}: {
-  yesScore: number;
-  ifNeedBeScore: number;
-}) => {
-  const { participants } = useParticipants();
-  const total = participants.length;
-  const score = yesScore + ifNeedBeScore;
-  const stroke = 2.5;
-  const radius = (24 - stroke) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const yesLength = total > 0 ? (yesScore / total) * circumference : 0;
-  const ifNeedBeLength =
-    total > 0 ? (ifNeedBeScore / total) * circumference : 0;
-  const segment = (className: string, length: number, offset: number) => (
-    <circle
-      cx="12"
-      cy="12"
-      r={radius}
-      fill="none"
-      strokeWidth={stroke}
-      strokeDasharray={`${length} ${circumference}`}
-      strokeDashoffset={-offset}
-      className={className}
-    />
-  );
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className="size-6 opacity-100">
-      {/* Segments start at 12 o'clock; only the ring rotates so the score stays upright. */}
-      <g transform="rotate(-90 12 12)">
-        <circle
-          cx="12"
-          cy="12"
-          r={radius}
-          fill="none"
-          strokeWidth={stroke}
-          className="stroke-muted"
-        />
-        {segment("stroke-[#00C950]", yesLength, 0)}
-        {segment("stroke-[#FFB900]", ifNeedBeLength, yesLength)}
-      </g>
-      <text
-        x="12"
-        y="12.5"
-        textAnchor="middle"
-        dominantBaseline="central"
-        fontSize="9"
-        className="fill-foreground font-medium"
-      >
-        {score}
-      </text>
-    </svg>
-  );
-};
-
 const PollOption: React.FunctionComponent<PollOptionProps> = ({
   children,
   selectedParticipantId,
@@ -234,15 +177,12 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           defaultValue: "Show participant votes",
         })}`}
         variant="ghost"
-        size="icon-lg"
-        className="size-11"
+        className="h-11 min-w-11 px-1.5"
         onClick={() => {
           dialog.trigger();
         }}
       >
-        <IfScoresVisible>
-          <OptionScoreDonut yesScore={yesScore} ifNeedBeScore={ifNeedBeScore} />
-        </IfScoresVisible>
+        <ConnectedScoreSummary optionId={optionId} />
       </Button>
       <Dialog {...dialog.dialogProps}>
         <DialogContent size="sm">
