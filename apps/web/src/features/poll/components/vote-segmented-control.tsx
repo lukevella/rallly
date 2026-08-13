@@ -38,6 +38,7 @@ export const VoteSegmentedControl = ({
     <SegmentedControl
       data-testid="vote-selector"
       aria-label={optionLabel}
+      className="h-11"
       value={value ?? null}
       onValueChange={(newValue) => {
         if (newValue) {
@@ -50,7 +51,7 @@ export const VoteSegmentedControl = ({
           key={type}
           value={type}
           aria-label={voteLabels[type]}
-          className="w-8 data-unchecked:[&_path]:fill-gray-400"
+          className="w-11 data-unchecked:[&_path]:fill-gray-400"
         >
           <VoteIcon type={type} />
         </SegmentedControlItem>
