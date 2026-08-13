@@ -28,7 +28,7 @@ const GroupedOptions: React.FunctionComponent<GroupedOptionsProps> = ({
         return (
           <div key={day}>
             <div className={cn("sticky top-0 z-10 p-1", groupClassName)}>
-              <div className="rounded-lg border bg-card/80 p-2 font-semibold text-sm shadow-xs backdrop-blur-lg">
+              <div className="rounded-lg border bg-card/80 p-2 font-semibold text-sm shadow-sm backdrop-blur-lg">
                 {day}
               </div>
             </div>

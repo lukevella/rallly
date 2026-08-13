@@ -57,6 +57,7 @@ export const VotingFooter = ({ className }: { className?: string }) => {
       </p>
       <Button
         type="button"
+        size="lg"
         className="flex-1 md:flex-none"
         disabled={votingForm.formState.isSubmitting}
         onClick={() => {
@@ -72,8 +73,9 @@ export const VotingFooter = ({ className }: { className?: string }) => {
       <Button
         form="voting-form"
         type="submit"
+        size="lg"
         variant="primary"
-        className="flex-2 aria-disabled:opacity-50 md:flex-none"
+        className="flex-2 backdrop-blur-lg aria-disabled:opacity-50 md:flex-none"
         aria-disabled={isBlocked}
         loading={votingForm.formState.isSubmitting}
         onClick={(event) => {
