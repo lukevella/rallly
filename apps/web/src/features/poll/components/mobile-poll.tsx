@@ -237,7 +237,7 @@ const MobilePoll: React.FunctionComponent = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <VotingFooter className="p-3" />
+            <VotingFooter className="px-3 pb-3" />
           </m.div>
         ) : null}
       </AnimatePresence>

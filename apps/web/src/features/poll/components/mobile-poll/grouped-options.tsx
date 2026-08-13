@@ -27,10 +27,13 @@ const GroupedOptions: React.FunctionComponent<GroupedOptionsProps> = ({
       {Object.entries(grouped).map(([day, options]) => {
         return (
           <div key={day}>
-            <div className={cn("sticky top-0 z-10 p-1", groupClassName)}>
-              <div className="rounded-lg border bg-card/80 p-2 font-semibold text-sm shadow-sm backdrop-blur-lg">
-                {day}
-              </div>
+            <div
+              className={cn(
+                "border-b bg-card/80 px-4 py-3 font-semibold text-sm",
+                groupClassName,
+              )}
+            >
+              {day}
             </div>
             <PollOptions
               options={options}
