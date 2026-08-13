@@ -102,7 +102,7 @@ const MobilePoll: React.FunctionComponent = () => {
   ];
 
   return (
-    <Card>
+    <Card className="overflow-visible">
       <div className="flex flex-col space-y-2 border-b p-2">
         <div className="flex gap-x-2">
           {selectedParticipantId || !isEditing ? (
@@ -223,6 +223,7 @@ const MobilePoll: React.FunctionComponent = () => {
       <AnimatePresence>
         {isEditing ? (
           <m.div
+            className="sticky bottom-0 z-20"
             variants={{
               hidden: { opacity: 0, y: -20, height: 0 },
               visible: { opacity: 1, y: 0, height: "auto" },
@@ -236,7 +237,7 @@ const MobilePoll: React.FunctionComponent = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <CardFooter className="border-t">
+            <CardFooter className="rounded-b-2xl border-t bg-card">
               <VotingFooter className="flex-1" />
             </CardFooter>
           </m.div>
