@@ -151,7 +151,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
     <div
       className={cn(
         "grid h-14 items-center px-2 text-left transition-[grid-template-columns] duration-300",
-        editable && "grid-cols-[0rem_1fr_3rem_3.5rem_8.375rem]",
+        editable && "grid-cols-[0rem_1fr_3rem_3.5rem_8.875rem]",
         showVote && "grid-cols-[1.875rem_1fr_3rem_3.5rem_0rem]",
         !editable && !showVote && "grid-cols-[0rem_1fr_3rem_3.5rem_0rem]",
       )}
