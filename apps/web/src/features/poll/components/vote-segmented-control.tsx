@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@rallly/ui";
 import {
   SegmentedControl,
   SegmentedControlItem,
@@ -16,9 +17,11 @@ export const VoteSegmentedControl = ({
   value,
   onChange,
   optionLabel,
+  className,
 }: {
   value?: VoteType;
   onChange: (value: VoteType) => void;
+  className?: string;
   /**
    * Accessible description of the option being voted on (e.g. "Tue 30 Jun
    * 2026, 1:00 PM – 2:00 PM") so screen readers can tie the vote to its
@@ -38,7 +41,7 @@ export const VoteSegmentedControl = ({
     <SegmentedControl
       data-testid="vote-selector"
       aria-label={optionLabel}
-      className="h-11"
+      className={cn("h-11", className)}
       value={value ?? null}
       onValueChange={(newValue) => {
         if (newValue) {

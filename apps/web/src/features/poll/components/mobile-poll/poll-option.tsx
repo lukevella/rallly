@@ -147,8 +147,16 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
 
   const showVote = !editable && !!selectedParticipantId;
 
-  const optionSummary = (
-    <>
+  return (
+    <div
+      className={cn(
+        "grid h-14 items-center px-2 text-left transition-[grid-template-columns] duration-300",
+        showVote
+          ? "grid-cols-[1.875rem_4.5rem_3rem_auto_1fr]"
+          : "grid-cols-[0rem_4.5rem_3rem_auto_1fr]",
+      )}
+      data-testid="poll-option"
+    >
       <span
         aria-hidden={showVote ? undefined : true}
         className="overflow-hidden"
@@ -156,19 +164,6 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
         {showVote ? <VoteIcon type={vote} /> : null}
       </span>
       {children}
-    </>
-  );
-
-  const optionGrid = cn(
-    "grid min-w-0 flex-1 items-center px-2 text-left transition-[grid-template-columns] duration-300",
-    showVote
-      ? "grid-cols-[1.875rem_4.5rem_1fr]"
-      : "grid-cols-[0rem_4.5rem_1fr]",
-  );
-
-  return (
-    <div className="flex items-center gap-x-2" data-testid="poll-option">
-      <div className={cn(optionGrid)}>{optionSummary}</div>
       <IfScoresVisible>
         <Button
           {...dialog.triggerProps}
@@ -180,6 +175,8 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
             defaultValue: "Show participant votes",
           })}`}
           variant="ghost"
+          size="lg"
+          className="col-start-4 justify-self-start"
         >
           <ConnectedScoreSummary optionId={optionId} />
         </Button>
@@ -200,6 +197,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           value={vote}
           onChange={onChange}
           optionLabel={optionLabel}
+          className="col-start-5 justify-self-end"
         />
       ) : null}
     </div>
