@@ -16,7 +16,11 @@ test.describe(() => {
   });
 
   const voteAsNewParticipant = async (page: Page, name: string) => {
-    await page.getByTestId("poll-option").first().click();
+    await page
+      .getByTestId("vote-selector")
+      .first()
+      .getByRole("radio", { name: "Yes" })
+      .click();
     await page.getByRole("button", { name: "Continue" }).click();
     await page.getByPlaceholder("Jessie Smith").fill(name);
     await page.getByRole("button", { name: "Save availability" }).click();

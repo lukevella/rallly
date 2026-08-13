@@ -1,6 +1,6 @@
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { Card, CardFooter } from "@rallly/ui/card";
+import { Card } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import {
   Select,
@@ -102,14 +102,13 @@ const MobilePoll: React.FunctionComponent = () => {
   ];
 
   return (
-    <Card>
+    <Card className="overflow-visible">
       <div className="flex flex-col space-y-2 border-b p-2">
-        <div className="flex gap-x-2.5">
+        <div className="flex gap-x-2">
           {selectedParticipantId || !isEditing ? (
             <Select
               items={participantOptions}
-              defaultValue="all"
-              value={selectedParticipantId}
+              value={selectedParticipantId ?? "all"}
               onValueChange={(participantId) => {
                 if (participantId) {
                   votingForm.setValue("participantId", participantId);
@@ -183,6 +182,7 @@ const MobilePoll: React.FunctionComponent = () => {
                   aria-label={t("moreOptions", {
                     defaultValue: "More options",
                   })}
+                  variant="ghost"
                   size="icon"
                 >
                   <MoreHorizontalIcon />
@@ -223,6 +223,7 @@ const MobilePoll: React.FunctionComponent = () => {
       <AnimatePresence>
         {isEditing ? (
           <m.div
+            className="sticky bottom-0 z-20"
             variants={{
               hidden: { opacity: 0, y: -20, height: 0 },
               visible: { opacity: 1, y: 0, height: "auto" },
@@ -236,9 +237,7 @@ const MobilePoll: React.FunctionComponent = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <CardFooter className="border-t">
-              <VotingFooter className="flex-1" />
-            </CardFooter>
+            <VotingFooter className="p-3" />
           </m.div>
         ) : null}
       </AnimatePresence>
