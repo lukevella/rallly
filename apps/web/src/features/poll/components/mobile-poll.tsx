@@ -223,7 +223,7 @@ const MobilePoll: React.FunctionComponent = () => {
       <AnimatePresence>
         {isEditing ? (
           <m.div
-            className="sticky bottom-0 z-20"
+            className="sticky bottom-0 z-20 px-3 pb-3"
             variants={{
               hidden: { opacity: 0, y: -20, height: 0 },
               visible: { opacity: 1, y: 0, height: "auto" },
@@ -237,9 +237,7 @@ const MobilePoll: React.FunctionComponent = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <div className="p-3">
-              <VotingFooter />
-            </div>
+            <VotingFooter />
           </m.div>
         ) : null}
       </AnimatePresence>
