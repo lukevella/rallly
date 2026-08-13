@@ -198,7 +198,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           className="col-start-4 justify-self-end"
           initial={{ opacity: 0, x: 12 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         >
           <VoteSegmentedControl
             value={vote}
