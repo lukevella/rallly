@@ -75,7 +75,7 @@ export const VotingFooter = ({ className }: { className?: string }) => {
         type="submit"
         size="lg"
         variant="primary"
-        className="flex-2 backdrop-blur-lg aria-disabled:opacity-50 md:flex-none"
+        className="flex-2 bg-primary/80 backdrop-blur-lg aria-disabled:opacity-50 md:flex-none"
         aria-disabled={isBlocked}
         loading={votingForm.formState.isSubmitting}
         onClick={(event) => {
