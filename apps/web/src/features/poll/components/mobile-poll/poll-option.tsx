@@ -10,6 +10,7 @@ import {
   DialogTitle,
   useDialog,
 } from "@rallly/ui/dialog";
+import * as m from "motion/react-m";
 import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
@@ -193,12 +194,18 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
         </Dialog>
       </IfScoresVisible>
       {editable ? (
-        <VoteSegmentedControl
-          value={vote}
-          onChange={onChange}
-          optionLabel={optionLabel}
+        <m.div
           className="col-start-4 justify-self-end"
-        />
+          initial={{ opacity: 0, x: 12 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+        >
+          <VoteSegmentedControl
+            value={vote}
+            onChange={onChange}
+            optionLabel={optionLabel}
+          />
+        </m.div>
       ) : null}
     </div>
   );
