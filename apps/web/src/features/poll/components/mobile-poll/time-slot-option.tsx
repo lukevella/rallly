@@ -18,7 +18,7 @@ const TimeSlotOption: React.FunctionComponent<TimeSlotOptionProps> = ({
     <PollOption {...rest}>
       <div className="contents text-sm">
         <div>{startTime}</div>
-        <div className="text-muted-foreground">{duration}</div>
+        <div className="justify-self-end text-muted-foreground">{duration}</div>
       </div>
     </PollOption>
   );
