@@ -50,7 +50,7 @@ export const VoteSegmentedControl = ({
           key={type}
           value={type}
           aria-label={voteLabels[type]}
-          className="data-unchecked:[&_path]:fill-gray-400"
+          className="w-8 data-unchecked:[&_path]:fill-gray-400"
         >
           <VoteIcon type={type} />
         </SegmentedControlItem>
