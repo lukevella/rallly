@@ -168,14 +168,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
 
   return (
     <div className="flex items-center gap-x-2" data-testid="poll-option">
-      <div className={cn(optionGrid, "h-11")}>{optionSummary}</div>
-      {editable ? (
-        <VoteSegmentedControl
-          value={vote}
-          onChange={onChange}
-          optionLabel={optionLabel}
-        />
-      ) : null}
+      <div className={cn(optionGrid)}>{optionSummary}</div>
       <IfScoresVisible>
         <Button
           {...dialog.triggerProps}
@@ -187,7 +180,6 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
             defaultValue: "Show participant votes",
           })}`}
           variant="ghost"
-          className="w-14"
         >
           <ConnectedScoreSummary optionId={optionId} />
         </Button>
@@ -203,6 +195,13 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           </DialogContent>
         </Dialog>
       </IfScoresVisible>
+      {editable ? (
+        <VoteSegmentedControl
+          value={vote}
+          onChange={onChange}
+          optionLabel={optionLabel}
+        />
+      ) : null}
     </div>
   );
 };
