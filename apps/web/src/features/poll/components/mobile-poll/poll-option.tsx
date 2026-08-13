@@ -152,8 +152,8 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
       className={cn(
         "grid h-14 items-center px-2 text-left transition-[grid-template-columns] duration-300",
         showVote
-          ? "grid-cols-[1.875rem_1fr_3rem_3rem_8.375rem]"
-          : "grid-cols-[0rem_1fr_3rem_3rem_8.375rem]",
+          ? "grid-cols-[1.875rem_1fr_3rem_3.5rem_8.375rem]"
+          : "grid-cols-[0rem_1fr_3rem_3.5rem_8.375rem]",
       )}
       data-testid="poll-option"
     >
