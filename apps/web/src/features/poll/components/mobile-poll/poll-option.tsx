@@ -151,9 +151,9 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
     <div
       className={cn(
         "grid h-14 items-center px-2 text-left transition-[grid-template-columns] duration-300",
-        editable && "grid-cols-[0rem_1fr_3rem_3.5rem_8.875rem]",
-        showVote && "grid-cols-[1.875rem_1fr_3rem_3.5rem_0rem]",
-        !editable && !showVote && "grid-cols-[0rem_1fr_3rem_3.5rem_0rem]",
+        editable && "grid-cols-[0rem_1fr_3.5rem_8.875rem]",
+        showVote && "grid-cols-[1.875rem_1fr_3.5rem_0rem]",
+        !editable && !showVote && "grid-cols-[0rem_1fr_3.5rem_0rem]",
       )}
       data-testid="poll-option"
     >
@@ -176,7 +176,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           })}`}
           variant="ghost"
           size="lg"
-          className="col-start-4 justify-self-end"
+          className="col-start-3 justify-self-end"
         >
           <ConnectedScoreSummary optionId={optionId} />
         </Button>
@@ -197,7 +197,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           value={vote}
           onChange={onChange}
           optionLabel={optionLabel}
-          className="col-start-5 justify-self-end"
+          className="col-start-4 justify-self-end"
         />
       ) : null}
     </div>
