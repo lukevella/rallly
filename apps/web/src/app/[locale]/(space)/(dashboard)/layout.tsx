@@ -13,7 +13,6 @@ import {
 } from "@rallly/ui/sidebar";
 import { SettingsIcon } from "lucide-react";
 import Link from "next/link";
-import { CustomBrandingPrompt } from "@/features/branding/components/custom-branding-prompt";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
@@ -77,7 +76,6 @@ export default async function Layout({
       </Sidebar>
       <SidebarInset id="main-content" tabIndex={-1} className="min-w-0">
         <LicenseLimitWarning />
-        <CustomBrandingPrompt />
         <div className="flex flex-1 flex-col">
           <div className="flex flex-1 flex-col">{children}</div>
         </div>
