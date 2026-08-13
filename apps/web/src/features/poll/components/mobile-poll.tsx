@@ -1,6 +1,6 @@
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { Card, CardFooter } from "@rallly/ui/card";
+import { Card } from "@rallly/ui/card";
 import { Icon } from "@rallly/ui/icon";
 import {
   Select,
@@ -237,9 +237,9 @@ const MobilePoll: React.FunctionComponent = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <CardFooter className="rounded-b-2xl border-t bg-card">
-              <VotingFooter className="flex-1" />
-            </CardFooter>
+            <div className="p-3">
+              <VotingFooter />
+            </div>
           </m.div>
         ) : null}
       </AnimatePresence>
