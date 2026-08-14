@@ -61,7 +61,7 @@ export default async function Root(props: {
           </LinkBase>
           <nav className="hidden items-center gap-2 lg:flex">
             <NavLink href="https://support.rallly.co/workflow/create">
-              <Trans t={t} i18nKey="howItWorks" defaults="How it Works" />
+              <Trans t={t} i18nKey="howItWorks" defaults="How it works" />
             </NavLink>
             <NavLink href="/pricing">
               <Trans t={t} i18nKey="pricing" />
@@ -94,7 +94,7 @@ export default async function Root(props: {
                     <LinkBase href="https://support.rallly.co/workflow/create" />
                   }
                 >
-                  <Trans t={t} i18nKey="howItWorks" defaults="How it Works" />
+                  <Trans t={t} i18nKey="howItWorks" defaults="How it works" />
                 </DropdownMenuItem>
                 <DropdownMenuItem render={<LinkBase href="/pricing" />}>
                   <Trans t={t} i18nKey="pricing" defaults="Pricing" />

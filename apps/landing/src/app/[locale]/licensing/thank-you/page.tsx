@@ -25,7 +25,7 @@ export default async function LicensingThankYouPage(props: {
             <Trans
               t={t}
               i18nKey="licensingThankYouTitle"
-              defaults="Thank You for Your Purchase!"
+              defaults="Thank you for your purchase!"
             />
           </h1>
           <p>
@@ -42,7 +42,7 @@ export default async function LicensingThankYouPage(props: {
             <Trans
               t={t}
               i18nKey="licensingThankYouLicense"
-              defaults="Next Steps"
+              defaults="Next steps"
             />
           </h2>
           <p className="text-gray-700 dark:text-gray-300">
@@ -62,7 +62,7 @@ export default async function LicensingThankYouPage(props: {
                 <Trans
                   t={t}
                   i18nKey="licensingThankYouNextStepsInstallation"
-                  defaults="Installation Guide"
+                  defaults="Installation guide"
                 />
               </a>
             </li>
@@ -74,7 +74,7 @@ export default async function LicensingThankYouPage(props: {
                 <Trans
                   t={t}
                   i18nKey="licensingThankYouNextStepsActivateLicense"
-                  defaults="How to Activate Your License"
+                  defaults="How to activate your license"
                 />
               </a>
             </li>
@@ -105,7 +105,7 @@ export default async function LicensingThankYouPage(props: {
             <Trans
               t={t}
               i18nKey="licensingThankYouGoHomeLink"
-              defaults="Return to Home"
+              defaults="Return to home"
             />
           </LinkBase>
         </div>

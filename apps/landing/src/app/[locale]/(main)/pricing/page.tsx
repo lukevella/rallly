@@ -19,7 +19,7 @@ const FAQ = async (props: { locale: string }) => {
           t={t}
           ns="pricing"
           i18nKey="faq"
-          defaults="Frequently Asked Questions"
+          defaults="Frequently asked questions"
         />
       </h2>
       <h3 className="mt-6 mb-2 font-bold text-lg">

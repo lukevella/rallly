@@ -68,7 +68,7 @@ export const FinalCta = ({
               <Trans
                 ns="home"
                 i18nKey="createAPoll"
-                defaults="Create a Meeting Poll"
+                defaults="Create a meeting poll"
               />
             )}
           </Link>

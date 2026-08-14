@@ -204,7 +204,7 @@ export const Footer: React.FunctionComponent = () => {
                 <Trans
                   ns="common"
                   i18nKey="bestDoodleAlternative"
-                  defaults="Best Doodle Alternative"
+                  defaults="Best Doodle alternative"
                 />
               </LinkBase>
             </li>
@@ -216,7 +216,7 @@ export const Footer: React.FunctionComponent = () => {
                 <Trans
                   ns="common"
                   i18nKey="when2MeetAlternative"
-                  defaults="When2Meet Alternative"
+                  defaults="When2Meet alternative"
                 />
               </LinkBase>
             </li>
@@ -228,7 +228,7 @@ export const Footer: React.FunctionComponent = () => {
                 <Trans
                   ns="common"
                   i18nKey="freeSchedulingPoll"
-                  defaults="Free Scheduling Poll"
+                  defaults="Free scheduling poll"
                 />
               </LinkBase>
             </li>
