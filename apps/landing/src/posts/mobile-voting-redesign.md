@@ -22,11 +22,11 @@ Options now show the full time range, like "12:00 – 1:00 PM", instead of a sta
 
 ## Harder to answer by accident
 
-Continue stays inactive until you've selected at least one option, and if none of the times work for you, there's now an explicit Decline button. Both float within reach at the bottom of the screen while you scroll, so you're never hunting for them on a long poll. Accidentally responding "no" to everything is no longer possible.
+Continue stays inactive until you've selected at least one option, and if none of the times work for you, there's now an explicit Decline button. Both float within reach at the bottom of the screen while you scroll, so you're never hunting for them on a long poll. Submitting an empty response by accident is no longer possible.
 
 ## Built for thumbs
 
-The new controls follow Apple's touch guidelines: bigger targets, no tap delay, and instant feedback when you press. Voting on a 20 option poll should feel quick rather than fiddly.
+The new controls follow Apple's touch guidelines: bigger targets, no tap delay, and instant feedback when you press. Voting on a poll with 20 options should feel quick rather than fiddly.
 
 Nothing about your existing polls or responses has changed. This is purely a better way to do the same thing.
 
