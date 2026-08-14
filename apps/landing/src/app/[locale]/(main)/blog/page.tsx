@@ -29,7 +29,7 @@ export default async function Page(props: {
             t={t}
             ns="blog"
             i18nKey="recentPosts"
-            defaults="Recent Posts"
+            defaults="Recent posts"
           />
         </h1>
       </header>
