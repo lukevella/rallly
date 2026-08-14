@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import { Trans } from "react-i18next/TransWithoutContext";
 import Bonus from "@/components/home/bonus";
+import { FinalCta } from "@/components/home/final-cta";
 import { MarketingHero } from "@/components/home/hero";
 import { BigTestimonial, Marketing, MentionedBy } from "@/components/marketing";
 import { getTranslation } from "@/i18n/server";
@@ -28,6 +29,25 @@ export default async function Page(props: {
       <Bonus locale={locale} />
       <BigTestimonial />
       <MentionedBy />
+      <FinalCta
+        title={
+          <Trans
+            t={t}
+            ns="home"
+            i18nKey="doodleAlternativeFinalCtaTitle"
+            defaults="Ready to make the switch?"
+          />
+        }
+        description={
+          <Trans
+            t={t}
+            ns="home"
+            i18nKey="doodleAlternativeFinalCtaDescription"
+            defaults="Create your first poll in seconds and see why so many people left Doodle behind."
+          />
+        }
+        callToAction={<Trans t={t} ns="home" i18nKey="createAPoll" />}
+      />
     </Marketing>
   );
 }

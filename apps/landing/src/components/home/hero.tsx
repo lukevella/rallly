@@ -1,4 +1,5 @@
 "use client";
+import { posthog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { ChevronRightIcon } from "lucide-react";
@@ -118,6 +119,9 @@ export const MarketingHero = ({
               variant: "primary",
               className: "shadow-md transition-all active:shadow-none",
             })}
+            onClick={() => {
+              posthog.capture("landing:hero_cta_click");
+            }}
           >
             {callToAction}
           </Link>
