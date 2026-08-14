@@ -58,6 +58,7 @@
             "pages": [
               "self-hosting/management",
               "self-hosting/licensing",
+              "self-hosting/corporate-networks",
               "self-hosting/white-labeling"
             ]
           },

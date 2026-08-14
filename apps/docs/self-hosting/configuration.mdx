@@ -190,6 +190,10 @@ The stack bundles [Garage](https://garagehq.deuxfleurs.fr/) for file uploads, wh
   Secret key for the bucket.
 </ParamField>
 
+### Corporate networks
+
+If outbound traffic from your server must pass through a proxy, or your network intercepts TLS with an internal root CA, see the [Corporate Networks guide](/self-hosting/corporate-networks) for the `HTTP_PROXY`/`HTTPS_PROXY`/`NO_PROXY` variables and `CA_CERT_FILE`.
+
 ## Running the image directly
 
 If you're running the Rallly Docker image without the [Rallly CLI](/self-hosting/installation/docker), a few variables that the CLI normally supplies or derives become your responsibility.
