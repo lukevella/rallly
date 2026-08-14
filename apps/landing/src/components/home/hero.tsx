@@ -62,6 +62,7 @@ const Screenshot = () => {
           width={1440}
           height={1152}
           quality={100}
+          preload
           onLoad={() => {
             setIsLoaded(true);
           }}
