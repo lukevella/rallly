@@ -2,13 +2,9 @@ import { buttonVariants } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@rallly/ui/card";
 
+import { Field, FieldContent, FieldGroup, FieldTitle } from "@rallly/ui/field";
 import { KeySquareIcon, PaletteIcon, ShoppingBagIcon } from "lucide-react";
 import type { Metadata } from "next";
-import {
-  DescriptionList,
-  DescriptionListTitle,
-  DescriptionListValue,
-} from "@/components/description-list";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -16,7 +12,12 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { PageSection } from "@/components/page-layout";
+import {
+  PageSection,
+  PageSectionContent,
+  PageSectionHeader,
+  PageSectionTitle,
+} from "@/components/page-layout";
 import {
   SettingsPage,
   SettingsPageContent,
@@ -57,59 +58,91 @@ export default async function LicensePage() {
         {license ? (
           <>
             <PageSection variant="card">
-              <div className="flex justify-between">
-                <DescriptionList>
-                  <DescriptionListTitle>
-                    <Trans i18nKey="licenseType" defaults="License type" />
-                  </DescriptionListTitle>
-                  <DescriptionListValue>
-                    <span className="text-primary capitalize">
-                      {license.type}
-                    </span>
-                    {license.seats ? (
-                      <span className="ml-2 text-muted-foreground">
-                        (
-                        <Trans
-                          i18nKey="seatCount"
-                          defaults="{count, plural, one {# seat} other {# seats}}"
-                          values={{ count: license.seats }}
-                        />
-                        )
-                      </span>
-                    ) : null}
-                  </DescriptionListValue>
-                  <DescriptionListTitle>
-                    <Trans i18nKey="licenseKey" defaults="License key" />
-                  </DescriptionListTitle>
-                  <DescriptionListValue>
-                    <span className="select-all font-mono text-sm">
-                      {license.licenseKey}
-                    </span>
-                  </DescriptionListValue>
-                  <DescriptionListTitle>
-                    <Trans i18nKey="licenseeName" defaults="Licensee name" />
-                  </DescriptionListTitle>
-                  <DescriptionListValue>
-                    {license.licenseeName ?? "-"}
-                  </DescriptionListValue>
-                  <DescriptionListTitle>
-                    <Trans i18nKey="licenseeEmail" defaults="Licensee email" />
-                  </DescriptionListTitle>
-                  <DescriptionListValue>
-                    {license.licenseeEmail ?? "-"}
-                  </DescriptionListValue>
-                  <DescriptionListTitle>
-                    <Trans i18nKey="purchaseDate" defaults="Purchase date" />
-                  </DescriptionListTitle>
-                  <DescriptionListValue>
-                    <Time value={license.issuedAt} preset="date" />
-                  </DescriptionListValue>
-                </DescriptionList>
-                <div className="flex gap-2">
+              <PageSectionHeader className="flex items-center justify-between gap-4">
+                <PageSectionTitle>
+                  <Trans i18nKey="licenseDetails" defaults="License details" />
+                </PageSectionTitle>
+                <div className="flex shrink-0 gap-2">
                   <RefreshLicenseButton />
                   <RemoveLicenseButton />
                 </div>
-              </div>
+              </PageSectionHeader>
+              <PageSectionContent>
+                <FieldGroup variant="divided">
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldTitle>
+                        <Trans i18nKey="licenseType" defaults="License type" />
+                      </FieldTitle>
+                    </FieldContent>
+                    <div className="font-mono text-sm">
+                      <span className="text-primary capitalize">
+                        {license.type}
+                      </span>
+                      {license.seats ? (
+                        <span className="ml-2 text-muted-foreground">
+                          (
+                          <Trans
+                            i18nKey="seatCount"
+                            defaults="{count, plural, one {# seat} other {# seats}}"
+                            values={{ count: license.seats }}
+                          />
+                          )
+                        </span>
+                      ) : null}
+                    </div>
+                  </Field>
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldTitle>
+                        <Trans i18nKey="licenseKey" defaults="License key" />
+                      </FieldTitle>
+                    </FieldContent>
+                    <div className="select-all font-mono text-sm">
+                      {license.licenseKey}
+                    </div>
+                  </Field>
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldTitle>
+                        <Trans
+                          i18nKey="licenseeName"
+                          defaults="Licensee name"
+                        />
+                      </FieldTitle>
+                    </FieldContent>
+                    <div className="font-mono text-sm">
+                      {license.licenseeName ?? "-"}
+                    </div>
+                  </Field>
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldTitle>
+                        <Trans
+                          i18nKey="licenseeEmail"
+                          defaults="Licensee email"
+                        />
+                      </FieldTitle>
+                    </FieldContent>
+                    <div className="font-mono text-sm">
+                      {license.licenseeEmail ?? "-"}
+                    </div>
+                  </Field>
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldTitle>
+                        <Trans
+                          i18nKey="purchaseDate"
+                          defaults="Purchase date"
+                        />
+                      </FieldTitle>
+                    </FieldContent>
+                    <div className="font-mono text-sm">
+                      <Time value={license.issuedAt} preset="date" />
+                    </div>
+                  </Field>
+                </FieldGroup>
+              </PageSectionContent>
             </PageSection>
             <div className="grid gap-4 lg:grid-cols-2">
               <Card>

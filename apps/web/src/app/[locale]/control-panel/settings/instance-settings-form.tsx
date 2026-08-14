@@ -1,7 +1,13 @@
 "use client";
 
 import { Alert, AlertDescription } from "@rallly/ui/alert";
-import { Label } from "@rallly/ui/label";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@rallly/ui/field";
 import {
   Select,
   SelectContent,
@@ -47,56 +53,58 @@ export function InstanceSettingsForm({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
-        <div className="space-y-1">
-          <Label htmlFor="userRegistration">
-            <Trans i18nKey="userRegistration" defaults="User registration" />
-          </Label>
-          <p className="text-muted-foreground text-sm">
-            <Trans
-              i18nKey="userRegistrationDescription"
-              defaults="Allow new users to register an account."
-            />
-          </p>
-        </div>
-        <Select
-          items={{
-            enabled: <Trans i18nKey="enabled" defaults="Enabled" />,
-            disabled: <Trans i18nKey="disabled" defaults="Disabled" />,
-          }}
-          value={disableUserRegistration ? "disabled" : "enabled"}
-          onValueChange={(value) => {
-            if (value) {
-              handleChange(value);
-            }
-          }}
-          disabled={!isRegistrationEnabled}
-        >
-          <SelectTrigger id="userRegistration" className="w-32">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="enabled">
-              <Trans i18nKey="enabled" defaults="Enabled" />
-            </SelectItem>
-            <SelectItem value="disabled">
-              <Trans i18nKey="disabled" defaults="Disabled" />
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      {!isRegistrationEnabled && (
-        <Alert variant="note">
-          <ContainerIcon />
-          <AlertDescription>
-            <Trans
-              i18nKey="configuredByEnvironmentVariable"
-              defaults="This setting has been configured by environment variable."
-            />
-          </AlertDescription>
-        </Alert>
-      )}
-    </div>
+    <FieldGroup variant="divided">
+      <Field>
+        <Field orientation="responsive">
+          <FieldContent>
+            <FieldLabel htmlFor="userRegistration">
+              <Trans i18nKey="userRegistration" defaults="User registration" />
+            </FieldLabel>
+            <FieldDescription>
+              <Trans
+                i18nKey="userRegistrationDescription"
+                defaults="Allow new users to register an account."
+              />
+            </FieldDescription>
+          </FieldContent>
+          <Select
+            items={{
+              enabled: <Trans i18nKey="enabled" defaults="Enabled" />,
+              disabled: <Trans i18nKey="disabled" defaults="Disabled" />,
+            }}
+            value={disableUserRegistration ? "disabled" : "enabled"}
+            onValueChange={(value) => {
+              if (value) {
+                handleChange(value);
+              }
+            }}
+            disabled={!isRegistrationEnabled}
+          >
+            <SelectTrigger id="userRegistration" className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="enabled">
+                <Trans i18nKey="enabled" defaults="Enabled" />
+              </SelectItem>
+              <SelectItem value="disabled">
+                <Trans i18nKey="disabled" defaults="Disabled" />
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </Field>
+        {!isRegistrationEnabled && (
+          <Alert variant="note">
+            <ContainerIcon />
+            <AlertDescription>
+              <Trans
+                i18nKey="configuredByEnvironmentVariable"
+                defaults="This setting has been configured by environment variable."
+              />
+            </AlertDescription>
+          </Alert>
+        )}
+      </Field>
+    </FieldGroup>
   );
 }
