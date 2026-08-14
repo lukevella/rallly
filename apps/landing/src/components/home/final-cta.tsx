@@ -3,6 +3,7 @@ import { posthog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
 import * as m from "motion/react-m";
 import Link from "next/link";
+import type React from "react";
 import { handwritten } from "@/fonts/handwritten";
 import { Trans } from "@/i18n/client/trans";
 import { linkToApp } from "@/lib/linkToApp";
