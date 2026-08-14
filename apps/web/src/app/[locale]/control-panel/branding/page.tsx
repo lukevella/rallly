@@ -1,4 +1,11 @@
 import { Alert, AlertDescription } from "@rallly/ui/alert";
+import {
+  Field,
+  FieldContent,
+  FieldGroup,
+  FieldLabel,
+  FieldTitle,
+} from "@rallly/ui/field";
 import { Input } from "@rallly/ui/input";
 import { Switch } from "@rallly/ui/switch";
 import { CodeIcon, GemIcon } from "lucide-react";
@@ -155,19 +162,30 @@ export default async function BrandingPage() {
               </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
-              <div className="space-y-2">
-                <div className="text-muted-foreground text-xs">
-                  <Trans
-                    t={t}
-                    i18n={i18n}
-                    ns="app"
-                    i18nKey="appName"
-                    defaults="App name"
-                  />
-                </div>
-                <Input value={appName} readOnly />
-                <SetEnvironmentVariableAlert variable="APP_NAME" />
-              </div>
+              <FieldGroup variant="divided">
+                <Field>
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldLabel htmlFor="app-name">
+                        <Trans
+                          t={t}
+                          i18n={i18n}
+                          ns="app"
+                          i18nKey="appName"
+                          defaults="App name"
+                        />
+                      </FieldLabel>
+                    </FieldContent>
+                    <Input
+                      id="app-name"
+                      className="w-56"
+                      value={appName}
+                      readOnly
+                    />
+                  </Field>
+                  <SetEnvironmentVariableAlert variable="APP_NAME" />
+                </Field>
+              </FieldGroup>
             </PageSectionContent>
           </PageSection>
           <PageSection variant="card">
@@ -192,50 +210,58 @@ export default async function BrandingPage() {
               </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <div className="text-muted-foreground text-xs">
-                    <Trans
-                      t={t}
-                      i18n={i18n}
-                      ns="app"
-                      i18nKey="primaryColor"
-                      defaults="Primary color"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="size-8 rounded border"
-                      style={{ backgroundColor: primaryColorLight }}
-                    />
-                    <span className="font-mono text-sm">
-                      {primaryColorLight}
-                    </span>
-                  </div>
+              <FieldGroup variant="divided">
+                <Field>
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldTitle>
+                        <Trans
+                          t={t}
+                          i18n={i18n}
+                          ns="app"
+                          i18nKey="primaryColor"
+                          defaults="Primary color"
+                        />
+                      </FieldTitle>
+                    </FieldContent>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="size-8 rounded border"
+                        style={{ backgroundColor: primaryColorLight }}
+                      />
+                      <span className="font-mono text-sm">
+                        {primaryColorLight}
+                      </span>
+                    </div>
+                  </Field>
                   <SetEnvironmentVariableAlert variable="PRIMARY_COLOR" />
-                </div>
-                <div className="space-y-2">
-                  <div className="text-muted-foreground text-xs">
-                    <Trans
-                      t={t}
-                      i18n={i18n}
-                      ns="app"
-                      i18nKey="primaryColorDark"
-                      defaults="Primary color (dark mode)"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="size-8 rounded border"
-                      style={{ backgroundColor: primaryColorDark }}
-                    />
-                    <span className="font-mono text-sm">
-                      {primaryColorDark}
-                    </span>
-                  </div>
+                </Field>
+                <Field>
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldTitle>
+                        <Trans
+                          t={t}
+                          i18n={i18n}
+                          ns="app"
+                          i18nKey="primaryColorDark"
+                          defaults="Primary color (dark mode)"
+                        />
+                      </FieldTitle>
+                    </FieldContent>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="size-8 rounded border"
+                        style={{ backgroundColor: primaryColorDark }}
+                      />
+                      <span className="font-mono text-sm">
+                        {primaryColorDark}
+                      </span>
+                    </div>
+                  </Field>
                   <SetEnvironmentVariableAlert variable="PRIMARY_COLOR_DARK" />
-                </div>
-              </div>
+                </Field>
+              </FieldGroup>
             </PageSectionContent>
           </PageSection>
           <PageSection variant="card">
@@ -260,80 +286,92 @@ export default async function BrandingPage() {
               </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <div className="text-muted-foreground text-xs">
-                    <Trans
-                      t={t}
-                      i18n={i18n}
-                      ns="app"
-                      i18nKey="logo"
-                      defaults="Logo"
-                    />
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="flex w-48 items-center justify-center overflow-hidden rounded border bg-white">
-                      {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
-                      <img
-                        src={logoUrlLight}
-                        alt={t("logo", { ns: "app", defaultValue: "Logo" })}
-                        className="max-h-full max-w-full object-contain p-2"
-                      />
+              <FieldGroup variant="divided">
+                <Field>
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldTitle>
+                        <Trans
+                          t={t}
+                          i18n={i18n}
+                          ns="app"
+                          i18nKey="logo"
+                          defaults="Logo"
+                        />
+                      </FieldTitle>
+                    </FieldContent>
+                    <div className="flex items-center">
+                      <div className="flex w-48 items-center justify-center overflow-hidden rounded border bg-white">
+                        {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
+                        <img
+                          src={logoUrlLight}
+                          alt={t("logo", { ns: "app", defaultValue: "Logo" })}
+                          className="max-h-full max-w-full object-contain p-2"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  </Field>
                   <SetEnvironmentVariableAlert variable="LOGO_URL" />
-                </div>
-                <div className="space-y-2">
-                  <div className="text-muted-foreground text-xs">
-                    <Trans
-                      t={t}
-                      i18n={i18n}
-                      ns="app"
-                      i18nKey="logoDark"
-                      defaults="Logo (dark mode)"
-                    />
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="flex w-48 items-center justify-center overflow-hidden rounded border bg-gray-900">
-                      {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
-                      <img
-                        src={logoUrlDark}
-                        alt={t("logoDark", {
-                          ns: "app",
-                          defaultValue: "Logo (dark mode)",
-                        })}
-                        className="max-h-full max-w-full object-contain p-2"
-                      />
+                </Field>
+                <Field>
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldTitle>
+                        <Trans
+                          t={t}
+                          i18n={i18n}
+                          ns="app"
+                          i18nKey="logoDark"
+                          defaults="Logo (dark mode)"
+                        />
+                      </FieldTitle>
+                    </FieldContent>
+                    <div className="flex items-center">
+                      <div className="flex w-48 items-center justify-center overflow-hidden rounded border bg-gray-900">
+                        {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
+                        <img
+                          src={logoUrlDark}
+                          alt={t("logoDark", {
+                            ns: "app",
+                            defaultValue: "Logo (dark mode)",
+                          })}
+                          className="max-h-full max-w-full object-contain p-2"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  </Field>
                   <SetEnvironmentVariableAlert variable="LOGO_URL_DARK" />
-                </div>
-                <div className="space-y-2">
-                  <div className="text-muted-foreground text-xs">
-                    <Trans
-                      t={t}
-                      i18n={i18n}
-                      ns="app"
-                      i18nKey="logoIcon"
-                      defaults="Logo icon"
-                    />
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="flex size-16 items-center justify-center overflow-hidden rounded border bg-white">
-                      {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
-                      <img
-                        src={logoIconUrl}
-                        alt={t("logoIcon", {
-                          ns: "app",
-                          defaultValue: "Logo icon",
-                        })}
-                        className="max-h-full max-w-full object-contain p-2"
-                      />
+                </Field>
+                <Field>
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldTitle>
+                        <Trans
+                          t={t}
+                          i18n={i18n}
+                          ns="app"
+                          i18nKey="logoIcon"
+                          defaults="Logo icon"
+                        />
+                      </FieldTitle>
+                    </FieldContent>
+                    <div className="flex items-center">
+                      <div className="flex size-16 items-center justify-center overflow-hidden rounded border bg-white">
+                        {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
+                        <img
+                          src={logoIconUrl}
+                          alt={t("logoIcon", {
+                            ns: "app",
+                            defaultValue: "Logo icon",
+                          })}
+                          className="max-h-full max-w-full object-contain p-2"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  </Field>
                   <SetEnvironmentVariableAlert variable="LOGO_ICON_URL" />
-                </div>
-              </div>
+                </Field>
+              </FieldGroup>
             </PageSectionContent>
           </PageSection>
           <PageSection variant="card">
@@ -358,21 +396,29 @@ export default async function BrandingPage() {
               </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
-              <div className="space-y-2">
-                <div className="text-muted-foreground text-xs">
-                  <Trans
-                    t={t}
-                    i18n={i18n}
-                    ns="app"
-                    i18nKey="hideAttribution"
-                    defaults="Hide attribution"
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Switch checked={hideAttribution} disabled />
-                </div>
-                <SetEnvironmentVariableAlert variable="HIDE_ATTRIBUTION" />
-              </div>
+              <FieldGroup variant="divided">
+                <Field>
+                  <Field orientation="responsive">
+                    <FieldContent>
+                      <FieldLabel htmlFor="hide-attribution">
+                        <Trans
+                          t={t}
+                          i18n={i18n}
+                          ns="app"
+                          i18nKey="hideAttribution"
+                          defaults="Hide attribution"
+                        />
+                      </FieldLabel>
+                    </FieldContent>
+                    <Switch
+                      id="hide-attribution"
+                      checked={hideAttribution}
+                      disabled
+                    />
+                  </Field>
+                  <SetEnvironmentVariableAlert variable="HIDE_ATTRIBUTION" />
+                </Field>
+              </FieldGroup>
             </PageSectionContent>
           </PageSection>
         </PageSectionGroup>
