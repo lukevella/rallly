@@ -62,7 +62,7 @@ const Screenshot = () => {
           width={1440}
           height={1152}
           quality={100}
-          priority
+          preload
           onLoad={() => {
             setIsLoaded(true);
           }}
