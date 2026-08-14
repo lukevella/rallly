@@ -27,6 +27,8 @@ export type ColorPickerProps = Pick<
 > & {
   className?: string;
   disabled?: boolean;
+  /** Rendered below the hex input, for actions such as save or reset. */
+  footer?: React.ReactNode;
   /** Applied to the swatch trigger, which is the control an external label names. */
   "aria-labelledby"?: string;
   "aria-describedby"?: string;
@@ -64,6 +66,7 @@ function HexColorInput() {
 export function ColorPicker({
   className,
   disabled,
+  footer,
   "aria-labelledby": labelledBy,
   "aria-describedby": describedBy,
   ...props
@@ -112,6 +115,7 @@ export function ColorPicker({
             </SliderTrack>
           </ColorSlider>
           <HexColorInput />
+          {footer ? <div className="mt-2">{footer}</div> : null}
         </PopoverContent>
       </Popover>
     </ColorPickerPrimitive>

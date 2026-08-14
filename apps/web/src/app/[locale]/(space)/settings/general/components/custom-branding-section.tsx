@@ -49,8 +49,6 @@ export function CustomBrandingSection({
   const currentColor = space.primaryColor ?? DEFAULT_PRIMARY_COLOR;
   const [color, setColor] = React.useState(() => parseColor(currentColor));
   const hexColor = color.toString("hex");
-  // Stored values may differ in case from what the picker emits
-  const isDirty = hexColor.toLowerCase() !== currentColor.toLowerCase();
   const isDefault =
     hexColor.toLowerCase() === DEFAULT_PRIMARY_COLOR.toLowerCase();
 
@@ -133,7 +131,6 @@ export function CustomBrandingSection({
               value={color}
               onChange={setColor}
               disabled={disabled}
-              isDirty={isDirty}
               isSaving={updateSpace.isExecuting}
               onSave={handleSave}
               onReset={handleReset}

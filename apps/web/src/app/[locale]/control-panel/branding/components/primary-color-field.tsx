@@ -23,8 +23,6 @@ export function PrimaryColorField({
   const updateBranding = useSafeAction(updateBrandingSettingsAction);
   const [color, setColor] = React.useState(() => parseColor(defaultValue));
   const hexColor = color.toString("hex");
-  // Stored values may differ in case from what the picker emits
-  const isDirty = hexColor.toLowerCase() !== defaultValue.toLowerCase();
 
   const handleSave = async () => {
     const result = await updateBranding.executeAsync(
@@ -43,7 +41,6 @@ export function PrimaryColorField({
       value={color}
       onChange={setColor}
       disabled={disabled}
-      isDirty={isDirty}
       isSaving={updateBranding.isExecuting}
       onSave={handleSave}
       aria-labelledby={labelledBy}
