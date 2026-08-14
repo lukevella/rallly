@@ -24,6 +24,7 @@ export function InviteMemberButton({
   return (
     <>
       <Button
+        variant="primary"
         disabled={availableSeats <= 0}
         onClick={() => {
           if (space.getMemberAbility().cannot("create", "SpaceMemberInvite")) {
