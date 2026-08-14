@@ -415,7 +415,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         </form>
       </Form>
       <DialogFooter>
-        <Button type="button" onClick={props.onCancel}>
+        <Button type="button" variant="ghost" onClick={props.onCancel}>
           {t("back")}
         </Button>
         <Button
