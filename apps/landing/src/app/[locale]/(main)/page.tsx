@@ -10,7 +10,7 @@ import { getTranslation } from "@/i18n/server";
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
 }) {
-  cacheLife("max");
+  cacheLife("days");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["home", "common"]);
   return (
@@ -29,8 +29,10 @@ export default async function Page(props: {
           ns: "home",
         })}
       />
-      <Bonus locale={locale} />
-      <BigTestimonial />
+      <div className="space-y-8">
+        <Bonus locale={locale} />
+        <BigTestimonial />
+      </div>
       <MentionedBy />
     </Marketing>
   );
