@@ -4,15 +4,14 @@ import type { BrandingConfig } from "./client";
 import {
   DARK_MODE_BACKGROUND,
   DEFAULT_APP_NAME,
-  DEFAULT_LOGO_HEIGHT,
   DEFAULT_LOGO_ICON_URL,
+  DEFAULT_LOGO_SIZE,
   DEFAULT_LOGO_URL,
   DEFAULT_LOGO_URL_DARK,
   DEFAULT_PRIMARY_COLOR,
   LIGHT_MODE_BACKGROUND,
-  MAX_LOGO_HEIGHT,
-  MIN_LOGO_HEIGHT,
 } from "./constants";
+import type { LogoSize } from "./types";
 
 export function getPrimaryColorVars(primaryColor: string) {
   const light = adjustColorForContrast(primaryColor, LIGHT_MODE_BACKGROUND);
@@ -25,10 +24,6 @@ export function getPrimaryColorVars(primaryColor: string) {
   };
 }
 
-export function clampLogoHeight(height: number) {
-  return Math.min(MAX_LOGO_HEIGHT, Math.max(MIN_LOGO_HEIGHT, height));
-}
-
 interface BrandingValues {
   appName?: string | null;
   primaryColor?: string | null;
@@ -36,7 +31,7 @@ interface BrandingValues {
   logo?: string | null;
   logoDark?: string | null;
   logoIcon?: string | null;
-  logoHeight?: number | null;
+  logoSize?: LogoSize | null;
   hideAttribution?: boolean | null;
 }
 
@@ -45,14 +40,14 @@ interface BrandingValues {
  * derived rules: dark logo falls back to the light logo, the dark primary
  * color is computed from the light one, and foreground colors are computed
  * from their backgrounds. Logo values may be storage keys or absolute URLs.
- * Logo height has no env var — it is configured in the UI only.
+ * Logo size has no env var — it is configured in the UI only.
  */
 export function resolveBrandingConfig({
   db,
   env,
 }: {
   db?: BrandingValues | null;
-  env?: Omit<BrandingValues, "logoHeight">;
+  env?: Omit<BrandingValues, "logoSize">;
 }): BrandingConfig {
   const primaryColor =
     db?.primaryColor ?? env?.primaryColor ?? DEFAULT_PRIMARY_COLOR;
@@ -77,7 +72,7 @@ export function resolveBrandingConfig({
     logoIcon: resolveStorageUrl(
       db?.logoIcon ?? env?.logoIcon ?? DEFAULT_LOGO_ICON_URL,
     ),
-    logoHeight: clampLogoHeight(db?.logoHeight ?? DEFAULT_LOGO_HEIGHT),
+    logoSize: db?.logoSize ?? DEFAULT_LOGO_SIZE,
     hideAttribution: db?.hideAttribution ?? env?.hideAttribution ?? false,
     appName: db?.appName ?? env?.appName ?? DEFAULT_APP_NAME,
   };

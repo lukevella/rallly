@@ -12,13 +12,21 @@ model InstanceSettings {
   primaryColorDark String?  @map("primary_color_dark")
   // Logo values are storage keys or absolute URLs
   logo             String?
-  logoDark         String?  @map("logo_dark")
-  logoIcon         String?  @map("logo_icon")
-  logoHeight       Int?     @map("logo_height")
-  hideAttribution  Boolean? @map("hide_attribution")
+  logoDark         String?   @map("logo_dark")
+  logoIcon         String?   @map("logo_icon")
+  logoSize         LogoSize? @map("logo_size")
+  hideAttribution  Boolean?  @map("hide_attribution")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("instance_settings")
+}
+
+enum LogoSize {
+  sm
+  md
+  lg
+
+  @@map("logo_size")
 }

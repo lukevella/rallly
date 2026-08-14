@@ -2,31 +2,13 @@ import { describe, expect, it } from "vitest";
 import { getForegroundColor } from "@/lib/utils/color";
 import {
   DEFAULT_APP_NAME,
-  DEFAULT_LOGO_HEIGHT,
   DEFAULT_LOGO_ICON_URL,
+  DEFAULT_LOGO_SIZE,
   DEFAULT_LOGO_URL,
   DEFAULT_LOGO_URL_DARK,
   DEFAULT_PRIMARY_COLOR,
 } from "./constants";
-import {
-  clampLogoHeight,
-  getPrimaryColorVars,
-  resolveBrandingConfig,
-} from "./utils";
-
-describe("clampLogoHeight", () => {
-  it("clamps values above the maximum to 64", () => {
-    expect(clampLogoHeight(200)).toBe(64);
-  });
-
-  it("clamps values below the minimum to 16", () => {
-    expect(clampLogoHeight(4)).toBe(16);
-  });
-
-  it("passes through values within range", () => {
-    expect(clampLogoHeight(32)).toBe(32);
-  });
-});
+import { getPrimaryColorVars, resolveBrandingConfig } from "./utils";
 
 describe("resolveBrandingConfig", () => {
   it("returns the default config when no sources are provided", () => {
@@ -39,7 +21,7 @@ describe("resolveBrandingConfig", () => {
         dark: DEFAULT_LOGO_URL_DARK,
       },
       logoIcon: DEFAULT_LOGO_ICON_URL,
-      logoHeight: DEFAULT_LOGO_HEIGHT,
+      logoSize: DEFAULT_LOGO_SIZE,
       hideAttribution: false,
       appName: DEFAULT_APP_NAME,
     });
@@ -54,7 +36,7 @@ describe("resolveBrandingConfig", () => {
         logo: null,
         logoDark: null,
         logoIcon: null,
-        logoHeight: null,
+        logoSize: null,
         hideAttribution: null,
       },
       env: {
@@ -80,7 +62,7 @@ describe("resolveBrandingConfig", () => {
         logo: "https://db.example.com/logo.svg",
         logoDark: null,
         logoIcon: null,
-        logoHeight: 48,
+        logoSize: "lg",
         hideAttribution: false,
       },
       env: {
@@ -94,7 +76,7 @@ describe("resolveBrandingConfig", () => {
     // db wins where set
     expect(config.appName).toBe("DB App");
     expect(config.logo.light).toBe("https://db.example.com/logo.svg");
-    expect(config.logoHeight).toBe(48);
+    expect(config.logoSize).toBe("lg");
     expect(config.hideAttribution).toBe(false);
     // env fills fields the db leaves unset
     expect(config.logoIcon).toBe("https://env.example.com/icon.png");
@@ -119,7 +101,7 @@ describe("resolveBrandingConfig", () => {
         logo: "https://example.com/logo.svg",
         logoDark: "https://example.com/logo-dark.svg",
         logoIcon: null,
-        logoHeight: null,
+        logoSize: null,
         hideAttribution: null,
       },
     });
@@ -142,7 +124,7 @@ describe("resolveBrandingConfig", () => {
         logo: "branding/logo.png",
         logoDark: null,
         logoIcon: "branding/icon.png",
-        logoHeight: null,
+        logoSize: null,
         hideAttribution: null,
       },
     });
@@ -161,7 +143,7 @@ describe("resolveBrandingConfig", () => {
         logo: null,
         logoDark: null,
         logoIcon: null,
-        logoHeight: null,
+        logoSize: null,
         hideAttribution: null,
       },
     });
@@ -178,7 +160,7 @@ describe("resolveBrandingConfig", () => {
         logo: null,
         logoDark: null,
         logoIcon: null,
-        logoHeight: null,
+        logoSize: null,
         hideAttribution: null,
       },
       env: {
@@ -195,26 +177,8 @@ describe("resolveBrandingConfig", () => {
     );
   });
 
-  it("clamps the stored logo height and defaults to 32", () => {
-    const dbValues = {
-      appName: null,
-      primaryColor: null,
-      primaryColorDark: null,
-      logo: null,
-      logoDark: null,
-      logoIcon: null,
-      hideAttribution: null,
-    };
-
-    expect(
-      resolveBrandingConfig({ db: { ...dbValues, logoHeight: 500 } })
-        .logoHeight,
-    ).toBe(64);
-
-    expect(
-      resolveBrandingConfig({ db: { ...dbValues, logoHeight: 8 } }).logoHeight,
-    ).toBe(16);
-
-    expect(resolveBrandingConfig({}).logoHeight).toBe(DEFAULT_LOGO_HEIGHT);
+  it("defaults the logo size to md when unset", () => {
+    expect(resolveBrandingConfig({}).logoSize).toBe(DEFAULT_LOGO_SIZE);
+    expect(DEFAULT_LOGO_SIZE).toBe("md");
   });
 });

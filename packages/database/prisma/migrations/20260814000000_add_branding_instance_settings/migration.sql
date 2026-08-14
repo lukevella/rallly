@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "logo_size" AS ENUM ('sm', 'md', 'lg');
+
 -- AlterTable
 ALTER TABLE "instance_settings"
   ADD COLUMN "app_name" TEXT,
@@ -6,5 +9,5 @@ ALTER TABLE "instance_settings"
   ADD COLUMN "logo" TEXT,
   ADD COLUMN "logo_dark" TEXT,
   ADD COLUMN "logo_icon" TEXT,
-  ADD COLUMN "logo_height" INTEGER,
+  ADD COLUMN "logo_size" "logo_size",
   ADD COLUMN "hide_attribution" BOOLEAN;
