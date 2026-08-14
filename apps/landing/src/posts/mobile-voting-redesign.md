@@ -1,5 +1,5 @@
 ---
-title: A Clearer Way to Vote on Your Phone
+title: A clearer way to vote on your phone
 date: "2026-08-14"
 excerpt: We redesigned the mobile voting experience so that choosing your availability is obvious at a glance.
 ---
@@ -26,7 +26,7 @@ Continue stays inactive until you've selected at least one option, and if none o
 
 ## Built for thumbs
 
-The new controls follow Apple's touch guidelines: bigger targets, no tap delay, and instant feedback when you press. Voting on a poll with 20 options should feel quick rather than fiddly.
+The new controls meet Apple's recommended touch target sizes, and we removed the tap delay so every press gets instant feedback. Voting on a poll with 20 options should feel quick rather than fiddly.
 
 Nothing about your existing polls or responses has changed. This is purely a better way to do the same thing.
 

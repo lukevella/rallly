@@ -95,7 +95,7 @@ export const MarketingHero = ({
               <Trans
                 ns="home"
                 i18nKey="mobileVotingBlog"
-                defaults="A Clearer Way to Vote on Your Phone"
+                defaults="A clearer way to vote on your phone"
               />
               <ChevronRightIcon
                 className="-mr-1 size-4 transition-transform group-active:translate-x-0.5"
