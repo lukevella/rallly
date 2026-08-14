@@ -6,7 +6,7 @@ description: Run Rallly behind a corporate proxy or TLS-intercepting firewall.
 
 Corporate networks often restrict outbound traffic in two ways: all egress must pass through an explicit proxy, and/or outbound TLS is intercepted and re-signed with an internal root certificate authority that Node.js does not trust. Either one breaks Rallly's outbound HTTPS requests. [License activation](/self-hosting/licensing), which connects to `licensing.rallly.co` on port 443, is usually where you notice it first, but any outbound call is affected. Some networks require both fixes below together.
 
-If your server can reach the internet directly, none of this applies and you can skip this page.
+If your server can reach the internet directly and your network does not intercept TLS, none of this applies and you can skip this page.
 
 ## Routing traffic through a proxy
 
@@ -25,6 +25,7 @@ NO_PROXY=garage,db
 - If your proxy requires basic authentication, include the credentials in the URL: `http://user:password@proxy.internal.example.com:8080`.
 - Loopback traffic is never sent through the proxy, and the container healthcheck bypasses proxy settings automatically.
 - The `NO_PROXY` entries above keep traffic to the stack's bundled storage (`garage`) and database (`db`) services off the proxy.
+- The lowercase variants (`http_proxy`, `https_proxy`, `no_proxy`) are also recognised. If both `no_proxy` and `NO_PROXY` are set, the lowercase value wins.
 
 Apply the change with `./rallly.sh restart`.
 
@@ -72,7 +73,15 @@ As a fallback, you can export a certificate from the chain the proxy presents. R
 openssl s_client -showcerts -connect licensing.rallly.co:443 </dev/null 2>/dev/null | openssl x509 -outform PEM > ca.pem
 ```
 
-Two caveats: this writes only the leaf certificate, so it stops working when the proxy reissues it — treat it as a stopgap until IT provides the root. It also doubles as a diagnostic: if the printed certificate's subject names your organisation instead of `licensing.rallly.co`, TLS interception is confirmed.
+Note that `openssl` does not read the proxy environment variables. On a network with no direct egress, add `-proxy proxy.internal.example.com:8080` to the command so the connection goes through your proxy.
+
+Two caveats: this writes only the leaf certificate, so it stops working when the proxy reissues it — treat it as a stopgap until IT provides the root. It also doubles as a diagnostic — inspect the exported certificate's subject:
+
+```sh
+openssl x509 -in ca.pem -noout -subject
+```
+
+If the subject names your organisation instead of `licensing.rallly.co`, TLS interception is confirmed.
 
 ## Diagnosing failures
 
