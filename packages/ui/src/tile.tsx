@@ -38,10 +38,10 @@ const TileTitle = React.forwardRef<
 TileTitle.displayName = "TileTitle";
 
 const TileDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <p
+  <div
     ref={ref}
     className={cn(
       "pointer-events-none absolute top-3 right-3 text-muted-foreground text-sm",
