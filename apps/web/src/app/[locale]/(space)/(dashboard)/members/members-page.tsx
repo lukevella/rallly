@@ -8,21 +8,18 @@ import {
 } from "@rallly/ui/alert";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { InfoIcon, SparklesIcon } from "lucide-react";
+import { useDialog } from "@rallly/ui/dialog";
+import { InfoIcon, MailIcon, SparklesIcon } from "lucide-react";
 import Link from "next/link";
+import React from "react";
 import { IfCloudHosted, IfSelfHosted } from "@/components/environment";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import {
   PageContainer,
   PageContent,
   PageHeader,
-  PageSection,
-  PageSectionContent,
-  PageSectionDescription,
-  PageSectionDivider,
-  PageSectionGroup,
-  PageSectionHeader,
-  PageSectionTitle,
+  PageHeaderActions,
+  PageHeaderContent,
   PageTitle,
 } from "@/components/page-layout";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
@@ -32,9 +29,9 @@ import { SpaceRole } from "@/features/space/components/space-role";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { trpc } from "@/trpc/client";
-import { InviteDropdownMenu } from "./components/invite-dropdown-menu";
 import { InviteMemberButton } from "./components/invite-member-button";
 import { MemberDropdownMenu } from "./components/member-dropdown-menu";
+import { PendingInvitesDialog } from "./components/pending-invites-dialog";
 
 export function MembersPage({
   totalSeats,
@@ -48,115 +45,124 @@ export function MembersPage({
   const [invites] = trpc.spaces.listInvites.useSuspenseQuery();
   const canInviteMembers = space.getAbility().can("invite", "Member");
   const hasInactiveMembers = space.data.tier === "hobby" && members.total > 1;
+  const availableSeats = Math.max(totalSeats - usedSeats, 0);
+  const pendingInvitesDialog = useDialog();
+  const { dismiss: dismissPendingInvitesDialog } = pendingInvitesDialog;
+
+  React.useEffect(() => {
+    if (invites.length === 0) {
+      dismissPendingInvitesDialog();
+    }
+  }, [invites.length, dismissPendingInvitesDialog]);
 
   return (
     <PageContainer>
       <PageHeader>
-        <PageTitle>
-          <Trans i18nKey="members" defaults="Members" />
-        </PageTitle>
+        <PageHeaderContent>
+          <PageTitle>
+            <Trans i18nKey="members" defaults="Members" />
+          </PageTitle>
+        </PageHeaderContent>
+        {canInviteMembers ? (
+          <PageHeaderActions>
+            <p className="text-muted-foreground text-sm">
+              <Trans
+                i18nKey="seatsAvailable"
+                defaults="{count, plural, =0 {No seats available} one {# seat available} other {# seats available}}"
+                values={{ count: availableSeats }}
+              />
+            </p>
+            <InviteMemberButton usedSeats={usedSeats} totalSeats={totalSeats} />
+          </PageHeaderActions>
+        ) : null}
       </PageHeader>
-      <PageContent>
-        <PageSectionGroup>
-          <PageSection>
-            <PageSectionContent>
-              <IfFeatureEnabled feature="billing">
-                {hasInactiveMembers ? (
-                  <Alert>
-                    <InfoIcon />
-                    <AlertTitle>
-                      <Trans
-                        i18nKey="membersInactiveAlertTitle"
-                        defaults="Members are inactive"
-                      />
-                    </AlertTitle>
-                    <AlertDescription>
-                      <Trans
-                        i18nKey="membersInactiveAlertDescription"
-                        defaults="These members lost access when this space's Pro subscription ended. Their seats are kept and access is restored when the space is upgraded again."
-                      />
-                    </AlertDescription>
-                    <AlertAction>
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          showPayWall({
-                            from: "space-members",
-                            action: "reactivate",
-                          });
-                        }}
-                      >
-                        <Trans
-                          i18nKey="upgradeToPro"
-                          defaults="Upgrade to Pro"
+      <PageContent className="space-y-4">
+        {canInviteMembers && invites.length > 0 ? (
+          <Alert>
+            <MailIcon />
+            <AlertDescription>
+              <Trans
+                i18nKey="pendingInvitesAlertDescription"
+                defaults="{count, plural, one {There is # pending invite} other {There are # pending invites}}"
+                values={{ count: invites.length }}
+              />
+            </AlertDescription>
+            <AlertAction>
+              <Button
+                size="sm"
+                onClick={() => {
+                  pendingInvitesDialog.trigger();
+                }}
+              >
+                <Trans i18nKey="viewInvites" defaults="View invites" />
+              </Button>
+            </AlertAction>
+          </Alert>
+        ) : null}
+        {canInviteMembers && availableSeats <= 0 ? (
+          <Alert variant="info">
+            <InfoIcon />
+            <AlertDescription>
+              <IfCloudHosted>
+                <p>
+                  <Trans
+                    i18nKey="noSeatsAvailableAlertBillingDescription"
+                    defaults="Increase the number of seats in this space from the <a>billing page</a>."
+                    components={{
+                      a: (
+                        <Link
+                          className="underline hover:text-foreground"
+                          href="/settings/billing"
                         />
-                      </Button>
-                    </AlertAction>
-                  </Alert>
-                ) : null}
-              </IfFeatureEnabled>
-              <StackedList>
-                {members.data.map((member) => (
-                  <StackedListItem key={member.id}>
-                    <div className="flex flex-1 items-center gap-4">
-                      <OptimizedAvatarImage
-                        src={member.image ?? undefined}
-                        name={member.name}
-                        size="xl"
-                      />
-                      <div>
-                        <div className="flex items-center gap-x-2">
-                          <div className="font-semibold text-sm">
-                            {member.name}
-                          </div>
-                          <div>
-                            {member.isOwner ? (
-                              <Badge>
-                                <Trans i18nKey="owner" defaults="Owner" />
-                              </Badge>
-                            ) : null}
-                            <IfFeatureEnabled feature="billing">
-                              {space.data.tier === "hobby" &&
-                              !member.isOwner ? (
-                                <Badge>
-                                  <Trans
-                                    i18nKey="memberInactive"
-                                    defaults="Inactive"
-                                  />
-                                </Badge>
-                              ) : null}
-                            </IfFeatureEnabled>
-                          </div>
-                        </div>
-                        <div className="text-muted-foreground text-sm">
-                          {member.email}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-sm">
-                      <SpaceRole role={member.role} />
-                    </div>
-                    <MemberDropdownMenu member={member} />
-                  </StackedListItem>
-                ))}
-              </StackedList>
-            </PageSectionContent>
-          </PageSection>
-          {!canInviteMembers && !hasInactiveMembers ? (
-            <Alert variant="primary">
-              <SparklesIcon />
+                      ),
+                    }}
+                  />
+                </p>
+              </IfCloudHosted>
+              <IfSelfHosted>
+                <p>
+                  <Trans
+                    i18nKey="noSeatsAvailableAlertSelfHostedDescription"
+                    defaults="You will need to <a>upgrade</a> to increase the number of seats in this space."
+                    components={{
+                      a: (
+                        <Link
+                          className="underline hover:text-foreground"
+                          prefetch={false}
+                          href="https://support.rallly.co/self-hosting/licensing"
+                        />
+                      ),
+                    }}
+                  />
+                </p>
+              </IfSelfHosted>
+            </AlertDescription>
+          </Alert>
+        ) : null}
+        <IfFeatureEnabled feature="billing">
+          {hasInactiveMembers ? (
+            <Alert>
+              <InfoIcon />
+              <AlertTitle>
+                <Trans
+                  i18nKey="membersInactiveAlertTitle"
+                  defaults="Members are inactive"
+                />
+              </AlertTitle>
               <AlertDescription>
                 <Trans
-                  i18nKey="inviteMembersUpsellDescription"
-                  defaults="Invite members to manage polls and events together in this space."
+                  i18nKey="membersInactiveAlertDescription"
+                  defaults="These members lost access when this space's Pro subscription ended. Their seats are kept and access is restored when the space is upgraded again."
                 />
               </AlertDescription>
               <AlertAction>
                 <Button
                   size="sm"
-                  variant="link"
                   onClick={() => {
-                    showPayWall({ from: "space-members", action: "invite" });
+                    showPayWall({
+                      from: "space-members",
+                      action: "reactivate",
+                    });
                   }}
                 >
                   <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />
@@ -164,121 +170,76 @@ export function MembersPage({
               </AlertAction>
             </Alert>
           ) : null}
-          {canInviteMembers ? (
-            <>
-              <PageSectionDivider />
-              <PageSection>
-                <PageSectionHeader>
-                  <PageSectionTitle>
-                    <Trans
-                      i18nKey="pendingInvites"
-                      defaults="Pending invites"
-                    />
-                  </PageSectionTitle>
-                  <PageSectionDescription>
-                    <Trans
-                      i18nKey="pendingInvitesDescription"
-                      defaults="Invite other users to share your space."
-                    />
-                  </PageSectionDescription>
-                </PageSectionHeader>
-                <PageSectionContent>
-                  {invites.length > 0 ? (
-                    <StackedList>
-                      {invites.map((invite) => (
-                        <StackedListItem key={invite.id}>
-                          <div className="flex flex-1 items-center gap-4">
-                            <OptimizedAvatarImage
-                              name={invite.email}
-                              size="xl"
+        </IfFeatureEnabled>
+        {!canInviteMembers && !hasInactiveMembers ? (
+          <Alert variant="primary">
+            <SparklesIcon />
+            <AlertDescription>
+              <Trans
+                i18nKey="inviteMembersUpsellDescription"
+                defaults="Invite members to manage polls and events together in this space."
+              />
+            </AlertDescription>
+            <AlertAction>
+              <Button
+                size="sm"
+                variant="link"
+                onClick={() => {
+                  showPayWall({ from: "space-members", action: "invite" });
+                }}
+              >
+                <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />
+              </Button>
+            </AlertAction>
+          </Alert>
+        ) : null}
+        <StackedList>
+          {members.data.map((member) => (
+            <StackedListItem key={member.id}>
+              <div className="flex flex-1 items-center gap-4">
+                <OptimizedAvatarImage
+                  src={member.image ?? undefined}
+                  name={member.name}
+                  size="xl"
+                />
+                <div>
+                  <div className="flex items-center gap-x-2">
+                    <div className="font-semibold text-sm">{member.name}</div>
+                    <div>
+                      {member.isOwner ? (
+                        <Badge>
+                          <Trans i18nKey="owner" defaults="Owner" />
+                        </Badge>
+                      ) : null}
+                      <IfFeatureEnabled feature="billing">
+                        {space.data.tier === "hobby" && !member.isOwner ? (
+                          <Badge>
+                            <Trans
+                              i18nKey="memberInactive"
+                              defaults="Inactive"
                             />
-                            <div>
-                              <div className="flex items-center gap-x-2">
-                                <div className="font-semibold text-sm">
-                                  {invite.email}
-                                </div>
-                              </div>
-                              <div className="text-muted-foreground text-sm">
-                                <Trans
-                                  i18nKey="memberInvitedBy"
-                                  defaults="Invited by {inviterName}"
-                                  values={{
-                                    inviterName: invite.invitedBy.name,
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="text-sm">
-                            <SpaceRole role={invite.role} />
-                          </div>
-                          <InviteDropdownMenu invite={invite} />
-                        </StackedListItem>
-                      ))}
-                    </StackedList>
-                  ) : null}
-                  <div className="flex items-center gap-4">
-                    <InviteMemberButton
-                      usedSeats={usedSeats}
-                      totalSeats={totalSeats}
-                    />
-                    <p className="font-medium text-sm">
-                      <Trans
-                        i18nKey="seatUsage"
-                        defaults="{usedSeats} of {totalSeats} seats used"
-                        values={{
-                          usedSeats,
-                          totalSeats,
-                        }}
-                      />
-                    </p>
+                          </Badge>
+                        ) : null}
+                      </IfFeatureEnabled>
+                    </div>
                   </div>
-                  {totalSeats - usedSeats <= 0 ? (
-                    <Alert variant="info">
-                      <InfoIcon />
-                      <AlertDescription>
-                        <IfCloudHosted>
-                          <p>
-                            <Trans
-                              i18nKey="noSeatsAvailableAlertBillingDescription"
-                              defaults="Increase the number of seats in this space from the <a>billing page</a>."
-                              components={{
-                                a: (
-                                  <Link
-                                    className="underline hover:text-foreground"
-                                    href="/settings/billing"
-                                  />
-                                ),
-                              }}
-                            />
-                          </p>
-                        </IfCloudHosted>
-                        <IfSelfHosted>
-                          <p>
-                            <Trans
-                              i18nKey="noSeatsAvailableAlertSelfHostedDescription"
-                              defaults="You will need to <a>upgrade</a> to increase the number of seats in this space."
-                              components={{
-                                a: (
-                                  <Link
-                                    className="underline hover:text-foreground"
-                                    prefetch={false}
-                                    href="https://support.rallly.co/self-hosting/licensing"
-                                  />
-                                ),
-                              }}
-                            />
-                          </p>
-                        </IfSelfHosted>
-                      </AlertDescription>
-                    </Alert>
-                  ) : null}
-                </PageSectionContent>
-              </PageSection>
-            </>
-          ) : null}
-        </PageSectionGroup>
+                  <div className="text-muted-foreground text-sm">
+                    {member.email}
+                  </div>
+                </div>
+              </div>
+              <div className="text-sm">
+                <SpaceRole role={member.role} />
+              </div>
+              <MemberDropdownMenu member={member} />
+            </StackedListItem>
+          ))}
+        </StackedList>
       </PageContent>
+      <PendingInvitesDialog
+        invites={invites}
+        {...pendingInvitesDialog.dialogProps}
+      />
     </PageContainer>
   );
 }
