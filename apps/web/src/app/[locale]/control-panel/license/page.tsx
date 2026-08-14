@@ -12,7 +12,12 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { PageSection } from "@/components/page-layout";
+import {
+  PageSection,
+  PageSectionContent,
+  PageSectionHeader,
+  PageSectionTitle,
+} from "@/components/page-layout";
 import {
   SettingsPage,
   SettingsPageContent,
@@ -53,7 +58,16 @@ export default async function LicensePage() {
         {license ? (
           <>
             <PageSection variant="card">
-              <div className="flex justify-between gap-8">
+              <PageSectionHeader className="flex items-center justify-between gap-4">
+                <PageSectionTitle>
+                  <Trans i18nKey="licenseDetails" defaults="License details" />
+                </PageSectionTitle>
+                <div className="flex shrink-0 gap-2">
+                  <RefreshLicenseButton />
+                  <RemoveLicenseButton />
+                </div>
+              </PageSectionHeader>
+              <PageSectionContent>
                 <FieldGroup variant="divided">
                   <Field orientation="responsive">
                     <FieldContent>
@@ -128,11 +142,7 @@ export default async function LicensePage() {
                     </div>
                   </Field>
                 </FieldGroup>
-                <div className="flex shrink-0 gap-2">
-                  <RefreshLicenseButton />
-                  <RemoveLicenseButton />
-                </div>
-              </div>
+              </PageSectionContent>
             </PageSection>
             <div className="grid gap-4 lg:grid-cols-2">
               <Card>

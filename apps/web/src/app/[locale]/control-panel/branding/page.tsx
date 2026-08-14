@@ -398,7 +398,7 @@ export default async function BrandingPage() {
             <PageSectionContent>
               <FieldGroup variant="divided">
                 <Field>
-                  <Field orientation="responsive">
+                  <Field orientation="horizontal">
                     <FieldContent>
                       <FieldLabel htmlFor="hide-attribution">
                         <Trans
