@@ -9,7 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
-import { MoreHorizontalIcon, PlusIcon, UsersIcon } from "lucide-react";
+import {
+  MoreHorizontalIcon,
+  PencilIcon,
+  PlusIcon,
+  UsersIcon,
+} from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import type * as React from "react";
@@ -162,6 +167,17 @@ const MobilePoll: React.FunctionComponent = () => {
                   size="icon"
                 />
               ) : null}
+              <Button
+                aria-label={t("editVotes", { defaultValue: "Edit votes" })}
+                variant="ghost"
+                size="icon"
+                disabled={!canEditParticipant(selectedParticipant.id)}
+                onClick={() => {
+                  votingForm.setEditingParticipantId(selectedParticipant.id);
+                }}
+              >
+                <PencilIcon />
+              </Button>
               <ParticipantDropdown
                 align="end"
                 disabled={!canEditParticipant(selectedParticipant.id)}
@@ -170,9 +186,6 @@ const MobilePoll: React.FunctionComponent = () => {
                   userId: selectedParticipant.userId ?? undefined,
                   email: selectedParticipant.email ?? undefined,
                   id: selectedParticipant.id,
-                }}
-                onEdit={() => {
-                  votingForm.setEditingParticipantId(selectedParticipant.id);
                 }}
                 onDelete={() => {
                   votingForm.setValue("participantId", "all");

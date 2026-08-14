@@ -26,7 +26,7 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { PencilIcon, TagIcon, TrashIcon } from "lucide-react";
+import { TagIcon, TrashIcon } from "lucide-react";
 import React from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -43,7 +43,6 @@ import { trpc } from "@/trpc/client";
 
 export const ParticipantDropdown = ({
   participant,
-  onEdit,
   onDelete,
   children,
   disabled,
@@ -57,7 +56,6 @@ export const ParticipantDropdown = ({
     id: string;
   };
   align?: "start" | "end";
-  onEdit: () => void;
   onDelete?: () => void;
   children: React.ReactElement;
 }) => {
@@ -88,10 +86,6 @@ export const ParticipantDropdown = ({
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={onEdit}>
-            <PencilIcon />
-            <Trans i18nKey="editVotes" defaults="Edit votes" />
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsChangeNameModalVisible(true)}>
             <TagIcon />
             <Trans i18nKey="changeName" defaults="Change name" />

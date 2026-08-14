@@ -4,7 +4,7 @@ import type { VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { MoreHorizontalIcon } from "lucide-react";
+import { MoreHorizontalIcon, PencilIcon } from "lucide-react";
 import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
@@ -155,19 +155,25 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
       }
       action={
         canEdit ? (
-          <ParticipantDropdown
-            participant={participant}
-            align="start"
-            onEdit={() => onChangeEditMode?.(true)}
-          >
+          <>
             <Button
-              aria-label={t("moreOptions", { defaultValue: "More options" })}
+              aria-label={t("editVotes", { defaultValue: "Edit votes" })}
               size="icon-xs"
               variant="ghost"
+              onClick={() => onChangeEditMode?.(true)}
             >
-              <MoreHorizontalIcon />
+              <PencilIcon />
             </Button>
-          </ParticipantDropdown>
+            <ParticipantDropdown participant={participant} align="start">
+              <Button
+                aria-label={t("moreOptions", { defaultValue: "More options" })}
+                size="icon-xs"
+                variant="ghost"
+              >
+                <MoreHorizontalIcon />
+              </Button>
+            </ParticipantDropdown>
+          </>
         ) : null
       }
       isYou={isYou}
