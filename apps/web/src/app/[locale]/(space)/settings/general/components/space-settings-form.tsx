@@ -9,15 +9,7 @@ import {
   FieldLabel,
   FieldTitle,
 } from "@rallly/ui/field";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import { CheckIcon } from "lucide-react";
 import type React from "react";
 import type { Control } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
@@ -27,6 +19,7 @@ import {
   ImageUploadControl,
   ImageUploadPreview,
 } from "@/components/image-upload";
+import { InputWithSaveButton } from "@/components/input-with-save-button";
 import {
   getSpaceImageUploadUrlAction,
   removeSpaceImageAction,
@@ -175,41 +168,17 @@ function SpaceNameField({
         name="name"
         render={({ field, fieldState }) => (
           <>
-            <InputGroup className="w-56">
-              <InputGroupInput
-                {...field}
-                id="space-name"
-                disabled={disabled}
-                placeholder={t("spaceNamePlaceholder", {
-                  defaultValue: "My Team",
-                })}
-                aria-invalid={fieldState.invalid}
-              />
-              {/* Rendered only when there is something to save. A disabled
-                  button here would trip InputGroup's `has-disabled:` styles
-                  and grey out the whole field. */}
-              {isDirty && !disabled ? (
-                <InputGroupAddon align="inline-end">
-                  <Tooltip>
-                    <TooltipTrigger
-                      render={
-                        <InputGroupButton
-                          type="submit"
-                          size="icon-xs"
-                          loading={isSaving}
-                          aria-label={t("save", { defaultValue: "Save" })}
-                        >
-                          <CheckIcon />
-                        </InputGroupButton>
-                      }
-                    />
-                    <TooltipContent>
-                      <Trans i18nKey="save" defaults="Save" />
-                    </TooltipContent>
-                  </Tooltip>
-                </InputGroupAddon>
-              ) : null}
-            </InputGroup>
+            <InputWithSaveButton
+              {...field}
+              id="space-name"
+              disabled={disabled}
+              placeholder={t("spaceNamePlaceholder", {
+                defaultValue: "My Team",
+              })}
+              aria-invalid={fieldState.invalid}
+              isDirty={isDirty}
+              isSaving={isSaving}
+            />
             {fieldState.invalid ? (
               <FieldError className="mt-1.5" errors={[fieldState.error]} />
             ) : null}
