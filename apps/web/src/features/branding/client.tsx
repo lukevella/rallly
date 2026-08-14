@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import type { LogoSize } from "./types";
 
 export interface BrandingConfig {
   primaryColor: {
@@ -15,7 +14,6 @@ export interface BrandingConfig {
     dark: string;
   };
   logoIcon: string;
-  logoSize: LogoSize;
   hideAttribution: boolean;
   appName: string;
 }

@@ -5,13 +5,11 @@ import {
   DARK_MODE_BACKGROUND,
   DEFAULT_APP_NAME,
   DEFAULT_LOGO_ICON_URL,
-  DEFAULT_LOGO_SIZE,
   DEFAULT_LOGO_URL,
   DEFAULT_LOGO_URL_DARK,
   DEFAULT_PRIMARY_COLOR,
   LIGHT_MODE_BACKGROUND,
 } from "./constants";
-import type { LogoSize } from "./types";
 
 export function getPrimaryColorVars(primaryColor: string) {
   const light = adjustColorForContrast(primaryColor, LIGHT_MODE_BACKGROUND);
@@ -31,7 +29,6 @@ interface BrandingValues {
   logo?: string | null;
   logoDark?: string | null;
   logoIcon?: string | null;
-  logoSize?: LogoSize | null;
   hideAttribution?: boolean | null;
 }
 
@@ -40,14 +37,13 @@ interface BrandingValues {
  * derived rules: dark logo falls back to the light logo, the dark primary
  * color is computed from the light one, and foreground colors are computed
  * from their backgrounds. Logo values may be storage keys or absolute URLs.
- * Logo size has no env var — it is configured in the UI only.
  */
 export function resolveBrandingConfig({
   db,
   env,
 }: {
   db?: BrandingValues | null;
-  env?: Omit<BrandingValues, "logoSize">;
+  env?: BrandingValues;
 }): BrandingConfig {
   const primaryColor =
     db?.primaryColor ?? env?.primaryColor ?? DEFAULT_PRIMARY_COLOR;
@@ -72,7 +68,6 @@ export function resolveBrandingConfig({
     logoIcon: resolveStorageUrl(
       db?.logoIcon ?? env?.logoIcon ?? DEFAULT_LOGO_ICON_URL,
     ),
-    logoSize: db?.logoSize ?? DEFAULT_LOGO_SIZE,
     hideAttribution: db?.hideAttribution ?? env?.hideAttribution ?? false,
     appName: db?.appName ?? env?.appName ?? DEFAULT_APP_NAME,
   };

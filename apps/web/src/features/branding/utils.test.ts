@@ -3,7 +3,6 @@ import { getForegroundColor } from "@/lib/utils/color";
 import {
   DEFAULT_APP_NAME,
   DEFAULT_LOGO_ICON_URL,
-  DEFAULT_LOGO_SIZE,
   DEFAULT_LOGO_URL,
   DEFAULT_LOGO_URL_DARK,
   DEFAULT_PRIMARY_COLOR,
@@ -21,7 +20,6 @@ describe("resolveBrandingConfig", () => {
         dark: DEFAULT_LOGO_URL_DARK,
       },
       logoIcon: DEFAULT_LOGO_ICON_URL,
-      logoSize: DEFAULT_LOGO_SIZE,
       hideAttribution: false,
       appName: DEFAULT_APP_NAME,
     });
@@ -36,7 +34,6 @@ describe("resolveBrandingConfig", () => {
         logo: null,
         logoDark: null,
         logoIcon: null,
-        logoSize: null,
         hideAttribution: null,
       },
       env: {
@@ -62,7 +59,6 @@ describe("resolveBrandingConfig", () => {
         logo: "https://db.example.com/logo.svg",
         logoDark: null,
         logoIcon: null,
-        logoSize: "lg",
         hideAttribution: false,
       },
       env: {
@@ -76,7 +72,6 @@ describe("resolveBrandingConfig", () => {
     // db wins where set
     expect(config.appName).toBe("DB App");
     expect(config.logo.light).toBe("https://db.example.com/logo.svg");
-    expect(config.logoSize).toBe("lg");
     expect(config.hideAttribution).toBe(false);
     // env fills fields the db leaves unset
     expect(config.logoIcon).toBe("https://env.example.com/icon.png");
@@ -101,7 +96,6 @@ describe("resolveBrandingConfig", () => {
         logo: "https://example.com/logo.svg",
         logoDark: "https://example.com/logo-dark.svg",
         logoIcon: null,
-        logoSize: null,
         hideAttribution: null,
       },
     });
@@ -124,7 +118,6 @@ describe("resolveBrandingConfig", () => {
         logo: "branding/logo.png",
         logoDark: null,
         logoIcon: "branding/icon.png",
-        logoSize: null,
         hideAttribution: null,
       },
     });
@@ -143,7 +136,6 @@ describe("resolveBrandingConfig", () => {
         logo: null,
         logoDark: null,
         logoIcon: null,
-        logoSize: null,
         hideAttribution: null,
       },
     });
@@ -160,7 +152,6 @@ describe("resolveBrandingConfig", () => {
         logo: null,
         logoDark: null,
         logoIcon: null,
-        logoSize: null,
         hideAttribution: null,
       },
       env: {
@@ -175,10 +166,5 @@ describe("resolveBrandingConfig", () => {
     expect(config.primaryColor.light).toEqual(
       getPrimaryColorVars("#336699").light,
     );
-  });
-
-  it("defaults the logo size to md when unset", () => {
-    expect(resolveBrandingConfig({}).logoSize).toBe(DEFAULT_LOGO_SIZE);
-    expect(DEFAULT_LOGO_SIZE).toBe("md");
   });
 });

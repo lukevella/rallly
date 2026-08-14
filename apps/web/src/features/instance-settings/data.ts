@@ -20,7 +20,6 @@ export const getInstanceSettings = unstable_cache(
         logo: true,
         logoDark: true,
         logoIcon: true,
-        logoSize: true,
         hideAttribution: true,
       },
     });
@@ -35,7 +34,6 @@ export const getInstanceSettings = unstable_cache(
       logo: instanceSettings?.logo ?? null,
       logoDark: instanceSettings?.logoDark ?? null,
       logoIcon: instanceSettings?.logoIcon ?? null,
-      logoSize: instanceSettings?.logoSize ?? null,
       hideAttribution: instanceSettings?.hideAttribution ?? null,
     };
   },
