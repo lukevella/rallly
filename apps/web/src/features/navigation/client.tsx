@@ -42,7 +42,7 @@ export const useSpaceMenu = () => {
     () => ({
       sections: [
         {
-          id: "home",
+          id: "main",
           items: [
             {
               id: "home",
@@ -51,12 +51,6 @@ export const useSpaceMenu = () => {
               icon: HomeIcon,
               isActive: pathname === "/",
             },
-          ],
-        },
-        {
-          id: "content",
-          title: t("content", { defaultValue: "Content" }),
-          items: [
             {
               id: "polls",
               label: t("polls", { defaultValue: "Polls" }),
@@ -82,12 +76,6 @@ export const useSpaceMenu = () => {
                   },
                 ]
               : []),
-          ],
-        },
-        {
-          id: "space",
-          title: t("space", { defaultValue: "Space" }),
-          items: [
             {
               id: "members",
               label: t("members", { defaultValue: "Members" }),
