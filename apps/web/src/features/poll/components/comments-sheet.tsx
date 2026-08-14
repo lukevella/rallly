@@ -228,7 +228,7 @@ function CommentsSheetInner({ className }: { className?: string }) {
         {count > 0 ? <Badge>{count}</Badge> : null}
       </Button>
       <Sheet {...dialog.dialogProps}>
-        <SheetContent className="flex w-full flex-col sm:max-w-md">
+        <SheetContent className="flex flex-col sm:max-w-md">
           <SheetHeader>
             <div className="flex items-center gap-2">
               <SheetTitle>

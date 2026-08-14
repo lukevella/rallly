@@ -37,16 +37,16 @@ function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
 }
 
 const sheetVariants = cva(
-  "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-closed:animate-out data-open:animate-in data-closed:duration-200 data-open:duration-200",
+  "fixed z-50 gap-4 rounded-xl bg-popover p-6 text-popover-foreground shadow-lg ring-1 ring-foreground/10 transition ease-in-out data-closed:animate-out data-open:animate-in data-closed:duration-200 data-open:duration-200",
   {
     variants: {
       side: {
-        top: "data-closed:slide-out-to-top data-open:slide-in-from-top inset-x-0 top-0 border-b",
+        top: "data-closed:slide-out-to-top data-open:slide-in-from-top inset-x-2 top-2",
         bottom:
-          "data-closed:slide-out-to-bottom data-open:slide-in-from-bottom inset-x-0 bottom-0 border-t",
-        left: "data-closed:slide-out-to-left data-open:slide-in-from-left inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
+          "data-closed:slide-out-to-bottom data-open:slide-in-from-bottom inset-x-2 bottom-2",
+        left: "data-closed:slide-out-to-left data-open:slide-in-from-left inset-y-2 left-2 w-[calc(100%-1rem)] sm:max-w-sm",
         right:
-          "data-closed:slide-out-to-right data-open:slide-in-from-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
+          "data-closed:slide-out-to-right data-open:slide-in-from-right inset-y-2 right-2 w-[calc(100%-1rem)] sm:max-w-sm",
       },
     },
     defaultVariants: {
