@@ -23,9 +23,16 @@ White labeling allows you to customize the appearance of your Rallly instance to
 
 ## Configuration
 
-All white labeling options are configured via environment variables. See the [Configuration Options](/self-hosting/configuration#branding) page for the full list of available settings.
+You can configure white labeling in two ways:
 
-## Example
+- **Control Panel** - Edit the settings in the [Control Panel](/self-hosting/control-panel) under the **Branding** section. Changes apply straight away, without a container restart.
+- **Environment variables** - Set the values in your `.env` file. These act as the fallback: a value set in the Control Panel takes precedence over the matching environment variable, which in turn takes precedence over the built-in default.
+
+### Editing in the Control Panel
+
+Open the **Branding** section of the Control Panel to change the application name, primary colors, logos, and attribution. You can upload logo images directly when [object storage](/self-hosting/configuration#external-object-storage) is configured, which the bundled stack provides out of the box.
+
+### Environment variables
 
 Add your white labeling values to the `.env` file at the root of your self-hosted stack, then apply them with `./rallly.sh restart`:
 
@@ -40,9 +47,7 @@ LOGO_ICON_URL="https://example.com/icon.png"
 HIDE_ATTRIBUTION="true"
 ```
 
-## Viewing Current Settings
-
-You can view the current branding configuration in the [Control Panel](/self-hosting/control-panel) under the **Branding** section. These settings are read-only in the UI and must be changed via environment variables.
+See the [Configuration Options](/self-hosting/configuration#branding) page for the full list of available settings.
 
 ## Requirements
 

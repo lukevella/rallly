@@ -11,6 +11,12 @@ export interface ImageUploadControlProps {
   onUploadSuccess: (imageKey: string) => Promise<void> | void;
   onRemoveSuccess: () => Promise<void> | void;
   hasCurrentImage?: boolean;
+  /**
+   * Fixed crop aspect ratio. Leave undefined to allow a free-form crop, for
+   * example a wide logo.
+   */
+  aspect?: number;
+  disabled?: boolean;
 }
 
 export interface ImageUploadPreviewProps {

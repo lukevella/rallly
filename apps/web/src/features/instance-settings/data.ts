@@ -14,6 +14,13 @@ export const getInstanceSettings = unstable_cache(
       select: {
         instanceId: true,
         disableUserRegistration: true,
+        appName: true,
+        primaryColor: true,
+        primaryColorDark: true,
+        logoUrl: true,
+        logoUrlDark: true,
+        logoIconUrl: true,
+        hideAttribution: true,
       },
     });
 
@@ -21,6 +28,13 @@ export const getInstanceSettings = unstable_cache(
       instanceId: instanceSettings?.instanceId ?? null,
       disableUserRegistration:
         instanceSettings?.disableUserRegistration ?? false,
+      appName: instanceSettings?.appName ?? null,
+      primaryColor: instanceSettings?.primaryColor ?? null,
+      primaryColorDark: instanceSettings?.primaryColorDark ?? null,
+      logoUrl: instanceSettings?.logoUrl ?? null,
+      logoUrlDark: instanceSettings?.logoUrlDark ?? null,
+      logoIconUrl: instanceSettings?.logoIconUrl ?? null,
+      hideAttribution: instanceSettings?.hideAttribution ?? null,
     };
   },
   [],

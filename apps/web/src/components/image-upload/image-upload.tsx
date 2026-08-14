@@ -1,8 +1,10 @@
 "use client";
 
 import { cn } from "@rallly/ui";
+import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
+import { ContainerIcon } from "lucide-react";
 import React from "react";
 import { ImageCropDialog } from "@/components/image-upload/image-crop-dialog";
 import type {
@@ -30,6 +32,8 @@ export function ImageUploadControl({
   onUploadSuccess,
   onRemoveSuccess,
   hasCurrentImage = false,
+  aspect = 1,
+  disabled = false,
 }: ImageUploadControlProps) {
   const isStorageEnabled = useFeatureFlag("storage");
 
@@ -162,7 +166,7 @@ export function ImageUploadControl({
         <div className="flex gap-2">
           <Button
             loading={isUploading}
-            disabled={!isStorageEnabled}
+            disabled={!isStorageEnabled || disabled}
             onClick={() => {
               fileInputRef.current?.click();
             }}
@@ -170,17 +174,44 @@ export function ImageUploadControl({
             <Trans i18nKey="chooseImage" defaults="Choose…" />
           </Button>
           {hasCurrentImage ? (
-            <Button loading={isRemoving} variant="ghost" onClick={handleRemove}>
+            <Button
+              loading={isRemoving}
+              variant="ghost"
+              disabled={disabled}
+              onClick={handleRemove}
+            >
               <Trans i18nKey="removeImage" defaults="Remove" />
             </Button>
           ) : null}
         </div>
-        <p className="text-muted-foreground text-xs">
-          <Trans
-            i18nKey="imageUploadDescription"
-            defaults="Up to 2MB, JPG or PNG"
-          />
-        </p>
+        {isStorageEnabled ? (
+          <p className="text-muted-foreground text-xs">
+            <Trans
+              i18nKey="imageUploadDescription"
+              defaults="Up to 2MB, JPG or PNG"
+            />
+          </p>
+        ) : (
+          <Alert variant="note">
+            <ContainerIcon />
+            <AlertDescription>
+              <Trans
+                i18nKey="imageUploadStorageNotConfigured"
+                defaults="Image uploads need object storage. Configure it to enable this, or set a URL through an environment variable. <a>Learn more</a>"
+                components={{
+                  a: (
+                    <a
+                      className="underline"
+                      href="https://support.rallly.co/self-hosting/configuration#external-object-storage"
+                      target="_blank"
+                      rel="noreferrer"
+                    />
+                  ),
+                }}
+              />
+            </AlertDescription>
+          </Alert>
+        )}
         <input
           ref={fileInputRef}
           type="file"
@@ -195,6 +226,7 @@ export function ImageUploadControl({
         imageSrc={imageToCrop}
         originalFile={originalFile}
         isUploading={isUploading}
+        aspect={aspect}
         onClose={handleCloseCropDialog}
         onCropComplete={handleCropComplete}
       />

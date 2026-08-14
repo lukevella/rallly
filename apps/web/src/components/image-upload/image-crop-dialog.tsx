@@ -24,6 +24,11 @@ export interface ImageCropDialogProps {
   originalFile: File | null;
   /** Loading state during upload */
   isUploading?: boolean;
+  /**
+   * Fixed crop aspect ratio. Leave undefined to allow a free-form crop, for
+   * example a wide logo.
+   */
+  aspect?: number;
   /** Callback when dialog should close */
   onClose: () => void;
   /** Callback when crop is complete with the cropped file */
@@ -35,6 +40,7 @@ export function ImageCropDialog({
   imageSrc,
   originalFile,
   isUploading = false,
+  aspect = 1,
   onClose,
   onCropComplete,
 }: ImageCropDialogProps) {
@@ -46,15 +52,9 @@ export function ImageCropDialog({
   const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const { width, height } = e.currentTarget;
     const crop = centerCrop(
-      makeAspectCrop(
-        {
-          unit: "%",
-          width: 100,
-        },
-        1, // 1:1 aspect ratio
-        width,
-        height,
-      ),
+      aspect
+        ? makeAspectCrop({ unit: "%", width: 100 }, aspect, width, height)
+        : { unit: "%", x: 0, y: 0, width: 100, height: 100 },
       width,
       height,
     );
@@ -104,7 +104,7 @@ export function ImageCropDialog({
               onComplete={(_, percentCrop) => {
                 setCompletedCrop(percentCrop);
               }}
-              aspect={1}
+              aspect={aspect}
               minWidth={100}
               minHeight={100}
               className="max-h-96"

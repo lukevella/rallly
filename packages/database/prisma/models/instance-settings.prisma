@@ -3,6 +3,17 @@ model InstanceSettings {
   // Authentication & Security
   disableUserRegistration Boolean @default(false) @map("disable_user_registration")
 
+  // Branding (white label add-on). Each column overrides the matching
+  // environment variable. A null column falls back to the env var, then the
+  // built-in default.
+  appName          String? @map("app_name")
+  primaryColor     String? @map("primary_color")
+  primaryColorDark String? @map("primary_color_dark")
+  logoUrl          String? @map("logo_url")
+  logoUrlDark      String? @map("logo_url_dark")
+  logoIconUrl      String? @map("logo_icon_url")
+  hideAttribution  Boolean? @map("hide_attribution")
+
   // Anonymous identifier used when the instance checks for updates
   instanceId String @unique @default(dbgenerated("gen_random_uuid()")) @map("instance_id") @db.Uuid
 

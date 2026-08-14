@@ -1,24 +1,6 @@
 import { Alert, AlertDescription } from "@rallly/ui/alert";
-import {
-  Field,
-  FieldContent,
-  FieldGroup,
-  FieldLabel,
-  FieldTitle,
-} from "@rallly/ui/field";
-import { Input } from "@rallly/ui/input";
-import { Switch } from "@rallly/ui/switch";
-import { CodeIcon, GemIcon } from "lucide-react";
+import { GemIcon } from "lucide-react";
 import type { Metadata } from "next";
-import { Trans } from "react-i18next/TransWithoutContext";
-import {
-  PageSection,
-  PageSectionContent,
-  PageSectionDescription,
-  PageSectionGroup,
-  PageSectionHeader,
-  PageSectionTitle,
-} from "@/components/page-layout";
 import {
   SettingsPage,
   SettingsPageContent,
@@ -26,83 +8,46 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { getCustomBrandingConfig } from "@/features/branding/data";
-import { loadInstanceLicense } from "@/features/licensing/data";
+import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
+import { loadBrandingSettings } from "@/features/branding/loaders";
+import { loadWhiteLabelAddon } from "@/features/licensing/loaders";
+import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { BrandingSettingsForm } from "./branding-settings-form";
 
 async function loadData() {
-  const [license, brandingConfig] = await Promise.all([
-    loadInstanceLicense(),
-    getCustomBrandingConfig(),
+  const [settings, hasWhiteLabelAddon] = await Promise.all([
+    loadBrandingSettings(),
+    loadWhiteLabelAddon(),
   ]);
 
   return {
-    primaryColorLight: brandingConfig.primaryColor.light,
-    primaryColorDark: brandingConfig.primaryColor.dark,
-    logoUrlLight: brandingConfig.logo.light,
-    logoUrlDark: brandingConfig.logo.dark,
-    hasWhiteLabelAddon: license?.whiteLabelAddon ?? false,
-    logoIconUrl: brandingConfig.logoIcon,
-    hideAttribution: brandingConfig.hideAttribution,
-    appName: brandingConfig.appName,
+    hasWhiteLabelAddon,
+    defaultValue: {
+      appName: settings.appName,
+      primaryColor: settings.primaryColor ?? DEFAULT_PRIMARY_COLOR,
+      primaryColorDark: settings.primaryColorDark,
+      logoUrl: settings.logoUrl,
+      logoUrlDark: settings.logoUrlDark,
+      logoIconUrl: settings.logoIconUrl,
+      hideAttribution: settings.hideAttribution,
+    },
   };
 }
 
-async function SetEnvironmentVariableAlert({ variable }: { variable: string }) {
-  const { t, i18n } = await getTranslation();
-  return (
-    <Alert>
-      <CodeIcon />
-      <AlertDescription>
-        <p>
-          <Trans
-            t={t}
-            i18n={i18n}
-            ns="app"
-            i18nKey="setEnvironmentVariable"
-            defaults="This value can be changed by setting the <env /> environment variable."
-            components={{
-              env: <code className="font-mono text-sm">{variable}</code>,
-            }}
-          />
-        </p>
-      </AlertDescription>
-    </Alert>
-  );
-}
-
 export default async function BrandingPage() {
-  const {
-    primaryColorLight,
-    primaryColorDark,
-    logoUrlLight,
-    logoUrlDark,
-    logoIconUrl,
-    hasWhiteLabelAddon,
-    hideAttribution,
-    appName,
-  } = await loadData();
-  const { t, i18n } = await getTranslation();
+  const { hasWhiteLabelAddon, defaultValue } = await loadData();
 
   return (
     <SettingsPage>
       <SettingsPageHeader>
         <SettingsPageTitle>
-          <Trans
-            t={t}
-            i18n={i18n}
-            ns="app"
-            i18nKey="branding"
-            defaults="Branding"
-          />
+          <Trans i18nKey="branding" defaults="Branding" />
         </SettingsPageTitle>
         <SettingsPageDescription>
           <Trans
-            t={t}
-            i18n={i18n}
-            ns="app"
             i18nKey="brandingDescription"
-            defaults="View your instance branding configuration"
+            defaults="Customize how your instance looks"
           />
         </SettingsPageDescription>
       </SettingsPageHeader>
@@ -113,9 +58,6 @@ export default async function BrandingPage() {
             <AlertDescription className="flex gap-2">
               <p className="flex-1">
                 <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
                   i18nKey="customBrandingAlertDescription"
                   defaults="Custom branding is available to Enterprise license holders as a paid add-on."
                 />
@@ -127,301 +69,16 @@ export default async function BrandingPage() {
                   className="underline"
                   rel="noreferrer"
                 >
-                  <Trans
-                    t={t}
-                    i18n={i18n}
-                    ns="app"
-                    i18nKey="learnMore"
-                    defaults="Learn more"
-                  />
+                  <Trans i18nKey="learnMore" defaults="Learn more" />
                 </a>
               </p>
             </AlertDescription>
           </Alert>
         ) : null}
-        <PageSectionGroup>
-          <PageSection variant="card">
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
-                  i18nKey="general"
-                  defaults="General"
-                />
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
-                  i18nKey="brandingDescription"
-                  defaults="View your instance branding configuration"
-                />
-              </PageSectionDescription>
-            </PageSectionHeader>
-            <PageSectionContent>
-              <FieldGroup variant="divided">
-                <Field>
-                  <Field orientation="responsive">
-                    <FieldContent>
-                      <FieldLabel htmlFor="app-name">
-                        <Trans
-                          t={t}
-                          i18n={i18n}
-                          ns="app"
-                          i18nKey="appName"
-                          defaults="App name"
-                        />
-                      </FieldLabel>
-                    </FieldContent>
-                    <Input
-                      id="app-name"
-                      className="w-56"
-                      value={appName}
-                      readOnly
-                    />
-                  </Field>
-                  <SetEnvironmentVariableAlert variable="APP_NAME" />
-                </Field>
-              </FieldGroup>
-            </PageSectionContent>
-          </PageSection>
-          <PageSection variant="card">
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
-                  i18nKey="colors"
-                  defaults="Colors"
-                />
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
-                  i18nKey="colorsDescription"
-                  defaults="Primary colors used for theming"
-                />
-              </PageSectionDescription>
-            </PageSectionHeader>
-            <PageSectionContent>
-              <FieldGroup variant="divided">
-                <Field>
-                  <Field orientation="responsive">
-                    <FieldContent>
-                      <FieldTitle>
-                        <Trans
-                          t={t}
-                          i18n={i18n}
-                          ns="app"
-                          i18nKey="primaryColor"
-                          defaults="Primary color"
-                        />
-                      </FieldTitle>
-                    </FieldContent>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="size-8 rounded border"
-                        style={{ backgroundColor: primaryColorLight }}
-                      />
-                      <span className="font-mono text-sm">
-                        {primaryColorLight}
-                      </span>
-                    </div>
-                  </Field>
-                  <SetEnvironmentVariableAlert variable="PRIMARY_COLOR" />
-                </Field>
-                <Field>
-                  <Field orientation="responsive">
-                    <FieldContent>
-                      <FieldTitle>
-                        <Trans
-                          t={t}
-                          i18n={i18n}
-                          ns="app"
-                          i18nKey="primaryColorDark"
-                          defaults="Primary color (dark mode)"
-                        />
-                      </FieldTitle>
-                    </FieldContent>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="size-8 rounded border"
-                        style={{ backgroundColor: primaryColorDark }}
-                      />
-                      <span className="font-mono text-sm">
-                        {primaryColorDark}
-                      </span>
-                    </div>
-                  </Field>
-                  <SetEnvironmentVariableAlert variable="PRIMARY_COLOR_DARK" />
-                </Field>
-              </FieldGroup>
-            </PageSectionContent>
-          </PageSection>
-          <PageSection variant="card">
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
-                  i18nKey="logos"
-                  defaults="Logos"
-                />
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
-                  i18nKey="logosDescription"
-                  defaults="Logo images used throughout the application"
-                />
-              </PageSectionDescription>
-            </PageSectionHeader>
-            <PageSectionContent>
-              <FieldGroup variant="divided">
-                <Field>
-                  <Field orientation="responsive">
-                    <FieldContent>
-                      <FieldTitle>
-                        <Trans
-                          t={t}
-                          i18n={i18n}
-                          ns="app"
-                          i18nKey="logo"
-                          defaults="Logo"
-                        />
-                      </FieldTitle>
-                    </FieldContent>
-                    <div className="flex items-center">
-                      <div className="flex w-48 items-center justify-center overflow-hidden rounded border bg-white">
-                        {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
-                        <img
-                          src={logoUrlLight}
-                          alt={t("logo", { ns: "app", defaultValue: "Logo" })}
-                          className="max-h-full max-w-full object-contain p-2"
-                        />
-                      </div>
-                    </div>
-                  </Field>
-                  <SetEnvironmentVariableAlert variable="LOGO_URL" />
-                </Field>
-                <Field>
-                  <Field orientation="responsive">
-                    <FieldContent>
-                      <FieldTitle>
-                        <Trans
-                          t={t}
-                          i18n={i18n}
-                          ns="app"
-                          i18nKey="logoDark"
-                          defaults="Logo (dark mode)"
-                        />
-                      </FieldTitle>
-                    </FieldContent>
-                    <div className="flex items-center">
-                      <div className="flex w-48 items-center justify-center overflow-hidden rounded border bg-gray-900">
-                        {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
-                        <img
-                          src={logoUrlDark}
-                          alt={t("logoDark", {
-                            ns: "app",
-                            defaultValue: "Logo (dark mode)",
-                          })}
-                          className="max-h-full max-w-full object-contain p-2"
-                        />
-                      </div>
-                    </div>
-                  </Field>
-                  <SetEnvironmentVariableAlert variable="LOGO_URL_DARK" />
-                </Field>
-                <Field>
-                  <Field orientation="responsive">
-                    <FieldContent>
-                      <FieldTitle>
-                        <Trans
-                          t={t}
-                          i18n={i18n}
-                          ns="app"
-                          i18nKey="logoIcon"
-                          defaults="Logo icon"
-                        />
-                      </FieldTitle>
-                    </FieldContent>
-                    <div className="flex items-center">
-                      <div className="flex size-16 items-center justify-center overflow-hidden rounded border bg-white">
-                        {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
-                        <img
-                          src={logoIconUrl}
-                          alt={t("logoIcon", {
-                            ns: "app",
-                            defaultValue: "Logo icon",
-                          })}
-                          className="max-h-full max-w-full object-contain p-2"
-                        />
-                      </div>
-                    </div>
-                  </Field>
-                  <SetEnvironmentVariableAlert variable="LOGO_ICON_URL" />
-                </Field>
-              </FieldGroup>
-            </PageSectionContent>
-          </PageSection>
-          <PageSection variant="card">
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
-                  i18nKey="attribution"
-                  defaults="Attribution"
-                />
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
-                  i18nKey="attributionDescription"
-                  defaults="Control the visibility of the attribution text"
-                />
-              </PageSectionDescription>
-            </PageSectionHeader>
-            <PageSectionContent>
-              <FieldGroup variant="divided">
-                <Field>
-                  <Field orientation="horizontal">
-                    <FieldContent>
-                      <FieldLabel htmlFor="hide-attribution">
-                        <Trans
-                          t={t}
-                          i18n={i18n}
-                          ns="app"
-                          i18nKey="hideAttribution"
-                          defaults="Hide attribution"
-                        />
-                      </FieldLabel>
-                    </FieldContent>
-                    <Switch
-                      id="hide-attribution"
-                      checked={hideAttribution}
-                      disabled
-                    />
-                  </Field>
-                  <SetEnvironmentVariableAlert variable="HIDE_ATTRIBUTION" />
-                </Field>
-              </FieldGroup>
-            </PageSectionContent>
-          </PageSection>
-        </PageSectionGroup>
+        <BrandingSettingsForm
+          defaultValue={defaultValue}
+          disabled={!hasWhiteLabelAddon}
+        />
       </SettingsPageContent>
     </SettingsPage>
   );

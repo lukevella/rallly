@@ -2,9 +2,11 @@ import "server-only";
 
 import { cache } from "react";
 import { env } from "@/env";
+import { getInstanceSettings } from "@/features/instance-settings/data";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { isSelfHosted } from "@/lib/constants";
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
+import { resolveStorageUrl } from "@/lib/storage/resolve-storage-url";
 import { getForegroundColor } from "@/lib/utils/color";
 import type { BrandingConfig } from "./client";
 import {
@@ -29,10 +31,33 @@ function getDefaultBrandingConfig(): BrandingConfig {
   };
 }
 
-export function getCustomBrandingConfig() {
-  const baseColor = env.PRIMARY_COLOR ?? DEFAULT_PRIMARY_COLOR;
+/**
+ * Resolves each branding value with `db ?? env ?? default` precedence. Colors
+ * are the raw stored hex values; logos are the raw stored values (either an
+ * uploaded storage key or an absolute URL).
+ */
+export async function getBrandingSettings() {
+  const settings = await getInstanceSettings();
+
+  return {
+    appName: settings.appName ?? env.APP_NAME ?? DEFAULT_APP_NAME,
+    primaryColor: settings.primaryColor ?? env.PRIMARY_COLOR ?? null,
+    primaryColorDark:
+      settings.primaryColorDark ?? env.PRIMARY_COLOR_DARK ?? null,
+    logoUrl: settings.logoUrl ?? env.LOGO_URL ?? null,
+    logoUrlDark: settings.logoUrlDark ?? env.LOGO_URL_DARK ?? null,
+    logoIconUrl: settings.logoIconUrl ?? env.LOGO_ICON_URL ?? null,
+    hideAttribution:
+      settings.hideAttribution ?? env.HIDE_ATTRIBUTION === "true",
+  };
+}
+
+export async function getCustomBrandingConfig(): Promise<BrandingConfig> {
+  const settings = await getBrandingSettings();
+
+  const baseColor = settings.primaryColor ?? DEFAULT_PRIMARY_COLOR;
   const vars = getPrimaryColorVars(baseColor);
-  const dark = env.PRIMARY_COLOR_DARK ?? vars.dark;
+  const dark = settings.primaryColorDark ?? vars.dark;
 
   return {
     primaryColor: {
@@ -42,12 +67,14 @@ export function getCustomBrandingConfig() {
       darkForeground: dark ? getForegroundColor(dark) : vars.darkForeground,
     },
     logo: {
-      light: env.LOGO_URL ?? DEFAULT_LOGO_URL,
-      dark: env.LOGO_URL_DARK ?? env.LOGO_URL ?? DEFAULT_LOGO_URL_DARK,
+      light: resolveStorageUrl(settings.logoUrl ?? DEFAULT_LOGO_URL),
+      dark: resolveStorageUrl(
+        settings.logoUrlDark ?? settings.logoUrl ?? DEFAULT_LOGO_URL_DARK,
+      ),
     },
-    logoIcon: env.LOGO_ICON_URL ?? DEFAULT_LOGO_ICON_URL,
-    hideAttribution: env.HIDE_ATTRIBUTION === "true",
-    appName: env.APP_NAME ?? DEFAULT_APP_NAME,
+    logoIcon: resolveStorageUrl(settings.logoIconUrl ?? DEFAULT_LOGO_ICON_URL),
+    hideAttribution: settings.hideAttribution,
+    appName: settings.appName,
   };
 }
 
