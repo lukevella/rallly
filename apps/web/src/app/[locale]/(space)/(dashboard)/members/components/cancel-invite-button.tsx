@@ -12,15 +12,7 @@ import {
   DialogTitle,
   useDialog,
 } from "@rallly/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
-import { MoreVerticalIcon, XIcon } from "lucide-react";
 import { useSpace } from "@/features/space/client";
 import { cancelInviteAction } from "@/features/space/member/actions";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -32,7 +24,7 @@ type SpaceMemberInvite = {
   spaceId: string;
 };
 
-export function InviteDropdownMenu({ invite }: { invite: SpaceMemberInvite }) {
+export function CancelInviteButton({ invite }: { invite: SpaceMemberInvite }) {
   const space = useSpace();
   const cancelInviteDialog = useDialog();
   const { t } = useTranslation();
@@ -55,33 +47,15 @@ export function InviteDropdownMenu({ invite }: { invite: SpaceMemberInvite }) {
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Button
-              aria-label={t("moreOptions", { defaultValue: "More options" })}
-              variant="ghost"
-              size="icon"
-            />
-          }
-        >
-          <Icon>
-            <MoreVerticalIcon />
-          </Icon>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            onClick={() => {
-              cancelInviteDialog.trigger();
-            }}
-            disabled={!canCancelInvite}
-            variant="destructive"
-          >
-            <XIcon />
-            <Trans i18nKey="cancelInvite" defaults="Cancel invite" />
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <Button
+        size="sm"
+        disabled={!canCancelInvite}
+        onClick={() => {
+          cancelInviteDialog.trigger();
+        }}
+      >
+        <Trans i18nKey="cancel" defaults="Cancel" />
+      </Button>
       <Dialog {...cancelInviteDialog.dialogProps}>
         <DialogContent size="sm">
           <DialogHeader>

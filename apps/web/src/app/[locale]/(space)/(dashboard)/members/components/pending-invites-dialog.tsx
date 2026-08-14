@@ -7,12 +7,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { SpaceRole } from "@/features/space/components/space-role";
 import type { MemberRole } from "@/features/space/schema";
 import { Trans } from "@/i18n/client";
-import { InviteDropdownMenu } from "./invite-dropdown-menu";
+import { CancelInviteButton } from "./cancel-invite-button";
 
 export function PendingInvitesDialog({
   invites,
@@ -37,23 +36,20 @@ export function PendingInvitesDialog({
         <StackedList>
           {invites.map((invite) => (
             <StackedListItem key={invite.id}>
-              <div className="flex flex-1 items-center gap-4">
-                <OptimizedAvatarImage name={invite.email} size="xl" />
-                <div>
-                  <div className="font-semibold text-sm">{invite.email}</div>
-                  <div className="text-muted-foreground text-sm">
-                    <Trans
-                      i18nKey="memberInvitedBy"
-                      defaults="Invited by {inviterName}"
-                      values={{ inviterName: invite.invitedBy.name }}
-                    />
-                  </div>
+              <div className="flex-1">
+                <div className="font-semibold text-sm">{invite.email}</div>
+                <div className="text-muted-foreground text-sm">
+                  <Trans
+                    i18nKey="memberInvitedBy"
+                    defaults="Invited by {inviterName}"
+                    values={{ inviterName: invite.invitedBy.name }}
+                  />
                 </div>
               </div>
               <div className="text-sm">
                 <SpaceRole role={invite.role} />
               </div>
-              <InviteDropdownMenu invite={invite} />
+              <CancelInviteButton invite={invite} />
             </StackedListItem>
           ))}
         </StackedList>

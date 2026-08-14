@@ -78,7 +78,7 @@ export function MembersPage({
       </PageHeader>
       <PageContent className="space-y-4">
         {canInviteMembers && invites.length > 0 ? (
-          <Alert>
+          <Alert variant="primary">
             <MailIcon />
             <AlertDescription>
               <Trans

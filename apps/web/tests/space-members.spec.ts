@@ -169,8 +169,7 @@ test.describe("Space members", () => {
 
     const inviteRow = memberRow(page, inviteeEmail);
     await expect(inviteRow).toBeVisible();
-    await inviteRow.getByRole("button", { name: "More options" }).click();
-    await page.getByRole("menuitem", { name: "Cancel invite" }).click();
+    await inviteRow.getByRole("button", { name: "Cancel" }).click();
     await page.getByRole("button", { name: "Confirm" }).click();
 
     await expect(page.getByText("Invite canceled successfully")).toBeVisible();
