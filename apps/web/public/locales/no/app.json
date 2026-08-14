@@ -519,7 +519,7 @@
   "optionalLabel": "(Valgfritt)",
   "optionCount": "{count, plural, one {# alternativ} other {# alternativer}}",
   "optionsSelected": "{count, plural, =0 {Ingen valgt} one {# alternativ valgt} other {# alternativer valgt}}",
-  "optionVoteBreakdown": "{yesScore} ja, {ifNeedBeScore} om nødvendig},{",
+  "optionVoteBreakdown": "{yesScore} ja, {ifNeedBeScore} om nødvendig",
   "or": "Eller",
   "organizationName": "Organisasjonsnavn",
   "organizationNamePlaceholder": "f.eks. Acme Corp",

@@ -519,7 +519,7 @@
   "optionalLabel": "(Facultatif)",
   "optionCount": "{count, plural, one {# option} other {# options}}",
   "optionsSelected": "{count, plural, =0 {Aucune option sélectionnée} one {# option sélectionnée} other {# options sélectionnées}}",
-  "optionVoteBreakdown": "{yesScore} oui, {ifNeedBeScore} si besoin},{",
+  "optionVoteBreakdown": "{yesScore} oui, {ifNeedBeScore} si besoin",
   "or": "Ou",
   "organizationName": "Nom de l'organisation",
   "organizationNamePlaceholder": "p. ex. Acme Corp",
