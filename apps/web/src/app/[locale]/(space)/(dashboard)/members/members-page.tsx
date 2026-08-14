@@ -65,7 +65,7 @@ export function MembersPage({
         </PageHeaderContent>
         {canInviteMembers ? (
           <PageHeaderActions>
-            <p className="text-muted-foreground text-sm">
+            <p className="mr-2 text-muted-foreground text-sm">
               <Trans
                 i18nKey="seatsAvailable"
                 defaults="{count, plural, =0 {No seats available} one {# seat available} other {# seats available}}"
