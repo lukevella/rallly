@@ -13,6 +13,12 @@
       ],
       "url": "https://ral1477.rallly.test",
       "autoPort": true
+    },
+    {
+      "name": "docs",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@rallly/docs", "dev", "--port", "3333"],
+      "port": 3333
     }
   ]
 }

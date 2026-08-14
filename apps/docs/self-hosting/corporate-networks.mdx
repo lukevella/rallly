@@ -1,0 +1,99 @@
+---
+icon: network-wired
+title: Corporate Networks
+description: Run Rallly behind a corporate proxy or TLS-intercepting firewall.
+---
+
+Corporate networks often restrict outbound traffic in two ways: all egress must pass through an explicit proxy, and/or outbound TLS is intercepted and re-signed with an internal root certificate authority that Node.js does not trust. Either one breaks Rallly's outbound HTTPS requests. [License activation](/self-hosting/licensing), which connects to `licensing.rallly.co` on port 443, is usually where you notice it first, but any outbound call is affected. Some networks require both fixes below together.
+
+If your server can reach the internet directly and your network does not intercept TLS, none of this applies and you can skip this page.
+
+## Routing traffic through a proxy
+
+Rallly honours the standard `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variables for outbound requests. Set them in `.env`:
+
+```sh
+HTTPS_PROXY=http://proxy.internal.example.com:8080
+HTTP_PROXY=http://proxy.internal.example.com:8080
+NO_PROXY=garage,db
+```
+
+<Note>
+  Available from v4.12.3 and later. Earlier versions ignore these variables entirely, so if you're on an older version, [update](/self-hosting/management#updating) first.
+</Note>
+
+- If your proxy requires basic authentication, include the credentials in the URL: `http://user:password@proxy.internal.example.com:8080`.
+- Loopback traffic is never sent through the proxy, and the container healthcheck bypasses proxy settings automatically.
+- The `NO_PROXY` entries above keep traffic to the stack's bundled storage (`garage`) and database (`db`) services off the proxy.
+- The lowercase variants (`http_proxy`, `https_proxy`, `no_proxy`) are also recognised. If both `no_proxy` and `NO_PROXY` are set, the lowercase value wins.
+
+Apply the change with `./rallly.sh restart`.
+
+## Trusting a custom root CA
+
+If your network intercepts TLS, the proxy terminates each HTTPS connection and re-signs it with your organisation's internal root CA. Node.js only trusts its built-in certificate authorities, so these connections fail until you tell Rallly about the internal CA.
+
+Set `CA_CERT_FILE` in `.env` to the absolute path of a PEM certificate file on the host:
+
+```sh
+CA_CERT_FILE=/opt/rallly/certs/corporate-root-ca.pem
+```
+
+The file is mounted read-only into the `web` container and added to Node's trust store. It is trusted **in addition to** the built-in certificate authorities, so certificates from public websites keep validating as before. When `CA_CERT_FILE` is unset, this feature is completely inert.
+
+Apply the change with `./rallly.sh restart`. Node reads the file once at startup, so if you later replace the certificate on disk, restart again to pick it up.
+
+<Note>
+  If `CA_CERT_FILE` points to a path that doesn't exist, the stack refuses to start with an error naming the path. This is deliberate: it catches typos that would otherwise fail silently.
+</Note>
+
+To verify the certificate is mounted and readable inside the container:
+
+```sh
+docker compose exec web openssl x509 -in /etc/ssl/certs/rallly-custom-ca.pem -noout -subject
+```
+
+Success prints the CA's subject line. `Unable to load certificate` means the file at `CA_CERT_FILE` is missing or not valid PEM.
+
+### Obtaining the certificate
+
+The file must be in PEM format: base64 text starting with `-----BEGIN CERTIFICATE-----`. Multiple certificates can be concatenated into one file.
+
+The best source is your IT department: ask for the organisation's **root CA certificate**. The root stays valid as the proxy reissues per-host certificates, so this is the option that keeps working.
+
+If IT hands you a DER-encoded file (binary, often `.crt` or `.cer`), convert it:
+
+```sh
+openssl x509 -inform DER -in ca.crt -out ca.pem
+```
+
+As a fallback, you can export a certificate from the chain the proxy presents. Run this **from the affected server**:
+
+```sh
+openssl s_client -showcerts -connect licensing.rallly.co:443 </dev/null 2>/dev/null | openssl x509 -outform PEM > ca.pem
+```
+
+Note that `openssl` does not read the proxy environment variables. On a network with no direct egress, add `-proxy proxy.internal.example.com:8080` to the command so the connection goes through your proxy.
+
+Two caveats: this writes only the leaf certificate, so it stops working when the proxy reissues it — treat it as a stopgap until IT provides the root. It also doubles as a diagnostic — inspect the exported certificate's subject:
+
+```sh
+openssl x509 -in ca.pem -noout -subject
+```
+
+If the subject names your organisation instead of `licensing.rallly.co`, TLS interception is confirmed.
+
+## Diagnosing failures
+
+Watch the logs while triggering the failing request (for example, a license activation attempt):
+
+```sh
+./rallly.sh logs web
+```
+
+| Error in logs | Cause | Fix |
+|:--------------|:------|:----|
+| `UNABLE_TO_VERIFY_LEAF_SIGNATURE`, `SELF_SIGNED_CERT_IN_CHAIN`, or `unable to get local issuer certificate` | TLS is intercepted and re-signed by an untrusted CA | Set [`CA_CERT_FILE`](#trusting-a-custom-root-ca) |
+| `ENOTFOUND` | DNS resolution for the host is blocked | Allow DNS for the host, or route through a proxy that resolves it |
+| `ETIMEDOUT` or `ECONNREFUSED` | No direct route to the host | Configure the [proxy variables](#routing-traffic-through-a-proxy) (v4.12.3+), or request a firewall exception for `licensing.rallly.co` on port 443 |
+| `EAI_AGAIN` with no connection attempts | Proxy-only network with no external DNS, on a version before v4.12.3 that ignores proxy variables | [Update](/self-hosting/management#updating) to v4.12.3 or later, then configure the proxy variables |
