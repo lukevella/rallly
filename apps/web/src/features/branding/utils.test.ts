@@ -61,7 +61,6 @@ describe("resolveBrandingConfig", () => {
         appName: "Env App",
         logo: "https://example.com/logo.svg",
         logoIcon: "https://example.com/icon.png",
-        logoHeight: 40,
         hideAttribution: true,
       },
     });
@@ -69,7 +68,6 @@ describe("resolveBrandingConfig", () => {
     expect(config.appName).toBe("Env App");
     expect(config.logo.light).toBe("https://example.com/logo.svg");
     expect(config.logoIcon).toBe("https://example.com/icon.png");
-    expect(config.logoHeight).toBe(40);
     expect(config.hideAttribution).toBe(true);
   });
 
@@ -89,7 +87,6 @@ describe("resolveBrandingConfig", () => {
         appName: "Env App",
         logo: "https://env.example.com/logo.svg",
         logoIcon: "https://env.example.com/icon.png",
-        logoHeight: 24,
         hideAttribution: true,
       },
     });
@@ -198,25 +195,25 @@ describe("resolveBrandingConfig", () => {
     );
   });
 
-  it("clamps the logo height from any source and defaults to 32", () => {
+  it("clamps the stored logo height and defaults to 32", () => {
+    const dbValues = {
+      appName: null,
+      primaryColor: null,
+      primaryColorDark: null,
+      logo: null,
+      logoDark: null,
+      logoIcon: null,
+      hideAttribution: null,
+    };
+
     expect(
-      resolveBrandingConfig({
-        db: {
-          appName: null,
-          primaryColor: null,
-          primaryColorDark: null,
-          logo: null,
-          logoDark: null,
-          logoIcon: null,
-          logoHeight: 500,
-          hideAttribution: null,
-        },
-      }).logoHeight,
+      resolveBrandingConfig({ db: { ...dbValues, logoHeight: 500 } })
+        .logoHeight,
     ).toBe(64);
 
-    expect(resolveBrandingConfig({ env: { logoHeight: 8 } }).logoHeight).toBe(
-      16,
-    );
+    expect(
+      resolveBrandingConfig({ db: { ...dbValues, logoHeight: 8 } }).logoHeight,
+    ).toBe(16);
 
     expect(resolveBrandingConfig({}).logoHeight).toBe(DEFAULT_LOGO_HEIGHT);
   });

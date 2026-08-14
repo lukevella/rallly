@@ -137,15 +137,6 @@ export const env = createEnv({
     LOGO_URL_DARK: z.url().optional(),
     LOGO_ICON_URL: z.url().optional(),
     /**
-     * Logo height in pixels, clamped to 16-64
-     * @default 32
-     */
-    LOGO_HEIGHT: z.coerce
-      .number()
-      .int()
-      .transform((value) => Math.min(64, Math.max(16, value)))
-      .optional(),
-    /**
      * Hide attribution text on invite pages and emails
      * @default "false"
      */
@@ -290,7 +281,6 @@ export const env = createEnv({
     LOGO_URL: process.env.LOGO_URL,
     LOGO_URL_DARK: process.env.LOGO_URL_DARK,
     LOGO_ICON_URL: process.env.LOGO_ICON_URL,
-    LOGO_HEIGHT: process.env.LOGO_HEIGHT,
     APP_NAME: process.env.APP_NAME,
     HIDE_ATTRIBUTION: process.env.HIDE_ATTRIBUTION,
     RATE_LIMIT_ENABLED: process.env.RATE_LIMIT_ENABLED,

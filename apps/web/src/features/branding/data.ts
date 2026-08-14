@@ -20,7 +20,6 @@ function getEnvBrandingValues() {
     logo: env.LOGO_URL,
     logoDark: env.LOGO_URL_DARK,
     logoIcon: env.LOGO_ICON_URL,
-    logoHeight: env.LOGO_HEIGHT,
     hideAttribution: env.HIDE_ATTRIBUTION === "true",
   };
 }
