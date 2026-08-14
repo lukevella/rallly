@@ -1,6 +1,6 @@
 "use client";
 
-import { useFeatureFlagEnabled } from "@rallly/posthog/client";
+import { posthog, useFeatureFlagEnabled } from "@rallly/posthog/client";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -10,6 +10,7 @@ import {
   SidebarMenuItem,
 } from "@rallly/ui/sidebar";
 import {
+  ArrowUpRightIcon,
   BellIcon,
   BoltIcon,
   CalendarIcon,
@@ -23,6 +24,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
+import type React from "react";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import { useSpace } from "@/features/space/client";
 import { useAuthedUser } from "@/features/user/client";
@@ -103,7 +105,14 @@ export function SpaceSidebarMenu() {
   const pathname = usePathname();
   const isBillingEnabled = useFeatureFlag("billing");
   const isEventTypesEnabled = useFeatureFlag("eventTypes");
-  const menuItems = [
+  const menuItems: {
+    id: string;
+    label: string;
+    icon: React.ReactNode;
+    href: string;
+    suffix?: React.ReactNode;
+    onClick?: () => void;
+  }[] = [
     {
       id: "general",
       label: t("general", { defaultValue: "General" }),
@@ -114,7 +123,11 @@ export function SpaceSidebarMenu() {
       id: "members",
       label: t("members", { defaultValue: "Members" }),
       icon: <UsersIcon />,
-      href: "/settings/members",
+      href: "/members",
+      suffix: <ArrowUpRightIcon className="ml-auto" />,
+      onClick: () => {
+        posthog?.capture("space_settings:members_link_click");
+      },
     },
     ...(isEventTypesEnabled
       ? [
@@ -147,12 +160,14 @@ export function SpaceSidebarMenu() {
               <HoverPrefetchLink
                 href={item.href}
                 className="flex items-center gap-x-2"
+                onClick={item.onClick}
               />
             }
             isActive={pathname.startsWith(item.href)}
           >
             {item.icon}
             {item.label}
+            {item.suffix}
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}

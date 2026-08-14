@@ -119,7 +119,7 @@ export function SpaceDropdown({
             </Icon>
             <Trans i18nKey="spaceSettings" defaults="Space settings" />
           </DropdownMenuItem>
-          <DropdownMenuItem render={<Link href="/settings/members" />}>
+          <DropdownMenuItem render={<Link href="/members" />}>
             <Icon>
               <UserPlusIcon />
             </Icon>
