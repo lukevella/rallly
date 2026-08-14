@@ -32,6 +32,7 @@ export type ColorPickerProps = Pick<
   /** Rendered as an inline-end addon, for actions such as save or reset. */
   actions?: React.ReactNode;
   className?: string;
+  disabled?: boolean;
   /** Applied to the hex input, which is the control an external label names. */
   "aria-labelledby"?: string;
   "aria-describedby"?: string;
@@ -41,9 +42,11 @@ export type { Color };
 export { parseColor } from "react-aria-components";
 
 function HexColorInput({
+  disabled,
   "aria-labelledby": labelledBy,
   "aria-describedby": describedBy,
 }: {
+  disabled?: boolean;
   "aria-labelledby"?: string;
   "aria-describedby"?: string;
 }) {
@@ -60,9 +63,13 @@ function HexColorInput({
   const { inputProps } = useColorField(
     // An external label wins; the generic fallback only applies when the
     // picker is used without one.
-    labelledBy
-      ? { "aria-labelledby": labelledBy, "aria-describedby": describedBy }
-      : { "aria-label": "Hex color", "aria-describedby": describedBy },
+    {
+      isDisabled: disabled,
+      "aria-describedby": describedBy,
+      ...(labelledBy
+        ? { "aria-labelledby": labelledBy }
+        : { "aria-label": "Hex color" }),
+    },
     state,
     inputRef,
   );
@@ -80,6 +87,7 @@ function HexColorInput({
 export function ColorPicker({
   actions,
   className,
+  disabled,
   "aria-labelledby": labelledBy,
   "aria-describedby": describedBy,
   ...props
@@ -89,11 +97,12 @@ export function ColorPicker({
       <Popover>
         <InputGroup className={cn("w-32", className)}>
           <InputGroupAddon align="inline-start">
-            <PopoverTrigger render={<InputGroupButton />}>
+            <PopoverTrigger render={<InputGroupButton disabled={disabled} />}>
               <ColorSwatch className="size-4 rounded-sm border border-black/10" />
             </PopoverTrigger>
           </InputGroupAddon>
           <HexColorInput
+            disabled={disabled}
             aria-labelledby={labelledBy}
             aria-describedby={describedBy}
           />
