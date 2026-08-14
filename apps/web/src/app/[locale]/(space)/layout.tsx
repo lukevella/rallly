@@ -37,7 +37,11 @@ async function SpaceGate({ children }: { children: React.ReactNode }) {
           <TierProvider tier={space.tier}>
             <SpaceProvider space={space}>
               {children}
-              <PayWall />
+              <PayWall
+                spaceName={space.name}
+                spaceImage={space.image}
+                primaryColor={space.primaryColor}
+              />
             </SpaceProvider>
           </TierProvider>
         </DateTimeProvider>

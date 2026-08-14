@@ -49,7 +49,11 @@ async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
         >
           <TierProvider tier={tier}>
             {children}
-            <PayWall />
+            <PayWall
+              spaceName={space?.name}
+              spaceImage={space?.image}
+              primaryColor={space?.primaryColor}
+            />
           </TierProvider>
         </DeviceDateTimeProvider>
       </UserProvider>

@@ -26,6 +26,7 @@ import {
 } from "@/components/page-layout";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
+import { BrandingPreview } from "@/features/branding/components/branding-preview";
 import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
 import {
   updateSpaceAction,
@@ -35,7 +36,6 @@ import { useSpace } from "@/features/space/client";
 import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { BrandingPreview } from "./branding-preview";
 import { RemoveAttributionSetting } from "./remove-attribution-setting";
 import { SpaceSettingsForm } from "./space-settings-form";
 

@@ -27,9 +27,6 @@ const PREVIEW_HEIGHT = 252;
  * The card is deliberately taller than the frame and cropped, with a fade at
  * the bottom edge, to read as a window onto a longer page rather than a
  * complete card whose content happens to be sparse.
- *
- * Sits in the SettingHint slot of the row whose switch controls it, so the
- * preview reads as evidence for that setting rather than a separate panel.
  */
 export function BrandingPreview({
   spaceName,
