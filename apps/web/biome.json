@@ -253,7 +253,6 @@
         "src/app/*/(space)/settings/preferences/components/date-time-preferences.tsx",
         "src/app/*/accept-invite/*/page.tsx",
         "src/app/*/invite/*/page.tsx",
-        "src/app/*/control-panel/settings/actions.ts",
         "src/app/*/control-panel/users/page.tsx",
         "src/app/*/e/*/components/rsvp-area.tsx"
       ],
@@ -296,7 +295,6 @@
         "src/app/*/(space)/settings/profile/components/account-deletion-summary.tsx",
         "src/app/*/(space)/settings/security/page.tsx",
         "src/app/*/(space)/settings/spaces/page.tsx",
-        "src/app/*/control-panel/branding/page.tsx",
         "src/app/*/control-panel/license/page.tsx",
         "src/app/*/control-panel/page.tsx",
         "src/app/*/control-panel/settings/page.tsx",

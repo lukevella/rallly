@@ -6,9 +6,7 @@ import {
   FieldLabel,
   FieldTitle,
 } from "@rallly/ui/field";
-import { Input } from "@rallly/ui/input";
-import { Switch } from "@rallly/ui/switch";
-import { CodeIcon, GemIcon } from "lucide-react";
+import { CodeIcon, ContainerIcon, GemIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { Trans } from "react-i18next/TransWithoutContext";
 import {
@@ -26,26 +24,28 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { getCustomBrandingConfig } from "@/features/branding/data";
-import { loadInstanceLicense } from "@/features/licensing/data";
+import { loadBrandingSettings } from "@/features/branding/loaders";
 import { getTranslation } from "@/i18n/server";
+import { AppNameField } from "./components/app-name-field";
+import { HideAttributionField } from "./components/hide-attribution-field";
+import { PrimaryColorField } from "./components/primary-color-field";
 
-async function loadData() {
-  const [license, brandingConfig] = await Promise.all([
-    loadInstanceLicense(),
-    getCustomBrandingConfig(),
-  ]);
-
-  return {
-    primaryColorLight: brandingConfig.primaryColor.light,
-    primaryColorDark: brandingConfig.primaryColor.dark,
-    logoUrlLight: brandingConfig.logo.light,
-    logoUrlDark: brandingConfig.logo.dark,
-    hasWhiteLabelAddon: license?.whiteLabelAddon ?? false,
-    logoIconUrl: brandingConfig.logoIcon,
-    hideAttribution: brandingConfig.hideAttribution,
-    appName: brandingConfig.appName,
-  };
+async function ConfiguredByEnvironmentVariableAlert() {
+  const { t, i18n } = await getTranslation();
+  return (
+    <Alert variant="note">
+      <ContainerIcon />
+      <AlertDescription>
+        <Trans
+          t={t}
+          i18n={i18n}
+          ns="app"
+          i18nKey="configuredByEnvironmentVariable"
+          defaults="This setting has been configured by environment variable."
+        />
+      </AlertDescription>
+    </Alert>
+  );
 }
 
 async function SetEnvironmentVariableAlert({ variable }: { variable: string }) {
@@ -73,15 +73,16 @@ async function SetEnvironmentVariableAlert({ variable }: { variable: string }) {
 
 export default async function BrandingPage() {
   const {
-    primaryColorLight,
+    hasWhiteLabelAddon,
+    appName,
+    primaryColor,
     primaryColorDark,
+    hideAttribution,
     logoUrlLight,
     logoUrlDark,
     logoIconUrl,
-    hasWhiteLabelAddon,
-    hideAttribution,
-    appName,
-  } = await loadData();
+    envConfigured,
+  } = await loadBrandingSettings();
   const { t, i18n } = await getTranslation();
 
   return (
@@ -101,8 +102,8 @@ export default async function BrandingPage() {
             t={t}
             i18n={i18n}
             ns="app"
-            i18nKey="brandingDescription"
-            defaults="View your instance branding configuration"
+            i18nKey="brandingSettingsDescription"
+            defaults="Customize your instance branding"
           />
         </SettingsPageDescription>
       </SettingsPageHeader>
@@ -156,8 +157,8 @@ export default async function BrandingPage() {
                   t={t}
                   i18n={i18n}
                   ns="app"
-                  i18nKey="brandingDescription"
-                  defaults="View your instance branding configuration"
+                  i18nKey="brandingGeneralDescription"
+                  defaults="Set the name of your instance"
                 />
               </PageSectionDescription>
             </PageSectionHeader>
@@ -176,14 +177,14 @@ export default async function BrandingPage() {
                         />
                       </FieldLabel>
                     </FieldContent>
-                    <Input
-                      id="app-name"
-                      className="w-56"
-                      value={appName}
-                      readOnly
+                    <AppNameField
+                      defaultValue={appName}
+                      disabled={!hasWhiteLabelAddon}
                     />
                   </Field>
-                  <SetEnvironmentVariableAlert variable="APP_NAME" />
+                  {envConfigured.appName ? (
+                    <ConfiguredByEnvironmentVariableAlert />
+                  ) : null}
                 </Field>
               </FieldGroup>
             </PageSectionContent>
@@ -214,7 +215,7 @@ export default async function BrandingPage() {
                 <Field>
                   <Field orientation="responsive">
                     <FieldContent>
-                      <FieldTitle>
+                      <FieldTitle id="primary-color-label">
                         <Trans
                           t={t}
                           i18n={i18n}
@@ -224,22 +225,21 @@ export default async function BrandingPage() {
                         />
                       </FieldTitle>
                     </FieldContent>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="size-8 rounded border"
-                        style={{ backgroundColor: primaryColorLight }}
-                      />
-                      <span className="font-mono text-sm">
-                        {primaryColorLight}
-                      </span>
-                    </div>
+                    <PrimaryColorField
+                      field="primaryColor"
+                      defaultValue={primaryColor}
+                      disabled={!hasWhiteLabelAddon}
+                      aria-labelledby="primary-color-label"
+                    />
                   </Field>
-                  <SetEnvironmentVariableAlert variable="PRIMARY_COLOR" />
+                  {envConfigured.primaryColor ? (
+                    <ConfiguredByEnvironmentVariableAlert />
+                  ) : null}
                 </Field>
                 <Field>
                   <Field orientation="responsive">
                     <FieldContent>
-                      <FieldTitle>
+                      <FieldTitle id="primary-color-dark-label">
                         <Trans
                           t={t}
                           i18n={i18n}
@@ -249,17 +249,16 @@ export default async function BrandingPage() {
                         />
                       </FieldTitle>
                     </FieldContent>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="size-8 rounded border"
-                        style={{ backgroundColor: primaryColorDark }}
-                      />
-                      <span className="font-mono text-sm">
-                        {primaryColorDark}
-                      </span>
-                    </div>
+                    <PrimaryColorField
+                      field="primaryColorDark"
+                      defaultValue={primaryColorDark}
+                      disabled={!hasWhiteLabelAddon}
+                      aria-labelledby="primary-color-dark-label"
+                    />
                   </Field>
-                  <SetEnvironmentVariableAlert variable="PRIMARY_COLOR_DARK" />
+                  {envConfigured.primaryColorDark ? (
+                    <ConfiguredByEnvironmentVariableAlert />
+                  ) : null}
                 </Field>
               </FieldGroup>
             </PageSectionContent>
@@ -410,13 +409,14 @@ export default async function BrandingPage() {
                         />
                       </FieldLabel>
                     </FieldContent>
-                    <Switch
-                      id="hide-attribution"
-                      checked={hideAttribution}
-                      disabled
+                    <HideAttributionField
+                      defaultValue={hideAttribution}
+                      disabled={!hasWhiteLabelAddon}
                     />
                   </Field>
-                  <SetEnvironmentVariableAlert variable="HIDE_ATTRIBUTION" />
+                  {envConfigured.hideAttribution ? (
+                    <ConfiguredByEnvironmentVariableAlert />
+                  ) : null}
                 </Field>
               </FieldGroup>
             </PageSectionContent>
