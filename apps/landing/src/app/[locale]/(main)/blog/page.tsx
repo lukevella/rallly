@@ -62,7 +62,7 @@ export async function generateMetadata(props: {
     }),
     description: t("blogDescription", {
       ns: "blog",
-      defaultValue: "News, updates and announcement about Rallly.",
+      defaultValue: "News, updates and announcements about Rallly.",
     }),
   };
 }

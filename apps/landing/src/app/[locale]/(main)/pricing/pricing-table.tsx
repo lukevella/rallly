@@ -123,7 +123,7 @@ export function PriceTables() {
                   t={t}
                   ns="pricing"
                   i18nKey="annualBenefit"
-                  defaults="{count} months free!"
+                  defaults="{count} months free"
                   values={{
                     count: 4,
                   }}
@@ -160,12 +160,7 @@ export function PriceTables() {
               className: "w-full",
             })}
           >
-            <Trans
-              t={t}
-              ns="pricing"
-              i18nKey="upgrade"
-              defaults="Go to billing"
-            />
+            <Trans t={t} ns="pricing" i18nKey="upgrade" defaults="Upgrade" />
           </Link>
           <BillingPlanPerks>
             <BillingPlanPerk pro={true}>
