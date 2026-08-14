@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Bonus from "@/components/home/bonus";
+import { FinalCta } from "@/components/home/final-cta";
 import { MarketingHero } from "@/components/home/hero";
 import { BigTestimonial, Marketing, MentionedBy } from "@/components/marketing";
 import { getTranslation } from "@/i18n/server";
@@ -34,6 +35,7 @@ export default async function Page(props: {
         <BigTestimonial />
       </div>
       <MentionedBy />
+      <FinalCta />
     </Marketing>
   );
 }
