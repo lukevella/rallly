@@ -22,6 +22,7 @@
   "new": "Új",
   "pcmagQuote": "\"Állítsd össze időpont szavazások a lehető legrövidebb idő alatt.\"",
   "popsciQuote": "\"A tökéletes választás, ha a résztvevő visszajelzéseket egyszerűen akarod kezelni.\"",
+  "statsLast30Days": "Az elmúlt 30 napban <b>{voterCount, plural, one {# személy szavazott} other {# személy szavaztak}}</b> <b>{pollCount, plural, one {# szavazáson} other {# szavazásokon}}</b>.",
   "subheading": "Szervezz csoportos találkozókat email adok-kapok nélkül",
   "viaTrustpilot": "Trustpilot által",
   "when2meetAlternative": "Egy modern When2Meet alternatíva",

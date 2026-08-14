@@ -22,6 +22,7 @@
   "new": "Nuovo",
   "pcmagQuote": "Imposta un sondaggio di pianificazione in pochissimo tempo",
   "popsciQuote": "La scelta perfetta se volete mantenere il vostro RSVP semplice",
+  "statsLast30Days": "<b>{voterCount, plural, one {# persona ha votato} other {# persone hanno votato}}</b> in <b>{pollCount, plural, one {# sondaggio} other {# sondaggi}}</b> negli ultimi 30 giorni",
   "subheading": "Coordinare riunioni di gruppo senza lo scambio continuo di email",
   "viaTrustpilot": "via Trustpilot",
   "when2meetAlternative": "Un'alternativa moderna a When2Meet",
