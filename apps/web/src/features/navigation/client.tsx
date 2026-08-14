@@ -6,6 +6,7 @@ import {
   CalendarDaysIcon,
   CalendarIcon,
   HomeIcon,
+  UsersIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -81,6 +82,19 @@ export const useSpaceMenu = () => {
                   },
                 ]
               : []),
+          ],
+        },
+        {
+          id: "space",
+          title: t("space", { defaultValue: "Space" }),
+          items: [
+            {
+              id: "members",
+              label: t("members", { defaultValue: "Members" }),
+              href: "/members",
+              icon: UsersIcon,
+              isActive: pathname === "/members",
+            },
           ],
         },
       ],

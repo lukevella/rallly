@@ -68,9 +68,9 @@ function mainContent(page: Page) {
   return page.locator("#main-content");
 }
 
-async function gotoMembersSettings(page: Page, email: string) {
+async function gotoMembersPage(page: Page, email: string) {
   await loginWithEmail(page, { email });
-  await page.goto("/settings/members");
+  await page.goto("/members");
   await page.getByRole("heading", { name: "Members" }).waitFor();
 }
 
@@ -95,7 +95,7 @@ test.describe("Space members", () => {
     const owner = await createSpaceAdmin({ name: "Invite Owner", seats: 3 });
     const inviteeEmail = `invitee-${runId}@example.com`;
 
-    await gotoMembersSettings(page, owner.email);
+    await gotoMembersPage(page, owner.email);
     await expect(
       mainContent(page).getByText("1 of 3 seats used"),
     ).toBeVisible();
@@ -154,7 +154,7 @@ test.describe("Space members", () => {
       },
     });
 
-    await gotoMembersSettings(page, owner.email);
+    await gotoMembersPage(page, owner.email);
 
     const inviteRow = memberRow(page, inviteeEmail);
     await expect(inviteRow).toBeVisible();
@@ -173,7 +173,7 @@ test.describe("Space members", () => {
       name: "Role Member",
     });
 
-    await gotoMembersSettings(page, owner.email);
+    await gotoMembersPage(page, owner.email);
 
     const row = memberRow(page, member.email);
     await expect(row.getByText("Member", { exact: true })).toBeVisible();
@@ -191,7 +191,7 @@ test.describe("Space members", () => {
       name: "Removable Member",
     });
 
-    await gotoMembersSettings(page, owner.email);
+    await gotoMembersPage(page, owner.email);
     await expect(
       mainContent(page).getByText("2 of 3 seats used"),
     ).toBeVisible();
@@ -214,7 +214,7 @@ test.describe("Space members", () => {
   }) => {
     const owner = await createSpaceAdmin({ name: "Full Owner", seats: 1 });
 
-    await gotoMembersSettings(page, owner.email);
+    await gotoMembersPage(page, owner.email);
 
     await expect(
       mainContent(page).getByText("1 of 1 seats used"),

@@ -154,7 +154,7 @@ export async function DashboardHome({
               </TileTitle>
             </Tile>
 
-            <Tile render={<HoverPrefetchLink href="/settings/members" />}>
+            <Tile render={<HoverPrefetchLink href="/members" />}>
               <MembersPageIcon />
               <TileTitle>
                 <Trans

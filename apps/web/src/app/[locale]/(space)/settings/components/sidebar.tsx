@@ -10,6 +10,7 @@ import {
   SidebarMenuItem,
 } from "@rallly/ui/sidebar";
 import {
+  ArrowUpRightIcon,
   BellIcon,
   BoltIcon,
   CalendarIcon,
@@ -23,6 +24,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
+import type React from "react";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import { useSpace } from "@/features/space/client";
 import { useAuthedUser } from "@/features/user/client";
@@ -103,7 +105,13 @@ export function SpaceSidebarMenu() {
   const pathname = usePathname();
   const isBillingEnabled = useFeatureFlag("billing");
   const isEventTypesEnabled = useFeatureFlag("eventTypes");
-  const menuItems = [
+  const menuItems: {
+    id: string;
+    label: string;
+    icon: React.ReactNode;
+    href: string;
+    suffix?: React.ReactNode;
+  }[] = [
     {
       id: "general",
       label: t("general", { defaultValue: "General" }),
@@ -114,7 +122,8 @@ export function SpaceSidebarMenu() {
       id: "members",
       label: t("members", { defaultValue: "Members" }),
       icon: <UsersIcon />,
-      href: "/settings/members",
+      href: "/members",
+      suffix: <ArrowUpRightIcon className="ml-auto" />,
     },
     ...(isEventTypesEnabled
       ? [
@@ -153,6 +162,7 @@ export function SpaceSidebarMenu() {
           >
             {item.icon}
             {item.label}
+            {item.suffix}
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}

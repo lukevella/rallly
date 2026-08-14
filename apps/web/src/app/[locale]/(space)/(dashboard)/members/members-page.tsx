@@ -13,6 +13,9 @@ import Link from "next/link";
 import { IfCloudHosted, IfSelfHosted } from "@/components/environment";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import {
+  PageContainer,
+  PageContent,
+  PageHeader,
   PageSection,
   PageSectionContent,
   PageSectionDescription,
@@ -20,14 +23,8 @@ import {
   PageSectionGroup,
   PageSectionHeader,
   PageSectionTitle,
+  PageTitle,
 } from "@/components/page-layout";
-import {
-  SettingsPage,
-  SettingsPageContent,
-  SettingsPageDescription,
-  SettingsPageHeader,
-  SettingsPageTitle,
-} from "@/components/settings-layout";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { showPayWall } from "@/features/billing/client";
 import { useSpace } from "@/features/space/client";
@@ -39,7 +36,7 @@ import { InviteDropdownMenu } from "./components/invite-dropdown-menu";
 import { InviteMemberButton } from "./components/invite-member-button";
 import { MemberDropdownMenu } from "./components/member-dropdown-menu";
 
-export function MembersSettingsPageClient({
+export function MembersPage({
   totalSeats,
   usedSeats,
 }: {
@@ -53,19 +50,13 @@ export function MembersSettingsPageClient({
   const hasInactiveMembers = space.data.tier === "hobby" && members.total > 1;
 
   return (
-    <SettingsPage>
-      <SettingsPageHeader>
-        <SettingsPageTitle>
+    <PageContainer>
+      <PageHeader>
+        <PageTitle>
           <Trans i18nKey="members" defaults="Members" />
-        </SettingsPageTitle>
-        <SettingsPageDescription>
-          <Trans
-            i18nKey="membersDescription"
-            defaults="Members have access to your space"
-          />
-        </SettingsPageDescription>
-      </SettingsPageHeader>
-      <SettingsPageContent>
+        </PageTitle>
+      </PageHeader>
+      <PageContent>
         <PageSectionGroup>
           <PageSection>
             <PageSectionContent>
@@ -287,7 +278,7 @@ export function MembersSettingsPageClient({
             </>
           ) : null}
         </PageSectionGroup>
-      </SettingsPageContent>
-    </SettingsPage>
+      </PageContent>
+    </PageContainer>
   );
 }
