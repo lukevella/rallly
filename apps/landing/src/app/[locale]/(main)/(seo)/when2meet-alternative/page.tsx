@@ -11,7 +11,7 @@ import { getTranslation } from "@/i18n/server";
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
 }) {
-  cacheLife("max");
+  cacheLife("days");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["home"]);
   return (

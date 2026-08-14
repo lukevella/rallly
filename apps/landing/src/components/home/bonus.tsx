@@ -15,7 +15,7 @@ export async function Bonus(props: { locale: string }) {
         t={t}
         ns="home"
         i18nKey="statsLast30Days"
-        defaults="<b>{voterCount, number} people</b> voted on <b>{pollCount, number} polls</b> in the last 30 days"
+        defaults="<b>{voterCount, plural, one {# person} other {# people}}</b> voted on <b>{pollCount, plural, one {# poll} other {# polls}}</b> in the last 30 days"
         values={{ voterCount, pollCount }}
         components={{
           b: <strong className="font-semibold text-gray-800" />,

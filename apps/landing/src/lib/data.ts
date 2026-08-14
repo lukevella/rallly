@@ -10,7 +10,13 @@ export const getMonthlyPollCount = async () => {
   cacheLife("days");
   return prisma.poll.count({
     where: {
-      createdAt: { gte: new Date(Date.now() - THIRTY_DAYS_MS) },
+      deleted: false,
+      participants: {
+        some: {
+          createdAt: { gte: new Date(Date.now() - THIRTY_DAYS_MS) },
+          deleted: false,
+        },
+      },
     },
   });
 };

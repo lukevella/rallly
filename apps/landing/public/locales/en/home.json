@@ -22,7 +22,7 @@
   "new": "New",
   "pcmagQuote": "“Set up a scheduling poll in as little time as possible.”",
   "popsciQuote": "“The perfect pick if you want to keep your RSVPs simple.”",
-  "statsLast30Days": "<b>{voterCount, number} people</b> voted on <b>{pollCount, number} polls</b> in the last 30 days",
+  "statsLast30Days": "<b>{voterCount, plural, one {# person} other {# people}}</b> voted on <b>{pollCount, plural, one {# poll} other {# polls}}</b> in the last 30 days",
   "subheading": "Coordinate group meetings without the back-and-forth emails",
   "viaTrustpilot": "via Trustpilot",
   "when2meetAlternative": "A Modern When2Meet Alternative",
