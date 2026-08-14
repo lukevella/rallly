@@ -67,7 +67,7 @@ const FAQ = async (props: { locale: string }) => {
           t={t}
           ns="pricing"
           i18nKey="whenPollInactiveAnswer"
-          defaults="Polls become inactive when all date options are in the past AND the poll has not been accessed for over 30 days. Inactive polls are automatically deleted if you do not have a paid subscription."
+          defaults="Polls become inactive when all date options are in the past AND there has been no activity for over 30 days. Activity includes new votes, comments, or changes to the poll. Inactive polls are automatically deleted if you do not have a paid subscription."
         />
       </p>
       <h3 className="mt-6 mb-2 font-bold text-lg">
