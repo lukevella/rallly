@@ -59,10 +59,10 @@ export function InvitePage() {
           <ResponsiveResults />
         </VotingForm>
         <PollFooter />
-        <div className="fixed right-4 bottom-4 z-40 lg:right-6 lg:bottom-6">
+        <div className="fixed right-4 bottom-15 z-40 lg:right-6 lg:bottom-6">
           <CommentsSheet className="rounded-full shadow-lg" />
         </div>
-        <div className="h-12 lg:hidden" />
+        <div className="h-24 lg:hidden" />
       </main>
     </div>
   );
