@@ -29,8 +29,10 @@ export default async function Page(props: {
           ns: "home",
         })}
       />
-      <Bonus locale={locale} />
-      <BigTestimonial />
+      <div className="space-y-8">
+        <Bonus locale={locale} />
+        <BigTestimonial />
+      </div>
       <MentionedBy />
     </Marketing>
   );

@@ -3,13 +3,25 @@ import "server-only";
 import { prisma } from "@rallly/database";
 import { cacheLife } from "next/cache";
 
-export const getUserCount = async () => {
+const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
+export const getMonthlyPollCount = async () => {
   "use cache";
   cacheLife("days");
-  const userCount = await prisma.user.count({
+  return prisma.poll.count({
     where: {
-      isAnonymous: false,
+      createdAt: { gte: new Date(Date.now() - THIRTY_DAYS_MS) },
     },
   });
-  return userCount;
+};
+
+export const getMonthlyVoterCount = async () => {
+  "use cache";
+  cacheLife("days");
+  return prisma.participant.count({
+    where: {
+      createdAt: { gte: new Date(Date.now() - THIRTY_DAYS_MS) },
+      deleted: false,
+    },
+  });
 };
