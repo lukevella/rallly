@@ -16,12 +16,8 @@ import {
   ColorThumb,
   SliderTrack,
 } from "react-aria-components";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "./input-group";
+import { Button } from "./button";
+import { Input } from "./input";
 import { cn } from "./lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
@@ -29,11 +25,9 @@ export type ColorPickerProps = Pick<
   RAColorPickerProps,
   "value" | "onChange" | "defaultValue"
 > & {
-  /** Rendered as an inline-end addon, for actions such as save or reset. */
-  actions?: React.ReactNode;
   className?: string;
   disabled?: boolean;
-  /** Applied to the hex input, which is the control an external label names. */
+  /** Applied to the swatch trigger, which is the control an external label names. */
   "aria-labelledby"?: string;
   "aria-describedby"?: string;
 };
@@ -41,15 +35,7 @@ export type ColorPickerProps = Pick<
 export type { Color };
 export { parseColor } from "react-aria-components";
 
-function HexColorInput({
-  disabled,
-  "aria-labelledby": labelledBy,
-  "aria-describedby": describedBy,
-}: {
-  disabled?: boolean;
-  "aria-labelledby"?: string;
-  "aria-describedby"?: string;
-}) {
+function HexColorInput() {
   const pickerState = React.useContext(ColorPickerStateContext);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -61,31 +47,21 @@ function HexColorInput({
   });
 
   const { inputProps } = useColorField(
-    // An external label wins; the generic fallback only applies when the
-    // picker is used without one.
-    {
-      isDisabled: disabled,
-      "aria-describedby": describedBy,
-      ...(labelledBy
-        ? { "aria-labelledby": labelledBy }
-        : { "aria-label": "Hex color" }),
-    },
+    { "aria-label": "Hex color" },
     state,
     inputRef,
   );
 
   return (
-    <InputGroupInput
+    <Input
       {...inputProps}
       ref={inputRef}
-      data-slot="input-group-control"
-      className="flex-1 rounded-none border-0 bg-transparent font-mono text-sm uppercase shadow-none outline-none ring-0 focus-visible:ring-0"
+      className="mt-2 h-8 w-full font-mono text-sm uppercase"
     />
   );
 }
 
 export function ColorPicker({
-  actions,
   className,
   disabled,
   "aria-labelledby": labelledBy,
@@ -95,22 +71,22 @@ export function ColorPicker({
   return (
     <ColorPickerPrimitive {...props}>
       <Popover>
-        <InputGroup className={cn("w-32", className)}>
-          <InputGroupAddon align="inline-start">
-            <PopoverTrigger render={<InputGroupButton disabled={disabled} />}>
-              <ColorSwatch className="size-4 rounded-sm border border-black/10" />
-            </PopoverTrigger>
-          </InputGroupAddon>
-          <HexColorInput
-            disabled={disabled}
-            aria-labelledby={labelledBy}
-            aria-describedby={describedBy}
-          />
-          {actions ? (
-            <InputGroupAddon align="inline-end">{actions}</InputGroupAddon>
-          ) : null}
-        </InputGroup>
-        <PopoverContent align="start" className="w-48">
+        <PopoverTrigger
+          render={
+            <Button
+              variant="default"
+              size="icon"
+              disabled={disabled}
+              className={className}
+              aria-labelledby={labelledBy}
+              aria-describedby={describedBy}
+              {...(labelledBy ? {} : { "aria-label": "Choose color" })}
+            />
+          }
+        >
+          <ColorSwatch className="size-5 rounded-sm border border-black/10" />
+        </PopoverTrigger>
+        <PopoverContent align="end" className="w-48">
           <ColorArea
             colorSpace="hsb"
             xChannel="saturation"
@@ -135,6 +111,7 @@ export function ColorPicker({
               />
             </SliderTrack>
           </ColorSlider>
+          <HexColorInput />
         </PopoverContent>
       </Popover>
     </ColorPickerPrimitive>

@@ -116,7 +116,7 @@ export function CustomBrandingSection({
           <SpaceSettingsForm space={space} disabled={disabled} />
           <Field orientation="responsive">
             <FieldContent>
-              <FieldTitle>
+              <FieldTitle id="primary-color-label">
                 <Trans
                   i18nKey="primaryColorSettingTitle"
                   defaults="Primary color"
@@ -138,6 +138,7 @@ export function CustomBrandingSection({
               onSave={handleSave}
               onReset={handleReset}
               showReset={!isDefault}
+              aria-labelledby="primary-color-label"
             />
           </Field>
           <IfCloudHosted>
