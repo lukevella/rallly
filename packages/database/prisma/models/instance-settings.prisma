@@ -6,6 +6,17 @@ model InstanceSettings {
   // Anonymous identifier used when the instance checks for updates
   instanceId String @unique @default(dbgenerated("gen_random_uuid()")) @map("instance_id") @db.Uuid
 
+  // Branding (unset values fall through to env vars, then defaults)
+  appName          String?  @map("app_name")
+  primaryColor     String?  @map("primary_color")
+  primaryColorDark String?  @map("primary_color_dark")
+  // Logo values are storage keys or absolute URLs
+  logo             String?
+  logoDark         String?  @map("logo_dark")
+  logoIcon         String?  @map("logo_icon")
+  logoHeight       Int?     @map("logo_height")
+  hideAttribution  Boolean? @map("hide_attribution")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 

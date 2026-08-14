@@ -14,6 +14,7 @@ export interface BrandingConfig {
     dark: string;
   };
   logoIcon: string;
+  logoHeight: number;
   hideAttribution: boolean;
   appName: string;
 }
