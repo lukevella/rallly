@@ -1,6 +1,6 @@
 "use client";
 
-import { useFeatureFlagEnabled } from "@rallly/posthog/client";
+import { posthog, useFeatureFlagEnabled } from "@rallly/posthog/client";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -111,6 +111,7 @@ export function SpaceSidebarMenu() {
     icon: React.ReactNode;
     href: string;
     suffix?: React.ReactNode;
+    onClick?: () => void;
   }[] = [
     {
       id: "general",
@@ -124,6 +125,9 @@ export function SpaceSidebarMenu() {
       icon: <UsersIcon />,
       href: "/members",
       suffix: <ArrowUpRightIcon className="ml-auto" />,
+      onClick: () => {
+        posthog?.capture("space_settings:members_link_click");
+      },
     },
     ...(isEventTypesEnabled
       ? [
@@ -156,6 +160,7 @@ export function SpaceSidebarMenu() {
               <HoverPrefetchLink
                 href={item.href}
                 className="flex items-center gap-x-2"
+                onClick={item.onClick}
               />
             }
             isActive={pathname.startsWith(item.href)}
