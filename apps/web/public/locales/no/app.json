@@ -628,7 +628,6 @@
   "resetPasswordFooter": "Trenger du ikke tilbakestille? <a>Tilbake til innlogging</a>",
   "resetPasswordInvalidTokenMessage": "Lenken for tilbakestilling av passord er ugyldig eller utløpt. Be om en ny.",
   "resetPasswordTitle": "Tilbakestill passord",
-  "resetToDefault": "Tilbakestill til standard",
   "respondedOn": "Besvart den",
   "response": "Svar",
   "responseOptions": "Svaralternativer",
