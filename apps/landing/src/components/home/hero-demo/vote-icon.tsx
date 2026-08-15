@@ -12,7 +12,7 @@ export const IfNeedBeIcon = ({ className }: { className?: string }) => (
     aria-hidden="true"
     className={className}
   >
-    <path d="M4 13.5c2.5-5 5-5 7-1s4.5 4 7-1" />
+    <path d="M20 13.5c-2.5-5-5-5-7-1s-4.5 4-7-1" />
   </svg>
 );
 
