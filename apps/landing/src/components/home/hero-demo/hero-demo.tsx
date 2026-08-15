@@ -35,12 +35,12 @@ export const HeroDemo = async ({ locale }: { locale: string }) => {
 
   return (
     <div className="relative z-10 mb-12 lg:mx-auto lg:w-fit lg:max-w-full">
-      <div className="overflow-hidden lg:overflow-visible">
-        <div aria-hidden="true" className="w-max lg:w-auto">
+      <div className="mr-[calc(50%-50vw)] overflow-hidden lg:mr-0 lg:overflow-visible">
+        <div aria-hidden="true" className="w-max [zoom:0.65] lg:[zoom:1]">
           <DesktopDemo locale={locale} days={days} scores={scores} t={t} />
         </div>
       </div>
-      <div className="absolute right-2 -bottom-12 w-[280px] max-w-[calc(100vw-3rem)] lg:-right-6 lg:w-[320px]">
+      <div className="hidden lg:absolute lg:-right-6 lg:-bottom-12 lg:block lg:w-[320px]">
         <TryItPrompt />
         <MobileDemo days={mobileDays} />
       </div>
