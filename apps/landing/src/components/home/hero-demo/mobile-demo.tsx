@@ -1,6 +1,6 @@
 "use client";
 import { posthog } from "@rallly/posthog/client";
-import { buttonVariants, cn } from "@rallly/ui";
+import { cn } from "@rallly/ui";
 import { CircleCheckIcon, UserIcon, XIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import Link from "next/link";
@@ -221,7 +221,7 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
                   onClick={() => {
                     posthog?.capture("landing:hero_demo_modal_cta_click");
                   }}
-                  className={buttonVariants()}
+                  className="font-medium text-indigo-600 text-xs hover:underline"
                 >
                   <Trans
                     ns="home"

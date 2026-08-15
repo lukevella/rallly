@@ -158,10 +158,8 @@ export const DesktopDemo = ({
                   <div
                     key={option.start.toISOString()}
                     className={cn(
-                      "border-t pt-2.5 text-gray-500 text-xs",
-                      slotIndex === 0
-                        ? "border-gray-100 border-l"
-                        : "border-gray-50 border-l",
+                      "border-gray-100 border-t pt-2.5 text-gray-500 text-xs",
+                      slotIndex === 0 && "border-l",
                     )}
                   >
                     {slotIndex === 0 && (
@@ -175,7 +173,7 @@ export const DesktopDemo = ({
                   </div>
                 )),
               )}
-              <div className="border-gray-100 border-t" />
+              <div />
               {days.flatMap((day) =>
                 day.options.map((option, slotIndex) => {
                   const optionIndex =
