@@ -124,7 +124,7 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
             </div>
           ))}
         </div>
-        <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 p-3">
+        <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-55% from-white via-85% via-white/70 to-transparent p-3 pt-10">
           <span
             aria-hidden="true"
             className="flex-1 rounded-xl border border-white/60 bg-white/70 py-2.5 text-center font-medium text-gray-800 text-sm shadow-sm backdrop-blur-md"
@@ -188,13 +188,6 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
                     defaults="Your response has been saved"
                   />
                 </div>
-                <p className="mt-1 text-gray-500 text-xs">
-                  <Trans
-                    ns="home"
-                    i18nKey="heroDemoSavedDescription"
-                    defaults="The organizer can now see your availability."
-                  />
-                </p>
               </m.div>
               <m.div
                 initial={{ opacity: 0, y: 6 }}
