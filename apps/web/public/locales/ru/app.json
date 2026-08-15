@@ -628,7 +628,6 @@
   "resetPasswordFooter": "Не нужно сбрасывать? <a>Назад к входу</a>",
   "resetPasswordInvalidTokenMessage": "Ссылка для сброса пароля недействительна или истекла. Пожалуйста, запросите новую.",
   "resetPasswordTitle": "Сброс пароля",
-  "resetToDefault": "Восстановить значения по умолчанию",
   "respondedOn": "Ответ дан",
   "response": "Ответ",
   "responseOptions": "Варианты ответов",
