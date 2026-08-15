@@ -628,7 +628,6 @@
   "resetPasswordFooter": "Behøver du ikke at nulstille? <a>Tilbage til login</a>",
   "resetPasswordInvalidTokenMessage": "Linket til nulstilling af adgangskode er ugyldigt eller er udløbet. Anmod venligst om et nyt.",
   "resetPasswordTitle": "Nulstil adgangskode",
-  "resetToDefault": "Nulstil til standard",
   "respondedOn": "Besvaret den",
   "response": "Svar",
   "responseOptions": "Svarmuligheder",
