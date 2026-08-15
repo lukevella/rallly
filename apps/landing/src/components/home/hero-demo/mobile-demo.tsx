@@ -1,6 +1,6 @@
 import { cn } from "@rallly/ui";
 import type { TFunction } from "i18next";
-import { GlobeIcon, UserIcon, UsersIcon } from "lucide-react";
+import { UserIcon, UsersIcon } from "lucide-react";
 import type { DemoDay, DemoVote } from "./demo-data";
 import { formatDemoParts, getScores } from "./demo-data";
 import { VoteIcon } from "./vote-icon";
@@ -55,13 +55,6 @@ export const MobileDemo = ({
               defaultValue: "You",
             })}
           </span>
-        </div>
-        <div className="flex items-center gap-2 border-gray-100 border-b px-3 py-2.5 text-gray-500 text-xs">
-          <GlobeIcon className="size-3.5" />
-          {t("heroDemoTimeZone", {
-            ns: "home",
-            defaultValue: "London time",
-          })}
         </div>
         <div className="min-h-0 flex-1 overflow-hidden">
           {days.slice(0, 3).map((day) => (

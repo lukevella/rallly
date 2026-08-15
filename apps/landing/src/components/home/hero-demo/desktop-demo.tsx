@@ -2,7 +2,6 @@ import { cn } from "@rallly/ui";
 import type { TFunction } from "i18next";
 import {
   ClockIcon,
-  GlobeIcon,
   LockIcon,
   MapPinIcon,
   Maximize2Icon,
@@ -141,14 +140,6 @@ export const DesktopDemo = ({
                 </span>
               </div>
               <div className="flex items-center gap-3 text-gray-500 text-sm">
-                <span className="flex items-center gap-1.5">
-                  <GlobeIcon className="size-4" />
-                  {t("heroDemoTimeZone", {
-                    ns: "home",
-                    defaultValue: "London time",
-                  })}
-                </span>
-                <span className="text-gray-300">|</span>
                 <span>
                   {t("heroDemoOptionCount", {
                     ns: "home",
