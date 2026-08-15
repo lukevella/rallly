@@ -1,6 +1,6 @@
 "use client";
 import { posthog } from "@rallly/posthog/client";
-import { cn } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import { CircleCheckIcon, UserIcon, UsersIcon, XIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import Link from "next/link";
@@ -137,12 +137,8 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
               posthog?.capture("landing:hero_demo_continue_click");
               setSubmitted(true);
             }}
-            className="relative flex-[2] cursor-pointer rounded-xl bg-indigo-500/90 py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md hover:bg-indigo-500"
+            className="flex-[2] cursor-pointer rounded-xl bg-indigo-500/90 py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md hover:bg-indigo-500"
           >
-            <span
-              aria-hidden="true"
-              className="absolute -inset-1 -z-10 animate-pulse rounded-2xl bg-indigo-400/50 blur-md"
-            />
             <Trans ns="home" i18nKey="heroDemoContinue" defaults="Continue" />
           </button>
         </div>
@@ -152,7 +148,7 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
               initial={{ scale: 0.92, opacity: 0, y: 8 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               transition={{ type: "spring", duration: 0.5, bounce: 0.35 }}
-              className="relative w-full rounded-2xl bg-white p-5 text-center shadow-lg"
+              className="relative flex aspect-[4/3] w-full flex-col items-center justify-center rounded-2xl bg-white p-5 text-center shadow-lg"
             >
               <button
                 type="button"
@@ -208,7 +204,7 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
                   onClick={() => {
                     posthog?.capture("landing:hero_demo_modal_cta_click");
                   }}
-                  className="mt-1.5 inline-block font-medium text-indigo-600 text-xs hover:underline"
+                  className={buttonVariants({ className: "mt-3" })}
                 >
                   <Trans
                     ns="home"
