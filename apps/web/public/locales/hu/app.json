@@ -628,7 +628,6 @@
   "resetPasswordFooter": "Nem kell visszaállítani? <a>Vissza a bejelentkezéshez</a>",
   "resetPasswordInvalidTokenMessage": "A jelszó visszaállító link érvénytelen vagy lejárt. Kérjük, igényelj egy újat.",
   "resetPasswordTitle": "Jelszó visszaállítása",
-  "resetToDefault": "Visszaállítás alaphelyzetbe",
   "respondedOn": "Visszajelzett itt:",
   "response": "Válasz",
   "responseOptions": "Válaszlehetőségek",
