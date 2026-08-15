@@ -628,7 +628,6 @@
   "resetPasswordFooter": "Geen reset nodig? <a>Terug naar login</a>",
   "resetPasswordInvalidTokenMessage": "De link om het wachtwoord te resetten is ongeldig of verlopen. Vraag een nieuwe aan.",
   "resetPasswordTitle": "Wachtwoord resetten",
-  "resetToDefault": "Terugzetten naar standaard",
   "respondedOn": "Gereageerd op",
   "response": "Antwoord",
   "responseOptions": "Reactie-opties",
