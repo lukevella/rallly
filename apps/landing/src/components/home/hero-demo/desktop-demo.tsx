@@ -6,12 +6,12 @@ import {
   Maximize2Icon,
   PlusIcon,
   UserIcon,
-  UsersIcon,
 } from "lucide-react";
 import * as React from "react";
 import type { DemoDay } from "./demo-data";
 import { demoParticipants, formatDemoParts, getInitials } from "./demo-data";
 import { DemoFrame, DemoScreen } from "./demo-frame";
+import { VoteCount } from "./vote-count";
 import { VoteIcon } from "./vote-icon";
 
 export const DesktopDemo = ({
@@ -201,17 +201,7 @@ export const DesktopDemo = ({
                         <ClockIcon className="size-3" />
                         1h
                       </div>
-                      <div
-                        className={cn(
-                          "flex items-center justify-center gap-1",
-                          score === topScore
-                            ? "font-medium text-gray-700"
-                            : "text-gray-400",
-                        )}
-                      >
-                        <UsersIcon className="size-3.5" />
-                        {score}
-                      </div>
+                      <VoteCount count={score} highlight={score === topScore} />
                     </div>
                   );
                 }),

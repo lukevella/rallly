@@ -1,7 +1,7 @@
 "use client";
 import { posthog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
-import { CircleCheckIcon, UserIcon, UsersIcon, XIcon } from "lucide-react";
+import { CircleCheckIcon, UserIcon, XIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import Link from "next/link";
 import * as React from "react";
@@ -10,6 +10,7 @@ import { useTranslation } from "@/i18n/client/use-translation";
 import { linkToApp } from "@/lib/linkToApp";
 import type { DemoVote } from "./demo-data";
 import { DemoFrame, DemoScreen } from "./demo-frame";
+import { VoteCount } from "./vote-count";
 import { VoteIcon } from "./vote-icon";
 
 export type MobileDemoDay = {
@@ -68,6 +69,9 @@ const TriState = ({
 export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
   const { t } = useTranslation("home");
   const [submitted, setSubmitted] = React.useState(false);
+  const topScore = Math.max(
+    ...days.flatMap((day) => day.options.map((option) => option.score)),
+  );
   const [votes, setVotes] = React.useState<
     Record<string, DemoVote | undefined>
   >(() => {
@@ -105,10 +109,11 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
                   <div className="min-w-0 flex-1 text-gray-800 text-xs">
                     {option.time}
                   </div>
-                  <div className="mr-2 flex shrink-0 items-center gap-1 text-gray-400 text-xs">
-                    <UsersIcon className="size-3.5" />
-                    {option.score}
-                  </div>
+                  <VoteCount
+                    count={option.score}
+                    highlight={option.score === topScore}
+                    className="mr-2 shrink-0"
+                  />
                   <TriState
                     label={`${day.label} ${option.time}`}
                     value={votes[option.id]}
@@ -148,7 +153,7 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
               initial={{ scale: 0.92, opacity: 0, y: 8 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               transition={{ type: "spring", duration: 0.5, bounce: 0.35 }}
-              className="relative flex aspect-[4/3] w-full flex-col items-center justify-center rounded-2xl bg-white p-5 text-center shadow-lg"
+              className="relative flex aspect-[4/3] w-full flex-col rounded-2xl bg-white p-4 text-center shadow-lg"
             >
               <button
                 type="button"
@@ -158,37 +163,39 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
               >
                 <XIcon className="size-4" />
               </button>
-              <m.div
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{
-                  type: "spring",
-                  duration: 0.6,
-                  bounce: 0.45,
-                  delay: 0.1,
-                }}
-                className="mx-auto w-fit"
-              >
-                <CircleCheckIcon className="size-9 text-green-500" />
-              </m.div>
-              <m.div
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  type: "spring",
-                  duration: 0.6,
-                  bounce: 0.3,
-                  delay: 0.2,
-                }}
-              >
-                <div className="mt-3 font-semibold text-gray-900 text-sm">
-                  <Trans
-                    ns="home"
-                    i18nKey="heroDemoThatWasEasy"
-                    defaults="That was easy!"
-                  />
-                </div>
-              </m.div>
+              <div className="flex flex-1 flex-col items-center justify-center">
+                <m.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{
+                    type: "spring",
+                    duration: 0.6,
+                    bounce: 0.45,
+                    delay: 0.1,
+                  }}
+                  className="mx-auto w-fit"
+                >
+                  <CircleCheckIcon className="size-9 text-green-500" />
+                </m.div>
+                <m.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    type: "spring",
+                    duration: 0.6,
+                    bounce: 0.3,
+                    delay: 0.2,
+                  }}
+                >
+                  <div className="mt-3 font-semibold text-gray-900 text-sm">
+                    <Trans
+                      ns="home"
+                      i18nKey="heroDemoThatWasEasy"
+                      defaults="That was easy!"
+                    />
+                  </div>
+                </m.div>
+              </div>
               <m.div
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -204,7 +211,7 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
                   onClick={() => {
                     posthog?.capture("landing:hero_demo_modal_cta_click");
                   }}
-                  className={buttonVariants({ className: "mt-3" })}
+                  className={buttonVariants()}
                 >
                   <Trans
                     ns="home"
