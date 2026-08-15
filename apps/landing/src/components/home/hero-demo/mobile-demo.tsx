@@ -148,7 +148,7 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
             }}
             className="flex-[2] cursor-pointer rounded-xl bg-indigo-500/90 py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md hover:bg-indigo-500"
           >
-            <Trans ns="home" i18nKey="heroDemoContinue" defaults="Continue" />
+            <Trans ns="home" i18nKey="heroDemoVote" defaults="Vote" />
           </button>
         </div>
         {submitted && (
