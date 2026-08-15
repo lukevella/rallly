@@ -57,34 +57,36 @@ const Screenshot = () => {
         animate={isLoaded ? "visible" : "hidden"}
         className="relative z-10 mx-auto mb-12 w-fit max-w-full"
       >
-        <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+        <div className="rounded-2xl border bg-white p-2 shadow-sm">
           <div
             aria-hidden="true"
-            className="grid grid-cols-[1fr_auto_1fr] items-center border-b bg-gray-50 px-4 py-2.5"
+            className="grid grid-cols-[1fr_auto_1fr] items-center px-1 pt-0.5 pb-2"
           >
             <div className="flex gap-1.5">
               <span className="size-2.5 rounded-full bg-gray-200" />
               <span className="size-2.5 rounded-full bg-gray-200" />
               <span className="size-2.5 rounded-full bg-gray-200" />
             </div>
-            <div className="rounded-md border bg-white px-3 py-1 text-gray-500 text-xs">
+            <div className="rounded-full bg-gray-100 px-3 py-1 text-gray-500 text-xs">
               rallly.co/invite/mdXPow2ZbLqW
             </div>
             <div />
           </div>
-          <Image
-            src="/static/images/hero-shot.png"
-            alt="Screenshot of Rallly Poll"
-            width={944}
-            height={727}
-            quality={100}
-            preload
-            onLoad={() => {
-              setIsLoaded(true);
-            }}
-          />
+          <div className="overflow-hidden rounded-lg border">
+            <Image
+              src="/static/images/hero-shot.png"
+              alt="Screenshot of Rallly Poll"
+              width={944}
+              height={727}
+              quality={100}
+              preload
+              onLoad={() => {
+                setIsLoaded(true);
+              }}
+            />
+          </div>
         </div>
-        <div className="absolute -right-6 -bottom-12 hidden w-[200px] lg:block">
+        <div className="absolute -right-6 -bottom-12 hidden w-[280px] lg:block">
           <div className="rounded-[2.2rem] border bg-white p-1.5 shadow-sm">
             <div className="overflow-hidden rounded-[1.8rem] border">
               <Image
