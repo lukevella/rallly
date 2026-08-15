@@ -65,9 +65,9 @@ export const DesktopDemo = ({
               <div className="space-y-1.5 text-gray-600 text-sm">
                 <div className="flex items-center gap-2">
                   <UserIcon className="size-4 text-gray-400" />
-                  {t("heroDemoOrganizedBy", {
+                  {t("heroDemoOrganizer", {
                     ns: "home",
-                    defaultValue: "Organized by Luke",
+                    defaultValue: "Organized by Sofia Almeida",
                   })}
                 </div>
                 <div className="flex items-center gap-2">
