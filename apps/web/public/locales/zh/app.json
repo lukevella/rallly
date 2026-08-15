@@ -624,7 +624,6 @@
   "resetPasswordFooter": "不需要重置？ <a>返回登录</a>",
   "resetPasswordInvalidTokenMessage": "重置密码链接无效或已过期。请请求一个新的链接。",
   "resetPasswordTitle": "重置密码",
-  "resetToDefault": "恢复默认",
   "respondedOn": "已回复于",
   "response": "回复",
   "responseOptions": "响应选项",
