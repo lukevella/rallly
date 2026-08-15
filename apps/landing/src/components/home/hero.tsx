@@ -3,7 +3,6 @@ import { posthog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { ChevronRightIcon } from "lucide-react";
-import * as m from "motion/react-m";
 import Link from "next/link";
 import type * as React from "react";
 import { handwritten } from "@/fonts/handwritten";
@@ -12,24 +11,7 @@ import { linkToApp } from "@/lib/linkToApp";
 
 const Callout = () => {
   return (
-    <m.div
-      transition={{
-        delay: 0.5,
-        type: "spring",
-        duration: 1,
-        bounce: 0.4,
-      }}
-      variants={{
-        hidden: { opacity: 0, y: 0, z: 0 },
-        visible: { opacity: 1, y: -10, z: 0 },
-      }}
-      initial="hidden"
-      animate="visible"
-      style={{
-        backfaceVisibility: "hidden",
-      }}
-      className="relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-2 text-gray-50 text-sm subpixel-antialiased shadow-sm"
-    >
+    <div className="relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-2 text-gray-50 text-sm subpixel-antialiased shadow-sm">
       <Trans
         ns="home"
         i18nKey="createPageLikeThis"
@@ -38,7 +20,7 @@ const Callout = () => {
       <span className="absolute top-full left-1/2 z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
       <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-center -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
       <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-center -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-    </m.div>
+    </div>
   );
 };
 
