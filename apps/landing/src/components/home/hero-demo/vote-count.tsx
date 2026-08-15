@@ -15,7 +15,7 @@ export const VoteCount = ({
   <div
     className={cn(
       "flex items-center justify-center gap-1 text-xs",
-      highlight ? "font-medium text-gray-700" : "text-gray-400",
+      highlight ? "font-medium text-gray-700" : "text-gray-500",
       className,
     )}
   >

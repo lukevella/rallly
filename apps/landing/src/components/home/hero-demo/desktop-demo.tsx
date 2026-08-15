@@ -195,7 +195,7 @@ export const DesktopDemo = ({
                       <div className="text-gray-700">
                         {format.time.format(option.start)}
                       </div>
-                      <div className="flex items-center justify-center gap-1 text-gray-400">
+                      <div className="flex items-center justify-center gap-1 text-gray-500">
                         <ClockIcon className="size-3" />
                         1h
                       </div>
@@ -207,7 +207,7 @@ export const DesktopDemo = ({
               {demoParticipants.map((participant) => (
                 <React.Fragment key={participant.name}>
                   <div className="flex items-center gap-2.5 border-gray-100 border-t px-3 py-3 text-left">
-                    <span className="flex size-7 items-center justify-center rounded-full bg-gray-100 font-medium text-[10px] text-gray-500 uppercase">
+                    <span className="flex size-7 items-center justify-center rounded-full bg-gray-100 font-medium text-[10px] text-gray-600 uppercase">
                       {getInitials(participant.name)}
                     </span>
                     <span className="truncate text-gray-800 text-sm">
