@@ -3,6 +3,7 @@ import type { TFunction } from "i18next";
 import { UserIcon, UsersIcon } from "lucide-react";
 import type { DemoDay, DemoVote } from "./demo-data";
 import { formatDemoParts, getScores } from "./demo-data";
+import { DemoFrame, DemoScreen } from "./demo-frame";
 import { VoteIcon } from "./vote-icon";
 
 const yourVotes: DemoVote[] = ["yes", "yes", "ifNeedBe"];
@@ -43,8 +44,8 @@ export const MobileDemo = ({
   let optionIndex = -1;
 
   return (
-    <div className="rounded-[2.2rem] border border-white/60 bg-white/60 p-1.5 shadow-sm backdrop-blur-xl">
-      <div className="flex h-[560px] flex-col overflow-hidden rounded-[1.8rem] border bg-white text-left">
+    <DemoFrame>
+      <DemoScreen className="flex h-[560px] flex-col text-left">
         <div className="flex items-center justify-between border-gray-100 border-b px-3 py-3">
           <span className="flex items-center gap-2 font-medium text-gray-900 text-sm">
             <span className="flex size-6 items-center justify-center rounded-full bg-gray-100">
@@ -97,7 +98,7 @@ export const MobileDemo = ({
             })}
           </span>
         </div>
-      </div>
-    </div>
+      </DemoScreen>
+    </DemoFrame>
   );
 };

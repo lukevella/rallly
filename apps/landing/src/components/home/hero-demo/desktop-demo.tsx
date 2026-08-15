@@ -2,7 +2,6 @@ import { cn } from "@rallly/ui";
 import type { TFunction } from "i18next";
 import {
   ClockIcon,
-  LockIcon,
   MapPinIcon,
   Maximize2Icon,
   PlusIcon,
@@ -12,6 +11,7 @@ import {
 import * as React from "react";
 import type { DemoDay } from "./demo-data";
 import { demoParticipants, formatDemoParts, getInitials } from "./demo-data";
+import { DemoFrame, DemoScreen } from "./demo-frame";
 import { VoteIcon } from "./vote-icon";
 
 export const DesktopDemo = ({
@@ -41,20 +41,8 @@ export const DesktopDemo = ({
   }
 
   return (
-    <div className="rounded-2xl border border-white/60 bg-white/60 p-2 shadow-sm backdrop-blur-xl">
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center px-1 pt-0.5 pb-2">
-        <div className="flex gap-1.5">
-          <span className="size-2.5 rounded-full bg-gray-200" />
-          <span className="size-2.5 rounded-full bg-gray-200" />
-          <span className="size-2.5 rounded-full bg-gray-200" />
-        </div>
-        <div className="flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-gray-500 text-xs">
-          <LockIcon className="size-3 text-gray-400" />
-          rallly.co/invite/mdXPow2ZbLqW
-        </div>
-        <div />
-      </div>
-      <div className="overflow-hidden rounded-lg border bg-gray-100 p-4 sm:p-6">
+    <DemoFrame>
+      <DemoScreen className="bg-gray-100 p-4 sm:p-6">
         <div className="mx-auto w-fit space-y-3 text-left">
           <div className="overflow-hidden rounded-xl border border-gray-200/60 bg-white">
             <div className="h-1.5 bg-gradient-to-r from-indigo-500 to-violet-500" />
@@ -246,7 +234,7 @@ export const DesktopDemo = ({
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </DemoScreen>
+    </DemoFrame>
   );
 };
