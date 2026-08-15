@@ -153,18 +153,28 @@ export const DesktopDemo = ({
                 </div>
               ))}
               <div />
-              {days.map((day) => (
-                <div
-                  key={day.date.toISOString()}
-                  style={{ gridColumn: `span ${day.options.length}` }}
-                  className="border-gray-100 border-t border-l pt-2.5 text-gray-500 text-xs"
-                >
-                  {format.weekday.format(day.date)}
-                  <div className="font-semibold text-base text-gray-900">
-                    {format.dayOfMonth.format(day.date)}
+              {days.flatMap((day) =>
+                day.options.map((option, slotIndex) => (
+                  <div
+                    key={option.start.toISOString()}
+                    className={cn(
+                      "border-t pt-2.5 text-gray-500 text-xs",
+                      slotIndex === 0
+                        ? "border-gray-100 border-l"
+                        : "border-gray-50 border-l",
+                    )}
+                  >
+                    {slotIndex === 0 && (
+                      <>
+                        {format.weekday.format(day.date)}
+                        <div className="font-semibold text-base text-gray-900">
+                          {format.dayOfMonth.format(day.date)}
+                        </div>
+                      </>
+                    )}
                   </div>
-                </div>
-              ))}
+                )),
+              )}
               <div className="border-gray-100 border-t" />
               {days.flatMap((day) =>
                 day.options.map((option, slotIndex) => {
