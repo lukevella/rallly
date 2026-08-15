@@ -628,7 +628,6 @@
   "resetPasswordFooter": "Behöver du inte återställa? <a>Tillbaka till inloggning</a>",
   "resetPasswordInvalidTokenMessage": "Länken för återställning av lösenord är ogiltig eller har gått ut. Begär en ny.",
   "resetPasswordTitle": "Återställ lösenord",
-  "resetToDefault": "Återställ till standard",
   "respondedOn": "Svarade den",
   "response": "Svar",
   "responseOptions": "Svarsalternativ",
