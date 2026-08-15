@@ -181,6 +181,13 @@ export const updateSpaceAction = authActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { space } = ctx;
 
+    if (parsedInput.primaryColor && space.tier !== "pro") {
+      throw new AppError({
+        code: "PAYMENT_REQUIRED",
+        message: "You need a Pro subscription to set a primary color",
+      });
+    }
+
     await updateSpace({
       spaceId: space.id,
       name: parsedInput.name,
