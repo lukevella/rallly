@@ -95,7 +95,14 @@ function assertLocalDatabase() {
   if (!url) {
     throw new Error("DATABASE_URL is not set");
   }
-  const host = new URL(url).hostname;
+  const parsed = new URL(url);
+  // pg honors libpq-style ?host= overrides, which would bypass a check on
+  // the URL authority alone. IPv6 hostnames keep their brackets in URL.
+  const hostOverrides = parsed.searchParams.getAll("host");
+  const host = (hostOverrides.at(-1) ?? parsed.hostname).replace(
+    /^\[|\]$/g,
+    "",
+  );
   if (!["localhost", "127.0.0.1", "::1"].includes(host)) {
     throw new Error(
       `Refusing to seed the demo poll on non-local database host "${host}"`,
