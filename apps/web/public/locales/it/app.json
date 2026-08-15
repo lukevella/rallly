@@ -628,7 +628,6 @@
   "resetPasswordFooter": "Non hai bisogno di resettare? <a>Torna al login</a>",
   "resetPasswordInvalidTokenMessage": "Il link per reimpostare la password non è valido o è scaduto. Si prega di richiederne uno nuovo.",
   "resetPasswordTitle": "Resetta password",
-  "resetToDefault": "Ripristina impostazioni predefinite",
   "respondedOn": "Risposto il",
   "response": "Risposta",
   "responseOptions": "Opzioni di risposta",
