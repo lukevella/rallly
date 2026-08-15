@@ -10,7 +10,7 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-primary text-primary-foreground ring-1 ring-button-outline ring-inset hover:bg-primary/90 dark:bg-primary/80",
+          "bg-primary/90 text-primary-foreground ring-1 ring-button-outline ring-inset hover:bg-primary dark:bg-primary/80 dark:hover:bg-primary",
         destructive:
           "bg-destructive text-destructive-foreground ring-1 ring-button-outline ring-inset hover:bg-destructive/90 dark:bg-destructive/80",
         default:
