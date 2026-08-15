@@ -45,7 +45,7 @@ export const MobileDemo = ({
 
   return (
     <DemoFrame className="rounded-[1.8rem]">
-      <DemoScreen className="flex h-[560px] flex-col rounded-[1.4rem] text-left">
+      <DemoScreen className="relative flex h-[560px] flex-col rounded-[1.4rem] text-left">
         <div className="flex items-center justify-between border-gray-100 border-b px-3 py-3">
           <span className="flex items-center gap-2 font-medium text-gray-900 text-sm">
             <span className="flex size-6 items-center justify-center rounded-full bg-gray-100">
@@ -73,7 +73,7 @@ export const MobileDemo = ({
                     <div className="min-w-0 flex-1 text-gray-800 text-xs">
                       {format.time.formatRange(option.start, option.end)}
                     </div>
-                    <div className="flex shrink-0 items-center gap-1 text-gray-400 text-xs">
+                    <div className="mr-2 flex shrink-0 items-center gap-1 text-gray-400 text-xs">
                       <UsersIcon className="size-3.5" />
                       {scores[optionIndex]}
                     </div>
@@ -84,14 +84,14 @@ export const MobileDemo = ({
             </div>
           ))}
         </div>
-        <div className="flex items-center gap-2 border-gray-100 border-t px-3 py-3">
-          <span className="flex-1 rounded-lg border py-1.5 text-center text-gray-700 text-xs">
+        <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 p-3">
+          <span className="flex-1 rounded-xl border border-white/60 bg-white/70 py-2.5 text-center font-medium text-gray-800 text-sm shadow-sm backdrop-blur-md">
             {t("heroDemoDecline", {
               ns: "home",
               defaultValue: "Decline",
             })}
           </span>
-          <span className="flex-[2] rounded-lg bg-indigo-500 py-1.5 text-center text-white text-xs">
+          <span className="flex-[2] rounded-xl bg-indigo-500/90 py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md">
             {t("heroDemoContinue", {
               ns: "home",
               defaultValue: "Continue",
