@@ -628,7 +628,6 @@
   "resetPasswordFooter": "Vous n'avez pas besoin de réinitialiser ? <a>Retour à la connexion</a>",
   "resetPasswordInvalidTokenMessage": "Le lien de réinitialisation du mot de passe est invalide ou a expiré. Veuillez en demander un nouveau.",
   "resetPasswordTitle": "Réinitialiser le mot de passe",
-  "resetToDefault": "Restaurer les valeurs par défaut",
   "respondedOn": "Répondu le",
   "response": "Réponse",
   "responseOptions": "Options de réponse",
