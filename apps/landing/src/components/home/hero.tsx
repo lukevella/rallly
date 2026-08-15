@@ -32,7 +32,7 @@ const Screenshot = () => {
         style={{
           backfaceVisibility: "hidden",
         }}
-        className="relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-2 text-gray-50 text-sm subpixel-antialiased shadow-huge"
+        className="relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-2 text-gray-50 text-sm subpixel-antialiased shadow-sm"
       >
         <Trans
           ns="home"
@@ -55,13 +55,27 @@ const Screenshot = () => {
         }}
         initial="hidden"
         animate={isLoaded ? "visible" : "hidden"}
-        className="mx-auto w-fit overflow-hidden rounded-md border shadow-huge"
+        className="mx-auto w-fit max-w-full overflow-hidden rounded-xl border bg-white shadow-sm"
       >
+        <div
+          aria-hidden="true"
+          className="grid grid-cols-[1fr_auto_1fr] items-center border-b bg-gray-50 px-4 py-2.5"
+        >
+          <div className="flex gap-1.5">
+            <span className="size-2.5 rounded-full bg-gray-200" />
+            <span className="size-2.5 rounded-full bg-gray-200" />
+            <span className="size-2.5 rounded-full bg-gray-200" />
+          </div>
+          <div className="rounded-md border bg-white px-3 py-1 text-gray-500 text-xs">
+            rallly.co/invite/monthly-meetup
+          </div>
+          <div />
+        </div>
         <Image
           src="/static/images/hero-shot.png"
           alt="Screenshot of Rallly Poll"
-          width={960}
-          height={815}
+          width={944}
+          height={727}
           quality={100}
           preload
           onLoad={() => {

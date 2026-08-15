@@ -188,18 +188,33 @@ async function capture() {
   await page.getByRole("button", { name: "Cancel" }).click();
   await page.waitForTimeout(1000);
 
+  // The attribution footer is redundant inside the landing page's own
+  // browser-chrome frame; hide it before measuring so the clip tightens.
+  await page
+    .getByText("Powered by")
+    .first()
+    .evaluate((element) => {
+      const block = element.closest("p, div");
+      if (block instanceof HTMLElement) {
+        block.style.display = "none";
+      }
+    });
+
   const main = await page.locator("main").boundingBox();
   if (!main) {
     throw new Error("Could not measure the invite page content");
   }
-  const pad = 32;
+  // Symmetric padding so the shot sits balanced inside the hero's
+  // browser-chrome frame.
+  const pad = 24;
+  const top = Math.max(main.y - pad, 0);
   await page.screenshot({
     path: OUTPUT,
     clip: {
       x: main.x - pad,
-      y: 0,
+      y: top,
       width: main.width + pad * 2,
-      height: main.y + main.height + pad,
+      height: main.y - top + main.height + pad,
     },
   });
   await browser.close();
