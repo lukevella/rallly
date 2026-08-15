@@ -153,7 +153,7 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
               initial={{ scale: 0.92, opacity: 0, y: 8 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               transition={{ type: "spring", duration: 0.5, bounce: 0.35 }}
-              className="relative flex aspect-[4/3] w-full flex-col rounded-2xl bg-white p-4 text-center shadow-lg"
+              className="relative flex aspect-[4/3] w-full flex-col items-center justify-center rounded-2xl bg-white p-4 text-center shadow-lg"
             >
               <button
                 type="button"
@@ -163,39 +163,48 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
               >
                 <XIcon className="size-4" />
               </button>
-              <div className="flex flex-1 flex-col items-center justify-center">
-                <m.div
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{
-                    type: "spring",
-                    duration: 0.6,
-                    bounce: 0.45,
-                    delay: 0.1,
-                  }}
-                  className="mx-auto w-fit"
-                >
-                  <CircleCheckIcon className="size-9 text-green-500" />
-                </m.div>
-                <m.div
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    type: "spring",
-                    duration: 0.6,
-                    bounce: 0.3,
-                    delay: 0.2,
-                  }}
-                >
-                  <div className="mt-3 font-semibold text-gray-900 text-sm">
-                    <Trans
-                      ns="home"
-                      i18nKey="heroDemoThatWasEasy"
-                      defaults="That was easy!"
-                    />
-                  </div>
-                </m.div>
-              </div>
+              <m.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{
+                  type: "spring",
+                  duration: 0.6,
+                  bounce: 0.45,
+                  delay: 0.1,
+                }}
+                className="relative mb-3 inline-block"
+              >
+                <div className="absolute top-0 right-0 bottom-2 -left-1.5 origin-bottom -rotate-12 scale-95 rounded-xl bg-white opacity-75 shadow-xs ring-1 ring-gray-200 ring-inset" />
+                <div className="absolute top-0 -right-1.5 bottom-2 left-0 origin-bottom rotate-12 scale-95 rounded-xl bg-white opacity-75 shadow-xs ring-1 ring-gray-200 ring-inset" />
+                <div className="relative inline-flex rounded-xl bg-white p-2.5 shadow-xs ring-1 ring-gray-200 ring-inset">
+                  <CircleCheckIcon className="size-5 text-green-500" />
+                </div>
+              </m.div>
+              <m.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  type: "spring",
+                  duration: 0.6,
+                  bounce: 0.3,
+                  delay: 0.2,
+                }}
+              >
+                <p className="font-semibold text-gray-900 text-sm">
+                  <Trans
+                    ns="home"
+                    i18nKey="heroDemoThatWasEasy"
+                    defaults="That was easy!"
+                  />
+                </p>
+                <p className="mt-1.5 text-gray-500 text-xs">
+                  <Trans
+                    ns="home"
+                    i18nKey="heroDemoEasyDescription"
+                    defaults="That's all it takes to respond to a poll."
+                  />
+                </p>
+              </m.div>
               <m.div
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -205,6 +214,7 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
                   bounce: 0.3,
                   delay: 0.3,
                 }}
+                className="mt-4"
               >
                 <Link
                   href={linkToApp("/new")}
