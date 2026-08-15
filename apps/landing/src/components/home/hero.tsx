@@ -9,21 +9,6 @@ import { handwritten } from "@/fonts/handwritten";
 import { Trans } from "@/i18n/client/trans";
 import { linkToApp } from "@/lib/linkToApp";
 
-const Callout = () => {
-  return (
-    <div className="relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-2 text-gray-50 text-sm subpixel-antialiased shadow-sm">
-      <Trans
-        ns="home"
-        i18nKey="createPageLikeThis"
-        defaults="Create a page like this in seconds!"
-      />
-      <span className="absolute top-full left-1/2 z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
-      <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-center -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-      <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-center -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-    </div>
-  );
-};
-
 export const MarketingHero = ({
   title,
   description,
@@ -94,10 +79,7 @@ export const MarketingHero = ({
           </p>
         </div>
       </header>
-      <section>
-        <Callout />
-        {demo}
-      </section>
+      <section>{demo}</section>
     </article>
   );
 };

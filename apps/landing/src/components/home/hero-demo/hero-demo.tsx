@@ -2,6 +2,7 @@ import { getTranslation } from "@/i18n/server";
 import { formatDemoParts, getDemoDays, getScores } from "./demo-data";
 import { DesktopDemo } from "./desktop-demo";
 import { MobileDemo } from "./mobile-demo";
+import { TryItPrompt } from "./try-it-prompt";
 
 // A presentational replica of the poll screens, deliberately decoupled from
 // apps/web so the landing page can't be broken by app changes. Dates are
@@ -40,6 +41,7 @@ export const HeroDemo = async ({ locale }: { locale: string }) => {
         </div>
       </div>
       <div className="absolute right-2 -bottom-12 w-[280px] max-w-[calc(100vw-3rem)] lg:-right-6 lg:w-[320px]">
+        <TryItPrompt />
         <MobileDemo days={mobileDays} />
       </div>
     </div>

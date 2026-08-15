@@ -1,7 +1,6 @@
 {
   "createAPoll": "Create a meeting poll",
   "createASchedulingPoll": "Create a scheduling poll",
-  "createPageLikeThis": "Create a page like this in seconds!",
   "doodleAlternative": "The best free Doodle alternative",
   "doodleAlternativeDescription": "Rallly is the Doodle alternative that everyone is looking for. Thousands of users have already made the switch and are now enjoying professional ad-free meeting polls in an intuitive and easy-to-use interface.        ",
   "doodleAlternativeFinalCtaDescription": "Create your first poll in seconds and see why so many people left Doodle behind.",
@@ -35,6 +34,7 @@
   "heroDemoResponseOptions": "Response options",
   "heroDemoThatWasEasy": "That was easy!",
   "heroDemoTitle": "Q3 Board Meeting",
+  "heroDemoTryIt": "Go ahead, try voting!",
   "heroDemoYes": "Yes",
   "heroDemoYou": "You",
   "hint": "It's free! No login required.",
