@@ -1,7 +1,6 @@
 "use client";
 
-import type { Color } from "@rallly/ui/color-picker";
-import { ColorPicker, parseColor } from "@rallly/ui/color-picker";
+import { parseColor } from "@rallly/ui/color-picker";
 import {
   Field,
   FieldContent,
@@ -10,12 +9,10 @@ import {
   FieldLabel,
   FieldTitle,
 } from "@rallly/ui/field";
-import { InputGroupButton } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import { CheckIcon, RotateCcwIcon } from "lucide-react";
 import React from "react";
+import { ColorPickerWithSaveButton } from "@/components/color-picker-with-save-button";
 import { IfCloudHosted } from "@/components/environment";
 import {
   PageSection,
@@ -52,8 +49,6 @@ export function CustomBrandingSection({
   const currentColor = space.primaryColor ?? DEFAULT_PRIMARY_COLOR;
   const [color, setColor] = React.useState(() => parseColor(currentColor));
   const hexColor = color.toString("hex");
-  // Stored values may differ in case from what the picker emits
-  const isDirty = hexColor.toLowerCase() !== currentColor.toLowerCase();
   const isDefault =
     hexColor.toLowerCase() === DEFAULT_PRIMARY_COLOR.toLowerCase();
 
@@ -119,7 +114,7 @@ export function CustomBrandingSection({
           <SpaceSettingsForm space={space} disabled={disabled} />
           <Field orientation="responsive">
             <FieldContent>
-              <FieldTitle>
+              <FieldTitle id="primary-color-label">
                 <Trans
                   i18nKey="primaryColorSettingTitle"
                   defaults="Primary color"
@@ -132,15 +127,15 @@ export function CustomBrandingSection({
                 />
               </FieldDescription>
             </FieldContent>
-            <PrimaryColorField
+            <ColorPickerWithSaveButton
               value={color}
               onChange={setColor}
               disabled={disabled}
-              isDefault={isDefault}
-              isDirty={isDirty}
               isSaving={updateSpace.isExecuting}
               onSave={handleSave}
               onReset={handleReset}
+              showReset={!isDefault}
+              aria-labelledby="primary-color-label"
             />
           </Field>
           <IfCloudHosted>
@@ -180,80 +175,5 @@ export function CustomBrandingSection({
         </FieldGroup>
       </PageSectionContent>
     </PageSection>
-  );
-}
-
-function PrimaryColorField({
-  value,
-  onChange,
-  disabled,
-  isDefault,
-  isDirty,
-  isSaving,
-  onSave,
-  onReset,
-}: {
-  value: Color;
-  onChange: (color: Color) => void;
-  disabled: boolean;
-  isDefault: boolean;
-  isDirty: boolean;
-  isSaving: boolean;
-  onSave: () => void;
-  onReset: () => void;
-}) {
-  const { t } = useTranslation();
-
-  return (
-    <ColorPicker
-      className="w-44"
-      value={value}
-      onChange={onChange}
-      actions={
-        disabled ? null : (
-          <>
-            {!isDefault ? (
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <InputGroupButton
-                      size="icon-xs"
-                      onClick={onReset}
-                      aria-label={t("resetToDefault", {
-                        defaultValue: "Reset to default",
-                      })}
-                    >
-                      <RotateCcwIcon />
-                    </InputGroupButton>
-                  }
-                />
-                <TooltipContent>
-                  <Trans i18nKey="resetToDefault" defaults="Reset to default" />
-                </TooltipContent>
-              </Tooltip>
-            ) : null}
-            {isDirty ? (
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <InputGroupButton
-                      size="icon-xs"
-                      onClick={onSave}
-                      loading={isSaving}
-                      aria-label={t("save", { defaultValue: "Save" })}
-                    >
-                      <CheckIcon />
-                    </InputGroupButton>
-                  }
-                />
-                <TooltipContent>
-                  <Trans i18nKey="save" defaults="Save" />
-                </TooltipContent>
-              </Tooltip>
-            ) : null}
-          </>
-        )
-      }
-    />
   );
 }

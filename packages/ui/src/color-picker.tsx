@@ -16,12 +16,8 @@ import {
   ColorThumb,
   SliderTrack,
 } from "react-aria-components";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "./input-group";
+import { Button } from "./button";
+import { Input } from "./input";
 import { cn } from "./lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
@@ -29,10 +25,18 @@ export type ColorPickerProps = Pick<
   RAColorPickerProps,
   "value" | "onChange" | "defaultValue"
 > & {
-  /** Rendered as an inline-end addon, for actions such as save or reset. */
-  actions?: React.ReactNode;
   className?: string;
-  /** Applied to the hex input, which is the control an external label names. */
+  disabled?: boolean;
+  /** Rendered below the hex input, for actions such as save or reset. */
+  footer?: React.ReactNode;
+  /** Localized accessible name for the hex input. */
+  hexInputLabel?: string;
+  /**
+   * Localized fallback name for the swatch trigger, used when no
+   * `aria-labelledby` is given.
+   */
+  "aria-label"?: string;
+  /** Applied to the swatch trigger, which is the control an external label names. */
   "aria-labelledby"?: string;
   "aria-describedby"?: string;
 };
@@ -41,11 +45,11 @@ export type { Color };
 export { parseColor } from "react-aria-components";
 
 function HexColorInput({
-  "aria-labelledby": labelledBy,
-  "aria-describedby": describedBy,
+  disabled,
+  "aria-label": label,
 }: {
-  "aria-labelledby"?: string;
-  "aria-describedby"?: string;
+  disabled?: boolean;
+  "aria-label": string;
 }) {
   const pickerState = React.useContext(ColorPickerStateContext);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -58,28 +62,26 @@ function HexColorInput({
   });
 
   const { inputProps } = useColorField(
-    // An external label wins; the generic fallback only applies when the
-    // picker is used without one.
-    labelledBy
-      ? { "aria-labelledby": labelledBy, "aria-describedby": describedBy }
-      : { "aria-label": "Hex color", "aria-describedby": describedBy },
+    { "aria-label": label, isDisabled: disabled },
     state,
     inputRef,
   );
 
   return (
-    <InputGroupInput
+    <Input
       {...inputProps}
       ref={inputRef}
-      data-slot="input-group-control"
-      className="flex-1 rounded-none border-0 bg-transparent font-mono text-sm uppercase shadow-none outline-none ring-0 focus-visible:ring-0"
+      className="mt-2 h-8 w-full font-mono text-sm uppercase"
     />
   );
 }
 
 export function ColorPicker({
-  actions,
   className,
+  disabled,
+  footer,
+  hexInputLabel = "Hex color",
+  "aria-label": label = "Choose color",
   "aria-labelledby": labelledBy,
   "aria-describedby": describedBy,
   ...props
@@ -87,25 +89,27 @@ export function ColorPicker({
   return (
     <ColorPickerPrimitive {...props}>
       <Popover>
-        <InputGroup className={cn("w-32", className)}>
-          <InputGroupAddon align="inline-start">
-            <PopoverTrigger render={<InputGroupButton />}>
-              <ColorSwatch className="size-4 rounded-sm border border-black/10" />
-            </PopoverTrigger>
-          </InputGroupAddon>
-          <HexColorInput
-            aria-labelledby={labelledBy}
-            aria-describedby={describedBy}
-          />
-          {actions ? (
-            <InputGroupAddon align="inline-end">{actions}</InputGroupAddon>
-          ) : null}
-        </InputGroup>
-        <PopoverContent align="start" className="w-48">
+        <PopoverTrigger
+          render={
+            <Button
+              variant="default"
+              size="icon"
+              disabled={disabled}
+              className={className}
+              aria-labelledby={labelledBy}
+              aria-describedby={describedBy}
+              {...(labelledBy ? {} : { "aria-label": label })}
+            />
+          }
+        >
+          <ColorSwatch className="size-5 rounded-sm border border-black/10" />
+        </PopoverTrigger>
+        <PopoverContent align="end" className="w-48">
           <ColorArea
             colorSpace="hsb"
             xChannel="saturation"
             yChannel="brightness"
+            isDisabled={disabled}
             className="w-full rounded-md"
             style={{ height: 148 }}
           >
@@ -116,7 +120,12 @@ export function ColorPicker({
               )}
             />
           </ColorArea>
-          <ColorSlider colorSpace="hsb" channel="hue" className="w-full">
+          <ColorSlider
+            colorSpace="hsb"
+            channel="hue"
+            isDisabled={disabled}
+            className="w-full"
+          >
             <SliderTrack className="mt-2 h-3 w-full rounded-full">
               <ColorThumb
                 className={cn(
@@ -126,6 +135,8 @@ export function ColorPicker({
               />
             </SliderTrack>
           </ColorSlider>
+          <HexColorInput disabled={disabled} aria-label={hexInputLabel} />
+          {footer ? <div className="mt-2">{footer}</div> : null}
         </PopoverContent>
       </Popover>
     </ColorPickerPrimitive>
