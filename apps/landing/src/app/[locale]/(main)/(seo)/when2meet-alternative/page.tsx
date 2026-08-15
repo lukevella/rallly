@@ -6,6 +6,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import Bonus from "@/components/home/bonus";
 import { FinalCta } from "@/components/home/final-cta";
 import { MarketingHero } from "@/components/home/hero";
+import { HeroDemo } from "@/components/home/hero-demo/hero-demo";
 import { BigTestimonial, Marketing, MentionedBy } from "@/components/marketing";
 import { getTranslation } from "@/i18n/server";
 
@@ -18,6 +19,7 @@ export default async function Page(props: {
   return (
     <Marketing>
       <MarketingHero
+        demo={<HeroDemo locale={locale} />}
         title={t("when2meetAlternative", {
           ns: "home",
         })}
