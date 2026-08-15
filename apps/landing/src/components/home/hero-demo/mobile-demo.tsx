@@ -43,31 +43,30 @@ const TriState = ({
     no: t("heroDemoNo", { defaultValue: "No" }),
   };
   return (
-    <div
-      role="radiogroup"
-      aria-label={label}
-      className="flex h-8 w-24 shrink-0 items-center rounded-lg border border-gray-200/60 bg-gray-100 p-0.5"
-    >
+    <div className="flex h-8 w-24 shrink-0 items-center rounded-lg border border-gray-200/60 bg-gray-100 p-0.5">
       {(["yes", "ifNeedBe", "no"] as const).map((vote) => {
         const isSelected = vote === value;
         return (
-          <button
+          <label
             key={vote}
-            type="button"
-            role="radio"
-            aria-checked={isSelected}
-            aria-label={voteLabels[vote]}
-            onClick={() => onChange(vote)}
             className={cn(
-              "flex h-full flex-1 cursor-pointer items-center justify-center rounded-md",
+              "flex h-full flex-1 cursor-pointer items-center justify-center rounded-md has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-indigo-500",
               isSelected ? "bg-white shadow-sm" : "hover:bg-white/50",
             )}
           >
+            <input
+              type="radio"
+              name={label}
+              checked={isSelected}
+              onChange={() => onChange(vote)}
+              aria-label={voteLabels[vote]}
+              className="sr-only"
+            />
             <VoteIcon
               vote={vote}
               className={cn("size-3.5", !isSelected && "text-gray-400")}
             />
-          </button>
+          </label>
         );
       })}
     </div>
