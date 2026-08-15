@@ -44,8 +44,8 @@ export const MobileDemo = ({
 
   return (
     <div className="rounded-[2.2rem] border bg-white p-1.5 shadow-sm">
-      <div className="flex h-[560px] flex-col overflow-hidden rounded-[1.8rem] border bg-white">
-        <div className="flex items-center justify-between border-gray-100 border-b px-4 py-3">
+      <div className="flex h-[560px] flex-col overflow-hidden rounded-[1.8rem] border bg-white text-left">
+        <div className="flex items-center justify-between border-gray-100 border-b px-3 py-3">
           <span className="flex items-center gap-2 font-medium text-gray-900 text-sm">
             <span className="flex size-6 items-center justify-center rounded-full bg-gray-100">
               <UserIcon className="size-3.5 text-gray-500" />
@@ -55,14 +55,8 @@ export const MobileDemo = ({
               defaultValue: "You",
             })}
           </span>
-          <span className="rounded-lg border px-2.5 py-1 text-gray-600 text-xs">
-            {t("heroDemoCancel", {
-              ns: "home",
-              defaultValue: "Cancel",
-            })}
-          </span>
         </div>
-        <div className="flex items-center gap-2 border-gray-100 border-b px-4 py-2.5 text-gray-500 text-xs">
+        <div className="flex items-center gap-2 border-gray-100 border-b px-3 py-2.5 text-gray-500 text-xs">
           <GlobeIcon className="size-3.5" />
           {t("heroDemoTimeZone", {
             ns: "home",
@@ -72,7 +66,7 @@ export const MobileDemo = ({
         <div className="min-h-0 flex-1 overflow-hidden">
           {days.slice(0, 3).map((day) => (
             <div key={day.date.toISOString()}>
-              <div className="border-gray-100 border-b bg-gray-50/60 px-4 py-2 font-semibold text-gray-900 text-xs">
+              <div className="border-gray-100 border-b bg-gray-50/60 px-3 py-2 font-semibold text-gray-900 text-xs">
                 {format.fullDay.format(day.date)}
               </div>
               {day.options.map((option) => {
@@ -80,7 +74,7 @@ export const MobileDemo = ({
                 return (
                   <div
                     key={option.start.toISOString()}
-                    className="flex items-center justify-between gap-2 border-gray-100 border-b px-4 py-3"
+                    className="flex items-center justify-between gap-2 border-gray-100 border-b px-3 py-3"
                   >
                     <div className="min-w-0 flex-1 text-gray-800 text-xs">
                       {format.time.formatRange(option.start, option.end)}
