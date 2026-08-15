@@ -41,7 +41,7 @@ export const DesktopDemo = ({
   }
 
   return (
-    <div className="rounded-2xl border bg-white p-2 shadow-sm">
+    <div className="rounded-2xl border border-white/60 bg-white/60 p-2 shadow-sm backdrop-blur-xl">
       <div className="grid grid-cols-[1fr_auto_1fr] items-center px-1 pt-0.5 pb-2">
         <div className="flex gap-1.5">
           <span className="size-2.5 rounded-full bg-gray-200" />
