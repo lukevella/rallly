@@ -1,5 +1,5 @@
 /**
- * Regenerates the landing page hero screenshot from a staged demo poll.
+ * Regenerates the landing page hero screenshots from a staged demo poll.
  *
  * With the dev server running:
  *   pnpm --filter @rallly/web capture:hero
@@ -8,7 +8,8 @@
  * The demo poll uses fixed ids, so re-running replaces it.
  */
 import path from "node:path";
-import { chromium } from "@playwright/test";
+import type { Browser, Page } from "@playwright/test";
+import { chromium, devices } from "@playwright/test";
 import { prisma } from "@rallly/database";
 
 const POLL_ID = "hero-demo-poll";
@@ -16,12 +17,14 @@ const USER_ID = "hero-demo-user";
 const SPACE_ID = "hero-demo-space";
 const TIME_ZONE = "Europe/London";
 const BASE_URL = process.env.APP_BASE_URL ?? "http://localhost:3000";
-const OUTPUT = path.resolve(
+const OUTPUT_DIR = path.resolve(
   __dirname,
-  "../../landing/public/static/images/hero-shot.png",
+  "../../landing/public/static/images",
 );
+const DESKTOP_OUTPUT = path.join(OUTPUT_DIR, "hero-shot.png");
+const MOBILE_OUTPUT = path.join(OUTPUT_DIR, "hero-shot-mobile.png");
 
-const VIEWPORT = { width: 1440, height: 1152 };
+const DESKTOP_VIEWPORT = { width: 1440, height: 1152 };
 
 type VoteType = "yes" | "ifNeedBe" | "no";
 
@@ -170,10 +173,31 @@ async function seed() {
   });
 }
 
-async function capture() {
-  const browser = await chromium.launch();
+// Floating and boilerplate UI that doesn't belong in a marketing shot: the
+// attribution footer (redundant inside the landing page's browser-chrome
+// frame), the comments pill, and the Next.js dev indicator.
+async function hideAncillaryUi(page: Page) {
+  await page.evaluate(() => {
+    document.querySelector("nextjs-portal")?.remove();
+    for (const button of document.querySelectorAll("button")) {
+      if (button.textContent?.includes("Comments")) {
+        button.style.display = "none";
+      }
+    }
+    for (const anchor of document.querySelectorAll("a")) {
+      if (anchor.textContent?.includes("rallly.co")) {
+        const block = anchor.closest("p, div");
+        if (block instanceof HTMLElement) {
+          block.style.display = "none";
+        }
+      }
+    }
+  });
+}
+
+async function captureDesktop(browser: Browser) {
   const context = await browser.newContext({
-    viewport: VIEWPORT,
+    viewport: DESKTOP_VIEWPORT,
     deviceScaleFactor: 2,
     timezoneId: TIME_ZONE,
     locale: "en",
@@ -183,22 +207,11 @@ async function capture() {
     waitUntil: "networkidle",
   });
   await page.getByText("Wendy").waitFor();
-  // Dismiss the voting form that opens for new visitors; the hero shows the
-  // poll at rest, not a half-completed response.
+  // Dismiss the voting form that opens for new visitors; the desktop shot
+  // shows the poll at rest, not a half-completed response.
   await page.getByRole("button", { name: "Cancel" }).click();
+  await hideAncillaryUi(page);
   await page.waitForTimeout(1000);
-
-  // The attribution footer is redundant inside the landing page's own
-  // browser-chrome frame; hide it before measuring so the clip tightens.
-  await page
-    .getByText("Powered by")
-    .first()
-    .evaluate((element) => {
-      const block = element.closest("p, div");
-      if (block instanceof HTMLElement) {
-        block.style.display = "none";
-      }
-    });
 
   const main = await page.locator("main").boundingBox();
   if (!main) {
@@ -209,7 +222,7 @@ async function capture() {
   const pad = 24;
   const top = Math.max(main.y - pad, 0);
   await page.screenshot({
-    path: OUTPUT,
+    path: DESKTOP_OUTPUT,
     clip: {
       x: main.x - pad,
       y: top,
@@ -217,14 +230,47 @@ async function capture() {
       height: main.y - top + main.height + pad,
     },
   });
-  await browser.close();
+  await context.close();
+}
+
+async function captureMobile(browser: Browser) {
+  const context = await browser.newContext({
+    ...devices["iPhone 13"],
+    timezoneId: TIME_ZONE,
+    locale: "en",
+  });
+  const page = await context.newPage();
+  await page.goto(`${BASE_URL}/invite/${POLL_ID}`, {
+    waitUntil: "networkidle",
+  });
+  const options = page.getByTestId("poll-option");
+  await options.first().waitFor();
+  // A response in progress shows off the mobile voting flow.
+  await options.nth(0).getByRole("radio", { name: "Yes" }).click();
+  await options.nth(1).getByRole("radio", { name: "Yes" }).click();
+  await options.nth(2).getByRole("radio", { name: "If need be" }).click();
+  await hideAncillaryUi(page);
+  // Fill the phone screen with the voting list rather than the poll header.
+  await page
+    .getByText("You", { exact: true })
+    .first()
+    .evaluate((element) => {
+      element.scrollIntoView({ block: "start" });
+    });
+  await page.waitForTimeout(1000);
+  await page.screenshot({ path: MOBILE_OUTPUT });
+  await context.close();
 }
 
 async function main() {
   await seed();
   console.info("✓ Demo poll seeded");
-  await capture();
-  console.info(`✓ Screenshot saved to ${OUTPUT}`);
+  const browser = await chromium.launch();
+  await captureDesktop(browser);
+  console.info(`✓ Desktop screenshot saved to ${DESKTOP_OUTPUT}`);
+  await captureMobile(browser);
+  console.info(`✓ Mobile screenshot saved to ${MOBILE_OUTPUT}`);
+  await browser.close();
   await prisma.$disconnect();
   process.exit(0);
 }
