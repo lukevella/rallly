@@ -137,8 +137,12 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
               posthog?.capture("landing:hero_demo_continue_click");
               setSubmitted(true);
             }}
-            className="flex-[2] cursor-pointer rounded-xl bg-indigo-500/90 py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md hover:bg-indigo-500"
+            className="relative flex-[2] cursor-pointer rounded-xl bg-indigo-500/90 py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md hover:bg-indigo-500"
           >
+            <span
+              aria-hidden="true"
+              className="absolute -inset-1 -z-10 animate-pulse rounded-2xl bg-indigo-400/50 blur-md"
+            />
             <Trans ns="home" i18nKey="heroDemoContinue" defaults="Continue" />
           </button>
         </div>

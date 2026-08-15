@@ -188,9 +188,9 @@ export const DesktopDemo = ({
                     <div
                       key={option.start.toISOString()}
                       className={cn(
-                        "space-y-1 border-gray-100 border-t py-2.5 text-xs",
+                        "space-y-1 py-2.5 text-xs",
                         slotIndex === 0
-                          ? "border-l"
+                          ? "border-gray-100 border-l"
                           : "border-gray-50 border-l",
                       )}
                     >
