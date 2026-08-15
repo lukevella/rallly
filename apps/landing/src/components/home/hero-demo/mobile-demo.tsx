@@ -82,7 +82,7 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
 
   return (
     <DemoFrame className="rounded-[1.8rem]">
-      <DemoScreen className="relative flex h-[560px] flex-col rounded-[1.4rem] text-left">
+      <DemoScreen className="relative flex h-[620px] flex-col rounded-[1.4rem] text-left">
         <div className="flex items-center justify-between border-gray-100 border-b px-3 py-3">
           <span className="flex items-center gap-2 font-medium text-gray-900 text-sm">
             <span className="flex size-6 items-center justify-center rounded-full bg-gray-100">

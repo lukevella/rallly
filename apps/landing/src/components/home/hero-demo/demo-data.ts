@@ -67,12 +67,13 @@ export function getInitials(name: string) {
     .join("");
 }
 
+// The count badge in the app includes both yes and if-need-be votes.
 export function getScores(days: DemoDay[]) {
   const optionCount = days.reduce((sum, day) => sum + day.options.length, 0);
   return Array.from({ length: optionCount }, (_, index) =>
     demoParticipants.reduce(
       (score, participant) =>
-        participant.votes[index] === "yes" ? score + 1 : score,
+        participant.votes[index] === "no" ? score : score + 1,
       0,
     ),
   );
