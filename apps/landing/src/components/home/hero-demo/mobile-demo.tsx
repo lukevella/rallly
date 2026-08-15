@@ -1,16 +1,14 @@
 "use client";
 import { posthog } from "@rallly/posthog/client";
-import { buttonVariants, cn } from "@rallly/ui";
+import { cn } from "@rallly/ui";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  useDialog,
-} from "@rallly/ui/dialog";
-import { UserIcon, UsersIcon } from "lucide-react";
+  CheckIcon,
+  ChevronRightIcon,
+  UserIcon,
+  UsersIcon,
+  XIcon,
+} from "lucide-react";
+import * as m from "motion/react-m";
 import Link from "next/link";
 import * as React from "react";
 import { Trans } from "@/i18n/client/trans";
@@ -74,7 +72,8 @@ const TriState = ({
 };
 
 export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
-  const dialog = useDialog();
+  const { t } = useTranslation("home");
+  const [submitted, setSubmitted] = React.useState(false);
   const [votes, setVotes] = React.useState<
     Record<string, DemoVote | undefined>
   >(() => {
@@ -142,49 +141,85 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
             type="button"
             onClick={() => {
               posthog?.capture("landing:hero_demo_continue_click");
-              dialog.trigger();
+              setSubmitted(true);
             }}
             className="flex-[2] cursor-pointer rounded-xl bg-indigo-500/90 py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md hover:bg-indigo-500"
           >
             <Trans ns="home" i18nKey="heroDemoContinue" defaults="Continue" />
           </button>
         </div>
-      </DemoScreen>
-      <Dialog {...dialog.dialogProps}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              <Trans
-                ns="home"
-                i18nKey="heroDemoThanksTitle"
-                defaults="Thanks for sharing your availability!"
-              />
-            </DialogTitle>
-            <DialogDescription>
-              <Trans
-                ns="home"
-                i18nKey="heroDemoThanksDescription"
-                defaults="That's all it takes to respond to a poll. Create your own and see who can make it."
-              />
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Link
-              href={linkToApp("/new")}
-              className={buttonVariants({ variant: "primary" })}
-              onClick={() => {
-                posthog?.capture("landing:hero_demo_modal_cta_click");
+        {submitted && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-white/85 p-6 text-center backdrop-blur-md">
+            <button
+              type="button"
+              aria-label={t("heroDemoClose", { defaultValue: "Close" })}
+              onClick={() => setSubmitted(false)}
+              className="absolute top-3 right-3 flex size-7 cursor-pointer items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            >
+              <XIcon className="size-4" />
+            </button>
+            <m.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", duration: 0.6, bounce: 0.45 }}
+              className="flex size-14 items-center justify-center rounded-full bg-green-100"
+            >
+              <CheckIcon strokeWidth={3} className="size-7 text-green-600" />
+            </m.div>
+            <m.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                duration: 0.6,
+                bounce: 0.3,
+                delay: 0.15,
+              }}
+              className="space-y-1.5"
+            >
+              <div className="font-semibold text-gray-900 text-sm">
+                <Trans
+                  ns="home"
+                  i18nKey="heroDemoThanksTitle"
+                  defaults="Thanks for sharing your availability!"
+                />
+              </div>
+              <p className="text-gray-500 text-xs">
+                <Trans
+                  ns="home"
+                  i18nKey="heroDemoThanksDescription"
+                  defaults="That's all it takes to respond to a poll. Create your own and see who can make it."
+                />
+              </p>
+            </m.div>
+            <m.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                duration: 0.6,
+                bounce: 0.3,
+                delay: 0.3,
               }}
             >
-              <Trans
-                ns="home"
-                i18nKey="heroDemoCreatePoll"
-                defaults="Create your own poll"
-              />
-            </Link>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+              <Link
+                href={linkToApp("/new")}
+                onClick={() => {
+                  posthog?.capture("landing:hero_demo_modal_cta_click");
+                }}
+                className="inline-flex items-center gap-0.5 font-medium text-indigo-600 text-xs hover:underline"
+              >
+                <Trans
+                  ns="home"
+                  i18nKey="heroDemoCreatePoll"
+                  defaults="Create your own poll"
+                />
+                <ChevronRightIcon className="size-3.5" />
+              </Link>
+            </m.div>
+          </div>
+        )}
+      </DemoScreen>
     </DemoFrame>
   );
 };
