@@ -628,7 +628,6 @@
   "resetPasswordFooter": "Não precisa redefinir? <a>Voltar para login</a>",
   "resetPasswordInvalidTokenMessage": "O link para redefinir a senha é inválido ou expirou. Por favor, solicite um novo.",
   "resetPasswordTitle": "Redefinir senha",
-  "resetToDefault": "Redefinir para o padrão",
   "respondedOn": "Respondido em",
   "response": "Resposta",
   "responseOptions": "Opções de resposta",
