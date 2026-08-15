@@ -628,7 +628,6 @@
   "resetPasswordFooter": "Kein Zurücksetzen notwendig? <a>Zurück zum Login</a>",
   "resetPasswordInvalidTokenMessage": "Dieser Passwort-Zurücksetzen-Link ist ungültig oder abgelaufen. Bitte fordere einen neuen an.",
   "resetPasswordTitle": "Passwort zurücksetzen",
-  "resetToDefault": "Auf Standard zurücksetzen",
   "respondedOn": "Antwort gegeben am",
   "response": "Antwort",
   "responseOptions": "Antwortoptionen",
