@@ -33,11 +33,13 @@ export const HeroDemo = async ({ locale }: { locale: string }) => {
   }));
 
   return (
-    <div className="relative z-10 mx-auto mb-12 w-fit max-w-full">
-      <div aria-hidden="true" className="hidden lg:block">
-        <DesktopDemo locale={locale} days={days} scores={scores} t={t} />
+    <div className="relative z-10 mb-12 lg:mx-auto lg:w-fit lg:max-w-full">
+      <div className="overflow-hidden lg:overflow-visible">
+        <div aria-hidden="true" className="w-max lg:w-auto">
+          <DesktopDemo locale={locale} days={days} scores={scores} t={t} />
+        </div>
       </div>
-      <div className="mx-auto w-[320px] lg:absolute lg:-right-6 lg:-bottom-12 lg:mx-0">
+      <div className="absolute right-2 -bottom-12 w-[280px] max-w-[calc(100vw-3rem)] lg:-right-6 lg:w-[320px]">
         <MobileDemo days={mobileDays} />
       </div>
     </div>
