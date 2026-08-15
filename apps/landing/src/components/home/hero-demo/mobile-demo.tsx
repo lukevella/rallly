@@ -188,8 +188,8 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
                 <div className="mt-3 font-semibold text-gray-900 text-sm">
                   <Trans
                     ns="home"
-                    i18nKey="heroDemoSavedTitle"
-                    defaults="Your response has been saved"
+                    i18nKey="heroDemoThatWasEasy"
+                    defaults="That was easy!"
                   />
                 </div>
               </m.div>
@@ -203,13 +203,6 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
                   delay: 0.3,
                 }}
               >
-                <p className="mt-4 text-gray-500 text-xs">
-                  <Trans
-                    ns="home"
-                    i18nKey="heroDemoThatWasEasy"
-                    defaults="That was easy!"
-                  />
-                </p>
                 <Link
                   href={linkToApp("/new")}
                   onClick={() => {
