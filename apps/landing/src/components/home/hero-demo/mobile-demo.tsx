@@ -44,7 +44,7 @@ export const MobileDemo = ({
 
   return (
     <div className="rounded-[2.2rem] border bg-white p-1.5 shadow-sm">
-      <div className="flex h-[420px] flex-col overflow-hidden rounded-[1.8rem] border bg-white">
+      <div className="flex h-[560px] flex-col overflow-hidden rounded-[1.8rem] border bg-white">
         <div className="flex items-center justify-between border-gray-100 border-b px-4 py-3">
           <span className="flex items-center gap-2 font-medium text-gray-900 text-sm">
             <span className="flex size-6 items-center justify-center rounded-full bg-gray-100">
@@ -70,7 +70,7 @@ export const MobileDemo = ({
           })}
         </div>
         <div className="min-h-0 flex-1 overflow-hidden">
-          {days.slice(0, 2).map((day) => (
+          {days.slice(0, 3).map((day) => (
             <div key={day.date.toISOString()}>
               <div className="border-gray-100 border-b bg-gray-50/60 px-4 py-2 font-semibold text-gray-900 text-xs">
                 {format.fullDay.format(day.date)}
@@ -82,14 +82,12 @@ export const MobileDemo = ({
                     key={option.start.toISOString()}
                     className="flex items-center justify-between gap-2 border-gray-100 border-b px-4 py-3"
                   >
-                    <div className="min-w-0">
-                      <div className="text-gray-800 text-xs">
-                        {format.time.formatRange(option.start, option.end)}
-                      </div>
-                      <div className="mt-0.5 flex items-center gap-1 text-[10px] text-gray-400">
-                        <UsersIcon className="size-3" />
-                        {scores[optionIndex]}
-                      </div>
+                    <div className="min-w-0 flex-1 text-gray-800 text-xs">
+                      {format.time.formatRange(option.start, option.end)}
+                    </div>
+                    <div className="flex shrink-0 items-center gap-1 text-gray-400 text-xs">
+                      <UsersIcon className="size-3.5" />
+                      {scores[optionIndex]}
                     </div>
                     <TriState selected={yourVotes[optionIndex]} />
                   </div>
