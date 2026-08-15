@@ -279,19 +279,22 @@ async function captureMobile(browser: Browser) {
 
 async function main() {
   assertLocalDatabase();
-  await seed();
-  console.info("✓ Demo poll seeded");
-  const browser = await chromium.launch();
-  await captureDesktop(browser);
-  console.info(`✓ Desktop screenshot saved to ${DESKTOP_OUTPUT}`);
-  await captureMobile(browser);
-  console.info(`✓ Mobile screenshot saved to ${MOBILE_OUTPUT}`);
-  await browser.close();
-  await prisma.$disconnect();
-  process.exit(0);
+  let browser: Browser | undefined;
+  try {
+    await seed();
+    console.info("✓ Demo poll seeded");
+    browser = await chromium.launch();
+    await captureDesktop(browser);
+    console.info(`✓ Desktop screenshot saved to ${DESKTOP_OUTPUT}`);
+    await captureMobile(browser);
+    console.info(`✓ Mobile screenshot saved to ${MOBILE_OUTPUT}`);
+  } finally {
+    await browser?.close();
+    await prisma.$disconnect();
+  }
 }
 
 main().catch((error) => {
   console.error(error);
-  process.exit(1);
+  process.exitCode = 1;
 });

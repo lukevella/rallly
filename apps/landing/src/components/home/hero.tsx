@@ -2,7 +2,7 @@
 import { posthog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
-import { ChevronRightIcon } from "lucide-react";
+import { ChevronRightIcon, LockIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import Image from "next/image";
 import Link from "next/link";
@@ -43,20 +43,7 @@ const Screenshot = () => {
         <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-center -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
         <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-center -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
       </m.div>
-      <m.div
-        transition={{
-          type: "spring",
-          duration: 1,
-          bounce: 0.3,
-        }}
-        variants={{
-          hidden: { opacity: 0, scale: 0.95, y: 5 },
-          visible: { opacity: 1, scale: 1, y: 0 },
-        }}
-        initial="hidden"
-        animate={isLoaded ? "visible" : "hidden"}
-        className="relative z-10 mx-auto mb-12 w-fit max-w-full"
-      >
+      <div className="relative z-10 mx-auto mb-12 w-fit max-w-full">
         <div className="rounded-2xl border bg-white p-2 shadow-sm">
           <div
             aria-hidden="true"
@@ -67,7 +54,8 @@ const Screenshot = () => {
               <span className="size-2.5 rounded-full bg-gray-200" />
               <span className="size-2.5 rounded-full bg-gray-200" />
             </div>
-            <div className="rounded-full bg-gray-100 px-3 py-1 text-gray-500 text-xs">
+            <div className="flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-gray-500 text-xs">
+              <LockIcon className="size-3 text-gray-400" />
               rallly.co/invite/mdXPow2ZbLqW
             </div>
             <div />
@@ -100,7 +88,7 @@ const Screenshot = () => {
             </div>
           </div>
         </div>
-      </m.div>
+      </div>
     </>
   );
 };
