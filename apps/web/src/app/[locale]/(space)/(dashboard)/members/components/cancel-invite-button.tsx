@@ -1,6 +1,5 @@
 "use client";
 
-import { subject } from "@casl/ability";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -13,19 +12,19 @@ import {
   useDialog,
 } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
-import { useSpace } from "@/features/space/client";
 import { cancelInviteAction } from "@/features/space/member/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
-type SpaceMemberInvite = {
-  id: string;
-  email: string;
-  spaceId: string;
-};
-
-export function CancelInviteButton({ invite }: { invite: SpaceMemberInvite }) {
-  const space = useSpace();
+export function CancelInviteButton({
+  inviteId,
+  inviteEmail,
+  disabled,
+}: {
+  inviteId: string;
+  inviteEmail: string;
+  disabled?: boolean;
+}) {
   const cancelInviteDialog = useDialog();
   const { t } = useTranslation();
   const cancelInvite = useSafeAction(cancelInviteAction, {
@@ -41,15 +40,11 @@ export function CancelInviteButton({ invite }: { invite: SpaceMemberInvite }) {
     },
   });
 
-  const canCancelInvite = space
-    .getMemberAbility()
-    .can("delete", subject("SpaceMemberInvite", invite));
-
   return (
     <>
       <Button
         size="sm"
-        disabled={!canCancelInvite}
+        disabled={disabled}
         onClick={() => {
           cancelInviteDialog.trigger();
         }}
@@ -66,7 +61,7 @@ export function CancelInviteButton({ invite }: { invite: SpaceMemberInvite }) {
               <Trans
                 i18nKey="cancelInviteConfirmation"
                 defaults="Are you sure you want to cancel the invite for {email}?"
-                values={{ email: invite.email }}
+                values={{ email: inviteEmail }}
               />
             </DialogDescription>
           </DialogHeader>
@@ -75,7 +70,7 @@ export function CancelInviteButton({ invite }: { invite: SpaceMemberInvite }) {
               variant="destructive"
               loading={cancelInvite.isExecuting}
               onClick={() => {
-                cancelInvite.execute({ inviteId: invite.id });
+                cancelInvite.execute({ inviteId });
               }}
             >
               <Trans i18nKey="confirm" defaults="Confirm" />

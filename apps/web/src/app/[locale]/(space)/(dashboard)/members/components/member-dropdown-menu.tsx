@@ -1,6 +1,5 @@
 "use client";
 
-import { subject } from "@casl/ability";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -22,7 +21,6 @@ import {
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { MoreVerticalIcon, ShieldIcon, UserIcon, XIcon } from "lucide-react";
-import { useSpace } from "@/features/space/client";
 import {
   changeMemberRoleAction,
   removeMemberAction,
@@ -32,8 +30,15 @@ import type { MemberRole } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
-export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
-  const space = useSpace();
+export function MemberDropdownMenu({
+  member,
+  canUpdate,
+  canDelete,
+}: {
+  member: MemberDTO;
+  canUpdate: boolean;
+  canDelete: boolean;
+}) {
   const removeMemberDialog = useDialog();
   const { t } = useTranslation();
   const removeMember = useSafeAction(removeMemberAction, {
@@ -57,14 +62,6 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
       );
     },
   });
-
-  const canUpdateMember = space
-    .getMemberAbility()
-    .can("update", subject("SpaceMember", member));
-
-  const canDeleteMember = space
-    .getMemberAbility()
-    .can("delete", subject("SpaceMember", member));
 
   const handleRoleChange = (newRole: MemberRole) => {
     changeMemberRole.execute({
@@ -93,7 +90,7 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
           {member.role === "member" ? (
             <DropdownMenuItem
               onClick={() => handleRoleChange("admin")}
-              disabled={!canUpdateMember}
+              disabled={!canUpdate}
             >
               <Icon>
                 <ShieldIcon className="size-4" />
@@ -103,7 +100,7 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
           ) : (
             <DropdownMenuItem
               onClick={() => handleRoleChange("member")}
-              disabled={!canUpdateMember}
+              disabled={!canUpdate}
             >
               <Icon>
                 <UserIcon />
@@ -116,7 +113,7 @@ export function MemberDropdownMenu({ member }: { member: MemberDTO }) {
             onClick={() => {
               removeMemberDialog.trigger();
             }}
-            disabled={!canDeleteMember}
+            disabled={!canDelete}
             variant="destructive"
           >
             <XIcon />

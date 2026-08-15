@@ -9,21 +9,17 @@ import {
 } from "@rallly/ui/dialog";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { SpaceRole } from "@/features/space/components/space-role";
-import type { MemberRole } from "@/features/space/schema";
+import type { MemberInviteDTO } from "@/features/space/member/types";
 import { Trans } from "@/i18n/client";
 import { CancelInviteButton } from "./cancel-invite-button";
 
 export function PendingInvitesDialog({
   invites,
+  canCancelInvite,
   ...dialogProps
 }: {
-  invites: {
-    id: string;
-    email: string;
-    spaceId: string;
-    role: MemberRole;
-    invitedBy: { name: string };
-  }[];
+  invites: MemberInviteDTO[];
+  canCancelInvite: boolean;
 } & DialogProps) {
   return (
     <Dialog {...dialogProps}>
@@ -49,7 +45,11 @@ export function PendingInvitesDialog({
               <div className="text-sm">
                 <SpaceRole role={invite.role} />
               </div>
-              <CancelInviteButton invite={invite} />
+              <CancelInviteButton
+                inviteId={invite.id}
+                inviteEmail={invite.email}
+                disabled={!canCancelInvite}
+              />
             </StackedListItem>
           ))}
         </StackedList>
