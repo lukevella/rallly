@@ -1,5 +1,4 @@
 "use client";
-import { cn } from "@rallly/ui";
 import {
   SegmentedControl,
   SegmentedControlItem,
@@ -41,7 +40,7 @@ export const VoteSegmentedControl = ({
     <SegmentedControl
       data-testid="vote-selector"
       aria-label={optionLabel}
-      className={cn("h-11", className)}
+      className={className}
       value={value ?? null}
       onValueChange={(newValue) => {
         if (newValue) {
