@@ -67,7 +67,7 @@ const Screenshot = () => {
             <span className="size-2.5 rounded-full bg-gray-200" />
           </div>
           <div className="rounded-md border bg-white px-3 py-1 text-gray-500 text-xs">
-            rallly.co/invite/monthly-meetup
+            rallly.co/invite/mdXPow2ZbLqW
           </div>
           <div />
         </div>
