@@ -29,6 +29,13 @@ export type ColorPickerProps = Pick<
   disabled?: boolean;
   /** Rendered below the hex input, for actions such as save or reset. */
   footer?: React.ReactNode;
+  /** Localized accessible name for the hex input. */
+  hexInputLabel?: string;
+  /**
+   * Localized fallback name for the swatch trigger, used when no
+   * `aria-labelledby` is given.
+   */
+  "aria-label"?: string;
   /** Applied to the swatch trigger, which is the control an external label names. */
   "aria-labelledby"?: string;
   "aria-describedby"?: string;
@@ -37,7 +44,13 @@ export type ColorPickerProps = Pick<
 export type { Color };
 export { parseColor } from "react-aria-components";
 
-function HexColorInput() {
+function HexColorInput({
+  disabled,
+  "aria-label": label,
+}: {
+  disabled?: boolean;
+  "aria-label": string;
+}) {
   const pickerState = React.useContext(ColorPickerStateContext);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -49,7 +62,7 @@ function HexColorInput() {
   });
 
   const { inputProps } = useColorField(
-    { "aria-label": "Hex color" },
+    { "aria-label": label, isDisabled: disabled },
     state,
     inputRef,
   );
@@ -67,6 +80,8 @@ export function ColorPicker({
   className,
   disabled,
   footer,
+  hexInputLabel = "Hex color",
+  "aria-label": label = "Choose color",
   "aria-labelledby": labelledBy,
   "aria-describedby": describedBy,
   ...props
@@ -83,7 +98,7 @@ export function ColorPicker({
               className={className}
               aria-labelledby={labelledBy}
               aria-describedby={describedBy}
-              {...(labelledBy ? {} : { "aria-label": "Choose color" })}
+              {...(labelledBy ? {} : { "aria-label": label })}
             />
           }
         >
@@ -94,6 +109,7 @@ export function ColorPicker({
             colorSpace="hsb"
             xChannel="saturation"
             yChannel="brightness"
+            isDisabled={disabled}
             className="w-full rounded-md"
             style={{ height: 148 }}
           >
@@ -104,7 +120,12 @@ export function ColorPicker({
               )}
             />
           </ColorArea>
-          <ColorSlider colorSpace="hsb" channel="hue" className="w-full">
+          <ColorSlider
+            colorSpace="hsb"
+            channel="hue"
+            isDisabled={disabled}
+            className="w-full"
+          >
             <SliderTrack className="mt-2 h-3 w-full rounded-full">
               <ColorThumb
                 className={cn(
@@ -114,7 +135,7 @@ export function ColorPicker({
               />
             </SliderTrack>
           </ColorSlider>
-          <HexColorInput />
+          <HexColorInput disabled={disabled} aria-label={hexInputLabel} />
           {footer ? <div className="mt-2">{footer}</div> : null}
         </PopoverContent>
       </Popover>

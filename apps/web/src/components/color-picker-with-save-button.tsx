@@ -3,7 +3,7 @@
 import { Button } from "@rallly/ui/button";
 import type { Color } from "@rallly/ui/color-picker";
 import { ColorPicker } from "@rallly/ui/color-picker";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 
 /**
  * Color swatch that opens a picker popover with save and optional
@@ -33,6 +33,8 @@ export function ColorPickerWithSaveButton({
   disabled?: boolean;
   "aria-labelledby"?: string;
 }) {
+  const { t } = useTranslation();
+
   return (
     <div>
       <ColorPicker
@@ -40,6 +42,8 @@ export function ColorPickerWithSaveButton({
         onChange={onChange}
         disabled={disabled}
         aria-labelledby={labelledBy}
+        aria-label={t("chooseColor", { defaultValue: "Choose color" })}
+        hexInputLabel={t("hexColor", { defaultValue: "Hex color" })}
         footer={
           <div className="flex justify-end gap-2">
             {onReset ? (
@@ -47,7 +51,7 @@ export function ColorPickerWithSaveButton({
                 size="sm"
                 variant="ghost"
                 onClick={onReset}
-                disabled={!showReset}
+                disabled={!showReset || disabled || isSaving}
               >
                 <Trans i18nKey="reset" defaults="Reset" />
               </Button>
@@ -61,6 +65,7 @@ export function ColorPickerWithSaveButton({
               className="flex-1"
               onClick={onSave}
               loading={isSaving}
+              disabled={disabled || isSaving}
             >
               <Trans i18nKey="save" defaults="Save" />
             </Button>
