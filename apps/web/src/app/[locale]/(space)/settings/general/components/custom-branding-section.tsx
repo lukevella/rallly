@@ -87,7 +87,14 @@ export function CustomBrandingSection({
     }
   };
 
-  const handleSave = () => persistColor(isDefault ? null : hexColor);
+  const handleSave = () => {
+    if (isFree) {
+      showPayWall({ from: "custom-branding", setting: "primary_color" });
+      return;
+    }
+
+    return persistColor(isDefault ? null : hexColor);
+  };
 
   // Clearing the column is what "default" means in the database, so reset
   // writes null rather than storing the default value literally.
