@@ -30,19 +30,19 @@ type VoteType = "yes" | "ifNeedBe" | "no";
 
 const participants: { name: string; votes: VoteType[] }[] = [
   {
-    name: "Arthur",
+    name: "Margaret Ellis",
     votes: ["ifNeedBe", "yes", "no", "yes", "yes", "yes", "no", "yes"],
   },
   {
-    name: "Samantha",
+    name: "Priya Patel",
     votes: ["yes", "yes", "yes", "no", "yes", "yes", "no", "yes"],
   },
   {
-    name: "Wendy",
+    name: "Tom Becker",
     votes: ["yes", "yes", "yes", "yes", "yes", "no", "ifNeedBe", "yes"],
   },
   {
-    name: "Joseph",
+    name: "Grace Okafor",
     votes: ["no", "yes", "no", "yes", "yes", "no", "no", "yes"],
   },
 ];
@@ -127,10 +127,10 @@ async function seed() {
   await prisma.poll.create({
     data: {
       id: POLL_ID,
-      title: "Monthly Meetup",
+      title: "Q3 Board Meeting",
       description:
-        "Hey everyone, please choose the dates that work best for you!",
-      location: "Joe's Coffee Shop",
+        "Please pick every time you could attend. We'll go with the one that works for everyone.",
+      location: "Riverside Community Center",
       status: "open",
       kind: "time",
       timeZone: TIME_ZONE,
@@ -181,8 +181,8 @@ async function seed() {
   await prisma.comment.create({
     data: {
       pollId: POLL_ID,
-      authorName: "Samantha",
-      content: "Looking forward to see you all!",
+      authorName: "Margaret Ellis",
+      content: "Looking forward to seeing everyone there!",
       createdAt: new Date(Date.now() - DAY_MS),
     },
   });
@@ -221,7 +221,7 @@ async function captureDesktop(browser: Browser) {
   await page.goto(`${BASE_URL}/invite/${POLL_ID}`, {
     waitUntil: "networkidle",
   });
-  await page.getByText("Wendy").waitFor();
+  await page.getByText("Tom Becker").waitFor();
   // Dismiss the voting form that opens for new visitors; the desktop shot
   // shows the poll at rest, not a half-completed response.
   await page.getByRole("button", { name: "Cancel" }).click();
