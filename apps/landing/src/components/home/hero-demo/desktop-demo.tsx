@@ -41,8 +41,8 @@ export const DesktopDemo = ({
   }
 
   return (
-    <DemoFrame>
-      <DemoScreen className="bg-gray-100 p-4 sm:p-6">
+    <DemoFrame className="rounded-2xl lg:rounded-[2.2rem]">
+      <DemoScreen className="rounded-xl bg-gray-100 p-4 sm:p-6 lg:rounded-[1.8rem]">
         <div className="mx-auto w-fit space-y-3 text-left">
           <div className="overflow-hidden rounded-xl border border-gray-200/60 bg-white">
             <div className="h-1.5 bg-gradient-to-r from-indigo-500 to-violet-500" />

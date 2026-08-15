@@ -35,7 +35,7 @@ export const HeroDemo = async ({ locale }: { locale: string }) => {
 
   return (
     <div className="relative z-10 mb-12 lg:mx-auto lg:w-fit lg:max-w-full">
-      <div className="mr-[calc(50%-50vw)] overflow-hidden lg:mr-0 lg:overflow-visible">
+      <div className="mr-[calc(50%-50vw)] overflow-hidden [mask-image:linear-gradient(to_left,transparent,black_6rem)] lg:mr-0 lg:overflow-visible lg:[mask-image:none]">
         <div aria-hidden="true" className="w-max [zoom:0.65] lg:[zoom:1]">
           <DesktopDemo locale={locale} days={days} scores={scores} t={t} />
         </div>
