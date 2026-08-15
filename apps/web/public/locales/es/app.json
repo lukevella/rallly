@@ -628,7 +628,6 @@
   "resetPasswordFooter": "¿No necesitas restablecer? <a>Regresar a iniciar sesión</a>",
   "resetPasswordInvalidTokenMessage": "El enlace de restablecimiento de contraseña es inválido o ha expirado. Por favor, solicita uno nuevo.",
   "resetPasswordTitle": "Restablecer contraseña",
-  "resetToDefault": "Restablecer al valor predeterminado",
   "respondedOn": "Respondió el",
   "response": "Respuesta",
   "responseOptions": "Opciones de respuesta",
