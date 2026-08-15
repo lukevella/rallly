@@ -4,6 +4,7 @@ import { prisma } from "@rallly/database";
 import { sendSpaceInviteEmail } from "@rallly/emails/templates/space-invite";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { revalidatePath } from "next/cache";
 import { getInstanceBranding } from "@/emails/branding";
 import { getTotalSeatsForSpace } from "@/features/space/data";
 import type { MemberRole } from "@/features/space/schema";
@@ -11,6 +12,10 @@ import { toDBRole } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
 
 const logger = createLogger("space/member/mutations");
+
+function revalidateMembersPage() {
+  revalidatePath("/[locale]/(space)/(dashboard)/members", "page");
+}
 
 export async function inviteMember({
   spaceId,
@@ -50,6 +55,8 @@ export async function inviteMember({
         where: { id: existingInvite.id },
         data: { role: toDBRole(role) },
       });
+
+      revalidateMembersPage();
 
       return { ok: true as const, code: "INVITE_UPDATED" as const };
     }
@@ -92,6 +99,8 @@ export async function inviteMember({
     await prisma.spaceMemberInvite.delete({ where: { id: invite.id } });
     return { ok: false as const, reason: "INVITE_FAILED" as const };
   }
+
+  revalidateMembersPage();
 
   return { ok: true as const, code: "INVITE_SENT" as const };
 }
@@ -148,6 +157,8 @@ export async function acceptInvite({
     logger.warn({ error }, "Failed to update user's active space");
   }
 
+  revalidateMembersPage();
+
   return result;
 }
 
@@ -155,6 +166,8 @@ export async function cancelInvite({ inviteId }: { inviteId: string }) {
   await prisma.spaceMemberInvite.delete({
     where: { id: inviteId },
   });
+
+  revalidateMembersPage();
 }
 
 export async function removeMember({ memberId }: { memberId: string }) {
@@ -165,6 +178,8 @@ export async function removeMember({ memberId }: { memberId: string }) {
   const memberCount = await prisma.spaceMember.count({
     where: { spaceId: removedMember.spaceId },
   });
+
+  revalidateMembersPage();
 
   return { removedUserId: removedMember.userId, memberCount };
 }
@@ -180,4 +195,6 @@ export async function changeMemberRole({
     where: { id: memberId },
     data: { role: toDBRole(role) },
   });
+
+  revalidateMembersPage();
 }

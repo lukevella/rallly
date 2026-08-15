@@ -5,36 +5,30 @@ import { useDialog } from "@rallly/ui/dialog";
 import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { UserPlusIcon } from "lucide-react";
-import { showPayWall } from "@/features/billing/client";
-import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { InviteMemberDialog } from "./invite-member-dialog";
 
 export function InviteMemberButton({
-  usedSeats,
-  totalSeats,
+  disabled,
+  canCreateInvite,
 }: {
-  usedSeats: number;
-  totalSeats: number;
+  disabled?: boolean;
+  canCreateInvite: boolean;
 }) {
   const { t } = useTranslation();
   const inviteMemberDialog = useDialog();
-  const space = useSpace();
-  const availableSeats = Math.max(totalSeats - usedSeats, 0);
   return (
     <>
       <Button
         variant="primary"
-        disabled={availableSeats <= 0}
+        disabled={disabled}
         onClick={() => {
-          if (space.getMemberAbility().cannot("create", "SpaceMemberInvite")) {
+          if (!canCreateInvite) {
             toast.error(
               t("adminRoleRequired", {
                 defaultValue: "You need to be an admin to perform this action",
               }),
             );
-          } else if (space.getAbility().cannot("invite", "Member")) {
-            showPayWall({ from: "space-members", action: "invite" });
           } else {
             inviteMemberDialog.trigger();
           }

@@ -51,30 +51,6 @@ export const spaces = router({
       })),
     };
   }),
-  listInvites: spaceProcedure.query(async ({ ctx }) => {
-    const invites = await prisma.spaceMemberInvite.findMany({
-      where: {
-        spaceId: ctx.space.id,
-      },
-      include: {
-        invitedBy: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-
-    return invites.map((invite) => ({
-      ...invite,
-      role: fromDBRole(invite.role),
-    }));
-  }),
   // ── Mutations ────────────────────────────────────────────────────────
   leave: spaceProcedure.mutation(async ({ ctx }) => {
     if (ctx.space.ownerId === ctx.user.id) {
