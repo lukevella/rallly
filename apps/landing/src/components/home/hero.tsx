@@ -60,8 +60,8 @@ const Screenshot = () => {
         <Image
           src="/static/images/hero-shot.png"
           alt="Screenshot of Rallly Poll"
-          width={1440}
-          height={1152}
+          width={960}
+          height={815}
           quality={100}
           preload
           onLoad={() => {
