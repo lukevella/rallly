@@ -157,7 +157,7 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
               initial={{ scale: 0.92, opacity: 0, y: 8 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               transition={{ type: "spring", duration: 0.5, bounce: 0.35 }}
-              className="relative flex aspect-[4/3] w-full flex-col items-center justify-center rounded-2xl border border-white/60 bg-white/70 p-4 text-center shadow-lg backdrop-blur-xl"
+              className="relative flex aspect-[4/3] w-full flex-col items-center justify-center rounded-2xl border border-white/60 bg-white/85 p-4 text-center shadow-lg backdrop-blur-xl"
             >
               <button
                 type="button"
