@@ -1,4 +1,7 @@
 {
+  "createAPoll": "Erstelle eine Umfrage zur Terminfindung",
+  "createASchedulingPoll": "Erstelle eine Umfrage zur Terminplanung",
+  "doodleAlternative": "Die beste kostenlose Alternative zu Doodle",
   "doodleAlternativeDescription": "Rallly ist die Doodle-Alternative, nach der alle suchen. Erstelle in Sekunden eine Terminumfrage und finde den besten Termin für deine Gruppe: ohne Anmeldung, ohne Werbung und ohne versteckte Kosten. Rallly ist Open Source und datenschutzfreundlich.",
   "doodleAlternativeFinalCtaDescription": "Erstelle deine erste Umfrage in Sekundenschnelle und sieh, warum so viele Doodle hinter sich gelassen haben.",
   "doodleAlternativeFinalCtaTitle": "Bereit für den Wechsel?",
@@ -27,6 +30,7 @@
   "statsLast30Days": "<b>{voterCount, plural, one {# Person hat} other {# Personen haben}}</b> in den letzten 30 Tagen in <b>{pollCount, plural, one {# Umfrage} other {# Umfragen}}</b> abgestimmt.",
   "subheading": "Koordiniere Gruppenmeetings ohne ewiges E-Mail-Hin-und-Her",
   "viaTrustpilot": "via Trustpilot",
+  "when2meetAlternative": "Eine moderne Alternative zu When2Meet",
   "when2meetAlternativeDescription": "Rallly kann alles, wofür du When2Meet verwendest, nur ohne die umständlichen Teile. Erstelle übersichtliche Terminumfragen, die auch mobil gut funktionieren, werde benachrichtigt, wenn Teilnehmer antworten, und verwalte alle deine Umfragen an einem Ort. Kostenlos, werbefrei und ohne Konto zum Abstimmen. Du kommst von When2Meet oder WhenIsGood? Rallly wird dir sofort vertraut sein.",
   "when2meetAlternativeFinalCtaDescription": "Erstelle in Sekundenschnelle eine Umfrage und finde auf übersichtlichere Weise eine passende Zeit.",
   "when2meetAlternativeFinalCtaTitle": "Bereit für einen frischen Blick auf When2Meet?",
