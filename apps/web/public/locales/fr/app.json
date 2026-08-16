@@ -675,6 +675,7 @@
   "searchPollsPlaceholder": "Rechercher des sondages par titre...",
   "searchUsers": "Recherche d'utilisateurs...",
   "seatCount": "{count, plural, one {# seat} other {# seats}}",
+  "seatsAvailable": "{count, plural, =0 {Aucune place disponible} one {# place disponible} other {# places disponibles}} }]}]}],}]}] }]}]}]},",
   "seatsUpdatedAlertDescription": "Votre allocation de siège a été mise à jour avec succès. Les modifications seront reflétées dans votre prochain cycle de facturation.",
   "seatsUpdatedAlertTitle": "Sièges mis à jour",
   "security": "Sécurité",
