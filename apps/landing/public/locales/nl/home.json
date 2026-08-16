@@ -1,4 +1,7 @@
 {
+  "createAPoll": "Maak een Poll voor een vergadering.",
+  "createASchedulingPoll": "Maak een Poll om te plannen.",
+  "doodleAlternative": "Het beste gratis alternatief voor Doodle",
   "doodleAlternativeDescription": "Rallly is het Doodle alternatief waar iedereen naar op zoek is. Duizenden gebruikers hebben de omschakeling al gemaakt en genieten nu van professionele, advertentievrij planningspolls in een intuïtieve en gemakkelijk te gebruiken interface.        ",
   "doodleAlternativeFinalCtaDescription": "Maak in enkele seconden je eerste poll en zie waarom zoveel mensen Doodle links lieten liggen.",
   "doodleAlternativeFinalCtaTitle": "Klaar om over te stappen?",
@@ -27,6 +30,7 @@
   "statsLast30Days": "<b>{voterCount, plural, one {# persoon heeft gestemd} other {# personen hebben gestemd}}</b> op <b>{pollCount, plural, one {# poll} other {# polls}}</b> in de afgelopen 30 dagen",
   "subheading": "Coördineer groepsbijeenkomsten zonder al die e-mails heen en weer",
   "viaTrustpilot": "via Trustpilot",
+  "when2meetAlternative": "Een modern alternatief voor When2Meet",
   "when2meetAlternativeDescription": "Rallly doet alles waarvoor je When2Meet gebruikt, zonder de omslachtige onderdelen. Maak overzichtelijke planningspolls die goed werken op mobiel, krijg een melding wanneer deelnemers reageren en beheer al je polls op één plek. Gratis, zonder advertenties en zonder account om te stemmen. Kom je van When2Meet of WhenIsGood? Rallly voelt meteen vertrouwd.",
   "when2meetAlternativeFinalCtaDescription": "Maak in enkele seconden een poll en vind eenvoudiger een geschikt tijdstip.",
   "when2meetAlternativeFinalCtaTitle": "Klaar voor een frisse kijk op When2Meet?",
