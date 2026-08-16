@@ -78,34 +78,13 @@ export const Footer: React.FunctionComponent = () => {
             />
           </div>
           <div className="my-8 text-gray-600 text-sm">
-            <p className="mb-4 leading-relaxed">
+            <p className="leading-relaxed">
               <Trans
                 ns="common"
-                i18nKey="footerSponsor"
-                components={{
-                  a: (
-                    <Link
-                      className="font-normal text-gray-600 leading-loose underline hover:text-gray-800 hover:underline"
-                      href="https://support.rallly.co/contribute/donations"
-                    />
-                  ),
-                }}
+                i18nKey="footerTagline"
+                defaults="Rallly is an open-source meeting scheduling tool that helps you find the best time to meet, without the back and forth."
               />
             </p>
-            <div>
-              <Trans
-                ns="common"
-                i18nKey="footerCredit"
-                components={{
-                  a: (
-                    <Link
-                      className="font-normal text-gray-600 leading-loose underline hover:text-gray-800 hover:underline"
-                      href="https://twitter.com/imlukevella"
-                    />
-                  ),
-                }}
-              />
-            </div>
           </div>
           <div className="flex items-center space-x-4">
             <a
@@ -265,6 +244,9 @@ export const Footer: React.FunctionComponent = () => {
         </div>
       </div>
       <div className="flex flex-col justify-start gap-x-8 gap-y-8 sm:flex-row sm:items-end sm:pb-8">
+        <p className="text-gray-600 text-sm leading-loose">
+          &copy; 2026 Stack Snap Ltd.
+        </p>
         <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm leading-loose">
           <li>
             <Link
