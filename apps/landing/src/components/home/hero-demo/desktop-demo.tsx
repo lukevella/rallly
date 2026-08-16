@@ -43,7 +43,7 @@ export const DesktopDemo = ({
   return (
     <DemoFrame className="rounded-2xl lg:rounded-[2.2rem]">
       <DemoScreen className="rounded-xl bg-gray-100 p-4 sm:p-6 lg:rounded-[1.8rem]">
-        <div className="space-y-3 text-left">
+        <div className="mx-auto w-fit space-y-3 text-left">
           <div className="overflow-hidden rounded-xl border border-gray-200/60 bg-white">
             <div className="h-1.5 bg-linear-to-r from-indigo-500 to-violet-500" />
             <div className="space-y-3 p-4 sm:p-5">
@@ -139,7 +139,7 @@ export const DesktopDemo = ({
                 <Maximize2Icon className="size-4" />
               </div>
             </div>
-            <div className="grid grid-cols-[172px_repeat(8,84px)] border-gray-100 border-t text-center lg:grid-cols-[minmax(172px,1.5fr)_repeat(8,minmax(84px,1fr))]">
+            <div className="grid grid-cols-[172px_repeat(8,84px)] border-gray-100 border-t text-center">
               <div />
               {monthGroups.map((group) => (
                 <div
