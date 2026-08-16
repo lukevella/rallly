@@ -129,7 +129,7 @@
   "changeRole": "Zmień rolę",
   "charactersRemaining": "{count, plural, one {# znak pozostał} few {# znaki pozostały} many {# znaków pozostało} other {# znaku pozostało}}",
   "checkForConflicts": "Wybierz kalendarze, które mają być sprawdzane pod kątem konfliktów",
-  "chooseColor": "Wybierz kolor},{",
+  "chooseColor": "Wybierz kolor",
   "chooseImage": "Wybierz…",
   "cityTime": "{city} czas",
   "clockPreferences": "Preferencje zegara",
