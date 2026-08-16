@@ -3,88 +3,26 @@ import { posthog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { ChevronRightIcon } from "lucide-react";
-import * as m from "motion/react-m";
-import Image from "next/image";
 import Link from "next/link";
-import * as React from "react";
+import type * as React from "react";
 import { handwritten } from "@/fonts/handwritten";
 import { Trans } from "@/i18n/client/trans";
 import { linkToApp } from "@/lib/linkToApp";
-
-const Screenshot = () => {
-  const [isLoaded, setIsLoaded] = React.useState(false);
-
-  return (
-    <>
-      <m.div
-        transition={{
-          delay: 0.5,
-          type: "spring",
-          duration: 1,
-          bounce: 0.4,
-        }}
-        variants={{
-          hidden: { opacity: 0, y: 0, z: 0 },
-          visible: { opacity: 1, y: -10, z: 0 },
-        }}
-        initial="hidden"
-        animate={isLoaded ? "visible" : "hidden"}
-        style={{
-          backfaceVisibility: "hidden",
-        }}
-        className="relative z-20 mx-auto w-fit max-w-full rounded-full border bg-gray-800 px-3 py-2 text-gray-50 text-sm subpixel-antialiased shadow-huge"
-      >
-        <Trans
-          ns="home"
-          i18nKey="createPageLikeThis"
-          defaults="Create a page like this in seconds!"
-        />
-        <span className="absolute top-full left-1/2 z-10 h-8 w-px -translate-x-1/2 bg-gray-800" />
-        <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-center -translate-x-1/2 rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-        <span className="absolute -bottom-12 left-1/2 z-10 inline-block size-3 origin-center -translate-x-1/2 animate-ping rounded-full bg-gray-800 ring-1 ring-gray-800 ring-offset-2" />
-      </m.div>
-      <m.div
-        transition={{
-          type: "spring",
-          duration: 1,
-          bounce: 0.3,
-        }}
-        variants={{
-          hidden: { opacity: 0, scale: 0.95, y: 5 },
-          visible: { opacity: 1, scale: 1, y: 0 },
-        }}
-        initial="hidden"
-        animate={isLoaded ? "visible" : "hidden"}
-        className="mx-auto w-fit overflow-hidden rounded-md border shadow-huge"
-      >
-        <Image
-          src="/static/images/hero-shot.png"
-          alt="Screenshot of Rallly Poll"
-          width={1440}
-          height={1152}
-          quality={100}
-          preload
-          onLoad={() => {
-            setIsLoaded(true);
-          }}
-        />
-      </m.div>
-    </>
-  );
-};
 
 export const MarketingHero = ({
   title,
   description,
   callToAction,
+  demo,
 }: {
   title: string;
   description: string;
   callToAction: React.ReactNode;
+  demo: React.ReactNode;
 }) => {
   return (
-    <article className="max-w-full space-y-12 text-center">
-      <header className="sm:p-8">
+    <article className="max-w-full space-y-16 text-center">
+      <header className="pt-6 sm:pt-28 sm:pb-8">
         <div>
           <Link
             href="/blog/mobile-voting-redesign"
@@ -141,9 +79,7 @@ export const MarketingHero = ({
           </p>
         </div>
       </header>
-      <section>
-        <Screenshot />
-      </section>
+      <section>{demo}</section>
     </article>
   );
 };
