@@ -15,10 +15,10 @@ const Mention = ({
   return (
     <FadeIn
       delay={delay}
-      className="flex flex-col items-start space-y-4 rounded-md"
+      className="flex h-full flex-col justify-between gap-8 rounded-2xl border border-gray-200/60 bg-white p-6"
     >
-      <div className="flex items-start justify-between">{logo}</div>
-      <p className="grow text-base">{children}</p>
+      <p className="text-base">{children}</p>
+      <div className="self-end">{logo}</div>
     </FadeIn>
   );
 };
@@ -27,7 +27,7 @@ export async function Mentions({ locale }: { locale: string }) {
   const { t } = await getTranslation(locale, ["home"]);
   return (
     <section className="py-8 sm:py-16">
-      <div className="grid gap-8 md:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2">
         <Mention
           delay={0.25}
           logo={
