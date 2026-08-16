@@ -54,7 +54,7 @@ export const DesktopDemo = ({
                     defaultValue: "Q3 Board Meeting",
                   })}
                 </h3>
-                <p className="mt-1 text-gray-600 text-sm">
+                <p className="mt-1 max-w-prose text-gray-600 text-sm">
                   {t("heroDemoDescription", {
                     ns: "home",
                     defaultValue:
