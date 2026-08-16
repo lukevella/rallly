@@ -8,24 +8,33 @@ import { Trans } from "@/i18n/client/trans";
 import { useTranslation } from "@/i18n/client/use-translation";
 import { linkToApp } from "@/lib/linkToApp";
 
-// The submit action of the phone demo, plus the confirmation it opens. The
-// surrounding poll layout stays on the server.
-export const VoteButton = () => {
+// The action bar of the phone demo, plus the confirmation it opens. The
+// surrounding poll layout stays on the server. Must be a direct child of the
+// relative DemoScreen so the confirmation overlay covers the whole screen.
+export const VoteActions = () => {
   const { t } = useTranslation("home");
   const [submitted, setSubmitted] = React.useState(false);
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => {
-          posthog?.capture("landing:hero_demo_continue_click");
-          setSubmitted(true);
-        }}
-        className="flex-[2] cursor-pointer rounded-xl bg-indigo-500/90 py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md hover:bg-indigo-500"
-      >
-        <Trans ns="home" i18nKey="heroDemoVote" defaults="Vote" />
-      </button>
+      <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-55% from-white via-85% via-white/70 to-transparent p-3 pt-10">
+        <span
+          aria-hidden="true"
+          className="flex-1 rounded-xl border border-white/60 bg-white/70 py-2.5 text-center font-medium text-gray-800 text-sm shadow-sm backdrop-blur-md"
+        >
+          <Trans ns="home" i18nKey="heroDemoDecline" defaults="Decline" />
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            posthog?.capture("landing:hero_demo_continue_click");
+            setSubmitted(true);
+          }}
+          className="flex-[2] cursor-pointer rounded-xl bg-indigo-500/90 py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md hover:bg-indigo-500"
+        >
+          <Trans ns="home" i18nKey="heroDemoVote" defaults="Vote" />
+        </button>
+      </div>
       {submitted && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-gray-900/20 p-4">
           <m.div

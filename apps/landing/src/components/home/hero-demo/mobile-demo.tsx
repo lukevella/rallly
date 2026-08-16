@@ -3,7 +3,7 @@ import { UserIcon } from "lucide-react";
 import type { DemoDay, DemoVote } from "./demo-data";
 import { formatDemoParts } from "./demo-data";
 import { DemoFrame, DemoScreen } from "./demo-frame";
-import { VoteButton } from "./vote-button";
+import { VoteActions } from "./vote-actions";
 import { VoteCount } from "./vote-count";
 import { VoteSelector } from "./vote-selector";
 
@@ -76,15 +76,7 @@ export const MobileDemo = ({
             );
           })}
         </div>
-        <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-55% from-white via-85% via-white/70 to-transparent p-3 pt-10">
-          <span
-            aria-hidden="true"
-            className="flex-1 rounded-xl border border-white/60 bg-white/70 py-2.5 text-center font-medium text-gray-800 text-sm shadow-sm backdrop-blur-md"
-          >
-            {t("heroDemoDecline", { ns: "home", defaultValue: "Decline" })}
-          </span>
-          <VoteButton />
-        </div>
+        <VoteActions />
       </DemoScreen>
     </DemoFrame>
   );
