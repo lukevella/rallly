@@ -23,14 +23,14 @@ function Switch({
       nativeButton
       data-slot="switch"
       className={cn(
-        "peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full p-[3px] ring-1 ring-button-outline ring-inset transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 data-disabled:cursor-not-allowed data-checked:bg-primary data-unchecked:bg-muted data-disabled:opacity-50",
+        "peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full p-[3px] ring-1 ring-button-outline ring-inset transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 data-disabled:cursor-not-allowed data-checked:bg-primary data-unchecked:bg-foreground/10 data-disabled:opacity-50",
         className,
       )}
       {...props}
     >
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
-        className="pointer-events-none flex h-full w-3.5 items-center justify-center rounded-full border border-black/10 bg-background shadow-sm ring-0 transition-transform duration-100 data-checked:translate-x-4 data-unchecked:translate-x-0 dark:bg-gray-700"
+        className="pointer-events-none flex h-full w-3.5 items-center justify-center rounded-full border border-black/10 bg-white shadow-sm ring-0 transition-transform duration-100 data-checked:translate-x-4 data-unchecked:translate-x-0"
       >
         {icon}
       </SwitchPrimitive.Thumb>
