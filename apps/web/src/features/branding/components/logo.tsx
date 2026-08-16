@@ -16,9 +16,30 @@ export const Logo = async ({
   size = "md",
 }: {
   className?: string;
-  size?: keyof typeof sizes;
+  size?: keyof typeof sizes | "fit";
 }) => {
   const { logo } = await getInstanceBrandingConfig();
+
+  if (size === "fit") {
+    return (
+      <div
+        className={cn("flex size-50 items-center justify-center", className)}
+      >
+        {/* biome-ignore lint/performance/noImgElement: we don't need Image component here */}
+        <img
+          src={logo.light}
+          alt={env.APP_NAME}
+          className="block max-h-full max-w-full object-contain dark:hidden"
+        />
+        {/* biome-ignore lint/performance/noImgElement: we don't need Image component here */}
+        <img
+          src={logo.dark}
+          alt={env.APP_NAME}
+          className="hidden max-h-full max-w-full object-contain dark:block"
+        />
+      </div>
+    );
+  }
 
   return (
     <div

@@ -298,7 +298,7 @@ export async function BrandingSettings() {
             {!isStorageEnabled ? <StorageNotConfiguredAlert /> : null}
             <FieldGroup variant="divided">
               <Field>
-                <Field orientation="responsive">
+                <Field>
                   <FieldContent>
                     <FieldTitle>
                       <Trans
@@ -325,7 +325,7 @@ export async function BrandingSettings() {
                 ) : null}
               </Field>
               <Field>
-                <Field orientation="responsive">
+                <Field>
                   <FieldContent>
                     <FieldTitle>
                       <Trans
@@ -355,7 +355,7 @@ export async function BrandingSettings() {
                 ) : null}
               </Field>
               <Field>
-                <Field orientation="responsive">
+                <Field>
                   <FieldContent>
                     <FieldTitle>
                       <Trans

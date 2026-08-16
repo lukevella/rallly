@@ -1,11 +1,7 @@
 "use client";
 
 import { cn } from "@rallly/ui";
-import {
-  ImageUpload,
-  ImageUploadControl,
-  ImageUploadPreview,
-} from "@/components/image-upload";
+import { ImageUploadControl } from "@/components/image-upload";
 import type { BrandingLogoType } from "@/features/instance-settings/schema";
 import { useSafeAction } from "@/lib/safe-action/client";
 import {
@@ -53,22 +49,23 @@ export function LogoUploadField({
   };
 
   return (
-    <ImageUpload>
-      <ImageUploadPreview>
-        <div
-          className={cn(
-            "flex size-50 items-center justify-center overflow-hidden rounded border",
-            previewVariants[logoType],
-          )}
-        >
+    <div className="w-full space-y-3">
+      {/* Full-width preview of the 200x200 slot the logo renders in */}
+      <div
+        className={cn(
+          "flex w-full items-center justify-center overflow-hidden rounded-lg border",
+          previewVariants[logoType],
+        )}
+      >
+        <div className="flex size-50 items-center justify-center">
           {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
           <img
             src={previewUrl}
             alt={previewAlt}
-            className="max-h-full max-w-full object-contain p-4"
+            className="max-h-full max-w-full object-contain"
           />
         </div>
-      </ImageUploadPreview>
+      </div>
       <ImageUploadControl
         crop={false}
         disabled={disabled}
@@ -81,6 +78,6 @@ export function LogoUploadField({
         }}
         hasCurrentImage={hasCustomLogo}
       />
-    </ImageUpload>
+    </div>
   );
 }
