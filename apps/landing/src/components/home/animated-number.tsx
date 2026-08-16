@@ -48,13 +48,22 @@ export function AnimatedNumber({
   }, [value]);
 
   return (
-    <span ref={ref}>
-      <NumberFlow
-        value={shown}
-        locales={locale}
-        animated={animated}
-        spinTiming={{ duration: 1200, easing: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-      />
+    <span
+      ref={ref}
+      role="img"
+      aria-label={new Intl.NumberFormat(locale).format(value)}
+    >
+      <span aria-hidden="true">
+        <NumberFlow
+          value={shown}
+          locales={locale}
+          animated={animated}
+          spinTiming={{
+            duration: 1200,
+            easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+        />
+      </span>
     </span>
   );
 }
