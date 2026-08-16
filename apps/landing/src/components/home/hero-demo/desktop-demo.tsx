@@ -87,21 +87,21 @@ export const DesktopDemo = ({
                 </div>
                 <div className="mt-1.5 flex items-center gap-4 text-gray-600 text-sm">
                   <span className="flex items-center gap-1.5">
-                    <VoteIcon vote="yes" className="size-4" />
+                    <VoteIcon vote="yes" />
                     {t("heroDemoYes", {
                       ns: "home",
                       defaultValue: "Yes",
                     })}
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <VoteIcon vote="ifNeedBe" className="size-4" />
+                    <VoteIcon vote="ifNeedBe" />
                     {t("heroDemoIfNeedBe", {
                       ns: "home",
                       defaultValue: "If need be",
                     })}
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <VoteIcon vote="no" className="size-4" />
+                    <VoteIcon vote="no" />
                     {t("heroDemoNo", {
                       ns: "home",
                       defaultValue: "No",
@@ -224,7 +224,7 @@ export const DesktopDemo = ({
                           : "border-gray-50 border-l",
                       )}
                     >
-                      <VoteIcon vote={vote} className="size-4" />
+                      <VoteIcon vote={vote} />
                     </div>
                   ))}
                 </React.Fragment>
