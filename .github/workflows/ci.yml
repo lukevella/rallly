@@ -50,6 +50,9 @@ jobs:
       - name: Check feature folder structure
         run: pnpm check:structure
 
+      - name: Check locale files for unbalanced braces
+        run: pnpm check:locales
+
   unit-tests:
     name: Unit tests
     runs-on: ubuntu-latest
