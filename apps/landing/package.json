@@ -11,6 +11,7 @@
     "i18n:scan": "i18next-cli extract"
   },
   "dependencies": {
+    "@number-flow/react": "^0.6.2",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@rallly/billing": "workspace:*",
