@@ -12,7 +12,9 @@ export function AuthFooter() {
   const { locale } = useLocale();
 
   return (
-    <footer className="flex items-center justify-center gap-x-4">
+    // h-50 mirrors the header's 200px logo slot so the vertically centered
+    // content sits at the true middle of the page
+    <footer className="flex h-50 items-end justify-center gap-x-4">
       <LanguageSelect
         aria-label={t("language", { defaultValue: "Language" })}
         value={locale}
