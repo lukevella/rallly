@@ -1,4 +1,7 @@
 {
+  "createAPoll": "Criar enquete de reunião},{",
+  "createASchedulingPoll": "Criar enquete de agendamento",
+  "doodleAlternative": "A melhor alternativa gratuita ao Doodle",
   "doodleAlternativeDescription": "Rallly é a alternativa ao Doodle que todos procuravam. Milhares de usuários já fizeram a troca e agora estão desfrutando de enquetes de reuniões de trabalho livres de anúncios em uma interface intuitiva e fácil de usar.        ",
   "doodleAlternativeFinalCtaDescription": "Crie sua primeira enquete em segundos e veja por que tantas pessoas abandonaram o Doodle.",
   "doodleAlternativeFinalCtaTitle": "Pronto para mudar?",
@@ -27,6 +30,7 @@
   "statsLast30Days": "<b>{voterCount, plural, one {# pessoa votou} other {# pessoas votaram}}</b> em <b>{pollCount, plural, one {# enquete} other {# enquetes}}</b> nos últimos 30 dias",
   "subheading": "Reuniões de grupos coordenadas sem troca de e-mails",
   "viaTrustpilot": "via Trustpilot",
+  "when2meetAlternative": "Uma alternativa moderna ao When2Meet",
   "when2meetAlternativeDescription": "O Rallly oferece tudo o que você usa no When2Meet, sem as partes complicadas. Crie enquetes de agendamento claras que funcionam muito bem no celular, receba notificações quando os participantes responderem e gerencie todas as suas enquetes em um só lugar. Gratuito, sem anúncios e sem necessidade de conta para votar. Vindo do When2Meet ou do WhenIsGood? O Rallly vai parecer familiar desde o início.",
   "when2meetAlternativeFinalCtaDescription": "Crie uma enquete em segundos e aproveite uma forma mais prática de encontrar um horário que funcione.",
   "when2meetAlternativeFinalCtaTitle": "Pronto para uma nova abordagem do When2Meet?",
