@@ -4,7 +4,7 @@ import type { Prisma, TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { authLib } from "@/lib/auth";
 import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
-import { deleteImageFromS3 } from "@/lib/storage/image-upload";
+import { deleteStoredAsset } from "@/lib/storage/asset-upload";
 
 export async function createUser({
   name,
@@ -134,8 +134,8 @@ export async function hardDeleteUser({ userId }: { userId: string }) {
     select: { image: true },
   });
 
-  if (user?.image && !user.image.startsWith("https://")) {
-    await deleteImageFromS3(user.image);
+  if (user?.image) {
+    await deleteStoredAsset(user.image);
   }
 
   // Cascades cover content the user owns. Everything on other people's polls

@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { spaceIconAssetProfile } from "@/features/space/constants";
 
 export const memberRoleSchema = z.enum(["member", "admin"]);
 export type MemberRole = z.infer<typeof memberRoleSchema>;
@@ -28,8 +29,8 @@ export const updateSpaceHideAttributionSchema = z.object({
 });
 
 export const spaceImageUploadSchema = z.object({
-  fileType: z.enum(["image/jpeg", "image/png"]),
-  fileSize: z.number(),
+  fileType: z.enum(spaceIconAssetProfile.accept),
+  fileSize: z.number().int().positive().max(spaceIconAssetProfile.maxSize),
 });
 
 export const updateSpaceImageSchema = z.object({

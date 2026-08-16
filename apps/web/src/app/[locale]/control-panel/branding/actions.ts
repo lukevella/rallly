@@ -1,10 +1,13 @@
 "use server";
 
 import {
+  brandingLogoEntityIds,
+  brandingLogoProfiles,
+} from "@/features/instance-settings/constants";
+import {
   updateInstanceLogo,
   updateInstanceSettings,
 } from "@/features/instance-settings/mutations";
-import type { BrandingLogoType } from "@/features/instance-settings/schema";
 import {
   brandingLogoUploadSchema,
   brandingSettingsSchema,
@@ -14,7 +17,10 @@ import {
 import { getWhiteLabelAddon } from "@/features/licensing/data";
 import { AppError } from "@/lib/errors/app-error";
 import { adminActionClient } from "@/lib/safe-action/server";
-import { getImageUploadUrl } from "@/lib/storage/image-upload";
+import {
+  assertAssetKey,
+  createAssetUploadUrl,
+} from "@/lib/storage/asset-upload";
 
 async function requireWhiteLabelAddon() {
   const hasWhiteLabelAddon = await getWhiteLabelAddon();
@@ -38,12 +44,6 @@ export const updateBrandingSettingsAction = adminActionClient
     await updateInstanceSettings(parsedInput);
   });
 
-const logoEntityIds: Record<BrandingLogoType, string> = {
-  logo: "logo",
-  logoDark: "logo-dark",
-  logoIcon: "logo-icon",
-};
-
 export const getBrandingLogoUploadUrlAction = adminActionClient
   .metadata({
     actionName: "get_branding_logo_upload_url",
@@ -52,9 +52,9 @@ export const getBrandingLogoUploadUrlAction = adminActionClient
   .action(async ({ parsedInput }) => {
     await requireWhiteLabelAddon();
 
-    return await getImageUploadUrl({
-      keyPrefix: "branding",
-      entityId: logoEntityIds[parsedInput.logoType],
+    return await createAssetUploadUrl({
+      profile: brandingLogoProfiles[parsedInput.logoType],
+      entityId: brandingLogoEntityIds[parsedInput.logoType],
       fileType: parsedInput.fileType,
       fileSize: parsedInput.fileSize,
     });
@@ -68,12 +68,10 @@ export const updateBrandingLogoAction = adminActionClient
   .action(async ({ parsedInput }) => {
     await requireWhiteLabelAddon();
 
-    if (!parsedInput.imageKey.startsWith("branding/")) {
-      throw new AppError({
-        code: "FORBIDDEN",
-        message: "Invalid image key",
-      });
-    }
+    assertAssetKey(parsedInput.imageKey, {
+      profile: brandingLogoProfiles[parsedInput.logoType],
+      entityId: brandingLogoEntityIds[parsedInput.logoType],
+    });
 
     await updateInstanceLogo({
       logoType: parsedInput.logoType,

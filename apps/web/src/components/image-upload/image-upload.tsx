@@ -4,45 +4,76 @@ import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
 import React from "react";
+import { useAssetUpload } from "@/components/asset-upload/use-asset-upload";
 import { ImageCropDialog } from "@/components/image-upload/image-crop-dialog";
-import type {
-  ImageUploadControlProps,
-  ImageUploadPreviewProps,
-  ImageUploadProps,
-} from "@/components/image-upload/types";
-import {
-  allowedMimeTypes,
-  defaultAcceptedMimeTypes,
-} from "@/components/image-upload/types";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
-import {
-  createImagePreviewUrl,
-  validateImageFile,
-} from "@/lib/image-processing";
-import { uploadImage } from "@/lib/storage/upload-client";
+import { createImagePreviewUrl } from "@/lib/image-processing";
+import type { AssetProfile } from "@/lib/storage/asset-profile";
+import { validateAssetFile } from "@/lib/storage/asset-profile";
 
-export function ImageUpload({ className, children }: ImageUploadProps) {
+export function ImageUpload({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
   return (
     <div className={cn("flex items-center gap-x-4", className)}>{children}</div>
   );
 }
 
-export function ImageUploadControl({
-  getUploadUrl,
-  onUploadSuccess,
-  onRemoveSuccess,
+const fileTypeLabels: Record<string, string> = {
+  "image/jpeg": "JPG",
+  "image/png": "PNG",
+  "image/svg+xml": "SVG",
+};
+
+function formatFileTypes(accept: readonly string[], language: string): string {
+  const labels = accept.map(
+    (mimeType) =>
+      fileTypeLabels[mimeType] ??
+      mimeType.split("/").pop()?.toUpperCase() ??
+      mimeType,
+  );
+  return new Intl.ListFormat(language, { type: "disjunction" }).format(labels);
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes >= 1024 * 1024) {
+    return `${Math.round(bytes / (1024 * 1024))}MB`;
+  }
+  return `${Math.round(bytes / 1024)}KB`;
+}
+
+export function ImageUploadControl<TAccept extends string>({
+  profile,
+  signUpload,
+  persistUpload,
+  onRemove,
   hasCurrentImage = false,
-  crop = true,
-  accept = defaultAcceptedMimeTypes,
   disabled = false,
-}: ImageUploadControlProps) {
-  const acceptsSvg = accept.includes("image/svg+xml");
+}: {
+  /** The asset slot this control uploads into; drives validation and hints. */
+  profile: AssetProfile & { accept: readonly [TAccept, ...TAccept[]] };
+  signUpload: Parameters<typeof useAssetUpload<TAccept>>[0]["signUpload"];
+  persistUpload: Parameters<typeof useAssetUpload<TAccept>>[0]["persistUpload"];
+  onRemove: () => Promise<unknown>;
+  hasCurrentImage?: boolean;
+  disabled?: boolean;
+}) {
   const isStorageEnabled = useFeatureFlag("storage");
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isRemoving, startRemoving] = React.useTransition();
-  const [isUploading, startUploading] = React.useTransition();
+  const { upload, isUploading } = useAssetUpload({
+    signUpload,
+    persistUpload,
+  });
+
+  const acceptedFormats = formatFileTypes(profile.accept, i18n.language);
+  const maxFileSize = formatFileSize(profile.maxSize);
 
   // Cropping state
   const [showCropDialog, setShowCropDialog] = React.useState(false);
@@ -61,8 +92,7 @@ export function ImageUploadControl({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate the file
-    const validation = validateImageFile(file, accept);
+    const validation = validateAssetFile(file, profile);
     if (!validation.success) {
       switch (validation.error) {
         case "invalidFileType":
@@ -71,13 +101,10 @@ export function ImageUploadControl({
               defaultValue: "Invalid file type",
             }),
             {
-              description: acceptsSvg
-                ? t("invalidFileTypeSvgDescription", {
-                    defaultValue: "Please upload an SVG, JPG or PNG file.",
-                  })
-                : t("invalidFileTypeDescription", {
-                    defaultValue: "Please upload a JPG or PNG file.",
-                  }),
+              description: t("imageUploadInvalidFileTypeDescription", {
+                defaultValue: "Accepted formats: {{formats}}",
+                formats: acceptedFormats,
+              }),
             },
           );
           break;
@@ -87,8 +114,9 @@ export function ImageUploadControl({
               defaultValue: "File too large",
             }),
             {
-              description: t("fileTooLargeDescription", {
-                defaultValue: "Please upload a file smaller than 2MB.",
+              description: t("imageUploadFileTooLargeDescription", {
+                defaultValue: "Please upload a file smaller than {{size}}.",
+                size: maxFileSize,
               }),
             },
           );
@@ -102,8 +130,8 @@ export function ImageUploadControl({
       return;
     }
 
-    if (!crop) {
-      startUpload(file);
+    if (!profile.crop) {
+      upload(file);
       event.target.value = "";
       return;
     }
@@ -119,44 +147,10 @@ export function ImageUploadControl({
     event.target.value = "";
   };
 
-  const startUpload = (file: File, onUploaded?: () => void) => {
-    const parsedFileType = allowedMimeTypes.parse(file.type);
-
-    startUploading(async () => {
-      try {
-        const { url, fields } = await getUploadUrl({
-          fileType: parsedFileType,
-          fileSize: file.size,
-        });
-
-        await uploadImage({
-          file,
-          url,
-          fileType: parsedFileType,
-        });
-
-        await onUploadSuccess(fields.key);
-        onUploaded?.();
-      } catch {
-        toast.error(
-          t("errorUploadPicture", {
-            defaultValue: "Failed to upload",
-          }),
-          {
-            description: t("errorUploadPictureDescription", {
-              defaultValue:
-                "There was an issue uploading your picture. Please try again later.",
-            }),
-          },
-        );
-      }
-    });
-  };
-
   const handleCropComplete = async (croppedFile: File) => {
     if (!originalFile) return;
 
-    startUpload(croppedFile, handleCloseCropDialog);
+    upload(croppedFile, { onSuccess: handleCloseCropDialog });
   };
 
   const handleCloseCropDialog = () => {
@@ -173,7 +167,7 @@ export function ImageUploadControl({
 
   const handleRemove = async () => {
     startRemoving(async () => {
-      await onRemoveSuccess();
+      await onRemove();
     });
   };
 
@@ -202,22 +196,16 @@ export function ImageUploadControl({
           ) : null}
         </div>
         <p className="text-muted-foreground text-xs">
-          {acceptsSvg ? (
-            <Trans
-              i18nKey="imageUploadSvgDescription"
-              defaults="Up to 2MB, SVG, JPG or PNG"
-            />
-          ) : (
-            <Trans
-              i18nKey="imageUploadDescription"
-              defaults="Up to 2MB, JPG or PNG"
-            />
-          )}
+          {t("imageUploadHint", {
+            defaultValue: "Up to {{size}}, {{formats}}",
+            size: maxFileSize,
+            formats: acceptedFormats,
+          })}
         </p>
         <input
           ref={fileInputRef}
           type="file"
-          accept={accept.join(",")}
+          accept={profile.accept.join(",")}
           onChange={handleFileChange}
           className="hidden"
         />
@@ -238,7 +226,10 @@ export function ImageUploadControl({
 export function ImageUploadPreview({
   className,
   children,
-}: ImageUploadPreviewProps) {
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
   return (
     <div className={cn("relative overflow-hidden", className)}>{children}</div>
   );

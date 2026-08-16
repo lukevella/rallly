@@ -2,23 +2,14 @@ import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { createLogger } from "@rallly/logger";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-
+import { assetProfiles } from "@/app/api/storage/asset-profiles";
 import { env } from "@/env";
 import { isSelfHosted } from "@/lib/constants";
-import { verifyUploadToken } from "@/lib/storage/image-upload";
+import { parseAssetKey } from "@/lib/storage/asset-profile";
+import { verifyUploadToken } from "@/lib/storage/asset-upload";
 import { getS3Client } from "@/lib/storage/s3";
 
 const logger = createLogger("api/storage");
-
-const MAX_UPLOAD_BYTES = 2 * 1024 * 1024;
-// The signed upload key's extension is derived server-side from the
-// validated file type, so it decides which content type a PUT may carry —
-// without this, any signed URL (e.g. an avatar's) could store an SVG
-const CONTENT_TYPE_BY_KEY_EXTENSION: Record<string, string> = {
-  jpg: "image/jpeg",
-  png: "image/png",
-  svg: "image/svg+xml",
-};
 
 async function getAvatar(key: string) {
   const s3Client = getS3Client();
@@ -102,20 +93,28 @@ export async function PUT(
     return new NextResponse("Invalid token", { status: 401 });
   }
 
-  const contentType = req.headers.get("content-type") ?? "";
-  const keyExtension = key.split(".").pop() ?? "";
-  const expectedContentType = CONTENT_TYPE_BY_KEY_EXTENSION[keyExtension];
+  // The signed key was produced from a profile, so the profile decides which
+  // content type and size this PUT may carry — without this, any signed URL
+  // (e.g. an avatar's) could store an SVG
+  const parsedKey = parseAssetKey(key, assetProfiles);
 
-  if (!expectedContentType || contentType !== expectedContentType) {
+  if (!parsedKey) {
+    return new NextResponse("Not found", { status: 404 });
+  }
+
+  const contentType = req.headers.get("content-type") ?? "";
+
+  if (contentType !== parsedKey.mimeType) {
     return new NextResponse("Unsupported content type", { status: 415 });
   }
 
+  const maxUploadBytes = parsedKey.profile.maxSize;
   const contentLength = Number(req.headers.get("content-length"));
 
   if (
     !Number.isFinite(contentLength) ||
     contentLength <= 0 ||
-    contentLength > MAX_UPLOAD_BYTES
+    contentLength > maxUploadBytes
   ) {
     return new NextResponse("Invalid content length", { status: 413 });
   }
@@ -128,7 +127,7 @@ export async function PUT(
 
   const arrayBuffer = await req.arrayBuffer();
 
-  if (arrayBuffer.byteLength > MAX_UPLOAD_BYTES) {
+  if (arrayBuffer.byteLength > maxUploadBytes) {
     return new NextResponse("Payload too large", { status: 413 });
   }
 

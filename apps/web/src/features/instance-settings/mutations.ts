@@ -2,9 +2,7 @@ import "server-only";
 
 import { prisma } from "@rallly/database";
 import { updateTag } from "next/cache";
-import { after } from "next/server";
-import { deleteImageFromS3 } from "@/lib/storage/image-upload";
-import { isStorageKey } from "@/lib/storage/resolve-storage-url";
+import { replaceStoredAsset } from "@/lib/storage/asset-upload";
 import { instanceSettingsTag } from "./constants";
 import type { BrandingLogoType } from "./schema";
 
@@ -44,22 +42,20 @@ export async function updateInstanceLogo({
     },
   });
 
-  const oldValue = instanceSettings?.[logoType];
+  await replaceStoredAsset({
+    currentKey: instanceSettings?.[logoType],
+    nextKey: imageKey,
+    persist: async () => {
+      await prisma.instanceSettings.update({
+        where: {
+          id: 1,
+        },
+        data: {
+          [logoType]: imageKey,
+        },
+      });
 
-  await prisma.instanceSettings.update({
-    where: {
-      id: 1,
-    },
-    data: {
-      [logoType]: imageKey,
+      updateTag(instanceSettingsTag);
     },
   });
-
-  updateTag(instanceSettingsTag);
-
-  // Only delete objects we own; a URL value points at externally hosted
-  // media, and a retry can resubmit the key that is now stored
-  if (oldValue && oldValue !== imageKey && isStorageKey(oldValue)) {
-    after(() => deleteImageFromS3(oldValue));
-  }
 }

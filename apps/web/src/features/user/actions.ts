@@ -4,6 +4,7 @@ import { prisma } from "@rallly/database";
 import { supportedLngs } from "@rallly/languages";
 import { headers } from "next/headers";
 import * as z from "zod";
+import { avatarAssetProfile } from "@/features/user/constants";
 import { banUser, unbanUser, updateUserRole } from "@/features/user/mutations";
 import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
@@ -14,9 +15,10 @@ import {
   createRateLimitMiddleware,
 } from "@/lib/safe-action/server";
 import {
-  deleteImageFromS3,
-  getImageUploadUrl,
-} from "@/lib/storage/image-upload";
+  assertAssetKey,
+  createAssetUploadUrl,
+  replaceStoredAsset,
+} from "@/lib/storage/asset-upload";
 import { timezoneSchema } from "@/lib/utils/timezone-schema";
 
 // Self-profile updates call Better-Auth's updateUser endpoint directly
@@ -73,13 +75,13 @@ export const getAvatarUploadUrlAction = authActionClient
   .use(createRateLimitMiddleware(10, "1 h"))
   .inputSchema(
     z.object({
-      fileType: z.enum(["image/jpeg", "image/png"]),
-      fileSize: z.number(),
+      fileType: z.enum(avatarAssetProfile.accept),
+      fileSize: z.number().int().positive().max(avatarAssetProfile.maxSize),
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
-    return await getImageUploadUrl({
-      keyPrefix: "avatars",
+    return await createAssetUploadUrl({
+      profile: avatarAssetProfile,
       entityId: ctx.user.id,
       fileType: parsedInput.fileType,
       fileSize: parsedInput.fileSize,
@@ -96,44 +98,36 @@ export const updateUserAvatarAction = authActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { imageKey } = parsedInput;
 
-    if (!imageKey.startsWith(`avatars/${ctx.user.id}-`)) {
-      throw new AppError({
-        code: "FORBIDDEN",
-        message: "Invalid image key",
-      });
-    }
-
-    const oldImageKey = ctx.user.image;
-
-    await authLib.api.updateUser({
-      body: { image: imageKey },
-      headers: await headers(),
+    assertAssetKey(imageKey, {
+      profile: avatarAssetProfile,
+      entityId: ctx.user.id,
     });
 
-    // Only delete from storage if it's an internal avatar, not an external
-    // URL from an OAuth provider.
-    if (oldImageKey && !oldImageKey.startsWith("https://")) {
-      await deleteImageFromS3(oldImageKey);
-    }
+    await replaceStoredAsset({
+      currentKey: ctx.user.image,
+      nextKey: imageKey,
+      persist: async () => {
+        await authLib.api.updateUser({
+          body: { image: imageKey },
+          headers: await headers(),
+        });
+      },
+    });
   });
 
 export const removeUserAvatarAction = authActionClient
   .metadata({ actionName: "remove_user_avatar" })
   .action(async ({ ctx }) => {
-    const oldImageKey = ctx.user.image;
-
-    await authLib.api.updateUser({
-      body: { image: null },
-      headers: await headers(),
+    await replaceStoredAsset({
+      currentKey: ctx.user.image,
+      nextKey: null,
+      persist: async () => {
+        await authLib.api.updateUser({
+          body: { image: null },
+          headers: await headers(),
+        });
+      },
     });
-
-    // Only delete from storage if it's an internal avatar, not an external
-    // URL from an OAuth provider.
-    const isInternalAvatar = oldImageKey && !oldImageKey.startsWith("https://");
-
-    if (isInternalAvatar) {
-      await deleteImageFromS3(oldImageKey);
-    }
   });
 
 export const changeRoleAction = adminActionClient

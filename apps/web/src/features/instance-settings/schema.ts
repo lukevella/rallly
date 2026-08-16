@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { brandingLogoAssetProfile } from "./constants";
 
 export const instanceSettingsSchema = z.object({
   disableUserRegistration: z.boolean(),
@@ -19,23 +20,13 @@ export const brandingLogoTypeSchema = z.enum(["logo", "logoDark", "logoIcon"]);
 
 export type BrandingLogoType = z.infer<typeof brandingLogoTypeSchema>;
 
-export const brandingLogoUploadSchema = z
-  .object({
-    logoType: brandingLogoTypeSchema,
-    fileType: z.enum(["image/jpeg", "image/png", "image/svg+xml"]),
-    fileSize: z
-      .number()
-      .int()
-      .positive()
-      .max(2 * 1024 * 1024),
-  })
-  // The icon renders in emails, where SVG support is unreliable across
-  // clients — raster only for that slot
-  .refine(
-    (value) =>
-      !(value.logoType === "logoIcon" && value.fileType === "image/svg+xml"),
-    { message: "The logo icon does not support SVG" },
-  );
+// The accept list is the wordmark profile's (the widest slot); the icon's
+// raster-only restriction is enforced at sign time against its own profile.
+export const brandingLogoUploadSchema = z.object({
+  logoType: brandingLogoTypeSchema,
+  fileType: z.enum(brandingLogoAssetProfile.accept),
+  fileSize: z.number().int().positive().max(brandingLogoAssetProfile.maxSize),
+});
 
 export const updateBrandingLogoSchema = z.object({
   logoType: brandingLogoTypeSchema,

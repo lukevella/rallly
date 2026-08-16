@@ -19,8 +19,6 @@ import {
   ImageUploadControl,
   ImageUploadPreview,
 } from "@/components/image-upload";
-import type { AllowedMimeType } from "@/components/image-upload/types";
-import { rasterMimeTypes } from "@/components/image-upload/types";
 import { InputWithSaveButton } from "@/components/input-with-save-button";
 import {
   getSpaceImageUploadUrlAction,
@@ -29,6 +27,7 @@ import {
   updateSpaceImageAction,
 } from "@/features/space/actions";
 import { SpaceIcon } from "@/features/space/components/space-icon";
+import { spaceIconAssetProfile } from "@/features/space/constants";
 import type { SpaceDTO } from "@/features/space/types";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -54,6 +53,7 @@ export function SpaceSettingsForm({
   const { t } = useTranslation();
 
   const updateSpace = useSafeAction(updateSpaceAction);
+  const getImageUploadUrl = useSafeAction(getSpaceImageUploadUrlAction);
   const updateImage = useSafeAction(updateSpaceImageAction);
   const removeImage = useSafeAction(removeSpaceImageAction);
 
@@ -63,31 +63,6 @@ export function SpaceSettingsForm({
       name: space.name,
     },
   });
-
-  const handleGetUploadUrl = async (input: {
-    fileType: AllowedMimeType;
-    fileSize: number;
-  }) => {
-    // The control only accepts raster types here (default accept list)
-    const result = await getSpaceImageUploadUrlAction({
-      fileType: rasterMimeTypes.parse(input.fileType),
-      fileSize: input.fileSize,
-    });
-
-    if (!result?.data) {
-      throw new Error("Failed to get upload URL");
-    }
-
-    return result.data;
-  };
-
-  const handleImageUploadSuccess = async (imageKey: string) => {
-    await updateImage.executeAsync({ imageKey });
-  };
-
-  const handleImageRemoveSuccess = async () => {
-    await removeImage.executeAsync();
-  };
 
   return (
     <>
@@ -108,9 +83,10 @@ export function SpaceSettingsForm({
             <SpaceIcon name={space.name} src={space.image} size="xl" />
           </ImageUploadPreview>
           <ImageUploadControl
-            getUploadUrl={handleGetUploadUrl}
-            onUploadSuccess={handleImageUploadSuccess}
-            onRemoveSuccess={handleImageRemoveSuccess}
+            profile={spaceIconAssetProfile}
+            signUpload={(input) => getImageUploadUrl.executeAsync(input)}
+            persistUpload={(imageKey) => updateImage.executeAsync({ imageKey })}
+            onRemove={() => removeImage.executeAsync()}
             hasCurrentImage={!!space.image}
           />
         </ImageUpload>
