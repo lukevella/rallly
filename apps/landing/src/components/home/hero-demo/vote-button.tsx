@@ -1,0 +1,120 @@
+"use client";
+import { posthog } from "@rallly/posthog/client";
+import { CircleCheckIcon, XIcon } from "lucide-react";
+import * as m from "motion/react-m";
+import Link from "next/link";
+import * as React from "react";
+import { Trans } from "@/i18n/client/trans";
+import { useTranslation } from "@/i18n/client/use-translation";
+import { linkToApp } from "@/lib/linkToApp";
+
+// The submit action of the phone demo, plus the confirmation it opens. The
+// surrounding poll layout stays on the server.
+export const VoteButton = () => {
+  const { t } = useTranslation("home");
+  const [submitted, setSubmitted] = React.useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => {
+          posthog?.capture("landing:hero_demo_continue_click");
+          setSubmitted(true);
+        }}
+        className="flex-[2] cursor-pointer rounded-xl bg-indigo-500/90 py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md hover:bg-indigo-500"
+      >
+        <Trans ns="home" i18nKey="heroDemoVote" defaults="Vote" />
+      </button>
+      {submitted && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gray-900/20 p-4">
+          <m.div
+            initial={{ scale: 0.92, opacity: 0, y: 8 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ type: "spring", duration: 0.5, bounce: 0.35 }}
+            className="relative flex aspect-[4/3] w-full flex-col items-center justify-center rounded-2xl border border-white/60 bg-white/85 p-4 text-center shadow-lg backdrop-blur-xl"
+          >
+            <button
+              type="button"
+              aria-label={t("heroDemoClose", { defaultValue: "Close" })}
+              onClick={() => {
+                posthog?.capture("landing:hero_demo_close_click");
+                setSubmitted(false);
+              }}
+              className="absolute top-3 right-3 flex size-6 cursor-pointer items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            >
+              <XIcon className="size-4" />
+            </button>
+            <m.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                type: "spring",
+                duration: 0.6,
+                bounce: 0.45,
+                delay: 0.1,
+              }}
+              className="relative mb-3 inline-block"
+            >
+              <div className="absolute top-0 right-0 bottom-2 -left-1.5 origin-bottom -rotate-12 scale-95 rounded-xl bg-white opacity-75 shadow-xs ring-1 ring-gray-200 ring-inset" />
+              <div className="absolute top-0 -right-1.5 bottom-2 left-0 origin-bottom rotate-12 scale-95 rounded-xl bg-white opacity-75 shadow-xs ring-1 ring-gray-200 ring-inset" />
+              <div className="relative inline-flex rounded-xl bg-white p-2.5 shadow-xs ring-1 ring-gray-200 ring-inset">
+                <CircleCheckIcon className="size-5 text-green-500" />
+              </div>
+            </m.div>
+            <m.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                duration: 0.6,
+                bounce: 0.3,
+                delay: 0.2,
+              }}
+            >
+              <p className="font-semibold text-gray-900 text-sm">
+                <Trans
+                  ns="home"
+                  i18nKey="heroDemoThatWasEasy"
+                  defaults="That was easy!"
+                />
+              </p>
+              <p className="mt-1.5 text-gray-500 text-xs">
+                <Trans
+                  ns="home"
+                  i18nKey="heroDemoEasyDescription"
+                  defaults="That's all it takes to respond to a poll."
+                />
+              </p>
+            </m.div>
+            <m.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                duration: 0.6,
+                bounce: 0.3,
+                delay: 0.3,
+              }}
+              className="mt-4"
+            >
+              <Link
+                href={linkToApp("/new")}
+                onClick={() => {
+                  posthog?.capture("landing:hero_demo_modal_cta_click");
+                }}
+                className="font-medium text-indigo-600 text-xs hover:underline"
+              >
+                <Trans
+                  ns="home"
+                  i18nKey="heroDemoCreatePoll"
+                  defaults="Create your own poll"
+                />
+              </Link>
+            </m.div>
+          </m.div>
+        </div>
+      )}
+    </>
+  );
+};
