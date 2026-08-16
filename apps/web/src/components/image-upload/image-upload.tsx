@@ -53,10 +53,17 @@ export function ImageUploadControl<TAccept extends string>({
   persistUpload,
   onRemove,
   hasCurrentImage = false,
+  crop = false,
   disabled = false,
 }: {
   /** The asset slot this control uploads into; drives validation and hints. */
   profile: AssetProfile & { accept: readonly [TAccept, ...TAccept[]] };
+  /**
+   * Run the selected file through the 1:1 crop dialog before uploading.
+   * Only raster types can be cropped (the crop canvas cannot process SVG),
+   * so this requires a raster-only profile.
+   */
+  crop?: boolean;
   signUpload: Parameters<typeof useAssetUpload<TAccept>>[0]["signUpload"];
   persistUpload: Parameters<typeof useAssetUpload<TAccept>>[0]["persistUpload"];
   onRemove: () => Promise<unknown>;
@@ -130,7 +137,7 @@ export function ImageUploadControl<TAccept extends string>({
       return;
     }
 
-    if (!profile.crop) {
+    if (!crop) {
       upload(file);
       event.target.value = "";
       return;

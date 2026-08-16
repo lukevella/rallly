@@ -7,7 +7,6 @@ const avatarProfile = {
   keyPrefix: "avatars",
   accept: ["image/jpeg", "image/png"],
   maxSize: 2 * 1024 * 1024,
-  crop: true,
 } as const satisfies AssetProfile;
 
 const wordmarkProfile = {
@@ -16,7 +15,6 @@ const wordmarkProfile = {
   entityIds: ["logo", "logo-dark"],
   accept: ["image/jpeg", "image/png", "image/svg+xml"],
   maxSize: 2 * 1024 * 1024,
-  crop: false,
 } as const satisfies AssetProfile;
 
 const iconProfile = {
@@ -25,7 +23,6 @@ const iconProfile = {
   entityIds: ["logo-icon"],
   accept: ["image/jpeg", "image/png"],
   maxSize: 2 * 1024 * 1024,
-  crop: false,
 } as const satisfies AssetProfile;
 
 const profiles = [avatarProfile, wordmarkProfile, iconProfile];

@@ -33,6 +33,7 @@ function ProfilePictureUpload({
       </ImageUploadPreview>
       <ImageUploadControl
         profile={avatarAssetProfile}
+        crop
         signUpload={(input) => getAvatarUploadUrl.executeAsync(input)}
         persistUpload={(imageKey) =>
           updateUserAvatar.executeAsync({ imageKey })

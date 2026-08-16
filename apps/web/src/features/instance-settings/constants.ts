@@ -11,7 +11,6 @@ export const brandingLogoAssetProfile = {
   entityIds: ["logo", "logo-dark"],
   accept: ["image/jpeg", "image/png", "image/svg+xml"],
   maxSize: 2 * 1024 * 1024,
-  crop: false,
 } as const satisfies AssetProfile;
 
 export const brandingLogoIconAssetProfile = {
@@ -20,7 +19,6 @@ export const brandingLogoIconAssetProfile = {
   entityIds: ["logo-icon"],
   accept: ["image/jpeg", "image/png"],
   maxSize: 2 * 1024 * 1024,
-  crop: false,
 } as const satisfies AssetProfile;
 
 // Keyed by BrandingLogoType (schema.ts); declared structurally to keep this

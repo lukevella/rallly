@@ -8,7 +8,8 @@
  * the upload control reads it for client-side validation and hint copy.
  *
  * The storage core is media-agnostic: nothing here branches on whether the
- * bytes are pixels. `crop` is data for the UI edge only.
+ * bytes are pixels. Presentation concerns like cropping belong to the UI
+ * components that produce the file, not to the profile.
  */
 export interface AssetProfile {
   id: string;
@@ -27,12 +28,6 @@ export interface AssetProfile {
   accept: readonly [string, ...string[]];
   /** Maximum file size in bytes. */
   maxSize: number;
-  /**
-   * UI edge hint: run the selected file through the 1:1 crop dialog before
-   * uploading. Only raster types can be cropped (the crop canvas cannot
-   * process SVG), so `crop: true` requires a raster-only `accept` list.
-   */
-  crop: boolean;
 }
 
 export const extensionByMimeType: Record<string, string> = {

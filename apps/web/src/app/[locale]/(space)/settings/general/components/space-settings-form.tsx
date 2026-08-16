@@ -84,6 +84,7 @@ export function SpaceSettingsForm({
           </ImageUploadPreview>
           <ImageUploadControl
             profile={spaceIconAssetProfile}
+            crop
             signUpload={(input) => getImageUploadUrl.executeAsync(input)}
             persistUpload={(imageKey) => updateImage.executeAsync({ imageKey })}
             onRemove={() => removeImage.executeAsync()}
