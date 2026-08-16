@@ -1,8 +1,9 @@
 {
-  "bestDoodleAlternative": "Best Doodle alternative",
   "blog": "Blog",
+  "compare": "Compare",
   "cookiePolicy": "Cookie policy",
   "discussions": "Discussions",
+  "doodleAlternative": "Doodle alternative",
   "footerDiscordLabel": "Join us on Discord",
   "footerGithubLabel": "View our GitHub repository",
   "footerLinkedinLabel": "Follow us on LinkedIn",
@@ -29,7 +30,6 @@
   "pricing": "Pricing",
   "privacyPolicy": "Privacy policy",
   "signUp": "Sign up",
-  "solutions": "Solutions",
   "status": "Status",
   "support": "Support",
   "termsOfUse": "Terms of use",

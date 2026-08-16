@@ -68,7 +68,7 @@ export const Footer: React.FunctionComponent = () => {
   return (
     <div className="mx-auto space-y-8">
       <div className="space-y-16 lg:flex lg:space-x-8 lg:space-y-0">
-        <div className="lg:w-2/6">
+        <div className="lg:w-1/4">
           <div className="relative h-[30px] w-[30px]">
             <Image
               src="/logo-footer.svg"
@@ -131,7 +131,7 @@ export const Footer: React.FunctionComponent = () => {
             </a>
           </div>
         </div>
-        <div className="lg:w-1/6">
+        <div className="lg:flex-1">
           <div className="mb-8 font-medium">
             <Trans ns="common" i18nKey="links" defaults="Links" />
           </div>
@@ -142,6 +142,18 @@ export const Footer: React.FunctionComponent = () => {
                 href="/pricing"
               >
                 <Trans i18nKey="pricing" defaults="Pricing" />
+              </LinkBase>
+            </li>
+            <li>
+              <LinkBase
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                href="/free-scheduling-poll"
+              >
+                <Trans
+                  ns="common"
+                  i18nKey="freeSchedulingPoll"
+                  defaults="Free scheduling poll"
+                />
               </LinkBase>
             </li>
             <li>
@@ -184,9 +196,9 @@ export const Footer: React.FunctionComponent = () => {
             </li>
           </ul>
         </div>
-        <div className="lg:w-1/6">
+        <div className="lg:flex-1">
           <div className="mb-8 font-medium">
-            <Trans i18nKey="solutions" defaults="Solutions" />
+            <Trans ns="common" i18nKey="compare" defaults="Compare" />
           </div>
           <ul className="grid gap-2 text-sm">
             <li>
@@ -196,8 +208,8 @@ export const Footer: React.FunctionComponent = () => {
               >
                 <Trans
                   ns="common"
-                  i18nKey="bestDoodleAlternative"
-                  defaults="Best Doodle alternative"
+                  i18nKey="doodleAlternative"
+                  defaults="Doodle alternative"
                 />
               </LinkBase>
             </li>
@@ -213,21 +225,9 @@ export const Footer: React.FunctionComponent = () => {
                 />
               </LinkBase>
             </li>
-            <li>
-              <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-                href="/free-scheduling-poll"
-              >
-                <Trans
-                  ns="common"
-                  i18nKey="freeSchedulingPoll"
-                  defaults="Free scheduling poll"
-                />
-              </LinkBase>
-            </li>
           </ul>
         </div>
-        <div className="lg:w-2/6">
+        <div className="lg:w-1/4">
           <div className="mb-8 font-medium">
             <Trans ns="common" i18nKey="language" defaults="Language" />
           </div>
