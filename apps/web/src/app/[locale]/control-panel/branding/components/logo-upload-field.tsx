@@ -75,52 +75,56 @@ export function LogoUploadField({
         )}
       >
         <div className="relative flex h-40 w-50 items-center justify-center">
-          <div
-            aria-hidden="true"
-            className={cn(
-              "absolute -inset-x-[100vw] top-0 border-t border-dashed",
-              previewVariants[logoType].line,
-            )}
-          />
-          <div
-            aria-hidden="true"
-            className={cn(
-              "absolute -inset-x-[100vw] bottom-0 border-t border-dashed",
-              previewVariants[logoType].line,
-            )}
-          />
-          <div
-            aria-hidden="true"
-            className={cn(
-              "absolute -inset-y-[100vh] left-0 border-l border-dashed",
-              previewVariants[logoType].line,
-            )}
-          />
-          <div
-            aria-hidden="true"
-            className={cn(
-              "absolute -inset-y-[100vh] right-0 border-l border-dashed",
-              previewVariants[logoType].line,
-            )}
-          />
-          <span
-            aria-hidden="true"
-            className={cn(
-              "absolute top-full left-1/2 mt-1.5 -translate-x-1/2 text-[10px] tabular-nums",
-              previewVariants[logoType].label,
-            )}
-          >
-            200px
-          </span>
-          <span
-            aria-hidden="true"
-            className={cn(
-              "absolute top-1/2 left-full ml-1.5 -translate-y-1/2 text-[10px] tabular-nums",
-              previewVariants[logoType].label,
-            )}
-          >
-            160px
-          </span>
+          {logoType !== "logoIcon" ? (
+            <>
+              <div
+                aria-hidden="true"
+                className={cn(
+                  "absolute -inset-x-[100vw] top-0 border-t border-dashed",
+                  previewVariants[logoType].line,
+                )}
+              />
+              <div
+                aria-hidden="true"
+                className={cn(
+                  "absolute -inset-x-[100vw] bottom-0 border-t border-dashed",
+                  previewVariants[logoType].line,
+                )}
+              />
+              <div
+                aria-hidden="true"
+                className={cn(
+                  "absolute -inset-y-[100vh] left-0 border-l border-dashed",
+                  previewVariants[logoType].line,
+                )}
+              />
+              <div
+                aria-hidden="true"
+                className={cn(
+                  "absolute -inset-y-[100vh] right-0 border-l border-dashed",
+                  previewVariants[logoType].line,
+                )}
+              />
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "absolute top-full left-1/2 mt-1.5 -translate-x-1/2 text-[10px] tabular-nums",
+                  previewVariants[logoType].label,
+                )}
+              >
+                200px
+              </span>
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "absolute top-1/2 left-full ml-1.5 -translate-y-1/2 text-[10px] tabular-nums",
+                  previewVariants[logoType].label,
+                )}
+              >
+                160px
+              </span>
+            </>
+          ) : null}
           {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
           <img
             src={previewUrl}
