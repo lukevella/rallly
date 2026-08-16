@@ -19,6 +19,8 @@ import {
   ImageUploadControl,
   ImageUploadPreview,
 } from "@/components/image-upload";
+import type { AllowedMimeType } from "@/components/image-upload/types";
+import { rasterMimeTypes } from "@/components/image-upload/types";
 import { InputWithSaveButton } from "@/components/input-with-save-button";
 import {
   getSpaceImageUploadUrlAction,
@@ -63,10 +65,14 @@ export function SpaceSettingsForm({
   });
 
   const handleGetUploadUrl = async (input: {
-    fileType: "image/jpeg" | "image/png";
+    fileType: AllowedMimeType;
     fileSize: number;
   }) => {
-    const result = await getSpaceImageUploadUrlAction(input);
+    // The control only accepts raster types here (default accept list)
+    const result = await getSpaceImageUploadUrlAction({
+      fileType: rasterMimeTypes.parse(input.fileType),
+      fileSize: input.fileSize,
+    });
 
     if (!result?.data) {
       throw new Error("Failed to get upload URL");

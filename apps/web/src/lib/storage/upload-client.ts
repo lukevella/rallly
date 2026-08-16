@@ -3,7 +3,7 @@ import { AppError } from "@/lib/errors/app-error";
 export interface UploadImageParams {
   file: File;
   url: string;
-  fileType: "image/jpeg" | "image/png";
+  fileType: "image/jpeg" | "image/png" | "image/svg+xml";
 }
 
 export async function uploadImage({

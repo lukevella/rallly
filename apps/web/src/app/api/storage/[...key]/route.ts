@@ -11,7 +11,11 @@ import { getS3Client } from "@/lib/storage/s3";
 const logger = createLogger("api/storage");
 
 const MAX_UPLOAD_BYTES = 2 * 1024 * 1024;
-const ALLOWED_UPLOAD_CONTENT_TYPES = new Set(["image/jpeg", "image/png"]);
+const ALLOWED_UPLOAD_CONTENT_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/svg+xml",
+]);
 
 async function getAvatar(key: string) {
   const s3Client = getS3Client();
@@ -56,6 +60,13 @@ export async function GET(
       headers: {
         "Content-Type": contentType,
         "Cache-Control": "public, max-age=3600",
+        // Uploads are served from the app origin. The sandbox neutralizes
+        // scripts in SVGs when the file is opened directly; it does not
+        // apply to <img> subresource loads, so rendering is unaffected.
+        // frame-ancestors is carried over from the global header, which
+        // excludes this path so it can't override the sandbox directive.
+        "Content-Security-Policy": "sandbox; frame-ancestors 'none'",
+        "X-Content-Type-Options": "nosniff",
       },
     });
   } catch (error) {

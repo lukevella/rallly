@@ -112,7 +112,9 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/:path*",
+        // /api/storage sets its own CSP (sandbox + frame-ancestors) per
+        // response; a config header for the same key would override it
+        source: "/((?!api/storage).*)",
         headers: [
           {
             key: "Content-Security-Policy",

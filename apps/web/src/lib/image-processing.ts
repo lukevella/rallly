@@ -153,9 +153,10 @@ export type ImageValidationResult =
  * @param file - File to validate
  * @returns Object with success boolean and optional error message
  */
-export function validateImageFile(file: File): ImageValidationResult {
-  const allowedMimeTypes = ["image/jpeg", "image/png"];
-
+export function validateImageFile(
+  file: File,
+  allowedMimeTypes: string[] = ["image/jpeg", "image/png"],
+): ImageValidationResult {
   if (!allowedMimeTypes.includes(file.type)) {
     return {
       success: false,
