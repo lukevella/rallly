@@ -57,8 +57,9 @@ export async function updateInstanceLogo({
 
   updateTag(instanceSettingsTag);
 
-  // Only delete objects we own; a URL value points at externally hosted media
-  if (oldValue && isStorageKey(oldValue)) {
+  // Only delete objects we own; a URL value points at externally hosted
+  // media, and a retry can resubmit the key that is now stored
+  if (oldValue && oldValue !== imageKey && isStorageKey(oldValue)) {
     after(() => deleteImageFromS3(oldValue));
   }
 }

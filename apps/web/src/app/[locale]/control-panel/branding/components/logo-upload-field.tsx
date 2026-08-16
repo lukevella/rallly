@@ -71,7 +71,12 @@ export function LogoUploadField({
         disabled={disabled}
         getUploadUrl={handleGetUploadUrl}
         onUploadSuccess={async (imageKey) => {
-          await updateLogo.executeAsync({ logoType, imageKey });
+          const result = await updateLogo.executeAsync({ logoType, imageKey });
+          // executeAsync resolves on server errors; throw so the control
+          // reports the failure instead of completing
+          if (result?.serverError || result?.validationErrors) {
+            throw new Error("Failed to save logo");
+          }
         }}
         onRemoveSuccess={async () => {
           await removeLogo.executeAsync({ logoType });

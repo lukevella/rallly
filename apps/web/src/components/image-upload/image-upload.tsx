@@ -126,7 +126,7 @@ export function ImageUploadControl({
           fileType: parsedFileType,
         });
 
-        onUploadSuccess(fields.key);
+        await onUploadSuccess(fields.key);
         onUploaded?.();
       } catch {
         toast.error(
