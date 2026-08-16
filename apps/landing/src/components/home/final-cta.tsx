@@ -31,7 +31,7 @@ export const FinalCta = ({
         posthog.capture("landing:final_cta_view");
       }}
     >
-      <section className="space-y-8 py-8 text-center sm:py-24">
+      <section className="space-y-8 py-8 sm:py-24">
         <div className="space-y-4">
           <h2 className="text-pretty font-bold text-2xl tracking-tight sm:text-4xl">
             {title ?? (
@@ -42,7 +42,7 @@ export const FinalCta = ({
               />
             )}
           </h2>
-          <p className="mx-auto max-w-2xl text-pretty text-base text-gray-600 sm:text-lg">
+          <p className="max-w-2xl text-pretty text-base text-gray-600 sm:text-lg">
             {description ?? (
               <Trans
                 ns="home"
@@ -52,7 +52,7 @@ export const FinalCta = ({
             )}
           </p>
         </div>
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-start gap-4">
           <Link
             href={linkToApp("/new")}
             className={buttonVariants({
@@ -74,7 +74,7 @@ export const FinalCta = ({
           </Link>
           <p
             className={cn(
-              "whitespace-nowrap text-center text-gray-600 text-xs",
+              "whitespace-nowrap text-gray-600 text-xs",
               handwritten.className,
               "decoration underline decoration-2 decoration-gray-300 underline-offset-8",
             )}

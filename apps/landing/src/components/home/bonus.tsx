@@ -11,7 +11,7 @@ export async function Bonus(props: { locale: string }) {
   const { t } = await getTranslation(props.locale, ["home"]);
 
   return (
-    <p className="mx-auto max-w-2xl text-balance text-center text-gray-600 text-lg">
+    <p className="max-w-2xl text-balance text-gray-600 text-lg">
       <Trans
         t={t}
         ns="home"

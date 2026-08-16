@@ -133,7 +133,7 @@ export default async function Page(props: {
   const { t } = await getTranslation(locale, "pricing");
   return (
     <article className="mx-auto max-w-3xl space-y-6">
-      <header className="space-y-2 sm:p-6 sm:text-center">
+      <header className="space-y-2 sm:py-6">
         <h1 className="font-bold text-2xl tracking-tight sm:text-4xl">
           <Trans
             t={t}

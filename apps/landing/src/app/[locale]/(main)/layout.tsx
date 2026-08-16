@@ -18,7 +18,6 @@ import Image from "next/image";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { LoginButton } from "@/components/login-button";
-import { SignUpButton } from "@/components/sign-up-button";
 import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 import { linkToApp } from "@/lib/linkToApp";
@@ -77,7 +76,6 @@ export default async function Root(props: {
         <div className="flex items-center gap-4 sm:gap-8">
           <div className="hidden items-center gap-2 sm:flex">
             <LoginButton />
-            <SignUpButton />
           </div>
           <div className="flex items-center justify-center lg:hidden">
             <DropdownMenu>
@@ -123,15 +121,6 @@ export default async function Root(props: {
                     })}
                   >
                     <Trans t={t} i18nKey="login" defaults="Login" />
-                  </LinkBase>
-                  <LinkBase
-                    href={linkToApp("/login")}
-                    className={buttonVariants({
-                      variant: "primary",
-                      className: "w-full",
-                    })}
-                  >
-                    <Trans t={t} i18nKey="signUp" defaults="Sign up" />
                   </LinkBase>
                 </DropdownMenuLabel>
               </DropdownMenuContent>

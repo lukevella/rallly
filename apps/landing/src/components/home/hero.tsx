@@ -21,7 +21,7 @@ export const MarketingHero = ({
   demo: React.ReactNode;
 }) => {
   return (
-    <article className="max-w-full space-y-16 text-center">
+    <article className="max-w-full space-y-16">
       <header className="pt-6 sm:pt-28">
         <div>
           <Link
@@ -47,10 +47,10 @@ export const MarketingHero = ({
         <h1 className="mt-6 mb-2 text-pretty font-bold text-2xl tracking-tight sm:mb-4 sm:text-5xl">
           {title}
         </h1>
-        <h2 className="mx-auto max-w-3xl text-pretty font-normal text-base text-gray-600 sm:text-xl sm:leading-relaxed">
+        <h2 className="max-w-3xl text-pretty font-normal text-base text-gray-600 sm:text-xl sm:leading-relaxed">
           {description}
         </h2>
-        <div className="mt-8 flex flex-col items-center justify-center gap-4">
+        <div className="mt-8 flex flex-col items-start gap-4">
           <Link
             href={linkToApp("/new")}
             className={buttonVariants({
@@ -66,7 +66,7 @@ export const MarketingHero = ({
           </Link>
           <p
             className={cn(
-              "whitespace-nowrap text-center text-gray-600 text-xs",
+              "whitespace-nowrap text-gray-600 text-xs",
               handwritten.className,
               "decoration underline decoration-2 decoration-gray-300 underline-offset-8",
             )}

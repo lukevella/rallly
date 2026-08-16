@@ -25,10 +25,10 @@ const Mention = ({
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="flex flex-col items-center space-y-4 rounded-md"
+      className="flex flex-col items-start space-y-4 rounded-md"
     >
       <div className="flex items-start justify-between">{logo}</div>
-      <p className="grow text-center text-base">{children}</p>
+      <p className="grow text-base">{children}</p>
     </m.div>
   );
 };
@@ -129,7 +129,7 @@ export const BigTestimonial = () => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: "all" }}
-      className="flex flex-col items-center gap-y-8"
+      className="flex flex-col items-start gap-y-8"
     >
       <div className="relative h-[30px] w-[120px]">
         <Image
@@ -139,8 +139,8 @@ export const BigTestimonial = () => {
           alt="5 stars"
         />
       </div>
-      <div className="text-center">
-        <p className="max-w-xl text-center font-medium text-lg leading-normal">
+      <div>
+        <p className="max-w-xl font-medium text-lg leading-normal">
           <Trans
             ns="home"
             i18nKey="ericQuote"
