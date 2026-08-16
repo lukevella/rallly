@@ -129,7 +129,7 @@
   "changeRole": "Изменить роль",
   "charactersRemaining": "{count, plural, one {Остался # символ} few {Осталось # символа} many {Осталось # символов} other {Осталось # символа}}",
   "checkForConflicts": "Выберите календари для проверки конфликтов",
-  "chooseColor": "Выбрать цвет},{",
+  "chooseColor": "Выбрать цвет",
   "chooseImage": "Выбрать…",
   "cityTime": "Время в {city}",
   "clockPreferences": "Настройки времени",
