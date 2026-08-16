@@ -20,7 +20,7 @@ function IconDescriptionList({
 }: React.HTMLAttributes<HTMLDListElement>) {
   return (
     <dl
-      className="flex flex-col gap-x-2 gap-y-1 text-muted-foreground text-xs sm:flex-row"
+      className="flex flex-wrap items-center gap-4 text-muted-foreground text-sm"
       {...props}
     >
       {children}
@@ -36,7 +36,7 @@ function IconDescription({
   label: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1.5">
       <dt>{icon}</dt>
       <dd>{label}</dd>
     </div>
@@ -83,7 +83,7 @@ export function EventCard() {
             </EventMetaItem>
           ) : null}
         </EventMetaList>
-        <h2 className="mt-4 mb-2 font-medium text-sm">
+        <h2 className="mt-4 mb-1.5 font-medium text-sm">
           <Trans i18nKey="responseOptions" defaults="Response options" />
         </h2>
         <IconDescriptionList aria-label="Response options">
