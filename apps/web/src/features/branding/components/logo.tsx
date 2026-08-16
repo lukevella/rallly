@@ -23,7 +23,7 @@ export const Logo = async ({
   if (size === "fit") {
     return (
       <div
-        className={cn("flex h-40 w-50 items-center justify-center", className)}
+        className={cn("flex h-32 w-48 items-center justify-center", className)}
       >
         {/* biome-ignore lint/performance/noImgElement: we don't need Image component here */}
         <img

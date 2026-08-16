@@ -14,7 +14,7 @@ export function AuthFooter() {
   return (
     // h-40 mirrors the header's 160px logo slot so the vertically centered
     // content sits at the true middle of the page
-    <footer className="flex h-40 items-end justify-center gap-x-4">
+    <footer className="flex items-end justify-center gap-x-4">
       <LanguageSelect
         aria-label={t("language", { defaultValue: "Language" })}
         value={locale}

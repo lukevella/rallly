@@ -25,19 +25,17 @@ export default async function Layout({
     >
       <div className="relative flex min-h-dvh flex-col items-center justify-center bg-background">
         <div className="z-10 flex w-full flex-1 lg:p-4">
-          <div className="flex flex-1 flex-col gap-4 p-6">
+          <div className="my-auto flex flex-1 flex-col gap-12 p-6">
             <header className="flex justify-center">
               <Logo size="fit" />
             </header>
-            <div className="my-auto">
-              <main
-                id="main-content"
-                tabIndex={-1}
-                className="mx-auto w-full max-w-sm"
-              >
-                {children}
-              </main>
-            </div>
+            <main
+              id="main-content"
+              tabIndex={-1}
+              className="mx-auto w-full max-w-sm"
+            >
+              {children}
+            </main>
             {isQuickCreateEnabled ? (
               <div className="flex justify-center lg:hidden">
                 <QuickCreateButton />
