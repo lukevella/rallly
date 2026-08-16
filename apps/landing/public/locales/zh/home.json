@@ -1,4 +1,7 @@
 {
+  "createAPoll": "创建会议投票},{",
+  "createASchedulingPoll": "创建日程投票",
+  "doodleAlternative": "最佳免费 Doodle 替代品",
   "doodleAlternativeDescription": "Rallly 是万众瞩目的 Doodle 替代方案。成千上万的用户已经进行了切换，并开始在直观且易于使用的界面中享受专业的无广告会议投票。        ",
   "doodleAlternativeFinalCtaDescription": "只需几秒就能创建第一个投票，看看为什么这么多人放弃了 Doodle。",
   "doodleAlternativeFinalCtaTitle": "准备好切换了吗？",
@@ -27,6 +30,7 @@
   "statsLast30Days": "过去30天里，<b>{voterCount, plural, other {# 人}}</b> 在 <b>{pollCount, plural, other {# 个投票}}</b> 上投了票",
   "subheading": "协调分组会议，而无需发送往来电子邮件",
   "viaTrustpilot": "前往 Trustpilot",
+  "when2meetAlternative": "现代 When2Meet 替代品",
   "when2meetAlternativeDescription": "Rallly 能满足你使用 When2Meet 的所有需求，而没有那些繁琐之处。创建清爽的日程投票，在手机上也能流畅使用；参与者回复时会收到通知；所有投票都能在一个地方管理。免费、无广告，投票无需注册账号。从 When2Meet 或 WhenIsGood 转过来？你会立刻上手 Rallly。",
   "when2meetAlternativeFinalCtaDescription": "几秒内创建投票，用更简洁的方式找到合适时间。",
   "when2meetAlternativeFinalCtaTitle": "准备好以全新方式体验 When2Meet 吗？",
