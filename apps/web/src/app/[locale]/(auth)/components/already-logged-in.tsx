@@ -18,9 +18,6 @@ import { SignOutButton } from "./sign-out-button";
  * / ↔ /login redirect loop — a loop needs two automated legs,
  * so the user must click to continue. The sign out button is the escape
  * hatch when the session only looks alive (stale cookie cache).
- *
- * Server component: AuthPageContainer renders the async server-only Logo,
- * so this must not be a client module.
  */
 export async function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
   const { t, i18n } = await getTranslation();

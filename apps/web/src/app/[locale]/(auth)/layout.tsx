@@ -1,4 +1,5 @@
 import { AuthFooter } from "@/app/[locale]/(auth)/components/auth-footer";
+import { Logo } from "@/features/branding/components/logo";
 import { QuickCreateButton } from "@/features/quick-create/components/quick-create-button";
 import { QuickCreateWidget } from "@/features/quick-create/components/quick-create-widget";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
@@ -25,6 +26,9 @@ export default async function Layout({
       <div className="relative flex min-h-dvh flex-col items-center justify-center bg-background">
         <div className="z-10 flex w-full flex-1 lg:p-4">
           <div className="flex flex-1 flex-col gap-4 p-6">
+            <header className="flex justify-center">
+              <Logo size="fit" />
+            </header>
             <div className="my-auto">
               <main
                 id="main-content"
