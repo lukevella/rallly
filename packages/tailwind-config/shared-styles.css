@@ -93,7 +93,7 @@
   --accent-foreground: var(--color-gray-100);
 
   --muted: var(--color-gray-800);
-  --muted-foreground: var(--color-gray-400);
+  --muted-foreground: var(--color-gray-300);
   --muted-border: var(--color-gray-700);
 
   --popover: var(--color-gray-800);
