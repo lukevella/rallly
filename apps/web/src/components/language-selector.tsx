@@ -14,6 +14,7 @@ export const LanguageSelect: React.FunctionComponent<{
   className?: string;
   value?: string;
   onChange?: (language: string) => void;
+  "aria-label"?: string;
   "aria-labelledby"?: string;
   "aria-describedby"?: string;
 }> = ({ id, className, value, onChange, ...ariaProps }) => {

@@ -1,3 +1,4 @@
+import { AuthFooter } from "@/app/[locale]/(auth)/components/auth-footer";
 import { QuickCreateButton } from "@/features/quick-create/components/quick-create-button";
 import { QuickCreateWidget } from "@/features/quick-create/components/quick-create-widget";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
@@ -38,6 +39,7 @@ export default async function Layout({
                 <QuickCreateButton />
               </div>
             ) : null}
+            <AuthFooter />
           </div>
           {isQuickCreateEnabled ? (
             <div className="relative hidden flex-1 flex-col justify-center rounded-lg border bg-muted/50 lg:flex lg:p-16">
