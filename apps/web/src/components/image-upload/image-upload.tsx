@@ -102,7 +102,7 @@ export function ImageUploadControl<TAccept extends string>({
             }),
             {
               description: t("imageUploadInvalidFileTypeDescription", {
-                defaultValue: "Accepted formats: {{formats}}",
+                defaultValue: "Accepted formats: {formats}",
                 formats: acceptedFormats,
               }),
             },
@@ -115,7 +115,7 @@ export function ImageUploadControl<TAccept extends string>({
             }),
             {
               description: t("imageUploadFileTooLargeDescription", {
-                defaultValue: "Please upload a file smaller than {{size}}.",
+                defaultValue: "Please upload a file smaller than {size}.",
                 size: maxFileSize,
               }),
             },
@@ -197,7 +197,7 @@ export function ImageUploadControl<TAccept extends string>({
         </div>
         <p className="text-muted-foreground text-xs">
           {t("imageUploadHint", {
-            defaultValue: "Up to {{size}}, {{formats}}",
+            defaultValue: "Up to {size}, {formats}",
             size: maxFileSize,
             formats: acceptedFormats,
           })}
