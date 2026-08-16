@@ -90,9 +90,7 @@ if (offenderCount > 0) {
   console.error(
     "These are usually Crowdin machine-translation artifacts (stray `},{` or `}]` fragments).",
   );
-  console.error(
-    "Fix the string in Crowdin and re-sync, or correct the JSON value directly.",
-  );
+  console.error("Fix the string in Crowdin and re-sync.");
   process.exit(1);
 }
 
