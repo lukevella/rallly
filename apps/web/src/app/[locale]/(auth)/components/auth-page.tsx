@@ -1,14 +1,5 @@
-import { Logo } from "@/features/branding/components/logo";
-
 export function AuthPageContainer({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="space-y-8">
-      <div className="mb-12 flex justify-center">
-        <Logo />
-      </div>
-      {children}
-    </div>
-  );
+  return <div className="space-y-8">{children}</div>;
 }
 
 export function AuthPageHeader({ children }: { children: React.ReactNode }) {

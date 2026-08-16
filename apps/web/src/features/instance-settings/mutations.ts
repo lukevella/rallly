@@ -2,7 +2,11 @@ import "server-only";
 
 import { prisma } from "@rallly/database";
 import { updateTag } from "next/cache";
+import { after } from "next/server";
+import { deleteImageFromS3 } from "@/lib/storage/image-upload";
+import { isStorageKey } from "@/lib/storage/resolve-storage-url";
 import { instanceSettingsTag } from "./constants";
+import type { BrandingLogoType } from "./schema";
 
 export async function updateInstanceSettings(data: {
   disableUserRegistration?: boolean;
@@ -20,4 +24,42 @@ export async function updateInstanceSettings(data: {
   });
 
   updateTag(instanceSettingsTag);
+}
+
+export async function updateInstanceLogo({
+  logoType,
+  imageKey,
+}: {
+  logoType: BrandingLogoType;
+  imageKey: string | null;
+}) {
+  const instanceSettings = await prisma.instanceSettings.findUnique({
+    where: {
+      id: 1,
+    },
+    select: {
+      logo: true,
+      logoDark: true,
+      logoIcon: true,
+    },
+  });
+
+  const oldValue = instanceSettings?.[logoType];
+
+  await prisma.instanceSettings.update({
+    where: {
+      id: 1,
+    },
+    data: {
+      [logoType]: imageKey,
+    },
+  });
+
+  updateTag(instanceSettingsTag);
+
+  // Only delete objects we own; a URL value points at externally hosted
+  // media, and a retry can resubmit the key that is now stored
+  if (oldValue && oldValue !== imageKey && isStorageKey(oldValue)) {
+    after(() => deleteImageFromS3(oldValue));
+  }
 }

@@ -13,12 +13,20 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
  * bundle, which crashes self-hosted builds where `NEXT_PUBLIC_BASE_URL` is set
  * at runtime and is therefore absent on the client.
  */
+/**
+ * Whether a stored image value is a key in our storage bucket, as opposed to
+ * an external URL or data URI.
+ */
+export function isStorageKey(value: string): boolean {
+  return !(
+    value.startsWith("https://") ||
+    value.startsWith("http://") ||
+    value.startsWith("data:")
+  );
+}
+
 export function resolveStorageUrl(key: string): string {
-  if (
-    key.startsWith("https://") ||
-    key.startsWith("http://") ||
-    key.startsWith("data:")
-  ) {
+  if (!isStorageKey(key)) {
     return key;
   }
 
