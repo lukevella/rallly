@@ -82,7 +82,13 @@ export default async function Root(props: {
           <div className="flex items-center justify-center lg:hidden">
             <DropdownMenu>
               <DropdownMenuTrigger
-                render={<Button size="sm" variant="ghost" />}
+                render={
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    aria-label={t("menu", { defaultValue: "Menu" })}
+                  />
+                }
               >
                 <Icon>
                   <MenuIcon />

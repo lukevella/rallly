@@ -42,7 +42,7 @@ export const FinalCta = ({
               />
             )}
           </h2>
-          <p className="mx-auto max-w-2xl text-pretty text-base text-gray-500 sm:text-lg">
+          <p className="mx-auto max-w-2xl text-pretty text-base text-gray-600 sm:text-lg">
             {description ?? (
               <Trans
                 ns="home"

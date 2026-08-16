@@ -150,7 +150,7 @@ export const BigTestimonial = () => {
         <p className="mt-1">
           <Link
             target="_blank"
-            className="text-gray-500 text-sm hover:underline"
+            className="text-gray-600 text-sm hover:underline"
             href="https://www.trustpilot.com/reviews/645e1d1976733924e89d8203"
           >
             <Trans
@@ -172,7 +172,7 @@ export const BigTestimonial = () => {
         />
         <div>
           <div className="font-semibold">Eric Fletcher</div>
-          <div className="text-gray-500 text-sm">
+          <div className="text-gray-600 text-sm">
             <Trans
               ns="home"
               i18nKey="ericJobTitle"

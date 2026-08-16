@@ -25,7 +25,7 @@ import { useTranslation } from "@/i18n/client/use-translation";
 const LanguageSelect = () => {
   const router = useRouter();
   const pathname = usePathname() ?? "";
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   return (
     <Select
       items={languages}
@@ -46,7 +46,10 @@ const LanguageSelect = () => {
         router.replace(`/${newLocale}${newPath}`);
       }}
     >
-      <SelectTrigger className="w-full">
+      <SelectTrigger
+        className="w-full"
+        aria-label={t("language", { defaultValue: "Language" })}
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -61,6 +64,7 @@ const LanguageSelect = () => {
 };
 
 export const Footer: React.FunctionComponent = () => {
+  const { t } = useTranslation("common");
   return (
     <div className="mx-auto space-y-8">
       <div className="space-y-16 lg:flex lg:space-x-8 lg:space-y-0">
@@ -73,7 +77,7 @@ export const Footer: React.FunctionComponent = () => {
               className="object-contain"
             />
           </div>
-          <div className="my-8 text-gray-500 text-sm">
+          <div className="my-8 text-gray-600 text-sm">
             <p className="mb-4 leading-relaxed">
               <Trans
                 ns="common"
@@ -81,7 +85,7 @@ export const Footer: React.FunctionComponent = () => {
                 components={{
                   a: (
                     <Link
-                      className="font-normal text-gray-500 leading-loose underline hover:text-gray-800 hover:underline"
+                      className="font-normal text-gray-600 leading-loose underline hover:text-gray-800 hover:underline"
                       href="https://support.rallly.co/contribute/donations"
                     />
                   ),
@@ -95,7 +99,7 @@ export const Footer: React.FunctionComponent = () => {
                 components={{
                   a: (
                     <Link
-                      className="font-normal text-gray-500 leading-loose underline hover:text-gray-800 hover:underline"
+                      className="font-normal text-gray-600 leading-loose underline hover:text-gray-800 hover:underline"
                       href="https://twitter.com/imlukevella"
                     />
                   ),
@@ -107,32 +111,42 @@ export const Footer: React.FunctionComponent = () => {
             <a
               target="_blank"
               href="https://x.com/ralllyco"
-              className="text-gray-500 text-sm hover:text-primary hover:no-underline"
+              className="text-gray-600 text-sm hover:text-primary hover:no-underline"
               rel="noreferrer noopener"
+              aria-label={t("footerXLabel", { defaultValue: "Follow us on X" })}
             >
               <XIcon className="size-4" />
             </a>
             <a
               target="_blank"
               href="https://discord.gg/uzg4ZcHbuM"
-              className="text-gray-500 text-sm hover:text-primary hover:no-underline"
+              className="text-gray-600 text-sm hover:text-primary hover:no-underline"
               rel="noreferrer noopener"
+              aria-label={t("footerDiscordLabel", {
+                defaultValue: "Join us on Discord",
+              })}
             >
               <DiscordIcon className="size-4" />
             </a>
             <a
               target="_blank"
               href="https://www.linkedin.com/company/rallly"
-              className="text-gray-500 text-sm hover:text-primary hover:no-underline"
+              className="text-gray-600 text-sm hover:text-primary hover:no-underline"
               rel="noreferrer noopener"
+              aria-label={t("footerLinkedinLabel", {
+                defaultValue: "Follow us on LinkedIn",
+              })}
             >
               <LinkedinIcon className="size-4" />
             </a>
             <a
               target="_blank"
               href="https://github.com/lukevella/rallly"
-              className="text-gray-500 text-sm hover:text-primary hover:no-underline"
+              className="text-gray-600 text-sm hover:text-primary hover:no-underline"
               rel="noreferrer noopener"
+              aria-label={t("footerGithubLabel", {
+                defaultValue: "View our GitHub repository",
+              })}
             >
               <GithubIcon className="size-4" />
             </a>
@@ -145,7 +159,7 @@ export const Footer: React.FunctionComponent = () => {
           <ul className="grid gap-2 text-sm">
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
                 href="/pricing"
               >
                 <Trans i18nKey="pricing" defaults="Pricing" />
@@ -154,7 +168,7 @@ export const Footer: React.FunctionComponent = () => {
             <li>
               <a
                 target="_blank"
-                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
                 href="https://github.com/lukevella/rallly/discussions"
                 rel="noopener"
               >
@@ -168,7 +182,7 @@ export const Footer: React.FunctionComponent = () => {
             <li>
               <LinkBase
                 href="/blog"
-                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
                 <Trans ns="common" i18nKey="blog" defaults="Blog" />
               </LinkBase>
@@ -176,7 +190,7 @@ export const Footer: React.FunctionComponent = () => {
             <li>
               <a
                 href="https://support.rallly.co"
-                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
                 <Trans ns="common" i18nKey="support" defaults="Support" />
               </a>
@@ -184,7 +198,7 @@ export const Footer: React.FunctionComponent = () => {
             <li>
               <a
                 href="https://rallly.openstatus.dev"
-                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
                 <Trans ns="common" i18nKey="status" defaults="Status" />
               </a>
@@ -198,7 +212,7 @@ export const Footer: React.FunctionComponent = () => {
           <ul className="grid gap-2 text-sm">
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
                 href="/best-doodle-alternative"
               >
                 <Trans
@@ -210,7 +224,7 @@ export const Footer: React.FunctionComponent = () => {
             </li>
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
                 href="/when2meet-alternative"
               >
                 <Trans
@@ -222,7 +236,7 @@ export const Footer: React.FunctionComponent = () => {
             </li>
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
                 href="/free-scheduling-poll"
               >
                 <Trans
@@ -243,7 +257,7 @@ export const Footer: React.FunctionComponent = () => {
           </div>
           <a
             href="https://support.rallly.co/contribute/translations"
-            className="inline-flex h-8 items-center rounded-md border px-3 text-gray-500 text-xs hover:border-primary hover:text-primary"
+            className="inline-flex h-8 items-center rounded-md border px-3 text-gray-600 text-xs hover:border-primary hover:text-primary"
           >
             <LanguagesIcon className="mr-2 size-5" />
             <Trans ns="common" i18nKey="volunteerTranslator" /> &rarr;
@@ -255,7 +269,7 @@ export const Footer: React.FunctionComponent = () => {
           <li>
             <Link
               href="/privacy-policy"
-              className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+              className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
             >
               <Trans ns="common" i18nKey="privacyPolicy" />
             </Link>
@@ -263,7 +277,7 @@ export const Footer: React.FunctionComponent = () => {
           <li>
             <Link
               href="/cookie-policy"
-              className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+              className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
             >
               <Trans ns="common" i18nKey="cookiePolicy" />
             </Link>
@@ -271,7 +285,7 @@ export const Footer: React.FunctionComponent = () => {
           <li>
             <Link
               href="/terms-of-use"
-              className="inline-block font-normal text-gray-500 hover:text-gray-800 hover:no-underline"
+              className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
             >
               <Trans ns="common" i18nKey="termsOfUse" />
             </Link>
