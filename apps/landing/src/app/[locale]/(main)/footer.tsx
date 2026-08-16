@@ -1,69 +1,17 @@
-"use client";
-
-import languages, { supportedLngs } from "@rallly/languages";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@rallly/ui/select";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import type * as React from "react";
+import { Trans } from "react-i18next/TransWithoutContext";
 
 import DiscordIcon from "@/assets/discord.svg";
 import GithubIcon from "@/assets/github.svg";
 import LinkedinIcon from "@/assets/linkedin.svg";
 import XIcon from "@/assets/x.svg";
 import { LinkBase } from "@/i18n/client/link";
-import { Trans } from "@/i18n/client/trans";
-import { useTranslation } from "@/i18n/client/use-translation";
+import { getTranslation } from "@/i18n/server";
+import { LanguageSelect } from "./language-select";
 
-const LanguageSelect = () => {
-  const router = useRouter();
-  const pathname = usePathname() ?? "";
-  const { t, i18n } = useTranslation();
-  return (
-    <Select
-      items={languages}
-      value={i18n.language}
-      onValueChange={(newLocale) => {
-        if (!newLocale) {
-          return;
-        }
-
-        const isLocalizedPath = supportedLngs.some((lng) =>
-          pathname?.startsWith(`/${lng}`),
-        );
-
-        const newPath = isLocalizedPath
-          ? pathname.replace(new RegExp(`^/${i18n.language}`), "")
-          : pathname;
-
-        router.replace(`/${newLocale}${newPath}`);
-      }}
-    >
-      <SelectTrigger
-        className="w-full"
-        aria-label={t("language", { defaultValue: "Language" })}
-      >
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        {Object.entries(languages).map(([code, name]) => (
-          <SelectItem key={code} value={code}>
-            {name}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  );
-};
-
-export const Footer: React.FunctionComponent = () => {
-  const { t } = useTranslation("common");
+export const Footer = async ({ locale }: { locale: string }) => {
+  const { t } = await getTranslation(locale, "common");
   return (
     <div className="mx-auto space-y-8">
       <div className="space-y-16 lg:flex lg:space-x-8 lg:space-y-0">
@@ -79,6 +27,7 @@ export const Footer: React.FunctionComponent = () => {
           <div className="my-8 text-gray-600 text-sm">
             <p className="leading-relaxed">
               <Trans
+                t={t}
                 ns="common"
                 i18nKey="footerTagline"
                 defaults="Rallly is an open-source meeting scheduling tool that helps you find the best time to meet, without the back and forth."
@@ -132,7 +81,7 @@ export const Footer: React.FunctionComponent = () => {
         </div>
         <div className="lg:flex-1">
           <div className="mb-8 flex h-[30px] items-center font-medium">
-            <Trans ns="common" i18nKey="product" defaults="Product" />
+            <Trans t={t} ns="common" i18nKey="product" defaults="Product" />
           </div>
           <ul className="grid gap-2 text-sm">
             <li>
@@ -140,7 +89,7 @@ export const Footer: React.FunctionComponent = () => {
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
                 href="/pricing"
               >
-                <Trans i18nKey="pricing" defaults="Pricing" />
+                <Trans t={t} i18nKey="pricing" defaults="Pricing" />
               </LinkBase>
             </li>
             <li>
@@ -149,6 +98,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="/free-scheduling-poll"
               >
                 <Trans
+                  t={t}
                   ns="common"
                   i18nKey="freeSchedulingPoll"
                   defaults="Free scheduling poll"
@@ -159,7 +109,7 @@ export const Footer: React.FunctionComponent = () => {
         </div>
         <div className="lg:flex-1">
           <div className="mb-8 flex h-[30px] items-center font-medium">
-            <Trans ns="common" i18nKey="resources" defaults="Resources" />
+            <Trans t={t} ns="common" i18nKey="resources" defaults="Resources" />
           </div>
           <ul className="grid gap-2 text-sm">
             <li>
@@ -167,7 +117,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="/blog"
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
-                <Trans ns="common" i18nKey="blog" defaults="Blog" />
+                <Trans t={t} ns="common" i18nKey="blog" defaults="Blog" />
               </LinkBase>
             </li>
             <li>
@@ -178,6 +128,7 @@ export const Footer: React.FunctionComponent = () => {
                 rel="noopener"
               >
                 <Trans
+                  t={t}
                   ns="common"
                   i18nKey="discussions"
                   defaults="Discussions"
@@ -189,7 +140,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="https://support.rallly.co"
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
-                <Trans ns="common" i18nKey="support" defaults="Support" />
+                <Trans t={t} ns="common" i18nKey="support" defaults="Support" />
               </a>
             </li>
             <li>
@@ -197,14 +148,14 @@ export const Footer: React.FunctionComponent = () => {
                 href="https://rallly.openstatus.dev"
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
-                <Trans ns="common" i18nKey="status" defaults="Status" />
+                <Trans t={t} ns="common" i18nKey="status" defaults="Status" />
               </a>
             </li>
           </ul>
         </div>
         <div className="lg:flex-1">
           <div className="mb-8 flex h-[30px] items-center font-medium">
-            <Trans ns="common" i18nKey="compare" defaults="Compare" />
+            <Trans t={t} ns="common" i18nKey="compare" defaults="Compare" />
           </div>
           <ul className="grid gap-2 text-sm">
             <li>
@@ -213,6 +164,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="/best-doodle-alternative"
               >
                 <Trans
+                  t={t}
                   ns="common"
                   i18nKey="doodleAlternative"
                   defaults="Doodle alternative"
@@ -225,6 +177,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="/when2meet-alternative"
               >
                 <Trans
+                  t={t}
                   ns="common"
                   i18nKey="when2MeetAlternative"
                   defaults="When2Meet alternative"
@@ -245,7 +198,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="/privacy-policy"
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
-                <Trans ns="common" i18nKey="privacyPolicy" />
+                <Trans t={t} ns="common" i18nKey="privacyPolicy" />
               </Link>
             </li>
             <li>
@@ -253,7 +206,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="/cookie-policy"
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
-                <Trans ns="common" i18nKey="cookiePolicy" />
+                <Trans t={t} ns="common" i18nKey="cookiePolicy" />
               </Link>
             </li>
             <li>
@@ -261,7 +214,7 @@ export const Footer: React.FunctionComponent = () => {
                 href="/terms-of-use"
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
-                <Trans ns="common" i18nKey="termsOfUse" />
+                <Trans t={t} ns="common" i18nKey="termsOfUse" />
               </Link>
             </li>
           </ul>

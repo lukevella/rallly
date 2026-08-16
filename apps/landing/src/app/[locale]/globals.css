@@ -5,7 +5,6 @@
 
 body {
   @apply bg-gray-100;
-  --foreground: var(--color-gray-700);
 }
 
 /* Blog post content styles */

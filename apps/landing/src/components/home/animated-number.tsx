@@ -113,7 +113,7 @@ export function AnimatedStat({
     .join("");
   const parsed = parseLocalizedInteger(text, locale);
   return (
-    <strong className="font-semibold text-gray-800">
+    <strong className="font-medium text-gray-800">
       {parsed ? (
         <>
           {text.slice(0, parsed.start)}
