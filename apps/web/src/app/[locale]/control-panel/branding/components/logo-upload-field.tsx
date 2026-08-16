@@ -15,9 +15,9 @@ import {
 } from "../actions";
 
 const previewVariants: Record<BrandingLogoType, string> = {
-  logo: "w-48 bg-white",
-  logoDark: "w-48 bg-gray-900",
-  logoIcon: "size-16 bg-white",
+  logo: "bg-white",
+  logoDark: "bg-gray-900",
+  logoIcon: "bg-white",
 };
 
 export function LogoUploadField({
@@ -57,7 +57,7 @@ export function LogoUploadField({
       <ImageUploadPreview>
         <div
           className={cn(
-            "flex items-center justify-center overflow-hidden rounded border",
+            "flex size-50 items-center justify-center overflow-hidden rounded border",
             previewVariants[logoType],
           )}
         >
@@ -65,7 +65,7 @@ export function LogoUploadField({
           <img
             src={previewUrl}
             alt={previewAlt}
-            className="max-h-full max-w-full object-contain p-2"
+            className="max-h-full max-w-full object-contain p-4"
           />
         </div>
       </ImageUploadPreview>
