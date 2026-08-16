@@ -68,7 +68,7 @@ export const Footer: React.FunctionComponent = () => {
   return (
     <div className="mx-auto space-y-8">
       <div className="space-y-16 lg:flex lg:space-x-8 lg:space-y-0">
-        <div className="lg:w-2/6">
+        <div className="lg:mr-16 lg:w-1/4">
           <div className="relative h-[30px] w-[30px]">
             <Image
               src="/logo-footer.svg"
@@ -78,34 +78,13 @@ export const Footer: React.FunctionComponent = () => {
             />
           </div>
           <div className="my-8 text-gray-600 text-sm">
-            <p className="mb-4 leading-relaxed">
+            <p className="leading-relaxed">
               <Trans
                 ns="common"
-                i18nKey="footerSponsor"
-                components={{
-                  a: (
-                    <Link
-                      className="font-normal text-gray-600 leading-loose underline hover:text-gray-800 hover:underline"
-                      href="https://support.rallly.co/contribute/donations"
-                    />
-                  ),
-                }}
+                i18nKey="footerTagline"
+                defaults="Rallly is an open-source meeting scheduling tool that helps you find the best time to meet, without the back and forth."
               />
             </p>
-            <div>
-              <Trans
-                ns="common"
-                i18nKey="footerCredit"
-                components={{
-                  a: (
-                    <Link
-                      className="font-normal text-gray-600 leading-loose underline hover:text-gray-800 hover:underline"
-                      href="https://twitter.com/imlukevella"
-                    />
-                  ),
-                }}
-              />
-            </div>
           </div>
           <div className="flex items-center space-x-4">
             <a
@@ -152,9 +131,9 @@ export const Footer: React.FunctionComponent = () => {
             </a>
           </div>
         </div>
-        <div className="lg:w-1/6">
-          <div className="mb-8 font-medium">
-            <Trans ns="common" i18nKey="links" defaults="Links" />
+        <div className="lg:flex-1">
+          <div className="mb-8 flex h-[30px] items-center font-medium">
+            <Trans ns="common" i18nKey="product" defaults="Product" />
           </div>
           <ul className="grid gap-2 text-sm">
             <li>
@@ -163,6 +142,33 @@ export const Footer: React.FunctionComponent = () => {
                 href="/pricing"
               >
                 <Trans i18nKey="pricing" defaults="Pricing" />
+              </LinkBase>
+            </li>
+            <li>
+              <LinkBase
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                href="/free-scheduling-poll"
+              >
+                <Trans
+                  ns="common"
+                  i18nKey="freeSchedulingPoll"
+                  defaults="Free scheduling poll"
+                />
+              </LinkBase>
+            </li>
+          </ul>
+        </div>
+        <div className="lg:flex-1">
+          <div className="mb-8 flex h-[30px] items-center font-medium">
+            <Trans ns="common" i18nKey="resources" defaults="Resources" />
+          </div>
+          <ul className="grid gap-2 text-sm">
+            <li>
+              <LinkBase
+                href="/blog"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+              >
+                <Trans ns="common" i18nKey="blog" defaults="Blog" />
               </LinkBase>
             </li>
             <li>
@@ -178,14 +184,6 @@ export const Footer: React.FunctionComponent = () => {
                   defaults="Discussions"
                 />
               </a>
-            </li>
-            <li>
-              <LinkBase
-                href="/blog"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-              >
-                <Trans ns="common" i18nKey="blog" defaults="Blog" />
-              </LinkBase>
             </li>
             <li>
               <a
@@ -205,9 +203,9 @@ export const Footer: React.FunctionComponent = () => {
             </li>
           </ul>
         </div>
-        <div className="lg:w-1/6">
-          <div className="mb-8 font-medium">
-            <Trans i18nKey="solutions" defaults="Solutions" />
+        <div className="lg:flex-1">
+          <div className="mb-8 flex h-[30px] items-center font-medium">
+            <Trans ns="common" i18nKey="compare" defaults="Compare" />
           </div>
           <ul className="grid gap-2 text-sm">
             <li>
@@ -217,8 +215,8 @@ export const Footer: React.FunctionComponent = () => {
               >
                 <Trans
                   ns="common"
-                  i18nKey="bestDoodleAlternative"
-                  defaults="Best Doodle alternative"
+                  i18nKey="doodleAlternative"
+                  defaults="Doodle alternative"
                 />
               </LinkBase>
             </li>
@@ -234,63 +232,53 @@ export const Footer: React.FunctionComponent = () => {
                 />
               </LinkBase>
             </li>
+          </ul>
+        </div>
+      </div>
+      <div className="flex flex-col gap-x-8 gap-y-8 sm:pb-8 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-x-8 gap-y-2 sm:flex-row sm:items-center">
+          <p className="whitespace-nowrap text-gray-600 text-sm leading-loose">
+            &copy; 2026 Stack Snap Ltd.
+          </p>
+          <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm leading-loose">
             <li>
-              <LinkBase
+              <Link
+                href="/privacy-policy"
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-                href="/free-scheduling-poll"
               >
-                <Trans
-                  ns="common"
-                  i18nKey="freeSchedulingPoll"
-                  defaults="Free scheduling poll"
-                />
-              </LinkBase>
+                <Trans ns="common" i18nKey="privacyPolicy" />
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/cookie-policy"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+              >
+                <Trans ns="common" i18nKey="cookiePolicy" />
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/terms-of-use"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+              >
+                <Trans ns="common" i18nKey="termsOfUse" />
+              </Link>
             </li>
           </ul>
         </div>
-        <div className="lg:w-2/6">
-          <div className="mb-8 font-medium">
-            <Trans ns="common" i18nKey="language" defaults="Language" />
-          </div>
-          <div className="mb-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="w-48">
             <LanguageSelect />
           </div>
           <a
             href="https://support.rallly.co/contribute/translations"
-            className="inline-flex h-8 items-center rounded-md border px-3 text-gray-600 text-xs hover:border-primary hover:text-primary"
+            className="inline-flex h-9 shrink-0 items-center rounded-md border px-3 text-gray-600 text-xs hover:border-primary hover:text-primary"
           >
-            <LanguagesIcon className="mr-2 size-5" />
+            <LanguagesIcon className="mr-2 size-4" />
             <Trans ns="common" i18nKey="volunteerTranslator" /> &rarr;
           </a>
         </div>
-      </div>
-      <div className="flex flex-col justify-start gap-x-8 gap-y-8 sm:flex-row sm:items-end sm:pb-8">
-        <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm leading-loose">
-          <li>
-            <Link
-              href="/privacy-policy"
-              className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-            >
-              <Trans ns="common" i18nKey="privacyPolicy" />
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/cookie-policy"
-              className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-            >
-              <Trans ns="common" i18nKey="cookiePolicy" />
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/terms-of-use"
-              className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-            >
-              <Trans ns="common" i18nKey="termsOfUse" />
-            </Link>
-          </li>
-        </ul>
       </div>
     </div>
   );

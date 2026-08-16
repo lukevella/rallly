@@ -29,11 +29,10 @@
         "exec",
         "next",
         "dev",
-        "--turbopack",
-        "--port",
-        "3033"
+        "--turbopack"
       ],
-      "port": 3033
+      "port": 3033,
+      "autoPort": true
     }
   ]
 }
