@@ -1,22 +1,8 @@
+"use client";
+
 import type { VoteType } from "@rallly/database";
-import { cn } from "@rallly/ui";
-import type { VariantProps } from "class-variance-authority";
-import { cva } from "class-variance-authority";
-import { IfNeedBeIcon } from "@/features/poll/components/vote-icon/if-need-be-icon";
-import { NoIcon } from "@/features/poll/components/vote-icon/no-icon";
-import { PendingIcon } from "@/features/poll/components/vote-icon/pending-icon";
-import { YesIcon } from "@/features/poll/components/vote-icon/yes-icon";
-
-const iconVariants = cva("", {
-  variants: {
-    size: {
-      sm: "size-3",
-      md: "size-5",
-    },
-  },
-});
-
-type IconVariantProps = VariantProps<typeof iconVariants>;
+import { VoteIcon as BaseVoteIcon } from "@rallly/ui/vote-icon";
+import { useTranslation } from "@/i18n/client";
 
 const VoteIcon = ({
   type,
@@ -24,20 +10,27 @@ const VoteIcon = ({
   className,
 }: {
   type?: VoteType;
+  size?: "sm" | "md";
   className?: string;
-} & IconVariantProps) => {
-  const iconClassName = iconVariants({ size });
-  switch (type) {
-    case "yes":
-      return <YesIcon className={cn(iconClassName, className)} />;
-    case "ifNeedBe":
-      return <IfNeedBeIcon className={cn(iconClassName, className)} />;
-    case "no":
-      return <NoIcon className={cn(iconClassName, className)} />;
+}) => {
+  const { t } = useTranslation();
 
-    default:
-      return <PendingIcon className={cn(iconClassName, className)} />;
-  }
+  const title = type
+    ? {
+        yes: t("yes", { defaultValue: "Yes" }),
+        ifNeedBe: t("ifNeedBe", { defaultValue: "If need be" }),
+        no: t("no", { defaultValue: "No" }),
+      }[type]
+    : t("pending", { defaultValue: "Pending" });
+
+  return (
+    <BaseVoteIcon
+      type={type ?? "pending"}
+      size={size}
+      title={title}
+      className={className}
+    />
+  );
 };
 
 export default VoteIcon;

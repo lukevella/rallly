@@ -58,7 +58,6 @@ const TriState = ({
             <VoteIcon
               vote={vote}
               className={cn(
-                "size-3.5",
                 !isSelected &&
                   "text-gray-400 opacity-50 transition-opacity group-hover:opacity-100",
               )}
