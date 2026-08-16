@@ -1,7 +1,7 @@
 {
-  "bestDoodleAlternative": "Beste Doodle Alternative",
+  "bestDoodleAlternative": "Beste Doodle-Alternative},{",
   "blog": "Blog",
-  "cookiePolicy": "Cookies Richtlinien",
+  "cookiePolicy": "Cookie-Richtlinie",
   "discussions": "Diskussion",
   "footerCredit": "Entwickelt von <a>@imlukevella</a>",
   "footerSponsor": "Dieses Projekt wird von Nutzern finanziert. Bitte unterstütze es durch eine <a>Spende</a>.",
@@ -23,11 +23,12 @@
   "notFoundDescription": "Die gewünschte Seite konnte nicht gefunden werden.",
   "notFoundTitle": "404 Seite nicht gefunden",
   "pricing": "Preise",
-  "privacyPolicy": "Datenschutzerklärung",
+  "privacyPolicy": "Datenschutzrichtlinie",
+  "signUp": "Registrieren",
   "solutions": "Anwendungen",
   "status": "Status",
   "support": "Hilfe",
   "termsOfUse": "Nutzungsbedingungen",
   "volunteerTranslator": "Hilf mit, diese Seite zu übersetzen",
-  "when2MeetAlternative": "When2Meet Alternative"
+  "when2MeetAlternative": "When2Meet-Alternative"
 }

@@ -5,7 +5,7 @@
   "discussions": "Diskuze",
   "footerCredit": "Vytvořil <a>@imlukevella</a>",
   "footerSponsor": "Tento projekt je financován uživateli. Zvažte jeho podporu <a>příspěvkem</a>.",
-  "freeSchedulingPoll": "Hlasování o termínech schůzek zdarma",
+  "freeSchedulingPoll": "Bezplatné hlasování o termínech",
   "getStarted": "Začínáme",
   "goToHome": "Přejít domů",
   "howItWorks": "Jak to funguje",
@@ -23,11 +23,12 @@
   "notFoundDescription": "Nemohli jsme najít stránku, kterou hledáte.",
   "notFoundTitle": "404 nenalezeno",
   "pricing": "Ceník",
-  "privacyPolicy": "Ochrana osobních údajů",
+  "privacyPolicy": "Zásady ochrany osobních údajů",
+  "signUp": "Registrovat se",
   "solutions": "Řešení",
   "status": "Stav",
   "support": "Podpora",
-  "termsOfUse": "Podmínky používání webu",
+  "termsOfUse": "Podmínky používání",
   "volunteerTranslator": "Pomozte přeložit tento web",
   "when2MeetAlternative": "Alternativa k When2Meet"
 }

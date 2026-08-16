@@ -11,7 +11,7 @@
   "howItWorks": "Sådan virker det",
   "language": "Sprog",
   "licensingThankYouGoHomeLink": "Gå til forsiden",
-  "licensingThankYouLicense": "Næste Trin",
+  "licensingThankYouLicense": "Næste trin",
   "licensingThankYouLicenseEmailed": "Din licensnøgle er blevet sendt til den e-mail-adresse, du angav under kassen. Tjek venligst din indbakke.",
   "licensingThankYouNextStepsActivateLicense": "Sådan aktiverer du din licens",
   "licensingThankYouNextStepsInstallation": "Installationsguide",
@@ -24,10 +24,11 @@
   "notFoundTitle": "404 Ikke Fundet",
   "pricing": "Priser",
   "privacyPolicy": "Fortrolighedspolitik",
+  "signUp": "Tilmeld dig",
   "solutions": "Løsninger",
   "status": "Status",
   "support": "Support",
   "termsOfUse": "Vilkår for anvendelse",
   "volunteerTranslator": "Hjælp med at oversætte dette websted",
-  "when2MeetAlternative": "When2Meet alternativ"
+  "when2MeetAlternative": "When2Meet-alternativ"
 }

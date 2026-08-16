@@ -1,7 +1,7 @@
 {
-  "bestDoodleAlternative": "Mejor alternativa a Doodle",
+  "bestDoodleAlternative": "Mejor alternativa a Doodle},{",
   "blog": "Blog",
-  "cookiePolicy": "Política de cookies",
+  "cookiePolicy": "Política de cookies",
   "discussions": "Discusiones",
   "footerCredit": "Creado por <a>@imlukevella</a>",
   "footerSponsor": "Este proyecto está financiado por los usuarios. Por favor, considera apoyarlo <a>donando</a>.",
@@ -24,6 +24,7 @@
   "notFoundTitle": "404 Página no encontrada",
   "pricing": "Precios",
   "privacyPolicy": "Política de privacidad",
+  "signUp": "Regístrate",
   "solutions": "Soluciones",
   "status": "Estado",
   "support": "Soporte",
