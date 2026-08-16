@@ -1,6 +1,5 @@
 import { cn } from "@rallly/ui";
 import { handwritten } from "@/fonts/handwritten";
-import { Trans } from "@/i18n/client/trans";
 
 const ScribbleArrow = ({ className }: { className?: string }) => (
   <svg
@@ -17,20 +16,16 @@ const ScribbleArrow = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const TryItPrompt = () => (
+export const TryItPrompt = ({ text }: { text: string }) => (
   <div
     className={cn(
-      "pointer-events-none absolute -top-12 right-2 flex items-start gap-2 text-gray-600",
+      "pointer-events-none absolute -top-9 right-2 z-10 flex items-start text-gray-600",
       handwritten.className,
     )}
   >
-    <span className="-rotate-2 whitespace-nowrap text-sm">
-      <Trans
-        ns="home"
-        i18nKey="heroDemoTryIt"
-        defaults="Go ahead, try voting!"
-      />
+    <span className="-rotate-2 whitespace-nowrap rounded-full bg-gray-800/80 px-2.5 py-1 text-sm text-white backdrop-blur-sm">
+      {text}
     </span>
-    <ScribbleArrow className="mt-3 size-6 text-gray-500" />
+    <ScribbleArrow className="mt-2.5 -ml-0.5 size-6 text-gray-800/80" />
   </div>
 );
