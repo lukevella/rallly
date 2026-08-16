@@ -11,7 +11,7 @@ export const DemoFrame = ({
 }) => (
   <div
     className={cn(
-      "rounded-[2.2rem] border border-white/60 bg-white/60 p-1.5 shadow-sm backdrop-blur-xl",
+      "rounded-3xl border border-white/60 bg-white/60 p-1.5 shadow-sm backdrop-blur-xl",
       className,
     )}
   >
@@ -26,12 +26,7 @@ export const DemoScreen = ({
   children: React.ReactNode;
   className?: string;
 }) => (
-  <div
-    className={cn(
-      "overflow-hidden rounded-[1.8rem] border bg-white",
-      className,
-    )}
-  >
+  <div className={cn("overflow-hidden rounded-2xl border bg-white", className)}>
     {children}
   </div>
 );

@@ -1,5 +1,5 @@
 import { Badge } from "@rallly/ui/badge";
-import { ChevronRightIcon } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import type * as React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
@@ -22,9 +22,9 @@ export async function Hero({
         <Link
           href="/blog/mobile-voting-redesign"
           prefetch={false}
-          className="inline-flex items-center gap-x-2 rounded-full bg-card/50 p-1 pr-3 text-sm hover:bg-card"
+          className="group inline-flex items-center gap-x-2 rounded-full bg-gray-200/50 p-1 pr-3 text-sm transition-all hover:bg-gray-200"
         >
-          <Badge variant="secondary" className="rounded-full">
+          <Badge variant="primary" className="rounded-full">
             <Trans
               t={t}
               ns="home"
@@ -39,17 +39,17 @@ export async function Hero({
               i18nKey="mobileVotingBlog"
               defaults="A clearer way to vote on your phone"
             />
-            <ChevronRightIcon
-              className="-mr-1 size-4 transition-transform group-active:translate-x-0.5"
-              aria-hidden="true"
-            />
           </span>
+          <ArrowRightIcon
+            className="size-3 text-gray-500 transition-transform group-hover:translate-x-0.5 group-active:translate-x-0.5"
+            aria-hidden="true"
+          />
         </Link>
       </div>
-      <h1 className="mb-2 text-balance font-medium text-5xl leading-tight tracking-tight">
+      <h1 className="text-balance font-medium text-5xl tracking-tight">
         {title}
       </h1>
-      <p className="text-balance font-normal text-gray-500 text-lg">
+      <p className="mt-6 text-balance font-normal text-gray-500 text-lg leading-relaxed">
         {description}
       </p>
       <div className="mt-16">
