@@ -1,5 +1,5 @@
 import { Trans } from "react-i18next/TransWithoutContext";
-import { AnimatedNumber } from "@/components/home/animated-number";
+import { AnimatedStat } from "@/components/home/animated-number";
 import { getTranslation } from "@/i18n/server";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 
@@ -16,12 +16,10 @@ export async function Bonus(props: { locale: string }) {
         t={t}
         ns="home"
         i18nKey="statsLast30Days"
-        defaults="<b><voters/> {voterCount, plural, one {person} other {people}}</b> voted on <b><polls/> {pollCount, plural, one {poll} other {polls}}</b> in the last 30 days"
+        defaults="<b>{voterCount, plural, one {# person} other {# people}}</b> voted on <b>{pollCount, plural, one {# poll} other {# polls}}</b> in the last 30 days"
         values={{ voterCount, pollCount }}
         components={{
-          b: <strong className="font-semibold text-gray-800" />,
-          voters: <AnimatedNumber value={voterCount} locale={props.locale} />,
-          polls: <AnimatedNumber value={pollCount} locale={props.locale} />,
+          b: <AnimatedStat locale={props.locale} />,
         }}
       />
     </p>
