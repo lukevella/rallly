@@ -30,6 +30,8 @@ export function ImageUploadControl({
   onUploadSuccess,
   onRemoveSuccess,
   hasCurrentImage = false,
+  crop = true,
+  disabled = false,
 }: ImageUploadControlProps) {
   const isStorageEnabled = useFeatureFlag("storage");
 
@@ -91,6 +93,12 @@ export function ImageUploadControl({
       return;
     }
 
+    if (!crop) {
+      startUpload(file);
+      event.target.value = "";
+      return;
+    }
+
     // Create preview URL and show cropping dialog
     const { url, cleanup } = createImagePreviewUrl(file);
     setOriginalFile(file);
@@ -102,26 +110,24 @@ export function ImageUploadControl({
     event.target.value = "";
   };
 
-  const handleCropComplete = async (croppedFile: File) => {
-    if (!originalFile) return;
-
-    const parsedFileType = allowedMimeTypes.parse(croppedFile.type);
+  const startUpload = (file: File, onUploaded?: () => void) => {
+    const parsedFileType = allowedMimeTypes.parse(file.type);
 
     startUploading(async () => {
       try {
         const { url, fields } = await getUploadUrl({
           fileType: parsedFileType,
-          fileSize: croppedFile.size,
+          fileSize: file.size,
         });
 
         await uploadImage({
-          file: croppedFile,
+          file,
           url,
           fileType: parsedFileType,
         });
 
         onUploadSuccess(fields.key);
-        handleCloseCropDialog();
+        onUploaded?.();
       } catch {
         toast.error(
           t("errorUploadPicture", {
@@ -136,6 +142,12 @@ export function ImageUploadControl({
         );
       }
     });
+  };
+
+  const handleCropComplete = async (croppedFile: File) => {
+    if (!originalFile) return;
+
+    startUpload(croppedFile, handleCloseCropDialog);
   };
 
   const handleCloseCropDialog = () => {
@@ -162,7 +174,7 @@ export function ImageUploadControl({
         <div className="flex gap-2">
           <Button
             loading={isUploading}
-            disabled={!isStorageEnabled}
+            disabled={disabled || !isStorageEnabled}
             onClick={() => {
               fileInputRef.current?.click();
             }}
@@ -170,7 +182,12 @@ export function ImageUploadControl({
             <Trans i18nKey="chooseImage" defaults="Choose…" />
           </Button>
           {hasCurrentImage ? (
-            <Button loading={isRemoving} variant="ghost" onClick={handleRemove}>
+            <Button
+              loading={isRemoving}
+              disabled={disabled}
+              variant="ghost"
+              onClick={handleRemove}
+            >
               <Trans i18nKey="removeImage" defaults="Remove" />
             </Button>
           ) : null}

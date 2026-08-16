@@ -11,6 +11,12 @@ export interface ImageUploadControlProps {
   onUploadSuccess: (imageKey: string) => Promise<void> | void;
   onRemoveSuccess: () => Promise<void> | void;
   hasCurrentImage?: boolean;
+  /**
+   * When false, the selected file is uploaded as-is instead of going through
+   * the 1:1 crop dialog. Use for images with a free aspect ratio (e.g. logos).
+   */
+  crop?: boolean;
+  disabled?: boolean;
 }
 
 export interface ImageUploadPreviewProps {

@@ -6,7 +6,7 @@ import {
   FieldLabel,
   FieldTitle,
 } from "@rallly/ui/field";
-import { CodeIcon, ContainerIcon, GemIcon } from "lucide-react";
+import { CodeIcon, ContainerIcon, GemIcon, HardDriveIcon } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 import {
   PageSection,
@@ -18,8 +18,10 @@ import {
 } from "@/components/page-layout";
 import { loadBrandingSettings } from "@/features/branding/loaders";
 import { getTranslation } from "@/i18n/server";
+import { isStorageEnabled } from "@/lib/storage/constants";
 import { AppNameField } from "./app-name-field";
 import { HideAttributionField } from "./hide-attribution-field";
+import { LogoUploadField } from "./logo-upload-field";
 import { PrimaryColorField } from "./primary-color-field";
 
 async function ConfiguredByEnvironmentVariableAlert() {
@@ -35,6 +37,42 @@ async function ConfiguredByEnvironmentVariableAlert() {
           i18nKey="configuredByEnvironmentVariable"
           defaults="This setting has been configured by environment variable."
         />
+      </AlertDescription>
+    </Alert>
+  );
+}
+
+async function StorageNotConfiguredAlert() {
+  const { t, i18n } = await getTranslation();
+  return (
+    <Alert>
+      <HardDriveIcon />
+      <AlertDescription className="flex gap-2">
+        <p className="flex-1">
+          <Trans
+            t={t}
+            i18n={i18n}
+            ns="app"
+            i18nKey="brandingStorageNotConfigured"
+            defaults="Logo uploads require object storage, which has not been configured on this instance."
+          />
+        </p>
+        <p>
+          <a
+            href="https://support.rallly.co/self-hosting/configuration#external-object-storage"
+            target="_blank"
+            className="underline"
+            rel="noreferrer"
+          >
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="app"
+              i18nKey="learnMore"
+              defaults="Learn more"
+            />
+          </a>
+        </p>
       </AlertDescription>
     </Alert>
   );
@@ -73,6 +111,7 @@ export async function BrandingSettings() {
     logoUrlLight,
     logoUrlDark,
     logoIconUrl,
+    logoConfigured,
     envConfigured,
   } = await loadBrandingSettings();
   const { t, i18n } = await getTranslation();
@@ -256,6 +295,7 @@ export async function BrandingSettings() {
             </PageSectionDescription>
           </PageSectionHeader>
           <PageSectionContent>
+            {!isStorageEnabled ? <StorageNotConfiguredAlert /> : null}
             <FieldGroup variant="divided">
               <Field>
                 <Field orientation="responsive">
@@ -270,18 +310,19 @@ export async function BrandingSettings() {
                       />
                     </FieldTitle>
                   </FieldContent>
-                  <div className="flex items-center">
-                    <div className="flex w-48 items-center justify-center overflow-hidden rounded border bg-white">
-                      {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
-                      <img
-                        src={logoUrlLight}
-                        alt={t("logo", { ns: "app", defaultValue: "Logo" })}
-                        className="max-h-full max-w-full object-contain p-2"
-                      />
-                    </div>
-                  </div>
+                  <LogoUploadField
+                    logoType="logo"
+                    previewUrl={logoUrlLight}
+                    previewAlt={t("logo", { ns: "app", defaultValue: "Logo" })}
+                    hasCustomLogo={logoConfigured.logo}
+                    disabled={!hasWhiteLabelAddon}
+                  />
                 </Field>
-                <SetEnvironmentVariableAlert variable="LOGO_URL" />
+                {envConfigured.logo ? (
+                  <ConfiguredByEnvironmentVariableAlert />
+                ) : !isStorageEnabled ? (
+                  <SetEnvironmentVariableAlert variable="LOGO_URL" />
+                ) : null}
               </Field>
               <Field>
                 <Field orientation="responsive">
@@ -296,21 +337,22 @@ export async function BrandingSettings() {
                       />
                     </FieldTitle>
                   </FieldContent>
-                  <div className="flex items-center">
-                    <div className="flex w-48 items-center justify-center overflow-hidden rounded border bg-gray-900">
-                      {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
-                      <img
-                        src={logoUrlDark}
-                        alt={t("logoDark", {
-                          ns: "app",
-                          defaultValue: "Logo (dark mode)",
-                        })}
-                        className="max-h-full max-w-full object-contain p-2"
-                      />
-                    </div>
-                  </div>
+                  <LogoUploadField
+                    logoType="logoDark"
+                    previewUrl={logoUrlDark}
+                    previewAlt={t("logoDark", {
+                      ns: "app",
+                      defaultValue: "Logo (dark mode)",
+                    })}
+                    hasCustomLogo={logoConfigured.logoDark}
+                    disabled={!hasWhiteLabelAddon}
+                  />
                 </Field>
-                <SetEnvironmentVariableAlert variable="LOGO_URL_DARK" />
+                {envConfigured.logoDark ? (
+                  <ConfiguredByEnvironmentVariableAlert />
+                ) : !isStorageEnabled ? (
+                  <SetEnvironmentVariableAlert variable="LOGO_URL_DARK" />
+                ) : null}
               </Field>
               <Field>
                 <Field orientation="responsive">
@@ -325,21 +367,22 @@ export async function BrandingSettings() {
                       />
                     </FieldTitle>
                   </FieldContent>
-                  <div className="flex items-center">
-                    <div className="flex size-16 items-center justify-center overflow-hidden rounded border bg-white">
-                      {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
-                      <img
-                        src={logoIconUrl}
-                        alt={t("logoIcon", {
-                          ns: "app",
-                          defaultValue: "Logo icon",
-                        })}
-                        className="max-h-full max-w-full object-contain p-2"
-                      />
-                    </div>
-                  </div>
+                  <LogoUploadField
+                    logoType="logoIcon"
+                    previewUrl={logoIconUrl}
+                    previewAlt={t("logoIcon", {
+                      ns: "app",
+                      defaultValue: "Logo icon",
+                    })}
+                    hasCustomLogo={logoConfigured.logoIcon}
+                    disabled={!hasWhiteLabelAddon}
+                  />
                 </Field>
-                <SetEnvironmentVariableAlert variable="LOGO_ICON_URL" />
+                {envConfigured.logoIcon ? (
+                  <ConfiguredByEnvironmentVariableAlert />
+                ) : !isStorageEnabled ? (
+                  <SetEnvironmentVariableAlert variable="LOGO_ICON_URL" />
+                ) : null}
               </Field>
             </FieldGroup>
           </PageSectionContent>

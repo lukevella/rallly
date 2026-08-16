@@ -38,6 +38,12 @@ export const loadBrandingSettings = cache(async () => {
     logoUrlLight: resolved.logo.light,
     logoUrlDark: resolved.logo.dark,
     logoIconUrl: resolved.logoIcon,
+    // A stored value exists that can be removed to fall back to env/default
+    logoConfigured: {
+      logo: db.logo !== null,
+      logoDark: db.logoDark !== null,
+      logoIcon: db.logoIcon !== null,
+    },
     // Checked against process.env because the parsed env applies defaults
     // (APP_NAME, HIDE_ATTRIBUTION), which would read as operator-set
     envConfigured: {
@@ -48,6 +54,9 @@ export const loadBrandingSettings = cache(async () => {
         db.primaryColorDark === null && Boolean(process.env.PRIMARY_COLOR_DARK),
       hideAttribution:
         db.hideAttribution === null && Boolean(process.env.HIDE_ATTRIBUTION),
+      logo: db.logo === null && Boolean(process.env.LOGO_URL),
+      logoDark: db.logoDark === null && Boolean(process.env.LOGO_URL_DARK),
+      logoIcon: db.logoIcon === null && Boolean(process.env.LOGO_ICON_URL),
     },
   };
 });
