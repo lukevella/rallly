@@ -50,14 +50,14 @@ export function LogoUploadField({
 
   return (
     <div className="w-full space-y-3">
-      {/* Full-width preview of the 160x160 slot the logo renders in */}
+      {/* Full-width preview of the 200x160 slot the logo renders in */}
       <div
         className={cn(
           "flex w-full items-center justify-center overflow-hidden rounded-lg border",
           previewVariants[logoType],
         )}
       >
-        <div className="flex size-40 items-center justify-center">
+        <div className="flex h-40 w-50 items-center justify-center">
           {/* biome-ignore lint/performance/noImgElement: external URLs may not work with Next.js Image */}
           <img
             src={previewUrl}
