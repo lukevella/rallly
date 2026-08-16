@@ -39,4 +39,24 @@ describe("cookieDomainSchema", () => {
   ])("rejects IP address %s", (value) => {
     expect(cookieDomainSchema.safeParse(value).success).toBe(false);
   });
+
+  // Browsers also refuse to set a cookie whose Domain is a public suffix:
+  // ignored entirely when it differs from the request host, downgraded to
+  // host-only when it matches. The private section counts too, so a site on
+  // foo.vercel.app cannot share cookies via Domain=.vercel.app.
+  it.each([
+    ".com",
+    "co.uk",
+    ".co.uk",
+    "vercel.app",
+  ])("rejects public suffix %s", (value) => {
+    expect(cookieDomainSchema.safeParse(value).success).toBe(false);
+  });
+
+  // Dotted domains under an unlisted TLD (intranet setups) stay valid.
+  it("accepts a dotted intranet domain", () => {
+    expect(cookieDomainSchema.safeParse(".rallly.corp.internal").success).toBe(
+      true,
+    );
+  });
 });

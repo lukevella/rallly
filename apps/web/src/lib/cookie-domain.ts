@@ -1,3 +1,4 @@
+import { getDomain } from "tldts";
 import * as z from "zod";
 
 export const cookieDomainSchema = z
@@ -8,16 +9,18 @@ export const cookieDomainSchema = z
   })
   .refine(
     (value) => {
-      // Browsers ignore the Domain attribute for dotless hostnames and IP
-      // addresses (RFC 6265bis public suffix handling) and store the cookie
-      // host-only instead. The session cookie then shares a store key with
-      // hostOnlyCookieCleanup's host-only deletions, so every sign-in
-      // deletes the session it just set.
+      // Browsers only honor a Domain attribute naming a registrable domain.
+      // For anything else (localhost, single-label hostnames, IP addresses,
+      // public suffixes like co.uk or vercel.app) the cookie is either
+      // dropped or silently stored host-only, where it shares a store key
+      // with hostOnlyCookieCleanup's host-only deletions, so every sign-in
+      // deletes the session it just set. getDomain returns null for exactly
+      // this class; unlisted TLDs (intranet domains) still resolve.
       const host = value.replace(/^\./, "");
-      return host.includes(".") && !/^\d+(\.\d+)*$/.test(host);
+      return getDomain(host, { allowPrivateDomains: true }) !== null;
     },
     {
       message:
-        "cannot be localhost, a single-label hostname, or an IP address. Browsers ignore the Domain attribute for these hosts, which breaks sign-in. Unset it to scope cookies to the request host instead.",
+        "must be a registrable domain. Browsers ignore a Domain attribute naming localhost, an IP address, a single-label hostname, or a public suffix (like .com or .vercel.app), which breaks sign-in. Unset it to scope cookies to the request host instead.",
     },
   );

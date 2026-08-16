@@ -98,6 +98,7 @@
     "smoothscroll-polyfill": "^0.4.4",
     "superjson": "^2.0.0",
     "tailwindcss": "^4.1.18",
+    "tldts": "^6.1.86",
     "undici": "^7.29.0",
     "zod": "^4.3.6",
     "zustand": "^5.0.14",

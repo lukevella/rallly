@@ -207,9 +207,9 @@ export const env = createEnv({
      * Domain to attach to server-set cookies (auth session, locale).
      * Set to a parent domain prefixed with a leading dot (e.g. `.rallly.co`)
      * to make these cookies readable across subdomains. When unset, cookies
-     * stay scoped to the apex host of the request. Must be a dotted DNS
+     * stay scoped to the exact request host. Must be a registrable DNS
      * domain: browsers ignore the Domain attribute for localhost, dotless
-     * hostnames, and IP addresses, which breaks sign-in.
+     * hostnames, IP addresses, and public suffixes, which breaks sign-in.
      */
     NEXT_PUBLIC_COOKIE_DOMAIN: cookieDomainSchema.optional(),
   },
