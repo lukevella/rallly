@@ -133,7 +133,7 @@ export const Footer: React.FunctionComponent = () => {
         </div>
         <div className="lg:flex-1">
           <div className="mb-8 font-medium">
-            <Trans ns="common" i18nKey="links" defaults="Links" />
+            <Trans ns="common" i18nKey="product" defaults="Product" />
           </div>
           <ul className="grid gap-2 text-sm">
             <li>
@@ -156,6 +156,21 @@ export const Footer: React.FunctionComponent = () => {
                 />
               </LinkBase>
             </li>
+          </ul>
+        </div>
+        <div className="lg:flex-1">
+          <div className="mb-8 font-medium">
+            <Trans ns="common" i18nKey="resources" defaults="Resources" />
+          </div>
+          <ul className="grid gap-2 text-sm">
+            <li>
+              <LinkBase
+                href="/blog"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+              >
+                <Trans ns="common" i18nKey="blog" defaults="Blog" />
+              </LinkBase>
+            </li>
             <li>
               <a
                 target="_blank"
@@ -169,14 +184,6 @@ export const Footer: React.FunctionComponent = () => {
                   defaults="Discussions"
                 />
               </a>
-            </li>
-            <li>
-              <LinkBase
-                href="/blog"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-              >
-                <Trans ns="common" i18nKey="blog" defaults="Blog" />
-              </LinkBase>
             </li>
             <li>
               <a
@@ -227,52 +234,51 @@ export const Footer: React.FunctionComponent = () => {
             </li>
           </ul>
         </div>
-        <div className="lg:w-1/4">
-          <div className="mb-8 font-medium">
-            <Trans ns="common" i18nKey="language" defaults="Language" />
-          </div>
-          <div className="mb-4">
+      </div>
+      <div className="flex flex-col gap-x-8 gap-y-8 sm:pb-8 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-x-8 gap-y-2 sm:flex-row sm:items-center">
+          <p className="whitespace-nowrap text-gray-600 text-sm leading-loose">
+            &copy; 2026 Stack Snap Ltd.
+          </p>
+          <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm leading-loose">
+            <li>
+              <Link
+                href="/privacy-policy"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+              >
+                <Trans ns="common" i18nKey="privacyPolicy" />
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/cookie-policy"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+              >
+                <Trans ns="common" i18nKey="cookiePolicy" />
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/terms-of-use"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+              >
+                <Trans ns="common" i18nKey="termsOfUse" />
+              </Link>
+            </li>
+          </ul>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="w-48">
             <LanguageSelect />
           </div>
           <a
             href="https://support.rallly.co/contribute/translations"
-            className="inline-flex h-8 items-center rounded-md border px-3 text-gray-600 text-xs hover:border-primary hover:text-primary"
+            className="inline-flex h-9 shrink-0 items-center rounded-md border px-3 text-gray-600 text-xs hover:border-primary hover:text-primary"
           >
-            <LanguagesIcon className="mr-2 size-5" />
+            <LanguagesIcon className="mr-2 size-4" />
             <Trans ns="common" i18nKey="volunteerTranslator" /> &rarr;
           </a>
         </div>
-      </div>
-      <div className="flex flex-col justify-start gap-x-8 gap-y-8 sm:flex-row sm:items-end sm:pb-8">
-        <p className="text-gray-600 text-sm leading-loose">
-          &copy; 2026 Stack Snap Ltd.
-        </p>
-        <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm leading-loose">
-          <li>
-            <Link
-              href="/privacy-policy"
-              className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-            >
-              <Trans ns="common" i18nKey="privacyPolicy" />
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/cookie-policy"
-              className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-            >
-              <Trans ns="common" i18nKey="cookiePolicy" />
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/terms-of-use"
-              className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-            >
-              <Trans ns="common" i18nKey="termsOfUse" />
-            </Link>
-          </li>
-        </ul>
       </div>
     </div>
   );
