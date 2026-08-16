@@ -11,11 +11,14 @@ import { getS3Client } from "@/lib/storage/s3";
 const logger = createLogger("api/storage");
 
 const MAX_UPLOAD_BYTES = 2 * 1024 * 1024;
-const ALLOWED_UPLOAD_CONTENT_TYPES = new Set([
-  "image/jpeg",
-  "image/png",
-  "image/svg+xml",
-]);
+// The signed upload key's extension is derived server-side from the
+// validated file type, so it decides which content type a PUT may carry —
+// without this, any signed URL (e.g. an avatar's) could store an SVG
+const CONTENT_TYPE_BY_KEY_EXTENSION: Record<string, string> = {
+  jpg: "image/jpeg",
+  png: "image/png",
+  svg: "image/svg+xml",
+};
 
 async function getAvatar(key: string) {
   const s3Client = getS3Client();
@@ -100,8 +103,10 @@ export async function PUT(
   }
 
   const contentType = req.headers.get("content-type") ?? "";
+  const keyExtension = key.split(".").pop() ?? "";
+  const expectedContentType = CONTENT_TYPE_BY_KEY_EXTENSION[keyExtension];
 
-  if (!ALLOWED_UPLOAD_CONTENT_TYPES.has(contentType)) {
+  if (!expectedContentType || contentType !== expectedContentType) {
     return new NextResponse("Unsupported content type", { status: 415 });
   }
 
