@@ -68,7 +68,7 @@ export const Footer: React.FunctionComponent = () => {
   return (
     <div className="mx-auto space-y-8">
       <div className="space-y-16 lg:flex lg:space-x-8 lg:space-y-0">
-        <div className="lg:w-1/4">
+        <div className="lg:mr-16 lg:w-1/4">
           <div className="relative h-[30px] w-[30px]">
             <Image
               src="/logo-footer.svg"
@@ -132,7 +132,7 @@ export const Footer: React.FunctionComponent = () => {
           </div>
         </div>
         <div className="lg:flex-1">
-          <div className="mb-8 font-medium">
+          <div className="mb-8 flex h-[30px] items-center font-medium">
             <Trans ns="common" i18nKey="product" defaults="Product" />
           </div>
           <ul className="grid gap-2 text-sm">
@@ -159,7 +159,7 @@ export const Footer: React.FunctionComponent = () => {
           </ul>
         </div>
         <div className="lg:flex-1">
-          <div className="mb-8 font-medium">
+          <div className="mb-8 flex h-[30px] items-center font-medium">
             <Trans ns="common" i18nKey="resources" defaults="Resources" />
           </div>
           <ul className="grid gap-2 text-sm">
@@ -204,7 +204,7 @@ export const Footer: React.FunctionComponent = () => {
           </ul>
         </div>
         <div className="lg:flex-1">
-          <div className="mb-8 font-medium">
+          <div className="mb-8 flex h-[30px] items-center font-medium">
             <Trans ns="common" i18nKey="compare" defaults="Compare" />
           </div>
           <ul className="grid gap-2 text-sm">
