@@ -5,6 +5,7 @@
 import "server-only";
 import { createEnv } from "@t3-oss/env-nextjs";
 import * as z from "zod";
+import { cookieDomainSchema } from "@/lib/cookie-domain";
 
 // Base URL fallback on preview deployments, where `NEXT_PUBLIC_BASE_URL` is
 // unset. Prefer the stable branch alias (the URL Vercel links to) over the
@@ -206,15 +207,11 @@ export const env = createEnv({
      * Domain to attach to server-set cookies (auth session, locale).
      * Set to a parent domain prefixed with a leading dot (e.g. `.rallly.co`)
      * to make these cookies readable across subdomains. When unset, cookies
-     * stay scoped to the apex host of the request.
+     * stay scoped to the apex host of the request. Must be a dotted DNS
+     * domain: browsers ignore the Domain attribute for localhost, dotless
+     * hostnames, and IP addresses, which breaks sign-in.
      */
-    NEXT_PUBLIC_COOKIE_DOMAIN: z
-      .string()
-      .regex(/^\.?[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*$/, {
-        message:
-          "must be a hostname or optional leading-dot domain (no protocol/port/path)",
-      })
-      .optional(),
+    NEXT_PUBLIC_COOKIE_DOMAIN: cookieDomainSchema.optional(),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
