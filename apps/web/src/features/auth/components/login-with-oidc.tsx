@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@rallly/ui/button";
 
-import { Trans } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
 
@@ -24,11 +23,7 @@ export function LoginWithOIDC({
       className="w-full"
       size="xl"
     >
-      <Trans
-        i18nKey="continueWithProvider"
-        defaults="Continue with {provider}"
-        values={{ provider: name }}
-      />
+      {name}
     </Button>
   );
 }
