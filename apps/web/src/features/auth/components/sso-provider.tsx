@@ -4,7 +4,6 @@ import { Icon } from "@rallly/ui/icon";
 import { UserIcon } from "lucide-react";
 import Image from "next/image";
 
-import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
 
@@ -46,15 +45,9 @@ export function SSOProvider({
   name: string;
   redirectTo?: string;
 }) {
-  const { t } = useTranslation();
   return (
     <Button
       size="xl"
-      aria-label={t("continueWithProvider", {
-        provider: name,
-        ns: "app",
-        defaultValue: "Continue with {provider}",
-      })}
       key={providerId}
       onClick={() => {
         authClient.signIn.social({
@@ -64,13 +57,7 @@ export function SSOProvider({
       }}
     >
       <SSOImage provider={providerId} />
-      <span>
-        <Trans
-          i18nKey="continueWithProvider"
-          defaults="Continue with {provider}"
-          values={{ provider: name }}
-        />
-      </span>
+      <span>{name}</span>
     </Button>
   );
 }
