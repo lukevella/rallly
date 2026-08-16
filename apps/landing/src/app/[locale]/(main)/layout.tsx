@@ -46,8 +46,8 @@ export default async function Root(props: {
   const { t } = await getTranslation(locale, ["common", "home"]);
   return (
     <div className="relative z-10 flex min-h-full flex-col">
-      <header className="sticky top-0 z-20 bg-gradient-to-b from-60% from-gray-100 to-transparent">
-        <div className="mx-auto flex w-full max-w-5xl items-center px-4 pt-4 pb-6 sm:px-6 sm:pt-6 sm:pb-8">
+      <header className="sticky top-0 z-20 bg-gray-100">
+        <div className="mx-auto flex w-full max-w-5xl items-center px-4 py-4 sm:px-6 sm:py-6">
           <div className="flex grow items-center gap-x-12">
             <LinkBase
               className="relative inline-block h-7 w-32 rounded-sm"
