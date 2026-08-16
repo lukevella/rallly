@@ -121,6 +121,9 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
                     label={`${day.label} ${option.time}`}
                     value={votes[option.id]}
                     onChange={(vote) => {
+                      posthog?.capture("landing:hero_demo_vote_change", {
+                        vote,
+                      });
                       setVotes((current) => ({
                         ...current,
                         [option.id]: vote,
@@ -161,7 +164,10 @@ export const MobileDemo = ({ days }: { days: MobileDemoDay[] }) => {
               <button
                 type="button"
                 aria-label={t("heroDemoClose", { defaultValue: "Close" })}
-                onClick={() => setSubmitted(false)}
+                onClick={() => {
+                  posthog?.capture("landing:hero_demo_close_click");
+                  setSubmitted(false);
+                }}
                 className="absolute top-3 right-3 flex size-6 cursor-pointer items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600"
               >
                 <XIcon className="size-4" />
