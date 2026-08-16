@@ -11,7 +11,14 @@ import { getS3Client } from "@/lib/storage/s3";
 const logger = createLogger("api/storage");
 
 const MAX_UPLOAD_BYTES = 2 * 1024 * 1024;
-const ALLOWED_UPLOAD_CONTENT_TYPES = new Set(["image/jpeg", "image/png"]);
+// The signed upload key's extension is derived server-side from the
+// validated file type, so it decides which content type a PUT may carry —
+// without this, any signed URL (e.g. an avatar's) could store an SVG
+const CONTENT_TYPE_BY_KEY_EXTENSION: Record<string, string> = {
+  jpg: "image/jpeg",
+  png: "image/png",
+  svg: "image/svg+xml",
+};
 
 async function getAvatar(key: string) {
   const s3Client = getS3Client();
@@ -56,6 +63,13 @@ export async function GET(
       headers: {
         "Content-Type": contentType,
         "Cache-Control": "public, max-age=3600",
+        // Uploads are served from the app origin. The sandbox neutralizes
+        // scripts in SVGs when the file is opened directly; it does not
+        // apply to <img> subresource loads, so rendering is unaffected.
+        // frame-ancestors is carried over from the global header, which
+        // excludes this path so it can't override the sandbox directive.
+        "Content-Security-Policy": "sandbox; frame-ancestors 'none'",
+        "X-Content-Type-Options": "nosniff",
       },
     });
   } catch (error) {
@@ -89,8 +103,10 @@ export async function PUT(
   }
 
   const contentType = req.headers.get("content-type") ?? "";
+  const keyExtension = key.split(".").pop() ?? "";
+  const expectedContentType = CONTENT_TYPE_BY_KEY_EXTENSION[keyExtension];
 
-  if (!ALLOWED_UPLOAD_CONTENT_TYPES.has(contentType)) {
+  if (!expectedContentType || contentType !== expectedContentType) {
     return new NextResponse("Unsupported content type", { status: 415 });
   }
 

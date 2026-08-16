@@ -42,12 +42,13 @@ export function verifyUploadToken(key: string, token: string) {
 const mimeToExtension = {
   "image/jpeg": "jpg",
   "image/png": "png",
+  "image/svg+xml": "svg",
 } as const;
 
 export interface GetImageUploadUrlParams {
   keyPrefix: string;
   entityId: string;
-  fileType: "image/jpeg" | "image/png";
+  fileType: keyof typeof mimeToExtension;
   fileSize: number;
 }
 

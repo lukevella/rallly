@@ -2,6 +2,7 @@
 
 import { cn } from "@rallly/ui";
 import { ImageUploadControl } from "@/components/image-upload";
+import type { AllowedMimeType } from "@/components/image-upload/types";
 import type { BrandingLogoType } from "@/features/instance-settings/schema";
 import { useSafeAction } from "@/lib/safe-action/client";
 import {
@@ -31,6 +32,13 @@ const previewVariants: Record<
   },
 };
 
+// The icon feeds emails, where SVG rendering is unreliable — raster only
+const acceptedMimeTypes: Record<BrandingLogoType, AllowedMimeType[]> = {
+  logo: ["image/jpeg", "image/png", "image/svg+xml"],
+  logoDark: ["image/jpeg", "image/png", "image/svg+xml"],
+  logoIcon: ["image/jpeg", "image/png"],
+};
+
 export function LogoUploadField({
   logoType,
   previewUrl,
@@ -48,7 +56,7 @@ export function LogoUploadField({
   const removeLogo = useSafeAction(removeBrandingLogoAction);
 
   const handleGetUploadUrl = async (input: {
-    fileType: "image/jpeg" | "image/png";
+    fileType: AllowedMimeType;
     fileSize: number;
   }) => {
     const result = await getBrandingLogoUploadUrlAction({
@@ -135,6 +143,7 @@ export function LogoUploadField({
       </div>
       <ImageUploadControl
         crop={false}
+        accept={acceptedMimeTypes[logoType]}
         disabled={disabled}
         getUploadUrl={handleGetUploadUrl}
         onUploadSuccess={async (imageKey) => {

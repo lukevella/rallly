@@ -5,6 +5,7 @@ import {
   ImageUploadControl,
   ImageUploadPreview,
 } from "@/components/image-upload";
+import { rasterMimeTypes } from "@/components/image-upload/types";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import {
   getAvatarUploadUrlAction,
@@ -40,7 +41,11 @@ function ProfilePictureUpload({
       </ImageUploadPreview>
       <ImageUploadControl
         getUploadUrl={async (input) => {
-          const result = await getAvatarUploadUrl.executeAsync(input);
+          // The control only accepts raster types here (default accept list)
+          const result = await getAvatarUploadUrl.executeAsync({
+            fileType: rasterMimeTypes.parse(input.fileType),
+            fileSize: input.fileSize,
+          });
           if (!result?.data) {
             throw new Error("Failed to get upload URL");
           }

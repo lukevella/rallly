@@ -19,15 +19,23 @@ export const brandingLogoTypeSchema = z.enum(["logo", "logoDark", "logoIcon"]);
 
 export type BrandingLogoType = z.infer<typeof brandingLogoTypeSchema>;
 
-export const brandingLogoUploadSchema = z.object({
-  logoType: brandingLogoTypeSchema,
-  fileType: z.enum(["image/jpeg", "image/png"]),
-  fileSize: z
-    .number()
-    .int()
-    .positive()
-    .max(2 * 1024 * 1024),
-});
+export const brandingLogoUploadSchema = z
+  .object({
+    logoType: brandingLogoTypeSchema,
+    fileType: z.enum(["image/jpeg", "image/png", "image/svg+xml"]),
+    fileSize: z
+      .number()
+      .int()
+      .positive()
+      .max(2 * 1024 * 1024),
+  })
+  // The icon renders in emails, where SVG support is unreliable across
+  // clients — raster only for that slot
+  .refine(
+    (value) =>
+      !(value.logoType === "logoIcon" && value.fileType === "image/svg+xml"),
+    { message: "The logo icon does not support SVG" },
+  );
 
 export const updateBrandingLogoSchema = z.object({
   logoType: brandingLogoTypeSchema,
