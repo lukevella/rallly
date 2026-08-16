@@ -287,7 +287,11 @@ export const env = createEnv({
     API_BASE_URL: process.env.API_BASE_URL,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
     NEXT_PUBLIC_CDN_BASE_URL: process.env.NEXT_PUBLIC_CDN_BASE_URL,
-    NEXT_PUBLIC_COOKIE_DOMAIN: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
+    // Empty string means unset: the process env can override an .env file
+    // value but never remove it, so this is the only way a dev server on
+    // plain localhost can neutralize a configured cookie domain.
+    NEXT_PUBLIC_COOKIE_DOMAIN:
+      process.env.NEXT_PUBLIC_COOKIE_DOMAIN || undefined,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });
