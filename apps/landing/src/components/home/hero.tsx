@@ -22,7 +22,7 @@ export const MarketingHero = ({
 }) => {
   return (
     <article className="max-w-full space-y-16 text-center">
-      <header className="pt-6 sm:pt-28 sm:pb-8">
+      <header className="pt-6 sm:pt-28">
         <div>
           <Link
             href="/blog/mobile-voting-redesign"
