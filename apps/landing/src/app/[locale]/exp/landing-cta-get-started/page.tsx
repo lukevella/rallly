@@ -3,14 +3,17 @@
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import { getTranslation } from "@/i18n/server";
-import { HomePage } from "./home-page";
+import { HomePage } from "../../(main)/home-page";
+
+// The get-started variant of the home page. Only reached via the middleware
+// rewrite in lib/cta-experiment.ts — the visitor's URL stays "/".
 
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
 }) {
   cacheLife("days");
   const { locale } = await props.params;
-  return <HomePage locale={locale} />;
+  return <HomePage locale={locale} ctaVariant="get-started" />;
 }
 
 export async function generateMetadata(props: {
@@ -29,5 +32,6 @@ export async function generateMetadata(props: {
       defaultValue:
         "Rallly is the fastest and easiest scheduling and collaboration tool. Create a meeting poll in seconds, no login required.",
     }),
+    robots: { index: false, follow: false },
   };
 }
