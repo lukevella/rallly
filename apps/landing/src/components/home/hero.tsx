@@ -17,8 +17,8 @@ export async function Hero({
 }) {
   const { t } = await getTranslation(locale, ["home"]);
   return (
-    <section className="pt-6 pb-8 sm:pt-28 sm:pb-16">
-      <div className="mb-6">
+    <section className="pt-6 pb-8 sm:pt-24 sm:pb-16">
+      <div className="mb-8">
         <Link
           href="/blog/mobile-voting-redesign"
           prefetch={false}
@@ -46,7 +46,7 @@ export async function Hero({
           />
         </Link>
       </div>
-      <h1 className="text-balance font-medium text-5xl tracking-tight">
+      <h1 className="text-balance font-medium text-5xl text-gray-800 tracking-tight">
         {title}
       </h1>
       <p className="mt-6 text-balance font-normal text-gray-500 text-lg leading-relaxed">

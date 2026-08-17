@@ -15,9 +15,9 @@ const Mention = ({
   return (
     <FadeIn
       delay={delay}
-      className="flex h-full flex-col justify-between gap-8 rounded-2xl border border-gray-200/60 bg-white p-6"
+      className="flex h-full flex-col justify-between gap-8"
     >
-      <p className="text-base">{children}</p>
+      <p className="text-xl">{children}</p>
       <div className="self-end">{logo}</div>
     </FadeIn>
   );
@@ -26,8 +26,26 @@ const Mention = ({
 export async function Mentions({ locale }: { locale: string }) {
   const { t } = await getTranslation(locale, ["home"]);
   return (
-    <section className="py-8 sm:py-16">
-      <div className="grid gap-4 sm:grid-cols-2">
+    <section className="py-12">
+      <div className="grid gap-4 space-y-4 sm:grid-cols-2 sm:gap-6">
+        <h2 className="text-balance font-medium text-4xl leading-tight tracking-tight">
+          <Trans
+            t={t}
+            ns="home"
+            i18nKey="pressMentionsTitle"
+            defaults="Mentions"
+          />
+        </h2>
+        <p className="max-w-prose text-balance text-gray-500 text-lg">
+          <Trans
+            t={t}
+            ns="home"
+            i18nKey="pressMentionsDescription"
+            defaults="Rallly has been featured in the press for its simplicity and ease of use."
+          />
+        </p>
+      </div>
+      <div className="mt-16 grid gap-8 sm:grid-cols-2">
         <Mention
           delay={0.25}
           logo={
