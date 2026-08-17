@@ -15,7 +15,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
     <div className="mx-auto space-y-8">
       <div className="space-y-16 lg:flex lg:space-x-8 lg:space-y-0">
         <div className="lg:mr-16 lg:w-1/4">
-          <div className="relative h-[30px] w-[30px]">
+          <div className="relative size-8">
             <Image
               src="/logo-footer.svg"
               fill
@@ -79,7 +79,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
           </div>
         </div>
         <div className="lg:flex-1">
-          <div className="mb-8 flex h-[30px] items-center font-medium">
+          <div className="mb-6 flex h-8 items-center font-medium">
             <Trans t={t} ns="common" i18nKey="product" defaults="Product" />
           </div>
           <ul className="grid gap-2 text-sm">
@@ -107,7 +107,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
           </ul>
         </div>
         <div className="lg:flex-1">
-          <div className="mb-8 flex h-[30px] items-center font-medium">
+          <div className="mb-6 flex h-8 items-center font-medium">
             <Trans t={t} ns="common" i18nKey="resources" defaults="Resources" />
           </div>
           <ul className="grid gap-2 text-sm">
@@ -153,7 +153,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
           </ul>
         </div>
         <div className="lg:flex-1">
-          <div className="mb-8 flex h-[30px] items-center font-medium">
+          <div className="mb-6 flex h-8 items-center font-medium">
             <Trans t={t} ns="common" i18nKey="compare" defaults="Compare" />
           </div>
           <ul className="grid gap-2 text-sm">

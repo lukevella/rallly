@@ -44,7 +44,7 @@ export async function Cta({
           </p>
         </div>
         <div className="mt-6 flex flex-col items-start gap-4">
-          <CtaButton captureEvent="landing:final_cta_click">
+          <CtaButton size="lg" captureEvent="landing:final_cta_click">
             {callToAction ?? (
               <Trans
                 t={t}

@@ -9,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import { MenuIcon } from "lucide-react";
 import type { Viewport } from "next";
 import { cacheLife } from "next/cache";
@@ -100,9 +99,7 @@ export default async function Root(props: {
                     />
                   }
                 >
-                  <Icon>
-                    <MenuIcon />
-                  </Icon>
+                  <MenuIcon className="size-4 text-muted-foreground" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   className="w-48"

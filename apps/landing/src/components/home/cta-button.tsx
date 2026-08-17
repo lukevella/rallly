@@ -12,7 +12,7 @@ export function CtaButton({
   children,
 }: {
   captureEvent: string;
-  size?: "default" | "xl";
+  size?: "default" | "lg" | "xl";
   className?: string;
   children: React.ReactNode;
 }) {
