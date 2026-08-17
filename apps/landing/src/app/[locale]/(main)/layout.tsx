@@ -76,8 +76,10 @@ export default async function Root(props: {
             </nav>
           </div>
           <div className="flex items-center gap-4 sm:gap-8">
-            <div className="hidden items-center gap-2 sm:flex">
-              <LoginButton />
+            <div className="flex items-center gap-2">
+              <div className="hidden sm:block">
+                <LoginButton />
+              </div>
               <CtaButton size="default" captureEvent="landing:header_cta_click">
                 <Trans
                   t={t}
@@ -136,18 +138,6 @@ export default async function Root(props: {
                     >
                       <Trans t={t} i18nKey="login" defaults="Login" />
                     </LinkBase>
-                    <CtaButton
-                      size="default"
-                      className="w-full"
-                      captureEvent="landing:header_cta_click"
-                    >
-                      <Trans
-                        t={t}
-                        ns="home"
-                        i18nKey="createAPoll"
-                        defaults="Create a poll"
-                      />
-                    </CtaButton>
                   </DropdownMenuLabel>
                 </DropdownMenuContent>
               </DropdownMenu>
