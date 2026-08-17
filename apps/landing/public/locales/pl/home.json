@@ -46,7 +46,6 @@
   "pcmagQuote": "\"Skonfiguruj ankietę planowania w jak najkrótszym czasie.\"",
   "popsciQuote": "\"Idealny wybór, jeśli chcesz zachować prostotę RSVP.\"",
   "statsLast30Days": "<b>{voterCount, plural, one {# osoba} few {# osoby} many {# osób} other {# osób}}</b> zagłosowało w <b>{pollCount, plural, one {# ankiecie} few {# ankietach} many {# ankietach} other {# ankietach}}</b> w ciągu ostatnich 30 dni",
-  "subheading": "Koordynuj spotkania grupowe bez wysyłania maili",
   "viaTrustpilot": "via Trustpilot",
   "when2meetAlternative": "Nowoczesna alternatywa dla When2Meet",
   "when2meetAlternativeDescription": "Rallly robi wszystko, do czego używasz When2Meet, bez uciążliwych elementów. Twórz przejrzyste ankiety terminów, które świetnie działają na telefonie, otrzymuj powiadomienia, gdy uczestnicy odpowiadają, i zarządzaj wszystkimi ankietami w jednym miejscu. Za darmo, bez reklam i bez konta, aby głosować. Przechodzisz z When2Meet lub WhenIsGood? Rallly od razu będzie Ci znajome.",
