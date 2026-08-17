@@ -6,6 +6,7 @@ import type { UserAbility } from "@/features/user/ability";
 import { defineAbilityFor } from "@/features/user/ability";
 import type { UserDTO } from "@/features/user/schema";
 import { authClient } from "@/lib/auth-client";
+import { useLocale } from "@/lib/locale/client";
 import { isOwner } from "@/lib/utils/permissions";
 
 const UserContext = React.createContext<UserDTO | null | undefined>(undefined);
@@ -19,12 +20,16 @@ export function UserProvider({
 }) {
   const userId = user?.id;
   const isGuest = user?.isGuest;
+  const { locale } = useLocale();
 
+  // Changing the language refreshes the router with a new [locale] param, so
+  // this re-runs; posthog-js turns a repeat identify into a $set and drops it
+  // when the properties are unchanged.
   React.useEffect(() => {
     if (userId && !isGuest) {
-      posthog.identify(userId);
+      posthog.identify(userId, { locale });
     }
-  }, [userId, isGuest]);
+  }, [userId, isGuest, locale]);
 
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 }
