@@ -46,7 +46,6 @@
   "pcmagQuote": "“在尽可能短的时间内进行一次投票。”",
   "popsciQuote": "“如果你想要保持你的RSVP简单，这是完美的选择。”",
   "statsLast30Days": "过去30天里，<b>{voterCount, plural, other {# 人}}</b> 在 <b>{pollCount, plural, other {# 个投票}}</b> 上投了票",
-  "subheading": "协调分组会议，而无需发送往来电子邮件",
   "viaTrustpilot": "前往 Trustpilot",
   "when2meetAlternative": "现代 When2Meet 替代品",
   "when2meetAlternativeDescription": "Rallly 能满足你使用 When2Meet 的所有需求，而没有那些繁琐之处。创建清爽的日程投票，在手机上也能流畅使用；参与者回复时会收到通知；所有投票都能在一个地方管理。免费、无广告，投票无需注册账号。从 When2Meet 或 WhenIsGood 转过来？你会立刻上手 Rallly。",
