@@ -46,13 +46,13 @@ export async function Hero({
           />
         </Link>
       </div>
-      <h1 className="text-balance font-medium text-5xl text-gray-800 tracking-tight">
+      <h1 className="text-pretty font-medium text-3xl text-gray-800 tracking-tight sm:text-5xl">
         {title}
       </h1>
-      <p className="mt-6 text-balance font-normal text-gray-500 text-lg leading-relaxed">
+      <p className="mt-4 text-pretty font-normal text-gray-500 text-sm leading-relaxed sm:text-lg">
         {description}
       </p>
-      <div className="mt-16">
+      <div className="mt-6 sm:mt-16">
         <HeroDemo locale={locale} />
       </div>
     </section>
