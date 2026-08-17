@@ -1,4 +1,5 @@
 {
+  "createAFreePoll": "Create a free poll",
   "createAPoll": "Create a poll",
   "doodleAlternative": "The best free Doodle alternative",
   "doodleAlternativeDescription": "Rallly is the Doodle alternative that everyone is looking for. Thousands of users have already made the switch and are now enjoying professional ad-free meeting polls in an intuitive and easy-to-use interface.        ",
@@ -17,7 +18,6 @@
   "freeSchedulingPollMetaDescription": "Create a free scheduling poll in seconds. Ideal for organizing meetings, events, conferences, sports teams and more.",
   "freeSchedulingPollMetaTitle": "Create a Free Scheduling Poll Instantly | No Account Required",
   "freeSchedulingPollTitle": "Find a date for your next event",
-  "getStartedForFree": "Get started for free",
   "goodfirmsQuote": "“Unique in its simplicity and requires minimum interaction time.”",
   "headline": "Find the best time to meet",
   "heroDemoClose": "Close",

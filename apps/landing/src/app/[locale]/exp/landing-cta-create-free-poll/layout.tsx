@@ -23,7 +23,7 @@ export default async function Root(props: {
   const { locale } = await params;
 
   return (
-    <LandingShell locale={locale} ctaVariant="get-started">
+    <LandingShell locale={locale} ctaVariant="create-free-poll">
       {children}
     </LandingShell>
   );

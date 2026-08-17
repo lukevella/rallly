@@ -13,7 +13,7 @@ export default async function Page(props: {
 }) {
   cacheLife("days");
   const { locale } = await props.params;
-  return <HomePage locale={locale} ctaVariant="get-started" />;
+  return <HomePage locale={locale} ctaVariant="create-free-poll" />;
 }
 
 export async function generateMetadata(props: {

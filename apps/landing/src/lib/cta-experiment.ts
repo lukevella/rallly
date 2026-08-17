@@ -15,7 +15,7 @@ import { fallbackLng, languages } from "@/i18n/settings";
 // events report the variant the visitor actually saw.
 
 const EXPERIMENT_FLAG = "landing-cta-copy";
-const REWRITE_VARIANT = "get-started";
+const REWRITE_VARIANT = "create-free-poll";
 const FLAG_COOKIE = `ph_ff_${EXPERIMENT_FLAG}`;
 const DISTINCT_ID_COOKIE = "ph_did";
 const FLAG_COOKIE_MAX_AGE = 60 * 60;

@@ -11,7 +11,7 @@ export async function HomePage({
   ctaVariant,
 }: {
   locale: string;
-  ctaVariant?: "control" | "get-started";
+  ctaVariant?: "control" | "create-free-poll";
 }) {
   const { t } = await getTranslation(locale, ["home", "common"]);
   return (

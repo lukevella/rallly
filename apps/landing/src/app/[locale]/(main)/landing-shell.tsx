@@ -29,7 +29,7 @@ export async function LandingShell({
   children,
 }: {
   locale: string;
-  ctaVariant?: "control" | "get-started";
+  ctaVariant?: "control" | "create-free-poll";
   children: React.ReactNode;
 }) {
   const { t } = await getTranslation(locale, ["common", "home"]);
