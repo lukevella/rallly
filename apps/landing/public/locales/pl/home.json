@@ -1,6 +1,4 @@
 {
-  "createAPoll": "Utwórz ankietę na spotkanie",
-  "createASchedulingPoll": "Utwórz ankietę planowania",
   "doodleAlternative": "Najlepsza darmowa alternatywa dla Doodle",
   "doodleAlternativeDescription": "Rallly to alternatywa dla Doodle, której wszyscy szukają. Tysiące użytkowników dokonało już zmiany i cieszy się teraz profesjonalnymi ankietami spotkań bez reklam w intuicyjnym i łatwym w użyciu interfejsie.        ",
   "doodleAlternativeFinalCtaDescription": "Utwórz pierwszą ankietę w kilka sekund i przekonaj się, dlaczego tak wielu zrezygnowało z Doodle.",
@@ -42,7 +40,6 @@
   "metaDescription": "Twórz ankiety i głosuj, aby znaleźć najlepszy dzień lub godzinę. Bezpłatna alternatywa dla Doodle.",
   "metaTitle": "Rallly: Darmowe narzędzie do planowania spotkań grupowych",
   "mobileVotingBlog": "Przejrzystsze głosowanie na telefonie",
-  "new": "Nowość",
   "pcmagQuote": "\"Skonfiguruj ankietę planowania w jak najkrótszym czasie.\"",
   "popsciQuote": "\"Idealny wybór, jeśli chcesz zachować prostotę RSVP.\"",
   "statsLast30Days": "<b>{voterCount, plural, one {# osoba} few {# osoby} many {# osób} other {# osób}}</b> zagłosowało w <b>{pollCount, plural, one {# ankiecie} few {# ankietach} many {# ankietach} other {# ankietach}}</b> w ciągu ostatnich 30 dni",
