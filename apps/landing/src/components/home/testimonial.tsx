@@ -15,7 +15,7 @@ export async function Testimonial({ locale }: { locale: string }) {
             src="/static/images/stars-5.svg"
             fill
             style={{ objectFit: "contain" }}
-            alt="5 stars"
+            alt={t("fiveStars", { ns: "home", defaultValue: "5 stars" })}
           />
         </div>
         <div className="sm:text-center">

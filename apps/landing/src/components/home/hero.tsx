@@ -18,11 +18,17 @@ export async function Hero({
   const { t } = await getTranslation(locale, ["home"]);
   return (
     <section className="pt-8 sm:py-16">
-      <div className="mb-8">
+      <h1 className="text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-5xl">
+        {title}
+      </h1>
+      <p className="mt-4 text-balance font-normal text-gray-500 text-sm leading-relaxed sm:text-lg">
+        {description}
+      </p>
+      <div className="mt-8">
         <Link
           href="/blog/mobile-voting-redesign"
           prefetch={false}
-          className="group inline-flex items-center gap-x-2 rounded-full bg-gray-200/50 p-1 pr-3 text-sm transition-all hover:bg-gray-200"
+          className="group -ml-1 inline-flex items-center gap-x-2 rounded-full bg-gray-200/50 p-1 pr-3 text-sm transition-all hover:bg-gray-200"
         >
           <Badge variant="primary" className="rounded-full">
             <Trans
@@ -46,12 +52,6 @@ export async function Hero({
           />
         </Link>
       </div>
-      <h1 className="text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-5xl">
-        {title}
-      </h1>
-      <p className="mt-4 text-balance font-normal text-gray-500 text-sm leading-relaxed sm:text-lg">
-        {description}
-      </p>
       <div className="mt-6 sm:mt-16">
         <HeroDemo locale={locale} />
       </div>

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import DiscordIcon from "@/assets/discord.svg";
@@ -194,28 +193,28 @@ export const Footer = async ({ locale }: { locale: string }) => {
           </p>
           <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm leading-loose">
             <li>
-              <Link
+              <LinkBase
                 href="/privacy-policy"
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
                 <Trans t={t} ns="common" i18nKey="privacyPolicy" />
-              </Link>
+              </LinkBase>
             </li>
             <li>
-              <Link
+              <LinkBase
                 href="/cookie-policy"
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
                 <Trans t={t} ns="common" i18nKey="cookiePolicy" />
-              </Link>
+              </LinkBase>
             </li>
             <li>
-              <Link
+              <LinkBase
                 href="/terms-of-use"
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
                 <Trans t={t} ns="common" i18nKey="termsOfUse" />
-              </Link>
+              </LinkBase>
             </li>
           </ul>
         </div>

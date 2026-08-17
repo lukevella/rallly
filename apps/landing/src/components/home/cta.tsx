@@ -1,7 +1,9 @@
+import { cn } from "@rallly/ui";
 import type * as React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { CtaButton } from "@/components/home/cta-button";
 import { FadeIn } from "@/components/home/fade-in";
+import { handwritten } from "@/fonts/handwritten";
 import { getTranslation } from "@/i18n/server";
 
 export async function Cta({
@@ -41,7 +43,7 @@ export async function Cta({
             )}
           </p>
         </div>
-        <div className="mt-6">
+        <div className="mt-6 flex flex-col items-start gap-4">
           <CtaButton captureEvent="landing:final_cta_click">
             {callToAction ?? (
               <Trans
@@ -52,6 +54,20 @@ export async function Cta({
               />
             )}
           </CtaButton>
+          <p
+            className={cn(
+              "whitespace-nowrap text-gray-600 text-xs",
+              handwritten.className,
+              "decoration underline decoration-2 decoration-gray-300 underline-offset-8",
+            )}
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="hint"
+              defaults="It's free! No login required."
+            />
+          </p>
         </div>
       </FadeIn>
     </section>
