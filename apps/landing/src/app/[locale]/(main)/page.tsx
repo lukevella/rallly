@@ -25,7 +25,7 @@ export default async function Page(props: {
         })}
         description={t("subheading", {
           defaultValue:
-            "Coordinate group meetings without the back-and-forth emails",
+            "Create a poll, share the link, and let everyone vote on the times that work. It's free and nobody needs an account.",
           ns: "home",
         })}
       />
