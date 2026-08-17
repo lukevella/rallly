@@ -1,4 +1,5 @@
 {
+  "createAPoll": "Crea un sondaggio",
   "doodleAlternative": "La migliore alternativa gratuita a Doodle",
   "doodleAlternativeDescription": "Rallly è l'alternativa a Doodle che tutti stanno cercando. Migliaia di utenti hanno già effettuato il passaggio e ora possono usufruire di sondaggi per riunioni senza pubblicità in un'interfaccia intuitiva e facile da usare.        ",
   "doodleAlternativeFinalCtaDescription": "Crea il tuo primo sondaggio in pochi secondi e scopri perché così tante persone hanno abbandonato Doodle.",
@@ -9,6 +10,7 @@
   "ericQuote": "Se il vostro flusso di lavoro di pianificazione passa per le e-mail, vi incoraggio caldamente a lasciare che Rallly semplifichi le vostre attività di pianificazione per una giornata di lavoro più organizzata e meno stressante.",
   "finalCtaDescription": "Crea un sondaggio, condividi il link e lascia che tutti votino gli orari che vanno bene.",
   "finalCtaTitle": "Pronto a trovare il momento migliore per incontrarvi?",
+  "fiveStars": "5 stelle",
   "freeSchedulingPollDescription": "Rallly ti permette di creare sondaggi di pianificazione belli e facili da usare, così puoi trovare l'orario migliore per il tuo prossimo evento.",
   "freeSchedulingPollFinalCtaDescription": "Ci vogliono pochi secondi e il tuo gruppo può iniziare a votare subito.",
   "freeSchedulingPollFinalCtaTitle": "Pronto a creare il tuo sondaggio per fissare l'orario?",
@@ -39,6 +41,7 @@
   "metaDescription": "Crea sondaggi e vota per trovare il miglior giorno o orario. Un alternativa gratuita a Doodle.",
   "metaTitle": "Rallly: strumento gratuito per la pianificazione di riunioni di gruppo",
   "mobileVotingBlog": "Un modo più chiaro per votare dal tuo telefono",
+  "mobileVotingBlogBadge": "Nuovo",
   "pcmagQuote": "Imposta un sondaggio di pianificazione in pochissimo tempo",
   "popsciQuote": "La scelta perfetta se volete mantenere il vostro RSVP semplice",
   "statsLast30Days": "<b>{voterCount, plural, one {# persona ha votato} other {# persone hanno votato}}</b> in <b>{pollCount, plural, one {# sondaggio} other {# sondaggi}}</b> negli ultimi 30 giorni",
