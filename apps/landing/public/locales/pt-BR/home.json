@@ -46,6 +46,7 @@
   "pcmagQuote": "“Configure uma enquete agendada no menor tempo possível”",
   "popsciQuote": "“A escolha perfeita se você quiser manter seus RSVPs simples.”",
   "statsLast30Days": "<b>{voterCount, plural, one {# pessoa votou} other {# pessoas votaram}}</b> em <b>{pollCount, plural, one {# enquete} other {# enquetes}}</b> nos últimos 30 dias",
+  "subheading": "Crie uma enquete, compartilhe o link e deixe todos votarem nos horários que funcionam. É grátis e ninguém precisa de uma conta.",
   "viaTrustpilot": "via Trustpilot",
   "when2meetAlternative": "Uma alternativa moderna ao When2Meet",
   "when2meetAlternativeDescription": "O Rallly oferece tudo o que você usa no When2Meet, sem as partes complicadas. Crie enquetes de agendamento claras que funcionam muito bem no celular, receba notificações quando os participantes responderem e gerencie todas as suas enquetes em um só lugar. Gratuito, sem anúncios e sem necessidade de conta para votar. Vindo do When2Meet ou do WhenIsGood? O Rallly vai parecer familiar desde o início.",
