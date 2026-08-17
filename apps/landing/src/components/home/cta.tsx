@@ -20,7 +20,7 @@ export async function Cta({
     <section className="py-8 sm:py-24">
       <FadeIn captureOnEnter="landing:final_cta_view">
         <div className="grid gap-4 space-y-4 sm:grid-cols-2 sm:gap-6">
-          <h2 className="text-balance font-medium text-2xl leading-tight tracking-tight sm:text-4xl">
+          <h2 className="text-balance font-medium text-2xl text-gray-800 leading-tight tracking-tight sm:text-4xl">
             {title ?? (
               <Trans
                 t={t}

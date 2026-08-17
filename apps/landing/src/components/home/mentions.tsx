@@ -13,12 +13,9 @@ const Mention = ({
   delay?: number;
 }>) => {
   return (
-    <FadeIn
-      delay={delay}
-      className="flex flex-col items-center space-y-4 rounded-md"
-    >
+    <FadeIn delay={delay} className="flex flex-col space-y-4 rounded-md">
       <div className="flex items-start justify-between">{logo}</div>
-      <p className="grow text-center text-base">{children}</p>
+      <p className="grow text-base">{children}</p>
     </FadeIn>
   );
 };
