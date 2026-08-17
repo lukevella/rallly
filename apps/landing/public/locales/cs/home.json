@@ -46,6 +46,7 @@
   "pcmagQuote": "„Vytvořte hlasování v co nejkratším čase.\"",
   "popsciQuote": "„Dokonalá volba, pokud chcete udržet své RSVP jednoduché.“",
   "statsLast30Days": "<b>{voterCount, plural, one {# osoba} few {# osoby} many {# osob} other {# osob}}</b> hlasovalo v <b>{pollCount, plural, one {# hlasování} few {# hlasování} many {# hlasování} other {# hlasování}}</b> za posledních 30 dní",
+  "subheading": "Vytvořte hlasování, sdílejte odkaz a nechte všechny hlasovat o vyhovujících termínech. Je to zdarma a nikdo nepotřebuje účet.",
   "viaTrustpilot": "skrze Trustpilot",
   "when2meetAlternative": "Moderní alternativa k When2Meet",
   "when2meetAlternativeDescription": "Rallly umí vše, k čemu používáte When2Meet, jen bez těžkopádných částí. Vytvářejte přehledné plánovací ankety, které skvěle fungují na mobilu, dostávejte upozornění, když účastníci odpoví, a spravujte všechny své ankety na jednom místě. Zdarma, bez reklam a k hlasování není potřeba účet. Přecházíte z When2Meet nebo WhenIsGood? Rallly vám bude hned povědomé.",
