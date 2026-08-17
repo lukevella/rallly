@@ -27,6 +27,7 @@ export async function proxy(req: NextRequest) {
       maxAge: cookie.maxAge,
       path: "/",
       sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
     });
   }
   return res;
