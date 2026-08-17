@@ -31,7 +31,7 @@ import {
   DeleteAccountSetting,
   PendingDeletionSetting,
 } from "./components/delete-account-setting";
-import { ProfileEmailAddress } from "./components/profile-email-address";
+import { EmailAddressSetting } from "./components/email-address-setting";
 import { ProfileSettings } from "./components/profile-settings";
 
 export default async function Page() {
@@ -72,7 +72,7 @@ export default async function Page() {
           <PageSection variant="card">
             <PageSectionHeader>
               <PageSectionTitle>
-                <Trans i18nKey="profileEmailAddress" defaults="Email address" />
+                <Trans i18nKey="profileAccount" defaults="Account" />
               </PageSectionTitle>
               <PageSectionDescription>
                 <Trans
@@ -82,7 +82,9 @@ export default async function Page() {
               </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
-              <ProfileEmailAddress email={user.email} />
+              <FieldGroup variant="divided">
+                <EmailAddressSetting email={user.email} />
+              </FieldGroup>
             </PageSectionContent>
           </PageSection>
 
