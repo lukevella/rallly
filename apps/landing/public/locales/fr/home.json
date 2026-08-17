@@ -1,4 +1,5 @@
 {
+  "createAPoll": "Créer un sondage",
   "doodleAlternative": "La meilleure alternative gratuite à Doodle",
   "doodleAlternativeDescription": "Rallly est l'équivalent gratuit de Doodle que tout le monde cherche. Des milliers d'utilisateurs ont déjà fait ce changement et profitent maintenant de sondages professionnels sans publicité dans une interface intuitive et facile à utiliser.",
   "doodleAlternativeFinalCtaDescription": "Créez votre premier sondage en quelques secondes et découvrez pourquoi tant de personnes ont quitté Doodle.",
@@ -9,6 +10,7 @@
   "ericQuote": "« Si votre travail de planification se fait via emails, je vous encourage vivement à essayer Rallly et à laisser le logiciel simplifier ce travail pour une journée de travail plus organisée et moins stressante. »",
   "finalCtaDescription": "Créez un sondage, partagez le lien et laissez chacun voter pour les créneaux qui conviennent.",
   "finalCtaTitle": "Prêt à trouver le meilleur moment pour se réunir ?",
+  "fiveStars": "5 étoiles",
   "freeSchedulingPollDescription": "Rallly vous permet de créer de jolis sondages de planification, faciles à utiliser, pour trouver le meilleur moment pour votre prochain événement.",
   "freeSchedulingPollFinalCtaDescription": "Cela prend quelques secondes et votre groupe peut voter immédiatement.",
   "freeSchedulingPollFinalCtaTitle": "Prêt à créer votre sondage de planification ?",
@@ -40,6 +42,7 @@
   "metaDescription": "Créez des sondages et votez pour trouver le meilleur jour ou la meilleure heure. Une alternative gratuite à Doodle.",
   "metaTitle": "Rallly - Outil de planification de réunions de groupe gratuit",
   "mobileVotingBlog": "Voter plus clairement sur votre téléphone",
+  "mobileVotingBlogBadge": "Nouveau",
   "pcmagQuote": "« Mettre en place un sondage de planification le plus rapidement possible »",
   "popsciQuote": "« Le choix parfait si vous voulez garder vos RSVPs simple. »",
   "statsLast30Days": "<b>{voterCount, plural, one {# personne a voté} other {# personnes ont voté}}</b> sur <b>{pollCount, plural, one {# sondage} other {# sondages}}</b> au cours des 30 derniers jours",

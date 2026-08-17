@@ -1,4 +1,5 @@
 {
+  "createAPoll": "Hozz létre egy szavazást",
   "doodleAlternative": "A legjobb ingyenes Doodle alternatíva",
   "doodleAlternativeDescription": "Rallly az a Doodle alternatíva, amit mindenki keres. Több ezer felhasználó már váltott és most te is élvezheted a professzionális reklámmentes szavazásokat egy magától értetődő, könnyen használható felületen.        ",
   "doodleAlternativeFinalCtaDescription": "Hozd létre az első szavazásodat másodpercek alatt, és lásd, miért hagyta el annyi ember a Doodlet.",
@@ -9,6 +10,7 @@
   "ericQuote": "\"Ha emailekben menedzseled az időpontjaidat, erősen ajánlom, hogy tégy egy próbát és engedd, hogy a Rallly leegyszerűsítse a szervezési feladataid jobban rendszerezett és kevésbé stresszes napokat eredményezve.\"",
   "finalCtaDescription": "Hozz létre egy szavazást, oszd meg a linket, és hagyd, hogy mindenki a megfelelő időpontokra szavazzon.",
   "finalCtaTitle": "Készen állsz megtalálni a legjobb időpontot a találkozóhoz?",
+  "fiveStars": "5 csillag",
   "freeSchedulingPollDescription": "A Rallly segít, hogy létrehozhass gyönyörű és könnyen használható szavazásokat, hogy megtaláld a legjobb időpontot a következő eseményedhez.",
   "freeSchedulingPollFinalCtaDescription": "Másodpercekbe telik, és a csoportod azonnal elkezdhet szavazni.",
   "freeSchedulingPollFinalCtaTitle": "Készen állsz létrehozni az időpont-egyeztető szavazásodat?",
@@ -40,6 +42,7 @@
   "metaDescription": "Hozz létre szavazásokat és szavazz, hogy megtaláld a legjobb napot vagy időt. Egy ingyenes Doodle alternatíva.",
   "metaTitle": "Rallly: Ingyenes csoportos találkozó ütemező eszköz",
   "mobileVotingBlog": "Egy egyszerűbb módja a szavazásnak a telefonodon",
+  "mobileVotingBlogBadge": "Új",
   "pcmagQuote": "\"Állítsd össze időpont szavazások a lehető legrövidebb idő alatt.\"",
   "popsciQuote": "\"A tökéletes választás, ha a résztvevő visszajelzéseket egyszerűen akarod kezelni.\"",
   "statsLast30Days": "Az elmúlt 30 napban <b>{voterCount, plural, one {# személy szavazott} other {# személy szavaztak}}</b> <b>{pollCount, plural, one {# szavazáson} other {# szavazásokon}}</b>.",
