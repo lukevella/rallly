@@ -2,7 +2,7 @@ import languages from "@rallly/languages";
 import type { Viewport } from "next";
 import { cacheLife } from "next/cache";
 
-import { LandingShell } from "./landing-shell";
+import { LandingShell } from "../../(main)/landing-shell";
 
 export async function generateStaticParams() {
   return Object.keys(languages).map((locale) => ({ locale }));
@@ -22,5 +22,9 @@ export default async function Root(props: {
   const { children, params } = props;
   const { locale } = await params;
 
-  return <LandingShell locale={locale}>{children}</LandingShell>;
+  return (
+    <LandingShell locale={locale} ctaVariant="get-started">
+      {children}
+    </LandingShell>
+  );
 }
