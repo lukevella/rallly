@@ -29,7 +29,7 @@ export function EventMetaDescription({
   return (
     <MarkdownDescription
       content={content}
-      className={cn(className, "min-w-0 max-w-prose opacity-90")}
+      className={cn(className, "min-w-0 opacity-90")}
     />
   );
 }
