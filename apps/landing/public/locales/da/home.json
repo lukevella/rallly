@@ -1,6 +1,4 @@
 {
-  "createAPoll": "Opret mødeafstemning",
-  "createASchedulingPoll": "Opret planlægningsafstemning",
   "doodleAlternative": "Det bedste gratis alternativ til Doodle",
   "doodleAlternativeDescription": "Rallly er det Doodle alternativ, som alle har ledt efter. Tusindvis af brugere er allerede skiftet og nyder nu professionelle annonce-fri meningsmålinger i et intuitiv og nemt interface.        ",
   "doodleAlternativeFinalCtaDescription": "Opret din første afstemning på få sekunder og se, hvorfor så mange har forladt Doodle.",
@@ -42,7 +40,6 @@
   "metaDescription": "Opret afstemninger og stemme for at finde den bedste dag eller tid. Et gratis alternativ til Doodle.",
   "metaTitle": "Rallly: Gratis mødeplanlægningsværktøj for grupper",
   "mobileVotingBlog": "En klarere måde at stemme på din telefon",
-  "new": "Ny",
   "pcmagQuote": "“Opsæt en planlægningsafstemning på så kort tid som muligt.”",
   "popsciQuote": "“Det perfekte værktøj, hvis du vil holde dine ja/nej/måske-opgaver simple.”",
   "statsLast30Days": "<b>{voterCount, plural, one {# person} other {# personer}}</b> stemte i <b>{pollCount, plural, one {# afstemning} other {# afstemninger}}</b> i de sidste 30 dage",

@@ -1,6 +1,4 @@
 {
-  "createAPoll": "Crear una encuesta de reunión",
-  "createASchedulingPoll": "Crear una encuesta para programar",
   "doodleAlternative": "La mejor alternativa gratuita a Doodle",
   "doodleAlternativeDescription": "Rallly es la alternativa a Doodle que todo el mundo está buscando. Miles de usuarios ya han hecho el cambio y ahora disfrutan de encuestas profesionales sin anuncios en una interfaz intuitiva y fácil de usar.        ",
   "doodleAlternativeFinalCtaDescription": "Crea tu primera encuesta en segundos y descubre por qué tanta gente dejó Doodle atrás.",
@@ -42,7 +40,6 @@
   "metaDescription": "Rallly es la herramienta de planificación y colaboración más rápida y fácil. Crea una encuesta de reunión en segundos, no requiere registro.",
   "metaTitle": "Rallly: Herramienta gratuita para programar reuniones en grupo",
   "mobileVotingBlog": "Una forma más clara de votar en el móvil.",
-  "new": "Nuevo",
   "pcmagQuote": "Configura una encuesta de horarios disponibles en el menor tiempo posible",
   "popsciQuote": "La elección perfecta si quieres mantener tus confirmaciones de asistencia simples",
   "statsLast30Days": "<b>{voterCount, plural, one {# persona votó} other {# personas votaron}}</b> en <b>{pollCount, plural, one {# encuesta} other {# encuestas}}</b> en los últimos 30 días",

@@ -1,6 +1,4 @@
 {
-  "createAPoll": "Vytvořit hlasování pro schůzku",
-  "createASchedulingPoll": "Vytvořit hlasování o termínu",
   "doodleAlternative": "Nejlepší bezplatná alternativa k Doodle",
   "doodleAlternativeDescription": "Rallly je tady pro vás, pokud hledáte alternativu k Doodle. Tisíce uživatelů již přešly a nyní si užívají profesionální hlasování o termínech schůzek bez reklam v intuitivním a snadno použitelném rozhraní.        ",
   "doodleAlternativeFinalCtaDescription": "Vytvořte své první hlasování za pár sekund a zjistěte, proč tolik lidí opustilo Doodle.",
@@ -42,7 +40,6 @@
   "metaDescription": "Vytvořte hlasování a najděte společně nejlepší den nebo čas. Bezplatná alternativa k Doodle.",
   "metaTitle": "Rallly - Bezplatný nástroj pro plánování skupinových setkání",
   "mobileVotingBlog": "Přehlednější hlasování v telefonu",
-  "new": "Nové",
   "pcmagQuote": "„Vytvořte hlasování v co nejkratším čase.\"",
   "popsciQuote": "„Dokonalá volba, pokud chcete udržet své RSVP jednoduché.“",
   "statsLast30Days": "<b>{voterCount, plural, one {# osoba} few {# osoby} many {# osob} other {# osob}}</b> hlasovalo v <b>{pollCount, plural, one {# hlasování} few {# hlasování} many {# hlasování} other {# hlasování}}</b> za posledních 30 dní",

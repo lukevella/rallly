@@ -1,6 +1,4 @@
 {
-  "createAPoll": "Skapa en mötesförfrågan",
-  "createASchedulingPoll": "Skapa en schemaläggningsförfrågan",
   "doodleAlternative": "Det bästa gratisalternativet till Doodle",
   "doodleAlternativeDescription": "Rallly är Doodle-alternativet som alla letar efter. Tusentals användare har redan gjort bytet och njuter nu av professionella annonsfria  mötesförfrågningar i ett intuitivt och lättanvänt gränssnitt.        ",
   "doodleAlternativeFinalCtaDescription": "Skapa din första förfrågan på några sekunder och se varför så många lämnade Doodle bakom sig.",
@@ -42,7 +40,6 @@
   "metaDescription": "Rallly är det snabbaste och enklaste schemaläggnings- och samarbetsverktyget. Skapa en mötesförfrågan på några sekunder, ingen inloggning krävs.",
   "metaTitle": "Rallly: Gratis verktyg för schemaläggning av gruppmöten",
   "mobileVotingBlog": "Ett tydligare sätt att rösta i mobilen",
-  "new": "Ny",
   "pcmagQuote": "“Set up a scheduling poll in as little time as possible.”",
   "popsciQuote": "\"Det perfekta valet om du vill hålla dina OSA enkla.\"",
   "statsLast30Days": "<b>{voterCount, plural, one {# person} other {# personer}}</b> röstade i <b>{pollCount, plural, one {# förfrågan} other {# förfrågningar}}</b> de senaste 30 dagarna",
