@@ -41,94 +41,40 @@ const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
 }) => {
   const { t } = useTranslation();
   const { participants } = useParticipants();
-  const participantsWhoVotedYes = filterParticipantsByVote(
-    participants,
-    optionId,
-    "yes",
+  const participantsWithVotes = (["yes", "ifNeedBe", "no"] as const).flatMap(
+    (voteType) =>
+      filterParticipantsByVote(participants, optionId, voteType).map(
+        (participant) => ({ participant, voteType }),
+      ),
   );
-  const participantsWhoVotedIfNeedBe = filterParticipantsByVote(
-    participants,
-    optionId,
-    "ifNeedBe",
-  );
-  const participantsWhoVotedNo = filterParticipantsByVote(
-    participants,
-    optionId,
-    "no",
-  );
-  const noVotes =
-    participantsWhoVotedYes.length + participantsWhoVotedIfNeedBe.length === 0;
+
+  if (participantsWithVotes.length === 0) {
+    return (
+      <p className="rounded-lg bg-muted p-2 text-center text-muted-foreground text-sm">
+        {t("noVotes", {
+          defaultValue: "No one has voted for this option",
+        })}
+      </p>
+    );
+  }
+
   return (
-    <div>
-      {noVotes ? (
-        <p className="rounded-lg bg-muted p-2 text-center text-muted-foreground text-sm">
-          {t("noVotes", {
-            defaultValue: "No one has voted for this option",
-          })}
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 gap-2">
-          <div className="col-span-1 space-y-2.5">
-            {participantsWhoVotedYes.map(({ name, image }, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
-              <div key={i} className="flex">
-                <div className="relative mr-2.5 flex size-4 items-center justify-center">
-                  <OptimizedAvatarImage
-                    size="sm"
-                    name={name}
-                    src={image ?? undefined}
-                  />
-                  <VoteIcon
-                    type="yes"
-                    size="sm"
-                    className="absolute bottom-0 left-full -translate-x-1 translate-y-1 rounded-full bg-background"
-                  />
-                </div>
-                <div className="truncate text-sm">{name}</div>
-              </div>
-            ))}
-            {participantsWhoVotedIfNeedBe.map(({ name, image }, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
-              <div key={i} className="flex">
-                <div className="relative mr-2.5 flex size-4 items-center justify-center">
-                  <OptimizedAvatarImage
-                    size="sm"
-                    name={name}
-                    src={image ?? undefined}
-                  />
-                  <VoteIcon
-                    type="ifNeedBe"
-                    size="sm"
-                    className="absolute bottom-0 left-full -translate-x-1 translate-y-1 rounded-full bg-background"
-                  />
-                </div>
-                <div className="truncate text-sm"> {name}</div>
-              </div>
-            ))}
+    <ul className="max-h-[min(20rem,40dvh)] space-y-2.5 overflow-y-auto">
+      {participantsWithVotes.map(({ participant, voteType }) => (
+        <li key={participant.id} className="flex items-center gap-x-2.5">
+          <OptimizedAvatarImage
+            size="sm"
+            name={participant.name}
+            src={participant.image ?? undefined}
+            className="shrink-0"
+          />
+          <div className="min-w-0 flex-1 truncate text-sm">
+            {participant.name}
           </div>
-          <div className="col-span-1 space-y-2.5">
-            {participantsWhoVotedNo.map(({ name, image }, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
-              <div key={i} className="flex">
-                <div className="relative mr-2.5 flex size-4 items-center justify-center">
-                  <OptimizedAvatarImage
-                    size="sm"
-                    name={name}
-                    src={image ?? undefined}
-                  />
-                  <VoteIcon
-                    type="no"
-                    size="sm"
-                    className="absolute bottom-0 left-full -translate-x-1 translate-y-1 rounded-full bg-background"
-                  />
-                </div>
-                <div className="truncate text-sm">{name}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+          <VoteIcon type={voteType} className="shrink-0" />
+        </li>
+      ))}
+    </ul>
   );
 };
 
