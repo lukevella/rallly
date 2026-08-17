@@ -1,6 +1,5 @@
 "use client";
 
-import { buttonVariants } from "@rallly/ui";
 import {
   Field,
   FieldContent,
@@ -17,13 +16,11 @@ import {
 } from "@rallly/ui/select";
 import { toast } from "@rallly/ui/sonner";
 import {
-  ArrowUpRight,
   CalendarIcon,
   ClockIcon,
   GlobeIcon,
   LanguagesIcon,
 } from "lucide-react";
-import Link from "next/link";
 import React from "react";
 import { LanguageSelect } from "@/components/language-selector";
 import { SettingIcon } from "@/components/setting-icon";
@@ -255,16 +252,6 @@ export const LocalizationPreferences = ({
           </Select>
         </Field>
       </FieldGroup>
-      <div className="mt-4 border-t pt-4">
-        <Link
-          target="_blank"
-          href="https://support.rallly.co/contribute/translations"
-          className={buttonVariants({ variant: "ghost" })}
-        >
-          <Trans i18nKey="becomeATranslator" defaults="Help translate" />
-          <ArrowUpRight className="size-4" />
-        </Link>
-      </div>
     </div>
   );
 };

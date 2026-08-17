@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
-import { LanguagesIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -271,13 +270,6 @@ export const Footer: React.FunctionComponent = () => {
           <div className="w-48">
             <LanguageSelect />
           </div>
-          <a
-            href="https://support.rallly.co/contribute/translations"
-            className="inline-flex h-9 shrink-0 items-center rounded-md border px-3 text-gray-600 text-xs hover:border-primary hover:text-primary"
-          >
-            <LanguagesIcon className="mr-2 size-4" />
-            <Trans ns="common" i18nKey="volunteerTranslator" /> &rarr;
-          </a>
         </div>
       </div>
     </div>
