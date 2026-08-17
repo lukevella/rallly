@@ -47,7 +47,7 @@ export default async function Root(props: {
   return (
     <div className="relative z-10 flex min-h-full flex-col">
       <header className="sticky top-0 z-20 bg-gray-100">
-        <div className="mx-auto flex w-full max-w-5xl items-center px-4 py-4 sm:px-6 sm:py-6">
+        <div className="mx-auto flex w-full max-w-6xl items-center px-4 py-4 sm:px-6 sm:py-6">
           <div className="flex grow items-center gap-x-12">
             <LinkBase
               className="relative inline-block h-7 w-32 rounded-sm"
@@ -83,7 +83,7 @@ export default async function Root(props: {
                   t={t}
                   ns="home"
                   i18nKey="createAPoll"
-                  defaults="Create a meeting poll"
+                  defaults="Create a poll"
                 />
               </CtaButton>
             </div>
@@ -145,7 +145,7 @@ export default async function Root(props: {
                         t={t}
                         ns="home"
                         i18nKey="createAPoll"
-                        defaults="Create a meeting poll"
+                        defaults="Create a poll"
                       />
                     </CtaButton>
                   </DropdownMenuLabel>
@@ -155,7 +155,7 @@ export default async function Root(props: {
           </div>
         </div>
       </header>
-      <div className="mx-auto flex w-full max-w-5xl grow flex-col space-y-8 px-4 pb-4 sm:px-6 sm:pb-6">
+      <div className="mx-auto flex w-full max-w-6xl grow flex-col space-y-8 px-4 pb-4 sm:px-6 sm:pb-6">
         <section className="relative grow">{children}</section>
         <footer className="border-t pt-8 sm:pt-16">
           <Footer locale={locale} />

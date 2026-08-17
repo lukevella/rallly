@@ -48,7 +48,7 @@ export async function Cta({
                 t={t}
                 ns="home"
                 i18nKey="createAPoll"
-                defaults="Create a meeting poll"
+                defaults="Create a poll"
               />
             )}
           </CtaButton>

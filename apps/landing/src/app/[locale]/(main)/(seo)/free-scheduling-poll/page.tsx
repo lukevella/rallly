@@ -48,7 +48,6 @@ export default async function Page(props: {
             defaults="It takes seconds and your group can start voting right away."
           />
         }
-        callToAction={<Trans t={t} ns="home" i18nKey="createASchedulingPoll" />}
       />
     </div>
   );

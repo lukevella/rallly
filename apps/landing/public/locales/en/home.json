@@ -1,6 +1,5 @@
 {
-  "createAPoll": "Create a meeting poll",
-  "createASchedulingPoll": "Create a scheduling poll",
+  "createAPoll": "Create a poll",
   "doodleAlternative": "The best free Doodle alternative",
   "doodleAlternativeDescription": "Rallly is the Doodle alternative that everyone is looking for. Thousands of users have already made the switch and are now enjoying professional ad-free meeting polls in an intuitive and easy-to-use interface.        ",
   "doodleAlternativeFinalCtaDescription": "Create your first poll in seconds and see why so many people left Doodle behind.",
@@ -44,6 +43,8 @@
   "mobileVotingBlogBadge": "New",
   "pcmagQuote": "“Set up a scheduling poll in as little time as possible.”",
   "popsciQuote": "“The perfect pick if you want to keep your RSVPs simple.”",
+  "pressMentionsDescription": "Rallly has been featured in the press for its simplicity and ease of use.",
+  "pressMentionsTitle": "Mentions",
   "statsLast30Days": "<b>{voterCount, plural, one {# person} other {# people}}</b> voted on <b>{pollCount, plural, one {# poll} other {# polls}}</b> in the last 30 days",
   "subheading": "Coordinate group meetings without the back-and-forth emails",
   "viaTrustpilot": "via Trustpilot",

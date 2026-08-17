@@ -48,7 +48,6 @@ export default async function Page(props: {
             defaults="Create a poll in seconds and enjoy a cleaner way to find a time that works."
           />
         }
-        callToAction={<Trans t={t} ns="home" i18nKey="createASchedulingPoll" />}
       />
     </div>
   );

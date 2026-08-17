@@ -48,7 +48,6 @@ export default async function Page(props: {
             defaults="Create your first poll in seconds and see why so many people left Doodle behind."
           />
         }
-        callToAction={<Trans t={t} ns="home" i18nKey="createAPoll" />}
       />
     </div>
   );
