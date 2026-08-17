@@ -46,7 +46,6 @@
   "pcmagQuote": "“Konfigurer en planleggingsavstemning på så lite tid som mulig.”",
   "popsciQuote": "“Det perfekte valg hvis du vil holde RSVP-ene dine enkle.”",
   "statsLast30Days": "<b>{voterCount, plural, one {# person} other {# personer}}</b> stemte på <b>{pollCount, plural, one {# avstemning} other {# avstemninger}}</b> de siste 30 dagene",
-  "subheading": "Planlegg gruppemøter uten lange e-posttråder",
   "viaTrustpilot": "via Trustpilot",
   "when2meetAlternative": "Et moderne alternativ til When2Meet",
   "when2meetAlternativeDescription": "Rallly gjør alt det du bruker When2Meet til, uten de tungvinte delene. Lag oversiktlige møteavstemninger som fungerer godt på mobil, få varsler når deltakerne svarer, og administrer alle avstemningene dine på ett sted. Gratis, uten reklame og uten konto for å stemme. Kommer du fra When2Meet eller WhenIsGood? Da vil Rallly føles kjent med en gang.",
