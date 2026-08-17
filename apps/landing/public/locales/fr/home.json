@@ -1,6 +1,4 @@
 {
-  "createAPoll": "Créer un sondage de réunion",
-  "createASchedulingPoll": "Créer un sondage de planification",
   "doodleAlternative": "La meilleure alternative gratuite à Doodle",
   "doodleAlternativeDescription": "Rallly est l'équivalent gratuit de Doodle que tout le monde cherche. Des milliers d'utilisateurs ont déjà fait ce changement et profitent maintenant de sondages professionnels sans publicité dans une interface intuitive et facile à utiliser.",
   "doodleAlternativeFinalCtaDescription": "Créez votre premier sondage en quelques secondes et découvrez pourquoi tant de personnes ont quitté Doodle.",
@@ -42,7 +40,6 @@
   "metaDescription": "Créez des sondages et votez pour trouver le meilleur jour ou la meilleure heure. Une alternative gratuite à Doodle.",
   "metaTitle": "Rallly - Outil de planification de réunions de groupe gratuit",
   "mobileVotingBlog": "Voter plus clairement sur votre téléphone",
-  "new": "Nouveau",
   "pcmagQuote": "« Mettre en place un sondage de planification le plus rapidement possible »",
   "popsciQuote": "« Le choix parfait si vous voulez garder vos RSVPs simple. »",
   "statsLast30Days": "<b>{voterCount, plural, one {# personne a voté} other {# personnes ont voté}}</b> sur <b>{pollCount, plural, one {# sondage} other {# sondages}}</b> au cours des 30 derniers jours",
