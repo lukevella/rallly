@@ -122,7 +122,7 @@ export function ImageUploadControl<TAccept extends string>({
             }),
             {
               description: t("imageUploadFileTooLargeDescription", {
-                defaultValue: "Please upload a file smaller than {size}.",
+                defaultValue: "Please upload a file no larger than {size}.",
                 size: maxFileSize,
               }),
             },
@@ -203,11 +203,11 @@ export function ImageUploadControl<TAccept extends string>({
           ) : null}
         </div>
         <p className="text-muted-foreground text-xs">
-          {t("imageUploadHint", {
-            defaultValue: "Up to {size}, {formats}",
-            size: maxFileSize,
-            formats: acceptedFormats,
-          })}
+          <Trans
+            i18nKey="imageUploadHint"
+            defaults="Up to {size}, {formats}"
+            values={{ size: maxFileSize, formats: acceptedFormats }}
+          />
         </p>
         <input
           ref={fileInputRef}

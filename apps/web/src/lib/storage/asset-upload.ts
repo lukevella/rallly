@@ -148,6 +148,12 @@ export async function deleteStoredAsset(key: string) {
  * object after the response. Guards live here, once: a retry can resubmit
  * the key that is already stored (equality check), and the old value may be
  * externally hosted media (isStorageKey via deleteStoredAsset).
+ *
+ * Semantics are last-write-wins: currentKey is read before persist, so a
+ * delayed duplicate of an older persist that lands after a newer one can
+ * delete an object the concurrent write just made current. Closing that
+ * window needs sign-time asset records (the planned Asset table), which is
+ * where confirm-before-delete will live.
  */
 export async function replaceStoredAsset({
   currentKey,

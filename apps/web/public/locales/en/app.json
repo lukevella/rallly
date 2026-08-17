@@ -350,7 +350,7 @@
   "homeActionsTitle": "Actions",
   "ifNeedBe": "If need be",
   "imageCropDialogTitle": "Crop image",
-  "imageUploadFileTooLargeDescription": "Please upload a file smaller than {size}.",
+  "imageUploadFileTooLargeDescription": "Please upload a file no larger than {size}.",
   "imageUploadHint": "Up to {size}, {formats}",
   "imageUploadInvalidFileTypeDescription": "Accepted formats: {formats}",
   "inappropriateContent": "Inappropriate content",
