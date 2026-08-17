@@ -18,6 +18,7 @@ import Image from "next/image";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { CtaButton } from "@/components/home/cta-button";
+import { CtaLabel } from "@/components/home/cta-label";
 import { LoginButton } from "@/components/login-button";
 import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
@@ -81,12 +82,7 @@ export default async function Root(props: {
                 <LoginButton />
               </div>
               <CtaButton size="default" captureEvent="landing:header_cta_click">
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="createAPoll"
-                  defaults="Create a poll"
-                />
+                <CtaLabel />
               </CtaButton>
             </div>
             <div className="flex items-center justify-center lg:hidden">

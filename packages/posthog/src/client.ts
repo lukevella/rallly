@@ -1,7 +1,10 @@
 "use client";
 import posthog from "posthog-js";
 
-export { useFeatureFlagEnabled } from "posthog-js/react";
+export {
+  useFeatureFlagEnabled,
+  useFeatureFlagVariantKey,
+} from "posthog-js/react";
 
 import {
   isGlobalPrivacyControlEnabled,
