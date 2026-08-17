@@ -9,7 +9,7 @@ export async function Testimonial({ locale }: { locale: string }) {
   const { t } = await getTranslation(locale, ["home"]);
   return (
     <section className="py-8 sm:py-16">
-      <FadeIn amount="all" className="flex flex-col items-start gap-y-8">
+      <FadeIn amount="all" className="flex flex-col items-center gap-y-8">
         <div className="relative h-[30px] w-[120px]">
           <Image
             src="/static/images/stars-5.svg"
@@ -18,8 +18,8 @@ export async function Testimonial({ locale }: { locale: string }) {
             alt="5 stars"
           />
         </div>
-        <div>
-          <p className="max-w-xl font-normal text-lg leading-normal">
+        <div className="text-center">
+          <p className="max-w-xl text-center font-medium text-lg leading-normal">
             <Trans
               t={t}
               ns="home"
