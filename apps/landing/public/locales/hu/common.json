@@ -1,10 +1,13 @@
 {
   "blog": "Blog",
+  "compare": "Összehasonlít",
   "cookiePolicy": "Cookie irányelvek",
   "discussions": "Beszélgetések",
+  "doodleAlternative": "Doodle alternatíva",
   "footerDiscordLabel": "Csatlakozz hozzánk Discordon",
   "footerGithubLabel": "Nézd meg a GitHub kódbázist",
   "footerLinkedinLabel": "Kövess minket LinkedIn-en",
+  "footerTagline": "A Rallly egy nyílt forráskódú találkozó ütemező eszköz, ami segít megtalálni a legjobb időpontot a találkozásra, adok-kapok kommunikáció nélkül.",
   "footerXLabel": "Kövess minket X-en",
   "freeSchedulingPoll": "Ingyenes ütemezés szavazás",
   "getStarted": "Kezdj neki",
@@ -25,10 +28,11 @@
   "notFoundTitle": "404 az oldal nem található",
   "pricing": "Árazás",
   "privacyPolicy": "Adatvédelmi irányelvek",
+  "product": "Termék",
+  "resources": "Erőforrások",
   "signUp": "Regisztrálj",
   "status": "Állapot",
   "support": "Segítség",
   "termsOfUse": "Felhasználási feltételek",
-  "volunteerTranslator": "Segíts lefordítani ezt az oldalt",
   "when2MeetAlternative": "When2Meet alternatíva"
 }
