@@ -38,7 +38,7 @@ export async function Cta({
                 t={t}
                 ns="home"
                 i18nKey="finalCtaDescription"
-                defaults="Create a poll, share the link, and let everyone vote on times that work."
+                defaults="Set up your poll in under a minute. No account, no downloads, no chasing people for replies."
               />
             )}
           </p>
