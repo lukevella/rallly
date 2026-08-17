@@ -1,28 +1,24 @@
 import { AppError } from "@/lib/errors/app-error";
 
-export interface UploadImageParams {
-  file: File;
-  url: string;
-  fileType: "image/jpeg" | "image/png" | "image/svg+xml";
-}
-
-export async function uploadImage({
-  file,
+export async function uploadAsset({
   url,
-  fileType,
-}: UploadImageParams): Promise<void> {
+  file,
+}: {
+  url: string;
+  file: File;
+}): Promise<void> {
   const response = await fetch(url, {
     method: "PUT",
     body: file,
     headers: {
-      "Content-Type": fileType,
+      "Content-Type": file.type,
     },
   });
 
   if (!response.ok) {
     throw new AppError({
       code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to upload image to storage",
+      message: "Failed to upload asset to storage",
     });
   }
 }

@@ -2,7 +2,7 @@
 
 import { cn } from "@rallly/ui";
 import { ImageUploadControl } from "@/components/image-upload";
-import type { AllowedMimeType } from "@/components/image-upload/types";
+import { brandingLogoProfiles } from "@/features/instance-settings/constants";
 import type { BrandingLogoType } from "@/features/instance-settings/schema";
 import { useSafeAction } from "@/lib/safe-action/client";
 import {
@@ -32,13 +32,6 @@ const previewVariants: Record<
   },
 };
 
-// The icon feeds emails, where SVG rendering is unreliable — raster only
-const acceptedMimeTypes: Record<BrandingLogoType, AllowedMimeType[]> = {
-  logo: ["image/jpeg", "image/png", "image/svg+xml"],
-  logoDark: ["image/jpeg", "image/png", "image/svg+xml"],
-  logoIcon: ["image/jpeg", "image/png"],
-};
-
 export function LogoUploadField({
   logoType,
   previewUrl,
@@ -52,24 +45,9 @@ export function LogoUploadField({
   hasCustomLogo: boolean;
   disabled?: boolean;
 }) {
+  const getLogoUploadUrl = useSafeAction(getBrandingLogoUploadUrlAction);
   const updateLogo = useSafeAction(updateBrandingLogoAction);
   const removeLogo = useSafeAction(removeBrandingLogoAction);
-
-  const handleGetUploadUrl = async (input: {
-    fileType: AllowedMimeType;
-    fileSize: number;
-  }) => {
-    const result = await getBrandingLogoUploadUrlAction({
-      logoType,
-      ...input,
-    });
-
-    if (!result?.data) {
-      throw new Error("Failed to get upload URL");
-    }
-
-    return result.data;
-  };
 
   return (
     <div className="w-full space-y-3">
@@ -142,21 +120,15 @@ export function LogoUploadField({
         </div>
       </div>
       <ImageUploadControl
-        crop={false}
-        accept={acceptedMimeTypes[logoType]}
+        profile={brandingLogoProfiles[logoType]}
         disabled={disabled}
-        getUploadUrl={handleGetUploadUrl}
-        onUploadSuccess={async (imageKey) => {
-          const result = await updateLogo.executeAsync({ logoType, imageKey });
-          // executeAsync resolves on server errors; throw so the control
-          // reports the failure instead of completing
-          if (result?.serverError || result?.validationErrors) {
-            throw new Error("Failed to save logo");
-          }
-        }}
-        onRemoveSuccess={async () => {
-          await removeLogo.executeAsync({ logoType });
-        }}
+        signUpload={(input) =>
+          getLogoUploadUrl.executeAsync({ logoType, ...input })
+        }
+        persistUpload={(imageKey) =>
+          updateLogo.executeAsync({ logoType, imageKey })
+        }
+        onRemove={() => removeLogo.executeAsync({ logoType })}
         hasCurrentImage={hasCustomLogo}
       />
     </div>

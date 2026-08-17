@@ -5,13 +5,13 @@ import {
   ImageUploadControl,
   ImageUploadPreview,
 } from "@/components/image-upload";
-import { rasterMimeTypes } from "@/components/image-upload/types";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import {
   getAvatarUploadUrlAction,
   removeUserAvatarAction,
   updateUserAvatarAction,
 } from "@/features/user/actions";
+import { avatarAssetProfile } from "@/features/user/constants";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
@@ -26,33 +26,19 @@ function ProfilePictureUpload({
   const updateUserAvatar = useSafeAction(updateUserAvatarAction);
   const removeUserAvatar = useSafeAction(removeUserAvatarAction);
 
-  const handleUploadSuccess = async (imageKey: string) => {
-    await updateUserAvatar.executeAsync({ imageKey });
-  };
-
-  const handleRemoveSuccess = async () => {
-    await removeUserAvatar.executeAsync();
-  };
-
   return (
     <ImageUpload>
       <ImageUploadPreview>
         <OptimizedAvatarImage src={image} name={name} size="xl" />
       </ImageUploadPreview>
       <ImageUploadControl
-        getUploadUrl={async (input) => {
-          // The control only accepts raster types here (default accept list)
-          const result = await getAvatarUploadUrl.executeAsync({
-            fileType: rasterMimeTypes.parse(input.fileType),
-            fileSize: input.fileSize,
-          });
-          if (!result?.data) {
-            throw new Error("Failed to get upload URL");
-          }
-          return result.data;
-        }}
-        onUploadSuccess={handleUploadSuccess}
-        onRemoveSuccess={handleRemoveSuccess}
+        profile={avatarAssetProfile}
+        crop
+        signUpload={(input) => getAvatarUploadUrl.executeAsync(input)}
+        persistUpload={(imageKey) =>
+          updateUserAvatar.executeAsync({ imageKey })
+        }
+        onRemove={() => removeUserAvatar.executeAsync()}
         hasCurrentImage={!!image}
       />
     </ImageUpload>

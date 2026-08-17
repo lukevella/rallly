@@ -5,7 +5,10 @@ import { prisma } from "@rallly/database";
 import { after } from "next/server";
 import { createSpaceDTO } from "@/features/space/data";
 import { isSelfHosted } from "@/lib/constants";
-import { deleteImageFromS3 } from "@/lib/storage/image-upload";
+import {
+  deleteStoredAsset,
+  replaceStoredAsset,
+} from "@/lib/storage/asset-upload";
 
 export async function createSpace({
   name = "Personal",
@@ -88,23 +91,23 @@ export async function updateSpaceImage({
   imageKey,
 }: {
   spaceId: string;
-  imageKey: string;
+  imageKey: string | null;
 }) {
   const space = await prisma.space.findUnique({
     where: { id: spaceId },
     select: { image: true },
   });
 
-  const oldImageKey = space?.image;
-
-  await prisma.space.update({
-    where: { id: spaceId },
-    data: { image: imageKey },
+  await replaceStoredAsset({
+    currentKey: space?.image,
+    nextKey: imageKey,
+    persist: async () => {
+      await prisma.space.update({
+        where: { id: spaceId },
+        data: { image: imageKey },
+      });
+    },
   });
-
-  if (oldImageKey) {
-    after(() => deleteImageFromS3(oldImageKey));
-  }
 }
 
 export async function deleteSpace({ spaceId }: { spaceId: string }) {
@@ -115,24 +118,6 @@ export async function deleteSpace({ spaceId }: { spaceId: string }) {
   const imageKey = deletedSpace.image;
 
   if (imageKey) {
-    after(() => deleteImageFromS3(imageKey));
-  }
-}
-
-export async function removeSpaceImage({ spaceId }: { spaceId: string }) {
-  const space = await prisma.space.findUnique({
-    where: { id: spaceId },
-    select: { image: true },
-  });
-
-  const oldImageKey = space?.image;
-
-  await prisma.space.update({
-    where: { id: spaceId },
-    data: { image: null },
-  });
-
-  if (oldImageKey) {
-    after(() => deleteImageFromS3(oldImageKey));
+    after(() => deleteStoredAsset(imageKey));
   }
 }

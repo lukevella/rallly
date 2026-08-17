@@ -4,13 +4,13 @@ import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { createMiddleware } from "next-safe-action";
 import * as z from "zod";
+import { spaceIconAssetProfile } from "@/features/space/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import {
   createSpace,
   deleteSpace,
-  removeSpaceImage,
   updateSpace,
   updateSpaceHideAttribution,
   updateSpaceImage,
@@ -32,7 +32,10 @@ import {
   authActionClient,
   createRateLimitMiddleware,
 } from "@/lib/safe-action/server";
-import { getImageUploadUrl } from "@/lib/storage/image-upload";
+import {
+  assertAssetKey,
+  createAssetUploadUrl,
+} from "@/lib/storage/asset-upload";
 
 // Resolves the actor's active space, verifies they can update it, and
 // injects it into ctx as `space`.
@@ -306,8 +309,8 @@ export const getSpaceImageUploadUrlAction = authActionClient
   .use(spaceUpdateAbilityMiddleware)
   .inputSchema(spaceImageUploadSchema)
   .action(async ({ ctx, parsedInput }) => {
-    return await getImageUploadUrl({
-      keyPrefix: "spaces",
+    return await createAssetUploadUrl({
+      profile: spaceIconAssetProfile,
       entityId: ctx.space.id,
       fileType: parsedInput.fileType,
       fileSize: parsedInput.fileSize,
@@ -321,12 +324,10 @@ export const updateSpaceImageAction = authActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { space } = ctx;
 
-    if (!parsedInput.imageKey.startsWith(`spaces/${space.id}-`)) {
-      throw new AppError({
-        code: "FORBIDDEN",
-        message: "Invalid image key",
-      });
-    }
+    assertAssetKey(parsedInput.imageKey, {
+      profile: spaceIconAssetProfile,
+      entityId: space.id,
+    });
 
     await updateSpaceImage({
       spaceId: space.id,
@@ -338,5 +339,5 @@ export const removeSpaceImageAction = authActionClient
   .metadata({ actionName: "remove_space_image" })
   .use(spaceUpdateAbilityMiddleware)
   .action(async ({ ctx }) => {
-    await removeSpaceImage({ spaceId: ctx.space.id });
+    await updateSpaceImage({ spaceId: ctx.space.id, imageKey: null });
   });
