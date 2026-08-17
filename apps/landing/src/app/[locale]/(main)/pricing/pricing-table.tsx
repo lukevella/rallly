@@ -26,7 +26,7 @@ export function PriceTables() {
   const [tab, setTab] = React.useState("yearly");
   return (
     <Tabs value={tab} onValueChange={setTab}>
-      <div className="flex justify-center">
+      <div className="flex">
         <TabsList className="mb-4 sm:mb-6">
           <TabsTrigger value="monthly">
             <Trans

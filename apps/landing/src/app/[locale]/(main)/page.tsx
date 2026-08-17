@@ -2,11 +2,11 @@
 
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
-import Bonus from "@/components/home/bonus";
-import { FinalCta } from "@/components/home/final-cta";
-import { MarketingHero } from "@/components/home/hero";
-import { HeroDemo } from "@/components/home/hero-demo/hero-demo";
-import { BigTestimonial, Marketing, MentionedBy } from "@/components/marketing";
+import { Cta } from "@/components/home/cta";
+import { Hero } from "@/components/home/hero";
+import { Mentions } from "@/components/home/mentions";
+import { Stats } from "@/components/home/stats";
+import { Testimonial } from "@/components/home/testimonial";
 import { getTranslation } from "@/i18n/server";
 
 export default async function Page(props: {
@@ -16,9 +16,9 @@ export default async function Page(props: {
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["home", "common"]);
   return (
-    <Marketing>
-      <MarketingHero
-        demo={<HeroDemo locale={locale} />}
+    <div className="divide-y">
+      <Hero
+        locale={locale}
         title={t("headline", {
           defaultValue: "Find the best time to meet",
           ns: "home",
@@ -28,17 +28,12 @@ export default async function Page(props: {
             "Coordinate group meetings without the back-and-forth emails",
           ns: "home",
         })}
-        callToAction={t("createAPoll", {
-          ns: "home",
-        })}
       />
-      <div className="space-y-8">
-        <Bonus locale={locale} />
-        <BigTestimonial />
-      </div>
-      <MentionedBy />
-      <FinalCta />
-    </Marketing>
+      <Stats locale={locale} />
+      <Testimonial locale={locale} />
+      <Mentions locale={locale} />
+      <Cta locale={locale} />
+    </div>
   );
 }
 
