@@ -237,15 +237,30 @@ export async function cancelUserSubscriptions({ userId }: { userId: string }) {
     select: { id: true },
   });
 
-  if (subscriptions.length === 0) {
+  await cancelSubscriptionsById({
+    subscriptionIds: subscriptions.map((subscription) => subscription.id),
+  });
+}
+
+/**
+ * Cancel by id rather than by user: account deletion removes the subscription
+ * rows with the user, so the ids have to be read before the delete and
+ * cancelled after it.
+ */
+export async function cancelSubscriptionsById({
+  subscriptionIds,
+}: {
+  subscriptionIds: string[];
+}) {
+  if (!isBillingEnabled || subscriptionIds.length === 0) {
     return;
   }
 
   const stripe = getStripe();
 
-  for (const subscription of subscriptions) {
+  for (const subscriptionId of subscriptionIds) {
     try {
-      await stripe.subscriptions.cancel(subscription.id);
+      await stripe.subscriptions.cancel(subscriptionId);
     } catch (error) {
       if (!isStripeResourceMissingError(error)) {
         throw error;

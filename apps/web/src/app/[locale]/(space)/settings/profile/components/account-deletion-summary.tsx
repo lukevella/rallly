@@ -1,7 +1,7 @@
 import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Icon } from "@rallly/ui/icon";
 import { Skeleton } from "@rallly/ui/skeleton";
-import { BarChart2Icon, CalendarIcon, InfoIcon } from "lucide-react";
+import { BarChart2Icon, CalendarIcon, TriangleAlertIcon } from "lucide-react";
 import { getAccountDeletionSummary } from "@/features/user/account-deletion/data";
 import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
@@ -53,13 +53,13 @@ export async function AccountDeletionSummary() {
         </ul>
       ) : null}
       {hasActiveSubscription ? (
-        <Alert>
-          <InfoIcon />
+        <Alert variant="error">
+          <TriangleAlertIcon />
           <AlertDescription>
             <p>
               <Trans
-                i18nKey="deleteAccountSubscriptionNotice"
-                defaults="Your Pro subscription will not renew and will end with your current billing period. If you cancel the deletion, your subscription will continue as normal."
+                i18nKey="deleteAccountSubscriptionWarning"
+                defaults="Your Pro subscription will be cancelled immediately and any remaining paid time will be lost. This cannot be refunded or restored."
               />
             </p>
           </AlertDescription>

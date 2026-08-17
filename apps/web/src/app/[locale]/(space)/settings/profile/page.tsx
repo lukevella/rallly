@@ -27,16 +27,11 @@ import {
   AccountDeletionSummary,
   AccountDeletionSummarySkeleton,
 } from "./components/account-deletion-summary";
-import {
-  DeleteAccountSetting,
-  PendingDeletionSetting,
-} from "./components/delete-account-setting";
+import { DeleteAccountSetting } from "./components/delete-account-setting";
 import { EmailAddressSetting } from "./components/email-address-setting";
 import { ProfileSettings } from "./components/profile-settings";
 
 export default async function Page() {
-  // Read from the database — the pending deletion notice depends on
-  // deletedAt, which the session snapshot doesn't carry.
   const user = await getCurrentUser();
 
   if (!user) {
@@ -96,17 +91,13 @@ export default async function Page() {
             </PageSectionHeader>
             <PageSectionContent>
               <FieldGroup variant="divided">
-                {user.deletedAt ? (
-                  <PendingDeletionSetting deletedAt={user.deletedAt} />
-                ) : (
-                  <DeleteAccountSetting
-                    summary={
-                      <Suspense fallback={<AccountDeletionSummarySkeleton />}>
-                        <AccountDeletionSummary />
-                      </Suspense>
-                    }
-                  />
-                )}
+                <DeleteAccountSetting
+                  summary={
+                    <Suspense fallback={<AccountDeletionSummarySkeleton />}>
+                      <AccountDeletionSummary />
+                    </Suspense>
+                  }
+                />
               </FieldGroup>
             </PageSectionContent>
           </PageSection>

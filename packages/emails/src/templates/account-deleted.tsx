@@ -6,7 +6,6 @@ import { PoweredBy } from "../components/powered-by";
 import { previewChrome } from "../components/preview-chrome";
 import {
   Body,
-  Button,
   Container,
   Heading,
   Link,
@@ -17,26 +16,22 @@ import type { SendArgs } from "../send";
 import { sendRenderedEmail } from "../send";
 import type { EmailChrome } from "../types";
 
-type AccountDeletionScheduledEmailProps = {
+type AccountDeletedEmailProps = {
   locale?: string;
   chrome: EmailChrome;
-  /** Preformatted, localized date (the caller owns date formatting). */
-  deletionDate: string;
 };
 
-async function AccountDeletionScheduledEmail({
-  deletionDate,
+async function AccountDeletedEmail({
   locale = "en",
   chrome,
-}: AccountDeletionScheduledEmailProps) {
+}: AccountDeletedEmailProps) {
   const { t, i18n } = await createEmailI18n(locale);
   return (
     <Html>
       <Head />
       <Preview>
-        {t("accountDeletionScheduled_preview", {
-          defaultValue: "Your account will be deleted on {date}",
-          date: deletionDate,
+        {t("accountDeleted_preview", {
+          defaultValue: "Your account has been deleted",
         })}
       </Preview>
       <Body>
@@ -48,51 +43,31 @@ async function AccountDeletionScheduledEmail({
             alt={chrome.appName}
           />
           <Heading>
-            {t("accountDeletionScheduled_heading", {
-              defaultValue: "Your account is scheduled for deletion",
+            {t("accountDeleted_heading", {
+              defaultValue: "Your account has been deleted",
             })}
           </Heading>
           <Text>
-            {t("accountDeletionScheduled_text", {
+            {t("accountDeleted_text", {
               defaultValue:
-                "Your {appName} account is scheduled for deletion on {date}. Your polls, events, votes, and comments will be permanently deleted.",
+                "Your {appName} account has been permanently deleted, along with your polls, events, votes, and comments. This cannot be undone.",
               appName: chrome.appName,
-              date: deletionDate,
             })}
           </Text>
           <Text>
-            <Trans
-              t={t}
-              i18n={i18n}
-              ns="emails"
-              i18nKey="accountDeletionScheduled_cancel"
-              defaults="If you change your mind, you can cancel the deletion from your <a>account settings</a> before then."
-              components={{
-                a: (
-                  <Link
-                    color={chrome.primaryColor}
-                    href={`${chrome.baseUrl}/settings/profile`}
-                  />
-                ),
-              }}
-            />
-          </Text>
-          <Button
-            href={`${chrome.baseUrl}/settings/profile`}
-            color={chrome.primaryColor}
-          >
-            {t("accountDeletionScheduled_button", {
-              defaultValue: "Manage Account",
+            {t("accountDeleted_signUpAgain", {
+              defaultValue:
+                "You're welcome back any time. Creating a new account starts you fresh with the same email address.",
             })}
-          </Button>
+          </Text>
           <Hr />
           <Text small light={true}>
             <Trans
               t={t}
               i18n={i18n}
               ns="emails"
-              i18nKey="accountDeletionScheduled_footer"
-              defaults="You're receiving this email because a request was made to delete an account on <domain />. If this wasn't you, sign in and cancel the deletion before then, or contact <a>{supportEmail}</a>."
+              i18nKey="accountDeleted_footer"
+              defaults="You're receiving this email because an account on <domain /> was deleted. If this wasn't you, contact <a>{supportEmail}</a>."
               values={{ supportEmail: chrome.supportEmail }}
               components={{
                 domain: (
@@ -116,29 +91,28 @@ async function AccountDeletionScheduledEmail({
   );
 }
 
-AccountDeletionScheduledEmail.PreviewProps = {
-  deletionDate: "August 2, 2026",
+AccountDeletedEmail.PreviewProps = {
   locale: "en",
   chrome: previewChrome,
-} as AccountDeletionScheduledEmailProps;
+} as AccountDeletedEmailProps;
 
-export default AccountDeletionScheduledEmail;
+export default AccountDeletedEmail;
 
-export async function sendAccountDeletionScheduledEmail({
+export async function sendAccountDeletedEmail({
   to,
   locale = "en",
   branding,
   props,
   ...rest
-}: SendArgs<AccountDeletionScheduledEmailProps>) {
+}: SendArgs<AccountDeletedEmailProps>) {
   const { t } = await createEmailI18n(locale);
   await sendRenderedEmail({
     to,
-    subject: t("accountDeletionScheduled_subject", {
-      defaultValue: "Your account is scheduled for deletion",
+    subject: t("accountDeleted_subject", {
+      defaultValue: "Your account has been deleted",
     }),
     element: (
-      <AccountDeletionScheduledEmail
+      <AccountDeletedEmail
         {...props}
         locale={locale}
         chrome={resolveChrome(branding)}
