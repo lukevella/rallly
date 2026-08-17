@@ -2,7 +2,6 @@ import { cn } from "@rallly/ui";
 import type * as React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { CtaButton } from "@/components/home/cta-button";
-import { CtaLabel } from "@/components/home/cta-label";
 import { FadeIn } from "@/components/home/fade-in";
 import { handwritten } from "@/fonts/handwritten";
 import { getTranslation } from "@/i18n/server";
@@ -46,7 +45,14 @@ export async function Cta({
         </div>
         <div className="mt-6 flex flex-col items-start gap-4">
           <CtaButton captureEvent="landing:final_cta_click">
-            {callToAction ?? <CtaLabel />}
+            {callToAction ?? (
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="createAPoll"
+                defaults="Create a poll"
+              />
+            )}
           </CtaButton>
           <p
             className={cn(

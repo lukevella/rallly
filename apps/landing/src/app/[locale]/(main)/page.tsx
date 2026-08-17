@@ -2,15 +2,39 @@
 
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
+import { Cta } from "@/components/home/cta";
+import { Hero } from "@/components/home/hero";
+import { Mentions } from "@/components/home/mentions";
+import { Stats } from "@/components/home/stats";
+import { Testimonial } from "@/components/home/testimonial";
 import { getTranslation } from "@/i18n/server";
-import { HomePage } from "./home-page";
 
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
 }) {
   cacheLife("days");
   const { locale } = await props.params;
-  return <HomePage locale={locale} />;
+  const { t } = await getTranslation(locale, ["home", "common"]);
+  return (
+    <div className="divide-y">
+      <Hero
+        locale={locale}
+        title={t("headline", {
+          defaultValue: "Find the best time to meet",
+          ns: "home",
+        })}
+        description={t("subheading", {
+          defaultValue:
+            "Create a poll, share the link, and let everyone vote on the times that work. It's free and nobody needs an account.",
+          ns: "home",
+        })}
+      />
+      <Stats locale={locale} />
+      <Testimonial locale={locale} />
+      <Mentions locale={locale} />
+      <Cta locale={locale} />
+    </div>
+  );
 }
 
 export async function generateMetadata(props: {
