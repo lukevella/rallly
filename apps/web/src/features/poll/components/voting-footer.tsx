@@ -45,9 +45,14 @@ export const VotingFooter = ({ className }: { className?: string }) => {
 
   return (
     <div
-      className={cn("flex items-center gap-x-2.5 md:justify-end", className)}
+      className={cn(
+        "relative flex items-center gap-x-2.5 md:justify-end",
+        className,
+      )}
     >
-      {/* Invisible, but keeps vote taps audible for screen readers. */}
+      {/* Invisible, but keeps vote taps audible for screen readers. The
+          wrapper is positioned so this absolutely positioned node resolves
+          against it instead of the body, which would extend the document. */}
       <p aria-live="polite" className="sr-only">
         <Trans
           i18nKey="optionsSelected"
