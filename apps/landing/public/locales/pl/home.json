@@ -1,4 +1,5 @@
 {
+  "createAPoll": "Utwórz ankietę",
   "doodleAlternative": "Najlepsza darmowa alternatywa dla Doodle",
   "doodleAlternativeDescription": "Rallly to alternatywa dla Doodle, której wszyscy szukają. Tysiące użytkowników dokonało już zmiany i cieszy się teraz profesjonalnymi ankietami spotkań bez reklam w intuicyjnym i łatwym w użyciu interfejsie.        ",
   "doodleAlternativeFinalCtaDescription": "Utwórz pierwszą ankietę w kilka sekund i przekonaj się, dlaczego tak wielu zrezygnowało z Doodle.",
@@ -9,6 +10,7 @@
   "ericQuote": "\"Jeśli Twój harmonogram pracy opiera się na wiadomościach e-mail, zdecydowanie zachęcam do wypróbowania Rallly i uproszczenia zadań związanych z planowaniem, aby uzyskać bardziej zorganizowany i mniej stresujący dzień pracy.\"",
   "finalCtaDescription": "Utwórz ankietę, udostępnij link i pozwól wszystkim głosować na pasujące terminy.",
   "finalCtaTitle": "Gotowy znaleźć najlepszy termin spotkania?",
+  "fiveStars": "5 gwiazdek",
   "freeSchedulingPollDescription": "Rallly pozwala tworzyć piękne i łatwe w użyciu ankiety do planowania, dzięki czemu możesz znaleźć najlepszy termin na swoje następne wydarzenie.",
   "freeSchedulingPollFinalCtaDescription": "Zajmuje to kilka sekund, a twoja grupa może zacząć głosować od razu.",
   "freeSchedulingPollFinalCtaTitle": "Gotowy utworzyć ankietę do ustalenia terminu?",
@@ -40,6 +42,7 @@
   "metaDescription": "Twórz ankiety i głosuj, aby znaleźć najlepszy dzień lub godzinę. Bezpłatna alternatywa dla Doodle.",
   "metaTitle": "Rallly: Darmowe narzędzie do planowania spotkań grupowych",
   "mobileVotingBlog": "Przejrzystsze głosowanie na telefonie",
+  "mobileVotingBlogBadge": "Nowość",
   "pcmagQuote": "\"Skonfiguruj ankietę planowania w jak najkrótszym czasie.\"",
   "popsciQuote": "\"Idealny wybór, jeśli chcesz zachować prostotę RSVP.\"",
   "statsLast30Days": "<b>{voterCount, plural, one {# osoba} few {# osoby} many {# osób} other {# osób}}</b> zagłosowało w <b>{pollCount, plural, one {# ankiecie} few {# ankietach} many {# ankietach} other {# ankietach}}</b> w ciągu ostatnich 30 dni",
