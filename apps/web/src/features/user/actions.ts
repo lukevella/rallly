@@ -5,6 +5,7 @@ import { supportedLngs } from "@rallly/languages";
 import { headers } from "next/headers";
 import * as z from "zod";
 import { avatarAssetProfile } from "@/features/user/constants";
+import { isEmailTaken } from "@/features/user/data";
 import { banUser, unbanUser, updateUserRole } from "@/features/user/mutations";
 import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
@@ -68,6 +69,34 @@ export const updateLocalizationAction = authActionClient
       },
       headers: await headers(),
     });
+  });
+
+// Better-Auth's request-email-change endpoint returns success without sending
+// anything when the address already belongs to an account, to avoid confirming
+// that it is registered. That leaves the caller unable to tell "code sent" from
+// "silently skipped", so check first and report the conflict as a value. The
+// address can still be claimed between this check and verification, which the
+// verify step handles via its own "email already in use" error.
+export const checkEmailAvailabilityAction = authActionClient
+  .metadata({ actionName: "check_email_availability" })
+  .use(createRateLimitMiddleware(10, "1 h"))
+  .inputSchema(
+    z.object({
+      email: z.email(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    const email = parsedInput.email.toLowerCase();
+
+    if (email === ctx.user.email.toLowerCase()) {
+      return { ok: false as const, reason: "same_email" as const };
+    }
+
+    if (await isEmailTaken(email)) {
+      return { ok: false as const, reason: "email_taken" as const };
+    }
+
+    return { ok: true as const };
   });
 
 export const getAvatarUploadUrlAction = authActionClient

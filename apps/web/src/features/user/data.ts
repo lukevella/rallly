@@ -73,6 +73,14 @@ export async function getUserDeletionDetails(userId: string) {
   };
 }
 
+export const isEmailTaken = async (email: string) => {
+  const user = await prisma.user.findUnique({
+    where: { email: email.toLowerCase() },
+    select: { id: true },
+  });
+  return !!user;
+};
+
 export const getUserHasPassword = async (userId: string) => {
   const account = await prisma.account.findFirst({
     where: {
