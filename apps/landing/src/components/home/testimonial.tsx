@@ -24,7 +24,7 @@ export async function Testimonial({ locale }: { locale: string }) {
             src="/static/images/mit-logo.svg"
             width={54}
             height={28}
-            alt="MIT"
+            alt=""
           />
           <div>
             <div className="font-semibold">Eric Fletcher</div>
@@ -42,7 +42,7 @@ export async function Testimonial({ locale }: { locale: string }) {
             src="/static/images/eric.png"
             width={48}
             height={48}
-            alt="Eric Fletcher"
+            alt=""
           />
         </div>
       </FadeIn>
