@@ -91,6 +91,9 @@ function AnimatedNumber({
           value={shown}
           locales={locale}
           animated={animated}
+          // Layout snaps instantly so digits spin straight vertically in
+          // place instead of sliding sideways while the width grows.
+          transformTiming={{ duration: 0 }}
           spinTiming={{
             duration: DURATION_MS,
             easing: "cubic-bezier(0.16, 1, 0.3, 1)",
