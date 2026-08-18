@@ -64,7 +64,7 @@ export class NewPollPage {
       await page.getByRole("switch", { name: /comments/i }).click();
     }
 
-    await page.getByRole("button", { name: /^create$/i }).click();
+    await page.getByRole("button", { name: /^create poll$/i }).click();
 
     const successDialog = new CreatePollSuccessDialog(page);
     await successDialog.dialog.waitFor({ state: "visible" });
