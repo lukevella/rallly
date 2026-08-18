@@ -19,11 +19,25 @@ function isTRPCClientError(error: Error): error is TRPCClientError<AppRouter> {
   return error instanceof TRPCClientError;
 }
 
+// A request cancelled on unmount or navigation surfaces as an aborted tRPC
+// request with no server response. Nothing broke, so it must not raise a
+// "Unable to reach the server" toast.
+function isAbortError(error: TRPCClientError<AppRouter>) {
+  return (
+    error.cause instanceof DOMException && error.cause.name === "AbortError"
+  );
+}
+
 export function TRPCProvider(props: { children: React.ReactNode }) {
   const { t } = useTranslation();
   const [queryClient] = useState(() => {
     function handleError(error: Error) {
       if (!isTRPCClientError(error)) {
+        return;
+      }
+
+      // A cancelled request is not a failure — never warn about connectivity
+      if (isAbortError(error)) {
         return;
       }
 
