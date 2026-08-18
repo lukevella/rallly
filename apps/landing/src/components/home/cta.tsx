@@ -20,7 +20,7 @@ export async function Cta({
   const { t } = await getTranslation(locale, ["home"]);
   return (
     <section className="py-8 sm:py-24">
-      <FadeIn captureOnEnter="landing:final_cta_view">
+      <FadeIn amount="all" captureOnEnter="landing:final_cta_view">
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
           <h2 className="text-balance font-medium text-2xl text-gray-800 leading-tight tracking-tight sm:text-4xl">
             {title ?? (
