@@ -1,9 +1,16 @@
+import { cn } from "@rallly/ui";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { AnimatedStat } from "@/components/home/animated-number";
 import { getTranslation } from "@/i18n/server";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 
-export async function Stats({ locale }: { locale: string }) {
+export async function Stats({
+  locale,
+  className,
+}: {
+  locale: string;
+  className?: string;
+}) {
   const [pollCount, voterCount] = await Promise.all([
     getMonthlyPollCount(),
     getMonthlyVoterCount(),
@@ -11,8 +18,8 @@ export async function Stats({ locale }: { locale: string }) {
   const { t } = await getTranslation(locale, ["home"]);
 
   return (
-    <section className="py-8 sm:py-16">
-      <p className="mx-auto max-w-2xl text-balance text-center text-2xl text-gray-600">
+    <section className={cn("py-8 sm:py-16", className)}>
+      <p className="mx-auto max-w-2xl text-balance text-center text-gray-600 text-lg sm:text-2xl">
         <Trans
           t={t}
           ns="home"

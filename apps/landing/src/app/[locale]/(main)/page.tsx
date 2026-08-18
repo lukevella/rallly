@@ -17,19 +17,21 @@ export default async function Page(props: {
   const { t } = await getTranslation(locale, ["home", "common"]);
   return (
     <div className="divide-y">
-      <Hero
-        locale={locale}
-        title={t("headline", {
-          defaultValue: "Find the best time to meet",
-          ns: "home",
-        })}
-        description={t("subheading", {
-          defaultValue:
-            "Create a poll, share the link, and let everyone vote on the times that work. It's free and nobody needs an account.",
-          ns: "home",
-        })}
-      />
-      <Stats locale={locale} />
+      <div>
+        <Hero
+          locale={locale}
+          title={t("headline", {
+            defaultValue: "Find the best time to meet",
+            ns: "home",
+          })}
+          description={t("subheading", {
+            defaultValue:
+              "Create a poll, share the link, and let everyone vote on the times that work. It's free and nobody needs an account.",
+            ns: "home",
+          })}
+        />
+        <Stats locale={locale} className="pt-4 sm:pt-0" />
+      </div>
       <Testimonial locale={locale} />
       <Mentions locale={locale} />
       <Cta locale={locale} />

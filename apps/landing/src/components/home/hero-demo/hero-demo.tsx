@@ -33,7 +33,7 @@ const CachedDemo = async ({
   const scores = getScores(days);
 
   return (
-    <div className="relative z-10 mb-12 md:mx-auto md:max-w-full">
+    <div className="relative z-10 md:mx-auto md:max-w-full lg:mb-12">
       <div className="mr-[calc(50%-50vw)] overflow-hidden [mask-image:linear-gradient(to_left,transparent,black_6rem)] md:mr-0 md:overflow-visible md:[mask-image:none]">
         <div
           aria-hidden="true"
