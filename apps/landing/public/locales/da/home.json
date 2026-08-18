@@ -46,6 +46,7 @@
   "pcmagQuote": "“Opsæt en planlægningsafstemning på så kort tid som muligt.”",
   "popsciQuote": "“Det perfekte værktøj, hvis du vil holde dine ja/nej/måske-opgaver simple.”",
   "statsLast30Days": "<b>{voterCount, plural, one {# person} other {# personer}}</b> stemte i <b>{pollCount, plural, one {# afstemning} other {# afstemninger}}</b> i de sidste 30 dage",
+  "subheading": "Opret en afstemning, del linket, og lad alle stemme på tider, der passer. Det er gratis, og ingen behøver en konto.",
   "viaTrustpilot": "via Trustpilot",
   "when2meetAlternative": "Et moderne alternativ til When2Meet",
   "when2meetAlternativeDescription": "Rallly kan alt det, du bruger When2Meet til, uden de besværlige dele. Opret overskuelige mødeafstemninger, der fungerer godt på mobilen, få besked når deltagerne svarer, og administrer alle dine afstemninger ét sted. Gratis, uden reklamer og uden konto for at stemme. Kommer du fra When2Meet eller WhenIsGood? Så vil Rallly straks føles velkendt.",
