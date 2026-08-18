@@ -116,7 +116,7 @@ const CreatePollActions = ({
       {form.formState.isSubmitting ? (
         <Trans i18nKey="createPollFooterCreating" defaults="Creating…" />
       ) : (
-        <Trans i18nKey="create" defaults="Create" />
+        <Trans i18nKey="createPoll" defaults="Create poll" />
       )}
     </Button>
   );
