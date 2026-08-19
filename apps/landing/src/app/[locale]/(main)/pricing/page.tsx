@@ -7,9 +7,11 @@ import {
   CalendarCheckIcon,
   CalendarSearchIcon,
   ClockIcon,
+  CopyIcon,
   EyeOffIcon,
   LifeBuoyIcon,
   PaletteIcon,
+  Settings2Icon,
   TimerResetIcon,
   UserPlusIcon,
 } from "lucide-react";
@@ -46,6 +48,7 @@ import {
   CompareTableDash,
   CompareTableFeature,
   CompareTableHead,
+  CompareTableTooltip,
 } from "./compare-table";
 import {
   PlanBenefit,
@@ -359,6 +362,44 @@ export default async function Page(props: {
                     />
                   </PlanBenefitTooltip>
                 </PlanBenefit>
+                <PlanBenefit icon={<CopyIcon />}>
+                  <PlanBenefitTooltip
+                    content={
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="duplicatePollsDescription"
+                        defaults="Create a new poll based on an existing one"
+                      />
+                    }
+                  >
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="duplicatePolls"
+                      defaults="Duplicate polls"
+                    />
+                  </PlanBenefitTooltip>
+                </PlanBenefit>
+                <PlanBenefit icon={<Settings2Icon />}>
+                  <PlanBenefitTooltip
+                    content={
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="advancedPollSettingsDescription"
+                        defaults="Require participant emails, hide participant names, and hide votes"
+                      />
+                    }
+                  >
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="advancedPollSettings"
+                      defaults="Advanced poll settings"
+                    />
+                  </PlanBenefitTooltip>
+                </PlanBenefit>
                 <PlanBenefit icon={<UserPlusIcon />}>
                   <PlanBenefitName>
                     <Trans
@@ -496,12 +537,23 @@ export default async function Page(props: {
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="comparePollRetention30Days"
-                    defaults="30 days"
-                  />
+                  <CompareTableTooltip
+                    content={
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="thirtyDayPollRetentionDescription"
+                        defaults="Polls are kept for 30 days after their final date"
+                      />
+                    }
+                  >
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="comparePollRetention30Days"
+                      defaults="30 days"
+                    />
+                  </CompareTableTooltip>
                 </CompareTableCell>
                 <CompareTableCell>
                   <Trans
@@ -520,6 +572,49 @@ export default async function Page(props: {
                     i18nKey="finalizeDate"
                     defaults="Finalize date"
                   />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="duplicatePolls"
+                    defaults="Duplicate polls"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <CompareTableTooltip
+                    content={
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="advancedPollSettingsDescription"
+                        defaults="Require participant emails, hide participant names, and hide votes"
+                      />
+                    }
+                  >
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="advancedPollSettings"
+                      defaults="Advanced poll settings"
+                    />
+                  </CompareTableTooltip>
                 </CompareTableFeature>
                 <CompareTableCell>
                   <CompareTableDash label={notIncluded} />
