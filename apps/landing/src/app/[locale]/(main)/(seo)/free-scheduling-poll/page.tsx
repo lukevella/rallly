@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { Cta } from "@/components/home/cta";
+import { Faq } from "@/components/home/faq";
 import { Hero } from "@/components/home/hero";
 import { Mentions } from "@/components/home/mentions";
 import { Stats } from "@/components/home/stats";
@@ -18,37 +19,42 @@ export default async function Page(props: {
   const { t } = await getTranslation(locale, ["home"]);
   return (
     <div className="divide-y">
-      <Hero
-        locale={locale}
-        title={t("freeSchedulingPollTitle", {
-          ns: "home",
-        })}
-        description={t("freeSchedulingPollDescription", {
-          ns: "home",
-        })}
-      />
-      <Stats locale={locale} />
+      <div>
+        <Hero
+          locale={locale}
+          title={t("freeSchedulingPollTitle", {
+            ns: "home",
+          })}
+          description={t("freeSchedulingPollDescription", {
+            ns: "home",
+          })}
+        />
+        <Stats locale={locale} className="pt-4 sm:pt-0" />
+      </div>
       <Testimonial locale={locale} />
       <Mentions locale={locale} />
-      <Cta
-        locale={locale}
-        title={
-          <Trans
-            t={t}
-            ns="home"
-            i18nKey="freeSchedulingPollFinalCtaTitle"
-            defaults="Ready to create your scheduling poll?"
-          />
-        }
-        description={
-          <Trans
-            t={t}
-            ns="home"
-            i18nKey="freeSchedulingPollFinalCtaDescription"
-            defaults="It takes seconds and your group can start voting right away."
-          />
-        }
-      />
+      <div>
+        <Faq locale={locale} />
+        <Cta
+          locale={locale}
+          title={
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="freeSchedulingPollFinalCtaTitle"
+              defaults="Ready to create your scheduling poll?"
+            />
+          }
+          description={
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="freeSchedulingPollFinalCtaDescription"
+              defaults="It takes seconds and your group can start voting right away."
+            />
+          }
+        />
+      </div>
     </div>
   );
 }

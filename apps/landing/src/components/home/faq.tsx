@@ -11,7 +11,7 @@ import {
 } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
 
-function FaqItem({
+export function FaqItem({
   question,
   answer,
 }: {
@@ -31,7 +31,13 @@ function FaqItem({
   );
 }
 
-export async function Faq({ locale }: { locale: string }) {
+export async function Faq({
+  locale,
+  children,
+}: {
+  locale: string;
+  children?: React.ReactNode;
+}) {
   const { t } = await getTranslation(locale, ["home"]);
   return (
     <Section>
@@ -54,6 +60,7 @@ export async function Faq({ locale }: { locale: string }) {
         </SectionDescription>
       </SectionHeading>
       <SectionContent className="divide-y border-y">
+        {children}
         <FaqItem
           question={
             <Trans

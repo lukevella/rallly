@@ -35,8 +35,10 @@ export default async function Page(props: {
       </div>
       <Testimonial locale={locale} />
       <Mentions locale={locale} />
-      <Faq locale={locale} />
-      <Cta locale={locale} />
+      <div>
+        <Faq locale={locale} />
+        <Cta locale={locale} />
+      </div>
     </div>
   );
 }
