@@ -14,6 +14,7 @@ import {
 } from "@rallly/ui/dialog";
 import { Field, FieldError, FieldGroup } from "@rallly/ui/field";
 import { Form } from "@rallly/ui/form";
+import { toast } from "@rallly/ui/sonner";
 import { useAction } from "next-safe-action/hooks";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -40,8 +41,27 @@ function ConfirmStep({
   // on success, which re-renders the streamed summary this dialog is mounted
   // under and resets the step back to the start. Nothing on the page changes
   // when a code is sent, so there is nothing to refresh.
+  const { t } = useTranslation();
   const requestCode = useAction(requestAccountDeletionCodeAction, {
     onSuccess: onCodeSent,
+    // Bypassing useSafeAction also bypasses its error toast, so failures
+    // here would otherwise be silent — the action is rate limited, so that
+    // is a state real users can reach.
+    onError: ({ error }) => {
+      if (!error.serverError) {
+        return;
+      }
+
+      toast.error(
+        error.serverError === "TOO_MANY_REQUESTS"
+          ? t("actionErrorTooManyRequests", {
+              defaultValue: "You are making too many requests",
+            })
+          : t("actionErrorInternalServerError", {
+              defaultValue: "An internal server error occurred",
+            }),
+      );
+    },
   });
 
   return (

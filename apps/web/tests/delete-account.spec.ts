@@ -32,8 +32,9 @@ test.describe.serial(() => {
     await page.getByRole("heading", { name: "Delete account" }).waitFor();
 
     // The dialog renders before React attaches its handlers, so a click can
-    // land on a button that does nothing yet. Retry until the step advances;
-    // the code is reused across resends, so requesting twice is safe.
+    // land on a button that does nothing yet. Retry until the step advances.
+    // Each request mints a fresh code and invalidates the previous one, and
+    // getCode reads the newest unread email, so a repeated click is safe.
     const verifyHeading = page.getByRole("heading", {
       name: "Confirm your account deletion",
     });

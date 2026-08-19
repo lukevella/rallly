@@ -1,16 +1,19 @@
 import "server-only";
 
-import { createHash, randomInt, timingSafeEqual } from "node:crypto";
+import { createHmac, randomInt, timingSafeEqual } from "node:crypto";
 import { prisma } from "@rallly/database";
+import { env } from "@/env";
 import {
   ACCOUNT_DELETION_OTP_MAX_ATTEMPTS,
   ACCOUNT_DELETION_OTP_TTL_MS,
 } from "./constants";
 import { toAccountDeletionOTPIdentifier } from "./utils";
 
-// Stored hashed so a database read cannot be replayed as a deletion code.
+// Keyed, not a bare digest: six digits is a million candidates, so an
+// unkeyed hash of a stored code can simply be enumerated by anyone who can
+// read the table. The key makes the stored value useless without the secret.
 const hashCode = (code: string) =>
-  createHash("sha256").update(code).digest("hex");
+  createHmac("sha256", env.SECRET_PASSWORD).update(code).digest("hex");
 
 /**
  * Mint a deletion code for a user, replacing any previous one. Deletion codes
