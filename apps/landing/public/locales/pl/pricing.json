@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "Zaawansowane ustawienia ankiet",
+  "advancedPollSettingsDescription": "Wymagaj adresów e-mail uczestników, ukrywaj imiona uczestników i ukrywaj głosy",
   "basicPolls": "Podstawowe ankiety",
   "basicPollsDescription": "Twórz proste ankiety do ustalania terminów",
   "cancelSubscription": "Jak anulować subskrypcję?",
@@ -16,6 +18,8 @@
   "compareUnlimited": "Nieograniczone",
   "customBranding": "Niestandardowe brandowanie",
   "customBrandingDescription": "Pokaż swoje logo i kolory marki uczestnikom",
+  "duplicatePolls": "Duplikowanie ankiet",
+  "duplicatePollsDescription": "Utwórz nową ankietę na podstawie istniejącej",
   "extendedPollLifetimeDescription": "Przechowuj ankiety bezterminowo",
   "faq": "Najczęściej zadawane pytania",
   "featureNameExtendedPollLifetime": "Wydłużony czas trwania ankiety",
