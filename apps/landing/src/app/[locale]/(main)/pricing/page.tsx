@@ -122,7 +122,7 @@ export default async function Page(props: {
                 />
               }
               badge={
-                <Badge variant="green">
+                <Badge>
                   <Trans
                     t={t}
                     ns="pricing"
@@ -135,7 +135,7 @@ export default async function Page(props: {
             />
           </div>
           <PlanCards className="mx-auto mt-4 w-full max-w-3xl sm:mt-6">
-            <PlanCard>
+            <PlanCard className="md:col-span-2">
               <PlanCardHeader>
                 <PlanCardName>{PLAN_NAMES.HOBBY}</PlanCardName>
                 <PlanCardDescription>
@@ -213,7 +213,7 @@ export default async function Page(props: {
                 </PlanBenefit>
               </PlanBenefits>
             </PlanCard>
-            <PlanCard className="md:col-span-2">
+            <PlanCard className="md:col-span-3">
               <PlanCardHeader>
                 <div className="flex items-center justify-between gap-x-4">
                   <PlanCardName>{PLAN_NAMES.PRO}</PlanCardName>
