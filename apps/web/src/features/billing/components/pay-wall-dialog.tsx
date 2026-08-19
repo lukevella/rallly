@@ -1,7 +1,8 @@
 "use client";
 
 import { pricingData } from "@rallly/billing/pricing";
-import { posthog } from "@rallly/posthog/client";
+import { posthog, useFeatureFlagEnabled } from "@rallly/posthog/client";
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -22,6 +23,7 @@ import {
   ClockIcon,
   EyeOffIcon,
   LifeBuoyIcon,
+  MailCheckIcon,
   PaletteIcon,
   SparklesIcon,
   TimerResetIcon,
@@ -109,6 +111,15 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
 
+const PREMIUM_POLL_FAKE_DOOR_FLAG = "premium-poll-fake-door";
+
+// Pegged to one month of Pro on purpose: the one-off replaces the
+// subscribe-once-and-cancel path, so pricing below it would only discount
+// behavior that already happens at full monthly price.
+const premiumPollPriceCents = pricingData.monthly.amount;
+
+type PlanOption = SpaceTier | "premium-poll";
+
 export function PayWallDialog({
   isOpen,
   onOpenChange,
@@ -116,11 +127,39 @@ export function PayWallDialog({
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const [selectedPlan, setSelectedPlan] = React.useState<SpaceTier>("pro");
+  const [selectedPlan, setSelectedPlan] = React.useState<PlanOption>("pro");
   const [isAnnual, setIsAnnual] = React.useState(true);
+  const [isComingSoonVisible, setIsComingSoonVisible] = React.useState(false);
   const trigger = usePayWallStore((state) => state.trigger);
+  const isFakeDoorEnabled = useFeatureFlagEnabled(PREMIUM_POLL_FAKE_DOOR_FLAG);
+  const showPremiumPoll =
+    !!isFakeDoorEnabled &&
+    (trigger?.from === "poll-settings" || trigger?.from === "manage-poll");
+
+  React.useEffect(() => {
+    if (!isOpen || !showPremiumPoll) {
+      return;
+    }
+    const { trigger: currentTrigger } = usePayWallStore.getState();
+    posthog?.capture("paywall:premium_poll_option_view", {
+      from: currentTrigger?.from,
+      setting: currentTrigger?.setting,
+      action: currentTrigger?.action,
+      poll_id: currentTrigger?.pollId,
+    });
+  }, [isOpen, showPremiumPoll]);
 
   const handleChangePlan = (value: string) => {
+    if (value === "premium-poll") {
+      posthog?.capture("paywall:premium_poll_option_select", {
+        from: trigger?.from,
+        setting: trigger?.setting,
+        action: trigger?.action,
+        poll_id: trigger?.pollId,
+      });
+      setSelectedPlan("premium-poll");
+      return;
+    }
     setSelectedPlan(spaceTierSchema.parse(value));
   };
 
@@ -143,6 +182,7 @@ export function PayWallDialog({
         if (!open) {
           setSelectedPlan("pro");
           setIsAnnual(true);
+          setIsComingSoonVisible(false);
         }
       }}
     >
@@ -197,6 +237,29 @@ export function PayWallDialog({
                     )
                   }
                 />
+                {showPremiumPoll && (
+                  <PlanRadioGroupItem
+                    value="premium-poll"
+                    id="premium-poll"
+                    title={
+                      <span className="flex items-center gap-2">
+                        <Trans i18nKey="premiumPoll" defaults="Premium poll" />
+                        <Badge size="sm" variant="secondary">
+                          <Trans
+                            i18nKey="premiumPollBadge"
+                            defaults="This poll only"
+                          />
+                        </Badge>
+                      </span>
+                    }
+                    price={currencyFormatter.format(
+                      premiumPollPriceCents / 100,
+                    )}
+                    priceLabel={
+                      <Trans i18nKey="premiumPollOneTime" defaults="one time" />
+                    }
+                  />
+                )}
               </RadioGroup>
             </div>
 
@@ -239,7 +302,7 @@ export function PayWallDialog({
                   />
                 </label>
               )}
-              {selectedPlan === "pro" ? (
+              {selectedPlan === "pro" && (
                 <TabsContent value="pro">
                   <UpgradeButton
                     className="w-full"
@@ -261,7 +324,66 @@ export function PayWallDialog({
                     />
                   </UpgradeButton>
                 </TabsContent>
-              ) : (
+              )}
+              {selectedPlan === "premium-poll" &&
+                (isComingSoonVisible ? (
+                  <div className="space-y-3 rounded-xl bg-gray-50 p-4 ring ring-button-outline ring-inset dark:bg-gray-700/50">
+                    <div className="font-medium text-sm">
+                      <Trans
+                        i18nKey="premiumPollComingSoonTitle"
+                        defaults="Premium polls are coming soon"
+                      />
+                    </div>
+                    <div className="text-muted-foreground text-sm">
+                      <Trans
+                        i18nKey="premiumPollComingSoonDescription"
+                        defaults="One-time purchases aren't available yet, but your interest helps us decide what to build next. Pro includes all of this on unlimited polls."
+                      />
+                    </div>
+                    <UpgradeButton
+                      className="w-full"
+                      annual={isAnnual}
+                      onClick={() => {
+                        posthog?.capture("paywall:upgrade_button_click", {
+                          from: trigger?.from,
+                          setting: trigger?.setting,
+                          action: trigger?.action,
+                          poll_id: trigger?.pollId,
+                          plan: "pro",
+                          interval: isAnnual ? "year" : "month",
+                          premium_poll_fallback: true,
+                        });
+                      }}
+                    >
+                      <Trans
+                        i18nKey="upgradeToProInstead"
+                        defaults="Upgrade to Pro instead"
+                      />
+                    </UpgradeButton>
+                  </div>
+                ) : (
+                  <Button
+                    size="xl"
+                    variant="primary"
+                    className="w-full"
+                    onClick={() => {
+                      posthog?.capture("paywall:premium_poll_upgrade_click", {
+                        from: trigger?.from,
+                        setting: trigger?.setting,
+                        action: trigger?.action,
+                        poll_id: trigger?.pollId,
+                        price: premiumPollPriceCents,
+                      });
+                      setIsComingSoonVisible(true);
+                    }}
+                  >
+                    <Trans
+                      i18nKey="premiumPollUpgradeButton"
+                      defaults="Upgrade this poll"
+                    />
+                  </Button>
+                ))}
+              {selectedPlan === "hobby" && (
                 <Button disabled={true} size="xl" className="w-full">
                   <Trans i18nKey="currentPlan" defaults="Current plan" />
                 </Button>
@@ -424,6 +546,88 @@ export function PayWallDialog({
                 </KeyBenefits>
               </div>
             </TabsContent>
+            {showPremiumPoll && (
+              <TabsContent value="premium-poll" className="space-y-6">
+                <DialogHeader>
+                  <DialogTitle>
+                    <Trans i18nKey="premiumPoll" defaults="Premium poll" />
+                  </DialogTitle>
+                  <DialogDescription>
+                    <Trans
+                      i18nKey="premiumPollTabDescription"
+                      defaults="Pro features for this poll only"
+                    />
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-3">
+                  <SubHeading>
+                    <Trans i18nKey="keyBenefits" defaults="Key benefits" />
+                  </SubHeading>
+                  <KeyBenefits>
+                    <KeyBenefitsItem
+                      icon={<CalendarCheckIcon />}
+                      title={
+                        <Trans
+                          i18nKey="featureNameSchedule"
+                          defaults="Schedule poll"
+                        />
+                      }
+                      description={
+                        <Trans
+                          i18nKey="schedulePollDescription"
+                          defaults="Select a final date for your event."
+                        />
+                      }
+                    />
+                    <KeyBenefitsItem
+                      icon={<EyeOffIcon />}
+                      title={
+                        <Trans
+                          i18nKey="premiumPollPrivacy"
+                          defaults="Participant privacy"
+                        />
+                      }
+                      description={
+                        <Trans
+                          i18nKey="premiumPollPrivacyDescription"
+                          defaults="Hide participant names and votes from respondents"
+                        />
+                      }
+                    />
+                    <KeyBenefitsItem
+                      icon={<MailCheckIcon />}
+                      title={
+                        <Trans
+                          i18nKey="requireParticipantEmailTitle"
+                          defaults="Require email"
+                        />
+                      }
+                      description={
+                        <Trans
+                          i18nKey="requireParticipantEmailDescription"
+                          defaults="Participants must provide an email address to respond."
+                        />
+                      }
+                    />
+                    <KeyBenefitsItem
+                      icon={<ClockIcon />}
+                      title={
+                        <Trans
+                          i18nKey="premiumPollLifetime"
+                          defaults="Keep this poll forever"
+                        />
+                      }
+                      description={
+                        <Trans
+                          i18nKey="premiumPollLifetimeDescription"
+                          defaults="This poll is exempt from the 30 day retention limit"
+                        />
+                      }
+                    />
+                  </KeyBenefits>
+                </div>
+              </TabsContent>
+            )}
           </div>
         </Tabs>
       </DialogContent>
