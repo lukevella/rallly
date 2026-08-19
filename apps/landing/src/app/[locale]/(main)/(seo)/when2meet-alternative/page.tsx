@@ -53,25 +53,6 @@ export default async function Page(props: {
               />
             }
           />
-          <FaqItem
-            question={
-              <Trans
-                t={t}
-                ns="home"
-                i18nKey="faqImport"
-                defaults="Can I move my {toolName} polls to Rallly?"
-                values={{ toolName: "When2Meet" }}
-              />
-            }
-            answer={
-              <Trans
-                t={t}
-                ns="home"
-                i18nKey="faqImportAnswer"
-                defaults="There is no automatic import, but a poll only takes a minute to set up, so most people simply recreate their active polls in Rallly."
-              />
-            }
-          />
         </Faq>
         <Cta
           locale={locale}

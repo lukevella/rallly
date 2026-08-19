@@ -13,8 +13,6 @@
   "faqDescription": "Quick answers about how Rallly works, pricing, and privacy.",
   "faqDoodleDifference": "How is Rallly different from Doodle?",
   "faqDoodleDifferenceAnswer": "Rallly gives you professional, ad-free meeting polls in a clean and easy to use interface. Participants can vote without creating an account, and if you want full control of your data you can even host Rallly on your own server.",
-  "faqImport": "Can I move my {toolName} polls to Rallly?",
-  "faqImportAnswer": "There is no automatic import, but a poll only takes a minute to set up, so most people simply recreate their active polls in Rallly.",
   "faqIsFree": "Is Rallly free?",
   "faqIsFreeAnswer": "Yes. 99% of people use Rallly completely free. Creating polls, sharing them, and collecting votes costs nothing and there is no limit on participants. We also offer <0>Rallly Pro</0>, a paid subscription with features that are useful if you use Rallly professionally, like adding your own branding, removing Rallly attribution from your polls, and keeping polls around indefinitely.",
   "faqNeedAccount": "Do I need an account to use Rallly?",

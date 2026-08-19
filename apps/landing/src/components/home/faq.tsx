@@ -60,7 +60,6 @@ export async function Faq({
         </SectionDescription>
       </SectionHeading>
       <SectionContent className="divide-y border-y">
-        {children}
         <FaqItem
           question={
             <Trans
@@ -79,6 +78,8 @@ export async function Faq({
             />
           }
         />
+        {/* Page-specific questions slot in after the intro question */}
+        {children}
         <FaqItem
           question={
             <Trans
