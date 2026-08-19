@@ -117,7 +117,7 @@ export function PayWallDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const [selectedPlan, setSelectedPlan] = React.useState<SpaceTier>("pro");
-  const [isAnnual, setIsAnnual] = React.useState(false);
+  const [isAnnual, setIsAnnual] = React.useState(true);
   const trigger = usePayWallStore((state) => state.trigger);
 
   const handleChangePlan = (value: string) => {
@@ -142,7 +142,7 @@ export function PayWallDialog({
         onOpenChange(open);
         if (!open) {
           setSelectedPlan("pro");
-          setIsAnnual(false);
+          setIsAnnual(true);
         }
       }}
     >
@@ -187,7 +187,14 @@ export function PayWallDialog({
                   title={PLAN_NAMES.PRO}
                   price={getProPrice()}
                   priceLabel={
-                    <Trans i18nKey="perSeatMonth" defaults="/seat/mo" />
+                    isAnnual ? (
+                      <Trans
+                        i18nKey="perSeatMonthBilledYearly"
+                        defaults="/seat/mo, billed yearly"
+                      />
+                    ) : (
+                      <Trans i18nKey="perSeatMonth" defaults="/seat/mo" />
+                    )
                   }
                 />
               </RadioGroup>
@@ -204,23 +211,23 @@ export function PayWallDialog({
                   <div className="flex-1">
                     <div className="text-sm">
                       <Trans
-                        defaults="Save {amount} with yearly billing"
-                        i18nKey="annualSavings"
-                        values={{
-                          amount: currencyFormatter.format(
-                            (pricingData.monthly.amount * 12 -
-                              pricingData.yearly.amount) /
-                              100,
-                          ),
-                        }}
+                        i18nKey="yearlyBilling"
+                        defaults="Yearly billing"
                       />
                     </div>
                     <div className="text-muted-foreground text-sm">
                       <Trans
-                        defaults="Pay for {payMonths, number} months, get 12."
-                        i18nKey="annualDiscount"
+                        defaults="{yearlyPrice} per year. Save {savings} compared to monthly."
+                        i18nKey="yearlyBillingDescription"
                         values={{
-                          payMonths: 8,
+                          yearlyPrice: currencyFormatter.format(
+                            pricingData.yearly.amount / 100,
+                          ),
+                          savings: currencyFormatter.format(
+                            (pricingData.monthly.amount * 12 -
+                              pricingData.yearly.amount) /
+                              100,
+                          ),
                         }}
                       />
                     </div>
@@ -250,7 +257,10 @@ export function PayWallDialog({
                       });
                     }}
                   >
-                    <Trans i18nKey="upgrade" defaults="Upgrade" />
+                    <Trans
+                      i18nKey="continueToCheckout"
+                      defaults="Continue to checkout"
+                    />
                   </UpgradeButton>
                 </TabsContent>
               ) : (
