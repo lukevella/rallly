@@ -232,13 +232,11 @@ export function PayWallDialog({
                       />
                     </div>
                   </div>
-                  <div className="mt-1">
-                    <Switch
-                      checked={isAnnual}
-                      onCheckedChange={setIsAnnual}
-                      id="annual-switch"
-                    />
-                  </div>
+                  <Switch
+                    checked={isAnnual}
+                    onCheckedChange={setIsAnnual}
+                    id="annual-switch"
+                  />
                 </label>
               )}
               {selectedPlan === "pro" ? (
