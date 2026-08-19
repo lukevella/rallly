@@ -113,6 +113,11 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
 
 const PREMIUM_POLL_FAKE_DOOR_FLAG = "premium-poll-fake-door";
 
+// Pegged to one month of Pro on purpose: the one-off replaces the
+// subscribe-once-and-cancel path, so pricing below it would only discount
+// behavior that already happens at full monthly price.
+const premiumPollPriceCents = pricingData.monthly.amount;
+
 type PlanOption = SpaceTier | "premium-poll";
 
 export function PayWallDialog({
@@ -248,7 +253,7 @@ export function PayWallDialog({
                       </span>
                     }
                     price={currencyFormatter.format(
-                      pricingData.monthly.amount / 100,
+                      premiumPollPriceCents / 100,
                     )}
                     priceLabel={
                       <Trans i18nKey="premiumPollOneTime" defaults="one time" />
@@ -367,7 +372,7 @@ export function PayWallDialog({
                         setting: trigger?.setting,
                         action: trigger?.action,
                         poll_id: trigger?.pollId,
-                        price: pricingData.monthly.amount,
+                        price: premiumPollPriceCents,
                       });
                       setIsComingSoonVisible(true);
                     }}
