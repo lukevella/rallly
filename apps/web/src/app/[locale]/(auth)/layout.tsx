@@ -1,5 +1,5 @@
-import { AuthFooter } from "@/app/[locale]/(auth)/components/auth-footer";
 import { Logo } from "@/features/branding/components/logo";
+import { LOGO_VIEWBOX } from "@/features/branding/constants";
 import { QuickCreateButton } from "@/features/quick-create/components/quick-create-button";
 import { QuickCreateWidget } from "@/features/quick-create/components/quick-create-widget";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
@@ -41,7 +41,9 @@ export default async function Layout({
                 <QuickCreateButton />
               </div>
             ) : null}
-            <AuthFooter />
+            {/* empty spacer matching the header's logo slot height so the
+                vertically centered content sits at the true middle of the page */}
+            <footer style={{ height: LOGO_VIEWBOX.height }} />
           </div>
           {isQuickCreateEnabled ? (
             <div className="relative hidden flex-1 flex-col justify-center rounded-lg border bg-muted/50 lg:flex lg:p-16">
