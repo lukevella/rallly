@@ -4,6 +4,7 @@ import posthog from "posthog-js";
 export { useFeatureFlagEnabled } from "posthog-js/react";
 
 import {
+  isAbortError,
   isGlobalPrivacyControlEnabled,
   isInjectedExtensionException,
 } from "./utils";
@@ -26,7 +27,7 @@ if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
     before_send: (event) => {
       if (
         event?.event === "$exception" &&
-        isInjectedExtensionException(event)
+        (isInjectedExtensionException(event) || isAbortError(event))
       ) {
         return null;
       }

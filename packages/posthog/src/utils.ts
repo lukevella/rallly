@@ -86,3 +86,30 @@ export function isInjectedExtensionException(event: CaptureResult) {
     ),
   );
 }
+
+/**
+ * A request that is aborted (React Query cancels an in-flight query on unmount
+ * or navigation) surfaces as an `AbortError`. When it wraps a tRPC request, the
+ * `$exception_list` holds a `TRPCClientError` ("The operation was aborted.")
+ * chained to a `DOMException` whose value starts with "AbortError:". Nothing
+ * broke for the user, so this is autocapture noise, not a real error.
+ */
+const ABORT_NOISE_VALUE_PATTERN =
+  /^AbortError\b|operation was aborted|user aborted a request/i;
+
+export function isAbortError(event: CaptureResult) {
+  const exceptionList = event.properties?.$exception_list as
+    | Array<{ type?: string; value?: string }>
+    | undefined;
+
+  if (!Array.isArray(exceptionList)) {
+    return false;
+  }
+
+  return exceptionList.some(
+    (exception) =>
+      exception?.type === "AbortError" ||
+      (typeof exception?.value === "string" &&
+        ABORT_NOISE_VALUE_PATTERN.test(exception.value)),
+  );
+}

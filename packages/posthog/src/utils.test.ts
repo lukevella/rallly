@@ -1,9 +1,62 @@
+import type { CaptureResult } from "posthog-js";
 import { describe, expect, it } from "vitest";
-import { getPostHogCookieName, parsePostHogCookieDistinctId } from "./utils";
+import {
+  getPostHogCookieName,
+  isAbortError,
+  parsePostHogCookieDistinctId,
+} from "./utils";
 
 describe("getPostHogCookieName", () => {
   it("builds the posthog-js persistence cookie name", () => {
     expect(getPostHogCookieName("phc_abc123")).toBe("ph_phc_abc123_posthog");
+  });
+});
+
+describe("isAbortError", () => {
+  const event = (exceptionList: unknown) =>
+    ({
+      properties: { $exception_list: exceptionList },
+    }) as unknown as CaptureResult;
+
+  it("matches an aborted tRPC request", () => {
+    expect(
+      isAbortError(
+        event([
+          { type: "TRPCClientError", value: "The operation was aborted. " },
+          {
+            type: "DOMException",
+            value: "AbortError: The operation was aborted. ",
+          },
+        ]),
+      ),
+    ).toBe(true);
+  });
+
+  it("matches a bare AbortError DOMException", () => {
+    expect(
+      isAbortError(
+        event([
+          {
+            type: "DOMException",
+            value: "AbortError: The user aborted a request.",
+          },
+        ]),
+      ),
+    ).toBe(true);
+  });
+
+  it("does not match an unrelated exception", () => {
+    expect(
+      isAbortError(
+        event([{ type: "TypeError", value: "x is not a function" }]),
+      ),
+    ).toBe(false);
+  });
+
+  it("does not match when the exception list is missing", () => {
+    expect(isAbortError({ properties: {} } as unknown as CaptureResult)).toBe(
+      false,
+    );
   });
 });
 
