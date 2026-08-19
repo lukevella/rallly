@@ -327,7 +327,7 @@ export function PayWallDialog({
               )}
               {selectedPlan === "premium-poll" &&
                 (isComingSoonVisible ? (
-                  <div className="space-y-3 rounded-lg bg-gray-50 p-4 ring ring-button-outline ring-inset dark:bg-gray-700/50">
+                  <div className="space-y-3 rounded-xl bg-gray-50 p-4 ring ring-button-outline ring-inset dark:bg-gray-700/50">
                     <div className="font-medium text-sm">
                       <Trans
                         i18nKey="premiumPollComingSoonTitle"
