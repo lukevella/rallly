@@ -48,7 +48,9 @@ import {
 } from "./compare-table";
 import {
   PlanBenefit,
+  PlanBenefitName,
   PlanBenefits,
+  PlanBenefitTooltip,
   PlanCard,
   PlanCardDescription,
   PlanCardHeader,
@@ -56,6 +58,7 @@ import {
   PlanCardPrice,
   PlanCardPriceAmount,
   PlanCardPriceLabel,
+  PlanCards,
 } from "./plan-card";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
@@ -142,7 +145,7 @@ export default async function Page(props: {
               }
             />
           </div>
-          <div className="mt-4 grid gap-4 sm:mt-6 sm:gap-6 md:grid-cols-3">
+          <PlanCards className="mt-4 sm:mt-6">
             <PlanCard>
               <PlanCardHeader>
                 <PlanCardName>{PLAN_NAMES.HOBBY}</PlanCardName>
@@ -165,62 +168,75 @@ export default async function Page(props: {
                   />
                 </PlanCardPriceAmount>
               </PlanCardPrice>
-              <Link
-                href={linkToApp("/")}
-                className={buttonVariants({ className: "w-full" })}
-              >
-                <Trans
-                  t={t}
-                  ns="common"
-                  i18nKey="getStarted"
-                  defaults="Get started"
-                />
-              </Link>
-              <hr />
+              <div>
+                <Link
+                  href={linkToApp("/")}
+                  className={buttonVariants({
+                    className: "w-full sm:w-auto",
+                  })}
+                >
+                  <Trans
+                    t={t}
+                    ns="common"
+                    i18nKey="getStarted"
+                    defaults="Get started"
+                  />
+                </Link>
+              </div>
               <PlanBenefits>
-                <PlanBenefit
-                  icon={<CalendarSearchIcon />}
-                  title={
+                <PlanBenefit icon={<CalendarSearchIcon />}>
+                  <PlanBenefitTooltip
+                    content={
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="basicPollsDescription"
+                        defaults="Create simple scheduling polls"
+                      />
+                    }
+                  >
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="basicPolls"
                       defaults="Basic polls"
                     />
-                  }
-                  description={
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="basicPollsDescription"
-                      defaults="Create simple scheduling polls"
-                    />
-                  }
-                />
-                <PlanBenefit
-                  icon={<TimerResetIcon />}
-                  title={
+                  </PlanBenefitTooltip>
+                </PlanBenefit>
+                <PlanBenefit icon={<TimerResetIcon />}>
+                  <PlanBenefitTooltip
+                    content={
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="thirtyDayPollRetentionDescription"
+                        defaults="Polls are kept for 30 days after their final date"
+                      />
+                    }
+                  >
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="thirtyDayPollRetention"
                       defaults="30 day poll retention"
                     />
-                  }
-                  description={
+                  </PlanBenefitTooltip>
+                </PlanBenefit>
+              </PlanBenefits>
+            </PlanCard>
+            <PlanCard className="md:col-span-2">
+              <PlanCardHeader>
+                <div className="flex items-center justify-between gap-x-4">
+                  <PlanCardName>{PLAN_NAMES.PRO}</PlanCardName>
+                  <Badge variant="primary">
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="thirtyDayPollRetentionDescription"
-                      defaults="Polls are kept for 30 days after their final date"
+                      i18nKey="recommended"
+                      defaults="Recommended"
                     />
-                  }
-                />
-              </PlanBenefits>
-            </PlanCard>
-            <PlanCard className="border-primary md:col-span-2">
-              <PlanCardHeader>
-                <PlanCardName>{PLAN_NAMES.PRO}</PlanCardName>
+                  </Badge>
+                </div>
                 <PlanCardDescription>
                   <Trans
                     t={t}
@@ -260,139 +276,122 @@ export default async function Page(props: {
                   </PlanCardPrice>
                 }
               />
-              <Link
-                href={linkToApp("/settings/billing")}
-                className={buttonVariants({
-                  variant: "primary",
-                  className: "w-full",
-                })}
-              >
-                <Trans
-                  t={t}
-                  ns="pricing"
-                  i18nKey="upgrade"
-                  defaults="Upgrade"
-                />
-              </Link>
-              <hr />
+              <div>
+                <Link
+                  href={linkToApp("/settings/billing")}
+                  className={buttonVariants({
+                    variant: "primary",
+                    className: "w-full sm:w-auto",
+                  })}
+                >
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="getPro"
+                    defaults="Get Pro"
+                  />
+                </Link>
+              </div>
               <PlanBenefits className="sm:grid-cols-2 sm:gap-x-6">
-                <PlanBenefit
-                  icon={<PaletteIcon />}
-                  title={
+                <PlanBenefit icon={<PaletteIcon />}>
+                  <PlanBenefitTooltip
+                    content={
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="customBrandingDescription"
+                        defaults="Show your logo and brand colors to your participants"
+                      />
+                    }
+                  >
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="customBranding"
                       defaults="Custom branding"
                     />
-                  }
-                  description={
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="customBrandingDescription"
-                      defaults="Show your logo and brand colors to your participants"
-                    />
-                  }
-                />
-                <PlanBenefit
-                  icon={<EyeOffIcon />}
-                  title={
+                  </PlanBenefitTooltip>
+                </PlanBenefit>
+                <PlanBenefit icon={<EyeOffIcon />}>
+                  <PlanBenefitTooltip
+                    content={
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="removeAttributionBenefitDescription"
+                        defaults='Hide "Powered by Rallly" from your participants'
+                      />
+                    }
+                  >
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="removeAttribution"
                       defaults="Remove attribution"
                     />
-                  }
-                  description={
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="removeAttributionBenefitDescription"
-                      defaults='Hide "Powered by Rallly" from your participants'
-                    />
-                  }
-                />
-                <PlanBenefit
-                  icon={<CalendarCheckIcon />}
-                  title={
+                  </PlanBenefitTooltip>
+                </PlanBenefit>
+                <PlanBenefit icon={<CalendarCheckIcon />}>
+                  <PlanBenefitTooltip
+                    content={
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="schedulePollDescription"
+                        defaults="Select a final date for your event."
+                      />
+                    }
+                  >
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="featureNameSchedule"
                       defaults="Schedule poll"
                     />
-                  }
-                  description={
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="schedulePollDescription"
-                      defaults="Select a final date for your event."
-                    />
-                  }
-                />
-                <PlanBenefit
-                  icon={<ClockIcon />}
-                  title={
+                  </PlanBenefitTooltip>
+                </PlanBenefit>
+                <PlanBenefit icon={<ClockIcon />}>
+                  <PlanBenefitTooltip
+                    content={
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="extendedPollLifetimeDescription"
+                        defaults="Keep polls indefinitely"
+                      />
+                    }
+                  >
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="featureNameExtendedPollLifetime"
                       defaults="Extended poll lifetime"
                     />
-                  }
-                  description={
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="extendedPollLifetimeDescription"
-                      defaults="Keep polls indefinitely"
-                    />
-                  }
-                />
-                <PlanBenefit
-                  icon={<UserPlusIcon />}
-                  title={
+                  </PlanBenefitTooltip>
+                </PlanBenefit>
+                <PlanBenefit icon={<UserPlusIcon />}>
+                  <PlanBenefitName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="teamCollaboration"
                       defaults="Team collaboration"
                     />
-                  }
-                  description={
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="teamCollaborationDescription"
-                      defaults="Invite team members with centralized billing"
-                    />
-                  }
-                />
-                <PlanBenefit
-                  icon={<LifeBuoyIcon />}
-                  title={
+                  </PlanBenefitName>
+                </PlanBenefit>
+                <PlanBenefit icon={<LifeBuoyIcon />}>
+                  <PlanBenefitName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="prioritySupport"
                       defaults="Priority support"
                     />
-                  }
-                  description={
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="prioritySupportDescription"
-                      defaults="Get faster response times and dedicated assistance"
-                    />
-                  }
-                />
+                  </PlanBenefitName>
+                </PlanBenefit>
               </PlanBenefits>
             </PlanCard>
-          </div>
+          </PlanCards>
         </BillingIntervalProvider>
         <Stats className="mt-8 sm:mt-24">
           <Trans
