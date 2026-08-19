@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "高级投票设置",
+  "advancedPollSettingsDescription": "要求参与者提供电子邮箱、隐藏参与者姓名并隐藏票数",
   "basicPolls": "基础投票},{",
   "basicPollsDescription": "创建简单的日程投票",
   "cancelSubscription": "我如何取消我的订阅？",
@@ -16,6 +18,8 @@
   "compareUnlimited": "无限",
   "customBranding": "自定义品牌",
   "customBrandingDescription": "向参与者展示您的徽标和品牌颜色",
+  "duplicatePolls": "复制投票",
+  "duplicatePollsDescription": "基于现有投票创建新投票",
   "extendedPollLifetimeDescription": "无限期保留投票",
   "faq": "常见问题",
   "featureNameExtendedPollLifetime": "延长投票保留期",
