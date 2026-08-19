@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   getPostHogCookieName,
   isAbortError,
+  isResizeObserverLoopError,
   parsePostHogCookieDistinctId,
 } from "./utils";
 
@@ -57,6 +58,51 @@ describe("isAbortError", () => {
     expect(isAbortError({ properties: {} } as unknown as CaptureResult)).toBe(
       false,
     );
+  });
+});
+
+describe("isResizeObserverLoopError", () => {
+  const event = (exceptionList: unknown) =>
+    ({
+      properties: { $exception_list: exceptionList },
+    }) as unknown as CaptureResult;
+
+  it("matches the undelivered notifications notice", () => {
+    expect(
+      isResizeObserverLoopError(
+        event([
+          {
+            type: "Error",
+            value:
+              "ResizeObserver loop completed with undelivered notifications.",
+          },
+        ]),
+      ),
+    ).toBe(true);
+  });
+
+  it("matches the loop limit exceeded notice", () => {
+    expect(
+      isResizeObserverLoopError(
+        event([{ type: "Error", value: "ResizeObserver loop limit exceeded" }]),
+      ),
+    ).toBe(true);
+  });
+
+  it("does not match an unrelated exception", () => {
+    expect(
+      isResizeObserverLoopError(
+        event([{ type: "TypeError", value: "x is not a function" }]),
+      ),
+    ).toBe(false);
+  });
+
+  it("does not match when the exception list is missing", () => {
+    expect(
+      isResizeObserverLoopError({
+        properties: {},
+      } as unknown as CaptureResult),
+    ).toBe(false);
   });
 });
 

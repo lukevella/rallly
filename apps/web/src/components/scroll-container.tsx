@@ -8,14 +8,23 @@ const useIsOverflowing = <E extends Element | null>(
   const [isOverflowing, setIsOverflowing] = React.useState(false);
 
   React.useEffect(() => {
+    // Defer the state update to the next frame so it lands outside the
+    // ResizeObserver callback's frame. Updating layout state inline can resize
+    // the observed element again in the same frame, which makes the browser fire
+    // "ResizeObserver loop completed with undelivered notifications." on
+    // window.onerror.
+    let frame = 0;
     const checkOverflow = () => {
-      if (ref.current) {
-        const element = ref.current;
-        const overflowX = element.scrollWidth > element.clientWidth;
-        const overflowY = element.scrollHeight > element.clientHeight;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        if (ref.current) {
+          const element = ref.current;
+          const overflowX = element.scrollWidth > element.clientWidth;
+          const overflowY = element.scrollHeight > element.clientHeight;
 
-        setIsOverflowing(overflowX || overflowY);
-      }
+          setIsOverflowing(overflowX || overflowY);
+        }
+      });
     };
 
     if (ref.current) {
@@ -31,6 +40,7 @@ const useIsOverflowing = <E extends Element | null>(
       checkOverflow();
 
       return () => {
+        cancelAnimationFrame(frame);
         resizeObserver.disconnect();
         mutationObserver.disconnect();
       };
