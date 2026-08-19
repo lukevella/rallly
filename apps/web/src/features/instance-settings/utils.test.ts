@@ -18,6 +18,11 @@ describe("getMajorVersion", () => {
     expect(getMajorVersion("unknown")).toBeNull();
     expect(getMajorVersion("")).toBeNull();
   });
+
+  it("rejects malformed versions with numeric prefixes", () => {
+    expect(getMajorVersion("4foo")).toBeNull();
+    expect(getMajorVersion("4.5x")).toBeNull();
+  });
 });
 
 describe("isOutdated", () => {

@@ -12,8 +12,9 @@ function normalizeVersion(version: string) {
 }
 
 export function getMajorVersion(version: string) {
-  const major = Number.parseInt(normalizeVersion(version).split(".")[0], 10);
-  return Number.isNaN(major) ? null : major;
+  const normalized = normalizeVersion(version);
+  if (!/^\d+(\.\d+){0,2}$/.test(normalized)) return null;
+  return Number(normalized.split(".")[0]);
 }
 
 // Compares release numbers only — prerelease/build suffixes are ignored, so

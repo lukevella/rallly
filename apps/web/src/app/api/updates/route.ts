@@ -44,15 +44,23 @@ const seenInstanceCache = createCache<string>({
 const ratelimit = createRatelimit(60, "1 h");
 
 async function fetchReleaseChannels(): Promise<ReleaseChannels | null> {
-  const res = await fetch(GITHUB_RELEASES_URL, {
-    headers: {
-      Accept: "application/vnd.github+json",
-      "User-Agent": "Rallly",
-    },
-  });
-  if (!res.ok) return null;
+  try {
+    const res = await fetch(GITHUB_RELEASES_URL, {
+      headers: {
+        Accept: "application/vnd.github+json",
+        "User-Agent": "Rallly",
+      },
+      // Just under the self-hosted client's 3s budget so a slow GitHub
+      // response still yields our controlled 502 instead of a hung slot
+      signal: AbortSignal.timeout(2500),
+    });
+    if (!res.ok) return null;
 
-  return buildReleaseChannels(await res.json());
+    return buildReleaseChannels(await res.json());
+  } catch (error) {
+    logger.warn({ error }, "Failed to fetch releases from GitHub");
+    return null;
+  }
 }
 
 async function getReleaseChannels(): Promise<ReleaseChannels | null> {
