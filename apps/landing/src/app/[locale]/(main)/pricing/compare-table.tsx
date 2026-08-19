@@ -1,4 +1,5 @@
 import { cn } from "@rallly/ui";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { CircleCheckIcon, XIcon } from "lucide-react";
 import type * as React from "react";
 
@@ -53,6 +54,23 @@ export function CompareTableCell({
       className={cn("whitespace-nowrap px-4 py-4 text-gray-800", className)}
       {...props}
     />
+  );
+}
+
+export function CompareTableTooltip({
+  content,
+  children,
+}: {
+  content: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger className="cursor-help text-left underline decoration-gray-400 decoration-dotted underline-offset-4">
+        {children}
+      </TooltipTrigger>
+      <TooltipContent className="max-w-64">{content}</TooltipContent>
+    </Tooltip>
   );
 }
 
