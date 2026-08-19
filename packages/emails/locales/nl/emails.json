@@ -5,7 +5,7 @@
   "accountDeletionScheduled_heading": "Je account staat gepland voor verwijdering",
   "accountDeletionScheduled_preview": "Je account wordt op {date} verwijderd.",
   "accountDeletionScheduled_subject": "Je account staat gepland voor verwijdering",
-  "accountDeletionScheduled_text": "Je {appName}-account staat gepland voor verwijdering op {date}. Je Polls, evenementen, stemmen en opmerkingen worden permanent verwijderd.",
+  "accountDeletionScheduled_text": "Je {appName}-account staat gepland voor verwijdering op {date}. Je polls, evenementen, stemmen en opmerkingen worden permanent verwijderd.",
   "allDay": "Hele dag",
   "changeEmail_codeValid": "Deze code is 15 minuten geldig",
   "changeEmail_content2": "Je ontvangt deze e-mail omdat er een verzoek is gedaan om het e-mailadres van een account op <domain /> te wijzigen. Als jij dat niet was, neem dan contact op met <a>{supportEmail}</a>.",
