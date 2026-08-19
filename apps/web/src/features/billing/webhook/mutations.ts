@@ -30,6 +30,20 @@ async function getExpandedSubscription(subscriptionId: string) {
 }
 
 /**
+ * Subscription events for a deleted user arrive after the user's spaces and
+ * subscriptions have been cascade-deleted, so there is nothing left to sync.
+ * Handlers treat a missing space as a successful no-op instead of failing the
+ * webhook and having Stripe retry it.
+ */
+async function spaceExists(spaceId: string) {
+  const space = await prisma.space.findUnique({
+    where: { id: spaceId },
+    select: { id: true },
+  });
+  return space !== null;
+}
+
+/**
  * Recomputes a space's tier from its subscriptions so the tier reflects whether
  * *any* subscription is active, rather than the state of a single webhook event.
  * Must run after the triggering subscription's `active` flag has been written in
@@ -237,6 +251,10 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
 
   const { userId, spaceId } = res.data;
 
+  if (!(await spaceExists(spaceId))) {
+    return;
+  }
+
   const subscriptionItem = subscription.items.data[0];
 
   if (!subscriptionItem) {
@@ -369,6 +387,10 @@ async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
 
   const { userId, spaceId } = res.data;
 
+  if (!(await spaceExists(spaceId))) {
+    return;
+  }
+
   const tier = await prisma.$transaction(async (tx) => {
     // updateMany so a missing row (e.g. already cascade-deleted with the user
     // or space) doesn't abort the transaction before the tier sync runs
@@ -433,6 +455,10 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
   }
 
   const { userId, spaceId } = res.data;
+
+  if (!(await spaceExists(spaceId))) {
+    return;
+  }
 
   const subscriptionItem = subscription.items.data[0];
 
