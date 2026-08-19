@@ -20,6 +20,7 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 import { InputOTP } from "@/components/input-otp";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -67,25 +68,28 @@ function ConfirmStep({ onCodeSent }: { onCodeSent: () => void }) {
         <DialogDescription>
           <Trans
             i18nKey="deleteAccountDialogDescription"
-            defaults="To confirm it's you, we'll email a verification code to {email}."
-            values={{ email: user.email }}
+            defaults="This account and everything in it will be permanently deleted. This cannot be undone."
           />
         </DialogDescription>
       </DialogHeader>
-      <div className="space-y-3 text-sm leading-relaxed">
-        <p>
-          <Trans
-            i18nKey="deleteAccountDialogDataWarning"
-            defaults="All data associated with your account will be permanently deleted."
-          />
-        </p>
-        <p>
-          <Trans
-            i18nKey="deleteAccountDialogImmediateWarning"
-            defaults="Your account and data will be deleted immediately. This cannot be undone."
-          />
-        </p>
+      {/* The account is shown rather than named in a sentence: this is the
+          one thing worth checking before an irreversible action, and it is
+          easier to check as a labelled row than mid-paragraph. */}
+      <div className="flex items-center gap-3 rounded-lg border bg-muted/40 p-3">
+        <OptimizedAvatarImage size="lg" src={user.image} name={user.name} />
+        <div className="min-w-0 flex-1 text-sm">
+          <div className="truncate font-medium">{user.name}</div>
+          <div className="truncate text-muted-foreground text-xs">
+            {user.email}
+          </div>
+        </div>
       </div>
+      <p className="text-muted-foreground text-sm">
+        <Trans
+          i18nKey="deleteAccountDialogCodeHint"
+          defaults="We'll email a verification code to confirm it's you."
+        />
+      </p>
       <DialogFooter>
         <DialogClose render={<Button />}>
           <Trans i18nKey="cancel" defaults="Cancel" />
