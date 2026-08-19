@@ -1,0 +1,40 @@
+/*
+  Keep the docs theme in sync with the product design tokens defined in
+  packages/tailwind-config/shared-styles.css.
+
+  Mintlify generates a gray scale tinted from the primary color; the product
+  remaps gray-* to Tailwind's zinc scale, so the same values go here (as the
+  RGB triplets Mintlify's variables expect).
+*/
+:root {
+  --gray-50: 250 250 250;
+  --gray-100: 244 244 245;
+  --gray-200: 228 228 231;
+  --gray-300: 212 212 216;
+  --gray-400: 161 161 170;
+  --gray-500: 113 113 122;
+  --gray-600: 82 82 91;
+  --gray-700: 63 63 70;
+  --gray-800: 39 39 42;
+  --gray-900: 24 24 27;
+  --gray-950: 9 9 11;
+}
+
+/* --foreground: zinc-800 in light mode, white in dark mode. Body text gets
+   its color by inheritance from the app shell, so re-anchor it on the
+   documented #content-area selector. */
+#content-area {
+  color: rgb(39 39 42);
+}
+
+.dark #content-area {
+  color: rgb(255 255 255);
+}
+
+/* Headings carry their own text-gray-* utilities that beat inheritance */
+.dark #content-area h1,
+.dark #content-area h2,
+.dark #content-area h3,
+.dark #content-area h4 {
+  color: rgb(255 255 255);
+}
