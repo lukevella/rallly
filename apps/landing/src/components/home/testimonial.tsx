@@ -11,7 +11,7 @@ export async function Testimonial({ locale }: { locale: string }) {
         amount="all"
         className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between sm:gap-16"
       >
-        <p className="max-w-2xl text-xl leading-normal sm:text-2xl">
+        <p className="max-w-2xl text-lg leading-normal sm:text-2xl">
           <Trans
             t={t}
             ns="home"
