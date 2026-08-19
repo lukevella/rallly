@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "Speciális szavazásbeállítások",
+  "advancedPollSettingsDescription": "Kérj e-mail-címet a résztvevőktől, rejtsd el a résztvevők nevét és a szavazatokat",
   "basicPolls": "Szavazások",
   "basicPollsDescription": "Hozz létre egyszerű ütemező szavazásokat",
   "cancelSubscription": "Hogyan mondhatom le az előfizetésemet?",
@@ -16,6 +18,8 @@
   "compareUnlimited": "Korlátlan",
   "customBranding": "Egyedi arculat",
   "customBrandingDescription": "Mutasd meg a logódat és az arculatod színeit a résztvevőidnek",
+  "duplicatePolls": "Szavazások duplikálása",
+  "duplicatePollsDescription": "Hozz létre új szavazást egy meglévő alapján",
   "extendedPollLifetimeDescription": "Szavazások megőrzése örökre",
   "faq": "Gyakran ismételt kérdések",
   "featureNameExtendedPollLifetime": "Meghosszabbított szavazási idő",
