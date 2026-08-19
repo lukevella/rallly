@@ -214,7 +214,6 @@
   "deleteAccountDialogDescription": "Are you sure you want to delete your account?",
   "deleteAccountDialogImmediateWarning": "Your account and data will be deleted immediately. This cannot be undone.",
   "deleteAccountDialogTitle": "Delete account",
-  "deleteAccountError": "Something went wrong. Please try again.",
   "deleteAccountInvalidCode": "This code is incorrect or has expired. Request a new one to continue.",
   "deleteAccountSubscriptionWarning": "Your Pro subscription will be cancelled immediately and any remaining paid time will be lost. This cannot be refunded or restored.",
   "deleteAccountUpcomingEvents": "{count, plural, one {# upcoming event} other {# upcoming events}}",

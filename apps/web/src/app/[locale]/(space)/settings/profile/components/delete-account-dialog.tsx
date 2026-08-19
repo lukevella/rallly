@@ -14,6 +14,7 @@ import {
 } from "@rallly/ui/dialog";
 import { Field, FieldError, FieldGroup } from "@rallly/ui/field";
 import { Form } from "@rallly/ui/form";
+import { useAction } from "next-safe-action/hooks";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -35,7 +36,11 @@ function ConfirmStep({
   summary?: React.ReactNode;
   onCodeSent: () => void;
 }) {
-  const requestCode = useSafeAction(requestAccountDeletionCodeAction, {
+  // useAction directly, not useSafeAction: the latter calls router.refresh()
+  // on success, which re-renders the streamed summary this dialog is mounted
+  // under and resets the step back to the start. Nothing on the page changes
+  // when a code is sent, so there is nothing to refresh.
+  const requestCode = useAction(requestAccountDeletionCodeAction, {
     onSuccess: onCodeSent,
   });
 
@@ -75,7 +80,7 @@ function ConfirmStep({
           type="button"
           variant="destructive"
           loading={requestCode.isExecuting}
-          onClick={() => requestCode.executeAsync()}
+          onClick={() => requestCode.execute()}
         >
           <Trans i18nKey="continue" defaults="Continue" />
         </Button>
@@ -108,12 +113,9 @@ function VerifyStep({ onBack }: { onBack: () => void }) {
       return;
     }
 
-    if (!result?.data) {
-      form.setError("otp", {
-        message: t("deleteAccountError", {
-          defaultValue: "Something went wrong. Please try again.",
-        }),
-      });
+    // Anything other than an explicit success leaves the dialog open;
+    // useSafeAction has already surfaced a serverError as a toast.
+    if (result?.data?.ok !== true) {
       return;
     }
 

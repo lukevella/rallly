@@ -11,11 +11,13 @@ import {
   cancelSubscriptionsById,
   deleteStripeCustomer,
 } from "@/features/billing/mutations";
-import { DELETE_ACCOUNT_OTP_TYPE } from "@/features/user/account-deletion/constants";
-import { consumeAccountDeletionOTP } from "@/features/user/account-deletion/mutations";
+import {
+  createAccountDeletionOTP,
+  verifyAccountDeletionOTP,
+} from "@/features/user/account-deletion/mutations";
 import { hardDeleteUser } from "@/features/user/mutations";
 import { getLocale } from "@/i18n/server/get-locale";
-import authLib, { signOut } from "@/lib/auth";
+import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors/app-error";
 import {
   deletePostHogPerson,
@@ -47,9 +49,7 @@ export const requestAccountDeletionCodeAction = authActionClient
     const locale = ctx.user.locale ?? (await getLocale());
     const branding = await getInstanceBranding();
 
-    const code = await authLib.api.createVerificationOTP({
-      body: { email, type: DELETE_ACCOUNT_OTP_TYPE },
-    });
+    const code = await createAccountDeletionOTP({ userId: ctx.user.id });
 
     after(() =>
       sendConfirmAccountDeletionEmail({
@@ -78,28 +78,17 @@ export const deleteAccountAction = authActionClient
       });
     }
 
-    // The email is taken from the session, never from the client: the
-    // underlying Better-Auth OTP endpoints are unauthenticated, so trusting a
-    // submitted address would let anyone verify a code against any account.
-    const otpEmail = ctx.user.email;
+    // Keyed by the session's user id, never by client input, and in its own
+    // namespace so a login code can never satisfy a deletion. Consumed on
+    // success by the verifier.
+    const codeAccepted = await verifyAccountDeletionOTP({
+      userId: ctx.user.id,
+      code: parsedInput.otp,
+    });
 
-    try {
-      await authLib.api.checkVerificationOTP({
-        body: {
-          email: otpEmail,
-          type: DELETE_ACCOUNT_OTP_TYPE,
-          otp: parsedInput.otp,
-        },
-      });
-    } catch {
-      // Every failure mode (wrong code, expired, attempts exhausted) throws;
-      // reported as a value so the dialog can show it on the field.
+    if (!codeAccepted) {
       return { ok: false as const, reason: "invalid_code" as const };
     }
-
-    // Consumed immediately: the code must not be replayable, nor reusable as
-    // an email verification.
-    await consumeAccountDeletionOTP({ email: otpEmail });
 
     // Everything the cleanup and the confirmation email need has to be read
     // before the row disappears — the subscription rows cascade away with it.
@@ -162,4 +151,6 @@ export const deleteAccountAction = authActionClient
 
       await flushPostHog();
     });
+
+    return { ok: true as const };
   });
