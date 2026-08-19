@@ -53,39 +53,24 @@ export const deleteAccountAction = authActionClient
     trackSystemEvent({ event: "account_deletion_complete" });
 
     after(async () => {
-      try {
-        await sendAccountDeletedEmail({
-          to: email,
-          locale,
-          branding,
-          props: {},
-        });
-      } catch (error) {
-        logger.error({ error }, "Failed to send account deletion email");
-      }
-
-      // Subscriptions are cancelled outright: there is no recovery window
-      // left for the remaining paid time to matter, and the dialog warns
-      // first. Stripe runs after the delete so an outage there can never
-      // stop someone from deleting their account.
+      // Billing first: this is the only cleanup whose failure costs the user
+      // money, and `after` gives no delivery guarantee — if the instance is
+      // recycled mid-callback, the steps that run last are the ones lost.
+      // Deleting the customer also cancels its subscriptions, so the explicit
+      // cancel is a best effort for the case where there is no customer id.
       try {
         await cancelSubscriptionsById({ subscriptionIds });
-      } catch (error) {
-        logger.error(
-          { error, subscriptionIds },
-          "Failed to cancel subscriptions after account deletion",
-        );
-      }
 
-      if (customerId) {
-        try {
+        if (customerId) {
           await deleteStripeCustomer({ customerId });
-        } catch (error) {
-          logger.error(
-            { error, customerId },
-            "Failed to delete Stripe customer after account deletion",
-          );
         }
+      } catch (error) {
+        // Logged with the ids because nothing in the database refers to this
+        // account any more: these lines are the only record to reconcile from.
+        logger.error(
+          { error, customerId, subscriptionIds },
+          "Failed to clean up billing after account deletion — subscription may still be active",
+        );
       }
 
       try {
@@ -95,6 +80,17 @@ export const deleteAccountAction = authActionClient
           { error },
           "Failed to delete PostHog person after account deletion",
         );
+      }
+
+      try {
+        await sendAccountDeletedEmail({
+          to: email,
+          locale,
+          branding,
+          props: {},
+        });
+      } catch (error) {
+        logger.error({ error }, "Failed to send account deletion email");
       }
 
       await flushPostHog();
