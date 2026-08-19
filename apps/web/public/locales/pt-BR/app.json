@@ -271,7 +271,7 @@
   "email": "E-mail",
   "emailChangeAddressTaken": "Este endereço de e-mail já está em uso por outra conta.",
   "emailChangeRequestError": "Não conseguimos processar esta solicitação. Por favor, tente novamente mais tarde.",
-  "emailChangeRequestSent": "Verifique seu novo endereço de email",
+  "emailChangeRequestSent": "Verifique seu novo endereço de e-mail",
   "emailChangeSameAddress": "Esse já é seu endereço de e-mail. Informe outro.",
   "emailChangeSuccess": "E-mail alterado com sucesso",
   "emailChangeVerifyDescription": "Digite o código de verificação de 6 dígitos que enviamos para {email}.",

@@ -119,7 +119,7 @@
   "cancelInviteConfirmation": "您确定要取消对 {email} 的邀请吗？",
   "captchaFailed": "验证失败。请重试。",
   "changeEmail": "更改邮箱",
-  "changeEmailDescription": "我们会向您的新邮箱发送验证码\"}]}{",
+  "changeEmailDescription": "我们会向您的新邮箱发送验证码",
   "changeName": "重新命名",
   "changeNameDescription": "输入一个新名称给这位参与者。",
   "changeNameInfo": "这不会影响任何现有的投票",
