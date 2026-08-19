@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "Расширенные настройки опросов",
+  "advancedPollSettingsDescription": "Требуйте адреса электронной почты участников, скрывайте имена участников и скрывайте голоса",
   "basicPolls": "Простые опросы",
   "basicPollsDescription": "Создавайте простые опросы для планирования",
   "cancelSubscription": "Как мне отменить подписку?",
@@ -16,6 +18,8 @@
   "compareUnlimited": "Неограниченно",
   "customBranding": "Собственное брендирование",
   "customBrandingDescription": "Покажите логотип и фирменные цвета участникам",
+  "duplicatePolls": "Копирование опросов",
+  "duplicatePollsDescription": "Создайте новый опрос на основе существующего",
   "extendedPollLifetimeDescription": "Храните опросы бессрочно",
   "faq": "Часто задаваемые вопросы",
   "featureNameExtendedPollLifetime": "Продлённый срок действия опроса",
