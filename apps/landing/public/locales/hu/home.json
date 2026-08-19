@@ -68,7 +68,7 @@
   "mobileVotingBlogBadge": "Új",
   "pcmagQuote": "\"Állítsd össze időpont szavazások a lehető legrövidebb idő alatt.\"",
   "popsciQuote": "\"A tökéletes választás, ha a résztvevő visszajelzéseket egyszerűen akarod kezelni.\"",
-  "statsLast30Days": "Az elmúlt 30 napban <b>{voterCount, plural, one {# személy szavazott} other {# személy szavaztak}}</b> <b>{pollCount, plural, one {# szavazáson} other {# szavazásokon}}</b>.",
+  "statsLast30Days": "Az elmúlt 30 napban <0>{voterCount, plural, one {# személy szavazott} other {# személy szavaztak}}</0> <1>{pollCount, plural, one {# szavazáson} other {# szavazásokon}}</1>.",
   "subheading": "Hozz létre egy szavazást, oszd meg a linket, és hagyd, hogy mindenki az alkalmas időpontokra szavazzon. Ingyenes, és senkinek nincs szüksége fiókra.",
   "when2meetAlternative": "Egy modern When2Meet alternatíva",
   "when2meetAlternativeDescription": "A Rallly mindent tud, amiért a When2Meet-et használod, a nehézkes részen nélkül. Hozz létre egyszerű ütemező szavazásokat, amik telefonról is jól kitölthetőek, értesülj, ha a résztvevők szavaznak és kezeld egy helyen az összes szavazásod. Ingyenes, reklámmentes és nem szükséges fiók a szavazáshoz. When2Meet-ről vagy WhenIsGood-ról váltasz? A Rallly azonnal ismerős lesz számodra.",

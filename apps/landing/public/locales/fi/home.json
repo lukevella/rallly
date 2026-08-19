@@ -68,7 +68,7 @@
   "mobileVotingBlogBadge": "Uutta",
   "pcmagQuote": "”Luo aikataulukysely niin lyhyessä ajassa kuin vain mahdollista.”",
   "popsciQuote": "”Täydellinen valinta, jos haluat vastaukset kutsuihisi vaivattomasti.”",
-  "statsLast30Days": "<b>{voterCount, plural, one {# henkilö} other {# henkilöä}}</b> äänesti <b>{pollCount, plural, one {# kyselyä} other {# kyselyä}}</b> viimeisten 30 päivän aikana",
+  "statsLast30Days": "<0>{voterCount, plural, one {# henkilö} other {# henkilöä}}</0> äänesti <1>{pollCount, plural, one {# kyselyä} other {# kyselyä}}</1> viimeisten 30 päivän aikana",
   "subheading": "Luo kysely, jaa linkki ja anna kaikkien äänestää sopivista ajoista. Se on ilmaista, eikä tilille tarvitse rekisteröityä.",
   "when2meetAlternative": "Moderni vaihtoehto When2Meetille",
   "when2meetAlternativeDescription": "Rallly hoitaa kaiken mitä When2Meetikin, mutta ilman kömpelyyksiä. Luo siistejä ja hienosti mobiililaitteilla toimivia aikataulukyselyjä, saa ilmoitukset osallistujien vastattua ja hallitse kaikkia kyselyitäsi yhdessä paikassa. Ilmainen, ei mainoksia eikä äänestämiseen tarvitse tiliä. Vaihdatko When2Meetistä tai WhenIsGoodista? Rallly tuntuu heti tutulta.",

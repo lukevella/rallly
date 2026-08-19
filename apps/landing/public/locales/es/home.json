@@ -68,7 +68,7 @@
   "mobileVotingBlogBadge": "Nuevo",
   "pcmagQuote": "Configura una encuesta de horarios disponibles en el menor tiempo posible",
   "popsciQuote": "La elección perfecta si quieres mantener tus confirmaciones de asistencia simples",
-  "statsLast30Days": "<b>{voterCount, plural, one {# persona votó} other {# personas votaron}}</b> en <b>{pollCount, plural, one {# encuesta} other {# encuestas}}</b> en los últimos 30 días",
+  "statsLast30Days": "<0>{voterCount, plural, one {# persona votó} other {# personas votaron}}</0> en <1>{pollCount, plural, one {# encuesta} other {# encuestas}}</1> en los últimos 30 días",
   "subheading": "Crea una encuesta, comparte el enlace y deja que todos voten los horarios que les convengan. Es gratis y no hace falta una cuenta.",
   "when2meetAlternative": "Una alternativa moderna a When2Meet",
   "when2meetAlternativeDescription": "Rallly hace todo aquello para lo que usas When2Meet, sin las partes engorrosas. Crea encuestas de planificación claras que funcionan muy bien en el móvil, recibe notificaciones cuando los participantes respondan y gestiona todas tus encuestas en un solo lugar. Gratis, sin anuncios y sin necesidad de cuenta para votar. ¿Vienes de When2Meet o WhenIsGood? Rallly te resultará familiar desde el primer momento.",
