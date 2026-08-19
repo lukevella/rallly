@@ -817,6 +817,71 @@ export default async function Page(props: {
                   defaults="You can cancel your subscription at any time by going to your <a>billing settings</a>. Once you cancel your subscription, you will still have access to your paid plan until the end of your billing period. After that, you will be downgraded to a free plan."
                 />
               </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="faqNonprofit"
+                    defaults="Do you offer discounts for nonprofits?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="faqNonprofitAnswer"
+                  defaults="Yes. We offer discounted Rallly Pro subscriptions for registered nonprofits. Email us at <0>support@rallly.co</0> and we will get you set up."
+                  components={[
+                    <a
+                      key="email"
+                      className={faqLinkClassName}
+                      href="mailto:support@rallly.co"
+                    />,
+                  ]}
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="faqTeams"
+                    defaults="How does Rallly work for teams?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="faqTeamsAnswer"
+                  defaults="You can invite your team into a shared space where everyone creates and manages polls together. Billing is centralized. A single subscription covers the whole team, and you can add or remove seats as your team changes."
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="faqSelfHost"
+                    defaults="Can I self-host Rallly?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="faqSelfHostAnswer"
+                  defaults="Yes. Rallly is open source and can be deployed on your own infrastructure with Docker. Check the <0>self-hosting docs</0> to get started."
+                  components={[
+                    <a
+                      key="docs"
+                      className={faqLinkClassName}
+                      href="https://support.rallly.co/self-hosting/installation/docker"
+                    />,
+                  ]}
+                />
+              </FaqItem>
             </Faq>
           </SectionContent>
         </Section>
