@@ -812,6 +812,7 @@
   "verifyEmail": "Hitelesítsd az email címed",
   "verifyEmailDescription": "Add meg a hatjegyű kódot, amit ide küldtünk: <b>{email}</b>",
   "verifyEmailTitle": "Hitelesítsd az email címed",
+  "versionTileNewMajorNotice": "v{major} elérhető. Olvasd el a migrációs útmutatót.",
   "viewClosedPolls": "Lezárt szavazások megtekintése",
   "viewInvites": "Meghívók megtekintése",
   "viewPoll": "Szavazás megtekintése",
