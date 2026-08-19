@@ -25,11 +25,18 @@ test.describe.serial(() => {
     await registerPage.register(testUser);
 
     await page.goto("/settings/profile");
+
+    // "Delete account" names the trigger, the dialog and its confirm button,
+    // so every locator here is scoped: an unscoped one matches three elements
+    // and Playwright clicks whichever it resolves first.
+    const dialog = page.getByRole("dialog", { name: "Delete account" });
+
     await page
+      .getByRole("main")
       .getByRole("button", { name: "Delete account", exact: true })
       .click();
 
-    await page.getByRole("heading", { name: "Delete account" }).waitFor();
+    await dialog.waitFor();
 
     // The dialog renders before React attaches its handlers, so a click can
     // land on a button that does nothing yet. Retry until the step advances.
@@ -42,7 +49,9 @@ test.describe.serial(() => {
       if (await verifyHeading.isVisible()) {
         return;
       }
-      await page.getByRole("button", { name: "Continue", exact: true }).click();
+      await dialog
+        .getByRole("button", { name: "Delete account", exact: true })
+        .click();
       await verifyHeading.waitFor({ timeout: 5000 });
     }).toPass();
 
