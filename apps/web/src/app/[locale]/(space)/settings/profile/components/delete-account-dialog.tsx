@@ -77,6 +77,12 @@ function ConfirmStep({ onCodeSent }: { onCodeSent: () => void }) {
             defaults="All data associated with your account will be permanently deleted."
           />
         </p>
+        <p>
+          <Trans
+            i18nKey="deleteAccountDialogImmediateWarning"
+            defaults="Your account and data will be deleted immediately. This cannot be undone."
+          />
+        </p>
       </div>
       <DialogFooter>
         <DialogClose render={<Button />}>
@@ -206,7 +212,9 @@ export function DeleteAccountDialog({
       }}
     >
       <DialogTrigger render={trigger} />
-      <DialogContent>
+      {/* The code step is narrower: six OTP boxes are a fixed width, and at
+          the default size they leave a stretch of empty dialog beside them. */}
+      <DialogContent size={codeSent ? "sm" : "md"}>
         {codeSent ? (
           <VerifyStep onBack={() => setCodeSent(false)} />
         ) : (
