@@ -129,8 +129,8 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="pricing"
-                    i18nKey="annualBenefit"
-                    defaults="{count} months free"
+                    i18nKey="yearlyFreeMonths"
+                    defaults="{count, plural, one {# month free} other {# months free}}"
                     values={{ count: freeMonths }}
                   />
                 </Badge>
