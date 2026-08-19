@@ -1,22 +1,13 @@
 import { cn } from "@rallly/ui";
-import { Trans } from "react-i18next/TransWithoutContext";
-import { AnimatedStat } from "@/components/home/animated-number";
-import { getTranslation } from "@/i18n/server";
-import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
+import type * as React from "react";
 
-export async function Stats({
-  locale,
+export function Stats({
   className,
+  children,
 }: {
-  locale: string;
   className?: string;
+  children: React.ReactNode;
 }) {
-  const [pollCount, voterCount] = await Promise.all([
-    getMonthlyPollCount(),
-    getMonthlyVoterCount(),
-  ]);
-  const { t } = await getTranslation(locale, ["home"]);
-
   return (
     <p
       className={cn(
@@ -24,16 +15,7 @@ export async function Stats({
         className,
       )}
     >
-      <Trans
-        t={t}
-        ns="home"
-        i18nKey="statsLast30Days"
-        defaults="<b>{voterCount, plural, one {# person} other {# people}}</b> voted on <b>{pollCount, plural, one {# poll} other {# polls}}</b> in the last 30 days"
-        values={{ voterCount, pollCount }}
-        components={{
-          b: <AnimatedStat locale={locale} />,
-        }}
-      />
+      {children}
     </p>
   );
 }
