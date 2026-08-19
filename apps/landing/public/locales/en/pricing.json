@@ -1,6 +1,4 @@
 {
-  "advancedPollSettings": "Advanced poll settings",
-  "advancedPollSettingsDescription": "Require participant emails, hide participant names, and hide votes",
   "basicPolls": "Basic polls",
   "basicPollsDescription": "Create simple scheduling polls",
   "cancelSubscription": "How do I cancel my subscription?",
@@ -18,8 +16,6 @@
   "compareUnlimited": "Unlimited",
   "customBranding": "Custom branding",
   "customBrandingDescription": "Show your logo and brand colors to your participants",
-  "duplicatePolls": "Duplicate polls",
-  "duplicatePollsDescription": "Create a new poll based on an existing one",
   "extendedPollLifetimeDescription": "Keep polls indefinitely",
   "faq": "Frequently asked questions",
   "featureNameExtendedPollLifetime": "Extended poll lifetime",
