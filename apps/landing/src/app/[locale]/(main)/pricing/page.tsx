@@ -75,6 +75,9 @@ export default async function Page(props: {
     getMonthlyPollCount(),
     getMonthlyVoterCount(),
   ]);
+  const freeMonths = Math.round(
+    12 - pricingData.yearly.amount / pricingData.monthly.amount,
+  );
   const included = t("included", {
     ns: "pricing",
     defaultValue: "Included",
@@ -122,13 +125,13 @@ export default async function Page(props: {
                 />
               }
               badge={
-                <Badge>
+                <Badge variant="green">
                   <Trans
                     t={t}
                     ns="pricing"
                     i18nKey="annualBenefit"
                     defaults="{count} months free"
-                    values={{ count: 4 }}
+                    values={{ count: freeMonths }}
                   />
                 </Badge>
               }
