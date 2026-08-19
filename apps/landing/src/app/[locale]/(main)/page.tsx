@@ -5,6 +5,7 @@ import { cacheLife } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
+import { AnimatedStat } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { Faq, FaqItem } from "@/components/home/faq";
 import { Hero, HeroAnnouncement } from "@/components/home/hero";
@@ -20,6 +21,7 @@ import {
   SectionTitle,
 } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
+import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
@@ -27,6 +29,10 @@ export default async function Page(props: {
   cacheLife("days");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["home", "common"]);
+  const [pollCount, voterCount] = await Promise.all([
+    getMonthlyPollCount(),
+    getMonthlyVoterCount(),
+  ]);
   return (
     <div className="divide-y">
       <Section>
@@ -63,7 +69,18 @@ export default async function Page(props: {
         >
           <HeroDemo locale={locale} />
         </Hero>
-        <Stats locale={locale} className="mt-4 sm:mt-16" />
+        <Stats className="mt-8 sm:mt-24">
+          <Trans
+            t={t}
+            ns="home"
+            i18nKey="statsLast30Days"
+            defaults="<b>{voterCount, plural, one {# person} other {# people}}</b> voted on <b>{pollCount, plural, one {# poll} other {# polls}}</b> in the last 30 days"
+            values={{ voterCount, pollCount }}
+            components={{
+              b: <AnimatedStat locale={locale} />,
+            }}
+          />
+        </Stats>
       </Section>
       <Section>
         <Testimonial
