@@ -96,14 +96,11 @@ function ConfirmStep({ onCodeSent }: { onCodeSent: () => void }) {
         </DialogClose>
         <Button
           type="button"
-          variant="primary"
+          className="text-destructive"
           loading={requestCode.isExecuting}
           onClick={() => requestCode.execute()}
         >
-          <Trans
-            i18nKey="deleteAccountRequestCode"
-            defaults="Request verification code"
-          />
+          <Trans i18nKey="deleteAccount" defaults="Delete account" />
         </Button>
       </DialogFooter>
     </>

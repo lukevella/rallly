@@ -214,7 +214,6 @@
   "deleteAccountDialogTitle": "Delete account",
   "deleteAccountInvalidCode": "This code is incorrect or has expired. Request a new one to continue.",
   "deleteAccountPermanently": "Permanently delete account",
-  "deleteAccountRequestCode": "Request verification code",
   "deleteAccountVerifyDescription": "Enter the 6 digit code we sent to {email}.",
   "deleteAccountVerifyTitle": "Confirm your account deletion",
   "deleteDate": "Delete date",
