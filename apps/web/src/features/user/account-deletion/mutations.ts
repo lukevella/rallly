@@ -60,15 +60,24 @@ export async function verifyAccountDeletionOTP({
     return false;
   }
 
+  // Every write below is conditional on the row this call actually read.
+  // Without it a stale request — one whose code has since been replaced by a
+  // newer one — would delete or overwrite the new code.
+  const readRecord = {
+    identifier,
+    value: record.value,
+    expiresAt: record.expiresAt,
+  };
+
   if (record.expiresAt < new Date()) {
-    await prisma.verification.deleteMany({ where: { identifier } });
+    await prisma.verification.deleteMany({ where: readRecord });
     return false;
   }
 
   const [storedHash, attempts = "0"] = record.value.split(":");
 
   if (Number.parseInt(attempts, 10) >= ACCOUNT_DELETION_OTP_MAX_ATTEMPTS) {
-    await prisma.verification.deleteMany({ where: { identifier } });
+    await prisma.verification.deleteMany({ where: readRecord });
     return false;
   }
 
@@ -78,20 +87,20 @@ export async function verifyAccountDeletionOTP({
     provided.length === expected.length && timingSafeEqual(provided, expected);
 
   if (!matches) {
-    // Conditional on the value this attempt read: without it, parallel
-    // guesses all read the same count and overwrite each other's increment,
-    // which is how a three attempt limit turns into an unlimited one.
+    // Parallel guesses would otherwise all read the same count and overwrite
+    // each other's increment, which is how a three attempt limit turns into
+    // an unlimited one.
     await prisma.verification.updateMany({
-      where: { identifier, value: record.value },
+      where: readRecord,
       data: { value: `${storedHash}:${Number.parseInt(attempts, 10) + 1}` },
     });
     return false;
   }
 
-  // Consumed on success, conditional on the same value, so exactly one of a
-  // set of concurrent requests can claim a code.
+  // Consumed on success so exactly one of a set of concurrent requests can
+  // claim a code.
   const { count } = await prisma.verification.deleteMany({
-    where: { identifier, value: record.value },
+    where: readRecord,
   });
 
   return count === 1;

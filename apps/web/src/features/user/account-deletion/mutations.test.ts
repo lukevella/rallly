@@ -68,6 +68,11 @@ describe("verifyAccountDeletionOTP", () => {
     mockUpsert.mockReset().mockResolvedValue({});
   });
 
+  // Derived, never hardcoded: the code is randomly generated, so a fixed
+  // "wrong" value would occasionally be the right one.
+  const differentFrom = (code: string) =>
+    code === "000000" ? "000001" : "000000";
+
   const seedWith = async (attempts: number) => {
     const code = await createAccountDeletionOTP({ userId: USER_ID });
     const storedHash = mockUpsert.mock.calls[0][0].create.value.split(":")[0];
@@ -87,10 +92,10 @@ describe("verifyAccountDeletionOTP", () => {
   });
 
   it("rejects a wrong code and counts the attempt", async () => {
-    await seedWith(0);
+    const code = await seedWith(0);
 
     await expect(
-      verifyAccountDeletionOTP({ userId: USER_ID, code: "000000" }),
+      verifyAccountDeletionOTP({ userId: USER_ID, code: differentFrom(code) }),
     ).resolves.toBe(false);
     expect(mockUpdateMany).toHaveBeenCalled();
   });
@@ -98,8 +103,11 @@ describe("verifyAccountDeletionOTP", () => {
   // Without the value in the where clause, parallel guesses overwrite each
   // other's increment and the attempt limit stops holding.
   it("increments attempts conditionally on the value it read", async () => {
-    await seedWith(1);
-    await verifyAccountDeletionOTP({ userId: USER_ID, code: "000000" });
+    const code = await seedWith(1);
+    await verifyAccountDeletionOTP({
+      userId: USER_ID,
+      code: differentFrom(code),
+    });
 
     const { where } = mockUpdateMany.mock.calls[0][0];
     expect(where.value).toMatch(/:1$/);
@@ -125,6 +133,24 @@ describe("verifyAccountDeletionOTP", () => {
     await expect(
       verifyAccountDeletionOTP({ userId: USER_ID, code }),
     ).resolves.toBe(false);
+  });
+
+  // A stale request whose code has since been replaced must not delete the
+  // replacement: its cleanup is filtered on the row it actually read.
+  it("does not clean up a code minted after it read", async () => {
+    const code = await createAccountDeletionOTP({ userId: USER_ID });
+    const storedHash = mockUpsert.mock.calls[0][0].create.value.split(":")[0];
+    mockFindUnique.mockResolvedValue({
+      identifier: IDENTIFIER,
+      value: `${storedHash}:0`,
+      expiresAt: new Date(Date.now() - 1),
+    });
+
+    await verifyAccountDeletionOTP({ userId: USER_ID, code });
+
+    const { where } = mockDeleteMany.mock.calls[0][0];
+    expect(where.value).toBe(`${storedHash}:0`);
+    expect(where.expiresAt).toBeInstanceOf(Date);
   });
 
   it("rejects when there is no code", async () => {
