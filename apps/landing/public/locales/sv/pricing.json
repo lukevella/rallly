@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "Avancerade omröstningsinställningar",
+  "advancedPollSettingsDescription": "Kräv deltagarnas e-postadresser, dölj deltagarnas namn och dölj röster",
   "basicPolls": "Grundläggande förfrågningar",
   "basicPollsDescription": "Skapa enkla schemaläggningsförfrågningar",
   "cancelSubscription": "Hur avbryter jag min prenumeration?",
@@ -16,6 +18,8 @@
   "compareUnlimited": "Obegränsat",
   "customBranding": "Anpassad branding",
   "customBrandingDescription": "Visa din logotyp och varumärkesfärger för dina deltagare",
+  "duplicatePolls": "Duplicera omröstningar",
+  "duplicatePollsDescription": "Skapa en ny omröstning baserad på en befintlig",
   "extendedPollLifetimeDescription": "Behåll förfrågningar på obestämd tid",
   "faq": "Vanliga frågor",
   "featureNameExtendedPollLifetime": "Förlängd lagringstid för förfrågningar",
