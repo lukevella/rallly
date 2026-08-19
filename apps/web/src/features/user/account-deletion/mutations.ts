@@ -24,14 +24,16 @@ export async function createAccountDeletionOTP({ userId }: { userId: string }) {
   const code = randomInt(0, 1_000_000).toString().padStart(6, "0");
   const identifier = toAccountDeletionOTPIdentifier(userId);
 
-  await prisma.verification.deleteMany({ where: { identifier } });
-  await prisma.verification.create({
-    data: {
-      id: crypto.randomUUID(),
-      identifier,
-      value: `${hashCode(code)}:0`,
-      expiresAt: new Date(Date.now() + ACCOUNT_DELETION_OTP_TTL_MS),
-    },
+  // Upsert rather than delete-then-create: identifier is unique, so two
+  // concurrent requests racing between the delete and the create would make
+  // one of them fail on the constraint.
+  const value = `${hashCode(code)}:0`;
+  const expiresAt = new Date(Date.now() + ACCOUNT_DELETION_OTP_TTL_MS);
+
+  await prisma.verification.upsert({
+    where: { identifier },
+    create: { id: crypto.randomUUID(), identifier, value, expiresAt },
+    update: { value, expiresAt },
   });
 
   return code;
@@ -76,14 +78,21 @@ export async function verifyAccountDeletionOTP({
     provided.length === expected.length && timingSafeEqual(provided, expected);
 
   if (!matches) {
-    await prisma.verification.update({
-      where: { identifier },
+    // Conditional on the value this attempt read: without it, parallel
+    // guesses all read the same count and overwrite each other's increment,
+    // which is how a three attempt limit turns into an unlimited one.
+    await prisma.verification.updateMany({
+      where: { identifier, value: record.value },
       data: { value: `${storedHash}:${Number.parseInt(attempts, 10) + 1}` },
     });
     return false;
   }
 
-  // Consumed on success so a code cannot be replayed.
-  await prisma.verification.deleteMany({ where: { identifier } });
-  return true;
+  // Consumed on success, conditional on the same value, so exactly one of a
+  // set of concurrent requests can claim a code.
+  const { count } = await prisma.verification.deleteMany({
+    where: { identifier, value: record.value },
+  });
+
+  return count === 1;
 }
