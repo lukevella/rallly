@@ -69,7 +69,7 @@ export default async function Page(props: {
         >
           <HeroDemo locale={locale} />
         </Hero>
-        <Stats className="mt-4 sm:mt-16">
+        <Stats className="mt-8 sm:mt-24">
           <Trans
             t={t}
             ns="home"
