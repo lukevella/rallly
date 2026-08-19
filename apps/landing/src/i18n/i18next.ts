@@ -22,6 +22,12 @@ i18next
     detection: {
       order: ["path", "htmlTag", "cookie", "navigator"],
     },
+    react: {
+      // Default list plus b: locales whose statsLast30Days translation still
+      // carries the old <b> markup degrade to bold text instead of showing
+      // escaped tags; remove once they are re-translated
+      transKeepBasicHtmlNodesFor: ["br", "strong", "i", "p", "b"],
+    },
   });
 
 export { i18next };

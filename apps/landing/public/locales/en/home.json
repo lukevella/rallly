@@ -68,7 +68,7 @@
   "mobileVotingBlogBadge": "New",
   "pcmagQuote": "“Set up a scheduling poll in as little time as possible.”",
   "popsciQuote": "“The perfect pick if you want to keep your RSVPs simple.”",
-  "statsLast30Days": "<b>{voterCount, plural, one {# person} other {# people}}</b> voted on <b>{pollCount, plural, one {# poll} other {# polls}}</b> in the last 30 days",
+  "statsLast30Days": "<0>{voterCount, plural, one {# person} other {# people}}</0> voted on <1>{pollCount, plural, one {# poll} other {# polls}}</1> in the last 30 days",
   "subheading": "Create a poll, share the link, and let everyone vote on the times that work. It's free and nobody needs an account.",
   "when2meetAlternative": "A modern When2Meet alternative",
   "when2meetAlternativeDescription": "Rallly does everything you use When2Meet for, without the clunky parts. Create clean scheduling polls that work great on mobile, get notified when participants respond, and manage all your polls in one place. Free, without ads, and no account needed to vote. Coming from When2Meet or WhenIsGood? Rallly will feel instantly familiar.",

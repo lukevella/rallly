@@ -19,7 +19,7 @@ import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { AnimatedStat } from "@/components/home/animated-number";
+import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { Faq, FaqItem } from "@/components/home/faq";
 import { Hero } from "@/components/home/hero";
@@ -429,11 +429,12 @@ export default async function Page(props: {
             t={t}
             ns="home"
             i18nKey="statsLast30Days"
-            defaults="<b>{voterCount, plural, one {# person} other {# people}}</b> voted on <b>{pollCount, plural, one {# poll} other {# polls}}</b> in the last 30 days"
+            defaults="<0>{voterCount, plural, one {# person} other {# people}}</0> voted on <1>{pollCount, plural, one {# poll} other {# polls}}</1> in the last 30 days"
             values={{ voterCount, pollCount }}
-            components={{
-              b: <AnimatedStat locale={locale} />,
-            }}
+            components={[
+              <PeopleBadge key="people" locale={locale} />,
+              <PollsBadge key="polls" locale={locale} />,
+            ]}
           />
         </Stats>
       </Section>
