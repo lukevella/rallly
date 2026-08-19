@@ -87,6 +87,7 @@ export default async function Page(props: {
     <div className="divide-y">
       <Section>
         <Hero
+          className="text-center"
           title={t("pricingTitle", {
             ns: "pricing",
             defaultValue: "Get started for free",
@@ -98,7 +99,7 @@ export default async function Page(props: {
           })}
         />
         <BillingIntervalProvider>
-          <div className="mt-8 sm:mt-12">
+          <div className="mt-8 flex justify-center sm:mt-12">
             <BillingIntervalSwitch
               switchLabel={t("payYearly", {
                 ns: "pricing",
@@ -133,7 +134,7 @@ export default async function Page(props: {
               }
             />
           </div>
-          <PlanCards className="mt-4 sm:mt-6">
+          <PlanCards className="mx-auto mt-4 w-full max-w-4xl sm:mt-6">
             <PlanCard>
               <PlanCardHeader>
                 <PlanCardName>{PLAN_NAMES.HOBBY}</PlanCardName>
@@ -212,7 +213,7 @@ export default async function Page(props: {
                 </PlanBenefit>
               </PlanBenefits>
             </PlanCard>
-            <PlanCard className="md:col-span-2">
+            <PlanCard>
               <PlanCardHeader>
                 <div className="flex items-center justify-between gap-x-4">
                   <PlanCardName>{PLAN_NAMES.PRO}</PlanCardName>
@@ -278,7 +279,7 @@ export default async function Page(props: {
                   />
                 </Link>
               </div>
-              <PlanBenefits className="sm:grid-cols-2 sm:gap-x-6">
+              <PlanBenefits>
                 <PlanBenefit icon={<PaletteIcon />}>
                   <PlanBenefitTooltip
                     content={

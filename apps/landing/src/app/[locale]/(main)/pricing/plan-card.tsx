@@ -9,7 +9,7 @@ export function PlanCards({
   return (
     <div
       className={cn(
-        "grid divide-y divide-gray-950/5 overflow-hidden rounded-xl border bg-white md:grid-cols-3 md:divide-x md:divide-y-0",
+        "grid divide-y divide-gray-950/5 overflow-hidden rounded-xl border bg-white md:grid-cols-2 md:divide-x md:divide-y-0",
         className,
       )}
       {...props}

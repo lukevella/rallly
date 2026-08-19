@@ -35,14 +35,16 @@ export function Hero({
   description,
   announcement,
   children,
+  className,
 }: {
   title: React.ReactNode;
   description: React.ReactNode;
   announcement?: React.ReactNode;
   children?: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div>
+    <div className={className}>
       <h1 className="text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-5xl">
         {title}
       </h1>
