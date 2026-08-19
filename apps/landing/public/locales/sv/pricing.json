@@ -1,6 +1,6 @@
 {
-  "basicPolls": "Grundläggande förfrågningar},{",
-  "basicPollsDescription": "Skapa enkla schemaläggningsförfrågningar},{",
+  "basicPolls": "Grundläggande förfrågningar",
+  "basicPollsDescription": "Skapa enkla schemaläggningsförfrågningar",
   "cancelSubscription": "Hur avbryter jag min prenumeration?",
   "cancelSubscriptionAnswer": "Du kan när som helst avbryta din prenumeration genom att gå till dina <a>faktureringsinställningar</a>. När du avslutar din prenumeration har du fortfarande tillgång till din betalda plan fram till slutet av din faktureringsperiod. Efter det kommer du att nedgraderas till en gratis plan.",
   "canUseFree": "Kan jag använda Rallly gratis?",
