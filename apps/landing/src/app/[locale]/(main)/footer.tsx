@@ -97,8 +97,8 @@ export const Footer = async ({ locale }: { locale: string }) => {
                 <Trans
                   t={t}
                   ns="common"
-                  i18nKey="freeSchedulingPoll"
-                  defaults="Free scheduling poll"
+                  i18nKey="schedulingPoll"
+                  defaults="Scheduling poll"
                 />
               </LinkBase>
             </li>
