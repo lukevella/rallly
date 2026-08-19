@@ -21,26 +21,13 @@ import {
 } from "@/features/billing/webhook/utils";
 import { licenseManager } from "@/features/licensing/mutations";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
+import { spaceExists } from "@/features/space/data";
 import { identifyGroup, posthog } from "@/lib/posthog";
 
 async function getExpandedSubscription(subscriptionId: string) {
   return getStripe().subscriptions.retrieve(subscriptionId, {
     expand: ["items.data.price.currency_options"],
   });
-}
-
-/**
- * Subscription events for a deleted user arrive after the user's spaces and
- * subscriptions have been cascade-deleted, so there is nothing left to sync.
- * Handlers treat a missing space as a successful no-op instead of failing the
- * webhook and having Stripe retry it.
- */
-async function spaceExists(spaceId: string) {
-  const space = await prisma.space.findUnique({
-    where: { id: spaceId },
-    select: { id: true },
-  });
-  return space !== null;
 }
 
 /**
@@ -251,6 +238,8 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
 
   const { userId, spaceId } = res.data;
 
+  // Cascade-deleted with its owner — nothing to sync, and failing would
+  // make Stripe retry the event
   if (!(await spaceExists(spaceId))) {
     return;
   }
@@ -387,6 +376,8 @@ async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
 
   const { userId, spaceId } = res.data;
 
+  // Cascade-deleted with its owner — nothing to sync, and failing would
+  // make Stripe retry the event
   if (!(await spaceExists(spaceId))) {
     return;
   }
@@ -456,6 +447,8 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
 
   const { userId, spaceId } = res.data;
 
+  // Cascade-deleted with its owner — nothing to sync, and failing would
+  // make Stripe retry the event
   if (!(await spaceExists(spaceId))) {
     return;
   }
