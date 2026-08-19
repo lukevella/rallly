@@ -30,17 +30,10 @@ import {
 
 const otpSchema = z.object({ otp: z.string().regex(/^\d{6}$/) });
 
-function ConfirmStep({
-  summary,
-  onCodeSent,
-}: {
-  summary?: React.ReactNode;
-  onCodeSent: () => void;
-}) {
-  // useAction directly, not useSafeAction: the latter calls router.refresh()
-  // on success, which re-renders the streamed summary this dialog is mounted
-  // under and resets the step back to the start. Nothing on the page changes
-  // when a code is sent, so there is nothing to refresh.
+function ConfirmStep({ onCodeSent }: { onCodeSent: () => void }) {
+  // useAction directly, not useSafeAction: the latter refreshes the router on
+  // success, which re-renders the tree this dialog sits in mid-flow. Sending a
+  // code changes nothing on the page, so there is nothing to refresh.
   const { t } = useTranslation();
   const requestCode = useAction(requestAccountDeletionCodeAction, {
     onSuccess: onCodeSent,
@@ -77,18 +70,11 @@ function ConfirmStep({
           />
         </DialogDescription>
       </DialogHeader>
-      <div className="space-y-3 py-4 text-sm">
+      <div className="space-y-3 text-sm leading-relaxed">
         <p>
           <Trans
             i18nKey="deleteAccountDialogDataWarning"
             defaults="All data associated with your account will be permanently deleted."
-          />
-        </p>
-        {summary}
-        <p>
-          <Trans
-            i18nKey="deleteAccountDialogImmediateWarning"
-            defaults="Your account and data will be deleted immediately. This cannot be undone."
           />
         </p>
       </div>
@@ -98,7 +84,7 @@ function ConfirmStep({
         </DialogClose>
         <Button
           type="button"
-          variant="destructive"
+          variant="primary"
           loading={requestCode.isExecuting}
           onClick={() => requestCode.execute()}
         >
@@ -202,11 +188,9 @@ function VerifyStep({ onBack }: { onBack: () => void }) {
 // account email: the session alone is not proof of intent.
 export function DeleteAccountDialog({
   trigger,
-  summary,
 }: {
   /** Rendered as the dialog trigger; the caller styles it and wires aria labels. */
   trigger: React.ReactElement;
-  summary?: React.ReactNode;
 }) {
   const dialog = useDialog();
   const [codeSent, setCodeSent] = React.useState(false);
@@ -226,7 +210,7 @@ export function DeleteAccountDialog({
         {codeSent ? (
           <VerifyStep onBack={() => setCodeSent(false)} />
         ) : (
-          <ConfirmStep summary={summary} onCodeSent={() => setCodeSent(true)} />
+          <ConfirmStep onCodeSent={() => setCodeSent(true)} />
         )}
       </DialogContent>
     </Dialog>

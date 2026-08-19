@@ -10,11 +10,7 @@ import { SettingIcon } from "@/components/setting-icon";
 import { Trans } from "@/i18n/client";
 import { DeleteAccountDialog } from "./delete-account-dialog";
 
-export function DeleteAccountSetting({
-  summary,
-}: {
-  summary?: React.ReactNode;
-}) {
+export function DeleteAccountSetting() {
   return (
     <Field orientation="responsive">
       <SettingIcon>
@@ -37,7 +33,6 @@ export function DeleteAccountSetting({
             <Trans i18nKey="deleteAccount" defaults="Delete account" />
           </Button>
         }
-        summary={summary}
       />
     </Field>
   );
