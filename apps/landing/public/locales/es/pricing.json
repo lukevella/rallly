@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "Configuración avanzada de encuestas",
+  "advancedPollSettingsDescription": "Exige el correo electrónico de los participantes, oculta sus nombres y oculta los votos",
   "basicPolls": "Encuestas básicas",
   "basicPollsDescription": "Crear encuestas de programación simples",
   "cancelSubscription": "¿Cómo puedo cancelar mi suscripción?",
@@ -16,6 +18,8 @@
   "compareUnlimited": "Ilimitado",
   "customBranding": "Marca personalizada",
   "customBrandingDescription": "Muestra tu logo y los colores de tu marca a tus participantes",
+  "duplicatePolls": "Duplicar encuestas",
+  "duplicatePollsDescription": "Crea una nueva encuesta a partir de una existente",
   "extendedPollLifetimeDescription": "Mantén las encuestas indefinidamente",
   "faq": "Preguntas frecuentes",
   "featureNameExtendedPollLifetime": "Duración extendida de las encuestas",
