@@ -1,5 +1,6 @@
 import { cn } from "@rallly/ui";
 import { env } from "@/env";
+import { LOGO_VIEWBOX } from "@/features/branding/constants";
 import { getInstanceBrandingConfig } from "@/features/branding/data";
 
 const sizes = {
@@ -23,7 +24,8 @@ export const Logo = async ({
   if (size === "fit") {
     return (
       <div
-        className={cn("flex h-32 w-48 items-center justify-center", className)}
+        className={cn("flex items-center justify-center", className)}
+        style={{ width: LOGO_VIEWBOX.width, height: LOGO_VIEWBOX.height }}
       >
         {/* biome-ignore lint/performance/noImgElement: we don't need Image component here */}
         <img

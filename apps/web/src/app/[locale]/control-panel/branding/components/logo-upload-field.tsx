@@ -2,6 +2,7 @@
 
 import { cn } from "@rallly/ui";
 import { ImageUploadControl } from "@/components/image-upload";
+import { LOGO_VIEWBOX } from "@/features/branding/constants";
 import { brandingLogoProfiles } from "@/features/instance-settings/constants";
 import type { BrandingLogoType } from "@/features/instance-settings/schema";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -51,16 +52,19 @@ export function LogoUploadField({
 
   return (
     <div className="w-full space-y-3">
-      {/* Full-width preview of the 200x160 slot the logo renders in. The
-          cell's guide lines are oversized and clipped by the strip, so they
-          run edge to edge. */}
+      {/* Full-width preview of the slot the logo renders in. The cell's guide
+          lines are oversized and clipped by the strip, so they run edge to
+          edge. */}
       <div
         className={cn(
           "flex w-full items-center justify-center overflow-hidden rounded-lg border py-10",
           previewVariants[logoType].container,
         )}
       >
-        <div className="relative flex h-40 w-50 items-center justify-center">
+        <div
+          className="relative flex items-center justify-center"
+          style={{ width: LOGO_VIEWBOX.width, height: LOGO_VIEWBOX.height }}
+        >
           {logoType !== "logoIcon" ? (
             <>
               <div
@@ -98,7 +102,7 @@ export function LogoUploadField({
                   previewVariants[logoType].label,
                 )}
               >
-                200px
+                {LOGO_VIEWBOX.width}px
               </span>
               <span
                 aria-hidden="true"
@@ -107,7 +111,7 @@ export function LogoUploadField({
                   previewVariants[logoType].label,
                 )}
               >
-                160px
+                {LOGO_VIEWBOX.height}px
               </span>
             </>
           ) : null}
