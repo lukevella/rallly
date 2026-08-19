@@ -13,7 +13,11 @@ import { buildReleaseChannels } from "./release-channels";
 const logger = createLogger("api/updates");
 
 const GITHUB_RELEASES_URL =
-  "https://api.github.com/repos/lukevella/rallly/releases?per_page=100";
+  "https://api.github.com/repos/lukevella/rallly/releases";
+const RELEASES_PER_PAGE = 100;
+// Sequential unauthenticated requests count against a 60/hour IP budget, so
+// pagination is bounded; older majors beyond this window report no update.
+const MAX_RELEASE_PAGES = 3;
 
 // The fleet starts linking here the moment a new major's first release is
 // tagged — the guide must be published at this path before tagging.
@@ -45,18 +49,39 @@ const ratelimit = createRatelimit(60, "1 h");
 
 async function fetchReleaseChannels(): Promise<ReleaseChannels | null> {
   try {
-    const res = await fetch(GITHUB_RELEASES_URL, {
-      headers: {
-        Accept: "application/vnd.github+json",
-        "User-Agent": "Rallly",
-      },
-      // Just under the self-hosted client's 3s budget so a slow GitHub
-      // response still yields our controlled 502 instead of a hung slot
-      signal: AbortSignal.timeout(2500),
-    });
-    if (!res.ok) return null;
+    // One deadline for the whole pagination, just under the self-hosted
+    // client's 3s budget so a slow GitHub response still yields our
+    // controlled 502 instead of a hung slot
+    const signal = AbortSignal.timeout(2500);
+    const releases: unknown[] = [];
 
-    return buildReleaseChannels(await res.json());
+    for (let page = 1; page <= MAX_RELEASE_PAGES; page++) {
+      const res = await fetch(
+        `${GITHUB_RELEASES_URL}?per_page=${RELEASES_PER_PAGE}&page=${page}`,
+        {
+          headers: {
+            Accept: "application/vnd.github+json",
+            "User-Agent": "Rallly",
+          },
+          signal,
+        },
+      );
+      if (!res.ok) return null;
+
+      const batch = await res.json();
+      if (!Array.isArray(batch)) return null;
+
+      releases.push(...batch);
+      if (batch.length < RELEASES_PER_PAGE) break;
+      if (page === MAX_RELEASE_PAGES) {
+        logger.warn(
+          { pages: MAX_RELEASE_PAGES },
+          "Release list truncated at the pagination bound",
+        );
+      }
+    }
+
+    return buildReleaseChannels(releases);
   } catch (error) {
     logger.warn({ error }, "Failed to fetch releases from GitHub");
     return null;
