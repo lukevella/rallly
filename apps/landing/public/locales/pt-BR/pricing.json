@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "Configurações avançadas de enquete",
+  "advancedPollSettingsDescription": "Exija o e-mail dos participantes, oculte os nomes dos participantes e oculte os votos",
   "basicPolls": "Enquetes básicas",
   "basicPollsDescription": "Crie enquetes de agendamento simples",
   "cancelSubscription": "Como faço para cancelar minha assinatura?",
@@ -16,6 +18,8 @@
   "compareUnlimited": "Ilimitado",
   "customBranding": "Marca personalizada",
   "customBrandingDescription": "Mostre seu logotipo e as cores da marca aos participantes",
+  "duplicatePolls": "Duplicar enquetes",
+  "duplicatePollsDescription": "Crie uma nova enquete com base em uma existente",
   "extendedPollLifetimeDescription": "Mantenha enquetes indefinidamente",
   "faq": "Perguntas frequentes",
   "featureNameExtendedPollLifetime": "Duração estendida da enquete",
