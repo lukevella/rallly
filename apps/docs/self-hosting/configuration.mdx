@@ -106,7 +106,7 @@ See the [Single Sign-On guide](/self-hosting/single-sign-on) for setup instructi
 
 ## Branding
 
-Customise the look of your instance. See [White Labeling](/self-hosting/white-labeling) for details.
+Customise the look of your instance. These settings can also be changed from the Control Panel, where a saved value takes precedence over the environment variable. See [White Labeling](/self-hosting/white-labeling) for details.
 
 <Note>
   Available from v4.6.0 and later. Requires an Enterprise license with the white-label add-on.
@@ -124,16 +124,16 @@ Customise the look of your instance. See [White Labeling](/self-hosting/white-la
   Primary brand color for dark mode. Auto-calculated from `PRIMARY_COLOR` if not set.
 </ParamField>
 
-<ParamField path="LOGO_URL" default="/static/logo.svg">
-  URL to your logo for light mode. SVG recommended.
+<ParamField path="LOGO_URL">
+  Absolute URL to your logo for light mode. SVG recommended. Defaults to the Rallly logo.
 </ParamField>
 
 <ParamField path="LOGO_URL_DARK">
-  URL to your logo for dark mode. Falls back to `LOGO_URL` if not set.
+  Absolute URL to your logo for dark mode. Falls back to `LOGO_URL` if not set.
 </ParamField>
 
-<ParamField path="LOGO_ICON_URL" default="/images/rallly-logo-mark.png">
-  URL to your logo icon, used in emails and as a favicon.
+<ParamField path="LOGO_ICON_URL">
+  Absolute URL to your logo icon, shown at the top of emails. Defaults to the Rallly logo mark. Use a raster format, as SVG rendering is unreliable across mail clients.
 </ParamField>
 
 <ParamField path="HIDE_ATTRIBUTION" default="false">
