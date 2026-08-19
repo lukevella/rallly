@@ -444,10 +444,20 @@ export default async function Page(props: {
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
-                  <CompareTableCheck label={included} />
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="compareUnlimited"
+                    defaults="Unlimited"
+                  />
                 </CompareTableCell>
                 <CompareTableCell>
-                  <CompareTableCheck label={included} />
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="compareUnlimited"
+                    defaults="Unlimited"
+                  />
                 </CompareTableCell>
               </tr>
               <tr>
@@ -463,7 +473,7 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="pricing"
-                    i18nKey="compareParticipantsUnlimited"
+                    i18nKey="compareUnlimited"
                     defaults="Unlimited"
                   />
                 </CompareTableCell>
@@ -471,7 +481,7 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="pricing"
-                    i18nKey="compareParticipantsUnlimited"
+                    i18nKey="compareUnlimited"
                     defaults="Unlimited"
                   />
                 </CompareTableCell>
