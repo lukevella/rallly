@@ -3,29 +3,36 @@ import { createLogger } from "@rallly/logger";
 import type { NextRequest } from "next/server";
 import { after, NextResponse } from "next/server";
 import * as z from "zod";
+import { getMajorVersion } from "@/features/instance-settings/utils";
 import { createCache } from "@/lib/cache";
 import { isSelfHosted } from "@/lib/constants";
 import { createRatelimit } from "@/lib/rate-limit";
+import type { ReleaseChannels } from "./release-channels";
+import { buildReleaseChannels } from "./release-channels";
 
 const logger = createLogger("api/updates");
 
 const GITHUB_RELEASES_URL =
-  "https://api.github.com/repos/lukevella/rallly/releases/latest";
+  "https://api.github.com/repos/lukevella/rallly/releases?per_page=100";
 
-const upstreamSchema = z.object({
-  tag_name: z.string().min(1),
-  html_url: z.string().min(1),
-  published_at: z.string().min(1),
-});
+// The fleet starts linking here the moment a new major's first release is
+// tagged — the guide must be published at this path before tagging.
+function getMigrationGuideUrl(major: number) {
+  return `https://support.rallly.co/self-hosting/migrate-to-v${major}`;
+}
 
 type UpdatesPayload = {
-  latest: string;
-  url: string;
-  publishedAt: string;
+  latest: string | null;
+  url: string | null;
+  publishedAt: string | null;
+  newMajor?: {
+    version: string;
+    migrationGuideUrl: string;
+  };
 };
 
-const latestReleaseCache = createCache<UpdatesPayload>({
-  namespace: "updates:latest-release",
+const releaseChannelsCache = createCache<ReleaseChannels>({
+  namespace: "updates:release-channels",
   ttl: "1 h",
 });
 
@@ -36,7 +43,7 @@ const seenInstanceCache = createCache<string>({
 
 const ratelimit = createRatelimit(60, "1 h");
 
-async function fetchLatestRelease(): Promise<UpdatesPayload | null> {
+async function fetchReleaseChannels(): Promise<ReleaseChannels | null> {
   const res = await fetch(GITHUB_RELEASES_URL, {
     headers: {
       Accept: "application/vnd.github+json",
@@ -45,23 +52,47 @@ async function fetchLatestRelease(): Promise<UpdatesPayload | null> {
   });
   if (!res.ok) return null;
 
-  const parsed = upstreamSchema.safeParse(await res.json());
-  if (!parsed.success) return null;
-
-  return {
-    latest: parsed.data.tag_name,
-    url: parsed.data.html_url,
-    publishedAt: parsed.data.published_at,
-  };
+  return buildReleaseChannels(await res.json());
 }
 
-async function getLatestRelease(): Promise<UpdatesPayload | null> {
-  const cached = await latestReleaseCache.get("latest");
+async function getReleaseChannels(): Promise<ReleaseChannels | null> {
+  const cached = await releaseChannelsCache.get("channels");
   if (cached) return cached;
 
-  const fresh = await fetchLatestRelease();
-  if (fresh) await latestReleaseCache.set("latest", fresh);
+  const fresh = await fetchReleaseChannels();
+  if (fresh) await releaseChannelsCache.set("channels", fresh);
   return fresh;
+}
+
+function buildPayload(
+  channels: ReleaseChannels,
+  requestedMajor: number | null,
+): UpdatesPayload {
+  const latestRelease = channels.latestByMajor[channels.latestMajor];
+
+  if (requestedMajor === null) {
+    return {
+      latest: latestRelease.version,
+      url: latestRelease.url,
+      publishedAt: latestRelease.publishedAt,
+    };
+  }
+
+  const ownChannel = channels.latestByMajor[requestedMajor];
+
+  return {
+    latest: ownChannel?.version ?? null,
+    url: ownChannel?.url ?? null,
+    publishedAt: ownChannel?.publishedAt ?? null,
+    ...(channels.latestMajor > requestedMajor
+      ? {
+          newMajor: {
+            version: latestRelease.version,
+            migrationGuideUrl: getMigrationGuideUrl(channels.latestMajor),
+          },
+        }
+      : {}),
+  };
 }
 
 export async function GET(request: NextRequest) {
@@ -78,9 +109,9 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const payload = await getLatestRelease();
+  const channels = await getReleaseChannels();
 
-  if (!payload) {
+  if (!channels) {
     return NextResponse.json(
       { error: "upstream_unavailable" },
       { status: 502 },
@@ -119,5 +150,9 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  return NextResponse.json(payload);
+  const requestedMajor = parsedVersion.success
+    ? getMajorVersion(parsedVersion.data)
+    : null;
+
+  return NextResponse.json(buildPayload(channels, requestedMajor));
 }

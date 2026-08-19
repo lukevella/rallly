@@ -4,34 +4,21 @@ import { createLogger } from "@rallly/logger";
 import * as z from "zod";
 import { env } from "@/env";
 import { appVersion } from "@/lib/constants";
+import { getMajorVersion, isOutdated } from "./utils";
 
 const logger = createLogger("update-check");
 
 const updateStatusSchema = z.object({
-  latest: z.string(),
-  url: z.string(),
-  publishedAt: z.string(),
+  latest: z.string().nullish(),
+  url: z.string().nullish(),
+  publishedAt: z.string().nullish(),
+  newMajor: z
+    .object({
+      version: z.string(),
+      migrationGuideUrl: z.string(),
+    })
+    .nullish(),
 });
-
-function normalizeVersion(version: string) {
-  return version.replace(/^v/, "").split(/[-+]/)[0];
-}
-
-function isOutdated(current: string, latest: string) {
-  const a = normalizeVersion(current)
-    .split(".")
-    .map((n) => Number(n) || 0);
-  const b = normalizeVersion(latest)
-    .split(".")
-    .map((n) => Number(n) || 0);
-  const len = Math.max(a.length, b.length);
-  for (let i = 0; i < len; i++) {
-    const ai = a[i] ?? 0;
-    const bi = b[i] ?? 0;
-    if (ai !== bi) return ai < bi;
-  }
-  return false;
-}
 
 export async function getUpdateStatus({ instanceId }: { instanceId: string }) {
   if (!appVersion || !env.API_BASE_URL) return null;
@@ -62,10 +49,43 @@ export async function getUpdateStatus({ instanceId }: { instanceId: string }) {
       );
       return null;
     }
-    if (!isOutdated(appVersion, parsed.data.latest)) {
-      return { status: "up-to-date" as const };
-    }
-    return { status: "update-available" as const, ...parsed.data };
+
+    const currentMajor = getMajorVersion(appVersion);
+    const { latest, url: releaseUrl, publishedAt, newMajor } = parsed.data;
+
+    // The endpoint scopes `latest` to our own major. Guard anyway: a release
+    // from another major must never surface as a pullable update, and this
+    // code is frozen in fleet binaries.
+    const withinMajor =
+      latest &&
+      releaseUrl &&
+      publishedAt &&
+      currentMajor !== null &&
+      getMajorVersion(latest) === currentMajor &&
+      isOutdated(appVersion, latest)
+        ? {
+            status: "update-available" as const,
+            latest,
+            url: releaseUrl,
+            publishedAt,
+          }
+        : { status: "up-to-date" as const };
+
+    const newMajorVersion = newMajor ? getMajorVersion(newMajor.version) : null;
+
+    return {
+      ...withinMajor,
+      newMajor:
+        newMajor &&
+        currentMajor !== null &&
+        newMajorVersion !== null &&
+        newMajorVersion > currentMajor
+          ? {
+              major: newMajorVersion,
+              migrationGuideUrl: newMajor.migrationGuideUrl,
+            }
+          : null,
+    };
   } catch (error) {
     logger.warn(
       { error, instanceId, version: appVersion },

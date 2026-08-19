@@ -813,6 +813,7 @@
   "verifyEmail": "Verify your email",
   "verifyEmailDescription": "Enter the 6-digit code we sent to <b>{email}</b>",
   "verifyEmailTitle": "Verify your email",
+  "versionTileNewMajorNotice": "v{major} is available. Read the migration guide.",
   "viewClosedPolls": "View closed polls",
   "viewInvites": "View invites",
   "viewPoll": "View poll",
