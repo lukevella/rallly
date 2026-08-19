@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "Pokročilá nastavení hlasování",
+  "advancedPollSettingsDescription": "Vyžadujte e-maily účastníků, skryjte jména účastníků a skryjte hlasy",
   "basicPolls": "Základní hlasování",
   "basicPollsDescription": "Vytvořte jednoduchá plánovací hlasování",
   "cancelSubscription": "Jak zrušit předplatné?",
@@ -16,6 +18,8 @@
   "compareUnlimited": "Neomezené",
   "customBranding": "Vlastní značka",
   "customBrandingDescription": "Zobrazte své logo a barvy značky účastníkům",
+  "duplicatePolls": "Kopírování hlasování",
+  "duplicatePollsDescription": "Vytvořte nové hlasování na základě existujícího",
   "extendedPollLifetimeDescription": "Uchovávat hlasování neomezeně",
   "faq": "Často kladené otázky",
   "featureNameExtendedPollLifetime": "Prodloužená doba uchovávání hlasování",
