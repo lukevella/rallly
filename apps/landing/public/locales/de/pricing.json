@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "Erweiterte Umfrageeinstellungen",
+  "advancedPollSettingsDescription": "E-Mail-Adressen der Teilnehmer verlangen, Teilnehmernamen ausblenden und Stimmen ausblenden",
   "basicPolls": "Einfache Umfragen",
   "basicPollsDescription": "Erstelle einfache Umfragen zur Terminplanung",
   "cancelSubscription": "Wie kann ich mein Abo kündigen?",
@@ -16,6 +18,8 @@
   "compareUnlimited": "Unbegrenzt",
   "customBranding": "Eigenes Branding",
   "customBrandingDescription": "Präsentiere deinen Teilnehmern dein Logo und deine Markenfarben",
+  "duplicatePolls": "Umfragen duplizieren",
+  "duplicatePollsDescription": "Erstelle eine neue Umfrage auf Basis einer bestehenden",
   "extendedPollLifetimeDescription": "Umfragen unbegrenzt behalten",
   "faq": "Häufig gestellte Fragen",
   "featureNameExtendedPollLifetime": "Verlängerte Umfragedauer",
