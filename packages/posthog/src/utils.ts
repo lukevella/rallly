@@ -113,3 +113,29 @@ export function isAbortError(event: CaptureResult) {
         ABORT_NOISE_VALUE_PATTERN.test(exception.value)),
   );
 }
+
+/**
+ * The browser fires `ResizeObserver loop completed with undelivered
+ * notifications.` on `window.onerror` when a ResizeObserver callback changes
+ * layout and the browser cannot deliver every notification inside one animation
+ * frame. Nothing breaks — it is a notice, not a crash — so autocapture must not
+ * report it as a real error.
+ */
+const RESIZE_OBSERVER_LOOP_VALUE_PATTERN =
+  /^ResizeObserver loop (limit exceeded|completed with undelivered notifications)/i;
+
+export function isResizeObserverLoopError(event: CaptureResult) {
+  const exceptionList = event.properties?.$exception_list as
+    | Array<{ value?: string }>
+    | undefined;
+
+  if (!Array.isArray(exceptionList)) {
+    return false;
+  }
+
+  return exceptionList.some(
+    (exception) =>
+      typeof exception?.value === "string" &&
+      RESIZE_OBSERVER_LOOP_VALUE_PATTERN.test(exception.value),
+  );
+}

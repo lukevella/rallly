@@ -7,6 +7,7 @@ import {
   isAbortError,
   isGlobalPrivacyControlEnabled,
   isInjectedExtensionException,
+  isResizeObserverLoopError,
 } from "./utils";
 
 if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
@@ -27,7 +28,9 @@ if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
     before_send: (event) => {
       if (
         event?.event === "$exception" &&
-        (isInjectedExtensionException(event) || isAbortError(event))
+        (isInjectedExtensionException(event) ||
+          isAbortError(event) ||
+          isResizeObserverLoopError(event))
       ) {
         return null;
       }
