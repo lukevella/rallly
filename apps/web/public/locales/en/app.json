@@ -825,7 +825,7 @@
   "wrongVerificationCode": "Your verification code is incorrect",
   "yahoo": "Yahoo",
   "yearlyBilling": "Yearly billing",
-  "yearlyBillingDescription": "{yearlyPrice} per year. Save {savings} compared to monthly.",
+  "yearlyBillingDescription": "{yearlyPrice} per year, save {savings}.",
   "yes": "Yes",
   "yesUpdateTimezone": "Yes, update my time zone",
   "you": "You",

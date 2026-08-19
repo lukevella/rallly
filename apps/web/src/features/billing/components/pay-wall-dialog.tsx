@@ -215,9 +215,9 @@ export function PayWallDialog({
                         defaults="Yearly billing"
                       />
                     </div>
-                    <div className="text-muted-foreground text-sm">
+                    <div className="mt-1 text-muted-foreground text-sm">
                       <Trans
-                        defaults="{yearlyPrice} per year. Save {savings} compared to monthly."
+                        defaults="{yearlyPrice} per year, save {savings}."
                         i18nKey="yearlyBillingDescription"
                         values={{
                           yearlyPrice: currencyFormatter.format(
