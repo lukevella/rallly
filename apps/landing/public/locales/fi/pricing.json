@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "Kyselyjen lisäasetukset",
+  "advancedPollSettingsDescription": "Vaadi osallistujien sähköpostiosoitteet, piilota osallistujien nimet ja piilota äänet",
   "basicPolls": "Peruskyselyt",
   "basicPollsDescription": "Luo yksinkertaisia aikataulukyselyjä",
   "cancelSubscription": "Miten perun tilaukseni?",
@@ -16,6 +18,8 @@
   "compareUnlimited": "Rajoittamaton",
   "customBranding": "Oma brändäys",
   "customBrandingDescription": "Näytä osallistujillesi logosi ja brändivärit",
+  "duplicatePolls": "Kyselyjen kopiointi",
+  "duplicatePollsDescription": "Luo uusi kysely olemassa olevan pohjalta",
   "extendedPollLifetimeDescription": "Säilytä kyselyt pysyvästi",
   "faq": "Usein kysytyt kysymykset",
   "featureNameExtendedPollLifetime": "Kyselyjen pidennetty säilytysaika",
