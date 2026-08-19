@@ -335,8 +335,8 @@ export default async function Page(props: {
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="featureNameSchedule"
-                      defaults="Schedule poll"
+                      i18nKey="finalizeDate"
+                      defaults="Finalize date"
                     />
                   </PlanBenefitTooltip>
                 </PlanBenefit>
@@ -455,15 +455,25 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="pricing"
-                    i18nKey="compareUnlimitedParticipants"
-                    defaults="Unlimited participants"
+                    i18nKey="compareParticipants"
+                    defaults="Participants"
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
-                  <CompareTableCheck label={included} />
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="compareParticipantsUnlimited"
+                    defaults="Unlimited"
+                  />
                 </CompareTableCell>
                 <CompareTableCell>
-                  <CompareTableCheck label={included} />
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="compareParticipantsUnlimited"
+                    defaults="Unlimited"
+                  />
                 </CompareTableCell>
               </tr>
               <tr>
@@ -497,8 +507,8 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="pricing"
-                    i18nKey="featureNameSchedule"
-                    defaults="Schedule poll"
+                    i18nKey="finalizeDate"
+                    defaults="Finalize date"
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
