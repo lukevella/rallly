@@ -9,7 +9,7 @@ export function PlanCards({
   return (
     <div
       className={cn(
-        "grid divide-y divide-gray-950/5 rounded-xl border bg-white md:grid-cols-3 md:divide-x md:divide-y-0",
+        "grid divide-y divide-gray-950/5 overflow-hidden rounded-xl border bg-white md:grid-cols-3 md:divide-x md:divide-y-0",
         className,
       )}
       {...props}
@@ -27,7 +27,7 @@ export function PlanCardHeader({
   className,
   ...props
 }: React.ComponentProps<"header">) {
-  return <header className={cn("space-y-1", className)} {...props} />;
+  return <header className={cn("space-y-0.5", className)} {...props} />;
 }
 
 export function PlanCardName({
@@ -55,7 +55,10 @@ export function PlanCardPrice({
 }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("flex flex-wrap items-baseline gap-x-1.5", className)}
+      className={cn(
+        "flex min-h-14 flex-wrap items-center gap-x-1.5",
+        className,
+      )}
       {...props}
     />
   );

@@ -160,7 +160,7 @@ export default async function Page(props: {
                 <Link
                   href={linkToApp("/")}
                   className={buttonVariants({
-                    className: "w-full sm:w-auto",
+                    className: "w-full",
                   })}
                 >
                   <Trans
@@ -216,7 +216,7 @@ export default async function Page(props: {
               <PlanCardHeader>
                 <div className="flex items-center justify-between gap-x-4">
                   <PlanCardName>{PLAN_NAMES.PRO}</PlanCardName>
-                  <Badge variant="primary">
+                  <Badge variant="secondary">
                     <Trans
                       t={t}
                       ns="pricing"
@@ -267,7 +267,7 @@ export default async function Page(props: {
                   href={linkToApp("/settings/billing")}
                   className={buttonVariants({
                     variant: "primary",
-                    className: "w-full sm:w-auto",
+                    className: "w-full",
                   })}
                 >
                   <Trans
