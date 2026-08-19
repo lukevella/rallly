@@ -34,6 +34,7 @@ function ConfirmStep({ onCodeSent }: { onCodeSent: () => void }) {
   // useAction directly, not useSafeAction: the latter refreshes the router on
   // success, which re-renders the tree this dialog sits in mid-flow. Sending a
   // code changes nothing on the page, so there is nothing to refresh.
+  const user = useAuthedUser();
   const { t } = useTranslation();
   const requestCode = useAction(requestAccountDeletionCodeAction, {
     onSuccess: onCodeSent,
@@ -66,7 +67,8 @@ function ConfirmStep({ onCodeSent }: { onCodeSent: () => void }) {
         <DialogDescription>
           <Trans
             i18nKey="deleteAccountDialogDescription"
-            defaults="Are you sure you want to delete your account?"
+            defaults="To confirm it's you, we'll email a verification code to {email}."
+            values={{ email: user.email }}
           />
         </DialogDescription>
       </DialogHeader>
@@ -94,7 +96,10 @@ function ConfirmStep({ onCodeSent }: { onCodeSent: () => void }) {
           loading={requestCode.isExecuting}
           onClick={() => requestCode.execute()}
         >
-          <Trans i18nKey="continue" defaults="Continue" />
+          <Trans
+            i18nKey="deleteAccountRequestCode"
+            defaults="Request verification code"
+          />
         </Button>
       </DialogFooter>
     </>
@@ -149,7 +154,7 @@ function VerifyStep({ onBack }: { onBack: () => void }) {
           <DialogDescription>
             <Trans
               i18nKey="deleteAccountVerifyDescription"
-              defaults="Enter the 6 digit code we sent to {email} to permanently delete your account."
+              defaults="Enter the 6 digit code we sent to {email}."
               values={{ email: user.email }}
             />
           </DialogDescription>
@@ -182,7 +187,10 @@ function VerifyStep({ onBack }: { onBack: () => void }) {
             variant="destructive"
             loading={formState.isSubmitting}
           >
-            <Trans i18nKey="deleteAccount" defaults="Delete account" />
+            <Trans
+              i18nKey="deleteAccountPermanently"
+              defaults="Permanently delete account"
+            />
           </Button>
         </DialogFooter>
       </form>
