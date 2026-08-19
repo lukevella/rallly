@@ -20,7 +20,7 @@
   "faqNonprofit": "Do you offer discounts for nonprofits?",
   "faqNonprofitAnswer": "Yes. We offer discounted Rallly Pro subscriptions for registered nonprofits. Email us at <0>support@rallly.co</0> and we will get you set up.",
   "faqPrivacy": "Is my data private?",
-  "faqPrivacyAnswer": "Rallly does not show ads or sell your data, and polls on the free plan are deleted automatically when they become inactive. You can read the details in our <0>privacy policy</0>.",
+  "faqPrivacyAnswer": "Yes. Privacy is central to how we build Rallly. We do not show ads or sell your data, we collect only what we need to run the service, and polls on the free plan are deleted automatically once they become inactive. Rallly is also open source, so anyone can inspect how their data is handled. You can read the details in our <0>privacy policy</0>.",
   "faqSelfHost": "Can I self-host Rallly?",
   "faqSelfHostAnswer": "Yes. Rallly is open source and can be deployed on your own infrastructure with Docker. Check the <0>self-hosting docs</0> to get started.",
   "faqTeams": "How does Rallly work for teams?",

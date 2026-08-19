@@ -241,7 +241,7 @@ export async function Faq({
               t={t}
               ns="home"
               i18nKey="faqPrivacyAnswer"
-              defaults="Rallly does not show ads or sell your data, and polls on the free plan are deleted automatically when they become inactive. You can read the details in our <0>privacy policy</0>."
+              defaults="Yes. Privacy is central to how we build Rallly. We do not show ads or sell your data, we collect only what we need to run the service, and polls on the free plan are deleted automatically once they become inactive. Rallly is also open source, so anyone can inspect how their data is handled. You can read the details in our <0>privacy policy</0>."
               components={[
                 <Link
                   key="privacy"
