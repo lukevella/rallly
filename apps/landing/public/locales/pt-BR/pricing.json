@@ -15,5 +15,5 @@
   "whenPollInactive": "Quando uma enquete fica inativa?",
   "whenPollInactiveAnswer": "As enquetes ficam inativas quando todas as opções de data estão no passado E não houve atividade por mais de 30 dias. Atividade inclui novos votos, comentários ou alterações na enquete. Enquetes inativas são automaticamente excluídas se você não tiver uma assinatura paga.",
   "whyUpgrade": "Por que devo fazer o upgrade?",
-  "whyUpgradeAnswer2": "Atualizar para um plano pago faz sentido se você usar o Rallly com frequência ou usá-lo para trabalhar. A atual taxa de assinatura é uma taxa especial de utilizador antecipado e aumentará no futuro. Ao atualizar agora, você terá acesso antecipado a novas ferramentas de agendamento de alta qualidade à medida que forem lançadas e bloqueadas na sua taxa de assinatura para que você não seja afetado por futuros aumentos de preços."
+  "whyUpgradeAnswer2": "Atualizar para um plano pago faz sentido se você usar o Rallly com frequência ou usá-lo para trabalhar. A atual taxa de assinatura é uma taxa especial para usuários antecipados e aumentará no futuro. Ao atualizar agora, você terá acesso antecipado a novas ferramentas de agendamento de alta qualidade à medida que forem lançadas e garantirá sua taxa de assinatura atual, para que você não seja afetado por futuros aumentos de preços."
 }
