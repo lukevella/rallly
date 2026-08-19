@@ -18,7 +18,7 @@
             "pages": ["introduction", "faq"]
           },
           {
-            "group": "How it Works",
+            "group": "How it works",
             "pages": ["workflow/create", "workflow/invite", "workflow/schedule"]
           },
           {
