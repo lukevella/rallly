@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "Geavanceerde pollinstellingen",
+  "advancedPollSettingsDescription": "Vereis e-mailadressen van deelnemers, verberg namen van deelnemers en verberg stemmen",
   "basicPolls": "Basispolls",
   "basicPollsDescription": "Maak eenvoudige planningspolls",
   "cancelSubscription": "Hoe kan ik mijn abonnement opzeggen?",
@@ -16,6 +18,8 @@
   "compareUnlimited": "Onbeperkt",
   "customBranding": "Aangepaste branding",
   "customBrandingDescription": "Toon je logo en merkkleuren aan je deelnemers",
+  "duplicatePolls": "Polls dupliceren",
+  "duplicatePollsDescription": "Maak een nieuwe poll op basis van een bestaande",
   "extendedPollLifetimeDescription": "Behoud polls voor onbepaalde tijd",
   "faq": "Veelgestelde vragen",
   "featureNameExtendedPollLifetime": "Verlengde levensduur polls",
