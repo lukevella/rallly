@@ -1,4 +1,4 @@
-import { Alert, AlertDescription } from "@rallly/ui/alert";
+import { Alert, AlertAction, AlertDescription } from "@rallly/ui/alert";
 import {
   Field,
   FieldContent,
@@ -47,33 +47,31 @@ async function StorageNotConfiguredAlert() {
   return (
     <Alert>
       <HardDriveIcon />
-      <AlertDescription className="flex gap-2">
-        <p className="flex-1">
+      <AlertDescription>
+        <Trans
+          t={t}
+          i18n={i18n}
+          ns="app"
+          i18nKey="brandingStorageNotConfigured"
+          defaults="Logo uploads require object storage, which has not been configured on this instance."
+        />
+      </AlertDescription>
+      <AlertAction>
+        <a
+          href="https://support.rallly.co/self-hosting/configuration#external-object-storage"
+          target="_blank"
+          className="underline"
+          rel="noreferrer"
+        >
           <Trans
             t={t}
             i18n={i18n}
             ns="app"
-            i18nKey="brandingStorageNotConfigured"
-            defaults="Logo uploads require object storage, which has not been configured on this instance."
+            i18nKey="learnMore"
+            defaults="Learn more"
           />
-        </p>
-        <p>
-          <a
-            href="https://support.rallly.co/self-hosting/configuration#external-object-storage"
-            target="_blank"
-            className="underline"
-            rel="noreferrer"
-          >
-            <Trans
-              t={t}
-              i18n={i18n}
-              ns="app"
-              i18nKey="learnMore"
-              defaults="Learn more"
-            />
-          </a>
-        </p>
-      </AlertDescription>
+        </a>
+      </AlertAction>
     </Alert>
   );
 }
@@ -121,33 +119,31 @@ export async function BrandingSettings() {
       {!hasWhiteLabelAddon ? (
         <Alert variant="primary">
           <GemIcon />
-          <AlertDescription className="flex gap-2">
-            <p className="flex-1">
+          <AlertDescription>
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="app"
+              i18nKey="customBrandingAlertDescription"
+              defaults="Custom branding is available to Enterprise license holders as a paid add-on."
+            />
+          </AlertDescription>
+          <AlertAction>
+            <a
+              href="https://support.rallly.co/self-hosting/white-labeling"
+              target="_blank"
+              className="underline"
+              rel="noreferrer"
+            >
               <Trans
                 t={t}
                 i18n={i18n}
                 ns="app"
-                i18nKey="customBrandingAlertDescription"
-                defaults="Custom branding is available to Enterprise license holders as a paid add-on."
+                i18nKey="learnMore"
+                defaults="Learn more"
               />
-            </p>
-            <p>
-              <a
-                href="https://support.rallly.co/self-hosting/white-labeling"
-                target="_blank"
-                className="underline"
-                rel="noreferrer"
-              >
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
-                  i18nKey="learnMore"
-                  defaults="Learn more"
-                />
-              </a>
-            </p>
-          </AlertDescription>
+            </a>
+          </AlertAction>
         </Alert>
       ) : null}
       <PageSectionGroup>
