@@ -34,6 +34,7 @@ import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 import { linkToApp } from "@/lib/linkToApp";
 
 import {
+  BillingIntervalPrice,
   BillingIntervalProvider,
   BillingIntervalSwitch,
   BillingIntervalValue,
@@ -61,13 +62,6 @@ import {
   PlanCards,
 } from "./plan-card";
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
 const faqLinkClassName =
   "text-gray-800 underline underline-offset-2 hover:text-gray-600";
 
@@ -81,12 +75,6 @@ export default async function Page(props: {
     getMonthlyPollCount(),
     getMonthlyVoterCount(),
   ]);
-  const monthlyPrice = currencyFormatter.format(
-    pricingData.monthly.amount / 100,
-  );
-  const yearlyMonthlyEquivalent = currencyFormatter.format(
-    pricingData.yearly.amount / 100 / 12,
-  );
   const included = t("included", {
     ns: "pricing",
     defaultValue: "Included",
@@ -246,36 +234,34 @@ export default async function Page(props: {
                   />
                 </PlanCardDescription>
               </PlanCardHeader>
-              <BillingIntervalValue
-                yearly={
-                  <PlanCardPrice>
-                    <PlanCardPriceAmount>
-                      {yearlyMonthlyEquivalent}
-                    </PlanCardPriceAmount>
-                    <PlanCardPriceLabel>
+              <PlanCardPrice>
+                <PlanCardPriceAmount>
+                  <BillingIntervalPrice
+                    monthly={pricingData.monthly.amount / 100}
+                    yearly={pricingData.yearly.amount / 100 / 12}
+                  />
+                </PlanCardPriceAmount>
+                <PlanCardPriceLabel>
+                  <BillingIntervalValue
+                    yearly={
                       <Trans
                         t={t}
                         ns="pricing"
                         i18nKey="perSeatMonthBilledYearly"
                         defaults="/seat/mo, billed yearly"
                       />
-                    </PlanCardPriceLabel>
-                  </PlanCardPrice>
-                }
-                monthly={
-                  <PlanCardPrice>
-                    <PlanCardPriceAmount>{monthlyPrice}</PlanCardPriceAmount>
-                    <PlanCardPriceLabel>
+                    }
+                    monthly={
                       <Trans
                         t={t}
                         ns="pricing"
                         i18nKey="perSeatMonth"
                         defaults="/seat/mo"
                       />
-                    </PlanCardPriceLabel>
-                  </PlanCardPrice>
-                }
-              />
+                    }
+                  />
+                </PlanCardPriceLabel>
+              </PlanCardPrice>
               <div>
                 <Link
                   href={linkToApp("/settings/billing")}

@@ -1,5 +1,6 @@
 "use client";
 
+import NumberFlow from "@number-flow/react";
 import { cn } from "@rallly/ui";
 import { Switch } from "@rallly/ui/switch";
 import React from "react";
@@ -75,6 +76,28 @@ export function BillingIntervalSwitch({
       </span>
       {badge}
     </div>
+  );
+}
+
+export function BillingIntervalPrice({
+  monthly,
+  yearly,
+}: {
+  monthly: number;
+  yearly: number;
+}) {
+  const { interval } = useBillingInterval();
+  return (
+    <NumberFlow
+      value={interval === "yearly" ? yearly : monthly}
+      locales="en-US"
+      format={{
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }}
+    />
   );
 }
 

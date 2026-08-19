@@ -68,7 +68,7 @@ export function PlanCardPriceAmount({
   return (
     <span
       className={cn(
-        "font-semibold text-4xl text-gray-800 tracking-tight",
+        "font-semibold text-4xl text-gray-800 tabular-nums tracking-tight",
         className,
       )}
       {...props}

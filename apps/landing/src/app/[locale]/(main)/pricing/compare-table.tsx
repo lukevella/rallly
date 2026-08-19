@@ -1,5 +1,5 @@
 import { cn } from "@rallly/ui";
-import { CheckIcon, MinusIcon } from "lucide-react";
+import { CircleCheckIcon, XIcon } from "lucide-react";
 import type * as React from "react";
 
 export function CompareTable({
@@ -59,7 +59,7 @@ export function CompareTableCell({
 export function CompareTableCheck({ label }: { label: string }) {
   return (
     <>
-      <CheckIcon className="size-4 text-gray-800" aria-hidden="true" />
+      <CircleCheckIcon className="size-4 text-green-600" aria-hidden="true" />
       <span className="sr-only">{label}</span>
     </>
   );
@@ -68,7 +68,7 @@ export function CompareTableCheck({ label }: { label: string }) {
 export function CompareTableDash({ label }: { label: string }) {
   return (
     <>
-      <MinusIcon className="size-4 text-gray-300" aria-hidden="true" />
+      <XIcon className="size-4 text-gray-400" aria-hidden="true" />
       <span className="sr-only">{label}</span>
     </>
   );
