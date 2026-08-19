@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "Avanserte avstemningsinnstillinger",
+  "advancedPollSettingsDescription": "Krev deltakernes e-postadresser, skjul deltakernavn og skjul stemmer",
   "basicPolls": "Enkle avstemninger",
   "basicPollsDescription": "Lag enkle planleggingsavstemninger",
   "cancelSubscription": "Hvordan avslutter jeg abonnementet?",
@@ -16,6 +18,8 @@
   "compareUnlimited": "Ubegrenset",
   "customBranding": "Egendefinert profil",
   "customBrandingDescription": "Vis logoen og merkevarens farger til deltakerne dine",
+  "duplicatePolls": "Dupliser avstemninger",
+  "duplicatePollsDescription": "Opprett en ny avstemning basert på en eksisterende",
   "extendedPollLifetimeDescription": "Behold avstemninger på ubestemt tid",
   "faq": "Ofte stilte spørsmål",
   "featureNameExtendedPollLifetime": "Forlenget avstemningslevetid",
