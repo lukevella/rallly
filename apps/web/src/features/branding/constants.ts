@@ -7,5 +7,6 @@ export const DEFAULT_LOGO_ICON_URL = absoluteUrl(
   "/images/rallly-logo-mark.png",
 );
 export const DEFAULT_APP_NAME = "Rallly";
+export const LOGO_VIEWBOX = { width: 192, height: 128 };
 export const LIGHT_MODE_BACKGROUND = "#ffffff";
 export const DARK_MODE_BACKGROUND = "#171717";
