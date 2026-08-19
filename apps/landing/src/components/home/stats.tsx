@@ -18,19 +18,22 @@ export async function Stats({
   const { t } = await getTranslation(locale, ["home"]);
 
   return (
-    <section className={cn("py-8 sm:py-16", className)}>
-      <p className="mx-auto max-w-2xl text-balance text-center text-gray-600 text-lg sm:text-2xl">
-        <Trans
-          t={t}
-          ns="home"
-          i18nKey="statsLast30Days"
-          defaults="<b>{voterCount, plural, one {# person} other {# people}}</b> voted on <b>{pollCount, plural, one {# poll} other {# polls}}</b> in the last 30 days"
-          values={{ voterCount, pollCount }}
-          components={{
-            b: <AnimatedStat locale={locale} />,
-          }}
-        />
-      </p>
-    </section>
+    <p
+      className={cn(
+        "mx-auto max-w-2xl text-balance text-center text-gray-600 text-lg sm:text-2xl",
+        className,
+      )}
+    >
+      <Trans
+        t={t}
+        ns="home"
+        i18nKey="statsLast30Days"
+        defaults="<b>{voterCount, plural, one {# person} other {# people}}</b> voted on <b>{pollCount, plural, one {# poll} other {# polls}}</b> in the last 30 days"
+        values={{ voterCount, pollCount }}
+        components={{
+          b: <AnimatedStat locale={locale} />,
+        }}
+      />
+    </p>
   );
 }
