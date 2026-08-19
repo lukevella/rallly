@@ -10,6 +10,7 @@ import { Cta } from "@/components/home/cta";
 import { Faq, FaqItem } from "@/components/home/faq";
 import { Hero, HeroAnnouncement } from "@/components/home/hero";
 import { HeroDemo } from "@/components/home/hero-demo/hero-demo";
+import { HowItWorks } from "@/components/home/how-it-works/how-it-works";
 import { Mention, Mentions } from "@/components/home/mentions";
 import { Stats } from "@/components/home/stats";
 import { Testimonial } from "@/components/home/testimonial";
@@ -80,6 +81,7 @@ export default async function Page(props: {
           />
         </Stats>
       </Section>
+      <HowItWorks locale={locale} />
       <Section>
         <Testimonial
           logo={
