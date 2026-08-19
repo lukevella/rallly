@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import { Cta } from "@/components/home/cta";
+import { Faq } from "@/components/home/faq";
 import { Hero } from "@/components/home/hero";
 import { Mentions } from "@/components/home/mentions";
 import { Stats } from "@/components/home/stats";
@@ -34,6 +35,7 @@ export default async function Page(props: {
       </div>
       <Testimonial locale={locale} />
       <Mentions locale={locale} />
+      <Faq locale={locale} />
       <Cta locale={locale} />
     </div>
   );
