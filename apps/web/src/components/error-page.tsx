@@ -1,16 +1,17 @@
 "use client";
 
 import { ChevronRightIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 export function ErrorPage({
+  logo,
   label,
   title,
   description,
   children,
   actions,
 }: {
+  logo: React.ReactNode;
   label: React.ReactNode;
   title: React.ReactNode;
   description: React.ReactNode;
@@ -24,20 +25,7 @@ export function ErrorPage({
         tabIndex={-1}
         className="mx-auto w-full max-w-7xl px-6 pt-10 pb-16 sm:pb-24 lg:px-8"
       >
-        <Image
-          src="/static/logo.svg"
-          alt="Rallly"
-          width={130}
-          height={30}
-          className="mx-auto dark:hidden"
-        />
-        <Image
-          src="/static/logo-dark.svg"
-          alt="Rallly"
-          width={130}
-          height={30}
-          className="mx-auto hidden dark:block"
-        />
+        <header className="flex justify-center">{logo}</header>
         <div className="mx-auto mt-16 max-w-2xl text-center">
           <p className="font-semibold text-base/8 text-primary">{label}</p>
           <h1 className="mt-4 text-balance font-semibold text-3xl text-foreground tracking-tight sm:text-5xl">

@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { ErrorPage, ErrorPageLinkItem } from "@/components/error-page";
+import { DefaultLogo } from "@/features/branding/components/default-logo";
 import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 import { INVALID_SESSION } from "@/lib/errors/invalid-session-error";
@@ -34,6 +35,7 @@ export default function LocaleErrorBoundary({
     // infinite loop with the login page.
     return (
       <ErrorPage
+        logo={<DefaultLogo />}
         label={<Trans i18nKey="invalidSessionLabel" defaults="Session" />}
         title={
           <Trans
@@ -69,6 +71,7 @@ export default function LocaleErrorBoundary({
 
   return (
     <ErrorPage
+      logo={<DefaultLogo />}
       label={<Trans i18nKey="errorLabel" defaults="Error" />}
       title={<Trans i18nKey="errorTitle" defaults="Something went wrong" />}
       description={
