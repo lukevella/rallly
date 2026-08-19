@@ -1,4 +1,6 @@
 {
+  "advancedPollSettings": "Impostazioni avanzate dei sondaggi",
+  "advancedPollSettingsDescription": "Richiedi l'e-mail dei partecipanti, nascondi i nomi dei partecipanti e nascondi i voti",
   "basicPolls": "Sondaggi di base",
   "basicPollsDescription": "Crea semplici sondaggi di pianificazione",
   "cancelSubscription": "Come annullo il mio abbonamento?",
@@ -16,6 +18,8 @@
   "compareUnlimited": "Illimitato",
   "customBranding": "Marchio personalizzato",
   "customBrandingDescription": "Mostra il tuo logo e i colori del tuo marchio ai tuoi partecipanti",
+  "duplicatePolls": "Duplica sondaggi",
+  "duplicatePollsDescription": "Crea un nuovo sondaggio a partire da uno esistente",
   "extendedPollLifetimeDescription": "Conserva i sondaggi a tempo indeterminato",
   "faq": "Domande frequenti",
   "featureNameExtendedPollLifetime": "Durata estesa del sondaggio",
