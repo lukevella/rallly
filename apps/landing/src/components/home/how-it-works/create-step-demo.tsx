@@ -12,12 +12,17 @@ import { PressButton } from "./press-button";
 // it doesn't compete with the section text. Sized to fit the 4:3 artboard on
 // the how it works section.
 //
-// On play the selected column fills in one date per week, top to bottom, then
-// the submit button presses.
+// On play the picked dates land one at a time in the order listed, then the
+// submit button presses.
 const WEEKS = 4;
 const START_OFFSET = 2;
-const SELECTED_COLUMN = 3;
-const SUBMIT_DELAY = WEEKS * STAGGER + 0.12;
+
+// Scattered rather than a single column: a weekly cadence reads as a
+// recurring event, where the point here is someone picking whichever days
+// happen to suit. Indices are cells in the WEEKS x 7 grid, listed in the
+// order they get picked, which is deliberately not left to right.
+const SELECTED = [10, 4, 17, 23, 12, 27];
+const SUBMIT_DELAY = SELECTED.length * STAGGER + 0.12;
 
 export const CreateStepDemo = ({ play }: { play: boolean }) => (
   <DemoScreen className="space-y-2 p-4">
@@ -51,7 +56,8 @@ export const CreateStepDemo = ({ play }: { play: boolean }) => (
               />
             );
           }
-          if (index % 7 !== SELECTED_COLUMN) {
+          const pickedAt = SELECTED.indexOf(index);
+          if (pickedAt === -1) {
             return (
               <div
                 // biome-ignore lint/suspicious/noArrayIndexKey: calendar cells are positional
@@ -77,13 +83,13 @@ export const CreateStepDemo = ({ play }: { play: boolean }) => (
                       backgroundColor: {
                         duration: 0.22,
                         ease: EASE_OUT,
-                        delay: Math.floor(index / 7) * STAGGER,
+                        delay: pickedAt * STAGGER,
                       },
                       scale: {
                         type: "spring",
                         duration: 0.44,
                         bounce: 0.42,
-                        delay: Math.floor(index / 7) * STAGGER,
+                        delay: pickedAt * STAGGER,
                       },
                     }
                   : EXIT
