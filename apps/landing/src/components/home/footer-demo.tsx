@@ -30,10 +30,13 @@ const HOLD_MS = 2600;
 const EXIT_MS = 700;
 
 /**
- * True once the card is meaningfully in view, and false again when it leaves.
- * The card has to have travelled a little way up the screen rather than just
- * clipped its bottom edge, so the story starts when it is actually being
- * looked at.
+ * True while any part of the slot is on screen, false once none of it is.
+ *
+ * Deliberately no threshold or root margin. Anything that only counts the slot
+ * as "in view" once some fraction of it shows leaves a band where it is on
+ * screen but reported out of view — and in that band the card is visible while
+ * the cycle is parked, so it reads as an empty panel. Plain intersection has no
+ * such band: out of view means not a pixel of it is showing.
  *
  * Plain IntersectionObserver rather than Motion's `useInView` so the reveal
  * does not depend on an animation frame being scheduled.
@@ -45,15 +48,14 @@ function useInView(ref: React.RefObject<Element | null>, enabled: boolean) {
 
   React.useEffect(() => {
     const element = ref.current;
-    if (!enabled || !element) return;
+    // Without the API there is nothing to observe, and constructing it would
+    // throw before the solved-card fallback ever renders.
+    if (!enabled || !element || typeof IntersectionObserver === "undefined") {
+      return;
+    }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      // Shrinking the root's bottom edge rather than setting a threshold, so
-      // the trigger point does not depend on how tall the card happens to be:
-      // it reveals once the top of the card has risen past the last fifth of
-      // the viewport.
-      { rootMargin: "0px 0px -20% 0px" },
+    const observer = new IntersectionObserver(([entry]) =>
+      setInView(entry.isIntersecting),
     );
     observer.observe(element);
 
@@ -145,22 +147,18 @@ export function FooterDemo({ className }: { className?: string }) {
   const decided = solved ? true : cycleDecided;
 
   return (
+    // The observed slot itself never moves or fades. The reveal lives on the
+    // panel inside it, so the transform cannot shift what the observer is
+    // measuring and flip the reveal back and forth at the boundary.
     <div
       ref={ref}
       aria-hidden
       className={cn(
         "relative isolate flex items-center justify-center py-10",
-        // The card rises into place as it scrolls into view.
-        // `inView === false` is the only state that hides it, so a missing
-        // observer or reduced motion leaves it plainly visible.
-        "transition-all duration-700 ease-out",
-        inView === false
-          ? "translate-y-4 opacity-0"
-          : "translate-y-0 opacity-100",
         className,
       )}
     >
-      {/* Graph paper filling the whole slot, dissolving well before the edges
+      {/* A dot grid filling the whole slot, dissolving well before the edges
           so the pattern has no hard border and reads as texture behind the
           panel rather than a box around it. */}
       <div
@@ -169,8 +167,11 @@ export function FooterDemo({ className }: { className?: string }) {
           // padding, where the mask fades it out just shy of the border. No
           // sideways bleed: that would widen the page.
           "absolute -top-14 right-0 -bottom-10 left-0 -z-10",
-          "bg-[linear-gradient(to_right,--theme(--color-black/2.5%)_1px,transparent_1px),linear-gradient(to_bottom,--theme(--color-black/2.5%)_1px,transparent_1px)]",
-          "bg-[size:32px_32px]",
+          // Dots rather than ruled lines: far less ink for the same rhythm, so
+          // it sits further back behind the panel. They carry more alpha than
+          // the lines did because there is so much less of each one.
+          "bg-[radial-gradient(--theme(--color-black/12%)_1px,transparent_1px)]",
+          "bg-[size:24px_24px]",
           // Fades out on every edge, so the pattern approaches the footer's
           // top border without ever meeting it.
           "[mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent),linear-gradient(to_bottom,transparent,black_18%,black_75%,transparent)]",
@@ -185,7 +186,18 @@ export function FooterDemo({ className }: { className?: string }) {
           "[background:radial-gradient(ellipse_at_center,--theme(--color-black/4%),transparent_70%)]",
         )}
       />
-      <div className="w-full max-w-sm space-y-1.5 rounded-xl border bg-white/55 p-3 shadow-[0_1px_2px_--theme(--color-black/5%),0_8px_24px_-4px_--theme(--color-black/8%)] backdrop-blur-sm">
+      <div
+        className={cn(
+          "w-full max-w-sm space-y-1.5 rounded-xl border bg-white/55 p-3 shadow-[0_1px_2px_--theme(--color-black/5%),0_8px_24px_-4px_--theme(--color-black/8%)] backdrop-blur-sm",
+          // Rises into place as the slot scrolls in. `inView === false` is the
+          // only state that hides it, so a missing observer or reduced motion
+          // leaves it plainly visible.
+          "transition-all duration-700 ease-out",
+          inView === false
+            ? "translate-y-4 opacity-0"
+            : "translate-y-0 opacity-100",
+        )}
+      >
         {/* The proposed times */}
         <div className="flex items-center gap-1.5">
           <div
