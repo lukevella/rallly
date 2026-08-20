@@ -27,7 +27,7 @@ export function AddToCalendarButton({
         render={<Button size={size} className={className} />}
       >
         <PlusIcon data-icon="inline-start" />
-        <Trans i18nKey="addToCalendar" defaults="Add to Calendar" />
+        <Trans i18nKey="addToCalendar" defaults="Add to calendar" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <AddToCalendarMenuItems eventId={eventId} />

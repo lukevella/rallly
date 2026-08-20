@@ -185,7 +185,7 @@ export function ScheduledEventListItem({
                 <Icon>
                   <CalendarPlusIcon />
                 </Icon>
-                <Trans i18nKey="addToCalendar" defaults="Add to Calendar" />
+                <Trans i18nKey="addToCalendar" defaults="Add to calendar" />
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent>
                 <AddToCalendarMenuItems eventId={eventId} />
