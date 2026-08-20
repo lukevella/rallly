@@ -48,7 +48,7 @@ export function Hero({
       <h1 className="text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-5xl">
         {title}
       </h1>
-      <p className="mt-4 text-balance font-normal text-base/6 text-gray-500 sm:text-lg sm:leading-relaxed">
+      <p className="mt-4 max-w-prose text-balance font-normal text-base/6 text-gray-500 sm:text-lg sm:leading-relaxed [.text-center_&]:mx-auto">
         {description}
       </p>
       {announcement ? <div className="mt-8">{announcement}</div> : null}
