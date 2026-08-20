@@ -1,5 +1,5 @@
 import type { TFunction } from "i18next";
-import type { DemoVote } from "./demo-data";
+import type { DemoSpacing, DemoVote } from "./demo-data";
 
 // The demo renders one of these presets. The audience pages (/for/*) show a
 // poll that looks like one their reader would actually run, so the screenshot
@@ -9,6 +9,11 @@ export type DemoPreset = {
   description: string;
   organizer: string;
   location: string;
+  spacing: DemoSpacing;
+  // Set when the poll should render as a Pro customer's branded poll: the
+  // space logo and name sit above the title, the way the invite page shows
+  // them once a space turns branding on.
+  space?: { name: string };
   participants: { name: string; votes: DemoVote[] }[];
 };
 
@@ -30,12 +35,12 @@ export function getDemoPreset(
     return {
       title: t("heroDemoEaTitle", {
         ns: "home",
-        defaultValue: "Executive team offsite",
+        defaultValue: "Interview panel: Head of Finance",
       }),
       description: t("heroDemoEaDescription", {
         ns: "home",
         defaultValue:
-          "Please mark every slot you could make. I'll hold the room and send calendar invites once we have a time.",
+          "Please mark every slot you could make this week. The candidate is holding Thursday, so I'd like to confirm by Tuesday.",
       }),
       organizer: t("heroDemoEaOrganizer", {
         ns: "home",
@@ -43,8 +48,15 @@ export function getDemoPreset(
       }),
       location: t("heroDemoEaLocation", {
         ns: "home",
-        defaultValue: "Boardroom, 14th floor",
+        defaultValue: "Meeting room 3 and Zoom",
       }),
+      spacing: "consecutive",
+      space: {
+        name: t("heroDemoEaSpaceName", {
+          ns: "home",
+          defaultValue: "Westbrook University",
+        }),
+      },
       participants: executiveAssistantParticipants,
     };
   }
@@ -67,6 +79,7 @@ export function getDemoPreset(
       ns: "home",
       defaultValue: "Riverside Community Center",
     }),
+    spacing: "weekly",
     participants: defaultParticipants,
   };
 }
@@ -91,9 +104,10 @@ const defaultParticipants: DemoPreset["participants"] = [
   },
 ];
 
-// A busier board than the default: more executives, more conflicts, and a lot
-// of if-need-be — the picture of the calendar an assistant is actually working
-// around.
+// An interview panel: four colleagues plus the candidate, who is the one
+// external in the room and the reason the poll gets shared as a link. Their
+// availability is the tightest, which is what makes the last slot the only one
+// that works for everyone.
 const executiveAssistantParticipants: DemoPreset["participants"] = [
   {
     name: "Daniel Whitfield",
@@ -112,7 +126,7 @@ const executiveAssistantParticipants: DemoPreset["participants"] = [
     votes: ["yes", "no", "no", "ifNeedBe", "ifNeedBe", "no", "yes", "yes"],
   },
   {
-    name: "Rajesh Iyer",
-    votes: ["no", "ifNeedBe", "yes", "yes", "no", "no", "ifNeedBe", "yes"],
+    name: "Jordan Reyes",
+    votes: ["no", "no", "no", "ifNeedBe", "no", "no", "ifNeedBe", "yes"],
   },
 ];

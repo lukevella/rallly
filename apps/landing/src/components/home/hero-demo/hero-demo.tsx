@@ -46,7 +46,7 @@ const CachedDemo = async ({
   "use cache";
   const { t } = await getTranslation<"home">(locale, "home");
   const demoPreset = getDemoPreset(t, preset);
-  const days = getDemoDays(anchor);
+  const days = getDemoDays(anchor, demoPreset.spacing);
   const scores = getScores(days, demoPreset.participants);
 
   return (
