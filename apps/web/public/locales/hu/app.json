@@ -32,7 +32,6 @@
   "addressPlaceholder": "Fő utca 123.",
   "addSeats": "{count, plural, one {#} other {#}} hely hozzáadása",
   "addTimeOption": "Időpont hozzáadása",
-  "addToCalendar": "Hozzáadás a naptárhoz",
   "admin": "Adminisztrátor",
   "adminAccessRequired": "Adminisztrátor hozzáférés szükséges",
   "adminAccessRequiredDescription": "Adminisztrátori hozzáférésre van szükséged, hogy meg tudd nézni ezt az oldalt.",
