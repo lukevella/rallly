@@ -32,7 +32,6 @@
   "addressPlaceholder": "ul. Główna 123",
   "addSeats": "{count, plural, one {Dodaj # miejsce} few {Dodaj # miejsca} many {Dodaj # miejsc} other {Dodaj # miejsca}}",
   "addTimeOption": "Dodaj opcję czasową",
-  "addToCalendar": "Dodaj do kalendarza",
   "admin": "Administrator",
   "adminAccessRequired": "Wymagane uprawnienia administratora",
   "adminAccessRequiredDescription": "Musisz mieć uprawnienia administratora, aby zobaczyć tę stronę.",
