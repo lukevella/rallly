@@ -502,7 +502,13 @@ export const authLib = betterAuth({
                 data: { lastSeenAt: new Date() },
                 select: { isAnonymous: true, lastLoginMethod: true },
               })
-              .catch(() => null);
+              .catch((error) => {
+                logger.error(
+                  { error, userId: session.userId },
+                  "Failed to update lastSeenAt",
+                );
+                return null;
+              });
 
             // Anonymous users shouldn't trigger login events or create person profiles.
             if (user && !user.isAnonymous) {
