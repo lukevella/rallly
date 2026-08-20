@@ -1,9 +1,16 @@
 import "server-only";
 
+import { subject } from "@casl/ability";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import { getUser, getUserHasNoAccounts } from "@/features/user/data";
-import type { UserDTO } from "@/features/user/schema";
+import { defineAbilityFor } from "@/features/user/ability";
+import { getUser, getUserHasNoAccounts, getUsers } from "@/features/user/data";
+import type {
+  InactivityPeriod,
+  UserDTO,
+  UserRole,
+  UserSort,
+} from "@/features/user/schema";
 import { getSession, getSessionState } from "@/lib/auth";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { getPathname } from "@/lib/pathname";
@@ -95,3 +102,51 @@ export const loadUserHasNoAccounts = cache(async () => {
   const user = await requireUser();
   return getUserHasNoAccounts(user.id);
 });
+
+/**
+ * The control panel user directory, with each row annotated with what the
+ * signed-in admin is allowed to do to it. Admin-gated.
+ *
+ * Not wrapped in cache(): the filter arguments arrive as an object literal, so
+ * a memo keyed on argument identity could never hit. The page renders this
+ * once per request.
+ */
+export async function loadUsers({
+  page,
+  pageSize,
+  q,
+  role,
+  inactiveFor,
+  sort,
+}: {
+  page: number;
+  pageSize: number;
+  q?: string;
+  role?: UserRole;
+  inactiveFor?: InactivityPeriod;
+  sort: UserSort;
+}) {
+  const admin = await requireAdmin();
+
+  const { users, totalUsers } = await getUsers({
+    page,
+    pageSize,
+    q,
+    role,
+    inactiveFor,
+    sort,
+  });
+
+  const ability = defineAbilityFor({ role: admin.role, id: admin.id });
+
+  return {
+    users: users.map((user) => ({
+      ...user,
+      image: user.image ?? undefined,
+      canChangeRole: ability.can("update", subject("User", user), "role"),
+      canBan: ability.can("update", subject("User", user), "banned"),
+      canDelete: ability.can("delete", subject("User", user)),
+    })),
+    totalUsers,
+  };
+}

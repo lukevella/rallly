@@ -253,7 +253,6 @@
         "src/app/*/(space)/settings/preferences/components/date-time-preferences.tsx",
         "src/app/*/accept-invite/*/page.tsx",
         "src/app/*/invite/*/page.tsx",
-        "src/app/*/control-panel/users/page.tsx",
         "src/app/*/e/*/components/rsvp-area.tsx"
       ],
       "linter": {
