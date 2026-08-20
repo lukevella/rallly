@@ -32,7 +32,6 @@
   "addressPlaceholder": "Hoofdstraat 123",
   "addSeats": "{count, plural, one {Voeg # plaats toe} other {Voeg # plaatsen toe}}",
   "addTimeOption": "Periode toevoegen",
-  "addToCalendar": "Toevoegen aan Agenda",
   "admin": "Beheerder",
   "adminAccessRequired": "Beheerdersrechten vereist",
   "adminAccessRequiredDescription": "Je hebt beheerdersrechten nodig om deze pagina te bekijken.",
