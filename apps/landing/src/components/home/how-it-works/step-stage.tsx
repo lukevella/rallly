@@ -23,11 +23,9 @@ export type StepKey = keyof typeof DEMOS;
 // so the next one starts as the previous settles.
 const STEP_STAGGER = 900;
 
-// The cue comes from the first step rather than each step watching itself:
-// below lg the later cards sit outside the viewport in a horizontal scroller,
-// so self-observation would start their sequences whenever they were scrolled
-// to, breaking the order.
-const StepCueContext = React.createContext(false);
+// When the section came into view, so a step can tell how much of its slot in
+// the walkthrough is left. Null until it does.
+const StepCueContext = React.createContext<number | null>(null);
 
 export const StepCue = ({
   children,
@@ -42,10 +40,17 @@ export const StepCue = ({
   // strip can be taller than the viewport, where a fraction like 0.4 would
   // never be reached and the section would never play.
   const started = useInView(ref, { once: true, margin: "0px 0px -15% 0px" });
+  const [startedAt, setStartedAt] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    if (started) {
+      setStartedAt(performance.now());
+    }
+  }, [started]);
 
   return (
     <div ref={ref} className={className}>
-      <StepCueContext.Provider value={started}>
+      <StepCueContext.Provider value={startedAt}>
         {children}
       </StepCueContext.Provider>
     </div>
@@ -61,7 +66,13 @@ export const StepStage = ({
   index: number;
   className?: string;
 }) => {
-  const started = React.useContext(StepCueContext);
+  const startedAt = React.useContext(StepCueContext);
+  const ref = React.useRef<HTMLDivElement>(null);
+  // Below lg the cards sit in a horizontal scroller, so a step can be off to
+  // the side long after the section itself is on screen. Waiting for the stage
+  // itself means a demo never plays out of sight; half of it keeps the card
+  // peeking in past the gutter from counting as arrived.
+  const arrived = useInView(ref, { once: true, amount: 0.5 });
   const [play, setPlay] = React.useState(false);
   const reduceMotion = useReducedMotion();
   const Demo = DEMOS[step];
@@ -70,17 +81,24 @@ export const StepStage = ({
   const playback: Playback = reduceMotion ? "done" : play ? "play" : "idle";
 
   React.useEffect(() => {
-    if (!started) {
+    if (startedAt === null || !arrived) {
       return;
     }
+    // The stagger orders steps that arrive together: what is left of this
+    // step's slot, and nothing at all for a step scrolled to later, which is
+    // its own cue and should play as it lands.
+    const delay = Math.max(
+      0,
+      index * STEP_STAGGER - (performance.now() - startedAt),
+    );
     // Plays once and holds: the finished state says more than the empty one,
     // so there is nothing to gain from resetting it.
-    const timer = setTimeout(() => setPlay(true), index * STEP_STAGGER);
+    const timer = setTimeout(() => setPlay(true), delay);
     return () => clearTimeout(timer);
-  }, [started, index]);
+  }, [startedAt, arrived, index]);
 
   return (
-    <div aria-hidden="true" className={className}>
+    <div ref={ref} aria-hidden="true" className={className}>
       <div className="w-full max-w-64">
         <Demo playback={playback} />
       </div>
