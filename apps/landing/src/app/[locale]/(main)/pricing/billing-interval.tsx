@@ -50,26 +50,26 @@ export function BillingIntervalSwitch({
   const { interval, setInterval } = useBillingInterval();
   const isYearly = interval === "yearly";
   return (
-    <div className="flex flex-col items-center gap-y-2">
+    <div className="flex flex-col items-center gap-y-4">
       {badge ? (
         <div className="relative">
           {badge}
           <svg
             aria-hidden="true"
-            viewBox="0 0 48 40"
-            className="pointer-events-none absolute top-0 -right-16 hidden h-12 w-16 text-green-500 sm:block"
+            viewBox="0 0 48 32"
+            className="pointer-events-none absolute top-0 -right-16 hidden h-9 w-16 text-gray-400 sm:block"
             fill="none"
           >
             <path
-              d="M2 8c18-7 33 2 32 20"
+              d="M2 7c17-6 31 1 30 15"
               stroke="currentColor"
-              strokeWidth="2.5"
+              strokeWidth="1.5"
               strokeLinecap="round"
             />
             <path
-              d="M27 22l7 7 5-6"
+              d="M26 18l6 5 4-5"
               stroke="currentColor"
-              strokeWidth="2.5"
+              strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
