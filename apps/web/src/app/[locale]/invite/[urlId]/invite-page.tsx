@@ -45,7 +45,11 @@ const GoToApp = () => {
   );
 };
 
-export function InvitePage() {
+export function InvitePage({
+  footerLinks,
+}: {
+  footerLinks: { label: string; href: string }[];
+}) {
   return (
     <div className="page-bg-gray-100 h-dvh overflow-auto p-3 lg:p-6 dark:bg-gray-900">
       <main
@@ -58,7 +62,7 @@ export function InvitePage() {
         <VotingForm>
           <ResponsiveResults />
         </VotingForm>
-        <PollFooter />
+        <PollFooter footerLinks={footerLinks} />
         <div className="fixed right-4 bottom-15 z-40 lg:right-6 lg:bottom-6">
           <CommentsSheet className="rounded-full shadow-lg" />
         </div>

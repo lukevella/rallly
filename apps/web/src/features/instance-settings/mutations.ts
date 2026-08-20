@@ -4,7 +4,7 @@ import { prisma } from "@rallly/database";
 import { updateTag } from "next/cache";
 import { replaceStoredAsset } from "@/lib/storage/asset-upload";
 import { instanceSettingsTag } from "./constants";
-import type { BrandingLogoType } from "./schema";
+import type { BrandingLogoType, FooterLink } from "./schema";
 
 export async function updateInstanceSettings(data: {
   disableUserRegistration?: boolean;
@@ -58,4 +58,17 @@ export async function updateInstanceLogo({
       updateTag(instanceSettingsTag);
     },
   });
+}
+
+export async function updateInstanceFooterLinks(footerLinks: FooterLink[]) {
+  await prisma.instanceSettings.update({
+    where: {
+      id: 1,
+    },
+    data: {
+      footerLinks,
+    },
+  });
+
+  updateTag(instanceSettingsTag);
 }

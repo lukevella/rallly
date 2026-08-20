@@ -12,11 +12,15 @@ const InvitePage = dynamic(
   { ssr: false },
 );
 
-export function InvitePageLoader() {
+export function InvitePageLoader({
+  footerLinks,
+}: {
+  footerLinks: { label: string; href: string }[];
+}) {
   return (
     <>
       <PollBrandingFromContext />
-      <InvitePage />
+      <InvitePage footerLinks={footerLinks} />
     </>
   );
 }

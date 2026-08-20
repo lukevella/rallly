@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
+import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { PermissionProvider } from "@/features/poll/client";
 import { UserProvider } from "@/features/user/client";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -50,14 +51,16 @@ export default async function Page(props: {
 
   const token = (await props.searchParams).token;
 
-  const [locale, session, deviceDateTimeConfig] = await Promise.all([
-    getLocale(),
-    getSession(),
-    getDeviceDateTimeConfig(),
-    trpc.polls.get.prefetch({ urlId: params.urlId }),
-    trpc.polls.participants.list.prefetch({ pollId: params.urlId, token }),
-    trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
-  ]);
+  const [locale, session, deviceDateTimeConfig, footerLinks] =
+    await Promise.all([
+      getLocale(),
+      getSession(),
+      getDeviceDateTimeConfig(),
+      loadFooterLinks(),
+      trpc.polls.get.prefetch({ urlId: params.urlId }),
+      trpc.polls.participants.list.prefetch({ pollId: params.urlId, token }),
+      trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
+    ]);
 
   let impersonatedUserId: string | null = null;
   if (token) {
@@ -78,7 +81,7 @@ export default async function Page(props: {
         >
           <Providers>
             <PermissionProvider impersonatedUserId={impersonatedUserId}>
-              <InvitePageLoader />
+              <InvitePageLoader footerLinks={footerLinks} />
             </PermissionProvider>
           </Providers>
         </DeviceDateTimeProvider>
