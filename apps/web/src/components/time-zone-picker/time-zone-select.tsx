@@ -12,9 +12,10 @@ import { InputGroupAddon } from "@rallly/ui/input-group";
 import { GlobeIcon } from "lucide-react";
 import React from "react";
 import {
-  curatedTimezoneIds,
   getAllTimezoneIds,
   getCityFromTimezoneId,
+  getCuratedTimezoneIds,
+  matchesTimezoneQuery,
 } from "@/components/time-zone-picker/timezone-data";
 import { useTranslation } from "@/i18n/client";
 import { Time } from "@/lib/datetime/time";
@@ -23,12 +24,7 @@ const allIds = getAllTimezoneIds().sort((a, b) =>
   getCityFromTimezoneId(a).localeCompare(getCityFromTimezoneId(b)),
 );
 
-const curatedIds = allIds.filter((id) => curatedTimezoneIds.has(id));
-
-function filterTimezone(id: string, query: string): boolean {
-  if (!query) return true;
-  return getCityFromTimezoneId(id).toLowerCase().includes(query.toLowerCase());
-}
+const curatedIds = getCuratedTimezoneIds(allIds);
 
 export function TimeZoneSelect({
   id,
@@ -71,7 +67,7 @@ export function TimeZoneSelect({
         }
       }}
       itemToStringLabel={getCityFromTimezoneId}
-      filter={filterTimezone}
+      filter={matchesTimezoneQuery}
       autoHighlight={true}
     >
       <div ref={anchorRef} className={cn("min-w-64", className)}>

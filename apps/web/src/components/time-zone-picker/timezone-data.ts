@@ -1,4 +1,7 @@
-import { normalizeLegacyIanaId } from "@/lib/utils/timezone-schema";
+import {
+  normalizeLegacyIanaId,
+  toRuntimeCanonicalIanaId,
+} from "@/lib/utils/timezone-schema";
 
 export function getAllTimezoneIds(): string[] {
   return Intl.supportedValuesOf("timeZone");
@@ -8,6 +11,43 @@ export function getCityFromTimezoneId(id: string): string {
   const resolved = normalizeLegacyIanaId(id);
   const lastSlash = resolved.lastIndexOf("/");
   return resolved.substring(lastSlash + 1).replaceAll("_", " ");
+}
+
+/**
+ * The curated IDs as this runtime spells them.
+ *
+ * CLDR/ICU keeps pre-2008 tzdb IDs canonical, so `Intl.supportedValuesOf`
+ * yields `Asia/Calcutta` where the curated set lists `Asia/Kolkata`. A raw
+ * string intersection silently drops those entries, so compare canonical forms
+ * on both sides instead. `time-zone-select.test.tsx` asserts no curated entry
+ * goes missing.
+ */
+export function getCuratedTimezoneIds(allIds: string[]): string[] {
+  const curatedCanonical = new Set(
+    Array.from(curatedTimezoneIds, toRuntimeCanonicalIanaId),
+  );
+  return allIds.filter((id) =>
+    curatedCanonical.has(toRuntimeCanonicalIanaId(id)),
+  );
+}
+
+/**
+ * Match a query against the displayed (modern) city name and the legacy alias,
+ * so someone typing "Calcutta" still finds the zone shown as "Kolkata".
+ */
+export function matchesTimezoneQuery(id: string, query: string): boolean {
+  const normalizedQuery = query.trim().toLowerCase();
+  if (!normalizedQuery) return true;
+
+  const candidates = new Set([id, normalizeLegacyIanaId(id)]);
+  for (const candidate of candidates) {
+    const lastSlash = candidate.lastIndexOf("/");
+    const city = candidate.substring(lastSlash + 1).replaceAll("_", " ");
+    if (city.toLowerCase().includes(normalizedQuery)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 // Curated set of major cities/timezones covering most common UTC offsets.

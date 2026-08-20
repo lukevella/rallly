@@ -3,6 +3,12 @@ import { describe, expect, it } from "vitest";
 import { render, screen, within } from "@/test/test-utils";
 
 import { TimeZoneSelect } from "./time-zone-select";
+import {
+  curatedTimezoneIds,
+  getAllTimezoneIds,
+  getCityFromTimezoneId,
+  getCuratedTimezoneIds,
+} from "./timezone-data";
 
 describe("TimeZoneSelect", () => {
   it("should render the combobox input", () => {
@@ -104,5 +110,44 @@ describe("TimeZoneSelect", () => {
 
     // The combobox should indicate the list is empty via data attribute
     expect(input).toHaveAttribute("data-list-empty", "");
+  });
+});
+
+describe("curated timezone list", () => {
+  const curatedIds = getCuratedTimezoneIds(getAllTimezoneIds());
+
+  it.each(
+    Array.from(curatedTimezoneIds),
+  )("keeps %s in the curated list", (curatedId) => {
+    // A curated ID that matches nothing must fail here rather than vanish
+    // from the default view. CLDR/ICU keeps pre-2008 tzdb IDs canonical, so
+    // the runtime lists `Asia/Calcutta` where we curate `Asia/Kolkata`; the
+    // intersection compares canonical forms so both spellings match.
+    const cities = curatedIds.map(getCityFromTimezoneId);
+    expect(cities).toContain(getCityFromTimezoneId(curatedId));
+  });
+
+  it("shows modern city names for zones the runtime spells with legacy IDs", () => {
+    const cities = curatedIds.map(getCityFromTimezoneId);
+
+    expect(cities).toContain("Kolkata");
+    expect(cities).toContain("Kathmandu");
+    expect(cities).toContain("Yangon");
+    expect(cities).toContain("Ho Chi Minh");
+    expect(cities).toContain("Buenos Aires");
+    expect(cities).toContain("Kyiv");
+
+    expect(cities).not.toContain("Calcutta");
+    expect(cities).not.toContain("Katmandu");
+    expect(cities).not.toContain("Rangoon");
+    expect(cities).not.toContain("Saigon");
+    expect(cities).not.toContain("Kiev");
+  });
+
+  it("does not duplicate a zone the runtime and curated set spell differently", () => {
+    const kolkata = curatedIds.filter(
+      (id) => getCityFromTimezoneId(id) === "Kolkata",
+    );
+    expect(kolkata).toHaveLength(1);
   });
 });
