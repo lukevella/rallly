@@ -32,7 +32,6 @@
   "addressPlaceholder": "ул. Главная, 123",
   "addSeats": "{count, plural, one {Add # Seat} other {Add # Seats}}",
   "addTimeOption": "Добавить время",
-  "addToCalendar": "Добавить в календарь",
   "admin": "Администратор",
   "adminAccessRequired": "Требуются права администратора.",
   "adminAccessRequiredDescription": "Для просмотра этой страницы требуются права администратора.",
