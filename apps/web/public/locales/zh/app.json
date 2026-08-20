@@ -32,7 +32,6 @@
   "addressPlaceholder": "主街123号",
   "addSeats": "{count, plural, other {添加 # 个席位}}",
   "addTimeOption": "新增时间选项",
-  "addToCalendar": "添加到日历",
   "admin": "管理员",
   "adminAccessRequired": "需要管理员权限",
   "adminAccessRequiredDescription": "需要管理员权限才能查看此页面。",
