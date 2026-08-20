@@ -18,15 +18,20 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { shortUrl } from "@rallly/utils/absolute-url";
-import { MoreVerticalIcon } from "lucide-react";
+import { CalendarPlusIcon, MoreVerticalIcon } from "lucide-react";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedList } from "@/components/stacked-list";
+import { AddToCalendarMenuItems } from "@/features/calendars/components/add-to-calendar-menu-items";
 import {
   EventDate,
   EventTimeRange,
@@ -153,37 +158,52 @@ export function ScheduledEventListItem({
         {isScheduledEventEnabled && (
           <CopyLinkButton href={shortUrl(`/e/${eventId}`)} />
         )}
-        {status !== "canceled" ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <Button
-                  aria-label={t("moreOptions", {
-                    defaultValue: "More options",
-                  })}
-                  variant="ghost"
-                  size="icon"
-                />
-              }
-            >
-              <Icon>
-                <MoreVerticalIcon />
-              </Icon>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                variant="destructive"
-                onClick={() => dialog.trigger()}
-              >
-                <Trans i18nKey="cancelEvent" defaults="Cancel event" />
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
+        {status === "canceled" && (
           <Badge>
             <Trans i18nKey="canceled" defaults="Canceled" />
           </Badge>
         )}
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            render={
+              <Button
+                aria-label={t("moreOptions", {
+                  defaultValue: "More options",
+                })}
+                variant="ghost"
+                size="icon"
+              />
+            }
+          >
+            <Icon>
+              <MoreVerticalIcon />
+            </Icon>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <Icon>
+                  <CalendarPlusIcon />
+                </Icon>
+                <Trans i18nKey="addToCalendar" defaults="Add to Calendar" />
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <AddToCalendarMenuItems eventId={eventId} />
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+            {status !== "canceled" && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => dialog.trigger()}
+                >
+                  <Trans i18nKey="cancelEvent" defaults="Cancel event" />
+                </DropdownMenuItem>
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <Dialog {...dialog.dialogProps}>
         <DialogContent size="sm">
