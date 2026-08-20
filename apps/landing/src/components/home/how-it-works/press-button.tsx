@@ -40,8 +40,19 @@ export const PressButton = ({
     <m.div
       className={className}
       initial={false}
-      animate={{ scale: down ? 0.93 : 1 }}
-      transition={playback === "play" ? (down ? PRESS_DOWN : PRESS_UP) : EXIT}
+      // Guarded on playback rather than down alone: switching reduced motion on
+      // mid press would otherwise render the dip for a frame before the effect
+      // clears it, which is the movement reduced motion is meant to avoid.
+      animate={{ scale: playback === "play" && down ? 0.93 : 1 }}
+      transition={
+        playback === "done"
+          ? { duration: 0 }
+          : playback === "play"
+            ? down
+              ? PRESS_DOWN
+              : PRESS_UP
+            : EXIT
+      }
     />
   );
 };
