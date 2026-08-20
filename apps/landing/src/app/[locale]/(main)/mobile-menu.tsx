@@ -10,6 +10,8 @@ import { LinkBase } from "@/i18n/client/link";
 import { linkToApp } from "@/lib/linkToApp";
 
 const PANEL_ID = "mobile-menu-panel";
+// Matches the `lg:hidden` on the panel below. Tailwind's default `lg`.
+const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
 
 export const MobileMenu = ({
   links,
@@ -34,6 +36,16 @@ export const MobileMenu = ({
 
   React.useEffect(() => {
     if (!open) return;
+    const mediaQuery = window.matchMedia(DESKTOP_MEDIA_QUERY);
+    if (mediaQuery.matches) {
+      setOpen(false);
+      return;
+    }
+    const onDesktop = (event: MediaQueryListEvent) => {
+      if (event.matches) setOpen(false);
+    };
+    mediaQuery.addEventListener("change", onDesktop);
+
     const { body } = document;
     const previous = body.style.overflow;
     body.style.overflow = "hidden";
@@ -46,6 +58,7 @@ export const MobileMenu = ({
     return () => {
       body.style.overflow = previous;
       document.removeEventListener("keydown", onKeyDown);
+      mediaQuery.removeEventListener("change", onDesktop);
     };
   }, [open]);
 
