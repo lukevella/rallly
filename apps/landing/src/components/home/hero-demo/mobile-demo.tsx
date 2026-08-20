@@ -15,11 +15,13 @@ export const MobileDemo = ({
   locale,
   days,
   scores,
+  accentColor,
   t,
 }: {
   locale: string;
   days: DemoDay[];
   scores: number[];
+  accentColor?: string;
   t: TFunction<"home">;
 }) => {
   const format = formatDemoParts(locale);
@@ -76,7 +78,7 @@ export const MobileDemo = ({
             );
           })}
         </div>
-        <VoteActions />
+        <VoteActions accentColor={accentColor} />
       </DemoScreen>
     </DemoFrame>
   );

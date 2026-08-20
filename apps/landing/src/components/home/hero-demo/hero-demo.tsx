@@ -72,7 +72,13 @@ const CachedDemo = async ({
             defaultValue: "Go ahead, try voting!",
           })}
         />
-        <MobileDemo locale={locale} days={days} scores={scores} t={t} />
+        <MobileDemo
+          locale={locale}
+          days={days}
+          scores={scores}
+          accentColor={demoPreset.space?.color}
+          t={t}
+        />
       </div>
     </div>
   );

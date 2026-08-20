@@ -12,8 +12,9 @@ export type DemoPreset = {
   spacing: DemoSpacing;
   // Set when the poll should render as a Pro customer's branded poll: the
   // space logo and name sit above the title, the way the invite page shows
-  // them once a space turns branding on.
-  space?: { name: string };
+  // them once a space turns branding on. `color` stands in for the space's
+  // primary colour, which drives the accents a white-labelled poll recolours.
+  space?: { name: string; color: string };
   participants: { name: string; votes: DemoVote[] }[];
 };
 
@@ -56,6 +57,7 @@ export function getDemoPreset(
           ns: "home",
           defaultValue: "Westbrook University",
         }),
+        color: "#1D3AA7",
       },
       participants: executiveAssistantParticipants,
     };
