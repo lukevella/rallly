@@ -20,6 +20,7 @@ const VOTES: ("yes" | "ifNeedBe" | "no")[][] = [
   ["yes", "no", "ifNeedBe", "yes", "no"],
   ["no", "yes", "no", "yes", "ifNeedBe"],
   ["ifNeedBe", "no", "yes", "yes", "no"],
+  ["no", "ifNeedBe", "no", "yes", "yes"],
 ];
 
 const STEP_MS = 900;
@@ -30,46 +31,39 @@ const HOLD_MS = 2600;
 const EXIT_MS = 700;
 
 /**
- * True once the bottom of the page has been reached, and false again when it
- * is left. Watches the end of the enclosing footer rather than the card
- * itself: the card clears the viewport a few hundred pixels before the page
- * does, so keying off the card would finish the reveal mid scroll.
+ * True while any part of the slot is on screen, false once none of it is.
+ *
+ * Deliberately no threshold or root margin. Anything that only counts the slot
+ * as "in view" once some fraction of it shows leaves a band where it is on
+ * screen but reported out of view — and in that band the card is visible while
+ * the cycle is parked, so it reads as an empty panel. Plain intersection has no
+ * such band: out of view means not a pixel of it is showing.
  *
  * Plain IntersectionObserver rather than Motion's `useInView` so the reveal
  * does not depend on an animation frame being scheduled.
  */
-function useScrolledToBottom(
-  ref: React.RefObject<Element | null>,
-  enabled: boolean,
-) {
+function useInView(ref: React.RefObject<Element | null>, enabled: boolean) {
   // Starts null — "not yet known" — so the card can stay visible until an
   // observer actually reports otherwise. Only ever hides on a real `false`.
-  const [atBottom, setAtBottom] = React.useState<boolean | null>(null);
+  const [inView, setInView] = React.useState<boolean | null>(null);
 
   React.useEffect(() => {
     const element = ref.current;
-    if (!enabled || !element) return;
-
-    const footer = element.closest("footer") ?? element;
-    // A probe at the very end of the footer, entering the viewport only once
-    // the page is scrolled to the bottom.
-    const sentinel = document.createElement("div");
-    sentinel.setAttribute("aria-hidden", "true");
-    sentinel.style.cssText = "height:1px;width:100%;pointer-events:none";
-    footer.append(sentinel);
+    // Without the API there is nothing to observe, and constructing it would
+    // throw before the solved-card fallback ever renders.
+    if (!enabled || !element || typeof IntersectionObserver === "undefined") {
+      return;
+    }
 
     const observer = new IntersectionObserver(([entry]) =>
-      setAtBottom(entry.isIntersecting),
+      setInView(entry.isIntersecting),
     );
-    observer.observe(sentinel);
+    observer.observe(element);
 
-    return () => {
-      observer.disconnect();
-      sentinel.remove();
-    };
+    return () => observer.disconnect();
   }, [ref, enabled]);
 
-  return atBottom;
+  return inView;
 }
 
 // step 0: empty card. step 1: the proposed times appear. steps 2..n+1: one
@@ -136,10 +130,10 @@ export function FooterDemo({ className }: { className?: string }) {
   }, []);
   // With reduced motion the observer never runs: nothing reveals, nothing
   // loops, the solved poll is simply there.
-  const inView = useScrolledToBottom(ref, !shouldReduceMotion);
+  const inView = useInView(ref, !shouldReduceMotion);
 
-  // The cycle runs only while the page is at the bottom, so arriving there
-  // always starts from the top of the story rather than mid vote.
+  // The cycle runs only while the card is in view, so scrolling to it always
+  // starts from the top of the story rather than mid vote.
   const animated = inView === true && !shouldReduceMotion;
   const { visibleRows, showTimes, decided: cycleDecided } = useCycle(animated);
 
@@ -154,22 +148,18 @@ export function FooterDemo({ className }: { className?: string }) {
   const decided = solved ? true : cycleDecided;
 
   return (
+    // The observed slot itself never moves or fades. The reveal lives on the
+    // panel inside it, so the transform cannot shift what the observer is
+    // measuring and flip the reveal back and forth at the boundary.
     <div
       ref={ref}
       aria-hidden
       className={cn(
         "relative isolate flex items-center justify-center py-10",
-        // The card rises into place once the page bottom is reached.
-        // `inView === false` is the only state that hides it, so a missing
-        // observer or reduced motion leaves it plainly visible.
-        "transition-all duration-700 ease-out",
-        inView === false
-          ? "translate-y-4 opacity-0"
-          : "translate-y-0 opacity-100",
         className,
       )}
     >
-      {/* Graph paper filling the whole slot, dissolving well before the edges
+      {/* A dot grid filling the whole slot, dissolving well before the edges
           so the pattern has no hard border and reads as texture behind the
           panel rather than a box around it. */}
       <div
@@ -178,8 +168,11 @@ export function FooterDemo({ className }: { className?: string }) {
           // padding, where the mask fades it out just shy of the border. No
           // sideways bleed: that would widen the page.
           "absolute -top-14 right-0 -bottom-10 left-0 -z-10",
-          "bg-[linear-gradient(to_right,--theme(--color-black/2.5%)_1px,transparent_1px),linear-gradient(to_bottom,--theme(--color-black/2.5%)_1px,transparent_1px)]",
-          "bg-[size:32px_32px]",
+          // Dots rather than ruled lines: far less ink for the same rhythm, so
+          // it sits further back behind the panel. They carry more alpha than
+          // the lines did because there is so much less of each one.
+          "bg-[radial-gradient(--theme(--color-black/12%)_1px,transparent_1px)]",
+          "bg-[size:24px_24px]",
           // Fades out on every edge, so the pattern approaches the footer's
           // top border without ever meeting it.
           "[mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent),linear-gradient(to_bottom,transparent,black_18%,black_75%,transparent)]",
@@ -194,7 +187,18 @@ export function FooterDemo({ className }: { className?: string }) {
           "[background:radial-gradient(ellipse_at_center,--theme(--color-black/4%),transparent_70%)]",
         )}
       />
-      <div className="w-full max-w-sm space-y-1.5 rounded-xl border bg-white/80 p-3 shadow-[0_1px_2px_--theme(--color-black/5%),0_8px_24px_-4px_--theme(--color-black/8%)] backdrop-blur-sm">
+      <div
+        className={cn(
+          "w-full max-w-sm space-y-1.5 rounded-xl border border-border-muted bg-white/55 p-3 shadow-[0_1px_2px_--theme(--color-black/5%),0_8px_24px_-4px_--theme(--color-black/8%)] backdrop-blur-sm",
+          // Rises into place as the slot scrolls in. `inView === false` is the
+          // only state that hides it, so a missing observer or reduced motion
+          // leaves it plainly visible.
+          "transition-all duration-700 ease-out",
+          inView === false
+            ? "translate-y-4 opacity-0"
+            : "translate-y-0 opacity-100",
+        )}
+      >
         {/* The proposed times */}
         <div className="flex items-center gap-1.5">
           <div
@@ -232,9 +236,10 @@ export function FooterDemo({ className }: { className?: string }) {
           ))}
         </div>
 
-        {/* One row per voter, arriving in turn. The height is reserved for the
-            full set so the footer does not reflow as rows come and go. */}
-        <div className="h-[72px] space-y-1.5">
+        {/* One row per voter, arriving in turn. Every row stays mounted and
+            merely turns transparent, so the block keeps its full height
+            throughout and the footer never reflows. */}
+        <div className="space-y-1.5">
           {VOTES.map((votes, rowIndex) => (
             <div
               // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length wireframe rows
@@ -254,10 +259,7 @@ export function FooterDemo({ className }: { className?: string }) {
                   // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length wireframe votes
                   key={column}
                   className={cn(
-                    "flex h-5 flex-1 items-center justify-center rounded-md transition-all duration-500",
-                    decided && column === WINNING_COLUMN
-                      ? "bg-gray-100"
-                      : "bg-gray-50",
+                    "flex h-5 flex-1 items-center justify-center transition-all duration-500",
                     // Everything but the winning column recedes once decided,
                     // so the eye lands on the agreed time.
                     decided && column !== WINNING_COLUMN && "opacity-40",
