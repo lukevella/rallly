@@ -8,7 +8,6 @@ import {
   UserIcon,
 } from "lucide-react";
 import * as React from "react";
-import DemoSpaceLogo from "./assets/demo-space-logo.svg";
 import type { DemoDay } from "./demo-data";
 import { formatDemoParts, getInitials } from "./demo-data";
 import { DemoFrame, DemoScreen } from "./demo-frame";
@@ -48,32 +47,8 @@ export const DesktopDemo = ({
       <DemoScreen className="bg-gray-100 p-4 sm:p-6">
         <div className="mx-auto w-fit space-y-3 text-left">
           <div className="overflow-hidden rounded-xl border border-gray-200/60 bg-white">
-            {preset.space ? (
-              // The real card draws this bar from the primary colour, which a
-              // white-labelled space overrides with its own.
-              <div
-                className="h-1.5 bg-linear-to-r"
-                style={{
-                  backgroundImage: `linear-gradient(to right, ${preset.space.color}, ${preset.space.color}bf)`,
-                }}
-              />
-            ) : (
-              <div className="h-1.5 bg-linear-to-r from-indigo-500 to-violet-500" />
-            )}
+            <div className="h-1.5 bg-linear-to-r from-indigo-500 to-violet-500" />
             <div className="space-y-3 p-4 sm:p-5">
-              {preset.space ? (
-                <div>
-                  <div
-                    className="flex size-12 items-center justify-center rounded-lg text-white"
-                    style={{ backgroundColor: preset.space.color }}
-                  >
-                    <DemoSpaceLogo className="h-6 w-auto" />
-                  </div>
-                  <p className="mt-2 font-medium text-gray-500 text-sm">
-                    {preset.space.name}
-                  </p>
-                </div>
-              ) : null}
               <div>
                 <h3 className="font-semibold text-gray-900 text-lg tracking-tight">
                   {preset.title}

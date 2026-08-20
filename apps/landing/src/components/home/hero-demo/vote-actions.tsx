@@ -1,6 +1,5 @@
 "use client";
 import { posthog } from "@rallly/posthog/client";
-import { cn } from "@rallly/ui";
 import { CircleCheckIcon, XIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import Link from "next/link";
@@ -12,7 +11,7 @@ import { linkToApp } from "@/lib/linkToApp";
 // The action bar of the phone demo, plus the confirmation it opens. The
 // surrounding poll layout stays on the server. Must be a direct child of the
 // relative DemoScreen so the confirmation overlay covers the whole screen.
-export const VoteActions = ({ accentColor }: { accentColor?: string }) => {
+export const VoteActions = () => {
   const { t } = useTranslation("home");
   const [submitted, setSubmitted] = React.useState(false);
 
@@ -31,13 +30,7 @@ export const VoteActions = ({ accentColor }: { accentColor?: string }) => {
             posthog?.capture("landing:hero_demo_continue_click");
             setSubmitted(true);
           }}
-          className={cn(
-            "flex-[2] cursor-pointer rounded-xl py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md",
-            // A branded poll recolours the primary action; otherwise it keeps
-            // the Rallly accent.
-            !accentColor && "bg-indigo-500/90 hover:bg-indigo-500",
-          )}
-          style={accentColor ? { backgroundColor: accentColor } : undefined}
+          className="flex-[2] cursor-pointer rounded-xl bg-indigo-500/90 py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md hover:bg-indigo-500"
         >
           <Trans ns="home" i18nKey="heroDemoVote" defaults="Vote" />
         </button>
