@@ -21,7 +21,7 @@ export function Cta({
         <h2 className="text-balance font-medium text-2xl text-gray-800 leading-tight tracking-tight sm:text-4xl">
           {title}
         </h2>
-        <p className="max-w-prose text-pretty text-gray-500 text-sm sm:text-balance sm:text-lg">
+        <p className="max-w-prose text-pretty text-base/6 text-gray-500 sm:text-balance sm:text-lg">
           {description}
         </p>
       </div>
