@@ -8,7 +8,7 @@ const alternateLanguages = supportedLngs.filter((lng) => lng !== "en");
 
 const seoPages = [
   "/best-doodle-alternative",
-  "/for/executive-assistants",
+  "/scheduling-for/executive-assistants",
   "/free-scheduling-poll",
   "/when2meet-alternative",
 ];

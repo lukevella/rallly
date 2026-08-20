@@ -185,13 +185,18 @@ export const Footer = async ({ locale }: { locale: string }) => {
         </div>
         <div>
           <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
-            <Trans t={t} ns="common" i18nKey="for" defaults="For" />
+            <Trans
+              t={t}
+              ns="common"
+              i18nKey="schedulingFor"
+              defaults="Scheduling for"
+            />
           </div>
           <ul className="grid gap-3 text-sm">
             <li>
               <LinkBase
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-                href="/for/executive-assistants"
+                href="/scheduling-for/executive-assistants"
               >
                 <Trans
                   t={t}
