@@ -1,4 +1,5 @@
 import {
+  getIanaIdAliases,
   normalizeLegacyIanaId,
   toRuntimeCanonicalIanaId,
 } from "@/lib/utils/timezone-schema";
@@ -32,15 +33,15 @@ export function getCuratedTimezoneIds(allIds: string[]): string[] {
 }
 
 /**
- * Match a query against the displayed (modern) city name and the legacy alias,
- * so someone typing "Calcutta" still finds the zone shown as "Kolkata".
+ * Match a query against every spelling of the zone, so someone typing
+ * "Calcutta" still finds the zone shown as "Kolkata" — and vice versa on an
+ * engine that lists the modern ID.
  */
 export function matchesTimezoneQuery(id: string, query: string): boolean {
   const normalizedQuery = query.trim().toLowerCase();
   if (!normalizedQuery) return true;
 
-  const candidates = new Set([id, normalizeLegacyIanaId(id)]);
-  for (const candidate of candidates) {
+  for (const candidate of getIanaIdAliases(id)) {
     const lastSlash = candidate.lastIndexOf("/");
     const city = candidate.substring(lastSlash + 1).replaceAll("_", " ");
     if (city.toLowerCase().includes(normalizedQuery)) {

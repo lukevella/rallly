@@ -19,12 +19,32 @@ import {
 } from "@/components/time-zone-picker/timezone-data";
 import { useTranslation } from "@/i18n/client";
 import { Time } from "@/lib/datetime/time";
+import {
+  normalizeLegacyIanaId,
+  toRuntimeCanonicalIanaId,
+} from "@/lib/utils/timezone-schema";
 
 const allIds = getAllTimezoneIds().sort((a, b) =>
   getCityFromTimezoneId(a).localeCompare(getCityFromTimezoneId(b)),
 );
 
 const curatedIds = getCuratedTimezoneIds(allIds);
+
+const idByCanonicalForm = new Map(
+  allIds.map((id) => [toRuntimeCanonicalIanaId(id), id]),
+);
+
+/**
+ * Map a stored ID onto the exact item the list renders.
+ *
+ * Values are persisted in the modern spelling (`timezoneSchema` normalizes on
+ * write), while the runtime lists the legacy one. Passing the stored ID
+ * straight through leaves the combobox unable to match any item, so the saved
+ * zone renders unselected. Selecting by canonical form fixes that.
+ */
+function toItemId(value: string): string {
+  return idByCanonicalForm.get(toRuntimeCanonicalIanaId(value)) ?? value;
+}
 
 export function TimeZoneSelect({
   id,
@@ -53,10 +73,12 @@ export function TimeZoneSelect({
   return (
     <Combobox
       items={isSearching ? allIds : curatedIds}
-      value={value ?? null}
+      value={value ? toItemId(value) : null}
       onValueChange={(id) => {
         if (id) {
-          onValueChange?.(id);
+          // Report the modern spelling regardless of how the runtime spells it,
+          // so callers persist a stable, tzdb-canonical ID.
+          onValueChange?.(normalizeLegacyIanaId(id));
         }
       }}
       onInputValueChange={(inputValue, { reason }) => {

@@ -16,6 +16,25 @@ export function normalizeLegacyIanaId(id: string): string {
   return ianaOverrides[id] ?? id;
 }
 
+const legacyIdsByModernId = Object.entries(ianaOverrides).reduce<
+  Record<string, string[]>
+>((acc, [legacy, modern]) => {
+  acc[modern] = [...(acc[modern] ?? []), legacy];
+  return acc;
+}, {});
+
+/**
+ * Every spelling of a zone we know about — modern and legacy — for the given
+ * ID, whichever spelling it arrives in. Used for search, so a query matches an
+ * alias no matter which form the runtime happens to list.
+ */
+export function getIanaIdAliases(id: string): string[] {
+  const modern = normalizeLegacyIanaId(id);
+  return Array.from(
+    new Set([id, modern, ...(legacyIdsByModernId[modern] ?? [])]),
+  );
+}
+
 /**
  * Fold an IANA ID to whatever spelling this runtime treats as canonical.
  *
