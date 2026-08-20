@@ -30,46 +30,37 @@ const HOLD_MS = 2600;
 const EXIT_MS = 700;
 
 /**
- * True once the bottom of the page has been reached, and false again when it
- * is left. Watches the end of the enclosing footer rather than the card
- * itself: the card clears the viewport a few hundred pixels before the page
- * does, so keying off the card would finish the reveal mid scroll.
+ * True once the card is meaningfully in view, and false again when it leaves.
+ * The card has to have travelled a little way up the screen rather than just
+ * clipped its bottom edge, so the story starts when it is actually being
+ * looked at.
  *
  * Plain IntersectionObserver rather than Motion's `useInView` so the reveal
  * does not depend on an animation frame being scheduled.
  */
-function useScrolledToBottom(
-  ref: React.RefObject<Element | null>,
-  enabled: boolean,
-) {
+function useInView(ref: React.RefObject<Element | null>, enabled: boolean) {
   // Starts null — "not yet known" — so the card can stay visible until an
   // observer actually reports otherwise. Only ever hides on a real `false`.
-  const [atBottom, setAtBottom] = React.useState<boolean | null>(null);
+  const [inView, setInView] = React.useState<boolean | null>(null);
 
   React.useEffect(() => {
     const element = ref.current;
     if (!enabled || !element) return;
 
-    const footer = element.closest("footer") ?? element;
-    // A probe at the very end of the footer, entering the viewport only once
-    // the page is scrolled to the bottom.
-    const sentinel = document.createElement("div");
-    sentinel.setAttribute("aria-hidden", "true");
-    sentinel.style.cssText = "height:1px;width:100%;pointer-events:none";
-    footer.append(sentinel);
-
-    const observer = new IntersectionObserver(([entry]) =>
-      setAtBottom(entry.isIntersecting),
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      // Shrinking the root's bottom edge rather than setting a threshold, so
+      // the trigger point does not depend on how tall the card happens to be:
+      // it reveals once the top of the card has risen past the last fifth of
+      // the viewport.
+      { rootMargin: "0px 0px -20% 0px" },
     );
-    observer.observe(sentinel);
+    observer.observe(element);
 
-    return () => {
-      observer.disconnect();
-      sentinel.remove();
-    };
+    return () => observer.disconnect();
   }, [ref, enabled]);
 
-  return atBottom;
+  return inView;
 }
 
 // step 0: empty card. step 1: the proposed times appear. steps 2..n+1: one
@@ -136,10 +127,10 @@ export function FooterDemo({ className }: { className?: string }) {
   }, []);
   // With reduced motion the observer never runs: nothing reveals, nothing
   // loops, the solved poll is simply there.
-  const inView = useScrolledToBottom(ref, !shouldReduceMotion);
+  const inView = useInView(ref, !shouldReduceMotion);
 
-  // The cycle runs only while the page is at the bottom, so arriving there
-  // always starts from the top of the story rather than mid vote.
+  // The cycle runs only while the card is in view, so scrolling to it always
+  // starts from the top of the story rather than mid vote.
   const animated = inView === true && !shouldReduceMotion;
   const { visibleRows, showTimes, decided: cycleDecided } = useCycle(animated);
 
@@ -159,7 +150,7 @@ export function FooterDemo({ className }: { className?: string }) {
       aria-hidden
       className={cn(
         "relative isolate flex items-center justify-center py-10",
-        // The card rises into place once the page bottom is reached.
+        // The card rises into place as it scrolls into view.
         // `inView === false` is the only state that hides it, so a missing
         // observer or reduced motion leaves it plainly visible.
         "transition-all duration-700 ease-out",
