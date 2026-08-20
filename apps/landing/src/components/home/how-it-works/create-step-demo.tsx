@@ -1,15 +1,22 @@
-import { cn } from "@rallly/ui";
+"use client";
+
+import * as m from "motion/react-m";
 import { DemoScreen } from "../hero-demo/demo-frame";
 
 // A textless mock of the poll creation form: title field and a month
 // calendar with a weekly cadence of selected days. Bars stand in for copy so
 // it doesn't compete with the section text. Sized to fit the 4:3 artboard on
 // the how it works section.
+//
+// On play the selected column fills in one date per week, top to bottom, then
+// the submit button presses.
 const WEEKS = 4;
 const START_OFFSET = 2;
 const SELECTED_COLUMN = 3;
+const DATE_STAGGER = 0.11;
+const SUBMIT_DELAY = WEEKS * DATE_STAGGER + 0.15;
 
-export const CreateStepDemo = () => (
+export const CreateStepDemo = ({ play }: { play: boolean }) => (
   <DemoScreen className="space-y-2 p-4">
     <div className="space-y-1.5">
       <div className="h-1.5 w-8 rounded-full bg-gray-300" />
@@ -41,21 +48,42 @@ export const CreateStepDemo = () => (
               />
             );
           }
+          if (index % 7 !== SELECTED_COLUMN) {
+            return (
+              <div
+                // biome-ignore lint/suspicious/noArrayIndexKey: calendar cells are positional
+                key={index}
+                className="h-3.5 rounded bg-gray-100"
+              />
+            );
+          }
           return (
-            <div
+            <m.div
               // biome-ignore lint/suspicious/noArrayIndexKey: calendar cells are positional
               key={index}
-              className={cn(
-                "h-3.5 rounded",
-                index % 7 === SELECTED_COLUMN ? "bg-gray-300" : "bg-gray-100",
-              )}
+              className="h-3.5 rounded bg-gray-100"
+              initial={false}
+              animate={
+                play
+                  ? { backgroundColor: "#d1d5db", scale: [1, 1.15, 1] }
+                  : { backgroundColor: "#f3f4f6", scale: 1 }
+              }
+              transition={{
+                duration: 0.3,
+                delay: play ? Math.floor(index / 7) * DATE_STAGGER : 0,
+              }}
             />
           );
         })}
       </div>
     </div>
     <div className="flex justify-end border-gray-200/60 border-t pt-2">
-      <div className="h-7 w-14 rounded-md bg-indigo-600/90" />
+      <m.div
+        className="h-7 w-14 rounded-md bg-indigo-600/90"
+        initial={false}
+        animate={play ? { scale: [1, 0.92, 1] } : { scale: 1 }}
+        transition={{ duration: 0.35, delay: play ? SUBMIT_DELAY : 0 }}
+      />
     </div>
   </DemoScreen>
 );

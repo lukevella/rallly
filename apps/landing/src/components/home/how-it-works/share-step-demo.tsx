@@ -1,26 +1,67 @@
+"use client";
+
 import { cn } from "@rallly/ui";
-import { MailIcon, MessageCircleIcon, SendIcon } from "lucide-react";
+import { CheckIcon, MailIcon, MessageCircleIcon, SendIcon } from "lucide-react";
+import * as m from "motion/react-m";
 import { DemoScreen } from "../hero-demo/demo-frame";
 
 // A textless mock of the invite step: a link field with a copy button, ways
 // to send it, and the group it goes out to. Bars stand in for copy so it
 // doesn't compete with the section text. Fills the 4:3 frame on the how it
 // works section.
+//
+// On play a pointer travels to the copy button, presses it, and the link field
+// flips to a confirmation. The pointer is drawn rather than implied so the
+// button dip reads as a click.
 const CHANNELS = [
   { key: "email", icon: MailIcon, width: "w-20" },
   { key: "chat", icon: MessageCircleIcon, width: "w-14" },
   { key: "direct", icon: SendIcon, width: "w-24" },
 ];
 
-export const ShareStepDemo = () => (
+const PRESS_AT = 0.55;
+const COPIED_AT = PRESS_AT + 0.15;
+
+export const ShareStepDemo = ({ play }: { play: boolean }) => (
   <DemoScreen className="space-y-2 p-4">
     <div className="space-y-1.5">
       <div className="h-1.5 w-12 rounded-full bg-gray-300" />
       <div className="flex items-center gap-2">
-        <div className="flex h-7 min-w-0 flex-1 items-center gap-1.5 rounded-md border border-gray-200 bg-gray-50 px-2">
-          <div className="h-1.5 w-28 rounded-full bg-gray-300" />
+        <div className="relative flex h-7 min-w-0 flex-1 items-center gap-1.5 rounded-md border border-gray-200 bg-gray-50 px-2">
+          <m.div
+            className="h-1.5 w-28 rounded-full bg-gray-300"
+            initial={false}
+            animate={{ opacity: play ? 0 : 1 }}
+            transition={{ duration: 0.15, delay: play ? COPIED_AT : 0.1 }}
+          />
+          <m.div
+            className="absolute top-1/2 left-2 flex -translate-y-1/2 items-center gap-1 text-indigo-600"
+            initial={false}
+            animate={{ opacity: play ? 1 : 0 }}
+            transition={{ duration: 0.15, delay: play ? COPIED_AT : 0 }}
+          >
+            <CheckIcon className="size-3" />
+            <div className="h-1.5 w-14 rounded-full bg-indigo-400" />
+          </m.div>
         </div>
-        <div className="h-7 w-14 shrink-0 rounded-md bg-indigo-600/90" />
+        <div className="relative shrink-0">
+          <m.div
+            className="h-7 w-14 rounded-md bg-indigo-600/90"
+            initial={false}
+            animate={play ? { scale: [1, 0.9, 1] } : { scale: 1 }}
+            transition={{ duration: 0.3, delay: play ? PRESS_AT : 0 }}
+          />
+          <m.div
+            className="pointer-events-none absolute top-4 left-6"
+            initial={false}
+            animate={
+              play ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: 26, y: 22 }
+            }
+            transition={{ duration: 0.5 }}
+          >
+            <CursorIcon />
+          </m.div>
+        </div>
       </div>
     </div>
     <div className="space-y-1.5">
@@ -53,4 +94,15 @@ export const ShareStepDemo = () => (
       </div>
     </div>
   </DemoScreen>
+);
+
+const CursorIcon = () => (
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 12 12"
+    className="size-4 fill-gray-900 stroke-white drop-shadow-sm"
+    strokeWidth="1"
+  >
+    <path d="M1 1 L1 10 L3.5 7.6 L5.3 11 L7 10.1 L5.2 6.9 L8.6 6.7 Z" />
+  </svg>
 );

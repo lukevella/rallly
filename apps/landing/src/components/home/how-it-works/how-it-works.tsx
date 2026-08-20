@@ -8,16 +8,19 @@ import {
   SectionTitle,
 } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
-import { CreateStepDemo } from "./create-step-demo";
-import { DecideStepDemo } from "./decide-step-demo";
-import { ShareStepDemo } from "./share-step-demo";
+import type { StepKey } from "./step-stage";
+import { StepStage } from "./step-stage";
 
 // The meeting poll walkthrough, shared by the home page and the SEO landing
 // pages. Owns its copy, unlike the rest of the landing components, so every
 // page renders the same three steps.
 export const HowItWorks = async ({ locale }: { locale: string }) => {
   const { t } = await getTranslation<"home">(locale, "home");
-  const steps = [
+  const steps: {
+    key: StepKey;
+    title: React.ReactNode;
+    description: React.ReactNode;
+  }[] = [
     {
       key: "create",
       title: (
@@ -36,7 +39,6 @@ export const HowItWorks = async ({ locale }: { locale: string }) => {
           defaults="Pick a few times that could work. Add a title and you're done. No account needed."
         />
       ),
-      visual: <CreateStepDemo />,
     },
     {
       key: "share",
@@ -56,7 +58,6 @@ export const HowItWorks = async ({ locale }: { locale: string }) => {
           defaults="Send it over email, Slack, or WhatsApp. Participants don't need to sign up."
         />
       ),
-      visual: <ShareStepDemo />,
     },
     {
       key: "decide",
@@ -76,7 +77,6 @@ export const HowItWorks = async ({ locale }: { locale: string }) => {
           defaults="Everyone marks the times that work for them, and the best option shows at a glance."
         />
       ),
-      visual: <DecideStepDemo />,
     },
   ];
 
@@ -131,12 +131,10 @@ export const HowItWorks = async ({ locale }: { locale: string }) => {
                     values={{ number: `0${index + 1}` }}
                   />
                 </div>
-                <div
-                  aria-hidden="true"
+                <StepStage
+                  step={step.key}
                   className="flex h-64 items-center justify-center"
-                >
-                  <div className="w-full max-w-64">{step.visual}</div>
-                </div>
+                />
               </div>
               <div className="p-3">
                 <dt className="font-medium text-gray-900">{step.title}</dt>
