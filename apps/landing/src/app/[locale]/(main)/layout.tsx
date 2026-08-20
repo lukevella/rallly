@@ -1,15 +1,4 @@
 import languages from "@rallly/languages";
-import { buttonVariants } from "@rallly/ui";
-import { Button } from "@rallly/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@rallly/ui/dropdown-menu";
-import { MenuIcon } from "lucide-react";
 import type { Viewport } from "next";
 import { cacheLife } from "next/cache";
 import Image from "next/image";
@@ -20,8 +9,8 @@ import { CtaButton } from "@/components/home/cta-button";
 import { LoginButton } from "@/components/login-button";
 import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
-import { linkToApp } from "@/lib/linkToApp";
 import { Footer } from "./footer";
+import { MobileMenu } from "./mobile-menu";
 import { NavLink } from "./nav-link";
 
 export async function generateStaticParams() {
@@ -86,48 +75,20 @@ export default async function Root(props: {
               </CtaButton>
             </div>
             <div className="flex items-center justify-center lg:hidden">
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  render={
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      aria-label={t("menu", { defaultValue: "Menu" })}
-                    />
-                  }
-                >
-                  <MenuIcon className="size-4 text-muted-foreground" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-48"
-                  align="end"
-                  sideOffset={16}
-                >
-                  <DropdownMenuItem render={<LinkBase href="/pricing" />}>
-                    <Trans t={t} i18nKey="pricing" defaults="Pricing" />
-                  </DropdownMenuItem>
-                  <DropdownMenuItem render={<LinkBase href="/blog" />}>
-                    <Trans t={t} i18nKey="blog" />
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    render={<LinkBase href="https://support.rallly.co" />}
-                  >
-                    <Trans t={t} i18nKey="support" />
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuLabel className="space-y-2">
-                    <LinkBase
-                      href={linkToApp("/login")}
-                      className={buttonVariants({
-                        variant: "default",
-                        className: "w-full",
-                      })}
-                    >
-                      <Trans t={t} i18nKey="login" defaults="Login" />
-                    </LinkBase>
-                  </DropdownMenuLabel>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <MobileMenu
+                links={[
+                  { href: "/pricing", label: t("pricing") },
+                  { href: "/blog", label: t("blog") },
+                  { href: "https://support.rallly.co", label: t("support") },
+                ]}
+                menuLabel={t("menu", { defaultValue: "Menu" })}
+                closeLabel={t("close", { defaultValue: "Close" })}
+                loginLabel={t("login", { defaultValue: "Login" })}
+                ctaLabel={t("createAPoll", {
+                  ns: "home",
+                  defaultValue: "Create a poll",
+                })}
+              />
             </div>
           </div>
         </div>
