@@ -115,7 +115,7 @@ export const HowItWorks = async ({ locale }: { locale: string }) => {
       <SectionContent>
         {/* Below lg the three steps stay side by side and scroll horizontally,
             bleeding past the page gutters so the next card peeks in. */}
-        <dl className="-mx-4 grid snap-x snap-mandatory grid-cols-[repeat(3,min(75vw,20rem))] grid-rows-[auto_auto] gap-x-4 gap-y-1 overflow-x-auto scroll-px-4 px-4 sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:grid-cols-3 lg:overflow-x-visible lg:px-0">
+        <dl className="-mx-4 grid snap-x snap-mandatory scroll-px-4 grid-cols-[repeat(3,min(75vw,20rem))] grid-rows-[auto_auto] gap-x-4 gap-y-1 overflow-x-auto px-4 sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:grid-cols-3 lg:overflow-x-visible lg:px-0">
           {steps.map((step, index) => (
             <div
               key={step.key}
