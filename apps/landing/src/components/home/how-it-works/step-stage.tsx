@@ -4,6 +4,7 @@ import { useReducedMotion } from "motion/react";
 import * as React from "react";
 import { CreateStepDemo } from "./create-step-demo";
 import { DecideStepDemo } from "./decide-step-demo";
+import type { Playback } from "./motion";
 import { ShareStepDemo } from "./share-step-demo";
 
 // The demo is picked here rather than passed in: a server component can't hand
@@ -83,6 +84,9 @@ export const StepStage = ({
   const [play, setPlay] = React.useState(false);
   const reduceMotion = useReducedMotion();
   const Demo = DEMOS[step];
+  // Reduced motion skips the sequence and shows the outcome, rather than
+  // playing the same timed choreography with the movement left in.
+  const playback: Playback = reduceMotion ? "done" : play ? "play" : "idle";
 
   React.useEffect(() => {
     if (!started) {
@@ -97,7 +101,7 @@ export const StepStage = ({
   return (
     <div aria-hidden="true" className={className}>
       <div className="w-full max-w-64">
-        <Demo play={reduceMotion ? true : play} />
+        <Demo playback={playback} />
       </div>
     </div>
   );

@@ -23,3 +23,9 @@ export const PRESS_UP = {
   duration: 0.44,
   bounce: 0.42,
 } as const;
+
+// How a demo should render. "idle" is the resting state, "play" runs the timed
+// sequence, and "done" jumps straight to the finished values with no delays or
+// movement, which is what reduced motion wants: the information without the
+// journey to it.
+export type Playback = "idle" | "play" | "done";
