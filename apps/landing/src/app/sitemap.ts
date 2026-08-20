@@ -6,6 +6,12 @@ import { getAllPosts } from "@/lib/api";
 
 const alternateLanguages = supportedLngs.filter((lng) => lng !== "en");
 
+const seoPages = [
+  "/best-doodle-alternative",
+  "/free-scheduling-poll",
+  "/when2meet-alternative",
+];
+
 const getAlternateLanguages = (path: string) => {
   return alternateLanguages.reduce<Record<string, string>>((acc, locale) => {
     acc[locale] = absoluteUrl(`/${locale}${path}`);
@@ -35,6 +41,15 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
         languages: getAlternateLanguages("/pricing"),
       },
     },
+    ...seoPages.map((path) => ({
+      url: absoluteUrl(path),
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+      alternates: {
+        languages: getAlternateLanguages(path),
+      },
+    })),
     {
       url: absoluteUrl("/blog"),
       lastModified: new Date(),
