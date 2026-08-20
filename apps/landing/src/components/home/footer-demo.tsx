@@ -20,6 +20,7 @@ const VOTES: ("yes" | "ifNeedBe" | "no")[][] = [
   ["yes", "no", "ifNeedBe", "yes", "no"],
   ["no", "yes", "no", "yes", "ifNeedBe"],
   ["ifNeedBe", "no", "yes", "yes", "no"],
+  ["no", "ifNeedBe", "no", "yes", "yes"],
 ];
 
 const STEP_MS = 900;
@@ -188,7 +189,7 @@ export function FooterDemo({ className }: { className?: string }) {
       />
       <div
         className={cn(
-          "w-full max-w-sm space-y-1.5 rounded-xl border bg-white/55 p-3 shadow-[0_1px_2px_--theme(--color-black/5%),0_8px_24px_-4px_--theme(--color-black/8%)] backdrop-blur-sm",
+          "w-full max-w-sm space-y-1.5 rounded-xl border border-border-muted bg-white/55 p-3 shadow-[0_1px_2px_--theme(--color-black/5%),0_8px_24px_-4px_--theme(--color-black/8%)] backdrop-blur-sm",
           // Rises into place as the slot scrolls in. `inView === false` is the
           // only state that hides it, so a missing observer or reduced motion
           // leaves it plainly visible.
@@ -235,9 +236,10 @@ export function FooterDemo({ className }: { className?: string }) {
           ))}
         </div>
 
-        {/* One row per voter, arriving in turn. The height is reserved for the
-            full set so the footer does not reflow as rows come and go. */}
-        <div className="h-[72px] space-y-1.5">
+        {/* One row per voter, arriving in turn. Every row stays mounted and
+            merely turns transparent, so the block keeps its full height
+            throughout and the footer never reflows. */}
+        <div className="space-y-1.5">
           {VOTES.map((votes, rowIndex) => (
             <div
               // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length wireframe rows
@@ -257,10 +259,7 @@ export function FooterDemo({ className }: { className?: string }) {
                   // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length wireframe votes
                   key={column}
                   className={cn(
-                    "flex h-5 flex-1 items-center justify-center rounded-md transition-all duration-500",
-                    decided && column === WINNING_COLUMN
-                      ? "bg-gray-100"
-                      : "bg-gray-50",
+                    "flex h-5 flex-1 items-center justify-center transition-all duration-500",
                     // Everything but the winning column recedes once decided,
                     // so the eye lands on the agreed time.
                     decided && column !== WINNING_COLUMN && "opacity-40",
