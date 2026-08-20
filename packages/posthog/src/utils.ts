@@ -139,3 +139,47 @@ export function isResizeObserverLoopError(event: CaptureResult) {
       RESIZE_OBSERVER_LOOP_VALUE_PATTERN.test(exception.value),
   );
 }
+
+/**
+ * An iOS-only throw reaches error tracking with a bare minified identifier as
+ * its message (`fa`, `ga`, `Ba`, `Ca`, ...) and a stack whose every frame
+ * resolves to the HTML document (`filename: https://app.rallly.co/`,
+ * `function: "?"`) instead of a `/_next/static` chunk. Only chunk files ship
+ * source maps (`productionBrowserSourceMaps` in next.config.ts), so an inline
+ * document script can never be symbolicated and the stack stays useless. The
+ * minifier renames the symbol on each release, so the message is part of the
+ * fingerprint and every deploy opens a fresh, uninvestigable issue.
+ *
+ * Match a short minified identifier value together with a stack that carries no
+ * `/_next/static` frame. This drops the whole class and covers the next rename.
+ */
+const MINIFIED_IDENTIFIER_VALUE_PATTERN = /^[A-Za-z$_][\w$]{0,2}$/;
+
+export function isUnsymbolicatedMinifiedException(event: CaptureResult) {
+  const exceptionList = event.properties?.$exception_list as
+    | Array<{
+        value?: string;
+        stacktrace?: { frames?: Array<{ filename?: string }> };
+      }>
+    | undefined;
+
+  if (!Array.isArray(exceptionList)) {
+    return false;
+  }
+
+  return exceptionList.some((exception) => {
+    if (
+      typeof exception?.value !== "string" ||
+      !MINIFIED_IDENTIFIER_VALUE_PATTERN.test(exception.value)
+    ) {
+      return false;
+    }
+
+    const frames = exception.stacktrace?.frames;
+    if (!Array.isArray(frames) || frames.length === 0) {
+      return false;
+    }
+
+    return !frames.some((frame) => frame?.filename?.includes("/_next/static"));
+  });
+}
