@@ -2,6 +2,8 @@
 
 import * as m from "motion/react-m";
 import { DemoScreen } from "../hero-demo/demo-frame";
+import { EASE_OUT, EXIT, STAGGER } from "./motion";
+import { PressButton } from "./press-button";
 
 // A textless mock of the poll creation form: title field and a month
 // calendar with a weekly cadence of selected days. Bars stand in for copy so
@@ -13,8 +15,7 @@ import { DemoScreen } from "../hero-demo/demo-frame";
 const WEEKS = 4;
 const START_OFFSET = 2;
 const SELECTED_COLUMN = 3;
-const DATE_STAGGER = 0.11;
-const SUBMIT_DELAY = WEEKS * DATE_STAGGER + 0.15;
+const SUBMIT_DELAY = WEEKS * STAGGER + 0.12;
 
 export const CreateStepDemo = ({ play }: { play: boolean }) => (
   <DemoScreen className="space-y-2 p-4">
@@ -65,24 +66,36 @@ export const CreateStepDemo = ({ play }: { play: boolean }) => (
               initial={false}
               animate={
                 play
-                  ? { backgroundColor: "#d1d5db", scale: [1, 1.15, 1] }
+                  ? { backgroundColor: "#d1d5db", scale: [0.88, 1] }
                   : { backgroundColor: "#f3f4f6", scale: 1 }
               }
-              transition={{
-                duration: 0.3,
-                delay: play ? Math.floor(index / 7) * DATE_STAGGER : 0,
-              }}
+              transition={
+                play
+                  ? {
+                      backgroundColor: {
+                        duration: 0.22,
+                        ease: EASE_OUT,
+                        delay: Math.floor(index / 7) * STAGGER,
+                      },
+                      scale: {
+                        type: "spring",
+                        duration: 0.44,
+                        bounce: 0.42,
+                        delay: Math.floor(index / 7) * STAGGER,
+                      },
+                    }
+                  : EXIT
+              }
             />
           );
         })}
       </div>
     </div>
     <div className="flex justify-end border-gray-200/60 border-t pt-2">
-      <m.div
+      <PressButton
+        play={play}
+        delay={SUBMIT_DELAY}
         className="h-7 w-14 rounded-md bg-indigo-600/90"
-        initial={false}
-        animate={play ? { scale: [1, 0.92, 1] } : { scale: 1 }}
-        transition={{ duration: 0.35, delay: play ? SUBMIT_DELAY : 0 }}
       />
     </div>
   </DemoScreen>

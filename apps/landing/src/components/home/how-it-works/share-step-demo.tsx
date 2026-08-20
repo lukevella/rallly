@@ -4,6 +4,8 @@ import { cn } from "@rallly/ui";
 import { CheckIcon, MailIcon, MessageCircleIcon, SendIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import { DemoScreen } from "../hero-demo/demo-frame";
+import { EASE_OUT, EXIT } from "./motion";
+import { PressButton } from "./press-button";
 
 // A textless mock of the invite step: a link field with a copy button, ways
 // to send it, and the group it goes out to. Bars stand in for copy so it
@@ -19,8 +21,13 @@ const CHANNELS = [
   { key: "direct", icon: SendIcon, width: "w-24" },
 ];
 
-const PRESS_AT = 0.55;
-const COPIED_AT = PRESS_AT + 0.15;
+const PRESS_AT = 0.42;
+const COPIED_AT = PRESS_AT + 0.1;
+
+// The url and the confirmation blur through each other rather than crossfading
+// cleanly: without it you read two overlapping bars swapping, with it one label
+// turning into the other.
+const SWAP = { duration: 0.2, ease: EASE_OUT } as const;
 
 export const ShareStepDemo = ({ play }: { play: boolean }) => (
   <DemoScreen className="space-y-2 p-4">
@@ -31,33 +38,46 @@ export const ShareStepDemo = ({ play }: { play: boolean }) => (
           <m.div
             className="h-1.5 w-28 rounded-full bg-gray-300"
             initial={false}
-            animate={{ opacity: play ? 0 : 1 }}
-            transition={{ duration: 0.15, delay: play ? COPIED_AT : 0.1 }}
+            animate={{
+              opacity: play ? 0 : 1,
+              filter: play ? "blur(2px)" : "blur(0px)",
+            }}
+            transition={{ ...SWAP, delay: play ? COPIED_AT : 0.06 }}
           />
           <m.div
             className="absolute top-1/2 left-2 flex -translate-y-1/2 items-center gap-1 text-indigo-600"
             initial={false}
-            animate={{ opacity: play ? 1 : 0 }}
-            transition={{ duration: 0.15, delay: play ? COPIED_AT : 0 }}
+            animate={{
+              opacity: play ? 1 : 0,
+              filter: play ? "blur(0px)" : "blur(2px)",
+            }}
+            transition={{ ...SWAP, delay: play ? COPIED_AT : 0 }}
           >
             <CheckIcon className="size-3" />
             <div className="h-1.5 w-14 rounded-full bg-indigo-400" />
           </m.div>
         </div>
         <div className="relative shrink-0">
-          <m.div
+          <PressButton
+            play={play}
+            delay={PRESS_AT}
             className="h-7 w-14 rounded-md bg-indigo-600/90"
-            initial={false}
-            animate={play ? { scale: [1, 0.9, 1] } : { scale: 1 }}
-            transition={{ duration: 0.3, delay: play ? PRESS_AT : 0 }}
           />
           <m.div
             className="pointer-events-none absolute top-4 left-6"
             initial={false}
             animate={
-              play ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: 26, y: 22 }
+              play ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: 28, y: 24 }
             }
-            transition={{ duration: 0.5 }}
+            transition={
+              play
+                ? {
+                    x: { type: "spring", duration: 0.5, bounce: 0.2 },
+                    y: { type: "spring", duration: 0.5, bounce: 0.2 },
+                    opacity: { duration: 0.14, ease: EASE_OUT },
+                  }
+                : { ...EXIT, opacity: { duration: 0.12 } }
+            }
           >
             <CursorIcon />
           </m.div>

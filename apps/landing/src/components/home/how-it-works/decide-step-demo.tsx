@@ -4,6 +4,7 @@ import { cn } from "@rallly/ui";
 import { VoteIcon } from "@rallly/ui/vote-icon";
 import * as m from "motion/react-m";
 import { DemoScreen } from "../hero-demo/demo-frame";
+import { EASE_OUT, EXIT } from "./motion";
 
 // A textless mock of the results: one row per option with real vote icons,
 // the winner highlighted. Bars stand in for copy so it doesn't compete with
@@ -19,8 +20,12 @@ const ROWS: { votes: ("yes" | "ifNeedBe" | "no")[]; winner: boolean }[] = [
   { votes: ["no", "yes", "ifNeedBe", "no"], winner: false },
 ];
 
-const VOTER_STAGGER = 0.22;
-const WINNER_DELAY = ROWS[0].votes.length * VOTER_STAGGER + 0.1;
+// Votes land per participant, so the column is the beat. Rows within a column
+// are nudged apart a little so a response reads as arriving rather than
+// stamping four cells at once.
+const VOTER_STAGGER = 0.09;
+const ROW_STAGGER = 0.02;
+const WINNER_DELAY = ROWS[0].votes.length * VOTER_STAGGER + 0.12;
 
 export const DecideStepDemo = ({ play }: { play: boolean }) => (
   <DemoScreen className="space-y-1.5 p-4">
@@ -37,7 +42,9 @@ export const DecideStepDemo = ({ play }: { play: boolean }) => (
           backgroundColor:
             play && row.winner ? "rgb(238 242 255)" : "rgba(255,255,255,0)",
         }}
-        transition={{ duration: 0.3, delay: play ? WINNER_DELAY : 0 }}
+        transition={
+          play ? { duration: 0.34, ease: EASE_OUT, delay: WINNER_DELAY } : EXIT
+        }
       >
         <div className="min-w-0 space-y-1.5">
           <div
@@ -52,8 +59,18 @@ export const DecideStepDemo = ({ play }: { play: boolean }) => (
               <m.div
                 className="h-1.5 w-12 rounded-full bg-indigo-600"
                 initial={false}
-                animate={{ opacity: play ? 1 : 0 }}
-                transition={{ duration: 0.3, delay: play ? WINNER_DELAY : 0 }}
+                animate={{ opacity: play ? 1 : 0, scaleX: play ? 1 : 0.4 }}
+                style={{ originX: 0 }}
+                transition={
+                  play
+                    ? {
+                        type: "spring",
+                        duration: 0.5,
+                        bounce: 0.24,
+                        delay: WINNER_DELAY + 0.08,
+                      }
+                    : EXIT
+                }
               />
             ) : null}
           </div>
@@ -67,12 +84,18 @@ export const DecideStepDemo = ({ play }: { play: boolean }) => (
               animate={
                 play
                   ? { opacity: 1, scale: 1, y: 0 }
-                  : { opacity: 0, scale: 0.6, y: -4 }
+                  : { opacity: 0, scale: 0.82, y: -3 }
               }
-              transition={{
-                duration: 0.3,
-                delay: play ? voteIndex * VOTER_STAGGER : 0,
-              }}
+              transition={
+                play
+                  ? {
+                      type: "spring",
+                      duration: 0.46,
+                      bounce: 0.38,
+                      delay: voteIndex * VOTER_STAGGER + rowIndex * ROW_STAGGER,
+                    }
+                  : EXIT
+              }
             >
               <VoteIcon type={vote} className="size-3.5" />
             </m.div>
