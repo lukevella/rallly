@@ -8,7 +8,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { Faq, FaqItem } from "@/components/home/faq";
-import { Hero, HeroAnnouncement } from "@/components/home/hero";
+import { Hero } from "@/components/home/hero";
 import { HeroDemo } from "@/components/home/hero-demo/hero-demo";
 import { HowItWorks } from "@/components/home/how-it-works/how-it-works";
 import { Mention, Mentions } from "@/components/home/mentions";
@@ -47,26 +47,6 @@ export default async function Page(props: {
             defaultValue:
               "Find a time that works across a dozen busy calendars without a single follow-up email. Share one link, watch the responses land, and lock in the slot everyone can make. Free, and nobody you invite needs an account.",
           })}
-          announcement={
-            <HeroAnnouncement
-              href="/blog/mobile-voting-redesign"
-              badge={
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="mobileVotingBlogBadge"
-                  defaults="New"
-                />
-              }
-            >
-              <Trans
-                t={t}
-                ns="home"
-                i18nKey="mobileVotingBlog"
-                defaults="A clearer way to vote on your phone"
-              />
-            </HeroAnnouncement>
-          }
         >
           <HeroDemo locale={locale} preset="executiveAssistant" />
         </Hero>
