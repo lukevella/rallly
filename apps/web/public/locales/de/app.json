@@ -32,7 +32,6 @@
   "addressPlaceholder": "123 Hauptstraße",
   "addSeats": "{count, plural, one {# Benutzerplatz hinzufügen} other {# Benutzerplätze hinzufügen}}",
   "addTimeOption": "Uhrzeit hinzufügen",
-  "addToCalendar": "Zum Kalender hinzufügen",
   "admin": "Admin",
   "adminAccessRequired": "Administratorrechte erforderlich",
   "adminAccessRequiredDescription": "Du benötigst Administratorrechte, um auf diese Seite zuzugreifen.",

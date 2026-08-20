@@ -32,7 +32,6 @@
   "addressPlaceholder": "123 rue Principale",
   "addSeats": "{count, plural, one {Add # Seat} other {Add # Seats}}",
   "addTimeOption": "Ajouter une option de temps",
-  "addToCalendar": "Ajouter au calendrier",
   "admin": "Admin",
   "adminAccessRequired": "Accès administrateur requis",
   "adminAccessRequiredDescription": "Vous devez disposer des droits d'administrateur pour voir cette page.",

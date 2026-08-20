@@ -32,7 +32,6 @@
   "addressPlaceholder": "123 Calle Principal",
   "addSeats": "{count, plural, one {Añadir # asiento} other {Añadir # asientos}}",
   "addTimeOption": "Añadir opción de hora",
-  "addToCalendar": "Agregar al calendario",
   "admin": "Administrador",
   "adminAccessRequired": "Acceso de administrador requerido",
   "adminAccessRequiredDescription": "Necesitas acceso de administrador para ver esta página.",

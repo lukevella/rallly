@@ -32,7 +32,6 @@
   "addressPlaceholder": "Hlavní ulice 123",
   "addSeats": "{count, plural, one {Přidat # místo} few {Přidat # místa} many {Přidat # míst} other {Přidat # míst}}",
   "addTimeOption": "Vybrat konkrétní čas",
-  "addToCalendar": "Přidat do kalendáře",
   "admin": "Administrátor",
   "adminAccessRequired": "Vyžadován přístup správce",
   "adminAccessRequiredDescription": "Pro zobrazení této stránky potřebujete přístup správce.",

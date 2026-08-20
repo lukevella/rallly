@@ -32,7 +32,6 @@
   "addressPlaceholder": "Via Roma 123",
   "addSeats": "{count, plural, one {Aggiungi # Posto} other {Aggiungi # Posti}}",
   "addTimeOption": "Aggiungi opzione orario",
-  "addToCalendar": "Aggiungi al Calendario",
   "admin": "Amministratore",
   "adminAccessRequired": "Accesso amministratore richiesto.",
   "adminAccessRequiredDescription": "Per visualizzare questa pagina è necessario l'accesso amministratore.",

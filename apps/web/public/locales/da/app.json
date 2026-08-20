@@ -32,7 +32,6 @@
   "addressPlaceholder": "123 Main Street",
   "addSeats": "{count, plural, one {Tilføj # sæde} other {Tilføj # sæder}}",
   "addTimeOption": "Tilføj tidspunkt",
-  "addToCalendar": "Tilføj til kalender",
   "admin": "Admin",
   "adminAccessRequired": "Administratoradgang kræves",
   "adminAccessRequiredDescription": "Du skal have administratoradgang for at se denne side.",

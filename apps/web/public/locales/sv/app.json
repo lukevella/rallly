@@ -32,7 +32,6 @@
   "addressPlaceholder": "Huvudgatan 123",
   "addSeats": "{count, plural, one {Lägg till # plats} other {Lägg till # platser}}",
   "addTimeOption": "Lägg till tidsalternativ",
-  "addToCalendar": "Lägg till i kalender",
   "admin": "Administratör",
   "adminAccessRequired": "Administratörsbehörighet krävs",
   "adminAccessRequiredDescription": "Du behöver administratörsbehörighet för att visa den här sidan.",
