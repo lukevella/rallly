@@ -50,31 +50,57 @@ export function BillingIntervalSwitch({
   const { interval, setInterval } = useBillingInterval();
   const isYearly = interval === "yearly";
   return (
-    <div className="flex items-center gap-x-3">
-      <span
-        className={cn(
-          "font-medium text-sm",
-          isYearly ? "text-gray-500" : "text-gray-800",
-        )}
-      >
-        {monthlyLabel}
-      </span>
-      <Switch
-        aria-label={switchLabel}
-        checked={isYearly}
-        onCheckedChange={(checked) =>
-          setInterval(checked ? "yearly" : "monthly")
-        }
-      />
-      <span
-        className={cn(
-          "font-medium text-sm",
-          isYearly ? "text-gray-800" : "text-gray-500",
-        )}
-      >
-        {yearlyLabel}
-      </span>
-      {badge}
+    <div className="flex flex-col items-center gap-y-2">
+      {badge ? (
+        <div className="relative">
+          {badge}
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 48 40"
+            className="pointer-events-none absolute top-0 -right-16 hidden h-12 w-16 text-green-500 sm:block"
+            fill="none"
+          >
+            <path
+              d="M2 8c18-7 33 2 32 20"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+            <path
+              d="M27 22l7 7 5-6"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+      ) : null}
+      <div className="flex items-center gap-x-3">
+        <span
+          className={cn(
+            "font-medium text-sm",
+            isYearly ? "text-gray-500" : "text-gray-800",
+          )}
+        >
+          {monthlyLabel}
+        </span>
+        <Switch
+          aria-label={switchLabel}
+          checked={isYearly}
+          onCheckedChange={(checked) =>
+            setInterval(checked ? "yearly" : "monthly")
+          }
+        />
+        <span
+          className={cn(
+            "font-medium text-sm",
+            isYearly ? "text-gray-800" : "text-gray-500",
+          )}
+        >
+          {yearlyLabel}
+        </span>
+      </div>
     </div>
   );
 }
