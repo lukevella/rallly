@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@rallly/ui";
-import { CheckIcon, MailIcon, MessageCircleIcon, SendIcon } from "lucide-react";
+import { MailIcon, MessageCircleIcon, SendIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import { DemoScreen } from "../hero-demo/demo-frame";
 import { ACCENT } from "./accent";
@@ -26,8 +26,8 @@ const PRESS_AT = 0.42;
 const COPIED_AT = PRESS_AT + 0.1;
 
 // Copying recolors the url in place rather than swapping it for a shorter
-// confirmation: the bar keeps its width so the field never shows a gap, and
-// the check is the only thing that appears.
+// confirmation, so the field keeps the same block at the same width and the
+// accent is what signals the copy.
 const SWAP = { duration: 0.2, ease: EASE_OUT } as const;
 
 export const ShareStepDemo = ({ play }: { play: boolean }) => (
@@ -35,26 +35,7 @@ export const ShareStepDemo = ({ play }: { play: boolean }) => (
     <div className="space-y-1.5">
       <div className="h-1.5 w-12 rounded-full bg-gray-300" />
       <div className="flex items-center gap-2">
-        <div className="relative flex h-7 min-w-0 flex-1 items-center rounded-md border border-gray-200 bg-gray-50 px-2">
-          {/* The check sits out of flow so the url keeps its exact position
-              and width when the copy lands. */}
-          <m.div
-            className="absolute -right-0.5 text-violet-500"
-            initial={false}
-            animate={{ opacity: play ? 1 : 0, scale: play ? 1 : 0.7 }}
-            transition={
-              play
-                ? {
-                    type: "spring",
-                    duration: 0.4,
-                    bounce: 0.4,
-                    delay: COPIED_AT,
-                  }
-                : EXIT
-            }
-          >
-            <CheckIcon className="size-3" />
-          </m.div>
+        <div className="flex h-7 min-w-0 flex-1 items-center rounded-md border border-gray-200 bg-gray-50 px-2">
           {/* The accent fades over the resting bar rather than replacing its
               class, so the recolor transitions instead of snapping. */}
           <div className="relative h-1.5 w-28 shrink-0 overflow-hidden rounded-full bg-gray-300">
