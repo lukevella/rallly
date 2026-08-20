@@ -1,7 +1,13 @@
 "use server";
 
-import { updateInstanceSettings } from "@/features/instance-settings/mutations";
-import { instanceSettingsSchema } from "@/features/instance-settings/schema";
+import {
+  updateInstanceFooterLinks,
+  updateInstanceSettings,
+} from "@/features/instance-settings/mutations";
+import {
+  footerLinksSchema,
+  instanceSettingsSchema,
+} from "@/features/instance-settings/schema";
 import { adminActionClient } from "@/lib/safe-action/server";
 
 export const updateInstanceSettingsAction = adminActionClient
@@ -11,4 +17,13 @@ export const updateInstanceSettingsAction = adminActionClient
   .inputSchema(instanceSettingsSchema)
   .action(async ({ parsedInput }) => {
     await updateInstanceSettings(parsedInput);
+  });
+
+export const updateFooterLinksAction = adminActionClient
+  .metadata({
+    actionName: "update_footer_links",
+  })
+  .inputSchema(footerLinksSchema)
+  .action(async ({ parsedInput }) => {
+    await updateInstanceFooterLinks(parsedInput.footerLinks);
   });

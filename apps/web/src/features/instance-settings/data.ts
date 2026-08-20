@@ -4,6 +4,23 @@ import { prisma } from "@rallly/database";
 import { unstable_cache } from "next/cache";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { instanceSettingsTag } from "./constants";
+import type { FooterLink } from "./schema";
+import { footerLinkSchema } from "./schema";
+
+// Stored links are re-validated on read, not just on write: a row edited
+// directly in the database must not be able to put an unsafe href into an
+// anchor. Invalid entries are dropped rather than failing the whole read, so
+// one bad link cannot take down the login page.
+function parseFooterLinks(value: unknown): FooterLink[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((entry) => {
+    const parsed = footerLinkSchema.safeParse(entry);
+    return parsed.success ? [parsed.data] : [];
+  });
+}
 
 export const getInstanceSettings = unstable_cache(
   async () => {
@@ -21,6 +38,7 @@ export const getInstanceSettings = unstable_cache(
         logoDark: true,
         logoIcon: true,
         hideAttribution: true,
+        footerLinks: true,
       },
     });
 
@@ -35,6 +53,7 @@ export const getInstanceSettings = unstable_cache(
       logoDark: instanceSettings?.logoDark ?? null,
       logoIcon: instanceSettings?.logoIcon ?? null,
       hideAttribution: instanceSettings?.hideAttribution ?? null,
+      footerLinks: parseFooterLinks(instanceSettings?.footerLinks),
     };
   },
   [],

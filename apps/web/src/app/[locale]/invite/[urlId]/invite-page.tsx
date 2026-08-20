@@ -3,6 +3,7 @@ import { buttonVariants } from "@rallly/ui";
 import { Alert, AlertAction, AlertDescription } from "@rallly/ui/alert";
 import { ArrowUpRightIcon, CrownIcon } from "lucide-react";
 import Link from "next/link";
+import { InstanceFooterLinks } from "@/components/instance-footer-links";
 import { usePoll } from "@/features/poll/client";
 import { CommentsSheet } from "@/features/poll/components/comments-sheet";
 import { EventCard } from "@/features/poll/components/event-card";
@@ -45,7 +46,11 @@ const GoToApp = () => {
   );
 };
 
-export function InvitePage() {
+export function InvitePage({
+  footerLinks,
+}: {
+  footerLinks: { label: string; href: string }[];
+}) {
   return (
     <div className="page-bg-gray-100 h-dvh overflow-auto p-3 lg:p-6 dark:bg-gray-900">
       <main
@@ -59,6 +64,7 @@ export function InvitePage() {
           <ResponsiveResults />
         </VotingForm>
         <PollFooter />
+        <InstanceFooterLinks links={footerLinks} />
         <div className="fixed right-4 bottom-15 z-40 lg:right-6 lg:bottom-6">
           <CommentsSheet className="rounded-full shadow-lg" />
         </div>
