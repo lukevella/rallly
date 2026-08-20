@@ -7,11 +7,15 @@ const AdminPage = dynamic(
   { ssr: false },
 );
 
-export function AdminPageLoader() {
+export function AdminPageLoader({
+  footerLinks,
+}: {
+  footerLinks: { label: string; href: string }[];
+}) {
   return (
     <>
       <PollBrandingFromContext />
-      <AdminPage />
+      <AdminPage footerLinks={footerLinks} />
     </>
   );
 }
