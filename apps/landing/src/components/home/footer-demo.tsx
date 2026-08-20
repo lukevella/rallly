@@ -22,11 +22,12 @@ const VOTES: ("yes" | "ifNeedBe" | "no")[][] = [
   ["ifNeedBe", "no", "yes", "yes", "no"],
 ];
 
-type Stage = "times" | "voting" | "decided";
-
 const STEP_MS = 900;
 const DECIDE_MS = 1600;
 const HOLD_MS = 2600;
+// Long enough for the card to finish clearing before the next pass builds it
+// back up, so the loop never shows an exit and an entrance at once.
+const EXIT_MS = 700;
 
 /**
  * True once the bottom of the page has been reached, and false again when it
@@ -72,12 +73,13 @@ function useScrolledToBottom(
 }
 
 // step 0: empty card. step 1: the proposed times appear. steps 2..n+1: one
-// voter row each. step n+2: decided, held. Then back to 0 for the next pass.
+// voter row each. step n+2: decided, held. step n+3: everything clears
+// together. Then back to 0 for the next pass.
 const STEP_EMPTY = 0;
 const STEP_TIMES = 1;
-const STEP_FIRST_VOTE = 2;
 const STEP_DECIDED = VOTES.length + 2;
-const TOTAL_STEPS = VOTES.length + 3;
+const STEP_EXIT = VOTES.length + 3;
+const TOTAL_STEPS = VOTES.length + 4;
 
 /**
  * Walks the cycle above, resetting to the empty card whenever it is disabled
@@ -95,11 +97,13 @@ function useCycle(enabled: boolean) {
     }
 
     const delay =
-      step === STEP_DECIDED
-        ? HOLD_MS
-        : step === STEP_DECIDED - 1
-          ? DECIDE_MS
-          : STEP_MS;
+      step === STEP_EXIT
+        ? EXIT_MS
+        : step === STEP_DECIDED
+          ? HOLD_MS
+          : step === STEP_DECIDED - 1
+            ? DECIDE_MS
+            : STEP_MS;
 
     const timeout = setTimeout(() => {
       setStep((current) => (current + 1) % TOTAL_STEPS);
@@ -108,17 +112,16 @@ function useCycle(enabled: boolean) {
     return () => clearTimeout(timeout);
   }, [step, enabled]);
 
-  const stage: Stage =
-    step === STEP_DECIDED
-      ? "decided"
-      : step >= STEP_FIRST_VOTE
-        ? "voting"
-        : "times";
+  // On the exit step everything hides at once, still wearing its decided
+  // colours. Nothing un-solves on screen: the solved card simply clears.
+  const exiting = step === STEP_EXIT;
 
   return {
-    visibleRows: Math.max(0, Math.min(step - 1, VOTES.length)),
-    showTimes: step >= STEP_TIMES,
-    stage,
+    visibleRows: exiting ? 0 : Math.max(0, Math.min(step - 1, VOTES.length)),
+    showTimes: !exiting && step >= STEP_TIMES,
+    // Hold the decided styling through the exit so the winner fades out as
+    // part of the card rather than reverting to grey first.
+    decided: step === STEP_DECIDED || exiting,
   };
 }
 
@@ -138,7 +141,7 @@ export function FooterDemo({ className }: { className?: string }) {
   // The cycle runs only while the page is at the bottom, so arriving there
   // always starts from the top of the story rather than mid vote.
   const animated = inView === true && !shouldReduceMotion;
-  const { visibleRows, showTimes, stage } = useCycle(animated);
+  const { visibleRows, showTimes, decided: cycleDecided } = useCycle(animated);
 
   // Show the solved poll only when no animation will play: reduced motion, or
   // no IntersectionObserver at all. Otherwise the cycle owns the card from the
@@ -148,7 +151,7 @@ export function FooterDemo({ className }: { className?: string }) {
 
   const rows = solved ? VOTES.length : visibleRows;
   const times = solved ? true : showTimes;
-  const decided = solved ? true : stage === "decided";
+  const decided = solved ? true : cycleDecided;
 
   return (
     <div
