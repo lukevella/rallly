@@ -78,7 +78,7 @@ export default async function InstanceSettingsPage() {
                 <PageSectionDescription>
                   <Trans
                     i18nKey="footerLinksDescription"
-                    defaults="Links shown on the login and invite pages, for legal notices such as an imprint or privacy policy"
+                    defaults="Links shown on the login, invite and poll pages, for legal notices such as an imprint or privacy policy"
                   />
                 </PageSectionDescription>
               </PageSectionHeader>

@@ -331,7 +331,7 @@
   "footerLinkLabelPlaceholder": "Privacy policy",
   "footerLinkRemove": "Remove link",
   "footerLinks": "Footer links",
-  "footerLinksDescription": "Links shown on the login and invite pages, for legal notices such as an imprint or privacy policy",
+  "footerLinksDescription": "Links shown on the login, invite and poll pages, for legal notices such as an imprint or privacy policy",
   "footerLinkUrl": "URL",
   "footerLinkUrlInvalid": "Enter a URL starting with http:// or https://",
   "forgotPassword": "Forgot password?",
