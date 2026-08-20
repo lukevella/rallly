@@ -42,7 +42,7 @@ const idByCanonicalForm = new Map(
  * straight through leaves the combobox unable to match any item, so the saved
  * zone renders unselected. Selecting by canonical form fixes that.
  */
-function toItemId(value: string): string {
+function toItemId(value: string) {
   return idByCanonicalForm.get(toRuntimeCanonicalIanaId(value)) ?? value;
 }
 

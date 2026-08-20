@@ -23,7 +23,7 @@ export function getCityFromTimezoneId(id: string): string {
  * on both sides instead. `time-zone-select.test.tsx` asserts no curated entry
  * goes missing.
  */
-export function getCuratedTimezoneIds(allIds: string[]): string[] {
+export function getCuratedTimezoneIds(allIds: string[]) {
   const curatedCanonical = new Set(
     Array.from(curatedTimezoneIds, toRuntimeCanonicalIanaId),
   );
@@ -37,7 +37,7 @@ export function getCuratedTimezoneIds(allIds: string[]): string[] {
  * "Calcutta" still finds the zone shown as "Kolkata" — and vice versa on an
  * engine that lists the modern ID.
  */
-export function matchesTimezoneQuery(id: string, query: string): boolean {
+export function matchesTimezoneQuery(id: string, query: string) {
   const normalizedQuery = query.trim().toLowerCase();
   if (!normalizedQuery) return true;
 
