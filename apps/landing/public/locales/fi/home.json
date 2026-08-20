@@ -50,7 +50,6 @@
   "heroDemoIfNeedBe": "Tarvittaessa",
   "heroDemoLocation": "Jokirannan yhteisötalo",
   "heroDemoNo": "Ei",
-  "heroDemoOptionCount": "{count, plural, one {# vaihtoehto} other {# vaihtoehtoa}}",
   "heroDemoOrganizer": "Järjestäjä: Sofia Virtanen",
   "heroDemoParticipants": "Osallistujat",
   "heroDemoResponseOptions": "Vastausvaihtoehdot",
