@@ -16,6 +16,7 @@ import {
 import { getInstanceSettings } from "@/features/instance-settings/data";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { Trans } from "@/i18n/client";
+import { isSelfHosted } from "@/lib/constants";
 import { FooterLinksField } from "./footer-links-field";
 import { InstanceSettingsForm } from "./instance-settings-form";
 
@@ -68,22 +69,24 @@ export default async function InstanceSettingsPage() {
               <InstanceSettingsForm defaultValue={instanceSettings} />
             </PageSectionContent>
           </PageSection>
-          <PageSection variant="card">
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans i18nKey="footerLinks" defaults="Footer links" />
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  i18nKey="footerLinksDescription"
-                  defaults="Links shown on the login and invite pages, for legal notices such as an imprint or privacy policy"
-                />
-              </PageSectionDescription>
-            </PageSectionHeader>
-            <PageSectionContent>
-              <FooterLinksField defaultValue={footerLinks} />
-            </PageSectionContent>
-          </PageSection>
+          {isSelfHosted ? (
+            <PageSection variant="card">
+              <PageSectionHeader>
+                <PageSectionTitle>
+                  <Trans i18nKey="footerLinks" defaults="Footer links" />
+                </PageSectionTitle>
+                <PageSectionDescription>
+                  <Trans
+                    i18nKey="footerLinksDescription"
+                    defaults="Links shown on the login and invite pages, for legal notices such as an imprint or privacy policy"
+                  />
+                </PageSectionDescription>
+              </PageSectionHeader>
+              <PageSectionContent>
+                <FooterLinksField defaultValue={footerLinks} />
+              </PageSectionContent>
+            </PageSection>
+          ) : null}
         </PageSectionGroup>
       </SettingsPageContent>
     </SettingsPage>

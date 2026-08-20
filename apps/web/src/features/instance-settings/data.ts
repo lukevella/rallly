@@ -5,21 +5,24 @@ import { unstable_cache } from "next/cache";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { instanceSettingsTag } from "./constants";
 import type { FooterLink } from "./schema";
-import { footerLinkSchema } from "./schema";
+import { FOOTER_LINK_MAX_COUNT, footerLinkSchema } from "./schema";
 
 // Stored links are re-validated on read, not just on write: a row edited
 // directly in the database must not be able to put an unsafe href into an
-// anchor. Invalid entries are dropped rather than failing the whole read, so
-// one bad link cannot take down the login page.
+// anchor, or turn the footer into a link farm. Invalid entries are dropped
+// rather than failing the whole read, so one bad link cannot take down the
+// login page.
 function parseFooterLinks(value: unknown): FooterLink[] {
   if (!Array.isArray(value)) {
     return [];
   }
 
-  return value.flatMap((entry) => {
-    const parsed = footerLinkSchema.safeParse(entry);
-    return parsed.success ? [parsed.data] : [];
-  });
+  return value
+    .flatMap((entry) => {
+      const parsed = footerLinkSchema.safeParse(entry);
+      return parsed.success ? [parsed.data] : [];
+    })
+    .slice(0, FOOTER_LINK_MAX_COUNT);
 }
 
 export const getInstanceSettings = unstable_cache(
