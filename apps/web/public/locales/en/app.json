@@ -32,7 +32,7 @@
   "addressPlaceholder": "123 Main Street",
   "addSeats": "{count, plural, one {Add # seat} other {Add # seats}}",
   "addTimeOption": "Add time option",
-  "addToCalendar": "Add to calendar",
+  "addToCalendar": "Add to Calendar",
   "admin": "Admin",
   "adminAccessRequired": "Administrator access required",
   "adminAccessRequiredDescription": "You need administrator access to view this page.",
