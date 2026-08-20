@@ -1,7 +1,7 @@
 {
   "advancedPollSettings": "高级投票设置",
   "advancedPollSettingsDescription": "要求参与者提供电子邮箱、隐藏参与者姓名并隐藏票数",
-  "basicPolls": "基础投票},{",
+  "basicPolls": "基础投票",
   "basicPollsDescription": "创建简单的日程投票",
   "cancelSubscription": "我如何取消我的订阅？",
   "cancelSubscriptionAnswer": "你可以随时前往 <a>订阅设置</a> 取消您的订阅。取消订阅后，您仍然可以访问付费方案，直到计费周期结束。之后，您将降级为免费方案。",
