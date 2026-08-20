@@ -185,7 +185,7 @@ export function FooterDemo({ className }: { className?: string }) {
           "[background:radial-gradient(ellipse_at_center,--theme(--color-black/4%),transparent_70%)]",
         )}
       />
-      <div className="w-full max-w-sm space-y-1.5 rounded-xl border bg-white/80 p-3 shadow-[0_1px_2px_--theme(--color-black/5%),0_8px_24px_-4px_--theme(--color-black/8%)] backdrop-blur-sm">
+      <div className="w-full max-w-sm space-y-1.5 rounded-xl border bg-white/55 p-3 shadow-[0_1px_2px_--theme(--color-black/5%),0_8px_24px_-4px_--theme(--color-black/8%)] backdrop-blur-sm">
         {/* The proposed times */}
         <div className="flex items-center gap-1.5">
           <div
