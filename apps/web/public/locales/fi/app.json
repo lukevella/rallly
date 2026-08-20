@@ -32,7 +32,6 @@
   "addressPlaceholder": "Pääkatu 12",
   "addSeats": "{count, plural, one {Lisää # lisenssi} other {Lisää # lisenssiä}}",
   "addTimeOption": "Lisää aikavaihtoehto",
-  "addToCalendar": "Lisää kalenteriin",
   "admin": "Ylläpitäjä",
   "adminAccessRequired": "Järjestelmänvalvojan oikeudet vaaditaan",
   "adminAccessRequiredDescription": "Tarvitset järjestelmänvalvojan oikeudet nähdäksesi tämän sivun.",
