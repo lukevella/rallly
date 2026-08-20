@@ -1,6 +1,7 @@
 "use client";
 
 import NumberFlow from "@number-flow/react";
+import { BarChart2Icon, UsersIcon } from "lucide-react";
 import * as React from "react";
 
 const DURATION_MS = 1200;
@@ -85,8 +86,26 @@ function AnimatedNumber({
   }, [value]);
 
   return (
-    <span ref={ref} role="img" aria-label={display}>
-      <span aria-hidden="true">
+    // tabular-nums keeps the sizer and NumberFlow (which renders digits at a
+    // uniform width) measuring identically.
+    <span
+      ref={ref}
+      role="img"
+      aria-label={display}
+      className="relative inline-block tabular-nums"
+    >
+      {/* Invisible copy of the final number holds its width for the whole
+          animation so the surrounding text doesn't shift as digits roll in */}
+      <span className="invisible" aria-hidden="true">
+        {display}
+      </span>
+      {/* NumberFlow's box is taller than the text (mask padding) but
+          symmetric around the glyphs, so centering it on the sizer — also
+          symmetric — puts both baselines in the same place */}
+      <span
+        className="absolute inset-0 flex items-center justify-end"
+        aria-hidden="true"
+      >
         <NumberFlow
           value={shown}
           locales={locale}
@@ -104,11 +123,13 @@ function AnimatedNumber({
   );
 }
 
-export function AnimatedStat({
+function AnimatedStat({
   locale,
+  icon,
   children,
 }: {
   locale: string;
+  icon?: React.ReactNode;
   children?: React.ReactNode;
 }) {
   const text = React.Children.toArray(children)
@@ -116,20 +137,58 @@ export function AnimatedStat({
     .join("");
   const parsed = parseLocalizedInteger(text, locale);
   return (
-    <strong className="font-medium text-gray-800">
-      {parsed ? (
-        <>
-          {text.slice(0, parsed.start)}
-          <AnimatedNumber
-            value={parsed.value}
-            display={parsed.token}
-            locale={locale}
-          />
-          {text.slice(parsed.start + parsed.token.length)}
-        </>
-      ) : (
-        children
-      )}
+    // items-baseline makes the text span carry the container's baseline, so
+    // the badge text sits on the surrounding sentence's baseline; the icon
+    // opts back into optical centering with self-center.
+    // leading-none keeps the badge shorter than the paragraph's loose line
+    // boxes, so wrapped lines show a gap between stacked badges.
+    <strong className="inline-flex items-baseline gap-x-1.5 whitespace-nowrap rounded-lg bg-gray-200 px-3 py-1.5 font-normal text-gray-800 leading-none [&_svg]:-ml-1 [&_svg]:size-[1em] [&_svg]:shrink-0 [&_svg]:self-center">
+      {icon}
+      {/* Inner span keeps the number and its unit in normal inline flow so
+          the space between them survives the flex container */}
+      <span>
+        {parsed ? (
+          <>
+            {text.slice(0, parsed.start)}
+            <AnimatedNumber
+              value={parsed.value}
+              display={parsed.token}
+              locale={locale}
+            />
+            {text.slice(parsed.start + parsed.token.length)}
+          </>
+        ) : (
+          children
+        )}
+      </span>
     </strong>
+  );
+}
+
+export function PeopleBadge({
+  locale,
+  children,
+}: {
+  locale: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <AnimatedStat locale={locale} icon={<UsersIcon />}>
+      {children}
+    </AnimatedStat>
+  );
+}
+
+export function PollsBadge({
+  locale,
+  children,
+}: {
+  locale: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <AnimatedStat locale={locale} icon={<BarChart2Icon />}>
+      {children}
+    </AnimatedStat>
   );
 }

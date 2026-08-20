@@ -5,11 +5,12 @@ import { cacheLife } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
-import { AnimatedStat } from "@/components/home/animated-number";
+import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { Faq, FaqItem } from "@/components/home/faq";
 import { Hero, HeroAnnouncement } from "@/components/home/hero";
 import { HeroDemo } from "@/components/home/hero-demo/hero-demo";
+import { HowItWorks } from "@/components/home/how-it-works/how-it-works";
 import { Mention, Mentions } from "@/components/home/mentions";
 import { Stats } from "@/components/home/stats";
 import { Testimonial } from "@/components/home/testimonial";
@@ -74,14 +75,16 @@ export default async function Page(props: {
             t={t}
             ns="home"
             i18nKey="statsLast30Days"
-            defaults="<b>{voterCount, plural, one {# person} other {# people}}</b> voted on <b>{pollCount, plural, one {# poll} other {# polls}}</b> in the last 30 days"
+            defaults="<0>{voterCount, plural, one {# person} other {# people}}</0> voted on <1>{pollCount, plural, one {# poll} other {# polls}}</1> in the last 30 days"
             values={{ voterCount, pollCount }}
-            components={{
-              b: <AnimatedStat locale={locale} />,
-            }}
+            components={[
+              <PeopleBadge key="people" locale={locale} />,
+              <PollsBadge key="polls" locale={locale} />,
+            ]}
           />
         </Stats>
       </Section>
+      <HowItWorks locale={locale} />
       <Section>
         <Testimonial
           logo={
@@ -279,71 +282,6 @@ export default async function Page(props: {
                       key="pricing"
                       className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
                       href="/pricing"
-                    />,
-                  ]}
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqNonprofit"
-                    defaults="Do you offer discounts for nonprofits?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqNonprofitAnswer"
-                  defaults="Yes. We offer discounted Rallly Pro subscriptions for registered nonprofits. Email us at <0>support@rallly.co</0> and we will get you set up."
-                  components={[
-                    <a
-                      key="email"
-                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
-                      href="mailto:support@rallly.co"
-                    />,
-                  ]}
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqTeams"
-                    defaults="How does Rallly work for teams?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqTeamsAnswer"
-                  defaults="You can invite your team into a shared space where everyone creates and manages polls together. Billing is centralized. A single subscription covers the whole team, and you can add or remove seats as your team changes."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqSelfHost"
-                    defaults="Can I self-host Rallly?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqSelfHostAnswer"
-                  defaults="Yes. Rallly is open source and can be deployed on your own infrastructure with Docker. Check the <0>self-hosting docs</0> to get started."
-                  components={[
-                    <a
-                      key="docs"
-                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
-                      href="https://support.rallly.co/self-hosting/installation/docker"
                     />,
                   ]}
                 />

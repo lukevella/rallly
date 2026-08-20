@@ -2,6 +2,7 @@ import { buttonVariants } from "@rallly/ui";
 import Link from "next/link";
 
 import { ErrorPage } from "@/components/error-page";
+import { DefaultLogo } from "@/features/branding/components/default-logo";
 import { getTranslation } from "@/i18n/server";
 
 export default async function MaintenancePage({
@@ -14,6 +15,7 @@ export default async function MaintenancePage({
 
   return (
     <ErrorPage
+      logo={<DefaultLogo />}
       label={t("maintenanceLabel", { defaultValue: "Maintenance" })}
       title={t("maintenanceTitle", { defaultValue: "Be right back" })}
       description={t("maintenanceDescription", {
