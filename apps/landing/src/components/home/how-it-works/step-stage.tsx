@@ -1,6 +1,6 @@
 "use client";
 
-import { useReducedMotion } from "motion/react";
+import { useInView, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { CreateStepDemo } from "./create-step-demo";
 import { DecideStepDemo } from "./decide-step-demo";
@@ -36,31 +36,12 @@ export const StepCue = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  const [started, setStarted] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el) {
-      return;
-    }
-    // A bottom margin so the walkthrough starts as the cards come up rather
-    // than the instant the first pixel appears. Deliberately no ratio
-    // threshold: the strip can be taller than the viewport, where a fraction
-    // like 0.4 would never be reached and the section would never play.
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) {
-          return;
-        }
-        observer.disconnect();
-        setStarted(true);
-      },
-      { rootMargin: "0px 0px -15% 0px" },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  // A bottom margin so the walkthrough starts as the cards come up rather than
+  // the instant the first pixel appears. Deliberately no amount threshold: the
+  // strip can be taller than the viewport, where a fraction like 0.4 would
+  // never be reached and the section would never play.
+  const started = useInView(ref, { once: true, margin: "0px 0px -15% 0px" });
 
   return (
     <div ref={ref} className={className}>
