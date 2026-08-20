@@ -1,7 +1,7 @@
 import { cn } from "@rallly/ui";
 import type * as React from "react";
+import { CaptureOnView } from "@/components/home/capture-on-view";
 import { CtaButton } from "@/components/home/cta-button";
-import { FadeIn } from "@/components/home/fade-in";
 import { handwritten } from "@/fonts/handwritten";
 
 export function Cta({
@@ -16,7 +16,7 @@ export function Cta({
   hint: React.ReactNode;
 }) {
   return (
-    <FadeIn amount="all" captureOnEnter="landing:final_cta_view">
+    <CaptureOnView event="landing:final_cta_view">
       <div className="grid gap-4 text-center sm:grid-cols-2 sm:gap-6 sm:text-left">
         <h2 className="text-balance font-medium text-2xl text-gray-800 leading-tight tracking-tight sm:text-4xl">
           {title}
@@ -39,6 +39,6 @@ export function Cta({
           {hint}
         </p>
       </div>
-    </FadeIn>
+    </CaptureOnView>
   );
 }
