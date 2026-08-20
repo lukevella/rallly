@@ -52,13 +52,6 @@ export function getDemoPreset(
         defaultValue: "Meeting room 3 and Zoom",
       }),
       spacing: "consecutive",
-      space: {
-        name: t("heroDemoEaSpaceName", {
-          ns: "home",
-          defaultValue: "Westbrook University",
-        }),
-        color: "#1D3AA7",
-      },
       participants: executiveAssistantParticipants,
     };
   }
