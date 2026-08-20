@@ -40,7 +40,7 @@ export function getDemoPreset(
       description: t("heroDemoEaDescription", {
         ns: "home",
         defaultValue:
-          "Please mark every slot you could make this week. The candidate is holding Thursday, so I'd like to confirm by Tuesday.",
+          "Please mark every slot you could make this week. The candidate is flying in on Monday, so I'd like to confirm as early as I can.",
       }),
       organizer: t("heroDemoEaOrganizer", {
         ns: "home",
@@ -111,7 +111,7 @@ const defaultParticipants: DemoPreset["participants"] = [
 const executiveAssistantParticipants: DemoPreset["participants"] = [
   {
     name: "Daniel Whitfield",
-    votes: ["no", "ifNeedBe", "no", "yes", "no", "yes", "ifNeedBe", "yes"],
+    votes: ["no", "ifNeedBe", "no", "yes", "no", "yes", "ifNeedBe", "no"],
   },
   {
     name: "Amara Osei",
@@ -119,14 +119,14 @@ const executiveAssistantParticipants: DemoPreset["participants"] = [
   },
   {
     name: "Henrik Lindqvist",
-    votes: ["no", "yes", "ifNeedBe", "no", "yes", "yes", "no", "yes"],
+    votes: ["no", "yes", "ifNeedBe", "yes", "yes", "yes", "no", "no"],
   },
   {
     name: "Claire Fontaine",
-    votes: ["yes", "no", "no", "ifNeedBe", "ifNeedBe", "no", "yes", "yes"],
+    votes: ["yes", "no", "no", "yes", "ifNeedBe", "no", "yes", "ifNeedBe"],
   },
   {
     name: "Jordan Reyes",
-    votes: ["no", "no", "no", "ifNeedBe", "no", "no", "ifNeedBe", "yes"],
+    votes: ["no", "no", "no", "yes", "no", "no", "ifNeedBe", "yes"],
   },
 ];
