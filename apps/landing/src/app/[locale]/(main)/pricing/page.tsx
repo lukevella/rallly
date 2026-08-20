@@ -140,8 +140,8 @@ export default async function Page(props: {
               }
             />
           </div>
-          <PlanCards className="mx-auto mt-4 w-full max-w-6xl sm:mt-6">
-            <PlanCard className="md:col-span-2">
+          <PlanCards className="mx-auto mt-4 max-w-6xl sm:mt-6">
+            <PlanCard>
               <PlanCardHeader>
                 <PlanCardName>{PLAN_NAMES.HOBBY}</PlanCardName>
                 <PlanCardDescription>
@@ -219,7 +219,7 @@ export default async function Page(props: {
                 </PlanBenefit>
               </PlanBenefits>
             </PlanCard>
-            <PlanCard className="md:col-span-3">
+            <PlanCard>
               <PlanCardHeader>
                 <div className="flex items-center justify-between gap-x-4">
                   <PlanCardName>{PLAN_NAMES.PRO}</PlanCardName>
