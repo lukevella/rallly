@@ -77,14 +77,17 @@ export function BillingIntervalSwitch({
         </div>
       ) : null}
       <div className="flex items-center gap-x-3">
-        <span
+        <button
+          type="button"
+          aria-pressed={!isYearly}
+          onClick={() => setInterval("monthly")}
           className={cn(
-            "font-medium text-sm",
+            "cursor-pointer rounded-sm font-medium text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
             isYearly ? "text-gray-500" : "text-gray-800",
           )}
         >
           {monthlyLabel}
-        </span>
+        </button>
         <Switch
           aria-label={switchLabel}
           checked={isYearly}
@@ -92,14 +95,17 @@ export function BillingIntervalSwitch({
             setInterval(checked ? "yearly" : "monthly")
           }
         />
-        <span
+        <button
+          type="button"
+          aria-pressed={isYearly}
+          onClick={() => setInterval("yearly")}
           className={cn(
-            "font-medium text-sm",
+            "cursor-pointer rounded-sm font-medium text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
             isYearly ? "text-gray-800" : "text-gray-500",
           )}
         >
           {yearlyLabel}
-        </span>
+        </button>
       </div>
     </div>
   );
