@@ -38,14 +38,17 @@ export default async function Page(props: {
     <div className="divide-y">
       <Section>
         <Hero
-          title={t("freeSchedulingPollTitle", {
+          title={t("eaTitle", {
             ns: "home",
+            defaultValue: "Scheduling for executive assistants",
           })}
-          description={t("freeSchedulingPollDescription", {
+          description={t("eaDescription", {
             ns: "home",
+            defaultValue:
+              "Find a time that works across a dozen busy calendars without a single follow-up email. Share one link, watch the responses land, and lock in the slot everyone can make. Free, and nobody you invite needs an account.",
           })}
         >
-          <HeroDemo locale={locale} />
+          <HeroDemo locale={locale} preset="executiveAssistant" />
         </Hero>
         <Stats className="mt-8 sm:mt-24">
           <Trans
@@ -210,16 +213,16 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
-                    i18nKey="faqWhatIsRallly"
-                    defaults="What is Rallly?"
+                    i18nKey="eaFaqExternalGuests"
+                    defaults="Can I invite people outside my organization?"
                   />
                 }
               >
                 <Trans
                   t={t}
                   ns="home"
-                  i18nKey="faqWhatIsRalllyAnswer"
-                  defaults="Rallly is a meeting scheduling tool. You create a poll with a few proposed times, share a link, and participants vote on the times that work for them. When the votes are in, you can see at a glance which time suits everyone best."
+                  i18nKey="eaFaqExternalGuestsAnswer"
+                  defaults="Yes. Anyone with the link can respond, whether or not they use Rallly and whichever calendar system their company runs on. They don't need an account and there is no limit on how many people you invite, so board members, clients and external counsel can all reply the same way."
                 />
               </FaqItem>
               <FaqItem
@@ -227,16 +230,16 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
-                    i18nKey="faqNeedAccount"
-                    defaults="Do I need an account to use Rallly?"
+                    i18nKey="eaFaqOnBehalf"
+                    defaults="Can I schedule on behalf of an executive?"
                   />
                 }
               >
                 <Trans
                   t={t}
                   ns="home"
-                  i18nKey="faqNeedAccountAnswer"
-                  defaults="No. You can create a poll and vote on one without signing up. Creating a free account lets you manage your polls from any device and get notified when people respond."
+                  i18nKey="eaFaqOnBehalfAnswer"
+                  defaults="Yes. You create and manage the poll, so the responses come back to you and you decide the final time. You can also add participants and fill in availability on someone's behalf, which is useful when a principal sends you their times directly instead of clicking the link."
                 />
               </FaqItem>
               <FaqItem
@@ -244,16 +247,50 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
-                    i18nKey="faqIsFree"
-                    defaults="Is Rallly free?"
+                    i18nKey="eaFaqTimeZones"
+                    defaults="Does it handle meetings across time zones?"
                   />
                 }
               >
                 <Trans
                   t={t}
                   ns="home"
-                  i18nKey="faqIsFreeAnswer"
-                  defaults="Yes. 99% of people use Rallly completely free. Creating polls, sharing them, and collecting votes costs nothing and there is no limit on participants. We also offer <0>Rallly Pro</0>, a paid subscription with features that are useful if you use Rallly professionally, like adding your own branding, removing Rallly attribution from your polls, and keeping polls around indefinitely."
+                  i18nKey="eaFaqTimeZonesAnswer"
+                  defaults="Yes. Each participant sees the proposed times in their own time zone automatically, so a London board member and a San Francisco executive are looking at the same slot without either of you converting anything by hand."
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="eaFaqChasing"
+                    defaults="Do I still have to chase people for replies?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="eaFaqChasingAnswer"
+                  defaults="You can see at a glance who has responded and who hasn't, and get an email as responses come in. That turns the usual round of follow-up emails into a single reminder to the few people still outstanding."
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="eaFaqBranding"
+                    defaults="Can polls carry our company branding?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="eaFaqBrandingAnswer"
+                  defaults="With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send to a board or a client looks like it came from your organization. Everything else is free to use."
                   components={[
                     <Link
                       key="pricing"
@@ -261,40 +298,6 @@ export default async function Page(props: {
                       href="/pricing"
                     />,
                   ]}
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqTimeZones"
-                    defaults="Does Rallly work across time zones?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqTimeZonesAnswer"
-                  defaults="Yes. When you create a poll with specific times, each participant sees the options in their own time zone automatically, so nobody has to do the math."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqAfterVoting"
-                    defaults="What happens after everyone votes?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqAfterVotingAnswer"
-                  defaults="The results show which times work for the most people. With Rallly Pro you can finalize the poll, which notifies participants of the chosen time by email."
                 />
               </FaqItem>
               <FaqItem
@@ -330,16 +333,16 @@ export default async function Page(props: {
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="freeSchedulingPollFinalCtaTitle"
-                defaults="Ready to create your scheduling poll?"
+                i18nKey="eaFinalCtaTitle"
+                defaults="Ready to get that meeting in the diary?"
               />
             }
             description={
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="freeSchedulingPollFinalCtaDescription"
-                defaults="It takes seconds and your group can start voting right away."
+                i18nKey="eaFinalCtaDescription"
+                defaults="Set up your poll in under a minute, send one link, and stop chasing replies."
               />
             }
             buttonLabel={
@@ -372,11 +375,15 @@ export async function generateMetadata(props: {
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, "home");
   return {
-    title: t("freeSchedulingPollMetaTitle", {
+    title: t("eaMetaTitle", {
       ns: "home",
+      defaultValue:
+        "Scheduling for Executive Assistants | Free Meeting Poll Tool",
     }),
-    description: t("freeSchedulingPollMetaDescription", {
+    description: t("eaMetaDescription", {
       ns: "home",
+      defaultValue:
+        "Rallly is a free scheduling tool for executive assistants. Coordinate meetings across busy calendars and time zones with one link. No account needed to respond.",
     }),
   };
 }

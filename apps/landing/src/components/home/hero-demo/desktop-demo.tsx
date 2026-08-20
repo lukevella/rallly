@@ -9,8 +9,9 @@ import {
 } from "lucide-react";
 import * as React from "react";
 import type { DemoDay } from "./demo-data";
-import { demoParticipants, formatDemoParts, getInitials } from "./demo-data";
+import { formatDemoParts, getInitials } from "./demo-data";
 import { DemoFrame, DemoScreen } from "./demo-frame";
+import type { DemoPreset } from "./demo-presets";
 import { VoteCount } from "./vote-count";
 import { VoteIcon } from "./vote-icon";
 
@@ -18,15 +19,16 @@ export const DesktopDemo = ({
   locale,
   days,
   scores,
+  preset,
   t,
 }: {
   locale: string;
   days: DemoDay[];
   scores: number[];
+  preset: DemoPreset;
   t: TFunction<"home">;
 }) => {
   const format = formatDemoParts(locale);
-  const optionCount = scores.length;
   const topScore = Math.max(...scores);
 
   const monthGroups: { label: string; span: number }[] = [];
@@ -49,33 +51,20 @@ export const DesktopDemo = ({
             <div className="space-y-3 p-4 sm:p-5">
               <div>
                 <h3 className="font-semibold text-gray-900 text-lg tracking-tight">
-                  {t("heroDemoTitle", {
-                    ns: "home",
-                    defaultValue: "Q3 Board Meeting",
-                  })}
+                  {preset.title}
                 </h3>
                 <p className="mt-1 text-gray-600 text-sm">
-                  {t("heroDemoDescription", {
-                    ns: "home",
-                    defaultValue:
-                      "Please pick every time you could attend. We'll go with the one that works for everyone.",
-                  })}
+                  {preset.description}
                 </p>
               </div>
               <div className="space-y-1.5 text-gray-600 text-sm">
                 <div className="flex items-center gap-2">
                   <UserIcon className="size-4 text-gray-400" />
-                  {t("heroDemoOrganizer", {
-                    ns: "home",
-                    defaultValue: "Organized by Sofia Almeida",
-                  })}
+                  {preset.organizer}
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPinIcon className="size-4 text-gray-400" />
-                  {t("heroDemoLocation", {
-                    ns: "home",
-                    defaultValue: "Riverside Community Center",
-                  })}
+                  {preset.location}
                 </div>
               </div>
               <div>
@@ -121,21 +110,13 @@ export const DesktopDemo = ({
                   })}
                 </span>
                 <span className="rounded-md border px-1.5 py-0.5 text-gray-500 text-xs">
-                  {demoParticipants.length}
+                  {preset.participants.length}
                 </span>
                 <span className="flex size-6 items-center justify-center rounded-md border text-gray-500">
                   <PlusIcon className="size-3.5" />
                 </span>
               </div>
               <div className="flex items-center gap-3 text-gray-500 text-sm">
-                <span>
-                  {t("heroDemoOptionCount", {
-                    ns: "home",
-                    defaultValue:
-                      "{count, plural, one {# option} other {# options}}",
-                    count: optionCount,
-                  })}
-                </span>
                 <Maximize2Icon className="size-4" />
               </div>
             </div>
@@ -204,7 +185,7 @@ export const DesktopDemo = ({
                   );
                 }),
               )}
-              {demoParticipants.map((participant) => (
+              {preset.participants.map((participant) => (
                 <React.Fragment key={participant.name}>
                   <div className="flex items-center gap-2.5 border-gray-100 border-t px-3 py-3 text-left">
                     <span className="flex size-7 items-center justify-center rounded-full bg-gray-100 font-medium text-[10px] text-gray-600 uppercase">

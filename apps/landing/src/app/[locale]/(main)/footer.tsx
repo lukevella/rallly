@@ -75,7 +75,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
           </a>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
             <Trans t={t} ns="common" i18nKey="product" defaults="Product" />
@@ -178,6 +178,31 @@ export const Footer = async ({ locale }: { locale: string }) => {
                   ns="common"
                   i18nKey="when2MeetAlternative"
                   defaults="When2Meet alternative"
+                />
+              </LinkBase>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
+            <Trans
+              t={t}
+              ns="common"
+              i18nKey="schedulingFor"
+              defaults="Scheduling for"
+            />
+          </div>
+          <ul className="grid gap-3 text-sm">
+            <li>
+              <LinkBase
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                href="/scheduling-for/executive-assistants"
+              >
+                <Trans
+                  t={t}
+                  ns="common"
+                  i18nKey="executiveAssistants"
+                  defaults="Executive assistants"
                 />
               </LinkBase>
             </li>
