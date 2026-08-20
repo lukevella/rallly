@@ -164,6 +164,20 @@ const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 100;
  *
  * `scheduledEventInvites` is the invitee link (invitee_id, SetNull); a guest
  * on that relation is a live participant elsewhere and must be retained.
+ *
+ * The filter below is the canonical list of guarded relations, and it must
+ * stay exhaustive: every `onDelete: Cascade` relation on `User` is inside
+ * this delete's blast radius. `scripts/check-user-cascade-relations.mjs`
+ * fails CI when the schema grows one that is neither guarded here nor
+ * recorded as deliberately ignored (auth plumbing — sessions, accounts,
+ * notification preferences — which every guest has and which hold no data
+ * worth keeping).
+ *
+ * Most of these can't be reached by an anonymous guest today: the
+ * user-create hook in `lib/auth.ts` returns early for anonymous users, so no
+ * space is provisioned and the space-scoped relations stay empty. That is an
+ * application-code invariant, not a database constraint, so the filter does
+ * not rely on it holding.
  */
 export async function deleteOrphanedAnonymousUsers() {
   const cutoff = new Date(Date.now() - SESSION_TTL_SECONDS * 1000);
@@ -176,6 +190,16 @@ export async function deleteOrphanedAnonymousUsers() {
     comments: { none: {} },
     participants: { none: {} },
     scheduledEventInvites: { none: {} },
+    scheduledEvents: { none: {} },
+    hostedEventTypes: { none: {} },
+    hostedSheets: { none: {} },
+    spaces: { none: {} },
+    memberOf: { none: {} },
+    spaceMemberInvites: { none: {} },
+    subscriptions: { none: {} },
+    paymentMethods: { none: {} },
+    calendarConnections: { none: {} },
+    credentials: { none: {} },
   } satisfies Prisma.UserWhereInput;
 
   let deleted = 0;
