@@ -10,27 +10,6 @@ export type DemoDay = {
   options: DemoOption[];
 };
 
-// Participant names are sample data and stay untranslated; votes are indexed
-// against the flattened option list (four Thursdays, two slots each).
-export const demoParticipants: { name: string; votes: DemoVote[] }[] = [
-  {
-    name: "Margaret Ellis",
-    votes: ["ifNeedBe", "yes", "no", "yes", "yes", "yes", "no", "yes"],
-  },
-  {
-    name: "Priya Patel",
-    votes: ["yes", "yes", "yes", "no", "yes", "yes", "no", "yes"],
-  },
-  {
-    name: "Tom Becker",
-    votes: ["yes", "yes", "yes", "yes", "yes", "no", "ifNeedBe", "yes"],
-  },
-  {
-    name: "Grace Okafor",
-    votes: ["no", "yes", "no", "yes", "yes", "no", "no", "yes"],
-  },
-];
-
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
 const SLOT_HOURS = [12, 18];
@@ -75,10 +54,13 @@ export function getInitials(name: string) {
 }
 
 // The count badge in the app includes both yes and if-need-be votes.
-export function getScores(days: DemoDay[]) {
+export function getScores(
+  days: DemoDay[],
+  participants: { votes: DemoVote[] }[],
+) {
   const optionCount = days.reduce((sum, day) => sum + day.options.length, 0);
   return Array.from({ length: optionCount }, (_, index) =>
-    demoParticipants.reduce(
+    participants.reduce(
       (score, participant) =>
         participant.votes[index] === "no" ? score : score + 1,
       0,
