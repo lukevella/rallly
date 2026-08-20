@@ -176,10 +176,18 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
       <header className="sticky top-0 z-20 bg-gray-100/90 p-3 backdrop-blur-md xl:bg-transparent xl:backdrop-blur-none dark:bg-gray-900/90 dark:xl:bg-transparent">
         <div className="flex items-center justify-between gap-x-4">
           <div className="flex min-w-0 flex-1 items-center">
+            {/* The back link is not prefetched: a guest gets bounced from "/"
+                to a bare /login, and that redirect is cached against the space
+                layout the whole dashboard shares, so any later navigation into
+                that subtree lands on /login instead of where it was headed. */}
             {isLoggedIn ? (
               nav
             ) : (
-              <Link href="/" className={buttonVariants({ variant: "ghost" })}>
+              <Link
+                href="/"
+                prefetch={false}
+                className={buttonVariants({ variant: "ghost" })}
+              >
                 <ArrowLeftIcon className="size-4" />
                 <Trans i18nKey="back" defaults="Back" />
               </Link>
