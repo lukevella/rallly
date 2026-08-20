@@ -77,7 +77,9 @@ export const Footer = async ({ locale }: { locale: string }) => {
             </a>
           </div>
         </div>
-        <FooterDemo className="w-full lg:min-w-0 lg:flex-1" />
+        {/* Decorative, and there is no room for it beside the tagline until
+            the footer goes side by side, so it only shows from `lg` up. */}
+        <FooterDemo className="hidden w-full lg:flex lg:min-w-0 lg:flex-1" />
       </div>
       <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
         <div>
