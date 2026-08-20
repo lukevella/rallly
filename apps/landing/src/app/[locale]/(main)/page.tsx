@@ -78,8 +78,8 @@ export default async function Page(props: {
             defaults="<0>{voterCount, plural, one {# person} other {# people}}</0> voted on <1>{pollCount, plural, one {# poll} other {# polls}}</1> in the last 30 days"
             values={{ voterCount, pollCount }}
             components={[
-              <PeopleBadge key="people" locale={locale} />,
-              <PollsBadge key="polls" locale={locale} />,
+              <PeopleBadge key="people" locale={locale} live />,
+              <PollsBadge key="polls" locale={locale} live />,
             ]}
           />
         </Stats>
