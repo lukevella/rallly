@@ -32,6 +32,38 @@ export function getPublicScheduledEvent(id: string) {
   });
 }
 
+// Backs the unauthenticated /api/event/:id calendar routes. The host is
+// selected as the ICS organizer, matching the copy attached to the RSVP
+// confirmation email: same UID, same ORGANIZER, so the downloaded and emailed
+// events reconcile in the attendee's calendar instead of conflicting.
+// Soft-deleted events are excluded here rather than at the call site so the
+// route cannot forget the filter.
+export function getScheduledEventCalendarData(id: string) {
+  return prisma.scheduledEvent.findFirst({
+    where: { id, deletedAt: null },
+    select: {
+      id: true,
+      uid: true,
+      sequence: true,
+      title: true,
+      description: true,
+      location: true,
+      conferencing: true,
+      start: true,
+      end: true,
+      allDay: true,
+      timeZone: true,
+      status: true,
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+}
+
 // Everything the RSVP confirmation email needs: ICS identity (uid/sequence),
 // event details, the host as organizer, and the space's branding fields.
 export function getScheduledEventRsvpEmailData(eventId: string) {

@@ -181,7 +181,6 @@
     },
     {
       "includes": [
-        "src/app/api/event/**",
         "src/app/api/legacy/**",
         "src/app/api/status/**",
         "src/app/api/updates/**",

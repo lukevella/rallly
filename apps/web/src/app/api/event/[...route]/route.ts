@@ -1,4 +1,3 @@
-import { prisma } from "@rallly/database";
 import type { CalendarEvent } from "calendar-link";
 import { google, office365, outlook, yahoo } from "calendar-link";
 import { Hono } from "hono";
@@ -8,36 +7,21 @@ import { parseConferencing } from "@/features/conferencing/data";
 import { getConferencingUri } from "@/features/conferencing/utils";
 import { parseLocation } from "@/features/location/data";
 import { formatLocationText } from "@/features/location/utils";
+import { getScheduledEventCalendarData } from "@/features/scheduled-event/data";
+import { createRatelimit } from "@/lib/rate-limit";
 import { createIcsEvent } from "@/lib/utils/ics";
 
 const app = new Hono().basePath("/api/event");
 
-async function getScheduledEvent(eventId: string) {
-  return prisma.scheduledEvent.findUnique({
-    where: { id: eventId },
-    select: {
-      id: true,
-      uid: true,
-      title: true,
-      description: true,
-      location: true,
-      conferencing: true,
-      start: true,
-      end: true,
-      allDay: true,
-      timeZone: true,
-      user: {
-        select: {
-          name: true,
-          email: true,
-        },
-      },
-    },
-  });
-}
+// These routes are unauthenticated by design: an event's calendar links are
+// handed to invitees who have no account, exactly like the public /e/[id]
+// page. The event id is the only credential and the ICS carries the host's
+// address, so the budget bounds what a leaked or guessed id is worth in bulk.
+// A real attendee adds an event to their calendar once.
+const ratelimit = createRatelimit(60, "1 h");
 
 type ScheduledEventRow = NonNullable<
-  Awaited<ReturnType<typeof getScheduledEvent>>
+  Awaited<ReturnType<typeof getScheduledEventCalendarData>>
 >;
 
 // Flattens structured location/conferencing into the single-string fields the
@@ -85,8 +69,19 @@ function toCalendarEvent(event: ScheduledEventRow): CalendarEvent {
   };
 }
 
+app.use("/:eventId/*", async (c, next) => {
+  if (ratelimit) {
+    const ip = c.req.header("x-forwarded-for")?.split(",")[0]?.trim();
+    const { success } = await ratelimit.limit(`api:event:${ip || "unknown"}`);
+    if (!success) {
+      return c.json({ error: "Too many requests" }, 429);
+    }
+  }
+  return next();
+});
+
 app.get("/:eventId/google-calendar", async (c) => {
-  const event = await getScheduledEvent(c.req.param("eventId"));
+  const event = await getScheduledEventCalendarData(c.req.param("eventId"));
   if (!event) {
     return c.json({ error: "Event not found" }, 404);
   }
@@ -94,7 +89,7 @@ app.get("/:eventId/google-calendar", async (c) => {
 });
 
 app.get("/:eventId/outlook", async (c) => {
-  const event = await getScheduledEvent(c.req.param("eventId"));
+  const event = await getScheduledEventCalendarData(c.req.param("eventId"));
   if (!event) {
     return c.json({ error: "Event not found" }, 404);
   }
@@ -102,7 +97,7 @@ app.get("/:eventId/outlook", async (c) => {
 });
 
 app.get("/:eventId/office365", async (c) => {
-  const event = await getScheduledEvent(c.req.param("eventId"));
+  const event = await getScheduledEventCalendarData(c.req.param("eventId"));
   if (!event) {
     return c.json({ error: "Event not found" }, 404);
   }
@@ -110,7 +105,7 @@ app.get("/:eventId/office365", async (c) => {
 });
 
 app.get("/:eventId/yahoo", async (c) => {
-  const event = await getScheduledEvent(c.req.param("eventId"));
+  const event = await getScheduledEventCalendarData(c.req.param("eventId"));
   if (!event) {
     return c.json({ error: "Event not found" }, 404);
   }
@@ -118,7 +113,7 @@ app.get("/:eventId/yahoo", async (c) => {
 });
 
 app.get("/:eventId/ics", async (c) => {
-  const event = await getScheduledEvent(c.req.param("eventId"));
+  const event = await getScheduledEventCalendarData(c.req.param("eventId"));
   if (!event) {
     return c.json({ error: "Event not found" }, 404);
   }
@@ -127,6 +122,9 @@ app.get("/:eventId/ics", async (c) => {
 
   const { error, value } = createIcsEvent({
     uid: event.uid,
+    // Carries the event's revision so a re-download supersedes the copy
+    // already in the client's calendar instead of being dropped as not-newer.
+    sequence: event.sequence,
     title: event.title,
     description,
     location,
@@ -136,6 +134,7 @@ app.get("/:eventId/ics", async (c) => {
     timeZone: event.timeZone ?? undefined,
     organizer: { name: event.user.name, email: event.user.email },
     method: "publish",
+    status: event.status === "canceled" ? "CANCELLED" : "CONFIRMED",
   });
 
   if (error || !value) {
