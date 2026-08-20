@@ -30,7 +30,6 @@ export const DesktopDemo = ({
   t: TFunction<"home">;
 }) => {
   const format = formatDemoParts(locale);
-  const optionCount = scores.length;
   const topScore = Math.max(...scores);
 
   const monthGroups: { label: string; span: number }[] = [];
@@ -143,14 +142,6 @@ export const DesktopDemo = ({
                 </span>
               </div>
               <div className="flex items-center gap-3 text-gray-500 text-sm">
-                <span>
-                  {t("heroDemoOptionCount", {
-                    ns: "home",
-                    defaultValue:
-                      "{count, plural, one {# option} other {# options}}",
-                    count: optionCount,
-                  })}
-                </span>
                 <Maximize2Icon className="size-4" />
               </div>
             </div>
