@@ -1,7 +1,9 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import * as m from "motion/react-m";
 import { DemoScreen } from "../hero-demo/demo-frame";
+import { ACCENT } from "./accent";
 import { EASE_OUT, EXIT, STAGGER } from "./motion";
 import { PressButton } from "./press-button";
 
@@ -95,7 +97,7 @@ export const CreateStepDemo = ({ play }: { play: boolean }) => (
       <PressButton
         play={play}
         delay={SUBMIT_DELAY}
-        className="h-7 w-14 rounded-md bg-indigo-600/90"
+        className={cn("h-7 w-14 rounded-md", ACCENT)}
       />
     </div>
   </DemoScreen>

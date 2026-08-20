@@ -4,6 +4,7 @@ import { cn } from "@rallly/ui";
 import { CheckIcon, MailIcon, MessageCircleIcon, SendIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import { DemoScreen } from "../hero-demo/demo-frame";
+import { ACCENT } from "./accent";
 import { EASE_OUT, EXIT } from "./motion";
 import { PressButton } from "./press-button";
 
@@ -24,9 +25,9 @@ const CHANNELS = [
 const PRESS_AT = 0.42;
 const COPIED_AT = PRESS_AT + 0.1;
 
-// The url and the confirmation blur through each other rather than crossfading
-// cleanly: without it you read two overlapping bars swapping, with it one label
-// turning into the other.
+// Copying recolors the url in place rather than swapping it for a shorter
+// confirmation: the bar keeps its width so the field never shows a gap, and
+// the check is the only thing that appears.
 const SWAP = { duration: 0.2, ease: EASE_OUT } as const;
 
 export const ShareStepDemo = ({ play }: { play: boolean }) => (
@@ -34,34 +35,42 @@ export const ShareStepDemo = ({ play }: { play: boolean }) => (
     <div className="space-y-1.5">
       <div className="h-1.5 w-12 rounded-full bg-gray-300" />
       <div className="flex items-center gap-2">
-        <div className="relative flex h-7 min-w-0 flex-1 items-center gap-1.5 rounded-md border border-gray-200 bg-gray-50 px-2">
+        <div className="relative flex h-7 min-w-0 flex-1 items-center rounded-md border border-gray-200 bg-gray-50 px-2">
+          {/* The check sits out of flow so the url keeps its exact position
+              and width when the copy lands. */}
           <m.div
-            className="h-1.5 w-28 rounded-full bg-gray-300"
+            className="absolute -right-0.5 text-violet-500"
             initial={false}
-            animate={{
-              opacity: play ? 0 : 1,
-              filter: play ? "blur(2px)" : "blur(0px)",
-            }}
-            transition={{ ...SWAP, delay: play ? COPIED_AT : 0.06 }}
-          />
-          <m.div
-            className="absolute top-1/2 left-2 flex -translate-y-1/2 items-center gap-1 text-indigo-600"
-            initial={false}
-            animate={{
-              opacity: play ? 1 : 0,
-              filter: play ? "blur(0px)" : "blur(2px)",
-            }}
-            transition={{ ...SWAP, delay: play ? COPIED_AT : 0 }}
+            animate={{ opacity: play ? 1 : 0, scale: play ? 1 : 0.7 }}
+            transition={
+              play
+                ? {
+                    type: "spring",
+                    duration: 0.4,
+                    bounce: 0.4,
+                    delay: COPIED_AT,
+                  }
+                : EXIT
+            }
           >
             <CheckIcon className="size-3" />
-            <div className="h-1.5 w-14 rounded-full bg-indigo-400" />
           </m.div>
+          {/* The accent fades over the resting bar rather than replacing its
+              class, so the recolor transitions instead of snapping. */}
+          <div className="relative h-1.5 w-28 shrink-0 overflow-hidden rounded-full bg-gray-300">
+            <m.div
+              className={cn("absolute inset-0", ACCENT)}
+              initial={false}
+              animate={{ opacity: play ? 1 : 0 }}
+              transition={{ ...SWAP, delay: play ? COPIED_AT : 0 }}
+            />
+          </div>
         </div>
         <div className="relative shrink-0">
           <PressButton
             play={play}
             delay={PRESS_AT}
-            className="h-7 w-14 rounded-md bg-indigo-600/90"
+            className={cn("h-7 w-14 rounded-md", ACCENT)}
           />
           <m.div
             className="pointer-events-none absolute top-4 left-6"

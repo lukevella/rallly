@@ -4,6 +4,7 @@ import { cn } from "@rallly/ui";
 import { VoteIcon } from "@rallly/ui/vote-icon";
 import * as m from "motion/react-m";
 import { DemoScreen } from "../hero-demo/demo-frame";
+import { ACCENT } from "./accent";
 import { EASE_OUT, EXIT } from "./motion";
 
 // A textless mock of the results: one row per option with real vote icons,
@@ -57,7 +58,7 @@ export const DecideStepDemo = ({ play }: { play: boolean }) => (
             <div className="h-1.5 w-10 rounded-full bg-gray-200" />
             {row.winner ? (
               <m.div
-                className="h-1.5 w-12 rounded-full bg-indigo-600"
+                className={cn("h-1.5 w-12 rounded-full", ACCENT)}
                 initial={false}
                 animate={{ opacity: play ? 1 : 0, scaleX: play ? 1 : 0.4 }}
                 style={{ originX: 0 }}
