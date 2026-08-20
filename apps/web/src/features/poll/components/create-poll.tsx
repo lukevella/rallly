@@ -28,7 +28,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { toast } from "@rallly/ui/sonner";
 import { shortUrl } from "@rallly/utils/absolute-url";
-import { CheckIcon, CopyIcon } from "lucide-react";
+import { ArrowLeftIcon, CheckIcon, CopyIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useForm, useFormContext } from "react-hook-form";
@@ -39,6 +39,7 @@ import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { NewEventData } from "@/features/poll/components/forms/types";
 import { useUser } from "@/features/user/client";
+import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans, useTranslation } from "@/i18n/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
@@ -68,25 +69,41 @@ const GuestModeBadge = () => {
         <Trans i18nKey="guest" defaults="Guest" />
       </PopoverTrigger>
       <PopoverContent align="end" className="max-w-xs">
-        <div>
-          <h3 className="font-medium text-sm">
-            <Trans i18nKey="createPollGuestModeTitle" defaults="Guest mode" />
-          </h3>
-          <p className="mt-1 text-pretty text-muted-foreground text-sm">
-            <Trans
-              i18nKey="createPollGuestModeDescription"
-              defaults="Guest polls can only be managed from the browser they were created in. Log in to manage them from any device."
-            />
-          </p>
-        </div>
-        <Link
-          href="/login?redirectTo=/new"
-          className={cn(buttonVariants(), "mt-3 w-full")}
-        >
-          <Trans i18nKey="createPollGuestModeLogin" defaults="Log in" />
-        </Link>
+        <h3 className="font-medium text-sm">
+          <Trans i18nKey="createPollGuestModeTitle" defaults="Guest mode" />
+        </h3>
+        <p className="mt-1 text-pretty text-muted-foreground text-sm">
+          <Trans
+            i18nKey="createPollGuestModeDescription"
+            defaults="Guest polls can only be managed from the browser they were created in. Log in to manage them from any device."
+          />
+        </p>
       </PopoverContent>
     </Popover>
+  );
+};
+
+const SelectedOptionsCount = () => {
+  const form = useFormContext<NewEventData>();
+  const optionCount = form.watch("options").length;
+  const allDay = form.watch("allDay");
+
+  if (allDay) {
+    return (
+      <Trans
+        i18nKey="createPollFooterDatesSelected"
+        defaults="{count, plural, =0 {No dates selected} one {1 date selected} other {# dates selected}}"
+        values={{ count: optionCount }}
+      />
+    );
+  }
+
+  return (
+    <Trans
+      i18nKey="createPollFooterTimesSelected"
+      defaults="{count, plural, =0 {No times selected} one {1 time selected} other {# times selected}}"
+      values={{ count: optionCount }}
+    />
   );
 };
 
@@ -99,7 +116,7 @@ const CreatePollActions = ({
 
   if (createdPollId) {
     return (
-      <output className="flex h-9 items-center gap-x-1.5 rounded-lg bg-green-600/10 px-2.5 font-medium text-green-600 text-sm dark:bg-green-500/10 dark:text-green-500">
+      <output className="flex h-9 items-center gap-x-1.5 rounded-full bg-green-600/10 px-3.5 font-medium text-green-600 text-sm dark:bg-green-500/10 dark:text-green-500">
         <CheckIcon className="size-4 shrink-0" />
         <Trans i18nKey="createPollFooterCreated" defaults="Created" />
       </output>
@@ -108,6 +125,7 @@ const CreatePollActions = ({
 
   return (
     <Button
+      className="rounded-full px-4"
       form="create-poll"
       loading={form.formState.isSubmitting}
       type="submit"
@@ -157,17 +175,26 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
     <Form {...form}>
       <header className="sticky top-0 z-20 bg-gray-100/90 p-3 backdrop-blur-md xl:bg-transparent xl:backdrop-blur-none dark:bg-gray-900/90 dark:xl:bg-transparent">
         <div className="flex items-center justify-between gap-x-4">
-          <div className="flex min-w-0 flex-1 items-center">{nav}</div>
-          <div className="flex shrink-0 items-center gap-x-4">
+          <div className="flex min-w-0 flex-1 items-center">
+            {isLoggedIn ? (
+              nav
+            ) : (
+              <Link href="/" className={buttonVariants({ variant: "ghost" })}>
+                <ArrowLeftIcon className="size-4" />
+                <Trans i18nKey="back" defaults="Back" />
+              </Link>
+            )}
+          </div>
+          <div className="flex shrink-0 items-center gap-x-2">
             {!isLoggedIn ? <GuestModeBadge /> : null}
-            <CreatePollActions createdPollId={createdPollId} />
+            <UserDropdown />
           </div>
         </div>
       </header>
       <main
         id="main-content"
         tabIndex={-1}
-        className="mx-auto max-w-4xl px-3 pb-8 lg:pt-6"
+        className="mx-auto max-w-4xl px-3 lg:pt-6"
       >
         <form
           id="create-poll"
@@ -245,6 +272,16 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
             <PollSettingsForm />
           </div>
         </form>
+        <div className="pointer-events-none sticky bottom-0 z-20 flex justify-center pt-4 pb-6">
+          <div className="pointer-events-auto flex w-full max-w-md items-center justify-between gap-x-4 rounded-full border border-popover-border bg-popover py-2 pr-2 pl-5 shadow-2xl shadow-black/40">
+            <p className="min-w-0 truncate text-muted-foreground text-sm">
+              <SelectedOptionsCount />
+            </p>
+            <div className="shrink-0">
+              <CreatePollActions createdPollId={createdPollId} />
+            </div>
+          </div>
+        </div>
       </main>
       <Dialog open={!!createdPollId}>
         <DialogContent showCloseButton={false}>

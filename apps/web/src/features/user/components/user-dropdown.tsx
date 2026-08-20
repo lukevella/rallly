@@ -33,7 +33,6 @@ import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
-import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { useTheme } from "@/lib/theme";
 
 export const UserDropdown = ({ className }: { className?: string }) => {
@@ -42,26 +41,14 @@ export const UserDropdown = ({ className }: { className?: string }) => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
 
-  const isRegistrationEnabled = useFeatureFlag("registration");
-
   if (!user || user.isGuest) {
     return (
-      <div className="flex items-center gap-x-2">
-        <Link
-          href={`/login?redirectTo=${encodeURIComponent("/new")}`}
-          className={buttonVariants({ variant: "ghost" })}
-        >
-          <Trans i18nKey="login" defaults="Login" />
-        </Link>
-        {isRegistrationEnabled ? (
-          <Link
-            href={`/register?redirectTo=${encodeURIComponent("/new")}`}
-            className={buttonVariants({ variant: "primary" })}
-          >
-            <Trans i18nKey="signUp" defaults="Sign up" />
-          </Link>
-        ) : null}
-      </div>
+      <Link
+        href={`/login?redirectTo=${encodeURIComponent("/new")}`}
+        className={buttonVariants({ variant: "ghost" })}
+      >
+        <Trans i18nKey="login" defaults="Login" />
+      </Link>
     );
   }
 
