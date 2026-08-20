@@ -5,6 +5,16 @@ import { BarChart2Icon, UsersIcon } from "lucide-react";
 import * as React from "react";
 
 const DURATION_MS = 1200;
+// Logarithmic spin: log10(1 + 9t) sampled into a CSS linear() easing.
+//
+// The obvious "decelerating" curves (expo-out and friends) put ~97% of the
+// count in the first half of the duration, so the digits snap to nearly the
+// final value and then sit still through a long dead tail. A log curve keeps
+// them visibly climbing for the whole spin — quick off the mark, easing down,
+// but still moving at t=0.9 — which is what reads as counting up rather than
+// landing. Falls back to constant-rate easing below Safari 17.2.
+const LOG_EASING =
+  "linear(0, 0.1383, 0.243, 0.3274, 0.3979, 0.4586, 0.5119, 0.5593, 0.6021, 0.641, 0.6767, 0.7097, 0.7404, 0.769, 0.7959, 0.8212, 0.8451, 0.8678, 0.8893, 0.9098, 0.9294, 0.9482, 0.9661, 0.9834, 1)";
 
 // Locates the first localized integer (any Unicode numbering system, with
 // locale grouping separators) so the surrounding translation stays untouched.
@@ -40,8 +50,29 @@ function parseLocalizedInteger(text: string, locale: string) {
 }
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
-// Below this the ticker would fire faster than it reads as a discrete event.
-const MIN_TICK_MS = 2000;
+// Keeps a burst from firing faster than a digit roll can settle.
+const MIN_GAP_MS = 700;
+// Stops a long random gap from reading as "the ticker died". Relative to the
+// mean so a slow badge keeps its shape instead of being squashed against a
+// fixed ceiling, with an absolute backstop for very slow ones.
+const MAX_GAP_FACTOR = 2.5;
+const MAX_GAP_MS = 25000;
+
+/**
+ * Random gap around a mean, drawn from an exponential distribution.
+ *
+ * Votes arrive independently of each other, which makes arrivals a Poisson
+ * process and the gaps between them exponential — so sampling this way makes
+ * the badge cluster and pause the way real traffic does, instead of ticking
+ * like a metronome. The clamps trade a little of that shape for the two
+ * things a uniform timer got for free: no burst too fast to read, no gap long
+ * enough to look broken.
+ */
+function nextGapMs(meanMs: number) {
+  const gap = -Math.log(1 - Math.random()) * meanMs;
+  const ceiling = Math.min(meanMs * MAX_GAP_FACTOR, MAX_GAP_MS);
+  return Math.min(Math.max(gap, MIN_GAP_MS), Math.max(ceiling, MIN_GAP_MS));
+}
 
 /**
  * Ticks the badge up at the average rate the 30-day count was accumulated,
@@ -69,15 +100,40 @@ function useLiveCount({
     if (!enabled || tickMs <= 0) {
       return;
     }
-    const interval = Math.max(tickMs, MIN_TICK_MS);
     const startedAt = Date.now();
-    // Derived from the wall clock rather than incremented, so a throttled or
-    // suspended timer catches up in one step instead of drifting behind.
-    const id = window.setInterval(() => {
+    let timeout: number;
+    // The displayed count is always derived from elapsed wall-clock time, so
+    // the jitter only decides *when* to look — it never feeds back into the
+    // arithmetic. That keeps the average exactly the measured rate however
+    // the gaps fall, and lets a throttled or suspended timer catch up in one
+    // step instead of drifting behind.
+    const sample = () => {
       const elapsed = Math.max(0, Date.now() - startedAt);
-      setValue(baseValue + Math.floor(elapsed / interval));
-    }, interval);
-    return () => window.clearInterval(id);
+      setValue(baseValue + Math.floor(elapsed / tickMs));
+    };
+    const schedule = () => {
+      timeout = window.setTimeout(() => {
+        sample();
+        schedule();
+      }, nextGapMs(tickMs));
+    };
+    schedule();
+
+    const onVisibility = () => {
+      if (document.visibilityState !== "visible") {
+        return;
+      }
+      // Resync on return so a backgrounded tab shows the right number
+      // immediately rather than waiting out a stale timer.
+      window.clearTimeout(timeout);
+      sample();
+      schedule();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.clearTimeout(timeout);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, [baseValue, tickMs, enabled]);
 
   return value;
@@ -185,7 +241,7 @@ function AnimatedNumber({
           transformTiming={{ duration: 0 }}
           spinTiming={{
             duration: DURATION_MS,
-            easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+            easing: LOG_EASING,
           }}
         />
       </span>
