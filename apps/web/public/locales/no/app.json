@@ -32,7 +32,6 @@
   "addressPlaceholder": "Hovedgaten 123",
   "addSeats": "{count, plural, one {Add # Seat} other {Add # Seats}}",
   "addTimeOption": "Legg til klokkeslett",
-  "addToCalendar": "Legg til i kalender",
   "admin": "Administrator",
   "adminAccessRequired": "Administratorrettigheter kreves.",
   "adminAccessRequiredDescription": "Du trenger administratorrettigheter for å se denne siden.",
