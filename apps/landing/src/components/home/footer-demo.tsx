@@ -72,8 +72,14 @@ function useSlotVisibility(
   React.useEffect(() => {
     const element = ref.current;
     // Without the API there is nothing to observe, and constructing it would
-    // throw before the solved-card fallback ever renders.
+    // throw before the solved-card fallback ever renders. Drop back to "not
+    // yet known" on the way out: a new observer does not report synchronously,
+    // so a stale answer left here would drive the card for the frames between
+    // re-enabling and the first callback — appearing at once with no fade, or
+    // staying hidden — instead of the fresh observation taking over cleanly.
     if (!enabled || !element || typeof IntersectionObserver === "undefined") {
+      setRevealed(null);
+      setActive(null);
       return;
     }
 
