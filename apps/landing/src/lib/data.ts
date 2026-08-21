@@ -7,7 +7,7 @@ const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
 export const getMonthlyPollCount = async () => {
   "use cache";
-  cacheLife("days");
+  cacheLife("hours");
   return prisma.poll.count({
     where: {
       deleted: false,
@@ -23,7 +23,7 @@ export const getMonthlyPollCount = async () => {
 
 export const getMonthlyVoterCount = async () => {
   "use cache";
-  cacheLife("days");
+  cacheLife("hours");
   return prisma.participant.count({
     where: {
       createdAt: { gte: new Date(Date.now() - THIRTY_DAYS_MS) },
