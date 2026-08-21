@@ -138,7 +138,7 @@ export function getDemoPreset(
       description: t("heroDemoLegalDescription", {
         ns: "home",
         defaultValue:
-          "Please mark every slot counsel and your client could attend. Half day sessions, and we will confirm once both sides have responded.",
+          "Please mark every slot counsel and your client could attend. These are half-day sessions. We will confirm once both sides have responded.",
       }),
       organizer: t("heroDemoLegalOrganizer", {
         ns: "home",
