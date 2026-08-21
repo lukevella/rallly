@@ -31,7 +31,11 @@ export default async function Page() {
   const needsWorkDetails =
     space.spaceType === "work" &&
     (!user.jobTitle ||
-      (!space.industry && ability.can("update", subject("Space", space))));
+      (!space.industry &&
+        // Spread: subject() tags the object it is given, and getActiveSpace()
+        // is React-cached, so tagging it directly mutates the same instance
+        // the layout hands to the client SpaceProvider.
+        ability.can("update", subject("Space", { ...space }))));
 
   return (
     <DashboardHome

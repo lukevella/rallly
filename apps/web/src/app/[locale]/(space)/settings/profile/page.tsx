@@ -100,10 +100,14 @@ export default async function Page() {
                         })
                   }
                   spaceName={space.name}
+                  // Spread: subject() tags the object it is given, and
+                  // getActiveSpace() is React-cached, so tagging it directly
+                  // mutates the same instance the layout hands to the client
+                  // SpaceProvider — which then isn't a plain object.
                   canEditIndustry={defineAbilityForMember({
                     user: { id: user.id },
                     space,
-                  }).can("update", subject("Space", space))}
+                  }).can("update", subject("Space", { ...space }))}
                 />
               </PageSectionContent>
             </PageSection>
